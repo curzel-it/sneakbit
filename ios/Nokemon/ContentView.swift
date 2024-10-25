@@ -1,8 +1,11 @@
 import SwiftUI
+import Schwifty
 
 struct ContentView: View {
     var body: some View {
-        GameViewRepresentable()
+        ZStack {
+            GameViewRepresentable()
+            ControllerEmulatorView().positioned(.bottom)
+        }
     }
 }
-

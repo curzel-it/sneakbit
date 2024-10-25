@@ -1,10 +1,11 @@
 import UIKit
 
 class GameView: UIView {
-    private let engine: GameEngine
+    private var engine: GameEngine {
+        GameEngine.shared
+    }
         
-    required init(engine: GameEngine, frame: CGRect) {
-        self.engine = engine
+    override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.engine.onNewFrame = { [weak self] in
@@ -37,16 +38,12 @@ class GameView: UIView {
     }
     
     private func renderBiome(_ textureX: Int32, _ textureY: Int32, _ row: Int32, _ col: Int32, in context: CGContext) {
-        let textureRect = IntRect(x: textureX, y: textureY, width: 1, height: 1)
-        let renderingRect = IntRect(x: col, y: row, width: 1, height: 1)
-        
-        guard let image = engine.spritesProvider.cgImage(
-            for: UInt32(SPRITE_SHEET_BIOME_TILES),
-            textureRect: textureRect
-        ) else { return }
-        
-        let frame = engine.renderingFrame(for: renderingRect)
-        render(texture: image, at: frame, in: context)
+        renderTile(
+            UInt32(SPRITE_SHEET_BIOME_TILES),
+            textureX, textureY,
+            row, col,
+            in: context
+        )
     }
     
     private func renderConstructions(in context: CGContext) {
@@ -56,14 +53,19 @@ class GameView: UIView {
     }
     
     private func renderConstruction(_ textureX: Int32, _ textureY: Int32, _ row: Int32, _ col: Int32, in context: CGContext) {
+        renderTile(
+            UInt32(SPRITE_SHEET_CONSTRUCTION_TILES),
+            textureX, textureY,
+            row, col,
+            in: context
+        )
+    }
+    
+    private func renderTile(_ spriteSheet: UInt32, _ textureX: Int32, _ textureY: Int32, _ row: Int32, _ col: Int32, in context: CGContext) {
         let textureRect = IntRect(x: textureX, y: textureY, width: 1, height: 1)
         let renderingRect = IntRect(x: col, y: row, width: 1, height: 1)
         
-        guard let image = engine.spritesProvider.cgImage(
-            for: UInt32(SPRITE_SHEET_CONSTRUCTION_TILES),
-            textureRect: textureRect
-        ) else { return }
-        
+        guard let image = engine.spritesProvider.cgImage(for: spriteSheet, textureRect: textureRect) else { return }
         let frame = engine.renderingFrame(for: renderingRect)
         render(texture: image, at: frame, in: context)
     }

@@ -3,19 +3,17 @@ import UIKit
 
 class GameViewController: UIViewController {
     private var gameView: GameView!
-    private var gameEngine: GameEngine!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        gameEngine = GameEngine()
-        gameView = GameView(engine: gameEngine, frame: view.bounds)
+        gameView = GameView(frame: view.bounds)
         gameView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(gameView)
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        gameEngine.setupChanged(
+        GameEngine.shared.setupChanged(
             windowSize: view.bounds.size,
             scale: 1 // TODO: view.window?.screen.scale
         )

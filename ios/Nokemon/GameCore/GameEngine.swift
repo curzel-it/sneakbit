@@ -3,6 +3,8 @@ import UIKit
 import Schwifty
 
 class GameEngine {
+    static let shared = GameEngine()
+    
     var onNewFrame: () -> Void = {}
     var size: CGSize = .zero
     var center: CGPoint = .zero
@@ -39,6 +41,10 @@ class GameEngine {
     private var displayLink: CADisplayLink?
     private var lastUpdateTime: CFTimeInterval = CACurrentMediaTime()
     
+    private var keyPressed = Set<EmulatedKey>()
+    private var keyDown = Set<EmulatedKey>()
+    private var currentChar: UInt32 = 0
+    
     init() {
         initializeEngine()
         displayLink = CADisplayLink(target: self, selector: #selector(gameLoop))
@@ -56,7 +62,7 @@ class GameEngine {
         let deltaTime = min(currentTime - lastUpdateTime, 0.05)
         lastUpdateTime = currentTime
 
-        update(deltaTime: deltaTime)
+        update(deltaTime: Float(deltaTime))
         onNewFrame()
         isUpdating = false
     }
@@ -124,8 +130,9 @@ class GameEngine {
         window_size_changed(Float(size.width), Float(size.height), 1, 1, 1)
     }
 
-    func update(deltaTime: TimeInterval) {
-        update_game(Float(deltaTime))
+    func update(deltaTime: Float) {
+        updateKeyboardState(timeSinceLastUpdate: deltaTime)
+        update_game(deltaTime)
         let cv = camera_viewport()
         cameraViewport = IntRect(x: cv.x, y: cv.y, width: cv.w, height: cv.h)
         
@@ -160,7 +167,62 @@ class GameEngine {
             height: CGFloat(frame.height) * tileSize * renderingScale
         )
     }
+    
+    func setDidType(char: Character) {
+        if let scalar = char.unicodeScalars.first, char.unicodeScalars.count == 1 {
+            currentChar = scalar.value
+        } else {
+            setDidTypeNothing()
+        }
+    }
+    
+    func setDidTypeNothing() {
+        currentChar = 0
+    }
+    
+    func setKeyDown(_ key: EmulatedKey) {
+        if keyPressed.contains(key) {
+            keyPressed.remove(key)
+        } else {
+            keyPressed.insert(key)
+        }
+        keyDown.insert(key)
+    }
+    
+    func setKeyUp(_ key: EmulatedKey) {
+        keyPressed.remove(key)
+        keyDown.remove(key)
+    }
+    
+    private func updateKeyboardState(timeSinceLastUpdate: Float) {
+        update_keyboard(
+            keyPressed.contains(.up),
+            keyPressed.contains(.right),
+            keyPressed.contains(.down),
+            keyPressed.contains(.left),
+            keyDown.contains(.up),
+            keyDown.contains(.right),
+            keyDown.contains(.down),
+            keyDown.contains(.left),
+            keyPressed.contains(.escape),
+            keyPressed.contains(.menu),
+            keyPressed.contains(.confirm),
+            keyPressed.contains(.attack),
+            keyPressed.contains(.backspace),
+            currentChar,
+            timeSinceLastUpdate
+        )
+    }
 }
 
-
-
+enum EmulatedKey {
+    case up
+    case right
+    case down
+    case left
+    case attack
+    case backspace
+    case confirm
+    case escape
+    case menu
+}
