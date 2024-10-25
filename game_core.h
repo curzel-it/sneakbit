@@ -259,7 +259,7 @@ void update_mouse(bool mouse_left_down,
                   float mouse_y,
                   float rendering_scale);
 
-struct RenderableItem *renderables(uintptr_t *length);
+struct RenderableItem *get_renderables(uintptr_t *length);
 
 void free_renderables(struct RenderableItem *ptr, uintptr_t length);
 

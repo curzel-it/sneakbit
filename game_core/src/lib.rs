@@ -126,7 +126,7 @@ pub struct RenderableItem {
     pub frame: IntRect
 }
 
-pub fn renderables_vec() -> Vec<RenderableItem> {
+pub fn get_renderables_vec() -> Vec<RenderableItem> {
     let world = &engine().world;
     let visible_entities = &world.visible_entities;
     let entities_map = world.entities.borrow();    
@@ -166,8 +166,8 @@ pub fn renderables_vec() -> Vec<RenderableItem> {
 }
 
 #[no_mangle]
-pub extern "C" fn renderables(length: *mut usize) -> *mut RenderableItem {
-    let items = renderables_vec();
+pub extern "C" fn get_renderables(length: *mut usize) -> *mut RenderableItem {
+    let items = get_renderables_vec();
 
     let len = items.len();
     unsafe {
