@@ -11,6 +11,17 @@ public struct ConstructionTile {
     public var texture_source_rect: IntRect
 }
 
+extension ConstructionTile {
+    init(with other: ConstructionTile) {
+        tile_type = other.tile_type
+        tile_up_type = other.tile_up_type
+        tile_right_type = other.tile_right_type
+        tile_down_type = other.tile_down_type
+        tile_left_type = other.tile_left_type
+        texture_source_rect = IntRect(with: other.texture_source_rect)
+    }
+}
+
 @_silgen_name("get_construction_tiles")
 func get_construction_tiles(_ out_tiles: UnsafeMutablePointer<UnsafePointer<ConstructionTile>?>?,
                      _ out_len_x: UnsafeMutablePointer<size_t>?,

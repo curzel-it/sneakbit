@@ -17,6 +17,13 @@ public struct Vector2d {
 extension IntRect {
     static let zero = IntRect(x: 0, y: 0, width: 0, height: 0)
     
+    init(with other: IntRect) {
+        x = other.x
+        y = other.y
+        width = other.width
+        height = other.height
+    }
+    
     func cgRect() -> CGRect {
         CGRect(
            x: CGFloat(x),

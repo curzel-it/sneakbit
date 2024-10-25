@@ -8,8 +8,6 @@ struct ContentView: View {
                 .ignoresSafeArea()
             
             ControllerEmulatorView()
-                .positioned(.bottom)
-                .padding(.bottom, 30)
         }
     }
 }

@@ -13,6 +13,18 @@ public struct BiomeTile {
     public var texture_offset_y: Int32
 }
 
+extension BiomeTile {
+    init(with other: BiomeTile) {
+        tile_type = other.tile_type
+        tile_up_type = other.tile_up_type
+        tile_right_type = other.tile_right_type
+        tile_down_type = other.tile_down_type
+        tile_left_type = other.tile_left_type
+        texture_offset_x = other.texture_offset_x
+        texture_offset_y = other.texture_offset_y
+    }
+}
+
 @_silgen_name("get_biome_tiles")
 func get_biome_tiles(_ out_tiles: UnsafeMutablePointer<UnsafePointer<BiomeTile>?>?,
                      _ out_len_x: UnsafeMutablePointer<size_t>?,

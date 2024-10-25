@@ -29,6 +29,7 @@ class GameEngine {
         ]
     )
     
+    private var currentWorldId: UInt32 = 0
     private var lastFpsUpdate: Date = Date()
     private var frameCount: Int = 0
     private var isUpdating: Bool = false
@@ -44,6 +45,9 @@ class GameEngine {
     private var keyPressed = Set<EmulatedKey>()
     private var keyDown = Set<EmulatedKey>()
     private var currentChar: UInt32 = 0
+    
+    private var biomeTiles: [[BiomeTile]] = []
+    private var constructionTiles: [[ConstructionTile]] = []
     
     init() {
         initializeEngine()
@@ -75,7 +79,26 @@ class GameEngine {
         }
     }
     
+    func fetchTiles() {
+        fetchBiomeTiles { tiles in
+            self.biomeTiles = tiles.map { row in
+                row.map { tile in
+                    BiomeTile(with: tile)
+                }
+            }
+        }
+        fetchConstructionTiles { tiles in
+            self.constructionTiles = tiles.map { row in
+                row.map { tile in
+                    ConstructionTile(with: tile)
+                }
+            }
+        }
+    }
+    
     func renderBiomeTiles(_ render: @escaping (Int32, Int32, Int32, Int32) -> Void) {
+        guard !biomeTiles.isEmpty else { return }
+        
         let rows = current_world_height()
         let cols = current_world_width()
         
@@ -85,21 +108,21 @@ class GameEngine {
         let startCol = min(max(cameraViewport.x - 2, 0), cols)
         let endCol = min(max(cameraViewport.x + cameraViewport.width + 3, 0), cols)
                 
-        fetchBiomeTiles { tiles in
-            for row in startRow..<endRow {
-                for col in startCol..<endCol {
-                    render(
-                        tiles[Int(row)][Int(col)].texture_offset_x,
-                        tiles[Int(row)][Int(col)].texture_offset_y,
-                        row,
-                        col
-                    )
-                }
+        for row in startRow..<endRow {
+            for col in startCol..<endCol {
+                render(
+                    biomeTiles[Int(row)][Int(col)].texture_offset_x,
+                    biomeTiles[Int(row)][Int(col)].texture_offset_y,
+                    row,
+                    col
+                )
             }
         }
     }
     
     func renderConstructionTiles(_ render: @escaping (Int32, Int32, Int32, Int32) -> Void) {
+        guard !constructionTiles.isEmpty else { return }
+        
         let rows = current_world_height()
         let cols = current_world_width()
         
@@ -109,16 +132,14 @@ class GameEngine {
         let startCol = min(max(cameraViewport.x - 2, 0), cols)
         let endCol = min(max(cameraViewport.x + cameraViewport.width + 3, 0), cols)
         
-        fetchConstructionTiles { tiles in
-            for row in startRow..<endRow {
-                for col in startCol..<endCol {
-                    render(
-                        tiles[Int(row)][Int(col)].texture_source_rect.x,
-                        tiles[Int(row)][Int(col)].texture_source_rect.y,
-                        row,
-                        col
-                    )
-                }
+        for row in startRow..<endRow {
+            for col in startCol..<endCol {
+                render(
+                    constructionTiles[Int(row)][Int(col)].texture_source_rect.x,
+                    constructionTiles[Int(row)][Int(col)].texture_source_rect.y,
+                    row,
+                    col
+                )
             }
         }
     }
@@ -133,6 +154,12 @@ class GameEngine {
     func update(deltaTime: Float) {
         updateKeyboardState(timeSinceLastUpdate: deltaTime)
         update_game(deltaTime)
+        
+        if current_world_id() != currentWorldId {
+            currentWorldId = current_world_id()
+            fetchTiles()
+        }
+        
         let cv = camera_viewport()
         cameraViewport = IntRect(x: cv.x, y: cv.y, width: cv.w, height: cv.h)
         

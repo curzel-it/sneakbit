@@ -310,3 +310,8 @@ pub extern "C" fn free_construction_tiles(tiles_ptr: *mut ConstructionTile, len_
         let _ = Vec::from_raw_parts(tiles_ptr, len, len);
     }
 }
+
+#[no_mangle]
+pub extern "C" fn current_world_id() -> u32 {
+    engine().world.id
+}

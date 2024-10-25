@@ -296,4 +296,6 @@ void get_construction_tiles(const struct ConstructionTile **out_tiles,
 
 void free_construction_tiles(struct ConstructionTile *tiles_ptr, uintptr_t len_x, uintptr_t len_y);
 
+uint32_t current_world_id(void);
+
 #endif  /* GAME_CORE_H */
