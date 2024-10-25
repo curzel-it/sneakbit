@@ -1,6 +1,8 @@
 import UIKit
 
 class GameView: UIView {
+    @Inject private var spritesProvider: SpritesProvider
+    
     private var engine: GameEngine {
         GameEngine.shared
     }
@@ -24,52 +26,10 @@ class GameView: UIView {
         context.fill(rect)
         context.interpolationQuality = .none
 
-        // renderBiomes(in: context)
-        // renderConstructions(in: context)
         renderTileMap(in: context)
         renderEntities(in: context)
 
         drawDebugInfo(context: context, rect: rect)
-    }
-    
-    private func renderBiomes(in context: CGContext) {
-        engine.renderBiomeTiles { textureX, textureY, row, col in
-            self.renderBiome(textureX, textureY, row, col, in: context)
-        }
-    }
-    
-    private func renderBiome(_ textureX: Int32, _ textureY: Int32, _ row: Int32, _ col: Int32, in context: CGContext) {
-        renderTile(
-            UInt32(SPRITE_SHEET_BIOME_TILES),
-            textureX, textureY,
-            row, col,
-            in: context
-        )
-    }
-    
-    private func renderConstructions(in context: CGContext) {
-        engine.renderConstructionTiles { textureX, textureY, row, col in
-            self.renderConstruction(textureX, textureY, row, col, in: context)
-        }
-    }
-    
-    private func renderConstruction(_ textureX: Int32, _ textureY: Int32, _ row: Int32, _ col: Int32, in context: CGContext) {
-        guard textureX != 0 else { return }
-        renderTile(
-            UInt32(SPRITE_SHEET_CONSTRUCTION_TILES),
-            textureX, textureY,
-            row, col,
-            in: context
-        )
-    }
-    
-    private func renderTile(_ spriteSheet: UInt32, _ textureX: Int32, _ textureY: Int32, _ row: Int32, _ col: Int32, in context: CGContext) {
-        let textureRect = IntRect(x: textureX, y: textureY, width: 1, height: 1)
-        let renderingRect = IntRect(x: col, y: row, width: 1, height: 1)
-        
-        guard let image = engine.spritesProvider.cgImage(for: spriteSheet, textureRect: textureRect) else { return }
-        let frame = engine.renderingFrame(for: renderingRect)
-        render(texture: image, at: frame, in: context)
     }
     
     private func renderEntities(in context: CGContext) {
@@ -79,7 +39,7 @@ class GameView: UIView {
     }
     
     private func render(entity: RenderableItem, in context: CGContext) {
-        guard let image = engine.spritesProvider.cgImage(for: entity) else { return }
+        guard let image = spritesProvider.cgImage(for: entity) else { return }
         let frame = engine.renderingFrame(for: entity)
         render(texture: image, at: frame, in: context)
     }
