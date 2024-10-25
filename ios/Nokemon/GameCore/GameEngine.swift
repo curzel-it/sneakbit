@@ -214,15 +214,3 @@ class GameEngine {
         )
     }
 }
-
-enum EmulatedKey {
-    case up
-    case right
-    case down
-    case left
-    case attack
-    case backspace
-    case confirm
-    case escape
-    case menu
-}

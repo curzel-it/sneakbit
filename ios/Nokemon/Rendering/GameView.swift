@@ -53,6 +53,7 @@ class GameView: UIView {
     }
     
     private func renderConstruction(_ textureX: Int32, _ textureY: Int32, _ row: Int32, _ col: Int32, in context: CGContext) {
+        guard textureX != 0 else { return }
         renderTile(
             UInt32(SPRITE_SHEET_CONSTRUCTION_TILES),
             textureX, textureY,

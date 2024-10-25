@@ -5,7 +5,11 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             GameViewRepresentable()
-            ControllerEmulatorView().positioned(.bottom)
+                .ignoresSafeArea()
+            
+            ControllerEmulatorView()
+                .positioned(.bottom)
+                .padding(.bottom, 30)
         }
     }
 }
