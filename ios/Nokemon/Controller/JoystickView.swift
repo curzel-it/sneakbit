@@ -37,6 +37,8 @@ struct JoystickView: View {
 }
 
 private class JoystickViewModel: ObservableObject {
+    @Inject private var engine: GameEngine
+    
     @Published var dragLocation: CGPoint = .zero
     @Published var isDragging = false
     @Published var currentActiveKey: EmulatedKey?
@@ -100,10 +102,10 @@ private class JoystickViewModel: ObservableObject {
 
         if currentActiveKey != newActiveKey {
             if let key = currentActiveKey {
-                GameEngine.shared.setKeyUp(key)
+                engine.setKeyUp(key)
             }
             if let key = newActiveKey {
-                GameEngine.shared.setKeyDown(key)
+                engine.setKeyDown(key)
             }
             currentActiveKey = newActiveKey
         }
@@ -111,7 +113,7 @@ private class JoystickViewModel: ObservableObject {
 
     private func releaseCurrentKey() {
         if let key = currentActiveKey {
-            GameEngine.shared.setKeyUp(key)
+            engine.setKeyUp(key)
             currentActiveKey = nil
         }
     }

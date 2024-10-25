@@ -2,9 +2,7 @@ import Foundation
 import UIKit
 import Schwifty
 
-class GameEngine {
-    static let shared = GameEngine()
-    
+class GameEngine {   
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
     @Inject private var tileMapImageGenerator: TileMapImageGenerator
     @Inject private var spritesProvider: SpritesProvider

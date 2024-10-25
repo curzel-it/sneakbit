@@ -2,6 +2,8 @@ import SwiftUI
 import UIKit
 
 class GameViewController: UIViewController {
+    @Inject private var engine: GameEngine
+    
     private var gameView: GameView!
     
     override func viewDidLoad() {
@@ -13,7 +15,7 @@ class GameViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        GameEngine.shared.setupChanged(
+        engine.setupChanged(
             windowSize: view.bounds.size,
             screenScale: view.window?.screen.scale
         )

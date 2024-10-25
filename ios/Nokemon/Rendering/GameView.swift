@@ -2,11 +2,8 @@ import UIKit
 
 class GameView: UIView {
     @Inject private var spritesProvider: SpritesProvider
-    
-    private var engine: GameEngine {
-        GameEngine.shared
-    }
-        
+    @Inject private var engine: GameEngine
+            
     override init(frame: CGRect) {
         super.init(frame: frame)
         
