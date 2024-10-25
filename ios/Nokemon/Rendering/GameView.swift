@@ -6,10 +6,6 @@ class GameView: UIView {
             
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        self.engine.onNewFrame = { [weak self] in
-            self?.setNeedsDisplay()
-        }
         backgroundColor = .black
     }
     

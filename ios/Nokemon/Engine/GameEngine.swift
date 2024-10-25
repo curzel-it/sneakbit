@@ -7,29 +7,21 @@ class GameEngine {
     @Inject private var tileMapImageGenerator: TileMapImageGenerator
     @Inject private var spritesProvider: SpritesProvider
     
-    var onNewFrame: () -> Void = {}
     var size: CGSize = .zero
     var fps: Double = 0.0
     
     private var currentWorldId: UInt32 = 0
     private var lastFpsUpdate: Date = Date()
     private var frameCount: Int = 0
-    private var isUpdating: Bool = false
     
     let tileSize = CGFloat(TILE_SIZE)
     private(set) var renderingScale: CGFloat = 1
     private(set) var cameraViewport: IntRect = .zero
     private(set) var cameraViewportOffset: Vector2d = .zero
-    
-    private var displayLink: CADisplayLink?
-    private var lastUpdateTime: CFTimeInterval = CACurrentMediaTime()
-    
+        
     private var keyPressed = Set<EmulatedKey>()
     private var keyDown = Set<EmulatedKey>()
     private var currentChar: UInt32 = 0
-    
-    private var biomeTiles: [[BiomeTile]] = []
-    private var constructionTiles: [[ConstructionTile]] = []
     
     private var worldHeight: Int = 0
     private var worldWidth: Int = 0
@@ -38,24 +30,21 @@ class GameEngine {
     
     init() {
         initializeEngine()
-        displayLink = CADisplayLink(target: self, selector: #selector(gameLoop))
-        displayLink?.add(to: .main, forMode: .default)
     }
-
-    deinit {
-        displayLink?.invalidate()
-    }
-
-    @objc private func gameLoop() {
-        guard !isUpdating else { return }
-        isUpdating = true
-        let currentTime = displayLink?.timestamp ?? CACurrentMediaTime()
-        let deltaTime = min(currentTime - lastUpdateTime, 0.05)
-        lastUpdateTime = currentTime
-
-        update(deltaTime: Float(deltaTime))
-        onNewFrame()
-        isUpdating = false
+    
+    func update(deltaTime: Float) {
+        updateKeyboardState(timeSinceLastUpdate: deltaTime)
+        update_game(deltaTime)
+        
+        if current_world_id() != currentWorldId {
+            currentWorldId = current_world_id()
+            keyDown.removeAll()
+            keyPressed.removeAll()
+            generateTileMapImage()
+        }
+        
+        updateCameraParams()
+        updateFpsCounter()
     }
     
     func renderEntities(_ render: @escaping (RenderableItem) -> Void) {
@@ -80,29 +69,6 @@ class GameEngine {
         worldHeight = Int(current_world_height())
         worldWidth = Int(current_world_width())
         generateTileMapImage()
-    }
-
-    private func update(deltaTime: Float) {
-        updateKeyboardState(timeSinceLastUpdate: deltaTime)
-        update_game(deltaTime)
-        
-        if current_world_id() != currentWorldId {
-            currentWorldId = current_world_id()
-            keyDown.removeAll()
-            keyPressed.removeAll()
-            generateTileMapImage()
-        }
-        
-        updateCameraParams()
-
-        frameCount += 1
-        let now = Date()
-        let elapsed = now.timeIntervalSince(lastFpsUpdate)
-        if elapsed >= 1.0 {
-            fps = Double(frameCount) / elapsed
-            frameCount = 0
-            lastFpsUpdate = now
-        }
     }
     
     func renderingFrame(for entity: RenderableItem) -> CGRect {
@@ -189,6 +155,17 @@ class GameEngine {
                     constructionTiles: constructionTiles
                 )
             }
+        }
+    }
+    
+    private func updateFpsCounter() {
+        frameCount += 1
+        let now = Date()
+        let elapsed = now.timeIntervalSince(lastFpsUpdate)
+        if elapsed >= 1.0 {
+            fps = Double(frameCount) / elapsed
+            frameCount = 0
+            lastFpsUpdate = now
         }
     }
 }
