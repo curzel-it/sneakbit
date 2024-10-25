@@ -4,13 +4,25 @@ import Schwifty
 
 struct ControllerEmulatorView: View {
     var body: some View {
-        HStack {
-            KeyEmulatorView(key: .attack)
-                .padding(.bottom, KeyEmulatorView.size.height / 2)
-            KeyEmulatorView(key: .confirm)
-            Spacer()
-            JoystickView()
+        ZStack {
+            HStack {
+                KeyEmulatorView(key: .attack)
+                    .padding(.bottom, KeyEmulatorView.size.height / 2)
+                KeyEmulatorView(key: .confirm)
+            }
+            .positioned(.leadingBottom)
+            JoystickContainer()
         }
         .padding(.horizontal)
+        .positioned(.bottom)
+        .padding(.bottom, 30)
     }
 }
+
+private struct JoystickContainer: View {
+    var body: some View {
+        JoystickView()
+            .frame(maxWidth: .infinity, maxHeight: .infinity) 
+    }
+}
+

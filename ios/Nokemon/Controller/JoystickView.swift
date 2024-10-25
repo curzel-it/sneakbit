@@ -2,112 +2,117 @@ import Foundation
 import SwiftUI
 
 struct JoystickView: View {
-    @State private var dragLocation: CGPoint = .zero
-    @State private var isDragging = false
-    @State private var activeKeys: Set<EmulatedKey> = []
-
-    let outerRadius: CGFloat = 56
-    let innerRadius: CGFloat = 32
+    @StateObject private var viewModel = JoystickViewModel()
 
     var body: some View {
         GeometryReader { geometry in
             let size = geometry.size
-            let center = CGPoint(x: size.width / 2, y: size.height / 2)
-            
+
             ZStack {
-                // Outer Circle
-                Circle()
-                    .fill(Color.gray.opacity(0.6))
-                    .frame(width: outerRadius * 2, height: outerRadius * 2)
-                    .position(center)
-                
-                // Inner Circle
-                Circle()
-                    .fill(Color.gray.opacity(0.7))
-                    .frame(width: innerRadius * 2, height: innerRadius * 2)
-                    .position(isDragging ? dragLocation : center)
-                    .gesture(
-                        DragGesture()
-                            .onChanged { value in
-                                isDragging = true
-                                let location = value.location
-                                let vector = CGVector(dx: location.x - center.x, dy: location.y - center.y)
-                                let distance = min(sqrt(vector.dx * vector.dx + vector.dy * vector.dy), outerRadius)
-                                
-                                // Adjust for SwiftUI coordinate system (invert dy)
-                                let adjustedVector = CGVector(dx: vector.dx, dy: -(vector.dy))
-                                
-                                let angle = atan2(adjustedVector.dy, adjustedVector.dx)
-                                
-                                let limitedX = center.x + cos(angle) * distance
-                                let limitedY = center.y - sin(angle) * distance // Subtract to adjust for inverted y-axis
-                                
-                                dragLocation = CGPoint(x: limitedX, y: limitedY)
-                                
-                                // Handle direction
-                                handleDirection(angle: angle)
-                            }
-                            .onEnded { _ in
-                                isDragging = false
-                                dragLocation = center
-                                releaseAllKeys()
-                            }
-                    )
+                if viewModel.isDragging {
+                    Circle()
+                        .fill(Color.gray.opacity(0.6))
+                        .frame(width: viewModel.outerRadius * 2, height: viewModel.outerRadius * 2)
+                        .position(viewModel.center)
+
+                    Circle()
+                        .fill(Color.black.opacity(0.4))
+                        .frame(width: viewModel.innerRadius * 2, height: viewModel.innerRadius * 2)
+                        .position(viewModel.dragLocation)
+                }
             }
             .frame(width: size.width, height: size.height)
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        viewModel.handleDragChanged(value: value)
+                    }
+                    .onEnded { _ in
+                        viewModel.handleDragEnded()
+                    }
+            )
         }
-        .frame(width: outerRadius * 2 + 40, height: outerRadius * 2 + 40)
     }
+}
+
+class JoystickViewModel: ObservableObject {
+    @Published var dragLocation: CGPoint = .zero
+    @Published var isDragging = false
+    @Published var currentActiveKey: EmulatedKey?
+    @Published var center: CGPoint = .zero
+
+    static let size: CGFloat = 64
+    let outerRadius: CGFloat = 32
+    let innerRadius: CGFloat = 24
+    let maxDistance: CGFloat = 16
+    let maxFingerDistance: CGFloat = 50
     
+    func handleDragChanged(value: DragGesture.Value) {
+        if !isDragging {
+            isDragging = true
+            center = value.startLocation 
+        }
+        let location = value.location
+        var vector = CGVector(dx: location.x - center.x, dy: location.y - center.y)
+        var realDistance = hypot(vector.dx, vector.dy)
+                
+        if realDistance > maxFingerDistance {
+            let angle = atan2(vector.dy, vector.dx)
+            let excessDistance = realDistance - maxFingerDistance
+            center.x += cos(angle) * excessDistance
+            center.y += sin(angle) * excessDistance
+            vector = CGVector(dx: location.x - center.x, dy: location.y - center.y)
+            realDistance = hypot(vector.dx, vector.dy)
+        }
+        
+        let distance = min(realDistance, maxDistance)
+        let angle = atan2(vector.dy, vector.dx)
+        let limitedX = center.x + cos(angle) * distance
+        let limitedY = center.y + sin(angle) * distance
+        dragLocation = CGPoint(x: limitedX, y: limitedY)
+        handleDirection(angle: angle)
+    }
+
+    func handleDragEnded() {
+        isDragging = false
+        releaseCurrentKey()
+    }
+
     private func handleDirection(angle: CGFloat) {
-        // Determine the direction based on the angle
-        var newActiveKeys: Set<EmulatedKey> = []
-        
-        // Map angles to the four cardinal directions
         let adjustedAngle = angle < 0 ? angle + 2 * .pi : angle
-        
-        // Define the ranges for each direction (in radians)
         let pi = CGFloat.pi
-        let rightRange = (-pi / 4)...(pi / 4)
-        let upRange = (pi / 4)...(3 * pi / 4)
-        let leftRange = (3 * pi / 4)...(5 * pi / 4)
-        let downRange = (5 * pi / 4)...(7 * pi / 4)
-        
-        // Since angle ranges wrap around, adjust accordingly
-        if rightRange.contains(adjustedAngle) || (adjustedAngle >= 7 * .pi / 4 && adjustedAngle <= 2 * .pi) {
-            newActiveKeys.insert(.right)
-        } else if upRange.contains(adjustedAngle) {
-            newActiveKeys.insert(.up)
-        } else if leftRange.contains(adjustedAngle) {
-            newActiveKeys.insert(.left)
-        } else if downRange.contains(adjustedAngle) {
-            newActiveKeys.insert(.down)
+
+        var newActiveKey: EmulatedKey?
+
+        switch adjustedAngle {
+        case 7 * pi / 4...2 * pi, 0...pi / 4:
+            newActiveKey = .right
+        case pi / 4...3 * pi / 4:
+            newActiveKey = .down
+        case 3 * pi / 4...5 * pi / 4:
+            newActiveKey = .left
+        case 5 * pi / 4...7 * pi / 4:
+            newActiveKey = .up
+        default:
+            break
         }
-        
-        updateActiveKeys(newActiveKeys)
+
+        if currentActiveKey != newActiveKey {
+            if let key = currentActiveKey {
+                GameEngine.shared.setKeyUp(key)
+            }
+            if let key = newActiveKey {
+                GameEngine.shared.setKeyDown(key)
+            }
+            currentActiveKey = newActiveKey
+        }
     }
-    
-    private func updateActiveKeys(_ newActiveKeys: Set<EmulatedKey>) {
-        // Release keys that are no longer active
-        let keysToRelease = activeKeys.subtracting(newActiveKeys)
-        for key in keysToRelease {
+
+    private func releaseCurrentKey() {
+        if let key = currentActiveKey {
             GameEngine.shared.setKeyUp(key)
+            currentActiveKey = nil
         }
-        
-        // Press keys that are newly active
-        let keysToPress = newActiveKeys.subtracting(activeKeys)
-        for key in keysToPress {
-            GameEngine.shared.setKeyDown(key)
-        }
-        
-        // Update active keys
-        activeKeys = newActiveKeys
-    }
-    
-    private func releaseAllKeys() {
-        for key in activeKeys {
-            GameEngine.shared.setKeyUp(key)
-        }
-        activeKeys.removeAll()
     }
 }
