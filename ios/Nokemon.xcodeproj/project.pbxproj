@@ -10,6 +10,7 @@
 		1E06CD732CC9A7AB001231D7 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 1E06CD722CC9A7AB001231D7 /* assets */; };
 		1E06CD752CC9A7B4001231D7 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 1E06CD742CC9A7B4001231D7 /* data */; };
 		1E06CD772CC9A7BD001231D7 /* lang in Resources */ = {isa = PBXBuildFile; fileRef = 1E06CD762CC9A7BD001231D7 /* lang */; };
+		1E28046A2CCB93D500DBC189 /* Schwifty in Frameworks */ = {isa = PBXBuildFile; productRef = 1E2804692CCB93D500DBC189 /* Schwifty */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E28046A2CCB93D500DBC189 /* Schwifty in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +86,7 @@
 			);
 			name = Nokemon;
 			packageProductDependencies = (
+				1E2804692CCB93D500DBC189 /* Schwifty */,
 			);
 			productName = Nokemon;
 			productReference = 1EE0347C2CC8585400159636 /* Nokemon.app */;
@@ -113,6 +116,9 @@
 			);
 			mainGroup = 1EE034732CC8585400159636;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				1E2804682CCB93D500DBC189 /* XCRemoteSwiftPackageReference "schwifty" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1EE0347D2CC8585400159636 /* Products */;
 			projectDirPath = "";
@@ -362,6 +368,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1E2804682CCB93D500DBC189 /* XCRemoteSwiftPackageReference "schwifty" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/curzel-it/schwifty";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.9;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1E2804692CCB93D500DBC189 /* Schwifty */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E2804682CCB93D500DBC189 /* XCRemoteSwiftPackageReference "schwifty" */;
+			productName = Schwifty;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1EE034742CC8585400159636 /* Project object */;
 }

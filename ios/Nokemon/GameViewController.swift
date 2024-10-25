@@ -16,7 +16,10 @@ class GameViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        gameEngine.setWindowSize(view.bounds.size)
+        gameEngine.setupChanged(
+            windowSize: view.bounds.size,
+            scale: 1 // TODO: view.window?.screen.scale
+        )
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -31,7 +34,6 @@ class GameViewController: UIViewController {
         // ...
     }
 }
-
 
 struct GameViewRepresentable: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> GameViewController {

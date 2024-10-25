@@ -1,0 +1,15 @@
+{
+  "originHash" : "31cfaa3acd102e41ca2b7fc6d8b5140f334b67435c33c4d0601fde9da44bddb2",
+  "pins" : [
+    {
+      "identity" : "schwifty",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/curzel-it/schwifty",
+      "state" : {
+        "revision" : "9620d6a851f4c81c458cfa37fe50d0906f872a9c",
+        "version" : "1.2.9"
+      }
+    }
+  ],
+  "version" : 3
+}

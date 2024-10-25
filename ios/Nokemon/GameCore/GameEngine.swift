@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import Schwifty
 
 class GameEngine {
     var onNewFrame: () -> Void = {}
@@ -29,6 +30,11 @@ class GameEngine {
     private var lastFpsUpdate: Date = Date()
     private var frameCount: Int = 0
     private var isUpdating: Bool = false
+    
+    private let tileSize = CGFloat(TILE_SIZE)
+    private var renderingScale: CGFloat = 1 // = UIScreen.main.scale
+    private var cameraViewport: IntRect = .zero
+    private var cameraViewportOffset: Vector2d = .zero
     
     private var displayLink: CADisplayLink?
     private var lastUpdateTime: CFTimeInterval = CACurrentMediaTime()
@@ -63,14 +69,20 @@ class GameEngine {
         }
     }
 
-    func setWindowSize(_ size: CGSize) {
-        self.size = size
+    func setupChanged(windowSize: CGSize, scale: CGFloat) {
+        renderingScale = scale
+        size = windowSize
         center = CGPoint(x: size.width / 2, y: size.height / 2)
         window_size_changed(Float(size.width), Float(size.height), 1, 1, 1)
     }
 
     func update(deltaTime: TimeInterval) {
         update_game(Float(deltaTime))
+        let cv = camera_viewport()
+        cameraViewport = IntRect(x: cv.x, y: cv.y, width: cv.w, height: cv.h)
+        
+        let cvo = camera_viewport_offset()
+        cameraViewportOffset = Vector2d(x: cvo.x, y: cvo.y)
 
         frameCount += 1
         let now = Date()
@@ -83,11 +95,20 @@ class GameEngine {
     }
 
     func renderingFrame(for entity: RenderableItem) -> CGRect {
-        CGRect(
-            x: CGFloat(Float(entity.frame.x)),
-            y: CGFloat(Float(entity.frame.y)),
-            width: CGFloat(Float(entity.frame.width)),
-            height: CGFloat(Float(entity.frame.height))
+        let offset = entity.offset
+        let frame = entity.frame
+        
+        let actualCol = CGFloat(frame.x - cameraViewport.x)
+        let actualOffsetX = CGFloat(offset.x - cameraViewportOffset.x)
+
+        let actualRow = CGFloat(frame.y - cameraViewport.y)
+        let actualOffsetY = CGFloat(offset.y - cameraViewportOffset.y)
+        
+        return CGRect(
+            x: (actualCol * tileSize + actualOffsetX) * renderingScale,
+            y: (actualRow * tileSize + actualOffsetY) * renderingScale,
+            width: CGFloat(frame.width) * tileSize * renderingScale,
+            height: CGFloat(frame.height) * tileSize * renderingScale
         )
     }
 }
