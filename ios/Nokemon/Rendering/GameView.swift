@@ -24,8 +24,9 @@ class GameView: UIView {
         context.fill(rect)
         context.interpolationQuality = .none
 
-        renderBiomes(in: context)
-        renderConstructions(in: context)
+        // renderBiomes(in: context)
+        // renderConstructions(in: context)
+        renderTileMap(in: context)
         renderEntities(in: context)
 
         drawDebugInfo(context: context, rect: rect)
@@ -106,5 +107,21 @@ class GameView: UIView {
             height: textSize.height
         )
         fpsText.draw(in: textRect, withAttributes: attributes)
+    }
+    
+    private func renderTileMap(in context: CGContext) {
+        guard let tileMapImage = engine.tileMapImage else { return }
+        
+        let cameraViewport = engine.cameraViewport
+        let cameraOffset = engine.cameraViewportOffset
+        let tileSize = CGFloat(TILE_SIZE) * engine.renderingScale
+        
+        let offsetX = -CGFloat(cameraViewport.x) * tileSize - CGFloat(cameraOffset.x) * engine.renderingScale
+        let offsetY = -CGFloat(cameraViewport.y) * tileSize - CGFloat(cameraOffset.y) * engine.renderingScale
+        
+        context.saveGState()
+        context.translateBy(x: offsetX, y: offsetY)
+        context.draw(tileMapImage.cgImage!, in: CGRect(origin: .zero, size: tileMapImage.size))
+        context.restoreGState()
     }
 }
