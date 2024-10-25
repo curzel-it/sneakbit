@@ -252,7 +252,6 @@ fn to_path(value: *const c_char) -> PathBuf {
 }
 
 pub fn biome_tiles_vec() -> &'static Vec<Vec<BiomeTile>> {
-    println!("Getting tiles for world {}", &engine().world.id);
     &engine().world.biome_tiles.tiles
 }
 

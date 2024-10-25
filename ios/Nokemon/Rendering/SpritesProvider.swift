@@ -40,18 +40,15 @@ class MemCachedSpritesProvider: SpritesProvider {
             return nil
         }
 
-        // Cache and return the cropped image
         cache[cacheKey] = croppedCGImage
         return croppedCGImage
     }
 
     private func loadSpriteSheetImage(spriteSheetID: UInt32) -> CGImage? {
-        // Return cached sprite sheet image if available
         if let image = spriteSheetImages[spriteSheetID] {
             return image
         }
 
-        // Load the image from the provided file name
         guard let fileName = spriteSheetFileNames[spriteSheetID],
               let url = Bundle.main.url(forResource: fileName, withExtension: "png", subdirectory: "assets"),
               let image = UIImage(contentsOfFile: url.path),
@@ -59,7 +56,6 @@ class MemCachedSpritesProvider: SpritesProvider {
             return nil
         }
 
-        // Cache and return the sprite sheet image
         spriteSheetImages[spriteSheetID] = cgImage
         return cgImage
     }

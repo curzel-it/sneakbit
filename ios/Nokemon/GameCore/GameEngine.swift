@@ -68,6 +68,54 @@ class GameEngine {
             }
         }
     }
+    
+    func renderBiomeTiles(_ render: @escaping (Int32, Int32, Int32, Int32) -> Void) {
+        let rows = current_world_height()
+        let cols = current_world_width()
+        
+        let startRow = min(max(cameraViewport.y - 2, 0), rows)
+        let endRow = min(max(cameraViewport.y + cameraViewport.height + 3, 0), rows)
+        
+        let startCol = min(max(cameraViewport.x - 2, 0), cols)
+        let endCol = min(max(cameraViewport.x + cameraViewport.width + 3, 0), cols)
+                
+        fetchBiomeTiles { tiles in
+            for row in startRow..<endRow {
+                for col in startCol..<endCol {
+                    render(
+                        tiles[Int(row)][Int(col)].texture_offset_x,
+                        tiles[Int(row)][Int(col)].texture_offset_y,
+                        row,
+                        col
+                    )
+                }
+            }
+        }
+    }
+    
+    func renderConstructionTiles(_ render: @escaping (Int32, Int32, Int32, Int32) -> Void) {
+        let rows = current_world_height()
+        let cols = current_world_width()
+        
+        let startRow = min(max(cameraViewport.y - 2, 0), rows)
+        let endRow = min(max(cameraViewport.y + cameraViewport.height + 3, 0), rows)
+        
+        let startCol = min(max(cameraViewport.x - 2, 0), cols)
+        let endCol = min(max(cameraViewport.x + cameraViewport.width + 3, 0), cols)
+        
+        fetchConstructionTiles { tiles in
+            for row in startRow..<endRow {
+                for col in startCol..<endCol {
+                    render(
+                        tiles[Int(row)][Int(col)].texture_source_rect.x,
+                        tiles[Int(row)][Int(col)].texture_source_rect.y,
+                        row,
+                        col
+                    )
+                }
+            }
+        }
+    }
 
     func setupChanged(windowSize: CGSize, scale: CGFloat) {
         renderingScale = scale
@@ -93,11 +141,12 @@ class GameEngine {
             lastFpsUpdate = now
         }
     }
-
+    
     func renderingFrame(for entity: RenderableItem) -> CGRect {
-        let offset = entity.offset
-        let frame = entity.frame
-        
+        renderingFrame(for: entity.frame, offset: entity.offset)
+    }
+    
+    func renderingFrame(for frame: IntRect, offset: Vector2d = .zero) -> CGRect {
         let actualCol = CGFloat(frame.x - cameraViewport.x)
         let actualOffsetX = CGFloat(offset.x - cameraViewportOffset.x)
 
@@ -112,3 +161,6 @@ class GameEngine {
         )
     }
 }
+
+
+

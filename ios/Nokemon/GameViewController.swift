@@ -8,8 +8,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         gameEngine = GameEngine()
-        gameView = GameView(frame: view.bounds)
-        gameView.engine = gameEngine
+        gameView = GameView(engine: gameEngine, frame: view.bounds)
         gameView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(gameView)
     }
