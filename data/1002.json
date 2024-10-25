@@ -33,7 +33,7 @@
       "222222222222222222222222222224444444444444111111111111111B111111BBBBBBBBBBBBBBBBBBBB111111111111111111111111111111414442",
       "222222222222222222222222222244111111111111111111111B11111B111111B1111111111111111111111111111111111111111111111111111442",
       "222222222222222222222222222444111111111111111111111B11111B111111B1111111111111111111111111111111111111111111111111111442",
-      "2222222222222222222222222224411B11BB1B1B1BBBB11BBB1BBBB1BBB1B1BBB1111111111111111111111111111111111111111111111111111442",
+      "2222222222222222222222222224411B11BB1B1B1BBBB11BBBBBBBB1BBB1B1BBB1111111111111111111111111111111111111111111111111111442",
       "2222222222222222222222222224411111111111111111111111111111111111B1111111111111111111111111111111111111111111111111111442",
       "2222222222222222222222222224441B11111111111111111111111111111111B1111111111111111111111111111111111111111111111111114442",
       "2222222222222222222222222222441B11111111111111111111111111111111B1111111111111111111111111144444444444444111111141114442",
@@ -172,59 +172,60 @@
   },
   "entities": [
     {
-        "id": 1727270765,
+      "id": 1727270765,
+      "frame": {
+        "x": 24,
+        "y": 54,
+        "w": 5,
+        "h": 4
+      },
+      "name": "House",
+      "species_id": 1003,
+      "entity_type": "Building",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1004,
         "frame": {
-          "x": 24,
-          "y": 54,
-          "w": 5,
-          "h": 4
-        },
-        "name": "House",
-        "species_id": 1003,
-        "entity_type": "Building",
-        "offset": {
-          "x": 0.0,
-          "y": 0.0
-        },
-        "direction": "Down",
-        "current_speed": 0.0,
-        "is_rigid": false,
-        "z_index": 0,
-        "sprite": {
-          "sheet_id": 1004,
-          "frame": {
-            "x": 0,
-            "y": 6,
-            "w": 5,
-            "h": 4
-          },
-          "number_of_frames": 1
-        },
-        "dialogues": [],
-        "time_immobilized": 0.0,
-        "destination": null,
-        "lock_type": "None",
-        "original_sprite_frame": {
           "x": 0,
           "y": 6,
           "w": 5,
           "h": 4
         },
-        "is_consumable": false,
-        "speed_multiplier": 1.0,
-        "melee_attacks_hero": false,
-        "is_dying": false,
-        "latest_movement": [
-          0,
-          0
-        ],
-        "contents": null,
-        "remaining_lifespan": -420.0,
-        "shooting_cooldown_remaining": 0.0,
-        "parent_id": 0,
-        "is_invulnerable": true,
-        "demands_attention": false
-      },  
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 0,
+        "y": 6,
+        "w": 5,
+        "h": 4
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
     {
       "id": 1727270767,
       "frame": {
@@ -2119,61 +2120,6 @@
       "demands_attention": false
     },
     {
-      "id": 1727716088,
-      "frame": {
-        "x": 51,
-        "y": 30,
-        "w": 1,
-        "h": 2
-      },
-      "name": "Homunculus",
-      "species_id": 4004,
-      "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Unknown",
-      "current_speed": 2.5,
-      "is_rigid": false,
-      "z_index": 150,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 28,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
-      "movement_directions": "FindHero",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
       "id": 1727716089,
       "frame": {
         "x": 37,
@@ -2446,6 +2392,61 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 9893188,
+      "frame": {
+        "x": 46,
+        "y": 30,
+        "w": 1,
+        "h": 2
+      },
+      "name": "Homunculus",
+      "species_id": 4004,
+      "entity_type": "Npc",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 2.5,
+      "is_rigid": false,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 28,
+          "y": 0,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 28,
+        "y": 0,
+        "w": 1,
+        "h": 2
+      },
+      "movement_directions": "FindHero",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": true,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
       "demands_attention": false
     }
   ],
