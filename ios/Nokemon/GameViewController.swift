@@ -20,18 +20,6 @@ class GameViewController: UIViewController {
             screenScale: view.window?.screen.scale
         )
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // ...
-    }
-
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // ...
-    }
-
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // ...
-    }
 }
 
 struct GameViewRepresentable: UIViewControllerRepresentable {

@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Schwifty
 
-class GameEngine {   
+class GameEngine {
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
     @Inject private var tileMapImageGenerator: TileMapImageGenerator
     @Inject private var spritesProvider: SpritesProvider
@@ -65,23 +65,6 @@ class GameEngine {
             }
         }
     }
-    
-    func fetchTiles() {
-        fetchBiomeTiles { tiles in
-            self.biomeTiles = tiles.map { row in
-                row.map { tile in
-                    BiomeTile(with: tile)
-                }
-            }
-        }
-        fetchConstructionTiles { tiles in
-            self.constructionTiles = tiles.map { row in
-                row.map { tile in
-                    ConstructionTile(with: tile)
-                }
-            }
-        }
-    }
 
     func setupChanged(windowSize: CGSize, screenScale: CGFloat?) {
         renderingScale = renderingScaleUseCase.calculate(windowSize: windowSize, screenScale: screenScale)
@@ -105,7 +88,8 @@ class GameEngine {
         
         if current_world_id() != currentWorldId {
             currentWorldId = current_world_id()
-            fetchTiles()
+            keyDown.removeAll()
+            keyPressed.removeAll()
             generateTileMapImage()
         }
         
@@ -125,7 +109,7 @@ class GameEngine {
         renderingFrame(for: entity.frame, offset: entity.offset)
     }
     
-    func renderingFrame(for frame: IntRect, offset: Vector2d = .zero) -> CGRect {
+    private func renderingFrame(for frame: IntRect, offset: Vector2d = .zero) -> CGRect {
         let actualCol = CGFloat(frame.x - cameraViewport.x)
         let actualOffsetX = CGFloat(offset.x - cameraViewportOffset.x)
 
@@ -195,12 +179,16 @@ class GameEngine {
     }
     
     private func generateTileMapImage() {
-        tileMapImage = tileMapImageGenerator.generate(
-            renderingScale: renderingScale,
-            worldWidth: worldWidth,
-            worldHeight: worldHeight,
-            biomeTiles: biomeTiles,
-            constructionTiles: constructionTiles
-        )
+        fetchBiomeTiles { biomeTiles in
+            fetchConstructionTiles { constructionTiles in
+                self.tileMapImage = self.tileMapImageGenerator.generate(
+                    renderingScale: self.renderingScale,
+                    worldWidth: self.worldWidth,
+                    worldHeight: self.worldHeight,
+                    biomeTiles: biomeTiles,
+                    constructionTiles: constructionTiles
+                )
+            }
+        }
     }
 }

@@ -85,19 +85,12 @@ private class JoystickViewModel: ObservableObject {
         let adjustedAngle = angle < 0 ? angle + 2 * .pi : angle
         let pi = CGFloat.pi
 
-        var newActiveKey: EmulatedKey?
-
-        switch adjustedAngle {
-        case 7 * pi / 4...2 * pi, 0...pi / 4:
-            newActiveKey = .right
-        case pi / 4...3 * pi / 4:
-            newActiveKey = .down
-        case 3 * pi / 4...5 * pi / 4:
-            newActiveKey = .left
-        case 5 * pi / 4...7 * pi / 4:
-            newActiveKey = .up
-        default:
-            break
+        let newActiveKey: EmulatedKey? = switch adjustedAngle {
+        case 7 * pi / 4...2 * pi, 0...pi / 4: .right
+        case pi / 4...3 * pi / 4: .down
+        case 3 * pi / 4...5 * pi / 4: .left
+        case 5 * pi / 4...7 * pi / 4: .up
+        default: nil
         }
 
         if currentActiveKey != newActiveKey {
