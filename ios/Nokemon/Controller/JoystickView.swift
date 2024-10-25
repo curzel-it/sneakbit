@@ -36,7 +36,7 @@ struct JoystickView: View {
     }
 }
 
-class JoystickViewModel: ObservableObject {
+private class JoystickViewModel: ObservableObject {
     @Published var dragLocation: CGPoint = .zero
     @Published var isDragging = false
     @Published var currentActiveKey: EmulatedKey?
@@ -46,7 +46,7 @@ class JoystickViewModel: ObservableObject {
     let outerRadius: CGFloat = 32
     let innerRadius: CGFloat = 24
     let maxDistance: CGFloat = 16
-    let maxFingerDistance: CGFloat = 50
+    let maxFingerDistance: CGFloat = 48
     
     func handleDragChanged(value: DragGesture.Value) {
         if !isDragging {

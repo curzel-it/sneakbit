@@ -15,7 +15,7 @@ class GameViewController: UIViewController {
         super.viewDidLayoutSubviews()
         GameEngine.shared.setupChanged(
             windowSize: view.bounds.size,
-            scale: 1 // TODO: view.window?.screen.scale
+            screenScale: view.window?.screen.scale
         )
     }
     

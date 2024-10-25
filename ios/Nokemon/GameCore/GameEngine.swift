@@ -35,7 +35,7 @@ class GameEngine {
     private var isUpdating: Bool = false
     
     private let tileSize = CGFloat(TILE_SIZE)
-    private var renderingScale: CGFloat = 1 // = UIScreen.main.scale
+    private var renderingScale: CGFloat = 1
     private var cameraViewport: IntRect = .zero
     private var cameraViewportOffset: Vector2d = .zero
     
@@ -144,11 +144,30 @@ class GameEngine {
         }
     }
 
-    func setupChanged(windowSize: CGSize, scale: CGFloat) {
-        renderingScale = scale
+    func setupChanged(windowSize: CGSize, screenScale: CGFloat?) {
+        renderingScale = renderingScale(windowSize: windowSize, screenScale: screenScale)
         size = windowSize
         center = CGPoint(x: size.width / 2, y: size.height / 2)
-        window_size_changed(Float(size.width), Float(size.height), 1, 1, 1)
+        window_size_changed(
+            Float(size.width),
+            Float(size.height),
+            Float(renderingScale),
+            12,
+            8
+        )
+    }
+    
+    private func renderingScale(windowSize: CGSize, screenScale: CGFloat?) -> CGFloat {
+        if UIDevice.current.userInterfaceIdiom == .tv {
+            return 3.0
+        }
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            return 2.0
+        }
+        if (screenScale ?? 0) > 1 {
+            return 1.5
+        }
+        return 1
     }
 
     func update(deltaTime: Float) {

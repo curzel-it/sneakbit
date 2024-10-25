@@ -3,8 +3,8 @@ import SwiftUI
 import Schwifty
 
 struct KeyEmulatorView: View {
-    static let size = CGSize(width: 40, height: 40)
-    static let iconSize: CGFloat = 24
+    static let size = CGSize(width: 48, height: 48)
+    static let iconSize = CGSize(width: 24, height: 24)
     
     let key: EmulatedKey
     
@@ -14,8 +14,7 @@ struct KeyEmulatorView: View {
         Image(systemName: key.imageName)
             .resizable()
             .aspectRatio(contentMode: .fit)
-            .frame(width: KeyEmulatorView.iconSize)
-            .frame(height: KeyEmulatorView.iconSize)
+            .frame(size: KeyEmulatorView.iconSize)
             .foregroundStyle(Color.black)
             .frame(size: KeyEmulatorView.size)
             .background(Color.gray.opacity(0.6))
