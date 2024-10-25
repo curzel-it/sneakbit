@@ -19,6 +19,7 @@ class GameViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         displayLink = CADisplayLink(target: self, selector: #selector(gameLoop))
+        displayLink?.preferredFrameRateRange = .init(minimum: 30, maximum: 90, __preferred: 60)
         displayLink?.add(to: .main, forMode: .default)
     }
     
