@@ -49,6 +49,14 @@ class GameEngine {
     private var biomeTiles: [[BiomeTile]] = []
     private var constructionTiles: [[ConstructionTile]] = []
     
+    private var worldHeight: Int32 = 0
+    private var worldWidth: Int32 = 0
+    
+    private var startRow: Int32 = 0
+    private var endRow: Int32 = 0
+    private var startCol: Int32 = 0
+    private var endCol: Int32 = 0
+    
     init() {
         initializeEngine()
         displayLink = CADisplayLink(target: self, selector: #selector(gameLoop))
@@ -98,15 +106,6 @@ class GameEngine {
     
     func renderBiomeTiles(_ render: @escaping (Int32, Int32, Int32, Int32) -> Void) {
         guard !biomeTiles.isEmpty else { return }
-        
-        let rows = current_world_height()
-        let cols = current_world_width()
-        
-        let startRow = min(max(cameraViewport.y - 2, 0), rows)
-        let endRow = min(max(cameraViewport.y + cameraViewport.height + 3, 0), rows)
-        
-        let startCol = min(max(cameraViewport.x - 2, 0), cols)
-        let endCol = min(max(cameraViewport.x + cameraViewport.width + 3, 0), cols)
                 
         for row in startRow..<endRow {
             for col in startCol..<endCol {
@@ -122,15 +121,6 @@ class GameEngine {
     
     func renderConstructionTiles(_ render: @escaping (Int32, Int32, Int32, Int32) -> Void) {
         guard !constructionTiles.isEmpty else { return }
-        
-        let rows = current_world_height()
-        let cols = current_world_width()
-        
-        let startRow = min(max(cameraViewport.y - 2, 0), rows)
-        let endRow = min(max(cameraViewport.y + cameraViewport.height + 3, 0), rows)
-        
-        let startCol = min(max(cameraViewport.x - 2, 0), cols)
-        let endCol = min(max(cameraViewport.x + cameraViewport.width + 3, 0), cols)
         
         for row in startRow..<endRow {
             for col in startCol..<endCol {
@@ -148,6 +138,7 @@ class GameEngine {
         renderingScale = renderingScale(windowSize: windowSize, screenScale: screenScale)
         size = windowSize
         center = CGPoint(x: size.width / 2, y: size.height / 2)
+        
         window_size_changed(
             Float(size.width),
             Float(size.height),
@@ -155,6 +146,8 @@ class GameEngine {
             12,
             8
         )
+        worldHeight = current_world_height()
+        worldWidth = current_world_width()
     }
     
     private func renderingScale(windowSize: CGSize, screenScale: CGFloat?) -> CGFloat {
@@ -170,7 +163,7 @@ class GameEngine {
         return 1
     }
 
-    func update(deltaTime: Float) {
+    private func update(deltaTime: Float) {
         updateKeyboardState(timeSinceLastUpdate: deltaTime)
         update_game(deltaTime)
         
@@ -179,11 +172,7 @@ class GameEngine {
             fetchTiles()
         }
         
-        let cv = camera_viewport()
-        cameraViewport = IntRect(x: cv.x, y: cv.y, width: cv.w, height: cv.h)
-        
-        let cvo = camera_viewport_offset()
-        cameraViewportOffset = Vector2d(x: cvo.x, y: cvo.y)
+        updateCameraParams()
 
         frameCount += 1
         let now = Date()
@@ -258,5 +247,19 @@ class GameEngine {
             currentChar,
             timeSinceLastUpdate
         )
+    }
+    
+    private func updateCameraParams() {
+        let cv = camera_viewport()
+        cameraViewport = IntRect(x: cv.x, y: cv.y, width: cv.w, height: cv.h)
+        
+        let cvo = camera_viewport_offset()
+        cameraViewportOffset = Vector2d(x: cvo.x, y: cvo.y)
+        
+        startRow = min(max(cameraViewport.y - 1, 0), worldHeight)
+        endRow = min(max(cameraViewport.y + cameraViewport.height + 2, 0), worldHeight)
+        
+        startCol = min(max(cameraViewport.x - 1, 0), worldWidth)
+        endCol = min(max(cameraViewport.x + cameraViewport.width + 2, 0), worldWidth)
     }
 }
