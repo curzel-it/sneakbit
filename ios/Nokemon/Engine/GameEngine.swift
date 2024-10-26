@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import UIKit
 import Schwifty
 
@@ -6,6 +7,8 @@ class GameEngine {
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
     @Inject private var tileMapImageGenerator: TileMapImageGenerator
     @Inject private var spritesProvider: SpritesProvider
+    
+    let toast = CurrentValueSubject<ToastState?, Never>(nil)
     
     var size: CGSize = .zero
     var fps: Double = 0.0
@@ -52,6 +55,7 @@ class GameEngine {
             keyPressed.removeAll()
             generateTileMapImage()
         }
+        updateToast()
         updateBiomeVariant()
         updateCameraParams()
         updateFpsCounter()
@@ -165,6 +169,10 @@ class GameEngine {
             currentChar,
             timeSinceLastUpdate
         )
+    }
+    
+    private func updateToast() {
+        // ...
     }
     
     private func updateBiomeVariant() {

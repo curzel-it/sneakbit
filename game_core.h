@@ -174,6 +174,11 @@ enum Construction {
 };
 typedef uint32_t Construction;
 
+typedef enum ToastMode {
+  ToastMode_Regular,
+  ToastMode_Important,
+} ToastMode;
+
 typedef struct BordersTextures BordersTextures;
 
 typedef struct IntRect {
@@ -213,6 +218,26 @@ typedef struct ConstructionTile {
   Construction tile_left_type;
   struct IntRect texture_source_rect;
 } ConstructionTile;
+
+typedef struct NonColorC {
+  uint8_t red;
+  uint8_t green;
+  uint8_t blue;
+  uint8_t alpha;
+} NonColorC;
+
+typedef struct ToastImage {
+  struct IntRect sprite_frame;
+  uint32_t sprite_sheet_id;
+  int32_t number_of_frames;
+} ToastImage;
+
+typedef struct ToastState {
+  struct NonColorC background_color;
+  const char *text;
+  enum ToastMode mode;
+  struct ToastImage image;
+} ToastState;
 
 
 
@@ -296,5 +321,9 @@ void get_construction_tiles(const struct ConstructionTile **out_tiles,
 void free_construction_tiles(struct ConstructionTile *tiles_ptr, uintptr_t len_x, uintptr_t len_y);
 
 uint32_t current_world_id(void);
+
+struct ToastState current_toast(void);
+
+void free_c_char_ptr(const char *ptr);
 
 #endif  /* GAME_CORE_H */

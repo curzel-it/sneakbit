@@ -5,9 +5,9 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             GameViewRepresentable()
-                .ignoresSafeArea()
-            
             ControllerEmulatorView()
+            ToastView()
         }
+        .ignoresSafeArea()
     }
 }

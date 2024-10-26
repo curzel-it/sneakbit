@@ -4,12 +4,14 @@ use std::collections::VecDeque;
 use crate::{constants::SPRITE_SHEET_MENU, features::animated_sprite::AnimatedSprite, hstack, spacing, text, texture, ui::{components::{empty_view, BordersTextures, NonColor, Spacing, TextureInfo, Typography, View, COLOR_BLACK}, scaffold::scaffold}, utils::{animator::Animator, rect::IntRect}, vstack};
 
 #[derive(Debug, Clone, Copy)]
+#[repr(C)]
 pub enum ToastMode {
-    Regular,
+    Regular = 0,
     Important
 }
 
 #[derive(Debug, Clone, Copy)]
+#[repr(C)]
 pub struct ToastImage {
     pub sprite_frame: IntRect,
     pub sprite_sheet_id: u32,
@@ -24,11 +26,18 @@ pub struct Toast {
 }
 
 pub struct ToastDisplay {
-    animator: Animator,
-    text: String,
-    mode: ToastMode,
-    sprite: Option<AnimatedSprite>,
+    pub animator: Animator,
+    pub text: String,
+    pub mode: ToastMode,
+    pub image: Option<ToastImage>,
+    pub sprite: Option<AnimatedSprite>,
     queue: VecDeque<Toast>,
+}
+
+impl ToastImage {
+    pub fn empty() -> Self {
+        Self { sprite_frame: IntRect { x: 0, y: 0, w: 1, h: 1 }, sprite_sheet_id: 1001, number_of_frames: 1 }
+    }
 }
 
 impl ToastDisplay {
@@ -37,6 +46,7 @@ impl ToastDisplay {
             animator: Animator::new(),
             text: "".to_string(),
             mode: ToastMode::Regular,
+            image: None,
             sprite: None,
             queue: VecDeque::new(),
         }
@@ -71,6 +81,7 @@ impl ToastDisplay {
         self.animator.animate(0.0, 1.0, 2.5);
         self.text = toast.text;
         self.mode = toast.mode;
+        self.image = toast.image;
 
         if let Some(image) = toast.image {
             self.sprite = Some(AnimatedSprite::new(image.sprite_sheet_id, image.sprite_frame, image.number_of_frames));
@@ -130,7 +141,7 @@ impl ToastDisplay {
         if self.animator.is_active {            
             scaffold(
                 false, 
-                self.background_color(), 
+                self.toast_background_color(), 
                 Some(self.border_texture()),
                 self.content()
             )
@@ -169,7 +180,7 @@ impl ToastDisplay {
         }
     }
 
-    fn background_color(&self) -> NonColor {
+    pub fn toast_background_color(&self) -> NonColor {
         if self.animator.current_value < 0.05 {
             let alpha = 1.0 - (0.05 - self.animator.current_value) * 20.0;            
             (0, 0, 0, (255.0 * alpha) as u8)
