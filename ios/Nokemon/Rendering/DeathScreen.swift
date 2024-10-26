@@ -10,7 +10,7 @@ struct DeathScreen: View {
         if viewModel.isVisible {
             ZStack {
                 Rectangle()
-                    .foregroundStyle(Color.black.opacity(0.75))
+                    .foregroundStyle(Color.black.opacity(0.7))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
                 Text("You're Dead")

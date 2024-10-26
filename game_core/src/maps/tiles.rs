@@ -37,18 +37,3 @@ impl<T> TileSet<T> {
         *self.sprite_counter.current_frame() % BIOME_NUMBER_OF_FRAMES
     }
 }
-/*
-#[macro_export]
-macro_rules! impl_tile {
-    ($struct_name:ident) => {
-        impl $crate::maps::tiles::Tile for $struct_name {            
-            fn row(&self) -> u32 {
-                self.row
-            }
-            
-            fn column(&self) -> u32 {
-                self.column
-            }
-        }
-    } 
-}*/

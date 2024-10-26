@@ -1,4 +1,7 @@
 
+use std::ffi::{c_char, CString};
+use std::ptr::null;
+
 use crate::constants::{MENU_CLOSE_TIME, MENU_OPEN_TIME, SPRITE_SHEET_MENU};
 use crate::ui::components::{empty_view, BordersTextures, TextureInfo};
 use crate::ui::scaffold::scaffold;
@@ -189,5 +192,68 @@ impl<Item: MenuItem> Menu<Item> {
                 children
             }
         )
+    }
+}
+
+#[repr(C)]
+pub struct MenuDescriptorC {
+    pub is_visible: bool,
+    pub title: *const c_char,
+    pub text: *const c_char,
+    pub options: *const MenuDescriptorItemC,
+    pub options_count: u32
+}
+
+#[repr(C)]
+pub struct MenuDescriptorItemC {
+    pub title: *const c_char,
+}
+
+impl MenuDescriptorC {
+    pub fn empty() -> Self {
+        Self {
+            is_visible: false,
+            title: null(),
+            text: null(),
+            options: null(),
+            options_count: 0
+        }
+    }
+}
+
+impl<Item: MenuItem> Menu<Item> {
+    pub fn descriptor_c(&self) -> MenuDescriptorC {
+        let c_title = CString::new(self.title.clone())
+            .expect("Failed to convert title to CString");
+        let leaked_title = c_title.into_raw();
+
+        let c_text = CString::new(self.text.clone().unwrap_or_default())
+            .expect("Failed to convert text to CString");
+        let leaked_text = c_text.into_raw();
+
+        let mut c_options = Vec::with_capacity(self.items.len());
+        for item in &self.items {
+            let c_item_title = CString::new(item.title())
+                .expect("Failed to convert option title to CString");
+            let leaked_item_title = c_item_title.into_raw();
+
+            let c_item = MenuDescriptorItemC {
+                title: leaked_item_title,
+            };
+            c_options.push(c_item);
+        }
+
+        // Leak the Vec<MenuDescriptorItemC> to pass a raw pointer to C
+        let options_ptr = c_options.as_ptr();
+        let options_len = c_options.len();
+        std::mem::forget(c_options); // Prevent Rust from freeing the memory
+
+        MenuDescriptorC {
+            is_visible: true,
+            title: leaked_title,
+            text: leaked_text,
+            options: options_ptr,
+            options_count: options_len as u32,
+        }
     }
 }

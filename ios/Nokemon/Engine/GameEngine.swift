@@ -8,7 +8,8 @@ class GameEngine {
     @Inject private var tileMapImageGenerator: TileMapImageGenerator
     @Inject private var spritesProvider: SpritesProvider
     
-    let toast = CurrentValueSubject<ToastState?, Never>(nil)
+    let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
+    let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
     let showsLoadingScreen = CurrentValueSubject<Bool, Never>(true)
     let showsDeathScreen = CurrentValueSubject<Bool, Never>(false)
     
@@ -55,6 +56,7 @@ class GameEngine {
         updateKeyboardState(timeSinceLastUpdate: deltaTime)
         update_game(deltaTime)
         toast.send(current_toast())
+        menus.send(current_menu())
         showsDeathScreen.send(shows_death_screen())
         currentBiomeVariant = Int(current_biome_tiles_variant())
         cameraViewport = camera_viewport()
@@ -219,5 +221,9 @@ class GameEngine {
             frameCount = 0
             lastFpsUpdate = now
         }
+    }
+    
+    func onMenuItemSelection(index: Int) {
+        
     }
 }

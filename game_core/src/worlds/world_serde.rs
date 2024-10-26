@@ -88,6 +88,9 @@ struct WorldData {
     id: u32,
 
     #[serde(default)]
+    revision: u32,
+
+    #[serde(default)]
     biome_tiles: TileSet<BiomeTile>,
 
     #[serde(default)]
@@ -130,6 +133,7 @@ impl Serialize for World {
 
         let mut state = serializer.serialize_struct("World", 4)?;
         state.serialize_field("id", &self.id)?;
+        state.serialize_field("revision", &self.revision)?;
         state.serialize_field("biome_tiles", &self.biome_tiles)?;
         state.serialize_field("constructions_tiles", &self.constructions_tiles)?;
         state.serialize_field("entities", &entities)?;
@@ -150,6 +154,7 @@ impl<'de> Deserialize<'de> for World {
         let data = WorldData::deserialize(deserializer)?;
 
         let mut world = World::new(data.id);        
+        world.revision = data.revision;
         world.default_biome = data.default_biome;
         world.creep_spawn_enabled = data.creep_spawn_enabled;
         world.creep_spawn_interval = data.creep_spawn_interval;

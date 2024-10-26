@@ -226,17 +226,29 @@ typedef struct NonColorC {
   uint8_t alpha;
 } NonColorC;
 
-typedef struct ToastImageState {
+typedef struct ToastImageDescriptorC {
   uint32_t sprite_sheet_id;
   struct IntRect texture_frame;
-} ToastImageState;
+} ToastImageDescriptorC;
 
-typedef struct ToastState {
+typedef struct ToastDescriptorC {
   struct NonColorC background_color;
   const char *text;
   enum ToastMode mode;
-  struct ToastImageState image;
-} ToastState;
+  struct ToastImageDescriptorC image;
+} ToastDescriptorC;
+
+typedef struct MenuDescriptorItemC {
+  const char *title;
+} MenuDescriptorItemC;
+
+typedef struct MenuDescriptorC {
+  bool is_visible;
+  const char *title;
+  const char *text;
+  const struct MenuDescriptorItemC *options;
+  uint32_t options_count;
+} MenuDescriptorC;
 
 
 
@@ -321,7 +333,9 @@ void free_construction_tiles(struct ConstructionTile *tiles_ptr, uintptr_t len_x
 
 uint32_t current_world_id(void);
 
-struct ToastState current_toast(void);
+struct ToastDescriptorC current_toast(void);
+
+struct MenuDescriptorC current_menu(void);
 
 void free_c_char_ptr(const char *ptr);
 

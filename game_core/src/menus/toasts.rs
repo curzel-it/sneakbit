@@ -185,47 +185,47 @@ impl ToastDisplay {
 }
 
 impl ToastDisplay {
-    pub fn current_state(&self) -> ToastState {
+    pub fn descriptor_c(&self) -> ToastDescriptorC {
         if self.animator.is_active {
-            ToastState { 
+            ToastDescriptorC { 
                 background_color: NonColorC::new(&self.background_color()), 
                 text: string_to_c_char(self.text.clone()), 
                 mode: self.mode, 
                 image: if let Some(sprite) = self.sprite.clone() {
-                    ToastImageState {
+                    ToastImageDescriptorC {
                         sprite_sheet_id: sprite.sheet_id,
                         texture_frame: sprite.texture_source_rect()
                     }
                 } else {
-                    ToastImageState::empty()
+                    ToastImageDescriptorC::empty()
                 }
             }
         } else {
-            ToastState { 
+            ToastDescriptorC { 
                 background_color: NonColorC::new(&COLOR_TRANSPARENT), 
                 text: string_to_c_char("".to_owned()), 
                 mode: ToastMode::Regular, 
-                image: ToastImageState::empty()
+                image: ToastImageDescriptorC::empty()
             }
         }
     }
 }
 
 #[repr(C)]
-pub struct ToastState {
+pub struct ToastDescriptorC {
     pub background_color: NonColorC,
     pub text: *const c_char,
     pub mode: ToastMode,
-    pub image: ToastImageState,
+    pub image: ToastImageDescriptorC,
 }
 
 #[repr(C)]
-pub struct ToastImageState {
+pub struct ToastImageDescriptorC {
     pub sprite_sheet_id: u32,
     pub texture_frame: IntRect
 }
 
-impl ToastImageState {
+impl ToastImageDescriptorC {
     fn empty() -> Self {
         Self {
             sprite_sheet_id: 0,

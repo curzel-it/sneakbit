@@ -3,8 +3,7 @@ use std::{cmp::Ordering, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 use config::initialize_config_paths;
 use game_engine::{engine::GameEngine, entity::Entity};
 use maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile};
-use menus::toasts::ToastState;
-use ui::components::NonColor;
+use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::IntRect, vector::Vector2d};
 
 pub mod config;
@@ -321,9 +320,19 @@ pub extern "C" fn current_world_id() -> u32 {
 }
 
 #[no_mangle]
-pub extern "C" fn current_toast() -> ToastState {
-    engine().toast.current_state()
+pub extern "C" fn current_toast() -> ToastDescriptorC {
+    engine().toast.descriptor_c()
 }
+
+#[no_mangle]
+pub extern "C" fn current_menu() -> MenuDescriptorC {
+    let game_menu = &engine().menu;
+    if game_menu.is_open() {
+        return game_menu.menu.descriptor_c()
+    }
+    MenuDescriptorC::empty()
+}
+
 
 pub fn string_to_c_char(s: String) -> *const c_char {
     let c_string = CString::new(s).expect("Failed to convert String to CString");

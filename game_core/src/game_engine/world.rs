@@ -7,6 +7,7 @@ use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{
 
 pub struct World {
     pub id: u32,
+    pub revision: u32,
     pub total_elapsed_time: f32,
     pub bounds: IntRect,
     pub visible_bounds: IntRect,
@@ -38,6 +39,7 @@ impl World {
     pub fn new(id: u32) -> Self {
         Self {
             id,
+            revision: 0,
             total_elapsed_time: 0.0,
             bounds: IntRect::square_from_origin(150),
             visible_bounds: IntRect::square_from_origin(150),
