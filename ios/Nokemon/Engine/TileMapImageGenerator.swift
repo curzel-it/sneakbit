@@ -38,6 +38,8 @@ class TileMapImageGeneratorImpl: TileMapImageGenerator {
         for row in 0..<worldHeight {
             for col in 0..<worldWidth {
                 let biomeTile = biomeTiles[Int(row)][Int(col)]
+                guard biomeTile.tile_type != 0 else { continue }
+                
                 let textureRect = IntRect(
                     x: biomeTile.texture_offset_x,
                     y: biomeTile.texture_offset_y + variant * numberOfBiomes,
@@ -60,6 +62,8 @@ class TileMapImageGeneratorImpl: TileMapImageGenerator {
         for row in 0..<worldHeight {
             for col in 0..<worldWidth {
                 let constructionTile = constructionTiles[Int(row)][Int(col)]
+                guard constructionTile.tile_type != 0 else { continue }
+                
                 if constructionTile.texture_source_rect.x != 0 {
                     let textureRect = IntRect(
                         x: constructionTile.texture_source_rect.x,

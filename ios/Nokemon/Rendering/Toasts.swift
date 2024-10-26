@@ -38,11 +38,11 @@ struct ToastView: View {
 }
 
 private class ToastViewModel: ObservableObject {
-    @Inject private var gameEngine: GameEngine
+    @Inject private var engine: GameEngine
     @Inject private var spritesProvider: SpritesProvider
     
     var safeAreaInsets: UIEdgeInsets {
-        gameEngine.safeAreaInsets
+        engine.safeAreaInsets
     }
     
     @Published var backgroundColor: Color = .black
@@ -56,11 +56,11 @@ private class ToastViewModel: ObservableObject {
     private var disposables = Set<AnyCancellable>()
     
     init() {
-        bindToasts()
+        bind()
     }
     
-    private func bindToasts() {
-        gameEngine.toast
+    private func bind() {
+        engine.toast
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.load(toast: $0) }

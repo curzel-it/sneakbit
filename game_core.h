@@ -325,4 +325,6 @@ struct ToastState current_toast(void);
 
 void free_c_char_ptr(const char *ptr);
 
+float current_loading_screen_progress(void);
+
 #endif  /* GAME_CORE_H */

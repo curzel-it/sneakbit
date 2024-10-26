@@ -1,7 +1,7 @@
 use std::{collections::VecDeque, ffi::c_char};
 
 
-use crate::{constants::SPRITE_SHEET_MENU, features::animated_sprite::AnimatedSprite, hstack, spacing, string_to_c_char, text, texture, ui::{components::{empty_view, BordersTextures, NonColor, Spacing, TextureInfo, Typography, View, COLOR_BLACK, COLOR_TRANSPARENT}, scaffold::scaffold}, utils::{animator::Animator, rect::IntRect}, vstack, NonColorC};
+use crate::{constants::SPRITE_SHEET_MENU, features::animated_sprite::AnimatedSprite, hstack, spacing, string_to_c_char, text, texture, ui::{components::{empty_view, BordersTextures, NonColor, NonColorC, Spacing, TextureInfo, Typography, View, COLOR_BLACK, COLOR_TRANSPARENT}, scaffold::scaffold}, utils::{animator::Animator, rect::IntRect}, vstack};
 
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]

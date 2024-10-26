@@ -52,6 +52,6 @@ struct GameViewRepresentable: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: GameViewController, context: Context) {
-        print("Should probably update: \(context)")
+        // ...
     }
 }

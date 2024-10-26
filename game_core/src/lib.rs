@@ -325,25 +325,6 @@ pub extern "C" fn current_toast() -> ToastState {
     engine().toast.current_state()
 }
 
-#[repr(C)]
-pub struct NonColorC {
-    pub red: u8,
-    pub green: u8,
-    pub blue: u8,
-    pub alpha: u8,
-}
-
-impl NonColorC {
-    fn new(values: &NonColor) -> Self {
-        Self {
-            red: values.0,
-            green: values.1,
-            blue: values.2,
-            alpha: values.3,
-        }
-    }
-}
-
 pub fn string_to_c_char(s: String) -> *const c_char {
     let c_string = CString::new(s).expect("Failed to convert String to CString");
     let raw_ptr = c_string.into_raw();
@@ -358,4 +339,9 @@ pub extern "C" fn free_c_char_ptr(ptr: *const c_char) {
         }
         _ = CString::from_raw(ptr as *mut c_char);
     }
+}
+
+#[no_mangle]
+pub extern "C" fn current_loading_screen_progress() -> f32 {
+    engine().loading_screen.progress()
 }

@@ -180,3 +180,22 @@ impl Spacing {
         }
     }
 }
+
+#[repr(C)]
+pub struct NonColorC {
+    pub red: u8,
+    pub green: u8,
+    pub blue: u8,
+    pub alpha: u8,
+}
+
+impl NonColorC {
+    pub fn new(values: &NonColor) -> Self {
+        Self {
+            red: values.0,
+            green: values.1,
+            blue: values.2,
+            alpha: values.3,
+        }
+    }
+}

@@ -9,6 +9,7 @@ class GameEngine {
     @Inject private var spritesProvider: SpritesProvider
     
     let toast = CurrentValueSubject<ToastState?, Never>(nil)
+    let showsLoadingScreen = CurrentValueSubject<Bool, Never>(true)
     
     var size: CGSize = .zero
     var fps: Double = 0.0
@@ -29,6 +30,7 @@ class GameEngine {
     
     private var worldHeight: Int = 0
     private var worldWidth: Int = 0
+    private var isBusy: Bool = false
     
     private(set) var tileMapImages: [UIImage] = []
     private var currentBiomeVariant: Int = 0
@@ -47,8 +49,14 @@ class GameEngine {
     }
     
     func update(deltaTime: Float) {
+        guard !isBusy else { return }
+        
         updateKeyboardState(timeSinceLastUpdate: deltaTime)
         update_game(deltaTime)
+        toast.send(current_toast())
+        currentBiomeVariant = Int(current_biome_tiles_variant())
+        cameraViewport = camera_viewport()
+        cameraViewportOffset = camera_viewport_offset()
         
         if current_world_id() != currentWorldId {
             currentWorldId = current_world_id()
@@ -56,10 +64,6 @@ class GameEngine {
             keyPressed.removeAll()
             generateTileMapImage()
         }
-        toast.send(current_toast())
-        currentBiomeVariant = Int(current_biome_tiles_variant())
-        cameraViewport = camera_viewport()
-        cameraViewportOffset = camera_viewport_offset()
         
         updateFpsCounter()
         flushKeyboard()
@@ -178,6 +182,10 @@ class GameEngine {
     }
     
     private func generateTileMapImage() {
+        print("\(Date()) Generating tiles")
+        isBusy = true
+        showsLoadingScreen.send(true)
+        
         fetchBiomeTiles { biomeTiles in
             fetchConstructionTiles { constructionTiles in
                 self.tileMapImages = (0...4).compactMap { variant in
@@ -190,6 +198,11 @@ class GameEngine {
                         constructionTiles: constructionTiles
                     )
                 }
+                self.isBusy = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self.showsLoadingScreen.send(false)
+                }
+                print("\(Date()) Done generating tiles")
             }
         }
     }
@@ -198,6 +211,7 @@ class GameEngine {
         frameCount += 1
         let now = Date()
         let elapsed = now.timeIntervalSince(lastFpsUpdate)
+        
         if elapsed >= 1.0 {
             fps = Double(frameCount) / elapsed
             frameCount = 0

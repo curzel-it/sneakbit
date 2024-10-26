@@ -8,7 +8,7 @@ use super::tiles::{SpriteTile, TileSet};
 #[derive(Default)]
 #[repr(u32)]
 pub enum Biome {
-    Nothing,
+    Nothing = 0,
     #[default]
     Grass,
     GrassFlowersRed,
