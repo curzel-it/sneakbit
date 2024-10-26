@@ -3,7 +3,9 @@ import SwiftUI
 
 extension View {
     func typography(_ font: AppFont) -> some View {
-        self.font(font.font)
+        self
+            .font(font.font)
+            .lineSpacing(font.lineSpacing)
     }
 }
 
@@ -12,12 +14,14 @@ struct AppFont {
     let name: String
     let weight: Font.Weight
     let font: Font
+    let lineSpacing: CGFloat
 
     init(name: String, size: CGFloat, weight: Font.Weight) {
         self.name = name
         self.size = size
         self.weight = weight
         self.font = .custom(name, size: size).weight(weight)
+        self.lineSpacing = size / 3
     }
 }
 

@@ -252,8 +252,6 @@ typedef struct MenuDescriptorC {
 
 
 
-void test_integration(void);
-
 void initialize_game(bool creative_mode);
 
 bool is_creative_mode(void);
@@ -342,5 +340,7 @@ void free_c_char_ptr(const char *ptr);
 float current_loading_screen_progress(void);
 
 bool shows_death_screen(void);
+
+void select_current_menu_option_at_index(uint32_t index);
 
 #endif  /* GAME_CORE_H */

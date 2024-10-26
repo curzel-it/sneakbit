@@ -35,11 +35,6 @@ fn engine_mut() -> &'static mut GameEngine {
 }
 
 #[no_mangle]
-pub extern "C" fn test_integration() {
-    println!("Helloooo");
-}
-
-#[no_mangle]
 pub extern "C" fn initialize_game(creative_mode: bool) {
     unsafe {
         let boxed = Box::new(GameEngine::new());
@@ -326,9 +321,22 @@ pub extern "C" fn current_toast() -> ToastDescriptorC {
 
 #[no_mangle]
 pub extern "C" fn current_menu() -> MenuDescriptorC {
-    let game_menu = &engine().menu;
-    if game_menu.is_open() {
-        return game_menu.menu.descriptor_c()
+    let engine = engine();
+    
+    if engine.dialogue_menu.is_open() {
+        let mut descriptor = engine.dialogue_menu.menu.descriptor_c();
+        free_c_char_ptr(descriptor.text);
+        descriptor.text = string_to_c_char(engine.dialogue_menu.text.clone());
+        return descriptor
+    }
+    if engine.confirmation_dialog.is_open() {
+        return engine.confirmation_dialog.menu.descriptor_c()
+    }
+    if engine.entity_options_menu.is_open() {
+        return engine.entity_options_menu.menu.descriptor_c()
+    }
+    if engine.menu.is_open() {
+        return engine.menu.menu.descriptor_c()
     }
     MenuDescriptorC::empty()
 }
@@ -358,4 +366,9 @@ pub extern "C" fn current_loading_screen_progress() -> f32 {
 #[no_mangle]
 pub extern "C" fn shows_death_screen() -> bool {
     engine().death_screen.is_open
+}
+
+#[no_mangle]
+pub extern "C" fn select_current_menu_option_at_index(index: u32) {
+    engine_mut().select_current_menu_option_at_index(index as usize)
 }

@@ -4,12 +4,12 @@ use crate::{constants::SPRITE_SHEET_MENU, game_engine::{keyboard_events_provider
 use super::menu::{Menu, MenuItem, MenuUpdate};
 
 pub struct ConfirmationDialog {
-    menu: Menu<ConfirmationOption>,
+    pub menu: Menu<ConfirmationOption>,
     on_confirm: Vec<WorldStateUpdate>
 }
 
 #[derive(Debug, Copy, Clone)]
-enum ConfirmationOption {
+pub enum ConfirmationOption {
     YesConfirm,
     NoCancel,
 }
@@ -65,6 +65,10 @@ impl ConfirmationDialog {
             }
         }
         (self.menu.is_open, vec![])
+    }
+
+    pub fn select_option_at_index(&mut self, index: usize) {
+        self.menu.selected_index = index;
     }
 }
 

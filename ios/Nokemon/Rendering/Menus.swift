@@ -9,24 +9,22 @@ struct MenuView: View {
     var body: some View {
         if viewModel.isVisible {
             ZStack {
-                Button("") {
-                    viewModel.cancel()
-                }
-                .buttonStyle(.plain)
-                .frame(maxWidth: .infinity)
-                .frame(maxHeight: .infinity)
-                .background(Color.black.opacity(0.4))
+                Rectangle()
+                    .frame(maxWidth: .infinity)
+                    .frame(maxHeight: .infinity)
+                    .foregroundStyle(Color.black.opacity(0.4))
+                    .onTapGesture { viewModel.cancel() }
                 
-                VStack {
+                VStack(spacing: 20) {
                     if let title = viewModel.title {
                         Text(title)
+                            .textAlign(.leading)
                             .typography(.title)
-                            .padding(.top)
                     }
                     if let text = viewModel.text {
                         Text(text)
+                            .textAlign(.leading)
                             .typography(.text)
-                            .padding(.horizontal)
                     }
                     ForEach(viewModel.options.indices, id: \.self) { index in
                         Button(viewModel.options[index]) {
@@ -99,7 +97,9 @@ private class MenuViewModel: ObservableObject {
         let buffer = UnsafeBufferPointer(start: menu.options, count: Int(menu.options_count))
         let items = Array(buffer)
         
-        options = items.map { string(from: $0.title) ?? "Unknown" }
+        options = items
+            .map { string(from: $0.title) ?? "Unknown" }
+            .map { "> \($0)" }
         
         withAnimation {
             isVisible = true

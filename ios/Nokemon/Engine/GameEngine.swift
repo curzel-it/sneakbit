@@ -224,6 +224,7 @@ class GameEngine {
     }
     
     func onMenuItemSelection(index: Int) {
-        
+        select_current_menu_option_at_index(UInt32(index))
+        setKeyDown(.confirm)
     }
 }

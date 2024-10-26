@@ -24,7 +24,10 @@ private struct MenuOptionButton: ButtonStyle {
     @SwiftUI.Environment(\.isEnabled) private var isEnabled: Bool
     
     func makeBody(configuration: Self.Configuration) -> some View {
-        configuration.label
+        HStack {
+            configuration.label.multilineTextAlignment(.leading)
+            Spacer(minLength: 0)
+        }
             .typography(.text)
             .foregroundColor(Color.white)
             .frame(maxWidth: 400)

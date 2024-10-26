@@ -50,7 +50,7 @@ pub enum EntityOptionsMenuState {
 pub struct EntityOptionsMenu {
     entity: Box<Entity>,
     time_since_last_closed: f32,
-    menu: Menu<EntityOptionMenuItem>,
+    pub menu: Menu<EntityOptionMenuItem>,
     state: EntityOptionsMenuState,
     text_input: TextInput,
     lock_menu: Menu<LockType>,
@@ -413,6 +413,10 @@ impl EntityOptionsMenu {
             options.push(EntityOptionMenuItem::UseItem);
         }
         options
+    }
+
+    pub fn select_option_at_index(&mut self, index: usize) {
+        self.menu.selected_index = index;
     }
 }
 

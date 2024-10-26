@@ -297,6 +297,21 @@ impl GameEngine {
         self.camera_viewport_offset = *offset;
         self.world.visible_bounds = self.camera_viewport;
     }
+
+    pub fn select_current_menu_option_at_index(&mut self, index: usize) {
+        if self.confirmation_dialog.is_open() {
+            self.confirmation_dialog.select_option_at_index(index);
+            return
+        }
+        if self.entity_options_menu.is_open() {
+            self.entity_options_menu.select_option_at_index(index);
+            return
+        }
+        if self.menu.is_open() {
+            self.menu.select_option_at_index(index);
+            return
+        }
+    }
 }
 
 #[cfg(test)]

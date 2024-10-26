@@ -203,4 +203,8 @@ impl GameMenu {
             MenuState::MapEditor | MenuState::PlaceItem => self.map_editor.ui(camera_viewport),
         }
     }
+
+    pub fn select_option_at_index(&mut self, index: usize) {
+        self.menu.selected_index = index;
+    }
 }

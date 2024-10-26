@@ -10,8 +10,8 @@ struct ControllerEmulatorView: View {
             JoystickView()
             
             HStack {
-                KeyEmulatorView(key: .attack).padding(.bottom, KeyEmulatorView.size.height)
-                KeyEmulatorView(key: .menu).padding(.bottom, KeyEmulatorView.size.height / 2)
+                // KeyEmulatorView(key: .menu).padding(.bottom, KeyEmulatorView.size.height)
+                KeyEmulatorView(key: .attack).padding(.bottom, KeyEmulatorView.size.height / 2)
                 KeyEmulatorView(key: .confirm)
             }
             .positioned(.leadingBottom)
