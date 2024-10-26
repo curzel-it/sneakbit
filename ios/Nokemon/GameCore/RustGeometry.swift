@@ -1,36 +1,28 @@
 import Foundation
 
-@frozen
-public struct IntRect: Hashable {
-    public var x: Int32
-    public var y: Int32
-    public var width: Int32
-    public var height: Int32
-}
-
-@frozen
-public struct Vector2d {
-    public var x: Float
-    public var y: Float
-}
-
 extension IntRect {
-    static let zero = IntRect(x: 0, y: 0, width: 0, height: 0)
-    
-    init(with other: IntRect) {
-        x = other.x
-        y = other.y
-        width = other.width
-        height = other.height
-    }
+    static let zero = IntRect(x: 0, y: 0, w: 0, h: 0)
     
     func cgRect() -> CGRect {
         CGRect(
            x: CGFloat(x),
            y: CGFloat(y),
-           width: CGFloat(width),
-           height: CGFloat(height)
+           width: CGFloat(w),
+           height: CGFloat(h)
         )
+    }
+}
+
+extension IntRect: Hashable, Equatable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(x)
+        hasher.combine(y)
+        hasher.combine(w)
+        hasher.combine(h)
+    }
+    
+    public static func == (lhs: IntRect, rhs: IntRect) -> Bool {
+        lhs.x == rhs.x && lhs.y == rhs.y && lhs.w == rhs.w && lhs.h == rhs.h
     }
 }
 

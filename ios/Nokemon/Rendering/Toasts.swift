@@ -70,10 +70,10 @@ private class ToastViewModel: ObservableObject {
     private func load(toast: ToastState) {
         backgroundColor = toast.background_color.asSolidColor()
         opacity = toast.background_color.opacity()
-        text = toast.text
+        text = string(from: toast.text) ?? "..."
         isVisible = opacity > 0.05
-        position = toast.mode == 0 ? .trailingTop : .leadingTop
-        borderColor = toast.mode == 0 ? .cyan : .yellow
+        position = toast.mode.rawValue == 0 ? .trailingTop : .leadingTop
+        borderColor = toast.mode.rawValue == 0 ? .cyan : .yellow
         
         if let cgImage = spritesProvider.cgImage(for: toast.image.sprite_sheet_id, textureRect: toast.image.texture_frame) {
             image = Image(decorative: cgImage, scale: 1).interpolation(.none)

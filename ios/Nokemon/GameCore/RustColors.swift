@@ -1,14 +1,6 @@
 import Foundation
 import SwiftUI
 
-@frozen
-public struct NonColorC {
-    public let red: UInt8
-    public let green: UInt8
-    public let blue: UInt8
-    public let alpha: UInt8
-}
-
 extension NonColorC {
     func asColor() -> Color {
         Color(

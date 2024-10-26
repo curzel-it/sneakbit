@@ -58,3 +58,4 @@ private func inventoryFilePath() -> String {
     }
     return saveFileURL.path
 }
+

@@ -56,9 +56,11 @@ class GameEngine {
             keyPressed.removeAll()
             generateTileMapImage()
         }
-        updateToast()
-        updateBiomeVariant()
-        updateCameraParams()
+        toast.send(current_toast())
+        currentBiomeVariant = Int(current_biome_tiles_variant())
+        cameraViewport = camera_viewport()
+        cameraViewportOffset = camera_viewport_offset()
+        
         updateFpsCounter()
         flushKeyboard()
     }
@@ -112,8 +114,8 @@ class GameEngine {
         return CGRect(
             x: (actualCol * tileSize + actualOffsetX) * renderingScale,
             y: (actualRow * tileSize + actualOffsetY) * renderingScale,
-            width: CGFloat(frame.width) * tileSize * renderingScale,
-            height: CGFloat(frame.height) * tileSize * renderingScale
+            width: CGFloat(frame.w) * tileSize * renderingScale,
+            height: CGFloat(frame.h) * tileSize * renderingScale
         )
     }
     
@@ -173,44 +175,6 @@ class GameEngine {
             currentChar,
             timeSinceLastUpdate
         )
-    }
-    
-    private func updateToast() {
-        let state = current_toast()
-        
-        let newToast = ToastState(
-            background_color: NonColorC(
-                red: state.background_color.red,
-                green: state.background_color.green,
-                blue: state.background_color.blue,
-                alpha: state.background_color.alpha
-            ),
-            text: string(from: state.text) ?? "Unreadable text",
-            mode: state.mode.rawValue,
-            image: ToastImageState(
-                sprite_sheet_id: state.image.sprite_sheet_id,
-                texture_frame: IntRect(
-                    x: state.image.texture_frame.x,
-                    y: state.image.texture_frame.y,
-                    width: state.image.texture_frame.w,
-                    height: state.image.texture_frame.h
-                )
-            )
-        )
-        
-        toast.send(newToast)
-    }
-    
-    private func updateBiomeVariant() {
-        currentBiomeVariant = Int(current_biome_tiles_variant())
-    }
-    
-    private func updateCameraParams() {
-        let cv = camera_viewport()
-        cameraViewport = IntRect(x: cv.x, y: cv.y, width: cv.w, height: cv.h)
-        
-        let cvo = camera_viewport_offset()
-        cameraViewportOffset = Vector2d(x: cvo.x, y: cvo.y)
     }
     
     private func generateTileMapImage() {

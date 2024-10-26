@@ -41,8 +41,8 @@ class TileMapImageGeneratorImpl: TileMapImageGenerator {
                 let textureRect = IntRect(
                     x: biomeTile.texture_offset_x,
                     y: biomeTile.texture_offset_y + variant * numberOfBiomes,
-                    width: 1,
-                    height: 1
+                    w: 1,
+                    h: 1
                 )
                 
                 if let image = spritesProvider.cgImage(for: UInt32(SPRITE_SHEET_BIOME_TILES), textureRect: textureRect) {
@@ -64,8 +64,8 @@ class TileMapImageGeneratorImpl: TileMapImageGenerator {
                     let textureRect = IntRect(
                         x: constructionTile.texture_source_rect.x,
                         y: constructionTile.texture_source_rect.y,
-                        width: 1,
-                        height: 1
+                        w: 1,
+                        h: 1
                     )
                     
                     if let image = spritesProvider.cgImage(for: UInt32(SPRITE_SHEET_CONSTRUCTION_TILES), textureRect: textureRect) {
