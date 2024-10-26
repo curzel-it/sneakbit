@@ -63,7 +63,7 @@ class GameView: UIView {
     }
     
     private func renderTileMap(in context: CGContext) {
-        guard let tileMapImage = engine.tileMapImage else { return }
+        guard let tileMapImage = engine.tileMapImage() else { return }
         
         let cameraViewport = engine.cameraViewport
         let cameraOffset = engine.cameraViewportOffset

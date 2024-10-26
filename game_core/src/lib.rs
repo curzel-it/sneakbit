@@ -190,6 +190,7 @@ pub extern "C" fn free_renderables(ptr: *mut RenderableItem, length: usize) {
 
 #[no_mangle]
 pub extern "C" fn initialize_config(
+    base_entity_speed: f32,
     current_lang: *const c_char,
     levels_path: *const c_char,
     species_path: *const c_char,
@@ -198,6 +199,7 @@ pub extern "C" fn initialize_config(
     localized_strings_path: *const c_char,
 ) {
     initialize_config_paths(
+        base_entity_speed,
         to_string(current_lang),
         to_path(levels_path),
         to_path(species_path),

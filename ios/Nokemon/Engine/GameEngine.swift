@@ -26,10 +26,20 @@ class GameEngine {
     private var worldHeight: Int = 0
     private var worldWidth: Int = 0
     
-    private(set) var tileMapImage: UIImage?
+    private(set) var tileMapImages: [UIImage] = []
+    private var currentBiomeVariant: Int = 0
     
     init() {
-        initializeEngine()
+        initialize_config(
+            Float(TILE_SIZE * 1.8),
+            currentLang(),
+            dataFolder(),
+            speciesJson(),
+            inventoryJson(),
+            saveJson(),
+            langFolder()
+        )
+        initialize_game(false)
     }
     
     func update(deltaTime: Float) {
@@ -42,9 +52,10 @@ class GameEngine {
             keyPressed.removeAll()
             generateTileMapImage()
         }
-        
+        updateBiomeVariant()
         updateCameraParams()
         updateFpsCounter()
+        flushKeyboard()
     }
     
     func renderEntities(_ render: @escaping (RenderableItem) -> Void) {
@@ -75,6 +86,14 @@ class GameEngine {
         renderingFrame(for: entity.frame, offset: entity.offset)
     }
     
+    func tileMapImage() -> UIImage? {
+        if currentBiomeVariant < tileMapImages.count {
+            tileMapImages[currentBiomeVariant]
+        } else {
+            nil
+        }
+    }
+    
     private func renderingFrame(for frame: IntRect, offset: Vector2d = .zero) -> CGRect {
         let actualCol = CGFloat(frame.x - cameraViewport.x)
         let actualOffsetX = CGFloat(offset.x - cameraViewportOffset.x)
@@ -103,17 +122,29 @@ class GameEngine {
     }
     
     func setKeyDown(_ key: EmulatedKey) {
-        if keyPressed.contains(key) {
-            keyPressed.remove(key)
-        } else {
-            keyPressed.insert(key)
+        if keyDown.contains(key) {
+            return
         }
+        keyPressed.insert(key)
         keyDown.insert(key)
     }
     
     func setKeyUp(_ key: EmulatedKey) {
         keyPressed.remove(key)
         keyDown.remove(key)
+    }
+    
+    private func flushKeyboard() {
+        for key in keyPressed {
+            keyDown.insert(key)
+        }
+        keyPressed.removeAll()
+        
+        keyDown.remove(.attack)
+        keyDown.remove(.backspace)
+        keyDown.remove(.confirm)
+        keyDown.remove(.escape)
+        keyDown.remove(.menu)
     }
     
     private func updateKeyboardState(timeSinceLastUpdate: Float) {
@@ -136,6 +167,10 @@ class GameEngine {
         )
     }
     
+    private func updateBiomeVariant() {
+        currentBiomeVariant = Int(current_biome_tiles_variant())
+    }
+    
     private func updateCameraParams() {
         let cv = camera_viewport()
         cameraViewport = IntRect(x: cv.x, y: cv.y, width: cv.w, height: cv.h)
@@ -147,13 +182,16 @@ class GameEngine {
     private func generateTileMapImage() {
         fetchBiomeTiles { biomeTiles in
             fetchConstructionTiles { constructionTiles in
-                self.tileMapImage = self.tileMapImageGenerator.generate(
-                    renderingScale: self.renderingScale,
-                    worldWidth: self.worldWidth,
-                    worldHeight: self.worldHeight,
-                    biomeTiles: biomeTiles,
-                    constructionTiles: constructionTiles
-                )
+                self.tileMapImages = (0...4).compactMap { variant in
+                    self.tileMapImageGenerator.generate(
+                        renderingScale: self.renderingScale,
+                        worldWidth: self.worldWidth,
+                        worldHeight: self.worldHeight,
+                        variant: Int32(variant),
+                        biomeTiles: biomeTiles,
+                        constructionTiles: constructionTiles
+                    )
+                }
             }
         }
     }

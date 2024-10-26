@@ -44,8 +44,6 @@
 
 #define BIOME_NUMBER_OF_FRAMES 4
 
-#define BASE_ENTITY_SPEED (TILE_SIZE * 2.5)
-
 #define STEP_COMMITMENT_THRESHOLD (TILE_SIZE / 16.0)
 
 #define SPRITE_SHEET_BLANK 1000
@@ -263,7 +261,8 @@ struct RenderableItem *get_renderables(uintptr_t *length);
 
 void free_renderables(struct RenderableItem *ptr, uintptr_t length);
 
-void initialize_config(const char *current_lang,
+void initialize_config(float base_entity_speed,
+                       const char *current_lang,
                        const char *levels_path,
                        const char *species_path,
                        const char *inventory_path,

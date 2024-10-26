@@ -33,6 +33,7 @@ struct JoystickView: View {
                     }
             )
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

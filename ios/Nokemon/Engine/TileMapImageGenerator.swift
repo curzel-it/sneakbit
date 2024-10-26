@@ -6,6 +6,7 @@ protocol TileMapImageGenerator {
         renderingScale: CGFloat,
         worldWidth: Int,
         worldHeight: Int,
+        variant: Int32,
         biomeTiles: [[BiomeTile]],
         constructionTiles: [[ConstructionTile]]
     ) -> UIImage?
@@ -14,10 +15,13 @@ protocol TileMapImageGenerator {
 class TileMapImageGeneratorImpl: TileMapImageGenerator {
     @Inject private var spritesProvider: SpritesProvider
     
+    private let numberOfBiomes: Int32 = 18
+    
     func generate(
         renderingScale: CGFloat,
         worldWidth: Int,
         worldHeight: Int,
+        variant: Int32,
         biomeTiles: [[BiomeTile]],
         constructionTiles: [[ConstructionTile]]
     ) -> UIImage? {
@@ -34,7 +38,12 @@ class TileMapImageGeneratorImpl: TileMapImageGenerator {
         for row in 0..<worldHeight {
             for col in 0..<worldWidth {
                 let biomeTile = biomeTiles[Int(row)][Int(col)]
-                let textureRect = IntRect(x: biomeTile.texture_offset_x, y: biomeTile.texture_offset_y, width: 1, height: 1)
+                let textureRect = IntRect(
+                    x: biomeTile.texture_offset_x,
+                    y: biomeTile.texture_offset_y + variant * numberOfBiomes,
+                    width: 1,
+                    height: 1
+                )
                 
                 if let image = spritesProvider.cgImage(for: UInt32(SPRITE_SHEET_BIOME_TILES), textureRect: textureRect) {
                     let frame = CGRect(
