@@ -8,6 +8,7 @@ struct ContentView: View {
             ControllerEmulatorView()
             ToastView()
             LoadingScreen()
+            DeathScreen()
         }
         .ignoresSafeArea()
         .typography(.text)

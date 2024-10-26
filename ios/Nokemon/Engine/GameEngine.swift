@@ -10,6 +10,7 @@ class GameEngine {
     
     let toast = CurrentValueSubject<ToastState?, Never>(nil)
     let showsLoadingScreen = CurrentValueSubject<Bool, Never>(true)
+    let showsDeathScreen = CurrentValueSubject<Bool, Never>(false)
     
     var size: CGSize = .zero
     var fps: Double = 0.0
@@ -54,6 +55,7 @@ class GameEngine {
         updateKeyboardState(timeSinceLastUpdate: deltaTime)
         update_game(deltaTime)
         toast.send(current_toast())
+        showsDeathScreen.send(shows_death_screen())
         currentBiomeVariant = Int(current_biome_tiles_variant())
         cameraViewport = camera_viewport()
         cameraViewportOffset = camera_viewport_offset()

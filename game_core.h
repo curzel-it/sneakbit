@@ -131,7 +131,7 @@
 #define SPECIES_DEEP_HOLE 5001
 
 enum Biome {
-  Biome_Nothing,
+  Biome_Nothing = 0,
   Biome_Grass,
   Biome_GrassFlowersRed,
   Biome_GrassFlowersYellow,
@@ -153,7 +153,7 @@ enum Biome {
 typedef uint32_t Biome;
 
 enum Construction {
-  Construction_Nothing,
+  Construction_Nothing = 0,
   Construction_WoodenFence,
   Construction_MetalFence,
   Construction_DarkRock,
@@ -326,5 +326,7 @@ struct ToastState current_toast(void);
 void free_c_char_ptr(const char *ptr);
 
 float current_loading_screen_progress(void);
+
+bool shows_death_screen(void);
 
 #endif  /* GAME_CORE_H */

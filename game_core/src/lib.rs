@@ -345,3 +345,8 @@ pub extern "C" fn free_c_char_ptr(ptr: *const c_char) {
 pub extern "C" fn current_loading_screen_progress() -> f32 {
     engine().loading_screen.progress()
 }
+
+#[no_mangle]
+pub extern "C" fn shows_death_screen() -> bool {
+    engine().death_screen.is_open
+}
