@@ -3,6 +3,8 @@ import SwiftUI
 import Schwifty
 
 struct ControllerEmulatorView: View {
+    @StateObject private var viewModel = ControllerEmulatorViewModel()
+    
     var body: some View {
         ZStack {
             JoystickView()
@@ -16,6 +18,19 @@ struct ControllerEmulatorView: View {
         }
         .padding(.horizontal)
         .positioned(.bottom)
+        .padding(.top, viewModel.safeAreaInsets.top)
+        .padding(.trailing, viewModel.safeAreaInsets.right)
+        .padding(.bottom, viewModel.safeAreaInsets.bottom)
+        .padding(.leading, viewModel.safeAreaInsets.left)
         .padding(.bottom, 30)
     }
+}
+
+private class ControllerEmulatorViewModel: ObservableObject {
+    @Inject private var gameEngine: GameEngine
+    
+    var safeAreaInsets: UIEdgeInsets {
+        gameEngine.safeAreaInsets
+    }
+    
 }

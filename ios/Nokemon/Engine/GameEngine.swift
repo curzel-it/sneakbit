@@ -21,6 +21,7 @@ class GameEngine {
     private(set) var renderingScale: CGFloat = 1
     private(set) var cameraViewport: IntRect = .zero
     private(set) var cameraViewportOffset: Vector2d = .zero
+    private(set) var safeAreaInsets: UIEdgeInsets = .zero
         
     private var keyPressed = Set<EmulatedKey>()
     private var keyDown = Set<EmulatedKey>()
@@ -70,7 +71,10 @@ class GameEngine {
         }
     }
 
-    func setupChanged(windowSize: CGSize, screenScale: CGFloat?) {
+    func setupChanged(safeArea: UIEdgeInsets?, windowSize: CGSize, screenScale: CGFloat?) {
+        if let safeArea {
+            safeAreaInsets = safeArea
+        }
         renderingScale = renderingScaleUseCase.calculate(windowSize: windowSize, screenScale: screenScale)
         size = windowSize
         
@@ -172,7 +176,29 @@ class GameEngine {
     }
     
     private func updateToast() {
-        // ...
+        let state = current_toast()
+        
+        let newToast = ToastState(
+            background_color: NonColorC(
+                red: state.background_color.red,
+                green: state.background_color.green,
+                blue: state.background_color.blue,
+                alpha: state.background_color.alpha
+            ),
+            text: string(from: state.text) ?? "Unreadable text",
+            mode: state.mode.rawValue,
+            image: ToastImageState(
+                sprite_sheet_id: state.image.sprite_sheet_id,
+                texture_frame: IntRect(
+                    x: state.image.texture_frame.x,
+                    y: state.image.texture_frame.y,
+                    width: state.image.texture_frame.w,
+                    height: state.image.texture_frame.h
+                )
+            )
+        )
+        
+        toast.send(newToast)
     }
     
     private func updateBiomeVariant() {

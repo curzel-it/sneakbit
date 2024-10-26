@@ -1,7 +1,7 @@
-use std::collections::VecDeque;
+use std::{collections::VecDeque, ffi::c_char};
 
 
-use crate::{constants::SPRITE_SHEET_MENU, features::animated_sprite::AnimatedSprite, hstack, spacing, text, texture, ui::{components::{empty_view, BordersTextures, NonColor, Spacing, TextureInfo, Typography, View, COLOR_BLACK}, scaffold::scaffold}, utils::{animator::Animator, rect::IntRect}, vstack};
+use crate::{constants::SPRITE_SHEET_MENU, features::animated_sprite::AnimatedSprite, hstack, spacing, string_to_c_char, text, texture, ui::{components::{empty_view, BordersTextures, NonColor, Spacing, TextureInfo, Typography, View, COLOR_BLACK, COLOR_TRANSPARENT}, scaffold::scaffold}, utils::{animator::Animator, rect::IntRect}, vstack, NonColorC};
 
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]
@@ -28,16 +28,9 @@ pub struct Toast {
 pub struct ToastDisplay {
     pub animator: Animator,
     pub text: String,
-    pub mode: ToastMode,
-    pub image: Option<ToastImage>,
-    pub sprite: Option<AnimatedSprite>,
+    mode: ToastMode,
+    sprite: Option<AnimatedSprite>,
     queue: VecDeque<Toast>,
-}
-
-impl ToastImage {
-    pub fn empty() -> Self {
-        Self { sprite_frame: IntRect { x: 0, y: 0, w: 1, h: 1 }, sprite_sheet_id: 1001, number_of_frames: 1 }
-    }
 }
 
 impl ToastDisplay {
@@ -46,7 +39,6 @@ impl ToastDisplay {
             animator: Animator::new(),
             text: "".to_string(),
             mode: ToastMode::Regular,
-            image: None,
             sprite: None,
             queue: VecDeque::new(),
         }
@@ -81,7 +73,6 @@ impl ToastDisplay {
         self.animator.animate(0.0, 1.0, 2.5);
         self.text = toast.text;
         self.mode = toast.mode;
-        self.image = toast.image;
 
         if let Some(image) = toast.image {
             self.sprite = Some(AnimatedSprite::new(image.sprite_sheet_id, image.sprite_frame, image.number_of_frames));
@@ -141,7 +132,7 @@ impl ToastDisplay {
         if self.animator.is_active {            
             scaffold(
                 false, 
-                self.toast_background_color(), 
+                self.background_color(), 
                 Some(self.border_texture()),
                 self.content()
             )
@@ -180,7 +171,7 @@ impl ToastDisplay {
         }
     }
 
-    pub fn toast_background_color(&self) -> NonColor {
+    fn background_color(&self) -> NonColor {
         if self.animator.current_value < 0.05 {
             let alpha = 1.0 - (0.05 - self.animator.current_value) * 20.0;            
             (0, 0, 0, (255.0 * alpha) as u8)
@@ -190,6 +181,56 @@ impl ToastDisplay {
             let alpha = (1.0 - self.animator.current_value) * 20.0;
             (0, 0, 0, (255.0 * alpha) as u8)
         }        
+    }
+}
+
+impl ToastDisplay {
+    pub fn current_state(&self) -> ToastState {
+        if self.animator.is_active {
+            ToastState { 
+                background_color: NonColorC::new(&self.background_color()), 
+                text: string_to_c_char(self.text.clone()), 
+                mode: self.mode, 
+                image: if let Some(sprite) = self.sprite.clone() {
+                    ToastImageState {
+                        sprite_sheet_id: sprite.sheet_id,
+                        texture_frame: sprite.texture_source_rect()
+                    }
+                } else {
+                    ToastImageState::empty()
+                }
+            }
+        } else {
+            ToastState { 
+                background_color: NonColorC::new(&COLOR_TRANSPARENT), 
+                text: string_to_c_char("".to_owned()), 
+                mode: ToastMode::Regular, 
+                image: ToastImageState::empty()
+            }
+        }
+    }
+}
+
+#[repr(C)]
+pub struct ToastState {
+    pub background_color: NonColorC,
+    pub text: *const c_char,
+    pub mode: ToastMode,
+    pub image: ToastImageState,
+}
+
+#[repr(C)]
+pub struct ToastImageState {
+    pub sprite_sheet_id: u32,
+    pub texture_frame: IntRect
+}
+
+impl ToastImageState {
+    fn empty() -> Self {
+        Self {
+            sprite_sheet_id: 0,
+            texture_frame: IntRect::square_from_origin(1)
+        }
     }
 }
 

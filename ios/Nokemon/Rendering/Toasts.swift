@@ -15,10 +15,24 @@ struct ToastView: View {
                 Text(viewModel.text)
             }
             .padding()
-            .background(viewModel.backgroundColor)
+            .background {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 4)
+                        .foregroundStyle(viewModel.borderColor)
+                    
+                    RoundedRectangle(cornerRadius: 3)
+                        .foregroundStyle(viewModel.backgroundColor)
+                        .padding(2)
+                }
+            }
+            .shadow(radius: 4)
             .opacity(viewModel.opacity)
             .positioned(viewModel.position)
             .padding()
+            .padding(.top, viewModel.safeAreaInsets.top)
+            .padding(.trailing, viewModel.safeAreaInsets.right)
+            .padding(.bottom, viewModel.safeAreaInsets.bottom)
+            .padding(.leading, viewModel.safeAreaInsets.left)
         }
     }
 }
@@ -27,7 +41,12 @@ private class ToastViewModel: ObservableObject {
     @Inject private var gameEngine: GameEngine
     @Inject private var spritesProvider: SpritesProvider
     
+    var safeAreaInsets: UIEdgeInsets {
+        gameEngine.safeAreaInsets
+    }
+    
     @Published var backgroundColor: Color = .black
+    @Published var borderColor: Color = .black
     @Published var opacity: CGFloat = 0
     @Published var text: String = ""
     @Published var image: Image? = nil
@@ -41,19 +60,11 @@ private class ToastViewModel: ObservableObject {
     }
     
     private func bindToasts() {
-        Task { @MainActor in
-            let toast = ToastState(
-                background_color: NonColorC(red: 255, green: 0, blue: 0, alpha: 128),
-                text: "Hellooo",
-                mode: 1,
-                image: ToastImage(
-                    sprite_frame: IntRect(x: 0, y: 0, width: 0, height: 0),
-                    sprite_sheet_id: 0,
-                    number_of_frames: 0
-                )
-            )
-            load(toast: toast)
-        }
+        gameEngine.toast
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.load(toast: $0) }
+            .store(in: &disposables)
     }
     
     private func load(toast: ToastState) {
@@ -62,6 +73,10 @@ private class ToastViewModel: ObservableObject {
         text = toast.text
         isVisible = opacity > 0.05
         position = toast.mode == 0 ? .trailingTop : .leadingTop
-        // image = spritesProvider.cgImage(for: toast.image.sprite_sheet_id, textureRect: toast.image.sprite_frame)
+        borderColor = toast.mode == 0 ? .cyan : .yellow
+        
+        if let cgImage = spritesProvider.cgImage(for: toast.image.sprite_sheet_id, textureRect: toast.image.texture_frame) {
+            image = Image(decorative: cgImage, scale: 1).interpolation(.none)
+        }
     }
 }

@@ -175,7 +175,7 @@ enum Construction {
 typedef uint32_t Construction;
 
 typedef enum ToastMode {
-  ToastMode_Regular,
+  ToastMode_Regular = 0,
   ToastMode_Important,
 } ToastMode;
 
@@ -226,17 +226,16 @@ typedef struct NonColorC {
   uint8_t alpha;
 } NonColorC;
 
-typedef struct ToastImage {
-  struct IntRect sprite_frame;
+typedef struct ToastImageState {
   uint32_t sprite_sheet_id;
-  int32_t number_of_frames;
-} ToastImage;
+  struct IntRect texture_frame;
+} ToastImageState;
 
 typedef struct ToastState {
   struct NonColorC background_color;
   const char *text;
   enum ToastMode mode;
-  struct ToastImage image;
+  struct ToastImageState image;
 } ToastState;
 
 

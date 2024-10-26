@@ -9,5 +9,6 @@ struct ContentView: View {
             ToastView()
         }
         .ignoresSafeArea()
+        .typography(.text)
     }
 }

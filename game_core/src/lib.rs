@@ -3,8 +3,8 @@ use std::{cmp::Ordering, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 use config::initialize_config_paths;
 use game_engine::{engine::GameEngine, entity::Entity};
 use maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile};
-use menus::toasts::{ToastImage, ToastMode};
-use ui::components::{NonColor, COLOR_TRANSPARENT};
+use menus::toasts::ToastState;
+use ui::components::NonColor;
 use utils::{rect::IntRect, vector::Vector2d};
 
 pub mod config;
@@ -322,23 +322,7 @@ pub extern "C" fn current_world_id() -> u32 {
 
 #[no_mangle]
 pub extern "C" fn current_toast() -> ToastState {
-    let toaster = &engine().toast;
-
-    if toaster.animator.is_active {
-        ToastState { 
-            background_color: NonColorC::new(&toaster.toast_background_color()), 
-            text: string_to_c_char(toaster.text.clone()), 
-            mode: toaster.mode, 
-            image: toaster.image.unwrap_or(ToastImage::empty())
-        }
-    } else {
-        return ToastState { 
-            background_color: NonColorC::new(&COLOR_TRANSPARENT), 
-            text: string_to_c_char("".to_owned()), 
-            mode: ToastMode::Regular, 
-            image: ToastImage::empty()
-        }
-    }
+    engine().toast.current_state()
 }
 
 #[repr(C)]
@@ -360,15 +344,7 @@ impl NonColorC {
     }
 }
 
-#[repr(C)]
-pub struct ToastState {
-    pub background_color: NonColorC,
-    pub text: *const c_char,
-    pub mode: ToastMode,
-    pub image: ToastImage
-}
-
-fn string_to_c_char(s: String) -> *const c_char {
+pub fn string_to_c_char(s: String) -> *const c_char {
     let c_string = CString::new(s).expect("Failed to convert String to CString");
     let raw_ptr = c_string.into_raw();
     raw_ptr as *const c_char

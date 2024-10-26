@@ -21,9 +21,22 @@
 		1EE0347C2CC8585400159636 /* Nokemon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nokemon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1E7FEFBF2CCD14FA00D745FF /* Exceptions for "Nokemon" folder in "Nokemon" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Info.plist,
+			);
+			target = 1EE0347B2CC8585400159636 /* Nokemon */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1EE0347E2CC8585400159636 /* Nokemon */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1E7FEFBF2CCD14FA00D745FF /* Exceptions for "Nokemon" folder in "Nokemon" target */,
+			);
 			path = Nokemon;
 			sourceTree = "<group>";
 		};
@@ -288,6 +301,7 @@
 				DEVELOPMENT_TEAM = 9L5V9XNS25;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Nokemon/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -325,6 +339,7 @@
 				DEVELOPMENT_TEAM = 9L5V9XNS25;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Nokemon/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

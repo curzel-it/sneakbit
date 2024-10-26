@@ -39,6 +39,7 @@ class GameViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         engine.setupChanged(
+            safeArea: view.window?.safeAreaInsets,
             windowSize: view.bounds.size,
             screenScale: view.window?.screen.scale
         )
