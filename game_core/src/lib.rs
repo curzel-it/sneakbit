@@ -126,7 +126,7 @@ pub struct RenderableItem {
     pub frame: IntRect
 }
 
-pub fn renderables_vec() -> Vec<RenderableItem> {
+pub fn get_renderables_vec() -> Vec<RenderableItem> {
     let world = &engine().world;
     let visible_entities = &world.visible_entities;
     let entities_map = world.entities.borrow();    
@@ -166,8 +166,8 @@ pub fn renderables_vec() -> Vec<RenderableItem> {
 }
 
 #[no_mangle]
-pub extern "C" fn renderables(length: *mut usize) -> *mut RenderableItem {
-    let items = renderables_vec();
+pub extern "C" fn get_renderables(length: *mut usize) -> *mut RenderableItem {
+    let items = get_renderables_vec();
 
     let len = items.len();
     unsafe {
@@ -190,6 +190,7 @@ pub extern "C" fn free_renderables(ptr: *mut RenderableItem, length: usize) {
 
 #[no_mangle]
 pub extern "C" fn initialize_config(
+    base_entity_speed: f32,
     current_lang: *const c_char,
     levels_path: *const c_char,
     species_path: *const c_char,
@@ -198,6 +199,7 @@ pub extern "C" fn initialize_config(
     localized_strings_path: *const c_char,
 ) {
     initialize_config_paths(
+        base_entity_speed,
         to_string(current_lang),
         to_path(levels_path),
         to_path(species_path),
@@ -252,7 +254,6 @@ fn to_path(value: *const c_char) -> PathBuf {
 }
 
 pub fn biome_tiles_vec() -> &'static Vec<Vec<BiomeTile>> {
-    println!("Getting tiles for world {}", &engine().world.id);
     &engine().world.biome_tiles.tiles
 }
 
@@ -310,4 +311,9 @@ pub extern "C" fn free_construction_tiles(tiles_ptr: *mut ConstructionTile, len_
     unsafe {
         let _ = Vec::from_raw_parts(tiles_ptr, len, len);
     }
+}
+
+#[no_mangle]
+pub extern "C" fn current_world_id() -> u32 {
+    engine().world.id
 }

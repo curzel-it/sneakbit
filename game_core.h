@@ -44,8 +44,6 @@
 
 #define BIOME_NUMBER_OF_FRAMES 4
 
-#define BASE_ENTITY_SPEED (TILE_SIZE * 2.5)
-
 #define STEP_COMMITMENT_THRESHOLD (TILE_SIZE / 16.0)
 
 #define SPRITE_SHEET_BLANK 1000
@@ -259,11 +257,12 @@ void update_mouse(bool mouse_left_down,
                   float mouse_y,
                   float rendering_scale);
 
-struct RenderableItem *renderables(uintptr_t *length);
+struct RenderableItem *get_renderables(uintptr_t *length);
 
 void free_renderables(struct RenderableItem *ptr, uintptr_t length);
 
-void initialize_config(const char *current_lang,
+void initialize_config(float base_entity_speed,
+                       const char *current_lang,
                        const char *levels_path,
                        const char *species_path,
                        const char *inventory_path,
@@ -295,5 +294,7 @@ void get_construction_tiles(const struct ConstructionTile **out_tiles,
                             uintptr_t *out_len_y);
 
 void free_construction_tiles(struct ConstructionTile *tiles_ptr, uintptr_t len_x, uintptr_t len_y);
+
+uint32_t current_world_id(void);
 
 #endif  /* GAME_CORE_H */

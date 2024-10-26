@@ -1,4 +1,4 @@
-use crate::{constants::{BASE_ENTITY_SPEED, HERO_ENTITY_ID, TILE_SIZE}, game_engine::{entity::Entity, world::World}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{config::config, constants::{HERO_ENTITY_ID, TILE_SIZE}, game_engine::{entity::Entity, world::World}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::hitmap::{Hitmap, WeightsMap};
 
@@ -55,7 +55,7 @@ fn updated_offset(offset: &Vector2d, direction: &Direction, speed: f32, time_sin
     direction.as_vector()
         .scaled(speed)
         .scaled(time_since_last_update)
-        .scaled(BASE_ENTITY_SPEED) + *offset
+        .scaled(config().base_entity_speed) + *offset
 }
 
 fn would_exit_bounds(frame: &IntRect, direction: &Direction, bounds: &IntRect) -> bool {

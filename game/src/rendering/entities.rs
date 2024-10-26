@@ -1,4 +1,4 @@
-use game_core::{constants::TILE_SIZE, renderables_vec, utils::{vector::Vector2d, rect::IntRect}, RenderableItem};
+use game_core::{constants::TILE_SIZE, get_renderables_vec, utils::{vector::Vector2d, rect::IntRect}, RenderableItem};
 use raylib::prelude::*;
 
 use super::ui::get_rendering_config;
@@ -8,7 +8,7 @@ pub fn render_entities(
     camera_viewport: &IntRect, 
     camera_viewport_offset: &Vector2d
 ) {
-    for item in &renderables_vec() {
+    for item in &get_renderables_vec() {
         render_entity(d, item, camera_viewport, camera_viewport_offset);
     }
 }
