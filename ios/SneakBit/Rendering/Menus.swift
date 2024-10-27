@@ -34,6 +34,7 @@ struct MenuView: View {
                     }
                 }
                 .padding()
+                .frame(maxWidth: 400)
                 .background {
                     ZStack {
                         RoundedRectangle(cornerRadius: 4)

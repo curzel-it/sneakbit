@@ -77,6 +77,8 @@ private class ToastViewModel: ObservableObject {
         
         if let cgImage = spritesProvider.cgImage(for: toast.image.sprite_sheet_id, textureRect: toast.image.texture_frame) {
             image = Image(decorative: cgImage, scale: 1).interpolation(.none)
+        } else {
+            image = nil
         }
     }
 }

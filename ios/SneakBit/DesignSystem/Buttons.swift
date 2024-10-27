@@ -28,12 +28,12 @@ private struct MenuOptionButton: ButtonStyle {
             configuration.label.multilineTextAlignment(.leading)
             Spacer(minLength: 0)
         }
-            .typography(.text)
-            .foregroundColor(Color.white)
-            .frame(maxWidth: 400)
-            .frame(height: 40)
-            .background(Color.clear)
-            .contentShape(Rectangle())
-            .opacity(isEnabled || configuration.isPressed ? 1 : 0.6)
+        .typography(.menuOption)
+        .foregroundColor(Color.white)
+        .frame(maxWidth: 400)
+        .frame(height: 40)
+        .background(Color.clear)
+        .contentShape(Rectangle())
+        .opacity(isEnabled || configuration.isPressed ? 1 : 0.6)
     }
 }

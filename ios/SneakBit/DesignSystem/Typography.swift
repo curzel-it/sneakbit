@@ -27,6 +27,7 @@ struct AppFont {
 
 extension AppFont {
     static let largeTitle = AppFont(name: "PixelOperator8-Bold", size: 24, weight: .bold)
-    static let title = AppFont(name: "PixelOperator8-Bold", size: 18, weight: .bold)
-    static let text = AppFont(name: "PixelOperator8", size: 16, weight: .regular)
+    static let title = AppFont(name: "PixelOperator8-Bold", size: 16, weight: .bold)
+    static let text = AppFont(name: "PixelOperator8", size: 14, weight: .regular)
+    static let menuOption = AppFont(name: "PixelOperator8", size: 16, weight: .regular)
 }
