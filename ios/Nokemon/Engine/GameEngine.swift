@@ -169,7 +169,6 @@ class GameEngine {
     }
     
     private func updateKeyboardState(timeSinceLastUpdate: Float) {
-        /*
         print("=== Keyboard State Update ===")
         print("Directional Keys Pressed:")
         print("  Up: \(keyPressed.contains(.up))")
@@ -190,7 +189,6 @@ class GameEngine {
         print("Current Character: \(currentChar)")
         print("Time Since Last Update: \(timeSinceLastUpdate) seconds")
         print("------------------------------")
-*/
         
         update_keyboard(
             keyPressed.contains(.up),

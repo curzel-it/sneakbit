@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>UIAppFonts</key>
-    <array>
-        <string>PixelOperator8.ttf</string>
-        <string>PixelOperator8-Bold.ttf</string>
-    </array>
+	<array>
+		<string>PixelOperator8.ttf</string>
+		<string>PixelOperator8-Bold.ttf</string>
+	</array>
 </dict>
 </plist>
