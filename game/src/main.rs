@@ -56,7 +56,7 @@ fn start_rl() -> (RaylibHandle, RaylibThread) {
     let font = rl.load_font(&thread, "fonts/PixelOperator/PixelOperator8.ttf").unwrap();
     let font_bold = rl.load_font(&thread, "fonts/PixelOperator/PixelOperator8-Bold.ttf").unwrap();            
 
-    // rl.set_target_fps(60.0);    
+    // rl.set_target_fps(60);
 
     let textures: HashMap<u32, Texture2D> = load_textures(&mut rl, &thread);
     init_rendering_config(RenderingConfig {

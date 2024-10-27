@@ -3,6 +3,7 @@ import UIKit
 
 class GameViewController: UIViewController {
     @Inject private var engine: GameEngine
+    @Inject private var gameSetup: GameSetupUseCase
     
     private var gameView: GameView!
     private var displayLink: CADisplayLink?
@@ -18,14 +19,15 @@ class GameViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        displayLink = CADisplayLink(target: self, selector: #selector(gameLoop))
-        displayLink?.preferredFrameRateRange = .init(minimum: 30, maximum: 90, __preferred: 60)
-        displayLink?.add(to: .main, forMode: .default)
+        Task {
+            await gameSetup.setup()
+            disconnectDisplayLink()
+            connectDisplayLink()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        displayLink?.invalidate()
-        displayLink = nil
+        disconnectDisplayLink()
     }
     
     @objc private func gameLoop() {
@@ -43,6 +45,17 @@ class GameViewController: UIViewController {
             windowSize: view.bounds.size,
             screenScale: view.window?.screen.scale
         )
+    }
+    
+    private func connectDisplayLink() {
+        displayLink = CADisplayLink(target: self, selector: #selector(gameLoop))
+        displayLink?.preferredFrameRateRange = .init(minimum: 30, maximum: 90, __preferred: 60)
+        displayLink?.add(to: .main, forMode: .default)
+    }
+    
+    private func disconnectDisplayLink() {
+        displayLink?.invalidate()
+        displayLink = nil
     }
 }
 

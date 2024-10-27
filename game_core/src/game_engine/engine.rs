@@ -269,6 +269,9 @@ impl GameEngine {
             destination.y
         );
         new_world.update(0.001);
+        new_world.update(0.001);
+        new_world.update(0.001);
+
         let hero_frame = new_world.cached_hero_props.frame;
         self.world = new_world;
         self.center_camera_in(&hero_frame);

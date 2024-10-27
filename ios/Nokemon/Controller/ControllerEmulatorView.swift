@@ -22,7 +22,7 @@ struct ControllerEmulatorView: View {
         .padding(.trailing, viewModel.safeAreaInsets.right)
         .padding(.bottom, viewModel.safeAreaInsets.bottom)
         .padding(.leading, viewModel.safeAreaInsets.left)
-        .padding(.bottom, 30)
+        .padding(.bottom, 80)
     }
 }
 

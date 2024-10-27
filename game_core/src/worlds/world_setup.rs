@@ -27,7 +27,8 @@ impl World {
             entity.direction = Direction::Down;
         }
         
-        entity.immobilize_for_seconds(0.2);        
+        entity.immobilize_for_seconds(0.2);
+        self.cached_hero_props = entity.props();
         self.add_entity(entity);
     }    
 
@@ -39,13 +40,17 @@ impl World {
     fn destination_x_y(&self, source: u32, original_x: i32, original_y: i32) -> (i32, i32) {
         if original_x == 0 && original_y == 0 {            
             if let Some(teleporter_position) = self.find_teleporter_for_destination(source) {
+                println!("Found teleporter at {} {}", teleporter_position.x, teleporter_position.y);
                 (teleporter_position.x, teleporter_position.y)
             } else if self.id == WORLD_ID_DEMO {
+                println!("World is demo using 59 41");
                 (59, 41)
             } else {
+                println!("Teleporter not found center at {} {}", WORLD_SIZE_COLUMNS as i32 / 2, WORLD_SIZE_ROWS as i32 / 2);
                 (WORLD_SIZE_COLUMNS as i32 / 2, WORLD_SIZE_ROWS as i32 / 2)
             }
         } else {
+            println!("Using original {} {}", original_x, original_y);
             (original_x, original_y)
         }
     }

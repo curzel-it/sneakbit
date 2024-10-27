@@ -1,7 +1,7 @@
 use std::{cmp::Ordering, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
-use game_engine::{engine::GameEngine, entity::Entity};
+use game_engine::{engine::GameEngine, entity::Entity, world::World};
 use maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::IntRect, vector::Vector2d};
@@ -249,69 +249,14 @@ fn to_path(value: *const c_char) -> PathBuf {
     PathBuf::from(to_string(value))
 }
 
-pub fn biome_tiles_vec() -> &'static Vec<Vec<BiomeTile>> {
-    &engine().world.biome_tiles.tiles
-}
-
-#[no_mangle]
-pub extern "C" fn get_biome_tiles(out_tiles: *mut *const BiomeTile, out_len_x: *mut usize, out_len_y: *mut usize) {
-    let tiles = biome_tiles_vec();
-    let len_y = tiles.len();
-    let len_x = if len_y > 0 { tiles[0].len() } else { 0 };
-
-    let flat_tiles: Vec<BiomeTile> = tiles.iter().flat_map(|row| row.iter().cloned()).collect();
-    let ptr = flat_tiles.as_ptr();
-
-    std::mem::forget(flat_tiles);
-
-    unsafe {
-        *out_tiles = ptr;
-        *out_len_x = len_x;
-        *out_len_y = len_y;
-    }
-}
-
-#[no_mangle]
-pub extern "C" fn free_biome_tiles(tiles_ptr: *mut BiomeTile, len_x: usize, len_y: usize) {
-    let len = len_x * len_y;
-    unsafe {
-        let _ = Vec::from_raw_parts(tiles_ptr, len, len);
-    }
-}
-
-pub fn construction_tiles_vec() -> &'static Vec<Vec<ConstructionTile>> {
-    &engine().world.constructions_tiles.tiles
-}
-
-#[no_mangle]
-pub extern "C" fn get_construction_tiles(out_tiles: *mut *const ConstructionTile, out_len_x: *mut usize, out_len_y: *mut usize) {
-    let tiles = construction_tiles_vec();
-    let len_y = tiles.len();
-    let len_x = if len_y > 0 { tiles[0].len() } else { 0 };
-
-    let flat_tiles: Vec<ConstructionTile> = tiles.iter().flat_map(|row| row.iter().cloned()).collect();
-    let ptr = flat_tiles.as_ptr();
-
-    std::mem::forget(flat_tiles);
-
-    unsafe {
-        *out_tiles = ptr;
-        *out_len_x = len_x;
-        *out_len_y = len_y;
-    }
-}
-
-#[no_mangle]
-pub extern "C" fn free_construction_tiles(tiles_ptr: *mut ConstructionTile, len_x: usize, len_y: usize) {
-    let len = len_x * len_y;
-    unsafe {
-        let _ = Vec::from_raw_parts(tiles_ptr, len, len);
-    }
-}
-
 #[no_mangle]
 pub extern "C" fn current_world_id() -> u32 {
     engine().world.id
+}
+
+#[no_mangle]
+pub extern "C" fn current_world_revision() -> u32 {
+    engine().world.revision
 }
 
 #[no_mangle]
@@ -322,7 +267,7 @@ pub extern "C" fn current_toast() -> ToastDescriptorC {
 #[no_mangle]
 pub extern "C" fn current_menu() -> MenuDescriptorC {
     let engine = engine();
-    
+
     if engine.dialogue_menu.is_open() {
         let mut descriptor = engine.dialogue_menu.menu.descriptor_c();
         free_c_char_ptr(descriptor.text);
@@ -371,4 +316,70 @@ pub extern "C" fn shows_death_screen() -> bool {
 #[no_mangle]
 pub extern "C" fn select_current_menu_option_at_index(index: u32) {
     engine_mut().select_current_menu_option_at_index(index as usize)
+}
+
+struct RevisedTiles {
+    current_revision: u32,
+    biome_tiles: Vec<Vec<BiomeTile>>,
+    construction_tiles: Vec<Vec<ConstructionTile>>
+}
+
+fn updated_tiles_vec(world_id: u32) -> RevisedTiles {
+    if let Some(world) = World::load(world_id) {
+        RevisedTiles {
+            current_revision: world.revision,
+            biome_tiles: world.biome_tiles.tiles,
+            construction_tiles: world.constructions_tiles.tiles
+        }
+    } else {
+        RevisedTiles { 
+            current_revision: 0, 
+            biome_tiles: vec![], 
+            construction_tiles: vec![] 
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn updated_tiles(
+    world_id: u32,
+    out_biome_tiles: *mut *const BiomeTile, 
+    out_construction_tiles: *mut *const ConstructionTile, 
+    out_len_x: *mut usize, out_len_y: *mut usize
+) -> u32 {
+    let tiles = updated_tiles_vec(world_id);
+    let len_y = tiles.biome_tiles.len();
+    let len_x = if len_y > 0 { tiles.biome_tiles[0].len() } else { 0 };
+
+    let flat_biome_tiles: Vec<BiomeTile> = tiles.biome_tiles.iter().flat_map(|row| row.iter().cloned()).collect();
+    let biome_ptr = flat_biome_tiles.as_ptr();
+    std::mem::forget(flat_biome_tiles);
+
+    let flat_construction_tiles: Vec<ConstructionTile> = tiles.construction_tiles.iter().flat_map(|row| row.iter().cloned()).collect();
+    let constructions_ptr = flat_construction_tiles.as_ptr();
+    std::mem::forget(flat_construction_tiles);
+
+    unsafe {
+        *out_biome_tiles = biome_ptr;
+        *out_construction_tiles = constructions_ptr;
+        *out_len_x = len_x;
+        *out_len_y = len_y;
+    }
+    tiles.current_revision
+}
+
+#[no_mangle]
+pub extern "C" fn free_biome_tiles(tiles_ptr: *mut BiomeTile, len_x: usize, len_y: usize) {
+    let len = len_x * len_y;
+    unsafe {
+        let _ = Vec::from_raw_parts(tiles_ptr, len, len);
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn free_construction_tiles(tiles_ptr: *mut ConstructionTile, len_x: usize, len_y: usize) {
+    let len = len_x * len_y;
+    unsafe {
+        let _ = Vec::from_raw_parts(tiles_ptr, len, len);
+    }
 }

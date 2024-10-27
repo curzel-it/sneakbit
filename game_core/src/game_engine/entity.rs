@@ -165,6 +165,26 @@ impl Entity {
     pub fn is_related_pressure_plate_down(&self) -> bool {
         get_value_for_key(self.lock_type.pressure_plate()).unwrap_or(1) == 0
     }
+
+    pub fn props(&self) -> EntityProps {
+        let x_offset = (self.sprite.frame.w - 1) / 2;
+        let y_offset = if self.sprite.frame.h > 1 { 1 } else { 0 };
+        let height = if self.sprite.frame.h > 1 { self.sprite.frame.h - 1 } else { self.sprite.frame.h };
+
+        EntityProps {
+            frame: self.frame,
+            direction: self.direction,
+            offset: self.offset,
+            speed: self.current_speed,
+            is_invulnerable: self.is_invulnerable,
+            hittable_frame: IntRect {
+                x: self.frame.x + x_offset,
+                y: self.frame.y + y_offset,
+                w: self.sprite.frame.w,
+                h: height,
+            },
+        }            
+    }
 }
 
 impl Entity {

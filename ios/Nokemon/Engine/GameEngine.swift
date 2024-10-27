@@ -6,11 +6,13 @@ import Schwifty
 class GameEngine {
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
     @Inject private var tileMapImageGenerator: TileMapImageGenerator
+    @Inject private var tileMapsStorage: TileMapsStorage
+    @Inject private var worldRevisionsStorage: WorldRevisionsStorage
     @Inject private var spritesProvider: SpritesProvider
     
     let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
-    let showsLoadingScreen = CurrentValueSubject<Bool, Never>(true)
+    let loadingScreenConfig = CurrentValueSubject<LoadingScreenConfig, Never>(.none)
     let showsDeathScreen = CurrentValueSubject<Bool, Never>(false)
     
     var size: CGSize = .zero
@@ -25,6 +27,7 @@ class GameEngine {
     private(set) var cameraViewport: IntRect = .zero
     private(set) var cameraViewportOffset: Vector2d = .zero
     private(set) var safeAreaInsets: UIEdgeInsets = .zero
+    private(set) var canRender: Bool = true
         
     private var keyPressed = Set<EmulatedKey>()
     private var keyDown = Set<EmulatedKey>()
@@ -63,10 +66,11 @@ class GameEngine {
         cameraViewportOffset = camera_viewport_offset()
         
         if current_world_id() != currentWorldId {
+            print("World changed from \(currentWorldId) to \(current_world_id())")
             currentWorldId = current_world_id()
             keyDown.removeAll()
             keyPressed.removeAll()
-            generateTileMapImage()
+            updateTileMapImages()
         }
         
         updateFpsCounter()
@@ -97,7 +101,6 @@ class GameEngine {
         )
         worldHeight = Int(current_world_height())
         worldWidth = Int(current_world_width())
-        generateTileMapImage()
     }
     
     func renderingFrame(for entity: RenderableItem) -> CGRect {
@@ -166,6 +169,29 @@ class GameEngine {
     }
     
     private func updateKeyboardState(timeSinceLastUpdate: Float) {
+        /*
+        print("=== Keyboard State Update ===")
+        print("Directional Keys Pressed:")
+        print("  Up: \(keyPressed.contains(.up))")
+        print("  Right: \(keyPressed.contains(.right))")
+        print("  Down: \(keyPressed.contains(.down))")
+        print("  Left: \(keyPressed.contains(.left))")
+        print("Directional Keys Down:")
+        print("  Up: \(keyDown.contains(.up))")
+        print("  Right: \(keyDown.contains(.right))")
+        print("  Down: \(keyDown.contains(.down))")
+        print("  Left: \(keyDown.contains(.left))")
+        print("Action Keys Pressed:")
+        print("  Escape: \(keyPressed.contains(.escape))")
+        print("  Menu: \(keyPressed.contains(.menu))")
+        print("  Confirm: \(keyPressed.contains(.confirm))")
+        print("  Attack: \(keyPressed.contains(.attack))")
+        print("  Backspace: \(keyPressed.contains(.backspace))")
+        print("Current Character: \(currentChar)")
+        print("Time Since Last Update: \(timeSinceLastUpdate) seconds")
+        print("------------------------------")
+*/
+        
         update_keyboard(
             keyPressed.contains(.up),
             keyPressed.contains(.right),
@@ -185,29 +211,34 @@ class GameEngine {
         )
     }
     
-    private func generateTileMapImage() {
-        print("\(Date()) Generating tiles")
-        isBusy = true
-        showsLoadingScreen.send(true)
+    private func updateTileMapImages() {
+        setLoading(.worldTransition)
         
-        fetchBiomeTiles { biomeTiles in
-            fetchConstructionTiles { constructionTiles in
-                self.tileMapImages = (0...4).compactMap { variant in
-                    self.tileMapImageGenerator.generate(
-                        renderingScale: self.renderingScale,
-                        worldWidth: self.worldWidth,
-                        worldHeight: self.worldHeight,
-                        variant: Int32(variant),
-                        biomeTiles: biomeTiles,
-                        constructionTiles: constructionTiles
-                    )
-                }
-                self.isBusy = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    self.showsLoadingScreen.send(false)
-                }
-                print("\(Date()) Done generating tiles")
+        let worldId = current_world_id()
+        let requiredRevision = current_world_revision()
+        let images = tileMapsStorage.images(forWorld: worldId, revision: requiredRevision)
+        
+        if images.count >= BIOME_NUMBER_OF_FRAMES {
+            tileMapImages = images
+            self.setLoading(.none)
+            return
+        }
+        
+        fetchUpdatedTiles(forWorld: worldId) { currentRevision, biomeTiles, constructionTiles in
+            self.worldRevisionsStorage.store(revision: currentRevision, forWorld: worldId)
+            
+            self.tileMapImages = (0..<BIOME_NUMBER_OF_FRAMES).compactMap { variant in
+                self.tileMapImageGenerator.generate(
+                    renderingScale: self.renderingScale,
+                    worldWidth: self.worldWidth,
+                    worldHeight: self.worldHeight,
+                    variant: Int32(variant),
+                    biomeTiles: biomeTiles,
+                    constructionTiles: constructionTiles
+                )
             }
+            self.tileMapsStorage.store(images: self.tileMapImages, forWorld: worldId, revision: requiredRevision)
+            self.setLoading(.none)
         }
     }
     
@@ -226,5 +257,21 @@ class GameEngine {
     func onMenuItemSelection(index: Int) {
         select_current_menu_option_at_index(UInt32(index))
         setKeyDown(.confirm)
+    }
+    
+    func setLoading(_ mode: LoadingScreenConfig) {
+        if mode.isVisible {
+            setLoadingNow(mode)
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.setLoadingNow(mode)
+            }
+        }
+    }
+    
+    private func setLoadingNow(_ mode: LoadingScreenConfig) {
+        canRender = !mode.isVisible
+        isBusy = mode.isVisible
+        loadingScreenConfig.send(mode)
     }
 }

@@ -19,10 +19,11 @@ class GameView: UIView {
         context.fill(rect)
         context.interpolationQuality = .none
 
-        renderTileMap(in: context)
-        renderEntities(in: context)
-
-        drawDebugInfo(context: context, rect: rect)
+        if engine.canRender {
+            renderTileMap(in: context)
+            renderEntities(in: context)
+            renderDebugInfo(context: context, rect: rect)
+        }
     }
     
     private func renderEntities(in context: CGContext) {
@@ -46,7 +47,7 @@ class GameView: UIView {
         context.restoreGState()
     }
 
-    private func drawDebugInfo(context: CGContext, rect: CGRect) {
+    private func renderDebugInfo(context: CGContext, rect: CGRect) {
         let fpsText = String(format: "FPS: %.0f", engine.fps)
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .medium),
