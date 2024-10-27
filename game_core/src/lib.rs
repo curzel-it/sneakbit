@@ -124,7 +124,7 @@ pub struct RenderableItem {
 
 pub fn get_renderables_vec() -> Vec<RenderableItem> {
     let world = &engine().world;
-    let visible_entities = &world.visible_entities;
+    let visible_entities = &world.renderable_entities;
     let entities_map = world.entities.borrow();    
 
     let mut entities: Vec<&Entity> = visible_entities.iter()

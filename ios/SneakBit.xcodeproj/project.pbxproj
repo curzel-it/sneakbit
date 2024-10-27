@@ -22,7 +22,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		1E7FEFBF2CCD14FA00D745FF /* Exceptions for "Nokemon" folder in "SneakBit" target */ = {
+		1E4999802CCF012D00A24458 /* Exceptions for "SneakBit" folder in "SneakBit" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Info.plist,
@@ -32,12 +32,12 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		1EE0347E2CC8585400159636 /* Nokemon */ = {
+		1EE0347E2CC8585400159636 /* SneakBit */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				1E7FEFBF2CCD14FA00D745FF /* Exceptions for "Nokemon" folder in "SneakBit" target */,
+				1E4999802CCF012D00A24458 /* Exceptions for "SneakBit" folder in "SneakBit" target */,
 			);
-			path = Nokemon;
+			path = SneakBit;
 			sourceTree = "<group>";
 		};
 		1EF8E9362CC8598400867F59 /* Rust */ = {
@@ -67,7 +67,7 @@
 				1E06CD742CC9A7B4001231D7 /* data */,
 				1E06CD722CC9A7AB001231D7 /* assets */,
 				1EF8E9362CC8598400867F59 /* Rust */,
-				1EE0347E2CC8585400159636 /* Nokemon */,
+				1EE0347E2CC8585400159636 /* SneakBit */,
 				1EE0347D2CC8585400159636 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -96,7 +96,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				1EE0347E2CC8585400159636 /* Nokemon */,
+				1EE0347E2CC8585400159636 /* SneakBit */,
 				1EF8E9362CC8598400867F59 /* Rust */,
 			);
 			name = SneakBit;
@@ -104,7 +104,7 @@
 				1E2804692CCB93D500DBC189 /* Schwifty */,
 				1EC6323C2CCC5D2F00B37D70 /* Swinject */,
 			);
-			productName = Nokemon;
+			productName = SneakBit;
 			productReference = 1EE0347C2CC8585400159636 /* SneakBit.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -301,7 +301,8 @@
 				DEVELOPMENT_TEAM = 9L5V9XNS25;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Nokemon/Resources/Info.plist;
+				INFOPLIST_FILE = SneakBit/Resources/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -313,15 +314,19 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Nokemon",
+					"$(PROJECT_DIR)/SneakBit",
 					"$(PROJECT_DIR)/Rust",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = it.curzel.bitscape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Nokemon/Nokemon-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "SneakBit/SneakBit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -339,7 +344,8 @@
 				DEVELOPMENT_TEAM = 9L5V9XNS25;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Nokemon/Resources/Info.plist;
+				INFOPLIST_FILE = SneakBit/Resources/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -351,15 +357,19 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Nokemon",
+					"$(PROJECT_DIR)/SneakBit",
 					"$(PROJECT_DIR)/Rust",
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = it.curzel.bitscape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Nokemon/Nokemon-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "SneakBit/SneakBit-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
