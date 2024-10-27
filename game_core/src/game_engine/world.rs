@@ -7,13 +7,15 @@ use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{
 
 pub struct World {
     pub id: u32,
+    pub revision: u32,
     pub total_elapsed_time: f32,
     pub bounds: IntRect,
     pub visible_bounds: IntRect,
     pub biome_tiles: TileSet<BiomeTile>,
     pub constructions_tiles: TileSet<ConstructionTile>,
     pub entities: RefCell<Vec<Entity>>,    
-    pub visible_entities: HashSet<(usize, u32)>,
+    pub renderable_entities: HashSet<(usize, u32)>,
+    pub updatable_entities: HashSet<(usize, u32)>,
     pub cached_hero_props: EntityProps,
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
@@ -38,13 +40,15 @@ impl World {
     pub fn new(id: u32) -> Self {
         Self {
             id,
+            revision: 0,
             total_elapsed_time: 0.0,
             bounds: IntRect::square_from_origin(150),
             visible_bounds: IntRect::square_from_origin(150),
             biome_tiles: TileSet::empty(),
             constructions_tiles: TileSet::empty(),
             entities: RefCell::new(vec![]),
-            visible_entities: hash_set![],
+            renderable_entities: hash_set![],
+            updatable_entities: hash_set![],
             cached_hero_props: EntityProps::default(),
             hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
             tiles_hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
@@ -108,7 +112,7 @@ impl World {
 
         let mut entities = self.entities.borrow_mut();
 
-        let state_updates: Vec<WorldStateUpdate> = self.visible_entities.iter()
+        let state_updates: Vec<WorldStateUpdate> = self.updatable_entities.iter()
             .flat_map(|(index, _)| {
                 if let Some(entity) = entities.get_mut(*index) {
                     entity.update(self, time_since_last_update)
@@ -122,7 +126,8 @@ impl World {
 
         drop(entities);
         let updates = self.apply_state_updates(state_updates);
-        self.visible_entities = self.compute_visible_entities(viewport);
+        self.updatable_entities = self.compute_updatable_entities(viewport);
+        self.renderable_entities = self.compute_renderable_entities(viewport);
         self.update_hitmaps();
         updates
     } 

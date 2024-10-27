@@ -1,4 +1,4 @@
-# Nokemon
+# SneakBit
 
 So, I got bored, wanted to speriment a bit with Rust, and love GameBoy games, here's the result!
 

@@ -32,22 +32,6 @@ impl Entity {
         )
     }
 
-    fn props(&self) -> EntityProps {
-        EntityProps {
-            frame: self.frame,
-            direction: self.direction,
-            offset: self.offset,
-            speed: self.current_speed,
-            is_invulnerable: self.is_invulnerable,
-            hittable_frame: IntRect {
-                x: self.frame.x + (self.sprite.frame.w - 1) / 2,
-                y: self.frame.y + (self.sprite.frame.h - 1),
-                w: self.sprite.frame.w,
-                h: 1,
-            },
-        }            
-    }
-
     fn move_camera_update(&self) -> WorldStateUpdate {
         WorldStateUpdate::EngineUpdate(
             EngineStateUpdate::CenterCamera(

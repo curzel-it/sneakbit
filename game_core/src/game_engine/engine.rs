@@ -269,6 +269,9 @@ impl GameEngine {
             destination.y
         );
         new_world.update(0.001);
+        new_world.update(0.001);
+        new_world.update(0.001);
+
         let hero_frame = new_world.cached_hero_props.frame;
         self.world = new_world;
         self.center_camera_in(&hero_frame);
@@ -296,6 +299,21 @@ impl GameEngine {
         self.camera_viewport.center_at(&Vector2d::new(x as f32, y as f32));
         self.camera_viewport_offset = *offset;
         self.world.visible_bounds = self.camera_viewport;
+    }
+
+    pub fn select_current_menu_option_at_index(&mut self, index: usize) {
+        if self.confirmation_dialog.is_open() {
+            self.confirmation_dialog.select_option_at_index(index);
+            return
+        }
+        if self.entity_options_menu.is_open() {
+            self.entity_options_menu.select_option_at_index(index);
+            return
+        }
+        if self.menu.is_open() {
+            self.menu.select_option_at_index(index);
+            return
+        }
     }
 }
 

@@ -55,6 +55,9 @@ impl Inventory {
     }
 
     fn handle_selection(&self, selected_index: usize) -> Vec<WorldStateUpdate> {
+        if selected_index >= self.stock.len() { 
+            return vec![]
+        }
         let item = self.stock[selected_index].clone();
 
         vec![

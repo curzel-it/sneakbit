@@ -9,7 +9,7 @@ use super::tiles::{SpriteTile, TileSet};
 #[repr(u32)]
 pub enum Construction {
     #[default]
-    Nothing,
+    Nothing = 0,
     WoodenFence,
     MetalFence,
     DarkRock,

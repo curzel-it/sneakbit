@@ -8,12 +8,12 @@ pub struct DialogueMenu {
     pub dialogue: Dialogue,
     time_since_last_closed: f32,
     text_animator: Animator,
-    text: String,
-    menu: Menu<DialogueAnswerItem>,
+    pub text: String,
+    pub menu: Menu<DialogueAnswerItem>,
 }
 
 #[derive(Clone)]
-enum DialogueAnswerItem {
+pub enum DialogueAnswerItem {
     Value(String)
 }
 

@@ -5,7 +5,7 @@ use super::{inventory::Inventory, map_editor::MapEditor, menu::{Menu, MenuItem, 
 pub struct GameMenu {
     pub current_world_id: u32,
     state: MenuState,
-    menu: Menu<GameMenuItem>,
+    pub menu: Menu<GameMenuItem>,
     inventory: Inventory,
     map_editor: MapEditor,
 }
@@ -20,7 +20,7 @@ enum MenuState {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-enum GameMenuItem {
+pub enum GameMenuItem {
     Save,
     Inventory,
     MapEditor,
@@ -202,5 +202,9 @@ impl GameMenu {
             MenuState::Inventory => self.inventory.ui(),
             MenuState::MapEditor | MenuState::PlaceItem => self.map_editor.ui(camera_viewport),
         }
+    }
+
+    pub fn select_option_at_index(&mut self, index: usize) {
+        self.menu.selected_index = index;
     }
 }

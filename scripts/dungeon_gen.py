@@ -166,7 +166,7 @@ world_data = {
     "default_biome": "Nothing"
 }
 
-output_filename = f"/Users/curzel/dev/nokemon/data/{args.world_id}.json"
+output_filename = f"/Users/curzel/dev/sneakbit/data/{args.world_id}.json"
 with open(output_filename, "w") as f:
     f.write(json.dumps(world_data, indent=2))
 

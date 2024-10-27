@@ -1,15 +1,17 @@
-use std::collections::VecDeque;
+use std::{collections::VecDeque, ffi::c_char};
 
 
-use crate::{constants::SPRITE_SHEET_MENU, features::animated_sprite::AnimatedSprite, hstack, spacing, text, texture, ui::{components::{empty_view, BordersTextures, NonColor, Spacing, TextureInfo, Typography, View, COLOR_BLACK}, scaffold::scaffold}, utils::{animator::Animator, rect::IntRect}, vstack};
+use crate::{constants::SPRITE_SHEET_MENU, features::animated_sprite::AnimatedSprite, hstack, spacing, string_to_c_char, text, texture, ui::{components::{empty_view, BordersTextures, NonColor, NonColorC, Spacing, TextureInfo, Typography, View, COLOR_BLACK, COLOR_TRANSPARENT}, scaffold::scaffold}, utils::{animator::Animator, rect::IntRect}, vstack};
 
 #[derive(Debug, Clone, Copy)]
+#[repr(C)]
 pub enum ToastMode {
-    Regular,
+    Regular = 0,
     Important
 }
 
 #[derive(Debug, Clone, Copy)]
+#[repr(C)]
 pub struct ToastImage {
     pub sprite_frame: IntRect,
     pub sprite_sheet_id: u32,
@@ -24,8 +26,8 @@ pub struct Toast {
 }
 
 pub struct ToastDisplay {
-    animator: Animator,
-    text: String,
+    pub animator: Animator,
+    pub text: String,
     mode: ToastMode,
     sprite: Option<AnimatedSprite>,
     queue: VecDeque<Toast>,
@@ -179,6 +181,56 @@ impl ToastDisplay {
             let alpha = (1.0 - self.animator.current_value) * 20.0;
             (0, 0, 0, (255.0 * alpha) as u8)
         }        
+    }
+}
+
+impl ToastDisplay {
+    pub fn descriptor_c(&self) -> ToastDescriptorC {
+        if self.animator.is_active {
+            ToastDescriptorC { 
+                background_color: NonColorC::new(&self.background_color()), 
+                text: string_to_c_char(self.text.clone()), 
+                mode: self.mode, 
+                image: if let Some(sprite) = self.sprite.clone() {
+                    ToastImageDescriptorC {
+                        sprite_sheet_id: sprite.sheet_id,
+                        texture_frame: sprite.texture_source_rect()
+                    }
+                } else {
+                    ToastImageDescriptorC::empty()
+                }
+            }
+        } else {
+            ToastDescriptorC { 
+                background_color: NonColorC::new(&COLOR_TRANSPARENT), 
+                text: string_to_c_char("".to_owned()), 
+                mode: ToastMode::Regular, 
+                image: ToastImageDescriptorC::empty()
+            }
+        }
+    }
+}
+
+#[repr(C)]
+pub struct ToastDescriptorC {
+    pub background_color: NonColorC,
+    pub text: *const c_char,
+    pub mode: ToastMode,
+    pub image: ToastImageDescriptorC,
+}
+
+#[repr(C)]
+pub struct ToastImageDescriptorC {
+    pub sprite_sheet_id: u32,
+    pub texture_frame: IntRect
+}
+
+impl ToastImageDescriptorC {
+    fn empty() -> Self {
+        Self {
+            sprite_sheet_id: 0,
+            texture_frame: IntRect::square_from_origin(1)
+        }
     }
 }
 
