@@ -6,10 +6,10 @@ use super::world::World;
 
 impl World {
     pub fn compute_visible_entities(&self, viewport: &IntRect) -> HashSet<(usize, u32)> {
-        let min_row = viewport.y;
-        let max_row = viewport.y + viewport.h;
-        let min_col = viewport.x;
-        let max_col = viewport.x + viewport.w;
+        let min_row = (viewport.y - 1).max(0);
+        let max_row = (viewport.y + viewport.h + 1).min(self.bounds.y + self.bounds.h);
+        let min_col = (viewport.x - 1).max(0);
+        let max_col = (viewport.x + viewport.w + 1).min(self.bounds.x + self.bounds.w);
 
         self.entities.borrow().iter()
             .enumerate()
