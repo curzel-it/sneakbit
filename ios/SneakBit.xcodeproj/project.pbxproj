@@ -18,16 +18,16 @@
 		1E06CD722CC9A7AB001231D7 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = Resources/assets; sourceTree = "<group>"; };
 		1E06CD742CC9A7B4001231D7 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = Resources/data; sourceTree = "<group>"; };
 		1E06CD762CC9A7BD001231D7 /* lang */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lang; path = Resources/lang; sourceTree = "<group>"; };
-		1EE0347C2CC8585400159636 /* Nokemon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nokemon.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1EE0347C2CC8585400159636 /* SneakBit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SneakBit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		1E7FEFBF2CCD14FA00D745FF /* Exceptions for "Nokemon" folder in "Nokemon" target */ = {
+		1E7FEFBF2CCD14FA00D745FF /* Exceptions for "Nokemon" folder in "SneakBit" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Info.plist,
 			);
-			target = 1EE0347B2CC8585400159636 /* Nokemon */;
+			target = 1EE0347B2CC8585400159636 /* SneakBit */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -35,7 +35,7 @@
 		1EE0347E2CC8585400159636 /* Nokemon */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				1E7FEFBF2CCD14FA00D745FF /* Exceptions for "Nokemon" folder in "Nokemon" target */,
+				1E7FEFBF2CCD14FA00D745FF /* Exceptions for "Nokemon" folder in "SneakBit" target */,
 			);
 			path = Nokemon;
 			sourceTree = "<group>";
@@ -75,7 +75,7 @@
 		1EE0347D2CC8585400159636 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1EE0347C2CC8585400159636 /* Nokemon.app */,
+				1EE0347C2CC8585400159636 /* SneakBit.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,9 +83,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1EE0347B2CC8585400159636 /* Nokemon */ = {
+		1EE0347B2CC8585400159636 /* SneakBit */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1EE0348A2CC8585500159636 /* Build configuration list for PBXNativeTarget "Nokemon" */;
+			buildConfigurationList = 1EE0348A2CC8585500159636 /* Build configuration list for PBXNativeTarget "SneakBit" */;
 			buildPhases = (
 				1EE034782CC8585400159636 /* Sources */,
 				1EE034792CC8585400159636 /* Frameworks */,
@@ -99,13 +99,13 @@
 				1EE0347E2CC8585400159636 /* Nokemon */,
 				1EF8E9362CC8598400867F59 /* Rust */,
 			);
-			name = Nokemon;
+			name = SneakBit;
 			packageProductDependencies = (
 				1E2804692CCB93D500DBC189 /* Schwifty */,
 				1EC6323C2CCC5D2F00B37D70 /* Swinject */,
 			);
 			productName = Nokemon;
-			productReference = 1EE0347C2CC8585400159636 /* Nokemon.app */;
+			productReference = 1EE0347C2CC8585400159636 /* SneakBit.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -123,7 +123,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1EE034772CC8585400159636 /* Build configuration list for PBXProject "Nokemon" */;
+			buildConfigurationList = 1EE034772CC8585400159636 /* Build configuration list for PBXProject "SneakBit" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -141,7 +141,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1EE0347B2CC8585400159636 /* Nokemon */,
+				1EE0347B2CC8585400159636 /* SneakBit */,
 			);
 		};
 /* End PBXProject section */
@@ -368,7 +368,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1EE034772CC8585400159636 /* Build configuration list for PBXProject "Nokemon" */ = {
+		1EE034772CC8585400159636 /* Build configuration list for PBXProject "SneakBit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1EE034882CC8585500159636 /* Debug */,
@@ -377,7 +377,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1EE0348A2CC8585500159636 /* Build configuration list for PBXNativeTarget "Nokemon" */ = {
+		1EE0348A2CC8585500159636 /* Build configuration list for PBXNativeTarget "SneakBit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1EE0348B2CC8585500159636 /* Debug */,
