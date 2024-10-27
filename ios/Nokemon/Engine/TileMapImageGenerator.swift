@@ -27,7 +27,7 @@ class TileMapImageGeneratorImpl: TileMapImageGenerator {
     ) -> UIImage? {
         guard !biomeTiles.isEmpty, !constructionTiles.isEmpty else { return nil }
         
-        let tileSize = CGFloat(TILE_SIZE) * renderingScale
+        let tileSize = CGFloat(TILE_SIZE) 
         let mapWidth = CGFloat(worldWidth) * tileSize
         let mapHeight = CGFloat(worldHeight) * tileSize
         

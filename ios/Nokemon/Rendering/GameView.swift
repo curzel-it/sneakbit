@@ -65,17 +65,19 @@ class GameView: UIView {
     
     private func renderTileMap(in context: CGContext) {
         guard let tileMapImage = engine.tileMapImage() else { return }
+        guard let tileMapCgImage = tileMapImage.cgImage else { return }
         
         let cameraViewport = engine.cameraViewport
         let cameraOffset = engine.cameraViewportOffset
         let tileSize = CGFloat(TILE_SIZE) * engine.renderingScale
+        let scaledMapSize = tileMapImage.size.scaled(engine.renderingScale)
         
         let offsetX = -CGFloat(cameraViewport.x) * tileSize - CGFloat(cameraOffset.x) * engine.renderingScale
         let offsetY = -CGFloat(cameraViewport.y) * tileSize - CGFloat(cameraOffset.y) * engine.renderingScale
         
         context.saveGState()
         context.translateBy(x: offsetX, y: offsetY)
-        context.draw(tileMapImage.cgImage!, in: CGRect(origin: .zero, size: tileMapImage.size))
+        context.draw(tileMapCgImage, in: CGRect(origin: .zero, size: scaledMapSize))
         context.restoreGState()
     }
 }
