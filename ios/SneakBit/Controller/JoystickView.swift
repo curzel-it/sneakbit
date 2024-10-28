@@ -10,14 +10,18 @@ struct JoystickView: View {
 
             ZStack {
                 if viewModel.isDragging {
-                    Circle()
-                        .fill(Color.gray.opacity(0.6))
-                        .frame(width: viewModel.outerRadius * 2, height: viewModel.outerRadius * 2)
+                    Image("joystick")
+                        .interpolation(.none)
+                        .resizable()
+                        // Circle().fill(Color.gray.opacity(0.6))
+                        .frame(width: viewModel.baseRadius * 2, height: viewModel.baseRadius * 2)
                         .position(viewModel.center)
-
-                    Circle()
-                        .fill(Color.black.opacity(0.4))
-                        .frame(width: viewModel.innerRadius * 2, height: viewModel.innerRadius * 2)
+                    
+                    Image("joystick_lever")
+                        .interpolation(.none)
+                        .resizable()
+                            // Circle().fill(Color.black.opacity(0.4))
+                        .frame(width: viewModel.leverRadius * 2, height: viewModel.leverRadius * 2)
                         .position(viewModel.dragLocation)
                 }
             }
@@ -46,8 +50,8 @@ private class JoystickViewModel: ObservableObject {
     @Published var center: CGPoint = .zero
 
     static let size: CGFloat = 64
-    let outerRadius: CGFloat = 32
-    let innerRadius: CGFloat = 24
+    let baseRadius: CGFloat = 32
+    let leverRadius: CGFloat = 16
     let maxDistance: CGFloat = 16
     let maxFingerDistance: CGFloat = 48
     
