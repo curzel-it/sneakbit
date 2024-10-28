@@ -250,6 +250,12 @@ typedef struct ConstructionTile {
   struct IntRect texture_source_rect;
 } ConstructionTile;
 
+typedef struct InventoryItem {
+  uint32_t species_id;
+  uint32_t count;
+  struct IntRect texture_source_rect;
+} InventoryItem;
+
 
 
 void initialize_game(bool creative_mode);
@@ -342,5 +348,9 @@ uint32_t updated_tiles(uint32_t world_id,
 void free_biome_tiles(struct BiomeTile *tiles_ptr, uintptr_t len_x, uintptr_t len_y);
 
 void free_construction_tiles(struct ConstructionTile *tiles_ptr, uintptr_t len_x, uintptr_t len_y);
+
+struct InventoryItem *inventory_state(uintptr_t *length);
+
+void free_inventory_state(struct InventoryItem *state, uintptr_t items_count);
 
 #endif  /* GAME_CORE_H */

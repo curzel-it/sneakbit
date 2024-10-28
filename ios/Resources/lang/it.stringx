@@ -8,6 +8,7 @@
 "confirmation.cancel" = "No"
 "death_screen.title" = "Sei morto."
 "dialogue.reward_received" = "Hai ricevuto `%s`!"
+"picked_up_item" = "Raccolto `%s`!"
 "dialogue.select_option" = "Seleziona un'opzione:"
 "ok" = "Ok"
 

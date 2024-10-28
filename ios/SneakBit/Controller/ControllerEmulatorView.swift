@@ -26,10 +26,9 @@ struct ControllerEmulatorView: View {
 }
 
 private class ControllerEmulatorViewModel: ObservableObject {
-    @Inject private var gameEngine: GameEngine
+    @Inject private var engine: GameEngine
     
     var safeAreaInsets: UIEdgeInsets {
-        gameEngine.safeAreaInsets
+        engine.safeAreaInsets
     }
-    
 }

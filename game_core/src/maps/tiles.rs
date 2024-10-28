@@ -1,5 +1,7 @@
 
-use crate::{constants::{SPRITE_SHEET_BLANK, BIOME_NUMBER_OF_FRAMES, TILE_VARIATIONS_FPS}, utils::{rect::IntRect, timed_content_provider::TimedContentProvider}};
+use crate::{constants::{BIOME_NUMBER_OF_FRAMES, SPRITE_SHEET_BLANK, TILE_VARIATIONS_FPS}, game_engine::world::World, utils::{rect::IntRect, timed_content_provider::TimedContentProvider}};
+
+use super::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile};
 
 pub trait SpriteTile {
     fn texture_source_rect(&self, variant: i32) -> IntRect;
@@ -35,5 +37,27 @@ impl<T> TileSet<T> {
 
     pub fn current_variant(&self) -> i32 {
         *self.sprite_counter.current_frame() % BIOME_NUMBER_OF_FRAMES
+    }
+}
+
+pub struct RevisedTiles {
+    pub current_revision: u32,
+    pub biome_tiles: Vec<Vec<BiomeTile>>,
+    pub construction_tiles: Vec<Vec<ConstructionTile>>
+}
+
+pub fn tiles_with_revision(world_id: u32) -> RevisedTiles {
+    if let Some(world) = World::load(world_id) {
+        RevisedTiles {
+            current_revision: world.revision,
+            biome_tiles: world.biome_tiles.tiles,
+            construction_tiles: world.constructions_tiles.tiles
+        }
+    } else {
+        RevisedTiles { 
+            current_revision: 0, 
+            biome_tiles: vec![], 
+            construction_tiles: vec![] 
+        }
     }
 }

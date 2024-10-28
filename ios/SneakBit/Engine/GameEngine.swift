@@ -12,6 +12,7 @@ class GameEngine {
     
     let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
+    let inventory = CurrentValueSubject<[InventoryItem], Never>([])
     let loadingScreenConfig = CurrentValueSubject<LoadingScreenConfig, Never>(.none)
     let showsDeathScreen = CurrentValueSubject<Bool, Never>(false)
     
@@ -64,6 +65,10 @@ class GameEngine {
         currentBiomeVariant = Int(current_biome_tiles_variant())
         cameraViewport = camera_viewport()
         cameraViewportOffset = camera_viewport_offset()
+        
+        fetchInventory { items in
+            self.inventory.send(items)
+        }
         
         if current_world_id() != currentWorldId {
             print("World changed from \(currentWorldId) to \(current_world_id())")

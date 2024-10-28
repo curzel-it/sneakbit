@@ -13,14 +13,12 @@ struct JoystickView: View {
                     Image("joystick")
                         .interpolation(.none)
                         .resizable()
-                        // Circle().fill(Color.gray.opacity(0.6))
                         .frame(width: viewModel.baseRadius * 2, height: viewModel.baseRadius * 2)
                         .position(viewModel.center)
                     
                     Image("joystick_lever")
                         .interpolation(.none)
                         .resizable()
-                            // Circle().fill(Color.black.opacity(0.4))
                         .frame(width: viewModel.leverRadius * 2, height: viewModel.leverRadius * 2)
                         .position(viewModel.dragLocation)
                 }

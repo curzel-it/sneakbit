@@ -1,8 +1,8 @@
 use std::{cmp::Ordering, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
-use game_engine::{engine::GameEngine, entity::Entity, world::World};
-use maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile};
+use game_engine::{engine::GameEngine, entity::Entity, inventory::{get_inventory_items, InventoryItem}};
+use maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile, tiles::tiles_with_revision};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::IntRect, vector::Vector2d};
 
@@ -164,8 +164,8 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
 #[no_mangle]
 pub extern "C" fn get_renderables(length: *mut usize) -> *mut RenderableItem {
     let items = get_renderables_vec();
-
     let len = items.len();
+    
     unsafe {
         ptr::write(length, len);
     }
@@ -318,28 +318,6 @@ pub extern "C" fn select_current_menu_option_at_index(index: u32) {
     engine_mut().select_current_menu_option_at_index(index as usize)
 }
 
-struct RevisedTiles {
-    current_revision: u32,
-    biome_tiles: Vec<Vec<BiomeTile>>,
-    construction_tiles: Vec<Vec<ConstructionTile>>
-}
-
-fn updated_tiles_vec(world_id: u32) -> RevisedTiles {
-    if let Some(world) = World::load(world_id) {
-        RevisedTiles {
-            current_revision: world.revision,
-            biome_tiles: world.biome_tiles.tiles,
-            construction_tiles: world.constructions_tiles.tiles
-        }
-    } else {
-        RevisedTiles { 
-            current_revision: 0, 
-            biome_tiles: vec![], 
-            construction_tiles: vec![] 
-        }
-    }
-}
-
 #[no_mangle]
 pub extern "C" fn updated_tiles(
     world_id: u32,
@@ -347,7 +325,7 @@ pub extern "C" fn updated_tiles(
     out_construction_tiles: *mut *const ConstructionTile, 
     out_len_x: *mut usize, out_len_y: *mut usize
 ) -> u32 {
-    let tiles = updated_tiles_vec(world_id);
+    let tiles = tiles_with_revision(world_id);
     let len_y = tiles.biome_tiles.len();
     let len_x = if len_y > 0 { tiles.biome_tiles[0].len() } else { 0 };
 
@@ -381,5 +359,29 @@ pub extern "C" fn free_construction_tiles(tiles_ptr: *mut ConstructionTile, len_
     let len = len_x * len_y;
     unsafe {
         let _ = Vec::from_raw_parts(tiles_ptr, len, len);
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn inventory_state(length: *mut usize) -> *mut InventoryItem {
+    let items = get_inventory_items();
+    let len = items.len();
+    
+    unsafe {
+        ptr::write(length, len);
+    }
+
+    let ptr = items.as_ptr() as *mut InventoryItem;
+    std::mem::forget(items);
+    ptr
+}
+
+#[no_mangle]
+pub extern "C" fn free_inventory_state(state: *mut InventoryItem, items_count: usize) {
+    if !state.is_null() {
+        unsafe {
+            let slice = std::slice::from_raw_parts_mut(state, items_count);
+            let _ = Box::from_raw(slice);
+        }
     }
 }
