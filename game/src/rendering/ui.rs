@@ -55,6 +55,7 @@ impl RenderingConfig {
             Typography::Title => &self.font_bold,
             Typography::Selected => &self.font_bold,
             Typography::Regular => &self.font,
+            Typography::Caption => &self.font,
         }
     }
 
@@ -67,6 +68,7 @@ impl RenderingConfig {
             Typography::Title => 12.0,
             Typography::Selected => 8.0,
             Typography::Regular => 8.0,
+            Typography::Caption => 6.0,
         }
     }
 

@@ -9,6 +9,7 @@ impl GameEngine {
             height, 
             self.hud_background_color(),
             vec![
+                (AnchorPoint::TopRight, self.inventory_status.ui()),
                 (AnchorPoint::TopRight, self.toast.regular_toast_ui()),
                 (AnchorPoint::TopLeft, self.toast.important_toast_ui()),
                 (AnchorPoint::BottomCenter, self.menu.ui(&self.camera_viewport)),
