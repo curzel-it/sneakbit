@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashSet, fmt::{self, Debug}};
+use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
 
 use common_macros::hash_set;
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, hitmap::{EntityIdsMap, Hitmap, WeightsMap}}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
@@ -333,6 +333,26 @@ impl World {
             .map(|t| t.frame)
     }
 
+    pub fn find_any_teleporter(&self) -> Option<IntRect> {
+        let entities = self.entities.borrow();
+        let mut teleporters: Vec<&Entity> = entities.iter().filter(|t| matches!(t.entity_type, EntityType::Teleporter)).collect();
+        
+        teleporters.sort_by(|a, b| {
+            if let Some(dest_a) = a.destination.clone() {
+                if let Some(dest_b) = b.destination.clone() {
+                    if dest_a.world < dest_b.world { return Ordering::Less }
+                    if dest_a.world > dest_b.world { return Ordering::Greater }
+                }
+            }
+            return Ordering::Equal            
+        });
+
+        if teleporters.len() > 0 {
+            Some(teleporters[0].frame)
+        } else {
+            None
+        }
+    }
 
     pub fn is_hero_on_slippery_surface(&self) -> bool {
         let frame = self.cached_hero_props.hittable_frame;

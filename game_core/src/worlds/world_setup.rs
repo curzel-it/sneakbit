@@ -40,13 +40,12 @@ impl World {
     fn destination_x_y(&self, source: u32, original_x: i32, original_y: i32) -> (i32, i32) {
         if original_x == 0 && original_y == 0 {            
             if let Some(teleporter_position) = self.find_teleporter_for_destination(source) {
-                println!("Found teleporter at {} {}", teleporter_position.x, teleporter_position.y);
                 (teleporter_position.x, teleporter_position.y)
             } else if self.id == WORLD_ID_DEMO {
-                println!("World is demo using 59 41");
                 (59, 41)
+            } else if let Some(teleporter_position) = self.find_any_teleporter() {
+                (teleporter_position.x, teleporter_position.y)
             } else {
-                println!("Teleporter not found center at {} {}", WORLD_SIZE_COLUMNS as i32 / 2, WORLD_SIZE_ROWS as i32 / 2);
                 (WORLD_SIZE_COLUMNS as i32 / 2, WORLD_SIZE_ROWS as i32 / 2)
             }
         } else {

@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, dialogues::{menu::DialogueMenu, models::Dialogue}, features::{creep_spawner::CreepSpawner, death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, inventory::Inventory, inventory_recap::InventoryRecap, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, dialogues::{menu::DialogueMenu, models::Dialogue}, features::{creep_spawner::CreepSpawner, death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, inventory_recap::InventoryRecap, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{rect::IntRect, vector::Vector2d}};
 
 use super::{inventory::{add_to_inventory, remove_from_inventory}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_key, set_value_for_key, StorageKey}, world::World};
 
@@ -59,7 +59,12 @@ impl GameEngine {
         self.toast.update(time_since_last_update);
 
         if self.death_screen.is_open {
-            return;
+            if self.keyboard.has_confirmation_been_pressed {
+                self.death_screen.is_open = false;
+                self.teleport_to_previous();
+            } else {
+                return;
+            }
         }
 
         self.loading_screen.update(time_since_last_update);
@@ -88,7 +93,7 @@ impl GameEngine {
         let mut is_game_paused = false;
 
         self.inventory_status.update();
-        
+
         if !is_game_paused {
             let keyboard = if self.long_text_display.is_open { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
             let is_reading = self.long_text_display.update(keyboard, time_since_last_update);
