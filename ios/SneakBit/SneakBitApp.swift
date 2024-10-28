@@ -10,6 +10,7 @@ struct SneakBitApp: App {
         WindowGroup {
             ContentView()
                 .statusBarHidden(true)
+                .foregroundStyle(Color.white)
         }
     }
 }

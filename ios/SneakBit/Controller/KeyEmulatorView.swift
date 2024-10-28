@@ -33,34 +33,3 @@ struct KeyEmulatorView: View {
             )
     }
 }
-
-
-/*
-import Foundation
-import SwiftUI
-import Schwifty
-
-struct KeyEmulatorView: View {
-    static let size = CGSize(width: 48, height: 48)
-    static let iconSize = CGSize(width: 24, height: 24)
-        
-    let key: EmulatedKey
-    
-    @State var isBeingPressed = false
-    
-    var body: some View {
-        Image("\(key.systemImageName)_button_\(isBeingPressed ? "down" : "up")")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(size: KeyEmulatorView.iconSize)
-            .foregroundStyle(Color.black)
-            .frame(size: KeyEmulatorView.size)
-            .background(Color.gray.opacity(0.7))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .onTapGesture {
-                @Inject var engine: GameEngine
-                engine.setKeyDown(key)
-            }
-    }
-}
-*/
