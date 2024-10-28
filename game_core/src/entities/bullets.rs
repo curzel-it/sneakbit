@@ -1,4 +1,6 @@
-use crate::{game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, utils::directions::Direction};
+use crate::{game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::directions::Direction};
+
+use super::pickable_object::object_pick_up_sequence;
 
 impl Entity {
     pub fn setup_bullet(&mut self) {
@@ -9,14 +11,8 @@ impl Entity {
         self.update_sprite_for_current_state();
         self.move_linearly(world, time_since_last_update);
 
-        if self.current_speed == 0.0 && world.is_hero_around_and_on_collision_with(&self.frame) {            
-            return vec![
-                WorldStateUpdate::EngineUpdate(
-                    EngineStateUpdate::ShowEntityOptions(
-                        Box::new(self.clone())
-                    )
-                )
-            ];   
+        if self.current_speed == 0.0 && !world.creative_mode && world.is_hero_at(self.frame.x, self.frame.y) {   
+            return object_pick_up_sequence(self);
         }
 
         if self.current_speed == 0.0 || matches!(self.direction, Direction::Unknown) {

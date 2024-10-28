@@ -123,5 +123,5 @@ private class MenuViewModel: ObservableObject {
         withAnimation {
             isVisible = false
         }
-    }
+    }    
 }

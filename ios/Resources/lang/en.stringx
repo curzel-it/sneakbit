@@ -7,6 +7,7 @@
 "confirmation.confirm" = "Ok"
 "confirmation.cancel" = "Nope"
 "death_screen.title" = "You're dead."
+"death_screen.subtitle" = "Press CONFIRM to try again"
 "dialogue.reward_received" = "You received `%s`!"
 "picked_up_item" = "Picked up `%s`!"
 "dialogue.select_option" = "Select an option:"

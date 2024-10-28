@@ -1172,7 +1172,7 @@
         "id": 6001,
         "name": "objects.name.book_red",
         "is_invulnerable": true,
-        "entity_type": "PickableObject",
+        "entity_type": "StaticObject",
         "z_index": 350,
         "base_speed": 1.0,
         "is_rigid": false,
@@ -1181,20 +1181,20 @@
             11
         ],
         "sprite_frame": {
-            "x": 0,
-            "y": 5,
+            "x": 19,
+            "y": 0,
             "w": 1,
             "h": 1
         },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
         "lock_type": "None"
     },
     {
         "id": 6002,
         "name": "objects.name.book_blue",
         "is_invulnerable": true,
-        "entity_type": "PickableObject",
+        "entity_type": "StaticObject",
         "z_index": 350,
         "base_speed": 1.0,
         "is_rigid": false,
@@ -1203,20 +1203,20 @@
             12
         ],
         "sprite_frame": {
-            "x": 0,
-            "y": 6,
+            "x": 19,
+            "y": 1,
             "w": 1,
             "h": 1
         },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
         "lock_type": "None"
     },
     {
         "id": 6003,
         "name": "objects.name.book_green",
         "is_invulnerable": true,
-        "entity_type": "PickableObject",
+        "entity_type": "StaticObject",
         "z_index": 350,
         "base_speed": 1.0,
         "is_rigid": false,
@@ -1225,20 +1225,20 @@
             13
         ],
         "sprite_frame": {
-            "x": 0,
-            "y": 7,
+            "x": 19,
+            "y": 2,
             "w": 1,
             "h": 1
         },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
         "lock_type": "None"
     },
     {
         "id": 6004,
         "name": "objects.name.book_purple",
         "is_invulnerable": true,
-        "entity_type": "PickableObject",
+        "entity_type": "StaticObject",
         "z_index": 350,
         "base_speed": 1.0,
         "is_rigid": false,
@@ -1247,20 +1247,20 @@
             14
         ],
         "sprite_frame": {
-            "x": 0,
-            "y": 8,
+            "x": 19,
+            "y": 3,
             "w": 1,
             "h": 1
         },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
         "lock_type": "None"
     },
     {
         "id": 6005,
         "name": "objects.name.book_dark",
         "is_invulnerable": true,
-        "entity_type": "PickableObject",
+        "entity_type": "StaticObject",
         "z_index": 350,
         "base_speed": 1.0,
         "is_rigid": false,
@@ -1269,13 +1269,13 @@
             15
         ],
         "sprite_frame": {
-            "x": 0,
-            "y": 9,
+            "x": 19,
+            "y": 4,
             "w": 1,
             "h": 1
         },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
         "lock_type": "None"
     },
     {

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::UNLIMITED_LIFESPAN, dialogues::models::{Dialogue, EntityDialogues}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, directions::MovementDirections}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::UNLIMITED_LIFESPAN, dialogues::models::{Dialogue, EntityDialogues}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, directions::MovementDirections}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::get_value_for_key, world::World};
 
@@ -195,14 +195,16 @@ impl Entity {
     }
 
     fn update_static(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {  
-        if (world.creative_mode || self.contents.is_some()) && world.is_hero_around_and_on_collision_with(&self.frame) {
-            return vec![
-                WorldStateUpdate::EngineUpdate(
-                    EngineStateUpdate::ShowEntityOptions(
-                        Box::new(self.clone())
+        if world.is_hero_around_and_on_collision_with(&self.frame) {
+            if let Some(contents) = self.contents.clone() {
+                return vec![
+                    WorldStateUpdate::EngineUpdate(
+                        EngineStateUpdate::DisplayLongText(
+                            contents.localized()
+                        )
                     )
-                )
-            ];   
+                ];   
+            }
         }
         vec![]
     }

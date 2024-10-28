@@ -274,6 +274,12 @@ pub extern "C" fn current_menu() -> MenuDescriptorC {
         descriptor.text = string_to_c_char(engine.dialogue_menu.text.clone());
         return descriptor
     }
+    if engine.long_text_display.is_open {
+        let mut descriptor = MenuDescriptorC::empty();
+        descriptor.is_visible = true;
+        descriptor.text = string_to_c_char(engine.long_text_display.text.clone());
+        return descriptor
+    }
     if engine.confirmation_dialog.is_open() {
         return engine.confirmation_dialog.menu.descriptor_c()
     }
