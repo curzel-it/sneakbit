@@ -185,6 +185,14 @@ impl Entity {
             },
         }            
     }
+
+    pub fn is_at_the_edge_of_the_world(&self, bounds: &IntRect) -> bool {
+        if self.frame.x <= bounds.x { return true }
+        if self.frame.y <= bounds.y { return true }
+        if self.frame.x + self.frame.w >= bounds.x + bounds.w { return true }
+        if self.frame.y + self.frame.h >= bounds.y + bounds.h { return true }
+        false
+    }
 }
 
 impl Entity {
