@@ -18,7 +18,7 @@ impl World {
         let mut idsmap = vec![vec![0; width]; height];
         let mut weightsmap = vec![vec![0; width]; height];
     
-        for &(index, id) in &self.renderable_entities {
+        for &(index, id) in &self.visible_entities {
             let entity = &entities[index];
             let col_start = entity.frame.x as usize;
             let col_end = (col_start + entity.frame.w as usize).min(width);
@@ -101,8 +101,7 @@ mod tests {
         npc.frame.x = 5;
         npc.frame.y = 5;
         world.add_entity(npc);
-        world.renderable_entities = world.compute_renderable_entities(&IntRect::square_from_origin(20));
-        world.updatable_entities = world.compute_updatable_entities(&IntRect::square_from_origin(20));
+        world.visible_entities = world.compute_visible_entities(&IntRect::square_from_origin(20));
         
         let (hitmap, _, _) = world.compute_hitmap();
         assert!(!hitmap[5][5]);
@@ -117,8 +116,7 @@ mod tests {
         npc.is_rigid = false;
         
         world.add_entity(npc);
-        world.renderable_entities = world.compute_renderable_entities(&IntRect::square_from_origin(20));
-        world.updatable_entities = world.compute_updatable_entities(&IntRect::square_from_origin(20));
+        world.visible_entities = world.compute_visible_entities(&IntRect::square_from_origin(20));
         
         let (hitmap, _, _) = world.compute_hitmap();
         assert!(!hitmap[6][5]);
