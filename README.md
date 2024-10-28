@@ -24,8 +24,15 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 3. Installed LLVM via `winget install LLVM.LLVM`
 4. `cargo run` 
 
+### iOS
+The engine is the same, the rendering is a simple custom view.
+```bash
+sh scripts/build_ios.sh
+```
+Then launch from Xcode (requires a real device with current cargo-lipo config).
+
 ## Why lib + bind?
-I'm trying to have the engine by completely independent from rendering, which is going to be useful for porting the project to iOS.
+I'm trying to have the engine by completely independent from rendering, which has proved useful for porting the project to iOS.
 
 ```bash
 cargo lipo --package game_core --release
@@ -42,3 +49,5 @@ cbindgen --config game_core/cbindgen.toml --crate game_core --output game_core.h
 - Add tests to make sure kunai can be used to lower pressure plates
 - Add indicator for overlapping enemies (beta testers liked the bug)
 - On windows, some users report crashes when certain dialogues start
+- Auto pick-up objects
+- Throttle entity interactions

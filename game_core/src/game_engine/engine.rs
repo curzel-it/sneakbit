@@ -234,6 +234,7 @@ impl GameEngine {
         if self.dialogue_menu.is_open() {
             return
         }
+        println!("Showing dialogue menu");
         self.dialogue_menu.show(*npc_id, npc_name, dialogue);
     }    
 
