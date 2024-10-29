@@ -1,17 +1,16 @@
 package it.curzel.bitscape
 
+import ControllerEmulatorView
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.engine.RenderingScaleUseCase
@@ -22,14 +21,32 @@ import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.GameView
 import it.curzel.bitscape.rendering.SpritesProvider
 import it.curzel.bitscape.ui.theme.SneakBitTheme
-import java.io.File
-import java.io.IOException
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val spritesProvider = SpritesProvider(
+        val spritesProvider = buildSpritesProvider()
+        val engine = buildEngine(spritesProvider)
+
+        enableEdgeToEdge()
+        setContent {
+            SneakBitTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Box(modifier = Modifier.padding(innerPadding)) {
+                        GameViewComposable(
+                            engine = engine,
+                            spritesProvider = spritesProvider
+                        )
+                        ControllerEmulatorView(engine)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun buildSpritesProvider(): SpritesProvider {
+        return SpritesProvider(
             context = this,
             spriteSheetFileNames = hashMapOf(
                 NativeLib.SPRITE_SHEET_INVENTORY to "inventory",
@@ -48,27 +65,16 @@ class MainActivity : ComponentActivity() {
                 NativeLib.SPRITE_SHEET_FARM_PLANTS to "farm_plants"
             )
         )
+    }
 
-        val engine = GameEngine(
+    private fun buildEngine(spritesProvider: SpritesProvider): GameEngine {
+        return GameEngine(
             context = this,
             renderingScaleUseCase = RenderingScaleUseCase(this),
             tileMapImageGenerator = TileMapImageGenerator(spritesProvider),
             tileMapsStorage = TileMapsStorage(this),
             worldRevisionsStorage = WorldRevisionsStorage(this)
         )
-
-        enableEdgeToEdge()
-        setContent {
-            SneakBitTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    GameViewComposable(
-                        engine = engine,
-                        spritesProvider = spritesProvider,
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
     }
 }
 

@@ -22,7 +22,7 @@ class GameEngine(
     private val tileMapImageGenerator: TileMapImageGenerator,
     private val tileMapsStorage: TileMapsStorage,
     private val worldRevisionsStorage: WorldRevisionsStorage
-) {
+): SomeGameEngine {
 
     // val toast = MutableStateFlow<ToastDescriptorC?>(null)
     // val menus = MutableStateFlow<MenuDescriptorC?>(null)
@@ -159,13 +159,13 @@ class GameEngine(
         currentChar = 0
     }
 
-    fun setKeyDown(key: EmulatedKey) {
+    override fun setKeyDown(key: EmulatedKey) {
         if (keyDown.add(key)) {
             keyPressed.add(key)
         }
     }
 
-    fun setKeyUp(key: EmulatedKey) {
+    override fun setKeyUp(key: EmulatedKey) {
         keyPressed.remove(key)
         keyDown.remove(key)
     }

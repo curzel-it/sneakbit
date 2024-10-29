@@ -15,13 +15,15 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import it.curzel.bitscape.R
-import it.curzel.bitscape.engine.GameEngine
+import it.curzel.bitscape.engine.MockGameEngine
+import it.curzel.bitscape.engine.SomeGameEngine
 
 @Composable
 fun JoystickView(
-    gameEngine: GameEngine,
+    gameEngine: SomeGameEngine,
     modifier: Modifier = Modifier
 ) {
     val viewModel = remember { JoystickViewModel(gameEngine) }
@@ -71,7 +73,7 @@ fun JoystickView(
     }
 }
 
-class JoystickViewModel(private val engine: GameEngine) {
+class JoystickViewModel(private val engine: SomeGameEngine) {
     var dragLocation by mutableStateOf(Offset.Zero)
         private set
 
