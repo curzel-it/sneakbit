@@ -16,10 +16,14 @@ impl InventoryRecap {
     }
 
     pub fn ui(&self) -> View {
-        View::VStack {
-            spacing: Spacing::LG, 
-            children: self.items.iter().map(|i| self.item_ui(i)).collect()
-        }
+        zstack!(
+            Spacing::MD,      
+            COLOR_TRANSPARENT,  
+            View::VStack {
+                spacing: Spacing::LG, 
+                children: self.items.iter().map(|i| self.item_ui(i)).collect()
+            }
+        )
     }
 
     fn item_ui(&self, item: &InventoryItem) -> View {

@@ -3,7 +3,13 @@ use lazy_static::lazy_static;
 
 use crate::config::config;
 
-use super::{locks::{PRESSURE_PLATE_BLUE, PRESSURE_PLATE_GREEN, PRESSURE_PLATE_RED, PRESSURE_PLATE_SILVER, PRESSURE_PLATE_YELLOW}, world::World};
+use super::{
+    locks::{
+        PRESSURE_PLATE_BLUE, PRESSURE_PLATE_GREEN, PRESSURE_PLATE_RED, PRESSURE_PLATE_SILVER,
+        PRESSURE_PLATE_YELLOW,
+    },
+    world::World,
+};
 
 pub struct StorageKey {}
 
@@ -22,15 +28,39 @@ impl StorageKey {
 }
 
 fn load_stored_values() -> BTreeMap<String, u32> {
-    println!("Parsing save from {:#?}", config().key_value_storage_path.clone());
-    let file = File::open(config().key_value_storage_path.clone()).expect("Failed to open save.json file");
+    println!(
+        "Parsing save from {:#?}",
+        config().key_value_storage_path.clone()
+    );
+    
+    let file = match File::open(&config().key_value_storage_path) {
+        Ok(f) => f,
+        Err(e) => {
+            eprintln!(
+                "Failed to open {:#?}: {}. Starting with an empty storage.",
+                config().key_value_storage_path, e
+            );
+            return BTreeMap::new();
+        }
+    };
+
     let reader = BufReader::new(file);
-    serde_json::from_reader(reader).expect("Failed to deserialize save file from JSON")
+
+    match serde_json::from_reader(reader) {
+        Ok(map) => map,
+        Err(e) => {
+            eprintln!(
+                "Failed to deserialize JSON from {:#?}: {}. Starting with an empty storage.",
+                config().key_value_storage_path, e
+            );
+            BTreeMap::new()
+        }
+    }
 }
 
 fn save_stored_values(data: &BTreeMap<String, u32>) {
     if let Ok(serialized_world) = serde_json::to_string_pretty(data) {
-        if let Ok(mut file) = File::create(config().key_value_storage_path.clone()) {
+        if let Ok(mut file) = File::create(&config().key_value_storage_path) {
             if let Err(e) = file.write_all(serialized_world.as_bytes()) {
                 eprintln!("Failed to write save file: {}", e);
             } else {
@@ -45,24 +75,25 @@ fn save_stored_values(data: &BTreeMap<String, u32>) {
 }
 
 lazy_static! {
-    static ref KEY_VALUE_STORAGE: RwLock<BTreeMap<String, u32>> = RwLock::new(load_stored_values());
-    
+    static ref KEY_VALUE_STORAGE: RwLock<BTreeMap<String, u32>> =
+        RwLock::new(load_stored_values());
+
     static ref SAVE_THREAD: (Sender<BTreeMap<String, u32>>, thread::JoinHandle<()>) = {
         let (tx, rx) = mpsc::channel::<BTreeMap<String, u32>>();
-        
+
         let handle = thread::spawn(move || {
             while let Ok(data) = rx.recv() {
                 save_stored_values(&data);
             }
         });
-        
+
         (tx, handle)
     };
 }
 
 pub fn get_value_for_key(key: &str) -> Option<u32> {
     if key == StorageKey::always() {
-        return Some(1)
+        return Some(1);
     }
     let storage = KEY_VALUE_STORAGE.read().unwrap();
     storage.get(key).cloned()

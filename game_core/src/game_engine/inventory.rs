@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, collections::HashMap, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
+use std::{collections::HashMap, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
 use lazy_static::lazy_static;
 use serde_json;
 use crate::{config::config, entities::species::{species_by_id, EntityType}, game_engine::entity::Entity, utils::rect::IntRect};
@@ -73,22 +73,41 @@ pub fn inventory_contains_species(species_id: u32) -> bool {
 }
 
 fn load_inventory() -> Vec<Entity> {
-    println!("Parsing inventory from {:#?}", config().inventory_path.clone());
-    let file = File::open(config().inventory_path.clone()).expect("Failed to open inventory.json file");
-    let reader = BufReader::new(file);
-    serde_json::from_reader(reader).expect("Failed to deserialize inventory file from JSON")
+    println!("Parsing inventory from {:?}", config().inventory_path);
+    match File::open(&config().inventory_path) {
+        Ok(file) => {
+            let reader = BufReader::new(file);
+            match serde_json::from_reader(reader) {
+                Ok(inventory) => inventory,
+                Err(e) => {
+                    eprintln!(
+                        "Failed to deserialize inventory file '{:#?}': {}. Starting with empty inventory.",
+                        config().inventory_path, e
+                    );
+                    Vec::new()
+                }
+            }
+        }
+        Err(e) => {
+            eprintln!(
+                "Failed to open inventory file '{:#?}': {}. Starting with empty inventory.",
+                config().inventory_path, e
+            );
+            Vec::new()
+        }
+    }
 }
 
 fn save_inventory(inventory: &Vec<Entity>) {
     if let Ok(serialized_inventory) = serde_json::to_string_pretty(inventory) {
-        if let Ok(mut file) = File::create(config().inventory_path.clone()) {
+        if let Ok(mut file) = File::create(&config().inventory_path) {
             if let Err(e) = file.write_all(serialized_inventory.as_bytes()) {
-                eprintln!("Failed to write inventory file: {}", e);
+                eprintln!("Failed to write inventory file '{:#?}': {}", config().inventory_path, e);
             } else {
-                println!("Inventory saved successfully to inventory.json");
+                println!("Inventory saved successfully to '{:#?}'", config().inventory_path);
             }
         } else {
-            eprintln!("Failed to create inventory file");
+            eprintln!("Failed to create inventory file '{:#?}'", config().inventory_path);
         }
     } else {
         eprintln!("Failed to serialize inventory data");
@@ -123,11 +142,7 @@ pub fn get_inventory_items() -> Vec<InventoryItem> {
         });
     }
 
-    items.sort_by(|a, b| { 
-        if a.species_id < b.species_id { Ordering::Less }
-        else if a.species_id > b.species_id { Ordering::Greater }
-        else { Ordering::Equal }
-    });
+    items.sort_by(|a, b| a.species_id.cmp(&b.species_id));
 
     items
 }
