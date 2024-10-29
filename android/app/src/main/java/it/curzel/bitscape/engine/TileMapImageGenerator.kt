@@ -4,26 +4,17 @@ import android.content.Context
 import android.graphics.*
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import it.curzel.bitscape.rendering.IntRect
+import it.curzel.bitscape.gamecore.BiomeTile
+import it.curzel.bitscape.gamecore.ConstructionTile
+import it.curzel.bitscape.gamecore.IntRect
+import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.SpritesProvider
+import java.lang.annotation.Native
 import kotlin.math.roundToInt
 
 // Assuming these constants are defined somewhere in your codebase
-const val TILE_SIZE = 32 // Example tile size in pixels
 const val SPRITE_SHEET_BIOME_TILES = 1
 const val SPRITE_SHEET_CONSTRUCTION_TILES = 2
-
-// Data classes (Assumed to be defined)
-data class BiomeTile(
-    val tile_type: Int,
-    val texture_offset_x: Int,
-    val texture_offset_y: Int
-)
-
-data class ConstructionTile(
-    val tile_type: Int,
-    val texture_source_rect: IntRect
-)
 
 // Extension function to flip a Bitmap vertically
 fun Bitmap.flipVertically(): Bitmap {
@@ -34,19 +25,18 @@ fun Bitmap.flipVertically(): Bitmap {
 }
 
 class TileMapImageGenerator(private val spritesProvider: SpritesProvider) {
-    private val numberOfBiomes: Int = 18
-
     fun generate(
         renderingScale: Float,
         worldWidth: Int,
         worldHeight: Int,
         variant: Int,
-        biomeTiles: List<List<BiomeTile>>,
-        constructionTiles: List<List<ConstructionTile>>
+        biomeTiles: Array<Array<BiomeTile>>,
+        constructionTiles: Array<Array<ConstructionTile>>
     ): Bitmap? {
         if (biomeTiles.isEmpty() || constructionTiles.isEmpty()) return null
+        if (worldWidth == 0 || worldHeight == 0) return null
 
-        val tileSize = TILE_SIZE * renderingScale
+        val tileSize = NativeLib.TILE_SIZE * renderingScale
         val mapWidth = (worldWidth * tileSize).roundToInt()
         val mapHeight = (worldHeight * tileSize).roundToInt()
 
@@ -61,16 +51,16 @@ class TileMapImageGenerator(private val spritesProvider: SpritesProvider) {
         for (row in 0 until worldHeight) {
             for (col in 0 until worldWidth) {
                 val biomeTile = biomeTiles[row][col]
-                if (biomeTile.tile_type == 0) continue
+                if (biomeTile.tileType == 0) continue
 
                 val textureRect = IntRect(
-                    x = biomeTile.texture_offset_x,
-                    y = biomeTile.texture_offset_y + variant * numberOfBiomes,
+                    x = biomeTile.textureOffsetX,
+                    y = biomeTile.textureOffsetY + variant * NativeLib.NUMBER_OF_BIOMES,
                     w = 1,
                     h = 1
                 )
 
-                val bitmap = spritesProvider.bitmapFor(SPRITE_SHEET_BIOME_TILES.toUInt(), textureRect)
+                val bitmap = spritesProvider.bitmapFor(NativeLib.SPRITE_SHEET_BIOME_TILES, textureRect)
                 bitmap?.let {
                     val frame = RectF(
                         col * tileSize,
@@ -87,9 +77,9 @@ class TileMapImageGenerator(private val spritesProvider: SpritesProvider) {
         for (row in 0 until worldHeight) {
             for (col in 0 until worldWidth) {
                 val constructionTile = constructionTiles[row][col]
-                if (constructionTile.tile_type == 0) continue
+                if (constructionTile.tileType == 0) continue
 
-                val sourceRect = constructionTile.texture_source_rect
+                val sourceRect = constructionTile.textureSourceRect
                 if (sourceRect.x != 0) {
                     val textureRect = IntRect(
                         x = sourceRect.x,
@@ -98,7 +88,7 @@ class TileMapImageGenerator(private val spritesProvider: SpritesProvider) {
                         h = sourceRect.h
                     )
 
-                    val bitmap = spritesProvider.bitmapFor(SPRITE_SHEET_CONSTRUCTION_TILES.toUInt(), textureRect)
+                    val bitmap = spritesProvider.bitmapFor(NativeLib.SPRITE_SHEET_CONSTRUCTION_TILES, textureRect)
                     bitmap?.let {
                         val frame = RectF(
                             col * tileSize,

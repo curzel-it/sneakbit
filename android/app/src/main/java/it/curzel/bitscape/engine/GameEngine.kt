@@ -11,11 +11,11 @@ import android.util.Log
 import android.util.Size
 import it.curzel.bitscape.AssetUtils
 import it.curzel.bitscape.controller.EmulatedKey
+import it.curzel.bitscape.gamecore.EdgeInsets
+import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
-import it.curzel.bitscape.rendering.EdgeInsets
-import it.curzel.bitscape.rendering.IntRect
+import it.curzel.bitscape.gamecore.Vector2d
 import it.curzel.bitscape.rendering.SpritesProvider
-import it.curzel.bitscape.rendering.Vector2d
 import java.io.File
 import java.io.IOException
 import java.lang.annotation.Native
@@ -43,7 +43,7 @@ class GameEngine(
     private var lastFpsUpdate = System.currentTimeMillis()
     private var frameCount = 0
 
-    private val tileSize = TILE_SIZE.toFloat()
+    private val tileSize = NativeLib.TILE_SIZE.toFloat()
     var renderingScale = 1f
     var cameraViewport = IntRect(0, 0, 0, 0)
     var cameraViewportOffset = Vector2d(0.0f, 0.0f)
@@ -101,7 +101,7 @@ class GameEngine(
 */
         val freshWorldId = nativeLib.currentWorldId().toUInt()
         if (freshWorldId != currentWorldId) {
-            println("World changed from $currentWorldId to ${freshWorldId}")
+            println("World changed from $currentWorldId to $freshWorldId")
             currentWorldId = freshWorldId
             keyDown.clear()
             keyPressed.clear()
@@ -136,6 +136,7 @@ class GameEngine(
         )
         worldWidth = nativeLib.currentWorldWidth()
         worldHeight = nativeLib.currentWorldHeight()
+        updateTileMapImages(currentWorldId)
     }/*
 
     fun renderingFrame(entity: RenderableItem): Rect {
@@ -234,35 +235,33 @@ class GameEngine(
         )
     }
 
-        private fun updateTileMapImages(worldId: UInt) {
-            // setLoading(LoadingScreenConfig.WorldTransition)
+    private fun updateTileMapImages(worldId: UInt) {
+        // setLoading(LoadingScreenConfig.WorldTransition)
 
-            val requiredRevision = nativeLib.currentWorldRevision().toUInt()
-            val images = tileMapsStorage.images(worldId, requiredRevision)
+        val requiredRevision = nativeLib.currentWorldRevision().toUInt()
+        val images = tileMapsStorage.images(worldId, requiredRevision)
 
-            if (images.size >= NativeLib.BIOME_NUMBER_OF_FRAMES) {
-                tileMapImages = images
-                // setLoading(LoadingScreenConfig.None)
-                return
-            }
-/*
-            nativeLib.fetchUpdatedTiles(worldId) { currentRevision, biomeTiles, constructionTiles ->
-                worldRevisionsStorage.store(currentRevision, worldId)
+        if (images.size >= NativeLib.BIOME_NUMBER_OF_FRAMES) {
+            tileMapImages = images
+            // setLoading(LoadingScreenConfig.None)
+            return
+        }
 
-                tileMapImages = (0 until NativeLib.BIOME_NUMBER_OF_FRAMES).mapNotNull { variant ->
-                    tileMapImageGenerator.generate(
-                        renderingScale,
-                        worldWidth,
-                        worldHeight,
-                        variant,
-                        biomeTiles,
-                        constructionTiles
-                    )
-                }
-                tileMapsStorage.storeImages(tileMapImages, worldId, requiredRevision)
-                // setLoading(LoadingScreenConfig.None)
-            }
-*/        }
+        val updatedTiles = nativeLib.fetchUpdatedTiles(worldId.toInt())
+        worldRevisionsStorage.store(updatedTiles.currentRevision, worldId)
+
+        tileMapImages = (0 until NativeLib.BIOME_NUMBER_OF_FRAMES).mapNotNull { variant ->
+            tileMapImageGenerator.generate(
+                renderingScale,
+                worldWidth,
+                worldHeight,
+                variant,
+                updatedTiles.biomeTiles,
+                updatedTiles.constructionTiles
+            )
+        }
+        tileMapsStorage.store(tileMapImages, worldId, requiredRevision)
+    }
 
     private fun updateFpsCounter() {
         frameCount++

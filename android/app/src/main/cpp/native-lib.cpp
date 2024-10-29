@@ -232,3 +232,152 @@ JNIEXPORT jint JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_currentWorldRevision(JNIEnv *env, jobject thiz) {
     return current_world_revision();
 }
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_fetchUpdatedTiles(
+        JNIEnv *env,
+        jobject thiz,
+        jint world_id
+) {
+    // Declare output parameters
+    const BiomeTile *biome_tiles = nullptr;
+    const ConstructionTile *construction_tiles = nullptr;
+    uintptr_t out_len_x = 0;
+    uintptr_t out_len_y = 0;
+
+    // Call the updated_tiles function
+    uint32_t current_revision = updated_tiles(
+            static_cast<uint32_t>(world_id),
+            &biome_tiles,
+            &construction_tiles,
+            &out_len_x,
+            &out_len_y
+    );
+
+    if (!biome_tiles || !construction_tiles) {
+        // Handle error: Tiles data not available
+        return nullptr;
+    }
+
+    // Get class references
+    jclass updatedTilesClass = env->FindClass("it/curzel/bitscape/gamecore/UpdatedTiles");
+    jclass biomeTileClass = env->FindClass("it/curzel/bitscape/gamecore/BiomeTile");
+    jclass constructionTileClass = env->FindClass("it/curzel/bitscape/gamecore/ConstructionTile");
+    jclass intRectClass = env->FindClass("it/curzel/bitscape/gamecore/IntRect");
+
+    if (!updatedTilesClass || !biomeTileClass || !constructionTileClass || !intRectClass) {
+        // Handle error: Classes not found
+        return nullptr;
+    }
+
+    // Get method IDs for constructors
+    jmethodID biomeTileConstructor = env->GetMethodID(biomeTileClass, "<init>", "(III)V");
+    jmethodID intRectConstructor = env->GetMethodID(intRectClass, "<init>", "(IIII)V");
+    jmethodID constructionTileConstructor = env->GetMethodID(constructionTileClass, "<init>", "(ILit/curzel/bitscape/gamecore/IntRect;)V");
+    jmethodID updatedTilesConstructor = env->GetMethodID(updatedTilesClass, "<init>", "(I[[Lit/curzel/bitscape/gamecore/BiomeTile;[[Lit/curzel/bitscape/gamecore/ConstructionTile;)V");
+
+    if (!biomeTileConstructor || !intRectConstructor || !constructionTileConstructor || !updatedTilesConstructor) {
+        // Handle error: Constructors not found
+        return nullptr;
+    }
+
+    // Prepare array classes
+    jclass biomeTileArrayClass = env->FindClass("[Lit/curzel/bitscape/gamecore/BiomeTile;");
+    jclass constructionTileArrayClass = env->FindClass("[Lit/curzel/bitscape/gamecore/ConstructionTile;");
+
+    if (!biomeTileArrayClass || !constructionTileArrayClass) {
+        // Handle error: Array classes not found
+        return nullptr;
+    }
+
+    // Create outer arrays
+    jobjectArray biomeTilesOuterArray = env->NewObjectArray(out_len_y, biomeTileArrayClass, nullptr);
+    jobjectArray constructionTilesOuterArray = env->NewObjectArray(out_len_y, constructionTileArrayClass, nullptr);
+
+    if (!biomeTilesOuterArray || !constructionTilesOuterArray) {
+        // Handle error: Failed to create outer arrays
+        return nullptr;
+    }
+
+    // Fill arrays
+    for (uintptr_t y = 0; y < out_len_y; ++y) {
+        jobjectArray biomeTileRow = env->NewObjectArray(out_len_x, biomeTileClass, nullptr);
+        jobjectArray constructionTileRow = env->NewObjectArray(out_len_x, constructionTileClass, nullptr);
+
+        if (!biomeTileRow || !constructionTileRow) {
+            // Handle error: Failed to create inner arrays
+            return nullptr;
+        }
+
+        for (uintptr_t x = 0; x < out_len_x; ++x) {
+            uintptr_t index = y * out_len_x + x;
+
+            // BiomeTile
+            const BiomeTile &tile = biome_tiles[index];
+            jobject biomeTileObj = env->NewObject(
+                    biomeTileClass,
+                    biomeTileConstructor,
+                    static_cast<jint>(tile.tile_type),
+                    static_cast<jint>(tile.texture_offset_x),
+                    static_cast<jint>(tile.texture_offset_y)
+            );
+            if (!biomeTileObj) {
+                // Handle error: Failed to create BiomeTile object
+                return nullptr;
+            }
+            env->SetObjectArrayElement(biomeTileRow, x, biomeTileObj);
+            env->DeleteLocalRef(biomeTileObj);
+
+            // ConstructionTile
+            const ConstructionTile &ctile = construction_tiles[index];
+            const IntRect &rect = ctile.texture_source_rect;
+            jobject intRectObj = env->NewObject(
+                    intRectClass,
+                    intRectConstructor,
+                    static_cast<jint>(rect.x),
+                    static_cast<jint>(rect.y),
+                    static_cast<jint>(rect.w),
+                    static_cast<jint>(rect.h)
+            );
+            if (!intRectObj) {
+                // Handle error: Failed to create IntRect object
+                return nullptr;
+            }
+            jobject constructionTileObj = env->NewObject(
+                    constructionTileClass,
+                    constructionTileConstructor,
+                    static_cast<jint>(ctile.tile_type),
+                    intRectObj
+            );
+            env->DeleteLocalRef(intRectObj);
+            if (!constructionTileObj) {
+                // Handle error: Failed to create ConstructionTile object
+                return nullptr;
+            }
+            env->SetObjectArrayElement(constructionTileRow, x, constructionTileObj);
+            env->DeleteLocalRef(constructionTileObj);
+        }
+
+        env->SetObjectArrayElement(biomeTilesOuterArray, y, biomeTileRow);
+        env->DeleteLocalRef(biomeTileRow);
+
+        env->SetObjectArrayElement(constructionTilesOuterArray, y, constructionTileRow);
+        env->DeleteLocalRef(constructionTileRow);
+    }
+
+    // Create the UpdatedTiles object
+    jobject updatedTilesObj = env->NewObject(
+            updatedTilesClass,
+            updatedTilesConstructor,
+            static_cast<jint>(current_revision),
+            biomeTilesOuterArray,
+            constructionTilesOuterArray
+    );
+
+    // Clean up
+    env->DeleteLocalRef(biomeTilesOuterArray);
+    env->DeleteLocalRef(constructionTilesOuterArray);
+
+    return updatedTilesObj;
+}

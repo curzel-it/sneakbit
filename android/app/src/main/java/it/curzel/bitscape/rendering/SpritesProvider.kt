@@ -4,18 +4,16 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
+import it.curzel.bitscape.gamecore.IntRect
+import it.curzel.bitscape.gamecore.NativeLib
+import it.curzel.bitscape.gamecore.RenderableItem
 import java.io.IOException
 
 class SpritesProvider(private val context: Context, private val spriteSheetFileNames: Map<UInt, String>) {
-
     private data class CacheKey(val spriteSheetID: UInt, val rect: IntRect)
 
     private val cache = mutableMapOf<CacheKey, Bitmap>()
     private val spriteSheetImages = mutableMapOf<UInt, Bitmap>()
-
-    companion object {
-        const val TILE_SIZE = 32 // Adjust this value as needed
-    }
 
     fun bitmapFor(spriteSheetID: UInt, textureRect: IntRect): Bitmap? {
         val cacheKey = CacheKey(spriteSheetID, textureRect)
@@ -25,10 +23,10 @@ class SpritesProvider(private val context: Context, private val spriteSheetFileN
         val sheetImage = loadSpriteSheetImage(spriteSheetID) ?: return null
 
         val rect = Rect(
-            textureRect.x * TILE_SIZE,
-            textureRect.y * TILE_SIZE,
-            (textureRect.x + textureRect.w) * TILE_SIZE,
-            (textureRect.y + textureRect.h) * TILE_SIZE
+            textureRect.x * NativeLib.TILE_SIZE,
+            textureRect.y * NativeLib.TILE_SIZE,
+            (textureRect.x + textureRect.w) * NativeLib.TILE_SIZE,
+            (textureRect.y + textureRect.h) * NativeLib.TILE_SIZE
         )
 
         val width = rect.width()
@@ -60,27 +58,3 @@ class SpritesProvider(private val context: Context, private val spriteSheetFileN
         return bitmapFor(entity.spriteSheetId, entity.textureRect)
     }
 }
-
-data class IntRect(
-    val x: Int,
-    val y: Int,
-    val w: Int,
-    val h: Int
-)
-
-data class Vector2d(
-    val x: Float,
-    val y: Float
-)
-
-data class EdgeInsets(
-    val top: Float,
-    val right: Float,
-    val down: Float,
-    val left: Float,
-)
-
-data class RenderableItem(
-    val spriteSheetId: UInt,
-    val textureRect: IntRect
-)

@@ -32,7 +32,8 @@ class MainActivity : ComponentActivity() {
         val spritesProvider = SpritesProvider(
             context = this,
             spriteSheetFileNames = hashMapOf(
-                // ...
+                NativeLib.SPRITE_SHEET_BIOME_TILES to "tiles_biome",
+                NativeLib.SPRITE_SHEET_CONSTRUCTION_TILES to "tiles_constructions"
             )
         )
 

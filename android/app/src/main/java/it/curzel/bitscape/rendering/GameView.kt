@@ -7,6 +7,7 @@ import android.util.Size
 import android.view.Choreographer
 import android.view.View
 import it.curzel.bitscape.engine.GameEngine
+import it.curzel.bitscape.gamecore.NativeLib
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,12 +32,13 @@ class GameView @JvmOverloads constructor(
         super.onAttachedToWindow()
         lastUpdateTime = System.nanoTime()
         startFrameCallback()
+    }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
         CoroutineScope(Dispatchers.Main).launch {
-            clipBounds?.let { bounds ->
-                val size = Size(bounds.width(), bounds.height())
-                engine.setupChanged(null, size)
-            }
+            val size = Size(w, h)
+            engine.setupChanged(null, size)
         }
     }
 
@@ -107,8 +109,8 @@ class GameView @JvmOverloads constructor(
     }
 
     private fun renderDebugInfo(canvas: Canvas) {
-        val fps = engine.fps
-        val fpsText = "FPS: ${String.format("%.0f", fps)}   "
+        val fps = engine.fps.toInt()
+        val fpsText = "FPS: $fps   "
         val paint = Paint().apply {
             color = Color.WHITE
             textSize = 14f * resources.displayMetrics.density
@@ -126,7 +128,7 @@ class GameView @JvmOverloads constructor(
 
         val cameraViewport = engine.cameraViewport
         val cameraOffset = engine.cameraViewportOffset
-        val tileSize = TILE_SIZE * engine.renderingScale
+        val tileSize = NativeLib.TILE_SIZE * engine.renderingScale
         val scaledMapSize = SizeF(
             tileMapBitmap.width * engine.renderingScale,
             tileMapBitmap.height * engine.renderingScale
@@ -141,10 +143,6 @@ class GameView @JvmOverloads constructor(
         canvas.drawBitmap(tileMapBitmap, null, RectF(0f, 0f, scaledMapSize.width, scaledMapSize.height), null)
 
         canvas.restoreToCount(saveCount)
-    }
-
-    companion object {
-        private const val TILE_SIZE = 32f  // Define your tile size here
     }
 }
 
