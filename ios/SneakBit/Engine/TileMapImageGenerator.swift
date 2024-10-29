@@ -3,7 +3,6 @@ import SwiftUI
 
 protocol TileMapImageGenerator {
     func generate(
-        renderingScale: CGFloat,
         worldWidth: Int,
         worldHeight: Int,
         variant: Int32,
@@ -18,7 +17,6 @@ class TileMapImageGeneratorImpl: TileMapImageGenerator {
     private let numberOfBiomes: Int32 = 18
     
     func generate(
-        renderingScale: CGFloat,
         worldWidth: Int,
         worldHeight: Int,
         variant: Int32,

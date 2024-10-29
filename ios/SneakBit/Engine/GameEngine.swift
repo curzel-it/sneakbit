@@ -232,7 +232,6 @@ class GameEngine {
             
             self.tileMapImages = (0..<BIOME_NUMBER_OF_FRAMES).compactMap { variant in
                 self.tileMapImageGenerator.generate(
-                    renderingScale: self.renderingScale,
                     worldWidth: self.worldWidth,
                     worldHeight: self.worldHeight,
                     variant: Int32(variant),

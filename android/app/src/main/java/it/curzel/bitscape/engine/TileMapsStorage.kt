@@ -3,6 +3,7 @@ package it.curzel.bitscape.engine
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import it.curzel.bitscape.gamecore.NativeLib
 import java.io.File
 import java.io.FileOutputStream
@@ -33,7 +34,7 @@ class TileMapsStorage(private val context: Context) {
                     image.compress(Bitmap.CompressFormat.PNG, 100, out)
                 }
             } catch (e: Exception) {
-                // Optionally handle the exception (e.g., log it)
+                Log.e("TileMapsStorage", "Failed to save image: $e")
             }
         }
     }
@@ -43,6 +44,7 @@ class TileMapsStorage(private val context: Context) {
             val filename = "${worldId}-${revision}-${variant}.png"
             val file = File(storageDirectory, filename)
             if (file.exists()) {
+                Log.d("TileMapsStorage", "Loading image at ${file.absolutePath}")
                 BitmapFactory.decodeFile(file.absolutePath)
             } else {
                 null

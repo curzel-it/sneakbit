@@ -195,26 +195,7 @@ class GameEngine(
     }
 
     private fun updateKeyboardState(deltaTime: Float) {
-        Log.d("GameEngine", "=== Keyboard State Update ===")
-        Log.d("GameEngine", "Directional Keys Pressed:")
-        Log.d("GameEngine", "  Up: ${keyPressed.contains(EmulatedKey.UP)}")
-        Log.d("GameEngine", "  Right: ${keyPressed.contains(EmulatedKey.RIGHT)}")
-        Log.d("GameEngine", "  Down: ${keyPressed.contains(EmulatedKey.DOWN)}")
-        Log.d("GameEngine", "  Left: ${keyPressed.contains(EmulatedKey.LEFT)}")
-        Log.d("GameEngine", "Directional Keys Down:")
-        Log.d("GameEngine", "  Up: ${keyDown.contains(EmulatedKey.UP)}")
-        Log.d("GameEngine", "  Right: ${keyDown.contains(EmulatedKey.RIGHT)}")
-        Log.d("GameEngine", "  Down: ${keyDown.contains(EmulatedKey.DOWN)}")
-        Log.d("GameEngine", "  Left: ${keyDown.contains(EmulatedKey.LEFT)}")
-        Log.d("GameEngine", "Action Keys Pressed:")
-        Log.d("GameEngine", "  Escape: ${keyPressed.contains(EmulatedKey.ESCAPE)}")
-        Log.d("GameEngine", "  Menu: ${keyPressed.contains(EmulatedKey.MENU)}")
-        Log.d("GameEngine", "  Confirm: ${keyPressed.contains(EmulatedKey.CONFIRM)}")
-        Log.d("GameEngine", "  Attack: ${keyPressed.contains(EmulatedKey.ATTACK)}")
-        Log.d("GameEngine", "  Backspace: ${keyPressed.contains(EmulatedKey.BACKSPACE)}")
-        Log.d("GameEngine", "Current Character: $currentChar")
-        Log.d("GameEngine", "Time Since Last Update: $deltaTime seconds")
-        Log.d("GameEngine", "------------------------------")
+        // logKeyboardState()
 
         nativeLib.updateKeyboard(
             keyPressed.contains(EmulatedKey.UP),
@@ -252,7 +233,6 @@ class GameEngine(
 
         tileMapImages = (0 until NativeLib.BIOME_NUMBER_OF_FRAMES).mapNotNull { variant ->
             tileMapImageGenerator.generate(
-                renderingScale,
                 worldWidth,
                 worldHeight,
                 variant,
@@ -323,6 +303,30 @@ class GameEngine(
         } else {
             Log.d("MainActivity", "File already exists: ${file.absolutePath}")
         }
+    }
+
+    private fun logKeyboardState() {
+        val state = mutableListOf<String>()
+        state.add("=== Keyboard State Update ===")
+        state.add("Directional Keys Pressed:")
+        state.add("  Up: ${keyPressed.contains(EmulatedKey.UP)}")
+        state.add("  Right: ${keyPressed.contains(EmulatedKey.RIGHT)}")
+        state.add("  Down: ${keyPressed.contains(EmulatedKey.DOWN)}")
+        state.add("  Left: ${keyPressed.contains(EmulatedKey.LEFT)}")
+        state.add("Directional Keys Down:")
+        state.add("  Up: ${keyDown.contains(EmulatedKey.UP)}")
+        state.add("  Right: ${keyDown.contains(EmulatedKey.RIGHT)}")
+        state.add("  Down: ${keyDown.contains(EmulatedKey.DOWN)}")
+        state.add("  Left: ${keyDown.contains(EmulatedKey.LEFT)}")
+        state.add("Action Keys Pressed:")
+        state.add("  Escape: ${keyPressed.contains(EmulatedKey.ESCAPE)}")
+        state.add("  Menu: ${keyPressed.contains(EmulatedKey.MENU)}")
+        state.add("  Confirm: ${keyPressed.contains(EmulatedKey.CONFIRM)}")
+        state.add("  Attack: ${keyPressed.contains(EmulatedKey.ATTACK)}")
+        state.add("  Backspace: ${keyPressed.contains(EmulatedKey.BACKSPACE)}")
+        state.add("Current Character: $currentChar")
+        state.add("------------------------------")
+        Log.d("GameEngine", "Keyboard state: ${state.joinToString("\n")}")
     }
 }
 

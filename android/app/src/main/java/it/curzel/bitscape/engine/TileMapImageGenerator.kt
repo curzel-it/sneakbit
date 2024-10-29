@@ -9,14 +9,8 @@ import it.curzel.bitscape.gamecore.ConstructionTile
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.SpritesProvider
-import java.lang.annotation.Native
 import kotlin.math.roundToInt
 
-// Assuming these constants are defined somewhere in your codebase
-const val SPRITE_SHEET_BIOME_TILES = 1
-const val SPRITE_SHEET_CONSTRUCTION_TILES = 2
-
-// Extension function to flip a Bitmap vertically
 fun Bitmap.flipVertically(): Bitmap {
     val matrix = Matrix().apply {
         preScale(1f, -1f)
@@ -26,7 +20,6 @@ fun Bitmap.flipVertically(): Bitmap {
 
 class TileMapImageGenerator(private val spritesProvider: SpritesProvider) {
     fun generate(
-        renderingScale: Float,
         worldWidth: Int,
         worldHeight: Int,
         variant: Int,
@@ -36,12 +29,12 @@ class TileMapImageGenerator(private val spritesProvider: SpritesProvider) {
         if (biomeTiles.isEmpty() || constructionTiles.isEmpty()) return null
         if (worldWidth == 0 || worldHeight == 0) return null
 
-        val tileSize = NativeLib.TILE_SIZE * renderingScale
-        val mapWidth = (worldWidth * tileSize).roundToInt()
-        val mapHeight = (worldHeight * tileSize).roundToInt()
+        val tileSize = NativeLib.TILE_SIZE.toFloat()
+        val mapWidth = worldWidth * tileSize
+        val mapHeight = worldHeight * tileSize
 
         // Create a bitmap with the desired size
-        val composedBitmap = Bitmap.createBitmap(mapWidth, mapHeight, Bitmap.Config.ARGB_8888)
+        val composedBitmap = Bitmap.createBitmap(mapWidth.toInt(), mapHeight.toInt(), Bitmap.Config.ARGB_8888)
         val canvas = Canvas(composedBitmap)
         val paint = Paint().apply {
             isFilterBitmap = false // Equivalent to interpolationQuality = .none
@@ -102,40 +95,14 @@ class TileMapImageGenerator(private val spritesProvider: SpritesProvider) {
             }
         }
 
-        return composedBitmap.flipVertically()
+        return composedBitmap // .flipVertically()
     }
 
-    /**
-     * Renders a single tile image onto the canvas within the specified frame.
-     *
-     * @param bitmap The bitmap image of the tile.
-     * @param frame The destination rectangle on the canvas where the tile should be drawn.
-     * @param canvas The Canvas to draw on.
-     * @param paint The Paint object to use for drawing.
-     */
     private fun renderTileImage(bitmap: Bitmap, frame: RectF, canvas: Canvas, paint: Paint) {
-        // Save the current state of the canvas
         canvas.save()
-
-        // Apply transformations: translate and scale to flip vertically
         canvas.translate(frame.left, frame.bottom)
-        canvas.scale(1f, -1f)
-
-        // Draw the bitmap into the transformed canvas
+        // canvas.scale(1f, -1f)
         canvas.drawBitmap(bitmap, 0f, 0f, paint)
-
-        // Restore the canvas to its previous state
         canvas.restore()
     }
-}
-
-/**
- * Retrieves the current display scale (density) from the context.
- *
- * @param context The Android Context.
- * @return The scale factor as a Float.
- */
-fun getDisplayScale(context: Context): Float {
-    val metrics = context.resources.displayMetrics
-    return metrics.density
 }
