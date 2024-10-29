@@ -130,48 +130,8 @@
 
 #define SPECIES_DEEP_HOLE 5001
 
-enum Biome {
-  Biome_Nothing = 0,
-  Biome_Grass,
-  Biome_GrassFlowersRed,
-  Biome_GrassFlowersYellow,
-  Biome_GrassFlowersBlue,
-  Biome_GrassFlowersPurple,
-  Biome_Water,
-  Biome_Rock,
-  Biome_Desert,
-  Biome_Snow,
-  Biome_DarkWood,
-  Biome_LightWood,
-  Biome_DarkRock,
-  Biome_Ice,
-  Biome_DarkGrass,
-  Biome_RockPlates,
-  Biome_Lava,
-  Biome_Farmland,
-};
 typedef uint32_t Biome;
 
-enum Construction {
-  Construction_Nothing = 0,
-  Construction_WoodenFence,
-  Construction_MetalFence,
-  Construction_DarkRock,
-  Construction_LightWall,
-  Construction_Counter,
-  Construction_Library,
-  Construction_TallGrass,
-  Construction_Forest,
-  Construction_Bamboo,
-  Construction_Box,
-  Construction_Rail,
-  Construction_StoneWall,
-  Construction_IndicatorArrow,
-  Construction_Bridge,
-  Construction_Broadleaf,
-  Construction_StoneBox,
-  Construction_SpoiledTree,
-};
 typedef uint32_t Construction;
 
 typedef enum ToastMode {

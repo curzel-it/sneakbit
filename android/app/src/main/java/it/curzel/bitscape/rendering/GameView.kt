@@ -1,7 +1,12 @@
 package it.curzel.bitscape.rendering
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.Size
 import android.view.Choreographer
@@ -97,8 +102,6 @@ class GameView @JvmOverloads constructor(
     private fun renderTexture(bitmap: Bitmap, frame: RectF, canvas: Canvas) {
         val saveCount = canvas.save()
         canvas.translate(frame.left, frame.top)
-        canvas.scale(1f, -1f)
-        canvas.translate(0f, -frame.height())
         canvas.drawBitmap(bitmap, null, RectF(0f, 0f, frame.width(), frame.height()), null)
         canvas.restoreToCount(saveCount)
     }

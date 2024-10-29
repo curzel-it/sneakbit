@@ -137,16 +137,17 @@ class GameEngine(
 
     private fun renderingFrame(frame: IntRect, offset: Vector2d = Vector2d(0.0f, 0.0f)): RectF {
         val actualCol = (frame.x - cameraViewport.x).toFloat()
-        val actualOffsetX = (offset.x - cameraViewportOffset.x).toFloat()
-
+        val actualOffsetX = offset.x - cameraViewportOffset.x
         val actualRow = (frame.y - cameraViewport.y).toFloat()
-        val actualOffsetY = (offset.y - cameraViewportOffset.y).toFloat()
+        val actualOffsetY = offset.y - cameraViewportOffset.y
+
+        val x = (actualCol * tileSize + actualOffsetX) * renderingScale
+        val y = (actualRow * tileSize + actualOffsetY) * renderingScale
 
         return RectF(
-            (actualCol * tileSize + actualOffsetX) * renderingScale,
-            (actualRow * tileSize + actualOffsetY) * renderingScale,
-            (frame.w * tileSize) * renderingScale,
-            (frame.h * tileSize) * renderingScale
+            x, y,
+            x + (frame.w * tileSize) * renderingScale,
+            y + (frame.h * tileSize) * renderingScale
         )
     }
 
