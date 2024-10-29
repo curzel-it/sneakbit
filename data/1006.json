@@ -1,5 +1,6 @@
 {
   "id": 1006,
+  "revision": 0,
   "biome_tiles": {
     "tiles": [
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -210,6 +211,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -264,6 +266,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -318,60 +321,7 @@
         "w": 1,
         "h": 2
       },
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 9024618,
-      "frame": {
-        "x": 10,
-        "y": 27,
-        "w": 1,
-        "h": 2
-      },
-      "name": "Homunculus",
-      "species_id": 4004,
-      "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 2.5,
-      "is_rigid": false,
-      "z_index": 150,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 28,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -426,6 +376,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -480,6 +431,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -503,7 +455,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -534,6 +486,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -557,7 +510,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Masso",
+      "name": "Boulder",
       "species_id": 1030,
       "entity_type": "PushableObject",
       "offset": {
@@ -588,6 +541,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -611,7 +565,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Piastra di Pressione d'Argento",
+      "name": "Silver Pressure Plate",
       "species_id": 1054,
       "entity_type": "PressurePlate",
       "offset": {
@@ -642,6 +596,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -696,6 +651,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -750,6 +706,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -804,6 +761,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -858,6 +816,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -912,6 +871,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -966,6 +926,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -1020,6 +981,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -1074,6 +1036,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -1128,6 +1091,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -1182,6 +1146,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -1236,6 +1201,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -1290,6 +1256,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1344,6 +1311,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1398,6 +1366,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1452,6 +1421,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1506,6 +1476,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1560,6 +1531,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1614,6 +1586,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1668,6 +1641,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1722,6 +1696,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1776,6 +1751,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1830,6 +1806,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1884,6 +1861,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1938,6 +1916,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1992,6 +1971,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2046,6 +2026,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2100,6 +2081,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2154,6 +2136,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2208,6 +2191,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2262,6 +2246,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2316,6 +2301,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2370,6 +2356,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2424,6 +2411,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2478,6 +2466,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2532,6 +2521,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2586,6 +2576,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2640,6 +2631,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2694,6 +2686,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2748,6 +2741,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2771,7 +2765,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Piastra di Pressione Gialla",
+      "name": "Yellow Pressure Plate",
       "species_id": 1050,
       "entity_type": "PressurePlate",
       "offset": {
@@ -2802,6 +2796,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2825,7 +2820,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Masso",
+      "name": "Boulder",
       "species_id": 1030,
       "entity_type": "PushableObject",
       "offset": {
@@ -2856,6 +2851,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2879,7 +2875,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello Giallo",
+      "name": "Yellow Gate",
       "species_id": 1040,
       "entity_type": "Gate",
       "offset": {
@@ -2910,6 +2906,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2933,7 +2930,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello Giallo",
+      "name": "Yellow Gate",
       "species_id": 1040,
       "entity_type": "Gate",
       "offset": {
@@ -2964,6 +2961,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3018,6 +3016,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3041,7 +3040,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello Giallo",
+      "name": "Yellow Gate",
       "species_id": 1040,
       "entity_type": "Gate",
       "offset": {
@@ -3072,6 +3071,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3095,7 +3095,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello Giallo",
+      "name": "Yellow Gate",
       "species_id": 1040,
       "entity_type": "Gate",
       "offset": {
@@ -3126,6 +3126,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3180,6 +3181,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -3234,6 +3236,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -3288,6 +3291,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -3342,6 +3346,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -3396,6 +3401,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -3450,6 +3456,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -3473,7 +3480,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello Giallo",
+      "name": "Yellow Gate",
       "species_id": 1040,
       "entity_type": "Gate",
       "offset": {
@@ -3504,6 +3511,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3527,7 +3535,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello Giallo",
+      "name": "Yellow Gate",
       "species_id": 1040,
       "entity_type": "Gate",
       "offset": {
@@ -3558,6 +3566,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3612,6 +3621,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3666,6 +3676,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3720,6 +3731,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3774,6 +3786,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3828,6 +3841,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3882,6 +3896,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3936,6 +3951,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3990,6 +4006,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4044,6 +4061,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4098,6 +4116,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4152,6 +4171,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4206,6 +4226,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4260,6 +4281,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4314,6 +4336,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4368,6 +4391,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4422,6 +4446,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4476,6 +4501,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4530,6 +4556,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4584,6 +4611,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4638,6 +4666,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4692,6 +4721,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4746,6 +4776,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4800,6 +4831,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4854,6 +4886,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4908,6 +4941,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4962,6 +4996,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5016,6 +5051,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5070,6 +5106,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5124,6 +5161,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5178,6 +5216,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5232,6 +5271,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5286,6 +5326,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5340,6 +5381,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5394,6 +5436,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5448,6 +5491,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5502,6 +5546,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5556,6 +5601,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5610,6 +5656,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5664,6 +5711,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5718,6 +5766,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5772,6 +5821,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5826,6 +5876,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5880,6 +5931,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5934,6 +5986,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5988,6 +6041,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6042,6 +6096,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6065,7 +6120,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello Rosso",
+      "name": "Red Gate",
       "species_id": 1041,
       "entity_type": "Gate",
       "offset": {
@@ -6096,6 +6151,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6150,6 +6206,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6204,6 +6261,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6258,6 +6316,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6312,6 +6371,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6366,6 +6426,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6420,6 +6481,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6474,6 +6536,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6528,6 +6591,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6582,6 +6646,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6636,6 +6701,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6690,6 +6756,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6713,7 +6780,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Masso",
+      "name": "Boulder",
       "species_id": 1030,
       "entity_type": "PushableObject",
       "offset": {
@@ -6744,6 +6811,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6767,7 +6835,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Piastra di Pressione Rossa",
+      "name": "Red Pressure Plate",
       "species_id": 1051,
       "entity_type": "PressurePlate",
       "offset": {
@@ -6798,6 +6866,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6852,6 +6921,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6906,6 +6976,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6960,6 +7031,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7014,6 +7086,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7068,6 +7141,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7122,6 +7196,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7176,6 +7251,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7230,6 +7306,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7284,6 +7361,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7338,6 +7416,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7392,6 +7471,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7446,6 +7526,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7500,6 +7581,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7523,7 +7605,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "Scale (Giù)",
+      "name": "Stairs (Down)",
       "species_id": 1011,
       "entity_type": "StaticObject",
       "offset": {
@@ -7554,6 +7636,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7577,7 +7660,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -7612,6 +7695,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,

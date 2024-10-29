@@ -1,4 +1,4 @@
-use crate::{game_engine::{entity::Entity, inventory::inventory_contains_species, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, lang::localizable::LocalizableText, menus::toasts::Toast, utils::directions::Direction};
+use crate::{features::destination::Destination, game_engine::{entity::Entity, inventory::inventory_contains_species, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, lang::localizable::LocalizableText, menus::toasts::Toast, utils::directions::Direction};
 
 impl Entity {
     pub fn setup_teleporter(&mut self, creative_mode: bool) {
@@ -24,7 +24,11 @@ impl Entity {
                     vec![self.show_locked_message()]
                 }                
             } else {
-                vec![self.engine_update_push_world()]
+                if let Some(destination) = self.destination.clone() {
+                    vec![self.engine_update_push_world(destination)]
+                } else {
+                    vec![]
+                }
             }
         } else {
             vec![]
@@ -38,30 +42,25 @@ impl Entity {
         let hero = world.cached_hero_props.hittable_frame;
         let hero_direction = world.cached_hero_props.direction;
 
-
         if matches!(hero_direction, Direction::Up) && hero.x == self.frame.x && hero.y == self.frame.y + 1 {
-            println!("Hero x {} y {} d {:#?} selfx {} selfy {}", hero.x, hero.y, hero_direction, self.frame.x, self.frame.y);
             return true
         }
         if matches!(hero_direction, Direction::Down) && hero.x == self.frame.x && hero.y == self.frame.y - 1 {
-            println!("Hero x {} y {} d {:#?} selfx {} selfy {}", hero.x, hero.y, hero_direction, self.frame.x, self.frame.y);
             return true
         }
         if matches!(hero_direction, Direction::Right) && hero.x == self.frame.x - 1 && hero.y == self.frame.y {
-            println!("Hero x {} y {} d {:#?} selfx {} selfy {}", hero.x, hero.y, hero_direction, self.frame.x, self.frame.y);
             return true
         }
         if matches!(hero_direction, Direction::Left) && hero.x == self.frame.x + 1 && hero.y == self.frame.y {
-            println!("Hero x {} y {} d {:#?} selfx {} selfy {}", hero.x, hero.y, hero_direction, self.frame.x, self.frame.y);
             return true
         }
         false
     }
 
-    fn engine_update_push_world(&self) -> WorldStateUpdate {
+    fn engine_update_push_world(&self, destination: Destination) -> WorldStateUpdate {
         WorldStateUpdate::EngineUpdate(
             EngineStateUpdate::Teleport(
-                self.destination.clone().unwrap_or_default()
+                destination
             )
         )
     }

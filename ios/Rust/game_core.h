@@ -260,6 +260,10 @@ typedef struct InventoryItem {
 
 void initialize_game(bool creative_mode);
 
+bool test_bool(void);
+
+void test_logs(void);
+
 bool is_creative_mode(void);
 
 bool is_game_running(void);
