@@ -5,45 +5,45 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import it.curzel.bitscape.R
-import it.curzel.bitscape.engine.MockGameEngine
 import it.curzel.bitscape.engine.SomeGameEngine
+import kotlin.math.*
 
 @Composable
 fun JoystickView(
     gameEngine: SomeGameEngine,
     modifier: Modifier = Modifier
 ) {
-    val viewModel = remember { JoystickViewModel(gameEngine) }
+    val density = LocalDensity.current
+    val viewModel = remember { JoystickViewModel(gameEngine, density) }
+
     Box(
         modifier = modifier
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectDragGestures(
                     onDragStart = { offset ->
-                        viewModel.handleDragStart(offset)
+                        viewModel.handleDragStarted(offset)
                     },
-                    onDrag = { change, dragAmount ->
+                    onDrag = { change, _ ->
                         change.consume()
-                        viewModel.handleDrag(change.position)
+                        viewModel.handleDragChanged(change.position)
                     },
                     onDragEnd = {
-                        viewModel.handleDragEnd()
+                        viewModel.handleDragEnded()
                     },
                     onDragCancel = {
-                        viewModel.handleDragEnd()
+                        viewModel.handleDragEnded()
                     }
                 )
             }
@@ -53,47 +53,57 @@ fun JoystickView(
                 painter = painterResource(id = R.drawable.joystick),
                 contentDescription = "Joystick Base",
                 modifier = Modifier
-                    .size((viewModel.baseRadius * 2).dp)
+                    .size(viewModel.baseRadius * 2)
                     .graphicsLayer {
-                        translationX = viewModel.center.x - viewModel.baseRadius
-                        translationY = viewModel.center.y - viewModel.baseRadius
+                        translationX = viewModel.center.x - viewModel.baseRadiusPx
+                        translationY = viewModel.center.y - viewModel.baseRadiusPx
                     }
             )
             Image(
                 painter = painterResource(id = R.drawable.joystick_lever),
                 contentDescription = "Joystick Lever",
                 modifier = Modifier
-                    .size((viewModel.leverRadius * 2).dp)
+                    .size(viewModel.leverRadius * 2)
                     .graphicsLayer {
-                        translationX = viewModel.dragLocation.x - viewModel.leverRadius
-                        translationY = viewModel.dragLocation.y - viewModel.leverRadius
+                        translationX = viewModel.dragLocation.x - viewModel.leverRadiusPx
+                        translationY = viewModel.dragLocation.y - viewModel.leverRadiusPx
                     }
             )
         }
     }
 }
 
-class JoystickViewModel(private val engine: SomeGameEngine) {
+class JoystickViewModel(
+    private val engine: SomeGameEngine,
+    density: Density
+) {
     var dragLocation by mutableStateOf(Offset.Zero)
-        private set
-
     var isDragging by mutableStateOf(false)
-        private set
-
     var currentActiveKey: EmulatedKey? by mutableStateOf(null)
-        private set
-
     var center by mutableStateOf(Offset.Zero)
-        private set
 
-    val baseRadius: Float = 32f
-    val leverRadius: Float = 16f
-    val maxDistance: Float = 16f
-    val maxFingerDistance: Float = 48f
+    val baseRadius: Dp = 32.dp
+    val leverRadius: Dp = 16.dp
+    val maxDistance: Dp = 16.dp
+    val maxFingerDistance: Dp = 48.dp
+
+    val baseRadiusPx: Float
+    val leverRadiusPx: Float
+    val maxDistancePx: Float
+    val maxFingerDistancePx: Float
 
     private val movesAlongWithGesture = true
 
-    fun handleDragStart(startLocation: Offset) {
+    init {
+        with(density) {
+            baseRadiusPx = baseRadius.toPx()
+            leverRadiusPx = leverRadius.toPx()
+            maxDistancePx = maxDistance.toPx()
+            maxFingerDistancePx = maxFingerDistance.toPx()
+        }
+    }
+
+    fun handleDragStarted(startLocation: Offset) {
         if (!isDragging) {
             isDragging = true
             center = startLocation
@@ -101,46 +111,48 @@ class JoystickViewModel(private val engine: SomeGameEngine) {
         }
     }
 
-    fun handleDrag(location: Offset) {
+    fun handleDragChanged(position: Offset) {
         if (!isDragging) return
 
         var vector = Offset(
-            x = location.x - center.x,
-            y = location.y - center.y
+            x = position.x - center.x,
+            y = position.y - center.y
         )
         var realDistance = vector.getDistance()
+        var updatedCenter = center
 
-        if (movesAlongWithGesture && realDistance > maxFingerDistance) {
+        if (movesAlongWithGesture && realDistance > maxFingerDistancePx) {
             val angle = vector.getAngle()
-            val excessDistance = realDistance - maxFingerDistance
-            center = Offset(
-                x = center.x + kotlin.math.cos(angle) * excessDistance,
-                y = center.y + kotlin.math.sin(angle) * excessDistance
+            val excessDistance = realDistance - maxFingerDistancePx
+            updatedCenter = Offset(
+                x = center.x + cos(angle) * excessDistance,
+                y = center.y + sin(angle) * excessDistance
             )
             vector = Offset(
-                x = location.x - center.x,
-                y = location.y - center.y
+                x = position.x - updatedCenter.x,
+                y = position.y - updatedCenter.y
             )
             realDistance = vector.getDistance()
         }
 
-        val distance = kotlin.math.min(realDistance, maxDistance)
+        val distance = min(realDistance, maxDistancePx)
         val angle = vector.getAngle()
-        val limitedX = center.x + kotlin.math.cos(angle) * distance
-        val limitedY = center.y + kotlin.math.sin(angle) * distance
+        val limitedX = updatedCenter.x + cos(angle) * distance
+        val limitedY = updatedCenter.y + sin(angle) * distance
         dragLocation = Offset(x = limitedX, y = limitedY)
+        center = updatedCenter
 
         handleDirection(angle = angle)
     }
 
-    fun handleDragEnd() {
+    fun handleDragEnded() {
         isDragging = false
         releaseCurrentKey()
     }
 
     private fun handleDirection(angle: Float) {
-        val adjustedAngle = if (angle < 0) angle + 2 * kotlin.math.PI.toFloat() else angle
-        val pi = kotlin.math.PI.toFloat()
+        val adjustedAngle = if (angle < 0) angle + 2 * PI.toFloat() else angle
+        val pi = PI.toFloat()
 
         val newActiveKey: EmulatedKey? = when {
             (7 * pi / 4 <= adjustedAngle && adjustedAngle <= 2 * pi) || (0 <= adjustedAngle && adjustedAngle <= pi / 4) -> EmulatedKey.RIGHT
@@ -162,7 +174,5 @@ class JoystickViewModel(private val engine: SomeGameEngine) {
         currentActiveKey = null
     }
 
-    private fun Offset.getAngle(): Float {
-        return kotlin.math.atan2(y, x)
-    }
+    private fun Offset.getAngle(): Float = atan2(this.y, this.x)
 }
