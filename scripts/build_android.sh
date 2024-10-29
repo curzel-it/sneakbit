@@ -15,4 +15,4 @@ cp target/armv7-linux-androideabi/release/libgame_core.so android/app/src/main/j
 cp target/aarch64-linux-android/release/libgame_core.so android/app/src/main/jniLibs/arm64-v8a/
 cp target/i686-linux-android/release/libgame_core.so android/app/src/main/jniLibs/x86/
 cp target/x86_64-linux-android/release/libgame_core.so android/app/src/main/jniLibs/x86_64/
-cp game_core.h android/app/src/main/jniLibs/
+cp game_core.h android/app/src/main/cpp/

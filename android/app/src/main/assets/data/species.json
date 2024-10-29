@@ -1,0 +1,2484 @@
+[
+    {
+        "id": 1001,
+        "name": "Hero",
+        "entity_type": "Hero",
+        "z_index": 150,
+        "base_speed": 4.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            0,
+            0
+        ],
+        "sprite_frame": {
+            "x": 12,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "Keyboard"
+    },
+    {
+        "id": 1002,
+        "name": "building.name.house",
+        "entity_type": "Building",
+        "is_invulnerable": true,
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            1
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 1,
+            "w": 5,
+            "h": 4
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1003,
+        "name": "building.name.house",
+        "is_invulnerable": true,
+        "entity_type": "Building",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            3
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 6,
+            "w": 5,
+            "h": 4
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1004,
+        "name": "building.name.house",
+        "is_invulnerable": true,
+        "entity_type": "Building",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            5
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 11,
+            "w": 5,
+            "h": 4
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1005,
+        "name": "building.name.house_two_floors",
+        "is_invulnerable": true,
+        "entity_type": "Building",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            2
+        ],
+        "sprite_frame": {
+            "x": 5,
+            "y": 0,
+            "w": 5,
+            "h": 5
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1006,
+        "name": "building.name.house_two_floors",
+        "is_invulnerable": true,
+        "entity_type": "Building",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            4
+        ],
+        "sprite_frame": {
+            "x": 5,
+            "y": 5,
+            "w": 5,
+            "h": 5
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1007,
+        "name": "building.name.house_two_floors",
+        "is_invulnerable": true,
+        "entity_type": "Building",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            6
+        ],
+        "sprite_frame": {
+            "x": 5,
+            "y": 10,
+            "w": 5,
+            "h": 5
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1008,
+        "name": "building.name.broken_house",
+        "is_invulnerable": true,
+        "entity_type": "Building",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            10
+        ],
+        "sprite_frame": {
+            "x": 15,
+            "y": 5,
+            "w": 5,
+            "h": 4
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1009,
+        "name": "building.name.broken_house",
+        "is_invulnerable": true,
+        "entity_type": "Building",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            11
+        ],
+        "sprite_frame": {
+            "x": 20,
+            "y": 5,
+            "w": 5,
+            "h": 4
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 50010,
+        "name": "building.name.villa",
+        "is_invulnerable": true,
+        "entity_type": "Building",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            12
+        ],
+        "sprite_frame": {
+            "x": 25,
+            "y": 5,
+            "w": 5,
+            "h": 5
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 3005,
+        "name": "npc.name.old_man",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            2
+        ],
+        "sprite_frame": {
+            "x": 4,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 3006,
+        "name": "npc.name.old_woman",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            3
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 3007,
+        "name": "npc.name.wizard",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            9
+        ],
+        "sprite_frame": {
+            "x": 32,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 3008,
+        "name": "npc.name.shop_clerk",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            4
+        ],
+        "sprite_frame": {
+            "x": 16,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1010,
+        "name": "objects.name.stairs_up",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 1000,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            3,
+            1
+        ],
+        "sprite_frame": {
+            "x": 1,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1011,
+        "name": "objects.name.stairs_down",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 1000,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            3,
+            2
+        ],
+        "sprite_frame": {
+            "x": 2,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1012,
+        "name": "objects.name.seat_brown",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            3
+        ],
+        "sprite_frame": {
+            "x": 3,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1013,
+        "name": "objects.name.seat_green",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            4
+        ],
+        "sprite_frame": {
+            "x": 3,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1015,
+        "name": "objects.name.seat_orange",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            5
+        ],
+        "sprite_frame": {
+            "x": 3,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1014,
+        "name": "objects.name.seat_pink",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            6
+        ],
+        "sprite_frame": {
+            "x": 3,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1016,
+        "name": "objects.name.table",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            3,
+            7
+        ],
+        "sprite_frame": {
+            "x": 4,
+            "y": 0,
+            "w": 2,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1017,
+        "name": "objects.name.bed",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            3,
+            8
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 2,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 2000,
+        "name": "objects.name.key_yellow",
+        "is_invulnerable": true,
+        "entity_type": "PickableObject",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            5,
+            1
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
+        "lock_type": "Yellow"
+    },
+    {
+        "id": 2001,
+        "name": "objects.name.key_red",
+        "is_invulnerable": true,
+        "entity_type": "PickableObject",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            5,
+            2
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
+        "lock_type": "Red"
+    },
+    {
+        "id": 2002,
+        "name": "objects.name.key_green",
+        "is_invulnerable": true,
+        "entity_type": "PickableObject",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            5,
+            3
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
+        "lock_type": "Green"
+    },
+    {
+        "id": 2003,
+        "name": "objects.name.key_blue",
+        "is_invulnerable": true,
+        "entity_type": "PickableObject",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            5,
+            4
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
+        "lock_type": "Blue"
+    },
+    {
+        "id": 2004,
+        "name": "objects.name.key_silver",
+        "is_invulnerable": true,
+        "entity_type": "PickableObject",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            5,
+            5
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 4,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
+        "lock_type": "Silver"
+    },
+    {
+        "id": 1019,
+        "name": "objects.name.teleporter",
+        "is_invulnerable": true,
+        "entity_type": "Teleporter",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            6,
+            5
+        ],
+        "sprite_frame": {
+            "x": 7,
+            "y": 5,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1030,
+        "name": "objects.name.boulder",
+        "is_invulnerable": true,
+        "entity_type": "PushableObject",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            9
+        ],
+        "sprite_frame": {
+            "x": 1,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1031,
+        "name": "objects.name.boulder",
+        "is_invulnerable": true,
+        "entity_type": "PushableObject",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            7,
+            3
+        ],
+        "sprite_frame": {
+            "x": 2,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1040,
+        "name": "objects.name.gate.yellow",
+        "is_invulnerable": true,
+        "entity_type": "Gate",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            5,
+            6
+        ],
+        "sprite_frame": {
+            "x": 6,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Yellow"
+    },
+    {
+        "id": 1041,
+        "name": "objects.name.gate.red",
+        "is_invulnerable": true,
+        "entity_type": "Gate",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            5,
+            7
+        ],
+        "sprite_frame": {
+            "x": 6,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Red"
+    },
+    {
+        "id": 1042,
+        "name": "objects.name.gate.green",
+        "is_invulnerable": true,
+        "entity_type": "Gate",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            5,
+            8
+        ],
+        "sprite_frame": {
+            "x": 6,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Green"
+    },
+    {
+        "id": 1043,
+        "name": "objects.name.gate.blue",
+        "is_invulnerable": true,
+        "entity_type": "Gate",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            5,
+            9
+        ],
+        "sprite_frame": {
+            "x": 6,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Blue"
+    },
+    {
+        "id": 1044,
+        "name": "objects.name.gate.silver",
+        "is_invulnerable": true,
+        "entity_type": "Gate",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            5,
+            10
+        ],
+        "sprite_frame": {
+            "x": 6,
+            "y": 4,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Silver"
+    },
+    {
+        "id": 1050,
+        "name": "objects.name.pressure_plate.yellow",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            5,
+            11
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Yellow"
+    },
+    {
+        "id": 1051,
+        "name": "objects.name.pressure_plate.red",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            5,
+            12
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Red"
+    },
+    {
+        "id": 1052,
+        "name": "objects.name.pressure_plate.green",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            5,
+            13
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Green"
+    },
+    {
+        "id": 1053,
+        "name": "objects.name.pressure_plate.blue",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            5,
+            14
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Blue"
+    },
+    {
+        "id": 1054,
+        "name": "objects.name.pressure_plate.silver",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            5,
+            15
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 4,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Silver"
+    },
+    {
+        "id": 1060,
+        "name": "objects.name.inverse_gate.yellow",
+        "is_invulnerable": true,
+        "entity_type": "InverseGate",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            6
+        ],
+        "sprite_frame": {
+            "x": 6,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Yellow"
+    },
+    {
+        "id": 1061,
+        "name": "objects.name.inverse_gate.red",
+        "is_invulnerable": true,
+        "entity_type": "InverseGate",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            7
+        ],
+        "sprite_frame": {
+            "x": 6,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Red"
+    },
+    {
+        "id": 1062,
+        "name": "objects.name.inverse_gate.green",
+        "is_invulnerable": true,
+        "entity_type": "InverseGate",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            8
+        ],
+        "sprite_frame": {
+            "x": 6,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Green"
+    },
+    {
+        "id": 1063,
+        "name": "objects.name.inverse_gate.blue",
+        "is_invulnerable": true,
+        "entity_type": "InverseGate",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            9
+        ],
+        "sprite_frame": {
+            "x": 6,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Blue"
+    },
+    {
+        "id": 1064,
+        "name": "objects.name.inverse_gate.silver",
+        "is_invulnerable": true,
+        "entity_type": "InverseGate",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            10
+        ],
+        "sprite_frame": {
+            "x": 6,
+            "y": 4,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Silver"
+    },
+    {
+        "id": 1070,
+        "name": "building.name.shop",
+        "is_invulnerable": true,
+        "entity_type": "Building",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            7
+        ],
+        "sprite_frame": {
+            "x": 10,
+            "y": 1,
+            "w": 5,
+            "h": 4
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1071,
+        "name": "building.name.shop",
+        "is_invulnerable": true,
+        "entity_type": "Building",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            8
+        ],
+        "sprite_frame": {
+            "x": 10,
+            "y": 6,
+            "w": 5,
+            "h": 4
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1072,
+        "name": "building.name.shop",
+        "is_invulnerable": true,
+        "entity_type": "Building",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            9
+        ],
+        "sprite_frame": {
+            "x": 10,
+            "y": 11,
+            "w": 5,
+            "h": 4
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 4001,
+        "name": "npc.name.slime",
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 0.5,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            5
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "Free"
+    },
+    {
+        "id": 4002,
+        "name": "npc.name.zombie",
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 1.5,
+        "is_rigid": false,
+        "melee_attacks_hero": true,
+        "inventory_texture_offset": [
+            2,
+            7
+        ],
+        "sprite_frame": {
+            "x": 24,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "FindHero"
+    },
+    {
+        "id": 4003,
+        "name": "npc.name.ghost",
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 2.5,
+        "melee_attacks_hero": true,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            2,
+            6
+        ],
+        "sprite_frame": {
+            "x": 20,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "FindHero"
+    },
+    {
+        "id": 4004,
+        "name": "npc.name.homunculus",
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 2.5,
+        "is_rigid": false,
+        "melee_attacks_hero": true,
+        "inventory_texture_offset": [
+            2,
+            8
+        ],
+        "sprite_frame": {
+            "x": 28,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "FindHero"
+    },
+    {
+        "id": 5001,
+        "name": "objects.name.deep_hole",
+        "is_invulnerable": true,
+        "entity_type": "Teleporter",
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            10
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 5,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 6001,
+        "name": "objects.name.book_red",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 350,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            11
+        ],
+        "sprite_frame": {
+            "x": 19,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 6002,
+        "name": "objects.name.book_blue",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 350,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            12
+        ],
+        "sprite_frame": {
+            "x": 19,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 6003,
+        "name": "objects.name.book_green",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 350,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            13
+        ],
+        "sprite_frame": {
+            "x": 19,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 6004,
+        "name": "objects.name.book_purple",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 350,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            14
+        ],
+        "sprite_frame": {
+            "x": 19,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 6005,
+        "name": "objects.name.book_dark",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 350,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            15
+        ],
+        "sprite_frame": {
+            "x": 19,
+            "y": 4,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 7000,
+        "name": "objects.name.kunai",
+        "entity_type": "Bullet",
+        "z_index": 300,
+        "base_speed": 6.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            7,
+            1
+        ],
+        "sprite_frame": {
+            "x": 4,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 7001,
+        "name": "objects.name.kunai.x10",
+        "entity_type": "Bundle",
+        "z_index": 300,
+        "base_speed": 5.0,
+        "is_rigid": false,
+        "is_invulnerable": true,
+        "inventory_texture_offset": [
+            7,
+            4
+        ],
+        "sprite_frame": {
+            "x": 1,
+            "y": 4,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None",
+        "bundle_contents": [
+            7000,
+            7000,
+            7000,
+            7000,
+            7000,
+            7000,
+            7000,
+            7000,
+            7000,
+            7000
+        ]
+    },
+    {
+        "id": 8000,
+        "name": "objects.name.pill.red",
+        "is_invulnerable": true,
+        "entity_type": "PickableObject",
+        "z_index": 50,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            7,
+            2
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 11,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 5,
+        "lock_type": "None",
+        "is_consumable": true
+    },
+    {
+        "id": 9000,
+        "name": "objects.name.rail.cart",
+        "entity_type": "RailObject",
+        "z_index": 50,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            6,
+            3
+        ],
+        "sprite_frame": {
+            "x": 2,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None",
+        "is_consumable": true
+    },
+    {
+        "id": 10000,
+        "name": "objects.name.sign",
+        "entity_type": "StaticObject",
+        "z_index": 300,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "is_invulnerable": true,
+        "inventory_texture_offset": [
+            8,
+            1
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 4,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 10001,
+        "name": "objects.name.large_sign",
+        "entity_type": "StaticObject",
+        "z_index": 300,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "is_invulnerable": true,
+        "inventory_texture_offset": [
+            8,
+            2
+        ],
+        "sprite_frame": {
+            "x": 3,
+            "y": 4,
+            "w": 2,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 10002,
+        "name": "objects.name.scroll.brown",
+        "entity_type": "StaticObject",
+        "z_index": 300,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            3
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 5,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 10003,
+        "name": "objects.name.scroll.red",
+        "entity_type": "StaticObject",
+        "z_index": 300,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            4
+        ],
+        "sprite_frame": {
+            "x": 1,
+            "y": 5,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 10004,
+        "name": "objects.name.scroll.blue",
+        "entity_type": "StaticObject",
+        "z_index": 300,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            5
+        ],
+        "sprite_frame": {
+            "x": 2,
+            "y": 5,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 10005,
+        "name": "objects.name.scroll.yellow",
+        "entity_type": "StaticObject",
+        "z_index": 300,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            6
+        ],
+        "sprite_frame": {
+            "x": 3,
+            "y": 5,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 10006,
+        "name": "objects.name.scroll.green",
+        "entity_type": "StaticObject",
+        "z_index": 300,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            7
+        ],
+        "sprite_frame": {
+            "x": 4,
+            "y": 5,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 11000,
+        "name": "objects.name.magic_circle.summoning",
+        "entity_type": "StaticObject",
+        "z_index": -1,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            7,
+            5
+        ],
+        "sprite_frame": {
+            "x": 9,
+            "y": 0,
+            "w": 3,
+            "h": 3
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 6,
+        "lock_type": "None"
+    },
+    {
+        "id": 11005,
+        "name": "objects.name.magic_circle.summoning.evil",
+        "entity_type": "StaticObject",
+        "z_index": -1,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            7,
+            11
+        ],
+        "sprite_frame": {
+            "x": 9,
+            "y": 3,
+            "w": 3,
+            "h": 3
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 6,
+        "lock_type": "None"
+    },
+    {
+        "id": 11001,
+        "name": "objects.name.well",
+        "entity_type": "StaticObject",
+        "z_index": 300,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            8
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 7,
+            "w": 2,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 11002,
+        "name": "objects.name.fountain",
+        "entity_type": "StaticObject",
+        "z_index": 300,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            6
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 15,
+            "w": 2,
+            "h": 2
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 11003,
+        "name": "objects.name.torch",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 350,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            7
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 17,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 5,
+        "lock_type": "None"
+    },
+    {
+        "id": 11004,
+        "name": "objects.name.magic_circle.blue",
+        "entity_type": "StaticObject",
+        "z_index": -1,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            7,
+            8
+        ],
+        "sprite_frame": {
+            "x": 9,
+            "y": 13,
+            "w": 3,
+            "h": 3
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 44401,
+        "name": "objects.name.slope.top_left.grass",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            0,
+            16
+        ],
+        "sprite_frame": {
+            "x": 11,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44402,
+        "name": "objects.name.slope.top_right.grass",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            0,
+            17
+        ],
+        "sprite_frame": {
+            "x": 12,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44403,
+        "name": "objects.name.slope.bottom_right.grass",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            0,
+            18
+        ],
+        "sprite_frame": {
+            "x": 13,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44404,
+        "name": "objects.name.slope.bottom_left.grass",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            0,
+            19
+        ],
+        "sprite_frame": {
+            "x": 14,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44405,
+        "name": "objects.name.slope.side_bottom.grass",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            0,
+            20
+        ],
+        "sprite_frame": {
+            "x": 15,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44406,
+        "name": "objects.name.slope.side_top.grass",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            0,
+            21
+        ],
+        "sprite_frame": {
+            "x": 16,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44407,
+        "name": "objects.name.slope.side_left.grass",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            0,
+            22
+        ],
+        "sprite_frame": {
+            "x": 17,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44408,
+        "name": "objects.name.slope.side_right.grass",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            0,
+            23
+        ],
+        "sprite_frame": {
+            "x": 18,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44411,
+        "name": "objects.name.slope.top_left.rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            1,
+            16
+        ],
+        "sprite_frame": {
+            "x": 11,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44412,
+        "name": "objects.name.slope.top_right.rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            1,
+            17
+        ],
+        "sprite_frame": {
+            "x": 12,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44413,
+        "name": "objects.name.slope.bottom_right.rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            1,
+            18
+        ],
+        "sprite_frame": {
+            "x": 13,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44414,
+        "name": "objects.name.slope.bottom_left.rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            1,
+            19
+        ],
+        "sprite_frame": {
+            "x": 14,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44415,
+        "name": "objects.name.slope.side_bottom.rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            1,
+            20
+        ],
+        "sprite_frame": {
+            "x": 15,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44416,
+        "name": "objects.name.slope.side_top.rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            1,
+            21
+        ],
+        "sprite_frame": {
+            "x": 16,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44417,
+        "name": "objects.name.slope.side_left.rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            1,
+            22
+        ],
+        "sprite_frame": {
+            "x": 17,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44418,
+        "name": "objects.name.slope.side_right.rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            1,
+            23
+        ],
+        "sprite_frame": {
+            "x": 18,
+            "y": 1,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44421,
+        "name": "objects.name.slope.top_left.sand",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            16
+        ],
+        "sprite_frame": {
+            "x": 11,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44422,
+        "name": "objects.name.slope.top_right.sand",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            17
+        ],
+        "sprite_frame": {
+            "x": 12,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44423,
+        "name": "objects.name.slope.bottom_right.sand",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            18
+        ],
+        "sprite_frame": {
+            "x": 13,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44424,
+        "name": "objects.name.slope.bottom_left.sand",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            19
+        ],
+        "sprite_frame": {
+            "x": 14,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44425,
+        "name": "objects.name.slope.side_bottom.sand",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            20
+        ],
+        "sprite_frame": {
+            "x": 15,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44426,
+        "name": "objects.name.slope.side_top.sand",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            21
+        ],
+        "sprite_frame": {
+            "x": 16,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44427,
+        "name": "objects.name.slope.side_left.sand",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            22
+        ],
+        "sprite_frame": {
+            "x": 17,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44428,
+        "name": "objects.name.slope.side_right.sand",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            23
+        ],
+        "sprite_frame": {
+            "x": 18,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44431,
+        "name": "objects.name.slope.top_left.dark_rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            16
+        ],
+        "sprite_frame": {
+            "x": 11,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44432,
+        "name": "objects.name.slope.top_right.dark_rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            17
+        ],
+        "sprite_frame": {
+            "x": 12,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44433,
+        "name": "objects.name.slope.bottom_right.dark_rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            18
+        ],
+        "sprite_frame": {
+            "x": 13,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44434,
+        "name": "objects.name.slope.bottom_left.dark_rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            19
+        ],
+        "sprite_frame": {
+            "x": 14,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44435,
+        "name": "objects.name.slope.side_bottom.dark_rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            20
+        ],
+        "sprite_frame": {
+            "x": 15,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44436,
+        "name": "objects.name.slope.side_top.dark_rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            21
+        ],
+        "sprite_frame": {
+            "x": 16,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44437,
+        "name": "objects.name.slope.side_left.dark_rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            22
+        ],
+        "sprite_frame": {
+            "x": 17,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 44438,
+        "name": "objects.name.slope.side_right.dark_rock",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            23
+        ],
+        "sprite_frame": {
+            "x": 18,
+            "y": 3,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 50000,
+        "name": "objects.name.hint_consumable",
+        "is_invulnerable": true,
+        "is_consumable": true,
+        "entity_type": "Hint",
+        "z_index": 0,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            7,
+            9
+        ],
+        "sprite_frame": {
+            "x": 4,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 50001,
+        "name": "objects.name.hint_permanent",
+        "is_invulnerable": true,
+        "is_consumable": false,
+        "entity_type": "Hint",
+        "z_index": 0,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            7,
+            10
+        ],
+        "sprite_frame": {
+            "x": 4,
+            "y": 2,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1
+    },
+    {
+        "id": 60001,
+        "name": "building.name.deamon_lord_castle",
+        "entity_type": "Building",
+        "is_invulnerable": true,
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            4,
+            13
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 21,
+            "w": 8,
+            "h": 8
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 60002,
+        "name": "npc.name.deamon_lord",
+        "entity_type": "Npc",
+        "z_index": -1,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "is_invulnerable": false,
+        "inventory_texture_offset": [
+            4,
+            14
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 0,
+            "w": 2,
+            "h": 3
+        },
+        "sprite_sheet_id": 1018,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 60003,
+        "name": "npc.name.goddess",
+        "entity_type": "Npc",
+        "z_index": -1,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "is_invulnerable": false,
+        "inventory_texture_offset": [
+            2,
+            11
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 0,
+            "w": 2,
+            "h": 3
+        },
+        "sprite_sheet_id": 1018,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1032,
+        "name": "objects.name.skull",
+        "is_invulnerable": true,
+        "entity_type": "PushableObject",
+        "z_index": 200,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            4,
+            15
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 7,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 4005,
+        "name": "npc.name.cat",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            2,
+            10
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "Free"
+    }
+]

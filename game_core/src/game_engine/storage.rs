@@ -22,6 +22,7 @@ impl StorageKey {
 }
 
 fn load_stored_values() -> BTreeMap<String, u32> {
+    println!("Parsing save from {:#?}", config().key_value_storage_path.clone());
     let file = File::open(config().key_value_storage_path.clone()).expect("Failed to open save.json file");
     let reader = BufReader::new(file);
     serde_json::from_reader(reader).expect("Failed to deserialize save file from JSON")

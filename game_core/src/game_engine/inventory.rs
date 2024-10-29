@@ -73,6 +73,7 @@ pub fn inventory_contains_species(species_id: u32) -> bool {
 }
 
 fn load_inventory() -> Vec<Entity> {
+    println!("Parsing inventory from {:#?}", config().inventory_path.clone());
     let file = File::open(config().inventory_path.clone()).expect("Failed to open inventory.json file");
     let reader = BufReader::new(file);
     serde_json::from_reader(reader).expect("Failed to deserialize inventory file from JSON")

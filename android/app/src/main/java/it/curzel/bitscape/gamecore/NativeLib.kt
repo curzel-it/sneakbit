@@ -1,6 +1,8 @@
 package it.curzel.bitscape.gamecore
 
 class NativeLib {
+    external fun testLogs()
+    external fun testBool(): Boolean
     external fun currentWorldId(): Int
     external fun initializeGame(creativeMode: Boolean)
     external fun initializeConfig(

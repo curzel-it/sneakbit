@@ -46,6 +46,16 @@ pub extern "C" fn initialize_game(creative_mode: bool) {
 }
 
 #[no_mangle]
+pub extern "C" fn test_bool() -> bool {
+    true
+}
+
+#[no_mangle]
+pub extern "C" fn test_logs() {
+    println!("This is a test log")
+}
+
+#[no_mangle]
 pub extern "C" fn is_creative_mode() -> bool {
     engine().creative_mode
 }
