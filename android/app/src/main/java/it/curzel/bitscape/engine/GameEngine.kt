@@ -1,12 +1,8 @@
 package it.curzel.bitscape.engine
 
 import android.content.Context
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import android.graphics.Bitmap
-import android.graphics.Rect
-import android.os.Handler
-import android.os.Looper
+import android.graphics.RectF
 import android.util.Log
 import android.util.Size
 import it.curzel.bitscape.AssetUtils
@@ -14,26 +10,25 @@ import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.gamecore.EdgeInsets
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
+import it.curzel.bitscape.gamecore.RenderableItem
 import it.curzel.bitscape.gamecore.Vector2d
-import it.curzel.bitscape.rendering.SpritesProvider
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.File
 import java.io.IOException
-import java.lang.annotation.Native
 
 class GameEngine(
     private val context: Context,
     private val renderingScaleUseCase: RenderingScaleUseCase,
     private val tileMapImageGenerator: TileMapImageGenerator,
     private val tileMapsStorage: TileMapsStorage,
-    private val worldRevisionsStorage: WorldRevisionsStorage,
-    private val spritesProvider: SpritesProvider
+    private val worldRevisionsStorage: WorldRevisionsStorage
 ) {
-    /*
-    val toast = MutableStateFlow<ToastDescriptorC?>(null)
-    val menus = MutableStateFlow<MenuDescriptorC?>(null)
-    val inventory = MutableStateFlow<List<InventoryItem>>(emptyList())
-    val loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.None)
-*/
+
+    // val toast = MutableStateFlow<ToastDescriptorC?>(null)
+    // val menus = MutableStateFlow<MenuDescriptorC?>(null)
+    // val inventory = MutableStateFlow<List<InventoryItem>>(emptyList())
+    // val loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.None)
+
     val showsDeathScreen = MutableStateFlow(false)
 
     var size = Size(0, 0)
@@ -90,15 +85,12 @@ class GameEngine(
         nativeLib.updateGame(deltaTime)
         // toast.value = current_toast()
         // menus.value = current_menu()
-            showsDeathScreen.value = nativeLib.showsDeathScreen()
-            currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
-            cameraViewport = nativeLib.cameraViewport().toRect()
-            cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
-        /*
-                    fetchInventory { items ->
-                        inventory.value = items
-                    }
-*/
+        showsDeathScreen.value = nativeLib.showsDeathScreen()
+        currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
+        cameraViewport = nativeLib.cameraViewport().toRect()
+        cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
+        // fetchInventory { inventory.value = it }
+
         val freshWorldId = nativeLib.currentWorldId().toUInt()
         if (freshWorldId != currentWorldId) {
             println("World changed from $currentWorldId to $freshWorldId")
@@ -110,16 +102,12 @@ class GameEngine(
 
         updateFpsCounter()
         flushKeyboard()
-    }/*
-
-    fun renderEntities(render: (RenderableItem) -> Unit) {
-        fetchRenderableItems { items ->
-            items.forEach { item ->
-                render(item)
-            }
-        }
     }
-*/
+
+    fun renderableItems(): List<RenderableItem> {
+        return nativeLib.fetchRenderableItems()
+    }
+
     fun setupChanged(safeArea: EdgeInsets?, windowSize: Size) {
         safeArea?.let {
             safeAreaInsets = it
@@ -137,28 +125,28 @@ class GameEngine(
         worldWidth = nativeLib.currentWorldWidth()
         worldHeight = nativeLib.currentWorldHeight()
         updateTileMapImages(currentWorldId)
-    }/*
+    }
 
-    fun renderingFrame(entity: RenderableItem): Rect {
+    fun renderingFrame(entity: RenderableItem): RectF {
         return renderingFrame(entity.frame, entity.offset)
     }
-*/
+
     fun tileMapImage(): Bitmap? {
         return tileMapImages.getOrNull(currentBiomeVariant)
     }
 
-    private fun renderingFrame(frame: IntRect, offset: Vector2d = Vector2d(0.0f, 0.0f)): Rect {
+    private fun renderingFrame(frame: IntRect, offset: Vector2d = Vector2d(0.0f, 0.0f)): RectF {
         val actualCol = (frame.x - cameraViewport.x).toFloat()
         val actualOffsetX = (offset.x - cameraViewportOffset.x).toFloat()
 
         val actualRow = (frame.y - cameraViewport.y).toFloat()
         val actualOffsetY = (offset.y - cameraViewportOffset.y).toFloat()
 
-        return Rect(
-            ((actualCol * tileSize + actualOffsetX) * renderingScale).toInt(),
-            ((actualRow * tileSize + actualOffsetY) * renderingScale).toInt(),
-            ((frame.w * tileSize) * renderingScale).toInt(),
-            ((frame.h * tileSize) * renderingScale).toInt()
+        return RectF(
+            (actualCol * tileSize + actualOffsetX) * renderingScale,
+            (actualRow * tileSize + actualOffsetY) * renderingScale,
+            (frame.w * tileSize) * renderingScale,
+            (frame.h * tileSize) * renderingScale
         )
     }
 

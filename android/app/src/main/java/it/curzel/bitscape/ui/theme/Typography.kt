@@ -1,4 +1,4 @@
-package it.curzel.bitscape.designsystem
+package it.curzel.bitscape.ui.theme
 
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -11,8 +11,9 @@ object Typography {
     val largeTitle = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Bold, fontSize = 24.sp)
     val title = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Bold, fontSize = 16.sp)
     val text = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Normal, fontSize = 14.sp)
-    val menuOption = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Normal, fontSize = 16.sp)
     val caption = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Normal, fontSize = 11.sp)
+
+    val menuOption = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Normal, fontSize = 16.sp)
 }
 
 private val PixelOperator8 = FontFamily(

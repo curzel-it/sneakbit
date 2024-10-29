@@ -1,22 +1,14 @@
 package it.curzel.bitscape.engine
 
-import android.content.Context
-import android.graphics.*
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import it.curzel.bitscape.gamecore.BiomeTile
 import it.curzel.bitscape.gamecore.ConstructionTile
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.SpritesProvider
-import kotlin.math.roundToInt
-
-fun Bitmap.flipVertically(): Bitmap {
-    val matrix = Matrix().apply {
-        preScale(1f, -1f)
-    }
-    return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
-}
 
 class TileMapImageGenerator(private val spritesProvider: SpritesProvider) {
     fun generate(
@@ -33,14 +25,12 @@ class TileMapImageGenerator(private val spritesProvider: SpritesProvider) {
         val mapWidth = worldWidth * tileSize
         val mapHeight = worldHeight * tileSize
 
-        // Create a bitmap with the desired size
         val composedBitmap = Bitmap.createBitmap(mapWidth.toInt(), mapHeight.toInt(), Bitmap.Config.ARGB_8888)
         val canvas = Canvas(composedBitmap)
         val paint = Paint().apply {
-            isFilterBitmap = false // Equivalent to interpolationQuality = .none
+            isFilterBitmap = false
         }
 
-        // Draw Biome Tiles
         for (row in 0 until worldHeight) {
             for (col in 0 until worldWidth) {
                 val biomeTile = biomeTiles[row][col]
@@ -66,7 +56,6 @@ class TileMapImageGenerator(private val spritesProvider: SpritesProvider) {
             }
         }
 
-        // Draw Construction Tiles
         for (row in 0 until worldHeight) {
             for (col in 0 until worldWidth) {
                 val constructionTile = constructionTiles[row][col]
@@ -95,13 +84,12 @@ class TileMapImageGenerator(private val spritesProvider: SpritesProvider) {
             }
         }
 
-        return composedBitmap // .flipVertically()
+        return composedBitmap
     }
 
     private fun renderTileImage(bitmap: Bitmap, frame: RectF, canvas: Canvas, paint: Paint) {
         canvas.save()
         canvas.translate(frame.left, frame.bottom)
-        // canvas.scale(1f, -1f)
         canvas.drawBitmap(bitmap, 0f, 0f, paint)
         canvas.restore()
     }

@@ -8,7 +8,6 @@ class GameEngine {
     @Inject private var tileMapImageGenerator: TileMapImageGenerator
     @Inject private var tileMapsStorage: TileMapsStorage
     @Inject private var worldRevisionsStorage: WorldRevisionsStorage
-    @Inject private var spritesProvider: SpritesProvider
     
     let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)

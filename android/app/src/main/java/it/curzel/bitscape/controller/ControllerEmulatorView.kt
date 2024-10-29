@@ -1,11 +1,11 @@
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.platform.LocalConfiguration
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.controller.JoystickView
 import it.curzel.bitscape.controller.KeyEmulatorView
@@ -16,21 +16,7 @@ fun ControllerEmulatorView(
     gameEngine: GameEngine,
     modifier: Modifier = Modifier
 ) {
-    // val safeAreaInsets = remember(gameEngine) { gameEngine.safeAreaInsets }
-
-    // Convert safeAreaInsets to Dp
-    val paddingValues = PaddingValues(
-        start = 0.dp, // safeAreaInsets.left.dp,
-        top = 0.dp, // safeAreaInsets.top.dp,
-        end = 0.dp, // safeAreaInsets.right.dp,
-        bottom = 80.dp // (safeAreaInsets.bottom + 80).dp // Adding extra bottom padding
-    )
-
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-    ) {
+    Box(modifier = modifier.fillMaxSize()) {
         JoystickView(
             modifier = Modifier.align(Alignment.Center),
             gameEngine = gameEngine

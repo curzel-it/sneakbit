@@ -1,7 +1,7 @@
 #include <jni.h>
 
 extern "C" {
-    #include "game_core.h"
+#include "game_core.h"
 }
 
 extern "C"
@@ -19,43 +19,43 @@ Java_it_curzel_bitscape_gamecore_NativeLib_testBool(JNIEnv *env, jobject thiz) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_initializeConfig(
-    JNIEnv *env,
-    jobject thiz,
-    jfloat baseEntitySpeed,
-    jstring currentLang,
-    jstring levelsPath,
-    jstring speciesPath,
-    jstring inventoryPath,
-    jstring keyValueStoragePath,
-    jstring localizedStringsPath
+        JNIEnv *env,
+        jobject thiz,
+        jfloat baseEntitySpeed,
+        jstring currentLang,
+        jstring levelsPath,
+        jstring speciesPath,
+        jstring inventoryPath,
+        jstring keyValueStoragePath,
+        jstring localizedStringsPath
 ) {
     auto base_entity_speed = static_cast<float>(baseEntitySpeed);
 
-    auto getCString = [&](jstring jStr) -> const char* {
+    auto getCString = [&](jstring jStr) -> const char * {
         if (jStr == nullptr) {
             return nullptr;
         }
         return env->GetStringUTFChars(jStr, nullptr);
     };
 
-    const char* current_lang = getCString(currentLang);
-    const char* levels_path = getCString(levelsPath);
-    const char* species_path = getCString(speciesPath);
-    const char* inventory_path = getCString(inventoryPath);
-    const char* key_value_storage_path = getCString(keyValueStoragePath);
-    const char* localized_strings_path = getCString(localizedStringsPath);
+    const char *current_lang = getCString(currentLang);
+    const char *levels_path = getCString(levelsPath);
+    const char *species_path = getCString(speciesPath);
+    const char *inventory_path = getCString(inventoryPath);
+    const char *key_value_storage_path = getCString(keyValueStoragePath);
+    const char *localized_strings_path = getCString(localizedStringsPath);
 
     initialize_config(
-        base_entity_speed,
-        current_lang,
-        levels_path,
-        species_path,
-        inventory_path,
-        key_value_storage_path,
-        localized_strings_path
+            base_entity_speed,
+            current_lang,
+            levels_path,
+            species_path,
+            inventory_path,
+            key_value_storage_path,
+            localized_strings_path
     );
 
-    auto releaseCString = [&](jstring jStr, const char* cStr) {
+    auto releaseCString = [&](jstring jStr, const char *cStr) {
         if (jStr != nullptr && cStr != nullptr) {
             env->ReleaseStringUTFChars(jStr, cStr);
         }
@@ -71,7 +71,8 @@ Java_it_curzel_bitscape_gamecore_NativeLib_initializeConfig(
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_initializeGame(JNIEnv *env, jobject thiz, jboolean creativeMode) {
+Java_it_curzel_bitscape_gamecore_NativeLib_initializeGame(JNIEnv *env, jobject thiz,
+                                                          jboolean creativeMode) {
     bool creative_mode = static_cast<bool>(creativeMode);
     initialize_game(creative_mode);
 }
@@ -97,13 +98,13 @@ Java_it_curzel_bitscape_gamecore_NativeLib_currentWorldHeight(JNIEnv *env, jobje
 extern "C"
 JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_windowSizeChanged(
-    JNIEnv *env,
-    jobject thiz,
-    jfloat _width,
-    jfloat _height,
-    jfloat renderingScale,
-    jfloat fontSize,
-    jfloat lineSpacing
+        JNIEnv *env,
+        jobject thiz,
+        jfloat _width,
+        jfloat _height,
+        jfloat renderingScale,
+        jfloat fontSize,
+        jfloat lineSpacing
 ) {
     auto width = static_cast<float>(_width);
     auto height = static_cast<float>(_height);
@@ -115,23 +116,23 @@ Java_it_curzel_bitscape_gamecore_NativeLib_windowSizeChanged(
 extern "C"
 JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
-    JNIEnv *env,
-    jobject thiz,
-    jboolean upPressed,
-    jboolean rightPressed,
-    jboolean downPressed,
-    jboolean leftPressed,
-    jboolean upDown,
-    jboolean rightDown,
-    jboolean downDown,
-    jboolean leftDown,
-    jboolean escapePressed,
-    jboolean menuPressed,
-    jboolean confirmPressed,
-    jboolean attackPressed,
-    jboolean backspacePressed,
-    jint currentChar,
-    jfloat timeSinceLastUpdate
+        JNIEnv *env,
+        jobject thiz,
+        jboolean upPressed,
+        jboolean rightPressed,
+        jboolean downPressed,
+        jboolean leftPressed,
+        jboolean upDown,
+        jboolean rightDown,
+        jboolean downDown,
+        jboolean leftDown,
+        jboolean escapePressed,
+        jboolean menuPressed,
+        jboolean confirmPressed,
+        jboolean attackPressed,
+        jboolean backspacePressed,
+        jint currentChar,
+        jfloat timeSinceLastUpdate
 ) {
     auto up_pressed = static_cast<bool>(upPressed);
     auto right_pressed = static_cast<bool>(rightPressed);
@@ -150,30 +151,30 @@ Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
     auto time_since_last_update = static_cast<float>(timeSinceLastUpdate);
 
     update_keyboard(
-        up_pressed,
-        right_pressed,
-        down_pressed,
-        left_pressed,
-        up_down,
-        right_down,
-        down_down,
-        left_down,
-        escape_pressed,
-        menu_pressed,
-        confirm_pressed,
-        attack_pressed,
-        backspace_pressed,
-        current_char,
-        time_since_last_update
+            up_pressed,
+            right_pressed,
+            down_pressed,
+            left_pressed,
+            up_down,
+            right_down,
+            down_down,
+            left_down,
+            escape_pressed,
+            menu_pressed,
+            confirm_pressed,
+            attack_pressed,
+            backspace_pressed,
+            current_char,
+            time_since_last_update
     );
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_updateGame(
-    JNIEnv *env,
-    jobject thiz,
-    jfloat timeSinceLastUpdate
+        JNIEnv *env,
+        jobject thiz,
+        jfloat timeSinceLastUpdate
 ) {
     auto time_since_last_update = static_cast<float>(timeSinceLastUpdate);
     update_game(time_since_last_update);
@@ -240,13 +241,11 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchUpdatedTiles(
         jobject thiz,
         jint world_id
 ) {
-    // Declare output parameters
     const BiomeTile *biome_tiles = nullptr;
     const ConstructionTile *construction_tiles = nullptr;
     uintptr_t out_len_x = 0;
     uintptr_t out_len_y = 0;
 
-    // Call the updated_tiles function
     uint32_t current_revision = updated_tiles(
             static_cast<uint32_t>(world_id),
             &biome_tiles,
@@ -256,64 +255,60 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchUpdatedTiles(
     );
 
     if (!biome_tiles || !construction_tiles) {
-        // Handle error: Tiles data not available
         return nullptr;
     }
 
-    // Get class references
     jclass updatedTilesClass = env->FindClass("it/curzel/bitscape/gamecore/UpdatedTiles");
     jclass biomeTileClass = env->FindClass("it/curzel/bitscape/gamecore/BiomeTile");
     jclass constructionTileClass = env->FindClass("it/curzel/bitscape/gamecore/ConstructionTile");
     jclass intRectClass = env->FindClass("it/curzel/bitscape/gamecore/IntRect");
 
     if (!updatedTilesClass || !biomeTileClass || !constructionTileClass || !intRectClass) {
-        // Handle error: Classes not found
         return nullptr;
     }
 
-    // Get method IDs for constructors
     jmethodID biomeTileConstructor = env->GetMethodID(biomeTileClass, "<init>", "(III)V");
     jmethodID intRectConstructor = env->GetMethodID(intRectClass, "<init>", "(IIII)V");
-    jmethodID constructionTileConstructor = env->GetMethodID(constructionTileClass, "<init>", "(ILit/curzel/bitscape/gamecore/IntRect;)V");
-    jmethodID updatedTilesConstructor = env->GetMethodID(updatedTilesClass, "<init>", "(I[[Lit/curzel/bitscape/gamecore/BiomeTile;[[Lit/curzel/bitscape/gamecore/ConstructionTile;)V");
+    jmethodID constructionTileConstructor = env->GetMethodID(constructionTileClass, "<init>",
+                                                             "(ILit/curzel/bitscape/gamecore/IntRect;)V");
+    jmethodID updatedTilesConstructor = env->GetMethodID(updatedTilesClass, "<init>",
+                                                         "(I[[Lit/curzel/bitscape/gamecore/BiomeTile;[[Lit/curzel/bitscape/gamecore/ConstructionTile;)V");
 
-    if (!biomeTileConstructor || !intRectConstructor || !constructionTileConstructor || !updatedTilesConstructor) {
-        // Handle error: Constructors not found
+    if (!biomeTileConstructor || !intRectConstructor || !constructionTileConstructor ||
+        !updatedTilesConstructor) {
         return nullptr;
     }
 
-    // Prepare array classes
     jclass biomeTileArrayClass = env->FindClass("[Lit/curzel/bitscape/gamecore/BiomeTile;");
-    jclass constructionTileArrayClass = env->FindClass("[Lit/curzel/bitscape/gamecore/ConstructionTile;");
+    jclass constructionTileArrayClass = env->FindClass(
+            "[Lit/curzel/bitscape/gamecore/ConstructionTile;");
 
     if (!biomeTileArrayClass || !constructionTileArrayClass) {
-        // Handle error: Array classes not found
         return nullptr;
     }
 
-    // Create outer arrays
-    jobjectArray biomeTilesOuterArray = env->NewObjectArray(out_len_y, biomeTileArrayClass, nullptr);
-    jobjectArray constructionTilesOuterArray = env->NewObjectArray(out_len_y, constructionTileArrayClass, nullptr);
+    jobjectArray biomeTilesOuterArray = env->NewObjectArray(out_len_y, biomeTileArrayClass,
+                                                            nullptr);
+    jobjectArray constructionTilesOuterArray = env->NewObjectArray(out_len_y,
+                                                                   constructionTileArrayClass,
+                                                                   nullptr);
 
     if (!biomeTilesOuterArray || !constructionTilesOuterArray) {
-        // Handle error: Failed to create outer arrays
         return nullptr;
     }
 
-    // Fill arrays
     for (uintptr_t y = 0; y < out_len_y; ++y) {
         jobjectArray biomeTileRow = env->NewObjectArray(out_len_x, biomeTileClass, nullptr);
-        jobjectArray constructionTileRow = env->NewObjectArray(out_len_x, constructionTileClass, nullptr);
+        jobjectArray constructionTileRow = env->NewObjectArray(out_len_x, constructionTileClass,
+                                                               nullptr);
 
         if (!biomeTileRow || !constructionTileRow) {
-            // Handle error: Failed to create inner arrays
             return nullptr;
         }
 
         for (uintptr_t x = 0; x < out_len_x; ++x) {
             uintptr_t index = y * out_len_x + x;
 
-            // BiomeTile
             const BiomeTile &tile = biome_tiles[index];
             jobject biomeTileObj = env->NewObject(
                     biomeTileClass,
@@ -323,13 +318,11 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchUpdatedTiles(
                     static_cast<jint>(tile.texture_offset_y)
             );
             if (!biomeTileObj) {
-                // Handle error: Failed to create BiomeTile object
                 return nullptr;
             }
             env->SetObjectArrayElement(biomeTileRow, x, biomeTileObj);
             env->DeleteLocalRef(biomeTileObj);
 
-            // ConstructionTile
             const ConstructionTile &ctile = construction_tiles[index];
             const IntRect &rect = ctile.texture_source_rect;
             jobject intRectObj = env->NewObject(
@@ -341,7 +334,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchUpdatedTiles(
                     static_cast<jint>(rect.h)
             );
             if (!intRectObj) {
-                // Handle error: Failed to create IntRect object
                 return nullptr;
             }
             jobject constructionTileObj = env->NewObject(
@@ -352,7 +344,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchUpdatedTiles(
             );
             env->DeleteLocalRef(intRectObj);
             if (!constructionTileObj) {
-                // Handle error: Failed to create ConstructionTile object
                 return nullptr;
             }
             env->SetObjectArrayElement(constructionTileRow, x, constructionTileObj);
@@ -366,7 +357,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchUpdatedTiles(
         env->DeleteLocalRef(constructionTileRow);
     }
 
-    // Create the UpdatedTiles object
     jobject updatedTilesObj = env->NewObject(
             updatedTilesClass,
             updatedTilesConstructor,
@@ -375,9 +365,85 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchUpdatedTiles(
             constructionTilesOuterArray
     );
 
-    // Clean up
     env->DeleteLocalRef(biomeTilesOuterArray);
     env->DeleteLocalRef(constructionTilesOuterArray);
 
     return updatedTilesObj;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, jobject thiz) {
+    uintptr_t length;
+    RenderableItem *items = get_renderables(&length);
+
+    jclass intRectClass = env->FindClass("it/curzel/bitscape/gamecore/IntRect");
+    jclass vector2dClass = env->FindClass("it/curzel/bitscape/gamecore/Vector2d");
+    jclass renderableItemClass = env->FindClass("it/curzel/bitscape/gamecore/RenderableItem");
+    jclass arrayListClass = env->FindClass("java/util/ArrayList");
+
+    jmethodID intRectConstructor = env->GetMethodID(intRectClass, "<init>", "(IIII)V");
+    jmethodID vector2dConstructor = env->GetMethodID(vector2dClass, "<init>", "(FF)V");
+    jmethodID renderableItemConstructor = env->GetMethodID(
+            renderableItemClass,
+            "<init>",
+            "(ILit/curzel/bitscape/gamecore/IntRect;Lit/curzel/bitscape/gamecore/Vector2d;Lit/curzel/bitscape/gamecore/IntRect;)V"
+    );
+    jmethodID arrayListConstructor = env->GetMethodID(arrayListClass, "<init>", "()V");
+    jmethodID arrayListAddMethod = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
+
+    jobject arrayListObject = env->NewObject(arrayListClass, arrayListConstructor);
+
+    for (uintptr_t i = 0; i < length; ++i) {
+        RenderableItem item = items[i];
+
+        jobject textureRectObject = env->NewObject(
+                intRectClass,
+                intRectConstructor,
+                item.texture_rect.x,
+                item.texture_rect.y,
+                item.texture_rect.w,
+                item.texture_rect.h
+        );
+
+        jobject frameObject = env->NewObject(
+                intRectClass,
+                intRectConstructor,
+                item.frame.x,
+                item.frame.y,
+                item.frame.w,
+                item.frame.h
+        );
+
+        jobject offsetObject = env->NewObject(
+                vector2dClass,
+                vector2dConstructor,
+                item.offset.x,
+                item.offset.y
+        );
+
+        jclass uIntClass = env->FindClass("kotlin/UInt");
+        jmethodID uIntConstructor = env->GetStaticMethodID(uIntClass, "constructor-impl", "(I)I");
+        jint spriteSheetIdUInt = env->CallStaticIntMethod(uIntClass, uIntConstructor,
+                                                          (jint) item.sprite_sheet_id);
+
+        jobject renderableItemObject = env->NewObject(
+                renderableItemClass,
+                renderableItemConstructor,
+                spriteSheetIdUInt,
+                textureRectObject,
+                offsetObject,
+                frameObject
+        );
+
+        env->CallBooleanMethod(arrayListObject, arrayListAddMethod, renderableItemObject);
+
+        env->DeleteLocalRef(textureRectObject);
+        env->DeleteLocalRef(frameObject);
+        env->DeleteLocalRef(offsetObject);
+        env->DeleteLocalRef(renderableItemObject);
+    }
+
+    free_renderables(items, length);
+    return arrayListObject;
 }

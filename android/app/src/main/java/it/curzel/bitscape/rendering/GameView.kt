@@ -8,6 +8,7 @@ import android.view.Choreographer
 import android.view.View
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.gamecore.NativeLib
+import it.curzel.bitscape.gamecore.RenderableItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -76,35 +77,29 @@ class GameView @JvmOverloads constructor(
 
         if (engine.canRender) {
             renderTileMap(canvas)
+            renderEntities(canvas)
             renderDebugInfo(canvas)
         }
     }
 
-    /*
     private fun renderEntities(canvas: Canvas) {
-        engine.renderEntities { entity ->
+        engine.renderableItems().forEach { entity ->
             render(entity, canvas)
         }
     }
 
     private fun render(entity: RenderableItem, canvas: Canvas) {
         val bitmap = spritesProvider.bitmapFor(entity) ?: return
-        val frame = engine.renderingFrameFor(entity)
+        val frame = engine.renderingFrame(entity)
         renderTexture(bitmap, frame, canvas)
     }
-    */
 
     private fun renderTexture(bitmap: Bitmap, frame: RectF, canvas: Canvas) {
         val saveCount = canvas.save()
-
-        // Apply transformations if needed (e.g., flipping)
         canvas.translate(frame.left, frame.top)
         canvas.scale(1f, -1f)
         canvas.translate(0f, -frame.height())
-
-        // Draw the bitmap
         canvas.drawBitmap(bitmap, null, RectF(0f, 0f, frame.width(), frame.height()), null)
-
         canvas.restoreToCount(saveCount)
     }
 
@@ -125,26 +120,17 @@ class GameView @JvmOverloads constructor(
 
     private fun renderTileMap(canvas: Canvas) {
         val tileMapBitmap = engine.tileMapImage() ?: return
-
         val cameraViewport = engine.cameraViewport
         val cameraOffset = engine.cameraViewportOffset
         val tileSize = NativeLib.TILE_SIZE * engine.renderingScale
-        val scaledMapSize = SizeF(
-            tileMapBitmap.width * engine.renderingScale,
-            tileMapBitmap.height * engine.renderingScale
-        )
-
+        val scaledMapWidth = tileMapBitmap.width * engine.renderingScale
+        val scaledMapHeight = tileMapBitmap.height * engine.renderingScale
         val offsetX = -cameraViewport.x * tileSize - cameraOffset.x * engine.renderingScale
         val offsetY = -cameraViewport.y * tileSize - cameraOffset.y * engine.renderingScale
 
         val saveCount = canvas.save()
-
         canvas.translate(offsetX, offsetY)
-        canvas.drawBitmap(tileMapBitmap, null, RectF(0f, 0f, scaledMapSize.width, scaledMapSize.height), null)
-
+        canvas.drawBitmap(tileMapBitmap, null, RectF(0f, 0f,scaledMapWidth, scaledMapHeight), null)
         canvas.restoreToCount(saveCount)
     }
 }
-
-// Additional helper classes and interfaces
-data class SizeF(val width: Float, val height: Float)
