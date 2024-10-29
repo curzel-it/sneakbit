@@ -150,6 +150,7 @@ impl Species {
 
 lazy_static! {
     pub static ref ALL_SPECIES: Vec<Species> = {
+        println!("Parsing species from {:#?}", config().species_path.clone());
         let mut file = File::open(config().species_path.clone()).expect("Could not open species.json");
         let mut data = String::new();
         file.read_to_string(&mut data).expect("Could not read species.json");

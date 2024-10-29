@@ -131,6 +131,7 @@
 #define SPECIES_DEEP_HOLE 5001
 
 typedef uint32_t Biome;
+
 typedef uint32_t Construction;
 
 typedef enum ToastMode {
@@ -218,6 +219,10 @@ typedef struct InventoryItem {
 
 
 void initialize_game(bool creative_mode);
+
+bool test_bool(void);
+
+void test_logs(void);
 
 bool is_creative_mode(void);
 

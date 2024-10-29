@@ -1,6 +1,5 @@
 package it.curzel.bitscape.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -21,22 +20,11 @@ private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
 
 @Composable
 fun SneakBitTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -52,7 +40,23 @@ fun SneakBitTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = androidx.compose.material3.Typography(
+            displayLarge = it.curzel.bitscape.ui.theme.Typography.largeTitle,
+            displayMedium = it.curzel.bitscape.ui.theme.Typography.largeTitle,
+            displaySmall = it.curzel.bitscape.ui.theme.Typography.largeTitle,
+            headlineLarge = it.curzel.bitscape.ui.theme.Typography.title,
+            headlineMedium = it.curzel.bitscape.ui.theme.Typography.title,
+            headlineSmall = it.curzel.bitscape.ui.theme.Typography.title,
+            titleLarge = it.curzel.bitscape.ui.theme.Typography.title,
+            titleMedium = it.curzel.bitscape.ui.theme.Typography.title,
+            titleSmall = it.curzel.bitscape.ui.theme.Typography.title,
+            bodyLarge = it.curzel.bitscape.ui.theme.Typography.text,
+            bodyMedium = it.curzel.bitscape.ui.theme.Typography.text,
+            bodySmall = it.curzel.bitscape.ui.theme.Typography.text,
+            labelLarge = it.curzel.bitscape.ui.theme.Typography.text,
+            labelMedium = it.curzel.bitscape.ui.theme.Typography.text,
+            labelSmall = it.curzel.bitscape.ui.theme.Typography.caption
+        ),
         content = content
     )
 }

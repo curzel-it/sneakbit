@@ -1,0 +1,307 @@
+"building.name.house" = "Casa"
+"building.name.house_two_floors" = "Casa (due piani)"
+"building.name.deamon_lord_castle" = "Castello del Signore dei Demoni"
+"combat.options.attack" = "Attacca"
+"combat.options.inventory" = "Inventario"
+"combat.options.run" = "Fuggi"
+"confirmation.confirm" = "Ok"
+"confirmation.cancel" = "No"
+"death_screen.title" = "Sei morto."
+"death_screen.subtitle" = "Premi CONFERMA per riprovare."
+"dialogue.reward_received" = "Hai ricevuto `%s`!"
+"picked_up_item" = "Raccolto `%s`!"
+"dialogue.select_option" = "Seleziona un'opzione:"
+"ok" = "Ok"
+
+"empty_dialogue" = "Cosa vuoi?"
+"entity.menu.title" = "Opzioni Entità"
+"entity.menu.remove" = "Rimuovi"
+"entity.menu.rename" = "Rinomina"
+"entity.menu.rename_title" = "Inserisci nuovo nome"
+"entity.menu.pickup" = "Raccogli"
+"entity.menu.read" = "Leggi"
+"entity.menu.use" = "Usa"
+"entity.menu.change_lock" = "Cambia Serratura"
+"entity.menu.change_lock_title" = "Seleziona Colore Chiave"
+"entity.menu.change_on_off" = "Accendi/Spegni"
+"entity.menu.change_destination_world" = "Cambia Mondo Destinazione"
+"entity.menu.change_destination_x" = "Cambia Destinazione X"
+"entity.menu.change_destination_y" = "Cambia Destinazione Y"
+"entity.menu.toggle_demand_attention" = "Attiva/Disattiva Richiesta Attenzione"
+
+"game.menu.title" = "Menu di Gioco"
+"game.menu.status" = "Stato"
+"game.menu.save" = "Salva Gioco"
+"game.menu.inventory" = "Inventario"
+"game.menu.map_editor" = "Editor Mappa"
+"game.menu.exit" = "Esci"
+"game.menu.save_and_exit" = "Salva & Esci"
+"game.menu.key_bindings" = "Comandi"
+
+"keys.menu.title" = "Comandi"
+
+"keys.menu.message" = """
+Movimento: WASD o FRECCE
+Indietro/Annulla: ESC
+Menu: INVIO
+
+Puoi cambiare quanto segue:
+"""
+
+"keys.menu.press_to_change" = "Premi nuovo tasto per"
+"inventory.title" = "Inventario"
+"inventory.subtitle" = "Oggetti nello zaino"
+"lock.name.none" = "Nessuna"
+"lock.name.yellow" = "Gialla"
+"lock.name.red" = "Rossa"
+"lock.name.blue" = "Blu"
+"lock.name.green" = "Verde"
+"lock.name.silver" = "Argento"
+"lock.name.permanent" = "Permanente"
+"map_editor.title" = "Editor Mappa"
+"map_editor.subtitle" = "Premi CONFERMA per selezionare qualcosa"
+"map_editor.placement" = "Premi CONFERMA per posizionare\nPremi ESC per annullare"
+"npc.name.default" = "Some Npc"
+"npc.name.deamon_lord" = "Signore Oscuro"
+"npc.name.goddess" = "Dea"
+"npc.name.wizard" = "Mago"
+"npc.name.old_man" = "Vecchio"
+"npc.name.old_woman" = "Vecchia"
+"npc.name.shop_clerk" = "Venditore"
+"npc.name.slime" = "Melma"
+"npc.name.zombie" = "Zombie"
+"npc.name.homunculus" = "Homunculus"
+"npc.name.ghost" = "Fantasma"
+"npc.menu.title" = "Opzioni NPC"
+"npc.menu.remove" = "Rimuovi"
+"npc.menu.play_dialog" = "Gioca dialogo"
+"objects.name.hint_consumable" = "Suggerimento (Uso singolo)"
+"objects.name.hint_permanent" = "Suggerimento (Permanente)"
+"objects.name.stairs_up" = "Scale (Su)"
+"objects.name.stairs_down" = "Scale (Giù)"
+"objects.name.seat_brown" = "Sedia Marrone"
+"objects.name.seat_green" = "Sedia Verde"
+"objects.name.seat_orange" = "Sedia Arancione"
+"objects.name.seat_pink" = "Sedia Rosa"
+"objects.name.table" = "Tavolo"
+"objects.name.bed" = "Letto"
+"objects.name.book_red" = "Libro"
+"objects.name.book_blue" = "Libro"
+"objects.name.book_green" = "Libro"
+"objects.name.book_purple" = "Libro"
+"objects.name.book_dark" = "Libro Scuro"
+"objects.name.key" = "Chiave"
+"objects.name.key_yellow" = "Chiave Gialla"
+"objects.name.key_red" = "Chiave Rossa"
+"objects.name.key_green" = "Chiave Verde"
+"objects.name.key_blue" = "Chiave Blu"
+"objects.name.key_silver" = "Chiave d'Argento"
+"objects.name.kunai" = "Kunai"
+"objects.name.kunai.x10" = "x10 Kunai"
+"objects.name.teleporter" = "Teletrasportatore"
+"objects.name.deep_hole" = "Buco Profondo"
+"objects.name.boulder" = "Masso"
+"objects.name.fountain" = "Fontana"
+"objects.name.gate.yellow" = "Cancello Giallo"
+"objects.name.gate.red" = "Cancello Rosso"
+"objects.name.gate.green" = "Cancello Verde"
+"objects.name.gate.blue" = "Cancello Blu"
+"objects.name.gate.silver" = "Cancello d'Argento"
+"objects.name.pressure_plate.yellow" = "Piastra di Pressione Gialla"
+"objects.name.pressure_plate.red" = "Piastra di Pressione Rossa"
+"objects.name.pressure_plate.green" = "Piastra di Pressione Verde"
+"objects.name.pressure_plate.blue" = "Piastra di Pressione Blu"
+"objects.name.pressure_plate.silver" = "Piastra di Pressione d'Argento"
+"objects.name.pill.red" = "Pillola Rossa"
+"objects.name.rail.cart" = "Carrello da Miniera"
+"objects.name.scroll.brown" = "Pergamena Marrone"
+"objects.name.scroll.red" = "Pergamena Rossa"
+"objects.name.scroll.blue" = "Pergamena Blu"
+"objects.name.scroll.yellow" = "Pergamena Gialla"
+"objects.name.scroll.green" = "Pergamena Verde"
+"objects.name.sign" = "Cartello"
+"objects.name.large_sign" = "Grande Cartello"
+"objects.name.magic_circle.summoning" = "Cerchio di Evocazione"
+"objects.name.magic_circle.summoning.evil" = "Cerchio di Evocazione Malefica"
+"objects.name.magic_circle.blue" = "Cerchio Magico Blu"
+"objects.name.well" = "Pozzo"
+
+"teleporter.name" = "Teletrasportatore"
+"teleporter.locked" = "Questa porta è bloccata.\nHai bisogno di una chiave %s per sbloccarla."
+"telepoter.locked.permanent" = "Questa porta è bloccata."
+"teleporter.unlock.title" = "Sbloccare la porta?"
+"teleporter.unlock.message" = "Perderai una chiave %s."
+"text_input.hint" = "Premi INVIO per confermare\nPremi ESC per annullare"
+
+"you" = "Tu"
+
+"status.fake" = """
+-----------------------------
+Punti disponibili:         0
+-----------------------------
+Stats (max lv 100):
+- Hp:                      1
+- Dp:                      1
+- Forza:                   5
+- Velocità:                4
+-----------------------------
+Skills (max lv 100):
+- Lancio pugnali:          1
+- Vectorized Casting:      1
+-----------------------------
+"""
+
+"1001.hint.blessing_received" = """
+Dea:
+Ti ho dato la mia benedizione viaggiatore.
+Controlla la finestra di stato,
+le tue nuove abilità saranno essenziali per la vittoria...
+"""
+
+"1001.wizard_intro" = """
+Non posso crederci che ha funzionato!
+
+Con l'aiuto della Dea, ti ho evocato qui per
+essere il campione dell'umanità e sconfiggere il Signore Oscuro.
+
+Purtroppo, l'invasione è già iniziata...
+
+Vai a nord, una barca sta per partire per Stormlace City!
+La Gran Sacerdotessa ti aspetterà lì...
+"""
+
+"1002.sign.welcome_to_village" = """
+Benvenuto a Porto Saltspire
+"""
+
+"1002.scroll.hidden_monsters_hint" = """
+Se stai leggendo questo, non siamo mai arrivati al tunnel.
+Fai attenzione al buco.
+"""
+
+"1002.sign.forest_maze" = """
+Proprietà privata
+"""
+
+"1002.sign.sorry_no_boat" = """
+Ahoy! 
+Ho dovuto salpare - quei dannati demoni erano troppo vicini per i miei gusti. 
+Trova il vecchio Capitano Briggs nel villaggio; ti darà una mano!
+"""
+
+"1002.book.underground_hint.title" = """
+Diario del Capitano Briggs
+"""
+
+"1002.book.underground_hint.message" = """
+Diario del Capitano Briggs:
+So che un capitano dovrebbe affondare con la sua nave, 
+ma la gente qui ha bisogno di me.
+Donne e bambini sono partiti con l'ultima barca.
+Spero che presto potremo partire anche noi usando il tunnel sotterraneo 
+nascosto nel villaggio.
+Se non è crollato, dovrebbe portarci fino alla prossima isola.
+"""
+
+"1001.wizard_no_time" = """
+Non c'è tempo per spiegare oltre.
+La nave sta partendo, sbrigati!
+"""
+
+"1002.old_man.damn_monsters" = """
+Questi mostri... È tutto finito...
+Tieni il mio coltello per me ragazzo.
+"""
+
+"1002.hint.why_no_status_window" = """
+Dea:
+Mmmh... Qualcosa non va nella finestra di stato...
+"""
+
+"1002.hint.cant_you_hear_me" = """
+Dea:
+Ciao!?
+"""
+
+"1003.hint.comunication_issues" = """
+Dea:
+... Non riesce a sentirmi...
+"""
+
+"1004.old_lady.talk_to_my_husband" = """
+Mio marito ha creato una barriera in tempo per salvare la nostra casa.
+Puoi vedere come sta?
+"""
+
+"1004.sign.cave_back" = """
+Benvenuto nella gloriosa città mineraria di Rusty Gulch
+Casa di tesori discutibili e problemi polmonari garantiti!
+Avviso: L'area è altamente contaminata. 
+Entra a tuo rischio e pericolo, o almeno con una maschera molto buona. 
+Seriamente, stai lontano. Non scherziamo... 
+...A meno che tu non sia interessato a rocce luminose e malattie misteriose,
+allora, vai pure avanti!
+"""
+
+"1004.old_man.please_open_gate" = """
+Ti ha mandato mia moglie?
+Sto bene, la maggior parte dei demoni è intrappolata adesso...
+Ma il sindaco si è chiuso dentro con tutte le nostre provviste. 
+Ho bisogno che tu mi aiuti a dargli una lezione.
+
+Puoi andare a Nord e aprire il cancello del municipio?
+Tutti i mostri sembrano arrivare da li, io non ce la faccio...
+"""
+
+"1004.old_man.gate_now_open" = """
+Haha! (Risata malefica)
+L'abbiamo preso!
+Saccheggiamo il municipio
+"""
+
+"1004.sign.last_ship_sailed" = """
+L'ultima nave è già salpata.
+Inoltre, non arriveranno altre navi.
+"""
+
+"1004.hint.what_is_that" = """
+Dea:
+Un portale..!
+I demoni arrivano sicuramente da li.
+"""
+
+"1004.hint.dont_enter_portal" = """
+Dea:
+È chiaramente magia demoniaca, stanne lontano!
+"""
+
+"1004.hint.dont_you_dare" = """
+Dea:
+Non osare...!
+"""
+
+"1005.hint.deamon_kingdom_intro" = """
+Il regno dei demoni!?
+"""
+
+"1008.dialogue.demon_lord.intro" = """
+Ti stavo aspettando... "Eroe".
+Qualcuno del tuo livello non ha nessuna chance.
+Inginocchiati e avrai una morte veloce e indolore.
+"""
+
+"1008.dialogue.demon_lord.try_me" = """
+Mortale, la mia pazienza ha un limite.
+"""
+
+"1009.dialogue.goddess.end_game" = """
+Grazie per aver salvato il mondo
+Bla bla bla
+(Lo sviluppatore non aveva sbatta di scrivere un dialogo come si deve, lol)
+"""
+
+"1009.dialogue.goddess.end_game_again" = """
+Grazie ancora.
+Ora puoi andare...
+(Lo sviluppatore non aveva sbatta di scrivere un dialogo come si deve, lol)
+"""

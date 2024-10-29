@@ -8,7 +8,6 @@ class GameEngine {
     @Inject private var tileMapImageGenerator: TileMapImageGenerator
     @Inject private var tileMapsStorage: TileMapsStorage
     @Inject private var worldRevisionsStorage: WorldRevisionsStorage
-    @Inject private var spritesProvider: SpritesProvider
     
     let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
@@ -232,7 +231,6 @@ class GameEngine {
             
             self.tileMapImages = (0..<BIOME_NUMBER_OF_FRAMES).compactMap { variant in
                 self.tileMapImageGenerator.generate(
-                    renderingScale: self.renderingScale,
                     worldWidth: self.worldWidth,
                     worldHeight: self.worldHeight,
                     variant: Int32(variant),
