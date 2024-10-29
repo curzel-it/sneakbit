@@ -27,8 +27,8 @@ class SpritesProvider(private val context: Context, private val spriteSheetFileN
         val rect = Rect(
             textureRect.x * TILE_SIZE,
             textureRect.y * TILE_SIZE,
-            (textureRect.x + textureRect.width) * TILE_SIZE,
-            (textureRect.y + textureRect.height) * TILE_SIZE
+            (textureRect.x + textureRect.w) * TILE_SIZE,
+            (textureRect.y + textureRect.h) * TILE_SIZE
         )
 
         val width = rect.width()
@@ -61,6 +61,26 @@ class SpritesProvider(private val context: Context, private val spriteSheetFileN
     }
 }
 
-data class IntRect(val x: Int, val y: Int, val width: Int, val height: Int)
+data class IntRect(
+    val x: Int,
+    val y: Int,
+    val w: Int,
+    val h: Int
+)
 
-data class RenderableItem(val spriteSheetId: UInt, val textureRect: IntRect)
+data class Vector2d(
+    val x: Float,
+    val y: Float
+)
+
+data class EdgeInsets(
+    val top: Float,
+    val right: Float,
+    val down: Float,
+    val left: Float,
+)
+
+data class RenderableItem(
+    val spriteSheetId: UInt,
+    val textureRect: IntRect
+)

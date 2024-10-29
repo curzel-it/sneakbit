@@ -3,36 +3,82 @@ package it.curzel.bitscape.rendering
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Size
+import android.view.Choreographer
 import android.view.View
+import it.curzel.bitscape.engine.GameEngine
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class GameView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
-) : View(context, attrs) {
+) : View(context, attrs), Choreographer.FrameCallback {
 
     lateinit var spritesProvider: SpritesProvider
     lateinit var engine: GameEngine
+
+    private var lastUpdateTime: Long = 0L
+    private var choreographer: Choreographer = Choreographer.getInstance()
+    private var isRunning: Boolean = false
 
     init {
         setBackgroundColor(Color.BLACK)
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        lastUpdateTime = System.nanoTime()
+        startFrameCallback()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            clipBounds?.let { bounds ->
+                val size = Size(bounds.width(), bounds.height())
+                engine.setupChanged(null, size)
+            }
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        stopFrameCallback()
+    }
+
+    private fun startFrameCallback() {
+        if (!isRunning) {
+            isRunning = true
+            choreographer.postFrameCallback(this)
+        }
+    }
+
+    private fun stopFrameCallback() {
+        if (isRunning) {
+            isRunning = false
+            choreographer.removeFrameCallback(this)
+        }
+    }
+
+    override fun doFrame(frameTimeNanos: Long) {
+        if (!isRunning) return
+        val deltaTime = (frameTimeNanos - lastUpdateTime) / 1_000_000_000.0
+        lastUpdateTime = frameTimeNanos
+        engine.update(deltaTime.toFloat())
+        invalidate()
+        choreographer.postFrameCallback(this)
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
-        // Clear the canvas with black color
         canvas.drawColor(Color.BLACK)
 
         if (engine.canRender) {
             renderTileMap(canvas)
-            renderEntities(canvas)
             renderDebugInfo(canvas)
         }
-
-        // Request the next frame
-        postInvalidateOnAnimation()
     }
 
+    /*
     private fun renderEntities(canvas: Canvas) {
         engine.renderEntities { entity ->
             render(entity, canvas)
@@ -44,6 +90,7 @@ class GameView @JvmOverloads constructor(
         val frame = engine.renderingFrameFor(entity)
         renderTexture(bitmap, frame, canvas)
     }
+    */
 
     private fun renderTexture(bitmap: Bitmap, frame: RectF, canvas: Canvas) {
         val saveCount = canvas.save()
@@ -60,7 +107,8 @@ class GameView @JvmOverloads constructor(
     }
 
     private fun renderDebugInfo(canvas: Canvas) {
-        val fpsText = String.format("\nFPS: %.0f   ", engine.fps)
+        val fps = engine.fps
+        val fpsText = "FPS: ${String.format("%.0f", fps)}   "
         val paint = Paint().apply {
             color = Color.WHITE
             textSize = 14f * resources.displayMetrics.density
@@ -74,7 +122,7 @@ class GameView @JvmOverloads constructor(
     }
 
     private fun renderTileMap(canvas: Canvas) {
-        val tileMapBitmap = engine.tileMapBitmap() ?: return
+        val tileMapBitmap = engine.tileMapImage() ?: return
 
         val cameraViewport = engine.cameraViewport
         val cameraOffset = engine.cameraViewportOffset
@@ -102,5 +150,3 @@ class GameView @JvmOverloads constructor(
 
 // Additional helper classes and interfaces
 data class SizeF(val width: Float, val height: Float)
-
-

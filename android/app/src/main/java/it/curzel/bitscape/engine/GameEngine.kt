@@ -1,24 +1,39 @@
-package it.curzel.bitscape.rendering
+package it.curzel.bitscape.engine
 
+import android.content.Context
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import javax.inject.Inject
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import android.util.Size
+import it.curzel.bitscape.AssetUtils
+import it.curzel.bitscape.controller.EmulatedKey
+import it.curzel.bitscape.gamecore.NativeLib
+import it.curzel.bitscape.rendering.EdgeInsets
+import it.curzel.bitscape.rendering.IntRect
+import it.curzel.bitscape.rendering.SpritesProvider
+import it.curzel.bitscape.rendering.Vector2d
+import java.io.File
+import java.io.IOException
+import java.lang.annotation.Native
 
-class GameEngine @Inject constructor(
+class GameEngine(
+    private val context: Context,
     private val renderingScaleUseCase: RenderingScaleUseCase,
     private val tileMapImageGenerator: TileMapImageGenerator,
     private val tileMapsStorage: TileMapsStorage,
     private val worldRevisionsStorage: WorldRevisionsStorage,
     private val spritesProvider: SpritesProvider
 ) {
+    /*
     val toast = MutableStateFlow<ToastDescriptorC?>(null)
     val menus = MutableStateFlow<MenuDescriptorC?>(null)
     val inventory = MutableStateFlow<List<InventoryItem>>(emptyList())
     val loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.None)
+*/
     val showsDeathScreen = MutableStateFlow(false)
 
     var size = Size(0, 0)
@@ -29,15 +44,15 @@ class GameEngine @Inject constructor(
     private var frameCount = 0
 
     private val tileSize = TILE_SIZE.toFloat()
-    private var renderingScale = 1f
-    private var cameraViewport = IntRect(0, 0, 0, 0)
-    private var cameraViewportOffset = Vector2d(0.0, 0.0)
-    private var safeAreaInsets = EdgeInsets(0, 0, 0, 0)
-    private var canRender = true
+    var renderingScale = 1f
+    var cameraViewport = IntRect(0, 0, 0, 0)
+    var cameraViewportOffset = Vector2d(0.0f, 0.0f)
+    private var safeAreaInsets = EdgeInsets(0.0f, 0.0f, 0.0f, 0.0f)
+    var canRender = true
 
     private val keyPressed = mutableSetOf<EmulatedKey>()
     private val keyDown = mutableSetOf<EmulatedKey>()
-    private var currentChar = 0u
+    private var currentChar: Int = 0
 
     private var worldHeight = 0
     private var worldWidth = 0
@@ -46,46 +61,56 @@ class GameEngine @Inject constructor(
     private var tileMapImages = emptyList<Bitmap>()
     private var currentBiomeVariant = 0
 
+    private val nativeLib = NativeLib()
+
     init {
-        initialize_config(
-            (TILE_SIZE * 1.8f),
-            currentLang(),
-            dataFolder(),
-            speciesJson(),
-            inventoryJson(),
-            saveJson(),
-            langFolder()
+        nativeLib.testLogs()
+        val result = nativeLib.testBool()
+        Log.d("MainActivity", "Interop working: $result")
+
+        val dataPath = AssetUtils.extractAssetFolder(context, "data", "data")
+        val langPath = AssetUtils.extractAssetFolder(context, "lang", "lang")
+
+        nativeLib.initializeConfig(
+            baseEntitySpeed = NativeLib.TILE_SIZE * 1.8f,
+            currentLang = "en",
+            levelsPath = dataPath,
+            speciesPath = "$dataPath/species.json",
+            inventoryPath = inventoryPath(),
+            keyValueStoragePath = storagePath(),
+            localizedStringsPath = langPath
         )
-        initialize_game(false)
+        nativeLib.initializeGame(false)
     }
 
     fun update(deltaTime: Float) {
         if (isBusy) return
 
         updateKeyboardState(deltaTime)
-        update_game(deltaTime)
-        toast.value = current_toast()
-        menus.value = current_menu()
-        showsDeathScreen.value = shows_death_screen()
-        currentBiomeVariant = current_biome_tiles_variant().toInt()
-        cameraViewport = camera_viewport()
-        cameraViewportOffset = camera_viewport_offset()
-
-        fetchInventory { items ->
-            inventory.value = items
-        }
-
-        if (current_world_id() != currentWorldId) {
-            println("World changed from $currentWorldId to ${current_world_id()}")
-            currentWorldId = current_world_id()
+        nativeLib.updateGame(deltaTime)
+        // toast.value = current_toast()
+        // menus.value = current_menu()
+            showsDeathScreen.value = nativeLib.showsDeathScreen()
+            currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
+            cameraViewport = nativeLib.cameraViewport().toRect()
+            cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
+        /*
+                    fetchInventory { items ->
+                        inventory.value = items
+                    }
+*/
+        val freshWorldId = nativeLib.currentWorldId().toUInt()
+        if (freshWorldId != currentWorldId) {
+            println("World changed from $currentWorldId to ${freshWorldId}")
+            currentWorldId = freshWorldId
             keyDown.clear()
             keyPressed.clear()
-            updateTileMapImages()
+            updateTileMapImages(freshWorldId)
         }
 
         updateFpsCounter()
         flushKeyboard()
-    }
+    }/*
 
     fun renderEntities(render: (RenderableItem) -> Unit) {
         fetchRenderableItems { items ->
@@ -94,34 +119,34 @@ class GameEngine @Inject constructor(
             }
         }
     }
-
-    fun setupChanged(safeArea: EdgeInsets?, windowSize: Size, screenScale: Float?) {
+*/
+    fun setupChanged(safeArea: EdgeInsets?, windowSize: Size) {
         safeArea?.let {
             safeAreaInsets = it
         }
-        renderingScale = renderingScaleUseCase.calculate(windowSize, screenScale)
+        renderingScale = renderingScaleUseCase.current()
         size = windowSize
 
-        window_size_changed(
+        nativeLib.windowSizeChanged(
             size.width.toFloat(),
             size.height.toFloat(),
             renderingScale,
             12f,
             8f
         )
-        worldHeight = current_world_height().toInt()
-        worldWidth = current_world_width().toInt()
-    }
+        worldWidth = nativeLib.currentWorldWidth()
+        worldHeight = nativeLib.currentWorldHeight()
+    }/*
 
     fun renderingFrame(entity: RenderableItem): Rect {
         return renderingFrame(entity.frame, entity.offset)
     }
-
+*/
     fun tileMapImage(): Bitmap? {
         return tileMapImages.getOrNull(currentBiomeVariant)
     }
 
-    private fun renderingFrame(frame: IntRect, offset: Vector2d = Vector2d(0.0, 0.0)): Rect {
+    private fun renderingFrame(frame: IntRect, offset: Vector2d = Vector2d(0.0f, 0.0f)): Rect {
         val actualCol = (frame.x - cameraViewport.x).toFloat()
         val actualOffsetX = (offset.x - cameraViewportOffset.x).toFloat()
 
@@ -137,11 +162,11 @@ class GameEngine @Inject constructor(
     }
 
     fun setDidType(char: Char) {
-        currentChar = char.code.toUInt()
+        currentChar = char.code.toInt()
     }
 
     fun setDidTypeNothing() {
-        currentChar = 0u
+        currentChar = 0
     }
 
     fun setKeyDown(key: EmulatedKey) {
@@ -159,86 +184,85 @@ class GameEngine @Inject constructor(
         keyPressed.clear()
         keyDown.removeAll(
             listOf(
-                EmulatedKey.Attack,
-                EmulatedKey.Backspace,
-                EmulatedKey.Confirm,
-                EmulatedKey.Escape,
-                EmulatedKey.Menu
+                EmulatedKey.ATTACK,
+                EmulatedKey.BACKSPACE,
+                EmulatedKey.CONFIRM,
+                EmulatedKey.ESCAPE,
+                EmulatedKey.MENU
             )
         )
     }
 
     private fun updateKeyboardState(deltaTime: Float) {
-        println("=== Keyboard State Update ===")
-        println("Directional Keys Pressed:")
-        println("  Up: ${keyPressed.contains(EmulatedKey.Up)}")
-        println("  Right: ${keyPressed.contains(EmulatedKey.Right)}")
-        println("  Down: ${keyPressed.contains(EmulatedKey.Down)}")
-        println("  Left: ${keyPressed.contains(EmulatedKey.Left)}")
-        println("Directional Keys Down:")
-        println("  Up: ${keyDown.contains(EmulatedKey.Up)}")
-        println("  Right: ${keyDown.contains(EmulatedKey.Right)}")
-        println("  Down: ${keyDown.contains(EmulatedKey.Down)}")
-        println("  Left: ${keyDown.contains(EmulatedKey.Left)}")
-        println("Action Keys Pressed:")
-        println("  Escape: ${keyPressed.contains(EmulatedKey.Escape)}")
-        println("  Menu: ${keyPressed.contains(EmulatedKey.Menu)}")
-        println("  Confirm: ${keyPressed.contains(EmulatedKey.Confirm)}")
-        println("  Attack: ${keyPressed.contains(EmulatedKey.Attack)}")
-        println("  Backspace: ${keyPressed.contains(EmulatedKey.Backspace)}")
-        println("Current Character: $currentChar")
-        println("Time Since Last Update: $deltaTime seconds")
-        println("------------------------------")
+        Log.d("GameEngine", "=== Keyboard State Update ===")
+        Log.d("GameEngine", "Directional Keys Pressed:")
+        Log.d("GameEngine", "  Up: ${keyPressed.contains(EmulatedKey.UP)}")
+        Log.d("GameEngine", "  Right: ${keyPressed.contains(EmulatedKey.RIGHT)}")
+        Log.d("GameEngine", "  Down: ${keyPressed.contains(EmulatedKey.DOWN)}")
+        Log.d("GameEngine", "  Left: ${keyPressed.contains(EmulatedKey.LEFT)}")
+        Log.d("GameEngine", "Directional Keys Down:")
+        Log.d("GameEngine", "  Up: ${keyDown.contains(EmulatedKey.UP)}")
+        Log.d("GameEngine", "  Right: ${keyDown.contains(EmulatedKey.RIGHT)}")
+        Log.d("GameEngine", "  Down: ${keyDown.contains(EmulatedKey.DOWN)}")
+        Log.d("GameEngine", "  Left: ${keyDown.contains(EmulatedKey.LEFT)}")
+        Log.d("GameEngine", "Action Keys Pressed:")
+        Log.d("GameEngine", "  Escape: ${keyPressed.contains(EmulatedKey.ESCAPE)}")
+        Log.d("GameEngine", "  Menu: ${keyPressed.contains(EmulatedKey.MENU)}")
+        Log.d("GameEngine", "  Confirm: ${keyPressed.contains(EmulatedKey.CONFIRM)}")
+        Log.d("GameEngine", "  Attack: ${keyPressed.contains(EmulatedKey.ATTACK)}")
+        Log.d("GameEngine", "  Backspace: ${keyPressed.contains(EmulatedKey.BACKSPACE)}")
+        Log.d("GameEngine", "Current Character: $currentChar")
+        Log.d("GameEngine", "Time Since Last Update: $deltaTime seconds")
+        Log.d("GameEngine", "------------------------------")
 
-        update_keyboard(
-            keyPressed.contains(EmulatedKey.Up),
-            keyPressed.contains(EmulatedKey.Right),
-            keyPressed.contains(EmulatedKey.Down),
-            keyPressed.contains(EmulatedKey.Left),
-            keyDown.contains(EmulatedKey.Up),
-            keyDown.contains(EmulatedKey.Right),
-            keyDown.contains(EmulatedKey.Down),
-            keyDown.contains(EmulatedKey.Left),
-            keyPressed.contains(EmulatedKey.Escape),
-            keyPressed.contains(EmulatedKey.Menu),
-            keyPressed.contains(EmulatedKey.Confirm),
-            keyPressed.contains(EmulatedKey.Attack),
-            keyPressed.contains(EmulatedKey.Backspace),
+        nativeLib.updateKeyboard(
+            keyPressed.contains(EmulatedKey.UP),
+            keyPressed.contains(EmulatedKey.RIGHT),
+            keyPressed.contains(EmulatedKey.DOWN),
+            keyPressed.contains(EmulatedKey.LEFT),
+            keyDown.contains(EmulatedKey.UP),
+            keyDown.contains(EmulatedKey.RIGHT),
+            keyDown.contains(EmulatedKey.DOWN),
+            keyDown.contains(EmulatedKey.LEFT),
+            keyPressed.contains(EmulatedKey.ESCAPE),
+            keyPressed.contains(EmulatedKey.MENU),
+            keyPressed.contains(EmulatedKey.CONFIRM),
+            keyPressed.contains(EmulatedKey.ATTACK),
+            keyPressed.contains(EmulatedKey.BACKSPACE),
             currentChar,
             deltaTime
         )
     }
 
-    private fun updateTileMapImages() {
-        setLoading(LoadingScreenConfig.WorldTransition)
+        private fun updateTileMapImages(worldId: UInt) {
+            // setLoading(LoadingScreenConfig.WorldTransition)
 
-        val worldId = current_world_id()
-        val requiredRevision = current_world_revision()
-        val images = tileMapsStorage.imagesForWorld(worldId, requiredRevision)
+            val requiredRevision = nativeLib.currentWorldRevision().toUInt()
+            val images = tileMapsStorage.images(worldId, requiredRevision)
 
-        if (images.size >= BIOME_NUMBER_OF_FRAMES) {
-            tileMapImages = images
-            setLoading(LoadingScreenConfig.None)
-            return
-        }
-
-        fetchUpdatedTiles(worldId) { currentRevision, biomeTiles, constructionTiles ->
-            worldRevisionsStorage.storeRevision(currentRevision, worldId)
-
-            tileMapImages = (0 until BIOME_NUMBER_OF_FRAMES).mapNotNull { variant ->
-                tileMapImageGenerator.generate(
-                    renderingScale,
-                    worldWidth,
-                    worldHeight,
-                    variant,
-                    biomeTiles,
-                    constructionTiles
-                )
+            if (images.size >= NativeLib.BIOME_NUMBER_OF_FRAMES) {
+                tileMapImages = images
+                // setLoading(LoadingScreenConfig.None)
+                return
             }
-            tileMapsStorage.storeImages(tileMapImages, worldId, requiredRevision)
-            setLoading(LoadingScreenConfig.None)
-        }
-    }
+/*
+            nativeLib.fetchUpdatedTiles(worldId) { currentRevision, biomeTiles, constructionTiles ->
+                worldRevisionsStorage.store(currentRevision, worldId)
+
+                tileMapImages = (0 until NativeLib.BIOME_NUMBER_OF_FRAMES).mapNotNull { variant ->
+                    tileMapImageGenerator.generate(
+                        renderingScale,
+                        worldWidth,
+                        worldHeight,
+                        variant,
+                        biomeTiles,
+                        constructionTiles
+                    )
+                }
+                tileMapsStorage.storeImages(tileMapImages, worldId, requiredRevision)
+                // setLoading(LoadingScreenConfig.None)
+            }
+*/        }
 
     private fun updateFpsCounter() {
         frameCount++
@@ -250,11 +274,11 @@ class GameEngine @Inject constructor(
             frameCount = 0
             lastFpsUpdate = now
         }
-    }
+    }/*
 
     fun onMenuItemSelection(index: Int) {
         select_current_menu_option_at_index(index.toUInt())
-        setKeyDown(EmulatedKey.Confirm)
+        setKeyDown(EmulatedKey.CONFIRM)
     }
 
     fun setLoading(mode: LoadingScreenConfig) {
@@ -272,4 +296,41 @@ class GameEngine @Inject constructor(
         isBusy = mode.isVisible
         loadingScreenConfig.value = mode
     }
+*/
+    private fun inventoryPath(): String {
+        val fileName = "inventory.json"
+        val file = File(context.filesDir, fileName)
+        ensureFileExists(file, "[]")
+        return file.absolutePath
+    }
+
+    private fun storagePath(): String {
+        val fileName = "save.json"
+        val file = File(context.filesDir, fileName)
+        ensureFileExists(file, "{}")
+        return file.absolutePath
+    }
+
+    private fun ensureFileExists(file: File, defaultContents: String) {
+        if (!file.exists()) {
+            try {
+                file.parentFile?.mkdirs()
+                file.createNewFile()
+                file.writeText(defaultContents)
+                Log.d("MainActivity", "Created new file: ${file.absolutePath}")
+            } catch (e: IOException) {
+                Log.e("MainActivity", "Failed to create file: ${file.absolutePath}", e)
+            }
+        } else {
+            Log.d("MainActivity", "File already exists: ${file.absolutePath}")
+        }
+    }
+}
+
+private fun IntArray.toRect(): IntRect {
+    return IntRect(this[0], this[1], this[2], this[3])
+}
+
+private fun FloatArray.toVector2d(): Vector2d {
+    return Vector2d(this[0], this[1])
 }
