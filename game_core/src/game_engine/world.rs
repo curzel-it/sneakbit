@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashSet, fmt::{self, Debug}};
+use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
 
 use common_macros::hash_set;
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, hitmap::{EntityIdsMap, Hitmap, WeightsMap}}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
@@ -10,12 +10,10 @@ pub struct World {
     pub revision: u32,
     pub total_elapsed_time: f32,
     pub bounds: IntRect,
-    pub visible_bounds: IntRect,
     pub biome_tiles: TileSet<BiomeTile>,
     pub constructions_tiles: TileSet<ConstructionTile>,
     pub entities: RefCell<Vec<Entity>>,    
-    pub renderable_entities: HashSet<(usize, u32)>,
-    pub updatable_entities: HashSet<(usize, u32)>,
+    pub visible_entities: HashSet<(usize, u32)>,
     pub cached_hero_props: EntityProps,
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
@@ -43,12 +41,10 @@ impl World {
             revision: 0,
             total_elapsed_time: 0.0,
             bounds: IntRect::square_from_origin(150),
-            visible_bounds: IntRect::square_from_origin(150),
             biome_tiles: TileSet::empty(),
             constructions_tiles: TileSet::empty(),
             entities: RefCell::new(vec![]),
-            renderable_entities: hash_set![],
-            updatable_entities: hash_set![],
+            visible_entities: hash_set![],
             cached_hero_props: EntityProps::default(),
             hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
             tiles_hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
@@ -98,7 +94,7 @@ impl World {
             .map(|(index, _)| index)
     }
 
-    pub fn update_rl(
+    pub fn update(
         &mut self, 
         time_since_last_update: f32,
         viewport: &IntRect,
@@ -112,7 +108,7 @@ impl World {
 
         let mut entities = self.entities.borrow_mut();
 
-        let state_updates: Vec<WorldStateUpdate> = self.updatable_entities.iter()
+        let state_updates: Vec<WorldStateUpdate> = self.visible_entities.iter()
             .flat_map(|(index, _)| {
                 if let Some(entity) = entities.get_mut(*index) {
                     entity.update(self, time_since_last_update)
@@ -126,8 +122,7 @@ impl World {
 
         drop(entities);
         let updates = self.apply_state_updates(state_updates);
-        self.updatable_entities = self.compute_updatable_entities(viewport);
-        self.renderable_entities = self.compute_renderable_entities(viewport);
+        self.visible_entities = self.compute_visible_entities(viewport);
         self.update_hitmaps();
         updates
     } 
@@ -333,6 +328,26 @@ impl World {
             .map(|t| t.frame)
     }
 
+    pub fn find_any_teleporter(&self) -> Option<IntRect> {
+        let entities = self.entities.borrow();
+        let mut teleporters: Vec<&Entity> = entities.iter().filter(|t| matches!(t.entity_type, EntityType::Teleporter)).collect();
+        
+        teleporters.sort_by(|a, b| {
+            if let Some(dest_a) = a.destination.clone() {
+                if let Some(dest_b) = b.destination.clone() {
+                    if dest_a.world < dest_b.world { return Ordering::Less }
+                    if dest_a.world > dest_b.world { return Ordering::Greater }
+                }
+            }
+            return Ordering::Equal            
+        });
+
+        if teleporters.len() > 0 {
+            Some(teleporters[0].frame)
+        } else {
+            None
+        }
+    }
 
     pub fn is_hero_on_slippery_surface(&self) -> bool {
         let frame = self.cached_hero_props.hittable_frame;
@@ -393,9 +408,9 @@ impl Debug for World {
 }
 
 impl World {        
-    pub fn update(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> {
+    pub fn update_no_input(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> {
         let keyboard = &NO_KEYBOARD_EVENTS;
         let viewport = self.bounds;
-        self.update_rl(time_since_last_update, &viewport, keyboard)
+        self.update(time_since_last_update, &viewport, keyboard)
     }
 }

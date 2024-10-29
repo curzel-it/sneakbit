@@ -26,18 +26,20 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 
 ### iOS
 The engine is the same, the rendering is a simple custom view.
+The build uses cargo-lipo, just run the script and open the project in Xcode.
 ```bash
 sh scripts/build_ios.sh
 ```
-Then launch from Xcode (requires a real device with current cargo-lipo config).
 
-## Why lib + bind?
-I'm trying to have the engine by completely independent from rendering, which has proved useful for porting the project to iOS.
-
+### Android
+The engine is the same, the rendering is a simple custom view.
+The build uses cargo-ndk, just run the script and open the project in Android Studio.
 ```bash
-cargo lipo --package game_core --release
-cbindgen --config game_core/cbindgen.toml --crate game_core --output game_core.h
+sh scripts/build_android.sh
 ```
+
+## Why lib + bin?
+I'm trying to have the engine by completely independent from rendering, which has proved useful for porting the project to iOS and Android.
 
 ## Screenshots
 ![Game intro](docs/1.png)

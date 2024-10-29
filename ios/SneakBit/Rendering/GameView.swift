@@ -48,7 +48,7 @@ class GameView: UIView {
     }
 
     private func renderDebugInfo(context: CGContext, rect: CGRect) {
-        let fpsText = String(format: "FPS: %.0f", engine.fps)
+        let fpsText = String(format: "\nFPS: %.0f   ", engine.fps)
         let attributes: [NSAttributedString.Key: Any] = [
             .font: UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .medium),
             .foregroundColor: UIColor.white

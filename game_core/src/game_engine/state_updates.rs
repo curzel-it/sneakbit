@@ -66,8 +66,8 @@ mod tests {
         let hero = make_entity_by_species(SPECIES_HERO);
         engine.world.add_entity(hero);
 
-        engine.world.update(1.0);
-        let updates = engine.world.update(60.0);
+        engine.world.update_no_input(1.0);
+        let updates = engine.world.update_no_input(60.0);
 
         assert!(!updates.is_empty());
     }

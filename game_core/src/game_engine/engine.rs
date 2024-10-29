@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, dialogues::{menu::DialogueMenu, models::Dialogue}, features::{creep_spawner::CreepSpawner, death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, dialogues::{menu::DialogueMenu, models::Dialogue}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, inventory_recap::InventoryRecap, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{rect::IntRect, vector::Vector2d}};
 
 use super::{inventory::{add_to_inventory, remove_from_inventory}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_key, set_value_for_key, StorageKey}, world::World};
 
@@ -11,7 +11,7 @@ pub struct GameEngine {
     pub death_screen: DeathScreen,
     pub dialogue_menu: DialogueMenu,
     pub toast: ToastDisplay,
-    pub creep_spawner: CreepSpawner,
+    pub inventory_status: InventoryRecap,
     pub entity_options_menu: EntityOptionsMenu,
     pub keyboard: KeyboardEventsProvider,
     pub mouse: MouseEventsProvider,
@@ -32,14 +32,14 @@ impl GameEngine {
             death_screen: DeathScreen::new(),
             dialogue_menu: DialogueMenu::new(),
             toast: ToastDisplay::new(),
-            creep_spawner: CreepSpawner::new(),
             entity_options_menu: EntityOptionsMenu::new(),
             keyboard: KeyboardEventsProvider::new(),
             mouse: MouseEventsProvider::new(),
             camera_viewport: INITIAL_CAMERA_VIEWPORT,
             camera_viewport_offset: Vector2d::zero(),
             is_running: true,
-            creative_mode: false
+            creative_mode: false,
+            inventory_status: InventoryRecap::new()
         }
     }
 
@@ -57,7 +57,12 @@ impl GameEngine {
         self.toast.update(time_since_last_update);
 
         if self.death_screen.is_open {
-            return;
+            if self.keyboard.has_confirmation_been_pressed {
+                self.death_screen.is_open = false;
+                self.teleport_to_previous();
+            } else {
+                return;
+            }
         }
 
         self.loading_screen.update(time_since_last_update);
@@ -74,16 +79,14 @@ impl GameEngine {
             (&self.keyboard, time_since_last_update)
         };
 
-        let updates = self.world.update_rl(game_update_time, &camera_viewport, world_keyboard);
+        let updates = self.world.update(game_update_time, &camera_viewport, world_keyboard);
         self.apply_state_updates(updates);
-
-        let creeps_world_updates = self.creep_spawner.update(&self.world, time_since_last_update);
-        let creeps_engine_updates = self.world.apply_state_updates(creeps_world_updates);
-        self.apply_state_updates(creeps_engine_updates);
     } 
 
     fn update_menus(&mut self, time_since_last_update: f32) -> bool {
         let mut is_game_paused = false;
+
+        self.inventory_status.update();
 
         if !is_game_paused {
             let keyboard = if self.long_text_display.is_open { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
@@ -102,6 +105,9 @@ impl GameEngine {
         if !is_game_paused {
             let keyboard = if self.dialogue_menu.is_open() { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
             let (pause, world_updates) = self.dialogue_menu.update(keyboard, time_since_last_update);
+            if keyboard.has_confirmation_been_pressed && !pause {
+                self.keyboard.has_confirmation_been_pressed = false;
+            }
             is_game_paused = is_game_paused || pause;
             let engine_updates = self.world.apply_state_updates(world_updates);
             self.apply_state_updates(engine_updates);
@@ -269,9 +275,9 @@ impl GameEngine {
             destination.x, 
             destination.y
         );
-        new_world.update(0.001);
-        new_world.update(0.001);
-        new_world.update(0.001);
+        new_world.update_no_input(0.001);
+        new_world.update_no_input(0.001);
+        new_world.update_no_input(0.001);
 
         let hero_frame = new_world.cached_hero_props.frame;
         self.world = new_world;
@@ -299,7 +305,6 @@ impl GameEngine {
     fn center_camera_at(&mut self, x: i32, y: i32, offset: &Vector2d) {
         self.camera_viewport.center_at(&Vector2d::new(x as f32, y as f32));
         self.camera_viewport_offset = *offset;
-        self.world.visible_bounds = self.camera_viewport;
     }
 
     pub fn select_current_menu_option_at_index(&mut self, index: usize) {

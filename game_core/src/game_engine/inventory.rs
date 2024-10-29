@@ -1,7 +1,7 @@
-use std::{fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
+use std::{cmp::Ordering, collections::HashMap, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
 use lazy_static::lazy_static;
 use serde_json;
-use crate::{config::config, entities::species::{species_by_id, EntityType}, game_engine::entity::Entity};
+use crate::{config::config, entities::species::{species_by_id, EntityType}, game_engine::entity::Entity, utils::rect::IntRect};
 
 lazy_static! {
     pub static ref INVENTORY: RwLock<Vec<Entity>> = RwLock::new(load_inventory());
@@ -92,4 +92,41 @@ fn save_inventory(inventory: &Vec<Entity>) {
     } else {
         eprintln!("Failed to serialize inventory data");
     }
+}
+
+#[repr(C)]
+pub struct InventoryItem {
+    pub species_id: u32,
+    pub count: u32,
+    pub texture_source_rect: IntRect,
+}
+
+pub fn get_inventory_items() -> Vec<InventoryItem> {
+    let inventory = get_inventory();
+    let mut species_counts = HashMap::new();
+    let mut items = Vec::new();
+
+    for entity in &inventory {
+        *species_counts.entry(entity.species_id).or_insert(0u32) += 1;
+    }
+
+    for (species_id, count) in species_counts {
+        let species = species_by_id(species_id);
+        let (y, x) = species.inventory_texture_offset;
+        let texture_source_rect = IntRect::new(x, y, 1, 1);
+
+        items.push(InventoryItem {
+            species_id,
+            count,
+            texture_source_rect,
+        });
+    }
+
+    items.sort_by(|a, b| { 
+        if a.species_id < b.species_id { Ordering::Less }
+        else if a.species_id > b.species_id { Ordering::Greater }
+        else { Ordering::Equal }
+    });
+
+    items
 }

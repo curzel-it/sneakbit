@@ -6,6 +6,7 @@ struct ContentView: View {
         ZStack {
             GameViewRepresentable()
             ControllerEmulatorView()
+            InventoryView()
             ToastView()
             MenuView()
             LoadingScreen()

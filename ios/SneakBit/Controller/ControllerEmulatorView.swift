@@ -9,9 +9,8 @@ struct ControllerEmulatorView: View {
         ZStack {
             JoystickView()
             
-            HStack {
-                // KeyEmulatorView(key: .menu).padding(.bottom, KeyEmulatorView.size.height)
-                KeyEmulatorView(key: .attack).padding(.bottom, KeyEmulatorView.size.height / 2)
+            HStack(spacing: KeyEmulatorView.size.height / 3) {
+                KeyEmulatorView(key: .attack).padding(.bottom, KeyEmulatorView.size.height)
                 KeyEmulatorView(key: .confirm)
             }
             .positioned(.leadingBottom)
@@ -27,10 +26,9 @@ struct ControllerEmulatorView: View {
 }
 
 private class ControllerEmulatorViewModel: ObservableObject {
-    @Inject private var gameEngine: GameEngine
+    @Inject private var engine: GameEngine
     
     var safeAreaInsets: UIEdgeInsets {
-        gameEngine.safeAreaInsets
+        engine.safeAreaInsets
     }
-    
 }

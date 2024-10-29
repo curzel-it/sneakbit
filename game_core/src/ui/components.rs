@@ -14,6 +14,7 @@ pub enum Typography {
     Title,
     Regular,
     Selected,
+    Caption,
 }
 
 pub enum Spacing {

@@ -9,6 +9,8 @@ struct SneakBitApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .statusBarHidden(true)
+                .foregroundStyle(Color.white)
         }
     }
 }

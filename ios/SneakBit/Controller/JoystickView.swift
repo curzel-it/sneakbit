@@ -10,14 +10,16 @@ struct JoystickView: View {
 
             ZStack {
                 if viewModel.isDragging {
-                    Circle()
-                        .fill(Color.gray.opacity(0.6))
-                        .frame(width: viewModel.outerRadius * 2, height: viewModel.outerRadius * 2)
+                    Image("joystick")
+                        .interpolation(.none)
+                        .resizable()
+                        .frame(width: viewModel.baseRadius * 2, height: viewModel.baseRadius * 2)
                         .position(viewModel.center)
-
-                    Circle()
-                        .fill(Color.black.opacity(0.4))
-                        .frame(width: viewModel.innerRadius * 2, height: viewModel.innerRadius * 2)
+                    
+                    Image("joystick_lever")
+                        .interpolation(.none)
+                        .resizable()
+                        .frame(width: viewModel.leverRadius * 2, height: viewModel.leverRadius * 2)
                         .position(viewModel.dragLocation)
                 }
             }
@@ -38,29 +40,34 @@ struct JoystickView: View {
 }
 
 private class JoystickViewModel: ObservableObject {
+    static let size: CGFloat = 64
+    
     @Inject private var engine: GameEngine
     
     @Published var dragLocation: CGPoint = .zero
     @Published var isDragging = false
     @Published var currentActiveKey: EmulatedKey?
     @Published var center: CGPoint = .zero
-
-    static let size: CGFloat = 64
-    let outerRadius: CGFloat = 32
-    let innerRadius: CGFloat = 24
+    
+    let baseRadius: CGFloat = 32
+    let leverRadius: CGFloat = 16
     let maxDistance: CGFloat = 16
     let maxFingerDistance: CGFloat = 48
     
+    private let movesAlongWithGesture = true
+    
     func handleDragChanged(value: DragGesture.Value) {
         if !isDragging {
-            isDragging = true
-            center = value.startLocation 
+            withAnimation {
+                isDragging = true
+            }
+            center = value.startLocation
         }
         let location = value.location
         var vector = CGVector(dx: location.x - center.x, dy: location.y - center.y)
         var realDistance = hypot(vector.dx, vector.dy)
                 
-        if realDistance > maxFingerDistance {
+        if movesAlongWithGesture && realDistance > maxFingerDistance {
             let angle = atan2(vector.dy, vector.dx)
             let excessDistance = realDistance - maxFingerDistance
             center.x += cos(angle) * excessDistance
@@ -78,7 +85,9 @@ private class JoystickViewModel: ObservableObject {
     }
 
     func handleDragEnded() {
-        isDragging = false
+        withAnimation {
+            isDragging = false
+        }
         releaseCurrentKey()
     }
 

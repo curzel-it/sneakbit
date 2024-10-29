@@ -48,7 +48,6 @@ impl GameMenu {
             "game.menu.title".localized(), 
             vec![
                 GameMenuItem::Status,
-                GameMenuItem::Inventory,
                 GameMenuItem::Exit,
             ]
         );
@@ -74,7 +73,6 @@ impl GameMenu {
         } else {
             vec![
                 GameMenuItem::Status,
-                GameMenuItem::Inventory,
                 GameMenuItem::Exit,
             ]
         }

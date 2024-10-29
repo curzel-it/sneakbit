@@ -13,10 +13,19 @@ struct DeathScreen: View {
                     .foregroundStyle(Color.black.opacity(0.7))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                Text("You're Dead")
-                    .typography(.largeTitle)
-                    .foregroundStyle(Color.white)
-                    .positioned(.middle)
+                VStack(spacing: 100) {
+                    Text("death_screen.title".localized())
+                        .typography(.largeTitle)
+                        .foregroundStyle(Color.white)
+                    
+                    Text("death_screen.subtitle".localized())
+                        .typography(.title)
+                        .foregroundStyle(Color.accentColor)
+                        .onTapGesture {
+                            viewModel.tryAgain()
+                        }
+                }
+                .positioned(.middle)
             }
         }
     }
@@ -42,5 +51,9 @@ private class DeathScreenViewModel: ObservableObject {
                 }
             }
             .store(in: &disposables)
+    }
+    
+    func tryAgain() {
+        engine.setKeyDown(.confirm)
     }
 }

@@ -1,4 +1,4 @@
-use crate::{constants::HERO_KUNAI_COOLDOWN, entities::{known_species::SPECIES_KUNAI, species::species_by_id}, game_engine::{entity::{Entity, EntityProps}, inventory::{inventory_contains_species, remove_one_of_species_from_inventory}, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, utils::rect::IntRect};
+use crate::{constants::HERO_KUNAI_COOLDOWN, entities::{known_species::SPECIES_KUNAI, species::species_by_id}, game_engine::{entity::Entity, inventory::{inventory_contains_species, remove_one_of_species_from_inventory}, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}};
 
 impl Entity {
     pub fn setup_hero(&mut self, creative_mode: bool) {

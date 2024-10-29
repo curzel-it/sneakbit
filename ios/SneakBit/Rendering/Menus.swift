@@ -92,14 +92,14 @@ private class MenuViewModel: ObservableObject {
     }
     
     private func load(menu: MenuDescriptorC) {
-        title = string(from: menu.title) ?? "Some title"
-        text = string(from: menu.text) ?? "Some message"
+        title = string(from: menu.title)
+        text = string(from: menu.text)
                 
         let buffer = UnsafeBufferPointer(start: menu.options, count: Int(menu.options_count))
         let items = Array(buffer)
         
         options = items
-            .map { string(from: $0.title) ?? "Unknown" }
+            .map { string(from: $0.title) ?? "???" }
             .map { "> \($0)" }
         
         withAnimation {
