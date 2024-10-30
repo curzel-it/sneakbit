@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SneakBit</string>
+    <string name="death_screen_title">You\'re dead</string>
+    <string name="death_screen_subtitle">Tap to try again</string>
 </resources>

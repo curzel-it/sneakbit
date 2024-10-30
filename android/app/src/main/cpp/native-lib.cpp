@@ -447,3 +447,157 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, job
     free_renderables(items, length);
     return arrayListObject;
 }
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_numberOfKunaiInInventory(JNIEnv *env, jobject thiz) {
+    return number_of_kunai_in_inventory();
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_toastConfig(JNIEnv *env, jobject thiz) {
+    ToastDescriptorC toastDescriptor = current_toast();
+
+    jclass toastConfigClass = env->FindClass("it/curzel/bitscape/rendering/ToastConfig");
+    if (toastConfigClass == nullptr) {
+        return nullptr;
+    }
+
+    jmethodID toastConfigConstructor = env->GetMethodID(
+            toastConfigClass,
+            "<init>",
+            "(JFLjava/lang/String;ZLjava/lang/Integer;Lit/curzel/bitscape/gamecore/IntRect;)V"
+    );
+    if (toastConfigConstructor == nullptr) {
+        return nullptr;
+    }
+
+    jlong backgroundColorArgb = ((jlong)toastDescriptor.background_color.alpha << 24) |
+                                ((jlong)toastDescriptor.background_color.red << 16) |
+                                ((jlong)toastDescriptor.background_color.green << 8) |
+                                ((jlong)toastDescriptor.background_color.blue);
+
+    jfloat opacity = toastDescriptor.background_color.alpha / 255.0f;
+    jstring text = env->NewStringUTF(toastDescriptor.text);
+    jboolean isImportant = (toastDescriptor.mode == ToastMode_Important) ? JNI_TRUE : JNI_FALSE;
+
+    jobject spriteSheetId = nullptr;
+    if (toastDescriptor.image.sprite_sheet_id != 0) {
+        jclass integerClass = env->FindClass("java/lang/Integer");
+        if (integerClass != nullptr) {
+            jmethodID integerConstructor = env->GetMethodID(integerClass, "<init>", "(I)V");
+            if (integerConstructor != nullptr) {
+                spriteSheetId = env->NewObject(integerClass, integerConstructor, (jint)toastDescriptor.image.sprite_sheet_id);
+            }
+        }
+    }
+
+    jobject textureFrame = nullptr;
+    if (toastDescriptor.image.sprite_sheet_id != 0) {
+        jclass intRectClass = env->FindClass("it/curzel/bitscape/gamecore/IntRect");
+        if (intRectClass != nullptr) {
+            jmethodID intRectConstructor = env->GetMethodID(intRectClass, "<init>", "(IIII)V");
+            if (intRectConstructor != nullptr) {
+                textureFrame = env->NewObject(intRectClass, intRectConstructor,
+                                              (jint)toastDescriptor.image.texture_frame.x,
+                                              (jint)toastDescriptor.image.texture_frame.y,
+                                              (jint)toastDescriptor.image.texture_frame.w,
+                                              (jint)toastDescriptor.image.texture_frame.h);
+            }
+        }
+    }
+
+    jobject toastConfig = env->NewObject(
+            toastConfigClass,
+            toastConfigConstructor,
+            backgroundColorArgb,
+            opacity,
+            text,
+            isImportant,
+            spriteSheetId,
+            textureFrame
+    );
+
+    return toastConfig;
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_menuConfig(JNIEnv *env, jobject thiz) {
+    MenuDescriptorC menu = current_menu();
+
+    jclass menuConfigClass = env->FindClass("it/curzel/bitscape/rendering/MenuConfig");
+    if (menuConfigClass == nullptr) {
+        return nullptr;
+    }
+
+    jmethodID menuConfigConstructor = env->GetMethodID(
+            menuConfigClass,
+            "<init>",
+            "(ZLjava/lang/String;Ljava/lang/String;Ljava/util/List;)V"
+    );
+    if (menuConfigConstructor == nullptr) {
+        return nullptr;
+    }
+
+    jboolean isVisible = menu.is_visible ? JNI_TRUE : JNI_FALSE;
+
+    jstring title = nullptr;
+    if (menu.title != nullptr) {
+        title = env->NewStringUTF(menu.title);
+    }
+
+    jstring text = nullptr;
+    if (menu.text != nullptr) {
+        text = env->NewStringUTF(menu.text);
+    }
+
+    jclass arrayListClass = env->FindClass("java/util/ArrayList");
+    if (arrayListClass == nullptr) {
+        return nullptr;
+    }
+
+    jmethodID arrayListConstructor = env->GetMethodID(arrayListClass, "<init>", "()V");
+    if (arrayListConstructor == nullptr) {
+        return nullptr;
+    }
+
+    jobject optionsList = env->NewObject(arrayListClass, arrayListConstructor);
+    if (optionsList == nullptr) {
+        return nullptr;
+    }
+
+    jmethodID arrayListAdd = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
+    if (arrayListAdd == nullptr) {
+        return nullptr;
+    }
+
+    for (uint32_t i = 0; i < menu.options_count; ++i) {
+        const char* optionTitle = menu.options[i].title;
+        jstring optionString = env->NewStringUTF(optionTitle);
+        env->CallBooleanMethod(optionsList, arrayListAdd, optionString);
+        env->DeleteLocalRef(optionString);
+    }
+
+    jobject menuConfigObject = env->NewObject(
+            menuConfigClass,
+            menuConfigConstructor,
+            isVisible,
+            title,
+            text,
+            optionsList
+    );
+
+    if (title != nullptr) {
+        env->DeleteLocalRef(title);
+    }
+    if (text != nullptr) {
+        env->DeleteLocalRef(text);
+    }
+    env->DeleteLocalRef(optionsList);
+    env->DeleteLocalRef(arrayListClass);
+    env->DeleteLocalRef(menuConfigClass);
+
+    return menuConfigObject;
+}

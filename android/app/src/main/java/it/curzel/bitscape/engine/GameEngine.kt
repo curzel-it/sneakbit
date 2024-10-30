@@ -3,6 +3,8 @@ package it.curzel.bitscape.engine
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.RectF
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.Size
 import it.curzel.bitscape.AssetUtils
@@ -12,7 +14,16 @@ import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
 import it.curzel.bitscape.gamecore.Vector2d
+import it.curzel.bitscape.rendering.LoadingScreenConfig
+import it.curzel.bitscape.rendering.MenuConfig
+import it.curzel.bitscape.rendering.ToastConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
 
@@ -23,13 +34,11 @@ class GameEngine(
     private val tileMapsStorage: TileMapsStorage,
     private val worldRevisionsStorage: WorldRevisionsStorage
 ): SomeGameEngine {
-
-    // val toast = MutableStateFlow<ToastDescriptorC?>(null)
-    // val menus = MutableStateFlow<MenuDescriptorC?>(null)
-    // val inventory = MutableStateFlow<List<InventoryItem>>(emptyList())
-    // val loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.None)
-
-    val showsDeathScreen = MutableStateFlow(false)
+    private val _loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.none)
+    private val _showsDeathScreen = MutableStateFlow(false)
+    private val _numberOfKunai = MutableStateFlow(0)
+    private val _toastConfig = MutableStateFlow(ToastConfig.none)
+    private val _menuConfig = MutableStateFlow(MenuConfig.none)
 
     var size = Size(0, 0)
     var fps = 0.0
@@ -39,10 +48,10 @@ class GameEngine(
     private var frameCount = 0
 
     private val tileSize = NativeLib.TILE_SIZE.toFloat()
+
     var renderingScale = 1f
     var cameraViewport = IntRect(0, 0, 0, 0)
     var cameraViewportOffset = Vector2d(0.0f, 0.0f)
-    private var safeAreaInsets = EdgeInsets(0.0f, 0.0f, 0.0f, 0.0f)
     var canRender = true
 
     private val keyPressed = mutableSetOf<EmulatedKey>()
@@ -83,13 +92,13 @@ class GameEngine(
 
         updateKeyboardState(deltaTime)
         nativeLib.updateGame(deltaTime)
-        // toast.value = current_toast()
-        // menus.value = current_menu()
-        showsDeathScreen.value = nativeLib.showsDeathScreen()
+        _menuConfig.value = nativeLib.menuConfig()
+        _toastConfig.value = nativeLib.toastConfig()
+        _numberOfKunai.value = nativeLib.numberOfKunaiInInventory()
+        _showsDeathScreen.value = nativeLib.showsDeathScreen()
         currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
         cameraViewport = nativeLib.cameraViewport().toRect()
         cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
-        // fetchInventory { inventory.value = it }
 
         val freshWorldId = nativeLib.currentWorldId().toUInt()
         if (freshWorldId != currentWorldId) {
@@ -104,14 +113,31 @@ class GameEngine(
         flushKeyboard()
     }
 
+    override fun numberOfKunai(): StateFlow<Int> {
+        return _numberOfKunai.asStateFlow()
+    }
+
+    override fun showsDeathScreen(): StateFlow<Boolean> {
+        return _showsDeathScreen.asStateFlow()
+    }
+
+    override fun loadingScreenConfig(): StateFlow<LoadingScreenConfig> {
+        return _loadingScreenConfig.asStateFlow()
+    }
+
+    override fun toastConfig(): StateFlow<ToastConfig> {
+        return _toastConfig.asStateFlow()
+    }
+
+    override fun menuConfig(): StateFlow<MenuConfig> {
+        return _menuConfig.asStateFlow()
+    }
+
     fun renderableItems(): List<RenderableItem> {
         return nativeLib.fetchRenderableItems()
     }
 
-    fun setupChanged(safeArea: EdgeInsets?, windowSize: Size) {
-        safeArea?.let {
-            safeAreaInsets = it
-        }
+    fun setupChanged(windowSize: Size) {
         renderingScale = renderingScaleUseCase.current()
         size = windowSize
 
@@ -206,30 +232,33 @@ class GameEngine(
     }
 
     private fun updateTileMapImages(worldId: UInt) {
-        // setLoading(LoadingScreenConfig.WorldTransition)
+        setLoading(LoadingScreenConfig.worldTransition)
 
-        val requiredRevision = nativeLib.currentWorldRevision().toUInt()
-        val images = tileMapsStorage.images(worldId, requiredRevision)
+        CoroutineScope(Dispatchers.IO + Job()).launch {
+            val requiredRevision = nativeLib.currentWorldRevision().toUInt()
+            val images = tileMapsStorage.images(worldId, requiredRevision)
 
-        if (images.size >= NativeLib.BIOME_NUMBER_OF_FRAMES) {
-            tileMapImages = images
-            // setLoading(LoadingScreenConfig.None)
-            return
+            if (images.size >= NativeLib.BIOME_NUMBER_OF_FRAMES) {
+                tileMapImages = images
+                setLoading(LoadingScreenConfig.none)
+                return@launch
+            }
+
+            val updatedTiles = nativeLib.fetchUpdatedTiles(worldId.toInt())
+            worldRevisionsStorage.store(updatedTiles.currentRevision, worldId)
+
+            tileMapImages = (0 until NativeLib.BIOME_NUMBER_OF_FRAMES).mapNotNull { variant ->
+                tileMapImageGenerator.generate(
+                    worldWidth,
+                    worldHeight,
+                    variant,
+                    updatedTiles.biomeTiles,
+                    updatedTiles.constructionTiles
+                )
+            }
+            tileMapsStorage.store(tileMapImages, worldId, requiredRevision)
+            setLoading(LoadingScreenConfig.none)
         }
-
-        val updatedTiles = nativeLib.fetchUpdatedTiles(worldId.toInt())
-        worldRevisionsStorage.store(updatedTiles.currentRevision, worldId)
-
-        tileMapImages = (0 until NativeLib.BIOME_NUMBER_OF_FRAMES).mapNotNull { variant ->
-            tileMapImageGenerator.generate(
-                worldWidth,
-                worldHeight,
-                variant,
-                updatedTiles.biomeTiles,
-                updatedTiles.constructionTiles
-            )
-        }
-        tileMapsStorage.store(tileMapImages, worldId, requiredRevision)
     }
 
     private fun updateFpsCounter() {
@@ -242,14 +271,14 @@ class GameEngine(
             frameCount = 0
             lastFpsUpdate = now
         }
-    }/*
+    }
 
-    fun onMenuItemSelection(index: Int) {
-        select_current_menu_option_at_index(index.toUInt())
+    override fun onMenuItemSelection(index: Int) {
+        // select_current_menu_option_at_index(index.toUInt())
         setKeyDown(EmulatedKey.CONFIRM)
     }
 
-    fun setLoading(mode: LoadingScreenConfig) {
+    private fun setLoading(mode: LoadingScreenConfig) {
         if (mode.isVisible) {
             setLoadingNow(mode)
         } else {
@@ -262,9 +291,9 @@ class GameEngine(
     private fun setLoadingNow(mode: LoadingScreenConfig) {
         canRender = !mode.isVisible
         isBusy = mode.isVisible
-        loadingScreenConfig.value = mode
+        _loadingScreenConfig.value = mode
     }
-*/
+
     private fun inventoryPath(): String {
         val fileName = "inventory.json"
         val file = File(context.filesDir, fileName)

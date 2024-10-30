@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "inventory_icon_kunai.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

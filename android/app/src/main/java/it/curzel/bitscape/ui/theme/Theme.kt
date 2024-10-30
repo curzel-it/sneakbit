@@ -41,21 +41,21 @@ fun SneakBitTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = androidx.compose.material3.Typography(
-            displayLarge = it.curzel.bitscape.ui.theme.Typography.largeTitle,
-            displayMedium = it.curzel.bitscape.ui.theme.Typography.largeTitle,
-            displaySmall = it.curzel.bitscape.ui.theme.Typography.largeTitle,
-            headlineLarge = it.curzel.bitscape.ui.theme.Typography.title,
-            headlineMedium = it.curzel.bitscape.ui.theme.Typography.title,
-            headlineSmall = it.curzel.bitscape.ui.theme.Typography.title,
-            titleLarge = it.curzel.bitscape.ui.theme.Typography.title,
-            titleMedium = it.curzel.bitscape.ui.theme.Typography.title,
-            titleSmall = it.curzel.bitscape.ui.theme.Typography.title,
-            bodyLarge = it.curzel.bitscape.ui.theme.Typography.text,
-            bodyMedium = it.curzel.bitscape.ui.theme.Typography.text,
-            bodySmall = it.curzel.bitscape.ui.theme.Typography.text,
-            labelLarge = it.curzel.bitscape.ui.theme.Typography.text,
-            labelMedium = it.curzel.bitscape.ui.theme.Typography.text,
-            labelSmall = it.curzel.bitscape.ui.theme.Typography.caption
+            displayLarge = it.curzel.bitscape.ui.theme.DSTypography.largeTitle,
+            displayMedium = it.curzel.bitscape.ui.theme.DSTypography.largeTitle,
+            displaySmall = it.curzel.bitscape.ui.theme.DSTypography.largeTitle,
+            headlineLarge = it.curzel.bitscape.ui.theme.DSTypography.title,
+            headlineMedium = it.curzel.bitscape.ui.theme.DSTypography.title,
+            headlineSmall = it.curzel.bitscape.ui.theme.DSTypography.title,
+            titleLarge = it.curzel.bitscape.ui.theme.DSTypography.title,
+            titleMedium = it.curzel.bitscape.ui.theme.DSTypography.title,
+            titleSmall = it.curzel.bitscape.ui.theme.DSTypography.title,
+            bodyLarge = it.curzel.bitscape.ui.theme.DSTypography.text,
+            bodyMedium = it.curzel.bitscape.ui.theme.DSTypography.text,
+            bodySmall = it.curzel.bitscape.ui.theme.DSTypography.text,
+            labelLarge = it.curzel.bitscape.ui.theme.DSTypography.text,
+            labelMedium = it.curzel.bitscape.ui.theme.DSTypography.text,
+            labelSmall = it.curzel.bitscape.ui.theme.DSTypography.caption
         ),
         content = content
     )

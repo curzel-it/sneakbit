@@ -32,8 +32,9 @@ fun KeyEmulatorView(
         bitmap = ImageBitmap.imageResource(resourceId),
         contentDescription = null,
         contentScale = ContentScale.FillBounds,
+        filterQuality = FilterQuality.None,
         modifier = modifier
-            .size(48.dp)
+            .size(56.dp)
             .pointerInput(key) {
                 detectTapGestures(
                     onPress = {
@@ -47,8 +48,7 @@ fun KeyEmulatorView(
                         }
                     }
                 )
-            },
-        filterQuality = FilterQuality.None
+            }
     )
 }
 

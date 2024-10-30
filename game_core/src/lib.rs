@@ -1,7 +1,8 @@
 use std::{cmp::Ordering, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
-use game_engine::{engine::GameEngine, entity::Entity, inventory::{get_inventory_items, InventoryItem}};
+use entities::known_species::SPECIES_KUNAI;
+use game_engine::{engine::GameEngine, entity::Entity, inventory::inventory_items_count_for_species};
 use maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile, tiles::tiles_with_revision};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::IntRect, vector::Vector2d};
@@ -379,25 +380,6 @@ pub extern "C" fn free_construction_tiles(tiles_ptr: *mut ConstructionTile, len_
 }
 
 #[no_mangle]
-pub extern "C" fn inventory_state(length: *mut usize) -> *mut InventoryItem {
-    let items = get_inventory_items();
-    let len = items.len();
-    
-    unsafe {
-        ptr::write(length, len);
-    }
-
-    let ptr = items.as_ptr() as *mut InventoryItem;
-    std::mem::forget(items);
-    ptr
-}
-
-#[no_mangle]
-pub extern "C" fn free_inventory_state(state: *mut InventoryItem, items_count: usize) {
-    if !state.is_null() {
-        unsafe {
-            let slice = std::slice::from_raw_parts_mut(state, items_count);
-            let _ = Box::from_raw(slice);
-        }
-    }
+pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
+    inventory_items_count_for_species(SPECIES_KUNAI) as i32
 }
