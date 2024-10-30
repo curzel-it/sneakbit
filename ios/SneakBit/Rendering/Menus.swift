@@ -68,6 +68,7 @@ private class MenuViewModel: ObservableObject {
     @Published var text: String? = nil
     @Published var options: [String] = []
     @Published var isVisible: Bool = false
+    @Published var opacity: CGFloat = 0
     
     let borderColor: Color = .gray
     let backgroundColor: Color = .black
@@ -92,36 +93,34 @@ private class MenuViewModel: ObservableObject {
     }
     
     private func load(menu: MenuDescriptorC) {
-        title = string(from: menu.title)
-        text = string(from: menu.text)
-                
         let buffer = UnsafeBufferPointer(start: menu.options, count: Int(menu.options_count))
         let items = Array(buffer)
-        
-        options = items
+        let newOptions = items
             .map { string(from: $0.title) ?? "???" }
             .map { "> \($0)" }
-        
+                
         withAnimation {
+            options = newOptions
+            text = string(from: menu.text)
+            title = string(from: menu.title)
             isVisible = true
         }
     }
     
     private func hide() {
         withAnimation {
+            options = []
             isVisible = false
         }
     }
     
     func cancel() {
         engine.setKeyDown(.escape)
+        hide()
     }
     
     func selectOption(at index: Int) {
         engine.onMenuItemSelection(index: index)
-        
-        withAnimation {
-            isVisible = false
-        }
+        hide()
     }
 }

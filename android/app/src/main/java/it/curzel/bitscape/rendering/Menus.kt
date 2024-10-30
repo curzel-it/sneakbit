@@ -1,34 +1,21 @@
-
 package it.curzel.bitscape.rendering
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -36,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.engine.SomeGameEngine
 import it.curzel.bitscape.ui.theme.DSTypography
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 data class MenuConfig(
@@ -123,9 +111,15 @@ private fun MenuContent(
     menuConfig: MenuConfig,
     onSelection: (Int) -> Unit,
 ) {
+    var titleTyped by remember { mutableStateOf(false) }
+    var textTyped by remember { mutableStateOf(false) }
+
+    val allTyped = (!menuConfig.title.isNullOrEmpty() && titleTyped) && (!menuConfig.text.isNullOrEmpty() && textTyped)
+
     Box(
         modifier = Modifier
-            // .padding(16.dp)
+            .widthIn(max = 400.dp)
+            .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(Color.Black)
             .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
@@ -135,17 +129,16 @@ private fun MenuContent(
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .widthIn(max = 400.dp)
                 .clickable(enabled = false) {}
         ) {
             Spacer(modifier = Modifier.height(6.dp))
 
             menuConfig.title?.let { title ->
-                Text(
-                    text = title,
+                TypewriterText(
+                    fullText = title,
                     style = DSTypography.title,
                     color = Color.White,
-                    modifier = Modifier.fillMaxWidth()
+                    onTypingFinished = { titleTyped = true }
                 )
             }
 
@@ -153,31 +146,65 @@ private fun MenuContent(
 
             menuConfig.text?.let { text ->
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = text,
+                TypewriterText(
+                    fullText = text,
                     style = DSTypography.text,
                     color = Color.White,
-                    modifier = Modifier.fillMaxWidth()
+                    onTypingFinished = { textTyped = true }
                 )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            menuConfig.options.forEachIndexed { index, option ->
-                Text(
-                    text = "> $option",
-                    style = DSTypography.menuOption,
-                    modifier = Modifier
-                        .height(36.dp)
-                        .fillMaxWidth()
-                        .clickable { onSelection(index) }
-                )
+            AnimatedVisibility(visible = allTyped) {
+                Column {
+                    menuConfig.options.forEachIndexed { index, option ->
+                        Text(
+                            text = "> $option",
+                            style = DSTypography.menuOption,
+                            color = Color.White,
+                            modifier = Modifier
+                                .height(36.dp)
+                                .fillMaxWidth()
+                                .clickable { onSelection(index) }
+                                .padding(vertical = 4.dp)
+                        )
+                    }
+                }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Composable
+fun TypewriterText(
+    fullText: String,
+    style: TextStyle,
+    color: Color,
+    modifier: Modifier = Modifier,
+    onTypingFinished: (() -> Unit)? = null,
+    charDelay: Long = 5L
+) {
+    var currentText by remember { mutableStateOf("") }
+
+    LaunchedEffect(fullText) {
+        currentText = ""
+        for (c in fullText) {
+            currentText += c
+            delay(charDelay)
+        }
+        onTypingFinished?.invoke()
+    }
+
+    Text(
+        text = currentText,
+        style = style,
+        color = color,
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true, device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape")
 @Composable
 fun MenuViewPreview() {
     MenuView(
@@ -211,4 +238,3 @@ class MenuViewModel(private val gameEngine: SomeGameEngine) : ViewModel() {
         gameEngine.onMenuItemSelection(index)
     }
 }
-

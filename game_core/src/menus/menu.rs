@@ -243,11 +243,10 @@ impl<Item: MenuItem> Menu<Item> {
             c_options.push(c_item);
         }
 
-        // Leak the Vec<MenuDescriptorItemC> to pass a raw pointer to C
         let options_ptr = c_options.as_ptr();
         let options_len = c_options.len();
-        std::mem::forget(c_options); // Prevent Rust from freeing the memory
-
+        std::mem::forget(c_options); 
+        
         MenuDescriptorC {
             is_visible: true,
             title: leaked_title,

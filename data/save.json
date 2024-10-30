@@ -1,10 +1,16 @@
 {
+  "dialogue.answer.1001.wizard_intro": 1,
+  "dialogue.answer.1001.wizard_no_time": 1,
+  "dialogue.answer.1002.old_man.damn_monsters": 1,
+  "dialogue.reward.1002.old_man.damn_monsters": 1,
   "hint.read.1001.hint.blessing_received": 1,
-  "latest_world": 1006,
+  "hint.read.1002.hint.cant_you_hear_me": 1,
+  "hint.read.1002.hint.why_no_status_window": 1,
+  "latest_world": 1002,
   "pressure_plate_down_blue": 0,
   "pressure_plate_down_green": 0,
   "pressure_plate_down_red": 0,
-  "pressure_plate_down_silver": 1,
+  "pressure_plate_down_silver": 0,
   "pressure_plate_down_yellow": 0,
-  "previous_world": 1006
+  "previous_world": 1002
 }

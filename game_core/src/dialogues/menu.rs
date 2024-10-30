@@ -7,7 +7,7 @@ pub struct DialogueMenu {
     pub npc_name: String,
     pub dialogue: Dialogue,
     time_since_last_closed: f32,
-    text_animator: Animator,
+    pub text_animator: Animator,
     pub text: String,
     pub menu: Menu<DialogueAnswerItem>,
 }
@@ -42,7 +42,7 @@ impl DialogueMenu {
     }
 
     pub fn show(&mut self, npc_id: u32, npc_name: &str, dialogue: &Dialogue) {
-        if self.time_since_last_closed >= 0.5 {
+        if self.time_since_last_closed >= 0.3 {
             self.show_now(npc_id, npc_name, dialogue, false);
         }
     }
@@ -55,7 +55,7 @@ impl DialogueMenu {
         self.menu.title = format!("{: <45}", format!("{}:", self.npc_name));
         self.text = self.dialogue.localized_text();
 
-        self.text_animator.animate(0.0, 1.0, self.text.len() as f32 / 80.0);
+        self.text_animator.animate(0.0, 1.0, self.text.len() as f32 / 120.0);
         self.time_since_last_closed = 0.0;
         
         self.menu.items = vec![DialogueAnswerItem::Value("ok".localized())];
@@ -85,15 +85,10 @@ impl DialogueMenu {
             self.menu.update(keyboard, time_since_last_update);
         }
         if self.menu.selection_has_been_confirmed {
-            if self.text_animator.is_active {
-                self.menu.is_open = true;
-                self.menu.selection_has_been_confirmed = false;
-            } else {
-                let updates = self.handle_answer();
-                self.dialogue = Dialogue::empty();
-                self.menu.close();
-                return (self.menu.is_open, updates)
-            }
+            let updates = self.handle_answer();
+            self.dialogue = Dialogue::empty();
+            self.menu.close();
+            return (self.menu.is_open, updates)
         }
 
         (self.menu.is_open, vec![])
