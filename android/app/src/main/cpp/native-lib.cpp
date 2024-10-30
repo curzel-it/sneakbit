@@ -521,3 +521,83 @@ Java_it_curzel_bitscape_gamecore_NativeLib_toastConfig(JNIEnv *env, jobject thiz
 
     return toastConfig;
 }
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_menuConfig(JNIEnv *env, jobject thiz) {
+    MenuDescriptorC menu = current_menu();
+
+    jclass menuConfigClass = env->FindClass("it/curzel/bitscape/rendering/MenuConfig");
+    if (menuConfigClass == nullptr) {
+        return nullptr;
+    }
+
+    jmethodID menuConfigConstructor = env->GetMethodID(
+            menuConfigClass,
+            "<init>",
+            "(ZLjava/lang/String;Ljava/lang/String;Ljava/util/List;)V"
+    );
+    if (menuConfigConstructor == nullptr) {
+        return nullptr;
+    }
+
+    jboolean isVisible = menu.is_visible ? JNI_TRUE : JNI_FALSE;
+
+    jstring title = nullptr;
+    if (menu.title != nullptr) {
+        title = env->NewStringUTF(menu.title);
+    }
+
+    jstring text = nullptr;
+    if (menu.text != nullptr) {
+        text = env->NewStringUTF(menu.text);
+    }
+
+    jclass arrayListClass = env->FindClass("java/util/ArrayList");
+    if (arrayListClass == nullptr) {
+        return nullptr;
+    }
+
+    jmethodID arrayListConstructor = env->GetMethodID(arrayListClass, "<init>", "()V");
+    if (arrayListConstructor == nullptr) {
+        return nullptr;
+    }
+
+    jobject optionsList = env->NewObject(arrayListClass, arrayListConstructor);
+    if (optionsList == nullptr) {
+        return nullptr;
+    }
+
+    jmethodID arrayListAdd = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
+    if (arrayListAdd == nullptr) {
+        return nullptr;
+    }
+
+    for (uint32_t i = 0; i < menu.options_count; ++i) {
+        const char* optionTitle = menu.options[i].title;
+        jstring optionString = env->NewStringUTF(optionTitle);
+        env->CallBooleanMethod(optionsList, arrayListAdd, optionString);
+        env->DeleteLocalRef(optionString);
+    }
+
+    jobject menuConfigObject = env->NewObject(
+            menuConfigClass,
+            menuConfigConstructor,
+            isVisible,
+            title,
+            text,
+            optionsList
+    );
+
+    if (title != nullptr) {
+        env->DeleteLocalRef(title);
+    }
+    if (text != nullptr) {
+        env->DeleteLocalRef(text);
+    }
+    env->DeleteLocalRef(optionsList);
+    env->DeleteLocalRef(arrayListClass);
+    env->DeleteLocalRef(menuConfigClass);
+
+    return menuConfigObject;
+}

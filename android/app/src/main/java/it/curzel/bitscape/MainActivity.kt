@@ -21,6 +21,7 @@ import it.curzel.bitscape.engine.WorldRevisionsStorage
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.GameView
 import it.curzel.bitscape.rendering.InventoryView
+import it.curzel.bitscape.rendering.MenuView
 import it.curzel.bitscape.rendering.SpritesProvider
 import it.curzel.bitscape.rendering.ToastView
 import it.curzel.bitscape.ui.theme.SneakBitTheme
@@ -42,6 +43,7 @@ class MainActivity : ComponentActivity() {
                             ControllerEmulatorView(engine)
                             InventoryView(engine)
                             ToastView(engine, spritesProvider)
+                            MenuView(engine)
                         }
                         DeathScreen(engine)
                     }

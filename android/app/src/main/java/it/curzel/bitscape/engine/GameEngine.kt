@@ -15,6 +15,7 @@ import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
 import it.curzel.bitscape.gamecore.Vector2d
 import it.curzel.bitscape.rendering.LoadingScreenConfig
+import it.curzel.bitscape.rendering.MenuConfig
 import it.curzel.bitscape.rendering.ToastConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,14 +34,11 @@ class GameEngine(
     private val tileMapsStorage: TileMapsStorage,
     private val worldRevisionsStorage: WorldRevisionsStorage
 ): SomeGameEngine {
-
-    // val menus = MutableStateFlow<MenuDescriptorC?>(null)
-    // val inventory = MutableStateFlow<List<InventoryItem>>(emptyList())
-
     private val _loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.none)
     private val _showsDeathScreen = MutableStateFlow(false)
     private val _numberOfKunai = MutableStateFlow(0)
     private val _toastConfig = MutableStateFlow(ToastConfig.none)
+    private val _menuConfig = MutableStateFlow(MenuConfig.none)
 
     var size = Size(0, 0)
     var fps = 0.0
@@ -94,14 +92,13 @@ class GameEngine(
 
         updateKeyboardState(deltaTime)
         nativeLib.updateGame(deltaTime)
-        // menus.value = current_menu()
+        _menuConfig.value = nativeLib.menuConfig()
         _toastConfig.value = nativeLib.toastConfig()
         _numberOfKunai.value = nativeLib.numberOfKunaiInInventory()
         _showsDeathScreen.value = nativeLib.showsDeathScreen()
         currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
         cameraViewport = nativeLib.cameraViewport().toRect()
         cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
-        // fetchInventory { inventory.value = it }
 
         val freshWorldId = nativeLib.currentWorldId().toUInt()
         if (freshWorldId != currentWorldId) {
@@ -130,6 +127,10 @@ class GameEngine(
 
     override fun toastConfig(): StateFlow<ToastConfig> {
         return _toastConfig.asStateFlow()
+    }
+
+    override fun menuConfig(): StateFlow<MenuConfig> {
+        return _menuConfig.asStateFlow()
     }
 
     fun renderableItems(): List<RenderableItem> {
@@ -270,13 +271,12 @@ class GameEngine(
             frameCount = 0
             lastFpsUpdate = now
         }
-    }/*
+    }
 
-    fun onMenuItemSelection(index: Int) {
-        select_current_menu_option_at_index(index.toUInt())
+    override fun onMenuItemSelection(index: Int) {
+        // select_current_menu_option_at_index(index.toUInt())
         setKeyDown(EmulatedKey.CONFIRM)
     }
-*/
 
     private fun setLoading(mode: LoadingScreenConfig) {
         if (mode.isVisible) {
