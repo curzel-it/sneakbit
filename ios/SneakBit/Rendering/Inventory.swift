@@ -8,7 +8,7 @@ struct InventoryView: View {
     
     var body: some View {
         VStack {
-            NumberOfKunaisView()
+            NumberOfKunaiView()
         }
         .padding()
         .positioned(.trailingTop)
@@ -20,19 +20,19 @@ struct InventoryView: View {
     }
 }
 
-private struct NumberOfKunaisView: View {
+private struct NumberOfKunaiView: View {
     @EnvironmentObject var viewModel: InventoryViewModel
         
     var body: some View {
-        if viewModel.numberOfKunais > 0 {
+        if viewModel.numberOfKunai > 0 {
             VStack(alignment: .trailing, spacing: 4) {
                 Image("inventory_icon_kunai")
                     .resizable()
                     .interpolation(.none)
                     .frame(width: 24, height: 24)
                 
-                if viewModel.numberOfKunais > 1 {
-                    Text("x\(viewModel.numberOfKunais)")
+                if viewModel.numberOfKunai > 1 {
+                    Text("x\(viewModel.numberOfKunai)")
                         .typography(.caption)
                         .foregroundStyle(Color.orange)
                         .shadow(color: .black, radius: 1)
@@ -46,7 +46,7 @@ private class InventoryViewModel: ObservableObject {
     @Inject private var engine: GameEngine
     @Inject private var spritesProvider: SpritesProvider
     
-    @Published var numberOfKunais: Int32 = 0
+    @Published var numberOfKunai: Int32 = 0
     
     private var disposables = Set<AnyCancellable>()
     
@@ -55,14 +55,14 @@ private class InventoryViewModel: ObservableObject {
     }
     
     init() {
-        bindKunais()
+        bindKunai()
     }
     
-    private func bindKunais() {
-        engine.kunais
+    private func bindKunai() {
+        engine.kunai
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.numberOfKunais = $0 }
+            .sink { [weak self] in self?.numberOfKunai = $0 }
             .store(in: &disposables)
     }
 }

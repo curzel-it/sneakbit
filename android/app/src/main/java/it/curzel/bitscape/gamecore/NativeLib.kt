@@ -1,5 +1,7 @@
 package it.curzel.bitscape.gamecore
 
+import it.curzel.bitscape.rendering.ToastConfig
+
 class NativeLib {
     external fun testLogs()
     external fun testBool(): Boolean
@@ -48,7 +50,8 @@ class NativeLib {
     external fun currentWorldRevision(): Int
     external fun fetchUpdatedTiles(worldId: Int): UpdatedTiles
     external fun fetchRenderableItems(): List<RenderableItem>
-    external fun numberOfKunaisInInventory(): Int
+    external fun numberOfKunaiInInventory(): Int
+    external fun toastConfig(): ToastConfig
 
     companion object {
         const val NUMBER_OF_BIOMES: Int = 18

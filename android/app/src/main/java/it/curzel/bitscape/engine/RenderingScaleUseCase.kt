@@ -6,7 +6,7 @@ import android.util.DisplayMetrics
 
 class RenderingScaleUseCase(private val context: Context) {
     fun current(): Float {
-        val inc = if (isTablet()) { 2 } else { 1 }
+        val inc = if (isTablet()) { 3 } else { 2 }
         return inc + currentDisplayScale()
     }
 

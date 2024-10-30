@@ -11,7 +11,7 @@ class GameEngine {
     
     let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
-    let kunais = CurrentValueSubject<Int32, Never>(0)
+    let kunai = CurrentValueSubject<Int32, Never>(0)
     let loadingScreenConfig = CurrentValueSubject<LoadingScreenConfig, Never>(.none)
     let showsDeathScreen = CurrentValueSubject<Bool, Never>(false)
     
@@ -60,7 +60,7 @@ class GameEngine {
         update_game(deltaTime)
         toast.send(current_toast())
         menus.send(current_menu())
-        kunais.send(number_of_kunais_in_inventory())
+        kunai.send(number_of_kunai_in_inventory())
         showsDeathScreen.send(shows_death_screen())
         currentBiomeVariant = Int(current_biome_tiles_variant())
         cameraViewport = camera_viewport()

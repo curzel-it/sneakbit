@@ -38,7 +38,7 @@ fun InventoryView(
     modifier: Modifier = Modifier
 ) {
     val viewModel = remember { InventoryViewModel(gameEngine) }
-    val numberOfKunais = viewModel.numberOfKunais.value
+    val numberOfKunai = viewModel.numberOfKunai.value
 
     Box(
         contentAlignment = Alignment.TopEnd,
@@ -48,27 +48,27 @@ fun InventoryView(
                 WindowInsets.safeDrawing.asPaddingValues()
             )
     ) {
-        NumberOfKunaisView(numberOfKunais = numberOfKunais)
+        NumberOfKunaiView(numberOfKunai = numberOfKunai)
     }
 }
 
 class InventoryViewModel(private val gameEngine: SomeGameEngine) : ViewModel() {
-    private val _numberOfKunais = mutableStateOf(0)
-    val numberOfKunais: State<Int> = _numberOfKunais
+    private val _numberOfKunai = mutableStateOf(0)
+    val numberOfKunai: State<Int> = _numberOfKunai
 
     init {
         viewModelScope.launch {
-            gameEngine.numberOfKunais()
+            gameEngine.numberOfKunai()
                 .collect { count ->
-                    _numberOfKunais.value = count
+                    _numberOfKunai.value = count
                 }
         }
     }
 }
 
 @Composable
-fun NumberOfKunaisView(numberOfKunais: Int) {
-    if (numberOfKunais > 0) {
+fun NumberOfKunaiView(numberOfKunai: Int) {
+    if (numberOfKunai > 0) {
         Column(
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.spacedBy(0.dp),
@@ -81,9 +81,9 @@ fun NumberOfKunaisView(numberOfKunais: Int) {
                 contentScale = ContentScale.FillBounds,
                 filterQuality = FilterQuality.None
             )
-            if (numberOfKunais > 1) {
+            if (numberOfKunai > 1) {
                 Text(
-                    text = "x$numberOfKunais",
+                    text = "x$numberOfKunai",
                     style = DSTypography.highlightedCaption
                 )
             }

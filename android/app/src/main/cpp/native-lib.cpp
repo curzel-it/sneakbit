@@ -450,6 +450,74 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, job
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_numberOfKunaisInInventory(JNIEnv *env, jobject thiz) {
-    return number_of_kunais_in_inventory();
+Java_it_curzel_bitscape_gamecore_NativeLib_numberOfKunaiInInventory(JNIEnv *env, jobject thiz) {
+    return number_of_kunai_in_inventory();
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_toastConfig(JNIEnv *env, jobject thiz) {
+    ToastDescriptorC toastDescriptor = current_toast();
+
+    jclass toastConfigClass = env->FindClass("it/curzel/bitscape/rendering/ToastConfig");
+    if (toastConfigClass == nullptr) {
+        return nullptr;
+    }
+
+    jmethodID toastConfigConstructor = env->GetMethodID(
+            toastConfigClass,
+            "<init>",
+            "(JFLjava/lang/String;ZLjava/lang/Integer;Lit/curzel/bitscape/gamecore/IntRect;)V"
+    );
+    if (toastConfigConstructor == nullptr) {
+        return nullptr;
+    }
+
+    jlong backgroundColorArgb = ((jlong)toastDescriptor.background_color.alpha << 24) |
+                                ((jlong)toastDescriptor.background_color.red << 16) |
+                                ((jlong)toastDescriptor.background_color.green << 8) |
+                                ((jlong)toastDescriptor.background_color.blue);
+
+    jfloat opacity = toastDescriptor.background_color.alpha / 255.0f;
+    jstring text = env->NewStringUTF(toastDescriptor.text);
+    jboolean isImportant = (toastDescriptor.mode == ToastMode_Important) ? JNI_TRUE : JNI_FALSE;
+
+    jobject spriteSheetId = nullptr;
+    if (toastDescriptor.image.sprite_sheet_id != 0) {
+        jclass integerClass = env->FindClass("java/lang/Integer");
+        if (integerClass != nullptr) {
+            jmethodID integerConstructor = env->GetMethodID(integerClass, "<init>", "(I)V");
+            if (integerConstructor != nullptr) {
+                spriteSheetId = env->NewObject(integerClass, integerConstructor, (jint)toastDescriptor.image.sprite_sheet_id);
+            }
+        }
+    }
+
+    jobject textureFrame = nullptr;
+    if (toastDescriptor.image.sprite_sheet_id != 0) {
+        jclass intRectClass = env->FindClass("it/curzel/bitscape/gamecore/IntRect");
+        if (intRectClass != nullptr) {
+            jmethodID intRectConstructor = env->GetMethodID(intRectClass, "<init>", "(IIII)V");
+            if (intRectConstructor != nullptr) {
+                textureFrame = env->NewObject(intRectClass, intRectConstructor,
+                                              (jint)toastDescriptor.image.texture_frame.x,
+                                              (jint)toastDescriptor.image.texture_frame.y,
+                                              (jint)toastDescriptor.image.texture_frame.w,
+                                              (jint)toastDescriptor.image.texture_frame.h);
+            }
+        }
+    }
+
+    jobject toastConfig = env->NewObject(
+            toastConfigClass,
+            toastConfigConstructor,
+            backgroundColorArgb,
+            opacity,
+            text,
+            isImportant,
+            spriteSheetId,
+            textureFrame
+    );
+
+    return toastConfig;
 }

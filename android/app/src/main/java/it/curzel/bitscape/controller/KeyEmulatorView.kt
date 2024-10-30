@@ -32,6 +32,7 @@ fun KeyEmulatorView(
         bitmap = ImageBitmap.imageResource(resourceId),
         contentDescription = null,
         contentScale = ContentScale.FillBounds,
+        filterQuality = FilterQuality.None,
         modifier = modifier
             .size(48.dp)
             .pointerInput(key) {
@@ -47,8 +48,7 @@ fun KeyEmulatorView(
                         }
                     }
                 )
-            },
-        filterQuality = FilterQuality.None
+            }
     )
 }
 

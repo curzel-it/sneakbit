@@ -15,9 +15,14 @@ import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
 import it.curzel.bitscape.gamecore.Vector2d
 import it.curzel.bitscape.rendering.LoadingScreenConfig
+import it.curzel.bitscape.rendering.ToastConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
 
@@ -29,13 +34,13 @@ class GameEngine(
     private val worldRevisionsStorage: WorldRevisionsStorage
 ): SomeGameEngine {
 
-    // val toast = MutableStateFlow<ToastDescriptorC?>(null)
     // val menus = MutableStateFlow<MenuDescriptorC?>(null)
     // val inventory = MutableStateFlow<List<InventoryItem>>(emptyList())
 
     private val _loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.none)
     private val _showsDeathScreen = MutableStateFlow(false)
-    private val _numberOfKunais = MutableStateFlow(0)
+    private val _numberOfKunai = MutableStateFlow(0)
+    private val _toastConfig = MutableStateFlow(ToastConfig.none)
 
     var size = Size(0, 0)
     var fps = 0.0
@@ -89,9 +94,9 @@ class GameEngine(
 
         updateKeyboardState(deltaTime)
         nativeLib.updateGame(deltaTime)
-        // toast.value = current_toast()
         // menus.value = current_menu()
-        _numberOfKunais.value = nativeLib.numberOfKunaisInInventory()
+        _toastConfig.value = nativeLib.toastConfig()
+        _numberOfKunai.value = nativeLib.numberOfKunaiInInventory()
         _showsDeathScreen.value = nativeLib.showsDeathScreen()
         currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
         cameraViewport = nativeLib.cameraViewport().toRect()
@@ -111,8 +116,8 @@ class GameEngine(
         flushKeyboard()
     }
 
-    override fun numberOfKunais(): StateFlow<Int> {
-        return _numberOfKunais.asStateFlow()
+    override fun numberOfKunai(): StateFlow<Int> {
+        return _numberOfKunai.asStateFlow()
     }
 
     override fun showsDeathScreen(): StateFlow<Boolean> {
@@ -121,6 +126,10 @@ class GameEngine(
 
     override fun loadingScreenConfig(): StateFlow<LoadingScreenConfig> {
         return _loadingScreenConfig.asStateFlow()
+    }
+
+    override fun toastConfig(): StateFlow<ToastConfig> {
+        return _toastConfig.asStateFlow()
     }
 
     fun renderableItems(): List<RenderableItem> {
@@ -224,28 +233,31 @@ class GameEngine(
     private fun updateTileMapImages(worldId: UInt) {
         setLoading(LoadingScreenConfig.worldTransition)
 
-        val requiredRevision = nativeLib.currentWorldRevision().toUInt()
-        val images = tileMapsStorage.images(worldId, requiredRevision)
+        CoroutineScope(Dispatchers.IO + Job()).launch {
+            val requiredRevision = nativeLib.currentWorldRevision().toUInt()
+            val images = tileMapsStorage.images(worldId, requiredRevision)
 
-        if (images.size >= NativeLib.BIOME_NUMBER_OF_FRAMES) {
-            tileMapImages = images
+            if (images.size >= NativeLib.BIOME_NUMBER_OF_FRAMES) {
+                tileMapImages = images
+                setLoading(LoadingScreenConfig.none)
+                return@launch
+            }
+
+            val updatedTiles = nativeLib.fetchUpdatedTiles(worldId.toInt())
+            worldRevisionsStorage.store(updatedTiles.currentRevision, worldId)
+
+            tileMapImages = (0 until NativeLib.BIOME_NUMBER_OF_FRAMES).mapNotNull { variant ->
+                tileMapImageGenerator.generate(
+                    worldWidth,
+                    worldHeight,
+                    variant,
+                    updatedTiles.biomeTiles,
+                    updatedTiles.constructionTiles
+                )
+            }
+            tileMapsStorage.store(tileMapImages, worldId, requiredRevision)
             setLoading(LoadingScreenConfig.none)
-            return
         }
-
-        val updatedTiles = nativeLib.fetchUpdatedTiles(worldId.toInt())
-        worldRevisionsStorage.store(updatedTiles.currentRevision, worldId)
-
-        tileMapImages = (0 until NativeLib.BIOME_NUMBER_OF_FRAMES).mapNotNull { variant ->
-            tileMapImageGenerator.generate(
-                worldWidth,
-                worldHeight,
-                variant,
-                updatedTiles.biomeTiles,
-                updatedTiles.constructionTiles
-            )
-        }
-        tileMapsStorage.store(tileMapImages, worldId, requiredRevision)
     }
 
     private fun updateFpsCounter() {

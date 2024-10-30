@@ -39,7 +39,6 @@ fun DeathScreen(
         modifier = modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.7f))
-            .clickable { viewModel.tryAgain() }
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -47,7 +46,7 @@ fun DeathScreen(
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(75.dp)
+                verticalArrangement = Arrangement.spacedBy(50.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.death_screen_title),
@@ -58,6 +57,9 @@ fun DeathScreen(
                     text = stringResource(id = R.string.death_screen_subtitle),
                     style = DSTypography.title,
                     color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .height(60.dp)
+                        .clickable { viewModel.tryAgain() }
                 )
             }
         }

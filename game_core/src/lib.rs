@@ -380,6 +380,6 @@ pub extern "C" fn free_construction_tiles(tiles_ptr: *mut ConstructionTile, len_
 }
 
 #[no_mangle]
-pub extern "C" fn number_of_kunais_in_inventory() -> i32 {
+pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
     inventory_items_count_for_species(SPECIES_KUNAI) as i32
 }
