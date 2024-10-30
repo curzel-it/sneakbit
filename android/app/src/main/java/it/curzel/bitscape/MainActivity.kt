@@ -1,6 +1,7 @@
 package it.curzel.bitscape
 
 import ControllerEmulatorView
+import DeathScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -34,13 +35,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             SneakBitTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
-                        GameViewComposable(
-                            engine = engine,
-                            spritesProvider = spritesProvider
-                        )
-                        ControllerEmulatorView(engine)
-                        InventoryView(engine)
+                    Box {
+                        Box(modifier = Modifier.padding(innerPadding)) {
+                            GameViewComposable(engine, spritesProvider)
+                            ControllerEmulatorView(engine)
+                            InventoryView(engine)
+                        }
+                        DeathScreen(engine)
                     }
                 }
             }

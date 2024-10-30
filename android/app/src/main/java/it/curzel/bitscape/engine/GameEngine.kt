@@ -112,6 +112,10 @@ class GameEngine(
         return _numberOfKunais.asStateFlow()
     }
 
+    override fun showsDeathScreen(): StateFlow<Boolean> {
+        return _showsDeathScreen.asStateFlow()
+    }
+
     fun renderableItems(): List<RenderableItem> {
         return nativeLib.fetchRenderableItems()
     }

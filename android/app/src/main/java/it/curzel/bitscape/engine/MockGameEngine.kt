@@ -9,6 +9,7 @@ interface SomeGameEngine {
     fun setKeyDown(key: EmulatedKey)
     fun setKeyUp(key: EmulatedKey)
     fun numberOfKunais(): StateFlow<Int>
+    fun showsDeathScreen(): StateFlow<Boolean>
 }
 
 class MockGameEngine: SomeGameEngine {
@@ -22,5 +23,9 @@ class MockGameEngine: SomeGameEngine {
 
     override fun numberOfKunais(): StateFlow<Int> {
         return MutableStateFlow(12).asStateFlow()
+    }
+
+    override fun showsDeathScreen(): StateFlow<Boolean> {
+        return MutableStateFlow(true).asStateFlow()
     }
 }
