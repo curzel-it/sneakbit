@@ -42,11 +42,9 @@ sh scripts/build_android.sh
 I'm trying to have the engine by completely independent from rendering, which has proved useful for porting the project to iOS and Android.
 
 ## TODO:
-- Add tests to make sure kunai can be used to lower pressure plates
-- Add indicator for overlapping enemies (beta testers liked the bug)
 - On windows, some users report crashes when certain dialogues start
 - Throttle entity interactions
-- Fix camera "shake" when near world edge (iOS only?)
+- Fix camera "shake" when near world edge (Mobile only?)
 - Study/review feedback from [r/speedrun](https://www.reddit.com/r/speedrun/comments/1gfjpyq/as_a_game_dev_what_can_i_do_to_make_my_game_more/)
 
 ## Screenshots

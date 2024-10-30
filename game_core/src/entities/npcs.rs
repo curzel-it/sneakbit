@@ -23,6 +23,11 @@ impl Entity {
                 if !updates.is_empty() {
                     return updates
                 }
+
+                let updates = self.fuse_with_other_creeps_if_possible(world);
+                if !updates.is_empty() {
+                    return updates
+                }
             }
         }
 

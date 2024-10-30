@@ -28,20 +28,20 @@ impl Entity {
 
     fn check_hits(&self, world: &World) -> Vec<WorldStateUpdate> {
         let hit = world.entities_map[self.frame.y as usize][self.frame.x as usize];
-        if self.is_valid_target(hit) { 
+        if self.is_valid_hit_target(hit) { 
             return vec![WorldStateUpdate::HandleHit(self.id, hit)]
         }
 
         let (previous_x, previous_y) = self.previous_position();
         let hit = world.entities_map[previous_y as usize][previous_x as usize];
-        if self.is_valid_target(hit) { 
+        if self.is_valid_hit_target(hit) { 
             return vec![WorldStateUpdate::HandleHit(self.id, hit)]
         }
 
         vec![]
     }
 
-    fn is_valid_target(&self, hit: u32) -> bool {
+    pub fn is_valid_hit_target(&self, hit: u32) -> bool {
         hit != 0 && hit != self.id && hit != self.parent_id 
     }
 

@@ -7,7 +7,7 @@ pub struct AnimatedSprite {
     pub sheet_id: u32, 
     pub frame: IntRect,
     pub supports_directions: bool,
-    original_frame: IntRect,
+    pub original_frame: IntRect,
     number_of_frames: i32,
     frames_provider: TimedContentProvider<i32>,
 }

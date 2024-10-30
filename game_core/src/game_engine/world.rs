@@ -14,6 +14,7 @@ pub struct World {
     pub constructions_tiles: TileSet<ConstructionTile>,
     pub entities: RefCell<Vec<Entity>>,    
     pub visible_entities: HashSet<(usize, u32)>,
+    melee_attackers: HashSet<u32>,
     pub cached_hero_props: EntityProps,
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
@@ -63,11 +64,16 @@ impl World {
             pressure_plate_down_blue: false,
             pressure_plate_down_silver: false,
             pressure_plate_down_yellow: false,
+            melee_attackers: hash_set![]
         }
     }
 
     pub fn add_entity(&mut self, entity: Entity) -> (usize, u32) {
         let id = entity.id;
+        if entity.melee_attacks_hero {
+            self.melee_attackers.insert(id);
+        }
+
         let mut entities = self.entities.borrow_mut();        
         entities.push(entity);
         let new_index = entities.len() - 1;
@@ -84,6 +90,13 @@ impl World {
     }
 
     fn remove_entity_at_index(&mut self, index: usize) {
+        let entities = self.entities.borrow();
+        let entity = &entities[index];
+        if entity.melee_attacks_hero {
+            self.melee_attackers.remove(&entity.id);
+        }
+        drop(entities);
+
         self.entities.borrow_mut().swap_remove(index);
     }
 
@@ -243,7 +256,7 @@ impl World {
         }
         drop(entities);
 
-        if did_hit {
+        if did_hit && bullet_id != 0 {
             self.remove_entity_by_id(bullet_id)
         }
     }
@@ -412,5 +425,11 @@ impl World {
         let keyboard = &NO_KEYBOARD_EVENTS;
         let viewport = self.bounds;
         self.update(time_since_last_update, &viewport, keyboard)
+    }
+}
+
+impl World {
+    pub fn is_creep(&self, id: u32) -> bool {
+        self.melee_attackers.contains(&id)
     }
 }
