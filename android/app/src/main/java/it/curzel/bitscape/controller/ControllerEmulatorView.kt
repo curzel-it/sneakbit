@@ -30,7 +30,7 @@ fun ControllerEmulatorView(
             verticalAlignment = Alignment.Bottom,
             modifier = Modifier.align(Alignment.BottomStart)
         ) {
-            KeyEmulatorView(EmulatedKey.ATTACK, gameEngine, modifier = Modifier.padding(bottom = 90.dp))
+            KeyEmulatorView(EmulatedKey.ATTACK, gameEngine, modifier = Modifier.padding(bottom = 85.dp))
             KeyEmulatorView(EmulatedKey.CONFIRM, gameEngine, modifier = Modifier.padding(bottom = 60.dp))
         }
     }

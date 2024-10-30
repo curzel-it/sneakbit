@@ -129,7 +129,7 @@ class GameView @JvmOverloads constructor(
         val scaledMapWidth = tileMapBitmap.width * engine.renderingScale
         val scaledMapHeight = tileMapBitmap.height * engine.renderingScale
         val offsetX = -cameraViewport.x * tileSize - cameraOffset.x * engine.renderingScale
-        val offsetY = -cameraViewport.y * tileSize - cameraOffset.y * engine.renderingScale
+        val offsetY = -(cameraViewport.y + 1) * tileSize - cameraOffset.y * engine.renderingScale
 
         val saveCount = canvas.save()
         canvas.translate(offsetX, offsetY)

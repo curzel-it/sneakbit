@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -50,24 +54,28 @@ fun JoystickView(
     ) {
         if (viewModel.isDragging) {
             Image(
-                painter = painterResource(id = R.drawable.joystick),
+                bitmap = ImageBitmap.imageResource(R.drawable.joystick),
                 contentDescription = "Joystick Base",
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .size(viewModel.baseRadius * 2)
                     .graphicsLayer {
                         translationX = viewModel.center.x - viewModel.baseRadiusPx
                         translationY = viewModel.center.y - viewModel.baseRadiusPx
-                    }
+                    },
+                filterQuality = FilterQuality.None
             )
             Image(
-                painter = painterResource(id = R.drawable.joystick_lever),
+                bitmap = ImageBitmap.imageResource(R.drawable.joystick_lever),
                 contentDescription = "Joystick Lever",
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .size(viewModel.leverRadius * 2)
                     .graphicsLayer {
                         translationX = viewModel.dragLocation.x - viewModel.leverRadiusPx
                         translationY = viewModel.dragLocation.y - viewModel.leverRadiusPx
-                    }
+                    },
+                filterQuality = FilterQuality.None
             )
         }
     }
