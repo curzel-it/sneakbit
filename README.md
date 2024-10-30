@@ -47,7 +47,7 @@ I'm trying to have the engine by completely independent from rendering, which ha
 - On windows, some users report crashes when certain dialogues start
 - Throttle entity interactions
 - Fix camera "shake" when near world edge (iOS only?)
-- https://www.reddit.com/r/speedrun/comments/1gfjpyq/as_a_game_dev_what_can_i_do_to_make_my_game_more/
+- Study/review feedback from [r/speedrun](https://www.reddit.com/r/speedrun/comments/1gfjpyq/as_a_game_dev_what_can_i_do_to_make_my_game_more/)
 
 ## Screenshots
 ![Game intro](docs/1.png)

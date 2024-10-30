@@ -274,7 +274,7 @@ class GameEngine(
     }
 
     override fun onMenuItemSelection(index: Int) {
-        // select_current_menu_option_at_index(index.toUInt())
+        nativeLib.selectCurrentMenuOptionAtIndex(index)
         setKeyDown(EmulatedKey.CONFIRM)
     }
 

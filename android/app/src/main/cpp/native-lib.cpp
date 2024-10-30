@@ -601,3 +601,9 @@ Java_it_curzel_bitscape_gamecore_NativeLib_menuConfig(JNIEnv *env, jobject thiz)
 
     return menuConfigObject;
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_selectCurrentMenuOptionAtIndex(JNIEnv *env, jobject thiz, jint index) {
+    select_current_menu_option_at_index(index);
+}

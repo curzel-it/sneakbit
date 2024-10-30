@@ -54,6 +54,7 @@ class NativeLib {
     external fun numberOfKunaiInInventory(): Int
     external fun toastConfig(): ToastConfig
     external fun menuConfig(): MenuConfig
+    external fun selectCurrentMenuOptionAtIndex(index: Int)
 
     companion object {
         const val NUMBER_OF_BIOMES: Int = 18
