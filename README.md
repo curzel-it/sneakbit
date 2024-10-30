@@ -41,15 +41,17 @@ sh scripts/build_android.sh
 ## Why lib + bin?
 I'm trying to have the engine by completely independent from rendering, which has proved useful for porting the project to iOS and Android.
 
+## TODO:
+- Add tests to make sure kunai can be used to lower pressure plates
+- Add indicator for overlapping enemies (beta testers liked the bug)
+- On windows, some users report crashes when certain dialogues start
+- Throttle entity interactions
+- Fix camera "shake" when near world edge (iOS only?)
+
 ## Screenshots
 ![Game intro](docs/1.png)
 ![First level](docs/2.png)
 ![Dialogues](docs/4.png)
 ![Map Editor](docs/6.png)
-
-## TODO:
-- Add tests to make sure kunai can be used to lower pressure plates
-- Add indicator for overlapping enemies (beta testers liked the bug)
-- On windows, some users report crashes when certain dialogues start
-- Auto pick-up objects
-- Throttle entity interactions
+![Android](docs/android.png)
+![iOS](docs/ios.jpeg)
