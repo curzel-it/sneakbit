@@ -19,7 +19,7 @@ fun ControllerEmulatorView(
     gameEngine: SomeGameEngine,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxSize().padding(horizontal = 24.dp)) {
+    Box(modifier = modifier.fillMaxSize()) {
         JoystickView(
             modifier = Modifier.align(Alignment.Center),
             gameEngine = gameEngine
@@ -28,10 +28,13 @@ fun ControllerEmulatorView(
         Row(
             horizontalArrangement = Arrangement.spacedBy(56.dp / 3),
             verticalAlignment = Alignment.Bottom,
-            modifier = Modifier.align(Alignment.BottomStart)
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(horizontal = 32.dp)
+                .padding(bottom = 100.dp)
         ) {
-            KeyEmulatorView(EmulatedKey.ATTACK, gameEngine, modifier = Modifier.padding(bottom = 85.dp))
-            KeyEmulatorView(EmulatedKey.CONFIRM, gameEngine, modifier = Modifier.padding(bottom = 60.dp))
+            KeyEmulatorView(EmulatedKey.ATTACK, gameEngine, modifier = Modifier.padding(bottom = 30.dp))
+            KeyEmulatorView(EmulatedKey.CONFIRM, gameEngine, modifier = Modifier)
         }
     }
 }

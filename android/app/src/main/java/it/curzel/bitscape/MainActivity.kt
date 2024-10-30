@@ -2,24 +2,25 @@ package it.curzel.bitscape
 
 import ControllerEmulatorView
 import DeathScreen
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.AndroidViewModel
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.engine.RenderingScaleUseCase
 import it.curzel.bitscape.engine.TileMapImageGenerator
 import it.curzel.bitscape.engine.TileMapsStorage
 import it.curzel.bitscape.engine.WorldRevisionsStorage
 import it.curzel.bitscape.gamecore.NativeLib
-import it.curzel.bitscape.rendering.GameView
+import it.curzel.bitscape.rendering.GameViewComposable
 import it.curzel.bitscape.rendering.InventoryView
 import it.curzel.bitscape.rendering.MenuView
 import it.curzel.bitscape.rendering.SpritesProvider
@@ -27,13 +28,16 @@ import it.curzel.bitscape.rendering.ToastView
 import it.curzel.bitscape.ui.theme.SneakBitTheme
 
 class MainActivity : ComponentActivity() {
+    private val gameViewModel: GameViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val spritesProvider = buildSpritesProvider()
-        val engine = buildEngine(spritesProvider)
+        val engine = gameViewModel.engine
+        val spritesProvider = gameViewModel.spritesProvider
 
         enableEdgeToEdge()
+
         setContent {
             SneakBitTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -43,18 +47,23 @@ class MainActivity : ComponentActivity() {
                             ControllerEmulatorView(engine)
                             InventoryView(engine)
                             ToastView(engine, spritesProvider)
-                            MenuView(engine)
                         }
+                        MenuView(engine)
                         DeathScreen(engine)
                     }
                 }
             }
         }
     }
+}
 
-    private fun buildSpritesProvider(): SpritesProvider {
+class GameViewModel(application: Application) : AndroidViewModel(application) {
+    val spritesProvider: SpritesProvider = buildSpritesProvider(application)
+    val engine: GameEngine = buildEngine(application, spritesProvider)
+
+    private fun buildSpritesProvider(application: Application): SpritesProvider {
         return SpritesProvider(
-            context = this,
+            context = application,
             spriteSheetFileNames = hashMapOf(
                 NativeLib.SPRITE_SHEET_INVENTORY to "inventory",
                 NativeLib.SPRITE_SHEET_BIOME_TILES to "tiles_biome",
@@ -74,30 +83,13 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    private fun buildEngine(spritesProvider: SpritesProvider): GameEngine {
+    private fun buildEngine(application: Application, spritesProvider: SpritesProvider): GameEngine {
         return GameEngine(
-            context = this,
-            renderingScaleUseCase = RenderingScaleUseCase(this),
+            context = application,
+            renderingScaleUseCase = RenderingScaleUseCase(application),
             tileMapImageGenerator = TileMapImageGenerator(spritesProvider),
-            tileMapsStorage = TileMapsStorage(this),
-            worldRevisionsStorage = WorldRevisionsStorage(this)
+            tileMapsStorage = TileMapsStorage(application),
+            worldRevisionsStorage = WorldRevisionsStorage(application)
         )
     }
-}
-
-@Composable
-fun GameViewComposable(
-    engine: GameEngine,
-    spritesProvider: SpritesProvider,
-    modifier: Modifier = Modifier
-) {
-    AndroidView(
-        modifier = modifier.fillMaxSize(),
-        factory = { context ->
-            GameView(context).apply {
-                this.engine = engine
-                this.spritesProvider = spritesProvider
-            }
-        }
-    )
 }

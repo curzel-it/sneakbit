@@ -11,12 +11,33 @@ import android.util.AttributeSet
 import android.util.Size
 import android.view.Choreographer
 import android.view.View
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
+@Composable
+fun GameViewComposable(
+    engine: GameEngine,
+    spritesProvider: SpritesProvider,
+    modifier: Modifier = Modifier
+) {
+    AndroidView(
+        modifier = modifier.fillMaxSize(),
+        factory = { context ->
+            GameView(context).apply {
+                this.engine = engine
+                this.spritesProvider = spritesProvider
+            }
+        }
+    )
+}
 
 class GameView @JvmOverloads constructor(
     context: Context,

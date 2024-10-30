@@ -34,7 +34,7 @@ fun KeyEmulatorView(
         contentScale = ContentScale.FillBounds,
         filterQuality = FilterQuality.None,
         modifier = modifier
-            .size(48.dp)
+            .size(56.dp)
             .pointerInput(key) {
                 detectTapGestures(
                     onPress = {

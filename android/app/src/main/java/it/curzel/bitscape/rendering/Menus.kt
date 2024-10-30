@@ -107,6 +107,7 @@ private fun MenuView(
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.4f))
             .padding(24.dp)
+            .padding(bottom = 24.dp)
             .clickable { onCancel() },
         contentAlignment = Alignment.Center
     ) {
