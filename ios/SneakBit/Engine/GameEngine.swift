@@ -238,7 +238,7 @@ class GameEngine {
         setKeyDown(.confirm)
     }
     
-    func setLoading(_ mode: LoadingScreenConfig) {
+    private func setLoading(_ mode: LoadingScreenConfig) {
         if mode.isVisible {
             setLoadingNow(mode)
         } else {

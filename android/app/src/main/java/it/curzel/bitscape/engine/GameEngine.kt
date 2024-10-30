@@ -3,6 +3,8 @@ package it.curzel.bitscape.engine
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.RectF
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.Size
 import it.curzel.bitscape.AssetUtils
@@ -12,6 +14,7 @@ import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
 import it.curzel.bitscape.gamecore.Vector2d
+import it.curzel.bitscape.rendering.LoadingScreenConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,8 +32,8 @@ class GameEngine(
     // val toast = MutableStateFlow<ToastDescriptorC?>(null)
     // val menus = MutableStateFlow<MenuDescriptorC?>(null)
     // val inventory = MutableStateFlow<List<InventoryItem>>(emptyList())
-    // val loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.None)
 
+    private val _loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.none)
     private val _showsDeathScreen = MutableStateFlow(false)
     private val _numberOfKunais = MutableStateFlow(0)
 
@@ -114,6 +117,10 @@ class GameEngine(
 
     override fun showsDeathScreen(): StateFlow<Boolean> {
         return _showsDeathScreen.asStateFlow()
+    }
+
+    override fun loadingScreenConfig(): StateFlow<LoadingScreenConfig> {
+        return _loadingScreenConfig.asStateFlow()
     }
 
     fun renderableItems(): List<RenderableItem> {
@@ -215,14 +222,14 @@ class GameEngine(
     }
 
     private fun updateTileMapImages(worldId: UInt) {
-        // setLoading(LoadingScreenConfig.WorldTransition)
+        setLoading(LoadingScreenConfig.worldTransition)
 
         val requiredRevision = nativeLib.currentWorldRevision().toUInt()
         val images = tileMapsStorage.images(worldId, requiredRevision)
 
         if (images.size >= NativeLib.BIOME_NUMBER_OF_FRAMES) {
             tileMapImages = images
-            // setLoading(LoadingScreenConfig.None)
+            setLoading(LoadingScreenConfig.none)
             return
         }
 
@@ -257,8 +264,9 @@ class GameEngine(
         select_current_menu_option_at_index(index.toUInt())
         setKeyDown(EmulatedKey.CONFIRM)
     }
+*/
 
-    fun setLoading(mode: LoadingScreenConfig) {
+    private fun setLoading(mode: LoadingScreenConfig) {
         if (mode.isVisible) {
             setLoadingNow(mode)
         } else {
@@ -271,9 +279,9 @@ class GameEngine(
     private fun setLoadingNow(mode: LoadingScreenConfig) {
         canRender = !mode.isVisible
         isBusy = mode.isVisible
-        loadingScreenConfig.value = mode
+        _loadingScreenConfig.value = mode
     }
-*/
+
     private fun inventoryPath(): String {
         val fileName = "inventory.json"
         val file = File(context.filesDir, fileName)
