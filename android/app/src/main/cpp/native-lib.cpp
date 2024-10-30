@@ -447,3 +447,9 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, job
     free_renderables(items, length);
     return arrayListObject;
 }
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_numberOfKunaisInInventory(JNIEnv *env, jobject thiz) {
+    return number_of_kunais_in_inventory();
+}

@@ -121,6 +121,10 @@ pub struct InventoryItem {
     pub texture_source_rect: IntRect,
 }
 
+pub fn inventory_items_count_for_species(species_id: u32) -> usize {
+    get_inventory().iter().filter(|e|e.species_id == species_id).count()
+}
+
 pub fn get_inventory_items() -> Vec<InventoryItem> {
     let inventory = get_inventory();
     let mut species_counts = HashMap::new();

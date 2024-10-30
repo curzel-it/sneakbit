@@ -15,7 +15,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -57,25 +56,25 @@ fun JoystickView(
                 bitmap = ImageBitmap.imageResource(R.drawable.joystick),
                 contentDescription = "Joystick Base",
                 contentScale = ContentScale.FillBounds,
+                filterQuality = FilterQuality.None,
                 modifier = Modifier
                     .size(viewModel.baseRadius * 2)
                     .graphicsLayer {
                         translationX = viewModel.center.x - viewModel.baseRadiusPx
                         translationY = viewModel.center.y - viewModel.baseRadiusPx
-                    },
-                filterQuality = FilterQuality.None
+                    }
             )
             Image(
                 bitmap = ImageBitmap.imageResource(R.drawable.joystick_lever),
                 contentDescription = "Joystick Lever",
                 contentScale = ContentScale.FillBounds,
+                filterQuality = FilterQuality.None,
                 modifier = Modifier
                     .size(viewModel.leverRadius * 2)
                     .graphicsLayer {
                         translationX = viewModel.dragLocation.x - viewModel.leverRadiusPx
                         translationY = viewModel.dragLocation.y - viewModel.leverRadiusPx
-                    },
-                filterQuality = FilterQuality.None
+                    }
             )
         }
     }

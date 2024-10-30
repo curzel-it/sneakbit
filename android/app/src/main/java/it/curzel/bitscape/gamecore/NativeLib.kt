@@ -48,6 +48,7 @@ class NativeLib {
     external fun currentWorldRevision(): Int
     external fun fetchUpdatedTiles(worldId: Int): UpdatedTiles
     external fun fetchRenderableItems(): List<RenderableItem>
+    external fun numberOfKunaisInInventory(): Int
 
     companion object {
         const val NUMBER_OF_BIOMES: Int = 18

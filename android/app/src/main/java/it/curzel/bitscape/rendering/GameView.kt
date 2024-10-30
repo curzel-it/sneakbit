@@ -43,8 +43,7 @@ class GameView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         CoroutineScope(Dispatchers.Main).launch {
-            val size = Size(w, h)
-            engine.setupChanged(null, size)
+            engine.setupChanged(Size(w, h))
         }
     }
 

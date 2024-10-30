@@ -11,7 +11,7 @@ class GameEngine {
     
     let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
-    let inventory = CurrentValueSubject<[InventoryItem], Never>([])
+    let kunais = CurrentValueSubject<Int32, Never>(0)
     let loadingScreenConfig = CurrentValueSubject<LoadingScreenConfig, Never>(.none)
     let showsDeathScreen = CurrentValueSubject<Bool, Never>(false)
     
@@ -60,14 +60,11 @@ class GameEngine {
         update_game(deltaTime)
         toast.send(current_toast())
         menus.send(current_menu())
+        kunais.send(number_of_kunais_in_inventory())
         showsDeathScreen.send(shows_death_screen())
         currentBiomeVariant = Int(current_biome_tiles_variant())
         cameraViewport = camera_viewport()
         cameraViewportOffset = camera_viewport_offset()
-        
-        fetchInventory { items in
-            self.inventory.send(items)
-        }
         
         if current_world_id() != currentWorldId {
             print("World changed from \(currentWorldId) to \(current_world_id())")

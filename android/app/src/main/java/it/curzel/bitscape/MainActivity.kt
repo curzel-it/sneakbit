@@ -19,6 +19,7 @@ import it.curzel.bitscape.engine.TileMapsStorage
 import it.curzel.bitscape.engine.WorldRevisionsStorage
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.GameView
+import it.curzel.bitscape.rendering.InventoryView
 import it.curzel.bitscape.rendering.SpritesProvider
 import it.curzel.bitscape.ui.theme.SneakBitTheme
 
@@ -39,6 +40,7 @@ class MainActivity : ComponentActivity() {
                             spritesProvider = spritesProvider
                         )
                         ControllerEmulatorView(engine)
+                        InventoryView(engine)
                     }
                 }
             }

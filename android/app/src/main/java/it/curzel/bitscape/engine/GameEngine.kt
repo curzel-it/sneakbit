@@ -13,6 +13,8 @@ import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
 import it.curzel.bitscape.gamecore.Vector2d
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 import java.io.IOException
 
@@ -29,7 +31,8 @@ class GameEngine(
     // val inventory = MutableStateFlow<List<InventoryItem>>(emptyList())
     // val loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.None)
 
-    val showsDeathScreen = MutableStateFlow(false)
+    private val _showsDeathScreen = MutableStateFlow(false)
+    private val _numberOfKunais = MutableStateFlow(0)
 
     var size = Size(0, 0)
     var fps = 0.0
@@ -39,10 +42,10 @@ class GameEngine(
     private var frameCount = 0
 
     private val tileSize = NativeLib.TILE_SIZE.toFloat()
+
     var renderingScale = 1f
     var cameraViewport = IntRect(0, 0, 0, 0)
     var cameraViewportOffset = Vector2d(0.0f, 0.0f)
-    private var safeAreaInsets = EdgeInsets(0.0f, 0.0f, 0.0f, 0.0f)
     var canRender = true
 
     private val keyPressed = mutableSetOf<EmulatedKey>()
@@ -85,7 +88,8 @@ class GameEngine(
         nativeLib.updateGame(deltaTime)
         // toast.value = current_toast()
         // menus.value = current_menu()
-        showsDeathScreen.value = nativeLib.showsDeathScreen()
+        _numberOfKunais.value = nativeLib.numberOfKunaisInInventory()
+        _showsDeathScreen.value = nativeLib.showsDeathScreen()
         currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
         cameraViewport = nativeLib.cameraViewport().toRect()
         cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
@@ -104,14 +108,15 @@ class GameEngine(
         flushKeyboard()
     }
 
+    override fun numberOfKunais(): StateFlow<Int> {
+        return _numberOfKunais.asStateFlow()
+    }
+
     fun renderableItems(): List<RenderableItem> {
         return nativeLib.fetchRenderableItems()
     }
 
-    fun setupChanged(safeArea: EdgeInsets?, windowSize: Size) {
-        safeArea?.let {
-            safeAreaInsets = it
-        }
+    fun setupChanged(windowSize: Size) {
         renderingScale = renderingScaleUseCase.current()
         size = windowSize
 

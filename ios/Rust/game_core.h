@@ -353,7 +353,7 @@ void free_biome_tiles(struct BiomeTile *tiles_ptr, uintptr_t len_x, uintptr_t le
 
 void free_construction_tiles(struct ConstructionTile *tiles_ptr, uintptr_t len_x, uintptr_t len_y);
 
-struct InventoryItem *inventory_state(uintptr_t *length);
+int32_t number_of_kunais_in_inventory(void);
 
 void free_inventory_state(struct InventoryItem *state, uintptr_t items_count);
 
