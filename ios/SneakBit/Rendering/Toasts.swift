@@ -19,6 +19,7 @@ struct ToastView: View {
                 Text(viewModel.text)
             }
             .padding()
+            .frame(maxWidth: 300)
             .background {
                 ZStack {
                     RoundedRectangle(cornerRadius: 4)
