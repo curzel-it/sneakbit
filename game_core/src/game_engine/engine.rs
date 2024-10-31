@@ -1,6 +1,6 @@
 use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, dialogues::{menu::DialogueMenu, models::Dialogue}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, inventory_recap::InventoryRecap, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{rect::IntRect, vector::Vector2d}};
 
-use super::{inventory::{add_to_inventory, remove_from_inventory}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_key, set_value_for_key, StorageKey}, world::World};
+use super::{inventory::{add_to_inventory, remove_one_of_species_from_inventory}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_key, set_value_for_key, StorageKey}, world::World};
 
 pub struct GameEngine {
     pub menu: GameMenu,
@@ -199,16 +199,13 @@ impl GameEngine {
                 self.exit()
             }
             EngineStateUpdate::ShowEntityOptions(entity) => {
-                self.entity_options_menu.show(entity.clone(), self.creative_mode, false)
+                self.entity_options_menu.show(entity.clone(), self.creative_mode)
             }
-            EngineStateUpdate::ShowInventoryOptions(entity) => {
-                self.entity_options_menu.show(entity.clone(), false, true)
+            EngineStateUpdate::AddToInventory(species_id) => {
+                add_to_inventory(species_id, 1)
             }
-            EngineStateUpdate::AddToInventory(entity) => {
-                add_to_inventory(*entity.clone())
-            }
-            EngineStateUpdate::RemoveFromInventory(entity_id) => {
-                remove_from_inventory(*entity_id)
+            EngineStateUpdate::RemoveFromInventory(species_id) => {
+                remove_one_of_species_from_inventory(species_id);
             }
             EngineStateUpdate::ResumeGame => {
                 self.menu.close()

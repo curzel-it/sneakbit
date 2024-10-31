@@ -111,11 +111,6 @@ private fun MenuContent(
     menuConfig: MenuConfig,
     onSelection: (Int) -> Unit,
 ) {
-    var titleTyped by remember { mutableStateOf(false) }
-    var textTyped by remember { mutableStateOf(false) }
-
-    val allTyped = (!menuConfig.title.isNullOrEmpty() && titleTyped) && (!menuConfig.text.isNullOrEmpty() && textTyped)
-
     Box(
         modifier = Modifier
             .widthIn(max = 400.dp)
@@ -134,11 +129,10 @@ private fun MenuContent(
             Spacer(modifier = Modifier.height(6.dp))
 
             menuConfig.title?.let { title ->
-                TypewriterText(
-                    fullText = title,
+                Text(
+                    text = title,
                     style = DSTypography.title,
-                    color = Color.White,
-                    onTypingFinished = { titleTyped = true }
+                    color = Color.White
                 )
             }
 
@@ -146,62 +140,31 @@ private fun MenuContent(
 
             menuConfig.text?.let { text ->
                 Spacer(modifier = Modifier.height(8.dp))
-                TypewriterText(
-                    fullText = text,
+                Text(
+                    text = text,
                     style = DSTypography.text,
-                    color = Color.White,
-                    onTypingFinished = { textTyped = true }
+                    color = Color.White
                 )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            AnimatedVisibility(visible = allTyped) {
-                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    menuConfig.options.forEachIndexed { index, option ->
-                        Text(
-                            text = "> $option",
-                            style = DSTypography.menuOption,
-                            color = Color.White,
-                            modifier = Modifier
-                                .height(36.dp)
-                                .fillMaxWidth()
-                                .clickable { onSelection(index) }
-                                .padding(top = 8.dp)
-                        )
-                    }
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                menuConfig.options.forEachIndexed { index, option ->
+                    Text(
+                        text = "> $option",
+                        style = DSTypography.menuOption,
+                        color = Color.White,
+                        modifier = Modifier
+                            .height(36.dp)
+                            .fillMaxWidth()
+                            .clickable { onSelection(index) }
+                            .padding(top = 8.dp)
+                    )
                 }
             }
         }
     }
-}
-
-@Composable
-fun TypewriterText(
-    fullText: String,
-    style: TextStyle,
-    color: Color,
-    modifier: Modifier = Modifier,
-    onTypingFinished: (() -> Unit)? = null,
-    charDelay: Long = 5L
-) {
-    var currentText by remember { mutableStateOf("") }
-
-    LaunchedEffect(fullText) {
-        currentText = ""
-        for (c in fullText) {
-            currentText += c
-            delay(charDelay)
-        }
-        onTypingFinished?.invoke()
-    }
-
-    Text(
-        text = currentText,
-        style = style,
-        color = color,
-        modifier = modifier
-    )
 }
 
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape")

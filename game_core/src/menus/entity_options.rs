@@ -78,18 +78,13 @@ impl EntityOptionsMenu {
         }
     }
 
-    pub fn show(
-        &mut self, 
-        entity: Box<Entity>, 
-        creative_mode: bool,
-        inventory: bool
-    ) {
+    pub fn show(&mut self, entity: Box<Entity>, creative_mode: bool) {
         if self.time_since_last_closed < 0.5 {
             return;
         }
         self.entity = entity;
         self.time_since_last_closed = 0.0;
-        self.menu.items = self.available_options(creative_mode, inventory);
+        self.menu.items = self.available_options(creative_mode);
 
         if self.menu.items.is_empty() {
             return
@@ -221,11 +216,7 @@ impl EntityOptionsMenu {
                     self.menu.clear_selection();
                     self.menu.close();
                     vec![
-                        WorldStateUpdate::EngineUpdate(
-                            EngineStateUpdate::AddToInventory(
-                                self.entity.clone()
-                            )
-                        ),
+                        WorldStateUpdate::EngineUpdate(EngineStateUpdate::AddToInventory(self.entity.species_id)),
                         WorldStateUpdate::RemoveEntity(self.entity.id),
                         WorldStateUpdate::EngineUpdate(EngineStateUpdate::SaveGame),
                     ]
@@ -324,10 +315,8 @@ impl EntityOptionsMenu {
         self.text_input.title = "entity.menu.change_destination_y".localized();
     }
 
-    fn available_options(&self, creative_mode: bool, inventory: bool) -> Vec<EntityOptionMenuItem> {
-        if inventory {
-            self.available_options_inventory()
-        } else if creative_mode {
+    fn available_options(&self, creative_mode: bool) -> Vec<EntityOptionMenuItem> {
+        if creative_mode {
             self.available_options_creative()
         } else {
             self.available_options_regular()
@@ -399,18 +388,6 @@ impl EntityOptionsMenu {
         }
         if let Some(contents) = self.entity.contents.clone() {
             options.push(EntityOptionMenuItem::Read(contents.localized()));
-        }
-        options
-    }
-
-    fn available_options_inventory(&self) -> Vec<EntityOptionMenuItem> {
-        let mut options: Vec<EntityOptionMenuItem> = vec![];
-
-        if let Some(contents) = self.entity.contents.clone() {
-            options.push(EntityOptionMenuItem::Read(contents.localized()));
-        }
-        if self.entity.is_consumable {
-            options.push(EntityOptionMenuItem::UseItem);
         }
         options
     }
