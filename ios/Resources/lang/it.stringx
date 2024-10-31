@@ -153,13 +153,11 @@ Skills (max lv 100):
 
 "1001.hint.blessing_received" = """
 Dea:
-Ti ho dato la mia benedizione viaggiatore.
-Controlla la finestra di stato,
-le tue nuove abilità saranno essenziali per la vittoria...
+Hai la mia benedizione, viaggiatore.
 """
 
 "1001.wizard_intro" = """
-Non posso crederci che ha funzionato!
+Non posso credere che abbia funzionato!
 
 Con l'aiuto della Dea, ti ho evocato qui per
 essere il campione dell'umanità e sconfiggere il Signore Oscuro.

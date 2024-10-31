@@ -47,7 +47,7 @@ impl LongTextDisplay {
         self.animator.update(time_since_last_update);
 
         if self.is_open {
-            if keyboard.has_back_been_pressed {
+            if keyboard.has_back_been_pressed || keyboard.has_confirmation_been_pressed {
                 self.close();
             }
             let max_offset = self.lines.len().saturating_sub(self.visible_line_count);

@@ -42,8 +42,6 @@ sh scripts/build_android.sh
 I'm trying to have the engine by completely independent from rendering, which has proved useful for porting the project to iOS and Android.
 
 ## TODO:
-- On windows, some users report crashes when certain dialogues start
-- Make text scrollable in menus 
 - Study/review feedback from [r/speedrun](https://www.reddit.com/r/speedrun/comments/1gfjpyq/as_a_game_dev_what_can_i_do_to_make_my_game_more/)
 
 ## Screenshots

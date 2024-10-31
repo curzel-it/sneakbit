@@ -48,8 +48,6 @@ class NativeLib {
     external fun currentBiomeTilesVariant(): Int
     external fun cameraViewport(): IntArray
     external fun cameraViewportOffset(): FloatArray
-    external fun currentWorldRevision(): Int
-    external fun fetchUpdatedTiles(worldId: Int): UpdatedTiles
     external fun fetchRenderableItems(): List<RenderableItem>
     external fun numberOfKunaiInInventory(): Int
     external fun toastConfig(): ToastConfig

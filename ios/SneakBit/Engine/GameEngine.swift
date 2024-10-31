@@ -5,9 +5,7 @@ import Schwifty
 
 class GameEngine {
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
-    @Inject private var tileMapImageGenerator: TileMapImageGenerator
     @Inject private var tileMapsStorage: TileMapsStorage
-    @Inject private var worldRevisionsStorage: WorldRevisionsStorage
     
     let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
@@ -18,6 +16,10 @@ class GameEngine {
     var size: CGSize = .zero
     var fps: Double = 0.0
     var biomeBackground: CGColor = UIColor.black.cgColor
+    
+    var isLandscape: Bool {
+        cameraViewport.w >= cameraViewport.h
+    }
     
     private var currentWorldId: UInt32 = 0
     private var lastFpsUpdate: Date = Date()
@@ -207,29 +209,8 @@ class GameEngine {
     private func updateTileMapImages() {
         setLoading(.worldTransition)
         
-        let worldId = current_world_id()
-        let requiredRevision = current_world_revision()
-        let images = tileMapsStorage.images(forWorld: worldId, revision: requiredRevision)
-        
-        if images.count >= BIOME_NUMBER_OF_FRAMES {
-            tileMapImages = images
-            self.setLoading(.none)
-            return
-        }
-        
-        fetchUpdatedTiles(forWorld: worldId) { currentRevision, biomeTiles, constructionTiles in
-            self.worldRevisionsStorage.store(revision: currentRevision, forWorld: worldId)
-            
-            self.tileMapImages = (0..<BIOME_NUMBER_OF_FRAMES).compactMap { variant in
-                self.tileMapImageGenerator.generate(
-                    worldWidth: self.worldWidth,
-                    worldHeight: self.worldHeight,
-                    variant: Int32(variant),
-                    biomeTiles: biomeTiles,
-                    constructionTiles: constructionTiles
-                )
-            }
-            self.tileMapsStorage.store(images: self.tileMapImages, forWorld: worldId, revision: requiredRevision)
+        DispatchQueue.global().async {
+            self.tileMapImages = self.tileMapsStorage.images(forWorld: self.currentWorldId)
             self.setLoading(.none)
         }
     }
@@ -255,7 +236,7 @@ class GameEngine {
         if mode.isVisible {
             setLoadingNow(mode)
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.setLoadingNow(mode)
             }
         }

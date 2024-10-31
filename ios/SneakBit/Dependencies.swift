@@ -25,8 +25,6 @@ struct Dependencies {
             )
         }
         container.register(RenderingScaleUseCase.self) { _ in RenderingScaleUseCaseImpl() }
-        container.register(TileMapImageGenerator.self) { _ in TileMapImageGeneratorImpl() }
-        container.register(WorldRevisionsStorage.self) { _ in WorldRevisionsUserDefaults() }
         container.register(TileMapsStorage.self) { _ in TileMapsStorageImpl() }
         container.register(GameSetupUseCase.self) { _ in GameSetupUseCaseImpl() }
         Container.main = container.synchronize()

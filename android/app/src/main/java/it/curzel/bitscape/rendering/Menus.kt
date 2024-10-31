@@ -7,7 +7,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -23,7 +25,6 @@ import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.engine.SomeGameEngine
 import it.curzel.bitscape.ui.theme.DSTypography
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 data class MenuConfig(
@@ -97,12 +98,9 @@ private fun MenuView(
             .padding(24.dp)
             .padding(bottom = 24.dp)
             .clickable { onCancel() },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.BottomCenter
     ) {
-        Column {
-            Spacer(modifier = Modifier.weight(1.0f))
-            MenuContent(menuConfig, onSelection)
-        }
+        MenuContent(menuConfig, onSelection)
     }
 }
 
@@ -111,10 +109,14 @@ private fun MenuContent(
     menuConfig: MenuConfig,
     onSelection: (Int) -> Unit,
 ) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+
     Box(
         modifier = Modifier
             .widthIn(max = 400.dp)
             .fillMaxWidth()
+            .heightIn(max = screenHeight * 0.8f)
             .clip(RoundedCornerShape(8.dp))
             .background(Color.Black)
             .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
@@ -124,6 +126,7 @@ private fun MenuContent(
         Column(
             modifier = Modifier
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
                 .clickable(enabled = false) {}
         ) {
             Spacer(modifier = Modifier.height(6.dp))

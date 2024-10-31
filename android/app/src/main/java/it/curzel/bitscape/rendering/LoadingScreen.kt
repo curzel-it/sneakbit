@@ -1,5 +1,6 @@
 package it.curzel.bitscape.rendering
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collect
@@ -9,6 +10,8 @@ import androidx.compose.runtime.State
 import it.curzel.bitscape.engine.SomeGameEngine
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,14 +39,8 @@ data class LoadingScreenConfig(
 
         val worldTransition = LoadingScreenConfig(
             isVisible = true,
-            message = "Changing world",
+            message = "",
             showsActivityIndicator = false
-        )
-
-        val gameSetup = LoadingScreenConfig(
-            isVisible = true,
-            message = "Applying updates...",
-            showsActivityIndicator = true
         )
     }
 }
@@ -54,31 +51,33 @@ fun LoadingScreen(
     modifier: Modifier = Modifier
 ) {
     val viewModel: LoadingScreenViewModel = remember { LoadingScreenViewModel(gameEngine) }
-
-    val animatedOpacity by animateFloatAsState(
-        targetValue = viewModel.opacity.value,
-        animationSpec = tween(durationMillis = 300)
-    )
-
+    val isVisible by viewModel.isVisible
     val text by viewModel.text
     val showsActivityIndicator by viewModel.showsActivityIndicator
 
-    LoadingScreen(animatedOpacity, text, showsActivityIndicator, modifier)
+    LoadingScreen(isVisible, text, showsActivityIndicator, modifier)
 }
 
 @Composable
 private fun LoadingScreen(
-    opacity: Float,
+    isVisible: Boolean,
     text: String,
     showsActivityIndicator: Boolean,
     modifier: Modifier = Modifier
 ) {
-    if (opacity > 0f) {
+    AnimatedVisibility(
+    visible = isVisible,
+    enter = fadeIn(),
+    exit = fadeOut(),
+    modifier = modifier
+        .fillMaxSize()
+        .background(Color.Black.copy(alpha = 0.7f))
+) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = opacity))
+                .background(Color.Black)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -99,8 +98,8 @@ private fun LoadingScreen(
 }
 
 class LoadingScreenViewModel(private val gameEngine: SomeGameEngine) : ViewModel() {
-    private val _opacity = mutableStateOf(0f)
-    val opacity: State<Float> = _opacity
+    private val _isVisible = mutableStateOf(false)
+    val isVisible: State<Boolean> = _isVisible
 
     private val _text = mutableStateOf("")
     val text: State<String> = _text
@@ -118,39 +117,9 @@ class LoadingScreenViewModel(private val gameEngine: SomeGameEngine) : ViewModel
 
     private fun applyConfig(config: LoadingScreenConfig) {
         viewModelScope.launch {
-            if (config.isVisible) {
-                animateFloat(
-                    from = _opacity.value,
-                    to = 1f,
-                    durationMillis = 300
-                ) { value ->
-                    _opacity.value = value
-                }
-            } else {
-                animateFloat(
-                    from = _opacity.value,
-                    to = 0f,
-                    durationMillis = 300
-                ) { value ->
-                    _opacity.value = value
-                }
-            }
+            _isVisible.value = config.isVisible
             _text.value = config.message
             _showsActivityIndicator.value = config.showsActivityIndicator
-        }
-    }
-
-    private suspend fun animateFloat(
-        from: Float,
-        to: Float,
-        durationMillis: Int,
-        onUpdate: (Float) -> Unit
-    ) {
-        androidx.compose.animation.core.Animatable(from).animateTo(
-            targetValue = to,
-            animationSpec = tween(durationMillis)
-        ) {
-            onUpdate(value)
         }
     }
 }
@@ -158,5 +127,5 @@ class LoadingScreenViewModel(private val gameEngine: SomeGameEngine) : ViewModel
 @Preview(showBackground = true)
 @Composable
 fun LoadingScreenPreview() {
-    LoadingScreen(1.0f, "Example", true, Modifier)
+    LoadingScreen(true, "Example", true, Modifier)
 }

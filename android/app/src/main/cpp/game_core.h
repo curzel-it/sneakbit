@@ -67,7 +67,6 @@
 #define SPECIES_HOMUNCULUS 4004
 #define SPECIES_DEEP_HOLE 5001
 typedef uint32_t Biome;
-typedef uint32_t Construction;
 typedef enum ToastMode {
   ToastMode_Regular = 0,
   ToastMode_Important,
@@ -124,14 +123,6 @@ typedef struct MenuDescriptorC {
   const struct MenuDescriptorItemC *options;
   uint32_t options_count;
 } MenuDescriptorC;
-typedef struct ConstructionTile {
-  Construction tile_type;
-  Construction tile_up_type;
-  Construction tile_right_type;
-  Construction tile_down_type;
-  Construction tile_left_type;
-  struct IntRect texture_source_rect;
-} ConstructionTile;
 void initialize_game(bool creative_mode);
 bool test_bool(void);
 void test_logs(void);
@@ -182,19 +173,11 @@ struct IntRect camera_viewport(void);
 struct Vector2d camera_viewport_offset(void);
 struct BiomeTile current_world_default_tile(void);
 uint32_t current_world_id(void);
-uint32_t current_world_revision(void);
 struct ToastDescriptorC current_toast(void);
 struct MenuDescriptorC current_menu(void);
 void free_c_char_ptr(const char *ptr);
 float current_loading_screen_progress(void);
 bool shows_death_screen(void);
 void select_current_menu_option_at_index(uint32_t index);
-uint32_t updated_tiles(uint32_t world_id,
-                       const struct BiomeTile **out_biome_tiles,
-                       const struct ConstructionTile **out_construction_tiles,
-                       uintptr_t *out_len_x,
-                       uintptr_t *out_len_y);
-void free_biome_tiles(struct BiomeTile *tiles_ptr, uintptr_t len_x, uintptr_t len_y);
-void free_construction_tiles(struct ConstructionTile *tiles_ptr, uintptr_t len_x, uintptr_t len_y);
 int32_t number_of_kunai_in_inventory(void);
 #endif  /* GAME_CORE_H */

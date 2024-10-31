@@ -36,9 +36,7 @@ import java.io.IOException
 class GameEngine(
     private val context: Context,
     private val renderingScaleUseCase: RenderingScaleUseCase,
-    private val tileMapImageGenerator: TileMapImageGenerator,
-    private val tileMapsStorage: TileMapsStorage,
-    private val worldRevisionsStorage: WorldRevisionsStorage
+    private val tileMapsStorage: TileMapsStorage
 ): SomeGameEngine {
     private var _biomeBackgroundColor: Int = Color.BLACK
     private val _loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.none)
@@ -259,28 +257,7 @@ class GameEngine(
         setLoading(LoadingScreenConfig.worldTransition)
 
         CoroutineScope(Dispatchers.IO + Job()).launch {
-            val requiredRevision = nativeLib.currentWorldRevision().toUInt()
-            val images = tileMapsStorage.images(worldId, requiredRevision)
-
-            if (images.size >= NativeLib.BIOME_NUMBER_OF_FRAMES) {
-                tileMapImages = images
-                setLoading(LoadingScreenConfig.none)
-                return@launch
-            }
-
-            val updatedTiles = nativeLib.fetchUpdatedTiles(worldId.toInt())
-            worldRevisionsStorage.store(updatedTiles.currentRevision, worldId)
-
-            tileMapImages = (0 until NativeLib.BIOME_NUMBER_OF_FRAMES).mapNotNull { variant ->
-                tileMapImageGenerator.generate(
-                    worldWidth,
-                    worldHeight,
-                    variant,
-                    updatedTiles.biomeTiles,
-                    updatedTiles.constructionTiles
-                )
-            }
-            tileMapsStorage.store(tileMapImages, worldId, requiredRevision)
+            tileMapImages = tileMapsStorage.images(worldId)
             setLoading(LoadingScreenConfig.none)
         }
     }
@@ -308,7 +285,7 @@ class GameEngine(
         } else {
             Handler(Looper.getMainLooper()).postDelayed({
                 setLoadingNow(mode)
-            }, 300)
+            }, 100)
         }
     }
 

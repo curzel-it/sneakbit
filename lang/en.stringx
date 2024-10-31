@@ -152,9 +152,7 @@ Skills (max lv 100):
 
 "1001.hint.blessing_received" = """
 Goddess:
-I gave you my blessing traveler.
-Please check the status window,
-your new abilities will be essential for victory...
+I give you my blessing, traveler.
 """
 
 "1001.wizard_intro" = """
