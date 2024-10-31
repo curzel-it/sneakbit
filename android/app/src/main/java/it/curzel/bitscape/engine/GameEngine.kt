@@ -36,8 +36,7 @@ import java.io.IOException
 class GameEngine(
     private val context: Context,
     private val renderingScaleUseCase: RenderingScaleUseCase,
-    private val tileMapsStorage: TileMapsStorage,
-    private val worldRevisionsStorage: WorldRevisionsStorage
+    private val tileMapsStorage: TileMapsStorage
 ): SomeGameEngine {
     private var _biomeBackgroundColor: Int = Color.BLACK
     private val _loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.none)

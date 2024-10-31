@@ -17,7 +17,6 @@ import androidx.lifecycle.AndroidViewModel
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.engine.RenderingScaleUseCase
 import it.curzel.bitscape.engine.TileMapsStorage
-import it.curzel.bitscape.engine.WorldRevisionsStorage
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.GameViewComposable
 import it.curzel.bitscape.rendering.InventoryView
@@ -86,8 +85,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         return GameEngine(
             context = application,
             renderingScaleUseCase = RenderingScaleUseCase(application),
-            tileMapsStorage = TileMapsStorage(application),
-            worldRevisionsStorage = WorldRevisionsStorage(application)
+            tileMapsStorage = TileMapsStorage(application)
         )
     }
 }

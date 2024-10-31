@@ -6,7 +6,6 @@ import Schwifty
 class GameEngine {
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
     @Inject private var tileMapsStorage: TileMapsStorage
-    @Inject private var worldRevisionsStorage: WorldRevisionsStorage
     
     let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
