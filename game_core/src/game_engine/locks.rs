@@ -34,7 +34,7 @@ impl LockType {
         }
     }
 
-    pub fn key(&self) -> SpeciesId {
+    pub fn key_species_id(&self) -> SpeciesId {
         match self {
             LockType::None => 0,
             LockType::Yellow => SPECIES_KEY_YELLOW,
@@ -55,6 +55,33 @@ impl LockType {
             LockType::Green => PRESSURE_PLATE_GREEN,
             LockType::Silver => PRESSURE_PLATE_SILVER,
             LockType::Permanent => ""
+        }
+    }
+}
+
+impl LockType {
+    pub fn as_int(&self) -> u32 {
+        match self {
+            LockType::None => 0,
+            LockType::Yellow => 1,
+            LockType::Red => 2,
+            LockType::Blue => 3,
+            LockType::Green => 4,
+            LockType::Silver => 5,
+            LockType::Permanent => 6
+        }
+    }
+
+    pub fn from_int(key: &u32) -> Option<LockType> {
+        match key {
+            0 => Some(LockType::None),
+            1 => Some(LockType::Yellow),
+            2 => Some(LockType::Red),
+            3 => Some(LockType::Blue),
+            4 => Some(LockType::Green),
+            5 => Some(LockType::Silver),
+            6 => Some(LockType::Permanent),
+            _ => None
         }
     }
 }

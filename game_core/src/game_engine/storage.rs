@@ -3,13 +3,7 @@ use lazy_static::lazy_static;
 
 use crate::config::config;
 
-use super::{
-    locks::{
-        PRESSURE_PLATE_BLUE, PRESSURE_PLATE_GREEN, PRESSURE_PLATE_RED, PRESSURE_PLATE_SILVER,
-        PRESSURE_PLATE_YELLOW,
-    },
-    world::World,
-};
+use super::{entity::EntityId, locks::{LockType, PRESSURE_PLATE_BLUE, PRESSURE_PLATE_GREEN, PRESSURE_PLATE_RED, PRESSURE_PLATE_SILVER, PRESSURE_PLATE_YELLOW}, world::World};
 
 pub struct StorageKey {}
 
@@ -125,4 +119,16 @@ impl IntConvertible for bool {
     fn to_int(&self) -> u32 {
         if *self { 1 } else { 0 }
     }
+}
+
+pub fn save_lock_override(id: &EntityId, lock_type: &LockType) {
+    set_value_for_key(&lock_override_key(id), lock_type.as_int());
+}
+
+pub fn lock_override(id: &EntityId) -> Option<LockType> {
+    get_value_for_key(&lock_override_key(id)).and_then(|lock_id| LockType::from_int(&lock_id))
+}
+
+fn lock_override_key(id: &EntityId) -> String {
+    format!("lock_override.{}", id)
 }

@@ -18,7 +18,7 @@ impl Entity {
 
         if self.should_teleport(world) {
             if !world.creative_mode && self.lock_type != LockType::None {
-                if inventory_contains_species(self.lock_type.key()) {
+                if inventory_contains_species(self.lock_type.key_species_id()) {
                     vec![self.show_unlock_confirmation()]
                 } else {
                     vec![self.show_locked_message()]
@@ -91,8 +91,14 @@ impl Entity {
                 "teleporter.unlock.message".localized().replace("%s", &name),
                 vec![
                     WorldStateUpdate::ChangeLock(self.id, LockType::None),
-                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::SaveGame),
-                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::RemoveFromInventory(self.lock_type.key()))
+                    WorldStateUpdate::EngineUpdate(
+                        EngineStateUpdate::SaveGame
+                    ),
+                    WorldStateUpdate::EngineUpdate(
+                        EngineStateUpdate::RemoveFromInventory(
+                            self.lock_type.key_species_id()
+                        )
+                    )
                 ]
             )
         )

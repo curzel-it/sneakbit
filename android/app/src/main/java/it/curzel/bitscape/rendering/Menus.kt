@@ -157,7 +157,7 @@ private fun MenuContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             AnimatedVisibility(visible = allTyped) {
-                Column {
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     menuConfig.options.forEachIndexed { index, option ->
                         Text(
                             text = "> $option",
@@ -167,7 +167,7 @@ private fun MenuContent(
                                 .height(36.dp)
                                 .fillMaxWidth()
                                 .clickable { onSelection(index) }
-                                .padding(vertical = 4.dp)
+                                .padding(top = 8.dp)
                         )
                     }
                 }
