@@ -2,18 +2,13 @@ import Foundation
 import SwiftUI
 
 protocol TileMapsStorage {
-    func store(images: [UIImage], forWorld worldId: UInt32, revision: UInt32)
-    func images(forWorld worldId: UInt32, revision: UInt32) -> [UIImage]
+    func images(forWorld worldId: UInt32) -> [UIImage]
 }
 
 class TileMapsStorageImpl: TileMapsStorage {
     private var cache: [UInt32: [UIImage]] = [:]
 
-    func store(images: [UIImage], forWorld worldId: UInt32, revision: UInt32) {
-        // ...
-    }
-
-    func images(forWorld worldId: UInt32, revision: UInt32) -> [UIImage] {
+    func images(forWorld worldId: UInt32) -> [UIImage] {
         if let cached = cache[worldId] {
             return cached
         }

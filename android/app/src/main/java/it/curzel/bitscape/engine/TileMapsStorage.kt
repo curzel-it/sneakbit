@@ -9,10 +9,7 @@ import java.io.IOException
 class TileMapsStorage(private val context: Context) {
     private val cache = HashMap<UInt, List<Bitmap>>()
 
-    fun store(images: List<Bitmap>, worldId: UInt, revision: UInt) {
-    }
-
-    fun images(worldId: UInt, revision: UInt): List<Bitmap> {
+    fun images(worldId: UInt): List<Bitmap> {
         cache[worldId]?.let {
             return it
         }
@@ -33,48 +30,3 @@ class TileMapsStorage(private val context: Context) {
         return images
     }
 }
-/*
-
-class TileMapsStorage(private val context: Context) {
-    companion object {
-        private const val STORAGE_DIR_NAME = "TileMaps"
-    }
-
-    private val storageDirectory: File
-
-    init {
-        val caches = context.cacheDir
-        storageDirectory = File(caches, STORAGE_DIR_NAME)
-
-        if (!storageDirectory.exists()) {
-            storageDirectory.mkdirs()
-        }
-    }
-
-    fun store(images: List<Bitmap>, worldId: UInt, revision: UInt) {
-        images.forEachIndexed { variant, image ->
-            val filename = "${worldId}-${revision}-${variant}.png"
-            val file = File(storageDirectory, filename)
-            try {
-                FileOutputStream(file).use { out ->
-                    image.compress(Bitmap.CompressFormat.PNG, 100, out)
-                }
-            } catch (e: Exception) {
-                Log.e("TileMapsStorage", "Failed to save image: $e")
-            }
-        }
-    }
-
-    fun images(worldId: UInt, revision: UInt): List<Bitmap> {
-        return (0..NativeLib.BIOME_NUMBER_OF_FRAMES).mapNotNull { variant ->
-            val filename = "${worldId}-${revision}-${variant}.png"
-            val file = File(storageDirectory, filename)
-            if (file.exists()) {
-                Log.d("TileMapsStorage", "Loading image at ${file.absolutePath}")
-                BitmapFactory.decodeFile(file.absolutePath)
-            } else {
-                null
-            }
-        }
-    }
-}*/
