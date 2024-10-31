@@ -278,7 +278,7 @@ impl GameEngine {
 
         let hero_frame = new_world.cached_hero_props.frame;
         self.world = new_world;
-        self.center_camera_in(&hero_frame);
+        self.center_camera_at(hero_frame.x, hero_frame.y, &Vector2d::zero());
 
         self.menu.current_world_id = self.world.id;
         self.keyboard.on_world_changed();
@@ -293,10 +293,6 @@ impl GameEngine {
         } else {
             self.world.id
         }
-    }
-
-    fn center_camera_in(&mut self, frame: &IntRect) {
-        self.camera_viewport.center_in(frame);
     }
 
     fn center_camera_at(&mut self, x: i32, y: i32, offset: &Vector2d) {
