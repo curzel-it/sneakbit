@@ -55,6 +55,7 @@ class NativeLib {
     external fun toastConfig(): ToastConfig
     external fun menuConfig(): MenuConfig
     external fun selectCurrentMenuOptionAtIndex(index: Int)
+    external fun defaultTileType(): Int
 
     companion object {
         const val NUMBER_OF_BIOMES: Int = 18

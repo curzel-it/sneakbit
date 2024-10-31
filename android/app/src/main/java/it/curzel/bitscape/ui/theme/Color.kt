@@ -11,3 +11,8 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val HighlightedText = Color(0xFFFFA500)
+
+val BiomeBackgroundNothing = Color(0xFF000000)
+val BiomeBackgroundGrass = Color(0xFF33984B)
+val BiomeBackgroundLava = Color(0xFF891C2B)
+val BiomeBackgroundWater = Color(0xFF0069AA)

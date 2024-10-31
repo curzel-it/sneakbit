@@ -101,10 +101,15 @@ class GameView @JvmOverloads constructor(
         canvas.drawColor(Color.BLACK)
 
         if (engine.canRender) {
+            renderBiomeBackground(canvas)
             renderTileMap(canvas)
             renderEntities(canvas)
             renderDebugInfo(canvas)
         }
+    }
+
+    private fun renderBiomeBackground(canvas: Canvas) {
+        canvas.drawColor(engine.biomeBackgroundColor())
     }
 
     private fun renderEntities(canvas: Canvas) {

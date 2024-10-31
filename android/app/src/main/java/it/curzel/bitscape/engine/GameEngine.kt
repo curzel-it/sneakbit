@@ -2,11 +2,13 @@ package it.curzel.bitscape.engine
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.RectF
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.util.Size
+import androidx.compose.ui.graphics.toArgb
 import it.curzel.bitscape.AssetUtils
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.gamecore.EdgeInsets
@@ -17,6 +19,10 @@ import it.curzel.bitscape.gamecore.Vector2d
 import it.curzel.bitscape.rendering.LoadingScreenConfig
 import it.curzel.bitscape.rendering.MenuConfig
 import it.curzel.bitscape.rendering.ToastConfig
+import it.curzel.bitscape.ui.theme.BiomeBackgroundGrass
+import it.curzel.bitscape.ui.theme.BiomeBackgroundLava
+import it.curzel.bitscape.ui.theme.BiomeBackgroundNothing
+import it.curzel.bitscape.ui.theme.BiomeBackgroundWater
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -34,6 +40,7 @@ class GameEngine(
     private val tileMapsStorage: TileMapsStorage,
     private val worldRevisionsStorage: WorldRevisionsStorage
 ): SomeGameEngine {
+    private var _biomeBackgroundColor: Int = Color.BLACK
     private val _loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.none)
     private val _showsDeathScreen = MutableStateFlow(false)
     private val _numberOfKunai = MutableStateFlow(0)
@@ -107,10 +114,27 @@ class GameEngine(
             keyDown.clear()
             keyPressed.clear()
             updateTileMapImages(freshWorldId)
+            updateBiomeBackgroundColor()
         }
 
         updateFpsCounter()
         flushKeyboard()
+    }
+
+    private fun updateBiomeBackgroundColor() {
+        val defaultTileType = nativeLib.defaultTileType()
+        val color = when (defaultTileType) {
+            0 -> BiomeBackgroundNothing
+            1 -> BiomeBackgroundGrass
+            6 -> BiomeBackgroundWater
+            16 -> BiomeBackgroundLava
+            else -> BiomeBackgroundNothing
+        }
+        _biomeBackgroundColor = color.toArgb()
+    }
+
+    override fun biomeBackgroundColor(): Int {
+        return _biomeBackgroundColor
     }
 
     override fun numberOfKunai(): StateFlow<Int> {
