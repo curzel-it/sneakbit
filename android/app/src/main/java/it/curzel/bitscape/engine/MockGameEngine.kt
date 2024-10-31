@@ -1,5 +1,7 @@
 package it.curzel.bitscape.engine
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.rendering.LoadingScreenConfig
 import it.curzel.bitscape.rendering.MenuConfig
@@ -17,6 +19,7 @@ interface SomeGameEngine {
     fun toastConfig(): StateFlow<ToastConfig>
     fun menuConfig(): StateFlow<MenuConfig>
     fun onMenuItemSelection(index: Int)
+    fun biomeBackgroundColor(): Int
 }
 
 class MockGameEngine: SomeGameEngine {
@@ -50,5 +53,9 @@ class MockGameEngine: SomeGameEngine {
 
     override fun onMenuItemSelection(index: Int) {
         // ...
+    }
+
+    override fun biomeBackgroundColor(): Int {
+        return Color.Gray.toArgb()
     }
 }

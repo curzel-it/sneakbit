@@ -128,7 +128,7 @@ impl Entity {
             EntityType::Teleporter => self.setup_teleporter(creative_mode),
             EntityType::PushableObject => self.setup_generic(creative_mode),
             EntityType::Gate => self.setup_gate(creative_mode),
-            EntityType::InverseGate => self.setup_inverse_gate(),
+            EntityType::InverseGate => self.setup_inverse_gate(creative_mode),
             EntityType::PressurePlate => self.setup_pressure_plate(),
             EntityType::Bullet => self.setup_bullet(),
             EntityType::RailObject => self.setup_rail(),
@@ -160,10 +160,6 @@ impl Entity {
             }
         }
         None
-    }
-
-    pub fn is_related_pressure_plate_down(&self) -> bool {
-        get_value_for_key(self.lock_type.pressure_plate()).unwrap_or(1) == 0
     }
 
     pub fn props(&self) -> EntityProps {

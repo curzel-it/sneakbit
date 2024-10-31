@@ -103,7 +103,6 @@ impl DialogueMenu {
             if !has_dialogue_reward_been_collected(dialogue_id) {
                 set_dialogue_reward_collected(dialogue_id);
                 let species = species_by_id(reward);
-                let reward_entity = Box::new(species.make_entity());
                 
                 vec! [
                     WorldStateUpdate::EngineUpdate(
@@ -117,7 +116,7 @@ impl DialogueMenu {
                             )
                         )
                     ),
-                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::AddToInventory(reward_entity)),
+                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::AddToInventory(reward)),
                     WorldStateUpdate::EngineUpdate(EngineStateUpdate::SaveGame)
                 ]
             } else {

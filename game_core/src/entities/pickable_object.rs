@@ -14,7 +14,7 @@ pub fn object_pick_up_sequence(entity: &Entity) -> Vec<WorldStateUpdate> {
     vec![
         WorldStateUpdate::EngineUpdate(
             EngineStateUpdate::AddToInventory(
-                Box::new(entity.clone())
+                entity.species_id
             )
         ),
         WorldStateUpdate::RemoveEntity(entity.id),

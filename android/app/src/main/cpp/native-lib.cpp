@@ -607,3 +607,9 @@ JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_selectCurrentMenuOptionAtIndex(JNIEnv *env, jobject thiz, jint index) {
     select_current_menu_option_at_index(index);
 }
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_defaultTileType(JNIEnv *env, jobject thiz) {
+    return current_world_default_tile().tile_type;
+}

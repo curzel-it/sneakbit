@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_INVENTORY, entities::known_species::SPECIES_KUNAI, game_engine::inventory::{get_inventory_items, InventoryItem}, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::vector::Vector2d, vstack, zstack};
+use crate::{constants::SPRITE_SHEET_INVENTORY, game_engine::inventory::{get_inventory_items, InventoryItem}, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::vector::Vector2d, vstack, zstack};
 
 pub struct InventoryRecap {
     items: Vec<InventoryItem>
@@ -27,7 +27,7 @@ impl InventoryRecap {
     }
 
     fn item_ui(&self, item: &InventoryItem) -> View {
-        if item.species_id != SPECIES_KUNAI || item.count == 0 {
+        if item.count == 0 {
             return empty_view()
         }
         let image = texture!(SPRITE_SHEET_INVENTORY, item.texture_source_rect, Vector2d::new(1.0, 1.0));

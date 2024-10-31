@@ -56,7 +56,7 @@ impl Entity {
         }
 
         self.shooting_cooldown_remaining = HERO_KUNAI_COOLDOWN;
-        remove_one_of_species_from_inventory(SPECIES_KUNAI);
+        remove_one_of_species_from_inventory(&SPECIES_KUNAI);
 
         let mut bullet = species_by_id(SPECIES_KUNAI).make_entity();
         bullet.direction = world.cached_hero_props.direction;

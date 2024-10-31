@@ -1,10 +1,10 @@
-use crate::{constants::{SPRITE_SHEET_INVENTORY, TILE_SIZE}, entities::species::{species_by_id, Species}, game_engine::{entity::Entity, inventory::get_inventory, keyboard_events_provider::KeyboardEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}}, lang::localizable::LocalizableText, text, texture, ui::{components::{GridSpacing, Spacing, Typography, View, COLOR_BLACK, COLOR_YELLOW}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, zstack};
+use crate::{constants::{SPRITE_SHEET_INVENTORY, TILE_SIZE}, entities::species::{species_by_id, Species, SpeciesId}, game_engine::{inventory::get_inventory, keyboard_events_provider::KeyboardEventsProvider, state_updates::WorldStateUpdate}, lang::localizable::LocalizableText, text, texture, ui::{components::{GridSpacing, Spacing, Typography, View, COLOR_BLACK, COLOR_YELLOW}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, zstack};
 
 use super::menu::MENU_BORDERS_TEXTURES;
 
 #[derive(Debug)]
 pub struct Inventory {
-    pub stock: Vec<Entity>,
+    pub stock: Vec<(SpeciesId, u32)>,
     state: InventoryState,
     columns: usize,
 }
@@ -24,7 +24,9 @@ impl Inventory {
     }
 
     pub fn setup(&mut self) {
-        self.stock = get_inventory()
+        let mut stock: Vec<(SpeciesId, u32)> = get_inventory().into_iter().map(|(k, v)| (k, v)).collect();
+        stock.sort();
+        self.stock = stock;
     }
 
     pub fn update(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
@@ -48,25 +50,7 @@ impl Inventory {
         if keyboard.direction_left.is_pressed && selected_index > 0 {
             self.state = InventoryState::SelectingItem(selected_index - 1);
         }
-        if keyboard.has_confirmation_been_pressed {
-            return self.handle_selection(selected_index); 
-        }
         vec![]
-    }
-
-    fn handle_selection(&self, selected_index: usize) -> Vec<WorldStateUpdate> {
-        if selected_index >= self.stock.len() { 
-            return vec![]
-        }
-        let item = self.stock[selected_index].clone();
-
-        vec![
-            WorldStateUpdate::EngineUpdate(
-                EngineStateUpdate::ShowInventoryOptions(
-                    Box::new(item)
-                )
-            )
-        ]
     }
 }
 
@@ -90,7 +74,7 @@ impl Inventory {
                 spacing: GridSpacing::sm(),
                 columns: self.columns,
                 children: self.stock.iter()
-                    .map(|e| e.species_id)
+                    .map(|(species_id, _)| *species_id)
                     .map(species_by_id)
                     .enumerate()
                     .map(|(index, species)| { self.item_ui(&species, index, selected_item_index) })

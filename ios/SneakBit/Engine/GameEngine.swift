@@ -17,6 +17,7 @@ class GameEngine {
     
     var size: CGSize = .zero
     var fps: Double = 0.0
+    var biomeBackground: CGColor = UIColor.black.cgColor
     
     private var currentWorldId: UInt32 = 0
     private var lastFpsUpdate: Date = Date()
@@ -69,6 +70,7 @@ class GameEngine {
         if current_world_id() != currentWorldId {
             print("World changed from \(currentWorldId) to \(current_world_id())")
             currentWorldId = current_world_id()
+            biomeBackground = fetchBiomeBackgroundColor()
             keyDown.removeAll()
             keyPressed.removeAll()
             updateTileMapImages()
@@ -76,6 +78,17 @@ class GameEngine {
         
         updateFpsCounter()
         flushKeyboard()
+    }
+    
+    private func fetchBiomeBackgroundColor() -> CGColor {
+        let color: UIColor? = switch current_world_default_tile().tile_type {
+        case 0: .init(named: "biome_background_nothing")
+        case 1: .init(named: "biome_background_grass")
+        case 6: .init(named: "biome_background_water")
+        case 16: .init(named: "biome_background_lava")
+        default: nil
+        }
+        return color?.cgColor ?? UIColor.black.cgColor
     }
     
     func renderEntities(_ render: @escaping (RenderableItem) -> Void) {

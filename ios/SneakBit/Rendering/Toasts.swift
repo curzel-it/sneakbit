@@ -11,10 +11,15 @@ struct ToastView: View {
             HStack {
                 if let image = viewModel.image {
                     image
+                        .interpolation(.none)
+                        .resizable()
+                        .frame(width: 32)
+                        .frame(height: 32)
                 }
                 Text(viewModel.text)
             }
             .padding()
+            .frame(maxWidth: 300)
             .background {
                 ZStack {
                     RoundedRectangle(cornerRadius: 4)
@@ -76,7 +81,7 @@ private class ToastViewModel: ObservableObject {
         borderColor = toast.mode.rawValue == 0 ? .cyan : .yellow
         
         if let cgImage = spritesProvider.cgImage(for: toast.image.sprite_sheet_id, textureRect: toast.image.texture_frame) {
-            image = Image(decorative: cgImage, scale: 1).interpolation(.none)
+            image = Image(decorative: cgImage, scale: 1)
         } else {
             image = nil
         }

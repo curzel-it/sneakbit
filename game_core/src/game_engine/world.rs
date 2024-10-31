@@ -3,7 +3,7 @@ use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}
 use common_macros::hash_set;
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, hitmap::{EntityIdsMap, Hitmap, WeightsMap}}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::save_pressure_plate_states};
+use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override}};
 
 pub struct World {
     pub id: u32,
@@ -75,9 +75,15 @@ impl World {
         }
 
         let mut entities = self.entities.borrow_mut();        
-        entities.push(entity);
-        let new_index = entities.len() - 1;
-        entities[new_index].setup(self.creative_mode);
+        let new_index = entities.len();
+        entities.push(entity);        
+
+        entities[new_index].setup(self.creative_mode);        
+
+        if let Some(lock_type) = lock_override(&id) {
+            entities[new_index].lock_type = lock_type;
+        }
+
         (new_index, id)
     }
 
@@ -228,7 +234,6 @@ impl World {
                     LockType::None => {}
                     LockType::Permanent => {}
                 }                
-                save_pressure_plate_states(self)
             }
         };
         None
@@ -287,6 +292,7 @@ impl World {
         let mut entities = self.entities.borrow_mut();
         if let Some(entity) = entities.iter_mut().find(|e| e.id == id) {
             entity.lock_type = lock_type;
+            save_lock_override(&entity.id, &lock_type);
         }
     }
 
@@ -431,5 +437,21 @@ impl World {
 impl World {
     pub fn is_creep(&self, id: u32) -> bool {
         self.melee_attackers.contains(&id)
+    }
+
+    pub fn is_pressure_plate_down(&self, lock_type: &LockType) -> bool {
+        match lock_type {
+            LockType::Blue => self.pressure_plate_down_blue,
+            LockType::Red => self.pressure_plate_down_red,
+            LockType::Green => self.pressure_plate_down_green,
+            LockType::Silver => self.pressure_plate_down_silver,
+            LockType::Yellow => self.pressure_plate_down_yellow,
+            LockType::Permanent => false,
+            LockType::None => false
+        }
+    }
+
+    pub fn is_pressure_plate_up(&self, lock_type: &LockType) -> bool {
+        !self.is_pressure_plate_down(lock_type)
     }
 }

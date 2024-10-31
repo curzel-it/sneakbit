@@ -16,3 +16,5 @@ cp target/aarch64-linux-android/release/libgame_core.so android/app/src/main/jni
 cp target/i686-linux-android/release/libgame_core.so android/app/src/main/jniLibs/x86/
 cp target/x86_64-linux-android/release/libgame_core.so android/app/src/main/jniLibs/x86_64/
 cp game_core.h android/app/src/main/cpp/
+
+python3 scripts/cleanup_android_game_core_header.py
