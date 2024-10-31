@@ -308,7 +308,7 @@ class GameEngine(
         } else {
             Handler(Looper.getMainLooper()).postDelayed({
                 setLoadingNow(mode)
-            }, 300)
+            }, 100)
         }
     }
 
