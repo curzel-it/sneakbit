@@ -75,7 +75,12 @@ impl DialogueMenu {
         self.text_animator.update(time_since_last_update);
         
         let animated_text_length = (self.text.len() as f32 * self.text_animator.current_value).round() as usize;
-        let animated_text = &self.text[..animated_text_length.min(self.text.len())];
+        let animated_text = self.text
+            .char_indices()
+            .take_while(|(idx, _)| *idx < animated_text_length)
+            .map(|(_, c)| c)
+            .collect::<String>();
+        
         self.menu.text = Some(animated_text.to_owned());
 
         if !self.menu.is_open {

@@ -52,9 +52,9 @@ fn start_rl() -> (RaylibHandle, RaylibThread) {
         .resizable()
         .title("SneakBit")
         .build();        
-
+    
     let font = rl.load_font(&thread, "fonts/PixelOperator/PixelOperator8.ttf").unwrap();
-    let font_bold = rl.load_font(&thread, "fonts/PixelOperator/PixelOperator8-Bold.ttf").unwrap();            
+    let font_bold = rl.load_font(&thread, "fonts/PixelOperator/PixelOperator8-Bold.ttf").unwrap();                     
     
     rl.set_target_fps(best_fps());
 
