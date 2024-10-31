@@ -116,7 +116,7 @@ private fun ToastView(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(0.dp),
                 modifier = Modifier
                     .clip(RoundedCornerShape(4.dp))
                     .background(backgroundColor)
@@ -133,13 +133,13 @@ private fun ToastView(
                         modifier = Modifier
                             .padding(vertical = 12.dp)
                             .padding(start = 12.dp)
-                            .size(24.dp)
+                            .size(32.dp)
                     )
                 }
                 Text(
                     modifier = Modifier
                         .padding(vertical = 16.dp)
-                        .padding(end = 12.dp),
+                        .padding(horizontal = 12.dp),
                     text = text,
                     color = Color.White,
                     style = DSTypography.text

@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 
 use crate::config::config;
 
-use super::{entity::EntityId, locks::{LockType, PRESSURE_PLATE_BLUE, PRESSURE_PLATE_GREEN, PRESSURE_PLATE_RED, PRESSURE_PLATE_SILVER, PRESSURE_PLATE_YELLOW}, world::World};
+use super::{entity::EntityId, locks::LockType};
 
 pub struct StorageKey {}
 
@@ -101,24 +101,6 @@ pub fn set_value_for_key(key: &str, value: u32) {
     let storage = KEY_VALUE_STORAGE.read().unwrap().clone();
     let tx = &SAVE_THREAD.0;
     tx.send(storage).expect("Failed to send data to save thread");
-}
-
-pub fn save_pressure_plate_states(world: &World) {
-    set_value_for_key(PRESSURE_PLATE_YELLOW, world.pressure_plate_down_yellow.to_int());
-    set_value_for_key(PRESSURE_PLATE_RED, world.pressure_plate_down_red.to_int());
-    set_value_for_key(PRESSURE_PLATE_BLUE, world.pressure_plate_down_blue.to_int());
-    set_value_for_key(PRESSURE_PLATE_GREEN, world.pressure_plate_down_green.to_int());
-    set_value_for_key(PRESSURE_PLATE_SILVER, world.pressure_plate_down_silver.to_int());
-}
-
-trait IntConvertible {
-    fn to_int(&self) -> u32;
-}
-
-impl IntConvertible for bool {
-    fn to_int(&self) -> u32 {
-        if *self { 1 } else { 0 }
-    }
 }
 
 pub fn save_lock_override(id: &EntityId, lock_type: &LockType) {

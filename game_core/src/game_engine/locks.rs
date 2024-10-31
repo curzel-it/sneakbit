@@ -45,18 +45,6 @@ impl LockType {
             LockType::Permanent => 0
         }
     }
-
-    pub fn pressure_plate(&self) -> &str {
-        match self {
-            LockType::None => "",
-            LockType::Yellow => PRESSURE_PLATE_YELLOW,
-            LockType::Red => PRESSURE_PLATE_RED,
-            LockType::Blue => PRESSURE_PLATE_BLUE,
-            LockType::Green => PRESSURE_PLATE_GREEN,
-            LockType::Silver => PRESSURE_PLATE_SILVER,
-            LockType::Permanent => ""
-        }
-    }
 }
 
 impl LockType {

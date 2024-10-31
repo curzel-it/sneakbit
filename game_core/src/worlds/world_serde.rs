@@ -107,21 +107,6 @@ struct WorldData {
 
     #[serde(default)]
     default_biome: Biome,
-
-    #[serde(default)]
-    pressure_plate_down_red: bool,
-
-    #[serde(default)]
-    pressure_plate_down_green: bool,
-
-    #[serde(default)]
-    pressure_plate_down_blue: bool,
-
-    #[serde(default)]
-    pressure_plate_down_silver: bool,
-
-    #[serde(default)]
-    pressure_plate_down_yellow: bool,
 }
 
 impl Serialize for World {
@@ -140,11 +125,6 @@ impl Serialize for World {
         state.serialize_field("creep_spawn_enabled", &self.creep_spawn_enabled)?;
         state.serialize_field("creep_spawn_interval", &self.creep_spawn_interval)?;
         state.serialize_field("default_biome", &self.default_biome)?;
-        state.serialize_field("pressure_plate_down_red", &self.pressure_plate_down_red)?;
-        state.serialize_field("pressure_plate_down_green", &self.pressure_plate_down_green)?;
-        state.serialize_field("pressure_plate_down_blue", &self.pressure_plate_down_blue)?;
-        state.serialize_field("pressure_plate_down_silver", &self.pressure_plate_down_silver)?;
-        state.serialize_field("pressure_plate_down_yellow", &self.pressure_plate_down_yellow)?;
         state.end()
     }
 }
@@ -158,11 +138,6 @@ impl<'de> Deserialize<'de> for World {
         world.default_biome = data.default_biome;
         world.creep_spawn_enabled = data.creep_spawn_enabled;
         world.creep_spawn_interval = data.creep_spawn_interval;
-        world.pressure_plate_down_red = data.pressure_plate_down_red;
-        world.pressure_plate_down_green = data.pressure_plate_down_green;
-        world.pressure_plate_down_blue = data.pressure_plate_down_blue;
-        world.pressure_plate_down_silver = data.pressure_plate_down_silver;
-        world.pressure_plate_down_yellow = data.pressure_plate_down_yellow;
         data.entities.into_iter().for_each(|e| _ = world.add_entity(e));        
         world.load_biome_tiles(data.biome_tiles);
         world.load_construction_tiles(data.constructions_tiles);
