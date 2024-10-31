@@ -19,6 +19,10 @@ class GameEngine {
     var fps: Double = 0.0
     var biomeBackground: CGColor = UIColor.black.cgColor
     
+    var isLandscape: Bool {
+        cameraViewport.w >= cameraViewport.h
+    }
+    
     private var currentWorldId: UInt32 = 0
     private var lastFpsUpdate: Date = Date()
     private var frameCount: Int = 0

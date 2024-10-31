@@ -13,13 +13,12 @@ struct ToastView: View {
                     image
                         .interpolation(.none)
                         .resizable()
-                        .frame(width: 32)
-                        .frame(height: 32)
+                        .frame(width: 24)
+                        .frame(height: 24)
                 }
                 Text(viewModel.text)
             }
             .padding()
-            .frame(maxWidth: 300)
             .background {
                 ZStack {
                     RoundedRectangle(cornerRadius: 4)

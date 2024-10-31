@@ -15,25 +15,7 @@ struct MenuView: View {
                     .foregroundStyle(Color.black.opacity(0.4))
                     .onTapGesture { viewModel.cancel() }
                 
-                VStack(spacing: 20) {
-                    if let title = viewModel.title {
-                        Text(title)
-                            .textAlign(.leading)
-                            .typography(.title)
-                    }
-                    if let text = viewModel.text {
-                        Text(text)
-                            .textAlign(.leading)
-                            .typography(.text)
-                    }
-                    ForEach(viewModel.options.indices, id: \.self) { index in
-                        Button(viewModel.options[index]) {
-                            viewModel.selectOption(at: index)
-                        }
-                        .buttonStyle(.menuOption)
-                    }
-                }
-                .padding()
+                ScrollableMenuContents()
                 .frame(maxWidth: 400)
                 .background {
                     ZStack {
@@ -53,6 +35,46 @@ struct MenuView: View {
                 .padding(.leading, viewModel.safeAreaInsets.left)
                 .positioned(.bottom)
             }
+            .environmentObject(viewModel)
+        }
+    }
+}
+
+private struct ScrollableMenuContents: View {
+    @EnvironmentObject private var viewModel: MenuViewModel
+    
+    var body: some View {
+        if viewModel.useScrollView {
+            ScrollView {
+                MenuContents().padding()
+            }
+        } else {
+            MenuContents().padding()
+        }
+    }
+}
+
+private struct MenuContents: View {
+    @EnvironmentObject private var viewModel: MenuViewModel
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            if let title = viewModel.title {
+                Text(title)
+                    .textAlign(.leading)
+                    .typography(.title)
+            }
+            if let text = viewModel.text {
+                Text(text)
+                    .textAlign(.leading)
+                    .typography(.text)
+            }
+            ForEach(viewModel.options.indices, id: \.self) { index in
+                Button(viewModel.options[index]) {
+                    viewModel.selectOption(at: index)
+                }
+                .buttonStyle(.menuOption)
+            }
         }
     }
 }
@@ -69,6 +91,7 @@ private class MenuViewModel: ObservableObject {
     @Published var options: [String] = []
     @Published var isVisible: Bool = false
     @Published var opacity: CGFloat = 0
+    @Published var useScrollView: Bool = false
     
     let borderColor: Color = .gray
     let backgroundColor: Color = .black
@@ -98,10 +121,15 @@ private class MenuViewModel: ObservableObject {
         let newOptions = items
             .map { string(from: $0.title) ?? "???" }
             .map { "> \($0)" }
-                
+        
+        let newText = string(from: menu.text)
+        let longTextThreshold = engine.isLandscape ? 150 : 300
+        let needsScroll = (newText?.count ?? 0) > longTextThreshold
+        
         withAnimation {
+            useScrollView = needsScroll
             options = newOptions
-            text = string(from: menu.text)
+            text = newText
             title = string(from: menu.title)
             isVisible = true
         }
