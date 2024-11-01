@@ -152,9 +152,21 @@ impl Entity {
         self.current_speed = self.speed_multiplier * species_by_id(self.species_id).base_speed;
     }    
     
-    pub fn next_dialogue(&self) -> Option<Dialogue> {
+    pub fn next_dialogue(&self, world: &World) -> Option<Dialogue> {
         for option in &self.dialogues {
-            let value = get_value_for_key(&option.key);
+            let value = if option.key.contains("pressure_plate_down") {
+                let lock_name = option.key.replace("pressure_plate_down_", "");
+                let lock_type = LockType::from_string(&lock_name);
+                
+                if world.is_pressure_plate_down(&lock_type) {
+                    Some(1)
+                } else {
+                    Some(0)
+                }
+            } else {
+                get_value_for_key(&option.key)
+            };
+            
             if value == Some(option.expected_value) || (option.expected_value == 0 && value.is_none()) {
                 return Some(option.clone())
             }

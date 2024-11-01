@@ -174,5 +174,6 @@
   "entities": [],
   "creep_spawn_enabled": false,
   "creep_spawn_interval": 0.0,
-  "default_biome": "Water"
+  "default_biome": "Water",
+  "light_conditions": "Day"
 }

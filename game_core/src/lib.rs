@@ -340,6 +340,5 @@ pub extern "C" fn is_night() -> bool {
 pub extern "C" fn is_limited_visibility() -> bool {
     let world = &engine().world;
     if world.creative_mode { return false }
-    println!("Light conditions: {} {:#?}", world.id, world.light_conditions);
     matches!(world.light_conditions, LightConditions::CantSeeShit)
 }

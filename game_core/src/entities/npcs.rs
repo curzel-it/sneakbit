@@ -43,7 +43,7 @@ impl Entity {
                     )
                 ];
                 return vec;  
-            } else if let Some(dialogue) = self.next_dialogue() {
+            } else if let Some(dialogue) = self.next_dialogue(world) {
                 self.demands_attention = false;
 
                 return vec![

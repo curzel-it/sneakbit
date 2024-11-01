@@ -72,4 +72,16 @@ impl LockType {
             _ => None
         }
     }
+
+    pub fn from_string(name: &str) -> LockType {
+        match name.to_ascii_lowercase().as_str() {
+            "yellow" => LockType::Yellow,
+            "red" => LockType::Red,
+            "blue" => LockType::Blue,
+            "green" => LockType::Green,
+            "silver" => LockType::Silver,
+            "permanent" => LockType::Permanent,
+            _ => LockType::None
+        }
+    }
 }
