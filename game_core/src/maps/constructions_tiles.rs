@@ -257,3 +257,28 @@ impl<'de> Deserialize<'de> for TileSet<ConstructionTile> {
         Ok(TileSet::with_tiles(data.sheet_id, tiles))
     }
 }
+
+impl Construction {
+    pub fn stops_bullets(&self) -> bool {
+        match self {
+            Construction::Nothing => false,
+            Construction::WoodenFence => false,
+            Construction::MetalFence => true,
+            Construction::DarkRock => true,
+            Construction::LightWall => true,
+            Construction::Counter => false,
+            Construction::Library => true,
+            Construction::TallGrass => false,
+            Construction::Forest => true,
+            Construction::Bamboo => false,
+            Construction::Box => true,
+            Construction::Rail => false,
+            Construction::StoneWall => true,
+            Construction::IndicatorArrow => false,
+            Construction::Bridge => false,
+            Construction::Broadleaf => true,
+            Construction::StoneBox => true,
+            Construction::SpoiledTree => false,
+        }
+    }
+}
