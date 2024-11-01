@@ -6,6 +6,7 @@ use common_macros::hash_map;
 use game_core::{config::initialize_config_paths, constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
 use raylib::{ffi::{KeyboardKey, MouseButton}, texture::Texture2D, window::{get_current_monitor, get_monitor_refresh_rate}, RaylibHandle, RaylibThread};
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
+use sys_locale::get_locale;
 
 fn main() {
     let mut needs_window_init = true;
@@ -13,7 +14,7 @@ fn main() {
 
     initialize_config_paths(
         TILE_SIZE * 2.5,
-        "en".to_owned(),
+        current_locale(),
         local_path("data"),
         local_path("data/species.json"),
         local_path("data/inventory.json"),
@@ -159,8 +160,8 @@ fn handle_keyboard_updates(rl: &mut RaylibHandle, time_since_last_update: f32) {
         rl.is_key_down(KeyboardKey::KEY_A) || rl.is_key_down(KeyboardKey::KEY_LEFT), 
         rl.is_key_pressed(KeyboardKey::KEY_ESCAPE), 
         rl.is_key_pressed(KeyboardKey::KEY_ENTER), 
-        rl.is_key_pressed(KeyboardKey::KEY_E), 
-        rl.is_key_pressed(KeyboardKey::KEY_F), 
+        rl.is_key_pressed(KeyboardKey::KEY_E) || rl.is_key_pressed(KeyboardKey::KEY_K) || rl.is_key_pressed(KeyboardKey::KEY_SPACE), 
+        rl.is_key_pressed(KeyboardKey::KEY_F) || rl.is_key_pressed(KeyboardKey::KEY_J) || rl.is_key_pressed(KeyboardKey::KEY_Q), 
         rl.is_key_pressed(KeyboardKey::KEY_BACKSPACE), 
         get_char_pressed(rl),
         time_since_last_update
@@ -195,4 +196,17 @@ fn local_path(filename: &str) -> PathBuf {
     path.push("..");
     path.push(filename);
     path
+}
+
+fn current_locale() -> String {
+    if let Some(locale) = get_locale() {
+        let locale_underscored = locale.replace("-", "_");
+        let language_part = locale_underscored
+            .split('_')
+            .next()
+            .unwrap_or("enx");
+        language_part.to_lowercase()
+    } else {
+        "en".to_string()
+    }
 }

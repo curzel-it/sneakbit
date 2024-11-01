@@ -1,7 +1,11 @@
 import Foundation
 
 func currentLang() -> String {
-    "en"
+    Locale.current.identifier
+        .replacingOccurrences(of: "-", with: "_")
+        .lowercased()
+        .components(separatedBy: "_")
+        .first ?? "en"
 }
 
 func dataFolder() -> String {

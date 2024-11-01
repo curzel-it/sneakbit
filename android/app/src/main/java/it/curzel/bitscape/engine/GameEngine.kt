@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
+import java.util.Locale
 
 class GameEngine(
     private val context: Context,
@@ -79,7 +80,7 @@ class GameEngine(
 
         nativeLib.initializeConfig(
             baseEntitySpeed = NativeLib.TILE_SIZE * 1.8f,
-            currentLang = "en",
+            currentLang = currentLang(),
             levelsPath = dataPath,
             speciesPath = "$dataPath/species.json",
             inventoryPath = inventoryPath(),
@@ -116,6 +117,14 @@ class GameEngine(
 
         updateFpsCounter()
         flushKeyboard()
+    }
+
+    private fun currentLang(): String {
+        return Locale.getDefault().language
+            .lowercase()
+            .replace("-", "_")
+            .split("_")
+            .firstOrNull() ?: "en"
     }
 
     private fun updateBiomeBackgroundColor() {

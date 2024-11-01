@@ -20,7 +20,7 @@ pub fn config() -> &'static Config {
 
 pub fn initialize_config_paths(
     base_entity_speed: f32,
-    current_lang: String,
+    user_lang: String,
     levels_path: PathBuf,
     species_path: PathBuf,
     inventory_path: PathBuf,
@@ -28,9 +28,13 @@ pub fn initialize_config_paths(
     localized_strings_path: PathBuf,
 ) {
     unsafe {
+        let supported_languages = vec!["en", "it"];
+        let user_lang_supported = supported_languages.contains(&user_lang.as_str());
+        let actual_lang = if user_lang_supported { user_lang } else { "en".to_string() };
+
         let config = Config {
             base_entity_speed,
-            current_lang,
+            current_lang: actual_lang,
             levels_path,
             species_path,
             inventory_path,
