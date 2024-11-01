@@ -20,6 +20,8 @@ interface SomeGameEngine {
     fun menuConfig(): StateFlow<MenuConfig>
     fun onMenuItemSelection(index: Int)
     fun biomeBackgroundColor(): Int
+    fun isNight(): Boolean
+    fun isLimitedVisibility(): Boolean
 }
 
 class MockGameEngine: SomeGameEngine {
@@ -57,5 +59,13 @@ class MockGameEngine: SomeGameEngine {
 
     override fun biomeBackgroundColor(): Int {
         return Color.Gray.toArgb()
+    }
+
+    override fun isNight(): Boolean {
+        return false
+    }
+
+    override fun isLimitedVisibility(): Boolean {
+        return false
     }
 }

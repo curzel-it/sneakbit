@@ -6,8 +6,17 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 object AssetUtils {
+    fun extractAssetFolder(context: Context, assetFolderName: String, destFolderName: String): String {
+        val destPath = File(context.filesDir, destFolderName)
+        if (destPath.exists()) {
+            destPath.delete()
+        }
+        copyAssetFolder(context, assetFolderName, destPath)
+        return destPath.absolutePath
+    }
+
     @Throws(IOException::class)
-    fun copyAssetFolder(context: Context, assetFolderName: String, destFolder: File) {
+    private fun copyAssetFolder(context: Context, assetFolderName: String, destFolder: File) {
         val assetManager = context.assets
         val files = assetManager.list(assetFolderName) ?: throw IOException("Asset folder not found: $assetFolderName")
         if (files.isEmpty()) {
@@ -24,13 +33,5 @@ object AssetUtils {
                 copyAssetFolder(context, "$assetFolderName/$file", File(destFolder, file))
             }
         }
-    }
-
-    fun extractAssetFolder(context: Context, assetFolderName: String, destFolderName: String): String {
-        val destPath = File(context.filesDir, destFolderName)
-        if (!destPath.exists()) {
-            copyAssetFolder(context, assetFolderName, destPath)
-        }
-        return destPath.absolutePath
     }
 }

@@ -4,8 +4,6 @@ import it.curzel.bitscape.rendering.MenuConfig
 import it.curzel.bitscape.rendering.ToastConfig
 
 class NativeLib {
-    external fun testLogs()
-    external fun testBool(): Boolean
     external fun initializeConfig(
         baseEntitySpeed: Float,
         currentLang: String?,
@@ -54,9 +52,10 @@ class NativeLib {
     external fun menuConfig(): MenuConfig
     external fun selectCurrentMenuOptionAtIndex(index: Int)
     external fun defaultTileType(): Int
+    external fun isNight(): Boolean
+    external fun isLimitedVisibility(): Boolean
 
     companion object {
-        const val NUMBER_OF_BIOMES: Int = 18
         const val TILE_SIZE: Int = 16
         const val BIOME_NUMBER_OF_FRAMES: Int = 4
 
@@ -75,6 +74,7 @@ class NativeLib {
         const val SPRITE_SHEET_HUMANOIDS_2X2: UInt = 1016u
         const val SPRITE_SHEET_FARM_PLANTS: UInt = 1017u
         const val SPRITE_SHEET_HUMANOIDS_2X3: UInt = 1018u
+        const val SPRITE_SHEET_CAVE_DARKNESS: UInt = 1019u
 
         init {
             System.loadLibrary("game_core")
@@ -82,30 +82,6 @@ class NativeLib {
         }
     }
 }
-
-data class UpdatedTiles(
-    val currentRevision: UInt,
-    val biomeTiles: Array<Array<BiomeTile>>,
-    val constructionTiles: Array<Array<ConstructionTile>>
-)
-
-data class BiomeTile(
-    val tileType: Int,
-    val textureOffsetX: Int,
-    val textureOffsetY: Int
-)
-
-data class ConstructionTile(
-    val tileType: Int,
-    val textureSourceRect: IntRect
-)
-
-data class EdgeInsets(
-    val top: Float,
-    val right: Float,
-    val down: Float,
-    val left: Float,
-)
 
 data class IntRect(
     val x: Int,

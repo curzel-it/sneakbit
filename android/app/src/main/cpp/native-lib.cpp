@@ -6,18 +6,6 @@ extern "C" {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_testLogs(JNIEnv *env, jobject thiz) {
-    test_logs();
-}
-
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_testBool(JNIEnv *env, jobject thiz) {
-    return test_bool();
-}
-
-extern "C"
-JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_initializeConfig(
         JNIEnv *env,
         jobject thiz,
@@ -469,4 +457,16 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_defaultTileType(JNIEnv *env, jobject thiz) {
     return current_world_default_tile().tile_type;
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_isNight(JNIEnv *env, jobject thiz) {
+    return is_night();
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_isLimitedVisibility(JNIEnv *env, jobject thiz) {
+    return is_limited_visibility();
 }

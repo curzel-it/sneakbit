@@ -593,6 +593,7 @@
   "creep_spawn_enabled": false,
   "creep_spawn_interval": 0.0,
   "default_biome": "Nothing",
+  "light_conditions": "CantSeeShit",
   "pressure_plate_down_red": false,
   "pressure_plate_down_green": false,
   "pressure_plate_down_blue": false,

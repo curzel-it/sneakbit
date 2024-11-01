@@ -31,6 +31,8 @@ class GameEngine {
     private(set) var cameraViewportOffset: Vector2d = .zero
     private(set) var safeAreaInsets: UIEdgeInsets = .zero
     private(set) var canRender: Bool = true
+    private(set) var isNight: Bool = false
+    private(set) var isLimitedVisibility: Bool = false
         
     private var keyPressed = Set<EmulatedKey>()
     private var keyDown = Set<EmulatedKey>()
@@ -72,6 +74,8 @@ class GameEngine {
         if current_world_id() != currentWorldId {
             print("World changed from \(currentWorldId) to \(current_world_id())")
             currentWorldId = current_world_id()
+            isNight = is_night()
+            isLimitedVisibility = is_limited_visibility()
             biomeBackground = fetchBiomeBackgroundColor()
             keyDown.removeAll()
             keyPressed.removeAll()

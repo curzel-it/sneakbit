@@ -2,7 +2,7 @@ use std::{fs::File, io::{BufReader, Write}};
 
 use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Error;
-use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, entities::known_species::SPECIES_HERO, game_engine::{entity::Entity, world::World}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::ConstructionTile, tiles::TileSet}};
+use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, entities::known_species::SPECIES_HERO, features::light_conditions::LightConditions, game_engine::{entity::Entity, world::World}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::ConstructionTile, tiles::TileSet}};
 
 impl World {
     pub fn load(id: u32) -> Option<Self> {
@@ -107,6 +107,9 @@ struct WorldData {
 
     #[serde(default)]
     default_biome: Biome,
+
+    #[serde(default)]
+    light_conditions: LightConditions,
 }
 
 impl Serialize for World {
@@ -125,6 +128,7 @@ impl Serialize for World {
         state.serialize_field("creep_spawn_enabled", &self.creep_spawn_enabled)?;
         state.serialize_field("creep_spawn_interval", &self.creep_spawn_interval)?;
         state.serialize_field("default_biome", &self.default_biome)?;
+        state.serialize_field("light_conditions", &self.light_conditions)?;
         state.end()
     }
 }
@@ -136,6 +140,7 @@ impl<'de> Deserialize<'de> for World {
         let mut world = World::new(data.id);        
         world.revision = data.revision;
         world.default_biome = data.default_biome;
+        world.light_conditions = data.light_conditions;
         world.creep_spawn_enabled = data.creep_spawn_enabled;
         world.creep_spawn_interval = data.creep_spawn_interval;
         data.entities.into_iter().for_each(|e| _ = world.add_entity(e));        

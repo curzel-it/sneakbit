@@ -22,7 +22,9 @@ class GameView: UIView {
         if engine.canRender {
             renderBiomeBackground(rect, in: context)
             renderTileMap(in: context)
+            renderNight(rect, in: context)
             renderEntities(in: context)
+            renderLimitedVisibility(rect, in: context)
             renderDebugInfo(context: context, rect: rect)
         }
     }
@@ -85,5 +87,37 @@ class GameView: UIView {
         context.translateBy(x: offsetX, y: offsetY)
         context.draw(tileMapCgImage, in: CGRect(origin: .zero, size: scaledMapSize))
         context.restoreGState()
+    }
+    
+    private func renderNight(_ rect: CGRect, in context: CGContext) {
+        guard engine.isNight else { return }
+        context.setFillColor((UIColor(named: "overlay_night_color") ?? .clear).cgColor)
+        context.fill(rect)
+    }
+    
+    private func renderLimitedVisibility(_ rect: CGRect, in context: CGContext) {
+        guard engine.isLimitedVisibility else { return }
+        context.setFillColor(UIColor.black.cgColor)
+        let centerX = rect.width / 2.0
+        let centerY = rect.height / 2.0
+        let tileSize = TILE_SIZE * engine.renderingScale
+        let visibleAreaSize = tileSize * 9.0
+        let visibleAreaHalf = visibleAreaSize / 2.0
+        let halfTile = tileSize / 2.0
+        let visibleAreaRect = CGRect(
+            x: halfTile + centerX - visibleAreaHalf,
+            y: centerY - visibleAreaHalf,
+            width: visibleAreaSize,
+            height: visibleAreaSize
+        )
+        
+        context.fill(CGRect(x: 0, y: 0, width: rect.width, height: centerY - visibleAreaHalf))
+        context.fill(CGRect(x: 0, y: centerY + visibleAreaHalf, width: rect.width, height: centerY - visibleAreaHalf))
+        context.fill(CGRect(x: 0, y: 0, width: halfTile + centerX - visibleAreaHalf, height: rect.height))
+        context.fill(CGRect(x: centerX + visibleAreaHalf + halfTile, y: 0, width: centerX - visibleAreaHalf, height: rect.height))
+        
+        if let image = spritesProvider.cgImage(for: UInt32(SPRITE_SHEET_CAVE_DARKNESS), textureRect: IntRect(x: 0, y: 0, w: 16, h: 16)) {
+            render(texture: image, at: visibleAreaRect, in: context)
+        }
     }
 }
