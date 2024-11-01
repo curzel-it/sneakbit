@@ -1,5 +1,6 @@
 {
   "id": 1004,
+  "revision": 0,
   "biome_tiles": {
     "tiles": [
       "222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222",
@@ -179,7 +180,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Buco Profondo",
+      "name": "Deep Hole",
       "species_id": 5001,
       "entity_type": "Teleporter",
       "offset": {
@@ -214,6 +215,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -268,6 +270,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -322,6 +325,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -376,6 +380,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -430,6 +435,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -453,7 +459,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cartello",
+      "name": "Sign",
       "species_id": 10000,
       "entity_type": "StaticObject",
       "offset": {
@@ -484,6 +490,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -496,7 +503,7 @@
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
-      "is_invulnerable": false,
+      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -507,7 +514,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Carrello da Miniera",
+      "name": "Rail Cart",
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
@@ -538,6 +545,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -592,6 +600,7 @@
         "w": 5,
         "h": 4
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -646,6 +655,7 @@
         "w": 5,
         "h": 4
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -700,6 +710,7 @@
         "w": 5,
         "h": 4
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -723,7 +734,7 @@
         "w": 5,
         "h": 4
       },
-      "name": "Casa",
+      "name": "House",
       "species_id": 1003,
       "entity_type": "Building",
       "offset": {
@@ -754,6 +765,7 @@
         "w": 5,
         "h": 4
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -777,7 +789,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -812,6 +824,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -835,7 +848,7 @@
         "w": 2,
         "h": 2
       },
-      "name": "Fontana",
+      "name": "Fountain",
       "species_id": 11002,
       "entity_type": "StaticObject",
       "offset": {
@@ -866,6 +879,7 @@
         "w": 2,
         "h": 2
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -889,7 +903,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "Vecchia",
+      "name": "Old Lady",
       "species_id": 3006,
       "entity_type": "Npc",
       "offset": {
@@ -927,6 +941,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -950,7 +965,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -981,6 +996,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1004,7 +1020,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -1035,6 +1051,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1089,6 +1106,7 @@
         "w": 5,
         "h": 5
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1112,7 +1130,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -1147,6 +1165,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1170,7 +1189,7 @@
         "w": 2,
         "h": 1
       },
-      "name": "Grande Cartello",
+      "name": "Large Sign",
       "species_id": 10001,
       "entity_type": "StaticObject",
       "offset": {
@@ -1201,6 +1220,7 @@
         "w": 2,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1213,7 +1233,7 @@
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
-      "is_invulnerable": false,
+      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -1224,7 +1244,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Melma",
+      "name": "Slime",
       "species_id": 4001,
       "entity_type": "Npc",
       "offset": {
@@ -1255,6 +1275,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "Free",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1309,6 +1330,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1363,6 +1385,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1417,6 +1440,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1440,7 +1464,7 @@
         "w": 2,
         "h": 2
       },
-      "name": "Pozzo",
+      "name": "Well",
       "species_id": 11001,
       "entity_type": "StaticObject",
       "offset": {
@@ -1471,6 +1495,7 @@
         "w": 2,
         "h": 2
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1489,16 +1514,16 @@
     {
       "id": 1727533496,
       "frame": {
-        "x": 75,
+        "x": 69,
         "y": 61,
         "w": 1,
         "h": 1
       },
-      "name": "Carrello da Miniera",
+      "name": "Rail Cart",
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": -1.6065032,
+        "x": -10.736568,
         "y": 0.0
       },
       "direction": "Left",
@@ -1525,6 +1550,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1548,7 +1574,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Piastra di Pressione d'Argento",
+      "name": "Silver Pressure Plate",
       "species_id": 1054,
       "entity_type": "PressurePlate",
       "offset": {
@@ -1579,6 +1605,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1602,7 +1629,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Masso",
+      "name": "Boulder",
       "species_id": 1030,
       "entity_type": "PushableObject",
       "offset": {
@@ -1633,6 +1660,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1656,7 +1684,7 @@
         "w": 2,
         "h": 1
       },
-      "name": "Grande Cartello",
+      "name": "Large Sign",
       "species_id": 10001,
       "entity_type": "StaticObject",
       "offset": {
@@ -1687,6 +1715,7 @@
         "w": 2,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1699,7 +1728,7 @@
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
-      "is_invulnerable": false,
+      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -1710,7 +1739,7 @@
         "w": 3,
         "h": 3
       },
-      "name": "Cerchio Magico Blu",
+      "name": "Blue Magic Circle",
       "species_id": 11004,
       "entity_type": "StaticObject",
       "offset": {
@@ -1741,6 +1770,7 @@
         "w": 3,
         "h": 3
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1764,7 +1794,7 @@
         "w": 3,
         "h": 3
       },
-      "name": "Cerchio di Evocazione Malefica",
+      "name": "Evil Summoning Circle",
       "species_id": 11005,
       "entity_type": "StaticObject",
       "offset": {
@@ -1795,6 +1825,7 @@
         "w": 3,
         "h": 3
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1818,7 +1849,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -1849,6 +1880,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1872,7 +1904,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "Vecchio",
+      "name": "Old Man",
       "species_id": 3005,
       "entity_type": "Npc",
       "offset": {
@@ -1916,6 +1948,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1939,7 +1972,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -1970,6 +2003,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -1993,7 +2027,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -2024,6 +2058,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2047,7 +2082,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -2078,6 +2113,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2101,7 +2137,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -2132,6 +2168,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2155,7 +2192,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -2186,6 +2223,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2240,6 +2278,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2294,6 +2333,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2348,6 +2388,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2402,6 +2443,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2456,6 +2498,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2510,6 +2553,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2564,6 +2608,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2618,6 +2663,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2672,6 +2718,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -2695,7 +2742,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -2726,6 +2773,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2749,7 +2797,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -2780,6 +2828,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2803,7 +2852,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -2834,6 +2883,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2857,7 +2907,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -2888,6 +2938,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2911,7 +2962,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -2942,6 +2993,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -2965,7 +3017,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -2996,6 +3048,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3019,7 +3072,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -3050,6 +3103,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3073,7 +3127,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Cancello d'Argento",
+      "name": "Silver Gate",
       "species_id": 1044,
       "entity_type": "Gate",
       "offset": {
@@ -3104,6 +3158,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3158,6 +3213,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3212,6 +3268,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3266,6 +3323,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3320,6 +3378,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3374,6 +3433,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3428,6 +3488,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3482,6 +3543,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3536,6 +3598,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3590,6 +3653,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3644,6 +3708,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3698,6 +3763,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3752,6 +3818,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3806,6 +3873,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3860,6 +3928,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3914,6 +3983,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -3968,6 +4038,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4022,6 +4093,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4076,6 +4148,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4130,6 +4203,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4184,6 +4258,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4238,6 +4313,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4292,6 +4368,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4346,6 +4423,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4400,6 +4478,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4454,6 +4533,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4508,6 +4588,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4562,6 +4643,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4616,6 +4698,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4670,6 +4753,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4724,6 +4808,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4778,6 +4863,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4832,6 +4918,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4886,6 +4973,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4940,6 +5028,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -4994,6 +5083,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5048,6 +5138,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5102,6 +5193,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5156,6 +5248,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5210,6 +5303,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5264,6 +5358,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5318,6 +5413,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5372,6 +5468,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5426,6 +5523,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5480,6 +5578,7 @@
         "w": 5,
         "h": 4
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5503,7 +5602,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -5538,6 +5637,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5592,6 +5692,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -5646,6 +5747,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -5700,6 +5802,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -5754,6 +5857,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -5808,6 +5912,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -5862,6 +5967,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -5916,6 +6022,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -5970,6 +6077,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6024,6 +6132,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6078,6 +6187,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6132,6 +6242,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6186,6 +6297,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6240,6 +6352,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6294,6 +6407,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6348,6 +6462,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6371,7 +6486,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -6406,6 +6521,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6429,7 +6545,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -6464,6 +6580,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -6518,6 +6635,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6572,6 +6690,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6626,6 +6745,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6680,6 +6800,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6734,6 +6855,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6788,6 +6910,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6842,6 +6965,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6896,6 +7020,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -6950,6 +7075,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7004,6 +7130,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7058,6 +7185,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7081,7 +7209,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -7116,6 +7244,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7170,6 +7299,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7193,7 +7323,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -7228,6 +7358,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7251,7 +7382,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -7286,6 +7417,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7309,7 +7441,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -7344,6 +7476,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7367,7 +7500,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teletrasportatore",
+      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -7402,6 +7535,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7456,6 +7590,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7510,6 +7645,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7564,6 +7700,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7618,6 +7755,7 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
@@ -7641,7 +7779,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Suggerimento (Uso singolo)",
+      "name": "Hint (One time)",
       "species_id": 50000,
       "entity_type": "Hint",
       "offset": {
@@ -7672,6 +7810,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7695,7 +7834,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Suggerimento (Uso singolo)",
+      "name": "Hint (One time)",
       "species_id": 50000,
       "entity_type": "Hint",
       "offset": {
@@ -7726,6 +7865,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7749,7 +7889,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Suggerimento (Uso singolo)",
+      "name": "Hint (One time)",
       "species_id": 50000,
       "entity_type": "Hint",
       "offset": {
@@ -7780,6 +7920,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7803,7 +7944,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Suggerimento (Uso singolo)",
+      "name": "Hint (One time)",
       "species_id": 50000,
       "entity_type": "Hint",
       "offset": {
@@ -7834,6 +7975,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7857,7 +7999,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Suggerimento (Uso singolo)",
+      "name": "Hint (One time)",
       "species_id": 50000,
       "entity_type": "Hint",
       "offset": {
@@ -7888,6 +8030,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7911,7 +8054,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Suggerimento (Uso singolo)",
+      "name": "Hint (One time)",
       "species_id": 50000,
       "entity_type": "Hint",
       "offset": {
@@ -7942,6 +8085,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -7965,7 +8109,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "Suggerimento (Uso singolo)",
+      "name": "Hint (One time)",
       "species_id": 50000,
       "entity_type": "Hint",
       "offset": {
@@ -7996,6 +8140,7 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -8038,7 +8183,7 @@
           "w": 1,
           "h": 1
         },
-        "number_of_frames": 1
+        "number_of_frames": 4
       },
       "dialogues": [],
       "time_immobilized": 0.0,
@@ -8050,6 +8195,117 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 10472572,
+      "frame": {
+        "x": 42,
+        "y": 44,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Silver Pressure Plate",
+      "species_id": 1054,
+      "entity_type": "PressurePlate",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 8,
+          "y": 4,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "Silver",
+      "original_sprite_frame": {
+        "x": 8,
+        "y": 4,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 10472573,
+      "frame": {
+        "x": 41,
+        "y": 44,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Boulder",
+      "species_id": 1031,
+      "entity_type": "PushableObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 200,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 2,
+          "y": 2,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 2,
+        "y": 2,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
@@ -8069,9 +8325,5 @@
   "creep_spawn_enabled": false,
   "creep_spawn_interval": 0.0,
   "default_biome": "Water",
-  "pressure_plate_down_red": false,
-  "pressure_plate_down_green": false,
-  "pressure_plate_down_blue": false,
-  "pressure_plate_down_silver": false,
-  "pressure_plate_down_yellow": false
+  "light_conditions": "Day"
 }
