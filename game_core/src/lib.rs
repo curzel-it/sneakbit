@@ -2,6 +2,7 @@ use std::{cmp::Ordering, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
 use entities::known_species::SPECIES_KUNAI;
+use features::light_conditions::LightConditions;
 use game_engine::{engine::GameEngine, entity::Entity, inventory::inventory_items_count_for_species};
 use maps::biome_tiles::BiomeTile;
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
@@ -44,16 +45,6 @@ pub extern "C" fn initialize_game(creative_mode: bool) {
     let engine = engine_mut();
     engine.set_creative_mode(creative_mode);
     engine.start();
-}
-
-#[no_mangle]
-pub extern "C" fn test_bool() -> bool {
-    true
-}
-
-#[no_mangle]
-pub extern "C" fn test_logs() {
-    println!("This is a test log")
 }
 
 #[no_mangle]
@@ -333,4 +324,22 @@ pub extern "C" fn select_current_menu_option_at_index(index: u32) {
 #[no_mangle]
 pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
     inventory_items_count_for_species(SPECIES_KUNAI) as i32
+}
+
+#[no_mangle]
+pub extern "C" fn is_day() -> bool {
+    matches!(engine().world.light_conditions, LightConditions::Day)
+}
+
+#[no_mangle]
+pub extern "C" fn is_night() -> bool {
+    matches!(engine().world.light_conditions, LightConditions::Night)
+}
+
+#[no_mangle]
+pub extern "C" fn is_limited_visibility() -> bool {
+    let world = &engine().world;
+    if world.creative_mode { return false }
+    println!("Light conditions: {} {:#?}", world.id, world.light_conditions);
+    matches!(world.light_conditions, LightConditions::CantSeeShit)
 }

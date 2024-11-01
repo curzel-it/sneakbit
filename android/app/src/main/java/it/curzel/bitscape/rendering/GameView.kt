@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import it.curzel.bitscape.engine.GameEngine
+import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
 import kotlinx.coroutines.CoroutineScope
@@ -50,6 +51,10 @@ class GameView @JvmOverloads constructor(
     private var lastUpdateTime: Long = 0L
     private var choreographer: Choreographer = Choreographer.getInstance()
     private var isRunning: Boolean = false
+
+    private val paint = Paint().apply {
+        isAntiAlias = false
+    }
 
     init {
         setBackgroundColor(Color.BLACK)
@@ -98,14 +103,56 @@ class GameView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawColor(Color.BLACK)
+        canvas.drawColor(0xFF000000)
 
         if (engine.canRender) {
             renderBiomeBackground(canvas)
             renderTileMap(canvas)
+            renderNight(canvas)
             renderEntities(canvas)
+            renderLimitedVisibility(canvas)
             renderDebugInfo(canvas)
         }
+    }
+
+    private fun renderLimitedVisibility(canvas: Canvas) {
+        if (!engine.isLimitedVisibility()) { return }
+
+        paint.color = 0xFF000000.toInt()
+
+        val canvasWidth = canvas.width.toFloat()
+        val canvasHeight = canvas.height.toFloat()
+
+        val centerX = canvasWidth / 2f
+        val centerY = canvasHeight / 2f
+
+        val tileSize = NativeLib.TILE_SIZE.toFloat() * engine.renderingScale
+        val visibleAreaSize = tileSize * 9.0f
+        val visibleAreaHalf = visibleAreaSize / 2f
+        val halfTile = tileSize / 2f
+
+        val visibleAreaRect = RectF(
+            halfTile + centerX - visibleAreaHalf,
+            centerY - visibleAreaHalf,
+            halfTile + centerX + visibleAreaHalf,
+            centerY + visibleAreaHalf
+        )
+
+        canvas.drawRect(0f, -200f, canvasWidth, visibleAreaRect.top, paint)
+        canvas.drawRect(0f, visibleAreaRect.bottom, canvasWidth, canvasHeight + 200f, paint)
+        canvas.drawRect(0f, visibleAreaRect.top, visibleAreaRect.left, visibleAreaRect.bottom, paint)
+        canvas.drawRect(visibleAreaRect.right, visibleAreaRect.top, canvasWidth, visibleAreaRect.bottom, paint)
+
+        val spriteId = NativeLib.SPRITE_SHEET_CAVE_DARKNESS
+        val textureRect = IntRect(0, 0, 10, 10)
+        spritesProvider.bitmapFor(spriteId, textureRect)?.let {
+            renderTexture(it, visibleAreaRect, canvas)
+        }
+    }
+
+    private fun renderNight(canvas: Canvas) {
+        if (!engine.isNight()) { return }
+        canvas.drawColor(0x80000000)
     }
 
     private fun renderBiomeBackground(canvas: Canvas) {

@@ -78,7 +78,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
                 NativeLib.SPRITE_SHEET_HUMANOIDS_2X2 to "humanoids_2x2",
                 NativeLib.SPRITE_SHEET_HUMANOIDS_2X3 to "humanoids_2x3",
                 NativeLib.SPRITE_SHEET_AVATARS to "avatars",
-                NativeLib.SPRITE_SHEET_FARM_PLANTS to "farm_plants"
+                NativeLib.SPRITE_SHEET_FARM_PLANTS to "farm_plants",
+                NativeLib.SPRITE_SHEET_CAVE_DARKNESS to "cave_darkness"
             )
         )
     }

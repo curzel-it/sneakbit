@@ -2,8 +2,10 @@
   "hint.read.1001.hint.blessing_received": 1,
   "hint.read.1002.hint.cant_you_hear_me": 1,
   "hint.read.1002.hint.why_no_status_window": 1,
+  "hint.read.1003.hint.comunication_issues": 1,
   "hint.read.1004.hint.dont_enter_portal": 1,
   "hint.read.1004.hint.what_is_that": 1,
   "latest_world": 1002,
-  "previous_world": 1001
+  "lock_override.1727270792": 0,
+  "previous_world": 1727270776
 }

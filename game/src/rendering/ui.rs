@@ -325,14 +325,18 @@ fn render_text(
 }
 
 fn multiline_text_to_vstack(style: &Typography, text: &str) -> View {
-    let lines = text.split("\n");
-    let texts: Vec<View> = lines.map(|line_text|
-        View::Text { 
-            style: *style, 
-            text: line_text.replace("\n", " ").to_string()
-        }
-    ).collect();
-            
+    let texts: Vec<View> = text
+        .lines()
+        .map(|line| line.trim())
+        .filter(|line| !line.is_empty())
+        .map(|line_text| 
+            View::Text { 
+                style: *style, 
+                text: line_text.to_string() 
+            }
+        )
+        .collect();
+
     View::VStack { 
         spacing: Spacing::TextLine(*style), 
         children: texts 

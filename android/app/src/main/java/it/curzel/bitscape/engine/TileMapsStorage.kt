@@ -17,12 +17,10 @@ class TileMapsStorage(private val context: Context) {
             val path = "assets/$worldId-$variant.png"
             try {
                 context.assets.open(path).use { inputStream ->
-                    println("Got input stream")
                     return@mapNotNull BitmapFactory.decodeStream(inputStream)
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
-                println("Left input stream")
                 return@mapNotNull null
             }
         }

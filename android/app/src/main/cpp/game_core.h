@@ -39,6 +39,7 @@
 #define SPRITE_SHEET_HUMANOIDS_2X2 1016
 #define SPRITE_SHEET_FARM_PLANTS 1017
 #define SPRITE_SHEET_HUMANOIDS_2X3 1018
+#define SPRITE_SHEET_CAVE_DARKNESS 1019
 #define SPECIES_HERO 1001
 #define SPECIES_HOUSE_1 1002
 #define SPECIES_HOUSE_2 1003
@@ -124,8 +125,6 @@ typedef struct MenuDescriptorC {
   uint32_t options_count;
 } MenuDescriptorC;
 void initialize_game(bool creative_mode);
-bool test_bool(void);
-void test_logs(void);
 bool is_creative_mode(void);
 bool is_game_running(void);
 void stop_game(void);
@@ -180,4 +179,7 @@ float current_loading_screen_progress(void);
 bool shows_death_screen(void);
 void select_current_menu_option_at_index(uint32_t index);
 int32_t number_of_kunai_in_inventory(void);
+bool is_day(void);
+bool is_night(void);
+bool is_limited_visibility(void);
 #endif  /* GAME_CORE_H */

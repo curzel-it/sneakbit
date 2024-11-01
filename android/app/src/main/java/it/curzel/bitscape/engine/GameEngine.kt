@@ -11,7 +11,6 @@ import android.util.Size
 import androidx.compose.ui.graphics.toArgb
 import it.curzel.bitscape.AssetUtils
 import it.curzel.bitscape.controller.EmulatedKey
-import it.curzel.bitscape.gamecore.EdgeInsets
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
@@ -44,6 +43,8 @@ class GameEngine(
     private val _numberOfKunai = MutableStateFlow(0)
     private val _toastConfig = MutableStateFlow(ToastConfig.none)
     private val _menuConfig = MutableStateFlow(MenuConfig.none)
+    private var _isNight = false
+    private var _isLimitedVisibility = false
 
     var size = Size(0, 0)
     var fps = 0.0
@@ -73,10 +74,6 @@ class GameEngine(
     private val nativeLib = NativeLib()
 
     init {
-        nativeLib.testLogs()
-        val result = nativeLib.testBool()
-        Log.d("MainActivity", "Interop working: $result")
-
         val dataPath = AssetUtils.extractAssetFolder(context, "data", "data")
         val langPath = AssetUtils.extractAssetFolder(context, "lang", "lang")
 
@@ -109,6 +106,8 @@ class GameEngine(
         if (freshWorldId != currentWorldId) {
             println("World changed from $currentWorldId to $freshWorldId")
             currentWorldId = freshWorldId
+            _isNight = nativeLib.isNight()
+            _isLimitedVisibility = nativeLib.isLimitedVisibility()
             keyDown.clear()
             keyPressed.clear()
             updateTileMapImages(freshWorldId)
@@ -155,6 +154,14 @@ class GameEngine(
         return _menuConfig.asStateFlow()
     }
 
+    override fun isNight(): Boolean {
+        return _isNight
+    }
+
+    override fun isLimitedVisibility(): Boolean {
+        return _isLimitedVisibility
+    }
+
     fun renderableItems(): List<RenderableItem> {
         return nativeLib.fetchRenderableItems()
     }
@@ -180,7 +187,7 @@ class GameEngine(
     }
 
     fun tileMapImage(): Bitmap? {
-        return tileMapImages.getOrNull(currentBiomeVariant)
+        return tileMapImages.getOrNull(currentBiomeVariant) ?: tileMapImages.firstOrNull()
     }
 
     private fun renderingFrame(frame: IntRect, offset: Vector2d = Vector2d(0.0f, 0.0f)): RectF {

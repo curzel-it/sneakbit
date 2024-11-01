@@ -89,7 +89,7 @@ fn parse_strings_content(content: &str) -> HashMap<String, String> {
                 panic!("Expected '\"' at position {}", pos);
             };
 
-            strings_map.insert(key, cleanup_accents(value));
+            strings_map.insert(key, cleaned(value));
         } else {
             panic!("Expected '\"' at position {}", pos);
         }
@@ -98,18 +98,19 @@ fn parse_strings_content(content: &str) -> HashMap<String, String> {
     strings_map
 }
 
-fn cleanup_accents(original: String) -> String {
+fn cleaned(original: String) -> String {
     original
-    .replace("à", "a`")
-    .replace("è", "e`")
-    .replace("ì", "i`")
-    .replace("ò", "o`")
-    .replace("ù", "u`")
-    .replace("À", "A`")
-    .replace("È", "E`")
-    .replace("Ì", "I`")
-    .replace("Ò", "O`")
-    .replace("Ù", "U`")
+        .replace("à", "a`")
+        .replace("è", "e`")
+        .replace("ì", "i`")
+        .replace("ò", "o`")
+        .replace("ù", "u`")
+        .replace("À", "A`")
+        .replace("È", "E`")
+        .replace("Ì", "I`")
+        .replace("Ò", "O`")
+        .replace("Ù", "U`")
+        .replace("\r\n", "\n")
 }
 
 fn skip_whitespace(chars: &[char], pos: &mut usize) {
