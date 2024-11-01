@@ -813,7 +813,7 @@
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": {
-        "world": 1727517349,
+        "world": 1016,
         "x": 0,
         "y": 0
       },
@@ -1154,7 +1154,7 @@
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": {
-        "world": 1727522894,
+        "world": 1021,
         "x": 0,
         "y": 0
       },
@@ -1514,7 +1514,7 @@
     {
       "id": 1727533496,
       "frame": {
-        "x": 69,
+        "x": 60,
         "y": 61,
         "w": 1,
         "h": 1
@@ -1523,10 +1523,10 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": -10.736568,
+        "x": 1.8101983,
         "y": 0.0
       },
-      "direction": "Left",
+      "direction": "Right",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,

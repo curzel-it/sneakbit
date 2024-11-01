@@ -1,5 +1,5 @@
 {
-  "id": 1727522879,
+  "id": 1015,
   "biome_tiles": {
     "tiles": [
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -95,7 +95,7 @@
       "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "444440044440000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "444444444440000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -172,239 +172,15 @@
   },
   "entities": [
     {
-      "id": 1727522882,
-      "frame": {
-        "x": 5,
-        "y": 8,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Teleporter",
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1008,
-        "frame": {
-          "x": 0,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": {
-        "world": 1004,
-        "x": 0,
-        "y": 0
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 0,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 1727522883,
-      "frame": {
-        "x": 6,
-        "y": 8,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Teleporter",
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1008,
-        "frame": {
-          "x": 0,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": {
-        "world": 1004,
-        "x": 0,
-        "y": 0
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 0,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 1727522884,
-      "frame": {
-        "x": 8,
-        "y": 0,
-        "w": 5,
-        "h": 5
-      },
-      "name": "building.name.villa",
-      "species_id": 1010,
-      "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1004,
-        "frame": {
-          "x": 25,
-          "y": 5,
-          "w": 5,
-          "h": 5
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 25,
-        "y": 5,
-        "w": 5,
-        "h": 5
-      },
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 1727522885,
+      "id": 1727478125,
       "frame": {
         "x": 8,
         "y": 1,
         "w": 1,
-        "h": 1
-      },
-      "name": "Teleporter",
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1008,
-        "frame": {
-          "x": 0,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": {
-        "world": 1727522880,
-        "x": 0,
-        "y": 0
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 0,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 1727522886,
-      "frame": {
-        "x": 1,
-        "y": 4,
-        "w": 2,
         "h": 2
       },
-      "name": "Table",
-      "species_id": 1016,
+      "name": "Stairs (Down)",
+      "species_id": 1011,
       "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
@@ -413,13 +189,13 @@
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": true,
-      "z_index": 200,
+      "z_index": 1000,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
-          "x": 4,
+          "x": 2,
           "y": 0,
-          "w": 2,
+          "w": 1,
           "h": 2
         },
         "number_of_frames": 1
@@ -429,9 +205,9 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 4,
+        "x": 2,
         "y": 0,
-        "w": 2,
+        "w": 1,
         "h": 2
       },
       "speed_multiplier": 1.0,
@@ -449,16 +225,16 @@
       "demands_attention": false
     },
     {
-      "id": 1727522887,
+      "id": 1727478126,
       "frame": {
-        "x": 1,
-        "y": 4,
+        "x": 8,
+        "y": 2,
         "w": 1,
         "h": 1
       },
-      "name": "Green Seat",
-      "species_id": 1013,
-      "entity_type": "StaticObject",
+      "name": "Teleporter",
+      "species_id": 1019,
+      "entity_type": "Teleporter",
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -466,12 +242,12 @@
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 100,
+      "z_index": 200,
       "sprite": {
-        "sheet_id": 1010,
+        "sheet_id": 1008,
         "frame": {
-          "x": 3,
-          "y": 1,
+          "x": 0,
+          "y": 0,
           "w": 1,
           "h": 1
         },
@@ -479,170 +255,15 @@
       },
       "dialogues": [],
       "time_immobilized": 0.0,
-      "destination": null,
+      "destination": {
+        "world": 1014,
+        "x": 0,
+        "y": 0
+      },
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 3,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 1727522888,
-      "frame": {
-        "x": 2,
-        "y": 4,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Green Seat",
-      "species_id": 1013,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 100,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 3,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 1727522889,
-      "frame": {
-        "x": 1,
-        "y": 6,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Green Seat",
-      "species_id": 1013,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 100,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 3,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 1727522890,
-      "frame": {
-        "x": 2,
-        "y": 6,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Green Seat",
-      "species_id": 1013,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 100,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 3,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 1,
+        "x": 0,
+        "y": 0,
         "w": 1,
         "h": 1
       },

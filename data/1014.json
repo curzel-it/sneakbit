@@ -1,5 +1,5 @@
 {
-  "id": 1727518222,
+  "id": 1014,
   "biome_tiles": {
     "tiles": [
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -172,7 +172,7 @@
   },
   "entities": [
     {
-      "id": 1727518225,
+      "id": 1727478116,
       "frame": {
         "x": 5,
         "y": 8,
@@ -203,7 +203,7 @@
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": {
-        "world": 1004,
+        "world": 1002,
         "x": 0,
         "y": 0
       },
@@ -229,7 +229,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727518226,
+      "id": 1727478117,
       "frame": {
         "x": 6,
         "y": 8,
@@ -260,7 +260,7 @@
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": {
-        "world": 1004,
+        "world": 1002,
         "x": 0,
         "y": 0
       },
@@ -286,7 +286,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727518227,
+      "id": 1727478118,
       "frame": {
         "x": 8,
         "y": 0,
@@ -339,7 +339,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727518228,
+      "id": 1727478119,
       "frame": {
         "x": 8,
         "y": 1,
@@ -370,7 +370,7 @@
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": {
-        "world": 1727518223,
+        "world": 1015,
         "x": 0,
         "y": 0
       },
@@ -396,7 +396,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727518229,
+      "id": 1727478120,
       "frame": {
         "x": 1,
         "y": 4,
@@ -449,7 +449,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727518230,
+      "id": 1727478121,
       "frame": {
         "x": 1,
         "y": 4,
@@ -502,7 +502,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727518231,
+      "id": 1727478122,
       "frame": {
         "x": 2,
         "y": 4,
@@ -555,7 +555,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727518232,
+      "id": 1727478123,
       "frame": {
         "x": 1,
         "y": 6,
@@ -608,7 +608,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727518233,
+      "id": 1727478124,
       "frame": {
         "x": 2,
         "y": 6,

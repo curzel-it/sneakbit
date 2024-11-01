@@ -1,15 +1,16 @@
 {
-  "id": 1727270776,
+  "id": 1021,
+  "revision": 0,
   "biome_tiles": {
     "tiles": [
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "066666666660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "066666666660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "066666666660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "066666666660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "066666666660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "066666666660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "066666666666000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "066666666666000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "066666666666000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "066666666666000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "066666666666000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "066666666666000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -87,15 +88,15 @@
   },
   "constructions_tiles": {
     "tiles": [
-      "444444444440000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "466666444440000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "466666000050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "400000055550000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "444444444444000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "444444444444000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "400005000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "455555000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "400000000055000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "400000000050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "400000000050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-      "444440044440000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "444440044444000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -172,7 +173,7 @@
   },
   "entities": [
     {
-      "id": 1727270779,
+      "id": 1727522897,
       "frame": {
         "x": 5,
         "y": 8,
@@ -191,10 +192,10 @@
       "is_rigid": false,
       "z_index": 200,
       "sprite": {
-        "sheet_id": 1008,
+        "sheet_id": 1010,
         "frame": {
-          "x": 0,
-          "y": 0,
+          "x": 7,
+          "y": 5,
           "w": 1,
           "h": 1
         },
@@ -203,17 +204,19 @@
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": {
-        "world": 1002,
+        "world": 1004,
         "x": 0,
         "y": 0
       },
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 0,
-        "y": 0,
+        "x": 7,
+        "y": 5,
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
+      "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
       "is_dying": false,
@@ -229,7 +232,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727270780,
+      "id": 1727522898,
       "frame": {
         "x": 6,
         "y": 8,
@@ -248,10 +251,10 @@
       "is_rigid": false,
       "z_index": 200,
       "sprite": {
-        "sheet_id": 1008,
+        "sheet_id": 1010,
         "frame": {
-          "x": 0,
-          "y": 0,
+          "x": 7,
+          "y": 5,
           "w": 1,
           "h": 1
         },
@@ -260,17 +263,19 @@
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": {
-        "world": 1002,
+        "world": 1004,
         "x": 0,
         "y": 0
       },
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 0,
-        "y": 0,
+        "x": 7,
+        "y": 5,
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
+      "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
       "is_dying": false,
@@ -286,7 +291,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727270781,
+      "id": 1727522899,
       "frame": {
         "x": 8,
         "y": 0,
@@ -302,7 +307,7 @@
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 1000,
       "sprite": {
         "sheet_id": 1010,
@@ -324,6 +329,8 @@
         "w": 1,
         "h": 2
       },
+      "movement_directions": "None",
+      "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
       "is_dying": false,
@@ -339,7 +346,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727270782,
+      "id": 1727522900,
       "frame": {
         "x": 8,
         "y": 1,
@@ -358,10 +365,10 @@
       "is_rigid": false,
       "z_index": 200,
       "sprite": {
-        "sheet_id": 1008,
+        "sheet_id": 1010,
         "frame": {
-          "x": 0,
-          "y": 0,
+          "x": 7,
+          "y": 5,
           "w": 1,
           "h": 1
         },
@@ -370,17 +377,19 @@
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": {
-        "world": 1727270777,
+        "world": 1022,
         "x": 0,
         "y": 0
       },
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 0,
-        "y": 0,
+        "x": 7,
+        "y": 5,
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
+      "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
       "is_dying": false,
@@ -396,7 +405,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727270783,
+      "id": 1727522901,
       "frame": {
         "x": 1,
         "y": 4,
@@ -412,7 +421,7 @@
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
@@ -434,6 +443,8 @@
         "w": 2,
         "h": 2
       },
+      "movement_directions": "None",
+      "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
       "is_dying": false,
@@ -449,7 +460,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727270784,
+      "id": 1727522902,
       "frame": {
         "x": 1,
         "y": 4,
@@ -487,6 +498,8 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
+      "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
       "is_dying": false,
@@ -502,7 +515,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727270785,
+      "id": 1727522903,
       "frame": {
         "x": 2,
         "y": 4,
@@ -540,6 +553,8 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
+      "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
       "is_dying": false,
@@ -555,7 +570,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727270786,
+      "id": 1727522904,
       "frame": {
         "x": 1,
         "y": 6,
@@ -593,6 +608,8 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
+      "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
       "is_dying": false,
@@ -608,7 +625,7 @@
       "demands_attention": false
     },
     {
-      "id": 1727270787,
+      "id": 1727522905,
       "frame": {
         "x": 2,
         "y": 6,
@@ -646,6 +663,8 @@
         "w": 1,
         "h": 1
       },
+      "movement_directions": "None",
+      "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
       "is_dying": false,
@@ -661,15 +680,15 @@
       "demands_attention": false
     },
     {
-      "id": 1727289072,
+      "id": 1727723123,
       "frame": {
-        "x": 9,
-        "y": 0,
+        "x": 3,
+        "y": 2,
         "w": 1,
-        "h": 2
+        "h": 1
       },
-      "name": "Brown Scroll",
-      "species_id": 10002,
+      "name": "Orange Seat",
+      "species_id": 1015,
       "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
@@ -677,15 +696,15 @@
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 300,
+      "is_rigid": false,
+      "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
-          "x": 0,
-          "y": 5,
+          "x": 3,
+          "y": 2,
           "w": 1,
-          "h": 2
+          "h": 1
         },
         "number_of_frames": 1
       },
@@ -694,11 +713,68 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 0,
+        "x": 3,
+        "y": 2,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 1727723120,
+      "frame": {
+        "x": 11,
         "y": 5,
         "w": 1,
-        "h": 2
+        "h": 1
       },
+      "name": "Pink Seat",
+      "species_id": 1014,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 3,
+          "y": 3,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 3,
+        "y": 3,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
       "is_dying": false,
@@ -706,20 +782,126 @@
         0,
         0
       ],
-      "contents": "1002.scroll.hidden_monsters_hint",
+      "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
-      "is_invulnerable": false,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 1727723124,
+      "frame": {
+        "x": 2,
+        "y": 2,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Orange Seat",
+      "species_id": 1015,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 3,
+          "y": 2,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 3,
+        "y": 2,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 1727723122,
+      "frame": {
+        "x": 4,
+        "y": 2,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Orange Seat",
+      "species_id": 1015,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 3,
+          "y": 2,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 3,
+        "y": 2,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
       "demands_attention": false
     }
   ],
   "creep_spawn_enabled": false,
   "creep_spawn_interval": 5.0,
   "default_biome": "Nothing",
-  "pressure_plate_down_red": false,
-  "pressure_plate_down_green": false,
-  "pressure_plate_down_blue": false,
-  "pressure_plate_down_silver": false,
-  "pressure_plate_down_yellow": false
+  "light_conditions": "Day"
 }
