@@ -1,7 +1,7 @@
 use game_core::{camera_viewport, camera_viewport_offset, can_render_frame, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, engine, is_limited_visibility, is_night};
 use raylib::prelude::*;
 
-use super::{entities::render_entities, tiles::render_tiles, ui::{get_rendering_config, render_layout}};
+use super::{entities::render_entities, tile_map::render_tile_map, tiles::render_tiles, ui::{get_rendering_config, render_layout}};
 
 pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
     let engine = engine();
@@ -18,13 +18,21 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
         let camera_viewport = camera_viewport();
         let camera_viewport_offset = camera_viewport_offset();
 
-        render_tiles(
-            &mut d, 
-            &camera_viewport, 
-            &camera_viewport_offset,
-            &world.biome_tiles.tiles,
-            &world.constructions_tiles.tiles
-        );
+        if world.creative_mode {
+            render_tiles(
+                &mut d, 
+                &camera_viewport, 
+                &camera_viewport_offset,
+                &world.biome_tiles.tiles,
+                &world.constructions_tiles.tiles
+            );
+        } else {
+            render_tile_map(
+                &mut d, 
+                &camera_viewport, 
+                &camera_viewport_offset
+            );
+        }
         render_night(&mut d, screen_width, screen_height);
         render_entities(&mut d, &camera_viewport, &camera_viewport_offset);
         render_limited_visibility(&mut d, screen_width, screen_height);

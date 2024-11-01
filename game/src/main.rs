@@ -3,13 +3,14 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_world_id, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
 use raylib::{ffi::{KeyboardKey, MouseButton}, texture::Texture2D, window::{get_current_monitor, get_monitor_refresh_rate}, RaylibHandle, RaylibThread};
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
 
 fn main() {
     let mut needs_window_init = true;
+    let mut latest_world_id = 0;
     let creative_mode = env::args().any(|arg| arg == "creative");
 
     initialize_config_paths(
@@ -40,6 +41,13 @@ fn main() {
         handle_keyboard_updates(&mut rl, time_since_last_update);
         handle_mouse_updates(&mut rl, get_rendering_config().rendering_scale);
         update_game(time_since_last_update);
+
+        let current_world = current_world_id(); 
+        if latest_world_id != current_world {
+            latest_world_id = current_world;
+            load_tile_map_textures(&mut rl, &thread, current_world);
+        }
+
         render_frame(&mut rl, &thread);  
     }
 }
@@ -115,8 +123,19 @@ fn load_textures(rl: &mut RaylibHandle, thread: &RaylibThread) -> HashMap<u32, T
     textures.insert(SPRITE_SHEET_HUMANOIDS_2X3, texture(rl, thread, "humanoids_2x3").unwrap());
     textures.insert(SPRITE_SHEET_AVATARS, texture(rl, thread, "avatars").unwrap());     
     textures.insert(SPRITE_SHEET_FARM_PLANTS, texture(rl, thread, "farm_plants").unwrap());    
-    textures.insert(SPRITE_SHEET_CAVE_DARKNESS, texture(rl, thread, "cave_darkness").unwrap());         
-    textures
+    textures.insert(SPRITE_SHEET_CAVE_DARKNESS, texture(rl, thread, "cave_darkness").unwrap()); 
+    textures        
+}
+
+fn load_tile_map_textures(rl: &mut RaylibHandle, thread: &RaylibThread, world_id: u32) {
+    let config = get_rendering_config_mut();
+    
+    (0..BIOME_NUMBER_OF_FRAMES).for_each(|variant| {
+        let key = world_id * 10 + variant as u32;
+        println!("Loading biome variant: {}", key);
+        let filename = format!("{}-{}", world_id, variant);
+        config.textures.insert(key, texture(rl, thread, &filename).unwrap());
+    });
 }
 
 fn texture(rl: &mut RaylibHandle, thread: &RaylibThread, name: &str) -> Option<Texture2D> {
