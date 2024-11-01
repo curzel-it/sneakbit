@@ -120,8 +120,7 @@ fn load_textures(rl: &mut RaylibHandle, thread: &RaylibThread) -> HashMap<u32, T
 }
 
 fn texture(rl: &mut RaylibHandle, thread: &RaylibThread, name: &str) -> Option<Texture2D> {
-    let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    path.push("..");
+    let mut path = root_path();
     path.push("assets");
     path.push(format!("{}.png", name));
 
@@ -192,6 +191,12 @@ fn rendering_scale_for_screen_width(width: f32) -> (f32, f32) {
 }
 
 fn local_path(filename: &str) -> PathBuf {
+    let mut path = root_path();
+    path.push(filename);
+    path
+}
+
+fn root_path() -> PathBuf {
     let cargo_manifest_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let exe_path = env::current_exe().unwrap_or(cargo_manifest_path);
     let exe_str = exe_path.to_str().unwrap();
@@ -203,7 +208,6 @@ fn local_path(filename: &str) -> PathBuf {
 
     let mut path = PathBuf::from(base);
     path.push("..");
-    path.push(filename);
     path
 }
 
