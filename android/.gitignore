@@ -1,3 +1,9 @@
+Rust/
+app/src/main/assets/data
+app/src/main/assets/lang
+app/src/main/assets/assets
+app/src/main/cpp/game_core.h
+
 *.iml
 .gradle
 /local.properties
