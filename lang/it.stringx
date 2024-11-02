@@ -65,6 +65,8 @@ Puoi cambiare quanto segue:
 "npc.name.deamon_lord" = "Signore Oscuro"
 "npc.name.goddess" = "Dea"
 "npc.name.wizard" = "Mago"
+"npc.name.ninja.blue" = "Ninja Blu"
+"npc.name.ninja.dark" = "Ninja Oscuro"
 "npc.name.old_man" = "Vecchio"
 "npc.name.old_woman" = "Vecchia"
 "npc.name.shop_clerk" = "Venditore"
@@ -302,4 +304,18 @@ Bla bla bla
 Grazie ancora.
 Ora puoi andare...
 (Lo sviluppatore non aveva sbatta di scrivere un dialogo come si deve, lol)
+"""
+
+"bullet_catcher_skill_intro" = """
+Mi sembri una persona affidabile...
+Ok, ti insegnerò a prendere i pugnali mentre sono in volo!
+"""
+
+"bullet_boomerang_skill_intro" = """
+Non mi sembre una persona molto responsabile...
+Ok, ora ti insegno a far rimbalzare i pugnali quando li lanci!
+"""
+
+"good_luck" = """
+Buona fortuna!
 """

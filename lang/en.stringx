@@ -64,6 +64,8 @@ You can change the following:
 "npc.name.deamon_lord" = "Demon Lord"
 "npc.name.goddess" = "Goddess"
 "npc.name.wizard" = "Wizard"
+"npc.name.ninja.blue" = "Blue Ninja"
+"npc.name.ninja.dark" = "Dark Ninja"
 "npc.name.old_man" = "Old Man"
 "npc.name.old_woman" = "Old Lady"
 "npc.name.shop_clerk" = "Shop Guy"
@@ -299,4 +301,18 @@ Bla bla bla
 Once again, thank you.
 You might go now.
 (The developer didn't bother adding further dialogue, lol)
+"""
+
+"bullet_catcher_skill_intro" = """
+You seem to be a responsible person...
+Ok, I'll teach you how to catch knifes mid-air!
+"""
+
+"bullet_boomerang_skill_intro" = """
+You seem to be a terrible person...
+Ok, I'll teach you how to throw knifes like boomerangs!
+"""
+
+"good_luck" = """
+Good luck!
 """

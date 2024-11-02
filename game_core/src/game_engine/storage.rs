@@ -21,11 +21,11 @@ impl StorageKey {
     }
 
     fn has_boomerang_skill() -> String {
-        "has_boomerang_skill".to_owned()
+        "dialogue.answer.bullet_boomerang_skill_intro".to_owned()
     }
 
     fn has_bullet_catcher_skill() -> String {
-        "has_bullet_catcher_skill".to_owned()
+        "dialogue.answer.bullet_catcher_skill_intro".to_owned()
     }
 }
 
