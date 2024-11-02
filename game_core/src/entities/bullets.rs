@@ -23,12 +23,11 @@ impl Entity {
             return vec![]
         }
 
-        let updates = self.check_hits(world);
+        let updates = self.check_stoppers(world);
         if !updates.is_empty() {
             return updates
         }
-
-        self.check_stoppers(world)
+        self.check_hits(world)
     }
 
     fn check_hits(&self, world: &World) -> Vec<WorldStateUpdate> {
@@ -53,10 +52,11 @@ impl Entity {
         if self.frame.y as usize >= world.constructions_tiles.tiles.len() { return vec![] }
         
         let construction = world.constructions_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
-        if construction.tile_type.stops_bullets() {
+        let hit = world.entities_map[self.frame.y as usize][self.frame.x as usize];
+
+        if construction.tile_type.stops_bullets() || world.is_building(hit) {
             return vec![WorldStateUpdate::RemoveEntity(self.id)]
         }
-
         vec![]
     }
 

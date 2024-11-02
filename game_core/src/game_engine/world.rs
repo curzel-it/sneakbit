@@ -15,6 +15,7 @@ pub struct World {
     pub entities: RefCell<Vec<Entity>>,    
     pub visible_entities: HashSet<(usize, u32)>,
     melee_attackers: HashSet<u32>,
+    buildings: HashSet<u32>,
     pub cached_hero_props: EntityProps,
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
@@ -66,15 +67,13 @@ impl World {
             pressure_plate_down_silver: false,
             pressure_plate_down_yellow: false,
             melee_attackers: hash_set![],
+            buildings: hash_set![],
             light_conditions: LightConditions::Day
         }
     }
 
     pub fn add_entity(&mut self, entity: Entity) -> (usize, u32) {
         let id = entity.id;
-        if entity.melee_attacks_hero {
-            self.melee_attackers.insert(id);
-        }
 
         let mut entities = self.entities.borrow_mut();        
         let new_index = entities.len();
@@ -84,6 +83,12 @@ impl World {
 
         if let Some(lock_type) = lock_override(&id) {
             entities[new_index].lock_type = lock_type;
+        }
+        if entities[new_index].melee_attacks_hero {
+            self.melee_attackers.insert(id);
+        }
+        if matches!(entities[new_index].entity_type, EntityType::Building) {
+            self.buildings.insert(id);
         }
 
         (new_index, id)
@@ -100,8 +105,12 @@ impl World {
     fn remove_entity_at_index(&mut self, index: usize) {
         let entities = self.entities.borrow();
         let entity = &entities[index];
+        
         if entity.melee_attacks_hero {
             self.melee_attackers.remove(&entity.id);
+        }
+        if matches!(entity.entity_type, EntityType::Building) {
+            self.buildings.remove(&entity.id);
         }
         drop(entities);
 
@@ -439,6 +448,10 @@ impl World {
 impl World {
     pub fn is_creep(&self, id: u32) -> bool {
         self.melee_attackers.contains(&id)
+    }
+
+    pub fn is_building(&self, id: u32) -> bool {
+        self.buildings.contains(&id)
     }
 
     pub fn is_pressure_plate_down(&self, lock_type: &LockType) -> bool {

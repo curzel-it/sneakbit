@@ -1576,6 +1576,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             8,
             8
@@ -1597,6 +1598,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             7,
             6
