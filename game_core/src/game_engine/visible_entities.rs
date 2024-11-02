@@ -6,9 +6,9 @@ use super::world::World;
 
 impl World {
     pub fn compute_visible_entities(&self, viewport: &IntRect) -> HashSet<(usize, u32)> {
-        let min_row = viewport.y;
+        let min_row = viewport.y - 1;
         let max_row = viewport.y + viewport.h + 1;
-        let min_col = viewport.x;
+        let min_col = viewport.x - 1;
         let max_col = viewport.x + viewport.w + 1;
 
         self.entities.borrow().iter()
