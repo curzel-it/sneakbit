@@ -7,8 +7,8 @@ import subprocess
 tile_size = 16
 aseprite_path = "/Applications/Aseprite.app/Contents/MacOS/aseprite"
 biomes = "grass desert rock snow water".split(" ")
-aseprite_assets = "../aseprite"
-pngs_folder = "../assets"
+aseprite_assets = "aseprite"
+pngs_folder = "assets"
 
 combinations = {
     "n": (4, -90),

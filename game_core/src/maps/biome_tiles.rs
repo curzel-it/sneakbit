@@ -237,6 +237,15 @@ impl Biome {
     }
 }
 
+impl Biome {
+    pub fn stops_bullets(&self) -> bool {
+        match self {
+            Biome::Nothing => true,
+            _ => false
+        }
+    }
+}
+
 impl TileSet<BiomeTile> {
     pub fn update_tile(&mut self, row: usize, col: usize, new_biome: Biome) {
         if row >= self.tiles.len() || col >= self.tiles[0].len() {

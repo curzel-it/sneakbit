@@ -196,7 +196,7 @@ def main(json_file_path: str, output_image_path: str, variant: int):
         sys.exit(1)
 
     # Initialize SpritesProvider
-    sprites_provider = SpritesProvider("../assets", {1002: "tiles_biome", 1003: "tiles_constructions"})
+    sprites_provider = SpritesProvider("assets", {1002: "tiles_biome", 1003: "tiles_constructions"})
 
     # Initialize TileMapImageGenerator
     tile_map_generator = TileMapImageGenerator(sprites_provider)
@@ -218,9 +218,9 @@ def main(json_file_path: str, output_image_path: str, variant: int):
         print("Failed to generate tile map image.")
 
 if __name__ == "__main__":
-    for filename in os.listdir("../data"):
+    for filename in os.listdir("data"):
         if not bool(re.match(r"^\d+\.json$", filename)): continue
         world_id = filename.split(".")[0]
 
         for variant in range(0, 4):
-            main(f"../data/{filename}", f"../assets/{world_id}-{variant}.png", variant)
+            main(f"data/{filename}", f"assets/{world_id}-{variant}.png", variant)

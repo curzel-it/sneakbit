@@ -4,8 +4,8 @@ import subprocess
 from PIL import Image
 
 aseprite_path = "/Applications/Aseprite.app/Contents/MacOS/aseprite"
-aseprite_assets = "../aseprite"
-pngs_folder = "../assets"
+aseprite_assets = "aseprite"
+pngs_folder = "assets"
 
 def export_aseprite(file_path, destination_folder):
     filename = file_path.split("/")[-1]

@@ -1283,7 +1283,7 @@
         "name": "objects.name.kunai",
         "entity_type": "Bullet",
         "z_index": 300,
-        "base_speed": 6.0,
+        "base_speed": 8.0,
         "is_rigid": false,
         "inventory_texture_offset": [
             7,
@@ -1534,6 +1534,7 @@
         "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": false,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             7,
             5
@@ -1555,6 +1556,7 @@
         "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": false,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             7,
             11
@@ -1642,6 +1644,7 @@
         "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": false,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             7,
             8

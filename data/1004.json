@@ -892,7 +892,7 @@
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
-      "is_invulnerable": false,
+      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -1508,13 +1508,13 @@
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
-      "is_invulnerable": false,
+      "is_invulnerable": true,
       "demands_attention": false
     },
     {
       "id": 1727533496,
       "frame": {
-        "x": 60,
+        "x": 66,
         "y": 61,
         "w": 1,
         "h": 1
@@ -1523,7 +1523,7 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": 1.8101983,
+        "x": 12.146815,
         "y": 0.0
       },
       "direction": "Right",
@@ -1783,7 +1783,7 @@
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
-      "is_invulnerable": false,
+      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -1838,7 +1838,7 @@
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
-      "is_invulnerable": false,
+      "is_invulnerable": true,
       "demands_attention": false
     },
     {

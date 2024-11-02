@@ -51,10 +51,11 @@ impl Entity {
         if self.frame.y < 0 { return vec![] }
         if self.frame.y as usize >= world.constructions_tiles.tiles.len() { return vec![] }
         
-        let construction = world.constructions_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
+        let construction = &world.constructions_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
+        let biome = &world.biome_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
         let hit = world.entities_map[self.frame.y as usize][self.frame.x as usize];
 
-        if construction.tile_type.stops_bullets() || world.is_building(hit) {
+        if construction.tile_type.stops_bullets() || biome.tile_type.stops_bullets() || world.is_building(hit) {
             return vec![WorldStateUpdate::RemoveEntity(self.id)]
         }
         vec![]
