@@ -140,8 +140,8 @@ class GameView @JvmOverloads constructor(
 
         canvas.drawRect(0f, -200f, canvasWidth, visibleAreaRect.top, paint)
         canvas.drawRect(0f, visibleAreaRect.bottom, canvasWidth, canvasHeight + 200f, paint)
-        canvas.drawRect(0f, visibleAreaRect.top, visibleAreaRect.left, visibleAreaRect.bottom, paint)
-        canvas.drawRect(visibleAreaRect.right, visibleAreaRect.top, canvasWidth, visibleAreaRect.bottom, paint)
+        canvas.drawRect(-200f, visibleAreaRect.top, visibleAreaRect.left, visibleAreaRect.bottom, paint)
+        canvas.drawRect(visibleAreaRect.right, visibleAreaRect.top, canvasWidth + 200f, visibleAreaRect.bottom, paint)
 
         val spriteId = NativeLib.SPRITE_SHEET_CAVE_DARKNESS
         val textureRect = IntRect(0, 0, 10, 10)
