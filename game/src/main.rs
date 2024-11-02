@@ -27,7 +27,7 @@ fn main() {
     rl.set_window_min_size(360, 240);
         
     while is_game_running() {
-        let time_since_last_update = rl.get_frame_time().min(0.1);
+        let time_since_last_update = rl.get_frame_time().min(0.5);
 
         if needs_window_init || rl.is_window_resized() {
             needs_window_init = false;

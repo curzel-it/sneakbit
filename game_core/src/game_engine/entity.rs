@@ -95,7 +95,6 @@ fn one() -> f32 {
 
 impl Entity {
     pub fn update(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {      
-        let time_since_last_update = time_since_last_update.min(0.1);
         let mut updates = match self.entity_type {
             EntityType::Hero => self.update_hero(world, time_since_last_update),
             EntityType::Npc => self.update_npc(world, time_since_last_update),

@@ -82,7 +82,7 @@ impl World {
 
 impl Entity {
     fn has_weight(&self) -> bool {
-        self.species_id != SPECIES_DEEP_HOLE && !matches!(self.entity_type, EntityType::PressurePlate)
+        self.species_id != SPECIES_DEEP_HOLE && !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate)
     }
 }
 
