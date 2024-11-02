@@ -2470,7 +2470,7 @@
         "entity_type": "Npc",
         "z_index": 150,
         "base_speed": 1.0,
-        "is_rigid": true,
+        "is_rigid": false,
         "inventory_texture_offset": [
             2,
             10

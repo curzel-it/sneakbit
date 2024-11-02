@@ -6,22 +6,26 @@ struct ControllerEmulatorView: View {
     @StateObject private var viewModel = ControllerEmulatorViewModel()
     
     var body: some View {
-        ZStack {
-            JoystickView()
+        GeometryReader { geo in
+            let isLandscape = geo.size.width >= geo.size.height
             
-            HStack(spacing: KeyEmulatorView.size.height / 3) {
-                KeyEmulatorView(key: .attack).padding(.bottom, KeyEmulatorView.size.height)
-                KeyEmulatorView(key: .confirm)
+            HStack(spacing: .zero) {
+                HStack(spacing: .zero) {
+                    KeyEmulatorView(key: .attack).padding(.bottom, 30)
+                    KeyEmulatorView(key: .confirm)
+                }
+                .positioned(.leadingBottom)
+                .padding(.leading, isLandscape ? 85 : 20)
+                .padding(.trailing, viewModel.safeAreaInsets.right)
+                .padding(.leading, viewModel.safeAreaInsets.left)
+                .padding(.bottom, isLandscape ? 120 : 140)
+                
+                JoystickView()
+                    .padding(.leading, -100)
             }
-            .positioned(.leadingBottom)
+            .padding(.top, viewModel.safeAreaInsets.top)
+            .padding(.bottom, viewModel.safeAreaInsets.bottom)
         }
-        .padding(.horizontal)
-        .positioned(.bottom)
-        .padding(.top, viewModel.safeAreaInsets.top)
-        .padding(.trailing, viewModel.safeAreaInsets.right)
-        .padding(.bottom, viewModel.safeAreaInsets.bottom)
-        .padding(.leading, viewModel.safeAreaInsets.left)
-        .padding(.bottom, 80)
     }
 }
 
@@ -30,5 +34,9 @@ private class ControllerEmulatorViewModel: ObservableObject {
     
     var safeAreaInsets: UIEdgeInsets {
         engine.safeAreaInsets
+    }
+    
+    var isLandscape: Bool {
+        engine.isLandscape
     }
 }

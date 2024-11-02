@@ -3,7 +3,7 @@ import SwiftUI
 import Schwifty
 
 struct KeyEmulatorView: View {
-    static let size = CGSize(width: 56, height: 56)
+    static let size = CGSize(width: 60, height: 60)
     static let iconSize = CGSize(width: 24, height: 24)
     
     let key: EmulatedKey
@@ -16,6 +16,8 @@ struct KeyEmulatorView: View {
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: KeyEmulatorView.size.width, height: KeyEmulatorView.size.height)
+            .padding(15)
+            .contentShape(Rectangle())
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { _ in

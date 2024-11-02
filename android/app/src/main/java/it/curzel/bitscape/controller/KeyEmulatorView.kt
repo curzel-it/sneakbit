@@ -2,6 +2,7 @@ package it.curzel.bitscape.controller
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,7 +35,8 @@ fun KeyEmulatorView(
         contentScale = ContentScale.FillBounds,
         filterQuality = FilterQuality.None,
         modifier = modifier
-            .size(56.dp)
+            .size(90.dp)
+            .padding(15.dp)
             .pointerInput(key) {
                 detectTapGestures(
                     onPress = {
