@@ -2,6 +2,7 @@ pub const SPECIES_HERO: u32 = 1001;
 pub const SPECIES_HOUSE_1: u32 = 1002;
 pub const SPECIES_HOUSE_2: u32 = 1003;
 pub const SPECIES_HOUSE_3: u32 = 1004;
+pub const SPECIES_HOUSE_SMALL_1: u32 = 1033;
 pub const SPECIES_VILLA_2: u32 = 1010;
 pub const SPECIES_HOUSE_TWO_FLOORS_1: u32 = 1005;
 pub const SPECIES_HOUSE_TWO_FLOORS_2: u32 = 1006;

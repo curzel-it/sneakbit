@@ -2485,5 +2485,27 @@
         "sprite_number_of_frames": 4,
         "lock_type": "None",
         "movement_directions": "Free"
+    },
+    {
+        "id": 1033,
+        "name": "building.name.house",
+        "entity_type": "Building",
+        "is_invulnerable": true,
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            12
+        ],
+        "sprite_frame": {
+            "x": 31,
+            "y": 7,
+            "w": 4,
+            "h": 3
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
     }
 ]

@@ -2,8 +2,8 @@
   "dialogue.answer.1004.old_lady.talk_to_my_husband": 1,
   "dialogue.answer.1004.old_man.gate_now_open": 1,
   "dialogue.answer.1004.old_man.please_open_gate": 1,
-  "has_boomerang_skill": 1,
-  "has_bullet_catcher_skill": 1,
+  "has_boomerang_skill": 0,
+  "has_bullet_catcher_skill": 0,
   "hint.read.1001.hint.blessing_received": 1,
   "hint.read.1002.hint.cant_you_hear_me": 1,
   "hint.read.1002.hint.why_no_status_window": 1,
@@ -11,7 +11,7 @@
   "hint.read.1004.hint.dont_enter_portal": 1,
   "hint.read.1004.hint.what_is_that": 1,
   "hint.read.1005.hint.deamon_kingdom_intro": 1,
-  "latest_world": 1006,
+  "latest_world": 1002,
   "lock_override.1727270792": 0,
-  "previous_world": 1006
+  "previous_world": 1002
 }

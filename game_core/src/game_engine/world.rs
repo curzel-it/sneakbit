@@ -261,7 +261,7 @@ impl World {
 
         let mut entities = self.entities.borrow_mut();
         if let Some(target) = entities.iter_mut().find(|e| e.id == target_id) {    
-            if !target.is_dying && !target.is_invulnerable {
+            if !target.is_dying && !target.is_invulnerable && target.parent_id != HERO_ENTITY_ID {
                 did_hit = true;
                 target.direction = Direction::Unknown;
                 target.current_speed = 0.0;
