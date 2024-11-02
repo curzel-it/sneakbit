@@ -1,6 +1,8 @@
-use crate::{game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::directions::Direction};
+use crate::{game_engine::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, utils::directions::Direction};
 
 use super::pickable_object::object_pick_up_sequence;
+
+pub type BulletId = EntityId;
 
 impl Entity {
     pub fn setup_bullet(&mut self) {
@@ -41,7 +43,6 @@ impl Entity {
         if self.is_valid_hit_target(hit) { 
             return vec![WorldStateUpdate::HandleHit(self.id, hit)]
         }
-
         vec![]
     }
 
@@ -56,7 +57,10 @@ impl Entity {
         let hit = world.entities_map[self.frame.y as usize][self.frame.x as usize];
 
         if construction.tile_type.stops_bullets() || biome.tile_type.stops_bullets() || world.is_building(hit) {
-            return vec![WorldStateUpdate::RemoveEntity(self.id)]
+            return vec![WorldStateUpdate::HandleBulletStopped(self.id)]
+        }
+        if hit == self.parent_id {
+            return vec![WorldStateUpdate::HandleBulletCatched(self.id)]
         }
         vec![]
     }

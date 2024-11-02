@@ -2813,16 +2813,16 @@
       "demands_attention": false
     },
     {
-      "id": 9024666,
+      "id": 10563813,
       "frame": {
-        "x": 38,
+        "x": 42,
         "y": 48,
         "w": 1,
         "h": 1
       },
-      "name": "Boulder",
-      "species_id": 1030,
-      "entity_type": "PushableObject",
+      "name": "Yellow Gate",
+      "species_id": 1040,
+      "entity_type": "Gate",
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -2834,8 +2834,8 @@
       "sprite": {
         "sheet_id": 1010,
         "frame": {
-          "x": 1,
-          "y": 2,
+          "x": 6,
+          "y": 0,
           "w": 1,
           "h": 1
         },
@@ -2844,10 +2844,10 @@
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": null,
-      "lock_type": "None",
+      "lock_type": "Yellow",
       "original_sprite_frame": {
-        "x": 1,
-        "y": 2,
+        "x": 6,
+        "y": 0,
         "w": 1,
         "h": 1
       },
@@ -3033,16 +3033,16 @@
       "demands_attention": false
     },
     {
-      "id": 9024670,
+      "id": 9026281,
       "frame": {
-        "x": 42,
-        "y": 49,
+        "x": 64,
+        "y": 59,
         "w": 1,
         "h": 1
       },
-      "name": "Yellow Gate",
-      "species_id": 1040,
-      "entity_type": "Gate",
+      "name": "Teleporter",
+      "species_id": 1019,
+      "entity_type": "Teleporter",
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -3054,8 +3054,8 @@
       "sprite": {
         "sheet_id": 1010,
         "frame": {
-          "x": 6,
-          "y": 0,
+          "x": 7,
+          "y": 5,
           "w": 1,
           "h": 1
         },
@@ -3063,11 +3063,15 @@
       },
       "dialogues": [],
       "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "Yellow",
+      "destination": {
+        "world": 1007,
+        "x": 111,
+        "y": 65
+      },
+      "lock_type": "None",
       "original_sprite_frame": {
-        "x": 6,
-        "y": 0,
+        "x": 7,
+        "y": 5,
         "w": 1,
         "h": 1
       },
@@ -3528,16 +3532,16 @@
       "demands_attention": false
     },
     {
-      "id": 9024679,
+      "id": 10327895,
       "frame": {
-        "x": 70,
-        "y": 10,
+        "x": 11,
+        "y": 28,
         "w": 1,
         "h": 1
       },
-      "name": "Yellow Gate",
-      "species_id": 1040,
-      "entity_type": "Gate",
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -3545,23 +3549,23 @@
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 200,
+      "z_index": 300,
       "sprite": {
-        "sheet_id": 1010,
+        "sheet_id": 1014,
         "frame": {
-          "x": 6,
+          "x": 4,
           "y": 0,
           "w": 1,
           "h": 1
         },
-        "number_of_frames": 1
+        "number_of_frames": 4
       },
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": null,
-      "lock_type": "Yellow",
+      "lock_type": "None",
       "original_sprite_frame": {
-        "x": 6,
+        "x": 4,
         "y": 0,
         "w": 1,
         "h": 1
@@ -3579,7 +3583,7 @@
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
-      "is_invulnerable": true,
+      "is_invulnerable": false,
       "demands_attention": false
     },
     {
@@ -6773,61 +6777,6 @@
       "demands_attention": false
     },
     {
-      "id": 9025912,
-      "frame": {
-        "x": 100,
-        "y": 68,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Boulder",
-      "species_id": 1030,
-      "entity_type": "PushableObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 2,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 1,
-        "y": 2,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
       "id": 9025913,
       "frame": {
         "x": 61,
@@ -7653,16 +7602,16 @@
       "demands_attention": false
     },
     {
-      "id": 9026281,
+      "id": 10563814,
       "frame": {
-        "x": 64,
-        "y": 59,
+        "x": 33,
+        "y": 63,
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
-      "species_id": 1019,
-      "entity_type": "Teleporter",
+      "name": "Boulder",
+      "species_id": 1030,
+      "entity_type": "PushableObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -7674,8 +7623,8 @@
       "sprite": {
         "sheet_id": 1010,
         "frame": {
-          "x": 7,
-          "y": 5,
+          "x": 1,
+          "y": 2,
           "w": 1,
           "h": 1
         },
@@ -7683,15 +7632,11 @@
       },
       "dialogues": [],
       "time_immobilized": 0.0,
-      "destination": {
-        "world": 1007,
-        "x": 111,
-        "y": 65
-      },
+      "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
+        "x": 1,
+        "y": 2,
         "w": 1,
         "h": 1
       },
@@ -7712,16 +7657,16 @@
       "demands_attention": false
     },
     {
-      "id": 10327895,
+      "id": 10563815,
       "frame": {
-        "x": 11,
-        "y": 28,
+        "x": 63,
+        "y": 64,
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
+      "name": "Boulder",
+      "species_id": 1030,
+      "entity_type": "PushableObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -7729,24 +7674,24 @@
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 300,
+      "z_index": 200,
       "sprite": {
-        "sheet_id": 1014,
+        "sheet_id": 1010,
         "frame": {
-          "x": 4,
-          "y": 0,
+          "x": 1,
+          "y": 2,
           "w": 1,
           "h": 1
         },
-        "number_of_frames": 4
+        "number_of_frames": 1
       },
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
+        "x": 1,
+        "y": 2,
         "w": 1,
         "h": 1
       },
@@ -7763,16 +7708,12 @@
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
-      "is_invulnerable": false,
+      "is_invulnerable": true,
       "demands_attention": false
     }
   ],
   "creep_spawn_enabled": false,
   "creep_spawn_interval": 0.0,
   "default_biome": "Nothing",
-  "pressure_plate_down_red": false,
-  "pressure_plate_down_green": false,
-  "pressure_plate_down_blue": false,
-  "pressure_plate_down_silver": false,
-  "pressure_plate_down_yellow": false
+  "light_conditions": "Day"
 }

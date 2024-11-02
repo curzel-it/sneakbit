@@ -19,6 +19,14 @@ impl StorageKey {
     pub fn latest_world() -> String {
         "latest_world".to_owned()
     }
+
+    fn has_boomerang_skill() -> String {
+        "has_boomerang_skill".to_owned()
+    }
+
+    fn has_bullet_catcher_skill() -> String {
+        "has_bullet_catcher_skill".to_owned()
+    }
 }
 
 fn load_stored_values() -> BTreeMap<String, u32> {
@@ -113,4 +121,12 @@ pub fn lock_override(id: &EntityId) -> Option<LockType> {
 
 fn lock_override_key(id: &EntityId) -> String {
     format!("lock_override.{}", id)
+}
+
+pub fn has_boomerang_skill() -> bool {
+    get_value_for_key(&StorageKey::has_boomerang_skill()).is_some_and(|i| i == 1)
+}
+
+pub fn has_bullet_catcher_skill() -> bool {
+    get_value_for_key(&StorageKey::has_bullet_catcher_skill()).is_some_and(|i| i == 1)
 }

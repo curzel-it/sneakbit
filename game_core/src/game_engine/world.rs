@@ -3,7 +3,7 @@ use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}
 use common_macros::hash_set;
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override}};
+use super::{entity::{Entity, EntityId, EntityProps}, inventory::add_to_inventory, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, lock_override, save_lock_override}};
 
 pub struct World {
     pub id: u32,
@@ -232,6 +232,12 @@ impl World {
             WorldStateUpdate::UpdateDestinationY(entity_id, y) => {
                 self.change_destination_y(entity_id, y)
             }
+            WorldStateUpdate::HandleBulletStopped(bullet_id) => {
+                self.handle_bullet_stopped(bullet_id)
+            }
+            WorldStateUpdate::HandleBulletCatched(bullet_id) => {
+                self.handle_bullet_catched(bullet_id)
+            }
             WorldStateUpdate::HandleHit(bullet_id, target_id) => {
                 self.handle_hit(bullet_id, target_id)
             }
@@ -252,8 +258,8 @@ impl World {
 
     fn handle_hit(&mut self, bullet_id: EntityId, target_id: EntityId) {
         let mut did_hit = false;
-        let mut entities = self.entities.borrow_mut();
 
+        let mut entities = self.entities.borrow_mut();
         if let Some(target) = entities.iter_mut().find(|e| e.id == target_id) {    
             if !target.is_dying && !target.is_invulnerable {
                 did_hit = true;
@@ -273,7 +279,35 @@ impl World {
         drop(entities);
 
         if did_hit && bullet_id != 0 {
-            self.remove_entity_by_id(bullet_id)
+            self.handle_bullet_stopped(bullet_id);
+        }
+    }
+
+    fn handle_bullet_stopped(&mut self, bullet_id: u32) {
+        if has_boomerang_skill() {
+            let mut entities = self.entities.borrow_mut();
+            if let Some(bullet) = entities.iter_mut().find(|e| e.id == bullet_id) {
+                if bullet.parent_id == HERO_ENTITY_ID {
+                    bullet.direction = bullet.direction.opposite();
+                    let (dx, dy) = bullet.direction.as_col_row_offset();
+                    bullet.frame.x += dx;
+                    bullet.frame.y += dy;
+                    return
+                }
+            }
+            drop(entities);
+        }
+        self.remove_entity_by_id(bullet_id)
+    }
+
+    fn handle_bullet_catched(&mut self, bullet_id: u32) {
+        if has_bullet_catcher_skill() {
+            let species_id = self.entities.borrow().iter().find(|e| e.id == bullet_id).and_then(|e| Some(e.species_id));
+            self.remove_entity_by_id(bullet_id);
+
+            if let Some(species_id) = species_id {
+                add_to_inventory(&species_id, 1);
+            }
         }
     }
 
