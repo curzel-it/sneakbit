@@ -9,19 +9,17 @@ struct ControllerEmulatorView: View {
         GeometryReader { geo in
             let isLandscape = geo.size.width >= geo.size.height
             
-            HStack(spacing: .zero) {
+            ZStack {
+                JoystickView()
+                
                 HStack(spacing: .zero) {
                     KeyEmulatorView(key: .attack).padding(.bottom, 30)
                     KeyEmulatorView(key: .confirm)
                 }
                 .positioned(.leadingBottom)
                 .padding(.leading, isLandscape ? 85 : 20)
-                .padding(.trailing, viewModel.safeAreaInsets.right)
                 .padding(.leading, viewModel.safeAreaInsets.left)
-                .padding(.bottom, isLandscape ? 120 : 140)
-                
-                JoystickView()
-                    .padding(.leading, -100)
+                .padding(.bottom, isLandscape ? 120 : 140)                
             }
             .padding(.top, viewModel.safeAreaInsets.top)
             .padding(.bottom, viewModel.safeAreaInsets.bottom)

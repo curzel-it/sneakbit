@@ -5,6 +5,7 @@ use super::{inventory::{add_to_inventory, remove_one_of_species_from_inventory},
 pub struct GameEngine {
     pub menu: GameMenu,
     pub world: World,
+    pub previous_world: Option<World>,
     pub loading_screen: LoadingScreen,
     pub long_text_display: LongTextDisplay,
     pub confirmation_dialog: ConfirmationDialog,
@@ -26,6 +27,7 @@ impl GameEngine {
         Self {
             menu: GameMenu::new(),
             world: World::load_or_create(WORLD_ID_NONE),
+            previous_world: None,
             loading_screen: LoadingScreen::new(),
             long_text_display: LongTextDisplay::new(50, 9),
             confirmation_dialog: ConfirmationDialog::new(),
@@ -59,6 +61,7 @@ impl GameEngine {
         if self.death_screen.is_open {
             if self.keyboard.has_confirmation_been_pressed {
                 self.death_screen.is_open = false;
+                self.previous_world = None;
                 self.teleport_to_previous();
             } else {
                 return;
@@ -264,7 +267,7 @@ impl GameEngine {
             set_value_for_key(&StorageKey::previous_world(), self.world.id);
         }
         
-        let mut new_world = World::load_or_create(destination.world);
+        let mut new_world = self.world_by_id(destination.world);
         new_world.set_creative_mode(self.creative_mode);
         new_world.setup(
             self.previous_world(), 
@@ -277,6 +280,9 @@ impl GameEngine {
         new_world.update_no_input(0.001);
 
         let hero_frame = new_world.cached_hero_props.frame;
+        if !self.world.ephemeral_state {
+            self.previous_world = Some(self.world.clone());
+        }
         self.world = new_world;
         self.center_camera_at(hero_frame.x, hero_frame.y, &Vector2d::zero());
 
@@ -285,6 +291,16 @@ impl GameEngine {
         self.mouse.on_world_changed();
 
         set_value_for_key(&StorageKey::latest_world(), self.world.id);
+    }
+    
+    fn world_by_id(&self, destination_world: u32) -> World {
+        if let Some(previous) = self.previous_world.clone() {
+            if previous.id == destination_world {
+                println!("Reusing previous world");
+                return previous
+            }
+        }
+        return World::load_or_create(destination_world)
     }
 
     fn previous_world(&self) -> u32 {

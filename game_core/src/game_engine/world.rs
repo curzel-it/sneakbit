@@ -5,6 +5,7 @@ use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OB
 
 use super::{entity::{Entity, EntityId, EntityProps}, inventory::add_to_inventory, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, lock_override, save_lock_override}};
 
+#[derive(Clone)]
 pub struct World {
     pub id: u32,
     pub revision: u32,
@@ -16,6 +17,7 @@ pub struct World {
     pub visible_entities: HashSet<(usize, u32)>,
     melee_attackers: HashSet<u32>,
     buildings: HashSet<u32>,
+    pub ephemeral_state: bool,
     pub cached_hero_props: EntityProps,
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
@@ -48,6 +50,7 @@ impl World {
             constructions_tiles: TileSet::empty(),
             entities: RefCell::new(vec![]),
             visible_entities: hash_set![],
+            ephemeral_state: false,
             cached_hero_props: EntityProps::default(),
             hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
             tiles_hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
@@ -92,6 +95,12 @@ impl World {
         }
 
         (new_index, id)
+    }
+
+    pub fn remove_hero(&mut self) {
+        if let Some(index) = self.index_for_entity(HERO_ENTITY_ID) {
+            self.remove_entity_at_index(index);
+        }
     }
 
     fn remove_entity_by_id(&mut self, id: u32) {
