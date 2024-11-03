@@ -1,4 +1,4 @@
-use crate::{constants::{SPRITE_SHEET_AVATARS, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_STATIC_OBJECTS}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_key, set_value_for_key, StorageKey}, world::World}, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastImage}, utils::rect::IntRect};
+use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_STATIC_OBJECTS}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_key, set_value_for_key, StorageKey}, world::World}, lang::localizable::LocalizableText, menus::toasts::Toast};
 
 use super::species::species_by_id;
 
@@ -36,7 +36,7 @@ impl Entity {
     fn toast(&self) -> WorldStateUpdate {
         let hint = self.key().localized();
         WorldStateUpdate::EngineUpdate(EngineStateUpdate::Toast(            
-            Toast::goddess_message(hint)
+            Toast::important(hint)
         ))
     }
 
@@ -68,18 +68,5 @@ fn has_hint_been_read(hint: &str) -> bool {
         read == 1
     } else {
         false
-    }
-}
-
-impl Toast {
-    fn goddess_message(text: String) -> Self {
-        Toast::important_with_image(
-            text, 
-            ToastImage::new(
-                IntRect::new(0, 0, 2, 2), 
-                SPRITE_SHEET_AVATARS, 
-                3
-            )
-        )
     }
 }

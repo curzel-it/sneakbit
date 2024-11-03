@@ -106,6 +106,10 @@ impl Toast {
         Toast { text, mode: ToastMode::Regular, image: Some(image) }
     }
     
+    pub fn important(text: String) -> Self {
+        Toast { text, mode: ToastMode::Important, image: None }
+    }
+    
     pub fn important_with_image(text: String, image: ToastImage) -> Self {
         Toast { text, mode: ToastMode::Important, image: Some(image) }
     }
