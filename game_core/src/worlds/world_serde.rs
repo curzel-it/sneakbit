@@ -100,12 +100,6 @@ struct WorldData {
     entities: Vec<Entity>,
 
     #[serde(default)]
-    creep_spawn_enabled: bool,
-
-    #[serde(default)]
-    creep_spawn_interval: f32,
-
-    #[serde(default)]
     default_biome: Biome,
 
     #[serde(default)]
@@ -129,8 +123,6 @@ impl Serialize for World {
         state.serialize_field("biome_tiles", &self.biome_tiles)?;
         state.serialize_field("constructions_tiles", &self.constructions_tiles)?;
         state.serialize_field("entities", &entities)?;
-        state.serialize_field("creep_spawn_enabled", &self.creep_spawn_enabled)?;
-        state.serialize_field("creep_spawn_interval", &self.creep_spawn_interval)?;
         state.serialize_field("default_biome", &self.default_biome)?;
         state.serialize_field("light_conditions", &self.light_conditions)?;
         state.end()
@@ -146,8 +138,6 @@ impl<'de> Deserialize<'de> for World {
         world.ephemeral_state = data.ephemeral_state;
         world.default_biome = data.default_biome;
         world.light_conditions = data.light_conditions;
-        world.creep_spawn_enabled = data.creep_spawn_enabled;
-        world.creep_spawn_interval = data.creep_spawn_interval;
         data.entities.into_iter().for_each(|e| _ = world.add_entity(e));        
         world.load_biome_tiles(data.biome_tiles);
         world.load_construction_tiles(data.constructions_tiles);

@@ -161,8 +161,6 @@ world_data = {
         "sheet_id": 1003
     },
     "entities": [],
-    "creep_spawn_enabled": False,
-    "creep_spawn_interval": 0.0,
     "default_biome": "Nothing"
 }
 
