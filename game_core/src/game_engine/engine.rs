@@ -280,7 +280,9 @@ impl GameEngine {
         new_world.update_no_input(0.001);
 
         let hero_frame = new_world.cached_hero_props.frame;
-        self.previous_world = Some(self.world.clone());
+        if !self.world.ephemeral_state {
+            self.previous_world = Some(self.world.clone());
+        }
         self.world = new_world;
         self.center_camera_at(hero_frame.x, hero_frame.y, &Vector2d::zero());
 

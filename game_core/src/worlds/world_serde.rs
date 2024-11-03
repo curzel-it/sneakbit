@@ -110,6 +110,9 @@ struct WorldData {
 
     #[serde(default)]
     light_conditions: LightConditions,
+
+    #[serde(default)]
+    ephemeral_state: bool
 }
 
 impl Serialize for World {
@@ -122,6 +125,7 @@ impl Serialize for World {
         let mut state = serializer.serialize_struct("World", 4)?;
         state.serialize_field("id", &self.id)?;
         state.serialize_field("revision", &self.revision)?;
+        state.serialize_field("ephemeral_state", &self.ephemeral_state)?;
         state.serialize_field("biome_tiles", &self.biome_tiles)?;
         state.serialize_field("constructions_tiles", &self.constructions_tiles)?;
         state.serialize_field("entities", &entities)?;
@@ -139,6 +143,7 @@ impl<'de> Deserialize<'de> for World {
 
         let mut world = World::new(data.id);        
         world.revision = data.revision;
+        world.ephemeral_state = data.ephemeral_state;
         world.default_biome = data.default_biome;
         world.light_conditions = data.light_conditions;
         world.creep_spawn_enabled = data.creep_spawn_enabled;
