@@ -2,6 +2,8 @@ use crate::{constants::{WORLD_ID_DEMO, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, ent
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32) {
+        self.remove_hero();
+        self.visible_entities = self.compute_visible_entities(&self.bounds);
         self.update_tiles_hitmap();
         self.update_hitmaps();
 
