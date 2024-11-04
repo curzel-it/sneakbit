@@ -26,7 +26,8 @@ pub enum Construction {
     Bridge,
     Broadleaf,
     StoneBox,
-    SpoiledTree
+    SpoiledTree,
+    WineTree
 }
 
 #[derive(Debug, Default, Clone, Copy)]
@@ -116,7 +117,8 @@ impl Construction {
             Construction::Broadleaf => 15,
             Construction::MetalFence => 16,
             Construction::StoneBox => 17,
-            Construction::SpoiledTree => 18
+            Construction::SpoiledTree => 18,
+            Construction::WineTree => 19
         }
     }
 }
@@ -166,6 +168,7 @@ impl Construction {
             'G' => Construction::MetalFence,
             'H' => Construction::StoneBox,
             'J' => Construction::SpoiledTree,
+            'K' => Construction::WineTree,
             _ => Construction::Nothing,
         }
     }
@@ -189,7 +192,8 @@ impl Construction {
             Construction::Broadleaf => 'F',
             Construction::MetalFence => 'G',
             Construction::StoneBox => 'H',
-            Construction::SpoiledTree => 'J'
+            Construction::SpoiledTree => 'J',
+            Construction::WineTree => 'K'
         }
     }
 }
@@ -279,6 +283,7 @@ impl Construction {
             Construction::Broadleaf => true,
             Construction::StoneBox => true,
             Construction::SpoiledTree => false,
+            Construction::WineTree => false
         }
     }
 }
