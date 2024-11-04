@@ -1039,6 +1039,6 @@
       "demands_attention": false
     }
   ],
-  "default_biome": "Nothing",
+  "default_biome": "Water",
   "light_conditions": "Day"
 }

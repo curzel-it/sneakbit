@@ -1,4 +1,4 @@
-use crate::{constants::{SPRITE_SHEET_BIOME_TILES, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, game_engine::world::World, utils::rect::IntRect};
+use crate::{constants::SPRITE_SHEET_BIOME_TILES, game_engine::world::World, utils::rect::IntRect};
 
 use super::{biome_tiles::{Biome, BiomeTile}, tiles::TileSet};
 
@@ -10,7 +10,7 @@ impl World {
         let tiles = if tiles.tiles.is_empty() {
             TileSet::<BiomeTile>::with_tiles(
                 SPRITE_SHEET_BIOME_TILES,
-                vec![vec![grass; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS]
+                vec![vec![grass; self.bounds.w as usize]; self.bounds.h as usize]
             )
         } else {
             tiles

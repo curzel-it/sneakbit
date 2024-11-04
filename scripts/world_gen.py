@@ -8,12 +8,12 @@ HEIGHT = 80
 
 freq = 0.8
 octaves = 3
-persistence = 0.5
+persistence = 0.1
 lacunarity = 2.0
 
 WATER = '2'
 SAND = '4'
-GRASSES = '1 C D E F'.split(' ')
+GRASSES = '1'.split(' ')
 DOUNGEON_PAVEMENT = 'B'
 DOUNGEON_WALL = 'H'
 

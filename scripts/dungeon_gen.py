@@ -2,15 +2,34 @@ import json
 import random
 import argparse
 
-WIDTH = 120
-HEIGHT = 80
-MIN_ROOM_SIZE = 6
-MAX_ROOM_SIZE = 15
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description='Generate a dungeon map with customizable parameters and a specific world ID.')
+parser.add_argument('world_id', type=int, help='The ID of the world to be generated.')
 
-DOUNGEON_EMPTY = '0'    # Represents black spot outside the dungeon
-DOUNGEON_PAVEMENT = 'B' # Represents pavement inside rooms and corridors
-DOUNGEON_WALL = 'H'     # Represents walls
-DOUNGEON_NO_WALL = '0'  # Represents pedestrian space (no wall)
+# Parameters to make configurable
+parser.add_argument('--width', type=int, default=120, help='Width of the dungeon map (default: 120)')
+parser.add_argument('--height', type=int, default=80, help='Height of the dungeon map (default: 80)')
+parser.add_argument('--min_room_size', type=int, default=6, help='Minimum size of a room (default: 6)')
+parser.add_argument('--max_room_size', type=int, default=15, help='Maximum size of a room (default: 15)')
+parser.add_argument('--pavement', type=str, default='B', help='Character representing pavement inside rooms and corridors (default: B)')
+parser.add_argument('--wall', type=str, default='H', help='Character representing walls (default: H)')
+parser.add_argument('--empty', type=str, default='0', help='Character representing empty space in biome tiles (default: 0)')
+parser.add_argument('--no_wall', type=str, default='0', help='Character representing no wall in construction tiles (default: 0)')
+
+# Existing optional argument
+parser.add_argument('--fill', action='store_true', help='Fill DOUNGEON_EMPTY biome tiles with DOUNGEON_WALL in construction tiles.')
+
+args = parser.parse_args()
+
+# Assign variables from parsed arguments
+WIDTH = args.width
+HEIGHT = args.height
+MIN_ROOM_SIZE = args.min_room_size
+MAX_ROOM_SIZE = args.max_room_size
+DOUNGEON_PAVEMENT = args.pavement
+DOUNGEON_WALL = args.wall
+DOUNGEON_EMPTY = args.empty
+DOUNGEON_NO_WALL = args.no_wall
 
 # Initialize the dungeon map with walls
 dungeon_map = [
@@ -140,15 +159,17 @@ construction_tiles = [
     for y in range(HEIGHT)
 ]
 
+# Post-processing: If fill flag is present, update construction tiles
+if args.fill:
+    for y in range(HEIGHT):
+        for x in range(WIDTH):
+            if biome_tiles[y][x] == DOUNGEON_EMPTY:
+                construction_tiles[y][x] = DOUNGEON_WALL
+                biome_tiles[y][x] = DOUNGEON_PAVEMENT
+
 # Convert tile grids to strings
 biome_tile_strings = [''.join(row) for row in biome_tiles]
 construction_tile_strings = [''.join(row) for row in construction_tiles]
-
-# Parse command-line arguments
-parser = argparse.ArgumentParser(description='Generate a dungeon map with a specific world ID.')
-parser.add_argument('world_id', type=int, help='The ID of the world to be generated.')
-
-args = parser.parse_args()
 
 world_data = {
     "id": args.world_id,
@@ -161,7 +182,7 @@ world_data = {
         "sheet_id": 1003
     },
     "entities": [],
-    "default_biome": "Nothing"
+    "default_biome": "Water"
 }
 
 output_filename = f"/Users/curzel/dev/sneakbit/data/{args.world_id}.json"
@@ -169,3 +190,5 @@ with open(output_filename, "w") as f:
     f.write(json.dumps(world_data, indent=2))
 
 print(f"Dungeon {args.world_id} has been generated and saved to {output_filename}")
+if args.fill:
+    print("Fill parameter was used: DOUNGEON_EMPTY biome tiles have been filled with DOUNGEON_WALL in construction tiles.")
