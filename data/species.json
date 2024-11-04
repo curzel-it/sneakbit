@@ -2377,7 +2377,7 @@
     },
     {
         "id": 60001,
-        "name": "building.name.deamon_lord_castle",
+        "name": "building.name.demon_lord_castle",
         "entity_type": "Building",
         "is_invulnerable": true,
         "z_index": 0,
@@ -2399,7 +2399,7 @@
     },
     {
         "id": 60002,
-        "name": "npc.name.deamon_lord",
+        "name": "npc.name.demon_lord",
         "entity_type": "Npc",
         "z_index": -1,
         "base_speed": 0.0,
