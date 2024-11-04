@@ -18,7 +18,6 @@ pub const HERO_ENTITY_ID: u32 = 420;
 
 // Known locations
 pub const WORLD_ID_NONE: u32 = 1000;
-pub const WORLD_ID_DEMO: u32 = 1001;
 
 // Animations
 pub const WORLD_TRANSITION_TIME: f32 = 0.3;

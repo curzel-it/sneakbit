@@ -1,4 +1,4 @@
-use crate::{constants::WORLD_ID_DEMO, entities::{known_species::SPECIES_HERO, species::make_entity_by_species}, game_engine::world::World, utils::directions::Direction};
+use crate::{entities::{known_species::SPECIES_HERO, species::make_entity_by_species}, game_engine::world::World, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32) {
@@ -43,8 +43,6 @@ impl World {
         if original_x == 0 && original_y == 0 {            
             if let Some(teleporter_position) = self.find_teleporter_for_destination(source) {
                 (teleporter_position.x, teleporter_position.y)
-            } else if self.id == WORLD_ID_DEMO {
-                self.destination_x_y(source, 59, 41)
             } else if let Some(teleporter_position) = self.find_any_teleporter() {
                 (teleporter_position.x, teleporter_position.y)
             } else {

@@ -2,20 +2,23 @@ import json
 import random
 import argparse
 
+# Dungeon - python3 scripts/dungen.py worldid --pavement B --wall H
+# Forest - python3 scripts/dungen.py worldid --pavement 1 --wall 8 --fill
+
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Generate a dungeon map with customizable parameters and a specific world ID.')
 parser.add_argument('world_id', type=int, help='The ID of the world to be generated.')
 
 # Parameters to make configurable
-parser.add_argument('--width', type=int, default=120, help='Width of the dungeon map (default: 120)')
-parser.add_argument('--height', type=int, default=80, help='Height of the dungeon map (default: 80)')
+parser.add_argument('--width', type=int, default=80, help='Width of the dungeon map (default: 120)')
+parser.add_argument('--height', type=int, default=60, help='Height of the dungeon map (default: 80)')
 parser.add_argument('--min_room_size', type=int, default=6, help='Minimum size of a room (default: 6)')
 parser.add_argument('--max_room_size', type=int, default=15, help='Maximum size of a room (default: 15)')
 parser.add_argument('--pavement', type=str, default='B', help='Character representing pavement inside rooms and corridors (default: B)')
 parser.add_argument('--wall', type=str, default='H', help='Character representing walls (default: H)')
 parser.add_argument('--empty', type=str, default='0', help='Character representing empty space in biome tiles (default: 0)')
 parser.add_argument('--no_wall', type=str, default='0', help='Character representing no wall in construction tiles (default: 0)')
-parser.add_argument('--padding', type=int, default=0, help='Number of tiles to use as padding (added to the final size) around world edges')
+parser.add_argument('--padding', type=int, default=10, help='Number of tiles to use as padding (added to the final size) around world edges')
 
 # Existing optional argument
 parser.add_argument('--fill', action='store_true', help='Fill DOUNGEON_EMPTY biome tiles with DOUNGEON_WALL in construction tiles.')
@@ -198,7 +201,8 @@ world_data = {
         "sheet_id": 1003
     },
     "entities": [],
-    "default_biome": "Water"
+    "default_biome": "Water",
+    "ephemeral_state": True,
 }
 
 output_filename = f"/Users/curzel/dev/sneakbit/data/{args.world_id}.json"
