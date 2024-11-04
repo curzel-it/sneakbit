@@ -15,6 +15,7 @@ parser.add_argument('--pavement', type=str, default='B', help='Character represe
 parser.add_argument('--wall', type=str, default='H', help='Character representing walls (default: H)')
 parser.add_argument('--empty', type=str, default='0', help='Character representing empty space in biome tiles (default: 0)')
 parser.add_argument('--no_wall', type=str, default='0', help='Character representing no wall in construction tiles (default: 0)')
+parser.add_argument('--padding', type=int, default=0, help='Number of tiles to use as padding (added to the final size) around world edges')
 
 # Existing optional argument
 parser.add_argument('--fill', action='store_true', help='Fill DOUNGEON_EMPTY biome tiles with DOUNGEON_WALL in construction tiles.')
@@ -171,6 +172,21 @@ if args.fill:
 biome_tile_strings = [''.join(row) for row in biome_tiles]
 construction_tile_strings = [''.join(row) for row in construction_tiles]
 
+# Post-processing: Add padding tiles
+padding_horizontal_biomes = args.padding * DOUNGEON_PAVEMENT
+padding_horizontal_constructions = args.padding * DOUNGEON_WALL
+
+for i in range(0, len(biome_tile_strings)):
+    biome_tile_strings[i] = padding_horizontal_biomes + biome_tile_strings[i] + padding_horizontal_biomes
+    construction_tile_strings[i] = padding_horizontal_constructions + construction_tile_strings[i] + padding_horizontal_constructions
+
+padding_vertical_biomes = [len(biome_tile_strings[0]) * DOUNGEON_PAVEMENT] * args.padding
+biome_tile_strings = padding_vertical_biomes + biome_tile_strings + padding_vertical_biomes
+
+padding_vertical_constructions = [len(construction_tile_strings[0]) * DOUNGEON_WALL] * args.padding
+construction_tile_strings = padding_vertical_constructions + construction_tile_strings + padding_vertical_constructions
+
+# Assemble json
 world_data = {
     "id": args.world_id,
     "biome_tiles": {
