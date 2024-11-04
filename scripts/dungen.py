@@ -2,8 +2,16 @@ import json
 import random
 import argparse
 
-# Dungeon - python3 scripts/dungen.py worldid --pavement B --wall H
-# Forest - python3 scripts/dungen.py worldid --pavement 1 --wall 8 --fill
+"""
+Dungeon 
+python3 scripts/dungen.py worldid --pavement B --wall H
+
+Forest
+python3 scripts/dungen.py worldid --pavement 1 --wall 8 --fill
+
+Forest Village
+python3 scripts/dungen.py worldid --pavement 1 --wall 8 --fill --min_room_size 1  --max_room_size 2 --width 60 --height 40
+"""
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Generate a dungeon map with customizable parameters and a specific world ID.')
@@ -18,7 +26,7 @@ parser.add_argument('--pavement', type=str, default='B', help='Character represe
 parser.add_argument('--wall', type=str, default='H', help='Character representing walls (default: H)')
 parser.add_argument('--empty', type=str, default='0', help='Character representing empty space in biome tiles (default: 0)')
 parser.add_argument('--no_wall', type=str, default='0', help='Character representing no wall in construction tiles (default: 0)')
-parser.add_argument('--padding', type=int, default=10, help='Number of tiles to use as padding (added to the final size) around world edges')
+parser.add_argument('--padding', type=int, default=20, help='Number of tiles to use as padding (added to the final size) around world edges')
 
 # Existing optional argument
 parser.add_argument('--fill', action='store_true', help='Fill DOUNGEON_EMPTY biome tiles with DOUNGEON_WALL in construction tiles.')

@@ -138,7 +138,7 @@ impl GameEngine {
 
     fn teleport_to_previous(&mut self) {
         let world_id = get_value_for_key(&StorageKey::latest_world()).unwrap_or(1001);
-        let (x, y) = if world_id == 1001 { (60, 50) } else { (0, 0) };
+        let (x, y) = if world_id == 1001 { (68, 23) } else { (0, 0) };
         self.teleport(&Destination::new(world_id, x, y));
     }
 

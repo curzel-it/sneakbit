@@ -37,8 +37,8 @@ pub struct World {
     pub light_conditions: LightConditions,
 }
 
-const WORLD_SIZE_ROWS: usize = 80;
-const WORLD_SIZE_COLUMNS: usize = 120;
+const WORLD_SIZE_COLUMNS: usize = 30;
+const WORLD_SIZE_ROWS: usize = 30;
 
 impl World {
     pub fn new(id: u32) -> Self {
