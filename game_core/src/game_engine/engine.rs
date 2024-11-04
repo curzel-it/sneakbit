@@ -312,8 +312,31 @@ impl GameEngine {
     }
 
     fn center_camera_at(&mut self, x: i32, y: i32, offset: &Vector2d) {
-        self.camera_viewport.center_at(&Vector2d::new(x as f32, y as f32));
-        self.camera_viewport_offset = *offset;
+        let camera_half_w = (self.camera_viewport.w as f32 / 2.0).ceil();
+        let camera_half_h = (self.camera_viewport.h as f32 / 2.0).ceil();        
+        let bounds = self.world.bounds;        
+        let min_x = bounds.x as f32 + camera_half_w + 2.0;
+        let max_x = (bounds.x + bounds.w) as f32 - camera_half_w - 2.0;
+        let min_y = bounds.y as f32 + camera_half_h + 2.0;
+        let max_y = (bounds.y + bounds.h) as f32 - camera_half_h - 2.0; 
+
+        let requested_center = Vector2d::new(x as f32, y as f32);
+        
+        let actual_center = Vector2d::new(
+            requested_center.x.max(min_x).min(max_x),
+            requested_center.y.max(min_y).min(max_y)
+        );
+        self.camera_viewport.center_at(&actual_center);
+
+        let is_going_outside_x = (requested_center.x - actual_center.x).abs() > 0.001;
+        let is_going_outside_y = (requested_center.y - actual_center.y).abs() > 0.001;        
+
+        if !is_going_outside_x {
+            self.camera_viewport_offset.x = offset.x;    
+        }
+        if !is_going_outside_y {
+            self.camera_viewport_offset.y = offset.y;    
+        }
     }
 
     pub fn select_current_menu_option_at_index(&mut self, index: usize) {
