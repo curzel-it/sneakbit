@@ -140,6 +140,7 @@ fn handle_mouse_updates(rl: &mut RaylibHandle, rendering_scale: f32) {
     update_mouse(
         rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT), 
         rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT), 
+        rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_RIGHT), 
         rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_RIGHT), 
         rl.get_mouse_position().x,
         rl.get_mouse_position().y, 

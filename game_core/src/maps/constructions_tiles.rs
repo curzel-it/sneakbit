@@ -28,7 +28,8 @@ pub enum Construction {
     StoneBox,
     SpoiledTree,
     WineTree,
-    SolarPanel
+    SolarPanel,
+    Pipe
 }
 
 #[derive(Debug, Default, Clone, Copy)]
@@ -121,6 +122,7 @@ impl Construction {
             Construction::SpoiledTree => 18,
             Construction::WineTree => 19,
             Construction::SolarPanel => 20,
+            Construction::Pipe => 21
         }
     }
 }
@@ -172,6 +174,7 @@ impl Construction {
             'J' => Construction::SpoiledTree,
             'K' => Construction::WineTree,
             'L' => Construction::SolarPanel,
+            'M' => Construction::Pipe,
             _ => Construction::Nothing,
         }
     }
@@ -198,6 +201,7 @@ impl Construction {
             Construction::SpoiledTree => 'J',
             Construction::WineTree => 'K',
             Construction::SolarPanel => 'L',
+            Construction::Pipe => 'M'
         }
     }
 }
@@ -288,7 +292,8 @@ impl Construction {
             Construction::StoneBox => true,
             Construction::SpoiledTree => false,
             Construction::WineTree => false,
-            Construction::SolarPanel => false
+            Construction::SolarPanel => false,
+            Construction::Pipe => false
         }
     }
 }

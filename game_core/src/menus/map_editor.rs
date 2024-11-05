@@ -115,8 +115,10 @@ impl MapEditor {
         keyboard: &KeyboardEventsProvider,
         mouse: &MouseEventsProvider,
     ) -> Vec<WorldStateUpdate> {
-        if mouse.has_right_been_pressed {
-            return self.clear_tile(frame);
+        if mouse.is_right_down {
+            let updated_frame = self.updated_frame(&frame, mouse, keyboard);
+            self.state = MapEditorState::PlacingItem(selected_index, item.clone(), updated_frame);
+            return self.clear_tile(updated_frame);
         }
         if self.has_selected_tile() && mouse.is_left_down {
             let updated_frame = self.updated_frame(&frame, mouse, keyboard);
@@ -272,7 +274,8 @@ impl Stockable {
                 Construction::StoneBox => (3, 16),
                 Construction::SpoiledTree => (2, 14),
                 Construction::WineTree => (8, 9),
-                Construction::SolarPanel => (8, 10)
+                Construction::SolarPanel => (8, 10),
+                Construction::Pipe => (8, 11)
             },
             Stockable::Entity(species) => species.inventory_texture_offset,
         };
@@ -343,7 +346,8 @@ impl MapEditor {
             Stockable::ConstructionTile(Construction::StoneBox),
             Stockable::ConstructionTile(Construction::SpoiledTree),
             Stockable::ConstructionTile(Construction::WineTree),
-            Stockable::ConstructionTile(Construction::SolarPanel)
+            Stockable::ConstructionTile(Construction::SolarPanel),
+            Stockable::ConstructionTile(Construction::Pipe)
         ];
         let mut species: Vec<Stockable> = ALL_SPECIES
             .iter()

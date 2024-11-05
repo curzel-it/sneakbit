@@ -2,6 +2,7 @@ use crate::constants::TILE_SIZE;
 
 pub struct MouseEventsProvider {
     pub is_left_down: bool,
+    pub is_right_down: bool,
     pub has_left_been_pressed: bool,
     pub has_right_been_pressed: bool,
     pub x: i32,
@@ -13,6 +14,7 @@ impl MouseEventsProvider {
     pub const fn new() -> Self {
         Self {            
             is_left_down: false,
+            is_right_down: false,
             has_left_been_pressed: false,
             has_right_been_pressed: false,
             x: 0, 
@@ -25,12 +27,14 @@ impl MouseEventsProvider {
         &mut self, 
         mouse_left_down: bool, 
         mouse_left_pressed: bool, 
+        mouse_right_down: bool,
         mouse_right_pressed: bool, 
         mouse_x: f32,
         mouse_y: f32,
         rendering_scale: f32
     ) {
         self.is_left_down = mouse_left_down;
+        self.is_right_down = mouse_right_down;
         self.has_left_been_pressed = mouse_left_pressed;
         self.has_right_been_pressed = mouse_right_pressed;
 

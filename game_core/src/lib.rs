@@ -103,6 +103,7 @@ pub extern "C" fn update_keyboard(
 pub extern "C" fn update_mouse(
     mouse_left_down: bool, 
     mouse_left_pressed: bool, 
+    mouse_right_down: bool, 
     mouse_right_pressed: bool, 
     mouse_x: f32,
     mouse_y: f32,
@@ -110,8 +111,11 @@ pub extern "C" fn update_mouse(
 ) {
     engine_mut().mouse.update(
         mouse_left_down, 
-        mouse_left_pressed, mouse_right_pressed, 
-        mouse_x, mouse_y, 
+        mouse_left_pressed, 
+        mouse_right_down, 
+        mouse_right_pressed, 
+        mouse_x, 
+        mouse_y, 
         rendering_scale
     );
 }
