@@ -2595,5 +2595,27 @@
         "sprite_sheet_id": 1009,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
+    },
+    {
+        "id": 1037,
+        "name": "building.name.power_station",
+        "entity_type": "Building",
+        "is_invulnerable": true,
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            15
+        ],
+        "sprite_frame": {
+            "x": 42,
+            "y": 1,
+            "w": 4,
+            "h": 3
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
     }
 ]

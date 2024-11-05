@@ -30,6 +30,7 @@ parser.add_argument('--padding', type=int, default=20, help='Number of tiles to 
 
 # Existing optional argument
 parser.add_argument('--fill', action='store_true', help='Fill DOUNGEON_EMPTY biome tiles with DOUNGEON_WALL in construction tiles.')
+parser.add_argument('--fill_pavement', action='store_true', help='Fill DOUNGEON_EMPTY biome tiles with DOUNGEON_WALL in construction tiles.')
 
 args = parser.parse_args()
 
@@ -177,6 +178,11 @@ if args.fill:
         for x in range(WIDTH):
             if biome_tiles[y][x] == DOUNGEON_EMPTY:
                 construction_tiles[y][x] = DOUNGEON_WALL
+                biome_tiles[y][x] = DOUNGEON_PAVEMENT
+elif args.fill_pavement:
+    for y in range(HEIGHT):
+        for x in range(WIDTH):
+            if biome_tiles[y][x] == DOUNGEON_EMPTY:
                 biome_tiles[y][x] = DOUNGEON_PAVEMENT
 
 # Convert tile grids to strings

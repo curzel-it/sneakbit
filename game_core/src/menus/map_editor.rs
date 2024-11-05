@@ -272,6 +272,7 @@ impl Stockable {
                 Construction::StoneBox => (3, 16),
                 Construction::SpoiledTree => (2, 14),
                 Construction::WineTree => (8, 9),
+                Construction::SolarPanel => (8, 10)
             },
             Stockable::Entity(species) => species.inventory_texture_offset,
         };
@@ -342,6 +343,7 @@ impl MapEditor {
             Stockable::ConstructionTile(Construction::StoneBox),
             Stockable::ConstructionTile(Construction::SpoiledTree),
             Stockable::ConstructionTile(Construction::WineTree),
+            Stockable::ConstructionTile(Construction::SolarPanel)
         ];
         let mut species: Vec<Stockable> = ALL_SPECIES
             .iter()
