@@ -13,7 +13,7 @@ fn main() {
     let creative_mode = env::args().any(|arg| arg == "creative");
 
     initialize_config_paths(
-        TILE_SIZE * 2.5,
+        TILE_SIZE * 2.0,
         current_locale(),
         local_path("data"),
         local_path("data/species.json"),
@@ -57,7 +57,7 @@ fn start_rl() -> (RaylibHandle, RaylibThread) {
     let font = rl.load_font(&thread, "fonts/PixelOperator/PixelOperator8.ttf").unwrap();
     let font_bold = rl.load_font(&thread, "fonts/PixelOperator/PixelOperator8-Bold.ttf").unwrap();                     
     
-    // rl.set_target_fps(best_fps());
+    rl.set_target_fps(best_fps());
 
     let textures: HashMap<u32, Texture2D> = load_textures(&mut rl, &thread);
     init_rendering_config(RenderingConfig {

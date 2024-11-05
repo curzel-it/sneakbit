@@ -2617,5 +2617,181 @@
         "sprite_sheet_id": 1004,
         "sprite_number_of_frames": 1,
         "lock_type": "None"
+    },
+    {
+        "id": 1038,
+        "name": "objects.barrel.purple",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            16
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 10,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1039,
+        "name": "objects.barrel.green",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            17
+        ],
+        "sprite_frame": {
+            "x": 1,
+            "y": 10,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1073,
+        "name": "objects.barrel.brown",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            18
+        ],
+        "sprite_frame": {
+            "x": 2,
+            "y": 10,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1074,
+        "name": "objects.barrel.wood",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            19
+        ],
+        "sprite_frame": {
+            "x": 3,
+            "y": 10,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1075,
+        "name": "objects.power.kidneys",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            20
+        ],
+        "sprite_frame": {
+            "x": 4,
+            "y": 11,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1076,
+        "name": "objects.power.tower.off",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            21
+        ],
+        "sprite_frame": {
+            "x": 5,
+            "y": 10,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1077,
+        "name": "objects.power.tower.on",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            22
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1078,
+        "name": "objects.boat.small",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            23
+        ],
+        "sprite_frame": {
+            "x": 9,
+            "y": 19,
+            "w": 2,
+            "h": 2
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
     }
 ]

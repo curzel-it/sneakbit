@@ -4,13 +4,16 @@ import argparse
 
 """
 Dungeon 
-python3 scripts/dungen.py worldid --pavement B --wall H
+python3 scripts/dungen.py worldid --pavement B --wall H --padding 0 --min_room_size 5  --max_room_size 12 --width 120 --height 80
 
 Forest
 python3 scripts/dungen.py worldid --pavement 1 --wall 8 --fill
 
 Forest Village
 python3 scripts/dungen.py worldid --pavement 1 --wall 8 --fill --min_room_size 1  --max_room_size 2 --width 60 --height 40
+
+Island
+python3 scripts/dungen.py worldid --pavement 1 --wall 8 --fill_pavement --empty 2 --min_room_size 8  --max_room_size 20
 """
 
 # Parse command-line arguments
@@ -27,10 +30,10 @@ parser.add_argument('--wall', type=str, default='H', help='Character representin
 parser.add_argument('--empty', type=str, default='0', help='Character representing empty space in biome tiles (default: 0)')
 parser.add_argument('--no_wall', type=str, default='0', help='Character representing no wall in construction tiles (default: 0)')
 parser.add_argument('--padding', type=int, default=20, help='Number of tiles to use as padding (added to the final size) around world edges')
-
-# Existing optional argument
 parser.add_argument('--fill', action='store_true', help='Fill DOUNGEON_EMPTY biome tiles with DOUNGEON_WALL in construction tiles.')
 parser.add_argument('--fill_pavement', action='store_true', help='Fill DOUNGEON_EMPTY biome tiles with DOUNGEON_WALL in construction tiles.')
+parser.add_argument('--padding_pavement', type=str, default='', help='Cell type to use in padding')
+parser.add_argument('--padding_wall', type=str, default='', help='Cell type to use in padding')
 
 args = parser.parse_args()
 
@@ -43,6 +46,8 @@ DOUNGEON_PAVEMENT = args.pavement
 DOUNGEON_WALL = args.wall
 DOUNGEON_EMPTY = args.empty
 DOUNGEON_NO_WALL = args.no_wall
+PADDING_PAVEMENT = args.padding_pavement if args.padding_pavement != '' else DOUNGEON_PAVEMENT
+PADDING_WALL = args.padding_wall if args.padding_wall != '' else DOUNGEON_WALL
 
 # Initialize the dungeon map with walls
 dungeon_map = [
@@ -178,29 +183,29 @@ if args.fill:
         for x in range(WIDTH):
             if biome_tiles[y][x] == DOUNGEON_EMPTY:
                 construction_tiles[y][x] = DOUNGEON_WALL
-                biome_tiles[y][x] = DOUNGEON_PAVEMENT
+                biome_tiles[y][x] = DOUNGEON_WALL
 elif args.fill_pavement:
     for y in range(HEIGHT):
         for x in range(WIDTH):
             if biome_tiles[y][x] == DOUNGEON_EMPTY:
-                biome_tiles[y][x] = DOUNGEON_PAVEMENT
+                biome_tiles[y][x] = DOUNGEON_WALL
 
 # Convert tile grids to strings
 biome_tile_strings = [''.join(row) for row in biome_tiles]
 construction_tile_strings = [''.join(row) for row in construction_tiles]
 
 # Post-processing: Add padding tiles
-padding_horizontal_biomes = args.padding * DOUNGEON_PAVEMENT
-padding_horizontal_constructions = args.padding * DOUNGEON_WALL
+padding_horizontal_biomes = args.padding * PADDING_PAVEMENT
+padding_horizontal_constructions = args.padding * PADDING_WALL
 
 for i in range(0, len(biome_tile_strings)):
     biome_tile_strings[i] = padding_horizontal_biomes + biome_tile_strings[i] + padding_horizontal_biomes
     construction_tile_strings[i] = padding_horizontal_constructions + construction_tile_strings[i] + padding_horizontal_constructions
 
-padding_vertical_biomes = [len(biome_tile_strings[0]) * DOUNGEON_PAVEMENT] * args.padding
+padding_vertical_biomes = [len(biome_tile_strings[0]) * PADDING_PAVEMENT] * args.padding
 biome_tile_strings = padding_vertical_biomes + biome_tile_strings + padding_vertical_biomes
 
-padding_vertical_constructions = [len(construction_tile_strings[0]) * DOUNGEON_WALL] * args.padding
+padding_vertical_constructions = [len(construction_tile_strings[0]) * PADDING_WALL] * args.padding
 construction_tile_strings = padding_vertical_constructions + construction_tile_strings + padding_vertical_constructions
 
 # Assemble json
@@ -215,7 +220,7 @@ world_data = {
         "sheet_id": 1003
     },
     "entities": [],
-    "default_biome": "Water",
+    "default_biome": "Nothing" if args.padding == 0 else "Water",
     "ephemeral_state": True,
 }
 

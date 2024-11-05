@@ -3,7 +3,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Destination {
     pub world: u32,
+    
+    #[serde(default)]
     pub x: i32,
+    
+    #[serde(default)]
     pub y: i32
 }
 
