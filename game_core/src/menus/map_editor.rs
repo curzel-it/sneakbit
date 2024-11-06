@@ -163,6 +163,8 @@ impl MapEditor {
     }
 
     fn place_item(&mut self, item: Stockable, frame: IntRect) -> Vec<WorldStateUpdate> {
+        if frame.x < 0 || frame.y < 0 { return vec![] }
+
         let row = frame.y as usize;
         let col = frame.x as usize;
 
@@ -253,6 +255,7 @@ impl Stockable {
                 Biome::GrassFlowersPurple => (0, 15),
                 Biome::Lava => (0, 24),
                 Biome::Farmland => (0, 25),
+                Biome::DarkWater => (0, 26)
             },
             Stockable::ConstructionTile(construction) => match construction {
                 Construction::Nothing => (6, 1),
@@ -327,6 +330,7 @@ impl MapEditor {
             Stockable::BiomeTile(Biome::Ice),
             Stockable::BiomeTile(Biome::Lava),
             Stockable::BiomeTile(Biome::Farmland),
+            Stockable::BiomeTile(Biome::DarkWater),
             Stockable::ConstructionTile(Construction::Nothing),
             Stockable::ConstructionTile(Construction::WoodenFence),
             Stockable::ConstructionTile(Construction::MetalFence),

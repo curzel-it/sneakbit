@@ -129,6 +129,8 @@ impl Construction {
 
 impl TileSet<ConstructionTile> {
     pub fn update_tile(&mut self, row: usize, col: usize, new_biome: Construction) {
+        if row >= self.tiles.len() || col >= self.tiles[row].len() { return }
+
         self.tiles[row][col].tile_type = new_biome;
         self.tiles[row][col].setup_textures();
 

@@ -2793,5 +2793,93 @@
         "sprite_sheet_id": 1012,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
+    },
+    {
+        "id": 1079,
+        "name": "objects.wind_turbine",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            7,
+            24
+        ],
+        "sprite_frame": {
+            "x": 17,
+            "y": 16,
+            "w": 3,
+            "h": 5
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 6,
+        "lock_type": "None"
+    },
+    {
+        "id": 1080,
+        "name": "npc.name.man.punk.1",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            12
+        ],
+        "sprite_frame": {
+            "x": 48,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1081,
+        "name": "npc.name.man.generic.black",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            13
+        ],
+        "sprite_frame": {
+            "x": 60,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1082,
+        "name": "npc.name.man.doctor.black",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            14
+        ],
+        "sprite_frame": {
+            "x": 64,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
     }
 ]

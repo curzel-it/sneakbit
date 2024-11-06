@@ -27,6 +27,7 @@ pub enum Biome {
     RockPlates,
     Lava,
     Farmland,
+    DarkWater
 }
 
 #[derive(Default, Debug, Clone)]
@@ -54,7 +55,7 @@ impl SpriteTile for BiomeTile {
 
 impl BiomeTile {
     pub fn is_obstacle(&self) -> bool {
-        matches!(&self.tile_type, Biome::Water) || matches!(&self.tile_type, Biome::Nothing) || matches!(&self.tile_type, Biome::Lava)
+        matches!(&self.tile_type, Biome::Water) || matches!(&self.tile_type, Biome::Nothing) || matches!(&self.tile_type, Biome::Lava) || matches!(&self.tile_type, Biome::DarkWater)
     }
 
     pub fn setup_neighbors(&mut self, up: Biome, right: Biome, bottom: Biome, left: Biome) {
@@ -89,6 +90,9 @@ impl BiomeTile {
                 (Biome::Water, Biome::Desert) => 0,
                 (Biome::Water, Biome::Grass) => 0,
                 (Biome::Water, Biome::DarkGrass) => 0,
+                (Biome::DarkWater, Biome::Desert) => 0,
+                (Biome::DarkWater, Biome::Grass) => 0,
+                (Biome::DarkWater, Biome::DarkGrass) => 0,
                 (Biome::Lava, Biome::Desert) => 0,
                 (Biome::Lava, Biome::Grass) => 0,
                 (Biome::Lava, Biome::DarkGrass) => 0,
@@ -103,6 +107,7 @@ impl BiomeTile {
                 (Biome::Grass, Biome::DarkGrass) => 0,
                 (Biome::Snow, Biome::Rock) => 0,
                 (Biome::Water, Biome::DarkRock) => 0,
+                (Biome::DarkWater, Biome::DarkRock) => 0,
                 (Biome::Lava, Biome::DarkRock) => 0,
                 (Biome::Desert, Biome::Snow) => 0,
                 (Biome::Rock, Biome::Snow) => 0,
@@ -195,7 +200,7 @@ impl Biome {
     }
 
     fn number_of_biomes() -> i32 {
-        18
+        19
     }
 
     fn texture_index(&self) -> i32 {
@@ -217,7 +222,8 @@ impl Biome {
             Biome::DarkGrass => 10,
             Biome::RockPlates => 11,
             Biome::Lava => 16,
-            Biome::Farmland => 17
+            Biome::Farmland => 17,
+            Biome::DarkWater => 18
         }
     }
 
@@ -294,6 +300,7 @@ impl Biome {
             'B' => Biome::RockPlates,
             'G' => Biome::Lava,
             'H' => Biome::Farmland,
+            'J' => Biome::DarkWater,
             _ => Biome::Nothing,
         }
     }
@@ -317,7 +324,8 @@ impl Biome {
             Biome::GrassFlowersBlue => 'E',
             Biome::GrassFlowersPurple => 'F',
             Biome::Lava => 'G',
-            Biome::Farmland => 'H'
+            Biome::Farmland => 'H',
+            Biome::DarkWater => 'J'
         }
     }
 }
