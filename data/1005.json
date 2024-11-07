@@ -2745,7 +2745,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.power.tower.on",
+      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -2800,7 +2800,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.power.tower.on",
+      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -2855,7 +2855,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.power.tower.on",
+      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -2910,7 +2910,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.power.tower.on",
+      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -2965,7 +2965,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.power.tower.on",
+      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -3020,7 +3020,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.power.tower.on",
+      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -3075,7 +3075,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3130,7 +3130,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3185,7 +3185,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3240,7 +3240,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3295,7 +3295,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3350,7 +3350,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3405,7 +3405,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3460,7 +3460,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3515,7 +3515,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3570,7 +3570,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3625,7 +3625,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3680,7 +3680,7 @@
         "w": 1,
         "h": 1
       },
-      "name": "object.power.kidneys",
+      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -3735,7 +3735,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.power.tower.on",
+      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -3790,7 +3790,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.power.tower.on",
+      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -3845,7 +3845,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.power.tower.on",
+      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -3900,7 +3900,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.power.tower.on",
+      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -3955,7 +3955,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.power.tower.on",
+      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -4010,7 +4010,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4065,7 +4065,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4120,7 +4120,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4175,7 +4175,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4230,7 +4230,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4285,7 +4285,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4340,7 +4340,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4395,7 +4395,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4450,7 +4450,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4505,7 +4505,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4560,7 +4560,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4615,7 +4615,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4670,7 +4670,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4725,7 +4725,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4780,7 +4780,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4835,7 +4835,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4890,7 +4890,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4945,7 +4945,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5000,7 +5000,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5055,7 +5055,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5110,7 +5110,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5165,7 +5165,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5220,7 +5220,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5275,7 +5275,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5330,7 +5330,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5385,7 +5385,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5440,7 +5440,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5495,7 +5495,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5550,7 +5550,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5605,7 +5605,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5660,7 +5660,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.purple",
+      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5715,7 +5715,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -5770,7 +5770,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -5825,7 +5825,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -5880,7 +5880,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -5935,7 +5935,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -5990,7 +5990,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -6045,7 +6045,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -6100,7 +6100,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -6155,7 +6155,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -6210,7 +6210,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -6265,7 +6265,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -6320,7 +6320,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -6375,7 +6375,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -6430,7 +6430,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -6485,7 +6485,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.green",
+      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -6540,7 +6540,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.brown",
+      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -6595,7 +6595,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.brown",
+      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -6650,7 +6650,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.brown",
+      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -6705,7 +6705,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.brown",
+      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -6760,7 +6760,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.brown",
+      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -6815,7 +6815,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.brown",
+      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -6870,7 +6870,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.brown",
+      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -6925,7 +6925,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "object.barrel.brown",
+      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {

@@ -18,11 +18,14 @@ python3 scripts/dungen.py worldid --pavement 1 --wall 8 --fill
 Forest Village
 python3 scripts/dungen.py worldid --pavement 1 --wall 8 --fill --min_room_size 1  --max_room_size 2 --width 60 --height 40
 
+Dark Forest
+python3 scripts/dungen.py 1010 --pavement A --wall 8 --padding 10 --empty A --min_room_size 3 --max_room_size 8 --width 60 --height 60 
+
 Island
 python3 scripts/dungen.py worldid --pavement 1 --empty 2 --wall 0 --padding_pavement 2 --padding_wall 0 --min_room_size 8  --max_room_size 20 --width 120 --height 80
 
 Arcipelago
-python3 scripts/dungen.py worldid --pavement 4 --empty 2 --wall 0 --padding_pavement 2 --padding_wall 0 --min_room_size 3  --max_room_size 8 --width 60 --height 80
+python3 scripts/dungen.py worldid --pavement 4 --empty 2 --wall 0 --padding_pavement 2 --padding_wall 0 --min_room_size 3 --max_room_size 8 --width 60 --height 80
 """
 
 # Parse command-line arguments

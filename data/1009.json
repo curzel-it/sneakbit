@@ -11705,7 +11705,7 @@
       "id": 10904521,
       "frame": {
         "x": 93,
-        "y": 91,
+        "y": 92,
         "w": 1,
         "h": 1
       },
@@ -11714,9 +11714,9 @@
       "entity_type": "RailObject",
       "offset": {
         "x": 0.0,
-        "y": 4.2111163
+        "y": -4.1330376
       },
-      "direction": "Down",
+      "direction": "Up",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -11759,7 +11759,7 @@
     {
       "id": 10904522,
       "frame": {
-        "x": 80,
+        "x": 79,
         "y": 81,
         "w": 1,
         "h": 1
@@ -11768,10 +11768,10 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": 0.0,
-        "y": -4.2111163
+        "x": -4.1330376,
+        "y": 0.0
       },
-      "direction": "Up",
+      "direction": "Left",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -11814,7 +11814,7 @@
     {
       "id": 10904523,
       "frame": {
-        "x": 118,
+        "x": 117,
         "y": 41,
         "w": 1,
         "h": 1
@@ -11823,10 +11823,10 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": 0.0,
-        "y": -15.398163
+        "x": -3.6891067,
+        "y": 0.0
       },
-      "direction": "Up",
+      "direction": "Left",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -11878,7 +11878,7 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": -4.2111163,
+        "x": -4.1330376,
         "y": 0.0
       },
       "direction": "Left",
@@ -11924,8 +11924,8 @@
     {
       "id": 10904525,
       "frame": {
-        "x": 45,
-        "y": 26,
+        "x": 47,
+        "y": 24,
         "w": 1,
         "h": 1
       },
@@ -11934,7 +11934,7 @@
       "entity_type": "RailObject",
       "offset": {
         "x": 0.0,
-        "y": -4.2111163
+        "y": -4.1330376
       },
       "direction": "Up",
       "current_speed": 1.0,
@@ -11979,8 +11979,8 @@
     {
       "id": 10904526,
       "frame": {
-        "x": 59,
-        "y": 28,
+        "x": 55,
+        "y": 30,
         "w": 1,
         "h": 1
       },
@@ -11989,7 +11989,7 @@
       "entity_type": "RailObject",
       "offset": {
         "x": 0.0,
-        "y": 4.2111163
+        "y": 4.1330376
       },
       "direction": "Down",
       "current_speed": 1.0,
@@ -12034,8 +12034,8 @@
     {
       "id": 10904527,
       "frame": {
-        "x": 128,
-        "y": 72,
+        "x": 125,
+        "y": 71,
         "w": 1,
         "h": 1
       },
@@ -12043,10 +12043,10 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": 4.2111163,
+        "x": -4.1330376,
         "y": 0.0
       },
-      "direction": "Right",
+      "direction": "Left",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,

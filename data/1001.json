@@ -929,7 +929,7 @@
       },
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
