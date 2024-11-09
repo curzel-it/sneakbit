@@ -24,6 +24,7 @@ class Biome(Enum):
     LAVA = 'G'
     FARMLAND = 'H'
     DARK_WATER = 'J'
+    DARK_SAND = 'K'
 
     @staticmethod
     def number_of_combinations() -> int:
@@ -31,7 +32,7 @@ class Biome(Enum):
 
     @staticmethod
     def number_of_biomes() -> int:
-        return 19
+        return 20
 
     def texture_index(self) -> int:
         texture_indices = {
@@ -54,6 +55,7 @@ class Biome(Enum):
             Biome.LAVA: 16,
             Biome.FARMLAND: 17,
             Biome.DARK_WATER: 18,
+            Biome.DARK_SAND: 19,
         }
         return texture_indices.get(self, 0)
 
@@ -92,6 +94,7 @@ class Biome(Enum):
             'G': Biome.LAVA,
             'H': Biome.FARMLAND,
             'J': Biome.DARK_WATER,
+            'K': Biome.DARK_SAND
         }
         return mapping.get(c.upper(), Biome.NOTHING)
 
@@ -116,6 +119,7 @@ class Biome(Enum):
             'G': Biome.LAVA,
             'H': Biome.FARMLAND,
             'J': Biome.DARK_WATER,
+            'K': Biome.DARK_SAND
         }.items()}
         return reverse_mapping.get(self, '0')
 
@@ -165,17 +169,44 @@ class BiomeTile:
                     return default_index
 
             match (self.tile_type, neighbor):
-                case (Biome.WATER, Biome.DESERT) | (Biome.WATER, Biome.GRASS) | (Biome.WATER, Biome.DARK_GRASS) | \
-                (Biome.LAVA, Biome.DESERT) | (Biome.LAVA, Biome.GRASS) | (Biome.LAVA, Biome.DARK_GRASS) | \
-                (Biome.GRASS, Biome.DESERT) | (Biome.GRASS, Biome.ROCK) | (Biome.GRASS, Biome.DARK_ROCK) | \
-                (Biome.GRASS, Biome.SNOW) | (Biome.DARK_GRASS, Biome.DESERT) | (Biome.DARK_GRASS, Biome.ROCK) | \
-                (Biome.DARK_GRASS, Biome.DARK_ROCK) | (Biome.DARK_GRASS, Biome.SNOW) | (Biome.GRASS, Biome.DARK_GRASS) | \
-                (Biome.SNOW, Biome.ROCK) | (Biome.WATER, Biome.DARK_ROCK) | (Biome.LAVA, Biome.DARK_ROCK) | \
-                (Biome.DESERT, Biome.SNOW) | (Biome.ROCK, Biome.SNOW) | (Biome.DARK_ROCK, Biome.SNOW) | \
-                (Biome.DARK_ROCK, Biome.DESERT) | (_, Biome.NOTHING):
-                    return 0
-                case _:
-                    return default_index
+                case (Biome.WATER, Biome.DESERT): return 0
+                case (Biome.WATER, Biome.GRASS): return 0
+                case (Biome.WATER, Biome.DARK_GRASS): return 0
+                case (Biome.WATER, Biome.ROCK): return 0
+                case (Biome.DARK_WATER, Biome.DARK_SAND): return 0
+                case (Biome.DARK_WATER, Biome.DESERT): return 0
+                case (Biome.DARK_WATER, Biome.GRASS): return 0
+                case (Biome.DARK_WATER, Biome.DARK_GRASS): return 0
+                case (Biome.LAVA, Biome.DARK_SAND): return 0
+                case (Biome.LAVA, Biome.DESERT): return 0
+                case (Biome.LAVA, Biome.GRASS): return 0
+                case (Biome.LAVA, Biome.DARK_GRASS): return 0
+                case (Biome.GRASS, Biome.DARK_SAND): return 0
+                case (Biome.GRASS, Biome.DESERT): return 0
+                case (Biome.GRASS, Biome.ROCK): return 0
+                case (Biome.GRASS, Biome.DARK_ROCK): return 0
+                case (Biome.GRASS, Biome.SNOW): return 0
+                case (Biome.DARK_GRASS, Biome.DARK_SAND): return 0
+                case (Biome.DARK_GRASS, Biome.DESERT): return 0
+                case (Biome.DARK_GRASS, Biome.ROCK): return 0
+                case (Biome.DARK_GRASS, Biome.DARK_ROCK): return 0
+                case (Biome.DARK_GRASS, Biome.SNOW): return 0
+                case (Biome.GRASS, Biome.DARK_GRASS): return 0
+                case (Biome.SNOW, Biome.ROCK): return 0
+                case (Biome.WATER, Biome.DARK_ROCK): return 0
+                case (Biome.DARK_WATER, Biome.DARK_ROCK): return 0
+                case (Biome.LAVA, Biome.DARK_ROCK): return 0
+                case (Biome.DARK_SAND, Biome.SNOW): return 0
+                case (Biome.DESERT, Biome.SNOW): return 0
+                case (Biome.DESERT, Biome.DARK_SAND): return 0
+                case (Biome.ROCK, Biome.SNOW): return 0
+                case (Biome.ROCK, Biome.DESERT): return 0
+                case (Biome.ROCK, Biome.DARK_SAND): return 0
+                case (Biome.DARK_ROCK, Biome.SNOW): return 0
+                case (Biome.DARK_ROCK, Biome.DESERT): return 0
+                case (Biome.DARK_ROCK, Biome.DARK_SAND): return 0
+                case (_, Biome.NOTHING): return 0
+                case _: return default_index
 
         return 0
 

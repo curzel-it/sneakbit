@@ -27,7 +27,8 @@ pub enum Biome {
     RockPlates,
     Lava,
     Farmland,
-    DarkWater
+    DarkWater,
+    DarkSand
 }
 
 #[derive(Default, Debug, Clone)]
@@ -90,16 +91,21 @@ impl BiomeTile {
                 (Biome::Water, Biome::Desert) => 0,
                 (Biome::Water, Biome::Grass) => 0,
                 (Biome::Water, Biome::DarkGrass) => 0,
+                (Biome::Water, Biome::Rock) => 0,
+                (Biome::DarkWater, Biome::DarkSand) => 0,
                 (Biome::DarkWater, Biome::Desert) => 0,
                 (Biome::DarkWater, Biome::Grass) => 0,
                 (Biome::DarkWater, Biome::DarkGrass) => 0,
+                (Biome::Lava, Biome::DarkSand) => 0,
                 (Biome::Lava, Biome::Desert) => 0,
                 (Biome::Lava, Biome::Grass) => 0,
                 (Biome::Lava, Biome::DarkGrass) => 0,
+                (Biome::Grass, Biome::DarkSand) => 0,
                 (Biome::Grass, Biome::Desert) => 0,
                 (Biome::Grass, Biome::Rock) => 0,
                 (Biome::Grass, Biome::DarkRock) => 0,
                 (Biome::Grass, Biome::Snow) => 0,
+                (Biome::DarkGrass, Biome::DarkSand) => 0,
                 (Biome::DarkGrass, Biome::Desert) => 0,
                 (Biome::DarkGrass, Biome::Rock) => 0,
                 (Biome::DarkGrass, Biome::DarkRock) => 0,
@@ -109,10 +115,15 @@ impl BiomeTile {
                 (Biome::Water, Biome::DarkRock) => 0,
                 (Biome::DarkWater, Biome::DarkRock) => 0,
                 (Biome::Lava, Biome::DarkRock) => 0,
+                (Biome::DarkSand, Biome::Snow) => 0,
                 (Biome::Desert, Biome::Snow) => 0,
+                (Biome::Desert, Biome::DarkSand) => 0,
                 (Biome::Rock, Biome::Snow) => 0,
+                (Biome::Rock, Biome::Desert) => 0,
+                (Biome::Rock, Biome::DarkSand) => 0,
                 (Biome::DarkRock, Biome::Snow) => 0,
                 (Biome::DarkRock, Biome::Desert) => 0,
+                (Biome::DarkRock, Biome::DarkSand) => 0,
                 (_, Biome::Nothing) => 0,
                 _ => default_index
             }
@@ -200,7 +211,7 @@ impl Biome {
     }
 
     fn number_of_biomes() -> i32 {
-        19
+        20
     }
 
     fn texture_index(&self) -> i32 {
@@ -223,7 +234,8 @@ impl Biome {
             Biome::RockPlates => 11,
             Biome::Lava => 16,
             Biome::Farmland => 17,
-            Biome::DarkWater => 18
+            Biome::DarkWater => 18,
+            Biome::DarkSand => 19
         }
     }
 
@@ -301,6 +313,7 @@ impl Biome {
             'G' => Biome::Lava,
             'H' => Biome::Farmland,
             'J' => Biome::DarkWater,
+            'K' => Biome::DarkSand,
             _ => Biome::Nothing,
         }
     }
@@ -325,7 +338,8 @@ impl Biome {
             Biome::GrassFlowersPurple => 'F',
             Biome::Lava => 'G',
             Biome::Farmland => 'H',
-            Biome::DarkWater => 'J'
+            Biome::DarkWater => 'J',
+            Biome::DarkSand => 'K'
         }
     }
 }

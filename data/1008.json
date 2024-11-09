@@ -3211,8 +3211,8 @@
     {
       "id": 10909152,
       "frame": {
-        "x": 25,
-        "y": 39,
+        "x": 24,
+        "y": 40,
         "w": 1,
         "h": 1
       },
@@ -3220,10 +3220,10 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": -8.590716,
-        "y": 0.0
+        "x": 0.0,
+        "y": -0.43312532
       },
-      "direction": "Left",
+      "direction": "Up",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -3266,7 +3266,7 @@
     {
       "id": 10909153,
       "frame": {
-        "x": 47,
+        "x": 37,
         "y": 27,
         "w": 1,
         "h": 1
@@ -3275,7 +3275,7 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": -12.192806,
+        "x": 0.0,
         "y": 0.0
       },
       "direction": "Left",
@@ -3308,7 +3308,7 @@
       "melee_attacks_hero": false,
       "is_dying": false,
       "latest_movement": [
-        0,
+        -1,
         0
       ],
       "contents": null,
@@ -3330,7 +3330,7 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": -1.3330799,
+        "x": -0.43312532,
         "y": 0.0
       },
       "direction": "Left",
@@ -3376,8 +3376,8 @@
     {
       "id": 10909151,
       "frame": {
-        "x": 62,
-        "y": 53,
+        "x": 60,
+        "y": 52,
         "w": 1,
         "h": 1
       },
@@ -3385,10 +3385,10 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": -1.6664866,
-        "y": 0.0
+        "x": 0.0,
+        "y": 0.43312532
       },
-      "direction": "Left",
+      "direction": "Down",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,

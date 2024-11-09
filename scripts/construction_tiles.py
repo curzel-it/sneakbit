@@ -25,6 +25,8 @@ class Construction(IntEnum):
     SpoiledTree = 18
     WineTree = 19
     SolarPanel = 20
+    Pipe = 21
+    BroadleafPurple = 22
 
     @staticmethod
     def from_char(c: str):
@@ -48,7 +50,9 @@ class Construction(IntEnum):
             'H': Construction.StoneBox,
             'J': Construction.SpoiledTree,
             'K': Construction.WineTree,
-            'L': Construction.SolarPanel
+            'L': Construction.SolarPanel,
+            'M': Construction.Pipe,
+            'N': Construction.BroadleafPurple
         }
         return mapping.get(c.upper(), Construction.Nothing)
 
@@ -74,6 +78,8 @@ class Construction(IntEnum):
             Construction.SpoiledTree: 'J',
             Construction.WineTree: 'K',
             Construction.SolarPanel: 'L',
+            Construction.Pipe: 'M',
+            Construction.BroadleafPurple: 'N'
         }
         return reverse_mapping.get(self, '0')
 
@@ -98,7 +104,9 @@ class Construction(IntEnum):
             Construction.StoneBox: 17,
             Construction.SpoiledTree: 18,
             Construction.WineTree: 19,
-            Construction.SolarPanel: 20
+            Construction.SolarPanel: 20,
+            Construction.Pipe: 21,
+            Construction.BroadleafPurple: 22
         }
         return mapping.get(self, 0)
 
