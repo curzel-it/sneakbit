@@ -123,14 +123,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -178,14 +178,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -233,14 +233,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -288,14 +288,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -343,14 +343,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -398,14 +398,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -453,14 +453,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -508,14 +508,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -563,14 +563,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -618,14 +618,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -673,14 +673,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -728,14 +728,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -783,14 +783,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -838,14 +838,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -893,14 +893,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -948,14 +948,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1003,14 +1003,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1058,14 +1058,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1113,14 +1113,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1168,14 +1168,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1223,14 +1223,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1278,14 +1278,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1333,14 +1333,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1388,14 +1388,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1443,14 +1443,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1498,14 +1498,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1553,14 +1553,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1608,14 +1608,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1663,14 +1663,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1718,14 +1718,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1773,14 +1773,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1828,14 +1828,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1883,14 +1883,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1938,14 +1938,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -1993,14 +1993,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2048,14 +2048,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2103,14 +2103,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2158,14 +2158,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2213,14 +2213,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2268,14 +2268,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2323,14 +2323,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2378,14 +2378,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2433,14 +2433,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2488,14 +2488,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2543,14 +2543,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2598,14 +2598,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2653,14 +2653,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2708,14 +2708,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2763,14 +2763,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2818,14 +2818,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2873,14 +2873,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2928,14 +2928,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -2983,14 +2983,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3038,14 +3038,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3093,14 +3093,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3148,14 +3148,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3203,14 +3203,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3258,14 +3258,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3313,14 +3313,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3368,14 +3368,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3423,14 +3423,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3478,14 +3478,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3533,14 +3533,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3588,14 +3588,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3643,14 +3643,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3698,14 +3698,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3753,14 +3753,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3808,14 +3808,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3863,14 +3863,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3918,14 +3918,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -3973,14 +3973,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4028,14 +4028,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4083,14 +4083,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4138,14 +4138,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4193,14 +4193,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4248,14 +4248,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4303,14 +4303,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4358,14 +4358,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4413,14 +4413,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4468,14 +4468,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4523,14 +4523,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4578,14 +4578,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4633,14 +4633,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4688,14 +4688,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4743,14 +4743,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4798,14 +4798,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4853,14 +4853,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4908,14 +4908,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -4963,14 +4963,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5018,14 +5018,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5073,14 +5073,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5128,14 +5128,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5183,14 +5183,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5238,14 +5238,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5293,14 +5293,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5348,14 +5348,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5403,14 +5403,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5458,14 +5458,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5513,14 +5513,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5568,14 +5568,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5623,14 +5623,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5678,14 +5678,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5733,14 +5733,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5788,14 +5788,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5843,14 +5843,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5898,14 +5898,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -5953,14 +5953,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6008,14 +6008,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6063,14 +6063,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6118,14 +6118,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6173,14 +6173,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6228,14 +6228,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6283,14 +6283,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6338,14 +6338,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6393,14 +6393,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6448,14 +6448,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6503,14 +6503,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6558,14 +6558,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6613,14 +6613,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6668,14 +6668,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6723,14 +6723,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6778,14 +6778,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6833,14 +6833,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6888,14 +6888,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6943,14 +6943,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -6998,14 +6998,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7053,14 +7053,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7108,14 +7108,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7163,14 +7163,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7218,14 +7218,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7273,14 +7273,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7328,14 +7328,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7383,14 +7383,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7438,14 +7438,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7493,14 +7493,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7548,14 +7548,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7603,14 +7603,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7658,14 +7658,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7713,14 +7713,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7768,14 +7768,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7823,14 +7823,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7878,14 +7878,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7933,14 +7933,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -7988,14 +7988,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8043,14 +8043,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8098,14 +8098,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8153,14 +8153,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8208,14 +8208,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8263,14 +8263,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8318,14 +8318,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8373,14 +8373,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8428,14 +8428,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8483,14 +8483,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8538,14 +8538,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8593,14 +8593,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8648,14 +8648,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8703,14 +8703,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8758,14 +8758,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8813,14 +8813,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8868,14 +8868,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8923,14 +8923,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -8978,14 +8978,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9033,14 +9033,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9088,14 +9088,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9143,14 +9143,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9198,14 +9198,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9253,14 +9253,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9308,14 +9308,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9363,14 +9363,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9418,14 +9418,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9473,14 +9473,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9528,14 +9528,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9583,14 +9583,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9638,14 +9638,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9693,14 +9693,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9748,14 +9748,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9803,14 +9803,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9858,14 +9858,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9913,14 +9913,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -9968,14 +9968,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10023,14 +10023,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10078,14 +10078,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10133,14 +10133,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10188,14 +10188,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10243,14 +10243,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10298,14 +10298,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10353,14 +10353,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10408,14 +10408,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10463,14 +10463,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10518,14 +10518,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10573,14 +10573,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10628,14 +10628,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10683,14 +10683,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10738,14 +10738,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10793,14 +10793,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10848,14 +10848,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10903,14 +10903,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -10958,14 +10958,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11013,14 +11013,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11068,14 +11068,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11123,14 +11123,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11178,14 +11178,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11233,14 +11233,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11288,14 +11288,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11343,14 +11343,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11398,14 +11398,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11453,14 +11453,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11508,14 +11508,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11563,14 +11563,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11618,14 +11618,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11673,14 +11673,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11728,14 +11728,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11783,14 +11783,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11838,14 +11838,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11893,14 +11893,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -11948,14 +11948,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12003,14 +12003,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12058,14 +12058,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12113,14 +12113,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12168,14 +12168,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12223,14 +12223,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12278,14 +12278,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12333,14 +12333,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12388,14 +12388,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12443,14 +12443,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12498,14 +12498,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12553,14 +12553,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12608,14 +12608,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12663,14 +12663,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12718,14 +12718,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12773,14 +12773,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12828,14 +12828,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12883,14 +12883,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12938,14 +12938,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -12993,14 +12993,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13048,14 +13048,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13103,14 +13103,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13158,14 +13158,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13213,14 +13213,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13268,14 +13268,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13323,14 +13323,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13378,14 +13378,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13433,14 +13433,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13488,14 +13488,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13543,14 +13543,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13598,14 +13598,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13653,14 +13653,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13708,14 +13708,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13763,14 +13763,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13818,14 +13818,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13873,14 +13873,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13928,14 +13928,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -13983,14 +13983,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14038,14 +14038,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14093,14 +14093,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14148,14 +14148,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14203,14 +14203,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14258,14 +14258,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14313,14 +14313,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14368,14 +14368,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14423,14 +14423,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14478,14 +14478,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14533,14 +14533,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14588,14 +14588,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14643,14 +14643,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14698,14 +14698,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14753,14 +14753,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14808,14 +14808,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14863,14 +14863,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14918,14 +14918,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -14973,14 +14973,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15028,14 +15028,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15083,14 +15083,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15138,14 +15138,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15193,14 +15193,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15248,14 +15248,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15303,14 +15303,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15358,14 +15358,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15413,14 +15413,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15468,14 +15468,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15523,14 +15523,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15578,14 +15578,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15633,14 +15633,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15688,14 +15688,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15743,14 +15743,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15798,14 +15798,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15853,14 +15853,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15908,14 +15908,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -15963,14 +15963,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16018,14 +16018,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16073,14 +16073,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16121,8 +16121,8 @@
     {
       "id": 11114106,
       "frame": {
-        "x": 53,
-        "y": 43,
+        "x": 60,
+        "y": 38,
         "w": 1,
         "h": 1
       },
@@ -16130,10 +16130,10 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": 4.3153443,
-        "y": 0.0
+        "x": 0.0,
+        "y": -5.3454714
       },
-      "direction": "Right",
+      "direction": "Up",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -16183,14 +16183,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16238,14 +16238,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16293,14 +16293,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16348,14 +16348,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16403,14 +16403,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16458,14 +16458,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16513,14 +16513,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16568,14 +16568,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16623,14 +16623,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16678,14 +16678,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16733,14 +16733,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16788,14 +16788,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16843,14 +16843,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16898,14 +16898,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -16953,14 +16953,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17008,14 +17008,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17063,14 +17063,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17118,14 +17118,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17173,14 +17173,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17228,14 +17228,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17283,14 +17283,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17338,14 +17338,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17393,14 +17393,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17448,14 +17448,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17503,14 +17503,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17558,14 +17558,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17613,14 +17613,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17668,14 +17668,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17723,14 +17723,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17778,14 +17778,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17833,14 +17833,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17888,14 +17888,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17943,14 +17943,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -17998,14 +17998,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18053,14 +18053,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18108,14 +18108,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18163,14 +18163,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18218,14 +18218,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18273,14 +18273,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18328,14 +18328,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18383,14 +18383,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18438,14 +18438,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18493,14 +18493,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18548,14 +18548,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18603,14 +18603,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18658,14 +18658,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18713,14 +18713,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18768,14 +18768,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18823,14 +18823,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18878,14 +18878,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18933,14 +18933,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -18988,14 +18988,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19043,14 +19043,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19098,14 +19098,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19153,14 +19153,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19208,14 +19208,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19263,14 +19263,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19318,14 +19318,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19373,14 +19373,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19428,14 +19428,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19483,14 +19483,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19538,14 +19538,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19593,14 +19593,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19648,14 +19648,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19703,14 +19703,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19758,14 +19758,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19813,14 +19813,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19868,14 +19868,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19923,14 +19923,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -19978,14 +19978,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20033,14 +20033,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20088,14 +20088,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20143,14 +20143,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20198,14 +20198,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20253,14 +20253,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20308,14 +20308,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20363,14 +20363,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20418,14 +20418,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20473,14 +20473,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20528,14 +20528,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20583,14 +20583,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20638,14 +20638,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20693,14 +20693,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20748,14 +20748,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20803,14 +20803,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20858,14 +20858,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20913,14 +20913,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -20968,14 +20968,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21023,14 +21023,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21078,14 +21078,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21133,14 +21133,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21188,14 +21188,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21243,14 +21243,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21298,14 +21298,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21353,14 +21353,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21408,14 +21408,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21463,14 +21463,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21518,14 +21518,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21573,14 +21573,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21628,14 +21628,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21683,14 +21683,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21738,14 +21738,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21793,14 +21793,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21848,14 +21848,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21903,14 +21903,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -21958,14 +21958,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22013,14 +22013,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22068,14 +22068,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22123,14 +22123,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22178,14 +22178,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22233,14 +22233,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22288,14 +22288,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22343,14 +22343,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22398,14 +22398,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22508,14 +22508,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22563,14 +22563,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22618,14 +22618,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22673,14 +22673,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22728,14 +22728,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22783,14 +22783,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22838,14 +22838,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22893,14 +22893,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -22948,14 +22948,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23003,14 +23003,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23058,14 +23058,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23113,14 +23113,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23168,14 +23168,14 @@
       },
       "name": "objects.name.slope.side_right.sand",
       "species_id": 44428,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23223,14 +23223,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23278,14 +23278,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23333,14 +23333,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23388,14 +23388,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23443,14 +23443,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23498,14 +23498,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23553,14 +23553,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23608,14 +23608,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23663,14 +23663,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23718,14 +23718,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23773,14 +23773,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23828,14 +23828,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23883,14 +23883,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23938,14 +23938,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -23993,14 +23993,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24048,14 +24048,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24103,14 +24103,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24158,14 +24158,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24213,14 +24213,14 @@
       },
       "name": "objects.name.slope.side_top.sand",
       "species_id": 44426,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24268,14 +24268,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24323,14 +24323,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24378,14 +24378,14 @@
       },
       "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24433,14 +24433,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24488,14 +24488,14 @@
       },
       "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24543,14 +24543,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24598,14 +24598,14 @@
       },
       "name": "objects.name.slope.side_bottom.sand",
       "species_id": 44425,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24653,14 +24653,14 @@
       },
       "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24708,14 +24708,14 @@
       },
       "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24763,14 +24763,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -24818,14 +24818,14 @@
       },
       "name": "objects.name.slope.side_left.sand",
       "species_id": 44427,
-      "entity_type": "PressurePlate",
+      "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
@@ -25186,7 +25186,7 @@
         0,
         0
       ],
-      "contents": null,
+      "contents": "1003.entrance",
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
@@ -26961,7 +26961,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "npc.name.girl.blue",
+      "name": "Girl",
       "species_id": 1036,
       "entity_type": "Npc",
       "offset": {
@@ -27016,7 +27016,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "npc.name.girl.blue",
+      "name": "Girl",
       "species_id": 1036,
       "entity_type": "Npc",
       "offset": {
@@ -27071,7 +27071,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "npc.name.girl.blue",
+      "name": "Girl",
       "species_id": 1036,
       "entity_type": "Npc",
       "offset": {
@@ -27642,7 +27642,7 @@
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 200,
       "sprite": {
         "sheet_id": 1010,

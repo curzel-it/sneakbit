@@ -149,8 +149,8 @@
       "888888888888888000088088888880888880088888000000008888888888",
       "888888888888000000008000088880888880888888000000008888888888",
       "000000000000000000008000088880888880888888808000008888888888",
-      "888888888888000000000000088880888880088888808000008888888888",
-      "888888888888888000000000008800888880088888808000008888888888",
+      "888888888888000000000000088880888880000888808000008888888888",
+      "888888888888888000000000008800888880000888808000008888888888",
       "888888888888888000000000088880888880000000008000008888888888",
       "888888888888888000000000088880888800088888888000008888888888",
       "888888888888888800000000088888888800088888880000008888888888",
@@ -1719,6 +1719,61 @@
         0
       ],
       "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11191654,
+      "frame": {
+        "x": 37,
+        "y": 60,
+        "w": 2,
+        "h": 1
+      },
+      "name": "Large Sign",
+      "species_id": 10001,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 3,
+          "y": 4,
+          "w": 2,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 3,
+        "y": 4,
+        "w": 2,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": "1010.entrance",
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,

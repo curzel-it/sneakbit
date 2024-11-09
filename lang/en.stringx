@@ -122,8 +122,19 @@
 "text_input.hint" = "ENTER to confirm, ESC to cancel"
 "you" = "You"
 
-"hint.001.pickup" = "Pick up objects by passing over them"
-"hint.002.throw_knife" = "Throw knifes by pressing FIRE"
+"hint.001.pickup" = """
+Pick up objects by passing over them
+"""
+
+"hint.002.throw_knife" = """
+Throw knifes by pressing FIRE
+"""
+
+"hint.003.not_all_places_have_loot" = """
+What? 
+You expected every house to have loot?
+Also, what the hell are you doing in my house!?
+"""
 
 "lore.001.ninja_house" = """
 Yo, 
@@ -132,17 +143,20 @@ Also, what the hell are you doing in my house!?
 Get out!
 Signed "B.N.K."
 """
+
 "lore.002.accumulator" = """
 My brother has an accumulation problem...
 I'm waiting for him to get home so I can force him to clean up.
 I just hope he didn't have any trouble with the monsters.
 """
+
 "lore.003.monsters_first_appearance" = """
 Monsters have been part of this world for a long time.
 They've been around for as long as I can remember at least.
 But they never left the deeper woods until recently.
 I pity newer generations for having to deal with this many.
 """
+
 "lore.004.you_are_here" = """
 So you say "some kind of magic" brought you here? 
 Interesting... You see, I attempted a summoning ritual 
@@ -154,3 +168,95 @@ I suggest you start your own journey and learn more
 about this world.
 I shall see you then.
 """
+
+"lore.004.you_are_here_again" = """
+I suggest you start your own journey and learn more
+about this world.
+I shall see you then.
+"""
+
+"lore.005.manafren_trees.sign" = """
+Manafern Trees
+Famous worldwide for their mystical energy properties. 
+Their unique purple leaves harness the essence of twilight, 
+fueling life and wonder in Duskhaven.
+"""
+
+"lore.005.manafren_trees.book" = """
+The Manafern Tree, a botanical marvel exclusive 
+to the ever-twilit region of Duskhaven, 
+has long captivated scholars and mystics alike. 
+
+This unique broadleaf species, 
+identifiable by its vibrant purple foliage, 
+exhibits an unparalleled ability to produce raw mana.
+
+Through a complex interaction between its deep-rooted system 
+and the ambient twilight of the region, 
+the Manafern absorbs ethereal particles from both the soil and air. 
+These particles, once drawn into the tree's intricate vascular system, 
+undergo a natural process akin to photosynthesis but far more extraordinary. 
+The tree converts these particles into pure mana, 
+which radiates through its leaves, casting a subtle, 
+luminescent glow. Locals often speak of how these trees 'hum' with life, 
+their energy harnessed to illuminate homes, power devices, 
+and even sustain the vibrant ecosystem of Duskhaven itself. 
+"""
+
+"lore.006.manafren_trees.dark_book" = """
+The Manafern Tree, prized for its mana-producing properties, 
+harbors a hidden and chilling secret. 
+Centuries ago, the Demon Lord forged a pact with the twilight land of Duskhaven, 
+embedding his essence into the very roots of the region.
+These trees, with their glowing purple leaves, 
+were not created to enrich life alone,
+but to sustain the dark will of their creator.
+
+Each pulse of mana radiating from the Manaferns carries 
+a fragment of the Demon Lord’s essence
+Every use of this power strengthens his tether to the world, 
+edging it closer to his dominion. 
+"""
+
+"lore.006.vintoria_power_station" = """
+Vintoria’s Cascade Station
+Harnessing the might of the waterfall to power 
+the valley with life-giving mana
+"""
+
+"lore.007.vintoria_entrance" = """
+Welcome to Vintoria Valley
+where the thundering falls weave mana into prosperity 
+and the vineyards whisper tales of timeless beauty.
+"""
+
+"lore.008.mount_ignis" = """
+Warning
+Extreme heat and volatile ground.
+Proceed with caution and respect the power of Mount Ignis.
+"""
+
+"lore.009.thermoria_dock" = """
+Dock of Thermoria — Gateway to Maritide Haven
+"""
+
+"1001.entrance" = "Welcome to Evergrove Village"
+"1002.entrance" = "Verdant Way"
+"1003.entrance" = "Welcome to Aridreach"
+"1004.entrance" = "Evergrove Village"
+"1005.entrance" = "Evergrove Village"
+"1006.entrance" = "Welcome to Thermoria"
+"1007.entrance" = "Evergrove Village"
+"1008.entrance" = "Welcome to Maritide Haven"
+"1009.entrance" = "Evergrove Village"
+"1010.entrance" = "Shadowveil Path"
+"1011.entrance" = "Duskhaven"
+"1012.entrance" = "Vintoria"
+"1013.entrance" = "Grimsun Basin"
+"1014.entrance" = "Evergrove Village"
+"1015.entrance" = "Evergrove Village"
+"1016.entrance" = "Evergrove Village"
+"1017.entrance" = "Evergrove Village"
+"1018.entrance" = "Evergrove Village"
+"1019.entrance" = "Evergrove Village"
+"1020.entrance" = "Evergrove Village"
