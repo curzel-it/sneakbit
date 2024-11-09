@@ -70,7 +70,7 @@ impl ToastDisplay {
     }
 
     fn show_now(&mut self, toast: Toast) {
-        self.animator.animate(0.0, 1.0, 2.5);
+        self.animator.animate(0.0, 1.0, toast.mode.duration());
         self.text = toast.text;
         self.mode = toast.mode;
 
@@ -80,6 +80,15 @@ impl ToastDisplay {
             self.sprite = None;
         }
         
+    }
+}
+
+impl ToastMode {
+    fn duration(&self) -> f32 {
+        match self {
+            ToastMode::Important => 1.8,
+            ToastMode::Regular => 1.0
+        }
     }
 }
 

@@ -7,8 +7,10 @@ pub type EntityDialogues = Vec<Dialogue>;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Dialogue {
     pub key: String,
-    pub expected_value: u32,
     pub text: String,
+    
+    #[serde(default)]
+    pub expected_value: u32,
     
     #[serde(default)]
     pub reward: Option<SpeciesId>

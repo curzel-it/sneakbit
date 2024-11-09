@@ -50,6 +50,7 @@
 "npc.menu.title" = "NPC Options"
 "npc.name.demon_lord" = "Demon Lord"
 "npc.name.default" = "Some Npc"
+"npc.name.girl.blue" = "Girl"
 "npc.name.ghost" = "Ghost"
 "npc.name.goddess" = "Goddess"
 "npc.name.homunculus" = "Homunculus"
@@ -120,3 +121,36 @@
 "telepoter.locked.permanent" = "This door is locked."
 "text_input.hint" = "ENTER to confirm, ESC to cancel"
 "you" = "You"
+
+"hint.001.pickup" = "Pick up objects by passing over them"
+"hint.002.throw_knife" = "Throw knifes by pressing FIRE"
+
+"lore.001.ninja_house" = """
+Yo, 
+I'm out on a mission.
+Also, what the hell are you doing in my house!?
+Get out!
+Signed "B.N.K."
+"""
+"lore.002.accumulator" = """
+My brother has an accumulation problem...
+I'm waiting for him to get home so I can force him to clean up.
+I just hope he didn't have any trouble with the monsters.
+"""
+"lore.003.monsters_first_appearance" = """
+Monsters have been part of this world for a long time.
+They've been around for as long as I can remember at least.
+But they never left the deeper woods until recently.
+I pity newer generations for having to deal with this many.
+"""
+"lore.004.you_are_here" = """
+So you say "some kind of magic" brought you here? 
+Interesting... You see, I attempted a summoning ritual 
+multiple times in the past, but it never worked.
+Either that, or you're very late.
+Unfortunately, there is no much guidance an old geezer 
+like me can give you, maybe if I were younger...
+I suggest you start your own journey and learn more
+about this world.
+I shall see you then.
+"""

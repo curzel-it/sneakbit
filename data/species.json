@@ -1181,13 +1181,13 @@
             11
         ],
         "sprite_frame": {
-            "x": 19,
-            "y": 0,
+            "x": 0,
+            "y": 5,
             "w": 1,
             "h": 1
         },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
         "lock_type": "None"
     },
     {
@@ -1203,13 +1203,13 @@
             12
         ],
         "sprite_frame": {
-            "x": 19,
-            "y": 1,
+            "x": 0,
+            "y": 6,
             "w": 1,
             "h": 1
         },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
         "lock_type": "None"
     },
     {
@@ -1225,13 +1225,13 @@
             13
         ],
         "sprite_frame": {
-            "x": 19,
-            "y": 2,
+            "x": 0,
+            "y": 7,
             "w": 1,
             "h": 1
         },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
         "lock_type": "None"
     },
     {
@@ -1247,13 +1247,13 @@
             14
         ],
         "sprite_frame": {
-            "x": 19,
-            "y": 3,
+            "x": 0,
+            "y": 8,
             "w": 1,
             "h": 1
         },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
         "lock_type": "None"
     },
     {
@@ -1269,13 +1269,13 @@
             15
         ],
         "sprite_frame": {
-            "x": 19,
-            "y": 4,
+            "x": 0,
+            "y": 9,
             "w": 1,
             "h": 1
         },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
         "lock_type": "None"
     },
     {
@@ -3056,6 +3056,204 @@
         },
         "sprite_sheet_id": 1012,
         "sprite_number_of_frames": 7,
+        "lock_type": "None"
+    },
+    {
+        "id": 1090,
+        "name": "objects.cabinet.sm.brown",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            11
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 12,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1091,
+        "name": "objects.cabinet.md.brown",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            12
+        ],
+        "sprite_frame": {
+            "x": 1,
+            "y": 12,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1092,
+        "name": "objects.cabinet.lg.brown",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            13
+        ],
+        "sprite_frame": {
+            "x": 2,
+            "y": 12,
+            "w": 2,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1093,
+        "name": "objects.cabinet.sm.beige",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            14
+        ],
+        "sprite_frame": {
+            "x": 4,
+            "y": 12,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1094,
+        "name": "objects.cabinet.md.beige",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            15
+        ],
+        "sprite_frame": {
+            "x": 5,
+            "y": 12,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1095,
+        "name": "objects.cabinet.lg.beige",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            16
+        ],
+        "sprite_frame": {
+            "x": 6,
+            "y": 12,
+            "w": 2,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1096,
+        "name": "objects.cabinet.sm.white",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            17
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 14,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1097,
+        "name": "objects.cabinet.md.white",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            18
+        ],
+        "sprite_frame": {
+            "x": 1,
+            "y": 14,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1098,
+        "name": "objects.cabinet.lg.white",
+        "entity_type": "StaticObject",
+        "is_invulnerable": false,
+        "z_index": 0,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            6,
+            19
+        ],
+        "sprite_frame": {
+            "x": 2,
+            "y": 14,
+            "w": 2,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
         "lock_type": "None"
     }
 ]
