@@ -1,4 +1,4 @@
-use crate::{dialogues::models::Dialogue, entities::{npcs::NpcId, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast, utils::vector::Vector2d};
+use crate::{dialogues::models::Dialogue, entities::{bullets::BulletId, npcs::NpcId, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast, utils::vector::Vector2d};
 
 use super::{entity::{Entity, EntityId, EntityProps}, locks::LockType};
 
@@ -19,7 +19,9 @@ pub enum WorldStateUpdate {
     StopHeroMovement,
     ConstructionTileChange(usize, usize, Construction),
     EngineUpdate(EngineStateUpdate),
-    HandleHit(EntityId, EntityId),
+    HandleHit(BulletId, EntityId),
+    HandleBulletCatched(BulletId),
+    HandleBulletStopped(BulletId),
     SetPressurePlateState(LockType, bool)
 }
 

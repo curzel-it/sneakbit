@@ -76,7 +76,7 @@ impl LongTextDisplay {
     }
 
     fn text_ui(&self) -> View {
-        let start_index = self.scroll_offset;
+        let start_index = self.scroll_offset.min(self.lines.len() - 2).max(0);
         let end_index = (self.scroll_offset + self.visible_line_count).min(self.lines.len());
 
         let visible_lines: Vec<View> = self.lines[start_index..end_index]

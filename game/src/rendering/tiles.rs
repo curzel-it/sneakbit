@@ -1,4 +1,4 @@
-use game_core::{constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, TILE_SIZE}, current_biome_tiles_variant, current_world_default_tile, current_world_height, current_world_width, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::SpriteTile}, utils::{rect::IntRect, vector::Vector2d}};
+use game_core::{constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, TILE_SIZE}, current_biome_tiles_variant, current_world_height, current_world_width, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::SpriteTile}, utils::{rect::IntRect, vector::Vector2d}};
 use raylib::prelude::*;
 
 use super::ui::get_rendering_config;
@@ -13,7 +13,6 @@ pub fn render_tiles(
     let variant = current_biome_tiles_variant();
     let world_width = current_world_width();
     let world_height = current_world_height();
-    let default_tile = &current_world_default_tile();
     
     let config = get_rendering_config();
     let texture_biome = config.get_texture(SPRITE_SHEET_BIOME_TILES).unwrap();
@@ -42,23 +41,7 @@ pub fn render_tiles(
             };
 
             if col < 0 || row < 0 || col >= world_width || row >= world_height {
-                let source = default_tile.texture_source_rect(variant);
-
-                let source_rect = Rectangle {
-                    x: TILE_SIZE * source.x as f32,
-                    y: TILE_SIZE * source.y as f32,
-                    width: TILE_SIZE * source.w as f32,
-                    height: TILE_SIZE * source.h as f32,
-                };
-
-                d.draw_texture_pro(
-                    texture_biome,
-                    source_rect,
-                    dest_rect,
-                    Vector2::zero(),
-                    0.0,
-                    Color::WHITE,
-                );
+                continue
             } else {
                 let row_usize = row as usize;
                 let col_usize = col as usize;

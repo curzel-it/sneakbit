@@ -40,6 +40,12 @@ impl IntRect {
         self.y = (point.y - (self.h as f32 / 2.0)).floor() as i32;
     }
 
+    pub fn centered_at(&mut self, point: &Vector2d) -> Self{
+        let x = (point.x - (self.w as f32 / 2.0)).floor() as i32;
+        let y = (point.y - (self.h as f32 / 2.0)).floor() as i32;
+        Self::new(x, y, self.w, self.h)
+    }
+
     pub fn offset(&self, dx: i32, dy: i32) -> Self {
         Self::new(self.x + dx, self.y + dy, self.w, self.h)
     }

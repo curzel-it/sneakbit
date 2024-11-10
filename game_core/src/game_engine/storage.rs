@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
+use std::{collections::{BTreeMap, HashSet}, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
 use lazy_static::lazy_static;
 
 use crate::config::config;
@@ -89,6 +89,15 @@ pub fn get_value_for_key(key: &str) -> Option<u32> {
     if key == StorageKey::always() {
         return Some(1);
     }
+    if key.contains(",") {
+        let keys = key.split_terminator(",");
+        let values: HashSet<u32> = keys.map(|k| get_value_for_key(k).unwrap_or_default()).collect();
+        if values.len() == 1 {
+            return values.iter().next().cloned()
+        } else {
+            return None
+        }
+    } 
     let storage = KEY_VALUE_STORAGE.read().unwrap();
     storage.get(key).cloned()
 }
@@ -113,4 +122,18 @@ pub fn lock_override(id: &EntityId) -> Option<LockType> {
 
 fn lock_override_key(id: &EntityId) -> String {
     format!("lock_override.{}", id)
+}
+
+pub fn has_boomerang_skill() -> bool {
+    get_value_for_key("dialogue.answer.quest.ninja_skills.8a").is_some_and(|i| i == 1) || 
+    get_value_for_key("dialogue.answer.quest.ninja_skills.8b").is_some_and(|i| i == 1) 
+}
+
+pub fn has_bullet_catcher_skill() -> bool {
+    get_value_for_key("dialogue.answer.quest.ninja_skills.5a").is_some_and(|i| i == 1) || 
+    get_value_for_key("dialogue.answer.quest.ninja_skills.5b").is_some_and(|i| i == 1) 
+}
+
+pub fn has_piercing_bullet_skill() -> bool {
+    get_value_for_key("dialogue.answer.quest.ninja_skills.11").is_some_and(|i| i == 1)
 }

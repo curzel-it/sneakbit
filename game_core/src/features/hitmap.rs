@@ -53,7 +53,7 @@ impl World {
     pub fn update_tiles_hitmap(&mut self) {    
         let mut hitmap = vec![vec![false; self.bounds.w as usize]; self.bounds.h as usize];
 
-        if !self.biome_tiles.tiles.is_empty() {
+        if !self.creative_mode && !self.biome_tiles.tiles.is_empty() {
             let min_row = self.bounds.y as usize;
             let max_row = ((self.bounds.y + self.bounds.h) as usize).min(self.biome_tiles.tiles.len());
             let min_col = self.bounds.x as usize;
@@ -82,7 +82,7 @@ impl World {
 
 impl Entity {
     fn has_weight(&self) -> bool {
-        self.species_id != SPECIES_DEEP_HOLE && !matches!(self.entity_type, EntityType::PressurePlate)
+        self.species_id != SPECIES_DEEP_HOLE && !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate)
     }
 }
 

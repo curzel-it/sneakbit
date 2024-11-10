@@ -1,4 +1,4 @@
-use crate::{constants::HERO_KUNAI_COOLDOWN, entities::{known_species::SPECIES_KUNAI, species::species_by_id}, game_engine::{entity::Entity, inventory::{inventory_contains_species, remove_one_of_species_from_inventory}, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}};
+use crate::{constants::{HERO_KUNAI_COOLDOWN, TILE_SIZE}, entities::{known_species::SPECIES_KUNAI, species::species_by_id}, game_engine::{entity::Entity, inventory::{inventory_contains_species, remove_one_of_species_from_inventory}, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}};
 
 impl Entity {
     pub fn setup_hero(&mut self, creative_mode: bool) {
@@ -62,9 +62,14 @@ impl Entity {
         bullet.direction = world.cached_hero_props.direction;
         let (dx, dy) = bullet.direction.as_col_row_offset();
         bullet.frame = world.cached_hero_props.frame.offset(dx, dy).offset_y(1).with_h(1);
-        bullet.offset = self.offset;
+        
+        if self.offset.x > TILE_SIZE / 2.0 { bullet.frame.x += 1 }
+        if self.offset.x < -TILE_SIZE / 2.0 { bullet.frame.x -= 1 }
+        if self.offset.y > TILE_SIZE / 2.0 { bullet.frame.y += 1 }
+        if self.offset.y < -TILE_SIZE / 2.0 { bullet.frame.y -= 1 }
+        
         bullet.parent_id = self.id;
-        bullet.remaining_lifespan = 5.0;
+        bullet.remaining_lifespan = 3.0;
         bullet.reset_speed();
 
         vec![WorldStateUpdate::AddEntity(Box::new(bullet))]

@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{constants::UNLIMITED_LIFESPAN, dialogues::models::{Dialogue, EntityDialogues}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, directions::MovementDirections}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::get_value_for_key, world::World};
+use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_key, StorageKey}, world::World};
 
 #[derive(Debug, Copy, Clone)]
 pub struct EntityProps {
@@ -167,7 +167,7 @@ impl Entity {
                 get_value_for_key(&option.key)
             };
             
-            if value == Some(option.expected_value) || (option.expected_value == 0 && value.is_none()) {
+            if option.key == StorageKey::always() || value == Some(option.expected_value) || (option.expected_value == 0 && value.is_none()) {
                 return Some(option.clone())
             }
         }

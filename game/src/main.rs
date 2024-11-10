@@ -14,7 +14,7 @@ fn main() {
     let creative_mode = env::args().any(|arg| arg == "creative");
 
     initialize_config_paths(
-        TILE_SIZE * 2.5,
+        TILE_SIZE * 2.0,
         current_locale(),
         local_path("data"),
         local_path("data/species.json"),
@@ -28,7 +28,7 @@ fn main() {
     rl.set_window_min_size(360, 240);
         
     while is_game_running() {
-        let time_since_last_update = rl.get_frame_time().min(0.1);
+        let time_since_last_update = rl.get_frame_time().min(0.5);
 
         if needs_window_init || rl.is_window_resized() {
             needs_window_init = false;
@@ -139,8 +139,7 @@ fn load_tile_map_textures(rl: &mut RaylibHandle, thread: &RaylibThread, world_id
 }
 
 fn texture(rl: &mut RaylibHandle, thread: &RaylibThread, name: &str) -> Option<Texture2D> {
-    let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    path.push("..");
+    let mut path = root_path();
     path.push("assets");
     path.push(format!("{}.png", name));
 
@@ -160,6 +159,7 @@ fn handle_mouse_updates(rl: &mut RaylibHandle, rendering_scale: f32) {
     update_mouse(
         rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT), 
         rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT), 
+        rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_RIGHT), 
         rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_RIGHT), 
         rl.get_mouse_position().x,
         rl.get_mouse_position().y, 
@@ -198,7 +198,7 @@ fn get_char_pressed(rl: &mut RaylibHandle) -> u32 {
 
 fn rendering_scale_for_screen_width(width: f32) -> (f32, f32) {
     if is_creative_mode() {
-        return (1.0, 2.0)
+        return (2.0, 2.0)
     }
     if width < 500.0 {
         (1.0, 1.0)
@@ -211,9 +211,23 @@ fn rendering_scale_for_screen_width(width: f32) -> (f32, f32) {
 }
 
 fn local_path(filename: &str) -> PathBuf {
-    let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    path.push("..");
+    let mut path = root_path();
     path.push(filename);
+    path
+}
+
+fn root_path() -> PathBuf {
+    let cargo_manifest_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let exe_path = env::current_exe().unwrap_or(cargo_manifest_path);
+    let exe_str = exe_path.to_str().unwrap();
+    let base = exe_str
+        .replace("target/debug/game", "game")
+        .replace("target/release/game", "game")
+        .replace("target\\debug\\game", "game")
+        .replace("target\\release\\game", "game");
+
+    let mut path = PathBuf::from(base);
+    path.push("..");
     path
 }
 

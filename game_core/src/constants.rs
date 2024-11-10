@@ -5,8 +5,6 @@ pub const ANIMATIONS_FPS: f32 = 10.0;
 
 // Default Props
 pub const INITIAL_CAMERA_VIEWPORT: IntRect = IntRect::new(0, 0, 60, 40);
-pub const WORLD_SIZE_ROWS: usize = 80;
-pub const WORLD_SIZE_COLUMNS: usize = 120;
 pub const UNLIMITED_LIFESPAN: f32 = -420.0;
 pub const NO_PARENT: u32 = 0;
 pub const HERO_KUNAI_COOLDOWN: f32 = 0.1;
@@ -20,7 +18,6 @@ pub const HERO_ENTITY_ID: u32 = 420;
 
 // Known locations
 pub const WORLD_ID_NONE: u32 = 1000;
-pub const WORLD_ID_DEMO: u32 = 1001;
 
 // Animations
 pub const WORLD_TRANSITION_TIME: f32 = 0.3;

@@ -1,6 +1,8 @@
-use crate::{game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::directions::Direction};
+use crate::{game_engine::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, utils::directions::Direction};
 
 use super::pickable_object::object_pick_up_sequence;
+
+pub type BulletId = EntityId;
 
 impl Entity {
     pub fn setup_bullet(&mut self) {
@@ -23,6 +25,10 @@ impl Entity {
             return vec![]
         }
 
+        let updates = self.check_stoppers(world);
+        if !updates.is_empty() {
+            return updates
+        }
         self.check_hits(world)
     }
 
@@ -37,7 +43,25 @@ impl Entity {
         if self.is_valid_hit_target(hit) { 
             return vec![WorldStateUpdate::HandleHit(self.id, hit)]
         }
+        vec![]
+    }
 
+    fn check_stoppers(&self, world: &World) -> Vec<WorldStateUpdate> {
+        if self.frame.x < 0 { return vec![] }
+        if self.frame.x as usize >= world.constructions_tiles.tiles[0].len() { return vec![] }
+        if self.frame.y < 0 { return vec![] }
+        if self.frame.y as usize >= world.constructions_tiles.tiles.len() { return vec![] }
+        
+        let construction = &world.constructions_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
+        let biome = &world.biome_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
+        let hit = world.entities_map[self.frame.y as usize][self.frame.x as usize];
+
+        if construction.tile_type.stops_bullets() || biome.tile_type.stops_bullets() || world.is_building(hit) {
+            return vec![WorldStateUpdate::HandleBulletStopped(self.id)]
+        }
+        if hit == self.parent_id {
+            return vec![WorldStateUpdate::HandleBulletCatched(self.id)]
+        }
         vec![]
     }
 

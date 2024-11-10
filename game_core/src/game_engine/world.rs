@@ -1,10 +1,11 @@
 use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
 
 use common_macros::hash_set;
-use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override}};
+use super::{entity::{Entity, EntityId, EntityProps}, inventory::add_to_inventory, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, lock_override, save_lock_override}};
 
+#[derive(Clone)]
 pub struct World {
     pub id: u32,
     pub revision: u32,
@@ -15,6 +16,8 @@ pub struct World {
     pub entities: RefCell<Vec<Entity>>,    
     pub visible_entities: HashSet<(usize, u32)>,
     melee_attackers: HashSet<u32>,
+    buildings: HashSet<u32>,
+    pub ephemeral_state: bool,
     pub cached_hero_props: EntityProps,
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
@@ -25,8 +28,6 @@ pub struct World {
     pub is_any_arrow_key_down: bool,
     pub has_attack_key_been_pressed: bool,
     pub has_confirmation_key_been_pressed: bool,
-    pub creep_spawn_enabled: bool,
-    pub creep_spawn_interval: f32,
     pub default_biome: Biome,
     pub pressure_plate_down_red: bool,
     pub pressure_plate_down_green: bool,
@@ -36,17 +37,21 @@ pub struct World {
     pub light_conditions: LightConditions,
 }
 
+const WORLD_SIZE_COLUMNS: usize = 30;
+const WORLD_SIZE_ROWS: usize = 30;
+
 impl World {
     pub fn new(id: u32) -> Self {
         Self {
             id,
             revision: 0,
             total_elapsed_time: 0.0,
-            bounds: IntRect::square_from_origin(150),
+            bounds: IntRect::from_origin(WORLD_SIZE_COLUMNS as i32, WORLD_SIZE_ROWS as i32),
             biome_tiles: TileSet::empty(),
             constructions_tiles: TileSet::empty(),
             entities: RefCell::new(vec![]),
             visible_entities: hash_set![],
+            ephemeral_state: false,
             cached_hero_props: EntityProps::default(),
             hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
             tiles_hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
@@ -57,8 +62,6 @@ impl World {
             is_any_arrow_key_down: false,
             has_attack_key_been_pressed: false,
             has_confirmation_key_been_pressed: false,
-            creep_spawn_enabled: false,
-            creep_spawn_interval: 5.0,
             default_biome: Biome::Nothing,
             pressure_plate_down_red: false,
             pressure_plate_down_green: false,
@@ -66,15 +69,13 @@ impl World {
             pressure_plate_down_silver: false,
             pressure_plate_down_yellow: false,
             melee_attackers: hash_set![],
+            buildings: hash_set![],
             light_conditions: LightConditions::Day
         }
     }
 
     pub fn add_entity(&mut self, entity: Entity) -> (usize, u32) {
         let id = entity.id;
-        if entity.melee_attacks_hero {
-            self.melee_attackers.insert(id);
-        }
 
         let mut entities = self.entities.borrow_mut();        
         let new_index = entities.len();
@@ -85,8 +86,20 @@ impl World {
         if let Some(lock_type) = lock_override(&id) {
             entities[new_index].lock_type = lock_type;
         }
+        if entities[new_index].melee_attacks_hero {
+            self.melee_attackers.insert(id);
+        }
+        if matches!(entities[new_index].entity_type, EntityType::Building) {
+            self.buildings.insert(id);
+        }
 
         (new_index, id)
+    }
+
+    pub fn remove_hero(&mut self) {
+        if let Some(index) = self.index_for_entity(HERO_ENTITY_ID) {
+            self.remove_entity_at_index(index);
+        }
     }
 
     fn remove_entity_by_id(&mut self, id: u32) {
@@ -100,8 +113,12 @@ impl World {
     fn remove_entity_at_index(&mut self, index: usize) {
         let entities = self.entities.borrow();
         let entity = &entities[index];
+        
         if entity.melee_attacks_hero {
             self.melee_attackers.remove(&entity.id);
+        }
+        if matches!(entity.entity_type, EntityType::Building) {
+            self.buildings.remove(&entity.id);
         }
         drop(entities);
 
@@ -223,6 +240,12 @@ impl World {
             WorldStateUpdate::UpdateDestinationY(entity_id, y) => {
                 self.change_destination_y(entity_id, y)
             }
+            WorldStateUpdate::HandleBulletStopped(bullet_id) => {
+                self.handle_bullet_stopped(bullet_id)
+            }
+            WorldStateUpdate::HandleBulletCatched(bullet_id) => {
+                self.handle_bullet_catched(bullet_id)
+            }
             WorldStateUpdate::HandleHit(bullet_id, target_id) => {
                 self.handle_hit(bullet_id, target_id)
             }
@@ -243,10 +266,12 @@ impl World {
 
     fn handle_hit(&mut self, bullet_id: EntityId, target_id: EntityId) {
         let mut did_hit = false;
-        let mut entities = self.entities.borrow_mut();
 
+        let mut entities = self.entities.borrow_mut();
         if let Some(target) = entities.iter_mut().find(|e| e.id == target_id) {    
-            if !target.is_dying && !target.is_invulnerable {
+            let is_vulnerable = !target.is_invulnerable || (has_piercing_bullet_skill() && target.melee_attacks_hero);
+
+            if !target.is_dying && is_vulnerable && target.parent_id != HERO_ENTITY_ID {
                 did_hit = true;
                 target.direction = Direction::Unknown;
                 target.current_speed = 0.0;
@@ -263,8 +288,36 @@ impl World {
         }
         drop(entities);
 
-        if did_hit && bullet_id != 0 {
-            self.remove_entity_by_id(bullet_id)
+        if did_hit && bullet_id != 0 && !has_piercing_bullet_skill() {
+            self.handle_bullet_stopped(bullet_id);
+        }
+    }
+
+    fn handle_bullet_stopped(&mut self, bullet_id: u32) {
+        if has_boomerang_skill() {
+            let mut entities = self.entities.borrow_mut();
+            if let Some(bullet) = entities.iter_mut().find(|e| e.id == bullet_id) {
+                if bullet.parent_id == HERO_ENTITY_ID {
+                    bullet.direction = bullet.direction.opposite();
+                    let (dx, dy) = bullet.direction.as_col_row_offset();
+                    bullet.frame.x += dx;
+                    bullet.frame.y += dy;
+                    return
+                }
+            }
+            drop(entities);
+        }
+        self.remove_entity_by_id(bullet_id)
+    }
+
+    fn handle_bullet_catched(&mut self, bullet_id: u32) {
+        if has_bullet_catcher_skill() {
+            let species_id = self.entities.borrow().iter().find(|e| e.id == bullet_id).and_then(|e| Some(e.species_id));
+            self.remove_entity_by_id(bullet_id);
+
+            if let Some(species_id) = species_id {
+                add_to_inventory(&species_id, 1);
+            }
         }
     }
 
@@ -439,6 +492,10 @@ impl World {
 impl World {
     pub fn is_creep(&self, id: u32) -> bool {
         self.melee_attackers.contains(&id)
+    }
+
+    pub fn is_building(&self, id: u32) -> bool {
+        self.buildings.contains(&id)
     }
 
     pub fn is_pressure_plate_down(&self, lock_type: &LockType) -> bool {

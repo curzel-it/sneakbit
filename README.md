@@ -30,14 +30,13 @@ The engine is the same, the rendering is a simple set of custom views.
 I have a bunch of helpers to generate and copy over resources to the correct places in the mobile projects:
 ```bash
 # Aseprite -> Png
-cd scripts
-python3 sprites.py
+python3 scripts/compile_sprites.py
 
 # Copy ALL assets, including headers to ios and android projects
 python3 scripts/sync_assets.py
 ```
 
-As a simple but significant optimization, you'll see that iOS and Android use a pre-rendered image instead of rendering individual tiles, which is much, much faster.
+As a simple but significant optimization,iOS and Android use a pre-rendered image instead of rendering individual tiles, which is much, much faster.
 
 #### iOS
 The build uses cargo-lipo, just run the script and open the project in Xcode.
@@ -46,16 +45,13 @@ sh scripts/build_ios.sh
 ```
 
 #### Android
-The engine is the same, the rendering is a simple custom view.
+The build uses cargo-ndk, just run the script and open the project in Android Studio.
 ```bash
 sh scripts/build_android.sh
 ```
 
 ## Why lib + bin?
 I'm trying to have the engine by completely independent from rendering, which has proved useful for porting the project to iOS and Android.
-
-## TODO:
-- Study/review feedback from [r/speedrun](https://www.reddit.com/r/speedrun/comments/1gfjpyq/as_a_game_dev_what_can_i_do_to_make_my_game_more/)
 
 ## Screenshots
 ![Game intro](docs/1.png)
@@ -64,3 +60,6 @@ I'm trying to have the engine by completely independent from rendering, which ha
 ![Map Editor](docs/6.png)
 ![Android](docs/android.png)
 ![iOS](docs/ios.jpeg)
+
+## TODO:
+- Lots.

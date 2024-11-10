@@ -7,7 +7,7 @@ pub trait SpriteTile {
     fn texture_source_rect(&self, variant: i32) -> IntRect;
 }
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct TileSet<T> {
     pub tiles: Vec<Vec<T>>,
     pub sheet_id: u32,

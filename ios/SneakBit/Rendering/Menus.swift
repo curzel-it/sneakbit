@@ -123,7 +123,7 @@ private class MenuViewModel: ObservableObject {
             .map { "> \($0)" }
         
         let newText = string(from: menu.text)
-        let longTextThreshold = engine.isLandscape ? 150 : 300
+        let longTextThreshold = engine.isLandscape ? 150 : 500
         let needsScroll = (newText?.count ?? 0) > longTextThreshold
         
         withAnimation {
