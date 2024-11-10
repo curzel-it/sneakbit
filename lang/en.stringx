@@ -55,7 +55,7 @@
 "npc.name.goddess" = "Goddess"
 "npc.name.homunculus" = "Homunculus"
 "npc.name.ninja.blue" = "Blue Ninja"
-"npc.name.ninja.dark" = "Dark Ninja"
+"npc.name.ninja.dark" = "Black Ninja"
 "npc.name.old_man" = "Old Man"
 "npc.name.old_woman" = "Old Lady"
 "npc.name.shop_clerk" = "Shop Guy"
@@ -134,20 +134,6 @@ Throw knifes by pressing FIRE
 What? 
 You expected every house to have loot?
 Also, what the hell are you doing in my house!?
-"""
-
-"lore.001.ninja_house" = """
-Yo, 
-I'm out on a mission.
-Also, what the hell are you doing in my house!?
-Get out!
-Signed "B.N.K."
-"""
-
-"lore.002.accumulator" = """
-My brother has an accumulation problem...
-I'm waiting for him to get home so I can force him to clean up.
-I just hope he didn't have any trouble with the monsters.
 """
 
 "lore.003.monsters_first_appearance" = """
@@ -260,3 +246,98 @@ Dock of Thermoria — Gateway to Maritide Haven
 "1018.entrance" = "Evergrove Village"
 "1019.entrance" = "Evergrove Village"
 "1020.entrance" = "Evergrove Village"
+
+"quest.ninja_skills.1" = """
+Yo, 
+I'm out on a mission.
+Also, what the hell are you doing in my house!?
+Get out!
+- Black Ninja
+"""
+
+"quest.ninja_skills.2" = """
+One of my brothers has an accumulation problem...
+I'm waiting for him to get home so I can force him to clean up.
+I just hope they didn't have any trouble on the mission...
+"""
+
+"quest.ninja_skills.3a" = """
+So you came all the way from Evergrove?
+Can you check on my sister and let her know I'm ok?
+My brother should be back home by now, 
+but with our job you never know...
+If you do, I'll teach you one of my ninja skills!
+"""
+
+"quest.ninja_skills.3b" = """
+So you came all the way from Evergrove?
+Can you check on my sister and let her know I'm ok?
+My brother should be back home by now, 
+but with our job you never know...
+If you do, I'll teach you one of my ninja skills!
+"""
+
+"quest.ninja_skills.4" = """
+A ninja dressed in black... 
+That's my brother!
+Please tell him to come home soon,
+I need help cleaning our brother's house!
+Was my other brother with him? 
+He dresses in blue.
+"""
+
+"quest.ninja_skills.5a" = """
+Cleaning the house!? LOL
+I'm not sure I'll make it, you know, we're kinda in the 
+middle of a war for the survival of mankind over here!
+As promised, you can now catch knifes mid-air bare handed.
+Obviously, you need knifes to be coming at you 
+to use this skill.
+But I'm sure you'll find some use for it eventually!
+"""
+
+"quest.ninja_skills.5b" = """
+Cleaning the house!? LOL
+I'm not sure I'll make it, you know, we're kinda in the 
+middle of a war for the survival of mankind over here!
+Pretty OP when combined with my brother's skill eh?
+"""
+
+"quest.ninja_skills.6" = """
+Cleaning the house!? LOL
+I'm not sure I'll make it, you know, we're kinda in the 
+middle of a war for the survival of mankind over here!
+Pretty OP when combined with my brother's skill eh?
+"""
+
+"quest.ninja_skills.7" = """
+A ninja dressed in blue... 
+That's my brother!
+Please tell him to come home soon,
+we need to clean up his place, it's full of junk!
+Was my other brother with him? 
+He dresses in black.
+"""
+
+"quest.ninja_skills.8a" = """
+Junk!? 
+It's not junk! It's weapons and other ninja stuff!
+Oh well...
+As promised, your knife will now bounce off all surfaces!
+Pretty cool eh? You'll see!
+"""
+
+"quest.ninja_skills.8b" = """
+Junk!? 
+It's not junk! It's weapons and other ninja stuff!
+Oh well...
+As promised, your knife will now bounce off all surfaces!
+Since you already have my brother's skill, this should
+basically solve your low-ammo problem!
+"""
+
+"quest.ninja_skills.9" = """
+Thank you for checking on my brothers...
+I hope they are coming home soon,
+I need help cleaning our brother's house!
+"""
