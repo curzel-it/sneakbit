@@ -1,6 +1,7 @@
 pub mod animated_sprite;
 pub mod autoremove;
 pub mod creep_fusion;
+pub mod cutscenes;
 pub mod death_screen;
 pub mod destination;
 pub mod directions;

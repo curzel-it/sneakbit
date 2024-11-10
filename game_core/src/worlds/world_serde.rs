@@ -2,7 +2,7 @@ use std::{fs::File, io::{BufReader, Write}};
 
 use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Error;
-use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::known_species::SPECIES_HERO, features::light_conditions::LightConditions, game_engine::{entity::Entity, world::World}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::ConstructionTile, tiles::TileSet}};
+use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::known_species::SPECIES_HERO, features::{cutscenes::CutScene, light_conditions::LightConditions}, game_engine::{entity::Entity, world::World}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::ConstructionTile, tiles::TileSet}};
 
 impl World {
     pub fn load(id: u32) -> Option<Self> {
@@ -106,7 +106,10 @@ struct WorldData {
     light_conditions: LightConditions,
 
     #[serde(default)]
-    ephemeral_state: bool
+    ephemeral_state: bool,
+
+    #[serde(default)]
+    cutscenes: Vec<CutScene>
 }
 
 impl Serialize for World {
@@ -125,6 +128,7 @@ impl Serialize for World {
         state.serialize_field("entities", &entities)?;
         state.serialize_field("default_biome", &self.default_biome)?;
         state.serialize_field("light_conditions", &self.light_conditions)?;
+        state.serialize_field("cutscenes", &self.cutscenes)?;
         state.end()
     }
 }
@@ -138,6 +142,7 @@ impl<'de> Deserialize<'de> for World {
         world.ephemeral_state = data.ephemeral_state;
         world.default_biome = data.default_biome;
         world.light_conditions = data.light_conditions;
+        world.cutscenes = data.cutscenes;
         data.entities.into_iter().for_each(|e| _ = world.add_entity(e));        
         world.load_biome_tiles(data.biome_tiles);
         world.load_construction_tiles(data.constructions_tiles);
