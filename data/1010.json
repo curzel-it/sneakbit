@@ -265,8 +265,8 @@
       "time_immobilized": 0.0,
       "destination": {
         "world": 1012,
-        "x": 0,
-        "y": 0
+        "x": 89,
+        "y": 68
       },
       "lock_type": "None",
       "original_sprite_frame": {

@@ -3,7 +3,7 @@ use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}
 use common_macros::hash_set;
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{entity::{Entity, EntityId, EntityProps}, inventory::add_to_inventory, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, lock_override, save_lock_override}};
+use super::{entity::{Entity, EntityId, EntityProps}, inventory::add_to_inventory, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, lock_override, save_lock_override}};
 
 #[derive(Clone)]
 pub struct World {
@@ -269,7 +269,9 @@ impl World {
 
         let mut entities = self.entities.borrow_mut();
         if let Some(target) = entities.iter_mut().find(|e| e.id == target_id) {    
-            if !target.is_dying && !target.is_invulnerable && target.parent_id != HERO_ENTITY_ID {
+            let is_vulnerable = !target.is_invulnerable || (has_piercing_bullet_skill() && target.melee_attacks_hero);
+
+            if !target.is_dying && is_vulnerable && target.parent_id != HERO_ENTITY_ID {
                 did_hit = true;
                 target.direction = Direction::Unknown;
                 target.current_speed = 0.0;
@@ -286,7 +288,7 @@ impl World {
         }
         drop(entities);
 
-        if did_hit && bullet_id != 0 {
+        if did_hit && bullet_id != 0 && !has_piercing_bullet_skill() {
             self.handle_bullet_stopped(bullet_id);
         }
     }

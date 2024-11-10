@@ -159,8 +159,8 @@
       "888888888000088000000000088808880000000KKKKKKK000000000000000000000000000000008880880000000808000000",
       "8888888800088880000000000808888000000000000000000000000000000000000000000000008000000000008808088888",
       "8888880000000000008888000008888000000000000000000000000000000000000000000888888000000000000008000000",
-      "8888880000000000008080000000888800000000000000000000000000000000000088888800000000000000000000008888",
-      "8888880000000088808880800008888880000000000000000000000000000000000080000000000000000088888888808888",
+      "8888880000000000008080000000888800000000000000000000000000000000000088888800000000008888888888008888",
+      "8888880000000088808880800008888880000000000000000000000000000000000080000000000000000000000000008888",
       "0000000008888880088880880000888888000000000000000000800000088888800080800000080000808000000000008888",
       "8888888008888888880088880000088880888000000080000000000000088888800080000888880800008088888888888888",
       "8888880888888888888888888000008880888888800800008000000008888880000000000800000800000088888888888888",
@@ -24158,15 +24158,15 @@
       "demands_attention": false
     },
     {
-      "id": 11105015,
+      "id": 11110894,
       "frame": {
-        "x": 93,
-        "y": 70,
+        "x": 46,
+        "y": 9,
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
-      "species_id": 44416,
+      "name": "objects.name.slope.bottom_right.rock",
+      "species_id": 44413,
       "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
@@ -24179,7 +24179,7 @@
       "sprite": {
         "sheet_id": 1010,
         "frame": {
-          "x": 16,
+          "x": 13,
           "y": 1,
           "w": 1,
           "h": 1
@@ -24191,7 +24191,7 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 16,
+        "x": 13,
         "y": 1,
         "w": 1,
         "h": 1
@@ -24213,120 +24213,124 @@
       "demands_attention": false
     },
     {
-      "id": 11105016,
-      "frame": {
-        "x": 92,
-        "y": 70,
-        "w": 1,
-        "h": 1
-      },
-      "name": "objects.name.slope.side_top.rock",
-      "species_id": 44416,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 100,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 16,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 16,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11105017,
-      "frame": {
-        "x": 92,
-        "y": 70,
-        "w": 1,
-        "h": 1
-      },
-      "name": "objects.name.slope.side_top.rock",
-      "species_id": 44416,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 100,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 16,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 16,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11105018,
+      "id": 11158191,
       "frame": {
         "x": 91,
-        "y": 70,
+        "y": 69,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Teleporter",
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 200,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": {
+        "world": 1010,
+        "x": 0,
+        "y": 0
+      },
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 7,
+        "y": 5,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11110895,
+      "frame": {
+        "x": 21,
+        "y": 69,
+        "w": 1,
+        "h": 2
+      },
+      "name": "Stairs (Down)",
+      "species_id": 1011,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 1000,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 2,
+          "y": 0,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 2
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11158684,
+      "frame": {
+        "x": 91,
+        "y": 72,
         "w": 1,
         "h": 1
       },
@@ -24378,15 +24382,125 @@
       "demands_attention": false
     },
     {
-      "id": 11105019,
+      "id": 11193791,
       "frame": {
-        "x": 90,
-        "y": 70,
+        "x": 66,
+        "y": 64,
+        "w": 2,
+        "h": 1
+      },
+      "name": "Large Sign",
+      "species_id": 10001,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 3,
+          "y": 4,
+          "w": 2,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 3,
+        "y": 4,
+        "w": 2,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": "lore.007.vintoria_entrance",
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11193929,
+      "frame": {
+        "x": 26,
+        "y": 16,
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
-      "species_id": 44416,
+      "name": "Sign",
+      "species_id": 10000,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 0,
+          "y": 4,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 0,
+        "y": 4,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": "lore.006.vintoria_power_station",
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11110885,
+      "frame": {
+        "x": 69,
+        "y": 15,
+        "w": 1,
+        "h": 1
+      },
+      "name": "objects.name.slope.bottom_right.grass",
+      "species_id": 44403,
       "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
@@ -24399,8 +24513,8 @@
       "sprite": {
         "sheet_id": 1010,
         "frame": {
-          "x": 16,
-          "y": 1,
+          "x": 13,
+          "y": 0,
           "w": 1,
           "h": 1
         },
@@ -24411,8 +24525,8 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 16,
-        "y": 1,
+        "x": 13,
+        "y": 0,
         "w": 1,
         "h": 1
       },
@@ -24433,16 +24547,16 @@
       "demands_attention": false
     },
     {
-      "id": 11105020,
+      "id": 11110888,
       "frame": {
-        "x": 89,
-        "y": 70,
-        "w": 1,
-        "h": 1
+        "x": 69,
+        "y": 32,
+        "w": 5,
+        "h": 4
       },
-      "name": "objects.name.slope.side_top.rock",
-      "species_id": 44416,
-      "entity_type": "StaticObject",
+      "name": "building.name.broken_house",
+      "species_id": 1008,
+      "entity_type": "Building",
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -24450,14 +24564,14 @@
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 100,
+      "z_index": 0,
       "sprite": {
-        "sheet_id": 1010,
+        "sheet_id": 1004,
         "frame": {
-          "x": 16,
-          "y": 1,
-          "w": 1,
-          "h": 1
+          "x": 15,
+          "y": 5,
+          "w": 5,
+          "h": 4
         },
         "number_of_frames": 1
       },
@@ -24466,175 +24580,10 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 16,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11105021,
-      "frame": {
-        "x": 88,
-        "y": 70,
-        "w": 1,
-        "h": 1
-      },
-      "name": "objects.name.slope.side_top.rock",
-      "species_id": 44416,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 100,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 16,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 16,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11105022,
-      "frame": {
-        "x": 87,
-        "y": 70,
-        "w": 1,
-        "h": 1
-      },
-      "name": "objects.name.slope.side_top.rock",
-      "species_id": 44416,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 100,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 16,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 16,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11105023,
-      "frame": {
-        "x": 86,
-        "y": 70,
-        "w": 1,
-        "h": 1
-      },
-      "name": "objects.name.slope.side_top.rock",
-      "species_id": 44416,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 100,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 16,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 16,
-        "y": 1,
-        "w": 1,
-        "h": 1
+        "x": 15,
+        "y": 5,
+        "w": 5,
+        "h": 4
       },
       "movement_directions": "None",
       "is_consumable": false,
@@ -27733,10 +27682,10 @@
       "demands_attention": false
     },
     {
-      "id": 11105088,
+      "id": 11110890,
       "frame": {
-        "x": 85,
-        "y": 70,
+        "x": 43,
+        "y": 2,
         "w": 1,
         "h": 1
       },
@@ -28888,15 +28837,15 @@
       "demands_attention": false
     },
     {
-      "id": 11105113,
+      "id": 11110892,
       "frame": {
-        "x": 94,
-        "y": 70,
+        "x": 20,
+        "y": 12,
         "w": 1,
-        "h": 1
+        "h": 2
       },
-      "name": "objects.name.slope.bottom_right.rock",
-      "species_id": 44413,
+      "name": "Stairs (Down)",
+      "species_id": 1011,
       "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
@@ -28905,14 +28854,14 @@
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 100,
+      "z_index": 1000,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
-          "x": 13,
-          "y": 1,
+          "x": 2,
+          "y": 0,
           "w": 1,
-          "h": 1
+          "h": 2
         },
         "number_of_frames": 1
       },
@@ -28921,10 +28870,10 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 13,
-        "y": 1,
+        "x": 2,
+        "y": 0,
         "w": 1,
-        "h": 1
+        "h": 2
       },
       "movement_directions": "None",
       "is_consumable": false,
@@ -29988,16 +29937,16 @@
       "demands_attention": false
     },
     {
-      "id": 11105133,
+      "id": 11110871,
       "frame": {
-        "x": 85,
-        "y": 71,
+        "x": 77,
+        "y": 22,
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.rock",
-      "species_id": 44413,
-      "entity_type": "StaticObject",
+      "name": "Teleporter",
+      "species_id": 1019,
+      "entity_type": "Teleporter",
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -30005,12 +29954,12 @@
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 100,
+      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
-          "x": 13,
-          "y": 1,
+          "x": 7,
+          "y": 5,
           "w": 1,
           "h": 1
         },
@@ -30018,11 +29967,15 @@
       },
       "dialogues": [],
       "time_immobilized": 0.0,
-      "destination": null,
+      "destination": {
+        "world": 11110869,
+        "x": 0,
+        "y": 0
+      },
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 13,
-        "y": 1,
+        "x": 7,
+        "y": 5,
         "w": 1,
         "h": 1
       },
@@ -50794,458 +50747,10 @@
       "demands_attention": false
     },
     {
-      "id": 11110871,
+      "id": 11201811,
       "frame": {
-        "x": 77,
-        "y": 22,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Teleporter",
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": {
-        "world": 11110869,
-        "x": 0,
-        "y": 0
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11110885,
-      "frame": {
-        "x": 69,
-        "y": 15,
-        "w": 1,
-        "h": 1
-      },
-      "name": "objects.name.slope.bottom_right.grass",
-      "species_id": 44403,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 100,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 13,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 13,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11110888,
-      "frame": {
-        "x": 69,
-        "y": 32,
-        "w": 5,
-        "h": 4
-      },
-      "name": "building.name.broken_house",
-      "species_id": 1008,
-      "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1004,
-        "frame": {
-          "x": 15,
-          "y": 5,
-          "w": 5,
-          "h": 4
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 15,
-        "y": 5,
-        "w": 5,
-        "h": 4
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11110890,
-      "frame": {
-        "x": 43,
-        "y": 2,
-        "w": 1,
-        "h": 1
-      },
-      "name": "objects.name.slope.top_left.rock",
-      "species_id": 44411,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 100,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 11,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 11,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11110892,
-      "frame": {
-        "x": 20,
-        "y": 12,
-        "w": 1,
-        "h": 2
-      },
-      "name": "Stairs (Down)",
-      "species_id": 1011,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 1000,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11110894,
-      "frame": {
-        "x": 46,
-        "y": 9,
-        "w": 1,
-        "h": 1
-      },
-      "name": "objects.name.slope.bottom_right.rock",
-      "species_id": 44413,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 100,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 13,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 13,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11110895,
-      "frame": {
-        "x": 21,
-        "y": 69,
-        "w": 1,
-        "h": 2
-      },
-      "name": "Stairs (Down)",
-      "species_id": 1011,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 1000,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11158191,
-      "frame": {
-        "x": 91,
-        "y": 69,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Teleporter",
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": {
-        "world": 1010,
-        "x": 0,
-        "y": 0
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11158684,
-      "frame": {
-        "x": 91,
-        "y": 72,
+        "x": 85,
+        "y": 71,
         "w": 1,
         "h": 1
       },
@@ -51297,70 +50802,15 @@
       "demands_attention": false
     },
     {
-      "id": 11193791,
+      "id": 11201812,
       "frame": {
-        "x": 66,
-        "y": 64,
-        "w": 2,
-        "h": 1
-      },
-      "name": "Large Sign",
-      "species_id": 10001,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 3,
-          "y": 4,
-          "w": 2,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 4,
-        "w": 2,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": "lore.007.vintoria_entrance",
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11193929,
-      "frame": {
-        "x": 26,
-        "y": 16,
+        "x": 86,
+        "y": 71,
         "w": 1,
         "h": 1
       },
-      "name": "Sign",
-      "species_id": 10000,
+      "name": "objects.name.slope.side_top.rock",
+      "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
         "x": 0.0,
@@ -51369,12 +50819,12 @@
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 300,
+      "z_index": 100,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
-          "x": 0,
-          "y": 4,
+          "x": 16,
+          "y": 1,
           "w": 1,
           "h": 1
         },
@@ -51385,8 +50835,8 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 0,
-        "y": 4,
+        "x": 16,
+        "y": 1,
         "w": 1,
         "h": 1
       },
@@ -51399,7 +50849,502 @@
         0,
         0
       ],
-      "contents": "lore.006.vintoria_power_station",
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11201813,
+      "frame": {
+        "x": 87,
+        "y": 71,
+        "w": 1,
+        "h": 1
+      },
+      "name": "objects.name.slope.side_top.rock",
+      "species_id": 44416,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 16,
+          "y": 1,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11201814,
+      "frame": {
+        "x": 88,
+        "y": 71,
+        "w": 1,
+        "h": 1
+      },
+      "name": "objects.name.slope.side_top.rock",
+      "species_id": 44416,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 16,
+          "y": 1,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11201815,
+      "frame": {
+        "x": 89,
+        "y": 71,
+        "w": 1,
+        "h": 1
+      },
+      "name": "objects.name.slope.side_top.rock",
+      "species_id": 44416,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 16,
+          "y": 1,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11201816,
+      "frame": {
+        "x": 90,
+        "y": 71,
+        "w": 1,
+        "h": 1
+      },
+      "name": "objects.name.slope.side_top.rock",
+      "species_id": 44416,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 16,
+          "y": 1,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11201817,
+      "frame": {
+        "x": 92,
+        "y": 71,
+        "w": 1,
+        "h": 1
+      },
+      "name": "objects.name.slope.side_top.rock",
+      "species_id": 44416,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 16,
+          "y": 1,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11201818,
+      "frame": {
+        "x": 91,
+        "y": 71,
+        "w": 1,
+        "h": 1
+      },
+      "name": "objects.name.slope.side_top.rock",
+      "species_id": 44416,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 16,
+          "y": 1,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11201819,
+      "frame": {
+        "x": 93,
+        "y": 71,
+        "w": 1,
+        "h": 1
+      },
+      "name": "objects.name.slope.side_top.rock",
+      "species_id": 44416,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 16,
+          "y": 1,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11201821,
+      "frame": {
+        "x": 94,
+        "y": 71,
+        "w": 1,
+        "h": 1
+      },
+      "name": "objects.name.slope.bottom_right.rock",
+      "species_id": 44413,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 13,
+          "y": 1,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 13,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11201822,
+      "frame": {
+        "x": 94,
+        "y": 70,
+        "w": 1,
+        "h": 1
+      },
+      "name": "objects.name.slope.side_left.rock",
+      "species_id": 44417,
+      "entity_type": "StaticObject",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 100,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 17,
+          "y": 1,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 17,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
