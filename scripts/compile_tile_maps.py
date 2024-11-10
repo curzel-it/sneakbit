@@ -75,7 +75,7 @@ class TileMapImageGenerator:
                 # Define the texture rectangle for the biome tile
                 texture_rect = IntRect(
                     x=biome_tile.texture_offset_x,
-                    y=biome_tile.texture_offset_y, # + variant * Biome.number_of_biomes(),
+                    y=biome_tile.texture_offset_y + variant * Biome.number_of_biomes(),
                     w=1,
                     h=1
                 )
