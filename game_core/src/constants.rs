@@ -29,7 +29,7 @@ pub const HOUSE_INTERIOR_ROWS: usize = 6;
 pub const HOUSE_INTERIOR_COLUMNS: usize = 10;
 
 // Tiles
-pub const TILE_VARIATIONS_FPS: f32 = 1.0;
+pub const TILE_VARIATIONS_FPS: f32 = 1.5;
 pub const TILE_SIZE: f32 = 16.0;
 pub const BIOME_NUMBER_OF_FRAMES: i32 = 4;
 pub const STEP_COMMITMENT_THRESHOLD: f32 = TILE_SIZE / 4.0;
