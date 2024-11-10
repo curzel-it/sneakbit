@@ -1,4 +1,4 @@
-use crate::game_engine::storage::{get_value_for_key, set_value_for_key, StorageKey};
+use crate::game_engine::storage::{get_value_for_global_key, set_value_for_key, StorageKey};
 
 impl StorageKey {
     fn dialogue_answer(dialogue: &str) -> String {
@@ -19,7 +19,7 @@ pub fn set_dialogue_reward_collected(dialogue: &str) {
 }
 
 pub fn has_dialogue_reward_been_collected(dialogue: &str) -> bool {
-    if let Some(collected) = get_value_for_key(&StorageKey::dialogue_reward_collected(dialogue)) {
+    if let Some(collected) = get_value_for_global_key(&StorageKey::dialogue_reward_collected(dialogue)) {
         collected == 1
     } else {
         false

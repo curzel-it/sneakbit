@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 
 use crate::config::config;
 
-use super::{entity::EntityId, locks::LockType};
+use super::{entity::EntityId, locks::LockType, world::World};
 
 pub struct StorageKey {}
 
@@ -85,15 +85,24 @@ lazy_static! {
     };
 }
 
-pub fn get_value_for_key(key: &str) -> Option<u32> {
+pub fn get_value_for_key(key: &str, world: &World) -> Option<u32> {
+    if key.contains("pressure_plate_down") {
+        let lock_name = key.replace("pressure_plate_down_", "");
+        let lock_type = LockType::from_string(&lock_name);        
+        return Some(if world.is_pressure_plate_down(&lock_type) { 1 } else { 0 })
+    }
+    get_value_for_global_key(key)
+}
+
+pub fn get_value_for_global_key(key: &str) -> Option<u32> {
     if key == StorageKey::always() {
         return Some(1);
     }
     if key.contains(",") {
         let keys = key.split_terminator(",");
-        let values: HashSet<u32> = keys.map(|k| get_value_for_key(k).unwrap_or_default()).collect();
+        let values: HashSet<Option<u32>> = keys.map(|k| get_value_for_global_key(k)).collect();
         if values.len() == 1 {
-            return values.iter().next().cloned()
+            return values.iter().next().unwrap_or(&None).clone()
         } else {
             return None
         }
@@ -116,8 +125,23 @@ pub fn save_lock_override(id: &EntityId, lock_type: &LockType) {
     set_value_for_key(&lock_override_key(id), lock_type.as_int());
 }
 
+pub fn key_value_matches(key: &str, world: &World, expected_value: u32) -> bool {
+    let value = get_value_for_key(key, world);
+    value_matches(key, value, expected_value)
+}
+
+pub fn global_key_value_matches(key: &str, expected_value: u32) -> bool {
+    let value = get_value_for_global_key(key);
+    value_matches(key, value, expected_value)
+}
+
+fn value_matches(key: &str, value: Option<u32>, expected_value: u32) -> bool {
+    key == StorageKey::always() || value == Some(expected_value) || (expected_value == 0 && value.is_none())
+}
+
 pub fn lock_override(id: &EntityId) -> Option<LockType> {
-    get_value_for_key(&lock_override_key(id)).and_then(|lock_id| LockType::from_int(&lock_id))
+    let key = &lock_override_key(id);
+    get_value_for_global_key(key).and_then(|lock_id| LockType::from_int(&lock_id))
 }
 
 fn lock_override_key(id: &EntityId) -> String {
@@ -125,15 +149,15 @@ fn lock_override_key(id: &EntityId) -> String {
 }
 
 pub fn has_boomerang_skill() -> bool {
-    get_value_for_key("dialogue.answer.quest.ninja_skills.8a").is_some_and(|i| i == 1) || 
-    get_value_for_key("dialogue.answer.quest.ninja_skills.8b").is_some_and(|i| i == 1) 
+    get_value_for_global_key("dialogue.answer.quest.ninja_skills.8a").is_some_and(|i| i == 1) || 
+    get_value_for_global_key("dialogue.answer.quest.ninja_skills.8b").is_some_and(|i| i == 1) 
 }
 
 pub fn has_bullet_catcher_skill() -> bool {
-    get_value_for_key("dialogue.answer.quest.ninja_skills.5a").is_some_and(|i| i == 1) || 
-    get_value_for_key("dialogue.answer.quest.ninja_skills.5b").is_some_and(|i| i == 1) 
+    get_value_for_global_key("dialogue.answer.quest.ninja_skills.5a").is_some_and(|i| i == 1) || 
+    get_value_for_global_key("dialogue.answer.quest.ninja_skills.5b").is_some_and(|i| i == 1) 
 }
 
 pub fn has_piercing_bullet_skill() -> bool {
-    get_value_for_key("dialogue.answer.quest.ninja_skills.11").is_some_and(|i| i == 1)
+    get_value_for_global_key("dialogue.answer.quest.ninja_skills.11").is_some_and(|i| i == 1)
 }

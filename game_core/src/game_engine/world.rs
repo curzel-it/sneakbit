@@ -77,6 +77,10 @@ impl World {
     pub fn add_entity(&mut self, entity: Entity) -> (usize, u32) {
         let id = entity.id;
 
+        if !entity.should_be_visible(self) {
+            return (0, 0)
+        }
+
         let mut entities = self.entities.borrow_mut();        
         let new_index = entities.len();
         entities.push(entity);        

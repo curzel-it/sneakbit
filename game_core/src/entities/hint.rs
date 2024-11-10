@@ -1,4 +1,4 @@
-use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_STATIC_OBJECTS}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_key, set_value_for_key, StorageKey}, world::World}, lang::localizable::LocalizableText, menus::toasts::Toast};
+use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_STATIC_OBJECTS}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World}, lang::localizable::LocalizableText, menus::toasts::Toast};
 
 use super::species::species_by_id;
 
@@ -64,7 +64,7 @@ fn set_hint_read(hint: &str) {
 }
 
 fn has_hint_been_read(hint: &str) -> bool {
-    if let Some(read) = get_value_for_key(&StorageKey::hint_read(hint)) {
+    if let Some(read) = get_value_for_global_key(&StorageKey::hint_read(hint)) {
         read == 1
     } else {
         false

@@ -352,8 +352,7 @@ My children are all about your age...
 """
 
 "quest.ninja_skills.11" = """
-Sounds like you met my children, 
-and they are all doing well!
+My kids are all well? That's a relief!
 As a reward, I'll teach the ultimate ninja skill.
 If only I had the chance, I KNOW I could defeat the 
 Demon Lord himself in one blow with it.
@@ -364,4 +363,11 @@ F*** that guy.
 Told you... Barrels, monsters, Demon Lords, ...
 Doesn't matter.
 One shot is enough for ANY foe.
+"""
+
+"quest.ninja_skills.13" = """
+I tried kid, but I was defeated.
+It's your turn now, here, have my skill.
+You can now defeat ANY enemy in one blow.
+Including... him...
 """

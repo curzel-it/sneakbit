@@ -6,7 +6,7 @@ impl Entity {
     }
 
     pub fn update_teleporter(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {   
-        self.is_rigid = !matches!(self.lock_type, LockType::None);
+        self.is_rigid = false; // !matches!(self.lock_type, LockType::None);
 
         if world.creative_mode && world.is_hero_around_and_on_collision_with(&self.frame) {
             return vec![

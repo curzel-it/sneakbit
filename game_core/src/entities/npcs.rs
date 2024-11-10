@@ -46,13 +46,17 @@ impl Entity {
             } else if let Some(dialogue) = self.next_dialogue(world) {
                 self.demands_attention = false;
 
-                return vec![
-                    WorldStateUpdate::EngineUpdate(
-                        EngineStateUpdate::ShowDialogue(
-                            self.id, self.name.clone(), dialogue,
-                        )
+                let show_dialogue = WorldStateUpdate::EngineUpdate(
+                    EngineStateUpdate::ShowDialogue(
+                        self.id, self.name.clone(), dialogue,
                     )
-                ];
+                );
+
+                return if self.vanishes_after_dialogue {
+                    vec![show_dialogue, WorldStateUpdate::RemoveEntity(self.id)]
+                } else {
+                    vec![show_dialogue]
+                }
             }             
         }  
         vec![]

@@ -1,6 +1,6 @@
 use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, dialogues::{menu::DialogueMenu, models::Dialogue}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, maps::biome_tiles::Biome, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, inventory_recap::InventoryRecap, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{rect::IntRect, vector::Vector2d}};
 
-use super::{inventory::{add_to_inventory, remove_one_of_species_from_inventory}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_key, set_value_for_key, StorageKey}, world::World};
+use super::{inventory::{add_to_inventory, remove_one_of_species_from_inventory}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World};
 
 pub struct GameEngine {
     pub menu: GameMenu,
@@ -137,7 +137,7 @@ impl GameEngine {
     }
 
     fn teleport_to_previous(&mut self) {
-        let world_id = get_value_for_key(&StorageKey::latest_world()).unwrap_or(1001);
+        let world_id = get_value_for_global_key(&StorageKey::latest_world()).unwrap_or(1001);
         let (x, y) = if world_id == 1001 { (68, 23) } else { (0, 0) };
         self.teleport(&Destination::new(world_id, x, y));
     }
@@ -303,7 +303,7 @@ impl GameEngine {
 
     fn previous_world(&self) -> u32 {
         if self.world.id == WORLD_ID_NONE { 
-            get_value_for_key(&StorageKey::previous_world()).unwrap_or(WORLD_ID_NONE)
+            get_value_for_global_key(&StorageKey::previous_world()).unwrap_or(WORLD_ID_NONE)
         } else {
             self.world.id
         }

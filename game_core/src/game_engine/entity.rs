@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{constants::UNLIMITED_LIFESPAN, dialogues::models::{Dialogue, EntityDialogues}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, directions::MovementDirections}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_key, StorageKey}, world::World};
+use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::key_value_matches, world::World};
 
 #[derive(Debug, Copy, Clone)]
 pub struct EntityProps {
@@ -49,6 +49,9 @@ pub struct Entity {
     pub original_sprite_frame: IntRect,
 
     #[serde(default)]
+    pub display_condition: Option<DisplayCondition>,
+
+    #[serde(default)]
     pub movement_directions: MovementDirections,
 
     #[serde(default)]
@@ -83,6 +86,9 @@ pub struct Entity {
 
     #[serde(default)]
     pub demands_attention: bool,
+
+    #[serde(default)]
+    pub vanishes_after_dialogue: bool,
 }
 
 fn unlimited_lifespan() -> f32 {
@@ -91,6 +97,12 @@ fn unlimited_lifespan() -> f32 {
 
 fn one() -> f32 {
     1.0
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DisplayCondition {
+    pub key: String,
+    pub expected_value: u32
 }
 
 impl Entity {
@@ -136,6 +148,18 @@ impl Entity {
         }
     }
 
+    pub fn should_be_visible(&self, world: &World) -> bool {
+        if let Some(condition) = self.display_condition.clone() {
+            if key_value_matches(&condition.key, world, condition.expected_value) {
+                true
+            } else {
+                false
+            }
+        } else {
+            true
+        }
+    }
+
     pub fn sprite_sheet(&self) -> u32 {
         self.sprite.sheet_id
     }
@@ -154,20 +178,7 @@ impl Entity {
     
     pub fn next_dialogue(&self, world: &World) -> Option<Dialogue> {
         for option in &self.dialogues {
-            let value = if option.key.contains("pressure_plate_down") {
-                let lock_name = option.key.replace("pressure_plate_down_", "");
-                let lock_type = LockType::from_string(&lock_name);
-                
-                if world.is_pressure_plate_down(&lock_type) {
-                    Some(1)
-                } else {
-                    Some(0)
-                }
-            } else {
-                get_value_for_key(&option.key)
-            };
-            
-            if option.key == StorageKey::always() || value == Some(option.expected_value) || (option.expected_value == 0 && value.is_none()) {
+            if key_value_matches(&option.key, world, option.expected_value) {
                 return Some(option.clone())
             }
         }

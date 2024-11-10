@@ -106,7 +106,9 @@ impl Species {
             is_invulnerable: false,
             demands_attention: false,
             is_consumable: self.is_consumable,
-            movement_directions: self.movement_directions
+            movement_directions: self.movement_directions,
+            display_condition: None,
+            vanishes_after_dialogue: false,
         }
     }
 
