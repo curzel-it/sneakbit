@@ -155,7 +155,7 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
         Ordering::Equal
     });
 
-    entities.iter()
+    let mut renderables: Vec<RenderableItem> = entities.iter()
         .map(|e| {
             RenderableItem {
                 sprite_sheet_id: e.sprite_sheet(),
@@ -164,7 +164,13 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
                 frame: e.frame
             }
         })
-        .collect()
+        .collect();
+
+    renderables.extend(
+        world.cutscenes.iter().map(|c| c.renderable_item())
+    );
+
+    renderables
 }
 
 #[no_mangle]

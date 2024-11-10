@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, set_value_for_key}, world::World}, utils::rect::IntRect};
+use crate::{constants::SPRITE_SHEET_BLANK, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, set_value_for_key}}, utils::{rect::IntRect, vector::Vector2d}, RenderableItem};
 
 use super::animated_sprite::AnimatedSprite;
 
@@ -14,6 +14,9 @@ pub struct CutScene {
     on_end: Vec<Entity>,
 
     #[serde(skip)]
+    did_setup: bool,
+
+    #[serde(skip)]
     is_playing: bool,
 
     #[serde(skip)]
@@ -21,8 +24,29 @@ pub struct CutScene {
 }
 
 impl CutScene {
-    pub fn update(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
-        if get_value_for_global_key(&self.key).unwrap_or_default() == 1 {
+    pub fn renderable_item(&self) -> RenderableItem {
+        let sprite = if self.is_playing { &self.play_sprite } else { &self.idle_sprite };
+
+        RenderableItem {
+            sprite_sheet_id: sprite.sheet_id,
+            texture_rect: sprite.frame,
+            offset: Vector2d::zero(),
+            frame: self.frame
+        }
+    }
+
+    pub fn update(&mut self, hero_frame: &IntRect, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
+        let did_already_play = get_value_for_global_key(&self.key).unwrap_or_default() == 1;
+
+        if !self.did_setup {
+            self.did_setup = true;
+
+            if did_already_play {
+                self.hide();
+            }
+        }
+
+        if did_already_play {
             return vec![];
         }
 
@@ -31,6 +55,7 @@ impl CutScene {
 
             if self.did_pass_first_frame && self.play_sprite.frame.x == self.play_sprite.original_frame.x {
                 set_value_for_key(&self.key, 1);
+                self.hide();
 
                 return self.on_end
                     .clone()
@@ -45,11 +70,17 @@ impl CutScene {
         } else {
             self.idle_sprite.update(time_since_last_update);           
 
-            if world.is_hero_at(self.trigger_position.0, self.trigger_position.1) {
+            if hero_frame.x == self.trigger_position.0 && hero_frame.y == self.trigger_position.1 {
                 self.is_playing = true;
             }
         }
 
         vec![]
+    }
+
+    fn hide(&mut self) {
+        self.is_playing = false;
+        self.idle_sprite.sheet_id = SPRITE_SHEET_BLANK;
+        self.idle_sprite.frame = IntRect::square_from_origin(1);
     }
 }

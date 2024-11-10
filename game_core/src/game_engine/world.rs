@@ -150,9 +150,11 @@ impl World {
         self.has_attack_key_been_pressed = keyboard.has_attack_key_been_pressed;
         self.has_confirmation_key_been_pressed = keyboard.has_confirmation_been_pressed;
 
+        self.biome_tiles.update(time_since_last_update);
+
         let mut entities = self.entities.borrow_mut();
 
-        let state_updates: Vec<WorldStateUpdate> = self.visible_entities.iter()
+        let entity_state_updates: Vec<WorldStateUpdate> = self.visible_entities.iter()
             .flat_map(|(index, _)| {
                 if let Some(entity) = entities.get_mut(*index) {
                     entity.update(self, time_since_last_update)
@@ -161,14 +163,21 @@ impl World {
                 }                
             })
             .collect();
-
-        self.biome_tiles.update(time_since_last_update);
-
         drop(entities);
-        let updates = self.apply_state_updates(state_updates);
+
+        let cutscene_state_updates: Vec<WorldStateUpdate> = self.cutscenes.iter_mut()
+            .flat_map(|c| 
+                c.update(&self.cached_hero_props.hittable_frame, time_since_last_update)
+            )
+            .collect();
+
+        let mut engine_updates = self.apply_state_updates(entity_state_updates);
+        let cutscene_engine_updates = self.apply_state_updates(cutscene_state_updates);
+        engine_updates.extend(cutscene_engine_updates);
+
         self.visible_entities = self.compute_visible_entities(viewport);
         self.update_hitmaps();
-        updates
+        engine_updates
     } 
 
     pub fn apply_state_updates(&mut self, updates: Vec<WorldStateUpdate>) -> Vec<EngineStateUpdate> {
