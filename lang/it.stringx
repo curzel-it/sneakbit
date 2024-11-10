@@ -1,321 +1,122 @@
-"building.name.house" = "Casa"
-"building.name.house_two_floors" = "Casa (due piani)"
-"building.name.deamon_lord_castle" = "Castello del Signore dei Demoni"
-"combat.options.attack" = "Attacca"
-"combat.options.inventory" = "Inventario"
-"combat.options.run" = "Fuggi"
+"building.name.demon_lord_castle" = "Demon Lord Castle"
+"building.name.house" = "House"
+"building.name.house_two_floors" = "House (two stories)"
+"combat.options.attack" = "Attack"
+"combat.options.inventory" = "Inventory"
+"combat.options.run" = "Run"
+"confirmation.cancel" = "Nope"
 "confirmation.confirm" = "Ok"
-"confirmation.cancel" = "No"
-"death_screen.title" = "Sei morto."
-"death_screen.subtitle" = "Premi CONFERMA per riprovare."
-"dialogue.reward_received" = "Hai ricevuto `%s`!"
-"picked_up_item" = "Raccolto `%s`!"
-"dialogue.select_option" = "Seleziona un'opzione:"
-"ok" = "Ok"
-
-"empty_dialogue" = "Cosa vuoi?"
-"entity.menu.title" = "Opzioni Entità"
-"entity.menu.remove" = "Rimuovi"
-"entity.menu.rename" = "Rinomina"
-"entity.menu.rename_title" = "Inserisci nuovo nome"
-"entity.menu.pickup" = "Raccogli"
-"entity.menu.read" = "Leggi"
-"entity.menu.use" = "Usa"
-"entity.menu.change_lock" = "Cambia Serratura"
-"entity.menu.change_lock_title" = "Seleziona Colore Chiave"
-"entity.menu.change_on_off" = "Accendi/Spegni"
-"entity.menu.change_destination_world" = "Cambia Mondo Destinazione"
-"entity.menu.change_destination_x" = "Cambia Destinazione X"
-"entity.menu.change_destination_y" = "Cambia Destinazione Y"
-"entity.menu.toggle_demand_attention" = "Attiva/Disattiva Richiesta Attenzione"
-
-"game.menu.title" = "Menu di Gioco"
-"game.menu.status" = "Stato"
-"game.menu.save" = "Salva Gioco"
-"game.menu.inventory" = "Inventario"
-"game.menu.map_editor" = "Editor Mappa"
-"game.menu.exit" = "Esci"
-"game.menu.save_and_exit" = "Salva & Esci"
-"game.menu.key_bindings" = "Comandi"
-
-"keys.menu.title" = "Comandi"
-
-"keys.menu.message" = """
-Movimento: WASD o FRECCE
-Indietro/Annulla: ESC
-Menu: INVIO
-
-Puoi cambiare quanto segue:
-"""
-
-"keys.menu.press_to_change" = "Premi nuovo tasto per"
-"inventory.title" = "Inventario"
-"inventory.subtitle" = "Oggetti nello zaino"
-"lock.name.none" = "Nessuna"
-"lock.name.yellow" = "Gialla"
-"lock.name.red" = "Rossa"
-"lock.name.blue" = "Blu"
-"lock.name.green" = "Verde"
-"lock.name.silver" = "Argento"
-"lock.name.permanent" = "Permanente"
-"map_editor.title" = "Editor Mappa"
-"map_editor.subtitle" = "Premi CONFERMA per selezionare qualcosa"
-"map_editor.placement" = "Premi CONFERMA per posizionare\nPremi ESC per annullare"
+"death_screen.subtitle" = "Press CONFIRM to try again"
+"death_screen.title" = "You're dead."
+"dialogue.reward_received" = "You received `%s`!"
+"dialogue.select_option" = "Select an option:"
+"empty_dialogue" = "What do you want?"
+"entity.menu.change_destination_world" = "Change Destination World"
+"entity.menu.change_destination_x" = "Change Destination X"
+"entity.menu.change_destination_y" = "Change Destination Y"
+"entity.menu.change_lock" = "Change Lock"
+"entity.menu.change_lock_title" = "Select Key Color"
+"entity.menu.change_on_off" = "Flip On/Off"
+"entity.menu.pickup" = "Pick up"
+"entity.menu.read" = "Read"
+"entity.menu.remove" = "Remove"
+"entity.menu.rename" = "Rename"
+"entity.menu.rename_title" = "Enter new name"
+"entity.menu.title" = "Entity Options"
+"entity.menu.toggle_demand_attention" = "Toggle Demand Attention"
+"entity.menu.use" = "Use"
+"game.menu.exit" = "Exit"
+"game.menu.inventory" = "Inventory"
+"game.menu.key_bindings" = "Key Bindings"
+"game.menu.map_editor" = "Map Editor"
+"game.menu.save" = "Save Game"
+"game.menu.save_and_exit" = "Save & Exit"
+"game.menu.status" = "Status"
+"game.menu.title" = "Game Menu"
+"inventory.subtitle" = "Stuff in your backpack"
+"inventory.title" = "Inventory"
+"lock.name.blue" = "Blue"
+"lock.name.green" = "Green"
+"lock.name.none" = "None"
+"lock.name.permanent" = "Permanent"
+"lock.name.red" = "Red"
+"lock.name.silver" = "Silver"
+"lock.name.yellow" = "Yellow"
+"map_editor.placement" = "CONFIRM to place, ESC to cancel"
+"map_editor.subtitle" = "Press CONFIRM to select something"
+"map_editor.title" = "Map Editor"
+"npc.menu.play_dialog" = "Play dialog"
+"npc.menu.remove" = "Remove"
+"npc.menu.title" = "NPC Options"
+"npc.name.demon_lord" = "Demon Lord"
 "npc.name.default" = "Some Npc"
-"npc.name.deamon_lord" = "Signore Oscuro"
-"npc.name.goddess" = "Dea"
-"npc.name.wizard" = "Mago"
-"npc.name.ninja.blue" = "Ninja Blu"
-"npc.name.ninja.dark" = "Ninja Oscuro"
-"npc.name.old_man" = "Vecchio"
-"npc.name.old_woman" = "Vecchia"
-"npc.name.shop_clerk" = "Venditore"
-"npc.name.slime" = "Melma"
-"npc.name.zombie" = "Zombie"
+"npc.name.ghost" = "Ghost"
+"npc.name.goddess" = "Goddess"
 "npc.name.homunculus" = "Homunculus"
-"npc.name.ghost" = "Fantasma"
-"npc.menu.title" = "Opzioni NPC"
-"npc.menu.remove" = "Rimuovi"
-"npc.menu.play_dialog" = "Gioca dialogo"
-"objects.name.hint_consumable" = "Suggerimento (Uso singolo)"
-"objects.name.hint_permanent" = "Suggerimento (Permanente)"
-"objects.name.stairs_up" = "Scale (Su)"
-"objects.name.stairs_down" = "Scale (Giù)"
-"objects.name.seat_brown" = "Sedia Marrone"
-"objects.name.seat_green" = "Sedia Verde"
-"objects.name.seat_orange" = "Sedia Arancione"
-"objects.name.seat_pink" = "Sedia Rosa"
-"objects.name.table" = "Tavolo"
-"objects.name.bed" = "Letto"
-"objects.name.book_red" = "Libro"
-"objects.name.book_blue" = "Libro"
-"objects.name.book_green" = "Libro"
-"objects.name.book_purple" = "Libro"
-"objects.name.book_dark" = "Libro Scuro"
-"objects.name.key" = "Chiave"
-"objects.name.key_yellow" = "Chiave Gialla"
-"objects.name.key_red" = "Chiave Rossa"
-"objects.name.key_green" = "Chiave Verde"
-"objects.name.key_blue" = "Chiave Blu"
-"objects.name.key_silver" = "Chiave d'Argento"
+"npc.name.ninja.blue" = "Blue Ninja"
+"npc.name.ninja.black" = "Dark Ninja"
+"npc.name.old_man" = "Old Man"
+"npc.name.old_woman" = "Old Lady"
+"npc.name.shop_clerk" = "Shop Guy"
+"npc.name.slime" = "Slime"
+"npc.name.wizard" = "Wizard"
+"npc.name.zombie" = "Zombie"
+"objects.name.bed" = "Bed"
+"objects.name.book_blue" = "Book"
+"objects.name.book_dark" = "Dark Book"
+"objects.name.book_green" = "Book"
+"objects.name.book_purple" = "Book"
+"objects.name.book_red" = "Book"
+"objects.name.boulder" = "Boulder"
+"objects.name.deep_hole" = "Deep Hole"
+"objects.name.fountain" = "Fountain"
+"objects.name.gate.blue" = "Blue Gate"
+"objects.name.gate.green" = "Green Gate"
+"objects.name.gate.red" = "Red Gate"
+"objects.name.gate.silver" = "Silver Gate"
+"objects.name.gate.yellow" = "Yellow Gate"
+"objects.name.hint_consumable" = "Hint (One time)"
+"objects.name.hint_permanent" = "Hint (Permanent)"
+"objects.name.key" = "Key"
+"objects.name.key_blue" = "Blue Key"
+"objects.name.key_green" = "Green Key"
+"objects.name.key_red" = "Red Key"
+"objects.name.key_silver" = "Silver Key"
+"objects.name.key_yellow" = "Yellow Key"
 "objects.name.kunai" = "Kunai"
 "objects.name.kunai.x10" = "x10 Kunai"
-"objects.name.teleporter" = "Teletrasportatore"
-"objects.name.deep_hole" = "Buco Profondo"
-"objects.name.boulder" = "Masso"
-"objects.name.fountain" = "Fontana"
-"objects.name.gate.yellow" = "Cancello Giallo"
-"objects.name.gate.red" = "Cancello Rosso"
-"objects.name.gate.green" = "Cancello Verde"
-"objects.name.gate.blue" = "Cancello Blu"
-"objects.name.gate.silver" = "Cancello d'Argento"
-"objects.name.pressure_plate.yellow" = "Piastra di Pressione Gialla"
-"objects.name.pressure_plate.red" = "Piastra di Pressione Rossa"
-"objects.name.pressure_plate.green" = "Piastra di Pressione Verde"
-"objects.name.pressure_plate.blue" = "Piastra di Pressione Blu"
-"objects.name.pressure_plate.silver" = "Piastra di Pressione d'Argento"
-"objects.name.pill.red" = "Pillola Rossa"
-"objects.name.rail.cart" = "Carrello da Miniera"
-"objects.name.scroll.brown" = "Pergamena Marrone"
-"objects.name.scroll.red" = "Pergamena Rossa"
-"objects.name.scroll.blue" = "Pergamena Blu"
-"objects.name.scroll.yellow" = "Pergamena Gialla"
-"objects.name.scroll.green" = "Pergamena Verde"
-"objects.name.sign" = "Cartello"
-"objects.name.large_sign" = "Grande Cartello"
-"objects.name.magic_circle.summoning" = "Cerchio di Evocazione"
-"objects.name.magic_circle.summoning.evil" = "Cerchio di Evocazione Malefica"
-"objects.name.magic_circle.blue" = "Cerchio Magico Blu"
-"objects.name.well" = "Pozzo"
-
-"teleporter.name" = "Teletrasportatore"
-"teleporter.locked" = "Questa porta è bloccata.\nHai bisogno di una chiave %s per sbloccarla."
-"telepoter.locked.permanent" = "Questa porta è bloccata."
-"teleporter.unlock.title" = "Sbloccare la porta?"
-"teleporter.unlock.message" = "Perderai una chiave %s."
-"text_input.hint" = "Premi INVIO per confermare\nPremi ESC per annullare"
-
-"you" = "Tu"
-
-"status.fake" = """
------------------------------
-Punti disponibili:         0
------------------------------
-Stats (max lv 100):
-- Hp:                      1
-- Dp:                      1
-- Forza:                   5
-- Velocità:                4
------------------------------
-Skills (max lv 100):
-- Lancio pugnali:          1
-- Vectorized Casting:      1
------------------------------
-"""
-
-"1001.hint.blessing_received" = """
-Dea:
-Hai la mia benedizione, viaggiatore.
-"""
-
-"1001.wizard_intro" = """
-Non posso crederci che ha funzionato!
-
-Con l'aiuto della Dea, ti ho evocato qui per
-essere il campione dell'umanità e sconfiggere il Signore Oscuro.
-
-Purtroppo, l'invasione è già iniziata...
-
-Vai a nord, una barca sta per partire per Stormlace City!
-La Gran Sacerdotessa ti aspetterà lì...
-"""
-
-"1002.sign.welcome_to_village" = """
-Benvenuto a Porto Saltspire
-"""
-
-"1002.scroll.hidden_monsters_hint" = """
-Se stai leggendo questo, non siamo mai arrivati al tunnel.
-Fai attenzione al buco.
-"""
-
-"1002.sign.forest_maze" = """
-Proprietà privata
-"""
-
-"1002.sign.sorry_no_boat" = """
-Ahoy! 
-Ho dovuto salpare - quei dannati demoni erano troppo vicini per i miei gusti. 
-Trova il vecchio Capitano Briggs nel villaggio; ti darà una mano!
-"""
-
-"1002.book.underground_hint.title" = """
-Diario del Capitano Briggs
-"""
-
-"1002.book.underground_hint.message" = """
-Diario del Capitano Briggs:
-So che un capitano dovrebbe affondare con la sua nave, 
-ma la gente qui ha bisogno di me.
-Donne e bambini sono partiti con l'ultima barca.
-Spero che presto potremo partire anche noi usando il tunnel sotterraneo 
-nascosto nel villaggio.
-Se non è crollato, dovrebbe portarci fino alla prossima isola.
-"""
-
-"1001.wizard_no_time" = """
-Non c'è tempo per spiegare oltre.
-La nave sta partendo, sbrigati!
-"""
-
-"1002.old_man.damn_monsters" = """
-Questi mostri... È tutto finito...
-Tieni il mio coltello per me ragazzo.
-"""
-
-"1002.hint.why_no_status_window" = """
-Dea:
-Mmmh... Qualcosa non va nella finestra di stato...
-"""
-
-"1002.hint.cant_you_hear_me" = """
-Dea:
-Ciao!?
-"""
-
-"1003.hint.comunication_issues" = """
-Dea:
-... Non riesce a sentirmi...
-"""
-
-"1004.old_lady.talk_to_my_husband" = """
-Mio marito ha creato una barriera in tempo per salvare la nostra casa.
-Puoi vedere come sta?
-"""
-
-"1004.sign.cave_back" = """
-Benvenuto nella gloriosa città mineraria di Rusty Gulch
-Casa di tesori discutibili e problemi polmonari garantiti!
-Avviso: L'area è altamente contaminata. 
-Entra a tuo rischio e pericolo, o almeno con una maschera molto buona. 
-Seriamente, stai lontano. Non scherziamo... 
-...A meno che tu non sia interessato a rocce luminose e malattie misteriose,
-allora, vai pure avanti!
-"""
-
-"1004.old_man.please_open_gate" = """
-Ti ha mandato mia moglie?
-Sto bene, la maggior parte dei demoni è intrappolata adesso...
-Ma il sindaco si è chiuso dentro con tutte le nostre provviste. 
-Ho bisogno che tu mi aiuti a dargli una lezione.
-
-Puoi andare a Nord e aprire il cancello del municipio?
-Tutti i mostri sembrano arrivare da li, io non ce la faccio...
-"""
-
-"1004.old_man.gate_now_open" = """
-Haha! (Risata malefica)
-L'abbiamo preso!
-Saccheggiamo il municipio
-"""
-
-"1004.sign.last_ship_sailed" = """
-L'ultima nave è già salpata.
-Inoltre, non arriveranno altre navi.
-"""
-
-"1004.hint.what_is_that" = """
-Dea:
-Un portale..!
-I demoni arrivano sicuramente da li.
-"""
-
-"1004.hint.dont_enter_portal" = """
-Dea:
-È chiaramente magia demoniaca, stanne lontano!
-"""
-
-"1004.hint.dont_you_dare" = """
-Dea:
-Non osare...!
-"""
-
-"1005.hint.deamon_kingdom_intro" = """
-Il regno dei demoni!?
-"""
-
-"1008.dialogue.demon_lord.intro" = """
-Ti stavo aspettando... "Eroe".
-Qualcuno del tuo livello non ha nessuna chance.
-Inginocchiati e avrai una morte veloce e indolore.
-"""
-
-"1008.dialogue.demon_lord.try_me" = """
-Mortale, la mia pazienza ha un limite.
-"""
-
-"1009.dialogue.goddess.end_game" = """
-Grazie per aver salvato il mondo
-Bla bla bla
-(Lo sviluppatore non aveva sbatta di scrivere un dialogo come si deve, lol)
-"""
-
-"1009.dialogue.goddess.end_game_again" = """
-Grazie ancora.
-Ora puoi andare...
-(Lo sviluppatore non aveva sbatta di scrivere un dialogo come si deve, lol)
-"""
-
-"bullet_catcher_skill_intro" = """
-Mi sembri una persona affidabile...
-Ok, ti insegnerò a prendere i pugnali mentre sono in volo!
-"""
-
-"bullet_boomerang_skill_intro" = """
-Non mi sembre una persona molto responsabile...
-Ok, ora ti insegno a far rimbalzare i pugnali quando li lanci!
-"""
-
-"good_luck" = """
-Buona fortuna!
-"""
+"objects.name.large_sign" = "Large Sign"
+"objects.name.magic_circle.blue" = "Blue Magic Circle"
+"objects.name.magic_circle.summoning" = "Summoning Circle"
+"objects.name.magic_circle.summoning.evil" = "Evil Summoning Circle"
+"objects.name.pill.red" = "Red Pill"
+"objects.name.pressure_plate.blue" = "Blue Pressure Plate"
+"objects.name.pressure_plate.green" = "Green Pressure Plate"
+"objects.name.pressure_plate.red" = "Red Pressure Plate"
+"objects.name.pressure_plate.silver" = "Silver Pressure Plate"
+"objects.name.pressure_plate.yellow" = "Yellow Pressure Plate"
+"objects.name.rail.cart" = "Rail Cart"
+"objects.name.scroll.blue" = "Blue Scroll"
+"objects.name.scroll.brown" = "Brown Scroll"
+"objects.name.scroll.green" = "Green Scroll"
+"objects.name.scroll.red" = "Red Scroll"
+"objects.name.scroll.yellow" = "Yellow Scroll"
+"objects.name.seat_brown" = "Brown Seat"
+"objects.name.seat_green" = "Green Seat"
+"objects.name.seat_orange" = "Orange Seat"
+"objects.name.seat_pink" = "Pink Seat"
+"objects.name.sign" = "Sign"
+"objects.name.stairs_down" = "Stairs (Down)"
+"objects.name.stairs_up" = "Stairs (Up)"
+"objects.name.table" = "Table"
+"objects.name.teleporter" = "Teleporter"
+"objects.name.well" = "Well"
+"ok" = "Ok"
+"picked_up_item" = "Picked up `%s`!"
+"teleporter.locked" = "You need a %s key to open this door."
+"teleporter.name" = "Teleporter"
+"teleporter.unlock.message" = "You will lose one %s key."
+"teleporter.unlock.title" = "Unlock the door?"
+"telepoter.locked.permanent" = "This door is locked."
+"text_input.hint" = "ENTER to confirm, ESC to cancel"
+"you" = "You"

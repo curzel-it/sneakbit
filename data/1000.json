@@ -1,6 +1,7 @@
 {
   "id": 1000,
   "revision": 0,
+  "ephemeral_state": false,
   "biome_tiles": {
     "tiles": [
       "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -172,8 +173,6 @@
     "sheet_id": 1003
   },
   "entities": [],
-  "creep_spawn_enabled": false,
-  "creep_spawn_interval": 0.0,
   "default_biome": "Water",
   "light_conditions": "Day"
 }

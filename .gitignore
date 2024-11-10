@@ -1,3 +1,4 @@
+assets/*-*.png
 debug/
 target/
 Cargo.lock

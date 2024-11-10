@@ -13,7 +13,7 @@ fn main() {
     let creative_mode = env::args().any(|arg| arg == "creative");
 
     initialize_config_paths(
-        TILE_SIZE * 2.5,
+        TILE_SIZE * 2.0,
         current_locale(),
         local_path("data"),
         local_path("data/species.json"),
@@ -140,6 +140,7 @@ fn handle_mouse_updates(rl: &mut RaylibHandle, rendering_scale: f32) {
     update_mouse(
         rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_LEFT), 
         rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_LEFT), 
+        rl.is_mouse_button_down(MouseButton::MOUSE_BUTTON_RIGHT), 
         rl.is_mouse_button_pressed(MouseButton::MOUSE_BUTTON_RIGHT), 
         rl.get_mouse_position().x,
         rl.get_mouse_position().y, 
@@ -178,7 +179,7 @@ fn get_char_pressed(rl: &mut RaylibHandle) -> u32 {
 
 fn rendering_scale_for_screen_width(width: f32) -> (f32, f32) {
     if is_creative_mode() {
-        return (1.0, 2.0)
+        return (2.0, 2.0)
     }
     if width < 500.0 {
         (1.0, 1.0)

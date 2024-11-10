@@ -2,7 +2,7 @@ use std::{fs::File, io::{BufReader, Write}};
 
 use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Error;
-use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, entities::known_species::SPECIES_HERO, features::light_conditions::LightConditions, game_engine::{entity::Entity, world::World}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::ConstructionTile, tiles::TileSet}};
+use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::known_species::SPECIES_HERO, features::light_conditions::LightConditions, game_engine::{entity::Entity, world::World}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::ConstructionTile, tiles::TileSet}};
 
 impl World {
     pub fn load(id: u32) -> Option<Self> {
@@ -57,8 +57,8 @@ impl World {
 
         let biome_tile_set = TileSet::<BiomeTile>::with_tiles(
             SPRITE_SHEET_BIOME_TILES, 
-            (0..WORLD_SIZE_ROWS).map(|_| {
-                (0..WORLD_SIZE_COLUMNS).map(|_| {
+            (0..world.bounds.h).map(|_| {
+                (0..world.bounds.w).map(|_| {
                     let mut tile = BiomeTile::from_data('0');
                     tile.setup_neighbors(tile.tile_type, tile.tile_type, tile.tile_type, tile.tile_type);
                     tile
@@ -69,8 +69,8 @@ impl World {
 
         let construction_tile_set = TileSet::<ConstructionTile>::with_tiles(
             SPRITE_SHEET_CONSTRUCTION_TILES, 
-            (0..WORLD_SIZE_ROWS).map(|_| {
-                (0..WORLD_SIZE_COLUMNS).map(|_| {
+            (0..world.bounds.h).map(|_| {
+                (0..world.bounds.w).map(|_| {
                     let mut tile = ConstructionTile::from_data('0');
                     tile.setup_neighbors(tile.tile_type, tile.tile_type, tile.tile_type, tile.tile_type);
                     tile
@@ -100,12 +100,6 @@ struct WorldData {
     entities: Vec<Entity>,
 
     #[serde(default)]
-    creep_spawn_enabled: bool,
-
-    #[serde(default)]
-    creep_spawn_interval: f32,
-
-    #[serde(default)]
     default_biome: Biome,
 
     #[serde(default)]
@@ -129,8 +123,6 @@ impl Serialize for World {
         state.serialize_field("biome_tiles", &self.biome_tiles)?;
         state.serialize_field("constructions_tiles", &self.constructions_tiles)?;
         state.serialize_field("entities", &entities)?;
-        state.serialize_field("creep_spawn_enabled", &self.creep_spawn_enabled)?;
-        state.serialize_field("creep_spawn_interval", &self.creep_spawn_interval)?;
         state.serialize_field("default_biome", &self.default_biome)?;
         state.serialize_field("light_conditions", &self.light_conditions)?;
         state.end()
@@ -146,8 +138,6 @@ impl<'de> Deserialize<'de> for World {
         world.ephemeral_state = data.ephemeral_state;
         world.default_biome = data.default_biome;
         world.light_conditions = data.light_conditions;
-        world.creep_spawn_enabled = data.creep_spawn_enabled;
-        world.creep_spawn_interval = data.creep_spawn_interval;
         data.entities.into_iter().for_each(|e| _ = world.add_entity(e));        
         world.load_biome_tiles(data.biome_tiles);
         world.load_construction_tiles(data.constructions_tiles);

@@ -8,10 +8,6 @@
 
 #define ANIMATIONS_FPS 10.0
 
-#define WORLD_SIZE_ROWS 80
-
-#define WORLD_SIZE_COLUMNS 120
-
 #define UNLIMITED_LIFESPAN -420.0
 
 #define NO_PARENT 0
@@ -25,8 +21,6 @@
 #define HERO_ENTITY_ID 420
 
 #define WORLD_ID_NONE 1000
-
-#define WORLD_ID_DEMO 1001
 
 #define WORLD_TRANSITION_TIME 0.3
 

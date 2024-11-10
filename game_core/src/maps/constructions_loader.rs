@@ -1,4 +1,4 @@
-use crate::{constants::{SPRITE_SHEET_CONSTRUCTION_TILES, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, game_engine::world::World};
+use crate::{constants::SPRITE_SHEET_CONSTRUCTION_TILES, game_engine::world::World};
 
 use super::{constructions_tiles::ConstructionTile, tiles::TileSet};
 
@@ -8,7 +8,7 @@ impl World {
         let tiles = if tiles.tiles.is_empty() {
             TileSet::<ConstructionTile>::with_tiles(
                 SPRITE_SHEET_CONSTRUCTION_TILES,
-                vec![vec![nothing; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS]
+                vec![vec![nothing; self.bounds.w as usize]; self.bounds.y as usize]
             )
         } else {
             tiles

@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, dialogues::{menu::DialogueMenu, models::Dialogue}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, inventory_recap::InventoryRecap, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, dialogues::{menu::DialogueMenu, models::Dialogue}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, maps::biome_tiles::Biome, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, inventory_recap::InventoryRecap, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{rect::IntRect, vector::Vector2d}};
 
 use super::{inventory::{add_to_inventory, remove_one_of_species_from_inventory}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_key, set_value_for_key, StorageKey}, world::World};
 
@@ -137,11 +137,9 @@ impl GameEngine {
     }
 
     fn teleport_to_previous(&mut self) {
-        if let Some(world) = get_value_for_key(&StorageKey::latest_world()) {
-            self.teleport(&Destination::new(world, 0, 0));
-        } else {
-            self.teleport(&Destination::default());
-        }
+        let world_id = get_value_for_key(&StorageKey::latest_world()).unwrap_or(1001);
+        let (x, y) = if world_id == 1001 { (68, 23) } else { (0, 0) };
+        self.teleport(&Destination::new(world_id, x, y));
     }
 
     pub fn window_size_changed(
@@ -312,8 +310,36 @@ impl GameEngine {
     }
 
     fn center_camera_at(&mut self, x: i32, y: i32, offset: &Vector2d) {
-        self.camera_viewport.center_at(&Vector2d::new(x as f32, y as f32));
-        self.camera_viewport_offset = *offset;
+        if matches!(self.world.default_biome, Biome::Nothing) || self.creative_mode {
+            self.camera_viewport.center_at(&Vector2d::new(x as f32, y as f32));
+            self.camera_viewport_offset = *offset;
+            return
+        }
+        let camera_half_w = (self.camera_viewport.w as f32 / 2.0).ceil();
+        let camera_half_h = (self.camera_viewport.h as f32 / 2.0).ceil();        
+        let bounds = self.world.bounds;        
+        let min_x = bounds.x as f32 + camera_half_w + 2.0;
+        let max_x = (bounds.x + bounds.w) as f32 - camera_half_w - 2.0;
+        let min_y = bounds.y as f32 + camera_half_h + 2.0;
+        let max_y = (bounds.y + bounds.h) as f32 - camera_half_h - 2.0; 
+
+        let requested_center = Vector2d::new(x as f32, y as f32);
+        
+        let actual_center = Vector2d::new(
+            requested_center.x.max(min_x).min(max_x),
+            requested_center.y.max(min_y).min(max_y)
+        );
+        self.camera_viewport.center_at(&actual_center);
+
+        let is_going_outside_x = (requested_center.x - actual_center.x).abs() > 0.001;
+        let is_going_outside_y = (requested_center.y - actual_center.y).abs() > 0.001;        
+
+        if !is_going_outside_x {
+            self.camera_viewport_offset.x = offset.x;    
+        }
+        if !is_going_outside_y {
+            self.camera_viewport_offset.y = offset.y;    
+        }
     }
 
     pub fn select_current_menu_option_at_index(&mut self, index: usize) {

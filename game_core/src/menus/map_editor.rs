@@ -115,8 +115,10 @@ impl MapEditor {
         keyboard: &KeyboardEventsProvider,
         mouse: &MouseEventsProvider,
     ) -> Vec<WorldStateUpdate> {
-        if mouse.has_right_been_pressed {
-            return self.clear_tile(frame);
+        if mouse.is_right_down {
+            let updated_frame = self.updated_frame(&frame, mouse, keyboard);
+            self.state = MapEditorState::PlacingItem(selected_index, item.clone(), updated_frame);
+            return self.clear_tile(updated_frame);
         }
         if self.has_selected_tile() && mouse.is_left_down {
             let updated_frame = self.updated_frame(&frame, mouse, keyboard);
@@ -161,6 +163,8 @@ impl MapEditor {
     }
 
     fn place_item(&mut self, item: Stockable, frame: IntRect) -> Vec<WorldStateUpdate> {
+        if frame.x < 0 || frame.y < 0 { return vec![] }
+
         let row = frame.y as usize;
         let col = frame.x as usize;
 
@@ -251,6 +255,8 @@ impl Stockable {
                 Biome::GrassFlowersPurple => (0, 15),
                 Biome::Lava => (0, 24),
                 Biome::Farmland => (0, 25),
+                Biome::DarkWater => (0, 26),
+                Biome::DarkSand => (0, 27)
             },
             Stockable::ConstructionTile(construction) => match construction {
                 Construction::Nothing => (6, 1),
@@ -271,6 +277,10 @@ impl Stockable {
                 Construction::Broadleaf => (1, 14),
                 Construction::StoneBox => (3, 16),
                 Construction::SpoiledTree => (2, 14),
+                Construction::WineTree => (8, 9),
+                Construction::SolarPanel => (8, 10),
+                Construction::Pipe => (8, 11),
+                Construction::BroadleafPurple => (5, 16)
             },
             Stockable::Entity(species) => species.inventory_texture_offset,
         };
@@ -322,6 +332,8 @@ impl MapEditor {
             Stockable::BiomeTile(Biome::Ice),
             Stockable::BiomeTile(Biome::Lava),
             Stockable::BiomeTile(Biome::Farmland),
+            Stockable::BiomeTile(Biome::DarkWater),
+            Stockable::BiomeTile(Biome::DarkSand),
             Stockable::ConstructionTile(Construction::Nothing),
             Stockable::ConstructionTile(Construction::WoodenFence),
             Stockable::ConstructionTile(Construction::MetalFence),
@@ -340,6 +352,10 @@ impl MapEditor {
             Stockable::ConstructionTile(Construction::Broadleaf),
             Stockable::ConstructionTile(Construction::StoneBox),
             Stockable::ConstructionTile(Construction::SpoiledTree),
+            Stockable::ConstructionTile(Construction::WineTree),
+            Stockable::ConstructionTile(Construction::SolarPanel),
+            Stockable::ConstructionTile(Construction::Pipe),
+            Stockable::ConstructionTile(Construction::BroadleafPurple)
         ];
         let mut species: Vec<Stockable> = ALL_SPECIES
             .iter()

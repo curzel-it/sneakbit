@@ -1,9 +1,9 @@
 use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
 
 use common_macros::hash_set;
-use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS, WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{entity::{Entity, EntityId, EntityProps}, inventory::add_to_inventory, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, lock_override, save_lock_override}};
+use super::{entity::{Entity, EntityId, EntityProps}, inventory::add_to_inventory, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, lock_override, save_lock_override}};
 
 #[derive(Clone)]
 pub struct World {
@@ -28,8 +28,6 @@ pub struct World {
     pub is_any_arrow_key_down: bool,
     pub has_attack_key_been_pressed: bool,
     pub has_confirmation_key_been_pressed: bool,
-    pub creep_spawn_enabled: bool,
-    pub creep_spawn_interval: f32,
     pub default_biome: Biome,
     pub pressure_plate_down_red: bool,
     pub pressure_plate_down_green: bool,
@@ -39,13 +37,16 @@ pub struct World {
     pub light_conditions: LightConditions,
 }
 
+const WORLD_SIZE_COLUMNS: usize = 30;
+const WORLD_SIZE_ROWS: usize = 30;
+
 impl World {
     pub fn new(id: u32) -> Self {
         Self {
             id,
             revision: 0,
             total_elapsed_time: 0.0,
-            bounds: IntRect::square_from_origin(150),
+            bounds: IntRect::from_origin(WORLD_SIZE_COLUMNS as i32, WORLD_SIZE_ROWS as i32),
             biome_tiles: TileSet::empty(),
             constructions_tiles: TileSet::empty(),
             entities: RefCell::new(vec![]),
@@ -61,8 +62,6 @@ impl World {
             is_any_arrow_key_down: false,
             has_attack_key_been_pressed: false,
             has_confirmation_key_been_pressed: false,
-            creep_spawn_enabled: false,
-            creep_spawn_interval: 5.0,
             default_biome: Biome::Nothing,
             pressure_plate_down_red: false,
             pressure_plate_down_green: false,
@@ -270,7 +269,9 @@ impl World {
 
         let mut entities = self.entities.borrow_mut();
         if let Some(target) = entities.iter_mut().find(|e| e.id == target_id) {    
-            if !target.is_dying && !target.is_invulnerable && target.parent_id != HERO_ENTITY_ID {
+            let is_vulnerable = !target.is_invulnerable || (has_piercing_bullet_skill() && target.melee_attacks_hero);
+
+            if !target.is_dying && is_vulnerable && target.parent_id != HERO_ENTITY_ID {
                 did_hit = true;
                 target.direction = Direction::Unknown;
                 target.current_speed = 0.0;
@@ -287,7 +288,7 @@ impl World {
         }
         drop(entities);
 
-        if did_hit && bullet_id != 0 {
+        if did_hit && bullet_id != 0 && !has_piercing_bullet_skill() {
             self.handle_bullet_stopped(bullet_id);
         }
     }

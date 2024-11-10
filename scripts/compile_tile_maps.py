@@ -67,8 +67,8 @@ class TileMapImageGenerator:
 
                 biome_tile.setup_neighbors(
                     biome_tiles[row-1][col].tile_type if row > 0 else Biome.NOTHING,
-                    biome_tiles[row][col+1].tile_type if col < 119 else Biome.NOTHING,
-                    biome_tiles[row+1][col].tile_type if row < 79 else Biome.NOTHING,
+                    biome_tiles[row][col+1].tile_type if col < world_width-1 else Biome.NOTHING,
+                    biome_tiles[row+1][col].tile_type if row < world_height-1 else Biome.NOTHING,
                     biome_tiles[row][col-1].tile_type if col > 0 else Biome.NOTHING,
                 )
 
@@ -96,8 +96,8 @@ class TileMapImageGenerator:
 
                 construction_tile.setup_neighbors(
                     construction_tiles[row-1][col].tile_type if row > 0 else Construction.Nothing,
-                    construction_tiles[row][col+1].tile_type if col < 119 else Construction.Nothing,
-                    construction_tiles[row+1][col].tile_type if row < 79 else Construction.Nothing,
+                    construction_tiles[row][col+1].tile_type if col < world_width-1 else Construction.Nothing,
+                    construction_tiles[row+1][col].tile_type if row < world_height-1  else Construction.Nothing,
                     construction_tiles[row][col-1].tile_type if col > 0 else Construction.Nothing,
                 )
 
