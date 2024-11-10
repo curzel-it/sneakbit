@@ -1,7 +1,7 @@
 use crate::{entities::{known_species::SPECIES_HERO, species::make_entity_by_species}, game_engine::world::World, utils::directions::Direction};
 
 impl World {
-    pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32) {
+    pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
         self.remove_hero();
         self.visible_entities = self.compute_visible_entities(&self.bounds);
         self.update_tiles_hitmap();
@@ -27,6 +27,9 @@ impl World {
             entity.frame.x = x;
             entity.frame.y = y;
             entity.direction = Direction::Down;
+        }
+        if !matches!(direction, Direction::Unknown | Direction::Still) {
+            entity.direction = direction;
         }
         
         entity.immobilize_for_seconds(0.2);

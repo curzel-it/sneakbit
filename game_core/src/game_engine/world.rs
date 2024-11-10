@@ -1,7 +1,7 @@
 use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
 
 use common_macros::hash_set;
-use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{entity::{Entity, EntityId, EntityProps}, inventory::add_to_inventory, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, lock_override, save_lock_override}};
 
@@ -360,6 +360,8 @@ impl World {
         if let Some(entity) = entities.iter_mut().find(|e| e.id == id) {
             if let Some(destination) = entity.destination.as_mut() {
                 destination.world = world;
+            } else {
+                entity.destination = Some(Destination::new(world, 0, 0));
             }
         }
     }
@@ -369,6 +371,8 @@ impl World {
         if let Some(entity) = entities.iter_mut().find(|e| e.id == id) {
             if let Some(destination) = entity.destination.as_mut() {
                 destination.x = x;
+            } else {
+                entity.destination = Some(Destination::new(0, x, 0));
             }
         }
     }
@@ -378,6 +382,8 @@ impl World {
         if let Some(entity) = entities.iter_mut().find(|e| e.id == id) {
             if let Some(destination) = entity.destination.as_mut() {
                 destination.y = y;
+            } else {
+                entity.destination = Some(Destination::new(0, 0, y));
             }
         }
     }

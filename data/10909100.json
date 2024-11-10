@@ -107,7 +107,8 @@
       "destination": {
         "world": 1008,
         "x": 0,
-        "y": 0
+        "y": 0,
+        "direction": "Unknown"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -116,6 +117,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -130,7 +132,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909104,
@@ -166,7 +169,8 @@
       "destination": {
         "world": 1008,
         "x": 0,
-        "y": 0
+        "y": 0,
+        "direction": "Unknown"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -175,6 +179,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -189,7 +194,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909105,
@@ -208,7 +214,7 @@
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 1000,
       "sprite": {
         "sheet_id": 1010,
@@ -230,6 +236,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -244,7 +251,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909106,
@@ -280,7 +288,8 @@
       "destination": {
         "world": 10909101,
         "x": 0,
-        "y": 0
+        "y": 0,
+        "direction": "Unknown"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -289,6 +298,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -303,7 +313,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909107,
@@ -322,7 +333,7 @@
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
@@ -344,6 +355,7 @@
         "w": 2,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -358,7 +370,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909108,
@@ -399,6 +412,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -413,7 +427,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909109,
@@ -454,6 +469,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -468,7 +484,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909110,
@@ -509,6 +526,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -523,7 +541,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909111,
@@ -564,6 +583,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -578,7 +598,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     }
   ],
   "default_biome": "Nothing",

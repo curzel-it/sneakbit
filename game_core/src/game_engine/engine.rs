@@ -271,7 +271,8 @@ impl GameEngine {
             self.previous_world(), 
             &self.world.cached_hero_props.direction, 
             destination.x, 
-            destination.y
+            destination.y,
+            destination.direction
         );
         new_world.update_no_input(0.001);
         new_world.update_no_input(0.001);

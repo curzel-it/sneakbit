@@ -17,8 +17,8 @@
       "08888888888888888888880000000008888888880088GGGGGGGGGGGGGG8GG88888888880000000000000000088888888GGGGG8888888000000000000",
       "08888888888888888888880000000000088G88888888GGGGGGGGG8888888GGG88888888800000000000000088888888GGGGGG8888888000000000000",
       "08888888888888888888880000000000008GGG888888GGGGGGGG888888888G888888888888888888888888888888888GGGGGG8888888000000000000",
-      "08888888888880000000000000000000008GGGG88888GGGGGGG8888888888G888888888800000000000000088888888GGGGGG8888888000000000000",
-      "08888888888880000000000000000000008GGGG88888GGGGGGG8888888888G8888888880000000000000000088888888GGGGG8888888000000000000",
+      "00888888888880000000000000000000008GGGG88888GGGGGGG8888888888G888888888800000000000000088888888GGGGGG8888888000000000000",
+      "00888888888880000000000000000000008GGGG88888GGGGGGG8888888888G8888888880000000000000000088888888GGGGG8888888000000000000",
       "00000000000000000000000000000000008GGGG888888888888888888888GGGGGG8800000000000000000000888888888GGGG8888888000000000000",
       "08888800000000000000000000000000008GGGG88888GGGGGGG888888888GGGGG88000000000000000000000888888888GGGG8888888000000000000",
       "08888880000000000000888888880000008GGGG88888GGGGGGGGGGGG88GGGGGGG88000000000000000000000888888888GGGG8888888000000000000",
@@ -95,15 +95,15 @@
       "000000000000000030000030000000300000003333333333300000300000030000000000000000000000000000000000000003000000000030000000",
       "000000000000000030000030000000300000003000000000300000300000030000000000000000000000000000000033333333000000000030000000",
       "000000000000000030000030000000300000003000000000300000300000030000000000000000000000000333333330000000000000000030000000",
-      "333333333333330030000033333333300000003000000000333033300000030000000000000000000000000300000000000000000000000030000000",
-      "300000000000030030000000000000000000003000000000003330000000030000000000000000000000000300000000000000000000000030000000",
-      "300000000000030030000033333333300000003000000000000000000000033000000000000000000000000300000000000000000000000030000000",
-      "300000000000030030000030000000300000003000000000000000000000003333333333000000000000000300000000000000033330333330000000",
-      "300000000000033330000030000000300000333333300000000000000000000000000003000000000000000300000000000000000000300000000000",
-      "300000000000000000000030000000333300333000000000000000000000000000000003333333333333333300000000000000000000300000000000",
-      "300000000000033330000030000000000300003000000000000000000000000000000000000000000000000000000000000000000000300000000000",
-      "300000000000030033333330000000000300000000000000000000000000000000000003333333333333333300000000000000000000300000000000",
-      "333333333333330000000000000000000300000000000000000000000000000000000003000000000000000300000000000000000000300000000000",
+      "033333333333330030000033333333300000003000000000333033300000030000000000000000000000000300000000000000000000000030000000",
+      "030000000000030030000000000000000000003000000000003330000000030000000000000000000000000300000000000000000000000030000000",
+      "030000000000030030000033333333300000003000000000000000000000033000000000000000000000000300000000000000000000000030000000",
+      "030000000000030030000030000000300000003000000000000000000000003333333333000000000000000300000000000000033330333330000000",
+      "030000000000033330000030000000300000333333300000000000000000000000000003000000000000000300000000000000000000300000000000",
+      "030000000000000000000030000000333300333000000000000000000000000000000003333333333333333300000000000000000000300000000000",
+      "030000000000033330000030000000000300003000000000000000000000000000000000000000000000000000000000000000000000300000000000",
+      "030000000000030033333330000000000300000000000000000000000000000000000003333333333333333300000000000000000000300000000000",
+      "033333333333330000000000000000000300000000000000000000000000000000000003000000000000000300000000000000000000300000000000",
       "000000000000000000000000000000000300000000000000000000000000000000033333000000000000000300000000000000000000300000000000",
       "33333330000000000003333333333000030000000000000000000000000000MMM0030000000000000000000300000000000000000003300000000000",
       "300000300000000000030000000030000300000000000000000000000000MMM0M0030000000000000000000300000000000000000003000000000000",
@@ -212,6 +212,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -226,7 +227,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10843057,
@@ -262,7 +264,8 @@
       "destination": {
         "world": 1006,
         "x": 74,
-        "y": 52
+        "y": 53,
+        "direction": "Unknown"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -271,6 +274,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -285,7 +289,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844508,
@@ -326,6 +331,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -340,7 +346,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844509,
@@ -381,6 +388,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -395,7 +403,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844510,
@@ -436,6 +445,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -450,7 +460,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844511,
@@ -491,6 +502,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -505,7 +517,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844513,
@@ -546,6 +559,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -560,7 +574,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844514,
@@ -601,6 +616,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -615,7 +631,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844515,
@@ -656,6 +673,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -670,7 +688,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844517,
@@ -711,6 +730,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -725,7 +745,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844518,
@@ -766,6 +787,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -780,7 +802,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844519,
@@ -821,6 +844,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -835,7 +859,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844520,
@@ -876,6 +901,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -890,7 +916,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844521,
@@ -931,6 +958,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -945,7 +973,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844522,
@@ -986,6 +1015,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1000,7 +1030,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844523,
@@ -1041,6 +1072,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1055,7 +1087,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844524,
@@ -1096,6 +1129,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1110,7 +1144,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844525,
@@ -1151,6 +1186,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1165,7 +1201,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844526,
@@ -1206,6 +1243,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1220,7 +1258,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844527,
@@ -1261,6 +1300,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1275,7 +1315,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844528,
@@ -1316,6 +1357,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1330,7 +1372,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844529,
@@ -1371,6 +1414,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1385,7 +1429,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844530,
@@ -1426,6 +1471,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1440,7 +1486,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844531,
@@ -1481,6 +1528,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1495,7 +1543,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844532,
@@ -1536,6 +1585,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1550,7 +1600,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844533,
@@ -1591,6 +1642,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1605,7 +1657,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844534,
@@ -1646,6 +1699,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1660,7 +1714,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844535,
@@ -1701,6 +1756,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1715,7 +1771,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844536,
@@ -1756,6 +1813,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1770,7 +1828,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844537,
@@ -1811,6 +1870,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1825,7 +1885,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844538,
@@ -1866,6 +1927,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1880,7 +1942,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844539,
@@ -1921,6 +1984,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1935,7 +1999,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844540,
@@ -1976,6 +2041,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -1990,7 +2056,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844541,
@@ -2031,6 +2098,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2045,7 +2113,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844542,
@@ -2086,6 +2155,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2100,7 +2170,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844543,
@@ -2141,6 +2212,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2155,7 +2227,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844544,
@@ -2196,6 +2269,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2210,7 +2284,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844545,
@@ -2251,6 +2326,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2265,7 +2341,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844546,
@@ -2306,6 +2383,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2320,7 +2398,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844547,
@@ -2361,6 +2440,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2375,7 +2455,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844548,
@@ -2416,6 +2497,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2430,7 +2512,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844549,
@@ -2471,6 +2554,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2485,7 +2569,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844588,
@@ -2526,6 +2611,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2540,7 +2626,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844551,
@@ -2581,6 +2668,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2595,7 +2683,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844552,
@@ -2636,6 +2725,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2650,7 +2740,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844553,
@@ -2691,6 +2782,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2705,7 +2797,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844554,
@@ -2746,6 +2839,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2760,7 +2854,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844556,
@@ -2801,6 +2896,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2815,7 +2911,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844558,
@@ -2856,6 +2953,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2870,7 +2968,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844559,
@@ -2911,6 +3010,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2925,7 +3025,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844560,
@@ -2966,6 +3067,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -2980,7 +3082,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844561,
@@ -3021,6 +3124,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3035,7 +3139,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844562,
@@ -3076,6 +3181,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3090,7 +3196,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844563,
@@ -3131,6 +3238,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3145,7 +3253,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844564,
@@ -3186,6 +3295,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3200,7 +3310,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844565,
@@ -3241,6 +3352,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3255,7 +3367,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844566,
@@ -3296,6 +3409,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3310,7 +3424,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844567,
@@ -3351,6 +3466,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3365,7 +3481,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844568,
@@ -3406,6 +3523,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3420,7 +3538,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844569,
@@ -3461,6 +3580,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3475,7 +3595,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847688,
@@ -3516,6 +3637,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3530,7 +3652,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844571,
@@ -3571,6 +3694,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3585,7 +3709,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847686,
@@ -3626,6 +3751,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3640,7 +3766,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844573,
@@ -3681,6 +3808,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3695,7 +3823,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844574,
@@ -3736,6 +3865,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3750,7 +3880,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844575,
@@ -3791,6 +3922,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3805,7 +3937,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844576,
@@ -3846,6 +3979,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3860,7 +3994,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844577,
@@ -3901,6 +4036,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3915,7 +4051,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844578,
@@ -3956,6 +4093,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -3970,7 +4108,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844579,
@@ -4011,6 +4150,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4025,7 +4165,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844580,
@@ -4066,6 +4207,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4080,7 +4222,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844581,
@@ -4121,6 +4264,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4135,7 +4279,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844582,
@@ -4176,6 +4321,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4190,7 +4336,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844583,
@@ -4231,6 +4378,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4245,7 +4393,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844584,
@@ -4286,6 +4435,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4300,7 +4450,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844585,
@@ -4341,6 +4492,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4355,7 +4507,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844586,
@@ -4396,6 +4549,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4410,7 +4564,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10844587,
@@ -4451,6 +4606,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4465,7 +4621,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10845815,
@@ -4506,6 +4663,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4520,7 +4678,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10845816,
@@ -4561,6 +4720,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4575,7 +4735,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10845817,
@@ -4616,6 +4777,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4630,7 +4792,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847687,
@@ -4671,6 +4834,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4685,7 +4849,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847689,
@@ -4726,6 +4891,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4740,7 +4906,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847690,
@@ -4781,6 +4948,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "FindHero",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4795,7 +4963,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847691,
@@ -4836,6 +5005,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4850,7 +5020,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847692,
@@ -4891,6 +5062,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4905,7 +5077,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847693,
@@ -4946,6 +5119,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -4960,7 +5134,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847694,
@@ -5001,6 +5176,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5015,7 +5191,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847695,
@@ -5056,6 +5233,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5070,7 +5248,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847696,
@@ -5111,6 +5290,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5125,7 +5305,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847697,
@@ -5166,6 +5347,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5180,7 +5362,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847698,
@@ -5221,6 +5404,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5235,7 +5419,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847699,
@@ -5276,6 +5461,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5290,7 +5476,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847700,
@@ -5331,6 +5518,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5345,7 +5533,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847701,
@@ -5386,6 +5575,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5400,7 +5590,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847702,
@@ -5441,6 +5632,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5455,7 +5647,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847703,
@@ -5496,6 +5689,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5510,7 +5704,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847704,
@@ -5551,6 +5746,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5565,7 +5761,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847705,
@@ -5606,6 +5803,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5620,7 +5818,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847706,
@@ -5661,6 +5860,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5675,7 +5875,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847707,
@@ -5716,6 +5917,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5730,7 +5932,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847708,
@@ -5771,6 +5974,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5785,7 +5989,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847709,
@@ -5826,6 +6031,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5840,7 +6046,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847710,
@@ -5881,6 +6088,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5895,7 +6103,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847711,
@@ -5936,6 +6145,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -5950,7 +6160,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847712,
@@ -5991,6 +6202,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6005,7 +6217,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847713,
@@ -6046,6 +6259,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6060,7 +6274,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847714,
@@ -6101,6 +6316,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6115,7 +6331,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847715,
@@ -6156,6 +6373,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6170,7 +6388,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847716,
@@ -6211,6 +6430,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6225,7 +6445,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847717,
@@ -6266,6 +6487,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6280,7 +6502,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847718,
@@ -6321,6 +6544,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6335,7 +6559,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847719,
@@ -6376,6 +6601,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6390,7 +6616,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847720,
@@ -6431,6 +6658,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6445,7 +6673,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847721,
@@ -6486,6 +6715,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6500,7 +6730,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847722,
@@ -6541,6 +6772,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6555,7 +6787,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847723,
@@ -6596,6 +6829,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6610,7 +6844,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847724,
@@ -6651,6 +6886,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6665,7 +6901,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847725,
@@ -6706,6 +6943,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6720,7 +6958,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847726,
@@ -6761,6 +7000,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6775,7 +7015,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847727,
@@ -6816,6 +7057,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6830,7 +7072,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847728,
@@ -6871,6 +7114,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6885,7 +7129,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847729,
@@ -6926,6 +7171,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6940,7 +7186,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847730,
@@ -6981,6 +7228,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -6995,7 +7243,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847731,
@@ -7036,6 +7285,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7050,7 +7300,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847732,
@@ -7091,6 +7342,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7105,7 +7357,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847733,
@@ -7146,6 +7399,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7160,7 +7414,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847734,
@@ -7201,6 +7456,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7215,7 +7471,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847735,
@@ -7256,6 +7513,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7270,7 +7528,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847736,
@@ -7311,6 +7570,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7325,7 +7585,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847737,
@@ -7366,6 +7627,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7380,7 +7642,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847738,
@@ -7421,6 +7684,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7435,7 +7699,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847739,
@@ -7476,6 +7741,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7490,7 +7756,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847740,
@@ -7531,6 +7798,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7545,7 +7813,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847741,
@@ -7586,6 +7855,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7600,7 +7870,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847742,
@@ -7641,6 +7912,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "Free",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7655,7 +7927,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847743,
@@ -7696,6 +7969,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "Free",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7710,7 +7984,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847744,
@@ -7751,6 +8026,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "Free",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7765,7 +8041,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847745,
@@ -7806,6 +8083,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "Free",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7820,7 +8098,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847746,
@@ -7861,6 +8140,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "Free",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7875,7 +8155,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847747,
@@ -7916,6 +8197,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7930,7 +8212,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847748,
@@ -7971,6 +8254,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -7985,7 +8269,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847749,
@@ -8026,6 +8311,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8040,7 +8326,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847750,
@@ -8081,6 +8368,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8095,7 +8383,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847751,
@@ -8136,6 +8425,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8150,7 +8440,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847752,
@@ -8191,6 +8482,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8205,7 +8497,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847753,
@@ -8246,6 +8539,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8260,7 +8554,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847754,
@@ -8301,6 +8596,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8315,7 +8611,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847755,
@@ -8356,6 +8653,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8370,7 +8668,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847756,
@@ -8411,6 +8710,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8425,7 +8725,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847757,
@@ -8466,6 +8767,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8480,7 +8782,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847758,
@@ -8521,6 +8824,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8535,7 +8839,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847759,
@@ -8576,6 +8881,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8590,7 +8896,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847760,
@@ -8631,6 +8938,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8645,7 +8953,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847761,
@@ -8686,6 +8995,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8700,7 +9010,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847762,
@@ -8741,6 +9052,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8755,7 +9067,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847763,
@@ -8796,6 +9109,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8810,7 +9124,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847764,
@@ -8851,6 +9166,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8865,7 +9181,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847765,
@@ -8906,6 +9223,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8920,7 +9238,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847766,
@@ -8961,6 +9280,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -8975,7 +9295,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847767,
@@ -9016,6 +9337,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9030,7 +9352,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847768,
@@ -9071,6 +9394,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9085,7 +9409,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847769,
@@ -9126,6 +9451,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9140,7 +9466,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847770,
@@ -9181,6 +9508,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9195,7 +9523,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847771,
@@ -9236,6 +9565,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9250,7 +9580,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847772,
@@ -9291,6 +9622,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9305,7 +9637,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847773,
@@ -9346,6 +9679,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9360,7 +9694,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847774,
@@ -9401,6 +9736,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9415,7 +9751,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847775,
@@ -9456,6 +9793,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9470,7 +9808,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847776,
@@ -9511,6 +9850,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9525,7 +9865,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847777,
@@ -9566,6 +9907,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9580,7 +9922,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847778,
@@ -9621,6 +9964,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9635,7 +9979,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847779,
@@ -9676,6 +10021,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9690,7 +10036,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847780,
@@ -9731,6 +10078,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9745,7 +10093,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847781,
@@ -9786,6 +10135,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9800,7 +10150,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847782,
@@ -9841,6 +10192,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9855,7 +10207,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847783,
@@ -9896,6 +10249,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9910,7 +10264,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847784,
@@ -9951,6 +10306,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -9965,7 +10321,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847785,
@@ -10006,6 +10363,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10020,7 +10378,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847786,
@@ -10061,6 +10420,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10075,7 +10435,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847787,
@@ -10116,6 +10477,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10130,7 +10492,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847788,
@@ -10171,6 +10534,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10185,7 +10549,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847789,
@@ -10226,6 +10591,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10240,7 +10606,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847790,
@@ -10281,6 +10648,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10295,7 +10663,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847791,
@@ -10336,6 +10705,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10350,7 +10720,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847792,
@@ -10391,6 +10762,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10405,7 +10777,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847793,
@@ -10446,6 +10819,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10460,7 +10834,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847794,
@@ -10501,6 +10876,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10515,7 +10891,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847795,
@@ -10556,6 +10933,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10570,7 +10948,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847796,
@@ -10611,6 +10990,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10625,7 +11005,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847797,
@@ -10666,6 +11047,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10680,7 +11062,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847798,
@@ -10721,6 +11104,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10735,7 +11119,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847799,
@@ -10776,6 +11161,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10790,7 +11176,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847800,
@@ -10831,6 +11218,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10845,7 +11233,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847801,
@@ -10886,6 +11275,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10900,7 +11290,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847802,
@@ -10941,6 +11332,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -10955,7 +11347,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847803,
@@ -10996,6 +11389,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11010,7 +11404,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847804,
@@ -11051,6 +11446,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11065,7 +11461,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847805,
@@ -11106,6 +11503,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11120,7 +11518,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847806,
@@ -11161,6 +11560,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11175,7 +11575,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847807,
@@ -11216,6 +11617,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11230,7 +11632,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847808,
@@ -11271,6 +11674,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11285,7 +11689,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847809,
@@ -11326,6 +11731,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11340,7 +11746,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847813,
@@ -11381,6 +11788,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11395,7 +11803,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847814,
@@ -11436,6 +11845,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11450,7 +11860,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847828,
@@ -11491,6 +11902,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11505,7 +11917,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847818,
@@ -11546,6 +11959,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11560,7 +11974,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847819,
@@ -11601,6 +12016,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11615,7 +12031,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847820,
@@ -11656,6 +12073,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11670,7 +12088,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847821,
@@ -11711,6 +12130,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11725,7 +12145,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847822,
@@ -11766,6 +12187,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11780,7 +12202,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847823,
@@ -11821,6 +12244,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11835,7 +12259,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847824,
@@ -11876,6 +12301,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11890,7 +12316,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847825,
@@ -11931,6 +12358,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -11945,7 +12373,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847826,
@@ -11986,6 +12415,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12000,7 +12430,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847829,
@@ -12041,6 +12472,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12055,7 +12487,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847830,
@@ -12096,6 +12529,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12110,7 +12544,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847831,
@@ -12151,6 +12586,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12165,7 +12601,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847832,
@@ -12206,6 +12643,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12220,7 +12658,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847833,
@@ -12261,6 +12700,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12275,7 +12715,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847834,
@@ -12316,6 +12757,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12330,7 +12772,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847835,
@@ -12371,6 +12814,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12385,7 +12829,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847836,
@@ -12426,6 +12871,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12440,7 +12886,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847837,
@@ -12481,6 +12928,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12495,7 +12943,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847838,
@@ -12536,6 +12985,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12550,7 +13000,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847839,
@@ -12591,6 +13042,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12605,7 +13057,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847840,
@@ -12646,6 +13099,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12660,7 +13114,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847841,
@@ -12701,6 +13156,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12715,7 +13171,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847842,
@@ -12756,6 +13213,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12770,7 +13228,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847843,
@@ -12811,6 +13270,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12825,7 +13285,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847844,
@@ -12866,6 +13327,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12880,7 +13342,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847845,
@@ -12921,6 +13384,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12935,7 +13399,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847846,
@@ -12976,6 +13441,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -12990,7 +13456,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847847,
@@ -13031,6 +13498,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13045,7 +13513,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847848,
@@ -13086,6 +13555,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13100,7 +13570,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847849,
@@ -13141,6 +13612,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13155,7 +13627,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847850,
@@ -13196,6 +13669,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13210,7 +13684,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847851,
@@ -13251,6 +13726,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13265,7 +13741,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847852,
@@ -13306,6 +13783,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13320,7 +13798,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847853,
@@ -13361,6 +13840,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13375,7 +13855,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847854,
@@ -13416,6 +13897,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13430,7 +13912,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847855,
@@ -13471,6 +13954,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13485,7 +13969,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847856,
@@ -13526,6 +14011,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13540,7 +14026,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847857,
@@ -13581,6 +14068,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13595,7 +14083,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847858,
@@ -13636,6 +14125,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13650,7 +14140,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847859,
@@ -13691,6 +14182,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13705,7 +14197,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847860,
@@ -13746,6 +14239,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13760,7 +14254,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847861,
@@ -13801,6 +14296,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13815,7 +14311,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847862,
@@ -13856,6 +14353,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13870,7 +14368,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847863,
@@ -13911,6 +14410,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13925,7 +14425,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847864,
@@ -13966,6 +14467,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -13980,7 +14482,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847865,
@@ -14021,6 +14524,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -14035,7 +14539,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847866,
@@ -14076,6 +14581,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -14090,7 +14596,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847867,
@@ -14131,6 +14638,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -14145,7 +14653,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847868,
@@ -14186,6 +14695,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -14200,7 +14710,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847869,
@@ -14241,6 +14752,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -14255,7 +14767,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847870,
@@ -14296,6 +14809,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -14310,7 +14824,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847871,
@@ -14351,6 +14866,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -14365,7 +14881,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847872,
@@ -14406,6 +14923,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -14420,7 +14938,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847873,
@@ -14461,6 +14980,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -14475,7 +14995,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847874,
@@ -14516,6 +15037,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -14530,7 +15052,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10847875,
@@ -14571,6 +15094,7 @@
         "w": 1,
         "h": 2
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -14585,1221 +15109,8 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10847876,
-      "frame": {
-        "x": 1,
-        "y": 6,
-        "w": 1,
-        "h": 2
-      },
-      "name": "Stairs (Up)",
-      "species_id": 1010,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 1000,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 1,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 10847877,
-      "frame": {
-        "x": 1,
-        "y": 7,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Teleporter",
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": {
-        "world": 1006,
-        "x": 24,
-        "y": 27
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 10849479,
-      "frame": {
-        "x": 33,
-        "y": 58,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849480,
-      "frame": {
-        "x": 18,
-        "y": 57,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849481,
-      "frame": {
-        "x": 25,
-        "y": 45,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849482,
-      "frame": {
-        "x": 8,
-        "y": 42,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849483,
-      "frame": {
-        "x": 35,
-        "y": 77,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849484,
-      "frame": {
-        "x": 16,
-        "y": 70,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849485,
-      "frame": {
-        "x": 64,
-        "y": 27,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849486,
-      "frame": {
-        "x": 57,
-        "y": 27,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849487,
-      "frame": {
-        "x": 7,
-        "y": 20,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849488,
-      "frame": {
-        "x": 18,
-        "y": 20,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849489,
-      "frame": {
-        "x": 9,
-        "y": 29,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849490,
-      "frame": {
-        "x": 91,
-        "y": 16,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849491,
-      "frame": {
-        "x": 114,
-        "y": 42,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849492,
-      "frame": {
-        "x": 104,
-        "y": 59,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849493,
-      "frame": {
-        "x": 92,
-        "y": 45,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849494,
-      "frame": {
-        "x": 72,
-        "y": 49,
-        "w": 1,
-        "h": 1
-      },
-      "name": "x10 Kunai",
-      "species_id": 7001,
-      "entity_type": "Bundle",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 4,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 1,
-        "y": 4,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 10849495,
-      "frame": {
-        "x": 33,
-        "y": 3,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849496,
-      "frame": {
-        "x": 57,
-        "y": 14,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849497,
-      "frame": {
-        "x": 46,
-        "y": 57,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 10849498,
-      "frame": {
-        "x": 100,
-        "y": 35,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Kunai",
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10849499,
@@ -15840,6 +15151,7 @@
         "w": 1,
         "h": 1
       },
+      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -15854,7 +15166,1148 @@
       "shooting_cooldown_remaining": 0.0,
       "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849479,
+      "frame": {
+        "x": 33,
+        "y": 58,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849480,
+      "frame": {
+        "x": 18,
+        "y": 57,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849481,
+      "frame": {
+        "x": 25,
+        "y": 45,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849482,
+      "frame": {
+        "x": 8,
+        "y": 42,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849483,
+      "frame": {
+        "x": 35,
+        "y": 77,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849484,
+      "frame": {
+        "x": 16,
+        "y": 70,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849485,
+      "frame": {
+        "x": 64,
+        "y": 27,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849486,
+      "frame": {
+        "x": 57,
+        "y": 27,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849487,
+      "frame": {
+        "x": 7,
+        "y": 20,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849488,
+      "frame": {
+        "x": 18,
+        "y": 20,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849489,
+      "frame": {
+        "x": 9,
+        "y": 29,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849490,
+      "frame": {
+        "x": 91,
+        "y": 16,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849491,
+      "frame": {
+        "x": 114,
+        "y": 42,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849492,
+      "frame": {
+        "x": 104,
+        "y": 59,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849493,
+      "frame": {
+        "x": 92,
+        "y": 45,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849494,
+      "frame": {
+        "x": 72,
+        "y": 49,
+        "w": 1,
+        "h": 1
+      },
+      "name": "x10 Kunai",
+      "species_id": 7001,
+      "entity_type": "Bundle",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 1,
+          "y": 4,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 1,
+        "y": 4,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849495,
+      "frame": {
+        "x": 33,
+        "y": 3,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849496,
+      "frame": {
+        "x": 57,
+        "y": 14,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849497,
+      "frame": {
+        "x": 46,
+        "y": 57,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 10849498,
+      "frame": {
+        "x": 100,
+        "y": 35,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Kunai",
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_condition": null,
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     }
   ],
   "default_biome": "Nothing",
