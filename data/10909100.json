@@ -117,7 +117,6 @@
         "w": 1,
         "h": 1
       },
-      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -179,7 +178,6 @@
         "w": 1,
         "h": 1
       },
-      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -236,7 +234,6 @@
         "w": 1,
         "h": 2
       },
-      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -298,7 +295,6 @@
         "w": 1,
         "h": 1
       },
-      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -355,7 +351,6 @@
         "w": 2,
         "h": 2
       },
-      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -412,7 +407,6 @@
         "w": 1,
         "h": 1
       },
-      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -469,7 +463,6 @@
         "w": 1,
         "h": 1
       },
-      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -526,7 +519,6 @@
         "w": 1,
         "h": 1
       },
-      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
@@ -583,7 +575,6 @@
         "w": 1,
         "h": 1
       },
-      "display_condition": null,
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,
