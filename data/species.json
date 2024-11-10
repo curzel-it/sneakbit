@@ -2532,7 +2532,7 @@
     },
     {
         "id": 1034,
-        "name": "npc.name.ninja.dark",
+        "name": "npc.name.ninja.black",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -3254,6 +3254,28 @@
         },
         "sprite_sheet_id": 1010,
         "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1099,
+        "name": "npc.name.ninja.red",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            15
+        ],
+        "sprite_frame": {
+            "x": 68,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
         "lock_type": "None"
     }
 ]

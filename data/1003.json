@@ -15,10 +15,10 @@
       "4444444444444444444444444444444444444444444444444444444444444444444444",
       "4444444444444444444444444444444444444444444444444444444444444444444444",
       "4444444444444444444444444444444444444444444444444444444444444444444444",
-      "4444444444444444444444444444444444444474444444444444444444444444444444",
-      "4444444444411111111111114444444444444474444444444474444447444444444444",
+      "4444444444444444444444444444444444444444444444444444444444444444444444",
+      "4444444444411111111111114444444444444444444444444444444446444444444444",
       "4444444444114411111111111444444444444474444444444474444447444444444444",
-      "4444444444144444111112211111111144444474447444444477777777444444444444",
+      "4444444444144444111112211111111144444474444444444477777777444444444444",
       "44444444441447441111CCCC1111114444444474447444444447444444444444444444",
       "44444444411447444111111C1121114444444474447444444447444444111144444444",
       "44444444411447411CCCCC122221444444444474447444444447411111111144444444",
@@ -16121,8 +16121,8 @@
     {
       "id": 11114106,
       "frame": {
-        "x": 60,
-        "y": 38,
+        "x": 26,
+        "y": 6,
         "w": 1,
         "h": 1
       },
@@ -16130,10 +16130,10 @@
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": 0.0,
-        "y": -5.3454714
+        "x": -0.4327613,
+        "y": 0.0
       },
-      "direction": "Up",
+      "direction": "Left",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -24919,43 +24919,43 @@
       "demands_attention": false
     },
     {
-      "id": 11114053,
+      "id": 11154589,
       "frame": {
-        "x": 36,
-        "y": 10,
-        "w": 4,
-        "h": 3
+        "x": 30,
+        "y": 43,
+        "w": 1,
+        "h": 1
       },
-      "name": "House",
-      "species_id": 1086,
-      "entity_type": "Building",
+      "name": "Teleporter",
+      "species_id": 1019,
+      "entity_type": "Teleporter",
       "offset": {
         "x": 0.0,
         "y": 0.0
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
+      "is_rigid": true,
+      "z_index": 200,
       "sprite": {
-        "sheet_id": 1004,
+        "sheet_id": 1010,
         "frame": {
-          "x": 16,
-          "y": 12,
-          "w": 4,
-          "h": 3
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
         },
         "number_of_frames": 1
       },
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": null,
-      "lock_type": "None",
+      "lock_type": "Permanent",
       "original_sprite_frame": {
-        "x": 16,
-        "y": 12,
-        "w": 4,
-        "h": 3
+        "x": 7,
+        "y": 5,
+        "w": 1,
+        "h": 1
       },
       "movement_directions": "None",
       "is_consumable": false,
@@ -24974,16 +24974,16 @@
       "demands_attention": false
     },
     {
-      "id": 11114054,
+      "id": 11142694,
       "frame": {
-        "x": 40,
-        "y": 12,
-        "w": 4,
-        "h": 3
+        "x": 34,
+        "y": 1,
+        "w": 1,
+        "h": 1
       },
-      "name": "House",
-      "species_id": 1086,
-      "entity_type": "Building",
+      "name": "Teleporter",
+      "species_id": 1019,
+      "entity_type": "Teleporter",
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -24991,26 +24991,30 @@
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 0,
+      "z_index": 200,
       "sprite": {
-        "sheet_id": 1004,
+        "sheet_id": 1010,
         "frame": {
-          "x": 16,
-          "y": 12,
-          "w": 4,
-          "h": 3
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
         },
         "number_of_frames": 1
       },
       "dialogues": [],
       "time_immobilized": 0.0,
-      "destination": null,
+      "destination": {
+        "world": 1013,
+        "x": 0,
+        "y": 0
+      },
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 16,
-        "y": 12,
-        "w": 4,
-        "h": 3
+        "x": 7,
+        "y": 5,
+        "w": 1,
+        "h": 1
       },
       "movement_directions": "None",
       "is_consumable": false,
@@ -25029,16 +25033,16 @@
       "demands_attention": false
     },
     {
-      "id": 11114055,
+      "id": 11142693,
       "frame": {
-        "x": 48,
-        "y": 10,
-        "w": 5,
-        "h": 3
+        "x": 52,
+        "y": 47,
+        "w": 1,
+        "h": 1
       },
-      "name": "House",
-      "species_id": 1087,
-      "entity_type": "Building",
+      "name": "Teleporter",
+      "species_id": 1019,
+      "entity_type": "Teleporter",
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -25046,81 +25050,30 @@
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 0,
+      "z_index": 200,
       "sprite": {
-        "sheet_id": 1004,
+        "sheet_id": 1010,
         "frame": {
-          "x": 20,
-          "y": 12,
-          "w": 5,
-          "h": 3
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
         },
         "number_of_frames": 1
       },
       "dialogues": [],
       "time_immobilized": 0.0,
-      "destination": null,
+      "destination": {
+        "world": 1002,
+        "x": 0,
+        "y": 0
+      },
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 20,
-        "y": 12,
-        "w": 5,
-        "h": 3
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11114056,
-      "frame": {
-        "x": 55,
-        "y": 10,
-        "w": 4,
-        "h": 3
-      },
-      "name": "House",
-      "species_id": 1086,
-      "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1004,
-        "frame": {
-          "x": 16,
-          "y": 12,
-          "w": 4,
-          "h": 3
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 16,
-        "y": 12,
-        "w": 4,
-        "h": 3
+        "x": 7,
+        "y": 5,
+        "w": 1,
+        "h": 1
       },
       "movement_directions": "None",
       "is_consumable": false,
@@ -27508,16 +27461,16 @@
       "demands_attention": false
     },
     {
-      "id": 11142693,
+      "id": 11199896,
       "frame": {
-        "x": 52,
-        "y": 47,
-        "w": 1,
-        "h": 1
+        "x": 36,
+        "y": 10,
+        "w": 4,
+        "h": 3
       },
-      "name": "Teleporter",
-      "species_id": 1019,
-      "entity_type": "Teleporter",
+      "name": "House",
+      "species_id": 1086,
+      "entity_type": "Building",
       "offset": {
         "x": 0.0,
         "y": 0.0
@@ -27525,139 +27478,308 @@
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 200,
+      "z_index": 0,
       "sprite": {
-        "sheet_id": 1010,
+        "sheet_id": 1004,
         "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": {
-        "world": 1002,
-        "x": 0,
-        "y": 0
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11142694,
-      "frame": {
-        "x": 34,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Teleporter",
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "time_immobilized": 0.0,
-      "destination": {
-        "world": 1013,
-        "x": 0,
-        "y": 0
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
-      "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
-      "is_invulnerable": true,
-      "demands_attention": false
-    },
-    {
-      "id": 11154589,
-      "frame": {
-        "x": 30,
-        "y": 43,
-        "w": 1,
-        "h": 1
-      },
-      "name": "Teleporter",
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
+          "x": 16,
+          "y": 12,
+          "w": 4,
+          "h": 3
         },
         "number_of_frames": 1
       },
       "dialogues": [],
       "time_immobilized": 0.0,
       "destination": null,
-      "lock_type": "Permanent",
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 12,
+        "w": 4,
+        "h": 3
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11199898,
+      "frame": {
+        "x": 38,
+        "y": 12,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Teleporter",
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 200,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": {
+        "world": 11199897,
+        "x": 0,
+        "y": 0
+      },
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 7,
+        "y": 5,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11199906,
+      "frame": {
+        "x": 40,
+        "y": 12,
+        "w": 4,
+        "h": 3
+      },
+      "name": "House",
+      "species_id": 1086,
+      "entity_type": "Building",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1004,
+        "frame": {
+          "x": 16,
+          "y": 12,
+          "w": 4,
+          "h": 3
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 12,
+        "w": 4,
+        "h": 3
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11199908,
+      "frame": {
+        "x": 42,
+        "y": 14,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Teleporter",
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 200,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": {
+        "world": 11199907,
+        "x": 0,
+        "y": 0
+      },
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 7,
+        "y": 5,
+        "w": 1,
+        "h": 1
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11199956,
+      "frame": {
+        "x": 55,
+        "y": 10,
+        "w": 5,
+        "h": 3
+      },
+      "name": "House",
+      "species_id": 1087,
+      "entity_type": "Building",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1004,
+        "frame": {
+          "x": 20,
+          "y": 12,
+          "w": 5,
+          "h": 3
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 20,
+        "y": 12,
+        "w": 5,
+        "h": 3
+      },
+      "movement_directions": "None",
+      "is_consumable": false,
+      "speed_multiplier": 1.0,
+      "melee_attacks_hero": false,
+      "is_dying": false,
+      "latest_movement": [
+        0,
+        0
+      ],
+      "contents": null,
+      "remaining_lifespan": -420.0,
+      "shooting_cooldown_remaining": 0.0,
+      "parent_id": 0,
+      "is_invulnerable": true,
+      "demands_attention": false
+    },
+    {
+      "id": 11199958,
+      "frame": {
+        "x": 57,
+        "y": 12,
+        "w": 1,
+        "h": 1
+      },
+      "name": "Teleporter",
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 200,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "time_immobilized": 0.0,
+      "destination": {
+        "world": 11199957,
+        "x": 0,
+        "y": 0
+      },
+      "lock_type": "None",
       "original_sprite_frame": {
         "x": 7,
         "y": 5,

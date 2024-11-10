@@ -54,8 +54,9 @@
 "npc.name.ghost" = "Ghost"
 "npc.name.goddess" = "Goddess"
 "npc.name.homunculus" = "Homunculus"
+"npc.name.ninja.black" = "Black Ninja"
 "npc.name.ninja.blue" = "Blue Ninja"
-"npc.name.ninja.dark" = "Black Ninja"
+"npc.name.ninja.red" = "Red Ninja"
 "npc.name.old_man" = "Old Man"
 "npc.name.old_woman" = "Old Lady"
 "npc.name.shop_clerk" = "Shop Guy"
@@ -338,6 +339,29 @@ basically solve your low-ammo problem!
 
 "quest.ninja_skills.9" = """
 Thank you for checking on my brothers...
-I hope they are coming home soon,
-I need help cleaning our brother's house!
+Since they joined our father in the "family business" I am
+always a bit worried...
+I just hope they are coming home soon, I need help 
+cleaning our brother's house!
+"""
+
+"quest.ninja_skills.10" = """
+This job requires me to stay away from home for
+long periods of time... 
+My children are all about your age...
+"""
+
+"quest.ninja_skills.11" = """
+Sounds like you met my children, 
+and they are all doing well!
+As a reward, I'll teach the ultimate ninja skill.
+If only I had the chance, I KNOW I could defeat the 
+Demon Lord himself in one blow with it.
+F*** that guy.
+"""
+
+"quest.ninja_skills.12" = """
+Told you... Barrels, monsters, Demon Lords, ...
+Doesn't matter.
+One shot is enough for ANY foe.
 """
