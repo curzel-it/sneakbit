@@ -174,5 +174,6 @@
   },
   "entities": [],
   "default_biome": "Water",
-  "light_conditions": "Day"
+  "light_conditions": "Day",
+  "cutscenes": []
 }
