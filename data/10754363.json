@@ -72,7 +72,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -122,7 +121,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -168,7 +166,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -214,7 +211,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -260,7 +256,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -306,7 +301,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -352,7 +346,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -398,7 +391,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -444,7 +436,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -490,7 +481,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -536,7 +526,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -582,7 +571,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -628,7 +616,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -674,7 +661,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -720,7 +706,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false
@@ -766,7 +751,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false
@@ -812,7 +796,6 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false

@@ -57,7 +57,7 @@ pub struct Entity {
     #[serde(default)]
     pub is_consumable: bool,
     
-    #[serde(default="one")]
+    #[serde(skip)]
     pub speed_multiplier: f32,
 
     #[serde(skip)]
@@ -86,10 +86,6 @@ pub struct Entity {
 
     #[serde(default)]
     pub vanishes_after_dialogue: bool,
-}
-
-fn one() -> f32 {
-    1.0
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
