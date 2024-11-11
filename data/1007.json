@@ -216,10 +216,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -276,10 +272,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -331,10 +323,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -386,10 +374,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -441,10 +425,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -496,10 +476,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -551,10 +527,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -606,10 +578,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -661,10 +629,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -716,10 +680,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -771,10 +731,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -826,10 +782,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -881,10 +833,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -936,10 +884,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -991,10 +935,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1046,10 +986,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1101,10 +1037,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1156,10 +1088,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        -1
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1211,10 +1139,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1266,10 +1190,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        -1,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1321,10 +1241,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1376,10 +1292,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1431,10 +1343,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1486,10 +1394,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1541,10 +1445,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1596,10 +1496,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1651,10 +1547,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1706,10 +1598,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1761,10 +1649,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1816,10 +1700,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1871,10 +1751,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1926,10 +1802,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -1981,10 +1853,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2036,10 +1904,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2091,10 +1955,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2146,10 +2006,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2201,10 +2057,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2256,10 +2108,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2311,10 +2159,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2366,10 +2210,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2421,10 +2261,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2476,10 +2312,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2531,10 +2363,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2586,10 +2414,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2641,10 +2465,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2696,10 +2516,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2751,10 +2567,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2806,10 +2618,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2861,10 +2669,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2916,10 +2720,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -2971,10 +2771,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3026,10 +2822,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3081,10 +2873,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3136,10 +2924,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3191,10 +2975,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3246,10 +3026,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3301,10 +3077,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3356,10 +3128,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3411,10 +3179,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3466,10 +3230,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3521,10 +3281,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3576,10 +3332,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3631,10 +3383,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3686,10 +3434,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3741,10 +3485,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3796,10 +3536,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3851,10 +3587,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3906,10 +3638,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -3961,10 +3689,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4016,10 +3740,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4071,10 +3791,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4126,10 +3842,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4181,10 +3893,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4236,10 +3944,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4291,10 +3995,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4346,10 +4046,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4401,10 +4097,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4456,10 +4148,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4511,10 +4199,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4566,10 +4250,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4621,10 +4301,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4676,10 +4352,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4731,10 +4403,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4786,10 +4454,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4841,10 +4505,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4896,10 +4556,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -4951,10 +4607,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5006,10 +4658,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5061,10 +4709,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5116,10 +4760,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5171,10 +4811,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5226,10 +4862,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5281,10 +4913,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5336,10 +4964,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5391,10 +5015,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5446,10 +5066,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5501,10 +5117,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5556,10 +5168,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5611,10 +5219,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5666,10 +5270,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5721,10 +5321,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5776,10 +5372,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5831,10 +5423,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5886,10 +5474,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5941,10 +5525,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -5996,10 +5576,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6051,10 +5627,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6106,10 +5678,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6161,10 +5729,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6216,10 +5780,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6271,10 +5831,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6326,10 +5882,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6381,10 +5933,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6436,10 +5984,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6491,10 +6035,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6546,10 +6086,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6601,10 +6137,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6656,10 +6188,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6711,10 +6239,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6766,10 +6290,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6821,10 +6341,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6876,10 +6392,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6931,10 +6443,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -6986,10 +6494,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7041,10 +6545,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7096,10 +6596,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7151,10 +6647,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7206,10 +6698,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7261,10 +6749,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7316,10 +6800,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7371,10 +6851,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7426,10 +6902,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7481,10 +6953,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7536,10 +7004,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7591,10 +7055,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7646,10 +7106,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7701,10 +7157,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7756,10 +7208,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7811,10 +7259,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7866,10 +7310,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7921,10 +7361,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -7976,10 +7412,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8031,10 +7463,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8086,10 +7514,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8141,10 +7565,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8196,10 +7616,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8251,10 +7667,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8306,10 +7718,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8361,10 +7769,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8416,10 +7820,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8471,10 +7871,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8526,10 +7922,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8581,10 +7973,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8636,10 +8024,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8691,10 +8075,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8746,10 +8126,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8801,10 +8177,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8856,10 +8228,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8911,10 +8279,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -8966,10 +8330,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9021,10 +8381,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9076,10 +8432,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9131,10 +8483,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9186,10 +8534,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9241,10 +8585,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9296,10 +8636,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9351,10 +8687,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9406,10 +8738,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9461,10 +8789,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9516,10 +8840,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9571,10 +8891,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9626,10 +8942,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9681,10 +8993,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9736,10 +9044,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9791,10 +9095,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9846,10 +9146,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9901,10 +9197,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -9956,10 +9248,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10011,10 +9299,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10066,10 +9350,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10121,10 +9401,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10176,10 +9452,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10231,10 +9503,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10286,10 +9554,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10341,10 +9605,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10396,10 +9656,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10451,10 +9707,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10506,10 +9758,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10561,10 +9809,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10616,10 +9860,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10671,10 +9911,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10726,10 +9962,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10781,10 +10013,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10836,10 +10064,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10891,10 +10115,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -10946,10 +10166,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11001,10 +10217,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11056,10 +10268,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11111,10 +10319,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11166,10 +10370,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11221,10 +10421,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11276,10 +10472,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11331,10 +10523,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11386,10 +10574,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11441,10 +10625,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11496,10 +10676,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11551,10 +10727,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11606,10 +10778,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11661,10 +10829,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11716,10 +10880,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11771,10 +10931,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11826,10 +10982,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11881,10 +11033,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11936,10 +11084,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -11991,10 +11135,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12046,10 +11186,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12101,10 +11237,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12156,10 +11288,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12211,10 +11339,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12266,10 +11390,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12321,10 +11441,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12376,10 +11492,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12431,10 +11543,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12486,10 +11594,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12541,10 +11645,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12596,10 +11696,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12651,10 +11747,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12706,10 +11798,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12761,10 +11849,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12816,10 +11900,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12871,10 +11951,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12926,10 +12002,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -12981,10 +12053,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13036,10 +12104,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13091,10 +12155,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13146,10 +12206,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13201,10 +12257,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13256,10 +12308,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13311,10 +12359,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13366,10 +12410,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13421,10 +12461,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13476,10 +12512,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13531,10 +12563,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13586,10 +12614,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13641,10 +12665,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13696,10 +12716,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13751,10 +12767,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13806,10 +12818,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13861,10 +12869,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13916,10 +12920,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -13971,10 +12971,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14026,10 +13022,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14081,10 +13073,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14136,10 +13124,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14191,10 +13175,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14246,10 +13226,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14301,10 +13277,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14356,10 +13328,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14411,10 +13379,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14466,10 +13430,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14521,10 +13481,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14576,10 +13532,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14631,10 +13583,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14686,10 +13634,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14741,10 +13685,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14796,10 +13736,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14851,10 +13787,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14906,10 +13838,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -14961,10 +13889,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15016,10 +13940,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15071,10 +13991,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15126,10 +14042,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15181,10 +14093,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15236,10 +14144,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15291,10 +14195,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15346,10 +14246,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15401,10 +14297,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15456,10 +14348,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15511,10 +14399,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15566,10 +14450,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15621,10 +14501,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15676,10 +14552,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,
@@ -15731,10 +14603,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
       "remaining_lifespan": -420.0,
       "shooting_cooldown_remaining": 0.0,

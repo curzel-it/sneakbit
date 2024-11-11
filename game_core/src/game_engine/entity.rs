@@ -67,9 +67,6 @@ pub struct Entity {
     pub is_dying: bool,
 
     #[serde(default)]
-    pub latest_movement: (i32, i32),  
-
-    #[serde(default)]
     pub contents: Option<String>,  
 
     #[serde(default="unlimited_lifespan")]
