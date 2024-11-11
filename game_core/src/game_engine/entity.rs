@@ -69,7 +69,7 @@ pub struct Entity {
     #[serde(default)]
     pub contents: Option<String>,  
 
-    #[serde(default="unlimited_lifespan")]
+    #[serde(skip)]
     pub remaining_lifespan: f32,  
 
     #[serde(skip)]
@@ -86,10 +86,6 @@ pub struct Entity {
 
     #[serde(default)]
     pub vanishes_after_dialogue: bool,
-}
-
-fn unlimited_lifespan() -> f32 {
-    UNLIMITED_LIFESPAN
 }
 
 fn one() -> f32 {
@@ -127,6 +123,7 @@ impl Entity {
     }
 
     pub fn setup(&mut self, creative_mode: bool) {      
+        self.remaining_lifespan = UNLIMITED_LIFESPAN;
         species_by_id(self.species_id).reload_props(self);
         
         match self.entity_type {

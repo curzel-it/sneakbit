@@ -221,7 +221,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -274,7 +273,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -322,7 +320,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -370,7 +367,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -418,7 +414,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -466,7 +461,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -514,7 +508,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -562,7 +555,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -610,7 +602,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -658,7 +649,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -706,7 +696,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -754,7 +743,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -802,7 +790,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -850,7 +837,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -898,7 +884,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -946,7 +931,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -994,7 +978,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1042,7 +1025,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1090,7 +1072,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1138,7 +1119,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1186,7 +1166,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1234,7 +1213,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1282,7 +1260,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1330,7 +1307,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1378,7 +1354,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1426,7 +1401,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1474,7 +1448,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1527,7 +1500,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": null,
-      "remaining_lifespan": -420.0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1575,7 +1547,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "contents": "1010.entrance",
-      "remaining_lifespan": -420.0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
