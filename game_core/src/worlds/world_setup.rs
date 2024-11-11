@@ -7,7 +7,7 @@ impl World {
         self.update_tiles_hitmap();
         self.update_hitmaps();
 
-        let (x, y) = self.destination_x_y(source, original_x, original_y);       
+        let (x, y) = self.destination_x_y(source, original_x, original_y);
         let mut entity = make_entity_by_species(SPECIES_HERO);
         
         if !matches!(direction, Direction::Unknown | Direction::Still) {
@@ -88,11 +88,14 @@ impl World {
     }
 
     fn destination_x_y(&self, source: u32, original_x: i32, original_y: i32) -> (i32, i32) {
+        if self.id == 1001 && (source == 0 || source == 1000) {
+            return (68, 23)
+        }
         if original_x == 0 && original_y == 0 {            
             if let Some(teleporter_position) = self.find_teleporter_for_destination(source) {
-                (teleporter_position.x, teleporter_position.y)
+                return (teleporter_position.x, teleporter_position.y)
             } else if let Some(teleporter_position) = self.find_any_teleporter() {
-                (teleporter_position.x, teleporter_position.y)
+                return (teleporter_position.x, teleporter_position.y)
             } else {
                 let x = self.bounds.w / 2;
                 let mut y = self.bounds.h / 2;
@@ -102,11 +105,10 @@ impl World {
                 }
                 return (x, y)
             }
-        } else {
-            let actual_x = original_x.min(self.bounds.x + self.bounds.w - 1).max(self.bounds.x - 1);
-            let actual_y = original_y.min(self.bounds.y + self.bounds.h - 1).max(self.bounds.y - 1);
-            (actual_x, actual_y)
         }
+        let actual_x = original_x.min(self.bounds.x + self.bounds.w - 1).max(self.bounds.x - 1);
+        let actual_y = original_y.min(self.bounds.y + self.bounds.h - 1).max(self.bounds.y - 1);
+        (actual_x, actual_y)
     }
 }
 

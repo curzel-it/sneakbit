@@ -139,8 +139,8 @@ impl GameEngine {
 
     fn teleport_to_previous(&mut self) {
         let world_id = get_value_for_global_key(&StorageKey::latest_world()).unwrap_or(1001);
-        let (x, y) = if world_id == 1001 { (68, 23) } else { (0, 0) };
-        self.teleport(&Destination::new(world_id, x, y));
+        let destination = Destination::new(world_id, self.world.spawn_point.0, self.world.spawn_point.1);
+        self.teleport(&destination);
     }
 
     pub fn window_size_changed(
@@ -284,6 +284,7 @@ impl GameEngine {
             self.previous_world = Some(self.world.clone());
         }
         self.world = new_world;
+        self.world.spawn_point = (hero_frame.x, hero_frame.y);
         self.center_camera_at(hero_frame.x, hero_frame.y, &Vector2d::zero());
 
         self.menu.current_world_id = self.world.id;

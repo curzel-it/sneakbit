@@ -34,6 +34,7 @@ pub struct World {
     pub pressure_plate_down_blue: bool,
     pub pressure_plate_down_silver: bool,
     pub pressure_plate_down_yellow: bool,
+    pub spawn_point: (i32, i32),
     pub light_conditions: LightConditions,
     pub cutscenes: Vec<CutScene>,
 }
@@ -73,6 +74,7 @@ impl World {
             buildings: hash_set![],
             light_conditions: LightConditions::Day,
             cutscenes: vec![],
+            spawn_point: (0, 0)
         }
     }
 
