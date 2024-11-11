@@ -60,7 +60,7 @@ pub struct Entity {
     #[serde(default="one")]
     pub speed_multiplier: f32,
 
-    #[serde(default)]
+    #[serde(skip)]
     pub melee_attacks_hero: bool,
     
     #[serde(skip)]
