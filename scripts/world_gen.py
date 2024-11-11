@@ -158,7 +158,7 @@ world_data = {
         "sheet_id": 1003
     },
     "entities": [],
-    "default_biome": "Water"
+    "is_interior": False,
 }
 
 output_filename = f"/Users/curzel/dev/sneakbit/data/{args.world_id}.json"

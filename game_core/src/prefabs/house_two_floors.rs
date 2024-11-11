@@ -1,4 +1,4 @@
-use crate::{constants::{HOUSE_INTERIOR_COLUMNS, HOUSE_INTERIOR_ROWS}, entities::{known_species::{SPECIES_SEAT_GREEN, SPECIES_STAIRS_DOWN, SPECIES_STAIRS_UP, SPECIES_TABLE, SPECIES_TELEPORTER}, species::{make_entity_by_species, Species}}, features::destination::Destination, game_engine::{entity::Entity, world::World}, maps::{biome_tiles::Biome, constructions_tiles::Construction}, utils::ids::get_next_id};
+use crate::{constants::{HOUSE_INTERIOR_COLUMNS, HOUSE_INTERIOR_ROWS}, entities::{known_species::{SPECIES_SEAT_GREEN, SPECIES_STAIRS_DOWN, SPECIES_STAIRS_UP, SPECIES_TABLE, SPECIES_TELEPORTER}, species::{make_entity_by_species, Species}}, features::destination::Destination, game_engine::{entity::Entity, world::World}, maps::{biome_tiles::Biome, constructions_tiles::Construction}, utils::{ids::get_next_id, rect::IntRect}};
 
 pub fn new_house_two_floors(species: &Species, source_world_id: u32, x: i32, y: i32) -> Vec<Entity> {
     let mut building = species.make_entity();
@@ -32,6 +32,8 @@ pub fn new_house_two_floors(species: &Species, source_world_id: u32, x: i32, y: 
     stairs_up_door.frame.y = stairs_up.frame.y + 1;
 
     let mut first_floor = World::load_or_create(first_floor_id);
+    first_floor.is_interior = true;
+    first_floor.bounds = IntRect::from_origin(30, 10);
 
     for row in 0..HOUSE_INTERIOR_ROWS {
         for col in 0..HOUSE_INTERIOR_COLUMNS {
@@ -90,6 +92,8 @@ pub fn new_house_two_floors(species: &Species, source_world_id: u32, x: i32, y: 
     stairs_down_door.frame.y = stairs_down.frame.y + 1;
 
     let mut second_floor = World::load_or_create(second_floor_id);
+    second_floor.is_interior = true;
+    second_floor.bounds = IntRect::from_origin(30, 10);
 
     for row in 0..HOUSE_INTERIOR_ROWS {
         for col in 0..HOUSE_INTERIOR_COLUMNS {

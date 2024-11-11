@@ -59,6 +59,7 @@
 "npc.name.ninja.red" = "Red Ninja"
 "npc.name.old_man" = "Old Man"
 "npc.name.old_woman" = "Old Lady"
+"npc.name.man.punk.1" = "Punk"
 "npc.name.shop_clerk" = "Shop Guy"
 "npc.name.slime" = "Slime"
 "npc.name.wizard" = "Wizard"
@@ -247,6 +248,68 @@ Dock of Thermoria — Gateway to Maritide Haven
 "1018.entrance" = "Evergrove Village"
 "1019.entrance" = "Evergrove Village"
 "1020.entrance" = "Evergrove Village"
+
+"quest.hero.1" = """
+So you're an outer-worlder eh?
+I bet that old geezer in Evergrove summoned you here.
+We don't need any heroes, go away.
+"""
+
+"quest.hero.2" = """
+I told you, it's no use running around killing monsters,
+their number never really lowers.
+This very world, too, has rejected the concept of a "hero".
+"""
+
+"quest.hero.3" = """
+They say the third time is the charm.
+What the hell are you doing here...?
+Are you... After the keys!?
+"""
+
+"quest.hero.4" = """
+You see, the problem with you, with the wizard, with this world...
+Is trust.
+The microwave is broken? Fix it with magic.
+Science is broken? Let's pray the gods for knowledge.
+The world is broken? 
+Sure, let's summon a random dude from another world to fix it!
+You have been so busy, so worried, it never even came to 
+your mind we might just be able to handle the situation ourself.
+"""
+
+"quest.hero.5" = """
+So you're the outer-worlder...
+Do you even know why you're here?
+Simple... It's because I failed as a father.
+"""
+
+"quest.hero.finale.a" = """
+No point in hiding it since you probably already know everything.
+I am the hero of the profecy, but have not always been.
+I grew up with the weight of the profecy but no skills to back it up.
+The looks on people faces, especially that damn old creep...
+All I saw was distrust, so I left.
+When I met you, my "replacement", rage took over...
+I realized the world was not waiting for me and had to take action.
+The head of the Demon Lord was my destiny, 
+but I think I owe you an apolegy nonetheless for taking you prey.
+"""
+
+"quest.hero.finale.b" = """
+What, you expected a boss fight?
+Tried to take over someone else's destiny, did you?
+Piss off.
+"""
+
+"quest.hero.finale.c" = """
+Who the hell are you?
+"""
+
+"quest.hero.finale.finale" = """
+We have nothing else to talk about.
+Go back to your world, or stay... Whatever...
+"""
 
 "quest.ninja_skills.1" = """
 Yo, 

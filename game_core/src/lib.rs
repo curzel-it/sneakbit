@@ -4,7 +4,6 @@ use config::initialize_config_paths;
 use entities::known_species::SPECIES_KUNAI;
 use features::light_conditions::LightConditions;
 use game_engine::{engine::GameEngine, entity::Entity, inventory::inventory_items_count_for_species};
-use maps::biome_tiles::BiomeTile;
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::IntRect, vector::Vector2d};
 
@@ -155,7 +154,7 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
         Ordering::Equal
     });
 
-    entities.iter()
+    let mut renderables: Vec<RenderableItem> = entities.iter()
         .map(|e| {
             RenderableItem {
                 sprite_sheet_id: e.sprite_sheet(),
@@ -164,7 +163,13 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
                 frame: e.frame
             }
         })
-        .collect()
+        .collect();
+
+    renderables.extend(
+        world.cutscenes.iter().map(|c| c.renderable_item())
+    );
+
+    renderables
 }
 
 #[no_mangle]
@@ -240,11 +245,6 @@ pub extern "C" fn camera_viewport() -> IntRect {
 #[no_mangle]
 pub extern "C" fn camera_viewport_offset() -> Vector2d {
     engine().camera_viewport_offset
-}
-
-#[no_mangle]
-pub extern "C" fn current_world_default_tile() -> BiomeTile {
-    engine().world.default_tile()
 }
 
 fn to_string(value: *const c_char) -> String {

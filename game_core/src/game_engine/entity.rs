@@ -49,7 +49,7 @@ pub struct Entity {
     pub original_sprite_frame: IntRect,
 
     #[serde(default)]
-    pub display_condition: Option<DisplayCondition>,
+    pub display_conditions: Vec<DisplayCondition>,
 
     #[serde(default)]
     pub movement_directions: MovementDirections,
@@ -102,7 +102,8 @@ fn one() -> f32 {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DisplayCondition {
     pub key: String,
-    pub expected_value: u32
+    pub expected_value: u32,
+    pub visible: bool
 }
 
 impl Entity {
@@ -149,15 +150,12 @@ impl Entity {
     }
 
     pub fn should_be_visible(&self, world: &World) -> bool {
-        if let Some(condition) = self.display_condition.clone() {
+        for condition in &self.display_conditions{
             if key_value_matches(&condition.key, world, condition.expected_value) {
-                true
-            } else {
-                false
+                return condition.visible
             }
-        } else {
-            true
         }
+        true
     }
 
     pub fn sprite_sheet(&self) -> u32 {

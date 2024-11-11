@@ -1,7 +1,7 @@
 use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
 
 use common_macros::hash_set;
-use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{entity::{Entity, EntityId, EntityProps}, inventory::add_to_inventory, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, lock_override, save_lock_override}};
 
@@ -28,13 +28,14 @@ pub struct World {
     pub is_any_arrow_key_down: bool,
     pub has_attack_key_been_pressed: bool,
     pub has_confirmation_key_been_pressed: bool,
-    pub default_biome: Biome,
+    pub is_interior: bool,
     pub pressure_plate_down_red: bool,
     pub pressure_plate_down_green: bool,
     pub pressure_plate_down_blue: bool,
     pub pressure_plate_down_silver: bool,
     pub pressure_plate_down_yellow: bool,
     pub light_conditions: LightConditions,
+    pub cutscenes: Vec<CutScene>,
 }
 
 const WORLD_SIZE_COLUMNS: usize = 30;
@@ -62,7 +63,7 @@ impl World {
             is_any_arrow_key_down: false,
             has_attack_key_been_pressed: false,
             has_confirmation_key_been_pressed: false,
-            default_biome: Biome::Nothing,
+            is_interior: false,
             pressure_plate_down_red: false,
             pressure_plate_down_green: false,
             pressure_plate_down_blue: false,
@@ -70,7 +71,8 @@ impl World {
             pressure_plate_down_yellow: false,
             melee_attackers: hash_set![],
             buildings: hash_set![],
-            light_conditions: LightConditions::Day
+            light_conditions: LightConditions::Day,
+            cutscenes: vec![],
         }
     }
 
@@ -148,9 +150,11 @@ impl World {
         self.has_attack_key_been_pressed = keyboard.has_attack_key_been_pressed;
         self.has_confirmation_key_been_pressed = keyboard.has_confirmation_been_pressed;
 
+        self.biome_tiles.update(time_since_last_update);
+
         let mut entities = self.entities.borrow_mut();
 
-        let state_updates: Vec<WorldStateUpdate> = self.visible_entities.iter()
+        let entity_state_updates: Vec<WorldStateUpdate> = self.visible_entities.iter()
             .flat_map(|(index, _)| {
                 if let Some(entity) = entities.get_mut(*index) {
                     entity.update(self, time_since_last_update)
@@ -159,32 +163,25 @@ impl World {
                 }                
             })
             .collect();
-
-        self.biome_tiles.update(time_since_last_update);
-
         drop(entities);
-        let updates = self.apply_state_updates(state_updates);
+
+        let cutscene_state_updates: Vec<WorldStateUpdate> = self.cutscenes.iter_mut()
+            .flat_map(|c| 
+                c.update(&self.cached_hero_props.hittable_frame, time_since_last_update)
+            )
+            .collect();
+
+        let mut engine_updates = self.apply_state_updates(entity_state_updates);
+        let cutscene_engine_updates = self.apply_state_updates(cutscene_state_updates);
+        engine_updates.extend(cutscene_engine_updates);
+
         self.visible_entities = self.compute_visible_entities(viewport);
         self.update_hitmaps();
-        updates
+        engine_updates
     } 
 
     pub fn apply_state_updates(&mut self, updates: Vec<WorldStateUpdate>) -> Vec<EngineStateUpdate> {
         updates.into_iter().filter_map(|u| self.apply_state_update(u)).collect()
-    }
-
-    pub fn default_tile(&self) -> BiomeTile {
-        let mut tile = BiomeTile {
-            tile_type: self.default_biome,
-            tile_up_type: self.default_biome,
-            tile_right_type: self.default_biome,
-            tile_down_type: self.default_biome,
-            tile_left_type: self.default_biome,
-            texture_offset_x: 0,
-            texture_offset_y: 0
-        };
-        tile.setup_neighbors(self.default_biome, self.default_biome, self.default_biome, self.default_biome);
-        tile
     }
 
     fn log_update(&self, update: &WorldStateUpdate) {

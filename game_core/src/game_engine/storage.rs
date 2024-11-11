@@ -19,6 +19,10 @@ impl StorageKey {
     pub fn latest_world() -> String {
         "latest_world".to_owned()
     }
+
+    pub fn npc_interaction(id: u32) -> String {
+        format!("npc_interactions.{}", id)
+    }
 }
 
 fn load_stored_values() -> BTreeMap<String, u32> {

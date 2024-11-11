@@ -73,14 +73,28 @@ pub fn would_collide(frame: &IntRect, direction: &Direction, hitmap: &Hitmap) ->
     let (col_offset, row_offset) = direction.as_col_row_offset();
     let base_y = frame.y + frame.h - 1;
     let base_x = frame.x;
-    hitmap[(base_y + row_offset).max(0) as usize][(base_x + col_offset).max(0) as usize]
+    let x = base_x + col_offset;
+    let y = base_y + row_offset;
+
+    if y < 0 || y >= hitmap.len() as i32 || x < 0 || x >= hitmap[0].len() as i32 {
+        true
+    } else {
+        hitmap[y as usize][x as usize]
+    }
 }
 
 pub fn would_over_weight(frame: &IntRect, direction: &Direction, weights_map: &WeightsMap) -> bool {
     let (col_offset, row_offset) = direction.as_col_row_offset();
     let base_y = frame.y + frame.h - 1;
     let base_x = frame.x;
-    weights_map[(base_y + row_offset).max(0) as usize][(base_x + col_offset).max(0) as usize] > 0
+    let x = base_x + col_offset;
+    let y = base_y + row_offset;
+
+    if y < 0 || y >= weights_map.len() as i32 || x < 0 || x >= weights_map[0].len() as i32 {
+        true
+    } else {
+        weights_map[y as usize][x as usize] > 0
+    }
 }
 
 pub fn would_collide_with_hero(frame: &IntRect, direction: &Direction, world: &World) -> bool {

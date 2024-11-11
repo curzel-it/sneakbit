@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, utils::directions::direction_between_rects};
+use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}, world::World}, utils::directions::direction_between_rects};
 
 pub type NpcId = u32;
 
@@ -45,6 +45,8 @@ impl Entity {
                 return vec;  
             } else if let Some(dialogue) = self.next_dialogue(world) {
                 self.demands_attention = false;
+
+                set_value_for_key(&StorageKey::npc_interaction(self.id), 1);
 
                 let show_dialogue = WorldStateUpdate::EngineUpdate(
                     EngineStateUpdate::ShowDialogue(

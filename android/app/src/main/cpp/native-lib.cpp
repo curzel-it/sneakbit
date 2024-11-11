@@ -454,12 +454,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_selectCurrentMenuOptionAtIndex(JNIEnv
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_defaultTileType(JNIEnv *env, jobject thiz) {
-    return current_world_default_tile().tile_type;
-}
-
-extern "C"
 JNIEXPORT jboolean JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_isNight(JNIEnv *env, jobject thiz) {
     return is_night();

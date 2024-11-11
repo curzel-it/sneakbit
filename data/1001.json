@@ -2108,7 +2108,7 @@
     {
       "id": 10754450,
       "frame": {
-        "x": 20,
+        "x": 19,
         "y": 35,
         "w": 1,
         "h": 1
@@ -2139,7 +2139,8 @@
       "destination": {
         "world": 1002,
         "x": 79,
-        "y": 44
+        "y": 44,
+        "direction": "Left"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2550,6 +2551,6 @@
       "demands_attention": false
     }
   ],
-  "default_biome": "Water",
+  "is_interior": false,
   "light_conditions": "Day"
 }

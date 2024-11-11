@@ -8,30 +8,28 @@ impl World {
         self.update_hitmaps();
 
         let (x, y) = self.destination_x_y(source, original_x, original_y);       
-        println!("Spawning hero at {}, {}", x, y); 
         let mut entity = make_entity_by_species(SPECIES_HERO);
-
-        if y > 0 && !self.hitmap[(y + 1) as usize][x as usize] {
-            entity.frame.x = x;
-            entity.frame.y = y;
-            entity.direction = *hero_direction;
-        } else if y > 0 && !self.hitmap[(y + 2) as usize][x as usize] {
-            entity.frame.x = x;
-            entity.frame.y = y + 2;
-            entity.direction = Direction::Down;
-        } else if y >= 2 && !self.hitmap[(y - 2) as usize][x as usize] {
-            entity.frame.x = x;
-            entity.frame.y = y - 2;
-            entity.direction = Direction::Up;
-        } else {
-            entity.frame.x = x;
-            entity.frame.y = y;
-            entity.direction = Direction::Down;
-        }
+        
         if !matches!(direction, Direction::Unknown | Direction::Still) {
             entity.direction = direction;
-        }
-        
+            entity.frame.x = x;
+            entity.frame.y = y;
+        } else {
+            entity.direction = Direction::Down;
+            entity.frame.x = x;
+            entity.frame.y = y - 1;
+
+            for new_direction in &self.likely_direction_for_hero(x, y, hero_direction) {
+                if self.has_space_for_hero_in_direction(x, y, new_direction) {
+                    let (ox, oy) = new_direction.as_col_row_offset();
+                    entity.frame.x = x + ox;
+                    entity.frame.y = y - 1 + oy;
+                    entity.direction = *new_direction;
+                    break
+                }
+            }
+        }   
+        println!("Spawning hero at {}, {}", entity.frame.x, entity.frame.y); 
         entity.immobilize_for_seconds(0.2);
         self.cached_hero_props = entity.props();
         self.add_entity(entity);
@@ -42,6 +40,53 @@ impl World {
         self.entities.borrow_mut().iter_mut().for_each(|e| e.setup(enabled));
     }
 
+    fn likely_direction_for_hero(&self, x: i32, y: i32, current_direction: &Direction) -> Vec<Direction> {
+        let mut options: Vec<Direction> = vec![];
+
+        let going_horizontally = matches!(current_direction, Direction::Left | Direction::Right);
+        let going_left = matches!(current_direction, Direction::Left);
+        let horizontal = if going_left || (!going_horizontally && x > self.bounds.w / 2) {
+            vec![Direction::Left, Direction::Right]
+        } else {
+            vec![Direction::Right, Direction::Left]
+        };
+
+        let going_vertically = matches!(current_direction, Direction::Up | Direction::Down);
+        let going_up = matches!(current_direction, Direction::Up);
+        let vertical = if going_up || (!going_vertically && y > self.bounds.h / 2) {
+            vec![Direction::Up, Direction::Down]
+        } else {
+            vec![Direction::Down, Direction::Up]
+        };
+
+        if self.is_interior {
+            options.extend(vertical);
+            options.extend(horizontal);
+        } else {
+            options.extend(horizontal);
+            options.extend(vertical);
+        }
+
+        options
+    }
+
+    fn has_space_for_hero_in_direction(&self, x: i32, y: i32, direction: &Direction) -> bool {
+        let (ox, oy) = direction.as_col_row_offset();
+        
+        for i in 0..3 {
+            let nx = x + i * ox;
+            let ny = y + i * oy + if i == 0 { 1 } else { 0 };
+    
+            if ny < 0 || ny >= self.hitmap.len() as i32 || nx < 0 || nx >= self.hitmap[0].len() as i32 {
+                continue;
+            }    
+            if self.hitmap[ny as usize][nx as usize] {
+                return false;
+            }
+        }    
+        true
+    }
+
     fn destination_x_y(&self, source: u32, original_x: i32, original_y: i32) -> (i32, i32) {
         if original_x == 0 && original_y == 0 {            
             if let Some(teleporter_position) = self.find_teleporter_for_destination(source) {
@@ -49,7 +94,13 @@ impl World {
             } else if let Some(teleporter_position) = self.find_any_teleporter() {
                 (teleporter_position.x, teleporter_position.y)
             } else {
-                (self.bounds.w / 2, self.bounds.h / 2)
+                let x = self.bounds.w / 2;
+                let mut y = self.bounds.h / 2;
+
+                while y < self.bounds.h - 1 && self.hitmap[y as usize][x as usize] {
+                    y += 1
+                }
+                return (x, y)
             }
         } else {
             let actual_x = original_x.min(self.bounds.x + self.bounds.w - 1).max(self.bounds.x - 1);

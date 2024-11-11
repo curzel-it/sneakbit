@@ -217,10 +217,33 @@ def main(json_file_path: str, output_image_path: str, variant: int):
     else:
         print("Failed to generate tile map image.")
 
+
 if __name__ == "__main__":
     for filename in os.listdir("data"):
-        if not bool(re.match(r"^\d+\.json$", filename)): continue
+        if not re.match(r"^\d+\.json$", filename):
+            continue
         world_id = filename.split(".")[0]
+        json_file_path = os.path.join("data", filename)
+
+        try:
+            json_mtime = os.path.getmtime(json_file_path)
+        except OSError as e:
+            print(f"Error accessing JSON file '{json_file_path}': {e}")
+            continue
 
         for variant in range(0, 4):
-            main(f"data/{filename}", f"assets/{world_id}-{variant}.png", variant)
+            output_image_path = os.path.join("assets", f"{world_id}-{variant}.png")
+
+            if os.path.exists(output_image_path):
+                try:
+                    image_mtime = os.path.getmtime(output_image_path)
+                except OSError as e:
+                    print(f"Error accessing image file '{output_image_path}': {e}")
+                    # Proceed to regenerate the image
+                else:
+                    if image_mtime >= json_mtime:
+                        print(f"Skipping '{output_image_path}'; it is already up-to-date.")
+                        continue  # Skip regeneration
+
+            # Generate the image since it doesn't exist or is outdated
+            main(json_file_path, output_image_path, variant)
