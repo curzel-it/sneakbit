@@ -75,44 +75,17 @@ impl World {
         
         for i in 0..3 {
             let nx = x + i * ox;
-            let ny = y + i * oy + if i == 0 { 1 } else { 0 }; // Adjust for initial offset on y
+            let ny = y + i * oy + if i == 0 { 1 } else { 0 };
     
             if ny < 0 || ny >= self.hitmap.len() as i32 || nx < 0 || nx >= self.hitmap[0].len() as i32 {
-                continue; // Assume out of bounds as true
-            }
-    
+                continue;
+            }    
             if self.hitmap[ny as usize][nx as usize] {
                 return false;
             }
-        }
-    
+        }    
         true
     }
-    /*
-    fn has_space_for_hero_in_direction(&self, x: i32, y: i32, direction: &Direction) -> bool {
-        let (ox, oy) = direction.as_col_row_offset();
-        let x = x + ox;
-        let y = y + 1 + oy;
-        let x2 = x + ox;
-        let y2 = y + oy;
-        let x3 = x2 + ox;
-        let y3 = y2+ oy;
-
-        if y >= 0 && y <= (self.hitmap.len() - 1) as i32 {
-            if x >= 0 && x <= (self.hitmap[0].len() - 1) as i32 {
-                if y2 >= 0 && y2 <= (self.hitmap.len() - 1) as i32 {
-                    if x2 >= 0 && x2 <= (self.hitmap[0].len() - 1) as i32 {
-                        if y3 >= 0 && y3 <= (self.hitmap.len() - 1) as i32 {
-                            if x3 >= 0 && x3 <= (self.hitmap[0].len() - 1) as i32 {
-                                return !self.hitmap[y as usize][x as usize] && !self.hitmap[y2 as usize][x2 as usize] && !self.hitmap[y3 as usize][x3 as usize]
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        false
-    } */
 
     fn destination_x_y(&self, source: u32, original_x: i32, original_y: i32) -> (i32, i32) {
         if original_x == 0 && original_y == 0 {            

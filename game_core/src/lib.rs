@@ -4,7 +4,6 @@ use config::initialize_config_paths;
 use entities::known_species::SPECIES_KUNAI;
 use features::light_conditions::LightConditions;
 use game_engine::{engine::GameEngine, entity::Entity, inventory::inventory_items_count_for_species};
-use maps::biome_tiles::BiomeTile;
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::IntRect, vector::Vector2d};
 
