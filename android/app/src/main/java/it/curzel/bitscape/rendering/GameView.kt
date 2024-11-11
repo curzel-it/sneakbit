@@ -106,7 +106,6 @@ class GameView @JvmOverloads constructor(
         canvas.drawColor(0xFF000000)
 
         if (engine.canRender) {
-            renderBiomeBackground(canvas)
             renderTileMap(canvas)
             renderNight(canvas)
             renderEntities(canvas)
@@ -153,10 +152,6 @@ class GameView @JvmOverloads constructor(
     private fun renderNight(canvas: Canvas) {
         if (!engine.isNight()) { return }
         canvas.drawColor(0x80000000)
-    }
-
-    private fun renderBiomeBackground(canvas: Canvas) {
-        canvas.drawColor(engine.biomeBackgroundColor())
     }
 
     private fun renderEntities(canvas: Canvas) {

@@ -20,18 +20,12 @@ class GameView: UIView {
         context.interpolationQuality = .none
 
         if engine.canRender {
-            renderBiomeBackground(rect, in: context)
             renderTileMap(in: context)
             renderNight(rect, in: context)
             renderEntities(in: context)
             renderLimitedVisibility(rect, in: context)
             renderDebugInfo(context: context, rect: rect)
         }
-    }
-    
-    private func renderBiomeBackground(_ rect: CGRect, in context: CGContext) {
-        context.setFillColor(engine.biomeBackground)
-        context.fill(rect)
     }
     
     private func renderEntities(in context: CGContext) {

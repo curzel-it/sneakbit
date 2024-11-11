@@ -32,7 +32,7 @@
 
 #define HOUSE_INTERIOR_COLUMNS 10
 
-#define TILE_VARIATIONS_FPS 1.0
+#define TILE_VARIATIONS_FPS 1.5
 
 #define TILE_SIZE 16.0
 
@@ -72,29 +72,9 @@
 
 #define SPRITE_SHEET_CAVE_DARKNESS 1019
 
+#define SPRITE_SHEET_DEMON_LORD_DEFEAT 1020
+
 #define SPECIES_HERO 1001
-
-#define SPECIES_HOUSE_1 1002
-
-#define SPECIES_HOUSE_2 1003
-
-#define SPECIES_HOUSE_3 1004
-
-#define SPECIES_HOUSE_SMALL_1 1033
-
-#define SPECIES_VILLA_2 1010
-
-#define SPECIES_HOUSE_TWO_FLOORS_1 1005
-
-#define SPECIES_HOUSE_TWO_FLOORS_2 1006
-
-#define SPECIES_HOUSE_TWO_FLOORS_3 1007
-
-#define SPECIES_HOUSE_SHOP_1 1070
-
-#define SPECIES_HOUSE_SHOP_2 1071
-
-#define SPECIES_HOUSE_SHOP_3 1072
 
 #define SPECIES_NPC_SHOP_CLERK 3008
 
@@ -128,28 +108,6 @@
 
 #define SPECIES_DEEP_HOLE 5001
 
-enum Biome {
-  Biome_Nothing = 0,
-  Biome_Grass,
-  Biome_GrassFlowersRed,
-  Biome_GrassFlowersYellow,
-  Biome_GrassFlowersBlue,
-  Biome_GrassFlowersPurple,
-  Biome_Water,
-  Biome_Rock,
-  Biome_Desert,
-  Biome_Snow,
-  Biome_DarkWood,
-  Biome_LightWood,
-  Biome_DarkRock,
-  Biome_Ice,
-  Biome_DarkGrass,
-  Biome_RockPlates,
-  Biome_Lava,
-  Biome_Farmland,
-};
-typedef uint32_t Biome;
-
 typedef enum ToastMode {
   ToastMode_Regular = 0,
   ToastMode_Important,
@@ -175,16 +133,6 @@ typedef struct RenderableItem {
   struct Vector2d offset;
   struct IntRect frame;
 } RenderableItem;
-
-typedef struct BiomeTile {
-  Biome tile_type;
-  Biome tile_up_type;
-  Biome tile_right_type;
-  Biome tile_down_type;
-  Biome tile_left_type;
-  int32_t texture_offset_x;
-  int32_t texture_offset_y;
-} BiomeTile;
 
 typedef struct NonColorC {
   uint8_t red;
@@ -253,6 +201,7 @@ void update_keyboard(bool up_pressed,
 
 void update_mouse(bool mouse_left_down,
                   bool mouse_left_pressed,
+                  bool mouse_right_down,
                   bool mouse_right_pressed,
                   float mouse_x,
                   float mouse_y,
@@ -281,8 +230,6 @@ int32_t current_world_height(void);
 struct IntRect camera_viewport(void);
 
 struct Vector2d camera_viewport_offset(void);
-
-struct BiomeTile current_world_default_tile(void);
 
 uint32_t current_world_id(void);
 
