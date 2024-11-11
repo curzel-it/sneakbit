@@ -181,7 +181,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -226,7 +225,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -271,7 +269,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -316,7 +313,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -361,7 +357,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -406,7 +401,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -451,7 +445,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -496,7 +489,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -541,7 +533,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -586,7 +577,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -631,7 +621,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -676,7 +665,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -721,7 +709,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -766,7 +753,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -811,7 +797,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -856,7 +841,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -901,7 +885,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -946,7 +929,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -991,7 +973,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1036,7 +1017,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1081,7 +1061,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1126,7 +1105,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1171,7 +1149,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1216,7 +1193,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1261,7 +1237,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1306,7 +1281,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1351,7 +1325,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1396,7 +1369,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1441,7 +1413,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1486,7 +1457,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1531,7 +1501,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1576,7 +1545,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1621,7 +1589,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1666,7 +1633,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1711,7 +1677,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1756,7 +1721,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1801,7 +1765,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1846,7 +1809,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1891,7 +1853,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1936,7 +1897,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -1981,7 +1941,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2026,7 +1985,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2071,7 +2029,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2116,7 +2073,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2206,7 +2162,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2251,7 +2206,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -2296,7 +2250,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2341,7 +2294,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2386,7 +2338,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2431,7 +2382,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2476,7 +2426,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2521,7 +2470,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2566,7 +2514,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2611,7 +2558,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2656,7 +2602,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2701,7 +2646,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2746,7 +2690,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2791,7 +2734,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2836,7 +2778,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2881,7 +2822,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2926,7 +2866,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -2971,7 +2910,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3016,7 +2954,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3061,7 +2998,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3106,7 +3042,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3151,7 +3086,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3196,7 +3130,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3241,7 +3174,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3286,7 +3218,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3331,7 +3262,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3376,7 +3306,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3421,7 +3350,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3466,7 +3394,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3511,7 +3438,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3556,7 +3482,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3601,7 +3526,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3646,7 +3570,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3691,7 +3614,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3736,7 +3658,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3781,7 +3702,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3826,7 +3746,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3871,7 +3790,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -3961,7 +3879,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4006,7 +3923,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4051,7 +3967,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4141,7 +4056,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4186,7 +4100,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4231,7 +4144,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4276,7 +4188,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4321,7 +4232,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4366,7 +4276,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4411,7 +4320,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4501,7 +4409,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4546,7 +4453,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4591,7 +4497,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4636,7 +4541,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4681,7 +4585,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4726,7 +4629,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4771,7 +4673,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4816,7 +4717,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4861,7 +4761,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -4911,7 +4810,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -4956,7 +4854,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -5001,7 +4898,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -5091,7 +4987,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -5136,7 +5031,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -5181,7 +5075,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -5226,7 +5119,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -5271,7 +5163,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -5316,7 +5207,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -5406,7 +5296,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -5496,7 +5385,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -5541,7 +5429,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -5631,7 +5518,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -6396,7 +6282,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -6891,7 +6776,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -6936,7 +6820,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -6981,7 +6864,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -7026,7 +6908,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -7071,7 +6952,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -7116,7 +6996,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -7161,7 +7040,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -7206,7 +7084,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -7251,7 +7128,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -7296,7 +7172,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -7341,7 +7216,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -7386,7 +7260,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -7431,7 +7304,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7476,7 +7348,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7521,7 +7392,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7566,7 +7436,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7611,7 +7480,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7656,7 +7524,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7701,7 +7568,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7746,7 +7612,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7791,7 +7656,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7836,7 +7700,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7881,7 +7744,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7926,7 +7788,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -7971,7 +7832,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8016,7 +7876,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8061,7 +7920,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8106,7 +7964,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8151,7 +8008,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8196,7 +8052,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8241,7 +8096,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8286,7 +8140,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8331,7 +8184,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8376,7 +8228,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8421,7 +8272,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8466,7 +8316,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8511,7 +8360,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -8556,7 +8404,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -8646,7 +8493,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8736,7 +8582,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8781,7 +8626,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.rock",
       "species_id": 44415,
       "entity_type": "StaticObject",
       "offset": {
@@ -8916,7 +8760,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -8961,7 +8804,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9006,7 +8848,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9051,7 +8892,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9096,7 +8936,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9141,7 +8980,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9186,7 +9024,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9231,7 +9068,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9276,7 +9112,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9321,7 +9156,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9366,7 +9200,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9411,7 +9244,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9456,7 +9288,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9501,7 +9332,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9546,7 +9376,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9591,7 +9420,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9636,7 +9464,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9681,7 +9508,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9726,7 +9552,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9771,7 +9596,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9816,7 +9640,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9861,7 +9684,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9906,7 +9728,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9951,7 +9772,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -9996,7 +9816,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -10041,7 +9860,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -10086,7 +9904,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -10131,7 +9948,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -10176,7 +9992,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -10221,7 +10036,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -10266,7 +10080,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -10356,7 +10169,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -10446,7 +10258,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -10536,7 +10347,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -10581,7 +10391,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -10626,7 +10435,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -10671,7 +10479,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -11481,7 +11288,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -11526,7 +11332,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -11571,7 +11376,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -11616,7 +11420,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -11661,7 +11464,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -11706,7 +11508,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -11751,7 +11552,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -11796,7 +11596,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -11841,7 +11640,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -11886,7 +11684,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -11931,7 +11728,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -11976,7 +11772,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -12021,7 +11816,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -12066,7 +11860,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -12111,7 +11904,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -12156,7 +11948,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -12201,7 +11992,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -12246,7 +12036,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -12291,7 +12080,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -12336,7 +12124,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12381,7 +12168,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12426,7 +12212,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12471,7 +12256,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12516,7 +12300,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12561,7 +12344,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12606,7 +12388,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12651,7 +12432,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12696,7 +12476,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12741,7 +12520,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12786,7 +12564,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -12831,7 +12608,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12876,7 +12652,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12921,7 +12696,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -12966,7 +12740,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -13686,7 +13459,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -13731,7 +13503,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -13821,7 +13592,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -13866,7 +13636,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -13911,7 +13680,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -13956,7 +13724,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14001,7 +13768,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14046,7 +13812,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14091,7 +13856,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14136,7 +13900,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14181,7 +13944,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14271,7 +14033,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14361,7 +14122,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14406,7 +14166,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14451,7 +14210,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14496,7 +14254,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14541,7 +14298,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -14586,7 +14342,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14631,7 +14386,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14676,7 +14430,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14721,7 +14474,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14811,7 +14563,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14901,7 +14652,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14946,7 +14696,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -14991,7 +14740,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15036,7 +14784,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15081,7 +14828,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15126,7 +14872,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15171,7 +14916,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15216,7 +14960,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15261,7 +15004,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15306,7 +15048,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -15351,7 +15092,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15396,7 +15136,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15441,7 +15180,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15486,7 +15224,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15531,7 +15268,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15666,7 +15402,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15711,7 +15446,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15756,7 +15490,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15801,7 +15534,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15846,7 +15578,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15891,7 +15622,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -15936,7 +15666,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16026,7 +15755,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16161,7 +15889,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16206,7 +15933,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16251,7 +15977,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16296,7 +16021,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16341,7 +16065,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16386,7 +16109,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16431,7 +16153,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16476,7 +16197,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16566,7 +16286,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16611,7 +16330,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16656,7 +16374,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16701,7 +16418,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16746,7 +16462,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16791,7 +16506,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16836,7 +16550,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -16881,7 +16594,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16926,7 +16638,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -16971,7 +16682,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -17016,7 +16726,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -17061,7 +16770,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -17106,7 +16814,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -17151,7 +16858,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -17961,7 +17667,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18006,7 +17711,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18051,7 +17755,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18096,7 +17799,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18141,7 +17843,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18186,7 +17887,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18231,7 +17931,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18276,7 +17975,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18321,7 +18019,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18366,7 +18063,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18411,7 +18107,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18456,7 +18151,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18501,7 +18195,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18546,7 +18239,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -18591,7 +18283,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -18636,7 +18327,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -18681,7 +18371,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -18726,7 +18415,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -18771,7 +18459,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -18816,7 +18503,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -18861,7 +18547,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -18906,7 +18591,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -18951,7 +18635,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -18996,7 +18679,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19041,7 +18723,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -19086,7 +18767,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -19176,7 +18856,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19221,7 +18900,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19266,7 +18944,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19311,7 +18988,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -19356,7 +19032,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -19401,7 +19076,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19446,7 +19120,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19491,7 +19164,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19536,7 +19208,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19581,7 +19252,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19626,7 +19296,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19671,7 +19340,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19716,7 +19384,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -19761,7 +19428,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -19851,7 +19517,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -19946,7 +19611,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20171,7 +19835,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20216,7 +19879,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -20261,7 +19923,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20306,7 +19967,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20351,7 +20011,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20396,7 +20055,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20441,7 +20099,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20486,7 +20143,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20531,7 +20187,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20666,7 +20321,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20711,7 +20365,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20801,7 +20454,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20846,7 +20498,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20891,7 +20542,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20936,7 +20586,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -20981,7 +20630,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21071,7 +20719,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21116,7 +20763,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21161,7 +20807,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21206,7 +20851,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21251,7 +20895,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21386,7 +21029,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21431,7 +21073,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21476,7 +21117,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21521,7 +21161,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -21611,7 +21250,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21656,7 +21294,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21701,7 +21338,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21746,7 +21382,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21791,7 +21426,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21836,7 +21470,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21881,7 +21514,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21926,7 +21558,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -21971,7 +21602,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -22016,7 +21646,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -22061,7 +21690,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -22106,7 +21734,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -22151,7 +21778,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -22196,7 +21822,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -22241,7 +21866,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -22286,7 +21910,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -22331,7 +21954,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -22376,7 +21998,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -22916,7 +22537,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -22961,7 +22581,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23006,7 +22625,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23051,7 +22669,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23096,7 +22713,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23141,7 +22757,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23186,7 +22801,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23231,7 +22845,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23276,7 +22889,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23321,7 +22933,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23366,7 +22977,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23411,7 +23021,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23456,7 +23065,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23501,7 +23109,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23546,7 +23153,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23591,7 +23197,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23726,7 +23331,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23771,7 +23375,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23816,7 +23419,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -23861,7 +23463,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -23906,7 +23507,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -23951,7 +23551,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -24266,7 +23865,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -24536,7 +24134,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -24586,7 +24183,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -24631,7 +24227,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -24676,7 +24271,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -24721,7 +24315,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -24766,7 +24359,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -24811,7 +24403,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -24856,7 +24447,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -24901,7 +24491,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -24946,7 +24535,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -24991,7 +24579,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25036,7 +24623,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25081,7 +24667,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25126,7 +24711,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25171,7 +24755,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25216,7 +24799,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25261,7 +24843,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25306,7 +24887,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25351,7 +24931,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25396,7 +24975,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25441,7 +25019,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25486,7 +25063,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25531,7 +25107,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25576,7 +25151,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25621,7 +25195,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25666,7 +25239,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25711,7 +25283,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25756,7 +25327,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25801,7 +25371,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -25846,7 +25415,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25891,7 +25459,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25936,7 +25503,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -25981,7 +25547,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26026,7 +25591,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26071,7 +25635,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26116,7 +25679,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26161,7 +25723,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26206,7 +25767,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26251,7 +25811,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26296,7 +25855,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26341,7 +25899,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26386,7 +25943,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26431,7 +25987,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26476,7 +26031,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26521,7 +26075,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -26566,7 +26119,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -27241,7 +26793,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -27286,7 +26837,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -27331,7 +26881,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -27376,7 +26925,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -27421,7 +26969,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {
@@ -28006,7 +27553,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -28051,7 +27597,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -28096,7 +27641,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -28141,7 +27685,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -28186,7 +27729,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -28231,7 +27773,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.rock",
       "species_id": 44418,
       "entity_type": "StaticObject",
       "offset": {
@@ -28276,7 +27817,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -28321,7 +27861,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -28366,7 +27905,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -28456,7 +27994,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28501,7 +28038,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28546,7 +28082,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28591,7 +28126,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28636,7 +28170,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28681,7 +28214,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28726,7 +28258,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28771,7 +28302,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28816,7 +28346,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28861,7 +28390,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28906,7 +28434,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28951,7 +28478,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -28996,7 +28522,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29041,7 +28566,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29086,7 +28610,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -29131,7 +28654,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29176,7 +28698,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29221,7 +28742,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29356,7 +28876,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -29401,7 +28920,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29446,7 +28964,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29491,7 +29008,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29536,7 +29052,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29581,7 +29096,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29626,7 +29140,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29671,7 +29184,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29716,7 +29228,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29761,7 +29272,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29806,7 +29316,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29851,7 +29360,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29896,7 +29404,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29941,7 +29448,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -29986,7 +29492,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30031,7 +29536,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30076,7 +29580,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30121,7 +29624,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30166,7 +29668,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30211,7 +29712,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30256,7 +29756,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30301,7 +29800,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30346,7 +29844,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30391,7 +29888,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30436,7 +29932,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30481,7 +29976,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30526,7 +30020,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30571,7 +30064,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30616,7 +30108,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30661,7 +30152,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30706,7 +30196,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30751,7 +30240,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30796,7 +30284,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30841,7 +30328,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30886,7 +30372,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30931,7 +30416,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -30976,7 +30460,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31021,7 +30504,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31066,7 +30548,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -31111,7 +30592,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31156,7 +30636,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31201,7 +30680,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31246,7 +30724,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31291,7 +30768,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31336,7 +30812,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31381,7 +30856,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31426,7 +30900,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31471,7 +30944,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31516,7 +30988,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31561,7 +31032,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31606,7 +31076,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31651,7 +31120,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31696,7 +31164,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31786,7 +31253,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31831,7 +31297,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31876,7 +31341,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -31921,7 +31385,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -31966,7 +31429,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32011,7 +31473,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32056,7 +31517,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32101,7 +31561,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32146,7 +31605,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32236,7 +31694,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32281,7 +31738,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32326,7 +31782,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32371,7 +31826,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32416,7 +31870,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32461,7 +31914,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32506,7 +31958,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32641,7 +32092,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32686,7 +32136,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32731,7 +32180,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -32776,7 +32224,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -33586,7 +33033,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -33631,7 +33077,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -33676,7 +33121,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -33721,7 +33165,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -33766,7 +33209,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -33811,7 +33253,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -33856,7 +33297,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -33901,7 +33341,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -33946,7 +33385,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -33991,7 +33429,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.grass",
       "species_id": 44407,
       "entity_type": "StaticObject",
       "offset": {
@@ -34036,7 +33473,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -34081,7 +33517,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -34126,7 +33561,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -34171,7 +33605,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -34261,7 +33694,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -34306,7 +33738,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -34351,7 +33782,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -34711,7 +34141,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -34756,7 +34185,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -34801,7 +34229,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_right.grass",
       "species_id": 44408,
       "entity_type": "StaticObject",
       "offset": {
@@ -34891,7 +34318,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -34936,7 +34362,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -34981,7 +34406,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35026,7 +34450,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35071,7 +34494,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35116,7 +34538,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35161,7 +34582,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35206,7 +34626,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35251,7 +34670,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35296,7 +34714,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35341,7 +34758,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35386,7 +34802,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35431,7 +34846,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35476,7 +34890,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35521,7 +34934,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35566,7 +34978,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35611,7 +35022,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35656,7 +35066,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35701,7 +35110,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35746,7 +35154,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -35791,7 +35198,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35836,7 +35242,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35881,7 +35286,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35926,7 +35330,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -35971,7 +35374,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36016,7 +35418,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36061,7 +35462,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36106,7 +35506,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36151,7 +35550,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36196,7 +35594,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36241,7 +35638,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36286,7 +35682,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36331,7 +35726,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36376,7 +35770,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36421,7 +35814,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36466,7 +35858,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36511,7 +35902,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36556,7 +35946,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36601,7 +35990,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36646,7 +36034,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36691,7 +36078,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36736,7 +36122,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36781,7 +36166,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36826,7 +36210,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36871,7 +36254,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36916,7 +36298,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -36961,7 +36342,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37006,7 +36386,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37051,7 +36430,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37096,7 +36474,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37141,7 +36518,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37186,7 +36562,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37276,7 +36651,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37321,7 +36695,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37366,7 +36739,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37411,7 +36783,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37456,7 +36827,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37501,7 +36871,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37546,7 +36915,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37591,7 +36959,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37636,7 +37003,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37681,7 +37047,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37726,7 +37091,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37771,7 +37135,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37816,7 +37179,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37861,7 +37223,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37906,7 +37267,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37951,7 +37311,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -37996,7 +37355,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38041,7 +37399,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38086,7 +37443,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38131,7 +37487,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38176,7 +37531,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38221,7 +37575,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38266,7 +37619,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38311,7 +37663,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38356,7 +37707,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38401,7 +37751,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38446,7 +37795,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38491,7 +37839,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38536,7 +37883,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38581,7 +37927,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38626,7 +37971,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38671,7 +38015,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38716,7 +38059,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38761,7 +38103,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38806,7 +38147,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -38851,7 +38191,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.grass",
       "species_id": 44406,
       "entity_type": "StaticObject",
       "offset": {
@@ -40021,7 +39360,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -40066,7 +39404,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -40111,7 +39448,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -40156,7 +39492,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -40201,7 +39536,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_bottom.grass",
       "species_id": 44405,
       "entity_type": "StaticObject",
       "offset": {
@@ -41146,7 +40480,6 @@
         "w": 5,
         "h": 4
       },
-      "name": "House",
       "species_id": 1003,
       "entity_type": "Building",
       "offset": {
@@ -41191,7 +40524,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -41241,7 +40573,6 @@
         "w": 4,
         "h": 3
       },
-      "name": "House",
       "species_id": 1033,
       "entity_type": "Building",
       "offset": {
@@ -41286,7 +40617,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -41336,7 +40666,6 @@
         "w": 4,
         "h": 3
       },
-      "name": "House",
       "species_id": 1033,
       "entity_type": "Building",
       "offset": {
@@ -41381,7 +40710,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -41476,7 +40804,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -41571,7 +40898,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -41616,7 +40942,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -41661,7 +40986,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -41706,7 +41030,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -41751,7 +41074,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -41796,7 +41118,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -41841,7 +41162,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -41886,7 +41206,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -41931,7 +41250,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_top.rock",
       "species_id": 44416,
       "entity_type": "StaticObject",
       "offset": {
@@ -42021,7 +41339,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.side_left.rock",
       "species_id": 44417,
       "entity_type": "StaticObject",
       "offset": {

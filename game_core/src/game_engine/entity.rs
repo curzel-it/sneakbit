@@ -33,7 +33,6 @@ pub type EntityId = u32;
 pub struct Entity {
     pub id: EntityId,
     pub frame: IntRect,  
-    pub name: String,  
     pub species_id: u32,  
     pub entity_type: EntityType,  
     pub offset: Vector2d,
@@ -46,6 +45,9 @@ pub struct Entity {
     pub destination: Option<Destination>,
     pub lock_type: LockType,
     pub original_sprite_frame: IntRect,
+
+    #[serde(skip)]
+    pub name: String,  
 
     #[serde(skip)]
     pub time_immobilized: f32,
