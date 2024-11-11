@@ -51,7 +51,7 @@ impl World {
             vec![Direction::Right, Direction::Left]
         };
 
-        let going_vertically = matches!(current_direction, Direction::Left | Direction::Right);
+        let going_vertically = matches!(current_direction, Direction::Up | Direction::Down);
         let going_up = matches!(current_direction, Direction::Up);
         let vertical = if going_up || (!going_vertically && y > self.bounds.h / 2) {
             vec![Direction::Up, Direction::Down]
@@ -70,6 +70,25 @@ impl World {
         options
     }
 
+    fn has_space_for_hero_in_direction(&self, x: i32, y: i32, direction: &Direction) -> bool {
+        let (ox, oy) = direction.as_col_row_offset();
+        
+        for i in 0..3 {
+            let nx = x + i * ox;
+            let ny = y + i * oy + if i == 0 { 1 } else { 0 }; // Adjust for initial offset on y
+    
+            if ny < 0 || ny >= self.hitmap.len() as i32 || nx < 0 || nx >= self.hitmap[0].len() as i32 {
+                continue; // Assume out of bounds as true
+            }
+    
+            if self.hitmap[ny as usize][nx as usize] {
+                return false;
+            }
+        }
+    
+        true
+    }
+    /*
     fn has_space_for_hero_in_direction(&self, x: i32, y: i32, direction: &Direction) -> bool {
         let (ox, oy) = direction.as_col_row_offset();
         let x = x + ox;
@@ -93,7 +112,7 @@ impl World {
             }
         }
         false
-    }
+    } */
 
     fn destination_x_y(&self, source: u32, original_x: i32, original_y: i32) -> (i32, i32) {
         if original_x == 0 && original_y == 0 {            

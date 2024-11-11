@@ -23,7 +23,7 @@ pub fn new_small_house(species: &Species, source_world_id: u32, x: i32, y: i32) 
 
     let mut first_floor = World::load_or_create(first_floor_id);
     first_floor.is_interior = true;
-    first_floor.bounds = IntRect::square_from_origin(30);
+    first_floor.bounds = IntRect::from_origin(30, 10);
 
     for row in 0..HOUSE_INTERIOR_ROWS {
         for col in 0..HOUSE_INTERIOR_COLUMNS {
