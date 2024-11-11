@@ -283,7 +283,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -329,7 +328,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 1006,
         "x": 16,
@@ -380,7 +378,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 1006,
         "x": 17,
@@ -431,7 +428,6 @@
         "number_of_frames": 6
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -477,7 +473,6 @@
         "number_of_frames": 6
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -523,7 +518,6 @@
         "number_of_frames": 6
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -569,7 +563,6 @@
         "number_of_frames": 6
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -615,7 +608,6 @@
         "number_of_frames": 6
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -661,7 +653,6 @@
         "number_of_frames": 6
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -707,7 +698,6 @@
         "number_of_frames": 6
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -753,7 +743,6 @@
         "number_of_frames": 6
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -799,7 +788,6 @@
         "number_of_frames": 6
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -845,7 +833,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -891,7 +878,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -937,7 +923,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -983,7 +968,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1029,7 +1013,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1075,7 +1058,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1121,7 +1103,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1167,7 +1148,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1213,7 +1193,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1259,7 +1238,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1305,7 +1283,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1351,7 +1328,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1397,7 +1373,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1443,7 +1418,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1489,7 +1463,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1535,7 +1508,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1581,7 +1553,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1627,7 +1598,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1673,7 +1643,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1719,7 +1688,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 1009,
         "x": 36,
@@ -1770,7 +1738,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1816,7 +1783,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 1009,
         "x": 129,
@@ -1867,7 +1833,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1913,7 +1878,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 10909045,
         "x": 0,
@@ -1964,7 +1928,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2010,7 +1973,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 10909075,
         "x": 0,
@@ -2061,7 +2023,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2107,7 +2068,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 10909085,
         "x": 0,
@@ -2158,7 +2118,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2204,7 +2163,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 10909100,
         "x": 0,
@@ -2255,7 +2213,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2301,7 +2258,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 10909115,
         "x": 0,
@@ -2352,7 +2308,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2398,7 +2353,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 10909130,
         "x": 0,
@@ -2449,7 +2403,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2495,7 +2448,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2541,7 +2493,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2587,7 +2538,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2633,7 +2583,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2679,7 +2628,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2725,7 +2673,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2771,7 +2718,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2817,7 +2763,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2863,7 +2808,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2909,7 +2853,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2955,7 +2898,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3001,7 +2943,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3047,7 +2988,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {

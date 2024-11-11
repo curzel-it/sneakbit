@@ -61,7 +61,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -106,7 +105,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 10909115,
         "x": 0,

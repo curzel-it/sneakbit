@@ -43,10 +43,12 @@ pub struct Entity {
     pub z_index: i32,
     pub sprite: AnimatedSprite,
     pub dialogues: EntityDialogues,
-    pub time_immobilized: f32,
     pub destination: Option<Destination>,
     pub lock_type: LockType,
     pub original_sprite_frame: IntRect,
+
+    #[serde(skip)]
+    pub time_immobilized: f32,
 
     #[serde(default)]
     pub display_conditions: Vec<DisplayCondition>,
