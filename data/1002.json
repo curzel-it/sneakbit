@@ -208,7 +208,7 @@
         "world": 1001,
         "x": 20,
         "y": 34,
-        "direction": "Unknown"
+        "direction": "Right"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -270,7 +270,7 @@
         "world": 1006,
         "x": 0,
         "y": 0,
-        "direction": "Unknown"
+        "direction": "Down"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -330,7 +330,7 @@
       "time_immobilized": 0.0,
       "destination": {
         "world": 1017,
-        "x": 77,
+        "x": 76,
         "y": 68,
         "direction": "Left"
       },

@@ -803,34 +803,40 @@
           },
           "dialogues": [
             {
-                "key": "quest.hero.5",
-                "expected_value": 1,
-                "text": "quest.hero.finale.a"
+              "key": "quest.hero.5",
+              "text": "quest.hero.finale.a",
+              "expected_value": 1,
+              "reward": null
             },
             {
-                "key": "dialogue.answer.quest.hero.1",
-                "expected_value": 1,
-                "text": "quest.hero.finale.b"
+              "key": "dialogue.answer.quest.hero.1",
+              "text": "quest.hero.finale.b",
+              "expected_value": 1,
+              "reward": null
             },
             {
-                "key": "dialogue.answer.quest.hero.finale.a",
-                "expected_value": 1,
-                "text": "quest.hero.finale.finale"
+              "key": "dialogue.answer.quest.hero.finale.a",
+              "text": "quest.hero.finale.finale",
+              "expected_value": 1,
+              "reward": null
             },
             {
-                "key": "dialogue.answer.quest.hero.finale.b",
-                "expected_value": 1,
-                "text": "quest.hero.finale.finale"
+              "key": "dialogue.answer.quest.hero.finale.b",
+              "text": "quest.hero.finale.finale",
+              "expected_value": 1,
+              "reward": null
             },
             {
-                "key": "dialogue.answer.quest.hero.finale.c",
-                "expected_value": 1,
-                "text": "quest.hero.finale.finale"
+              "key": "dialogue.answer.quest.hero.finale.c",
+              "text": "quest.hero.finale.finale",
+              "expected_value": 1,
+              "reward": null
             },
             {
-                "key": "always",
-                "expected_value": 0,
-                "text": "quest.hero.finale.c"
+              "key": "always",
+              "text": "quest.hero.finale.c",
+              "expected_value": 0,
+              "reward": null
             }
           ],
           "time_immobilized": 0.0,

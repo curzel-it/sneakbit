@@ -10,28 +10,30 @@ impl World {
         let (x, y) = self.destination_x_y(source, original_x, original_y);       
         println!("Spawning hero at {}, {}", x, y); 
         let mut entity = make_entity_by_species(SPECIES_HERO);
-
-        if y > 0 && !self.hitmap[(y + 1) as usize][x as usize] {
-            entity.frame.x = x;
-            entity.frame.y = y;
-            entity.direction = *hero_direction;
-        } else if y > 0 && !self.hitmap[(y + 2) as usize][x as usize] {
-            entity.frame.x = x;
-            entity.frame.y = y + 2;
-            entity.direction = Direction::Down;
-        } else if y >= 2 && !self.hitmap[(y - 2) as usize][x as usize] {
-            entity.frame.x = x;
-            entity.frame.y = y - 2;
-            entity.direction = Direction::Up;
-        } else {
-            entity.frame.x = x;
-            entity.frame.y = y;
-            entity.direction = Direction::Down;
-        }
+        
         if !matches!(direction, Direction::Unknown | Direction::Still) {
             entity.direction = direction;
-        }
-        
+            entity.frame.x = x;
+            entity.frame.y = y;
+        } else {
+            if y > 0 && !self.hitmap[(y + 1) as usize][x as usize] {
+                entity.frame.x = x;
+                entity.frame.y = y;
+                entity.direction = *hero_direction;
+            } else if y > 0 && !self.hitmap[(y + 2) as usize][x as usize] {
+                entity.frame.x = x;
+                entity.frame.y = y + 2;
+                entity.direction = Direction::Down;
+            } else if y >= 2 && !self.hitmap[(y - 2) as usize][x as usize] {
+                entity.frame.x = x;
+                entity.frame.y = y - 2;
+                entity.direction = Direction::Up;
+            } else {
+                entity.frame.x = x;
+                entity.frame.y = y;
+                entity.direction = Direction::Down;
+            }
+        }   
         entity.immobilize_for_seconds(0.2);
         self.cached_hero_props = entity.props();
         self.add_entity(entity);
