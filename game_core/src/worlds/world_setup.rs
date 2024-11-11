@@ -11,13 +11,14 @@ impl World {
         println!("Spawning hero at {}, {}", x, y); 
         let mut entity = make_entity_by_species(SPECIES_HERO);
         
-        entity.frame.x = x;
-        entity.frame.y = y;
-
         if !matches!(direction, Direction::Unknown | Direction::Still) {
             entity.direction = direction;
+            entity.frame.x = x;
+            entity.frame.y = y;
         } else {
             entity.direction = Direction::Down;
+            entity.frame.x = x;
+            entity.frame.y = y - 1;
 
             for new_direction in &self.likely_direction_for_hero(x, y, hero_direction) {
                 if self.has_space_for_hero_in_direction(x, y, new_direction) {
@@ -41,7 +42,6 @@ impl World {
 
     fn likely_direction_for_hero(&self, x: i32, y: i32, current_direction: &Direction) -> Vec<Direction> {
         let mut options: Vec<Direction> = vec![];
-
 
         let going_horizontally = matches!(current_direction, Direction::Left | Direction::Right);
         let going_left = matches!(current_direction, Direction::Left);
