@@ -100,7 +100,7 @@ struct WorldData {
     entities: Vec<Entity>,
 
     #[serde(default)]
-    default_biome: Biome,
+    is_interior: bool,
 
     #[serde(default)]
     light_conditions: LightConditions,
@@ -126,7 +126,7 @@ impl Serialize for World {
         state.serialize_field("biome_tiles", &self.biome_tiles)?;
         state.serialize_field("constructions_tiles", &self.constructions_tiles)?;
         state.serialize_field("entities", &entities)?;
-        state.serialize_field("default_biome", &self.default_biome)?;
+        state.serialize_field("is_interior", &self.is_interior)?;
         state.serialize_field("light_conditions", &self.light_conditions)?;
         state.serialize_field("cutscenes", &self.cutscenes)?;
         state.end()
@@ -140,7 +140,7 @@ impl<'de> Deserialize<'de> for World {
         let mut world = World::new(data.id);        
         world.revision = data.revision;
         world.ephemeral_state = data.ephemeral_state;
-        world.default_biome = data.default_biome;
+        world.is_interior = data.is_interior;
         world.light_conditions = data.light_conditions;
         world.cutscenes = data.cutscenes;
         data.entities.into_iter().for_each(|e| _ = world.add_entity(e));        

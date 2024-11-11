@@ -311,7 +311,7 @@ impl GameEngine {
     }
 
     fn center_camera_at(&mut self, x: i32, y: i32, offset: &Vector2d) {
-        if matches!(self.world.default_biome, Biome::Nothing) || self.creative_mode {
+        if self.world.is_interior || self.creative_mode {
             self.camera_viewport.center_at(&Vector2d::new(x as f32, y as f32));
             self.camera_viewport_offset = *offset;
             return

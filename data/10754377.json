@@ -962,6 +962,6 @@
       "demands_attention": false
     }
   ],
-  "default_biome": "Nothing",
+  "is_interior": true,
   "light_conditions": "Day"
 }

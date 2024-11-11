@@ -173,7 +173,7 @@
     "sheet_id": 1003
   },
   "entities": [],
-  "default_biome": "Water",
+  "is_interior": false,
   "light_conditions": "Day",
   "cutscenes": []
 }

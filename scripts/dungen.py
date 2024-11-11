@@ -235,7 +235,7 @@ world_data = {
         "sheet_id": 1003
     },
     "entities": [],
-    "default_biome": "Nothing" if args.padding == 0 else "Water",
+    "is_interior": True if args.padding == 0 else False,
     "ephemeral_state": True,
 }
 

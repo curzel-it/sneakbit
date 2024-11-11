@@ -28,7 +28,7 @@ pub struct World {
     pub is_any_arrow_key_down: bool,
     pub has_attack_key_been_pressed: bool,
     pub has_confirmation_key_been_pressed: bool,
-    pub default_biome: Biome,
+    pub is_interior: bool,
     pub pressure_plate_down_red: bool,
     pub pressure_plate_down_green: bool,
     pub pressure_plate_down_blue: bool,
@@ -63,7 +63,7 @@ impl World {
             is_any_arrow_key_down: false,
             has_attack_key_been_pressed: false,
             has_confirmation_key_been_pressed: false,
-            default_biome: Biome::Nothing,
+            is_interior: false,
             pressure_plate_down_red: false,
             pressure_plate_down_green: false,
             pressure_plate_down_blue: false,
@@ -182,20 +182,6 @@ impl World {
 
     pub fn apply_state_updates(&mut self, updates: Vec<WorldStateUpdate>) -> Vec<EngineStateUpdate> {
         updates.into_iter().filter_map(|u| self.apply_state_update(u)).collect()
-    }
-
-    pub fn default_tile(&self) -> BiomeTile {
-        let mut tile = BiomeTile {
-            tile_type: self.default_biome,
-            tile_up_type: self.default_biome,
-            tile_right_type: self.default_biome,
-            tile_down_type: self.default_biome,
-            tile_left_type: self.default_biome,
-            texture_offset_x: 0,
-            texture_offset_y: 0
-        };
-        tile.setup_neighbors(self.default_biome, self.default_biome, self.default_biome, self.default_biome);
-        tile
     }
 
     fn log_update(&self, update: &WorldStateUpdate) {

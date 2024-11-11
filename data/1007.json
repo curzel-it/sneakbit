@@ -16027,6 +16027,6 @@
       "vanishes_after_dialogue": false
     }
   ],
-  "default_biome": "Nothing",
+  "is_interior": true,
   "light_conditions": "Day"
 }

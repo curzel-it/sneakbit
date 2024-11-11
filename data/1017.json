@@ -736,7 +736,7 @@
       "vanishes_after_dialogue": false
     }
   ],
-  "default_biome": "Water",
+  "is_interior": false,
   "light_conditions": "Day",
   "cutscenes": [
     {

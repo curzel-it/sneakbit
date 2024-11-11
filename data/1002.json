@@ -176,7 +176,7 @@
     {
       "id": 10755338,
       "frame": {
-        "x": 79,
+        "x": 82,
         "y": 45,
         "w": 1,
         "h": 1
@@ -2080,7 +2080,7 @@
       "vanishes_after_dialogue": false
     }
   ],
-  "default_biome": "Water",
+  "is_interior": false,
   "light_conditions": "Day",
   "cutscenes": []
 }

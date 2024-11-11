@@ -248,11 +248,6 @@ pub extern "C" fn camera_viewport_offset() -> Vector2d {
     engine().camera_viewport_offset
 }
 
-#[no_mangle]
-pub extern "C" fn current_world_default_tile() -> BiomeTile {
-    engine().world.default_tile()
-}
-
 fn to_string(value: *const c_char) -> String {
     unsafe { CStr::from_ptr(value) }.to_str().unwrap().to_owned()
 }
