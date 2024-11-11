@@ -72,7 +72,7 @@ pub struct Entity {
     #[serde(default="unlimited_lifespan")]
     pub remaining_lifespan: f32,  
 
-    #[serde(default)]
+    #[serde(skip)]
     pub shooting_cooldown_remaining: f32,  
 
     #[serde(skip)]

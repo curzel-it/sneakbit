@@ -137,7 +137,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -189,7 +188,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -237,7 +235,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -285,7 +282,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -333,7 +329,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -381,7 +376,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -429,7 +423,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -477,7 +470,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -525,7 +517,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -573,7 +564,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -621,7 +611,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -669,7 +658,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -717,7 +705,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -765,7 +752,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -813,7 +799,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -861,7 +846,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -909,7 +893,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -957,7 +940,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1005,7 +987,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1053,7 +1034,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1101,7 +1081,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1149,7 +1128,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1197,7 +1175,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1245,7 +1222,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1293,7 +1269,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1341,7 +1316,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1389,7 +1363,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1437,7 +1410,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1485,7 +1457,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1533,7 +1504,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1581,7 +1551,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1629,7 +1598,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1677,7 +1645,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1725,7 +1692,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1773,7 +1739,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1821,7 +1786,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1869,7 +1833,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1917,7 +1880,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -1965,7 +1927,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2013,7 +1974,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2061,7 +2021,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2109,7 +2068,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -2157,7 +2115,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2205,7 +2162,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2253,7 +2209,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2301,7 +2256,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2349,7 +2303,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2397,7 +2350,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2445,7 +2397,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2493,7 +2444,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2541,7 +2491,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2589,7 +2538,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2637,7 +2585,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2685,7 +2632,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2733,7 +2679,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2781,7 +2726,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2829,7 +2773,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2877,7 +2820,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2925,7 +2867,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -2973,7 +2914,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3021,7 +2961,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -3069,7 +3008,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3117,7 +3055,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3165,7 +3102,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3213,7 +3149,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3261,7 +3196,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -3309,7 +3243,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": true,
       "demands_attention": false
     },
@@ -3357,7 +3290,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3405,7 +3337,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3453,7 +3384,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3501,7 +3431,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3549,7 +3478,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3597,7 +3525,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3645,7 +3572,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3693,7 +3619,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3741,7 +3666,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3789,7 +3713,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3837,7 +3760,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3885,7 +3807,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3933,7 +3854,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -3981,7 +3901,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4029,7 +3948,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4077,7 +3995,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4125,7 +4042,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4173,7 +4089,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4221,7 +4136,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4269,7 +4183,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4317,7 +4230,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4365,7 +4277,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4413,7 +4324,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4461,7 +4371,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4509,7 +4418,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4557,7 +4465,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4605,7 +4512,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4653,7 +4559,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4701,7 +4606,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4749,7 +4653,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4797,7 +4700,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4845,7 +4747,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4893,7 +4794,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4941,7 +4841,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -4989,7 +4888,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -5037,7 +4935,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -5085,7 +4982,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     },
@@ -5133,7 +5029,6 @@
       "speed_multiplier": 1.0,
       "contents": null,
       "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
       "is_invulnerable": false,
       "demands_attention": false
     }
