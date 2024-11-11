@@ -3277,5 +3277,93 @@
         "sprite_sheet_id": 1009,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
+    },
+    {
+        "id": 1100,
+        "name": "npc.name.middle_aged.man.long_silver_hair",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            16
+        ],
+        "sprite_frame": {
+            "x": 72,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1101,
+        "name": "npc.name.girl.brown",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            17
+        ],
+        "sprite_frame": {
+            "x": 76,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1102,
+        "name": "npc.name.soldier.female.red",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            18
+        ],
+        "sprite_frame": {
+            "x": 80,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1103,
+        "name": "npc.name.girl.green",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            19
+        ],
+        "sprite_frame": {
+            "x": 84,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
     }
 ]
