@@ -1078,54 +1078,8 @@
         "movement_directions": "Free"
     },
     {
-        "id": 4002,
-        "name": "npc.name.zombie",
-        "entity_type": "Npc",
-        "z_index": 150,
-        "base_speed": 1.5,
-        "is_rigid": false,
-        "melee_attacks_hero": true,
-        "inventory_texture_offset": [
-            2,
-            7
-        ],
-        "sprite_frame": {
-            "x": 24,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "FindHero"
-    },
-    {
-        "id": 4003,
-        "name": "npc.name.ghost",
-        "entity_type": "Npc",
-        "z_index": 150,
-        "base_speed": 2.5,
-        "melee_attacks_hero": true,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            2,
-            6
-        ],
-        "sprite_frame": {
-            "x": 20,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "FindHero"
-    },
-    {
         "id": 4004,
-        "name": "npc.name.homunculus",
+        "name": "npc.name.monster",
         "entity_type": "Npc",
         "z_index": 150,
         "base_speed": 2.5,
@@ -1332,29 +1286,6 @@
             7000,
             7000
         ]
-    },
-    {
-        "id": 8000,
-        "name": "objects.name.pill.red",
-        "is_invulnerable": true,
-        "entity_type": "PickableObject",
-        "z_index": 50,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            7,
-            2
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 11,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 5,
-        "lock_type": "None",
-        "is_consumable": true
     },
     {
         "id": 9000,
@@ -3365,5 +3296,49 @@
         "sprite_sheet_id": 1009,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
+    },
+    {
+        "id": 1104,
+        "name": "npc.name.snail",
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 0.5,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            8,
+            20
+        ],
+        "sprite_frame": {
+            "x": 12,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "Free"
+    },
+    {
+        "id": 1105,
+        "name": "npc.name.piglet",
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 1.5,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            8,
+            21
+        ],
+        "sprite_frame": {
+            "x": 16,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "Free"
     }
 ]

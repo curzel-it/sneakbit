@@ -1646,7 +1646,6 @@
         "w": 2,
         "h": 1
       },
-      "name": "Large Sign",
       "species_id": 10001,
       "entity_type": "StaticObject",
       "offset": {
@@ -1681,6 +1680,51 @@
       "is_consumable": false,
       "contents": "1002.entrance",
       "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11358359,
+      "frame": {
+        "x": 54,
+        "y": 40,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1104,
+      "entity_type": "Npc",
+      "offset": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "direction": "Down",
+      "current_speed": 0.5,
+      "is_rigid": false,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 12,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 12,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
     }
