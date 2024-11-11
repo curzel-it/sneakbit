@@ -296,7 +296,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -352,7 +351,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -413,7 +411,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -469,7 +466,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -525,7 +521,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -581,7 +576,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -637,7 +631,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -693,7 +686,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -749,7 +741,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -805,7 +796,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -861,7 +851,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -917,7 +906,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -973,7 +961,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1029,7 +1016,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1085,7 +1071,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1141,7 +1126,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1197,7 +1181,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1253,7 +1236,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1309,7 +1291,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1365,7 +1346,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1421,7 +1401,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1477,7 +1456,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1533,7 +1511,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1589,7 +1566,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1645,7 +1621,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1701,7 +1676,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1757,7 +1731,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1813,7 +1786,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1869,7 +1841,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1925,7 +1896,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -1981,7 +1951,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2037,7 +2006,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2093,7 +2061,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2149,7 +2116,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2205,7 +2171,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2261,7 +2226,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2317,7 +2281,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2373,7 +2336,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2429,7 +2391,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2485,7 +2446,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2541,7 +2501,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2597,7 +2556,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2653,7 +2611,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2709,7 +2666,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2765,7 +2721,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2821,7 +2776,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2877,7 +2831,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2933,7 +2886,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -2989,7 +2941,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3045,7 +2996,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3101,7 +3051,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3157,7 +3106,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3213,7 +3161,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3269,7 +3216,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3325,7 +3271,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3381,7 +3326,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3437,7 +3381,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3493,7 +3436,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3549,7 +3491,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3605,7 +3546,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3661,7 +3601,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3717,7 +3656,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3773,7 +3711,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3829,7 +3766,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3885,7 +3821,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3941,7 +3876,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -3997,7 +3931,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4053,7 +3986,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4109,7 +4041,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4165,7 +4096,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4221,7 +4151,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4277,7 +4206,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4333,7 +4261,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4389,7 +4316,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4445,7 +4371,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4501,7 +4426,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4557,7 +4481,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4613,7 +4536,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4669,7 +4591,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4725,7 +4646,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4781,7 +4701,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4837,7 +4756,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4893,7 +4811,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -4949,7 +4866,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5005,7 +4921,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5061,7 +4976,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5117,7 +5031,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5173,7 +5086,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5229,7 +5141,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5285,7 +5196,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5341,7 +5251,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5397,7 +5306,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5453,7 +5361,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5509,7 +5416,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5565,7 +5471,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5621,7 +5526,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5677,7 +5581,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5733,7 +5636,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5789,7 +5691,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5845,7 +5746,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5901,7 +5801,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -5957,7 +5856,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6013,7 +5911,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6069,7 +5966,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6125,7 +6021,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6181,7 +6076,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6237,7 +6131,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6293,7 +6186,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6349,7 +6241,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6405,7 +6296,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6461,7 +6351,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6517,7 +6406,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6573,7 +6461,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6629,7 +6516,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6685,7 +6571,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6741,7 +6626,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6797,7 +6681,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6853,7 +6736,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6909,7 +6791,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -6965,7 +6846,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7021,7 +6901,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7077,7 +6956,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7133,7 +7011,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7189,7 +7066,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7245,7 +7121,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7301,7 +7176,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7357,7 +7231,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7413,7 +7286,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7469,7 +7341,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7525,7 +7396,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7581,7 +7451,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7637,7 +7506,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7693,7 +7561,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7749,7 +7616,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7805,7 +7671,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7861,7 +7726,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7917,7 +7781,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -7973,7 +7836,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8029,7 +7891,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8085,7 +7946,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8141,7 +8001,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8197,7 +8056,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8253,7 +8111,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8309,7 +8166,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8365,7 +8221,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8421,7 +8276,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8477,7 +8331,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8533,7 +8386,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8589,7 +8441,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8645,7 +8496,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8701,7 +8551,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8757,7 +8606,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8813,7 +8661,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8869,7 +8716,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8925,7 +8771,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": true,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -8981,7 +8826,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9037,7 +8881,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9093,7 +8936,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9149,7 +8991,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9205,7 +9046,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9261,7 +9101,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9317,7 +9156,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9373,7 +9211,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9429,7 +9266,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9485,7 +9321,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9541,7 +9376,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9597,7 +9431,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9653,7 +9486,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9709,7 +9541,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9765,7 +9596,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9821,7 +9651,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9877,7 +9706,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9933,7 +9761,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -9989,7 +9816,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10045,7 +9871,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10101,7 +9926,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10157,7 +9981,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10213,7 +10036,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10269,7 +10091,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10325,7 +10146,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10381,7 +10201,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10437,7 +10256,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10493,7 +10311,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10549,7 +10366,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10605,7 +10421,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10661,7 +10476,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10717,7 +10531,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10773,7 +10586,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10829,7 +10641,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10885,7 +10696,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10941,7 +10751,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -10997,7 +10806,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11053,7 +10861,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11109,7 +10916,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11165,7 +10971,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11221,7 +11026,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11277,7 +11081,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11333,7 +11136,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11389,7 +11191,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11445,7 +11246,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11501,7 +11301,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11557,7 +11356,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11613,7 +11411,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11669,7 +11466,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11725,7 +11521,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11781,7 +11576,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11837,7 +11631,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11893,7 +11686,6 @@
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -11949,7 +11741,6 @@
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12005,7 +11796,6 @@
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12061,7 +11851,6 @@
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12117,7 +11906,6 @@
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12173,7 +11961,6 @@
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12229,7 +12016,6 @@
       "is_consumable": true,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12285,7 +12071,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12341,7 +12126,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12397,7 +12181,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12453,7 +12236,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12509,7 +12291,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12565,7 +12346,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12621,7 +12401,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12677,7 +12456,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12733,7 +12511,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12789,7 +12566,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12845,7 +12621,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12901,7 +12676,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -12957,7 +12731,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -13013,7 +12786,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -13069,7 +12841,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -13125,7 +12896,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -13181,7 +12951,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -13237,7 +13006,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -13293,7 +13061,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -13349,7 +13116,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -13405,7 +13171,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0
@@ -13461,7 +13226,6 @@
       "is_consumable": false,
       "speed_multiplier": 1.0,
       "melee_attacks_hero": false,
-      "is_dying": false,
       "latest_movement": [
         0,
         0

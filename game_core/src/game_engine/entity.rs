@@ -63,7 +63,7 @@ pub struct Entity {
     #[serde(default)]
     pub melee_attacks_hero: bool,
     
-    #[serde(default)]
+    #[serde(skip)]
     pub is_dying: bool,
 
     #[serde(default)]
