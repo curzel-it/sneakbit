@@ -150,12 +150,12 @@ impl Entity {
     }
 
     pub fn should_be_visible(&self, world: &World) -> bool {
-        self.display_conditions
-            .iter()
-            .filter(|c| key_value_matches(&c.key, world, c.expected_value))
-            .map(|c| c.visible)
-            .last()
-            .unwrap_or(true)
+        for condition in &self.display_conditions{
+            if key_value_matches(&condition.key, world, condition.expected_value) {
+                return condition.visible
+            }
+        }
+        true
     }
 
     pub fn sprite_sheet(&self) -> u32 {

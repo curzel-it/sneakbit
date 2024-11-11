@@ -769,7 +769,33 @@
         },
         "number_of_frames": 4
       },
-      "dialogues": [],
+      "dialogues": [
+        {
+            "key": "npc_interactions.11114092",
+            "expected_value": 1,
+            "text": "quest.hero.finale.finale"
+        },
+        {
+            "key": "dialogue.answer.quest.hero.3",
+            "expected_value": 1,
+            "text": "quest.hero.4"
+        },
+        {
+            "key": "dialogue.answer.quest.hero.2",
+            "expected_value": 1,
+            "text": "quest.hero.3"
+        },
+        {
+            "key": "dialogue.answer.quest.hero.1",
+            "expected_value": 1,
+            "text": "quest.hero.2"
+        },
+        {
+            "key": "always",
+            "expected_value": 0,
+            "text": "quest.hero.1"
+        }
+      ],
       "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
@@ -779,7 +805,18 @@
         "w": 1,
         "h": 2
       },
-      "display_conditions": [],
+      "display_conditions": [
+        {
+            "key": "npc_interactions.11114092",
+            "expected_value": 0,
+            "visible": true
+        },
+        {
+            "key": "always",
+            "expected_value": 0,
+            "visible": false
+        }        
+      ],
       "movement_directions": "None",
       "is_consumable": false,
       "speed_multiplier": 1.0,

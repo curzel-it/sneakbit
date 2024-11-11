@@ -455,7 +455,7 @@
       "destination": {
         "world": 1003,
         "x": 51,
-        "y": 45,
+        "y": 42,
         "direction": "Up"
       },
       "lock_type": "None",

@@ -8,7 +8,6 @@ impl World {
         self.update_hitmaps();
 
         let (x, y) = self.destination_x_y(source, original_x, original_y);       
-        println!("Spawning hero at {}, {}", x, y); 
         let mut entity = make_entity_by_species(SPECIES_HERO);
         
         if !matches!(direction, Direction::Unknown | Direction::Still) {
@@ -30,6 +29,7 @@ impl World {
                 }
             }
         }   
+        println!("Spawning hero at {}, {}", entity.frame.x, entity.frame.y); 
         entity.immobilize_for_seconds(0.2);
         self.cached_hero_props = entity.props();
         self.add_entity(entity);
