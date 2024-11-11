@@ -75,7 +75,7 @@ pub struct Entity {
     #[serde(default)]
     pub shooting_cooldown_remaining: f32,  
 
-    #[serde(default)]
+    #[serde(skip)]
     pub parent_id: u32,  
 
     #[serde(default)]
