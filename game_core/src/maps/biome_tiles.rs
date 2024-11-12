@@ -118,7 +118,6 @@ impl BiomeTile {
                 (Biome::DarkSand, Biome::Snow) => 0,
                 (Biome::Desert, Biome::Snow) => 0,
                 (Biome::Desert, Biome::DarkSand) => 0,
-                (Biome::Rock, Biome::Snow) => 0,
                 (Biome::Rock, Biome::Desert) => 0,
                 (Biome::Rock, Biome::DarkSand) => 0,
                 (Biome::DarkRock, Biome::Snow) => 0,
