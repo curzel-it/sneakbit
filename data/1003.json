@@ -391,7 +391,6 @@
         "w": 2,
         "h": 2
       },
-      "name": "Fountain",
       "species_id": 11002,
       "entity_type": "StaticObject",
       "offset": {
@@ -437,7 +436,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Old Man",
       "species_id": 3005,
       "entity_type": "Npc",
       "offset": {
@@ -483,7 +481,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Girl",
       "species_id": 1036,
       "entity_type": "Npc",
       "offset": {
@@ -529,7 +526,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Girl",
       "species_id": 1036,
       "entity_type": "Npc",
       "offset": {
@@ -575,7 +571,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Girl",
       "species_id": 1036,
       "entity_type": "Npc",
       "offset": {
@@ -621,7 +616,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "npc.name.man.punk.1",
       "species_id": 1080,
       "entity_type": "Npc",
       "offset": {
@@ -644,29 +638,34 @@
       },
       "dialogues": [
         {
-            "key": "npc_interactions.11114092",
-            "expected_value": 1,
-            "text": "quest.hero.finale.finale"
+          "key": "npc_interactions.11114092",
+          "text": "quest.hero.finale.finale",
+          "expected_value": 1,
+          "reward": null
         },
         {
-            "key": "dialogue.answer.quest.hero.3",
-            "expected_value": 1,
-            "text": "quest.hero.4"
+          "key": "dialogue.answer.quest.hero.3",
+          "text": "quest.hero.4",
+          "expected_value": 1,
+          "reward": null
         },
         {
-            "key": "dialogue.answer.quest.hero.2",
-            "expected_value": 1,
-            "text": "quest.hero.3"
+          "key": "dialogue.answer.quest.hero.2",
+          "text": "quest.hero.3",
+          "expected_value": 1,
+          "reward": null
         },
         {
-            "key": "dialogue.answer.quest.hero.1",
-            "expected_value": 1,
-            "text": "quest.hero.2"
+          "key": "dialogue.answer.quest.hero.1",
+          "text": "quest.hero.2",
+          "expected_value": 1,
+          "reward": null
         },
         {
-            "key": "always",
-            "expected_value": 0,
-            "text": "quest.hero.1"
+          "key": "always",
+          "text": "quest.hero.1",
+          "expected_value": 0,
+          "reward": null
         }
       ],
       "destination": null,
@@ -679,15 +678,15 @@
       },
       "display_conditions": [
         {
-            "key": "npc_interactions.11114092",
-            "expected_value": 0,
-            "visible": true
+          "key": "npc_interactions.11114092",
+          "expected_value": 0,
+          "visible": true
         },
         {
-            "key": "always",
-            "expected_value": 0,
-            "visible": false
-        }        
+          "key": "always",
+          "expected_value": 0,
+          "visible": false
+        }
       ],
       "movement_directions": "None",
       "is_consumable": false,
@@ -704,7 +703,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -750,7 +748,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -796,7 +793,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -1567,7 +1563,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Brown Seat",
       "species_id": 1012,
       "entity_type": "StaticObject",
       "offset": {
@@ -1838,7 +1833,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -1884,7 +1878,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -1930,7 +1923,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -2021,7 +2013,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -2067,7 +2058,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -2113,7 +2103,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -2249,7 +2238,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -2295,7 +2283,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -2341,7 +2328,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -2432,7 +2418,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -2478,7 +2463,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -2524,7 +2508,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -3740,7 +3723,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -4101,7 +4083,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -4327,7 +4308,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -4643,7 +4623,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -4959,7 +4938,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -5140,7 +5118,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -5231,7 +5208,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Brown Seat",
       "species_id": 1012,
       "entity_type": "StaticObject",
       "offset": {
@@ -5322,7 +5298,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -5368,7 +5343,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -5414,7 +5388,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -5460,7 +5433,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -5506,7 +5478,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -5552,7 +5523,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -5598,7 +5568,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -5644,7 +5613,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -5690,7 +5658,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -5781,7 +5748,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -5872,7 +5838,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -5918,7 +5883,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -6369,7 +6333,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -6505,7 +6468,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -6911,7 +6873,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -7002,7 +6963,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -7048,7 +7008,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -7094,7 +7053,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -7770,7 +7728,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -7861,7 +7818,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -7907,7 +7863,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -7953,7 +7908,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -8089,7 +8043,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -8135,7 +8088,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -8226,7 +8178,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -8272,7 +8223,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -8363,7 +8313,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -8454,7 +8403,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -8500,7 +8448,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -8546,7 +8493,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -8727,7 +8673,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -8773,7 +8718,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -8999,7 +8943,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Brown Seat",
       "species_id": 1012,
       "entity_type": "StaticObject",
       "offset": {
@@ -9090,7 +9033,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -9181,7 +9123,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -9227,7 +9168,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -9318,7 +9258,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -9409,7 +9348,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Brown Seat",
       "species_id": 1012,
       "entity_type": "StaticObject",
       "offset": {
@@ -10310,7 +10248,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -10896,7 +10833,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -10987,7 +10923,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -11033,7 +10968,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -11079,7 +11013,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -11125,7 +11058,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -11171,7 +11103,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -11217,7 +11148,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -11263,7 +11193,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -11309,7 +11238,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -11355,7 +11283,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -11401,7 +11328,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -11447,7 +11373,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -11493,7 +11418,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -11539,7 +11463,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -12215,7 +12138,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -13291,19 +13213,18 @@
     {
       "id": 11114106,
       "frame": {
-        "x": 33,
-        "y": 6,
+        "x": 27,
+        "y": 9,
         "w": 1,
         "h": 1
       },
-      "name": "Rail Cart",
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": -3.201965,
+        "x": 0.69177604,
         "y": 0.0
       },
-      "direction": "Left",
+      "direction": "Right",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -14332,7 +14253,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -14378,7 +14298,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -14424,7 +14343,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -14470,7 +14388,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -14516,7 +14433,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -15192,7 +15108,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -15238,7 +15153,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -15284,7 +15198,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -15330,7 +15243,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -15376,7 +15288,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -15422,7 +15333,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -15468,7 +15378,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -15559,7 +15468,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -15605,7 +15513,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -15651,7 +15558,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -15697,7 +15603,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -15743,7 +15648,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -15789,7 +15693,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -15880,7 +15783,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -15926,7 +15828,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -16107,7 +16008,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -16153,7 +16053,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -16199,7 +16098,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -16245,7 +16143,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -16876,7 +16773,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -16922,7 +16818,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -16968,7 +16863,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -17014,7 +16908,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -17060,7 +16953,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -17106,7 +16998,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -17152,7 +17043,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -17198,7 +17088,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -18504,7 +18393,6 @@
         "w": 2,
         "h": 2
       },
-      "name": "Table",
       "species_id": 1016,
       "entity_type": "StaticObject",
       "offset": {
@@ -18640,7 +18528,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -18866,7 +18753,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -19137,7 +19023,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -19273,7 +19158,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -19319,7 +19203,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -19365,7 +19248,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -19411,7 +19293,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -19457,7 +19338,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -19503,7 +19383,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -19549,7 +19428,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -19595,7 +19473,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -19641,7 +19518,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -19687,7 +19563,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -19733,7 +19608,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -19779,7 +19653,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -19915,7 +19788,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -20006,7 +19878,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -20052,7 +19923,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -20098,7 +19968,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -20189,7 +20058,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -20370,7 +20238,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -20416,7 +20283,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -20462,7 +20328,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -20653,7 +20518,6 @@
         "w": 2,
         "h": 1
       },
-      "name": "Large Sign",
       "species_id": 10001,
       "entity_type": "StaticObject",
       "offset": {
@@ -20969,7 +20833,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -21015,7 +20878,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -21061,7 +20923,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -21107,7 +20968,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -21153,7 +21013,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -21199,7 +21058,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -21380,7 +21238,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -21426,7 +21283,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -21472,7 +21328,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -21708,7 +21563,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -21754,7 +21608,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -21800,7 +21653,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -22971,7 +22823,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -23017,7 +22868,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -23063,7 +22913,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -23109,7 +22958,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -23155,7 +23003,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -23201,7 +23048,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -23247,7 +23093,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -23293,7 +23138,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -23339,7 +23183,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -23385,7 +23228,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -23431,7 +23273,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -23477,7 +23318,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -23523,7 +23363,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -23704,7 +23543,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -23750,7 +23588,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -23796,7 +23633,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -23887,7 +23723,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -23933,7 +23768,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -23979,7 +23813,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -24025,7 +23858,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -24836,7 +24668,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -25737,7 +25568,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -25783,7 +25613,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -25829,7 +25658,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -25875,7 +25703,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -25921,7 +25748,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -25967,7 +25793,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -26013,7 +25838,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -26059,7 +25883,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -26105,7 +25928,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -26151,7 +25973,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {
@@ -26197,7 +26018,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -26243,7 +26063,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -26334,7 +26153,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -26785,7 +26603,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_left.sand",
       "species_id": 44424,
       "entity_type": "StaticObject",
       "offset": {
@@ -26831,7 +26648,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_right.sand",
       "species_id": 44422,
       "entity_type": "StaticObject",
       "offset": {
@@ -26877,7 +26693,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.top_left.sand",
       "species_id": 44421,
       "entity_type": "StaticObject",
       "offset": {
@@ -26923,7 +26738,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.slope.bottom_right.sand",
       "species_id": 44423,
       "entity_type": "StaticObject",
       "offset": {

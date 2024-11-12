@@ -261,7 +261,6 @@
         "w": 2,
         "h": 2
       },
-      "name": "objects.boat.small",
       "species_id": 1078,
       "entity_type": "StaticObject",
       "offset": {
@@ -291,6 +290,7 @@
         "w": 2,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -340,6 +340,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -389,6 +390,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -404,7 +406,6 @@
         "w": 3,
         "h": 5
       },
-      "name": "objects.wind_turbine",
       "species_id": 1079,
       "entity_type": "StaticObject",
       "offset": {
@@ -434,6 +435,7 @@
         "w": 3,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -449,7 +451,6 @@
         "w": 3,
         "h": 5
       },
-      "name": "objects.wind_turbine",
       "species_id": 1079,
       "entity_type": "StaticObject",
       "offset": {
@@ -479,6 +480,7 @@
         "w": 3,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -494,7 +496,6 @@
         "w": 3,
         "h": 5
       },
-      "name": "objects.wind_turbine",
       "species_id": 1079,
       "entity_type": "StaticObject",
       "offset": {
@@ -524,6 +525,7 @@
         "w": 3,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -539,7 +541,6 @@
         "w": 3,
         "h": 5
       },
-      "name": "objects.wind_turbine",
       "species_id": 1079,
       "entity_type": "StaticObject",
       "offset": {
@@ -569,6 +570,7 @@
         "w": 3,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -584,7 +586,6 @@
         "w": 3,
         "h": 5
       },
-      "name": "objects.wind_turbine",
       "species_id": 1079,
       "entity_type": "StaticObject",
       "offset": {
@@ -614,6 +615,7 @@
         "w": 3,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -629,7 +631,6 @@
         "w": 3,
         "h": 5
       },
-      "name": "objects.wind_turbine",
       "species_id": 1079,
       "entity_type": "StaticObject",
       "offset": {
@@ -659,6 +660,7 @@
         "w": 3,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -674,7 +676,6 @@
         "w": 3,
         "h": 5
       },
-      "name": "objects.wind_turbine",
       "species_id": 1079,
       "entity_type": "StaticObject",
       "offset": {
@@ -704,6 +705,7 @@
         "w": 3,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -719,7 +721,6 @@
         "w": 3,
         "h": 5
       },
-      "name": "objects.wind_turbine",
       "species_id": 1079,
       "entity_type": "StaticObject",
       "offset": {
@@ -749,6 +750,7 @@
         "w": 3,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -764,7 +766,6 @@
         "w": 3,
         "h": 5
       },
-      "name": "objects.wind_turbine",
       "species_id": 1079,
       "entity_type": "StaticObject",
       "offset": {
@@ -794,6 +795,7 @@
         "w": 3,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -809,7 +811,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -839,6 +840,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -854,7 +856,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -884,6 +885,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -899,7 +901,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -929,6 +930,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -944,7 +946,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -974,6 +975,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -989,7 +991,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1019,6 +1020,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1034,7 +1036,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1064,6 +1065,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1079,7 +1081,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1109,6 +1110,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1124,7 +1126,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1154,6 +1155,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1169,7 +1171,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1199,6 +1200,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1214,7 +1216,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1244,6 +1245,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1259,7 +1261,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1289,6 +1290,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1304,7 +1306,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1334,6 +1335,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1349,7 +1351,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1379,6 +1380,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1394,7 +1396,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1424,6 +1425,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1439,7 +1441,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1469,6 +1470,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1484,7 +1486,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1514,6 +1515,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1529,7 +1531,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1559,6 +1560,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1574,7 +1576,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.power.kidneys",
       "species_id": 1075,
       "entity_type": "StaticObject",
       "offset": {
@@ -1604,6 +1605,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1619,7 +1621,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Stairs (Down)",
       "species_id": 1011,
       "entity_type": "StaticObject",
       "offset": {
@@ -1649,6 +1650,7 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1698,6 +1700,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1713,7 +1716,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Stairs (Down)",
       "species_id": 1011,
       "entity_type": "StaticObject",
       "offset": {
@@ -1743,6 +1745,7 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1766,7 +1769,7 @@
       },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
@@ -1792,6 +1795,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1836,6 +1840,7 @@
         "w": 5,
         "h": 4
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1885,6 +1890,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1929,6 +1935,7 @@
         "w": 5,
         "h": 4
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1978,6 +1985,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -1993,7 +2001,6 @@
         "w": 5,
         "h": 5
       },
-      "name": "House (two stories)",
       "species_id": 1007,
       "entity_type": "Building",
       "offset": {
@@ -2023,6 +2030,7 @@
         "w": 5,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2072,6 +2080,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2087,7 +2096,6 @@
         "w": 5,
         "h": 5
       },
-      "name": "House (two stories)",
       "species_id": 1007,
       "entity_type": "Building",
       "offset": {
@@ -2117,6 +2125,7 @@
         "w": 5,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2166,6 +2175,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2181,7 +2191,6 @@
         "w": 5,
         "h": 5
       },
-      "name": "House (two stories)",
       "species_id": 1007,
       "entity_type": "Building",
       "offset": {
@@ -2211,6 +2220,7 @@
         "w": 5,
         "h": 5
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2260,6 +2270,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2304,6 +2315,7 @@
         "w": 5,
         "h": 4
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2353,6 +2365,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2368,7 +2381,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Old Lady",
       "species_id": 3006,
       "entity_type": "Npc",
       "offset": {
@@ -2398,6 +2410,7 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2413,7 +2426,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Old Man",
       "species_id": 3005,
       "entity_type": "Npc",
       "offset": {
@@ -2443,6 +2455,7 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2458,7 +2471,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Shop Guy",
       "species_id": 3008,
       "entity_type": "Npc",
       "offset": {
@@ -2488,6 +2500,7 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2503,7 +2516,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -2533,6 +2545,7 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2548,7 +2561,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -2578,6 +2590,7 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2593,7 +2606,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.power.tower.on",
       "species_id": 1077,
       "entity_type": "StaticObject",
       "offset": {
@@ -2623,6 +2635,7 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2633,19 +2646,18 @@
     {
       "id": 10909152,
       "frame": {
-        "x": 24,
-        "y": 40,
+        "x": 27,
+        "y": 39,
         "w": 1,
         "h": 1
       },
-      "name": "Rail Cart",
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": 0.0,
+        "x": 14.720628,
         "y": 0.0
       },
-      "direction": "Up",
+      "direction": "Right",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -2668,6 +2680,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": true,
       "contents": null,
@@ -2683,11 +2696,10 @@
         "w": 1,
         "h": 1
       },
-      "name": "Rail Cart",
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": 0.41655332,
+        "x": 6.523824,
         "y": 0.0
       },
       "direction": "Right",
@@ -2713,6 +2725,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": true,
       "contents": null,
@@ -2723,19 +2736,18 @@
     {
       "id": 10909150,
       "frame": {
-        "x": 74,
-        "y": 82,
+        "x": 73,
+        "y": 79,
         "w": 1,
         "h": 1
       },
-      "name": "Rail Cart",
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": 0.0,
-        "y": 13.709695
+        "x": -7.6777554,
+        "y": 0.0
       },
-      "direction": "Down",
+      "direction": "Left",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -2758,6 +2770,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": true,
       "contents": null,
@@ -2768,19 +2781,18 @@
     {
       "id": 10909151,
       "frame": {
-        "x": 62,
+        "x": 63,
         "y": 53,
         "w": 1,
         "h": 1
       },
-      "name": "Rail Cart",
       "species_id": 9000,
       "entity_type": "RailObject",
       "offset": {
-        "x": 13.709695,
+        "x": -7.6777554,
         "y": 0.0
       },
-      "direction": "Right",
+      "direction": "Left",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -2803,6 +2815,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": true,
       "contents": null,
@@ -2818,7 +2831,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "npc.name.man.doctor.black",
       "species_id": 1082,
       "entity_type": "Npc",
       "offset": {
@@ -2848,6 +2860,7 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2863,7 +2876,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "npc.name.man.generic.black",
       "species_id": 1081,
       "entity_type": "Npc",
       "offset": {
@@ -2893,6 +2905,7 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -2908,7 +2921,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "npc.name.cat",
       "species_id": 4005,
       "entity_type": "Npc",
       "offset": {
@@ -2938,6 +2950,7 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "Free",
       "is_consumable": false,
       "contents": null,
@@ -2953,7 +2966,6 @@
         "w": 2,
         "h": 1
       },
-      "name": "Large Sign",
       "species_id": 10001,
       "entity_type": "StaticObject",
       "offset": {
@@ -2983,6 +2995,7 @@
         "w": 2,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": "1008.entrance",
@@ -2992,5 +3005,6 @@
     }
   ],
   "is_interior": false,
-  "light_conditions": "Day"
+  "light_conditions": "Day",
+  "cutscenes": []
 }

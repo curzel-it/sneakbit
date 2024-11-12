@@ -111,7 +111,7 @@ impl BiomeTile {
                 (Biome::DarkGrass, Biome::DarkRock) => 0,
                 (Biome::DarkGrass, Biome::Snow) => 0,
                 (Biome::Grass, Biome::DarkGrass) => 0,
-                (Biome::Snow, Biome::Rock) => 0,
+                (Biome::Rock, Biome::Snow) => 0,
                 (Biome::Water, Biome::DarkRock) => 0,
                 (Biome::DarkWater, Biome::DarkRock) => 0,
                 (Biome::Lava, Biome::DarkRock) => 0,
