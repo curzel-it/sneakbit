@@ -6,8 +6,10 @@ pub type EntityDialogues = Vec<Dialogue>;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Dialogue {
-    pub key: String,
     pub text: String,
+    
+    #[serde(default="always")]
+    pub key: String,
     
     #[serde(default)]
     pub expected_value: u32,
@@ -41,4 +43,8 @@ impl Dialogue {
             reward: None
         }
     }
+}
+
+fn always() -> String {
+    "always".to_owned()
 }

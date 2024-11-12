@@ -23,6 +23,10 @@ impl StorageKey {
     pub fn npc_interaction(id: u32) -> String {
         format!("npc_interactions.{}", id)
     }
+
+    pub fn content_read(id: u32) -> String {
+        format!("content_read.{}", id)   
+    }
 }
 
 fn load_stored_values() -> BTreeMap<String, u32> {

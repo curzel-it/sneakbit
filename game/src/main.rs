@@ -130,10 +130,12 @@ fn load_tile_map_textures(rl: &mut RaylibHandle, thread: &RaylibThread, world_id
     
     (0..BIOME_NUMBER_OF_FRAMES).for_each(|variant| {
         let key = world_id * 10 + variant as u32;
-        println!("Loading biome variant: {}", key);
         let filename = format!("{}-{}", world_id, variant);
-        config.textures.insert(key, texture(rl, thread, &filename).unwrap());
-    });
+        
+        if let Some(texture) = texture(rl, thread, &filename) {
+            config.textures.insert(key, texture);
+        }
+    });    
 }
 
 fn texture(rl: &mut RaylibHandle, thread: &RaylibThread, name: &str) -> Option<Texture2D> {
