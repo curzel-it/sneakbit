@@ -110,6 +110,8 @@ fn cleaned(original: String) -> String {
         .replace("Ì", "I`")
         .replace("Ò", "O`")
         .replace("Ù", "U`")
+        .replace("…", "...")
+        .replace("’", "'")
         .replace("\r\n", "\n")
 }
 

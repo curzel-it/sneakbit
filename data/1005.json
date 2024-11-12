@@ -101,7 +101,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Stairs (Up)",
       "species_id": 1010,
       "entity_type": "StaticObject",
       "offset": {
@@ -123,7 +122,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -132,21 +130,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808014,
@@ -156,7 +146,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -178,11 +167,11 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 1004,
         "x": 0,
-        "y": 0
+        "y": 0,
+        "direction": "Unknown"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -191,21 +180,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808064,
@@ -215,7 +196,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Green Key",
       "species_id": 2002,
       "entity_type": "PickableObject",
       "offset": {
@@ -237,7 +217,6 @@
         "number_of_frames": 8
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Green",
       "original_sprite_frame": {
@@ -246,21 +225,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808065,
@@ -270,7 +241,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.inverse_gate.blue",
       "species_id": 1063,
       "entity_type": "InverseGate",
       "offset": {
@@ -292,7 +262,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Blue",
       "original_sprite_frame": {
@@ -301,21 +270,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808066,
@@ -325,7 +286,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.inverse_gate.blue",
       "species_id": 1063,
       "entity_type": "InverseGate",
       "offset": {
@@ -347,7 +307,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Blue",
       "original_sprite_frame": {
@@ -356,21 +315,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808067,
@@ -380,7 +331,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Blue Gate",
       "species_id": 1043,
       "entity_type": "Gate",
       "offset": {
@@ -402,7 +352,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Blue",
       "original_sprite_frame": {
@@ -411,21 +360,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808068,
@@ -435,7 +376,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Yellow Gate",
       "species_id": 1040,
       "entity_type": "Gate",
       "offset": {
@@ -457,7 +397,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Yellow",
       "original_sprite_frame": {
@@ -466,21 +405,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808069,
@@ -490,7 +421,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Yellow Gate",
       "species_id": 1040,
       "entity_type": "Gate",
       "offset": {
@@ -512,7 +442,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Yellow",
       "original_sprite_frame": {
@@ -521,21 +450,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808070,
@@ -545,7 +466,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Yellow Gate",
       "species_id": 1040,
       "entity_type": "Gate",
       "offset": {
@@ -567,7 +487,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Yellow",
       "original_sprite_frame": {
@@ -576,21 +495,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808078,
@@ -600,7 +511,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Boulder",
       "species_id": 1031,
       "entity_type": "PushableObject",
       "offset": {
@@ -622,7 +532,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -631,21 +540,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808072,
@@ -655,7 +556,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Yellow Gate",
       "species_id": 1040,
       "entity_type": "Gate",
       "offset": {
@@ -677,7 +577,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Yellow",
       "original_sprite_frame": {
@@ -686,21 +585,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808073,
@@ -710,7 +601,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.inverse_gate.yellow",
       "species_id": 1060,
       "entity_type": "InverseGate",
       "offset": {
@@ -732,7 +622,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Yellow",
       "original_sprite_frame": {
@@ -741,21 +630,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808074,
@@ -765,7 +646,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.inverse_gate.yellow",
       "species_id": 1060,
       "entity_type": "InverseGate",
       "offset": {
@@ -787,7 +667,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Yellow",
       "original_sprite_frame": {
@@ -796,21 +675,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808075,
@@ -820,7 +691,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.inverse_gate.yellow",
       "species_id": 1060,
       "entity_type": "InverseGate",
       "offset": {
@@ -842,7 +712,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Yellow",
       "original_sprite_frame": {
@@ -851,21 +720,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808080,
@@ -875,7 +736,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Blue Pressure Plate",
       "species_id": 1053,
       "entity_type": "PressurePlate",
       "offset": {
@@ -897,7 +757,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Blue",
       "original_sprite_frame": {
@@ -906,21 +765,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808079,
@@ -930,7 +781,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Yellow Pressure Plate",
       "species_id": 1050,
       "entity_type": "PressurePlate",
       "offset": {
@@ -952,7 +802,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Yellow",
       "original_sprite_frame": {
@@ -961,21 +810,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808081,
@@ -985,7 +826,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Blue Gate",
       "species_id": 1043,
       "entity_type": "Gate",
       "offset": {
@@ -1007,7 +847,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Blue",
       "original_sprite_frame": {
@@ -1016,21 +855,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808082,
@@ -1040,7 +871,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1062,7 +892,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1071,21 +900,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808083,
@@ -1095,7 +916,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1117,7 +937,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1126,21 +945,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808084,
@@ -1150,7 +961,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1172,7 +982,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1181,21 +990,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808085,
@@ -1205,7 +1006,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1227,7 +1027,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1236,21 +1035,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808086,
@@ -1260,7 +1051,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1282,7 +1072,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1291,21 +1080,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808087,
@@ -1315,7 +1096,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1337,7 +1117,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1346,21 +1125,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808088,
@@ -1370,7 +1141,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1392,7 +1162,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1401,21 +1170,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808089,
@@ -1425,7 +1186,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1447,7 +1207,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1456,21 +1215,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808090,
@@ -1480,7 +1231,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1502,7 +1252,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1511,21 +1260,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808091,
@@ -1535,7 +1276,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1557,7 +1297,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1566,21 +1305,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808092,
@@ -1590,7 +1321,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1612,7 +1342,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1621,21 +1350,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808093,
@@ -1645,7 +1366,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1667,7 +1387,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1676,21 +1395,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808094,
@@ -1700,7 +1411,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1722,7 +1432,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1731,21 +1440,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808095,
@@ -1755,7 +1456,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1777,7 +1477,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1786,21 +1485,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808096,
@@ -1810,7 +1501,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1832,7 +1522,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1841,21 +1530,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808097,
@@ -1865,7 +1546,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1887,7 +1567,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1896,21 +1575,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808098,
@@ -1920,7 +1591,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1942,7 +1612,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1951,21 +1620,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808099,
@@ -1975,7 +1636,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1997,7 +1657,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2006,21 +1665,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808100,
@@ -2030,7 +1681,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -2052,7 +1702,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2061,21 +1710,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808101,
@@ -2085,7 +1726,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -2107,7 +1747,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2116,21 +1755,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808102,
@@ -2140,7 +1771,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -2162,7 +1792,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2171,21 +1800,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808103,
@@ -2195,7 +1816,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -2217,7 +1837,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2226,21 +1845,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808104,
@@ -2250,7 +1861,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -2272,7 +1882,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2281,21 +1890,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808105,
@@ -2305,7 +1906,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -2327,7 +1927,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2336,21 +1935,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808106,
@@ -2360,7 +1951,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "x10 Kunai",
       "species_id": 7001,
       "entity_type": "Bundle",
       "offset": {
@@ -2382,7 +1972,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2391,21 +1980,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808107,
@@ -2415,7 +1996,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -2437,7 +2017,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2446,21 +2025,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808108,
@@ -2470,7 +2041,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -2492,7 +2062,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2501,21 +2070,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808109,
@@ -2525,7 +2086,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -2547,7 +2107,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2556,21 +2115,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808110,
@@ -2580,7 +2131,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -2602,7 +2152,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2611,21 +2160,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808111,
@@ -2635,7 +2176,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -2657,7 +2197,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2666,21 +2205,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808112,
@@ -2690,7 +2221,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -2712,7 +2242,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2721,21 +2250,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808185,
@@ -2745,7 +2266,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -2767,7 +2287,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2776,21 +2295,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808184,
@@ -2800,7 +2311,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -2822,7 +2332,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2831,21 +2340,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808187,
@@ -2855,7 +2356,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -2877,7 +2377,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2886,21 +2385,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808188,
@@ -2910,7 +2401,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -2932,7 +2422,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2941,21 +2430,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808186,
@@ -2965,7 +2446,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -2987,7 +2467,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -2996,21 +2475,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808189,
@@ -3020,7 +2491,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -3042,7 +2512,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3051,21 +2520,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808183,
@@ -3075,7 +2536,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -3097,7 +2557,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3106,21 +2565,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808182,
@@ -3130,7 +2581,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -3152,7 +2602,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3161,21 +2610,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808181,
@@ -3185,7 +2626,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -3207,7 +2647,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3216,21 +2655,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808180,
@@ -3240,7 +2671,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -3262,7 +2692,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3271,21 +2700,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808179,
@@ -3295,7 +2716,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -3317,7 +2737,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3326,21 +2745,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808178,
@@ -3350,7 +2761,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -3372,7 +2782,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3381,21 +2790,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808199,
@@ -3405,7 +2806,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Boulder",
       "species_id": 1031,
       "entity_type": "PushableObject",
       "offset": {
@@ -3427,7 +2827,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3436,21 +2835,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808197,
@@ -3460,7 +2851,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -3482,7 +2872,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3491,21 +2880,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808194,
@@ -3515,7 +2896,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -3537,7 +2917,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3546,21 +2925,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808192,
@@ -3570,7 +2941,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -3592,7 +2962,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3601,21 +2970,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808190,
@@ -3625,7 +2986,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -3647,7 +3007,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3656,21 +3015,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808200,
@@ -3680,7 +3031,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Red Pressure Plate",
       "species_id": 1051,
       "entity_type": "PressurePlate",
       "offset": {
@@ -3702,7 +3052,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Red",
       "original_sprite_frame": {
@@ -3711,21 +3060,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808198,
@@ -3735,7 +3076,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Red Gate",
       "species_id": 1041,
       "entity_type": "Gate",
       "offset": {
@@ -3757,7 +3097,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Red",
       "original_sprite_frame": {
@@ -3766,21 +3105,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808195,
@@ -3790,7 +3121,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -3812,7 +3142,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3821,21 +3150,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808193,
@@ -3845,7 +3166,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -3867,7 +3187,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3876,21 +3195,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808191,
@@ -3900,7 +3211,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -3922,7 +3232,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3931,21 +3240,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808142,
@@ -3955,7 +3256,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -3977,7 +3277,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -3986,21 +3285,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808143,
@@ -4010,7 +3301,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4032,7 +3322,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4041,21 +3330,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808144,
@@ -4065,7 +3346,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4087,7 +3367,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4096,21 +3375,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808145,
@@ -4120,7 +3391,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4142,7 +3412,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4151,21 +3420,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808146,
@@ -4175,7 +3436,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4197,7 +3457,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4206,21 +3465,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808147,
@@ -4230,7 +3481,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4252,7 +3502,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4261,21 +3510,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808148,
@@ -4285,7 +3526,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4307,7 +3547,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4316,21 +3555,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808149,
@@ -4340,7 +3571,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4362,7 +3592,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4371,21 +3600,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808157,
@@ -4395,7 +3616,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4417,7 +3637,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4426,21 +3645,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808151,
@@ -4450,7 +3661,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4472,7 +3682,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4481,21 +3690,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808152,
@@ -4505,7 +3706,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4527,7 +3727,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4536,21 +3735,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808153,
@@ -4560,7 +3751,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4582,7 +3772,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4591,21 +3780,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808154,
@@ -4615,7 +3796,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4637,7 +3817,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4646,21 +3825,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808155,
@@ -4670,7 +3841,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4692,7 +3862,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4701,21 +3870,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808156,
@@ -4725,7 +3886,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4747,7 +3907,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4756,21 +3915,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808158,
@@ -4780,7 +3931,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4802,7 +3952,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4811,21 +3960,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808159,
@@ -4835,7 +3976,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4857,7 +3997,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4866,21 +4005,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808160,
@@ -4890,7 +4021,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4912,7 +4042,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4921,21 +4050,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808161,
@@ -4945,7 +4066,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -4967,7 +4087,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -4976,21 +4095,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808162,
@@ -5000,7 +4111,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5022,7 +4132,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5031,21 +4140,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808163,
@@ -5055,7 +4156,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5077,7 +4177,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5086,21 +4185,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808164,
@@ -5110,7 +4201,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5132,7 +4222,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5141,21 +4230,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808165,
@@ -5165,7 +4246,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5187,7 +4267,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5196,21 +4275,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808166,
@@ -5220,7 +4291,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5242,7 +4312,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5251,21 +4320,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808167,
@@ -5275,7 +4336,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5297,7 +4357,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5306,21 +4365,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808168,
@@ -5330,7 +4381,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5352,7 +4402,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5361,21 +4410,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808169,
@@ -5385,7 +4426,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5407,7 +4447,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5416,21 +4455,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808170,
@@ -5440,7 +4471,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5462,7 +4492,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5471,21 +4500,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808171,
@@ -5495,7 +4516,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5517,7 +4537,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5526,21 +4545,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808172,
@@ -5550,7 +4561,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5572,7 +4582,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5581,21 +4590,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808173,
@@ -5605,7 +4606,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -5627,7 +4627,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5636,21 +4635,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808174,
@@ -5660,7 +4651,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -5682,7 +4672,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5691,21 +4680,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808175,
@@ -5715,7 +4696,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -5737,7 +4717,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5746,21 +4725,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808176,
@@ -5770,7 +4741,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -5792,7 +4762,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5801,21 +4770,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10808177,
@@ -5825,7 +4786,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -5847,7 +4807,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -5856,23 +4815,16 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     }
   ],
   "is_interior": true,
-  "light_conditions": "Day"
+  "light_conditions": "Day",
+  "cutscenes": []
 }

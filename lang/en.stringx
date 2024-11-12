@@ -48,22 +48,28 @@
 "npc.menu.play_dialog" = "Play dialog"
 "npc.menu.remove" = "Remove"
 "npc.menu.title" = "NPC Options"
+"npc.name.cat" = "Cat"
 "npc.name.demon_lord" = "Demon Lord"
-"npc.name.default" = "Some Npc"
+"npc.name.dr_voss" = "Dr. Voss"
+"npc.name.ethan" = "Ethan"
 "npc.name.girl.blue" = "Girl"
-"npc.name.ghost" = "Ghost"
+"npc.name.girl.brown" = "Girl"
+"npc.name.girl.green" = "Girl"
 "npc.name.goddess" = "Goddess"
-"npc.name.homunculus" = "Homunculus"
+"npc.name.middle_aged.man.long_silver_hair" = "Silver"
+"npc.name.monster" = "Monster"
 "npc.name.ninja.black" = "Black Ninja"
 "npc.name.ninja.blue" = "Blue Ninja"
 "npc.name.ninja.red" = "Red Ninja"
 "npc.name.old_man" = "Old Man"
 "npc.name.old_woman" = "Old Lady"
 "npc.name.man.punk.1" = "Punk"
+"npc.name.piglet" = "Piglet"
 "npc.name.shop_clerk" = "Shop Guy"
 "npc.name.slime" = "Slime"
+"npc.name.snail" = "Snail"
+"npc.name.soldier.female.red" = "Red Guard"
 "npc.name.wizard" = "Wizard"
-"npc.name.zombie" = "Zombie"
 "objects.name.bed" = "Bed"
 "objects.name.book_blue" = "Book"
 "objects.name.book_dark" = "Dark Book"
@@ -81,17 +87,18 @@
 "objects.name.hint_consumable" = "Hint (One time)"
 "objects.name.hint_permanent" = "Hint (Permanent)"
 "objects.name.key" = "Key"
-"objects.name.key_blue" = "Blue Key"
-"objects.name.key_green" = "Green Key"
-"objects.name.key_red" = "Red Key"
-"objects.name.key_silver" = "Silver Key"
-"objects.name.key_yellow" = "Yellow Key"
+"objects.name.key_blue" = "key from Maritide mines"
+"objects.name.key_green" = "key from Duskhaven's dungeons"
+"objects.name.key_red" = "key from Mount Ignis"
+"objects.name.key_silver" = "key from Vintoria's dungeons"
+"objects.name.key_yellow" = "key from Grimsun desert"
 "objects.name.kunai" = "Kunai"
 "objects.name.kunai.x10" = "x10 Kunai"
 "objects.name.large_sign" = "Large Sign"
 "objects.name.magic_circle.blue" = "Blue Magic Circle"
 "objects.name.magic_circle.summoning" = "Summoning Circle"
 "objects.name.magic_circle.summoning.evil" = "Evil Summoning Circle"
+"objects.name.amanita" = "Amanita"
 "objects.name.pill.red" = "Red Pill"
 "objects.name.pressure_plate.blue" = "Blue Pressure Plate"
 "objects.name.pressure_plate.green" = "Green Pressure Plate"
@@ -147,9 +154,7 @@ I pity newer generations for having to deal with this many.
 
 "lore.004.you_are_here" = """
 So you say "some kind of magic" brought you here? 
-Interesting... You see, I attempted a summoning ritual 
-multiple times in the past, but it never worked.
-Either that, or you're very late.
+How interesting...
 Unfortunately, there is no much guidance an old geezer 
 like me can give you, maybe if I were younger...
 I suggest you start your own journey and learn more
@@ -191,21 +196,6 @@ their energy harnessed to illuminate homes, power devices,
 and even sustain the vibrant ecosystem of Duskhaven itself. 
 """
 
-"lore.006.manafren_trees.dark_book" = """
-The Manafern Tree, prized for its mana-producing properties, 
-harbors a hidden and chilling secret. 
-Centuries ago, the Demon Lord forged a pact with the twilight land of Duskhaven, 
-embedding his essence into the very roots of the region.
-These trees, with their glowing purple leaves, 
-were not created to enrich life alone,
-but to sustain the dark will of their creator.
-
-Each pulse of mana radiating from the Manaferns carries 
-a fragment of the Demon Lord’s essence
-Every use of this power strengthens his tether to the world, 
-edging it closer to his dominion. 
-"""
-
 "lore.006.vintoria_power_station" = """
 Vintoria’s Cascade Station
 Harnessing the might of the waterfall to power 
@@ -231,23 +221,20 @@ Dock of Thermoria — Gateway to Maritide Haven
 "1001.entrance" = "Welcome to Evergrove Village"
 "1002.entrance" = "Verdant Way"
 "1003.entrance" = "Welcome to Aridreach"
-"1004.entrance" = "Evergrove Village"
-"1005.entrance" = "Evergrove Village"
+"1004.entrance" = "Duskhaven's Dungeon Lv 1"
+"1005.entrance" = "Duskhaven's Dungeon Lv 2"
 "1006.entrance" = "Welcome to Thermoria"
-"1007.entrance" = "Evergrove Village"
+"1007.entrance" = "Underneath Mount Ignis"
 "1008.entrance" = "Welcome to Maritide Haven"
-"1009.entrance" = "Evergrove Village"
+"1009.entrance" = "Old Mining Complex underneath Maritide Haven"
 "1010.entrance" = "Shadowveil Path"
 "1011.entrance" = "Duskhaven"
 "1012.entrance" = "Vintoria"
 "1013.entrance" = "Grimsun Basin"
-"1014.entrance" = "Evergrove Village"
-"1015.entrance" = "Evergrove Village"
-"1016.entrance" = "Evergrove Village"
-"1017.entrance" = "Evergrove Village"
-"1018.entrance" = "Evergrove Village"
-"1019.entrance" = "Evergrove Village"
-"1020.entrance" = "Evergrove Village"
+"1014.entrance" = "Hydroelectric Power Plant Lv 1"
+"1015.entrance" = "Hydroelectric Power Plant Lv 2"
+"1016.entrance" = "Hydroelectric Power Plant Lv 3"
+"1017.entrance" = "Demon Maze"
 
 "quest.hero.1" = """
 So you're an outer-worlder eh?
@@ -433,4 +420,67 @@ I tried kid, but I was defeated.
 It's your turn now, here, have my skill.
 You can now defeat ANY enemy in one blow.
 Including... him...
+"""
+
+"quest.manafren_research.1" = """
+What do you think you are doing here!?
+This zone is off limits without a permit!
+"""
+
+"quest.manafren_research.2" = """
+Ah, just who I needed. 
+I’ve studied these Manafren trees extensively, by all accounts, they’re miraculous...
+Yet, I can’t shake this feeling of something dark, something ancient lurking beneath. 
+Maybe there’s something we’ve overlooked in the ancient scrolls...
+Unfortunately, the village elder is the only one with access to them, but he won't talk to me anymore...
+"""
+
+"quest.manafren_research.2.1" = """
+My research continues, but I can't get the feeling of dread off my mind.
+"""
+
+"quest.manafren_research.3" = """
+Dr. Voss sent you, did he? 
+Ah, well… I don’t put much stock in all his science...
+These trees, they hold a power older than you or me, a power that whispers secrets to those willing to listen. 
+There’s an old scroll tucked away in the dungeon nearby. 
+Maybe you’ll find what you seek there. 
+Just beware of what’s hidden within those words.
+"""
+
+"quest.manafren_research.3.1" = """
+Did you find anything interesting in the dungeon?
+"""
+
+"quest.manafren_research.4" = """
+In ages past, when twilight lay thick over Duskhaven, a pact was struck. 
+The trees would flourish, drawing life from the soil and skies, breathing mana into the land. 
+Yet, for this... <unreadable>
+Beneath their roots flows the darkness, and with each pulse, a reminder of... <unreadable>. 
+Those who seek this path must journey east to the mountains, where the source of the pact lies buried.
+"""
+
+"quest.manafren_research.5" = """
+It was here, beneath these stones, that the trees were first granted their cursed life. 
+The Lord of Darkness poured his very essence into their roots, binding their growth to his will. 
+Each leaf holds a shard of his presence, and with each season, his dominion spreads quietly. 
+Let this record serve as both a warning and a call to vigilance. As the trees grow, so does he.
+"""
+
+"quest.manafren_research.6" = """
+You… you found it. 
+So, the trees truly are bound to some dark force, and their energy, our very life here in Duskhaven, comes from this curse. 
+I had suspicions, but these findings, well, they change everything. 
+I’ll need time to process what this means, but take this as a token. 
+"""
+
+"quest.manafren_research.6.1" = """
+I’ll need time to process the latest findings...
+"""
+
+"quest.manafren_research.6.2" = """
+The suspicious dark aura is gone.
+I have to say, I am a bit pissed, I was so close...
+It's hard to do science in a world with magic.
+Maybe they should get an outer-worlder to do my job - no offense.
 """

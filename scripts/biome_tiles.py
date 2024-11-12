@@ -192,14 +192,13 @@ class BiomeTile:
                 case (Biome.DARK_GRASS, Biome.DARK_ROCK): return 0
                 case (Biome.DARK_GRASS, Biome.SNOW): return 0
                 case (Biome.GRASS, Biome.DARK_GRASS): return 0
-                case (Biome.SNOW, Biome.ROCK): return 0
+                case (Biome.ROCK, Biome.SNOW): return 0
                 case (Biome.WATER, Biome.DARK_ROCK): return 0
                 case (Biome.DARK_WATER, Biome.DARK_ROCK): return 0
                 case (Biome.LAVA, Biome.DARK_ROCK): return 0
                 case (Biome.DARK_SAND, Biome.SNOW): return 0
                 case (Biome.DESERT, Biome.SNOW): return 0
                 case (Biome.DESERT, Biome.DARK_SAND): return 0
-                case (Biome.ROCK, Biome.SNOW): return 0
                 case (Biome.ROCK, Biome.DESERT): return 0
                 case (Biome.ROCK, Biome.DARK_SAND): return 0
                 case (Biome.DARK_ROCK, Biome.SNOW): return 0

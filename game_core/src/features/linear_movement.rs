@@ -5,7 +5,6 @@ use super::hitmap::{Hitmap, WeightsMap};
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 
         let frame = self.frame;
-        self.latest_movement = (0, 0);
 
         if self.current_speed == 0.0 || matches!(self.direction, Direction::Unknown) {
             return
@@ -34,7 +33,6 @@ impl Entity {
         let tiles_y_i = tiles_y as i32;
         
         self.frame = frame.offset(tiles_x_i, tiles_y_i);
-        self.latest_movement = (tiles_x_i, tiles_y_i);
 
         if tiles_x != 0.0 || tiles_y != 0.0 {
             self.offset = Vector2d::zero();

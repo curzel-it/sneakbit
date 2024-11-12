@@ -25,7 +25,7 @@ impl MapEditor {
             stock: MapEditor::all_possible_items().into_iter().collect(),
             state: MapEditorState::SelectingItem(0),
             current_world_id: 0,
-            columns: 12,
+            columns: 20,
             offset: 0,
             camera_viewport: IntRect::square_from_origin(10),
         }

@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_INVENTORY, dialogues::storage::{has_dialogue_reward_been_collected, set_dialogue_reward_collected}, entities::species::species_by_id, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}}, lang::localizable::LocalizableText, menus::{menu::{Menu, MenuItem}, toasts::{Toast, ToastImage}}, ui::components::View, utils::animator::Animator};
+use crate::{constants::SPRITE_SHEET_INVENTORY, dialogues::storage::{has_dialogue_reward_been_collected, set_dialogue_reward_collected}, entities::species::species_by_id, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}}, lang::localizable::LocalizableText, menus::{menu::{Menu, MenuItem}, toasts::{Toast, ToastImage}}, ui::components::View, utils::{animator::Animator, strings::wrap_text}};
 
 use super::{models::Dialogue, storage::set_dialogue_read};
 
@@ -10,6 +10,7 @@ pub struct DialogueMenu {
     pub text_animator: Animator,
     pub text: String,
     pub menu: Menu<DialogueAnswerItem>,
+    pub max_line_length: usize
 }
 
 #[derive(Clone)]
@@ -38,6 +39,7 @@ impl DialogueMenu {
             text_animator: Animator::new(),
             text: "".to_owned(),
             menu: options_menu,
+            max_line_length: 60
         }
     }
 
@@ -53,7 +55,7 @@ impl DialogueMenu {
         self.dialogue = dialogue.clone();       
         
         self.menu.title = format!("{: <45}", format!("{}:", self.npc_name));
-        self.text = self.dialogue.localized_text();
+        self.text = wrap_text(&self.dialogue.localized_text(), self.max_line_length).join("\n");
 
         self.text_animator.animate(0.0, 1.0, self.text.len() as f32 / 120.0);
         self.time_since_last_closed = 0.0;
@@ -92,6 +94,7 @@ impl DialogueMenu {
         if self.menu.selection_has_been_confirmed {
             let updates = self.handle_answer();
             self.dialogue = Dialogue::empty();
+            self.text = "".to_owned();
             self.menu.close();
             return (self.menu.is_open, updates)
         }

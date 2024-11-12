@@ -225,7 +225,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -247,7 +246,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Blue",
       "original_sprite_frame": {
@@ -259,17 +257,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -282,7 +270,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -304,7 +291,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Silver",
       "original_sprite_frame": {
@@ -316,17 +302,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -339,7 +315,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -361,7 +336,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Yellow",
       "original_sprite_frame": {
@@ -373,17 +347,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -396,7 +360,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -418,7 +381,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": {
         "world": 1002,
         "x": 18,
@@ -435,17 +397,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -458,7 +410,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -480,7 +431,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Red",
       "original_sprite_frame": {
@@ -492,17 +442,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -515,7 +455,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Teleporter",
       "species_id": 1019,
       "entity_type": "Teleporter",
       "offset": {
@@ -537,7 +476,6 @@
         "number_of_frames": 1
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "Green",
       "original_sprite_frame": {
@@ -549,17 +487,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -594,7 +522,6 @@
         "number_of_frames": 5
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -606,17 +533,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -651,7 +568,6 @@
         "number_of_frames": 5
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -663,17 +579,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -708,7 +614,6 @@
         "number_of_frames": 5
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -720,17 +625,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -743,7 +638,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -765,7 +659,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -777,17 +670,7 @@
       "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -800,7 +683,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -822,7 +704,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -834,17 +715,7 @@
       "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -857,7 +728,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -879,7 +749,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -891,17 +760,7 @@
       "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -914,7 +773,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -936,7 +794,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -948,17 +805,7 @@
       "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -971,7 +818,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -993,7 +839,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1005,17 +850,7 @@
       "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1028,7 +863,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1050,7 +884,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1062,17 +895,7 @@
       "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1085,7 +908,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1107,7 +929,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1119,17 +940,7 @@
       "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1142,7 +953,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1164,7 +974,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1176,17 +985,7 @@
       "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1199,7 +998,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1221,7 +1019,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1233,17 +1030,7 @@
       "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1256,7 +1043,6 @@
         "w": 1,
         "h": 2
       },
-      "name": "Homunculus",
       "species_id": 4004,
       "entity_type": "Npc",
       "offset": {
@@ -1278,7 +1064,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1290,17 +1075,7 @@
       "display_conditions": [],
       "movement_directions": "FindHero",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": true,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1313,7 +1088,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -1335,7 +1109,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1347,17 +1120,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1370,7 +1133,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -1392,7 +1154,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1404,17 +1165,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1427,7 +1178,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -1449,7 +1199,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1461,17 +1210,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1484,7 +1223,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -1506,7 +1244,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1518,17 +1255,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1541,7 +1268,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -1563,7 +1289,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1575,17 +1300,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1598,7 +1313,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -1620,7 +1334,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1632,17 +1345,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1655,7 +1358,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -1677,7 +1379,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1689,17 +1390,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1712,7 +1403,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -1734,7 +1424,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1746,17 +1435,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1769,7 +1448,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -1791,7 +1469,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1803,17 +1480,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1826,7 +1493,6 @@
         "w": 1,
         "h": 1
       },
-      "name": "Kunai",
       "species_id": 7000,
       "entity_type": "Bullet",
       "offset": {
@@ -1848,7 +1514,6 @@
         "number_of_frames": 4
       },
       "dialogues": [],
-      "time_immobilized": 0.0,
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -1860,17 +1525,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "speed_multiplier": 1.0,
-      "melee_attacks_hero": false,
-      "is_dying": false,
-      "latest_movement": [
-        0,
-        0
-      ],
       "contents": null,
-      "remaining_lifespan": -420.0,
-      "shooting_cooldown_remaining": 0.0,
-      "parent_id": 0,
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -1979,7 +1634,6 @@
               "reward": null
             }
           ],
-          "time_immobilized": 0.0,
           "destination": null,
           "lock_type": "None",
           "original_sprite_frame": {
@@ -1991,16 +1645,7 @@
           "display_conditions": [],
           "movement_directions": "None",
           "is_consumable": false,
-          "speed_multiplier": 1.0,
-          "melee_attacks_hero": false,
-          "is_dying": false,
-          "latest_movement": [
-            0,
-            0
-          ],
           "contents": null,
-          "remaining_lifespan": -420.0,
-          "shooting_cooldown_remaining": 0.0,
           "parent_id": 0,
           "is_invulnerable": true,
           "demands_attention": false,

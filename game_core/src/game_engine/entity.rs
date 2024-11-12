@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::UNLIMITED_LIFESPAN, dialogues::models::{Dialogue, EntityDialogues}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, directions::MovementDirections}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::UNLIMITED_LIFESPAN, dialogues::models::{Dialogue, EntityDialogues}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, directions::MovementDirections}, game_engine::storage::{set_value_for_key, StorageKey}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::key_value_matches, world::World};
 
@@ -33,7 +33,6 @@ pub type EntityId = u32;
 pub struct Entity {
     pub id: EntityId,
     pub frame: IntRect,  
-    pub name: String,  
     pub species_id: u32,  
     pub entity_type: EntityType,  
     pub offset: Vector2d,
@@ -43,10 +42,15 @@ pub struct Entity {
     pub z_index: i32,
     pub sprite: AnimatedSprite,
     pub dialogues: EntityDialogues,
-    pub time_immobilized: f32,
     pub destination: Option<Destination>,
     pub lock_type: LockType,
     pub original_sprite_frame: IntRect,
+
+    #[serde(skip)]
+    pub name: String,  
+
+    #[serde(skip)]
+    pub time_immobilized: f32,
 
     #[serde(default)]
     pub display_conditions: Vec<DisplayCondition>,
@@ -57,28 +61,25 @@ pub struct Entity {
     #[serde(default)]
     pub is_consumable: bool,
     
-    #[serde(default="one")]
+    #[serde(skip)]
     pub speed_multiplier: f32,
 
-    #[serde(default)]
+    #[serde(skip)]
     pub melee_attacks_hero: bool,
     
-    #[serde(default)]
+    #[serde(skip)]
     pub is_dying: bool,
-
-    #[serde(default)]
-    pub latest_movement: (i32, i32),  
 
     #[serde(default)]
     pub contents: Option<String>,  
 
-    #[serde(default="unlimited_lifespan")]
+    #[serde(skip)]
     pub remaining_lifespan: f32,  
 
-    #[serde(default)]
+    #[serde(skip)]
     pub shooting_cooldown_remaining: f32,  
 
-    #[serde(default)]
+    #[serde(skip)]
     pub parent_id: u32,  
 
     #[serde(default)]
@@ -89,14 +90,6 @@ pub struct Entity {
 
     #[serde(default)]
     pub vanishes_after_dialogue: bool,
-}
-
-fn unlimited_lifespan() -> f32 {
-    UNLIMITED_LIFESPAN
-}
-
-fn one() -> f32 {
-    1.0
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -130,6 +123,7 @@ impl Entity {
     }
 
     pub fn setup(&mut self, creative_mode: bool) {      
+        self.remaining_lifespan = UNLIMITED_LIFESPAN;
         species_by_id(self.species_id).reload_props(self);
         
         match self.entity_type {
@@ -220,8 +214,10 @@ impl Entity {
     }
 
     fn update_static(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {  
-        if world.is_hero_around_and_on_collision_with(&self.frame) {
+        if world.is_hero_around_and_on_collision_with(&self.frame) {            
             if let Some(contents) = self.contents.clone() {
+                set_value_for_key(&StorageKey::content_read(self.id), 1);
+
                 return vec![
                     WorldStateUpdate::EngineUpdate(
                         EngineStateUpdate::DisplayLongText(

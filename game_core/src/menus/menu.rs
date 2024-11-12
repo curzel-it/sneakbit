@@ -63,6 +63,7 @@ impl<Item: MenuItem> Menu<Item> {
     }
 
     pub fn close(&mut self) {
+        self.scroll_offset = 0;
         self.is_open = false;
         self.animator.animate(1.0, 0.0, MENU_CLOSE_TIME)
     }

@@ -81,7 +81,6 @@ impl Species {
         Entity {
             id: self.next_entity_id(),
             frame: self.sprite_frame,  
-            latest_movement: (0, 0),
             species_id: self.id,  
             entity_type: self.entity_type,
             offset: Vector2d::zero(),
