@@ -3340,5 +3340,488 @@
         "sprite_number_of_frames": 4,
         "lock_type": "None",
         "movement_directions": "Free"
+    },
+    {
+        "id": 1106,
+        "name": "npc.name.old_man_mustache",
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            22
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1107,
+        "name": "npc.name.generic",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            1
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1108,
+        "name": "npc.name.mr_bubblegum",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            2
+        ],
+        "sprite_frame": {
+            "x": 20,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1109,
+        "name": "npc.name.swag_kid",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            3
+        ],
+        "sprite_frame": {
+            "x": 24,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1110,
+        "name": "npc.name.assasin_girl",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            21
+        ],
+        "sprite_frame": {
+            "x": 84,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1111,
+        "name": "npc.name.blonde_guy",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            4
+        ],
+        "sprite_frame": {
+            "x": 4,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1112,
+        "name": "npc.name.rasta_girl",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            5
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1113,
+        "name": "npc.name.swag_kid_2",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            6
+        ],
+        "sprite_frame": {
+            "x": 12,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1114,
+        "name": "npc.name.dbz1",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            7
+        ],
+        "sprite_frame": {
+            "x": 16,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1115,
+        "name": "npc.name.dbz2",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            8
+        ],
+        "sprite_frame": {
+            "x": 20,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1116,
+        "name": "npc.name.dbz3",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            9
+        ],
+        "sprite_frame": {
+            "x": 24,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1127,
+        "name": "npc.name.green_girl",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            10
+        ],
+        "sprite_frame": {
+            "x": 28,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1117,
+        "name": "npc.name.blue_mohawk",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            11
+        ],
+        "sprite_frame": {
+            "x": 32,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1118,
+        "name": "npc.name.generic.apron",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            12
+        ],
+        "sprite_frame": {
+            "x": 36,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1119,
+        "name": "npc.name.old_man_mustache.black",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            13
+        ],
+        "sprite_frame": {
+            "x": 40,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1120,
+        "name": "npc.name.black_male_blue_hair",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            14
+        ],
+        "sprite_frame": {
+            "x": 44,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1121,
+        "name": "npc.name.female_dark_blonde",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            15
+        ],
+        "sprite_frame": {
+            "x": 48,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1122,
+        "name": "npc.name.swag_kid_3",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            16
+        ],
+        "sprite_frame": {
+            "x": 52,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1123,
+        "name": "npc.name.purple_alien",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            17
+        ],
+        "sprite_frame": {
+            "x": 56,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1124,
+        "name": "npc.name.blonde.apron",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            18
+        ],
+        "sprite_frame": {
+            "x": 60,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1125,
+        "name": "npc.name.brown_mohawk",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            19
+        ],
+        "sprite_frame": {
+            "x": 64,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1126,
+        "name": "npc.name.purple_mohawk",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            20
+        ],
+        "sprite_frame": {
+            "x": 68,
+            "y": 19,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
     }
 ]

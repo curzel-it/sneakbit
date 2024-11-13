@@ -62,7 +62,7 @@ impl Entity {
             (Direction::Still, true) => 4,
             (Direction::Still, false) => 5,
         };
-        self.sprite.frame.y = self.sprite.frame.h * row;
+        self.sprite.frame.y = self.sprite.original_frame.y + self.sprite.frame.h * row;
     }
 }
 
