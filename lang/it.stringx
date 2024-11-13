@@ -48,26 +48,75 @@
 "npc.menu.play_dialog" = "Play dialog"
 "npc.menu.remove" = "Remove"
 "npc.menu.title" = "NPC Options"
+
+"npc.name.assasin_girl" = "Nyx"
+"npc.name.male.black.blue_hair" = "Villager"
+"npc.name.blonde.apron" = "Villager"
+"npc.name.blonde_guy" = "Villager"
+"npc.name.blue_mohawk" = "Villager"
+"npc.name.brown_mohawk" = "Villager"
+"npc.name.cat" = "Cat"
+"npc.name.dbz1" = "Android's husband"
+"npc.name.dbz2" = "Gohan's Godfather"
+"npc.name.dbz3" = "Son Monkey"
 "npc.name.demon_lord" = "Demon Lord"
-"npc.name.default" = "Some Npc"
-"npc.name.ghost" = "Ghost"
+"npc.name.male.black.doctor" = "Dr Voss"
+"npc.name.ethan" = "Ethan"
+"npc.name.female.dark_blonde" = "Villager"
+"npc.name.generic" = "Villager"
+"npc.name.generic.apron" = "Villager"
+"npc.name.female.blue_hair" = "Lyria Kurogane"
+"npc.name.female.brown_hair" = "Villager"
+"npc.name.female.green_hair" = "Villager"
 "npc.name.goddess" = "Goddess"
+"npc.name.female.green_hair" = "Villager"
+"npc.name.male.emo_hair" = "Punk"
+"npc.name.middle_aged.man.long_silver_hair" = "Silveroak"
 "npc.name.monster" = "Monster"
+"npc.name.mr_bubblegum" = "Mr Bubblegum"
+"npc.name.ninja.black" = "Black Ninja"
 "npc.name.ninja.blue" = "Blue Ninja"
-"npc.name.ninja.black" = "Dark Ninja"
-"npc.name.old_man" = "Old Man"
-"npc.name.old_woman" = "Old Lady"
-"npc.name.shop_clerk" = "Shop Guy"
+"npc.name.ninja.red" = "Red Ninja"
+"npc.name.old_man" = "Old Man Willow"
+"npc.name.old_man_mustache" = "Old Man Gus"
+"npc.name.old_man_mustache.black" = "Old Man Homer"
+"npc.name.old_woman" = "Elder Maren"
+"npc.name.piglet" = "Piglet"
+"npc.name.purple_alien" = "aaa"
+"npc.name.purple_mohawk" = "Villager"
+"npc.name.rasta_girl" = "Villager"
+"npc.name.male.kid.red_hair.blue_suit.green_hat" = "Villager"
 "npc.name.slime" = "Slime"
-"npc.name.wizard" = "Wizard"
-"npc.name.zombie" = "Zombie"
+"npc.name.snail" = "Snail"
+"npc.name.soldier" = "Captain 'Ironside' Thorne"
+"npc.name.soldier.female.red" = "Serena Flameheart"
+"npc.name.swag_kid" = "Villager"
+"npc.name.swag_kid_2" = "Villager"
+"npc.name.swag_kid_3" = "Villager"
+"npc.name.wizard" = "Mogarth the Sage"
+
+"objects.name.amanita" = "Amanita Mushroom"
+"objects.name.barrel.brown" = "Brown Barrel"
+"objects.name.barrel.green" = "Green Barrel"
+"objects.name.barrel.purple" = "Purple Barrel"
+"objects.name.barrel.wood" = "Wooden Barrel"
 "objects.name.bed" = "Bed"
-"objects.name.book_blue" = "Book"
-"objects.name.book_dark" = "Dark Book"
-"objects.name.book_green" = "Book"
-"objects.name.book_purple" = "Book"
-"objects.name.book_red" = "Book"
+"objects.name.boat.small" = "Small Boat"
+"objects.name.book_black" = "Black Book"
+"objects.name.book_blue" = "Blue Book"
+"objects.name.book_green" = "Green Book"
+"objects.name.book_purple" = "Purple Book"
+"objects.name.book_red" = "Red Book"
 "objects.name.boulder" = "Boulder"
+"objects.name.cabinet.lg.beige" = "Beige Wardrobe"
+"objects.name.cabinet.lg.brown" = "Brown Wardrobe"
+"objects.name.cabinet.lg.white" = "White Wardrobe"
+"objects.name.cabinet.md.beige" = "Beige Locker"
+"objects.name.cabinet.md.brown" = "Brown Locker"
+"objects.name.cabinet.md.white" = "White Locker"
+"objects.name.cabinet.sm.beige" = "Beige Drawer"
+"objects.name.cabinet.sm.brown" = "Brown Drawer"
+"objects.name.cabinet.sm.white" = "White Drawer"
 "objects.name.deep_hole" = "Deep Hole"
 "objects.name.fountain" = "Fountain"
 "objects.name.gate.blue" = "Blue Gate"
@@ -75,27 +124,27 @@
 "objects.name.gate.red" = "Red Gate"
 "objects.name.gate.silver" = "Silver Gate"
 "objects.name.gate.yellow" = "Yellow Gate"
-"objects.name.hint_consumable" = "Hint (One time)"
+"objects.name.hint_consumable" = "Hint (One Time)"
 "objects.name.hint_permanent" = "Hint (Permanent)"
 "objects.name.key" = "Key"
-"objects.name.key_blue" = "Blue Key"
-"objects.name.key_green" = "Green Key"
-"objects.name.key_red" = "Red Key"
-"objects.name.key_silver" = "Silver Key"
-"objects.name.key_yellow" = "Yellow Key"
+"objects.name.key_blue" = "key from Maritide mines"
+"objects.name.key_green" = "key from Duskhaven's dungeons"
+"objects.name.key_red" = "key from Mount Ignis"
+"objects.name.key_silver" = "key from Vintoria's dungeons"
+"objects.name.key_yellow" = "key from Grimsun desert"
 "objects.name.kunai" = "Kunai"
-"objects.name.kunai.x10" = "x10 Kunai"
-"objects.name.large_sign" = "Large Sign"
-"objects.name.magic_circle.blue" = "Blue Magic Circle"
-"objects.name.magic_circle.summoning" = "Summoning Circle"
-"objects.name.magic_circle.summoning.evil" = "Evil Summoning Circle"
-"objects.name.pill.red" = "Red Pill"
+"objects.name.kunai.x10" = "Kunai x10"
+"objects.name.large_sign" = "Signboard"
+"objects.name.magic_circle.blue" = "Magic Circle"
+"objects.name.magic_circle.small" = "Magic Circle"
+"objects.name.magic_circle.summoning" = "Magic Circle"
+"objects.name.magic_circle.summoning.evil" = "Magic Circle"
 "objects.name.pressure_plate.blue" = "Blue Pressure Plate"
 "objects.name.pressure_plate.green" = "Green Pressure Plate"
 "objects.name.pressure_plate.red" = "Red Pressure Plate"
 "objects.name.pressure_plate.silver" = "Silver Pressure Plate"
 "objects.name.pressure_plate.yellow" = "Yellow Pressure Plate"
-"objects.name.rail.cart" = "Rail Cart"
+"objects.name.rail.cart" = "Cart"
 "objects.name.scroll.blue" = "Blue Scroll"
 "objects.name.scroll.brown" = "Brown Scroll"
 "objects.name.scroll.green" = "Green Scroll"
@@ -106,11 +155,51 @@
 "objects.name.seat_orange" = "Orange Seat"
 "objects.name.seat_pink" = "Pink Seat"
 "objects.name.sign" = "Sign"
+"objects.name.skull" = "Skull"
+"objects.name.slope.bottom_left.dark_rock" = "Slope"
+"objects.name.slope.bottom_left.grass" = "Slope"
+"objects.name.slope.bottom_left.rock" = "Slope"
+"objects.name.slope.bottom_left.sand" = "Slope"
+"objects.name.slope.bottom_right.dark_rock" = "Slope"
+"objects.name.slope.bottom_right.grass" = "Slope"
+"objects.name.slope.bottom_right.rock" = "Slope"
+"objects.name.slope.bottom_right.sand" = "Slope"
+"objects.name.slope.side_bottom.dark_rock" = "Slope"
+"objects.name.slope.side_bottom.grass" = "Slope"
+"objects.name.slope.side_bottom.rock" = "Slope"
+"objects.name.slope.side_bottom.sand" = "Slope"
+"objects.name.slope.side_left.dark_rock" = "Slope"
+"objects.name.slope.side_left.grass" = "Slope"
+"objects.name.slope.side_left.rock" = "Slope"
+"objects.name.slope.side_left.sand" = "Slope"
+"objects.name.slope.side_right.dark_rock" = "Slope"
+"objects.name.slope.side_right.grass" = "Slope"
+"objects.name.slope.side_right.rock" = "Slope"
+"objects.name.slope.side_right.sand" = "Slope"
+"objects.name.slope.side_top.dark_rock" = "Slope"
+"objects.name.slope.side_top.grass" = "Slope"
+"objects.name.slope.side_top.rock" = "Slope"
+"objects.name.slope.side_top.sand" = "Slope"
+"objects.name.slope.top_left.dark_rock" = "Slope"
+"objects.name.slope.top_left.grass" = "Slope"
+"objects.name.slope.top_left.rock" = "Slope"
+"objects.name.slope.top_left.sand" = "Slope"
+"objects.name.slope.top_right.dark_rock" = "Slope"
+"objects.name.slope.top_right.grass" = "Slope"
+"objects.name.slope.top_right.rock" = "Slope"
+"objects.name.slope.top_right.sand" = "Slope"
 "objects.name.stairs_down" = "Stairs (Down)"
 "objects.name.stairs_up" = "Stairs (Up)"
 "objects.name.table" = "Table"
 "objects.name.teleporter" = "Teleporter"
+"objects.name.torch" = "Torch"
 "objects.name.well" = "Well"
+"objects.power.kidneys" = "Power Kidneys"
+"objects.power.tower.off" = "Mana Tower"
+"objects.power.tower.on" = "Mana Tower"
+"objects.waterfall" = "Waterfall"
+"objects.wind_turbine" = "Wind Turbine"
+
 "ok" = "Ok"
 "picked_up_item" = "Picked up `%s`!"
 "teleporter.locked" = "You need a %s key to open this door."
@@ -120,3 +209,357 @@
 "telepoter.locked.permanent" = "This door is locked."
 "text_input.hint" = "ENTER to confirm, ESC to cancel"
 "you" = "You"
+
+"hint.001.pickup" = """
+Pick up objects by passing over them
+"""
+
+"hint.002.throw_knife" = """
+Throw knifes by pressing FIRE
+"""
+
+"hint.003.not_all_places_have_loot" = """
+What? 
+You expected every house to have loot?
+Also, what the hell are you doing in my house!?
+"""
+
+"lore.003.monsters_first_appearance" = """
+Monsters have been part of this world for a long time.
+They've been around for as long as I can remember at least.
+But they never left the deeper woods until recently.
+I pity newer generations for having to deal with this many.
+"""
+
+"lore.004.you_are_here" = """
+So you say "some kind of magic" brought you here? 
+How interesting...
+Unfortunately, there is no much guidance an old geezer 
+like me can give you, maybe if I were younger...
+I suggest you start your own journey and learn more
+about this world.
+I shall see you then.
+"""
+
+"lore.004.you_are_here_again" = """
+I suggest you start your own journey and learn more
+about this world.
+I shall see you then.
+"""
+
+"lore.005.manafren_trees.sign" = """
+Manafern Trees
+Famous worldwide for their mystical energy properties. 
+Their unique purple leaves harness the essence of twilight, 
+fueling life and wonder in Duskhaven.
+"""
+
+"lore.005.manafren_trees.book" = """
+The Manafern Tree, a botanical marvel exclusive 
+to the ever-twilit region of Duskhaven, 
+has long captivated scholars and mystics alike. 
+
+This unique broadleaf species, 
+identifiable by its vibrant purple foliage, 
+exhibits an unparalleled ability to produce raw mana.
+
+Through a complex interaction between its deep-rooted system 
+and the ambient twilight of the region, 
+the Manafern absorbs ethereal particles from both the soil and air. 
+These particles, once drawn into the tree's intricate vascular system, 
+undergo a natural process akin to photosynthesis but far more extraordinary. 
+The tree converts these particles into pure mana, 
+which radiates through its leaves, casting a subtle, 
+luminescent glow. Locals often speak of how these trees 'hum' with life, 
+their energy harnessed to illuminate homes, power devices, 
+and even sustain the vibrant ecosystem of Duskhaven itself. 
+"""
+
+"lore.006.vintoria_power_station" = """
+Vintoria’s Cascade Station
+Harnessing the might of the waterfall to power 
+the valley with life-giving mana
+"""
+
+"lore.007.vintoria_entrance" = """
+Welcome to Vintoria Valley
+where the thundering falls weave mana into prosperity 
+and the vineyards whisper tales of timeless beauty.
+"""
+
+"lore.008.mount_ignis" = """
+Warning
+Extreme heat and volatile ground.
+Proceed with caution and respect the power of Mount Ignis.
+"""
+
+"lore.009.thermoria_dock" = """
+Dock of Thermoria — Gateway to Maritide Haven
+"""
+
+"1001.entrance" = "Welcome to Evergrove Village"
+"1002.entrance" = "Verdant Way"
+"1003.entrance" = "Welcome to Aridreach"
+"1004.entrance" = "Duskhaven's Dungeon Lv 1"
+"1005.entrance" = "Duskhaven's Dungeon Lv 2"
+"1006.entrance" = "Welcome to Thermoria"
+"1007.entrance" = "Underneath Mount Ignis"
+"1008.entrance" = "Welcome to Maritide Haven"
+"1009.entrance" = "Old Mining Complex underneath Maritide Haven"
+"1010.entrance" = "Shadowveil Path"
+"1011.entrance" = "Duskhaven"
+"1012.entrance" = "Vintoria"
+"1013.entrance" = "Grimsun Basin"
+"1014.entrance" = "Hydroelectric Power Plant Lv 1"
+"1015.entrance" = "Hydroelectric Power Plant Lv 2"
+"1016.entrance" = "Hydroelectric Power Plant Lv 3"
+"1017.entrance" = "Demon Maze"
+
+"quest.hero.1" = """
+So you're an outer-worlder eh?
+I bet that old geezer in Evergrove summoned you here.
+We don't need any heroes, go away.
+"""
+
+"quest.hero.2" = """
+I told you, it's no use running around killing monsters,
+their number never really lowers.
+This very world, too, has rejected the concept of a "hero".
+"""
+
+"quest.hero.3" = """
+They say the third time is the charm.
+What the hell are you doing here...?
+Are you... After the keys!?
+"""
+
+"quest.hero.4" = """
+You see, the problem with you, with the wizard, with this world...
+Is trust.
+The microwave is broken? Fix it with magic.
+Science is broken? Let's pray the gods for knowledge.
+The world is broken? 
+Sure, let's summon a random dude from another world to fix it!
+You have been so busy, so worried, it never even came to 
+your mind we might just be able to handle the situation ourself.
+"""
+
+"quest.hero.5" = """
+So you're the outer-worlder...
+Do you even know why you're here?
+Simple... It's because I failed as a father.
+"""
+
+"quest.hero.finale.a" = """
+No point in hiding it since you probably already know everything.
+I am the hero of the profecy, but have not always been.
+I grew up with the weight of the profecy but no skills to back it up.
+The looks on people faces, especially that damn old creep...
+All I saw was distrust, so I left.
+When I met you, my "replacement", rage took over...
+I realized the world was not waiting for me and had to take action.
+The head of the Demon Lord was my destiny, 
+but I think I owe you an apolegy nonetheless for taking you prey.
+"""
+
+"quest.hero.finale.b" = """
+What, you expected a boss fight?
+Tried to take over someone else's destiny, did you?
+Piss off.
+"""
+
+"quest.hero.finale.c" = """
+Who the hell are you?
+"""
+
+"quest.hero.finale.finale" = """
+We have nothing else to talk about.
+Go back to your world, or stay... Whatever...
+"""
+
+"quest.ninja_skills.1" = """
+Yo, 
+I'm out on a mission.
+Also, what the hell are you doing in my house!?
+Get out!
+- Black Ninja
+"""
+
+"quest.ninja_skills.2" = """
+One of my brothers has a hoarding issue...
+I'm waiting for him to get home so I can force him to clean up.
+I just hope they didn't have any trouble on the mission...
+"""
+
+"quest.ninja_skills.3a" = """
+So you came all the way from Evergrove?
+Can you check on my sister and let her know I'm ok?
+My brother should be back home by now, 
+but with our job you never know...
+If you do, I'll teach you one of my ninja skills!
+"""
+
+"quest.ninja_skills.3b" = """
+So you came all the way from Evergrove?
+Can you check on my sister and let her know I'm ok?
+My brother should be back home by now, 
+but with our job you never know...
+If you do, I'll teach you one of my ninja skills!
+"""
+
+"quest.ninja_skills.4" = """
+A ninja dressed in black... 
+That's my brother!
+Please tell him to come home soon,
+I need help cleaning our brother's house!
+Was my other brother with him? 
+He dresses in blue.
+"""
+
+"quest.ninja_skills.5a" = """
+Cleaning the house!? LOL
+I'm not sure I'll make it, you know, we're kinda in the 
+middle of a war for the survival of mankind over here!
+As promised, you can now catch knifes mid-air bare handed.
+Obviously, you need knifes to be coming at you 
+to use this skill.
+But I'm sure you'll find some use for it eventually!
+"""
+
+"quest.ninja_skills.5b" = """
+Cleaning the house!? LOL
+I'm not sure I'll make it, you know, we're kinda in the 
+middle of a war for the survival of mankind over here!
+Pretty OP when combined with my brother's skill eh?
+"""
+
+"quest.ninja_skills.6" = """
+Cleaning the house!? LOL
+I'm not sure I'll make it, you know, we're kinda in the 
+middle of a war for the survival of mankind over here!
+Pretty OP when combined with my brother's skill eh?
+"""
+
+"quest.ninja_skills.7" = """
+A ninja dressed in blue... 
+That's my brother!
+Please tell him to come home soon,
+we need to clean up his place, it's full of junk!
+Was my other brother with him? 
+He dresses in black.
+"""
+
+"quest.ninja_skills.8a" = """
+Junk!? 
+It's not junk! It's weapons and other ninja stuff!
+Oh well...
+As promised, your knife will now bounce off all surfaces!
+Pretty cool eh? You'll see!
+"""
+
+"quest.ninja_skills.8b" = """
+Junk!? 
+It's not junk! It's weapons and other ninja stuff!
+Oh well...
+As promised, your knife will now bounce off all surfaces!
+Since you already have my brother's skill, this should
+basically solve your low-ammo problem!
+"""
+
+"quest.ninja_skills.9" = """
+Thank you for checking on my brothers...
+Since they joined our father in the "family business" I am
+always a bit worried...
+I just hope they are coming home soon, I need help 
+cleaning our brother's house!
+"""
+
+"quest.ninja_skills.10" = """
+This job requires me to stay away from home for
+long periods of time... 
+My children are all about your age...
+"""
+
+"quest.ninja_skills.11" = """
+My kids are all well? That's a relief!
+As a reward, I'll teach the ultimate ninja skill.
+If only I had the chance, I KNOW I could defeat the 
+Demon Lord himself in one blow with it.
+F*** that guy.
+"""
+
+"quest.ninja_skills.12" = """
+Told you... Barrels, monsters, Demon Lords, ...
+Doesn't matter.
+One shot is enough for ANY foe.
+"""
+
+"quest.ninja_skills.13" = """
+I tried kid, but I was defeated.
+It's your turn now, here, have my skill.
+You can now defeat ANY enemy in one blow.
+Including... him...
+"""
+
+"quest.manafren_research.1" = """
+What do you think you are doing here!?
+This zone is off limits without a permit!
+"""
+
+"quest.manafren_research.2" = """
+Ah, just who I needed. 
+I’ve studied these Manafren trees extensively, by all accounts, they’re miraculous...
+Yet, I can’t shake this feeling of something dark, something ancient lurking beneath. 
+Maybe there’s something we’ve overlooked in the ancient scrolls...
+Unfortunately, the village elder is the only one with access to them, but he won't talk to me anymore...
+"""
+
+"quest.manafren_research.2.1" = """
+My research continues, but I can't get the feeling of dread off my mind.
+"""
+
+"quest.manafren_research.3" = """
+Dr. Voss sent you, did he? 
+Ah, well… I don’t put much stock in all his science...
+These trees, they hold a power older than you or me, a power that whispers secrets to those willing to listen. 
+There’s an old scroll tucked away in the dungeon nearby. 
+Maybe you’ll find what you seek there. 
+Just beware of what’s hidden within those words.
+"""
+
+"quest.manafren_research.3.1" = """
+Did you find anything interesting in the dungeon?
+"""
+
+"quest.manafren_research.4" = """
+In ages past, when twilight lay thick over Duskhaven, a pact was struck. 
+The trees would flourish, drawing life from the soil and skies, breathing mana into the land. 
+Yet, for this... <unreadable>
+Beneath their roots flows the darkness, and with each pulse, a reminder of... <unreadable>. 
+Those who seek this path must journey east to the mountains, where the source of the pact lies buried.
+"""
+
+"quest.manafren_research.5" = """
+It was here, beneath these stones, that the trees were first granted their cursed life. 
+The Lord of Darkness poured his very essence into their roots, binding their growth to his will. 
+Each leaf holds a shard of his presence, and with each season, his dominion spreads quietly. 
+Let this record serve as both a warning and a call to vigilance. As the trees grow, so does he.
+"""
+
+"quest.manafren_research.6" = """
+You… you found it. 
+So, the trees truly are bound to some dark force, and their energy, our very life here in Duskhaven, comes from this curse. 
+I had suspicions, but these findings, well, they change everything. 
+I’ll need time to process what this means, but take this as a token. 
+"""
+
+"quest.manafren_research.6.1" = """
+I’ll need time to process the latest findings...
+"""
+
+"quest.manafren_research.6.2" = """
+The suspicious dark aura is gone.
+I have to say, I am a bit pissed, I was so close...
+It's hard to do science in a world with magic.
+Maybe they should get an outer-worlder to do my job - no offense.
+"""

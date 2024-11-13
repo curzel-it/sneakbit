@@ -441,7 +441,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.cabinet.md.brown",
+      "name": "objects.name.cabinet.md.brown",
       "species_id": 1091,
       "entity_type": "StaticObject",
       "offset": {
@@ -573,7 +573,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.cabinet.md.brown",
+      "name": "objects.name.cabinet.md.brown",
       "species_id": 1091,
       "entity_type": "StaticObject",
       "offset": {

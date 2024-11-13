@@ -353,7 +353,7 @@
         "w": 2,
         "h": 2
       },
-      "name": "objects.cabinet.lg",
+      "name": "objects.name.cabinet.lg",
       "species_id": 1092,
       "entity_type": "StaticObject",
       "offset": {

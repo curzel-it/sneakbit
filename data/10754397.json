@@ -177,7 +177,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -221,7 +221,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
+      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -265,7 +265,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
+      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -309,7 +309,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
+      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -353,7 +353,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
+      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -397,7 +397,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
+      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -441,7 +441,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.green",
+      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
       "offset": {
@@ -485,7 +485,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
+      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -529,7 +529,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
+      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -573,7 +573,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
+      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -617,7 +617,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
+      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -661,7 +661,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
+      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -705,7 +705,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
+      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -749,7 +749,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
+      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -793,7 +793,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
+      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -837,7 +837,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
+      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -881,7 +881,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -925,7 +925,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -969,7 +969,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.purple",
+      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
       "offset": {
@@ -1057,7 +1057,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -1101,7 +1101,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
+      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -1145,7 +1145,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
+      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -1189,7 +1189,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
+      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -1233,7 +1233,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
+      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -1277,7 +1277,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
+      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -1321,7 +1321,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
+      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -1365,7 +1365,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
+      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -1409,7 +1409,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.brown",
+      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
       "offset": {
@@ -1453,7 +1453,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -1497,7 +1497,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -1541,7 +1541,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {

@@ -287,7 +287,7 @@
     },
     {
         "id": 3008,
-        "name": "npc.name.shop_clerk",
+        "name": "npc.name.male.kid.red_hair.blue_suit.green_hat",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -1212,7 +1212,7 @@
     },
     {
         "id": 6005,
-        "name": "objects.name.book_dark",
+        "name": "objects.name.book_black",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
         "z_index": 350,
@@ -2507,7 +2507,7 @@
     },
     {
         "id": 1036,
-        "name": "npc.name.girl.blue",
+        "name": "npc.name.female.blue_hair",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -2573,7 +2573,7 @@
     },
     {
         "id": 1038,
-        "name": "objects.barrel.purple",
+        "name": "objects.name.barrel.purple",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -2595,7 +2595,7 @@
     },
     {
         "id": 1039,
-        "name": "objects.barrel.green",
+        "name": "objects.name.barrel.green",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -2617,7 +2617,7 @@
     },
     {
         "id": 1073,
-        "name": "objects.barrel.brown",
+        "name": "objects.name.barrel.brown",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -2639,7 +2639,7 @@
     },
     {
         "id": 1074,
-        "name": "objects.barrel.wood",
+        "name": "objects.name.barrel.wood",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -2727,7 +2727,7 @@
     },
     {
         "id": 1078,
-        "name": "objects.boat.small",
+        "name": "objects.name.boat.small",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -2771,7 +2771,7 @@
     },
     {
         "id": 1080,
-        "name": "npc.name.man.punk.1",
+        "name": "npc.name.male.emo_hair",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -2815,7 +2815,7 @@
     },
     {
         "id": 1082,
-        "name": "npc.name.dr_voss",
+        "name": "npc.name.male.black.doctor",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -2969,7 +2969,7 @@
     },
     {
         "id": 1089,
-        "name": "object.waterfall",
+        "name": "objects.waterfall",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
         "z_index": 0,
@@ -2991,7 +2991,7 @@
     },
     {
         "id": 1090,
-        "name": "objects.cabinet.sm.brown",
+        "name": "objects.name.cabinet.sm.brown",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -3013,7 +3013,7 @@
     },
     {
         "id": 1091,
-        "name": "objects.cabinet.md.brown",
+        "name": "objects.name.cabinet.md.brown",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -3035,7 +3035,7 @@
     },
     {
         "id": 1092,
-        "name": "objects.cabinet.lg.brown",
+        "name": "objects.name.cabinet.lg.brown",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -3057,7 +3057,7 @@
     },
     {
         "id": 1093,
-        "name": "objects.cabinet.sm.beige",
+        "name": "objects.name.cabinet.sm.beige",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -3079,7 +3079,7 @@
     },
     {
         "id": 1094,
-        "name": "objects.cabinet.md.beige",
+        "name": "objects.name.cabinet.md.beige",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -3101,7 +3101,7 @@
     },
     {
         "id": 1095,
-        "name": "objects.cabinet.lg.beige",
+        "name": "objects.name.cabinet.lg.beige",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -3123,7 +3123,7 @@
     },
     {
         "id": 1096,
-        "name": "objects.cabinet.sm.white",
+        "name": "objects.name.cabinet.sm.white",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -3145,7 +3145,7 @@
     },
     {
         "id": 1097,
-        "name": "objects.cabinet.md.white",
+        "name": "objects.name.cabinet.md.white",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -3167,7 +3167,7 @@
     },
     {
         "id": 1098,
-        "name": "objects.cabinet.lg.white",
+        "name": "objects.name.cabinet.lg.white",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
         "z_index": 0,
@@ -3233,7 +3233,7 @@
     },
     {
         "id": 1101,
-        "name": "npc.name.girl.brown",
+        "name": "npc.name.female.brown_hair",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -3277,7 +3277,7 @@
     },
     {
         "id": 1103,
-        "name": "npc.name.girl.green",
+        "name": "npc.name.female.green_hair",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -3584,7 +3584,7 @@
     },
     {
         "id": 1127,
-        "name": "npc.name.green_girl",
+        "name": "npc.name.female.green_hair",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -3672,7 +3672,7 @@
     },
     {
         "id": 1120,
-        "name": "npc.name.black_male_blue_hair",
+        "name": "npc.name.male.black.blue_hair",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -3694,7 +3694,7 @@
     },
     {
         "id": 1121,
-        "name": "npc.name.female_dark_blonde",
+        "name": "npc.name.female.dark_blonde",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,

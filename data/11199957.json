@@ -133,7 +133,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -177,7 +177,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -221,7 +221,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -265,7 +265,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -309,7 +309,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -600,7 +600,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -644,7 +644,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -688,7 +688,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -732,7 +732,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -776,7 +776,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -820,7 +820,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -864,7 +864,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -908,7 +908,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -952,7 +952,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {
@@ -996,7 +996,7 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.barrel.wood",
+      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
       "offset": {

@@ -397,7 +397,7 @@
         "w": 2,
         "h": 2
       },
-      "name": "objects.cabinet.lg.beige",
+      "name": "objects.name.cabinet.lg.beige",
       "species_id": 1095,
       "entity_type": "StaticObject",
       "offset": {
@@ -441,7 +441,7 @@
         "w": 2,
         "h": 2
       },
-      "name": "objects.cabinet.lg.beige",
+      "name": "objects.name.cabinet.lg.beige",
       "species_id": 1095,
       "entity_type": "StaticObject",
       "offset": {

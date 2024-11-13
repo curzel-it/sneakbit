@@ -1575,7 +1575,6 @@
             "w": 1,
             "h": 2
           },
-          "name": "npc.name.man.punk.1",
           "species_id": 1080,
           "entity_type": "Npc",
           "offset": {
