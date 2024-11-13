@@ -35,7 +35,6 @@ pub struct Entity {
     pub frame: IntRect,  
     pub species_id: u32,  
     pub entity_type: EntityType,  
-    pub offset: Vector2d,
     pub direction: Direction,
     pub current_speed: f32,
     pub is_rigid: bool,
@@ -45,6 +44,9 @@ pub struct Entity {
     pub destination: Option<Destination>,
     pub lock_type: LockType,
     pub original_sprite_frame: IntRect,
+    
+    #[serde(skip)]
+    pub offset: Vector2d,
 
     #[serde(skip)]
     pub name: String,  
