@@ -18,11 +18,14 @@ impl World {
             entity.direction = Direction::Down;
             entity.frame.x = x;
             entity.frame.y = y; 
+            println!("Pre-setting to go down");
 
             let likely_directions = self.likely_direction_for_hero(x, y, hero_direction);
+            println!("Likely directions: {:#?}", likely_directions);
             
             for new_direction in &likely_directions {
                 if self.has_space_for_hero_in_direction(x, y, new_direction) {
+                    println!("Has space to go {:#?}", new_direction);
                     let (ox, oy) = new_direction.as_col_row_offset();
                     entity.frame.x = x + ox;
                     entity.frame.y = y - 1 + oy;
@@ -76,7 +79,7 @@ impl World {
         let (ox, oy) = direction.as_col_row_offset();
         
         let y_fix = match direction {
-            Direction::Up => -1,
+            Direction::Up => 0,
             Direction::Down => 1,
             _ => 0
         };
@@ -85,10 +88,17 @@ impl World {
             let nx = x + i * ox;
             let ny = y + i * oy + y_fix;
     
+            if ny == y && nx == x || ny == y+1 && nx == x {
+                println!("Check {}, hero position, ok", i);
+                continue;
+            }
             if ny < 0 || ny >= self.hitmap.len() as i32 || nx < 0 || nx >= self.hitmap[0].len() as i32 {
+                println!("Check {}, out of bounds, ok", i);
                 continue;
             }    
             if self.hitmap[ny as usize][nx as usize] {
+                let what = self.entities_map[ny as usize][nx as usize];
+                println!("Exiting at check {}, hits {}", i, what);
                 return false;
             }
         }    

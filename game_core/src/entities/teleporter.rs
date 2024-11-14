@@ -3,6 +3,7 @@ use crate::{features::destination::Destination, game_engine::{entity::Entity, in
 impl Entity {
     pub fn setup_teleporter(&mut self, creative_mode: bool) {
         self.sprite.frame.y = if creative_mode { 5 } else { 6 };
+        self.is_rigid = false;
     }
 
     pub fn update_teleporter(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {   

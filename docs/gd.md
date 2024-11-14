@@ -45,27 +45,51 @@ All skills are passive, stackable and perpetual.
 1. MC reaches Demon Lord location, but Punk is there and defeats him right before his eyes. Turns out Punk was the hero from the profecy all along and was actually getting ready to defeat the demon lord all along.
 
 ## Characters
-* Dr. Alistair Voss - Head of the Manafren trees research initiative
+### Main Cast 
+#### MC
+The player or main character, somebody who has recently been summoned to this world for unknown reasons.
 
-* Girl with blue hair in Evergrove Village
-* Blue Ninja
-* Black Ninja
-* Red Ninja
-* Chief Scientist
-* Intern Scientist
-* Wizard
-* Punk
-* Silver 
-* Monsters
+#### Mogarth the Sage
+The wise wizard who offers guidance and crucial information about the world’s magic and the looming threat of the Demon Lord.
 
-I also have assets ready for:
-* Male soldier/guard
-* Red-haired female hero
-* Girl with long brown hair
-* Girl with short green hair
-* Old man
-* Old woman
-* Young boy
+#### Punk
+A rebellious character destined to fulfill the prophecy by ultimately defeating the Demon Lord, challenging the MC's role as the hero.
+
+### Secondary 
+#### Dr. Alistair Voss
+Head of the Manafren trees research initiative who guides the player in understanding the Manafern trees and their connection to the Demon Lord.
+
+#### Lyria Kurogane
+The girl with blue hair in Evergrove Village who provides assistance and information to the MC during their early adventures.
+
+#### Blue Ninja
+A skilled warrior from the ninja family who helps the MC acquire the Bouncing Knife skill through a dedicated side quest.
+
+#### Black Ninja
+A formidable member of the ninja family who mentors the MC in obtaining the Knife Catcher skill.
+
+#### Red Ninja
+The leader of the ninja siblings who grants the MC the Piercing Knife skill after completing prerequisite quests.
+
+#### Silveroak
+Punk's father, who reveals the truth behind Punk's destiny and the hero prophecy, adding depth to the narrative.
+
+#### Elder Maren
+The wise old woman from Duskhaven who provides lore about the Manafern trees and their significance to the world.
+
+#### Serena Flameheart
+A female soldier who offers support and combat assistance to the MC during critical battles.
+
+#### Nyx
+An assassin girl who plays a pivotal role in the story’s conflict, adding intrigue and complexity to the plot.
+
+#### Captain 'Ironside' Thorne
+A steadfast male soldier who leads the defense against the increasing demon incursions.
+
+### Fauna
+A single kind of monster, which is just a black blob with a teeth-filled mouth for now.
+
+There's also several household animals, but they don't serve any purpose aside from decoration.
 
 ## Quests
 The objective of the game is to defeat the Demon Lord, which by necessity leads the player to go through all dungeons in search of special keys.
@@ -89,35 +113,35 @@ The quest has the following steps:
 Reward: Player wins the game
 
 ### Side Quest: Bouncing Knifes
-1. (Optional) Meet with the blue-haired girl in Evergrove
-1. Meet with the Blue Ninja
-1. Meet with his sister in Evergrove
-1. Go back to the Blue Ninja
+1. (Optional) Meet with Lyria Kunogane in Evergrove
+2. Meet with the Blue Ninja
+3. Meet with his sister Lyria in Evergrove
+4. Go back to the Blue Ninja
 
 Reward: Bouncing knifes skill
 
 ### Side Quest: Knife Catcher
-1. (Optional) Meet with the blue-haired girl in Evergrove
-1. Meet with the Black Ninja
-1. Meet with his sister in Evergrove
-1. Go back to the Black Ninja
+1. (Optional) Meet with Lyria Kunogane in Evergrove
+2. Meet with the Black Ninja
+3. Meet with his sister Lyria in Evergrove
+4. Go back to the Black Ninja
 
 Reward: Knife catcher skill
 
 ### Side Quest: Piercing Knifes
-1. (Optional) Meet with the Red Ninja
-1. Complete the "Bouncing Knifes" quest
-1. Complete the "Knife catcher" quest
-1. Meet with the Red Ninja
+1. (Optional) Meet with the Red Ninja, who reveals he's the head of the Kunogane family
+2. Complete the "Bouncing Knifes" quest
+3. Complete the "Knife catcher" quest
+4. Meet with the Red Ninja
 
 Reward: Piercing Knife skill
 
 ### Side Quest: Manafren Research
 1. Meet with Dr Voss
-1. (Optional) Talk to the village elder
-1. (Optional) Read the scroll in the dungeon
-1. Find the old book in the mountains to the East
-1. Report your findings to Dr Voss
+2. (Optional) Talk to the village elder
+3. (Optional) Read the scroll in the dungeon
+4. Find the old book in the mountains to the East
+5. Report your findings to Dr Voss
 
 Reward: 10x Kunai
 

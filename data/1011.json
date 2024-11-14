@@ -21973,7 +21973,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "contents": "quest.manafren_research.5",
+      "contents": "quest.manafren_research.ancient_book.contents",
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -22953,31 +22953,31 @@
       },
       "dialogues": [
         {
-          "text": "quest.manafren_research.6.2",
+          "text": "quest.manafren_research.dr_voss.research_was_inconclusive",
           "key": "demon_lord_defeat",
           "expected_value": 1,
           "reward": null
         },
         {
-          "text": "quest.manafren_research.6.1",
+          "text": "quest.manafren_research.dr_voss.thanks_for_the_info_still_working_on_it",
           "key": "dialogue.answer.quest.manafren_research.6",
           "expected_value": 1,
           "reward": null
         },
         {
-          "text": "quest.manafren_research.6",
+          "text": "quest.manafren_research.dr_voss.thanks_for_the_info",
           "key": "content_read.11022247",
           "expected_value": 1,
           "reward": 7001
         },
         {
-          "text": "quest.manafren_research.2.1",
+          "text": "quest.manafren_research.dr_voss.waiting_for_info",
           "key": "dialogue.answer.quest.manafren_research.2",
           "expected_value": 1,
           "reward": null
         },
         {
-          "text": "quest.manafren_research.2",
+          "text": "quest.manafren_research.dr_voss.introduction",
           "key": "always",
           "expected_value": 0,
           "reward": null
@@ -33384,7 +33384,7 @@
       },
       "dialogues": [
         {
-          "text": "quest.manafren_research.1",
+          "text": "quest.manafren_research.serena.keep_out_of_research_area",
           "key": "always",
           "expected_value": 0,
           "reward": null

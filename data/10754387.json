@@ -41,10 +41,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -63,7 +59,8 @@
       "destination": {
         "world": 1001,
         "x": 0,
-        "y": 0
+        "y": 0,
+        "direction": "Unknown"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -72,11 +69,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10754390,
@@ -88,10 +87,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -110,7 +105,8 @@
       "destination": {
         "world": 1001,
         "x": 0,
-        "y": 0
+        "y": 0,
+        "direction": "Unknown"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -119,11 +115,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10754391,
@@ -133,13 +131,8 @@
         "w": 2,
         "h": 2
       },
-      "name": "Table",
       "species_id": 1016,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -163,11 +156,13 @@
         "w": 2,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10754392,
@@ -177,13 +172,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "Green Seat",
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -207,11 +197,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10754393,
@@ -221,13 +213,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "Green Seat",
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -251,11 +238,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10754394,
@@ -265,13 +254,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "Green Seat",
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -295,11 +279,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10754395,
@@ -309,13 +295,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "Green Seat",
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -339,11 +320,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11171396,
@@ -353,13 +336,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "Bed",
       "species_id": 1017,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -383,11 +361,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11171398,
@@ -397,13 +377,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "Brown Scroll",
       "species_id": 10002,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -427,13 +402,16 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "contents": "quest.ninja_skills.1",
+      "contents": "quest.ninja_skills.black_ninja.note",
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     }
   ],
   "is_interior": true,
-  "light_conditions": "Day"
+  "light_conditions": "Day",
+  "cutscenes": []
 }

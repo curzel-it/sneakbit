@@ -156,29 +156,19 @@
       },
       "dialogues": [
           {
-              "key": "dialogue.answer.quest.ninja_skills.7,dialogue.answer.quest.ninja_skills.3a",
-              "expected_value": 1,
-              "text": "quest.ninja_skills.8b"
-          },
-          {
-              "key": "dialogue.answer.quest.ninja_skills.9,dialogue.answer.quest.ninja_skills.3a",
-              "expected_value": 1,
-              "text": "quest.ninja_skills.8b"
-          },
-          {
               "key": "dialogue.answer.quest.ninja_skills.7",
               "expected_value": 1,
-              "text": "quest.ninja_skills.8a"
+              "text": "quest.ninja_skills.blue_ninja.gain_bouncing_knifes_still"
           },
           {
               "key": "dialogue.answer.quest.ninja_skills.9",
               "expected_value": 1,
-              "text": "quest.ninja_skills.8a"
+              "text": "quest.ninja_skills.blue_ninja.gain_bouncing_knifes_still"
           },
           {
               "key": "always",
               "expected_value": 0,
-              "text": "quest.ninja_skills.3b"
+              "text": "quest.ninja_skills.blue_ninja.please_check_on_sister"
           }
       ],
       "destination": null,

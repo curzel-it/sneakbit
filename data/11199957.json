@@ -376,32 +376,20 @@
       },
       "dialogues": [
         {
-          "key": "dialogue.answer.quest.ninja_skills.9,dialogue.answer.quest.ninja_skills.3b",
-          "text": "quest.ninja_skills.5b",
-          "expected_value": 1,
-          "reward": null
-        },
-        {
-          "key": "dialogue.answer.quest.ninja_skills.4,dialogue.answer.quest.ninja_skills.3b",
-          "text": "quest.ninja_skills.5b",
-          "expected_value": 1,
-          "reward": null
-        },
-        {
           "key": "dialogue.answer.quest.ninja_skills.9",
-          "text": "quest.ninja_skills.5a",
+          "text": "quest.ninja_skills.black_ninja.gain_knife_catcher_skill",
           "expected_value": 1,
           "reward": null
         },
         {
           "key": "dialogue.answer.quest.ninja_skills.4",
-          "text": "quest.ninja_skills.5a",
+          "text": "quest.ninja_skills.black_ninja.gain_knife_catcher_skill",
           "expected_value": 1,
           "reward": null
         },
         {
           "key": "always",
-          "text": "quest.ninja_skills.3a",
+          "text": "quest.ninja_skills.black_ninja.please_check_on_sister",
           "expected_value": 0,
           "reward": null
         }

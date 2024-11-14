@@ -6,8 +6,8 @@
     "tiles": [
       "000000000000000000000000000000",
       "000000000000000000000000000000",
-      "066666066600000000000000000000",
-      "066666006600000000000000000000",
+      "066666666600000000000000000000",
+      "066666666600000000000000000000",
       "066666666600000000000000000000",
       "066666666600000000000000000000",
       "006666666600000000000000000000",
@@ -20,9 +20,9 @@
     "tiles": [
       "444444444400000000000000000000",
       "444444444400000000000000000000",
-      "400000000000000000000000000000",
+      "40000000B000000000000000000000",
       "40000000BB00000000000000000000",
-      "40000000MM00000000000000000000",
+      "40000000BM00000000000000000000",
       "40000000BB00000000000000000000",
       "40000000MM00000000000000000000",
       "400000000000000000000000000000",
@@ -41,10 +41,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -63,7 +59,8 @@
       "destination": {
         "world": 1001,
         "x": 0,
-        "y": 0
+        "y": 0,
+        "direction": "Unknown"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -72,11 +69,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10754400,
@@ -88,10 +87,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -110,7 +105,8 @@
       "destination": {
         "world": 1001,
         "x": 0,
-        "y": 0
+        "y": 0,
+        "direction": "Unknown"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -119,11 +115,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178599,
@@ -133,13 +131,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "x10 Kunai",
       "species_id": 7001,
       "entity_type": "Bundle",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -163,11 +156,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178639,
@@ -177,13 +172,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -207,11 +197,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178606,
@@ -221,13 +213,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -251,11 +238,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178607,
@@ -265,13 +254,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -295,11 +279,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178608,
@@ -309,13 +295,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -339,11 +320,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178609,
@@ -353,13 +336,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -383,11 +361,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178610,
@@ -397,13 +377,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -427,11 +402,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178611,
@@ -441,13 +418,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.green",
       "species_id": 1039,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -471,11 +443,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178612,
@@ -485,13 +459,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -515,11 +484,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178613,
@@ -529,13 +500,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -559,55 +525,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
-    },
-    {
-      "id": 11178614,
-      "frame": {
-        "x": 8,
-        "y": 1,
-        "w": 1,
-        "h": 2
-      },
-      "name": "objects.name.barrel.purple",
-      "species_id": 1038,
-      "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 0,
-        "y": 10,
-        "w": 1,
-        "h": 2
-      },
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178615,
@@ -617,13 +541,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -647,11 +566,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178634,
@@ -661,13 +582,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -691,11 +607,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178617,
@@ -705,13 +623,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -735,11 +648,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178618,
@@ -749,13 +664,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -779,11 +689,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178619,
@@ -793,13 +705,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -823,11 +730,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178620,
@@ -837,13 +746,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -867,11 +771,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178642,
@@ -881,13 +787,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -911,11 +812,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178638,
@@ -925,13 +828,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -955,11 +853,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178623,
@@ -969,13 +869,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.purple",
       "species_id": 1038,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -999,11 +894,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178640,
@@ -1013,13 +910,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "Bed",
       "species_id": 1017,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1043,11 +935,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178637,
@@ -1057,13 +951,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1087,11 +976,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178626,
@@ -1101,13 +992,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1131,11 +1017,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178627,
@@ -1145,13 +1033,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1175,11 +1058,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178628,
@@ -1189,13 +1074,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1219,11 +1099,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178629,
@@ -1233,13 +1115,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1263,11 +1140,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178630,
@@ -1277,13 +1156,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1307,11 +1181,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178631,
@@ -1321,13 +1197,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1351,11 +1222,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178632,
@@ -1365,13 +1238,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1395,11 +1263,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178633,
@@ -1409,13 +1279,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.brown",
       "species_id": 1073,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1439,11 +1304,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178635,
@@ -1453,13 +1320,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1483,11 +1345,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178636,
@@ -1497,13 +1361,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1527,11 +1386,13 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 11178641,
@@ -1541,13 +1402,8 @@
         "w": 1,
         "h": 2
       },
-      "name": "objects.name.barrel.wood",
       "species_id": 1074,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1571,13 +1427,262 @@
         "w": 1,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11607620,
+      "frame": {
+        "x": 9,
+        "y": 2,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1074,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 3,
+          "y": 10,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 3,
+        "y": 10,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11607621,
+      "frame": {
+        "x": 9,
+        "y": 4,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1074,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 3,
+          "y": 10,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 3,
+        "y": 10,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11607622,
+      "frame": {
+        "x": 9,
+        "y": 3,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1039,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 1,
+          "y": 10,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 1,
+        "y": 10,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11607623,
+      "frame": {
+        "x": 9,
+        "y": 5,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1039,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 1,
+          "y": 10,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 1,
+        "y": 10,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11607624,
+      "frame": {
+        "x": 8,
+        "y": 5,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1039,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 1,
+          "y": 10,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 1,
+        "y": 10,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11607625,
+      "frame": {
+        "x": 8,
+        "y": 0,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 10004,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 2,
+          "y": 5,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 2,
+        "y": 5,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": "quest.ninja_skills.blue_ninja.note",
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     }
   ],
   "is_interior": true,
-  "light_conditions": "Day"
+  "light_conditions": "Day",
+  "cutscenes": []
 }

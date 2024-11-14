@@ -2312,19 +2312,19 @@
       "dialogues": [
         {
           "key": "dialogue.answer.quest.ninja_skills.11",
-          "text": "quest.ninja_skills.12",
+          "text": "quest.ninja_skills.red_ninja.about_piercing_knife_skill",
           "expected_value": 1,
           "reward": null
         },
         {
           "key": "dialogue.answer.quest.ninja_skills.3a,dialogue.answer.quest.ninja_skills.3b",
-          "text": "quest.ninja_skills.11",
+          "text": "quest.ninja_skills.red_ninja.gain_piercing_knife_skill",
           "expected_value": 1,
           "reward": null
         },
         {
           "key": "always",
-          "text": "quest.ninja_skills.10",
+          "text": "quest.ninja_skills.red_ninja.please_check_on_my_kids",
           "expected_value": 0,
           "reward": null
         }

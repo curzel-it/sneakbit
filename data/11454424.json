@@ -523,13 +523,13 @@
       },
       "dialogues": [
         {
-          "text": "quest.manafren_research.3.1",
+          "text": "quest.manafren_research.duskhaven_village_elder.have_you_checked_the_dungeon",
           "key": "dialogue.answer.quest.manafren_research.3",
           "expected_value": 1,
           "reward": null
         },
         {
-          "text": "quest.manafren_research.3",
+          "text": "quest.manafren_research.duskhaven_village_elder.check_the_dungeon",
           "key": "always",
           "expected_value": 0,
           "reward": null

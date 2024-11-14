@@ -183,10 +183,6 @@
       },
       "species_id": 11000,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -228,10 +224,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -278,10 +270,6 @@
       },
       "species_id": 1006,
       "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -323,10 +311,6 @@
       },
       "species_id": 1003,
       "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -368,10 +352,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -418,10 +398,6 @@
       },
       "species_id": 1003,
       "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -463,10 +439,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -513,10 +485,6 @@
       },
       "species_id": 1033,
       "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -558,10 +526,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -608,10 +572,6 @@
       },
       "species_id": 1033,
       "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -653,10 +613,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -703,10 +659,6 @@
       },
       "species_id": 1033,
       "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -748,10 +700,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -798,10 +746,6 @@
       },
       "species_id": 4001,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.5,
       "is_rigid": false,
@@ -843,10 +787,6 @@
       },
       "species_id": 4005,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 1.0,
       "is_rigid": false,
@@ -888,10 +828,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -933,10 +869,6 @@
       },
       "species_id": 50000,
       "entity_type": "Hint",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -978,10 +910,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -1023,10 +951,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -1068,10 +992,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -1113,10 +1033,6 @@
       },
       "species_id": 3007,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Right",
       "current_speed": 0.0,
       "is_rigid": true,
@@ -1133,14 +1049,14 @@
       },
       "dialogues": [
         {
-          "key": "dialogue.answer.lore.004.you_are_here",
           "text": "lore.004.you_are_here_again",
+          "key": "dialogue.answer.lore.004.you_are_here",
           "expected_value": 1,
           "reward": null
         },
         {
-          "key": "always",
           "text": "lore.004.you_are_here",
+          "key": "always",
           "expected_value": 0,
           "reward": null
         }
@@ -1171,10 +1087,6 @@
       },
       "species_id": 1043,
       "entity_type": "Gate",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1216,10 +1128,6 @@
       },
       "species_id": 1053,
       "entity_type": "PressurePlate",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1261,10 +1169,6 @@
       },
       "species_id": 1030,
       "entity_type": "PushableObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1306,10 +1210,6 @@
       },
       "species_id": 1036,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": true,
@@ -1326,26 +1226,26 @@
       },
       "dialogues": [
         {
+          "text": "quest.ninja_skills.lyria.father_introduction",
           "key": "dialogue.answer.quest.ninja_skills.3a,dialogue.answer.quest.ninja_skills.3b",
-          "text": "quest.ninja_skills.9",
           "expected_value": 1,
           "reward": null
         },
         {
+          "text": "quest.ninja_skills.lyria.thats_my_brother_black",
           "key": "dialogue.answer.quest.ninja_skills.3a",
-          "text": "quest.ninja_skills.4",
           "expected_value": 1,
           "reward": null
         },
         {
+          "text": "quest.ninja_skills.lyria.thats_my_brother_blue",
           "key": "dialogue.answer.quest.ninja_skills.3b",
-          "text": "quest.ninja_skills.7",
           "expected_value": 1,
           "reward": null
         },
         {
+          "text": "quest.ninja_skills.lyria.hoarding_issues",
           "key": "always",
-          "text": "quest.ninja_skills.2",
           "expected_value": 0,
           "reward": null
         }
@@ -1376,10 +1276,6 @@
       },
       "species_id": 7001,
       "entity_type": "Bundle",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1421,10 +1317,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -1466,10 +1358,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1511,10 +1399,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1556,10 +1440,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1601,10 +1481,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1646,10 +1522,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1691,10 +1563,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1736,10 +1604,6 @@
       },
       "species_id": 11002,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1781,10 +1645,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1831,10 +1691,6 @@
       },
       "species_id": 7001,
       "entity_type": "Bundle",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1876,10 +1732,6 @@
       },
       "species_id": 50000,
       "entity_type": "Hint",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1921,10 +1773,6 @@
       },
       "species_id": 50000,
       "entity_type": "Hint",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1966,10 +1814,6 @@
       },
       "species_id": 50000,
       "entity_type": "Hint",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2011,10 +1855,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -2056,10 +1896,6 @@
       },
       "species_id": 10001,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2101,10 +1937,6 @@
       },
       "species_id": 4005,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 1.0,
       "is_rigid": false,
@@ -2146,10 +1978,6 @@
       },
       "species_id": 1105,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.5,
       "is_rigid": false,

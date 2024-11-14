@@ -377,7 +377,7 @@ We have nothing else to talk about.
 Go back to your world, or stay... Whatever...
 """
 
-"quest.ninja_skills.1" = """
+"quest.ninja_skills.black_ninja.note" = """
 Yo, 
 I'm out on a mission.
 Also, what the hell are you doing in my house!?
@@ -385,13 +385,21 @@ Get out!
 - Black Ninja
 """
 
-"quest.ninja_skills.2" = """
+"quest.ninja_skills.blue_ninja.note" = """
+Yo, 
+I'm out on a mission.
+Also, what the hell are you doing in my house!?
+Get out!
+- Blue Ninja
+"""
+
+"quest.ninja_skills.lyria.hoarding_issues" = """
 One of my brothers has a hoarding issue...
 I'm waiting for him to get home so I can force him to clean up.
 I just hope they didn't have any trouble on the mission...
 """
 
-"quest.ninja_skills.3a" = """
+"quest.ninja_skills.black_ninja.please_check_on_sister" = """
 So you came all the way from Evergrove?
 Can you check on my sister and let her know I'm ok?
 My brother should be back home by now, 
@@ -399,7 +407,7 @@ but with our job you never know...
 If you do, I'll teach you one of my ninja skills!
 """
 
-"quest.ninja_skills.3b" = """
+"quest.ninja_skills.blue_ninja.please_check_on_sister" = """
 So you came all the way from Evergrove?
 Can you check on my sister and let her know I'm ok?
 My brother should be back home by now, 
@@ -407,7 +415,7 @@ but with our job you never know...
 If you do, I'll teach you one of my ninja skills!
 """
 
-"quest.ninja_skills.4" = """
+"quest.ninja_skills.lyria.thats_my_brother_black" = """
 A ninja dressed in black... 
 That's my brother!
 Please tell him to come home soon,
@@ -416,7 +424,7 @@ Was my other brother with him?
 He dresses in blue.
 """
 
-"quest.ninja_skills.5a" = """
+"quest.ninja_skills.black_ninja.gain_knife_catcher_skill" = """
 Cleaning the house!? LOL
 I'm not sure I'll make it, you know, we're kinda in the 
 middle of a war for the survival of mankind over here!
@@ -426,21 +434,7 @@ to use this skill.
 But I'm sure you'll find some use for it eventually!
 """
 
-"quest.ninja_skills.5b" = """
-Cleaning the house!? LOL
-I'm not sure I'll make it, you know, we're kinda in the 
-middle of a war for the survival of mankind over here!
-Pretty OP when combined with my brother's skill eh?
-"""
-
-"quest.ninja_skills.6" = """
-Cleaning the house!? LOL
-I'm not sure I'll make it, you know, we're kinda in the 
-middle of a war for the survival of mankind over here!
-Pretty OP when combined with my brother's skill eh?
-"""
-
-"quest.ninja_skills.7" = """
+"quest.ninja_skills.lyria.thats_my_brother_blue" = """
 A ninja dressed in blue... 
 That's my brother!
 Please tell him to come home soon,
@@ -449,7 +443,7 @@ Was my other brother with him?
 He dresses in black.
 """
 
-"quest.ninja_skills.8a" = """
+"quest.ninja_skills.blue_ninja.gain_bouncing_knifes_still" = """
 Junk!? 
 It's not junk! It's weapons and other ninja stuff!
 Oh well...
@@ -457,30 +451,19 @@ As promised, your knife will now bounce off all surfaces!
 Pretty cool eh? You'll see!
 """
 
-"quest.ninja_skills.8b" = """
-Junk!? 
-It's not junk! It's weapons and other ninja stuff!
-Oh well...
-As promised, your knife will now bounce off all surfaces!
-Since you already have my brother's skill, this should
-basically solve your low-ammo problem!
-"""
-
-"quest.ninja_skills.9" = """
+"quest.ninja_skills.lyria.father_introduction" = """
 Thank you for checking on my brothers...
-Since they joined our father in the "family business" I am
-always a bit worried...
-I just hope they are coming home soon, I need help 
-cleaning our brother's house!
+Since they joined our father, the Great Red Ninja, in the "family business" I am always a bit worried...
+I just hope they are coming home soon!
 """
 
-"quest.ninja_skills.10" = """
+"quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
 This job requires me to stay away from home for
 long periods of time... 
 My children are all about your age...
 """
 
-"quest.ninja_skills.11" = """
+"quest.ninja_skills.red_ninja.gain_piercing_knife_skill" = """
 My kids are all well? That's a relief!
 As a reward, I'll teach the ultimate ninja skill.
 If only I had the chance, I KNOW I could defeat the 
@@ -488,25 +471,18 @@ Demon Lord himself in one blow with it.
 F*** that guy.
 """
 
-"quest.ninja_skills.12" = """
+"quest.ninja_skills.red_ninja.about_piercing_knife_skill" = """
 Told you... Barrels, monsters, Demon Lords, ...
 Doesn't matter.
 One shot is enough for ANY foe.
 """
 
-"quest.ninja_skills.13" = """
-I tried kid, but I was defeated.
-It's your turn now, here, have my skill.
-You can now defeat ANY enemy in one blow.
-Including... him...
-"""
-
-"quest.manafren_research.1" = """
+"quest.manafren_research.serena.keep_out_of_research_area" = """
 What do you think you are doing here!?
 This zone is off limits without a permit!
 """
 
-"quest.manafren_research.2" = """
+"quest.manafren_research.dr_voss.introduction" = """
 Ah, just who I needed. 
 I’ve studied these Manafren trees extensively, by all accounts, they’re miraculous...
 Yet, I can’t shake this feeling of something dark, something ancient lurking beneath. 
@@ -514,11 +490,11 @@ Maybe there’s something we’ve overlooked in the ancient scrolls...
 Unfortunately, the village elder is the only one with access to them, but he won't talk to me anymore...
 """
 
-"quest.manafren_research.2.1" = """
+"quest.manafren_research.dr_voss.waiting_for_info" = """
 My research continues, but I can't get the feeling of dread off my mind.
 """
 
-"quest.manafren_research.3" = """
+"quest.manafren_research.duskhaven_village_elder.check_the_dungeon" = """
 Dr. Voss sent you, did he? 
 Ah, well… I don’t put much stock in all his science...
 These trees, they hold a power older than you or me, a power that whispers secrets to those willing to listen. 
@@ -527,11 +503,11 @@ Maybe you’ll find what you seek there.
 Just beware of what’s hidden within those words.
 """
 
-"quest.manafren_research.3.1" = """
+"quest.manafren_research.duskhaven_village_elder.have_you_checked_the_dungeon" = """
 Did you find anything interesting in the dungeon?
 """
 
-"quest.manafren_research.4" = """
+"quest.manafren_research.dungeon_scroll.contents" = """
 In ages past, when twilight lay thick over Duskhaven, a pact was struck. 
 The trees would flourish, drawing life from the soil and skies, breathing mana into the land. 
 Yet, for this... <unreadable>
@@ -539,25 +515,25 @@ Beneath their roots flows the darkness, and with each pulse, a reminder of... <u
 Those who seek this path must journey east to the mountains, where the source of the pact lies buried.
 """
 
-"quest.manafren_research.5" = """
+"quest.manafren_research.ancient_book.contents" = """
 It was here, beneath these stones, that the trees were first granted their cursed life. 
 The Lord of Darkness poured his very essence into their roots, binding their growth to his will. 
 Each leaf holds a shard of his presence, and with each season, his dominion spreads quietly. 
 Let this record serve as both a warning and a call to vigilance. As the trees grow, so does he.
 """
 
-"quest.manafren_research.6" = """
+"quest.manafren_research.dr_voss.thanks_for_the_info" = """
 You… you found it. 
 So, the trees truly are bound to some dark force, and their energy, our very life here in Duskhaven, comes from this curse. 
 I had suspicions, but these findings, well, they change everything. 
 I’ll need time to process what this means, but take this as a token. 
 """
 
-"quest.manafren_research.6.1" = """
+"quest.manafren_research.dr_voss.thanks_for_the_info_still_working_on_it" = """
 I’ll need time to process the latest findings...
 """
 
-"quest.manafren_research.6.2" = """
+"quest.manafren_research.dr_voss.research_was_inconclusive" = """
 The suspicious dark aura is gone.
 I have to say, I am a bit pissed, I was so close...
 It's hard to do science in a world with magic.
