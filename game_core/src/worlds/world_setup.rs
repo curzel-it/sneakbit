@@ -17,9 +17,11 @@ impl World {
         } else {
             entity.direction = Direction::Down;
             entity.frame.x = x;
-            entity.frame.y = y - 1;
+            entity.frame.y = y; 
 
-            for new_direction in &self.likely_direction_for_hero(x, y, hero_direction) {
+            let likely_directions = self.likely_direction_for_hero(x, y, hero_direction);
+            
+            for new_direction in &likely_directions {
                 if self.has_space_for_hero_in_direction(x, y, new_direction) {
                     let (ox, oy) = new_direction.as_col_row_offset();
                     entity.frame.x = x + ox;
@@ -73,9 +75,15 @@ impl World {
     fn has_space_for_hero_in_direction(&self, x: i32, y: i32, direction: &Direction) -> bool {
         let (ox, oy) = direction.as_col_row_offset();
         
+        let y_fix = match direction {
+            Direction::Up => -1,
+            Direction::Down => 1,
+            _ => 0
+        };
+
         for i in 0..3 {
             let nx = x + i * ox;
-            let ny = y + i * oy + if i == 0 { 1 } else { 0 };
+            let ny = y + i * oy + y_fix;
     
             if ny < 0 || ny >= self.hitmap.len() as i32 || nx < 0 || nx >= self.hitmap[0].len() as i32 {
                 continue;
