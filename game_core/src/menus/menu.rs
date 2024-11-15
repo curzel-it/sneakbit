@@ -11,6 +11,7 @@ use crate::{game_engine::{keyboard_events_provider::KeyboardEventsProvider, stat
 pub struct Menu<Item: MenuItem> {
     pub title: String,
     pub text: Option<String>,
+    pub original_text: Option<String>,
     pub is_open: bool,
     pub selected_index: usize,
     pub selection_has_been_confirmed: bool,
@@ -32,6 +33,7 @@ impl<Item: MenuItem> Menu<Item> {
         Self {
             title,
             text: None,
+            original_text: None,
             is_open: false,
             selected_index: 0,
             selection_has_been_confirmed: false,
@@ -228,7 +230,7 @@ impl<Item: MenuItem> Menu<Item> {
             .expect("Failed to convert title to CString");
         let leaked_title = c_title.into_raw();
 
-        let c_text = CString::new(self.text.clone().unwrap_or_default())
+        let c_text = CString::new(self.actual_text())
             .expect("Failed to convert text to CString");
         let leaked_text = c_text.into_raw();
 
@@ -255,5 +257,15 @@ impl<Item: MenuItem> Menu<Item> {
             options: options_ptr,
             options_count: options_len as u32,
         }
+    }
+
+    fn actual_text(&self) -> String {
+        if let Some(original_text) = self.original_text.clone() {
+            return original_text
+        }
+        if let Some(text) = self.text.clone() {
+            return text
+        }
+        return "".to_owned()
     }
 }

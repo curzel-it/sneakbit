@@ -77,9 +77,9 @@
 "npc.name.ninja.black" = "Black Ninja"
 "npc.name.ninja.blue" = "Blue Ninja"
 "npc.name.ninja.red" = "Red Ninja"
-"npc.name.old_man" = "Old Man Willow"
-"npc.name.old_man_mustache" = "Old Man Gus"
-"npc.name.old_man_mustache.black" = "Old Man Homer"
+"npc.name.old_man" = "Villager"
+"npc.name.old_man_mustache" = "Old Man Willow"
+"npc.name.old_man_mustache.black" = "Old Man Gus"
 "npc.name.old_woman" = "Elder Maren"
 "npc.name.piglet" = "Piglet"
 "npc.name.purple_alien" = "aaa"
@@ -402,43 +402,37 @@ I just hope they didn't have any trouble on the mission...
 "quest.ninja_skills.black_ninja.please_check_on_sister" = """
 So you came all the way from Evergrove?
 Can you check on my sister and let her know I'm ok?
-My brother should be back home by now, 
-but with our job you never know...
+My brother should be back home by now, but with our job you never know...
 If you do, I'll teach you one of my ninja skills!
 """
 
 "quest.ninja_skills.blue_ninja.please_check_on_sister" = """
 So you came all the way from Evergrove?
 Can you check on my sister and let her know I'm ok?
-My brother should be back home by now, 
-but with our job you never know...
+My brother should be back home by now, but with our job you never know...
 If you do, I'll teach you one of my ninja skills!
 """
 
 "quest.ninja_skills.lyria.thats_my_brother_black" = """
 A ninja dressed in black... 
 That's my brother!
-Please tell him to come home soon,
-I need help cleaning our brother's house!
+Please tell him to come home soon, I need help cleaning our brother's house!
 Was my other brother with him? 
 He dresses in blue.
 """
 
 "quest.ninja_skills.black_ninja.gain_knife_catcher_skill" = """
 Cleaning the house!? LOL
-I'm not sure I'll make it, you know, we're kinda in the 
-middle of a war for the survival of mankind over here!
+I'm not sure I'll make it, you know, we're kinda in the middle of a war for the survival of mankind over here!
 As promised, you can now catch knifes mid-air bare handed.
-Obviously, you need knifes to be coming at you 
-to use this skill.
+Obviously, you need knifes to be coming at you to use this skill.
 But I'm sure you'll find some use for it eventually!
 """
 
 "quest.ninja_skills.lyria.thats_my_brother_blue" = """
 A ninja dressed in blue... 
 That's my brother!
-Please tell him to come home soon,
-we need to clean up his place, it's full of junk!
+Please tell him to come home soon, we need to clean up his place, it's full of junk!
 Was my other brother with him? 
 He dresses in black.
 """

@@ -501,7 +501,7 @@
         "w": 1,
         "h": 2
       },
-      "species_id": 3005,
+      "species_id": 1119,
       "entity_type": "Npc",
       "offset": {
         "x": 0.0,
@@ -514,10 +514,10 @@
       "sprite": {
         "sheet_id": 1009,
         "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 2
+            "x": 40,
+            "y": 19,
+            "w": 1,
+            "h": 2
         },
         "number_of_frames": 4
       },

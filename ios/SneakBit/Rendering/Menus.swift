@@ -16,24 +16,24 @@ struct MenuView: View {
                     .onTapGesture { viewModel.cancel() }
                 
                 ScrollableMenuContents()
-                .frame(maxWidth: 400)
-                .background {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 4)
-                            .foregroundStyle(viewModel.borderColor)
-                        
-                        RoundedRectangle(cornerRadius: 3)
-                            .foregroundStyle(viewModel.backgroundColor)
-                            .padding(2)
+                    // .frame(maxWidth: 400)
+                    .background {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 4)
+                                .foregroundStyle(viewModel.borderColor)
+                            
+                            RoundedRectangle(cornerRadius: 3)
+                                .foregroundStyle(viewModel.backgroundColor)
+                                .padding(2)
+                        }
                     }
-                }
-                .shadow(radius: 4)
-                .padding()
-                .padding(.top, viewModel.safeAreaInsets.top)
-                .padding(.trailing, viewModel.safeAreaInsets.right)
-                .padding(.bottom, viewModel.safeAreaInsets.bottom)
-                .padding(.leading, viewModel.safeAreaInsets.left)
-                .positioned(.bottom)
+                    .shadow(radius: 4)
+                    .padding()
+                    .padding(.top, viewModel.safeAreaInsets.top)
+                    .padding(.trailing, viewModel.safeAreaInsets.right)
+                    .padding(.bottom, viewModel.safeAreaInsets.bottom)
+                    .padding(.leading, viewModel.safeAreaInsets.left)
+                    .positioned(.bottom)
             }
             .environmentObject(viewModel)
         }
@@ -58,15 +58,15 @@ private struct MenuContents: View {
     @EnvironmentObject private var viewModel: MenuViewModel
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(alignment: .leading, spacing: 20) {
             if let title = viewModel.title {
                 Text(title)
-                    .textAlign(.leading)
+                    .multilineTextAlignment(.leading)
                     .typography(.title)
             }
             if let text = viewModel.text {
                 Text(text)
-                    .textAlign(.leading)
+                    .multilineTextAlignment(.leading)
                     .typography(.text)
             }
             ForEach(viewModel.options.indices, id: \.self) { index in
@@ -123,8 +123,8 @@ private class MenuViewModel: ObservableObject {
             .map { "> \($0)" }
         
         let newText = string(from: menu.text)
-        let longTextThreshold = engine.isLandscape ? 150 : 500
-        let needsScroll = (newText?.count ?? 0) > longTextThreshold
+        let longTextThreshold = engine.isLandscape && UIDevice.current.userInterfaceIdiom == .phone ? 150 : 500
+        let needsScroll = false // (newText?.count ?? 0) > longTextThreshold
         
         withAnimation {
             useScrollView = needsScroll
