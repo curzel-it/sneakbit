@@ -1227,19 +1227,19 @@
       "dialogues": [
         {
           "text": "quest.ninja_skills.lyria.father_introduction",
-          "key": "dialogue.answer.quest.ninja_skills.3a,dialogue.answer.quest.ninja_skills.3b",
+          "key": "dialogue.answer.quest.ninja_skills.blue_ninja.please_check_on_sister,dialogue.answer.quest.ninja_skills.black_ninja.please_check_on_sister",
           "expected_value": 1,
           "reward": null
         },
         {
           "text": "quest.ninja_skills.lyria.thats_my_brother_black",
-          "key": "dialogue.answer.quest.ninja_skills.3a",
+          "key": "dialogue.answer.quest.ninja_skills.black_ninja.please_check_on_sister",
           "expected_value": 1,
           "reward": null
         },
         {
           "text": "quest.ninja_skills.lyria.thats_my_brother_blue",
-          "key": "dialogue.answer.quest.ninja_skills.3b",
+          "key": "dialogue.answer.quest.ninja_skills.blue_ninja.please_check_on_sister",
           "expected_value": 1,
           "reward": null
         },

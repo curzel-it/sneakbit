@@ -376,13 +376,7 @@
       },
       "dialogues": [
         {
-          "key": "dialogue.answer.quest.ninja_skills.9",
-          "text": "quest.ninja_skills.black_ninja.gain_knife_catcher_skill",
-          "expected_value": 1,
-          "reward": null
-        },
-        {
-          "key": "dialogue.answer.quest.ninja_skills.4",
+          "key": "dialogue.answer.quest.ninja_skills.lyria.thats_my_brother_black",
           "text": "quest.ninja_skills.black_ninja.gain_knife_catcher_skill",
           "expected_value": 1,
           "reward": null

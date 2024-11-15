@@ -156,14 +156,9 @@
       },
       "dialogues": [
           {
-              "key": "dialogue.answer.quest.ninja_skills.7",
+              "key": "dialogue.answer.quest.ninja_skills.lyria.thats_my_brother_blue",
               "expected_value": 1,
-              "text": "quest.ninja_skills.blue_ninja.gain_bouncing_knifes_still"
-          },
-          {
-              "key": "dialogue.answer.quest.ninja_skills.9",
-              "expected_value": 1,
-              "text": "quest.ninja_skills.blue_ninja.gain_bouncing_knifes_still"
+              "text": "quest.ninja_skills.blue_ninja.gain_bouncing_knifes_skill"
           },
           {
               "key": "always",

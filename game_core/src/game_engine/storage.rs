@@ -157,15 +157,13 @@ fn lock_override_key(id: &EntityId) -> String {
 }
 
 pub fn has_boomerang_skill() -> bool {
-    get_value_for_global_key("dialogue.answer.quest.ninja_skills.8a").is_some_and(|i| i == 1) || 
-    get_value_for_global_key("dialogue.answer.quest.ninja_skills.8b").is_some_and(|i| i == 1) 
+    get_value_for_global_key("dialogue.answer.quest.ninja_skills.blue_ninja.gain_bouncing_knifes_skill").is_some_and(|i| i == 1)
 }
 
 pub fn has_bullet_catcher_skill() -> bool {
-    get_value_for_global_key("dialogue.answer.quest.ninja_skills.5a").is_some_and(|i| i == 1) || 
-    get_value_for_global_key("dialogue.answer.quest.ninja_skills.5b").is_some_and(|i| i == 1) 
+    get_value_for_global_key("dialogue.answer.quest.ninja_skills.black_ninja.gain_knife_catcher_skill").is_some_and(|i| i == 1)
 }
 
 pub fn has_piercing_bullet_skill() -> bool {
-    get_value_for_global_key("dialogue.answer.quest.ninja_skills.11").is_some_and(|i| i == 1)
+    get_value_for_global_key("dialogue.answer.quest.ninja_skills.red_ninja.gain_piercing_knife_skill").is_some_and(|i| i == 1)
 }
