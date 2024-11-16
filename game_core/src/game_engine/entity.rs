@@ -79,7 +79,7 @@ pub struct Entity {
     pub remaining_lifespan: f32,  
 
     #[serde(skip)]
-    pub shooting_cooldown_remaining: f32,  
+    pub action_cooldown_remaining: f32,  
 
     #[serde(skip)]
     pub parent_id: u32,  

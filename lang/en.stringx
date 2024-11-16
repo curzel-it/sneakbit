@@ -366,14 +366,9 @@ South: Thermoria
 You say "some kind of magic" brought you here? Interesting...
 Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
 I suggest you start your own journey to learn more about this world.
-The closest city is Aridreach, maybe start from there.
-I shall see you soon.
-"""
-
-"quest.hero.prologue_hint" = """
-To get to Aridreach go West from here, it's quite close.
-Also, if you're looking for directions, road signs can be useful.
-Now go.
+The closest city is Aridreach, West from here, why don't you start from there?
+If you're looking for directions, road signs can be useful.
+Now go, I shall see you soon!
 """
 
 "quest.hero.1" = """
@@ -424,8 +419,8 @@ but I think I owe you an apolegy nonetheless for taking you prey.
 """
 
 "quest.hero.finale.b" = """
-What, you expected a boss fight?
-Tried to take over someone else's destiny, did you?
+What, you expected to fight the final boss?
+Tried to force yourself onto someone else's destiny, did you?
 Piss off.
 """
 

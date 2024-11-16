@@ -1003,12 +1003,6 @@
       },
       "dialogues": [
         {
-          "text": "quest.hero.prologue_hint",
-          "key": "dialogue.answer.lore.004.you_are_here",
-          "expected_value": 1,
-          "reward": null
-        },
-        {
           "text": "quest.hero.prologue",
           "key": "always",
           "expected_value": 0,
@@ -1023,13 +1017,24 @@
         "w": 1,
         "h": 2
       },
-      "display_conditions": [],
+      "display_conditions": [
+        {
+            "key": "dialogue.answer.quest.hero.prologue",
+            "expected_value": 1,
+            "visible": false
+        },
+        {
+            "key": "always",
+            "expected_value": 0,
+            "visible": true
+        }
+      ],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": true,
-      "vanishes_after_dialogue": false
+      "vanishes_after_dialogue": true
     },
     {
       "id": 10754437,

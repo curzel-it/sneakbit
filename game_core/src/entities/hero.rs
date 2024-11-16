@@ -43,9 +43,9 @@ impl Entity {
     }
     
     fn shoot_kunai(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
-        self.shooting_cooldown_remaining -= time_since_last_update;
+        self.action_cooldown_remaining -= time_since_last_update;
         
-        if self.shooting_cooldown_remaining > 0.0 {
+        if self.action_cooldown_remaining > 0.0 {
             return vec![]
         }
         if !world.has_attack_key_been_pressed {
@@ -55,7 +55,7 @@ impl Entity {
             return vec![]
         }
 
-        self.shooting_cooldown_remaining = HERO_KUNAI_COOLDOWN;
+        self.action_cooldown_remaining = HERO_KUNAI_COOLDOWN;
         remove_one_of_species_from_inventory(&SPECIES_KUNAI);
 
         let mut bullet = species_by_id(SPECIES_KUNAI).make_entity();

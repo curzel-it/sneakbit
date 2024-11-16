@@ -1,618 +1,609 @@
-"building.name.demon_lord_castle" = "Demon Lord Castle"
-"building.name.house" = "House"
-"building.name.house_two_floors" = "House (two stories)"
-"combat.options.attack" = "Attack"
-"combat.options.inventory" = "Inventory"
-"combat.options.run" = "Run"
-"confirmation.cancel" = "Nope"
+"building.name.demon_lord_castle" = "Castello del Signore dei Demoni"
+"building.name.house" = "Casa"
+"building.name.house_two_floors" = "Casa (due piani)"
+"combat.options.attack" = "Attacca"
+"combat.options.inventory" = "Inventario"
+"combat.options.run" = "Scappa"
+"confirmation.cancel" = "No"
 "confirmation.confirm" = "Ok"
-"death_screen.subtitle" = "Press CONFIRM to try again"
-"death_screen.title" = "You're dead."
-"dialogue.reward_received" = "You received `%s`!"
-"dialogue.select_option" = "Select an option:"
-"empty_dialogue" = "What do you want?"
-"entity.menu.change_destination_world" = "Change Destination World"
-"entity.menu.change_destination_x" = "Change Destination X"
-"entity.menu.change_destination_y" = "Change Destination Y"
-"entity.menu.change_lock" = "Change Lock"
-"entity.menu.change_lock_title" = "Select Key Color"
-"entity.menu.change_on_off" = "Flip On/Off"
-"entity.menu.pickup" = "Pick up"
-"entity.menu.read" = "Read"
-"entity.menu.remove" = "Remove"
-"entity.menu.rename" = "Rename"
-"entity.menu.rename_title" = "Enter new name"
-"entity.menu.title" = "Entity Options"
-"entity.menu.toggle_demand_attention" = "Toggle Demand Attention"
-"entity.menu.use" = "Use"
-"game.menu.exit" = "Exit"
-"game.menu.inventory" = "Inventory"
-"game.menu.key_bindings" = "Key Bindings"
-"game.menu.map_editor" = "Map Editor"
-"game.menu.save" = "Save Game"
-"game.menu.save_and_exit" = "Save & Exit"
-"game.menu.status" = "Status"
-"game.menu.title" = "Game Menu"
-"inventory.subtitle" = "Stuff in your backpack"
-"inventory.title" = "Inventory"
-"lock.name.blue" = "Blue"
-"lock.name.green" = "Green"
-"lock.name.none" = "None"
-"lock.name.permanent" = "Permanent"
-"lock.name.red" = "Red"
-"lock.name.silver" = "Silver"
-"lock.name.yellow" = "Yellow"
-"map_editor.placement" = "CONFIRM to place, ESC to cancel"
-"map_editor.subtitle" = "Press CONFIRM to select something"
-"map_editor.title" = "Map Editor"
-"npc.menu.play_dialog" = "Play dialog"
-"npc.menu.remove" = "Remove"
-"npc.menu.title" = "NPC Options"
+"death_screen.subtitle" = "Premi CONFERMA per riprovare"
+"death_screen.title" = "Sei morto."
+"dialogue.reward_received" = "Hai ricevuto `%s`!"
+"dialogue.select_option" = "Seleziona un'opzione:"
+"empty_dialogue" = "Cosa vuoi?"
+"entity.menu.change_destination_world" = "Cambia Mondo Destinazione"
+"entity.menu.change_destination_x" = "Cambia Destinazione X"
+"entity.menu.change_destination_y" = "Cambia Destinazione Y"
+"entity.menu.change_lock" = "Cambia Blocco"
+"entity.menu.change_lock_title" = "Seleziona Colore della Chiave"
+"entity.menu.change_on_off" = "Attiva/Disattiva"
+"entity.menu.pickup" = "Raccogli"
+"entity.menu.read" = "Leggi"
+"entity.menu.remove" = "Rimuovi"
+"entity.menu.rename" = "Rinomina"
+"entity.menu.rename_title" = "Inserisci nuovo nome"
+"entity.menu.title" = "Opzioni Entità"
+"entity.menu.toggle_demand_attention" = "Alterna Richiesta Attenzione"
+"entity.menu.use" = "Usa"
+"game.menu.exit" = "Esci"
+"game.menu.inventory" = "Inventario"
+"game.menu.key_bindings" = "Configurazione Tasti"
+"game.menu.map_editor" = "Editor di Mappe"
+"game.menu.save" = "Salva Gioco"
+"game.menu.save_and_exit" = "Salva & Esci"
+"game.menu.status" = "Stato"
+"game.menu.title" = "Menu di Gioco"
+"inventory.subtitle" = "Oggetti nel tuo zaino"
+"inventory.title" = "Inventario"
+"lock.name.blue" = "Blu"
+"lock.name.green" = "Verde"
+"lock.name.none" = "Nessuno"
+"lock.name.permanent" = "Permanente"
+"lock.name.red" = "Rosso"
+"lock.name.silver" = "Argento"
+"lock.name.yellow" = "Giallo"
+"map_editor.placement" = "CONFERMA per posizionare, ESC per annullare"
+"map_editor.subtitle" = "Premi CONFERMA per selezionare qualcosa"
+"map_editor.title" = "Editor di Mappe"
+"npc.menu.play_dialog" = "Riproduci dialogo"
+"npc.menu.remove" = "Rimuovi"
+"npc.menu.title" = "Opzioni NPC"
 
 "npc.name.assasin_girl" = "Nyx"
-"npc.name.male.black.blue_hair" = "Villager"
-"npc.name.blonde.apron" = "Villager"
-"npc.name.blonde_guy" = "Villager"
-"npc.name.blue_mohawk" = "Villager"
-"npc.name.brown_mohawk" = "Villager"
-"npc.name.cat" = "Cat"
-"npc.name.dbz1" = "Android's husband"
-"npc.name.dbz2" = "Gohan's Godfather"
-"npc.name.dbz3" = "Son Monkey"
-"npc.name.demon_lord" = "Demon Lord"
+"npc.name.male.black.blue_hair" = "Abitante"
+"npc.name.blonde.apron" = "Abitante"
+"npc.name.blonde_guy" = "Abitante"
+"npc.name.blue_mohawk" = "Abitante"
+"npc.name.brown_mohawk" = "Abitante"
+"npc.name.cat" = "Gatto"
+"npc.name.dbz1" = "Marito dell'Android"
+"npc.name.dbz2" = "Padrino di Gohan"
+"npc.name.dbz3" = "Scimmia Son"
+"npc.name.demon_lord" = "Signore dei Demoni"
 "npc.name.male.black.doctor" = "Dr Voss"
 "npc.name.ethan" = "Ethan"
-"npc.name.female.dark_blonde" = "Villager"
-"npc.name.generic" = "Villager"
-"npc.name.generic.apron" = "Villager"
+"npc.name.female.dark_blonde" = "Abitante"
+"npc.name.generic" = "Abitante"
+"npc.name.generic.apron" = "Abitante"
 "npc.name.female.blue_hair" = "Lyria Kurogane"
-"npc.name.female.brown_hair" = "Villager"
-"npc.name.female.green_hair" = "Villager"
-"npc.name.goddess" = "Goddess"
-"npc.name.female.green_hair" = "Villager"
+"npc.name.female.brown_hair" = "Abitante"
+"npc.name.female.green_hair" = "Abitante"
+"npc.name.goddess" = "Dea"
+"npc.name.female.green_hair" = "Abitante"
 "npc.name.male.emo_hair" = "Punk"
 "npc.name.middle_aged.man.long_silver_hair" = "Silveroak"
-"npc.name.monster" = "Monster"
-"npc.name.mr_bubblegum" = "Mr Bubblegum"
-"npc.name.ninja.black" = "Black Ninja"
-"npc.name.ninja.blue" = "Blue Ninja"
-"npc.name.ninja.red" = "Red Ninja"
-"npc.name.old_man" = "Villager"
-"npc.name.old_man_mustache" = "Old Man Willow"
-"npc.name.old_man_mustache.black" = "Old Man Gus"
-"npc.name.old_woman" = "Elder Maren"
-"npc.name.piglet" = "Piglet"
+"npc.name.monster" = "Mostro"
+"npc.name.mr_bubblegum" = "Signor Bubblegum"
+"npc.name.ninja.black" = "Ninja Nero"
+"npc.name.ninja.blue" = "Ninja Blu"
+"npc.name.ninja.red" = "Ninja Rosso"
+"npc.name.old_man" = "Abitante"
+"npc.name.old_man_mustache" = "Vecchio Willow"
+"npc.name.old_man_mustache.black" = "Vecchio Gus"
+"npc.name.old_woman" = "Anziana Maren"
+"npc.name.piglet" = "Maialino"
 "npc.name.purple_alien" = "aaa"
-"npc.name.purple_mohawk" = "Villager"
-"npc.name.rasta_girl" = "Villager"
-"npc.name.male.kid.red_hair.blue_suit.green_hat" = "Villager"
-"npc.name.slime" = "Slime"
-"npc.name.snail" = "Snail"
-"npc.name.soldier" = "Captain 'Ironside' Thorne"
-"npc.name.soldier.female.red" = "Serena Flameheart"
-"npc.name.swag_kid" = "Villager"
-"npc.name.swag_kid_2" = "Villager"
-"npc.name.swag_kid_3" = "Villager"
-"npc.name.wizard" = "Mogarth the Sage"
-
-"objects.name.amanita" = "Amanita Mushroom"
-"objects.name.barrel.brown" = "Brown Barrel"
-"objects.name.barrel.green" = "Green Barrel"
-"objects.name.barrel.purple" = "Purple Barrel"
-"objects.name.barrel.wood" = "Wooden Barrel"
-"objects.name.bed" = "Bed"
-"objects.name.boat.small" = "Small Boat"
-"objects.name.book_black" = "Black Book"
-"objects.name.book_blue" = "Blue Book"
-"objects.name.book_green" = "Green Book"
-"objects.name.book_purple" = "Purple Book"
-"objects.name.book_red" = "Red Book"
-"objects.name.boulder" = "Boulder"
-"objects.name.cabinet.lg.beige" = "Beige Wardrobe"
-"objects.name.cabinet.lg.brown" = "Brown Wardrobe"
-"objects.name.cabinet.lg.white" = "White Wardrobe"
-"objects.name.cabinet.md.beige" = "Beige Locker"
-"objects.name.cabinet.md.brown" = "Brown Locker"
-"objects.name.cabinet.md.white" = "White Locker"
-"objects.name.cabinet.sm.beige" = "Beige Drawer"
-"objects.name.cabinet.sm.brown" = "Brown Drawer"
-"objects.name.cabinet.sm.white" = "White Drawer"
-"objects.name.deep_hole" = "Deep Hole"
-"objects.name.fountain" = "Fountain"
-"objects.name.gate.blue" = "Blue Gate"
-"objects.name.gate.green" = "Green Gate"
-"objects.name.gate.red" = "Red Gate"
-"objects.name.gate.silver" = "Silver Gate"
-"objects.name.gate.yellow" = "Yellow Gate"
-"objects.name.hint_consumable" = "Hint (One Time)"
-"objects.name.hint_permanent" = "Hint (Permanent)"
-"objects.name.key" = "Key"
-"objects.name.key_blue" = "key from Maritide mines"
-"objects.name.key_green" = "key from Duskhaven's dungeons"
-"objects.name.key_red" = "key from Mount Ignis"
-"objects.name.key_silver" = "key from Vintoria's dungeons"
-"objects.name.key_yellow" = "key from Grimsun desert"
+"npc.name.purple_mohawk" = "Abitante"
+"npc.name.rasta_girl" = "Abitante"
+"npc.name.male.kid.red_hair.blue_suit.green_hat" = "Abitante"
+"npc.name.slime" = "Melma"
+"npc.name.snail" = "Lumaca"
+"npc.name.soldier" = "Capitano 'Ironside' Thorne"
+"npc.name.soldier.female.red" = "Serena Cuorfiammante"
+"npc.name.swag_kid" = "Abitante"
+"npc.name.swag_kid_2" = "Abitante"
+"npc.name.swag_kid_3" = "Abitante"
+"npc.name.wizard" = "Mogarth il Saggio"
+"objects.name.amanita" = "Fungo Amanita"
+"objects.name.barrel.brown" = "Barile Marrone"
+"objects.name.barrel.green" = "Barile Verde"
+"objects.name.barrel.purple" = "Barile Viola"
+"objects.name.barrel.wood" = "Barile di Legno"
+"objects.name.bed" = "Letto"
+"objects.name.boat.small" = "Barca Piccola"
+"objects.name.book_black" = "Libro Nero"
+"objects.name.book_blue" = "Libro Blu"
+"objects.name.book_green" = "Libro Verde"
+"objects.name.book_purple" = "Libro Viola"
+"objects.name.book_red" = "Libro Rosso"
+"objects.name.boulder" = "Masso"
+"objects.name.cabinet.lg.beige" = "Armadio Beige"
+"objects.name.cabinet.lg.brown" = "Armadio Marrone"
+"objects.name.cabinet.lg.white" = "Armadio Bianco"
+"objects.name.cabinet.md.beige" = "Armadietto Beige"
+"objects.name.cabinet.md.brown" = "Armadietto Marrone"
+"objects.name.cabinet.md.white" = "Armadietto Bianco"
+"objects.name.cabinet.sm.beige" = "Cassetto Beige"
+"objects.name.cabinet.sm.brown" = "Cassetto Marrone"
+"objects.name.cabinet.sm.white" = "Cassetto Bianco"
+"objects.name.deep_hole" = "Buco Profondo"
+"objects.name.fountain" = "Fontana"
+"objects.name.gate.blue" = "Porta Blu"
+"objects.name.gate.green" = "Porta Verde"
+"objects.name.gate.red" = "Porta Rossa"
+"objects.name.gate.silver" = "Porta Argento"
+"objects.name.gate.yellow" = "Porta Gialla"
+"objects.name.hint_consumable" = "Suggerimento (Una Volta)"
+"objects.name.hint_permanent" = "Suggerimento (Permanente)"
+"objects.name.key" = "Chiave"
+"objects.name.key_blue" = "chiave delle miniere di Maritide"
+"objects.name.key_green" = "chiave dei sotterranei di Duskhaven"
+"objects.name.key_red" = "chiave del Monte Ignis"
+"objects.name.key_silver" = "chiave dei sotterranei di Vintoria"
+"objects.name.key_yellow" = "chiave del deserto di Grimsun"
 "objects.name.kunai" = "Kunai"
 "objects.name.kunai.x10" = "Kunai x10"
-"objects.name.large_sign" = "Signboard"
-"objects.name.magic_circle.blue" = "Magic Circle"
-"objects.name.magic_circle.small" = "Magic Circle"
-"objects.name.magic_circle.summoning" = "Magic Circle"
-"objects.name.magic_circle.summoning.evil" = "Magic Circle"
-"objects.name.pressure_plate.blue" = "Blue Pressure Plate"
-"objects.name.pressure_plate.green" = "Green Pressure Plate"
-"objects.name.pressure_plate.red" = "Red Pressure Plate"
-"objects.name.pressure_plate.silver" = "Silver Pressure Plate"
-"objects.name.pressure_plate.yellow" = "Yellow Pressure Plate"
-"objects.name.rail.cart" = "Cart"
-"objects.name.scroll.blue" = "Blue Scroll"
-"objects.name.scroll.brown" = "Brown Scroll"
-"objects.name.scroll.green" = "Green Scroll"
-"objects.name.scroll.red" = "Red Scroll"
-"objects.name.scroll.yellow" = "Yellow Scroll"
-"objects.name.seat_brown" = "Brown Seat"
-"objects.name.seat_green" = "Green Seat"
-"objects.name.seat_orange" = "Orange Seat"
-"objects.name.seat_pink" = "Pink Seat"
-"objects.name.sign" = "Sign"
-"objects.name.skull" = "Skull"
-"objects.name.slope.bottom_left.dark_rock" = "Slope"
-"objects.name.slope.bottom_left.grass" = "Slope"
-"objects.name.slope.bottom_left.rock" = "Slope"
-"objects.name.slope.bottom_left.sand" = "Slope"
-"objects.name.slope.bottom_right.dark_rock" = "Slope"
-"objects.name.slope.bottom_right.grass" = "Slope"
-"objects.name.slope.bottom_right.rock" = "Slope"
-"objects.name.slope.bottom_right.sand" = "Slope"
-"objects.name.slope.side_bottom.dark_rock" = "Slope"
-"objects.name.slope.side_bottom.grass" = "Slope"
-"objects.name.slope.side_bottom.rock" = "Slope"
-"objects.name.slope.side_bottom.sand" = "Slope"
-"objects.name.slope.side_left.dark_rock" = "Slope"
-"objects.name.slope.side_left.grass" = "Slope"
-"objects.name.slope.side_left.rock" = "Slope"
-"objects.name.slope.side_left.sand" = "Slope"
-"objects.name.slope.side_right.dark_rock" = "Slope"
-"objects.name.slope.side_right.grass" = "Slope"
-"objects.name.slope.side_right.rock" = "Slope"
-"objects.name.slope.side_right.sand" = "Slope"
-"objects.name.slope.side_top.dark_rock" = "Slope"
-"objects.name.slope.side_top.grass" = "Slope"
-"objects.name.slope.side_top.rock" = "Slope"
-"objects.name.slope.side_top.sand" = "Slope"
-"objects.name.slope.top_left.dark_rock" = "Slope"
-"objects.name.slope.top_left.grass" = "Slope"
-"objects.name.slope.top_left.rock" = "Slope"
-"objects.name.slope.top_left.sand" = "Slope"
-"objects.name.slope.top_right.dark_rock" = "Slope"
-"objects.name.slope.top_right.grass" = "Slope"
-"objects.name.slope.top_right.rock" = "Slope"
-"objects.name.slope.top_right.sand" = "Slope"
-"objects.name.stairs_down" = "Stairs (Down)"
-"objects.name.stairs_up" = "Stairs (Up)"
-"objects.name.table" = "Table"
-"objects.name.teleporter" = "Teleporter"
-"objects.name.torch" = "Torch"
-"objects.name.well" = "Well"
-"objects.power.kidneys" = "Power Kidneys"
-"objects.power.tower.off" = "Mana Tower"
-"objects.power.tower.on" = "Mana Tower"
-"objects.waterfall" = "Waterfall"
-"objects.wind_turbine" = "Wind Turbine"
-
+"objects.name.large_sign" = "Insegna"
+"objects.name.magic_circle.blue" = "Cerchio Magico"
+"objects.name.magic_circle.small" = "Cerchio Magico"
+"objects.name.magic_circle.summoning" = "Cerchio Magico"
+"objects.name.magic_circle.summoning.evil" = "Cerchio Magico"
+"objects.name.pressure_plate.blue" = "Piastra di Pressione Blu"
+"objects.name.pressure_plate.green" = "Piastra di Pressione Verde"
+"objects.name.pressure_plate.red" = "Piastra di Pressione Rossa"
+"objects.name.pressure_plate.silver" = "Piastra di Pressione Argento"
+"objects.name.pressure_plate.yellow" = "Piastra di Pressione Gialla"
+"objects.name.rail.cart" = "Carrello"
+"objects.name.scroll.blue" = "Pergamena Blu"
+"objects.name.scroll.brown" = "Pergamena Marrone"
+"objects.name.scroll.green" = "Pergamena Verde"
+"objects.name.scroll.red" = "Pergamena Rossa"
+"objects.name.scroll.yellow" = "Pergamena Gialla"
+"objects.name.seat_brown" = "Sedile Marrone"
+"objects.name.seat_green" = "Sedile Verde"
+"objects.name.seat_orange" = "Sedile Arancione"
+"objects.name.seat_pink" = "Sedile Rosa"
+"objects.name.sign" = "Cartello"
+"objects.name.skull" = "Teschio"
+"objects.name.slope.bottom_left.dark_rock" = "Pendenza"
+"objects.name.slope.bottom_left.grass" = "Pendenza"
+"objects.name.slope.bottom_left.rock" = "Pendenza"
+"objects.name.slope.bottom_left.sand" = "Pendenza"
+"objects.name.slope.bottom_right.dark_rock" = "Pendenza"
+"objects.name.slope.bottom_right.grass" = "Pendenza"
+"objects.name.slope.bottom_right.rock" = "Pendenza"
+"objects.name.slope.bottom_right.sand" = "Pendenza"
+"objects.name.slope.side_bottom.dark_rock" = "Pendenza"
+"objects.name.slope.side_bottom.grass" = "Pendenza"
+"objects.name.slope.side_bottom.rock" = "Pendenza"
+"objects.name.slope.side_bottom.sand" = "Pendenza"
+"objects.name.slope.side_left.dark_rock" = "Pendenza"
+"objects.name.slope.side_left.grass" = "Pendenza"
+"objects.name.slope.side_left.rock" = "Pendenza"
+"objects.name.slope.side_left.sand" = "Pendenza"
+"objects.name.slope.side_right.dark_rock" = "Pendenza"
+"objects.name.slope.side_right.grass" = "Pendenza"
+"objects.name.slope.side_right.rock" = "Pendenza"
+"objects.name.slope.side_right.sand" = "Pendenza"
+"objects.name.slope.side_top.dark_rock" = "Pendenza"
+"objects.name.slope.side_top.grass" = "Pendenza"
+"objects.name.slope.side_top.rock" = "Pendenza"
+"objects.name.slope.side_top.sand" = "Pendenza"
+"objects.name.slope.top_left.dark_rock" = "Pendenza"
+"objects.name.slope.top_left.grass" = "Pendenza"
+"objects.name.slope.top_left.rock" = "Pendenza"
+"objects.name.slope.top_left.sand" = "Pendenza"
+"objects.name.slope.top_right.dark_rock" = "Pendenza"
+"objects.name.slope.top_right.grass" = "Pendenza"
+"objects.name.slope.top_right.rock" = "Pendenza"
+"objects.name.slope.top_right.sand" = "Pendenza"
+"objects.name.stairs_down" = "Scale (Giù)"
+"objects.name.stairs_up" = "Scale (Su)"
+"objects.name.table" = "Tavolo"
+"objects.name.teleporter" = "Teletrasportatore"
+"objects.name.torch" = "Torcia"
+"objects.name.well" = "Pozzo"
+"objects.power.kidneys" = "Renal Power"
+"objects.power.tower.off" = "Torre di Mana"
+"objects.power.tower.on" = "Torre di Mana"
+"objects.waterfall" = "Cascata"
+"objects.wind_turbine" = "Turbina Eolica"
 "ok" = "Ok"
 "ok_action" = ">> Ok"
-"picked_up_item" = "Picked up `%s`!"
-"teleporter.locked" = "You need a %s key to open this door."
-"teleporter.name" = "Teleporter"
-"teleporter.unlock.message" = "You will lose one %s key."
-"teleporter.unlock.title" = "Unlock the door?"
-"telepoter.locked.permanent" = "This door is locked."
-"text_input.hint" = "ENTER to confirm, ESC to cancel"
-"you" = "You"
+"picked_up_item" = "Hai raccolto `%s`!"
+"teleporter.locked" = "Ti serve una chiave %s per aprire questa porta."
+"teleporter.name" = "Teletrasportatore"
+"teleporter.unlock.message" = "Perderai una chiave %s."
+"teleporter.unlock.title" = "Sbloccare la porta?"
+"telepoter.locked.permanent" = "Questa porta è bloccata."
+"text_input.hint" = "PREMI INVIO per confermare, ESC per annullare"
+"you" = "Tu"
 
 "hint.001.pickup" = """
-Pick up objects by passing over them
+Raccogli gli oggetti passando sopra di essi
 """
 
 "hint.002.throw_knife" = """
-Throw knifes by pressing FIRE
+Lancia coltelli premendo FUOCO
 """
 
 "hint.003.not_all_places_have_loot" = """
-What? 
-You expected every house to have loot?
-Also, what the hell are you doing in my house!?
+Cosa? 
+Ti aspettavi che ogni casa avesse bottino?
+E poi, cosa diavolo ci fai in casa mia!?
 """
 
 "lore.evergrove.monster_sightings_nowadays" = """
-Monsters have been part of this world for a long time.
-They've been around for as long as I can remember at least.
-But they never left the deeper woods until recently.
-I pity newer generations for having to deal with this many.
+I mostri sono parte di questo mondo da molto tempo.
+Ci sono sempre stati, almeno da quando posso ricordare.
+Ma non hanno mai lasciato i boschi più profondi fino a poco tempo fa.
+Povera la nuova generazione, costretta ad affrontarne così tanti.
 """
 
 "lore.evergrove.monster_sightings_logs" = """
-Monster Sightings Log
-Property of Evergrove Village Historical Records
+Registro Avvistamenti Mostri
+Proprietà degli Archivi Storici del Villaggio di Evergrove
 --
-January 4th, 1330: Spotted 1 monster near the village outskirts. First in many years.
-June 27th, 1331: Saw the first monster since last year. Stayed near the forest edge.
-March 15th, 1332: Two monsters appeared near Verdant Way. No harm done, but unsettling.
-October 9th, 1333: A strange, dark creature wandered into the village at dusk. Count: 3.
-May 20th, 1334: Four monsters sighted.
-July 13th, 1335: It's been a while since last sighting, five today.
-December 2nd, 1336: Six monsters attacked a passing caravan. Survivors returned shaken.
-September 22nd, 1338: Village attacked by eight creatures. Guards struggled to fend them off.
-November 16th, 1340: Count has reached 14 monsters roaming near Verdant Way. Never seen so many at once. No victims, so far.
+4 Gennaio 1330: Avvistato 1 mostro nei pressi del villaggio. Il primo dopo molti anni.
+27 Giugno 1331: Visto il primo mostro dall'anno scorso. Rimasto ai margini della foresta.
+15 Marzo 1332: Due mostri comparsi vicino a Verdant Way. Nessun danno, ma inquietante.
+9 Ottobre 1333: Una creatura oscura si è aggirata nel villaggio al crepuscolo. Conta: 3.
+20 Maggio 1334: Avvistati quattro mostri.
+13 Luglio 1335: È passato un po' dall'ultimo avvistamento, oggi cinque.
+2 Dicembre 1336: Sei mostri hanno attaccato una carovana di passaggio. I sopravvissuti sono tornati scossi.
+22 Settembre 1338: Il villaggio è stato attaccato da otto creature. Le guardie hanno lottato per respingerle.
+16 Novembre 1340: Conta arrivata a 14 mostri che vagano vicino a Verdant Way. Mai visti così tanti in una volta. Nessuna vittima, finora.
 """
 
 "lore.manafren_trees.tourists_sign" = """
-Manafern Trees
-Famous worldwide for their mystical energy properties. 
-Their unique purple leaves harness the essence of twilight, 
-fueling life and wonder in Duskhaven.
+Alberi di Manafern
+Famosi in tutto il mondo per le loro proprietà energetiche mistiche. 
+Le loro uniche foglie viola catturano l'essenza del crepuscolo, 
+alimentando la vita e il meraviglioso a Duskhaven.
 """
 
 "lore.manafren_trees.botanics_book" = """
-The Manafern Tree, a botanical marvel exclusive 
-to the ever-twilit region of Duskhaven, 
-has long captivated scholars and mystics alike. 
+L'Albero di Manafern, una meraviglia botanica esclusiva 
+della regione crepuscolare di Duskhaven, 
+ha a lungo catturato l'attenzione di studiosi e mistici. 
 
-This unique broadleaf species, 
-identifiable by its vibrant purple foliage, 
-exhibits an unparalleled ability to produce raw mana.
+Questa specie unica a foglia larga, 
+identificabile per il suo vibrante fogliame viola, 
+possiede un'abilità senza pari nel produrre mana puro.
 
-Through a complex interaction between its deep-rooted system 
-and the ambient twilight of the region, 
-the Manafern absorbs ethereal particles from both the soil and air. 
-These particles, once drawn into the tree's intricate vascular system, 
-undergo a natural process akin to photosynthesis but far more extraordinary. 
-The tree converts these particles into pure mana, 
-which radiates through its leaves, casting a subtle, 
-luminescent glow. Locals often speak of how these trees 'hum' with life, 
-their energy harnessed to illuminate homes, power devices, 
-and even sustain the vibrant ecosystem of Duskhaven itself. 
+Attraverso una complessa interazione tra il suo sistema di radici profonde 
+e il crepuscolo ambientale della regione, 
+il Manafern assorbe particelle eteree sia dal suolo che dall'aria. 
+Queste particelle, una volta assorbite nel sistema vascolare dell'albero, 
+subiscono un processo naturale simile alla fotosintesi ma molto più straordinario. 
+L'albero converte queste particelle in mana puro, 
+che si irradia attraverso le sue foglie, emanando una sottile 
+luminescenza. Gli abitanti locali spesso parlano di come questi alberi 'vibrino' di vita, 
+la loro energia utilizzata per illuminare case, alimentare dispositivi 
+e persino sostenere l'ecosistema vibrante di Duskhaven stesso.
 """
 
 "lore.006.vintoria_power_station" = """
-Vintoria’s Cascade Station
-Harnessing the might of the waterfall to power the valley with life-giving mana
+Stazione Cascata di Vintoria
+Sfruttando la potenza della cascata per alimentare la valle con mana vitale
 """
 
 "lore.007.vintoria_entrance" = """
-Welcome to Vintoria Valley
-where the thundering falls weave mana into prosperity  and the vineyards whisper tales of timeless beauty.
+Benvenuti nella Valle di Vintoria
+dove le cascate ruggenti intrecciano mana nella prosperità e i vigneti sussurrano racconti di bellezza senza tempo.
 """
 
 "lore.008.mount_ignis" = """
-Warning
-Extreme heat and volatile ground.
-Proceed with caution and respect the power of Mount Ignis.
+Avvertimento
+Calore estremo e terreno instabile.
+Procedete con cautela e rispettate la potenza del Monte Ignis.
 """
 
 "lore.009.thermoria_dock" = """
-Dock of Thermoria — Gateway to Maritide Haven
+Molo di Thermoria — Porta per il Rifugio Maritide
 """
 
 "lore.010.aridreach_before_the_solar_age" = """
-The Rise and Fall of Lushspire Peaks
+Ascesa e Caduta delle Vette di Lushspire
 --
-Once, Aridreach was a land of life and beauty, known as Lushspire Peaks. Its towering mountains cradled vast forests, crystal streams, and fertile valleys. The people thrived in harmony with the land, their bounty plentiful and enduring.
-Then came the cataclysm. The skies darkened, the rivers dried, and the mountains began to wither. No record remains of its cause, but the transformation was swift and unrelenting. The lush greenery gave way to scorched earth, and the proud peaks became lifeless dunes. What was once a haven turned into the unforgiving expanse now called the Grimsun Desert.
-In the face of desolation, the survivors endured. They built the great solar farm atop the barren heights, harnessing the unrelenting sun to power distant lands. While their ingenuity is lauded, the book laments the loss of Lushspire’s verdant beauty, now buried beneath endless sands.
+Un tempo, Aridreach era una terra di vita e bellezza, conosciuta come Vette di Lushspire. Le sue torreggianti montagne custodivano vasti boschi, torrenti cristallini e fertili vallate. La popolazione prosperava in armonia con la terra, il loro raccolto abbondante e duraturo.
+Poi arrivò la catastrofe. I cieli si oscurarono, i fiumi si prosciugarono, e le montagne cominciarono ad appassire. Non rimane traccia della causa, ma la trasformazione fu rapida e inesorabile. Il verde lussureggiante cedette il posto alla terra bruciata, e le orgogliose vette divennero dune senza vita. Ciò che una volta era un paradiso si trasformò nell'implacabile distesa ora chiamata Deserto di Grimsun.
+Di fronte alla desolazione, i sopravvissuti resistettero. Costruirono la grande centrale solare sulle cime aride, sfruttando il sole implacabile per alimentare terre lontane. Pur lodando la loro ingegnosità, il libro lamenta la perdita della bellezza rigogliosa di Lushspire, ora sepolta sotto infinite sabbie.
 """
-
-"1001.entrance" = "Welcome to Evergrove Village!"
+"1001.entrance" = "Benvenuti al Villaggio di Evergrove!"
 "1003.entrance" = """
-Welcome to Aridreach
+Benvenuti ad Aridreach
 --
-North: Grimsun Basin
-South: Verdant Way
+Nord: Bacino di Grimsun
+Sud: Sentiero Verdant Way
 """
-"1004.entrance" = "Duskhaven's Dungeon Lv 1"
-"1005.entrance" = "Duskhaven's Dungeon Lv 2"
+"1004.entrance" = "Dungeon di Duskhaven Lv 1"
+"1005.entrance" = "Dungeon di Duskhaven Lv 2"
 "1006.entrance" = """
-Welcome to Thermoria
+Benvenuti a Thermoria
 --
-North: Murkmire Swamps
-Boats to Maritide Haven available at the dock
+Nord: Paludi di Murkmire
+Barche disponibili per il Rifugio Maritide al molo
 """
-"1007.entrance" = "Underneath Mount Ignis"
+"1007.entrance" = "Sotto il Monte Ignis"
 "1008.entrance" = """
-Welcome to Maritide Haven
+Benvenuti al Rifugio Maritide
 --
-Boats to Thermoria available at the dock
+Barche per Thermoria disponibili al molo
 """
-"1009.entrance" = "Old Mining Complex underneath Maritide Haven"
+"1009.entrance" = "Vecchio Complesso Minerario sotto il Rifugio Maritide"
 "1011.entrance" = """
-Welcome to the Village of Twilight: Duskhaven
--- 
-Please do not touch the Manafren Trees.
-Please do not take pictures using the flash.
+Benvenuti al Villaggio del Crepuscolo: Duskhaven
+--
+Si prega di non toccare gli Alberi di Manafern.
+Si prega di non scattare foto con il flash.
 """
-"1012.entrance" = "Welcome to Vintoria!"
-"1013.entrance" = "Grimsun Basin"
-"1014.entrance" = "Hydroelectric Power Plant Lv 1"
-"1015.entrance" = "Hydroelectric Power Plant Lv 2"
-"1016.entrance" = "Hydroelectric Power Plant Lv 3"
-"1017.entrance" = "Demon Maze"
+"1012.entrance" = "Benvenuti a Vintoria!"
+"1013.entrance" = "Bacino di Grimsun"
+"1014.entrance" = "Centrale Idroelettrica Lv 1"
+"1015.entrance" = "Centrale Idroelettrica Lv 2"
+"1016.entrance" = "Centrale Idroelettrica Lv 3"
+"1017.entrance" = "Labirinto del Demone"
 
 "1002.entrance" = """
-Welcome to the Verdant Way
+Benvenuti al Sentiero Verdant Way
 --
-North-East: Aridreach
-North-West: Shadowveil Path
-South-West: Murkmire Swamps
+Nord-Est: Aridreach
+Nord-Ovest: Sentiero Shadowveil
+Sud-Ovest: Paludi di Murkmire
 """
 
 "1010.entrance" = """
-Welcome to te Shadowveil Path
+Benvenuti al Sentiero Shadowveil
 --
-North: Vintoria
-West: Demon Maze
-South: Verdant Way
+Nord: Vintoria
+Ovest: Labirinto del Demone
+Sud: Sentiero Verdant Way
 """
 
 "1018.entrance" = """
-Welcome to the Murkmire Swamps
+Benvenuti alle Paludi di Murkmire
 --
-North: Verdant Way
-West: Duskhaven
-South: Thermoria
+Nord: Sentiero Verdant Way
+Ovest: Duskhaven
+Sud: Thermoria
 """
 
 "quest.hero.prologue" = """
-You say "some kind of magic" brought you here? Interesting...
-Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
-I suggest you start your own journey to learn more about this world.
-The closest city is Aridreach, maybe start from there.
-I shall see you soon.
-"""
-
-"quest.hero.prologue_hint" = """
-To get to Aridreach go West from here, it's quite close.
-Also, if you're looking for directions, road signs can be useful.
-Now go.
+Dici che una "sorta di magia" ti ha portato qui? Interessante...
+Purtroppo, non c'è molta guida che un vecchio come me possa darti, forse se fossi più giovane...
+Ti consiglio di iniziare il tuo viaggio per conoscere meglio questo mondo.
+La città più vicina è Aridreach, a ovest da qui, perché non inizi da lì?
+Se cerchi indicazioni, i segnali stradali possono essere utili.
+Ora vai, ci vedremo presto!
 """
 
 "quest.hero.1" = """
-So you're an outer-worlder eh?
-I bet that old geezer in Evergrove summoned you here.
-We don't need any heroes, go away.
+Quindi sei uno straniero, eh?
+Scommetto che quel vecchio di Evergrove ti ha evocato qui.
+Non abbiamo bisogno di eroi, vattene.
 """
 
 "quest.hero.2" = """
-I told you, it's no use running around killing monsters,
-their number never really lowers.
-This very world, too, has rejected the concept of a "hero".
+Te l'ho detto, è inutile correre in giro uccidendo mostri,
+il loro numero non diminuisce mai davvero.
+Questo mondo stesso, inoltre, ha respinto il concetto di "eroe".
 """
 
 "quest.hero.3" = """
-They say the third time is the charm.
-What the hell are you doing here...?
-Are you... After the keys!?
+Dicono che la terza volta sia quella buona.
+Cosa diavolo ci fai qui...?
+Sei... alla ricerca delle chiavi!?
 """
 
 "quest.hero.4" = """
-You see, the problem with you, with the wizard, with this world...
-Is trust.
-The microwave is broken? Fix it with magic.
-Science is broken? Let's pray the gods for knowledge.
-The world is broken? 
-Sure, let's summon a random dude from another world to fix it!
-You have been so busy, so worried, it never even came to 
-your mind we might just be able to handle the situation ourself.
+Vedi, il problema con te, con il mago, con questo mondo...
+è la fiducia.
+Il microonde è rotto? Aggiustalo con la magia.
+La scienza è rotta? Preghiamo gli dei per conoscenza.
+Il mondo è rotto? 
+Certo, evochiamo un tizio a caso da un altro mondo per aggiustarlo!
+Sei stato così occupato, così preoccupato, che non ti è mai passato per la mente che potremmo essere in grado di gestire la situazione da soli.
 """
 
 "quest.hero.5" = """
-So you're the outer-worlder...
-Do you even know why you're here?
-Simple... It's because I failed as a father.
+Quindi sei lo straniero...
+Sai anche perché sei qui?
+Semplice... È perché ho fallito come padre.
 """
 
 "quest.hero.finale.a" = """
-No point in hiding it since you probably already know everything.
-I am the hero of the profecy, but have not always been.
-I grew up with the weight of the profecy but no skills to back it up.
-The looks on people faces, especially that damn old creep...
-All I saw was distrust, so I left.
-When I met you, my "replacement", rage took over...
-I realized the world was not waiting for me and had to take action.
-The head of the Demon Lord was my destiny, 
-but I think I owe you an apolegy nonetheless for taking you prey.
+Non ha senso nasconderlo visto che probabilmente sai già tutto.
+Io sono l'eroe della profezia, ma non lo sono sempre stato.
+Sono cresciuto con il peso della profezia ma senza le abilità per sostenerla.
+Gli sguardi delle persone, specialmente di quel maledetto vecchio...
+Tutto ciò che vedevo era sfiducia, quindi me ne andai.
+Quando ti ho incontrato, il mio "sostituto", la rabbia ha preso il sopravvento...
+Ho capito che il mondo non stava aspettando me e ho dovuto agire.
+La testa del Signore dei Demoni era il mio destino, 
+ma penso di doverti delle scuse per averti portato via la preda.
 """
 
 "quest.hero.finale.b" = """
-What, you expected a boss fight?
-Tried to take over someone else's destiny, did you?
-Piss off.
+Che fai qui... Ti aspettavi di combattere il boss finale?
+Cercavi di rubare il destino di qualcun'altro, eh?
+Sparisci.
 """
 
 "quest.hero.finale.c" = """
-Who the hell are you?
+Chi diavolo sei?
 """
 
 "quest.hero.finale.finale" = """
-We have nothing else to talk about.
-Go back to your world, or stay... Whatever...
+Non abbiamo altro di cui parlare.
+Torna nel tuo mondo, o rimani... Qualunque cosa...
 """
 
 "quest.ninja_skills.black_ninja.note" = """
-Yo, 
-I'm out on a mission.
-Also, what the hell are you doing in my house!?
-Get out!
-- Black Ninja
+Ehi,
+Sono in missione.
+E comunque, cosa diavolo fai a casa mia!?
+Fuori!
+- Ninja Nero
 """
 
 "quest.ninja_skills.girl.black_ninja_location_hint" = """
-He’s hiding around here, you know... but it’s not just him, oh no. 
-This place - it’s not what it looks like. 
-The dunes? They’re not just sand... 
-They’re watchers, silent guardians keeping everything locked inside. 
-And the Black Ninja? He’s no ordinary man. They’ve got him here for a reason, he knows something!
-Or maybe... maybe he’s the key. Or maybe... he’s the lock.
+Si sta nascondendo qui nei dintorni, sai... ma non è solo lui, oh no. 
+Questo posto - non è come sembra. 
+Le dune? Non sono solo sabbia... 
+Sono osservatori, guardiani silenziosi che tengono tutto chiuso dentro. 
+E il Ninja Nero? Non è un uomo qualunque. Lo tengono qui per un motivo, lui sa qualcosa!
+O forse... forse è la chiave. O forse... è il lucchetto.
 """
 
 "quest.ninja_skills.blue_ninja.note" = """
-Yo, 
-I'm out on a mission.
-Also, what the hell are you doing in my house!?
-Get out!
-- Blue Ninja
+Ehi,
+Sono in missione.
+E comunque, cosa diavolo fai a casa mia!?
+Fuori!
+- Ninja Blu
 """
 
 "quest.ninja_skills.lyria.hoarding_issues" = """
-One of my brothers has a hoarding issue...
-I'm waiting for him to get home so I can force him to clean up.
-I just hope they didn't have any trouble on the mission...
+Uno dei miei fratelli ha un problema con l'accumulo...
+Sto aspettando che torni a casa per costringerlo a fare pulizia.
+Spero solo che non abbiano avuto problemi durante la missione...
 """
 
 "quest.ninja_skills.black_ninja.please_check_on_sister" = """
-So you came all the way from Evergrove?
-Can you check on my sister and let her know I'm ok?
-My brother should be back home by now, but with our job you never know...
-If you do, I'll teach you one of my ninja skills!
+Quindi sei venuto fin da Evergrove?
+Puoi controllare come sta mia sorella e farle sapere che sto bene?
+Mio fratello dovrebbe essere già tornato a casa, ma con il nostro lavoro non si può mai sapere...
+Se lo fai, ti insegnerò una delle mie abilità ninja!
 """
 
 "quest.ninja_skills.blue_ninja.please_check_on_sister" = """
-So you came all the way from Evergrove?
-Can you check on my sister and let her know I'm ok?
-My brother should be back home by now, but with our job you never know...
-If you do, I'll teach you one of my ninja skills!
+Quindi sei venuto fin da Evergrove?
+Puoi controllare come sta mia sorella e farle sapere che sto bene?
+Mio fratello dovrebbe essere già tornato a casa, ma con il nostro lavoro non si può mai sapere...
+Se lo fai, ti insegnerò una delle mie abilità ninja!
 """
 
 "quest.ninja_skills.lyria.thats_my_brother_black" = """
-A ninja dressed in black... 
-That's my brother!
-Please tell him to come home soon, I need help cleaning our brother's house!
-Was my other brother with him? 
-He dresses in blue.
+Un ninja vestito di nero... 
+Quello è mio fratello!
+Per favore, digli di tornare presto a casa, ho bisogno di aiuto per pulire la casa di nostro fratello!
+Il mio altro fratello era con lui? 
+Si veste di blu.
 """
 
 "quest.ninja_skills.black_ninja.gain_bouncing_knifes_skill" = """
-Cleaning the house!? LOL
-I'm not sure I'll make it, you know, we're kinda in the middle of a war for the survival of mankind over here!
-As promised, your knife will now bounce off most surfaces!
-Pretty cool eh? You'll see!
+Pulire la casa!? LOL
+Non sono sicuro di farcela, sai, siamo nel bel mezzo di una guerra per la sopravvivenza dell'umanità qui!
+Come promesso, ora il tuo coltello rimbalzerà sulla maggior parte delle superfici!
+Abbastanza figo, eh? Vedrai!
 """
 
 "quest.ninja_skills.lyria.thats_my_brother_blue" = """
-A ninja dressed in blue... 
-That's my brother!
-Please tell him to come home soon, we need to clean up his place, it's full of junk!
-Was my other brother with him? 
-He dresses in black.
+Un ninja vestito di blu... 
+Quello è mio fratello!
+Per favore, digli di tornare presto a casa, dobbiamo pulire il suo posto, è pieno di roba!
+Il mio altro fratello era con lui? 
+Si veste di nero.
 """
 
 "quest.ninja_skills.blue_ninja.gain_knife_catcher_skill" = """
-Junk!? 
-It's not junk! It's weapons and other ninja stuff!
-Oh well...
-As promised, you can now catch knifes mid-air bare handed.
-Obviously, you need knifes to be coming at you to use this skill.
-But I'm sure you'll find some use for it eventually!
+Roba!? 
+Non è roba! Sono armi e altre cose ninja!
+Oh beh...
+Come promesso, ora puoi afferrare coltelli a mezz'aria a mani nude.
+Ovviamente, devi avere coltelli che ti vengono lanciati contro per usare questa abilità.
+Ma sono sicuro che troverai un modo per usarla prima o poi!
 """
 
 "quest.ninja_skills.lyria.father_introduction" = """
-Thank you for checking on my brothers...
-Since they joined our father, the Great Red Ninja, in the "family business" I am always a bit worried...
-I just hope they are coming home soon!
+Grazie per aver controllato i miei fratelli...
+Da quando si sono uniti a nostro padre, il Grande Ninja Rosso, nel "business di famiglia" sono sempre un po' preoccupata...
+Spero solo che tornino presto a casa!
 """
 
 "quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
-This job requires me to stay away from home for
-long periods of time... 
-My children are all about your age...
+Questo lavoro richiede che stia lontano da casa per
+lunghi periodi di tempo... 
+I miei figli hanno tutti la tua età...
 """
 
 "quest.ninja_skills.red_ninja.gain_piercing_knife_skill" = """
-My kids are all well? That's a relief!
-As a reward, I'll teach the ultimate ninja skill.
-If only I had the chance, I KNOW I could defeat the 
-Demon Lord himself in one blow with it.
-F*** that guy.
+I miei figli stanno tutti bene? Che sollievo!
+Come ricompensa, ti insegnerò l'abilità ninja suprema.
+Se solo ne avessi l'occasione, SO che potrei sconfiggere il
+Signore dei Demoni con un solo colpo.
+Quel tizio è proprio uno str***o.
 """
 
 "quest.ninja_skills.red_ninja.about_piercing_knife_skill" = """
-Told you... Barrels, monsters, Demon Lords, ...
-Doesn't matter.
-One shot is enough for ANY foe.
+Te l'avevo detto... Barili, mostri, Signori dei Demoni, ...
+Non importa.
+Un colpo basta per QUALSIASI nemico.
 """
 
 "quest.manafren_research.serena.keep_out_of_research_area" = """
-What do you think you are doing here!?
-This zone is off limits without a permit!
+Cosa pensi di fare qui!?
+Questa zona è vietata senza un permesso!
 """
 
 "quest.manafren_research.dr_voss.introduction" = """
-Ah, just who I needed. 
-I’ve studied these Manafren trees extensively, by all accounts, they’re miraculous...
-Yet, I can’t shake this feeling of something dark, something ancient lurking beneath. 
-Maybe there’s something we’ve overlooked in the ancient scrolls...
-Unfortunately, the village elder is the only one with access to them, but he won't talk to me anymore...
+Ah, proprio chi mi serviva. 
+Ho studiato questi alberi di Manafren a lungo, per ogni parametro, sono miracolosi...
+Eppure, non riesco a scrollarmi di dosso la sensazione di qualcosa di oscuro, qualcosa di antico che si cela sotto. 
+Forse c’è qualcosa che ci è sfuggito nei manoscritti antichi...
+Purtroppo, il capo villaggio è l’unico ad avere accesso a quei testi, ma non vuole più parlarmi...
 """
 
 "quest.manafren_research.dr_voss.waiting_for_info" = """
-My research continues, but I can't get the feeling of dread off my mind.
+Le mie ricerche continuano, ma non riesco a togliermi di dosso questa sensazione di inquietudine.
 """
 
 "quest.manafren_research.duskhaven_village_elder.check_the_dungeon" = """
-Dr. Voss sent you, did he? 
-Ah, well… I don’t put much stock in all his science...
-These trees, they hold a power older than you or me, a power that whispers secrets to those willing to listen. 
-There’s an old scroll tucked away in the dungeon nearby. 
-Maybe you’ll find what you seek there. 
-Just beware of what’s hidden within those words.
+Il dottor Voss ti ha mandato, vero? 
+Ah, beh… Non do molto credito a tutta la sua scienza...
+Questi alberi contengono un potere più antico di te e me, un potere che sussurra segreti a chi è disposto ad ascoltare. 
+C’è un vecchio manoscritto nascosto in un dungeon qui vicino. 
+Forse lì troverai quello che cerchi. 
+Ma fai attenzione a ciò che si cela in quelle parole.
 """
 
 "quest.manafren_research.duskhaven_village_elder.have_you_checked_the_dungeon" = """
-Did you find anything interesting in the dungeon?
+Hai trovato qualcosa di interessante nel dungeon?
 """
 
 "quest.manafren_research.dungeon_scroll.contents" = """
-In ages past, when twilight lay thick over Duskhaven, a pact was struck. 
-The trees would flourish, drawing life from the soil and skies, breathing mana into the land. 
-Yet, for this... <unreadable>
-Beneath their roots flows the darkness, and with each pulse, a reminder of... <unreadable>. 
-Those who seek this path must journey east to the mountains, where the source of the pact lies buried.
+In epoche passate, quando il crepuscolo avvolgeva fittamente Duskhaven, un patto fu stretto. 
+Gli alberi avrebbero prosperato, assorbendo vita dal suolo e dal cielo, donando mana alla terra. 
+Eppure, per questo... <illeggibile>
+Sotto le loro radici scorre l’oscurità, e con ogni pulsazione, un ricordo di... <illeggibile>. 
+Coloro che cercano questa strada devono viaggiare verso est, verso le montagne, dove la fonte del patto è sepolta.
 """
 
 "quest.manafren_research.ancient_book.contents" = """
-It was here, beneath these stones, that the trees were first granted their cursed life. 
-The Lord of Darkness poured his very essence into their roots, binding their growth to his will. 
-Each leaf holds a shard of his presence, and with each season, his dominion spreads quietly. 
-Let this record serve as both a warning and a call to vigilance. As the trees grow, so does he.
+Fu qui, sotto queste pietre, che agli alberi fu data la loro vita maledetta. 
+Il Signore delle Tenebre riversò la sua stessa essenza nelle loro radici, legando la loro crescita alla sua volontà. 
+Ogni foglia contiene un frammento della sua presenza, e con ogni stagione, il suo dominio si espande silenziosamente. 
+Che questo documento serva sia da avvertimento che da richiamo alla vigilanza. Con la crescita degli alberi, cresce anche lui.
 """
 
 "quest.manafren_research.dr_voss.thanks_for_the_info" = """
-You… you found it. 
-So, the trees truly are bound to some dark force, and their energy, our very life here in Duskhaven, comes from this curse. 
-I had suspicions, but these findings, well, they change everything. 
-I’ll need time to process what this means, but take this as a token. 
+Tu... tu l’hai trovato. 
+Quindi, gli alberi sono veramente legati a una forza oscura, e la loro energia, la nostra stessa vita qui a Duskhaven, deriva da questa maledizione. 
+Avevo dei sospetti, ma queste scoperte, beh, cambiano tutto. 
+Avrò bisogno di tempo per elaborare cosa significhi tutto ciò, ma prendi questo come ringraziamento. 
 """
 
 "quest.manafren_research.dr_voss.thanks_for_the_info_still_working_on_it" = """
-I’ll need time to process the latest findings...
+Avrò bisogno di tempo per elaborare le ultime scoperte...
 """
 
 "quest.manafren_research.dr_voss.research_was_inconclusive" = """
-The suspicious dark aura is gone.
-I have to say, I am a bit pissed, I was so close...
-It's hard to do science in a world with magic.
-Maybe they should get an outer-worlder to do my job - no offense.
+La strana aura oscura è sparita.
+Devo dire che sono un po’ arrabbiato, ero così vicino...
+È difficile fare scienza in un mondo con la magia.
+Forse dovrebbero far fare il mio lavoro a uno straniero - senza offesa.
 """
 
 "quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
-So you saw him, didn’t you? You talked to him? Oh, I knew it! 
-But don’t you see now? Don’t you see what I’ve been saying? 
-He’s not just *hiding*, he’s *placed*. 
-Everything in here, everyone in here... They’re puppets...
+Quindi l’hai visto, vero? Ci hai parlato? Oh, lo sapevo! 
+Ma ora non capisci? Non vedi quello che ho sempre detto? 
+Non si sta solo *nascondendo*, è stato *messo* lì. 
+Tutto qui dentro, tutti qui dentro... Sono burattini...
 """
 
 "quest.crazy_conspiracy.girl.black_ninja_i_knew_it_again" = """
-Sssh... They're watching us... 
+Sssh... Ci stanno guardando... 
 """
 
-"references.dbz.krillin" = "I hope you brought Senzu beans!"
+"references.dbz.krillin" = "Spero che tu abbia portato i fagioli Senzu!"

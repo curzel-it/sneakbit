@@ -14346,9 +14346,9 @@
       "dialogues": [],
       "destination": {
         "world": 11199907,
-        "x": 0,
-        "y": 0,
-        "direction": "Unknown"
+        "x": 5,
+        "y": 6,
+        "direction": "Up"
       },
       "lock_type": "None",
       "original_sprite_frame": {
