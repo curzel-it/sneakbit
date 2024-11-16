@@ -690,7 +690,7 @@
       },
       "movement_directions": "None",
       "is_consumable": false,
-      "contents": null,
+      "contents": "lore.evergrove.monster_sightings_logs",
       "is_invulnerable": true,
       "demands_attention": false
     },

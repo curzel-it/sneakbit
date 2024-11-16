@@ -19827,7 +19827,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "contents": "lore.005.manafren_trees.book",
+      "contents": "lore.manafren_trees.botanics_book",
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
@@ -20852,7 +20852,7 @@
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "contents": "lore.005.manafren_trees.sign",
+      "contents": "lore.manafren_trees.tourists_sign",
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false

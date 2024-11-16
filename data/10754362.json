@@ -441,7 +441,7 @@
       },
       "dialogues": [
         {
-          "text": "lore.003.monsters_first_appearance",
+          "text": "lore.evergrove.monster_sightings_nowadays",
           "key": "always",
           "expected_value": 0,
           "reward": null

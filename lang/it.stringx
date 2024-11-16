@@ -225,14 +225,14 @@ You expected every house to have loot?
 Also, what the hell are you doing in my house!?
 """
 
-"lore.003.monsters_first_appearance" = """
+"lore.evergrove.monster_sightings_nowadays" = """
 Monsters have been part of this world for a long time.
 They've been around for as long as I can remember at least.
 But they never left the deeper woods until recently.
 I pity newer generations for having to deal with this many.
 """
 
-"lore.004.you_are_here" = """
+"quest.hero.prologue" = """
 You say "some kind of magic" brought you here? Interesting...
 Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
 I suggest you start your own journey to learn more about this world.
@@ -240,20 +240,20 @@ The closest city is Aridreach, maybe start from there.
 I shall see you soon.
 """
 
-"lore.004.you_are_here_again" = """
+"quest.hero.prologue_hint" = """
 To get to Aridreach go West from here, it's quite close.
 Also, if you're looking for directions, road signs can be useful.
 Now go.
 """
 
-"lore.005.manafren_trees.sign" = """
+"lore.manafren_trees.tourists_sign" = """
 Manafern Trees
 Famous worldwide for their mystical energy properties. 
 Their unique purple leaves harness the essence of twilight, 
 fueling life and wonder in Duskhaven.
 """
 
-"lore.005.manafren_trees.book" = """
+"lore.manafren_trees.botanics_book" = """
 The Manafern Tree, a botanical marvel exclusive 
 to the ever-twilit region of Duskhaven, 
 has long captivated scholars and mystics alike. 

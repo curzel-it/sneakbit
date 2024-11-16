@@ -225,35 +225,36 @@ You expected every house to have loot?
 Also, what the hell are you doing in my house!?
 """
 
-"lore.003.monsters_first_appearance" = """
+"lore.evergrove.monster_sightings_nowadays" = """
 Monsters have been part of this world for a long time.
 They've been around for as long as I can remember at least.
 But they never left the deeper woods until recently.
 I pity newer generations for having to deal with this many.
 """
 
-"lore.004.you_are_here" = """
-You say "some kind of magic" brought you here? Interesting...
-Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
-I suggest you start your own journey to learn more about this world.
-The closest city is Aridreach, maybe start from there.
-I shall see you soon.
+"lore.evergrove.monster_sightings_logs" = """
+Monster Sightings Log
+Property of Evergrove Village Historical Records
+--
+January 4th, 1330: Spotted 1 monster near the village outskirts. First in many years.
+June 27th, 1331: Saw the first monster since last year. Stayed near the forest edge.
+March 15th, 1332: Two monsters appeared near Verdant Way. No harm done, but unsettling.
+October 9th, 1333: A strange, dark creature wandered into the village at dusk. Count: 3.
+May 20th, 1334: Four monsters sighted.
+July 13th, 1335: It's been a while since last sighting, five today.
+December 2nd, 1336: Six monsters attacked a passing caravan. Survivors returned shaken.
+September 22nd, 1338: Village attacked by eight creatures. Guards struggled to fend them off.
+November 16th, 1340: Count has reached 14 monsters roaming near Verdant Way. Never seen so many at once. No victims, so far.
 """
 
-"lore.004.you_are_here_again" = """
-To get to Aridreach go West from here, it's quite close.
-Also, if you're looking for directions, road signs can be useful.
-Now go.
-"""
-
-"lore.005.manafren_trees.sign" = """
+"lore.manafren_trees.tourists_sign" = """
 Manafern Trees
 Famous worldwide for their mystical energy properties. 
 Their unique purple leaves harness the essence of twilight, 
 fueling life and wonder in Duskhaven.
 """
 
-"lore.005.manafren_trees.book" = """
+"lore.manafren_trees.botanics_book" = """
 The Manafern Tree, a botanical marvel exclusive 
 to the ever-twilit region of Duskhaven, 
 has long captivated scholars and mystics alike. 
@@ -276,14 +277,12 @@ and even sustain the vibrant ecosystem of Duskhaven itself.
 
 "lore.006.vintoria_power_station" = """
 Vintoria’s Cascade Station
-Harnessing the might of the waterfall to power 
-the valley with life-giving mana
+Harnessing the might of the waterfall to power the valley with life-giving mana
 """
 
 "lore.007.vintoria_entrance" = """
 Welcome to Vintoria Valley
-where the thundering falls weave mana into prosperity 
-and the vineyards whisper tales of timeless beauty.
+where the thundering falls weave mana into prosperity  and the vineyards whisper tales of timeless beauty.
 """
 
 "lore.008.mount_ignis" = """
@@ -353,6 +352,20 @@ Welcome to the Murkmire Swamps
 North: Verdant Way
 West: Duskhaven
 South: Thermoria
+"""
+
+"quest.hero.prologue" = """
+You say "some kind of magic" brought you here? Interesting...
+Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
+I suggest you start your own journey to learn more about this world.
+The closest city is Aridreach, maybe start from there.
+I shall see you soon.
+"""
+
+"quest.hero.prologue_hint" = """
+To get to Aridreach go West from here, it's quite close.
+Also, if you're looking for directions, road signs can be useful.
+Now go.
 """
 
 "quest.hero.1" = """
