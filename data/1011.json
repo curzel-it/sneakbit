@@ -19220,14 +19220,14 @@
     {
       "id": 11022216,
       "frame": {
-        "x": 12,
-        "y": 32,
+        "x": 14,
+        "y": 31,
         "w": 1,
         "h": 1
       },
       "species_id": 9000,
       "entity_type": "RailObject",
-      "direction": "Down",
+      "direction": "Left",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -19262,7 +19262,7 @@
       "id": 11022217,
       "frame": {
         "x": 46,
-        "y": 73,
+        "y": 71,
         "w": 1,
         "h": 1
       },
@@ -20738,7 +20738,7 @@
       "id": 11022214,
       "frame": {
         "x": 28,
-        "y": 18,
+        "y": 16,
         "w": 1,
         "h": 1
       },
@@ -20778,14 +20778,14 @@
     {
       "id": 11022215,
       "frame": {
-        "x": 15,
-        "y": 69,
+        "x": 14,
+        "y": 71,
         "w": 1,
         "h": 1
       },
       "species_id": 9000,
       "entity_type": "RailObject",
-      "direction": "Right",
+      "direction": "Down",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -30848,7 +30848,7 @@
       },
       "dialogues": [],
       "destination": {
-        "world": 11454439,
+        "world": 10810193,
         "x": 0,
         "y": 0,
         "direction": "Unknown"

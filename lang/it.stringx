@@ -56,9 +56,9 @@
 "npc.name.blue_mohawk" = "Abitante"
 "npc.name.brown_mohawk" = "Abitante"
 "npc.name.cat" = "Gatto"
-"npc.name.dbz1" = "Marito dell'Android"
+"npc.name.dbz1" = "Marito dell'Androide"
 "npc.name.dbz2" = "Padrino di Gohan"
-"npc.name.dbz3" = "Scimmia Son"
+"npc.name.dbz3" = "Son Monkey"
 "npc.name.demon_lord" = "Signore dei Demoni"
 "npc.name.male.black.doctor" = "Dr Voss"
 "npc.name.ethan" = "Ethan"
@@ -222,6 +222,9 @@ Cosa?
 Ti aspettavi che ogni casa avesse bottino?
 E poi, cosa diavolo ci fai in casa mia!?
 """
+
+"references.dbz.krillin" = "Spero che tu abbia portato dei Senzu!"
+"references.dbz.goku" = "Mmmh questo non è l'universo 7... Ciaooo!"
 
 "lore.evergrove.monster_sightings_nowadays" = """
 I mostri sono parte di questo mondo da molto tempo.
@@ -605,5 +608,3 @@ Tutto qui dentro, tutti qui dentro... Sono burattini...
 "quest.crazy_conspiracy.girl.black_ninja_i_knew_it_again" = """
 Sssh... Ci stanno guardando... 
 """
-
-"references.dbz.krillin" = "Spero che tu abbia portato i fagioli Senzu!"

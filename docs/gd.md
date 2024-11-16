@@ -145,6 +145,16 @@ Reward: Piercing Knife skill
 
 Reward: 10x Kunai
 
+### Side Quest: Thugs and Assassins
+1. Meet with Thermoria village chief - he called assassins to get rid of the thugs
+1. Meet with the assassins - they are about to strike, just waiting to finish coffee
+1. Meet with the thugs - they are not thugs, just unpaid workers
+1. Meet with the village chief - he did pay them with checks
+1. Meet with the thugs - they don't know what a check is
+1. Meet with the village chief - he sends them crypto
+
+Reward: Thugs are gone and the passage to Maritide Have via Thermoria's dock
+
 ## Lore
 ### Locations
 #### Evergrove Village (1001)

@@ -225,6 +225,9 @@ You expected every house to have loot?
 Also, what the hell are you doing in my house!?
 """
 
+"references.dbz.krillin" = "I hope you brought Senzu beans!"
+"references.dbz.goku" = "Wait, this isn't universe 7... Byeee!"
+
 "lore.evergrove.monster_sightings_nowadays" = """
 Monsters have been part of this world for a long time.
 They've been around for as long as I can remember at least.
@@ -610,4 +613,55 @@ Everything in here, everyone in here... They’re puppets...
 Sssh... They're watching us... 
 """
 
-"references.dbz.krillin" = "I hope you brought Senzu beans!"
+"quest.thugs_and_assassins.nyx.intro" = """
+Stop messing around!
+You're lucky we are taking break right now.
+"""
+
+"quest.thugs_and_assassins.mr_bubblegum.intro" = """
+...
+"""
+
+"quest.thugs_and_assassins.thug_boss.intro" = """
+Go away kid, nobody is getting near the dock until I say so.
+"""
+
+"quest.thugs_and_assassins.thermoria_town_chief.i_hired_assassins" = """
+The guys outside? Yeah they are assassins.
+Oh no, I'm not their boss, I just hired them for a job.
+Some thugs have blocked the dock and we need to sail out some goods.
+"""
+
+"quest.thugs_and_assassins.nyx.we_are_about_to_strike" = """
+No need to rush, we are about to go and take care of them.
+Let me just finish my coffee first.
+"""
+
+"quest.thugs_and_assassins.thug_boss.we_are_not_thugs" = """
+The Village Chief hired WHO!? 
+Dude we're not "thugs", we're unpaid workers on strike!
+Please, please, talk to Chief so we can resolve this peacefully...
+"""
+
+"quest.thugs_and_assassins.thermoria_town_chief.it_was_about_the_money" = """
+Oh my... This thing again....
+I did pay them! I gave each one of them a check already!
+"""
+
+"quest.thugs_and_assassins.thug_boss.what_is_a_check" = """
+Wait, so the pieces of paper he gave us were... money?
+Well, we threw them away LOL
+Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
+"""
+
+"quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids" = """
+Basically you're telling me they are so young they don't know what a check is?
+Yes I know what crypto is, I'm not that old... 
+...
+Done, everyone paid in full...
+Stupid kids.
+"""
+
+"quest.thugs_and_assassins.thermoria_town_chief.finale" = """
+Stupid new-age money.
+"""

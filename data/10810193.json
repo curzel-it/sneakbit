@@ -57,7 +57,7 @@
       },
       "dialogues": [],
       "destination": {
-        "world": 1006,
+        "world": 1011,
         "x": 0,
         "y": 0,
         "direction": "Unknown"
@@ -103,7 +103,7 @@
       },
       "dialogues": [],
       "destination": {
-        "world": 1006,
+        "world": 1011,
         "x": 0,
         "y": 0,
         "direction": "Unknown"
