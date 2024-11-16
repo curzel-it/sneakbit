@@ -377,7 +377,7 @@
       "dialogues": [
         {
           "key": "dialogue.answer.quest.ninja_skills.lyria.thats_my_brother_black",
-          "text": "quest.ninja_skills.black_ninja.gain_knife_catcher_skill",
+          "text": "quest.ninja_skills.black_ninja.gain_bouncing_knifes_skill",
           "expected_value": 1,
           "reward": null
         },

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::UNLIMITED_LIFESPAN, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{Dialogue, EntityDialogues}, directions::MovementDirections}, game_engine::storage::{set_value_for_key, StorageKey}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{Dialogue, EntityDialogues}, directions::MovementDirections}, game_engine::storage::{set_value_for_key, StorageKey}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::key_value_matches, world::World};
 
@@ -124,8 +124,10 @@ impl Entity {
         updates
     }
 
-    pub fn setup(&mut self, creative_mode: bool) {      
-        self.remaining_lifespan = UNLIMITED_LIFESPAN;
+    pub fn setup(&mut self, creative_mode: bool) {    
+        if self.parent_id == NO_PARENT {  
+            self.remaining_lifespan = UNLIMITED_LIFESPAN;
+        }
         species_by_id(self.species_id).reload_props(self);
         
         match self.entity_type {

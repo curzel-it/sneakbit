@@ -233,19 +233,17 @@ I pity newer generations for having to deal with this many.
 """
 
 "lore.004.you_are_here" = """
-So you say "some kind of magic" brought you here? 
-How interesting...
-Unfortunately, there is no much guidance an old geezer 
-like me can give you, maybe if I were younger...
-I suggest you start your own journey and learn more
-about this world.
-I shall see you then.
+You say "some kind of magic" brought you here? Interesting...
+Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
+I suggest you start your own journey to learn more about this world.
+The closest city is Aridreach, maybe start from there.
+I shall see you soon.
 """
 
 "lore.004.you_are_here_again" = """
-I suggest you start your own journey and learn more
-about this world.
-I shall see you then.
+To get to Aridreach go West from here, it's quite close.
+Also, if you're looking for directions, road signs can be useful.
+Now go.
 """
 
 "lore.005.manafren_trees.sign" = """
@@ -298,23 +296,64 @@ Proceed with caution and respect the power of Mount Ignis.
 Dock of Thermoria — Gateway to Maritide Haven
 """
 
-"1001.entrance" = "Welcome to Evergrove Village"
-"1002.entrance" = "Verdant Way"
-"1003.entrance" = "Welcome to Aridreach"
+"1001.entrance" = "Welcome to Evergrove Village!"
+"1003.entrance" = """
+Welcome to Aridreach
+--
+North: Grimsun Basin
+South: Verdant Way
+"""
 "1004.entrance" = "Duskhaven's Dungeon Lv 1"
 "1005.entrance" = "Duskhaven's Dungeon Lv 2"
-"1006.entrance" = "Welcome to Thermoria"
+"1006.entrance" = """
+Welcome to Thermoria
+--
+North: Murkmire Swamps
+Boats to Maritide Haven available at the dock
+"""
 "1007.entrance" = "Underneath Mount Ignis"
-"1008.entrance" = "Welcome to Maritide Haven"
+"1008.entrance" = """
+Welcome to Maritide Haven
+--
+Boats to Thermoria available at the dock
+"""
 "1009.entrance" = "Old Mining Complex underneath Maritide Haven"
-"1010.entrance" = "Shadowveil Path"
-"1011.entrance" = "Duskhaven"
-"1012.entrance" = "Vintoria"
+"1011.entrance" = """
+Welcome to the Village of Twilight: Duskhaven
+-- 
+Please do not touch the Manafren Trees.
+Please do not take pictures using the flash.
+"""
+"1012.entrance" = "Welcome to Vintoria!"
 "1013.entrance" = "Grimsun Basin"
 "1014.entrance" = "Hydroelectric Power Plant Lv 1"
 "1015.entrance" = "Hydroelectric Power Plant Lv 2"
 "1016.entrance" = "Hydroelectric Power Plant Lv 3"
 "1017.entrance" = "Demon Maze"
+
+"1002.entrance" = """
+Welcome to the Verdant Way
+--
+North-East: Aridreach
+North-West: Shadowveil Path
+South-West: Murkmire Swamps
+"""
+
+"1010.entrance" = """
+Welcome to te Shadowveil Path
+--
+North: Vintoria
+West: Demon Maze
+South: Verdant Way
+"""
+
+"1018.entrance" = """
+Welcome to the Murkmire Swamps
+--
+North: Verdant Way
+West: Duskhaven
+South: Thermoria
+"""
 
 "quest.hero.1" = """
 So you're an outer-worlder eh?
@@ -422,12 +461,11 @@ Was my other brother with him?
 He dresses in blue.
 """
 
-"quest.ninja_skills.black_ninja.gain_knife_catcher_skill" = """
+"quest.ninja_skills.black_ninja.gain_bouncing_knifes_skill" = """
 Cleaning the house!? LOL
 I'm not sure I'll make it, you know, we're kinda in the middle of a war for the survival of mankind over here!
-As promised, you can now catch knifes mid-air bare handed.
-Obviously, you need knifes to be coming at you to use this skill.
-But I'm sure you'll find some use for it eventually!
+As promised, your knife will now bounce off most surfaces!
+Pretty cool eh? You'll see!
 """
 
 "quest.ninja_skills.lyria.thats_my_brother_blue" = """
@@ -438,12 +476,13 @@ Was my other brother with him?
 He dresses in black.
 """
 
-"quest.ninja_skills.blue_ninja.gain_bouncing_knifes_skill" = """
+"quest.ninja_skills.blue_ninja.gain_knife_catcher_skill" = """
 Junk!? 
 It's not junk! It's weapons and other ninja stuff!
 Oh well...
-As promised, your knife will now bounce off all surfaces!
-Pretty cool eh? You'll see!
+As promised, you can now catch knifes mid-air bare handed.
+Obviously, you need knifes to be coming at you to use this skill.
+But I'm sure you'll find some use for it eventually!
 """
 
 "quest.ninja_skills.lyria.father_introduction" = """

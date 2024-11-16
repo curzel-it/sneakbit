@@ -153,25 +153,31 @@ The small village near the spawn location of the MC.
 #### Verdant Way (1002)
 A network of paths in the forest near Evergrove that connect various locations:
 * Evergrove Village
-* Thermoria
+* Murkmire Swamps
 * Aridreach
 * Shadowveil Path
-* Demon Maze
-
-#### Demon Maze (1017)
-A dark, misterious maze full of monsters. 
-Legend says the throne of the Demon Lord is at the center of the maze.
 
 #### Shadowveil Path (1010)
-A network of paths in a dark near Verdant Way that connect various locations:
+A network of paths in a dark near Verdant Way that connects:
 * Verdant Way
-* Duskhaven
+* Demon Maze
 * Vintoria
 
 #### Aridreach (1003)
 A city built on top of a mountain in the middle of what is now Grimsun desert.
 The once lush environment has left way to a vast expanse of sand, on which the largest solar farm of the continent is built.
 The city also acts as the passage way to Grimsun Basin, a hot, deathly pile of sand and narrow passages between rocky mountinas.
+
+#### Murkmire Swamps (1018)
+Murkmire Swamp is a vast, foreboding wetland that stretches from the internal lands of the continent all the way to the South coast.
+The network of paths in the swamps connect:
+* Verdant Way
+* Duskhaven
+* Thermoria
+
+#### Demon Maze (1017)
+A dark, misterious maze full of monsters. 
+Legend says the throne of the Demon Lord is at the center of the maze.
 
 #### Thermoria (1006)
 A group of interconnected islands off the cost of Verdant Way.
