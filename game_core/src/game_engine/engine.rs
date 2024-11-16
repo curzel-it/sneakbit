@@ -140,10 +140,8 @@ impl GameEngine {
     ) {
         self.camera_viewport.w = (width / (scale * TILE_SIZE)) as i32;
         self.camera_viewport.h = (height / (scale * TILE_SIZE)) as i32;
-
-        let max_line_length = (width / font_size).floor() as usize;
-        self.long_text_display.max_line_length = max_line_length;        
-        self.long_text_display.visible_line_count = (0.3 * height / (line_spacing + font_size)).floor() as usize;
+        self.long_text_display.max_line_length = (width / font_size).floor() as usize;
+        self.long_text_display.visible_line_count = (0.4 * height / (line_spacing + font_size)).floor() as usize;
     }
 
     fn apply_state_updates(&mut self, updates: Vec<EngineStateUpdate>) {

@@ -45,6 +45,7 @@ impl LongTextDisplay {
 
         self.title = title.to_owned();
         self.text = text.to_owned();
+        self.scroll_offset = 0;
         self.lines = wrap_text(&self.text, self.max_line_length);
         self.is_open = true;
         self.animator.animate(0.0, 1.0, MENU_OPEN_TIME);
@@ -90,26 +91,29 @@ impl LongTextDisplay {
     }
 
     fn text_ui(&self) -> View {
-        let start_index = self.scroll_offset.min(self.lines.len().saturating_sub(2)).max(0);
-        let end_index = (self.scroll_offset + self.visible_line_count).min(self.lines.len());
+        let (start_index, end_index) = if self.visible_line_count < self.lines.len() {
+            let start_index = self.scroll_offset.min(self.lines.len().saturating_sub(2)).max(0);
+            let end_index = (self.scroll_offset + self.visible_line_count).min(self.lines.len());
+            (start_index, end_index)
+        } else {
+            (0, self.visible_line_count.min(self.lines.len()))
+        };
 
         let visible_lines: Vec<View> = self.lines[start_index..end_index]
             .iter()
-            .map(|line| {
-                text!(Typography::Regular, line.clone())
-            })
+            .map(|line| { text!(Typography::Regular, line.clone()) })
             .collect();
 
         let mut children: Vec<View> = Vec::new();
 
+        if self.title.is_empty() {
+            children.push(text!(Typography::Title, ">".to_owned()));
+        } else {
+            children.push(text!(Typography::Title, self.title.clone()));
+        }
+
         if self.scroll_offset > 0 {
             children.push(text!(Typography::Regular, "^".to_owned()));
-        } else {
-            if self.title.is_empty() {
-                children.push(text!(Typography::Title, ">".to_owned()));
-            } else {
-                children.push(text!(Typography::Title, self.title.clone()));
-            }
         }
 
         children.extend(visible_lines);
