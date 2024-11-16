@@ -24,7 +24,6 @@ pub enum GameMenuItem {
     Save,
     Inventory,
     MapEditor,
-    Status,
     Exit,
     SaveAndExit,
 }
@@ -35,7 +34,6 @@ impl MenuItem for GameMenuItem {
             GameMenuItem::Save => "game.menu.save".localized(),
             GameMenuItem::Inventory => "game.menu.inventory".localized(),
             GameMenuItem::MapEditor => "game.menu.map_editor".localized(),
-            GameMenuItem::Status => "game.menu.status".localized(),
             GameMenuItem::Exit => "game.menu.exit".localized(),
             GameMenuItem::SaveAndExit => "game.menu.save_and_exit".localized(),
         }
@@ -47,7 +45,6 @@ impl GameMenu {
         let menu = Menu::new(
             "game.menu.title".localized(), 
             vec![
-                GameMenuItem::Status,
                 GameMenuItem::Exit,
             ]
         );
@@ -66,13 +63,11 @@ impl GameMenu {
             vec![
                 GameMenuItem::Save,
                 GameMenuItem::MapEditor,
-                GameMenuItem::Status,
                 GameMenuItem::Inventory,
                 GameMenuItem::SaveAndExit,
             ]
         } else {
             vec![
-                GameMenuItem::Status,
                 GameMenuItem::Exit,
             ]
         }
@@ -128,10 +123,6 @@ impl GameMenu {
                 self.state = MenuState::MapEditor;
                 self.map_editor.current_world_id = self.current_world_id;
                 vec![]
-            }
-            GameMenuItem::Status => {
-                self.close();
-                vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::DisplayLongText("status.fake".localized()))]
             }
             GameMenuItem::SaveAndExit => {
                 self.close();

@@ -4,6 +4,7 @@ pub mod creep_fusion;
 pub mod cutscenes;
 pub mod death_screen;
 pub mod destination;
+pub mod dialogues;
 pub mod directions;
 pub mod hitmap;
 pub mod keyboard_directions;

@@ -9,7 +9,6 @@ use utils::{rect::IntRect, vector::Vector2d};
 
 pub mod config;
 pub mod constants;
-pub mod dialogues;
 pub mod entities;
 pub mod features;
 pub mod game_engine;
@@ -269,17 +268,8 @@ pub extern "C" fn current_toast() -> ToastDescriptorC {
 pub extern "C" fn current_menu() -> MenuDescriptorC {
     let engine = engine();
 
-    if engine.dialogue_menu.is_open() {
-        let mut descriptor = engine.dialogue_menu.menu.descriptor_c();
-        free_c_char_ptr(descriptor.text);
-        descriptor.text = string_to_c_char(engine.dialogue_menu.text.clone());
-        return descriptor
-    }
     if engine.long_text_display.is_open {
-        let mut descriptor = MenuDescriptorC::empty();
-        descriptor.is_visible = true;
-        descriptor.text = string_to_c_char(engine.long_text_display.text.clone());
-        return descriptor
+        return engine.long_text_display.descriptor_c()
     }
     if engine.confirmation_dialog.is_open() {
         return engine.confirmation_dialog.menu.descriptor_c()

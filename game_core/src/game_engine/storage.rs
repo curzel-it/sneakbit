@@ -27,6 +27,14 @@ impl StorageKey {
     pub fn content_read(id: u32) -> String {
         format!("content_read.{}", id)   
     }
+
+    fn dialogue_answer(dialogue: &str) -> String {
+        format!("dialogue.answer.{}", dialogue)
+    }
+
+    fn dialogue_reward_collected(dialogue: &str) -> String {
+        format!("dialogue.reward.{}", dialogue)
+    }
 }
 
 fn load_stored_values() -> BTreeMap<String, u32> {
@@ -166,4 +174,20 @@ pub fn has_bullet_catcher_skill() -> bool {
 
 pub fn has_piercing_bullet_skill() -> bool {
     get_value_for_global_key("dialogue.answer.quest.ninja_skills.red_ninja.gain_piercing_knife_skill").is_some_and(|i| i == 1)
+}
+
+pub fn set_dialogue_read(dialogue: &str) {
+    set_value_for_key(&StorageKey::dialogue_answer(dialogue), 1);
+}
+
+pub fn set_dialogue_reward_collected(dialogue: &str) {
+    set_value_for_key(&StorageKey::dialogue_reward_collected(dialogue), 1);    
+}
+
+pub fn has_dialogue_reward_been_collected(dialogue: &str) -> bool {
+    if let Some(collected) = get_value_for_global_key(&StorageKey::dialogue_reward_collected(dialogue)) {
+        collected == 1
+    } else {
+        false
+    }
 }

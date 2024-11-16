@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::UNLIMITED_LIFESPAN, dialogues::models::{Dialogue, EntityDialogues}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, directions::MovementDirections}, game_engine::storage::{set_value_for_key, StorageKey}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::UNLIMITED_LIFESPAN, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{Dialogue, EntityDialogues}, directions::MovementDirections}, game_engine::storage::{set_value_for_key, StorageKey}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::key_value_matches, world::World};
 
@@ -218,11 +218,14 @@ impl Entity {
     fn update_static(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {  
         if world.is_hero_around_and_on_collision_with(&self.frame) {            
             if let Some(contents) = self.contents.clone() {
+                let species_name = species_by_id(self.species_id).localized_name();
+
                 set_value_for_key(&StorageKey::content_read(self.id), 1);
 
                 return vec![
                     WorldStateUpdate::EngineUpdate(
                         EngineStateUpdate::DisplayLongText(
+                            format!("{}:", species_name), 
                             contents.localized()
                         )
                     )

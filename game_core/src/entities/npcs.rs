@@ -48,17 +48,21 @@ impl Entity {
 
                 set_value_for_key(&StorageKey::npc_interaction(self.id), 1);
 
-                let show_dialogue = WorldStateUpdate::EngineUpdate(
-                    EngineStateUpdate::ShowDialogue(
-                        self.id, self.name.clone(), dialogue,
+                let show_dialogue = vec![
+                    WorldStateUpdate::EngineUpdate(
+                        EngineStateUpdate::DisplayLongText(format!("{}:", self.name.clone()), dialogue.localized_text())
                     )
-                );
+                ];
 
-                return if self.vanishes_after_dialogue {
-                    vec![show_dialogue, WorldStateUpdate::RemoveEntity(self.id)]
+                let reward = dialogue.handle_reward();
+
+                let vanishing = if self.vanishes_after_dialogue {
+                    vec![WorldStateUpdate::RemoveEntity(self.id)]
                 } else {
-                    vec![show_dialogue]
-                }
+                    vec![]
+                };
+
+                return vec![show_dialogue, reward, vanishing].into_iter().flatten().collect();
             }             
         }  
         vec![]

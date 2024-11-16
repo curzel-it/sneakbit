@@ -15,8 +15,9 @@ struct MenuView: View {
                     .foregroundStyle(Color.black.opacity(0.4))
                     .onTapGesture { viewModel.cancel() }
                 
-                ScrollableMenuContents()
-                    // .frame(maxWidth: 400)
+                MenuContents()
+                    .padding()
+                    .frame(maxWidth: 600)
                     .background {
                         ZStack {
                             RoundedRectangle(cornerRadius: 4)
@@ -36,20 +37,6 @@ struct MenuView: View {
                     .positioned(.bottom)
             }
             .environmentObject(viewModel)
-        }
-    }
-}
-
-private struct ScrollableMenuContents: View {
-    @EnvironmentObject private var viewModel: MenuViewModel
-    
-    var body: some View {
-        if viewModel.useScrollView {
-            ScrollView {
-                MenuContents().padding()
-            }
-        } else {
-            MenuContents().padding()
         }
     }
 }
@@ -91,7 +78,6 @@ private class MenuViewModel: ObservableObject {
     @Published var options: [String] = []
     @Published var isVisible: Bool = false
     @Published var opacity: CGFloat = 0
-    @Published var useScrollView: Bool = false
     
     let borderColor: Color = .gray
     let backgroundColor: Color = .black
@@ -118,16 +104,10 @@ private class MenuViewModel: ObservableObject {
     private func load(menu: MenuDescriptorC) {
         let buffer = UnsafeBufferPointer(start: menu.options, count: Int(menu.options_count))
         let items = Array(buffer)
-        let newOptions = items
-            .map { string(from: $0.title) ?? "???" }
-            .map { "> \($0)" }
-        
+        let newOptions = items.map { string(from: $0.title) ?? "???" }
         let newText = string(from: menu.text)
-        let longTextThreshold = engine.isLandscape && UIDevice.current.userInterfaceIdiom == .phone ? 150 : 500
-        let needsScroll = false // (newText?.count ?? 0) > longTextThreshold
         
         withAnimation {
-            useScrollView = needsScroll
             options = newOptions
             text = newText
             title = string(from: menu.title)

@@ -361,7 +361,7 @@
       "id": 10755724,
       "frame": {
         "x": 72,
-        "y": 23,
+        "y": 22,
         "w": 1,
         "h": 1
       },
@@ -384,8 +384,8 @@
       "dialogues": [],
       "destination": {
         "world": 1003,
-        "x": 51,
-        "y": 42,
+        "x": 48,
+        "y": 38,
         "direction": "Up"
       },
       "lock_type": "None",
@@ -1563,7 +1563,7 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,

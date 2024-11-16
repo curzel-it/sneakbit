@@ -201,6 +201,7 @@
 "objects.wind_turbine" = "Wind Turbine"
 
 "ok" = "Ok"
+"ok_action" = ">> Ok"
 "picked_up_item" = "Picked up `%s`!"
 "teleporter.locked" = "You need a %s key to open this door."
 "teleporter.name" = "Teleporter"

@@ -1061,7 +1061,8 @@
         "entity_type": "Npc",
         "z_index": 150,
         "base_speed": 0.5,
-        "is_rigid": false,
+        "is_invulnerable": false,
+        "is_rigid": true,
         "inventory_texture_offset": [
             2,
             5
@@ -2419,11 +2420,11 @@
     {
         "id": 4005,
         "name": "npc.name.cat",
-        "is_invulnerable": true,
+        "is_invulnerable": false,
         "entity_type": "Npc",
         "z_index": 150,
         "base_speed": 1.0,
-        "is_rigid": false,
+        "is_rigid": true,
         "inventory_texture_offset": [
             2,
             10
@@ -3303,7 +3304,8 @@
         "entity_type": "Npc",
         "z_index": 150,
         "base_speed": 0.5,
-        "is_rigid": false,
+        "is_rigid": true,
+        "is_invulnerable": false,
         "inventory_texture_offset": [
             8,
             20
@@ -3325,7 +3327,8 @@
         "entity_type": "Npc",
         "z_index": 150,
         "base_speed": 1.5,
-        "is_rigid": false,
+        "is_rigid": true,
+        "is_invulnerable": false,
         "inventory_texture_offset": [
             8,
             21

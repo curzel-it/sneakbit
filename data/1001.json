@@ -748,7 +748,7 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
@@ -789,7 +789,7 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 1.0,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
@@ -814,7 +814,7 @@
       "movement_directions": "Free",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
+      "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
     },
@@ -1939,7 +1939,7 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 1.0,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
@@ -1964,7 +1964,7 @@
       "movement_directions": "Free",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
+      "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
     },
@@ -1980,7 +1980,7 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
