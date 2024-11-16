@@ -227,10 +227,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": true,
@@ -272,10 +268,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": true,
@@ -317,10 +309,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": true,
@@ -362,10 +350,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -382,9 +366,9 @@
       },
       "dialogues": [],
       "destination": {
-        "world": 1002,
-        "x": 18,
-        "y": 41,
+        "world": 1010,
+        "x": 7,
+        "y": 58,
         "direction": "Right"
       },
       "lock_type": "None",
@@ -412,10 +396,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": true,
@@ -457,10 +437,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": true,
@@ -500,13 +476,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.torch",
       "species_id": 11003,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -546,13 +517,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.torch",
       "species_id": 11003,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -592,13 +558,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "objects.name.torch",
       "species_id": 11003,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -640,10 +601,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -685,10 +642,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -730,10 +683,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -775,10 +724,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -820,10 +765,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -865,10 +806,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -910,10 +847,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -955,10 +888,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -1000,10 +929,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -1045,10 +970,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -1090,10 +1011,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1135,10 +1052,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1180,10 +1093,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1225,10 +1134,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1270,10 +1175,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1315,10 +1216,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1360,10 +1257,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1405,10 +1298,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1450,10 +1339,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1495,10 +1380,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1577,10 +1458,6 @@
           },
           "species_id": 1080,
           "entity_type": "Npc",
-          "offset": {
-            "x": 0.0,
-            "y": 0.0
-          },
           "direction": "Down",
           "current_speed": 0.0,
           "is_rigid": true,
@@ -1597,38 +1474,38 @@
           },
           "dialogues": [
             {
-              "key": "quest.hero.5",
               "text": "quest.hero.finale.a",
+              "key": "quest.hero.5",
               "expected_value": 1,
               "reward": null
             },
             {
-              "key": "dialogue.answer.quest.hero.1",
               "text": "quest.hero.finale.b",
+              "key": "dialogue.answer.quest.hero.1",
               "expected_value": 1,
               "reward": null
             },
             {
+              "text": "quest.hero.finale.finale",
               "key": "dialogue.answer.quest.hero.finale.a",
-              "text": "quest.hero.finale.finale",
               "expected_value": 1,
               "reward": null
             },
             {
+              "text": "quest.hero.finale.finale",
               "key": "dialogue.answer.quest.hero.finale.b",
-              "text": "quest.hero.finale.finale",
               "expected_value": 1,
               "reward": null
             },
             {
+              "text": "quest.hero.finale.finale",
               "key": "dialogue.answer.quest.hero.finale.c",
-              "text": "quest.hero.finale.finale",
               "expected_value": 1,
               "reward": null
             },
             {
-              "key": "always",
               "text": "quest.hero.finale.c",
+              "key": "always",
               "expected_value": 0,
               "reward": null
             }
@@ -1645,7 +1522,6 @@
           "movement_directions": "None",
           "is_consumable": false,
           "contents": null,
-          "parent_id": 0,
           "is_invulnerable": true,
           "demands_attention": false,
           "vanishes_after_dialogue": false
