@@ -150,6 +150,12 @@
       "dialogues": [
         {
           "text": "quest.ninja_skills.blue_ninja.gain_knife_catcher_skill",
+          "key": "dialogue.answer.quest.ninja_skills.lyria.father_introduction",
+          "expected_value": 1,
+          "reward": null
+        },
+        {
+          "text": "quest.ninja_skills.blue_ninja.gain_knife_catcher_skill",
           "key": "dialogue.answer.quest.ninja_skills.lyria.thats_my_brother_blue",
           "expected_value": 1,
           "reward": null
