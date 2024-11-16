@@ -446,6 +446,15 @@ Get out!
 - Black Ninja
 """
 
+"quest.ninja_skills.girl.black_ninja_location_hint" = """
+He’s hiding around here, you know... but it’s not just him, oh no. 
+This place - it’s not what it looks like. 
+The dunes? They’re not just sand... 
+They’re watchers, silent guardians keeping everything locked inside. 
+And the Black Ninja? He’s no ordinary man. They’ve got him here for a reason, he knows something!
+Or maybe... maybe he’s the key. Or maybe... he’s the lock.
+"""
+
 "quest.ninja_skills.blue_ninja.note" = """
 Yo, 
 I'm out on a mission.
@@ -594,3 +603,16 @@ I have to say, I am a bit pissed, I was so close...
 It's hard to do science in a world with magic.
 Maybe they should get an outer-worlder to do my job - no offense.
 """
+
+"quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
+So you saw him, didn’t you? You talked to him? Oh, I knew it! 
+But don’t you see now? Don’t you see what I’ve been saying? 
+He’s not just *hiding*, he’s *placed*. 
+Everything in here, everyone in here... They’re puppets...
+"""
+
+"quest.crazy_conspiracy.girl.black_ninja_i_knew_it_again" = """
+Sssh... They're watching us... 
+"""
+
+"references.dbz.krillin" = "I hope you brought Senzu beans!"

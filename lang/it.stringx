@@ -232,18 +232,19 @@ But they never left the deeper woods until recently.
 I pity newer generations for having to deal with this many.
 """
 
-"quest.hero.prologue" = """
-You say "some kind of magic" brought you here? Interesting...
-Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
-I suggest you start your own journey to learn more about this world.
-The closest city is Aridreach, maybe start from there.
-I shall see you soon.
-"""
-
-"quest.hero.prologue_hint" = """
-To get to Aridreach go West from here, it's quite close.
-Also, if you're looking for directions, road signs can be useful.
-Now go.
+"lore.evergrove.monster_sightings_logs" = """
+Monster Sightings Log
+Property of Evergrove Village Historical Records
+--
+January 4th, 1330: Spotted 1 monster near the village outskirts. First in many years.
+June 27th, 1331: Saw the first monster since last year. Stayed near the forest edge.
+March 15th, 1332: Two monsters appeared near Verdant Way. No harm done, but unsettling.
+October 9th, 1333: A strange, dark creature wandered into the village at dusk. Count: 3.
+May 20th, 1334: Four monsters sighted.
+July 13th, 1335: It's been a while since last sighting, five today.
+December 2nd, 1336: Six monsters attacked a passing caravan. Survivors returned shaken.
+September 22nd, 1338: Village attacked by eight creatures. Guards struggled to fend them off.
+November 16th, 1340: Count has reached 14 monsters roaming near Verdant Way. Never seen so many at once. No victims, so far.
 """
 
 "lore.manafren_trees.tourists_sign" = """
@@ -276,14 +277,12 @@ and even sustain the vibrant ecosystem of Duskhaven itself.
 
 "lore.006.vintoria_power_station" = """
 Vintoria’s Cascade Station
-Harnessing the might of the waterfall to power 
-the valley with life-giving mana
+Harnessing the might of the waterfall to power the valley with life-giving mana
 """
 
 "lore.007.vintoria_entrance" = """
 Welcome to Vintoria Valley
-where the thundering falls weave mana into prosperity 
-and the vineyards whisper tales of timeless beauty.
+where the thundering falls weave mana into prosperity  and the vineyards whisper tales of timeless beauty.
 """
 
 "lore.008.mount_ignis" = """
@@ -294,6 +293,14 @@ Proceed with caution and respect the power of Mount Ignis.
 
 "lore.009.thermoria_dock" = """
 Dock of Thermoria — Gateway to Maritide Haven
+"""
+
+"lore.010.aridreach_before_the_solar_age" = """
+The Rise and Fall of Lushspire Peaks
+--
+Once, Aridreach was a land of life and beauty, known as Lushspire Peaks. Its towering mountains cradled vast forests, crystal streams, and fertile valleys. The people thrived in harmony with the land, their bounty plentiful and enduring.
+Then came the cataclysm. The skies darkened, the rivers dried, and the mountains began to wither. No record remains of its cause, but the transformation was swift and unrelenting. The lush greenery gave way to scorched earth, and the proud peaks became lifeless dunes. What was once a haven turned into the unforgiving expanse now called the Grimsun Desert.
+In the face of desolation, the survivors endured. They built the great solar farm atop the barren heights, harnessing the unrelenting sun to power distant lands. While their ingenuity is lauded, the book laments the loss of Lushspire’s verdant beauty, now buried beneath endless sands.
 """
 
 "1001.entrance" = "Welcome to Evergrove Village!"
@@ -353,6 +360,20 @@ Welcome to the Murkmire Swamps
 North: Verdant Way
 West: Duskhaven
 South: Thermoria
+"""
+
+"quest.hero.prologue" = """
+You say "some kind of magic" brought you here? Interesting...
+Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
+I suggest you start your own journey to learn more about this world.
+The closest city is Aridreach, maybe start from there.
+I shall see you soon.
+"""
+
+"quest.hero.prologue_hint" = """
+To get to Aridreach go West from here, it's quite close.
+Also, if you're looking for directions, road signs can be useful.
+Now go.
 """
 
 "quest.hero.1" = """
@@ -423,6 +444,15 @@ I'm out on a mission.
 Also, what the hell are you doing in my house!?
 Get out!
 - Black Ninja
+"""
+
+"quest.ninja_skills.girl.black_ninja_location_hint" = """
+He’s hiding around here, you know... but it’s not just him, oh no. 
+This place - it’s not what it looks like. 
+The dunes? They’re not just sand... 
+They’re watchers, silent guardians keeping everything locked inside. 
+And the Black Ninja? He’s no ordinary man. They’ve got him here for a reason, he knows something!
+Or maybe... maybe he’s the key. Or maybe... he’s the lock.
 """
 
 "quest.ninja_skills.blue_ninja.note" = """
@@ -573,3 +603,16 @@ I have to say, I am a bit pissed, I was so close...
 It's hard to do science in a world with magic.
 Maybe they should get an outer-worlder to do my job - no offense.
 """
+
+"quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
+So you saw him, didn’t you? You talked to him? Oh, I knew it! 
+But don’t you see now? Don’t you see what I’ve been saying? 
+He’s not just *hiding*, he’s *placed*. 
+Everything in here, everyone in here... They’re puppets...
+"""
+
+"quest.crazy_conspiracy.girl.black_ninja_i_knew_it_again" = """
+Sssh... They're watching us... 
+"""
+
+"references.dbz.krillin" = "I hope you brought Senzu beans!"

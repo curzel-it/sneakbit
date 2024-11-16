@@ -19,16 +19,16 @@
       "4444444444441111111111114444444444444474444444444444KKKKKKKKKKKKKKKKKK",
       "4444444444441111111111111444444444444474444444444444KKKKKKKKKKKKKKKKKK",
       "4444444444441111711112211111111144444474447444444444KKKKKKKKKKKKKKKKKK",
-      "4444444444441111111111211111114444777777777444444744KKKKKKKKKKKKKKKKKK",
-      "4444444444444111111111121121114444744444444444444744KKKKKKKKKKKKKKKKKK",
-      "44444444444441111111CC122221144444744444444444444744KKKKKKKKKKKKKKKKKK",
-      "4444444444444111111111111111444444744444444444447744KKKKKKKKKKKKKKKKKK",
-      "444444444444441111111111111444444474444444444444744KKKKKKKKKKKKKKKKKKK",
-      "44444444444444444444111111447777777444444444444474KKKKKKKKKKKKKKKKKKKK",
-      "44444444444444444444444444444444474444444444444474KKKKKKKKKKKKKKKKKKKK",
-      "44444444444444444444444444444444474444444444444474KKKKKKKKKKKKKKKKKKKK",
-      "44444444444444444444444444444444474444444444444474KKKKKKKKKKKKKKKKKKKK",
-      "44444444444444444444444444444444474444444444444474KKKKKKKKKKKKKKKKKKKK",
+      "4444444444441111111111211111114444777777777444444444KKKKKKKKKKKKKKKKKK",
+      "4444444444444111111111121121114444744444444444444444KKKKKKKKKKKKKKKKKK",
+      "44444444444441111111CC122221144444744444444444444444KKKKKKKKKKKKKKKKKK",
+      "4444444444444111111111111111444444744444444444444444KKKKKKKKKKKKKKKKKK",
+      "444444444444441111111111111444444474444444444444444KKKKKKKKKKKKKKKKKKK",
+      "44444444444444444444111111447777777444444444444444KKKKKKKKKKKKKKKKKKKK",
+      "44444444444444444444444444444444474444444444444444KKKKKKKKKKKKKKKKKKKK",
+      "44444444444444444444444444444444474444444444444444KKKKKKKKKKKKKKKKKKKK",
+      "44444444444444444444444444444444474444444444444744KKKKKKKKKKKKKKKKKKKK",
+      "44444444444444444444444444444444474444444444444774KKKKKKKKKKKKKKKKKKKK",
       "44444444444444444444444444444444474444444444444474KKKKKKKKKKKKKKKKKKKK",
       "4444444444444444444444444444444447444444444HHHH474KKKKKKKKKKKKKKKKKKKK",
       "KKKKKKKKKKK4444444444444444444444744444444HHHHH474KKKKKKKKKKKKKKKKKKKK",
@@ -69,20 +69,20 @@
       "JJJJ0JJ000JJJJJJ0JJJJJ000J00000000B000JJJJJJ0000000JJJ0JJJ0000000JJ0JJ",
       "0000000000000000000000000000000000B00000000000000000000000000000000000",
       "JJ0JJJ000JJJJJJ0J0J0BBBBBBBBB0000000JJJJJJJJ0J0J00JJ0J00J0BJJJ0JJ000JJ",
-      "JJ00J0JJJJ0000000000000000JJ0J0000000000JJJJ0J0J00JJ000JJ0B00JJ0J00JJ0",
-      "JJJJJJJ0000000000000000000JJJ0JJ00000000JJJJ0J0J000000JJ00B000000000JJ",
-      "JJJJJ000JJ00000000000000000000000000000000000J0JJJJJ0000J0B00JJ000000J",
+      "JJ00J0JJJJ0000000000000000JJ0J0000000000JJJJ0J0JJ0JJ000JJ0B00JJ0J00JJ0",
+      "JJJJJJJ0000000000000000000JJJ0JJ00000000JJJJ00JJ000000JJ00B000000000JJ",
+      "JJJJJ000JJ00000000000000000000000000000000000JJ0JJJJ0000J0B00JJ000000J",
       "J0JJJJ0J0000000000000000000000000000000000000J0JJJJJ000000B00JJ00000JJ",
-      "JJJ0000J0J000000000000000000000000000000000000000000000J00B0000000J0JJ",
-      "JJJJJ00000000000000000000000000000000000000000000000000J00BJ00000JJ00J",
-      "JJJJ0J0J00000000000000000000000000000000JJ0J000000J0000000B000000000JJ",
-      "J0J0J0000000000000000000000000000000000J00JJ000000J00000J0B0000000JJJJ",
-      "J00JJ00J0J0000000000000000000000JJ000J0J0JJJ00J000J0000000B00J0J00J0JJ",
-      "JJ0J0J0J0JJ00000000000000000000JJ000000000000JJ00000000000B0000000JJJJ",
-      "J0JJ0J0000J0000000000000000000000000000000000JJ00000JJJ0J0B0000JJ0JJJJ",
-      "J0JJ0000J0000000000000000000000000000JJ000000J000000000000B000000BBBBB",
-      "JJJJJ000J0000JJJ00J000JJJ0J0J0J0J00000J000000J000000BBJBBBBBBJ000BJJJJ",
-      "JJ00J000J0JJ000000J000JJJ000J0J0J00000000000000J0000JJJJJ00JB000BBJJJJ",
+      "JJJ0000J0J000000000000000000000000000000000000000J00000J00B0000000J0JJ",
+      "JJJJJ00000000000000000000000000000000000000000J0000J000J00BJ00000JJ00J",
+      "JJJJ0J0J00000000000000000000000000000000JJ0J000JJ0JJ000000B000000000JJ",
+      "J0J0J0000000000000000000000000000000000J00JJ0JJJJJJ00000J0B0000000JJJJ",
+      "J00JJ00J0J0000000000000000000000JJ000J0J0JJJ0J0000J0000000B00J0J00J0JJ",
+      "JJ0J0J0J0JJ00000000000000000000JJ00000000000000JJJ00000000B0000000JJJJ",
+      "J0JJ0J0000J0000000000000000000000000000000000JJJJJ00JJJ0J0B0000JJ0JJJJ",
+      "J0JJ0000J0000000000000000000000000000JJ0000000000000000000B000000BBBBB",
+      "JJJJJ000J0000JJJ00J000JJJ0J0J0J0J00000J0000000000000BBJBBBBBBJ000BJJJJ",
+      "JJ00J000J0JJ000000J000JJJ000J0J0J0000000000000000000JJJJJ00JB000BBJJJJ",
       "JJ0JJ00J000J0JJJ00J00000J0000J0JJ00J00000000000000000JJB0J0JB00JBJJJJJ",
       "00000000000000J00000000000J0JJJ000000000000000000000J0JB0J0JB00JBJJJJJ",
       "JJJJ0J000J00000J00000000JJJ0J00JJ00JJ0000000990000000JJBJ00JB0JJBJJJJJ",
@@ -9615,7 +9615,7 @@
       },
       "dialogues": [],
       "destination": {
-        "world": 11199907,
+        "world": 11199957,
         "x": 0,
         "y": 0,
         "direction": "Unknown"
@@ -13907,8 +13907,8 @@
     {
       "id": 11199956,
       "frame": {
-        "x": 47,
-        "y": 13,
+        "x": 45,
+        "y": 21,
         "w": 5,
         "h": 3
       },
@@ -14322,8 +14322,8 @@
     {
       "id": 11199958,
       "frame": {
-        "x": 49,
-        "y": 15,
+        "x": 47,
+        "y": 23,
         "w": 1,
         "h": 1
       },
@@ -14345,7 +14345,7 @@
       },
       "dialogues": [],
       "destination": {
-        "world": 11199957,
+        "world": 11199907,
         "x": 0,
         "y": 0,
         "direction": "Unknown"
@@ -21460,6 +21460,189 @@
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11765932,
+      "frame": {
+        "x": 19,
+        "y": 16,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1121,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": true,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 48,
+          "y": 19,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [
+        {
+          "text": "quest.crazy_conspiracy.girl.black_ninja_i_knew_it_again",
+          "key": "dialogue.answer.quest.crazy_conspiracy.girl.black_ninja_i_knew_it",
+          "expected_value": 1,
+          "reward": null
+        },
+        {
+          "text": "quest.crazy_conspiracy.girl.black_ninja_i_knew_it",
+          "key": "dialogue.answer.quest.ninja_skills.black_ninja.please_check_on_sister",
+          "expected_value": 1,
+          "reward": null
+        },
+        {
+          "text": "quest.ninja_skills.girl.black_ninja_location_hint",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
+        }
+      ],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 48,
+        "y": 19,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11767600,
+      "frame": {
+        "x": 20,
+        "y": 11,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 4005,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.0,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 8,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 8,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11767601,
+      "frame": {
+        "x": 17,
+        "y": 15,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 4005,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.0,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 8,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 8,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11767602,
+      "frame": {
+        "x": 24,
+        "y": 19,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 4005,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.0,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 8,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 8,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
     }
