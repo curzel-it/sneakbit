@@ -28,7 +28,8 @@ pub enum Biome {
     Lava,
     Farmland,
     DarkWater,
-    DarkSand
+    DarkSand,
+    SandPlates
 }
 
 #[derive(Default, Debug, Clone)]
@@ -210,7 +211,7 @@ impl Biome {
     }
 
     fn number_of_biomes() -> i32 {
-        20
+        21
     }
 
     fn texture_index(&self) -> i32 {
@@ -234,7 +235,8 @@ impl Biome {
             Biome::Lava => 16,
             Biome::Farmland => 17,
             Biome::DarkWater => 18,
-            Biome::DarkSand => 19
+            Biome::DarkSand => 19,
+            Biome::SandPlates => 20
         }
     }
 
@@ -313,6 +315,7 @@ impl Biome {
             'H' => Biome::Farmland,
             'J' => Biome::DarkWater,
             'K' => Biome::DarkSand,
+            'L' => Biome::SandPlates,
             _ => Biome::Nothing,
         }
     }
@@ -338,7 +341,8 @@ impl Biome {
             Biome::Lava => 'G',
             Biome::Farmland => 'H',
             Biome::DarkWater => 'J',
-            Biome::DarkSand => 'K'
+            Biome::DarkSand => 'K',
+            Biome::SandPlates => 'L'
         }
     }
 }

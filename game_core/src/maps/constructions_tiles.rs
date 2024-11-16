@@ -30,7 +30,8 @@ pub enum Construction {
     WineTree,
     SolarPanel,
     Pipe,
-    BroadleafPurple
+    BroadleafPurple,
+    WoodenWall
 }
 
 #[derive(Debug, Default, Clone, Copy)]
@@ -124,7 +125,8 @@ impl Construction {
             Construction::WineTree => 19,
             Construction::SolarPanel => 20,
             Construction::Pipe => 21,
-            Construction::BroadleafPurple => 22
+            Construction::BroadleafPurple => 22,
+            Construction::WoodenWall => 23
         }
     }
 }
@@ -180,6 +182,7 @@ impl Construction {
             'L' => Construction::SolarPanel,
             'M' => Construction::Pipe,
             'N' => Construction::BroadleafPurple,
+            'O' => Construction::WoodenWall,
             _ => Construction::Nothing,
         }
     }
@@ -207,7 +210,8 @@ impl Construction {
             Construction::WineTree => 'K',
             Construction::SolarPanel => 'L',
             Construction::Pipe => 'M',
-            Construction::BroadleafPurple => 'N'
+            Construction::BroadleafPurple => 'N',
+            Construction::WoodenWall => 'O'
         }
     }
 }
@@ -300,7 +304,8 @@ impl Construction {
             Construction::WineTree => false,
             Construction::SolarPanel => false,
             Construction::Pipe => false,
-            Construction::BroadleafPurple => true
+            Construction::BroadleafPurple => true,
+            Construction::WoodenWall => true
         }
     }
 }

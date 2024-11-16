@@ -74,7 +74,8 @@ def export_biome_tiles(aseprite_assets, destination_folder):
         "lava",
         "farmland",
         "dark_water",
-        "dark_sand"
+        "dark_sand",
+        "sand_plates"
     ]
 
     # 1060 tiles

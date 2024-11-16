@@ -25,6 +25,7 @@ class Biome(Enum):
     FARMLAND = 'H'
     DARK_WATER = 'J'
     DARK_SAND = 'K'
+    SAND_PLATES = 'L'
 
     @staticmethod
     def number_of_combinations() -> int:
@@ -32,7 +33,7 @@ class Biome(Enum):
 
     @staticmethod
     def number_of_biomes() -> int:
-        return 20
+        return 21
 
     def texture_index(self) -> int:
         texture_indices = {
@@ -56,6 +57,7 @@ class Biome(Enum):
             Biome.FARMLAND: 17,
             Biome.DARK_WATER: 18,
             Biome.DARK_SAND: 19,
+            Biome.SAND_PLATES: 20,
         }
         return texture_indices.get(self, 0)
 
@@ -94,7 +96,8 @@ class Biome(Enum):
             'G': Biome.LAVA,
             'H': Biome.FARMLAND,
             'J': Biome.DARK_WATER,
-            'K': Biome.DARK_SAND
+            'K': Biome.DARK_SAND,
+            'L': Biome.SAND_PLATES
         }
         return mapping.get(c.upper(), Biome.NOTHING)
 
@@ -119,7 +122,8 @@ class Biome(Enum):
             'G': Biome.LAVA,
             'H': Biome.FARMLAND,
             'J': Biome.DARK_WATER,
-            'K': Biome.DARK_SAND
+            'K': Biome.DARK_SAND,
+            'L': Biome.SAND_PLATES
         }.items()}
         return reverse_mapping.get(self, '0')
 

@@ -295,6 +295,14 @@ Proceed with caution and respect the power of Mount Ignis.
 Dock of Thermoria — Gateway to Maritide Haven
 """
 
+"lore.010.aridreach_before_the_solar_age" = """
+The Rise and Fall of Lushspire Peaks
+--
+Once, Aridreach was a land of life and beauty, known as Lushspire Peaks. Its towering mountains cradled vast forests, crystal streams, and fertile valleys. The people thrived in harmony with the land, their bounty plentiful and enduring.
+Then came the cataclysm. The skies darkened, the rivers dried, and the mountains began to wither. No record remains of its cause, but the transformation was swift and unrelenting. The lush greenery gave way to scorched earth, and the proud peaks became lifeless dunes. What was once a haven turned into the unforgiving expanse now called the Grimsun Desert.
+In the face of desolation, the survivors endured. They built the great solar farm atop the barren heights, harnessing the unrelenting sun to power distant lands. While their ingenuity is lauded, the book laments the loss of Lushspire’s verdant beauty, now buried beneath endless sands.
+"""
+
 "1001.entrance" = "Welcome to Evergrove Village!"
 "1003.entrance" = """
 Welcome to Aridreach
