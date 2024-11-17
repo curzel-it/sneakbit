@@ -8,7 +8,7 @@ use raylib::{ffi::{GamepadAxis, GamepadButton, KeyboardKey, MouseButton}, textur
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
 
-const MAX_FPS: u32 = 120;
+const MAX_FPS: u32 = 60;
 
 fn main() {
     let mut needs_window_init = true;
