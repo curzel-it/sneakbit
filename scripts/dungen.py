@@ -4,7 +4,7 @@ import argparse
 
 """
 Dungeon 
-python3 scripts/dungen.py worldid --pavement B --wall H --padding 0 --min_room_size 5  --max_room_size 12 --width 120 --height 80
+python3 scripts/dungen.py 1019 --pavement B --wall H --padding 0 --min_room_size 3  --max_room_size 6 --width 40 --height 80
 
 Dark Cave
 python3 scripts/dungen.py worldid --pavement 8 --wall 3 --padding 0 --min_room_size 5  --max_room_size 12 --width 120 --height 80
