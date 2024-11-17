@@ -1,4 +1,4 @@
-use crate::{features::destination::Destination, game_engine::{entity::Entity, inventory::inventory_contains_species, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, lang::localizable::LocalizableText, menus::toasts::Toast, utils::directions::Direction};
+use crate::{features::destination::Destination, game_engine::{entity::Entity, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory, world::World}, lang::localizable::LocalizableText, menus::toasts::Toast, utils::directions::Direction};
 
 impl Entity {
     pub fn setup_teleporter(&mut self, creative_mode: bool) {
@@ -21,7 +21,7 @@ impl Entity {
 
         if self.should_teleport(world) {
             if !world.creative_mode && self.lock_type != LockType::None {
-                if inventory_contains_species(self.lock_type.key_species_id()) {
+                if has_species_in_inventory(&self.lock_type.key_species_id()) {
                     vec![self.show_unlock_confirmation()]
                 } else {
                     vec![self.show_locked_message()]

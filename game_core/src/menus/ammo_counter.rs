@@ -1,10 +1,10 @@
 use crate::{constants::SPRITE_SHEET_INVENTORY, number_of_kunai_in_inventory, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
-pub struct InventoryRecap {
+pub struct AmmoCounter {
     number_of_kunais: i32
 }
 
-impl InventoryRecap {
+impl AmmoCounter {
     pub fn new() -> Self {
         let mut recap = Self { number_of_kunais: 0 };
         recap.update();

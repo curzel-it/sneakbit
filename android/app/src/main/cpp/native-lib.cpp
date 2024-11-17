@@ -13,7 +13,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_initializeConfig(
         jstring currentLang,
         jstring levelsPath,
         jstring speciesPath,
-        jstring inventoryPath,
         jstring keyValueStoragePath,
         jstring localizedStringsPath
 ) {
@@ -29,7 +28,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_initializeConfig(
     const char *current_lang = getCString(currentLang);
     const char *levels_path = getCString(levelsPath);
     const char *species_path = getCString(speciesPath);
-    const char *inventory_path = getCString(inventoryPath);
     const char *key_value_storage_path = getCString(keyValueStoragePath);
     const char *localized_strings_path = getCString(localizedStringsPath);
 
@@ -38,7 +36,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_initializeConfig(
             current_lang,
             levels_path,
             species_path,
-            inventory_path,
             key_value_storage_path,
             localized_strings_path
     );

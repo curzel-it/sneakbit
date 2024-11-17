@@ -16,10 +16,6 @@ func speciesJson() -> String {
     filePath(name: "species", extension: "json", folder: "data")
 }
 
-func inventoryJson() -> String {
-    inventoryFilePath()
-}
-
 func saveJson() -> String {
     saveFilePath()
 }
@@ -50,16 +46,3 @@ private func saveFilePath() -> String {
     }
     return saveFileURL.path
 }
-
-private func inventoryFilePath() -> String {
-    let fileManager = FileManager.default
-    let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-    let saveFileURL = documentsDirectory.appendingPathComponent("inventory.json")
-    
-    if !fileManager.fileExists(atPath: saveFileURL.path) {
-        let defaultContents = "[]".data(using: .utf8)
-        fileManager.createFile(atPath: saveFileURL.path, contents: defaultContents, attributes: nil)
-    }
-    return saveFileURL.path
-}
-

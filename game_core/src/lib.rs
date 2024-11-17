@@ -3,7 +3,7 @@ use std::{cmp::Ordering, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 use config::initialize_config_paths;
 use entities::known_species::SPECIES_KUNAI;
 use features::light_conditions::LightConditions;
-use game_engine::{engine::GameEngine, entity::Entity, inventory::inventory_items_count_for_species};
+use game_engine::{engine::GameEngine, entity::Entity, storage::inventory_count};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::IntRect, vector::Vector2d};
 
@@ -200,7 +200,6 @@ pub extern "C" fn initialize_config(
     current_lang: *const c_char,
     levels_path: *const c_char,
     species_path: *const c_char,
-    inventory_path: *const c_char,
     key_value_storage_path: *const c_char,
     localized_strings_path: *const c_char,
 ) {
@@ -209,7 +208,6 @@ pub extern "C" fn initialize_config(
         to_string(current_lang),
         to_path(levels_path),
         to_path(species_path),
-        to_path(inventory_path),
         to_path(key_value_storage_path),
         to_path(localized_strings_path),
     );
@@ -317,7 +315,7 @@ pub extern "C" fn select_current_menu_option_at_index(index: u32) {
 
 #[no_mangle]
 pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
-    inventory_items_count_for_species(SPECIES_KUNAI) as i32
+    inventory_count(&SPECIES_KUNAI) as i32
 }
 
 #[no_mangle]

@@ -51,7 +51,6 @@ class GameEngine {
             currentLang(),
             dataFolder(),
             speciesJson(),
-            inventoryJson(),
             saveJson(),
             langFolder()
         )

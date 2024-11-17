@@ -1,6 +1,6 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, inventory_recap::InventoryRecap, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, ammo_counter::AmmoCounter, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{inventory::{add_to_inventory, remove_one_of_species_from_inventory}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World};
+use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, set_value_for_key, StorageKey}, world::World};
 
 pub struct GameEngine {
     pub menu: GameMenu,
@@ -11,7 +11,7 @@ pub struct GameEngine {
     pub confirmation_dialog: ConfirmationDialog,
     pub death_screen: DeathScreen,
     pub toast: ToastDisplay,
-    pub inventory_status: InventoryRecap,
+    pub inventory_status: AmmoCounter,
     pub entity_options_menu: EntityOptionsMenu,
     pub keyboard: KeyboardEventsProvider,
     pub mouse: MouseEventsProvider,
@@ -39,7 +39,7 @@ impl GameEngine {
             camera_viewport_offset: Vector2d::zero(),
             is_running: true,
             creative_mode: false,
-            inventory_status: InventoryRecap::new()
+            inventory_status: AmmoCounter::new()
         }
     }
 
@@ -188,10 +188,10 @@ impl GameEngine {
                 self.entity_options_menu.show(entity.clone(), self.creative_mode)
             }
             EngineStateUpdate::AddToInventory(species_id) => {
-                add_to_inventory(species_id, 1)
+                increment_inventory_count(species_id)
             }
             EngineStateUpdate::RemoveFromInventory(species_id) => {
-                remove_one_of_species_from_inventory(species_id);
+                decrease_inventory_count(species_id);
             }
             EngineStateUpdate::ResumeGame => {
                 self.menu.close()

@@ -77,7 +77,6 @@ class GameEngine(
             currentLang = currentLang(),
             levelsPath = dataPath,
             speciesPath = "$dataPath/species.json",
-            inventoryPath = inventoryPath(),
             keyValueStoragePath = storagePath(),
             localizedStringsPath = langPath
         )
@@ -291,13 +290,6 @@ class GameEngine(
         canRender = !mode.isVisible
         isBusy = mode.isVisible
         _loadingScreenConfig.value = mode
-    }
-
-    private fun inventoryPath(): String {
-        val fileName = "inventory.json"
-        val file = File(context.filesDir, fileName)
-        ensureFileExists(file, "[]")
-        return file.absolutePath
     }
 
     private fun storagePath(): String {

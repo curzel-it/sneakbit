@@ -1019,14 +1019,14 @@
       },
       "display_conditions": [
         {
-            "key": "dialogue.answer.quest.hero.prologue",
-            "expected_value": 1,
-            "visible": false
+          "key": "dialogue.answer.quest.hero.prologue",
+          "expected_value": 1,
+          "visible": false
         },
         {
-            "key": "always",
-            "expected_value": 0,
-            "visible": true
+          "key": "always",
+          "expected_value": 0,
+          "visible": true
         }
       ],
       "movement_directions": "None",

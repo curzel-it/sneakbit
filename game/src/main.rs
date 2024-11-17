@@ -20,7 +20,6 @@ fn main() {
         current_locale(),
         local_path("data"),
         local_path("data/species.json"),
-        local_path("data/inventory.json"),
         local_path("data/save.json"),
         local_path("lang")
     );

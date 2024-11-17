@@ -1,7 +1,7 @@
 use std::{collections::{BTreeMap, HashSet}, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
 use lazy_static::lazy_static;
 
-use crate::config::config;
+use crate::{config::config, entities::species::{species_by_id, SpeciesId}};
 
 use super::{entity::EntityId, locks::LockType, world::World};
 
@@ -34,6 +34,10 @@ impl StorageKey {
 
     fn dialogue_reward_collected(dialogue: &str) -> String {
         format!("dialogue.reward.{}", dialogue)
+    }
+
+    fn species_inventory_count(species_id: &SpeciesId) -> String {
+        format!("inventory.amount.{}", species_id)
     }
 }
 
@@ -190,4 +194,37 @@ pub fn has_dialogue_reward_been_collected(dialogue: &str) -> bool {
     } else {
         false
     }
+}
+
+fn increment_value(key: &str) {
+    let current_value = get_value_for_global_key(key).unwrap_or_default();
+    let next_value = current_value.saturating_add(1);
+    set_value_for_key(key, next_value);
+}
+
+fn decrease_value(key: &str) {
+    let current_value = get_value_for_global_key(key).unwrap_or_default();
+    let next_value = current_value.saturating_sub(1);
+    set_value_for_key(key, next_value);
+}
+
+pub fn increment_inventory_count(species_id: &SpeciesId) {
+    let species = species_by_id(*species_id);
+    if !species.bundle_contents.is_empty() {
+        species.bundle_contents.iter().for_each(|id|increment_inventory_count(id));
+    } else {
+        increment_value(&StorageKey::species_inventory_count(species_id));
+    }
+}
+
+pub fn decrease_inventory_count(species_id: &SpeciesId) {
+    decrease_value(&StorageKey::species_inventory_count(species_id));
+}
+
+pub fn inventory_count(species_id: &SpeciesId) -> u32 {
+    get_value_for_global_key(&StorageKey::species_inventory_count(species_id)).unwrap_or_default()
+}
+
+pub fn has_species_in_inventory(species_id: &SpeciesId) -> bool {
+    inventory_count(species_id) > 0
 }

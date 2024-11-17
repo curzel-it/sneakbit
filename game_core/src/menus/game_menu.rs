@@ -1,12 +1,11 @@
 use crate::{constants::WORLD_ID_NONE, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}}, lang::localizable::LocalizableText, spacing, ui::components::{Spacing, View}, utils::rect::IntRect};
 
-use super::{inventory::Inventory, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
+use super::{map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
 pub struct GameMenu {
     pub current_world_id: u32,
     state: MenuState,
     pub menu: Menu<GameMenuItem>,
-    inventory: Inventory,
     map_editor: MapEditor,
 }
 
@@ -14,7 +13,6 @@ pub struct GameMenu {
 enum MenuState {
     Closed,
     Open,
-    Inventory,
     MapEditor,
     PlaceItem,
 }
@@ -22,7 +20,6 @@ enum MenuState {
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum GameMenuItem {
     Save,
-    Inventory,
     MapEditor,
     Exit,
     SaveAndExit,
@@ -32,7 +29,6 @@ impl MenuItem for GameMenuItem {
     fn title(&self) -> String {
         match self {
             GameMenuItem::Save => "game.menu.save".localized(),
-            GameMenuItem::Inventory => "game.menu.inventory".localized(),
             GameMenuItem::MapEditor => "game.menu.map_editor".localized(),
             GameMenuItem::Exit => "game.menu.exit".localized(),
             GameMenuItem::SaveAndExit => "game.menu.save_and_exit".localized(),
@@ -53,7 +49,6 @@ impl GameMenu {
             current_world_id: WORLD_ID_NONE,
             state: MenuState::Closed,
             menu,
-            inventory: Inventory::new(),
             map_editor: MapEditor::new(),
         }
     }
@@ -63,7 +58,6 @@ impl GameMenu {
             vec![
                 GameMenuItem::Save,
                 GameMenuItem::MapEditor,
-                GameMenuItem::Inventory,
                 GameMenuItem::SaveAndExit,
             ]
         } else {
@@ -98,7 +92,6 @@ impl GameMenu {
         let updates = match self.state {
             MenuState::Closed => self.update_from_close(keyboard),
             MenuState::Open => self.update_from_open(keyboard, time_since_last_update),
-            MenuState::Inventory => self.update_from_inventory(keyboard, time_since_last_update),
             MenuState::MapEditor => self.update_from_map_editor(camera_vieport, keyboard, mouse),
             MenuState::PlaceItem => self.update_from_place_item(camera_vieport, keyboard, mouse),
         };
@@ -113,11 +106,6 @@ impl GameMenu {
             GameMenuItem::Save => {
                 self.close();
                 vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::SaveGame)]
-            }
-            GameMenuItem::Inventory => {
-                self.inventory.setup();
-                self.state = MenuState::Inventory;
-                vec![]
             }
             GameMenuItem::MapEditor => {
                 self.state = MenuState::MapEditor;
@@ -158,13 +146,6 @@ impl GameMenu {
         updates
     }
 
-    fn update_from_inventory(&mut self, keyboard: &KeyboardEventsProvider, _: f32) -> Vec<WorldStateUpdate> {
-        if keyboard.has_back_been_pressed {
-            self.state = MenuState::Open;
-        }
-        self.inventory.update(keyboard)
-    }
-
     fn update_from_map_editor(&mut self, camera_vieport: &IntRect, keyboard: &KeyboardEventsProvider, mouse: &MouseEventsProvider) -> Vec<WorldStateUpdate> {
         if keyboard.has_back_been_pressed {
             self.state = MenuState::Open;
@@ -188,7 +169,6 @@ impl GameMenu {
         match self.state {
             MenuState::Closed => spacing!(Spacing::Zero),
             MenuState::Open => self.menu.ui(),
-            MenuState::Inventory => self.inventory.ui(),
             MenuState::MapEditor | MenuState::PlaceItem => self.map_editor.ui(camera_viewport),
         }
     }

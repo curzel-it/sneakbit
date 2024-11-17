@@ -9,7 +9,6 @@ class NativeLib {
         currentLang: String?,
         levelsPath: String?,
         speciesPath: String?,
-        inventoryPath: String?,
         keyValueStoragePath: String?,
         localizedStringsPath: String?
     )

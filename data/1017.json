@@ -412,7 +412,7 @@
       },
       "dialogues": [],
       "destination": null,
-      "lock_type": "Red",
+      "lock_type": "Yellow",
       "original_sprite_frame": {
         "x": 7,
         "y": 5,

@@ -1,4 +1,4 @@
-use crate::{constants::{HERO_KUNAI_COOLDOWN, TILE_SIZE}, entities::{known_species::SPECIES_KUNAI, species::species_by_id}, game_engine::{entity::Entity, inventory::{inventory_contains_species, remove_one_of_species_from_inventory}, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}};
+use crate::{constants::{HERO_KUNAI_COOLDOWN, TILE_SIZE}, entities::{known_species::SPECIES_KUNAI, species::species_by_id}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, has_species_in_inventory}, world::World}};
 
 impl Entity {
     pub fn setup_hero(&mut self, creative_mode: bool) {
@@ -51,12 +51,12 @@ impl Entity {
         if !world.has_attack_key_been_pressed {
             return vec![]
         }
-        if !inventory_contains_species(SPECIES_KUNAI) {
+        if !has_species_in_inventory(&SPECIES_KUNAI) {
             return vec![]
         }
 
         self.action_cooldown_remaining = HERO_KUNAI_COOLDOWN;
-        remove_one_of_species_from_inventory(&SPECIES_KUNAI);
+        decrease_inventory_count(&SPECIES_KUNAI);
 
         let mut bullet = species_by_id(SPECIES_KUNAI).make_entity();
         bullet.direction = world.cached_hero_props.direction;
