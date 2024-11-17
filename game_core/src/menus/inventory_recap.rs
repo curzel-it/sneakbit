@@ -17,7 +17,7 @@ impl InventoryRecap {
 
     pub fn ui(&self) -> View {
         if self.number_of_kunais > 0 {
-            let image = texture!(SPRITE_SHEET_INVENTORY, IntRect::new(1, 7, 1, 1), Vector2d::new(1.0, 1.0));
+            let image = texture!(SPRITE_SHEET_INVENTORY, IntRect::new(1, 7, 1, 1), Vector2d::new(1.5, 1.5));
 
             zstack!(
                 Spacing::MD,
@@ -25,8 +25,8 @@ impl InventoryRecap {
                 image,
                 vstack!(
                     Spacing::Zero,
-                    spacing!(Spacing::LG),
-                    text!(Typography::Caption, format!("x{}", self.number_of_kunais))
+                    spacing!(Spacing::XL),
+                    text!(Typography::Regular, format!("x{}", self.number_of_kunais))
                 )
             )
         } else {
