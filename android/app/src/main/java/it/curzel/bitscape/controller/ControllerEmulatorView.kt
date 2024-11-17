@@ -1,4 +1,8 @@
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -16,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,9 +33,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ControllerEmulatorView(
     gameEngine: SomeGameEngine,
@@ -44,14 +47,12 @@ fun ControllerEmulatorView(
     val isConfirmVisible by viewModel.isConfirmVisible.collectAsState()
     val isAttackVisible by viewModel.isAttackVisible.collectAsState()
     val attackLabel by viewModel.attackLabel.collectAsState()
-    val attackBottomPadding by viewModel.attackBottomPadding.collectAsState()
 
     ControllerEmulatorView(
         isLandscape,
         isConfirmVisible,
         isAttackVisible,
         attackLabel,
-        attackBottomPadding,
         setKeyDown = { viewModel.setKeyDown(it) },
         setKeyUp = { viewModel.setKeyUp(it) },
         modifier = modifier
@@ -64,7 +65,6 @@ private fun ControllerEmulatorView(
     isConfirmVisible: Boolean,
     isAttackVisible: Boolean,
     attackLabel: String,
-    attackBottomPadding: Dp,
     setKeyDown: (EmulatedKey) -> Unit,
     setKeyUp: (EmulatedKey) -> Unit,
     modifier: Modifier = Modifier
@@ -80,8 +80,12 @@ private fun ControllerEmulatorView(
                 .padding(start = if (isLandscape) 85.dp else 20.dp)
                 .padding(bottom = if (isLandscape) 100.dp else 140.dp)
         ) {
-            if (isAttackVisible) {
-                Box(modifier = Modifier.padding(bottom = attackBottomPadding)) {
+            AnimatedVisibility(
+                visible = isAttackVisible,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Box {
                     KeyEmulatorView(EmulatedKey.ATTACK, setKeyDown, setKeyUp)
                     Text(
                         text = attackLabel,
@@ -95,7 +99,12 @@ private fun ControllerEmulatorView(
                     )
                 }
             }
-            if (isConfirmVisible) {
+
+            AnimatedVisibility(
+                visible = isConfirmVisible,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
                 KeyEmulatorView(EmulatedKey.CONFIRM, setKeyDown, setKeyUp)
             }
         }
@@ -113,9 +122,6 @@ class ControllerEmulatorViewModel(
 
     private val _attackLabel = MutableStateFlow("")
     val attackLabel: StateFlow<String> = _attackLabel.asStateFlow()
-
-    private val _attackBottomPadding = MutableStateFlow(0.dp)
-    val attackBottomPadding: StateFlow<Dp> = _attackBottomPadding.asStateFlow()
 
     init {
         observeKunaiCount()
@@ -147,7 +153,6 @@ class ControllerEmulatorViewModel(
                 .distinctUntilChanged { old, new -> old == new }
                 .collect { available ->
                     _isConfirmVisible.value = available
-                    _attackBottomPadding.value = if (available) 30.dp else 0.dp
                 }
         }
     }
@@ -161,7 +166,6 @@ fun ControllerEmulatorViewPreview() {
         isConfirmVisible = true,
         isAttackVisible = true,
         attackLabel = "x99",
-        attackBottomPadding = 30.dp,
         setKeyDown = {},
         setKeyUp = {},
         modifier = Modifier
@@ -176,7 +180,6 @@ fun ControllerEmulatorViewOnlyAttackPreview() {
         isConfirmVisible = false,
         isAttackVisible = true,
         attackLabel = "x99",
-        attackBottomPadding = 30.dp,
         setKeyDown = {},
         setKeyUp = {},
         modifier = Modifier
@@ -191,7 +194,6 @@ fun ControllerEmulatorViewOnlyConfirmPreview() {
         isConfirmVisible = true,
         isAttackVisible = false,
         attackLabel = "",
-        attackBottomPadding = 30.dp,
         setKeyDown = {},
         setKeyUp = {},
         modifier = Modifier

@@ -23,7 +23,6 @@ struct ControllerEmulatorView: View {
                                     .typography(.buttonCaption)
                                     .foregroundStyle(Color.black.opacity(0.9))
                             )
-                            .padding(.bottom, viewModel.attackBottomPadding)
                     }
                     if viewModel.isConfirmVisible {
                         KeyEmulatorView(key: .confirm)
@@ -45,7 +44,6 @@ private class ControllerEmulatorViewModel: ObservableObject {
     
     @Published var isConfirmVisible: Bool = false
     @Published var isAttackVisible: Bool = false
-    @Published var attackBottomPadding: CGFloat = 0
     @Published var attackLabel: String = ""
     
     var safeAreaInsets: UIEdgeInsets {
@@ -83,7 +81,6 @@ private class ControllerEmulatorViewModel: ObservableObject {
             .sink { [weak self] available in
                 withAnimation {
                     self?.isConfirmVisible = available
-                    self?.attackBottomPadding = available ? 30 : 0
                 }
             }
             .store(in: &disposables)
