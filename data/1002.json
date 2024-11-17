@@ -41,12 +41,12 @@
       "1111111111111111111111111111411111411111111111111111411111111111111114111111111111111111111111111111",
       "1111111111111111111111111111411111411111111111111111444444444111411114111111111111111111111111111111",
       "1111111111111111111111444444441444411111111111111111411111114111411114111111111111111111111111111111",
-      "1111111111111111111111411111111411111111111111111111411111114111411114111111111111111111111111111111",
-      "1111111111111111111111411111111411111444441111111111411111114444411114111111111111111111111111111111",
-      "1111111111111111111111411111411411111411144444411111411111111141111114111111111111111111111111111111",
-      "1111111111111111111111411111411411114411111111411111411111111141111114111111111111111111111111111111",
-      "1111111111111111111111411111411411114111111111411111411111111141111114444111111111111111111111111111",
-      "4444444444444444444444411111411411114111111111411111411111111141111114114444441111111111111111111111",
+      "1111111111111111111111111111111411111111111111111111411111114111411114111111111111111111111111111111",
+      "1111111111111111111111111111111411111444441111111111411111114444411114111111111111111111111111111111",
+      "1111111111111111111111111111411411111411144444411111411111111141111114111111111111111111111111111111",
+      "1111111111111111111111111111411411114411111111411111411111111141111114111111111111111111111111111111",
+      "1111111111111111111111111111411411114111111111411111411111111141111114444111111111111111111111111111",
+      "1111111111111111111111111111411411114111111111411111411111111141111114114444441111111111111111111111",
       "1111111111111111111111111111411411114111111111411111411111111141111114111111141111111111111111111111",
       "1111111111111111111111111111411411114111111111411111411111111141111114111111141111111111111111111111",
       "1111111111111111111111111111411444444111111111411111411111111141111114111111144444444444444444444444",
@@ -131,7 +131,7 @@
       "8888888888888888888888088888080088880080000000008000080888800808888800000088888888888888888888888888",
       "8888888888888888888888088888080000000088888888088000000888888808888800000088888888888888888888888888",
       "8888888888888888888888008888080000000888888888088000000888888808888800000088008888888888888888888888",
-      "0000000000000000000000000888088088800888888888088000000888888000888880880000008888888888888888888888",
+      "8888888888888888888888000888088088800888888888088000000888888000888880880000008888888888888888888888",
       "8888888888888888888888888888080008880888800888088888000888888000888880888888800088888888888888888888",
       "8888888888888888888888888888080008880888800888088888088888888808888880888888800088888888888888888888",
       "8888888888888888888880888880000000000088800000008888088800008808800800008888800000000000000000000000",
@@ -144,8 +144,8 @@
       "8888888888888888888888808800880888800000000880000000088800000888888800000000000888888888888888888888",
       "8888888888888888888888800000880888880008800888080000088800000000888800888888808888888888888888888888",
       "8888888888888888888888808800000888880008880800008080088800000000088800888888808888888888888888888888",
-      "8888888888888888888888000800000000000008800800000000000088000000088800888888808888888888888888888888",
-      "8888888888888888888888000800000888888888800000000080000080000888000800888888808888888888888888888888",
+      "8888888888888888888888008800000000000008800800000000000088000000088800888888808888888888888888888888",
+      "8888888888888888888888008800000888888888800000000080000080000888000800888888808888888888888888888888",
       "8888888888888888888888000800888888888888888888880080000000000000000000000080008888888888888888888888",
       "8888888888888888888888000888888888888888888888880088000088888888888000000000008888888888888888888888",
       "8888888888888888888888808888888888888888888888888888888888888888888888888888888888888888888888888888",
@@ -183,10 +183,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -227,16 +223,12 @@
       "id": 10755721,
       "frame": {
         "x": 23,
-        "y": 60,
+        "y": 62,
         "w": 1,
         "h": 1
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -253,60 +245,10 @@
       },
       "dialogues": [],
       "destination": {
-        "world": 1006,
-        "x": 0,
-        "y": 0,
+        "world": 1018,
+        "x": 67,
+        "y": 10,
         "direction": "Down"
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 10755722,
-      "frame": {
-        "x": 17,
-        "y": 42,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": {
-        "world": 1017,
-        "x": 77,
-        "y": 68,
-        "direction": "Left"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -333,10 +275,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -377,16 +315,12 @@
       "id": 10755724,
       "frame": {
         "x": 72,
-        "y": 23,
+        "y": 22,
         "w": 1,
         "h": 1
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -404,8 +338,8 @@
       "dialogues": [],
       "destination": {
         "world": 1003,
-        "x": 51,
-        "y": 42,
+        "x": 48,
+        "y": 38,
         "direction": "Up"
       },
       "lock_type": "None",
@@ -433,10 +367,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -478,10 +408,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -523,10 +449,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -568,10 +490,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -613,10 +531,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -658,10 +572,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -703,10 +613,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -748,10 +654,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -793,10 +695,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -838,10 +736,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -883,10 +777,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -928,10 +818,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -973,10 +859,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -1018,10 +900,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -1063,10 +941,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -1108,10 +982,6 @@
       },
       "species_id": 4004,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 2.5,
       "is_rigid": false,
@@ -1144,51 +1014,6 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10756911,
-      "frame": {
-        "x": 24,
-        "y": 54,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": false,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
       "id": 10756912,
       "frame": {
         "x": 30,
@@ -1198,55 +1023,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": false,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 10756913,
-      "frame": {
-        "x": 23,
-        "y": 36,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 7000,
-      "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1288,10 +1064,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1333,10 +1105,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1378,10 +1146,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1423,10 +1187,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1468,10 +1228,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1513,10 +1269,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1558,10 +1310,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1603,10 +1351,6 @@
       },
       "species_id": 7000,
       "entity_type": "Bullet",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1648,10 +1392,6 @@
       },
       "species_id": 10001,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1693,13 +1433,9 @@
       },
       "species_id": 1104,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
@@ -1722,6 +1458,47 @@
       },
       "display_conditions": [],
       "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11752022,
+      "frame": {
+        "x": 23,
+        "y": 41,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 7000,
+      "entity_type": "Bullet",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": false,

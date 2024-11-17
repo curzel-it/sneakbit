@@ -18,6 +18,7 @@ def image_to_matrix(image_path, N, M):
                 r, g, b = img.getpixel((j, i))
                 
                 # Check if the pixel is white
+                print((r,g,b))
                 if (r, g, b) == (255, 255, 255):
                     matrix[i, j] = 8  # Free cell
                 else:
@@ -41,18 +42,18 @@ if __name__ == "__main__":
     matrix = image_to_matrix(image_path, N, M)
 
     print("Generated Matrix:")
-    for i in range(10):
-        print('"' + "8" * (len(matrix[0]) + 20) + '",')
+    #for i in range(10):
+        #print('"' + "8" * (len(matrix[0]) + 20) + '",')
 
     for row in matrix:
         content = "".join(map(str, row))
-        content = "8888888888" + content
-        content = content + "8888888888" 
+        #content = "8888888888" + content
+        #content = content + "8888888888" 
         content = '"' + content + '",'
         print(content)
 
-    for i in range(10):
-        print('"' + "8" * (len(matrix[0]) + 20) + '",')
+    #for i in range(10):
+        #print('"' + "8" * (len(matrix[0]) + 20) + '",')
 
     #for i in range(10 + len(matrix) + 20):
     #    print('"' + "A" * (len(matrix[0]) + 20) + '",')

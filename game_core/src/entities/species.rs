@@ -97,7 +97,7 @@ impl Species {
             original_sprite_frame,
             contents: None,
             remaining_lifespan: UNLIMITED_LIFESPAN,
-            shooting_cooldown_remaining: 0.0,
+            action_cooldown_remaining: 0.0,
             parent_id: NO_PARENT,
             is_dying: false,
             melee_attacks_hero: self.melee_attacks_hero,
@@ -121,7 +121,7 @@ impl Species {
         entity.is_rigid = self.is_rigid;
         entity.sprite = sprite;
         entity.name = self.name.localized();
-        entity.shooting_cooldown_remaining = 0.0;
+        entity.action_cooldown_remaining = 0.0;
         entity.melee_attacks_hero = self.melee_attacks_hero;
         entity.speed_multiplier = 1.0;
         entity.is_consumable = self.is_consumable;

@@ -28,19 +28,19 @@
       "222222222222222222222222222222222222422242244222222222222222222222222222222222222222222222222222222222222222222222222222",
       "222222222222222222222222222222222222442222244222222222222222222222222222222222222222222222222222222222222222222222222222",
       "222222222222222222222222222222222222242222244222222222222222222222222222222222222222222222222222222222222222222222222222",
-      "222222222222222222222222444444444444222244244222222222222222222222222222222222222222222222222222222222222222222222222222",
-      "222222222222222222222224444444444444444442244222222222222222222222222222222222222222222222222222222222222222222222222222",
-      "222222222222222222222224411111111114444444444222222222222222222222222222222444442222222222222222222222222222222222222222",
-      "222222222222222222222244411116111161144444444444422222222222222222222222244444444422222222222222222222222222222222222222",
-      "222222222222222222222244111116111161111111464444444222222222222222222244444411114422222222222222222222222222222222222222",
-      "222222222222222222222444111116666666666666661111444444444442222244444444444111114442222222222222222222222222222222222222",
-      "222222222222222222222441111116111111E11111111111144444444444444444444444444111111442222222222222222222222222222222222222",
-      "222222222222222222222441111116111111E11111111111111111111114444441111111111111611442222222222222222222222222222222222222",
-      "222222222222222222222441111116111111111111111111111111111666666666666666666666614442222222222222222222222222222222222222",
-      "222222222222222222222444111116111111111111111161111111111614444441111111111116114422222222222222222222222222222222222222",
-      "222222222222222222222244111116111111111111111161111611111614444444111114444416144422222222222222222222222222222222222222",
-      "222222222222222222222244111116111111111111111161111611111614422244444444444416144222222222222222222222222222222222222222",
-      "222222222222222222222244111116111111111111111161111611111614422224444444224416144222222222222222222222222222222222222222",
+      "222222222222222222222222222222222222222244244222222222222222222222222222222222222222222222222222222222222222222222222222",
+      "222222222222222222222242222222222222224442244222222222222222222222222222222222222222222222222222222222222222222222222222",
+      "222222222222222222222422222444444444444444444222222222222222222222222222222444442222222222222222222222222222222222222222",
+      "222222222222222222222444444444444444444444414444422222222222222222222222244444444422222222222222222222222222222222222222",
+      "222222222222222222222224444444111161111111161444444222222222222222222244444411114422222222222222222222222222222222222222",
+      "222222222222222222224442222224441166666666661111444444444442222244444444444111114442222222222222222222222222222222222222",
+      "222222222222222222222424222222441161111111111111144444444444444444444444444111111442222222222222222222222222222222222222",
+      "222222222222222222222222222222441161111111111111111111111114444441111111111111611442222222222222222222222222222222222222",
+      "2222222222222222222222222222222441611C1111111111111111111666666666666666666666614442222222222222222222222222222222222222",
+      "2222222222222222222222222222224411611CCC11111161111111111614444441111111111116114422222222222222222222222222222222222222",
+      "22222222222222222222222244444441116111CC11111161111611111614444444111114444416144422222222222222222222222222222222222222",
+      "222222222222222222222224444444111161111111111161111611111614422244444444444416144222222222222222222222222222222222222222",
+      "222222222222222222222244111111111161111111111161111611111614422224444444224416144222222222222222222222222222222222222222",
       "222222222222222222222244116666666666666666666666666666666614422222222222224416144222222222222222222222222222222222222222",
       "222222222222222222222244116111111111111111111111111111111144222222222222224416144222222222222222222222222222222222222222",
       "222222222222222222222244116114441111114444444111111111114442222222222222244416144222222222222222222222222222222222222222",
@@ -223,10 +223,6 @@
       },
       "species_id": 11002,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -259,93 +255,69 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10810192,
+      "id": 11774935,
       "frame": {
-        "x": 26,
-        "y": 24,
-        "w": 5,
-        "h": 4
+        "x": 23,
+        "y": 48,
+        "w": 1,
+        "h": 2
       },
-      "species_id": 1004,
-      "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
+      "species_id": 1125,
+      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 0,
       "sprite": {
-        "sheet_id": 1004,
+        "sheet_id": 1009,
         "frame": {
-          "x": 0,
-          "y": 11,
-          "w": 5,
-          "h": 4
+          "x": 64,
+          "y": 19,
+          "w": 1,
+          "h": 2
         },
-        "number_of_frames": 1
+        "number_of_frames": 4
       },
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "quest.thugs_and_assassins.thug_boss.what_is_a_check",
+          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.it_was_about_the_money",
+          "expected_value": 1,
+          "reward": null
+        },
+        {
+          "text": "quest.thugs_and_assassins.thug_boss.we_are_not_thugs",
+          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.i_hired_assassins",
+          "expected_value": 1,
+          "reward": null
+        },
+        {
+          "text": "quest.thugs_and_assassins.thug_boss.intro",
+          "key": "always",
+          "expected_value": 1,
+          "reward": null
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 0,
-        "y": 11,
-        "w": 5,
-        "h": 4
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 10810194,
-      "frame": {
-        "x": 29,
-        "y": 27,
+        "x": 64,
+        "y": 19,
         "w": 1,
-        "h": 1
+        "h": 2
       },
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
+      "display_conditions": [
+        {
+            "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
+            "expected_value": 1,
+            "visible": false
         },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": {
-        "world": 10810193,
-        "x": 0,
-        "y": 0,
-        "direction": "Unknown"
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
-      "display_conditions": [],
+        {
+            "key": "always",
+            "expected_value": 0,
+            "visible": true
+        }
+      ],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -363,10 +335,6 @@
       },
       "species_id": 1004,
       "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -408,10 +376,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -458,10 +422,6 @@
       },
       "species_id": 1007,
       "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -503,10 +463,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -553,10 +509,6 @@
       },
       "species_id": 1007,
       "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -598,10 +550,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -648,10 +596,6 @@
       },
       "species_id": 1007,
       "entity_type": "Building",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -693,10 +637,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -743,10 +683,6 @@
       },
       "species_id": 11001,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -788,10 +724,6 @@
       },
       "species_id": 10000,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -833,13 +765,9 @@
       },
       "species_id": 4001,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
@@ -878,13 +806,9 @@
       },
       "species_id": 4001,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
@@ -923,13 +847,9 @@
       },
       "species_id": 4001,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
@@ -968,13 +888,9 @@
       },
       "species_id": 4001,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
@@ -1013,13 +929,9 @@
       },
       "species_id": 4001,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
@@ -1058,10 +970,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1108,10 +1016,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1153,10 +1057,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1198,10 +1098,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1234,51 +1130,6 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10810308,
-      "frame": {
-        "x": 43,
-        "y": 34,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 3005,
-      "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
       "id": 10810321,
       "frame": {
         "x": 67,
@@ -1288,10 +1139,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1333,10 +1180,6 @@
       },
       "species_id": 44434,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1378,10 +1221,6 @@
       },
       "species_id": 44434,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1423,10 +1262,6 @@
       },
       "species_id": 44432,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1468,10 +1303,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1513,10 +1344,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1563,10 +1390,6 @@
       },
       "species_id": 1078,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1608,10 +1431,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1653,10 +1472,6 @@
       },
       "species_id": 1011,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1698,10 +1513,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1743,10 +1554,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1788,10 +1595,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1833,10 +1636,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1878,10 +1677,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1923,10 +1718,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -1968,10 +1759,6 @@
       },
       "species_id": 44434,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2013,10 +1800,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2058,10 +1841,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2103,10 +1882,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2148,10 +1923,6 @@
       },
       "species_id": 44434,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2193,10 +1964,6 @@
       },
       "species_id": 44438,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2238,10 +2005,6 @@
       },
       "species_id": 44438,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2283,10 +2046,6 @@
       },
       "species_id": 44438,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2328,10 +2087,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2373,10 +2128,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2418,10 +2169,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2463,10 +2210,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2508,10 +2251,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2553,10 +2292,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2598,10 +2333,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2643,10 +2374,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2688,10 +2415,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2733,10 +2456,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2778,10 +2497,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2823,10 +2538,6 @@
       },
       "species_id": 1077,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2868,10 +2579,6 @@
       },
       "species_id": 44432,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2913,10 +2620,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -2958,10 +2661,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3003,10 +2702,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3048,10 +2743,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3093,10 +2784,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3138,10 +2825,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3183,10 +2866,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3228,10 +2907,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3273,10 +2948,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3318,10 +2989,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3363,10 +3030,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3408,10 +3071,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3453,10 +3112,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3498,10 +3153,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3543,10 +3194,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3588,10 +3235,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3633,10 +3276,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3678,10 +3317,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3723,10 +3358,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3768,10 +3399,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3813,10 +3440,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3858,10 +3481,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3903,10 +3522,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3948,10 +3563,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -3993,10 +3604,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4038,10 +3645,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4083,10 +3686,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4128,10 +3727,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4173,10 +3768,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4218,10 +3809,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4263,10 +3850,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4308,10 +3891,6 @@
       },
       "species_id": 44432,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4353,10 +3932,6 @@
       },
       "species_id": 44434,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4398,10 +3973,6 @@
       },
       "species_id": 44434,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4443,10 +4014,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4488,10 +4055,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4533,10 +4096,6 @@
       },
       "species_id": 1075,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4578,10 +4137,6 @@
       },
       "species_id": 1075,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4623,10 +4178,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4668,10 +4219,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4713,10 +4260,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4758,10 +4301,6 @@
       },
       "species_id": 44438,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4803,10 +4342,6 @@
       },
       "species_id": 44438,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4848,10 +4383,6 @@
       },
       "species_id": 44432,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4893,10 +4424,6 @@
       },
       "species_id": 44438,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4938,10 +4465,6 @@
       },
       "species_id": 44438,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -4983,10 +4506,6 @@
       },
       "species_id": 1076,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5028,10 +4547,6 @@
       },
       "species_id": 44432,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5073,10 +4588,6 @@
       },
       "species_id": 44432,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5118,10 +4629,6 @@
       },
       "species_id": 44434,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5163,10 +4670,6 @@
       },
       "species_id": 1076,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5208,10 +4711,6 @@
       },
       "species_id": 44434,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5253,10 +4752,6 @@
       },
       "species_id": 10000,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5289,51 +4784,6 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10829889,
-      "frame": {
-        "x": 64,
-        "y": 52,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 3006,
-      "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 8,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 8,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
       "id": 10829897,
       "frame": {
         "x": 68,
@@ -5343,10 +4793,6 @@
       },
       "species_id": 1075,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5388,10 +4834,6 @@
       },
       "species_id": 1075,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5433,10 +4875,6 @@
       },
       "species_id": 1075,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5478,10 +4916,6 @@
       },
       "species_id": 1077,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5523,10 +4957,6 @@
       },
       "species_id": 1077,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5568,10 +4998,6 @@
       },
       "species_id": 1077,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5613,10 +5039,6 @@
       },
       "species_id": 1077,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5658,10 +5080,6 @@
       },
       "species_id": 1077,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5703,10 +5121,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5748,10 +5162,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5793,10 +5203,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5838,10 +5244,6 @@
       },
       "species_id": 44432,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5883,10 +5285,6 @@
       },
       "species_id": 44438,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5928,10 +5326,6 @@
       },
       "species_id": 44438,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5973,10 +5367,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6018,10 +5408,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6063,10 +5449,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6108,10 +5490,6 @@
       },
       "species_id": 44435,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6153,10 +5531,6 @@
       },
       "species_id": 44437,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6198,10 +5572,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6243,10 +5613,6 @@
       },
       "species_id": 44436,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6288,10 +5654,6 @@
       },
       "species_id": 44432,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6333,10 +5695,6 @@
       },
       "species_id": 44432,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6378,10 +5736,6 @@
       },
       "species_id": 44434,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6423,10 +5777,6 @@
       },
       "species_id": 44432,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6468,10 +5818,6 @@
       },
       "species_id": 44434,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6513,10 +5859,6 @@
       },
       "species_id": 1075,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6558,10 +5900,6 @@
       },
       "species_id": 44433,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6603,10 +5941,6 @@
       },
       "species_id": 44431,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6648,10 +5982,6 @@
       },
       "species_id": 1011,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6693,10 +6023,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": true,
@@ -6738,10 +6064,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6788,10 +6110,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6808,9 +6126,9 @@
       },
       "dialogues": [],
       "destination": {
-        "world": 1002,
-        "x": 23,
-        "y": 58,
+        "world": 1018,
+        "x": 46,
+        "y": 71,
         "direction": "Up"
       },
       "lock_type": "None",
@@ -6838,10 +6156,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6858,9 +6172,9 @@
       },
       "dialogues": [],
       "destination": {
-        "world": 1002,
-        "x": 23,
-        "y": 58,
+        "world": 1018,
+        "x": 46,
+        "y": 71,
         "direction": "Up"
       },
       "lock_type": "None",
@@ -6888,10 +6202,6 @@
       },
       "species_id": 10001,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -6919,6 +6229,275 @@
       "movement_directions": "None",
       "is_consumable": false,
       "contents": "1006.entrance",
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11774934,
+      "frame": {
+        "x": 23,
+        "y": 46,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1126,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": true,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 68,
+          "y": 19,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 68,
+        "y": 19,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [
+        {
+            "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
+            "expected_value": 1,
+            "visible": false
+        },
+        {
+            "key": "always",
+            "expected_value": 0,
+            "visible": true
+        }
+      ],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11774932,
+      "frame": {
+        "x": 66,
+        "y": 52,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1124,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": true,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 60,
+          "y": 19,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 60,
+        "y": 19,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11774933,
+      "frame": {
+        "x": 22,
+        "y": 46,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1117,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": true,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 32,
+          "y": 19,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 32,
+        "y": 19,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [
+        {
+            "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
+            "expected_value": 1,
+            "visible": false
+        },
+        {
+            "key": "always",
+            "expected_value": 0,
+            "visible": true
+        }
+      ],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11774919,
+      "frame": {
+        "x": 44,
+        "y": 33,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1110,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": true,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 84,
+          "y": 0,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [
+        {
+          "text": "quest.thugs_and_assassins.nyx.we_are_about_to_strike",
+          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.i_hired_assassins",
+          "expected_value": 1,
+          "reward": null
+        },
+        {
+          "text": "quest.thugs_and_assassins.nyx.intro",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
+        }
+      ],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 84,
+        "y": 0,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [
+        {
+            "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
+            "expected_value": 1,
+            "visible": false
+        },
+        {
+            "key": "always",
+            "expected_value": 0,
+            "visible": true
+        }
+      ],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11774920,
+      "frame": {
+        "x": 47,
+        "y": 33,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1108,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": true,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 80,
+          "y": 19,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 8
+      },
+      "dialogues": [
+        {
+          "text": "quest.thugs_and_assassins.mr_bubblegum.intro",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
+        }
+      ],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 80,
+        "y": 19,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [
+        {
+            "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
+            "expected_value": 1,
+            "visible": false
+        },
+        {
+            "key": "always",
+            "expected_value": 0,
+            "visible": true
+        }
+      ],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false

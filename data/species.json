@@ -1061,7 +1061,8 @@
         "entity_type": "Npc",
         "z_index": 150,
         "base_speed": 0.5,
-        "is_rigid": false,
+        "is_invulnerable": false,
+        "is_rigid": true,
         "inventory_texture_offset": [
             2,
             5
@@ -2419,11 +2420,11 @@
     {
         "id": 4005,
         "name": "npc.name.cat",
-        "is_invulnerable": true,
+        "is_invulnerable": false,
         "entity_type": "Npc",
         "z_index": 150,
         "base_speed": 1.0,
-        "is_rigid": false,
+        "is_rigid": true,
         "inventory_texture_offset": [
             2,
             10
@@ -3276,34 +3277,13 @@
         "lock_type": "None"
     },
     {
-        "id": 1103,
-        "name": "npc.name.female.green_hair",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "z_index": 0,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            8,
-            19
-        ],
-        "sprite_frame": {
-            "x": 84,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
         "id": 1104,
         "name": "npc.name.snail",
         "entity_type": "Npc",
         "z_index": 150,
         "base_speed": 0.5,
-        "is_rigid": false,
+        "is_rigid": true,
+        "is_invulnerable": false,
         "inventory_texture_offset": [
             8,
             20
@@ -3325,7 +3305,8 @@
         "entity_type": "Npc",
         "z_index": 150,
         "base_speed": 1.5,
-        "is_rigid": false,
+        "is_rigid": true,
+        "is_invulnerable": false,
         "inventory_texture_offset": [
             8,
             21
@@ -3397,13 +3378,13 @@
             2
         ],
         "sprite_frame": {
-            "x": 20,
-            "y": 0,
+            "x": 80,
+            "y": 19,
             "w": 1,
             "h": 2
         },
         "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
+        "sprite_number_of_frames": 8,
         "lock_type": "None"
     },
     {

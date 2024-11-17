@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, dialogues::{menu::DialogueMenu, models::Dialogue}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, inventory_recap::InventoryRecap, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, inventory_recap::InventoryRecap, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{inventory::{add_to_inventory, remove_one_of_species_from_inventory}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World};
 
@@ -10,7 +10,6 @@ pub struct GameEngine {
     pub long_text_display: LongTextDisplay,
     pub confirmation_dialog: ConfirmationDialog,
     pub death_screen: DeathScreen,
-    pub dialogue_menu: DialogueMenu,
     pub toast: ToastDisplay,
     pub inventory_status: InventoryRecap,
     pub entity_options_menu: EntityOptionsMenu,
@@ -32,7 +31,6 @@ impl GameEngine {
             long_text_display: LongTextDisplay::new(50, 9),
             confirmation_dialog: ConfirmationDialog::new(),
             death_screen: DeathScreen::new(),
-            dialogue_menu: DialogueMenu::new(),
             toast: ToastDisplay::new(),
             entity_options_menu: EntityOptionsMenu::new(),
             keyboard: KeyboardEventsProvider::new(),
@@ -107,17 +105,6 @@ impl GameEngine {
         }
 
         if !is_game_paused {
-            let keyboard = if self.dialogue_menu.is_open() { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
-            let (pause, world_updates) = self.dialogue_menu.update(keyboard, time_since_last_update);
-            if keyboard.has_confirmation_been_pressed && !pause {
-                self.keyboard.has_confirmation_been_pressed = false;
-            }
-            is_game_paused = is_game_paused || pause;
-            let engine_updates = self.world.apply_state_updates(world_updates);
-            self.apply_state_updates(engine_updates);
-        }
-
-        if !is_game_paused {
             let keyboard = if self.entity_options_menu.is_open() { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
             let (pause, world_updates) = self.entity_options_menu.update(keyboard, time_since_last_update);
             is_game_paused = is_game_paused || pause;
@@ -153,12 +140,8 @@ impl GameEngine {
     ) {
         self.camera_viewport.w = (width / (scale * TILE_SIZE)) as i32;
         self.camera_viewport.h = (height / (scale * TILE_SIZE)) as i32;
-
-        let max_line_length = (width / font_size).floor() as usize;
-        self.long_text_display.max_line_length = max_line_length;
-        self.dialogue_menu.max_line_length = max_line_length;
-        
-        self.long_text_display.visible_line_count = (0.3 * height / (line_spacing + font_size)).floor() as usize;
+        self.long_text_display.max_line_length = (width / font_size).floor() as usize;
+        self.long_text_display.visible_line_count = (0.4 * height / (line_spacing + font_size)).floor() as usize;
     }
 
     fn apply_state_updates(&mut self, updates: Vec<EngineStateUpdate>) {
@@ -189,9 +172,6 @@ impl GameEngine {
         self.log_update(update);
 
         match update {
-            EngineStateUpdate::ShowDialogue(npc_id, npc_name, dialogue) => {
-                self.show_dialogue(npc_id, npc_name, dialogue)
-            }
             EngineStateUpdate::CenterCamera(x, y, offset) => {
                 self.center_camera_at(*x, *y, offset)
             }
@@ -222,8 +202,8 @@ impl GameEngine {
             EngineStateUpdate::Confirmation(title, text, on_confirm) => {
                 self.ask_for_confirmation(title, text, on_confirm)
             }
-            EngineStateUpdate::DisplayLongText(contents) => {
-                self.long_text_display.show(contents.clone())
+            EngineStateUpdate::DisplayLongText(title, text) => {
+                self.long_text_display.show(title, text)
             }
             EngineStateUpdate::DeathScreen => {
                 self.death_screen.show()
@@ -238,14 +218,6 @@ impl GameEngine {
     fn show_toast(&mut self, toast: &Toast) {
         self.toast.show(toast);
     }
-
-    fn show_dialogue(&mut self, npc_id: &u32, npc_name: &str, dialogue: &Dialogue) {
-        if self.dialogue_menu.is_open() {
-            return
-        }
-        println!("Showing dialogue menu");
-        self.dialogue_menu.show(*npc_id, npc_name, dialogue);
-    }    
 
     fn exit(&mut self) {
         println!("Got exit request!");

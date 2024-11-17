@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::UNLIMITED_LIFESPAN, dialogues::models::{Dialogue, EntityDialogues}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, directions::MovementDirections}, game_engine::storage::{set_value_for_key, StorageKey}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{Dialogue, EntityDialogues}, directions::MovementDirections}, game_engine::storage::{set_value_for_key, StorageKey}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::key_value_matches, world::World};
 
@@ -79,7 +79,7 @@ pub struct Entity {
     pub remaining_lifespan: f32,  
 
     #[serde(skip)]
-    pub shooting_cooldown_remaining: f32,  
+    pub action_cooldown_remaining: f32,  
 
     #[serde(skip)]
     pub parent_id: u32,  
@@ -124,8 +124,10 @@ impl Entity {
         updates
     }
 
-    pub fn setup(&mut self, creative_mode: bool) {      
-        self.remaining_lifespan = UNLIMITED_LIFESPAN;
+    pub fn setup(&mut self, creative_mode: bool) {    
+        if self.parent_id == NO_PARENT {  
+            self.remaining_lifespan = UNLIMITED_LIFESPAN;
+        }
         species_by_id(self.species_id).reload_props(self);
         
         match self.entity_type {
@@ -218,11 +220,14 @@ impl Entity {
     fn update_static(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {  
         if world.is_hero_around_and_on_collision_with(&self.frame) {            
             if let Some(contents) = self.contents.clone() {
+                let species_name = species_by_id(self.species_id).localized_name();
+
                 set_value_for_key(&StorageKey::content_read(self.id), 1);
 
                 return vec![
                     WorldStateUpdate::EngineUpdate(
                         EngineStateUpdate::DisplayLongText(
+                            format!("{}:", species_name), 
                             contents.localized()
                         )
                     )

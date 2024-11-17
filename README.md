@@ -61,5 +61,16 @@ I'm trying to have the engine by completely independent from rendering, which ha
 ![Android](docs/android.png)
 ![iOS](docs/ios.jpeg)
 
+## More about the game
+I'm taking notes about characters and lore [here](https://github.com/curzel-it/sneakbit/blob/main/docs/game_design_document.md).
+![World Map](docs/world_map.png)
+
 ## TODO:
-- Lots.
+- On mobile, show "fire" button only where there are bullets available
+- On mobile, show number of bullets on the "fire" button
+- On mobile, show "interact" button only where there are available interactions
+- Controller support (requirement for release on Steam)
+- Unify inventory and safe files
+- More Quests
+- More Lore
+- More Game

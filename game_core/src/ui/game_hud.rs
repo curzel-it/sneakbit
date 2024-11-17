@@ -10,13 +10,12 @@ impl GameEngine {
             self.hud_background_color(),
             vec![
                 (AnchorPoint::TopRight, self.inventory_status.ui()),
-                (AnchorPoint::TopRight, self.toast.regular_toast_ui()),
-                (AnchorPoint::TopLeft, self.toast.important_toast_ui()),
                 (AnchorPoint::BottomCenter, self.menu.ui(&self.camera_viewport)),
                 (AnchorPoint::BottomCenter, self.entity_options_menu.ui()),
-                (AnchorPoint::BottomCenter, self.dialogue_menu.ui()),
                 (AnchorPoint::BottomCenter, self.confirmation_dialog.ui()),
                 (AnchorPoint::BottomCenter, self.long_text_display.ui()),
+                (AnchorPoint::TopRight, self.toast.regular_toast_ui()),
+                (AnchorPoint::TopLeft, self.toast.important_toast_ui()),
                 (AnchorPoint::Center, self.death_screen.ui()),
                 (AnchorPoint::Center, self.loading_screen.ui())
             ]

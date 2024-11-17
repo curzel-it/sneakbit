@@ -15,41 +15,28 @@ struct MenuView: View {
                     .foregroundStyle(Color.black.opacity(0.4))
                     .onTapGesture { viewModel.cancel() }
                 
-                ScrollableMenuContents()
-                .frame(maxWidth: 400)
-                .background {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 4)
-                            .foregroundStyle(viewModel.borderColor)
-                        
-                        RoundedRectangle(cornerRadius: 3)
-                            .foregroundStyle(viewModel.backgroundColor)
-                            .padding(2)
+                MenuContents()
+                    .padding()
+                    .frame(maxWidth: 600)
+                    .background {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 4)
+                                .foregroundStyle(viewModel.borderColor)
+                            
+                            RoundedRectangle(cornerRadius: 3)
+                                .foregroundStyle(viewModel.backgroundColor)
+                                .padding(2)
+                        }
                     }
-                }
-                .shadow(radius: 4)
-                .padding()
-                .padding(.top, viewModel.safeAreaInsets.top)
-                .padding(.trailing, viewModel.safeAreaInsets.right)
-                .padding(.bottom, viewModel.safeAreaInsets.bottom)
-                .padding(.leading, viewModel.safeAreaInsets.left)
-                .positioned(.bottom)
+                    .shadow(radius: 4)
+                    .padding()
+                    .padding(.top, viewModel.safeAreaInsets.top)
+                    .padding(.trailing, viewModel.safeAreaInsets.right)
+                    .padding(.bottom, viewModel.safeAreaInsets.bottom)
+                    .padding(.leading, viewModel.safeAreaInsets.left)
+                    .positioned(.bottom)
             }
             .environmentObject(viewModel)
-        }
-    }
-}
-
-private struct ScrollableMenuContents: View {
-    @EnvironmentObject private var viewModel: MenuViewModel
-    
-    var body: some View {
-        if viewModel.useScrollView {
-            ScrollView {
-                MenuContents().padding()
-            }
-        } else {
-            MenuContents().padding()
         }
     }
 }
@@ -58,15 +45,15 @@ private struct MenuContents: View {
     @EnvironmentObject private var viewModel: MenuViewModel
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(alignment: .leading, spacing: 20) {
             if let title = viewModel.title {
                 Text(title)
-                    .textAlign(.leading)
+                    .multilineTextAlignment(.leading)
                     .typography(.title)
             }
             if let text = viewModel.text {
                 Text(text)
-                    .textAlign(.leading)
+                    .multilineTextAlignment(.leading)
                     .typography(.text)
             }
             ForEach(viewModel.options.indices, id: \.self) { index in
@@ -91,7 +78,6 @@ private class MenuViewModel: ObservableObject {
     @Published var options: [String] = []
     @Published var isVisible: Bool = false
     @Published var opacity: CGFloat = 0
-    @Published var useScrollView: Bool = false
     
     let borderColor: Color = .gray
     let backgroundColor: Color = .black
@@ -118,16 +104,10 @@ private class MenuViewModel: ObservableObject {
     private func load(menu: MenuDescriptorC) {
         let buffer = UnsafeBufferPointer(start: menu.options, count: Int(menu.options_count))
         let items = Array(buffer)
-        let newOptions = items
-            .map { string(from: $0.title) ?? "???" }
-            .map { "> \($0)" }
-        
+        let newOptions = items.map { string(from: $0.title) ?? "???" }
         let newText = string(from: menu.text)
-        let longTextThreshold = engine.isLandscape ? 150 : 500
-        let needsScroll = (newText?.count ?? 0) > longTextThreshold
         
         withAnimation {
-            useScrollView = needsScroll
             options = newOptions
             text = newText
             title = string(from: menu.title)

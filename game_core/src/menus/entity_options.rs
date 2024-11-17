@@ -6,7 +6,6 @@ pub enum EntityOptionMenuItem {
     Remove,
     Rename,
     PickUp,
-    Read(String),
     ToggleDemandAttention,
     UseItem,
     ChangeLock,
@@ -22,7 +21,6 @@ impl MenuItem for EntityOptionMenuItem {
             EntityOptionMenuItem::Rename => "entity.menu.rename".localized(),
             EntityOptionMenuItem::PickUp => "entity.menu.pickup".localized(),
             EntityOptionMenuItem::UseItem => "entity.menu.use".localized(),
-            EntityOptionMenuItem::Read(_) => "entity.menu.read".localized(),
             EntityOptionMenuItem::ToggleDemandAttention => "entity.menu.toggle_demand_attention".localized(),
             EntityOptionMenuItem::ChangeLock => "entity.menu.change_lock".localized(),
             EntityOptionMenuItem::ChangeDestinationWorld => "entity.menu.change_destination_world".localized(),
@@ -238,16 +236,6 @@ impl EntityOptionsMenu {
                         )
                     ]
                 },
-                EntityOptionMenuItem::Read(contents) => {
-                    self.menu.clear_selection();
-                    vec![
-                        WorldStateUpdate::EngineUpdate(
-                            EngineStateUpdate::DisplayLongText(
-                                contents
-                            )
-                        )
-                    ]
-                },
                 EntityOptionMenuItem::ChangeLock => {
                     self.menu.clear_selection();
                     self.ask_for_lock_type();
@@ -385,9 +373,6 @@ impl EntityOptionsMenu {
             EntityType::PickableObject | EntityType::Bundle => options.push(EntityOptionMenuItem::PickUp),
             EntityType::Bullet => options.push(EntityOptionMenuItem::PickUp),
             _ => {}
-        }
-        if let Some(contents) = self.entity.contents.clone() {
-            options.push(EntityOptionMenuItem::Read(contents.localized()));
         }
         options
     }

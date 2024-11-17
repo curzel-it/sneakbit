@@ -21,7 +21,7 @@ struct AppFont {
         self.size = size
         self.weight = weight
         self.font = .custom(name, size: size).weight(weight)
-        self.lineSpacing = size / 3
+        self.lineSpacing = size / 2
     }
 }
 

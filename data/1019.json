@@ -1,0 +1,358 @@
+{
+  "id": 1019,
+  "revision": 0,
+  "ephemeral_state": true,
+  "biome_tiles": {
+    "tiles": [
+      "888888888888888880000",
+      "888888888888888888880",
+      "888888888888888888888",
+      "888888888888888888888",
+      "888888888888888888880",
+      "888888888888888888888",
+      "888888888888888888880",
+      "888888888888888888880",
+      "888888888800888888880",
+      "888888888888888888880",
+      "888888888888888888080",
+      "888888880888888888880",
+      "888888888888888888888",
+      "888888888888888888888",
+      "888888888888888888888",
+      "888888888888888888888",
+      "888888880088888888888",
+      "888888888888888888880",
+      "808888888888888888880",
+      "888888888888888888880",
+      "888088888888888888880",
+      "888888888888888888880",
+      "888888888888888888880",
+      "888888888888888888888",
+      "808888888888888888880",
+      "888888888888888888880",
+      "888888888888888888888",
+      "888888888888888888888",
+      "888800008888888888888",
+      "888888888888888888888",
+      "088888888888888888888",
+      "888888888888888888888",
+      "888888888800088888888",
+      "888888888888880888888",
+      "888888888888888888888",
+      "888888888888888888888",
+      "888888888888888888888",
+      "888888888888888888888",
+      "088888888888888888888",
+      "888888888888888888888",
+      "888888888888888888888"
+    ],
+    "sheet_id": 1002
+  },
+  "constructions_tiles": {
+    "tiles": [
+      "HHHHHHHHHHHHHHHHHHHHH",
+      "00000000H000H0000000H",
+      "HHHHH0HHH0H0H0HHHHH0H",
+      "H000H000H0H0H000H000H",
+      "H0H0HHH0H0H0H0HHH0H0H",
+      "H0H0H000H0H000H000H0H",
+      "H0H0H0HHH0HHHHH0HHH0H",
+      "H0H000H00000H000H0H0H",
+      "H0HHH0H0HHHHH0HHH0H0H",
+      "H000H0H0H000H000H000H",
+      "HHH0HHH0H0H0HHH0H0HHH",
+      "H000H000H0H00000H000H",
+      "H0HHH0HHH0HHHHHHHHH0H",
+      "H0000000H0H000000000H",
+      "H0HHHHHHH0H0HHHHHHHHH",
+      "H0H000H000H000000000H",
+      "H0H0H0H0HHHHHHHHHHH0H",
+      "H0H0H0H000H0000000H0H",
+      "HHH0H0HHH0H0H0H0HHH0H",
+      "H000H0H000H0H0H0H000H",
+      "H0HHH0H0HHH0H0HHH0HHH",
+      "H0H00000H000H00000H0H",
+      "H0HHHHH0HHHHH0HHHHH0H",
+      "H00000H0H000H000H000H",
+      "HHHHH0H0H0H0HHH0H0H0H",
+      "H000H0H0H0H0H000H0H0H",
+      "H0HHH0H0HHH0H0HHHHH0H",
+      "H0H000H000H0H00000H0H",
+      "H0H0HHHHHHH0HHHHH0H0H",
+      "H0H000H00000H000H0H0H",
+      "H0HHH0H0HHHHH0HHH0H0H",
+      "H000H000H00000H000H0H",
+      "HHH0HHHHH0HHH0H0HHH0H",
+      "H0000000H0H000H00000H",
+      "H0HHHHH0HHH0H0HHHHH0H",
+      "H0H000H000H0H0H000H0H",
+      "H0H0H0HHH0H0HHH0H0H0H",
+      "H000H000H000H000H000H",
+      "H0HHHHH0HHHHH0HHHHHHH",
+      "H00000H00000000000000",
+      "HHHHHHHHHHHHHHHHHHHHH"
+    ],
+    "sheet_id": 1003
+  },
+  "entities": [
+    {
+      "id": 11826442,
+      "frame": {
+        "x": 1,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 7001,
+      "entity_type": "Bundle",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 1,
+          "y": 4,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 1,
+        "y": 4,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11826443,
+      "frame": {
+        "x": 7,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 6002,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 350,
+      "sprite": {
+        "sheet_id": 1012,
+        "frame": {
+          "x": 0,
+          "y": 6,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 8
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 0,
+        "y": 6,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11826444,
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1010,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 1000,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 1,
+          "y": 0,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11826445,
+      "frame": {
+        "x": 20,
+        "y": 38,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1010,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 1000,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 1,
+          "y": 0,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11826446,
+      "frame": {
+        "x": 20,
+        "y": 39,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 200,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": {
+        "world": 1012,
+        "x": 21,
+        "y": 70,
+        "direction": "Down"
+      },
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 7,
+        "y": 5,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11826447,
+      "frame": {
+        "x": 0,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 200,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": {
+        "world": 11110814,
+        "x": 8,
+        "y": 2,
+        "direction": "Down"
+      },
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 7,
+        "y": 5,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    }
+  ],
+  "is_interior": true,
+  "light_conditions": "CantSeeShit",
+  "cutscenes": []
+}

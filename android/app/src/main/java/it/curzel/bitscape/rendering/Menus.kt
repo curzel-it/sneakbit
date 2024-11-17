@@ -155,7 +155,7 @@ private fun MenuContent(
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 menuConfig.options.forEachIndexed { index, option ->
                     Text(
-                        text = "> $option",
+                        text = option,
                         style = DSTypography.menuOption,
                         color = Color.White,
                         modifier = Modifier

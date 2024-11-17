@@ -77,9 +77,9 @@
 "npc.name.ninja.black" = "Black Ninja"
 "npc.name.ninja.blue" = "Blue Ninja"
 "npc.name.ninja.red" = "Red Ninja"
-"npc.name.old_man" = "Old Man Willow"
-"npc.name.old_man_mustache" = "Old Man Gus"
-"npc.name.old_man_mustache.black" = "Old Man Homer"
+"npc.name.old_man" = "Villager"
+"npc.name.old_man_mustache" = "Old Man Willow"
+"npc.name.old_man_mustache.black" = "Old Man Gus"
 "npc.name.old_woman" = "Elder Maren"
 "npc.name.piglet" = "Piglet"
 "npc.name.purple_alien" = "aaa"
@@ -201,6 +201,7 @@
 "objects.wind_turbine" = "Wind Turbine"
 
 "ok" = "Ok"
+"ok_action" = ">> Ok"
 "picked_up_item" = "Picked up `%s`!"
 "teleporter.locked" = "You need a %s key to open this door."
 "teleporter.name" = "Teleporter"
@@ -224,37 +225,39 @@ You expected every house to have loot?
 Also, what the hell are you doing in my house!?
 """
 
-"lore.003.monsters_first_appearance" = """
+"references.dbz.krillin" = "I hope you brought Senzu beans!"
+"references.dbz.goku" = "Wait, this isn't universe 7... Byeee!"
+
+"lore.evergrove.monster_sightings_nowadays" = """
 Monsters have been part of this world for a long time.
 They've been around for as long as I can remember at least.
 But they never left the deeper woods until recently.
 I pity newer generations for having to deal with this many.
 """
 
-"lore.004.you_are_here" = """
-So you say "some kind of magic" brought you here? 
-How interesting...
-Unfortunately, there is no much guidance an old geezer 
-like me can give you, maybe if I were younger...
-I suggest you start your own journey and learn more
-about this world.
-I shall see you then.
+"lore.evergrove.monster_sightings_logs" = """
+Monster Sightings Log
+Property of Evergrove Village Historical Records
+--
+January 4th, 1330: Spotted 1 monster near the village outskirts. First in many years.
+June 27th, 1331: Saw the first monster since last year. Stayed near the forest edge.
+March 15th, 1332: Two monsters appeared near Verdant Way. No harm done, but unsettling.
+October 9th, 1333: A strange, dark creature wandered into the village at dusk. Count: 3.
+May 20th, 1334: Four monsters sighted.
+July 13th, 1335: It's been a while since last sighting, five today.
+December 2nd, 1336: Six monsters attacked a passing caravan. Survivors returned shaken.
+September 22nd, 1338: Village attacked by eight creatures. Guards struggled to fend them off.
+November 16th, 1340: Count has reached 14 monsters roaming near Verdant Way. Never seen so many at once. No victims, so far.
 """
 
-"lore.004.you_are_here_again" = """
-I suggest you start your own journey and learn more
-about this world.
-I shall see you then.
-"""
-
-"lore.005.manafren_trees.sign" = """
+"lore.manafren_trees.tourists_sign" = """
 Manafern Trees
 Famous worldwide for their mystical energy properties. 
 Their unique purple leaves harness the essence of twilight, 
 fueling life and wonder in Duskhaven.
 """
 
-"lore.005.manafren_trees.book" = """
+"lore.manafren_trees.botanics_book" = """
 The Manafern Tree, a botanical marvel exclusive 
 to the ever-twilit region of Duskhaven, 
 has long captivated scholars and mystics alike. 
@@ -277,14 +280,12 @@ and even sustain the vibrant ecosystem of Duskhaven itself.
 
 "lore.006.vintoria_power_station" = """
 Vintoria’s Cascade Station
-Harnessing the might of the waterfall to power 
-the valley with life-giving mana
+Harnessing the might of the waterfall to power the valley with life-giving mana
 """
 
 "lore.007.vintoria_entrance" = """
 Welcome to Vintoria Valley
-where the thundering falls weave mana into prosperity 
-and the vineyards whisper tales of timeless beauty.
+where the thundering falls weave mana into prosperity  and the vineyards whisper tales of timeless beauty.
 """
 
 "lore.008.mount_ignis" = """
@@ -297,23 +298,81 @@ Proceed with caution and respect the power of Mount Ignis.
 Dock of Thermoria — Gateway to Maritide Haven
 """
 
-"1001.entrance" = "Welcome to Evergrove Village"
-"1002.entrance" = "Verdant Way"
-"1003.entrance" = "Welcome to Aridreach"
+"lore.010.aridreach_before_the_solar_age" = """
+The Rise and Fall of Lushspire Peaks
+--
+Once, Aridreach was a land of life and beauty, known as Lushspire Peaks. Its towering mountains cradled vast forests, crystal streams, and fertile valleys. The people thrived in harmony with the land, their bounty plentiful and enduring.
+Then came the cataclysm. The skies darkened, the rivers dried, and the mountains began to wither. No record remains of its cause, but the transformation was swift and unrelenting. The lush greenery gave way to scorched earth, and the proud peaks became lifeless dunes. What was once a haven turned into the unforgiving expanse now called the Grimsun Desert.
+In the face of desolation, the survivors endured. They built the great solar farm atop the barren heights, harnessing the unrelenting sun to power distant lands. While their ingenuity is lauded, the book laments the loss of Lushspire’s verdant beauty, now buried beneath endless sands.
+"""
+
+"1001.entrance" = "Welcome to Evergrove Village!"
+"1003.entrance" = """
+Welcome to Aridreach
+--
+North: Grimsun Basin
+South: Verdant Way
+"""
 "1004.entrance" = "Duskhaven's Dungeon Lv 1"
 "1005.entrance" = "Duskhaven's Dungeon Lv 2"
-"1006.entrance" = "Welcome to Thermoria"
+"1006.entrance" = """
+Welcome to Thermoria
+--
+North: Murkmire Swamps
+Boats to Maritide Haven available at the dock
+"""
 "1007.entrance" = "Underneath Mount Ignis"
-"1008.entrance" = "Welcome to Maritide Haven"
+"1008.entrance" = """
+Welcome to Maritide Haven
+--
+Boats to Thermoria available at the dock
+"""
 "1009.entrance" = "Old Mining Complex underneath Maritide Haven"
-"1010.entrance" = "Shadowveil Path"
-"1011.entrance" = "Duskhaven"
-"1012.entrance" = "Vintoria"
+"1011.entrance" = """
+Welcome to the Village of Twilight: Duskhaven
+-- 
+Please do not touch the Manafren Trees.
+Please do not take pictures using the flash.
+"""
+"1012.entrance" = "Welcome to Vintoria!"
 "1013.entrance" = "Grimsun Basin"
 "1014.entrance" = "Hydroelectric Power Plant Lv 1"
 "1015.entrance" = "Hydroelectric Power Plant Lv 2"
 "1016.entrance" = "Hydroelectric Power Plant Lv 3"
 "1017.entrance" = "Demon Maze"
+
+"1002.entrance" = """
+Welcome to the Verdant Way
+--
+North-East: Aridreach
+North-West: Shadowveil Path
+South-West: Murkmire Swamps
+"""
+
+"1010.entrance" = """
+Welcome to te Shadowveil Path
+--
+North: Vintoria
+West: Demon Maze
+South: Verdant Way
+"""
+
+"1018.entrance" = """
+Welcome to the Murkmire Swamps
+--
+North: Verdant Way
+West: Duskhaven
+South: Thermoria
+"""
+
+"quest.hero.prologue" = """
+You say "some kind of magic" brought you here? Interesting...
+Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
+I suggest you start your own journey to learn more about this world.
+The closest city is Aridreach, West from here, why don't you start from there?
+If you're looking for directions, road signs can be useful.
+Now go, I shall see you soon!
+"""
 
 "quest.hero.1" = """
 So you're an outer-worlder eh?
@@ -363,8 +422,8 @@ but I think I owe you an apolegy nonetheless for taking you prey.
 """
 
 "quest.hero.finale.b" = """
-What, you expected a boss fight?
-Tried to take over someone else's destiny, did you?
+What, you expected to fight the final boss?
+Tried to force yourself onto someone else's destiny, did you?
 Piss off.
 """
 
@@ -377,7 +436,7 @@ We have nothing else to talk about.
 Go back to your world, or stay... Whatever...
 """
 
-"quest.ninja_skills.1" = """
+"quest.ninja_skills.black_ninja.note" = """
 Yo, 
 I'm out on a mission.
 Also, what the hell are you doing in my house!?
@@ -385,102 +444,88 @@ Get out!
 - Black Ninja
 """
 
-"quest.ninja_skills.2" = """
+"quest.ninja_skills.girl.black_ninja_location_hint" = """
+He’s hiding around here, you know... but it’s not just him, oh no. 
+This place - it’s not what it looks like. 
+The dunes? They’re not just sand... 
+They’re watchers, silent guardians keeping everything locked inside. 
+And the Black Ninja? He’s no ordinary man. They’ve got him here for a reason, he knows something!
+Or maybe... maybe he’s the key. Or maybe... he’s the lock.
+"""
+
+"quest.ninja_skills.blue_ninja.note" = """
+Yo, 
+I'm out on a mission.
+Also, what the hell are you doing in my house!?
+Get out!
+- Blue Ninja
+"""
+
+"quest.ninja_skills.lyria.hoarding_issues" = """
 One of my brothers has a hoarding issue...
 I'm waiting for him to get home so I can force him to clean up.
 I just hope they didn't have any trouble on the mission...
 """
 
-"quest.ninja_skills.3a" = """
+"quest.ninja_skills.black_ninja.please_check_on_sister" = """
 So you came all the way from Evergrove?
 Can you check on my sister and let her know I'm ok?
-My brother should be back home by now, 
-but with our job you never know...
+My brother should be back home by now, but with our job you never know...
 If you do, I'll teach you one of my ninja skills!
 """
 
-"quest.ninja_skills.3b" = """
+"quest.ninja_skills.blue_ninja.please_check_on_sister" = """
 So you came all the way from Evergrove?
 Can you check on my sister and let her know I'm ok?
-My brother should be back home by now, 
-but with our job you never know...
+My brother should be back home by now, but with our job you never know...
 If you do, I'll teach you one of my ninja skills!
 """
 
-"quest.ninja_skills.4" = """
+"quest.ninja_skills.lyria.thats_my_brother_black" = """
 A ninja dressed in black... 
 That's my brother!
-Please tell him to come home soon,
-I need help cleaning our brother's house!
+Please tell him to come home soon, I need help cleaning our brother's house!
 Was my other brother with him? 
 He dresses in blue.
 """
 
-"quest.ninja_skills.5a" = """
+"quest.ninja_skills.black_ninja.gain_bouncing_knifes_skill" = """
 Cleaning the house!? LOL
-I'm not sure I'll make it, you know, we're kinda in the 
-middle of a war for the survival of mankind over here!
-As promised, you can now catch knifes mid-air bare handed.
-Obviously, you need knifes to be coming at you 
-to use this skill.
-But I'm sure you'll find some use for it eventually!
+I'm not sure I'll make it, you know, we're kinda in the middle of a war for the survival of mankind over here!
+As promised, your knife will now bounce off most surfaces!
+Pretty cool eh? You'll see!
 """
 
-"quest.ninja_skills.5b" = """
-Cleaning the house!? LOL
-I'm not sure I'll make it, you know, we're kinda in the 
-middle of a war for the survival of mankind over here!
-Pretty OP when combined with my brother's skill eh?
-"""
-
-"quest.ninja_skills.6" = """
-Cleaning the house!? LOL
-I'm not sure I'll make it, you know, we're kinda in the 
-middle of a war for the survival of mankind over here!
-Pretty OP when combined with my brother's skill eh?
-"""
-
-"quest.ninja_skills.7" = """
+"quest.ninja_skills.lyria.thats_my_brother_blue" = """
 A ninja dressed in blue... 
 That's my brother!
-Please tell him to come home soon,
-we need to clean up his place, it's full of junk!
+Please tell him to come home soon, we need to clean up his place, it's full of junk!
 Was my other brother with him? 
 He dresses in black.
 """
 
-"quest.ninja_skills.8a" = """
+"quest.ninja_skills.blue_ninja.gain_knife_catcher_skill" = """
 Junk!? 
 It's not junk! It's weapons and other ninja stuff!
 Oh well...
-As promised, your knife will now bounce off all surfaces!
-Pretty cool eh? You'll see!
+As promised, you can now catch knifes mid-air bare handed.
+Obviously, you need knifes to be coming at you to use this skill.
+But I'm sure you'll find some use for it eventually!
 """
 
-"quest.ninja_skills.8b" = """
-Junk!? 
-It's not junk! It's weapons and other ninja stuff!
-Oh well...
-As promised, your knife will now bounce off all surfaces!
-Since you already have my brother's skill, this should
-basically solve your low-ammo problem!
-"""
-
-"quest.ninja_skills.9" = """
+"quest.ninja_skills.lyria.father_introduction" = """
 Thank you for checking on my brothers...
-Since they joined our father in the "family business" I am
-always a bit worried...
-I just hope they are coming home soon, I need help 
-cleaning our brother's house!
+Since they joined our father, the Great Red Ninja, in the "family business" I am always a bit worried...
+I just hope they are coming home soon!
 """
 
-"quest.ninja_skills.10" = """
+"quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
 This job requires me to stay away from home for
 long periods of time... 
 My children are all about your age...
 """
 
-"quest.ninja_skills.11" = """
+"quest.ninja_skills.red_ninja.gain_piercing_knife_skill" = """
 My kids are all well? That's a relief!
 As a reward, I'll teach the ultimate ninja skill.
 If only I had the chance, I KNOW I could defeat the 
@@ -488,25 +533,18 @@ Demon Lord himself in one blow with it.
 F*** that guy.
 """
 
-"quest.ninja_skills.12" = """
+"quest.ninja_skills.red_ninja.about_piercing_knife_skill" = """
 Told you... Barrels, monsters, Demon Lords, ...
 Doesn't matter.
 One shot is enough for ANY foe.
 """
 
-"quest.ninja_skills.13" = """
-I tried kid, but I was defeated.
-It's your turn now, here, have my skill.
-You can now defeat ANY enemy in one blow.
-Including... him...
-"""
-
-"quest.manafren_research.1" = """
+"quest.manafren_research.serena.keep_out_of_research_area" = """
 What do you think you are doing here!?
 This zone is off limits without a permit!
 """
 
-"quest.manafren_research.2" = """
+"quest.manafren_research.dr_voss.introduction" = """
 Ah, just who I needed. 
 I’ve studied these Manafren trees extensively, by all accounts, they’re miraculous...
 Yet, I can’t shake this feeling of something dark, something ancient lurking beneath. 
@@ -514,11 +552,11 @@ Maybe there’s something we’ve overlooked in the ancient scrolls...
 Unfortunately, the village elder is the only one with access to them, but he won't talk to me anymore...
 """
 
-"quest.manafren_research.2.1" = """
+"quest.manafren_research.dr_voss.waiting_for_info" = """
 My research continues, but I can't get the feeling of dread off my mind.
 """
 
-"quest.manafren_research.3" = """
+"quest.manafren_research.duskhaven_village_elder.check_the_dungeon" = """
 Dr. Voss sent you, did he? 
 Ah, well… I don’t put much stock in all his science...
 These trees, they hold a power older than you or me, a power that whispers secrets to those willing to listen. 
@@ -527,11 +565,11 @@ Maybe you’ll find what you seek there.
 Just beware of what’s hidden within those words.
 """
 
-"quest.manafren_research.3.1" = """
+"quest.manafren_research.duskhaven_village_elder.have_you_checked_the_dungeon" = """
 Did you find anything interesting in the dungeon?
 """
 
-"quest.manafren_research.4" = """
+"quest.manafren_research.dungeon_scroll.contents" = """
 In ages past, when twilight lay thick over Duskhaven, a pact was struck. 
 The trees would flourish, drawing life from the soil and skies, breathing mana into the land. 
 Yet, for this... <unreadable>
@@ -539,27 +577,91 @@ Beneath their roots flows the darkness, and with each pulse, a reminder of... <u
 Those who seek this path must journey east to the mountains, where the source of the pact lies buried.
 """
 
-"quest.manafren_research.5" = """
+"quest.manafren_research.ancient_book.contents" = """
 It was here, beneath these stones, that the trees were first granted their cursed life. 
 The Lord of Darkness poured his very essence into their roots, binding their growth to his will. 
 Each leaf holds a shard of his presence, and with each season, his dominion spreads quietly. 
 Let this record serve as both a warning and a call to vigilance. As the trees grow, so does he.
 """
 
-"quest.manafren_research.6" = """
+"quest.manafren_research.dr_voss.thanks_for_the_info" = """
 You… you found it. 
 So, the trees truly are bound to some dark force, and their energy, our very life here in Duskhaven, comes from this curse. 
 I had suspicions, but these findings, well, they change everything. 
 I’ll need time to process what this means, but take this as a token. 
 """
 
-"quest.manafren_research.6.1" = """
+"quest.manafren_research.dr_voss.thanks_for_the_info_still_working_on_it" = """
 I’ll need time to process the latest findings...
 """
 
-"quest.manafren_research.6.2" = """
+"quest.manafren_research.dr_voss.research_was_inconclusive" = """
 The suspicious dark aura is gone.
 I have to say, I am a bit pissed, I was so close...
 It's hard to do science in a world with magic.
 Maybe they should get an outer-worlder to do my job - no offense.
+"""
+
+"quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
+So you saw him, didn’t you? You talked to him? Oh, I knew it! 
+But don’t you see now? Don’t you see what I’ve been saying? 
+He’s not just *hiding*, he’s *placed*. 
+Everything in here, everyone in here... They’re puppets...
+"""
+
+"quest.crazy_conspiracy.girl.black_ninja_i_knew_it_again" = """
+Sssh... They're watching us... 
+"""
+
+"quest.thugs_and_assassins.nyx.intro" = """
+Stop messing around!
+You're lucky we are taking break right now.
+"""
+
+"quest.thugs_and_assassins.mr_bubblegum.intro" = """
+...
+"""
+
+"quest.thugs_and_assassins.thug_boss.intro" = """
+Go away kid, nobody is getting near the dock until I say so.
+"""
+
+"quest.thugs_and_assassins.thermoria_town_chief.i_hired_assassins" = """
+The guys outside? Yeah they are assassins.
+Oh no, I'm not their boss, I just hired them for a job.
+Some thugs have blocked the dock and we need to sail out some goods.
+"""
+
+"quest.thugs_and_assassins.nyx.we_are_about_to_strike" = """
+No need to rush, we are about to go and take care of them.
+Let me just finish my coffee first.
+"""
+
+"quest.thugs_and_assassins.thug_boss.we_are_not_thugs" = """
+The Village Chief hired WHO!? 
+Dude we're not "thugs", we're unpaid workers on strike!
+Please, please, talk to Chief so we can resolve this peacefully...
+"""
+
+"quest.thugs_and_assassins.thermoria_town_chief.it_was_about_the_money" = """
+Oh my... This thing again....
+I did pay them! I gave each one of them a check already!
+"""
+
+"quest.thugs_and_assassins.thug_boss.what_is_a_check" = """
+Wait, so the pieces of paper he gave us were... money?
+Well, we threw them away LOL
+Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
+"""
+
+"quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids" = """
+Basically you're telling me they are so young they don't know what a check is?
+Yes I know what crypto is, I'm not that old... 
+...
+Done, everyone paid in full...
+Stupid kids.
+"""
+
+"quest.thugs_and_assassins.thermoria_town_chief.finale" = """
+Stupid new-age money.
 """
