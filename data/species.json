@@ -2772,7 +2772,7 @@
     },
     {
         "id": 1080,
-        "name": "npc.name.male.emo_hair",
+        "name": "npc.name.punk",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,

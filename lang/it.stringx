@@ -72,7 +72,7 @@
 "npc.name.female.green_hair" = "Abitante"
 "npc.name.goddess" = "Dea"
 "npc.name.female.green_hair" = "Abitante"
-"npc.name.male.emo_hair" = "Punk"
+"npc.name.punk" = "Punk"
 "npc.name.middle_aged.man.long_silver_hair" = "Silveroak"
 "npc.name.monster" = "Mostro"
 "npc.name.mr_bubblegum" = "Signor Bubblegum"
@@ -374,13 +374,13 @@ Ora vai, ci vedremo presto!
 """
 
 "quest.hero.1" = """
-Quindi sei uno straniero, eh?
-Scommetto che quel vecchio di Evergrove ti ha evocato qui.
+Vieni da un'altro mondo, eh?
+Scommetto che è stato quel vecchio di Evergrove ad evocarti.
 Non abbiamo bisogno di eroi, vattene.
 """
 
 "quest.hero.2" = """
-Te l'ho detto, è inutile correre in giro uccidendo mostri,
+È inutile correre in giro uccidendo mostri,
 il loro numero non diminuisce mai davvero.
 Questo mondo stesso, inoltre, ha respinto il concetto di "eroe".
 """
