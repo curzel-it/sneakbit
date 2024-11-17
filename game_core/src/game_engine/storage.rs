@@ -28,6 +28,10 @@ impl StorageKey {
         format!("content_read.{}", id)   
     }
 
+    pub fn fullscreen() -> String {
+        "fullscreen".to_owned()
+    }
+
     fn dialogue_answer(dialogue: &str) -> String {
         format!("dialogue.answer.{}", dialogue)
     }
@@ -129,6 +133,10 @@ pub fn get_value_for_global_key(key: &str) -> Option<u32> {
     } 
     let storage = KEY_VALUE_STORAGE.read().unwrap();
     storage.get(key).cloned()
+}
+
+pub fn bool_for_global_key(key: &str) -> bool {
+    get_value_for_global_key(key).is_some_and(|v| v == 1)
 }
 
 pub fn set_value_for_key(key: &str, value: u32) {

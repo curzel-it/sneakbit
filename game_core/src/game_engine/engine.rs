@@ -19,6 +19,7 @@ pub struct GameEngine {
     pub camera_viewport_offset: Vector2d,
     pub is_running: bool,
     pub creative_mode: bool,
+    pub wants_fullscreen: bool
 }
 
 impl GameEngine {
@@ -39,7 +40,8 @@ impl GameEngine {
             camera_viewport_offset: Vector2d::zero(),
             is_running: true,
             creative_mode: false,
-            inventory_status: AmmoCounter::new()
+            inventory_status: AmmoCounter::new(),
+            wants_fullscreen: false
         }
     }
 
@@ -207,6 +209,9 @@ impl GameEngine {
             }
             EngineStateUpdate::DeathScreen => {
                 self.death_screen.show()
+            }
+            EngineStateUpdate::ToggleFullScreen => {
+                self.wants_fullscreen = !self.wants_fullscreen
             }
         }
     }

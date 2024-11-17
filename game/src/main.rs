@@ -3,8 +3,8 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_world_id, engine, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
-use raylib::{ffi::{GamepadAxis, GamepadButton, KeyboardKey, MouseButton}, texture::Texture2D, RaylibHandle, RaylibThread};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_world_id, engine, engine_set_wants_fullscreen, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use raylib::{ffi::{GamepadAxis, GamepadButton, KeyboardKey, MouseButton}, texture::Texture2D, window::{get_current_monitor, get_monitor_height, get_monitor_width}, RaylibHandle, RaylibThread};
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
 
@@ -13,6 +13,7 @@ const MAX_FPS: u32 = 120;
 fn main() {
     let mut needs_window_init = true;
     let mut latest_world_id = 0;
+    let mut is_fullscreen = false;
     let creative_mode = env::args().any(|arg| arg == "creative");
 
     initialize_config_paths(
@@ -28,8 +29,30 @@ fn main() {
     let (mut rl, thread) = start_rl();
     rl.set_window_min_size(360, 240);
         
+    if bool_for_global_key(&StorageKey::fullscreen()) {
+        engine_set_wants_fullscreen();
+    }
+
     while is_game_running() {
         let time_since_last_update = rl.get_frame_time().min(0.5);
+
+        let wants_fullscreen = engine().wants_fullscreen;
+        if wants_fullscreen != is_fullscreen {
+            is_fullscreen = wants_fullscreen;
+            needs_window_init = true;
+            
+            if wants_fullscreen {
+                let monitor = get_current_monitor();
+                let width = get_monitor_width(monitor);
+                let height = get_monitor_height(monitor);
+                rl.set_window_size(width, height);
+                rl.toggle_fullscreen();
+            } else {
+                rl.toggle_fullscreen();
+                rl.set_window_size(960, 640);
+            }
+            println!("Toggled fullscreen (now {})", is_fullscreen);
+        }
 
         if needs_window_init || rl.is_window_resized() {
             needs_window_init = false;

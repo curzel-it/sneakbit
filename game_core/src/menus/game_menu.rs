@@ -19,6 +19,8 @@ enum MenuState {
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum GameMenuItem {
+    Resume,
+    ToggleFullScreen,
     Save,
     MapEditor,
     Exit,
@@ -28,6 +30,8 @@ pub enum GameMenuItem {
 impl MenuItem for GameMenuItem {
     fn title(&self) -> String {
         match self {
+            GameMenuItem::Resume => "game.menu.resume".localized(),
+            GameMenuItem::ToggleFullScreen => "game.menu.toggle_fullscreen".localized(),
             GameMenuItem::Save => "game.menu.save".localized(),
             GameMenuItem::MapEditor => "game.menu.map_editor".localized(),
             GameMenuItem::Exit => "game.menu.exit".localized(),
@@ -57,11 +61,15 @@ impl GameMenu {
         self.menu.items = if creative_mode {
             vec![
                 GameMenuItem::Save,
+                GameMenuItem::Resume,
+                GameMenuItem::ToggleFullScreen,
                 GameMenuItem::MapEditor,
                 GameMenuItem::SaveAndExit,
             ]
         } else {
             vec![
+                GameMenuItem::Resume,
+                GameMenuItem::ToggleFullScreen,
                 GameMenuItem::Exit,
             ]
         }
@@ -103,6 +111,14 @@ impl GameMenu {
         self.menu.clear_selection();
 
         match selected {
+            GameMenuItem::Resume => {
+                self.close();
+                vec![]
+            }
+            GameMenuItem::ToggleFullScreen => {
+                self.close();
+                vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::ToggleFullScreen)]
+            }
             GameMenuItem::Save => {
                 self.close();
                 vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::SaveGame)]
