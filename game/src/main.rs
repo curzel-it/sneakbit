@@ -170,20 +170,28 @@ fn handle_keyboard_updates(rl: &mut RaylibHandle, time_since_last_update: f32) {
     let left_x = rl.get_gamepad_axis_movement(0, GamepadAxis::GAMEPAD_AXIS_LEFT_X);
     let left_y = rl.get_gamepad_axis_movement(0, GamepadAxis::GAMEPAD_AXIS_LEFT_Y);
     
-    let threshold = 0.5; // Adjust as needed to set deadzone
+    let threshold = 0.5;
     
-    let (joystick_up, joystick_down) = if left_y < -threshold {
-        (true, false)
-    } else if left_y > threshold {
-        (false, true)
+    let (joystick_up, joystick_down) = if left_y.abs() >= left_x.abs() {
+        if left_y < -threshold {
+            (true, false)
+        } else if left_y > threshold {
+            (false, true)
+        } else {
+            (false, false)
+        }
     } else {
         (false, false)
     };
     
-    let (joystick_right, joystick_left) = if left_x > threshold {
-        (true, false)
-    } else if left_x < -threshold {
-        (false, true)
+    let (joystick_right, joystick_left) = if left_y.abs() < left_x.abs() {
+         if left_x > threshold {
+            (true, false)
+        } else if left_x < -threshold {
+            (false, true)
+        } else {
+            (false, false)
+        }
     } else {
         (false, false)
     };
