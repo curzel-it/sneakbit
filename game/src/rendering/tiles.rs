@@ -20,8 +20,8 @@ pub fn render_tiles(
     let scale = config.rendering_scale;
 
     let tile_scale = scale * TILE_SIZE;
-    let camera_offset_x = camera_viewport_offset.x * scale;
-    let camera_offset_y = camera_viewport_offset.y * scale;
+    let camera_offset_x = (camera_viewport_offset.x * scale).ceil();
+    let camera_offset_y = (camera_viewport_offset.y * scale).ceil();
 
     let x_start = camera_viewport.x - 1;
     let y_start = camera_viewport.y - 1;

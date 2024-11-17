@@ -18,10 +18,8 @@ impl World {
             entity.direction = Direction::Down;
             entity.frame.x = x;
             entity.frame.y = y; 
-            println!("Pre-setting to go down");
 
             let likely_directions = self.likely_direction_for_hero(x, y, hero_direction);
-            println!("Likely directions: {:#?}", likely_directions);
             
             for new_direction in &likely_directions {
                 if self.has_space_for_hero_in_direction(x, y, new_direction) {

@@ -3,16 +3,17 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_world_id, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
-use raylib::{ffi::{KeyboardKey, MouseButton}, texture::Texture2D, RaylibHandle, RaylibThread};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_world_id, engine, engine_set_wants_fullscreen, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use raylib::{ffi::{GamepadAxis, GamepadButton, KeyboardKey, MouseButton}, texture::Texture2D, window::{get_current_monitor, get_monitor_height, get_monitor_width}, RaylibHandle, RaylibThread};
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
 
-const MAX_FPS: u32 = 120;
+const MAX_FPS: u32 = 60;
 
 fn main() {
     let mut needs_window_init = true;
     let mut latest_world_id = 0;
+    let mut is_fullscreen = false;
     let creative_mode = env::args().any(|arg| arg == "creative");
 
     initialize_config_paths(
@@ -28,8 +29,30 @@ fn main() {
     let (mut rl, thread) = start_rl();
     rl.set_window_min_size(360, 240);
         
+    if bool_for_global_key(&StorageKey::fullscreen()) {
+        engine_set_wants_fullscreen();
+    }
+
     while is_game_running() {
         let time_since_last_update = rl.get_frame_time().min(0.5);
+
+        let wants_fullscreen = engine().wants_fullscreen;
+        if wants_fullscreen != is_fullscreen {
+            is_fullscreen = wants_fullscreen;
+            needs_window_init = true;
+            
+            if wants_fullscreen {
+                let monitor = get_current_monitor();
+                let width = get_monitor_width(monitor);
+                let height = get_monitor_height(monitor);
+                rl.set_window_size(width, height);
+                rl.toggle_fullscreen();
+            } else {
+                rl.toggle_fullscreen();
+                rl.set_window_size(960, 640);
+            }
+            println!("Toggled fullscreen (now {})", is_fullscreen);
+        }
 
         if needs_window_init || rl.is_window_resized() {
             needs_window_init = false;
@@ -167,23 +190,59 @@ fn handle_mouse_updates(rl: &mut RaylibHandle, rendering_scale: f32) {
 }
 
 fn handle_keyboard_updates(rl: &mut RaylibHandle, time_since_last_update: f32) {
+    let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl);
+    let previous_keyboard_state = &engine().keyboard;
+
     update_keyboard(
-        rl.is_key_pressed(KeyboardKey::KEY_W) || rl.is_key_pressed(KeyboardKey::KEY_UP), 
-        rl.is_key_pressed(KeyboardKey::KEY_D) || rl.is_key_pressed(KeyboardKey::KEY_RIGHT), 
-        rl.is_key_pressed(KeyboardKey::KEY_S) || rl.is_key_pressed(KeyboardKey::KEY_DOWN), 
-        rl.is_key_pressed(KeyboardKey::KEY_A) || rl.is_key_pressed(KeyboardKey::KEY_LEFT), 
-        rl.is_key_down(KeyboardKey::KEY_W) || rl.is_key_down(KeyboardKey::KEY_UP), 
-        rl.is_key_down(KeyboardKey::KEY_D) || rl.is_key_down(KeyboardKey::KEY_RIGHT), 
-        rl.is_key_down(KeyboardKey::KEY_S) || rl.is_key_down(KeyboardKey::KEY_DOWN), 
-        rl.is_key_down(KeyboardKey::KEY_A) || rl.is_key_down(KeyboardKey::KEY_LEFT), 
-        rl.is_key_pressed(KeyboardKey::KEY_ESCAPE), 
-        rl.is_key_pressed(KeyboardKey::KEY_ENTER), 
-        rl.is_key_pressed(KeyboardKey::KEY_E) || rl.is_key_pressed(KeyboardKey::KEY_K) || rl.is_key_pressed(KeyboardKey::KEY_SPACE), 
-        rl.is_key_pressed(KeyboardKey::KEY_F) || rl.is_key_pressed(KeyboardKey::KEY_J) || rl.is_key_pressed(KeyboardKey::KEY_Q), 
+        rl.is_key_pressed(KeyboardKey::KEY_W) || rl.is_key_pressed(KeyboardKey::KEY_UP) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!previous_keyboard_state.direction_up.is_down && joystick_up), 
+        rl.is_key_pressed(KeyboardKey::KEY_D) || rl.is_key_pressed(KeyboardKey::KEY_RIGHT) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || (!previous_keyboard_state.direction_right.is_down && joystick_right), 
+        rl.is_key_pressed(KeyboardKey::KEY_S) || rl.is_key_pressed(KeyboardKey::KEY_DOWN) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || (!previous_keyboard_state.direction_down.is_down && joystick_down), 
+        rl.is_key_pressed(KeyboardKey::KEY_A) || rl.is_key_pressed(KeyboardKey::KEY_LEFT) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || (!previous_keyboard_state.direction_left.is_down && joystick_left), 
+        rl.is_key_down(KeyboardKey::KEY_W) || rl.is_key_down(KeyboardKey::KEY_UP) || rl.is_gamepad_button_down(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || joystick_up, 
+        rl.is_key_down(KeyboardKey::KEY_D) || rl.is_key_down(KeyboardKey::KEY_RIGHT) || rl.is_gamepad_button_down(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || joystick_right, 
+        rl.is_key_down(KeyboardKey::KEY_S) || rl.is_key_down(KeyboardKey::KEY_DOWN) || rl.is_gamepad_button_down(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || joystick_down, 
+        rl.is_key_down(KeyboardKey::KEY_A) || rl.is_key_down(KeyboardKey::KEY_LEFT) || rl.is_gamepad_button_down(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || joystick_left, 
+        rl.is_key_pressed(KeyboardKey::KEY_ESCAPE) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
+        rl.is_key_pressed(KeyboardKey::KEY_ENTER) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
+        rl.is_key_pressed(KeyboardKey::KEY_E) || rl.is_key_pressed(KeyboardKey::KEY_K) || rl.is_key_pressed(KeyboardKey::KEY_SPACE) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
+        rl.is_key_pressed(KeyboardKey::KEY_F) || rl.is_key_pressed(KeyboardKey::KEY_J) || rl.is_key_pressed(KeyboardKey::KEY_Q) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
         rl.is_key_pressed(KeyboardKey::KEY_BACKSPACE), 
         get_char_pressed(rl),
         time_since_last_update
     );
+}
+
+fn current_joystick_directions(rl: &RaylibHandle) -> (bool, bool, bool, bool) {
+    let left_x = rl.get_gamepad_axis_movement(0, GamepadAxis::GAMEPAD_AXIS_LEFT_X);
+    let left_y = rl.get_gamepad_axis_movement(0, GamepadAxis::GAMEPAD_AXIS_LEFT_Y);
+    
+    let threshold = 0.5;
+    
+    let (joystick_up, joystick_down) = if left_y.abs() >= left_x.abs() {
+        if left_y < -threshold {
+            (true, false)
+        } else if left_y > threshold {
+            (false, true)
+        } else {
+            (false, false)
+        }
+    } else {
+        (false, false)
+    };
+    
+    let (joystick_right, joystick_left) = if left_y.abs() < left_x.abs() {
+         if left_x > threshold {
+            (true, false)
+        } else if left_x < -threshold {
+            (false, true)
+        } else {
+            (false, false)
+        }
+    } else {
+        (false, false)
+    };
+
+    (joystick_up, joystick_right, joystick_down, joystick_left)
 }
 
 fn get_char_pressed(rl: &mut RaylibHandle) -> u32 {
@@ -204,7 +263,7 @@ fn rendering_scale_for_screen_width(width: f32) -> (f32, f32) {
     } else if width < 1400.0 {
         (2.0, 2.0)
     } else {
-        let scale = (width / 1000.0).ceil();
+        let scale = (width / 950.0).ceil();
         (scale, scale)
     }
 }
