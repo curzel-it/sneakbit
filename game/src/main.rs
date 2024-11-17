@@ -263,7 +263,7 @@ fn rendering_scale_for_screen_width(width: f32) -> (f32, f32) {
     } else if width < 1400.0 {
         (2.0, 2.0)
     } else {
-        let scale = (width / 1000.0).ceil();
+        let scale = (width / 950.0).ceil();
         (scale, scale)
     }
 }
