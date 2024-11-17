@@ -39,6 +39,7 @@ class GameEngine(
     private val _menuConfig = MutableStateFlow(MenuConfig.none)
     private var _isNight = false
     private var _isLimitedVisibility = false
+    private var _isInteractionEnabled = MutableStateFlow(false)
 
     var size = Size(0, 0)
     var fps = 0.0
@@ -92,6 +93,7 @@ class GameEngine(
         _toastConfig.value = nativeLib.toastConfig()
         _numberOfKunai.value = nativeLib.numberOfKunaiInInventory()
         _showsDeathScreen.value = nativeLib.showsDeathScreen()
+        _isInteractionEnabled.value = nativeLib.isInteractionAvailable()
         currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
         cameraViewport = nativeLib.cameraViewport().toRect()
         cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
@@ -145,6 +147,10 @@ class GameEngine(
 
     override fun isLimitedVisibility(): Boolean {
         return _isLimitedVisibility
+    }
+
+    override fun isInteractionEnabled(): StateFlow<Boolean> {
+        return _isInteractionEnabled.asStateFlow()
     }
 
     fun renderableItems(): List<RenderableItem> {

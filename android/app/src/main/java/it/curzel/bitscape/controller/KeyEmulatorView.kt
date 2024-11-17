@@ -17,13 +17,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import it.curzel.bitscape.engine.MockGameEngine
-import it.curzel.bitscape.engine.SomeGameEngine
+
+val keyEmulatorViewPadding = 15.dp
 
 @Composable
 fun KeyEmulatorView(
     key: EmulatedKey,
-    gameEngine: SomeGameEngine,
+    setKeyDown: (EmulatedKey) -> Unit,
+    setKeyUp: (EmulatedKey) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isBeingPressed by remember { mutableStateOf(false) }
@@ -36,17 +37,17 @@ fun KeyEmulatorView(
         filterQuality = FilterQuality.None,
         modifier = modifier
             .size(90.dp)
-            .padding(15.dp)
+            .padding(keyEmulatorViewPadding)
             .pointerInput(key) {
                 detectTapGestures(
                     onPress = {
                         isBeingPressed = true
-                        gameEngine.setKeyDown(key)
+                        setKeyDown(key)
                         try {
                             awaitRelease()
                         } finally {
                             isBeingPressed = false
-                            gameEngine.setKeyUp(key)
+                            setKeyUp(key)
                         }
                     }
                 )
@@ -57,5 +58,5 @@ fun KeyEmulatorView(
 @Preview(showBackground = true)
 @Composable
 fun KeyEmulatorViewPreview() {
-    KeyEmulatorView(key = EmulatedKey.CONFIRM, gameEngine = MockGameEngine())
+    KeyEmulatorView(EmulatedKey.CONFIRM, {}, {})
 }

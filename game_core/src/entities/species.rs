@@ -108,6 +108,7 @@ impl Species {
             movement_directions: self.movement_directions,
             display_conditions: vec![],
             vanishes_after_dialogue: false,
+            is_in_interaction_range: false
         }
     }
 

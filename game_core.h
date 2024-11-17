@@ -255,4 +255,6 @@ bool is_night(void);
 
 bool is_limited_visibility(void);
 
+bool is_interaction_available(void);
+
 #endif  /* GAME_CORE_H */

@@ -274,7 +274,7 @@ impl World {
         if let Some(target) = entities.iter_mut().find(|e| e.id == target_id) {    
             let is_vulnerable = !target.is_invulnerable || (has_piercing_bullet_skill() && target.melee_attacks_hero);
 
-            if !target.is_dying && is_vulnerable && target.parent_id != HERO_ENTITY_ID {
+            if !target.is_dying && is_vulnerable && target.parent_id != HERO_ENTITY_ID && !matches!(target.entity_type, EntityType::Bullet) && !matches!(target.entity_type, EntityType::Bundle) {
                 did_hit = true;
                 target.direction = Direction::Unknown;
                 target.current_speed = 0.0;
@@ -446,7 +446,6 @@ impl World {
     pub fn is_hero_around_and_on_collision_with(&self, target: &IntRect) -> bool {
         let hero = self.cached_hero_props.hittable_frame;
         let hero_direction: Direction = self.cached_hero_props.direction;        
-        if !self.has_confirmation_key_been_pressed { return false }  
         
         if self.is_hero_at(target.x, target.y) {
             return true
@@ -458,6 +457,10 @@ impl World {
             return true
         }
         false
+    }
+
+    pub fn is_hero_interacting(&self, target: &IntRect) -> bool {
+        self.is_hero_around_and_on_collision_with(target) && self.has_confirmation_key_been_pressed
     }
 
     pub fn is_hero_at(&self, x: i32, y: i32) -> bool {

@@ -16,27 +16,15 @@ enum class EmulatedKey {
 
     @get:DrawableRes
     val imageKeyUp: Int get() = when (this) {
-        UP -> R.drawable.up_button_up
-        RIGHT -> R.drawable.right_button_up
-        DOWN -> R.drawable.down_button_up
-        LEFT -> R.drawable.left_button_up
-        ATTACK -> R.drawable.j_button_up
-        BACKSPACE -> 0
-        CONFIRM -> R.drawable.k_button_up
-        ESCAPE -> 0
-        MENU -> 0
+        ATTACK -> R.drawable.attack_button_up
+        CONFIRM -> R.drawable.confirm_button_up
+        else -> 0
     }
 
     @get:DrawableRes
     val imageKeyDown: Int get() = when (this) {
-        UP -> R.drawable.up_button_down
-        RIGHT -> R.drawable.right_button_down
-        DOWN -> R.drawable.down_button_down
-        LEFT -> R.drawable.left_button_down
-        ATTACK -> R.drawable.j_button_down
-        BACKSPACE -> 0
-        CONFIRM -> R.drawable.k_button_down
-        ESCAPE -> 0
-        MENU -> 0
+        ATTACK -> R.drawable.attack_button_down
+        CONFIRM -> R.drawable.confirm_button_down
+        else -> 0
     }
 }

@@ -1,50 +1,36 @@
-use crate::{constants::SPRITE_SHEET_INVENTORY, game_engine::inventory::{get_inventory_items, InventoryItem}, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::vector::Vector2d, vstack, zstack};
+use crate::{constants::SPRITE_SHEET_INVENTORY, number_of_kunai_in_inventory, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 pub struct InventoryRecap {
-    items: Vec<InventoryItem>
+    number_of_kunais: i32
 }
 
 impl InventoryRecap {
     pub fn new() -> Self {
-        let mut recap = Self { items: vec![] };
+        let mut recap = Self { number_of_kunais: 0 };
         recap.update();
         recap
-    }
+    }    
 
     pub fn update(&mut self) {
-        self.items = get_inventory_items();
+        self.number_of_kunais = number_of_kunai_in_inventory();
     }
 
     pub fn ui(&self) -> View {
-        zstack!(
-            Spacing::MD,      
-            COLOR_TRANSPARENT,  
-            View::VStack {
-                spacing: Spacing::LG, 
-                children: self.items.iter().map(|i| self.item_ui(i)).collect()
-            }
-        )
-    }
+        if self.number_of_kunais > 0 {
+            let image = texture!(SPRITE_SHEET_INVENTORY, IntRect::new(1, 7, 1, 1), Vector2d::new(1.0, 1.0));
 
-    fn item_ui(&self, item: &InventoryItem) -> View {
-        if item.count == 0 {
-            return empty_view()
-        }
-        let image = texture!(SPRITE_SHEET_INVENTORY, item.texture_source_rect, Vector2d::new(1.0, 1.0));
-        
-        if item.count > 1 {
             zstack!(
-                Spacing::Zero,
+                Spacing::MD,
                 COLOR_TRANSPARENT,
                 image,
                 vstack!(
                     Spacing::Zero,
                     spacing!(Spacing::LG),
-                    text!(Typography::Caption, format!("x{}", item.count))
+                    text!(Typography::Caption, format!("x{}", self.number_of_kunais))
                 )
             )
         } else {
-            image
+            empty_view()
         }
     }
 } 

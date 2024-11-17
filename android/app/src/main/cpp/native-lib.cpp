@@ -464,3 +464,8 @@ JNIEXPORT jboolean JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_isLimitedVisibility(JNIEnv *env, jobject thiz) {
     return is_limited_visibility();
 }
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_isInteractionAvailable(JNIEnv *env, jobject thiz) {
+    return is_interaction_available();
+}

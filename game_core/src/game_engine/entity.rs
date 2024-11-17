@@ -84,6 +84,9 @@ pub struct Entity {
     #[serde(skip)]
     pub parent_id: u32,  
 
+    #[serde(skip)]
+    pub is_in_interaction_range: bool,
+
     #[serde(default)]
     pub is_invulnerable: bool,
 
@@ -218,20 +221,26 @@ impl Entity {
     }
 
     fn update_static(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {  
-        if world.is_hero_around_and_on_collision_with(&self.frame) {            
+        self.is_in_interaction_range = false;
+
+        if world.is_hero_around_and_on_collision_with(&self.frame) {    
             if let Some(contents) = self.contents.clone() {
-                let species_name = species_by_id(self.species_id).localized_name();
+                self.is_in_interaction_range = true;
 
-                set_value_for_key(&StorageKey::content_read(self.id), 1);
+                if world.has_confirmation_key_been_pressed {        
+                    let species_name = species_by_id(self.species_id).localized_name();
 
-                return vec![
-                    WorldStateUpdate::EngineUpdate(
-                        EngineStateUpdate::DisplayLongText(
-                            format!("{}:", species_name), 
-                            contents.localized()
+                    set_value_for_key(&StorageKey::content_read(self.id), 1);
+
+                    return vec![
+                        WorldStateUpdate::EngineUpdate(
+                            EngineStateUpdate::DisplayLongText(
+                                format!("{}:", species_name), 
+                                contents.localized()
+                            )
                         )
-                    )
-                ];   
+                    ];   
+                }
             }
         }
         vec![]

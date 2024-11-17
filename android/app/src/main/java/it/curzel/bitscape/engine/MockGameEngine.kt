@@ -1,7 +1,5 @@
 package it.curzel.bitscape.engine
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.rendering.LoadingScreenConfig
 import it.curzel.bitscape.rendering.MenuConfig
@@ -21,6 +19,7 @@ interface SomeGameEngine {
     fun onMenuItemSelection(index: Int)
     fun isNight(): Boolean
     fun isLimitedVisibility(): Boolean
+    fun isInteractionEnabled(): StateFlow<Boolean>
 }
 
 class MockGameEngine: SomeGameEngine {
@@ -62,5 +61,9 @@ class MockGameEngine: SomeGameEngine {
 
     override fun isLimitedVisibility(): Boolean {
         return false
+    }
+
+    override fun isInteractionEnabled(): StateFlow<Boolean> {
+        return MutableStateFlow(false).asStateFlow()
     }
 }

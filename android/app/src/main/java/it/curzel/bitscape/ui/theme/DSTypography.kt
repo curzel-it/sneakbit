@@ -1,8 +1,6 @@
 package it.curzel.bitscape.ui.theme
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -15,23 +13,13 @@ object DSTypography {
     val title = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Bold, fontSize = 16.sp, lineHeight = 24.sp)
     val text = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Normal, fontSize = 14.sp, lineHeight = 24.sp)
     val caption = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Normal, fontSize = 11.sp, lineHeight = 16.sp)
-
-    val highlightedCaption = TextStyle(
-        fontFamily = PixelOperator8,
-        fontWeight = FontWeight.Normal,
-        fontSize = 11.sp,
-        color = HighlightedText,
-        shadow = Shadow(
-            color = Color.Black,
-            blurRadius = 2f
-        )
-    )
+    val buttonCaption = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Bold, fontSize = 14.sp, lineHeight = 16.sp)
 
     val menuOption = TextStyle(
         fontFamily = PixelOperator8,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
-        color = White,
+        color = Yellow,
     )
 }
 

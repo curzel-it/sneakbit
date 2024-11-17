@@ -53,6 +53,7 @@ class NativeLib {
     external fun selectCurrentMenuOptionAtIndex(index: Int)
     external fun isNight(): Boolean
     external fun isLimitedVisibility(): Boolean
+    external fun isInteractionAvailable(): Boolean
 
     companion object {
         const val TILE_SIZE: Int = 16

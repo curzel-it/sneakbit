@@ -19,7 +19,6 @@ import it.curzel.bitscape.engine.RenderingScaleUseCase
 import it.curzel.bitscape.engine.TileMapsStorage
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.GameViewComposable
-import it.curzel.bitscape.rendering.InventoryView
 import it.curzel.bitscape.rendering.LoadingScreen
 import it.curzel.bitscape.rendering.MenuView
 import it.curzel.bitscape.rendering.SpritesProvider
@@ -44,7 +43,6 @@ class MainActivity : ComponentActivity() {
                         Box(modifier = Modifier.padding(innerPadding)) {
                             GameViewComposable(engine, spritesProvider)
                             ControllerEmulatorView(engine)
-                            InventoryView(engine)
                             ToastView(engine, spritesProvider)
                         }
                         MenuView(engine)

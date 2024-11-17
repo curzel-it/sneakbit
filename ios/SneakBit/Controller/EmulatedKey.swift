@@ -33,9 +33,9 @@ extension EmulatedKey {
         case .down: "down"
         case .left: "left"
         case .right: "right"
-        case .attack: "j"
+        case .attack: "attack"
         case .backspace: ""
-        case .confirm: "k"
+        case .confirm: "confirm"
         case .escape: ""
         case .menu: ""
         }

@@ -2,7 +2,7 @@ use crate::{features::linear_movement::{would_collide, would_over_weight}, game_
 
 impl Entity {
     pub fn update_pushable(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
-        if world.creative_mode && world.is_hero_around_and_on_collision_with(&self.frame) {
+        if world.creative_mode && world.is_hero_interacting(&self.frame) {
             return vec![
                 WorldStateUpdate::EngineUpdate(
                     EngineStateUpdate::ShowEntityOptions(

@@ -9,7 +9,9 @@ impl Entity {
         }
     }
 
-    pub fn update_npc(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
+    pub fn update_npc(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> { 
+        self.is_in_interaction_range = false;
+
         if self.sprite.supports_directions {
             self.update_sprite_for_current_state();
         }
@@ -31,7 +33,11 @@ impl Entity {
             }
         }
 
-        if world.is_hero_around_and_on_collision_with(&self.frame) {
+        if !world.is_hero_around_and_on_collision_with(&self.frame) {
+            return vec![]
+        }
+
+        if world.has_confirmation_key_been_pressed {
             self.direction = direction_between_rects(&self.frame, &world.cached_hero_props.hittable_frame);
 
             if world.creative_mode {
@@ -43,7 +49,13 @@ impl Entity {
                     )
                 ];
                 return vec;  
-            } else if let Some(dialogue) = self.next_dialogue(world) {
+            }
+        }
+
+        if let Some(dialogue) = self.next_dialogue(world) {
+            self.is_in_interaction_range = true;
+
+            if world.has_confirmation_key_been_pressed {
                 self.demands_attention = false;
 
                 set_value_for_key(&StorageKey::npc_interaction(self.id), 1);
@@ -63,8 +75,9 @@ impl Entity {
                 };
 
                 return vec![show_dialogue, reward, vanishing].into_iter().flatten().collect();
-            }             
-        }  
+            }
+        }             
+        
         vec![]
     }
 }

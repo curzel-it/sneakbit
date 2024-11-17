@@ -5,28 +5,72 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.controller.JoystickView
 import it.curzel.bitscape.controller.KeyEmulatorView
-import it.curzel.bitscape.engine.MockGameEngine
+import it.curzel.bitscape.controller.keyEmulatorViewPadding
 import it.curzel.bitscape.engine.SomeGameEngine
+import it.curzel.bitscape.ui.theme.DSTypography
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @Composable
 fun ControllerEmulatorView(
     gameEngine: SomeGameEngine,
     modifier: Modifier = Modifier
 ) {
+    val viewModel = remember { ControllerEmulatorViewModel(gameEngine) }
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val isConfirmVisible by viewModel.isConfirmVisible.collectAsState()
+    val isAttackVisible by viewModel.isAttackVisible.collectAsState()
+    val attackLabel by viewModel.attackLabel.collectAsState()
+    val attackBottomPadding by viewModel.attackBottomPadding.collectAsState()
 
+    ControllerEmulatorView(
+        isLandscape,
+        isConfirmVisible,
+        isAttackVisible,
+        attackLabel,
+        attackBottomPadding,
+        setKeyDown = { viewModel.setKeyDown(it) },
+        setKeyUp = { viewModel.setKeyUp(it) },
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun ControllerEmulatorView(
+    isLandscape: Boolean,
+    isConfirmVisible: Boolean,
+    isAttackVisible: Boolean,
+    attackLabel: String,
+    attackBottomPadding: Dp,
+    setKeyDown: (EmulatedKey) -> Unit,
+    setKeyUp: (EmulatedKey) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(modifier = modifier.fillMaxSize()) {
-        JoystickView(gameEngine = gameEngine)
+        JoystickView(setKeyDown, setKeyUp)
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(0.dp),
@@ -36,8 +80,75 @@ fun ControllerEmulatorView(
                 .padding(start = if (isLandscape) 85.dp else 20.dp)
                 .padding(bottom = if (isLandscape) 100.dp else 140.dp)
         ) {
-            KeyEmulatorView(EmulatedKey.ATTACK, gameEngine, modifier = Modifier.padding(bottom = 30.dp))
-            KeyEmulatorView(EmulatedKey.CONFIRM, gameEngine, modifier = Modifier)
+            if (isAttackVisible) {
+                Box(modifier = Modifier.padding(bottom = attackBottomPadding)) {
+                    KeyEmulatorView(EmulatedKey.ATTACK, setKeyDown, setKeyUp)
+                    Text(
+                        text = attackLabel,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 12.dp)
+                            .padding(bottom = keyEmulatorViewPadding),
+                        textAlign = TextAlign.Center,
+                        style = DSTypography.buttonCaption,
+                        color = Color.Black.copy(alpha = 0.9f)
+                    )
+                }
+            }
+            if (isConfirmVisible) {
+                KeyEmulatorView(EmulatedKey.CONFIRM, setKeyDown, setKeyUp)
+            }
+        }
+    }
+}
+
+class ControllerEmulatorViewModel(
+    private val engine: SomeGameEngine
+) : ViewModel() {
+    private val _isConfirmVisible = MutableStateFlow(false)
+    val isConfirmVisible: StateFlow<Boolean> = _isConfirmVisible.asStateFlow()
+
+    private val _isAttackVisible = MutableStateFlow(false)
+    val isAttackVisible: StateFlow<Boolean> = _isAttackVisible.asStateFlow()
+
+    private val _attackLabel = MutableStateFlow("")
+    val attackLabel: StateFlow<String> = _attackLabel.asStateFlow()
+
+    private val _attackBottomPadding = MutableStateFlow(0.dp)
+    val attackBottomPadding: StateFlow<Dp> = _attackBottomPadding.asStateFlow()
+
+    init {
+        observeKunaiCount()
+        observeInteractionAvailable()
+    }
+
+    fun setKeyDown(key: EmulatedKey) {
+        engine.setKeyDown(key)
+    }
+
+    fun setKeyUp(key: EmulatedKey) {
+        engine.setKeyUp(key)
+    }
+
+    private fun observeKunaiCount() {
+        viewModelScope.launch {
+            engine.numberOfKunai()
+                .distinctUntilChanged { old, new -> old == new }
+                .collect { count ->
+                    _isAttackVisible.value = count > 0
+                    _attackLabel.value = "x$count"
+                }
+        }
+    }
+
+    private fun observeInteractionAvailable() {
+        viewModelScope.launch {
+            engine.isInteractionEnabled()
+                .distinctUntilChanged { old, new -> old == new }
+                .collect { available ->
+                    _isConfirmVisible.value = available
+                    _attackBottomPadding.value = if (available) 30.dp else 0.dp
+                }
         }
     }
 }
@@ -45,5 +156,44 @@ fun ControllerEmulatorView(
 @Preview(showBackground = true)
 @Composable
 fun ControllerEmulatorViewPreview() {
-    ControllerEmulatorView(gameEngine = MockGameEngine())
+    ControllerEmulatorView(
+        isLandscape = false,
+        isConfirmVisible = true,
+        isAttackVisible = true,
+        attackLabel = "x99",
+        attackBottomPadding = 30.dp,
+        setKeyDown = {},
+        setKeyUp = {},
+        modifier = Modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ControllerEmulatorViewOnlyAttackPreview() {
+    ControllerEmulatorView(
+        isLandscape = false,
+        isConfirmVisible = false,
+        isAttackVisible = true,
+        attackLabel = "x99",
+        attackBottomPadding = 30.dp,
+        setKeyDown = {},
+        setKeyUp = {},
+        modifier = Modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ControllerEmulatorViewOnlyConfirmPreview() {
+    ControllerEmulatorView(
+        isLandscape = false,
+        isConfirmVisible = true,
+        isAttackVisible = false,
+        attackLabel = "",
+        attackBottomPadding = 30.dp,
+        setKeyDown = {},
+        setKeyUp = {},
+        modifier = Modifier
+    )
 }

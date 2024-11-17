@@ -19,16 +19,16 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import it.curzel.bitscape.R
-import it.curzel.bitscape.engine.SomeGameEngine
 import kotlin.math.*
 
 @Composable
 fun JoystickView(
-    gameEngine: SomeGameEngine,
+    setKeyDown: (EmulatedKey) -> Unit,
+    setKeyUp: (EmulatedKey) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
-    val viewModel = remember { JoystickViewModel(gameEngine, density) }
+    val viewModel = remember { JoystickViewModel(setKeyDown, setKeyUp, density) }
 
     Box(
         modifier = modifier
@@ -81,7 +81,8 @@ fun JoystickView(
 }
 
 class JoystickViewModel(
-    private val engine: SomeGameEngine,
+    private val setKeyDown: (EmulatedKey) -> Unit,
+    private val setKeyUp: (EmulatedKey) -> Unit,
     density: Density
 ) {
     var dragLocation by mutableStateOf(Offset.Zero)
@@ -170,14 +171,14 @@ class JoystickViewModel(
         }
 
         if (currentActiveKey != newActiveKey) {
-            currentActiveKey?.let { engine.setKeyUp(it) }
-            newActiveKey?.let { engine.setKeyDown(it) }
+            currentActiveKey?.let { setKeyUp(it) }
+            newActiveKey?.let { setKeyDown(it) }
             currentActiveKey = newActiveKey
         }
     }
 
     private fun releaseCurrentKey() {
-        currentActiveKey?.let { engine.setKeyUp(it) }
+        currentActiveKey?.let { setKeyUp(it) }
         currentActiveKey = null
     }
 

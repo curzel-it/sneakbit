@@ -209,6 +209,6 @@ fun ToastsViewPreview() {
         borderColor = Color.Red,
         backgroundColor = Color.Black,
         opacity = 1.0f,
-        image = ImageBitmap.imageResource(R.drawable.up_button_up),
+        image = ImageBitmap.imageResource(R.drawable.confirm_button_up),
     )
 }

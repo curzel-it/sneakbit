@@ -336,3 +336,8 @@ pub extern "C" fn is_limited_visibility() -> bool {
     if world.creative_mode { return false }
     matches!(world.light_conditions, LightConditions::CantSeeShit)
 }
+
+#[no_mangle]
+pub extern "C" fn is_interaction_available() -> bool {
+    engine().world.entities.borrow().iter().any(|e| e.is_in_interaction_range)
+}

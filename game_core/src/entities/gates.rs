@@ -8,7 +8,7 @@ impl Entity {
     }  
 
     pub fn update_gate(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {  
-        if world.creative_mode && world.is_hero_around_and_on_collision_with(&self.frame) {
+        if world.creative_mode && world.is_hero_interacting(&self.frame) {
             return vec![
                 WorldStateUpdate::EngineUpdate(
                     EngineStateUpdate::ShowEntityOptions(
@@ -38,7 +38,7 @@ impl Entity {
     }  
 
     pub fn update_inverse_gate(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {  
-        if world.creative_mode && world.is_hero_around_and_on_collision_with(&self.frame) {
+        if world.creative_mode && world.is_hero_interacting(&self.frame) {
             return vec![
                 WorldStateUpdate::EngineUpdate(
                     EngineStateUpdate::ShowEntityOptions(

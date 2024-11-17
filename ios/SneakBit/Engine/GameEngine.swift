@@ -10,6 +10,7 @@ class GameEngine {
     let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
     let kunai = CurrentValueSubject<Int32, Never>(0)
+    let isInteractionAvailable = CurrentValueSubject<Bool, Never>(false)
     let loadingScreenConfig = CurrentValueSubject<LoadingScreenConfig, Never>(.none)
     let showsDeathScreen = CurrentValueSubject<Bool, Never>(false)
     
@@ -65,6 +66,7 @@ class GameEngine {
         toast.send(current_toast())
         menus.send(current_menu())
         kunai.send(number_of_kunai_in_inventory())
+        isInteractionAvailable.send(is_interaction_available())
         showsDeathScreen.send(shows_death_screen())
         currentBiomeVariant = Int(current_biome_tiles_variant())
         cameraViewport = camera_viewport()
