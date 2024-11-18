@@ -1739,47 +1739,6 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10799674,
-      "frame": {
-        "x": 60,
-        "y": 18,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 4004,
-      "entity_type": "Npc",
-      "direction": "Down",
-      "current_speed": 2.5,
-      "is_rigid": false,
-      "z_index": 150,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 28,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
-      "display_conditions": [],
-      "movement_directions": "FindHero",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": false,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
       "id": 10805243,
       "frame": {
         "x": 8,
@@ -2313,23 +2272,23 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10799688,
+      "id": 11960248,
       "frame": {
-        "x": 23,
-        "y": 35,
+        "x": 56,
+        "y": 15,
         "w": 1,
         "h": 2
       },
-      "species_id": 3005,
+      "species_id": 4004,
       "entity_type": "Npc",
       "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 0,
+      "current_speed": 2.5,
+      "is_rigid": false,
+      "z_index": 150,
       "sprite": {
         "sheet_id": 1009,
         "frame": {
-          "x": 4,
+          "x": 28,
           "y": 0,
           "w": 1,
           "h": 2
@@ -2340,16 +2299,16 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 4,
+        "x": 28,
         "y": 0,
         "w": 1,
         "h": 2
       },
       "display_conditions": [],
-      "movement_directions": "None",
+      "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
+      "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
     },
@@ -3384,43 +3343,43 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10805561,
+      "id": 11454806,
       "frame": {
-        "x": 57,
-        "y": 19,
+        "x": 31,
+        "y": 21,
         "w": 1,
         "h": 2
       },
-      "species_id": 4004,
-      "entity_type": "Npc",
+      "species_id": 10002,
+      "entity_type": "StaticObject",
       "direction": "Down",
-      "current_speed": 2.5,
+      "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 150,
+      "z_index": 300,
       "sprite": {
-        "sheet_id": 1009,
+        "sheet_id": 1010,
         "frame": {
-          "x": 28,
-          "y": 0,
+          "x": 0,
+          "y": 5,
           "w": 1,
           "h": 2
         },
-        "number_of_frames": 4
+        "number_of_frames": 1
       },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 28,
-        "y": 0,
+        "x": 0,
+        "y": 5,
         "w": 1,
         "h": 2
       },
       "display_conditions": [],
-      "movement_directions": "FindHero",
+      "movement_directions": "None",
       "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": false,
+      "contents": "quest.manafren_research.dungeon_scroll.contents",
+      "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
     },
@@ -5065,15 +5024,56 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 11454806,
+      "id": 11960247,
       "frame": {
-        "x": 31,
-        "y": 21,
+        "x": 61,
+        "y": 22,
         "w": 1,
         "h": 2
       },
-      "species_id": 10002,
-      "entity_type": "StaticObject",
+      "species_id": 4004,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 2.5,
+      "is_rigid": false,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 28,
+          "y": 0,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 28,
+        "y": 0,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "FindHero",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11960249,
+      "frame": {
+        "x": 24,
+        "y": 37,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 7001,
+      "entity_type": "Bundle",
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -5081,10 +5081,10 @@
       "sprite": {
         "sheet_id": 1010,
         "frame": {
-          "x": 0,
-          "y": 5,
+          "x": 1,
+          "y": 4,
           "w": 1,
-          "h": 2
+          "h": 1
         },
         "number_of_frames": 1
       },
@@ -5092,16 +5092,16 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 0,
-        "y": 5,
+        "x": 1,
+        "y": 4,
         "w": 1,
-        "h": 2
+        "h": 1
       },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
-      "contents": "quest.manafren_research.dungeon_scroll.contents",
-      "is_invulnerable": false,
+      "contents": null,
+      "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
     }
