@@ -18,15 +18,15 @@
   },
   "constructions_tiles": {
     "tiles": [
-      "444444444440000000000000000000",
-      "444444444440000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "444440044440000000000000000000"
+      "OOOOOOOOOOO0000000000000000000",
+      "OOO6666OOOO0000000000000000000",
+      "O00666600000000000000000000000",
+      "O00000000000000000000000000000",
+      "O00000000000000000000000000000",
+      "O00000000000000000000000000000",
+      "O00000000000000000000000000000",
+      "O00000000000000000000000000000",
+      "OOOOO00OOOO0000000000000000000"
     ],
     "sheet_id": 1003
   },
@@ -41,10 +41,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -63,7 +59,8 @@
       "destination": {
         "world": 1008,
         "x": 0,
-        "y": 0
+        "y": 0,
+        "direction": "Unknown"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -72,11 +69,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909078,
@@ -88,10 +87,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -110,7 +105,8 @@
       "destination": {
         "world": 1008,
         "x": 0,
-        "y": 0
+        "y": 0,
+        "direction": "Unknown"
       },
       "lock_type": "None",
       "original_sprite_frame": {
@@ -119,11 +115,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909079,
@@ -133,16 +131,11 @@
         "w": 2,
         "h": 2
       },
-      "name": "Table",
       "species_id": 1016,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
@@ -163,11 +156,13 @@
         "w": 2,
         "h": 2
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909080,
@@ -177,13 +172,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "Green Seat",
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -207,11 +197,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909081,
@@ -221,13 +213,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "Green Seat",
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -251,11 +238,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909082,
@@ -265,13 +254,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "Green Seat",
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -295,11 +279,13 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     },
     {
       "id": 10909083,
@@ -309,13 +295,8 @@
         "w": 1,
         "h": 1
       },
-      "name": "Green Seat",
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -339,13 +320,221 @@
         "w": 1,
         "h": 1
       },
+      "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11962756,
+      "frame": {
+        "x": 9,
+        "y": 2,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1017,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 200,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 0,
+          "y": 2,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 0,
+        "y": 2,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11962757,
+      "frame": {
+        "x": 7,
+        "y": 2,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1017,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 200,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 0,
+          "y": 2,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 0,
+        "y": 2,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11962758,
+      "frame": {
+        "x": 1,
+        "y": 1,
+        "w": 2,
+        "h": 2
+      },
+      "species_id": 1092,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 2,
+          "y": 12,
+          "w": 2,
+          "h": 2
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 2,
+        "y": 12,
+        "w": 2,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11962759,
+      "frame": {
+        "x": 8,
+        "y": 2,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1090,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 0,
+          "y": 12,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 0,
+        "y": 12,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11962760,
+      "frame": {
+        "x": 10,
+        "y": 2,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1090,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 0,
+          "y": 12,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 0,
+        "y": 12,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
     }
   ],
   "is_interior": true,
-  "light_conditions": "Day"
+  "light_conditions": "Day",
+  "cutscenes": []
 }
