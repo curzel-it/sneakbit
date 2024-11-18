@@ -402,6 +402,8 @@ No known survivors.
 """
 
 "lore.016.silver_vein_survivors" = """
+Letter from the last day of the miners
+--
 To those who uncover this scroll, heed these words as a warning and a plea. 
 We were miners, delving deeper in search of wealth until we unearthed not silver, but ruin. 
 Our drills breached a cavern unlike any we had seen—its walls pulsing with veins of crimson and gold, as if alive. 
@@ -412,14 +414,14 @@ Now that is being left alone again, it seems to have calmed down.
 """
 
 "lore.016.fisherman_tales.1" = """
-The winds whisper strange tales of those old mines to the east... 
-If you're foolish enough to seek them, follow the gulls. 
-They'll guide you to the forgotten entrance, though what you find there might make you wish you hadn't.
+Yeah tourists think this place is peaceful...
+Old fishermen like me remember otherwise!
+The wind coming from the old mines still gives me the chills...
 """
 
 "lore.016.fisherman_tales.2" = """
 So, you’ve read it, have you? The scroll. 
-Aye, I was one of the lucky ones in fact, or cursed, depending how you see it. 
+I was one of the lucky ones, or cursed, depending how you see it. 
 We dug too deep, woke something that should've stayed asleep...
 """
 
