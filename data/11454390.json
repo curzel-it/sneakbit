@@ -83,13 +83,9 @@
       },
       "species_id": 1011,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
+      "is_rigid": false,
       "z_index": 1000,
       "sprite": {
         "sheet_id": 1010,
@@ -128,10 +124,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -159,6 +151,73 @@
         "y": 5,
         "w": 1,
         "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11930339,
+      "frame": {
+        "x": 4,
+        "y": 2,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1100,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": true,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 72,
+          "y": 0,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [
+        {
+            "text": "quest.hero.silver.i_am_a_proud_father",
+            "key": "dialogue.answer.quest.hero.finale.a",
+            "expected_value": 1
+        },
+        {
+            "text": "quest.hero.silver.i_am_a_proud_father",
+            "key": "dialogue.answer.quest.hero.finale.b",
+            "expected_value": 1
+        },
+        {
+            "text": "quest.hero.silver.i_am_a_proud_father",
+            "key": "dialogue.answer.quest.hero.finale.c",
+            "expected_value": 1
+        },
+        {
+            "text": "quest.hero.silver.i_am_punk_father",
+            "key": "did read profecy",
+            "expected_value": 1
+        },
+        {
+            "text": "quest.hero.silver.i_failed",
+            "key": "always",
+            "expected_value": 1
+        }
+      ],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 72,
+        "y": 0,
+        "w": 1,
+        "h": 2
       },
       "display_conditions": [],
       "movement_directions": "None",

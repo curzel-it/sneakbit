@@ -9166,6 +9166,94 @@
       "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
+    },
+    {
+        "id": 11885850,
+        "frame": {
+            "x": 39,
+            "y": 33,
+            "w": 1,
+            "h": 2
+        },
+        "species_id": 1080,
+        "entity_type": "Npc",
+        "direction": "Down",
+        "current_speed": 0.0,
+        "is_rigid": true,
+        "z_index": 0,
+        "sprite": {
+            "sheet_id": 1009,
+            "frame": {
+                "x": 48,
+                "y": 0,
+                "w": 1,
+                "h": 2
+            },
+            "number_of_frames": 4
+        },
+        "dialogues": [
+            {
+                "text": "quest.hero.finale.finale",
+                "key": "dialogue.answer.quest.hero.punk.the_problem",
+                "expected_value": 1
+            },
+            {
+                "text": "quest.hero.punk.the_problem",
+                "key": "dialogue.answer.quest.hero.silver.i_failed",
+                "expected_value": 1
+            },
+            {
+                "text": "quest.hero.punk.the_problem",
+                "key": "dialogue.answer.quest.hero.wizard.gather_the_keys",
+                "expected_value": 1
+            },
+            {
+                "text": "quest.hero.punk.no_use_killing_monsters",
+                "key": "dialogue.answer.quest.hero.wizard.met_anyone_important",
+                "expected_value": 1
+            },
+            {
+                "text": "quest.hero.finale.finale",
+                "key": "dialogue.answer.quest.hero.punk.so_you_are_the_outerworlder",
+                "expected_value": 1
+            },
+            {
+                "text": "quest.hero.punk.so_you_are_the_outerworlder",
+                "key": "always",
+                "expected_value": 1
+            }
+        ],
+        "destination": null,
+        "lock_type": "None",
+        "original_sprite_frame": {
+            "x": 48,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "display_conditions": [
+            {
+                "key": "dialogue.answer.quest.hero.wizard.gather_the_keys",
+                "expected_value": 1,
+                "visible": true
+            },
+            {
+                "key": "dialogue.answer.quest.hero.silver.i_failed",
+                "expected_value": 1,
+                "visible": true
+            },
+            {
+                "key": "always",
+                "expected_value": 0,
+                "visible": false
+            }
+        ],
+        "movement_directions": "None",
+        "is_consumable": false,
+        "contents": null,
+        "is_invulnerable": true,
+        "demands_attention": false,
+        "vanishes_after_dialogue": false
     }
   ],
   "is_interior": false,

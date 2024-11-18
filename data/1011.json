@@ -20778,14 +20778,14 @@
     {
       "id": 11022215,
       "frame": {
-        "x": 14,
+        "x": 15,
         "y": 71,
         "w": 1,
         "h": 1
       },
       "species_id": 9000,
       "entity_type": "RailObject",
-      "direction": "Down",
+      "direction": "Up",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,

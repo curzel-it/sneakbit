@@ -83,10 +83,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -133,10 +129,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -183,10 +175,6 @@
       },
       "species_id": 1010,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -228,10 +216,6 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -278,10 +262,6 @@
       },
       "species_id": 1016,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -323,10 +303,6 @@
       },
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -368,10 +344,6 @@
       },
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -413,10 +385,6 @@
       },
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -458,10 +426,6 @@
       },
       "species_id": 1013,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
@@ -503,10 +467,6 @@
       },
       "species_id": 1119,
       "entity_type": "Npc",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": true,
@@ -514,10 +474,10 @@
       "sprite": {
         "sheet_id": 1009,
         "frame": {
-            "x": 40,
-            "y": 19,
-            "w": 1,
-            "h": 2
+          "x": 40,
+          "y": 19,
+          "w": 1,
+          "h": 2
         },
         "number_of_frames": 4
       },
@@ -538,8 +498,8 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
+        "x": 40,
+        "y": 19,
         "w": 1,
         "h": 2
       },

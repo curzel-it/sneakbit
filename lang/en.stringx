@@ -308,6 +308,32 @@ Then came the cataclysm. The skies darkened, the rivers dried, and the mountains
 In the face of desolation, the survivors endured. They built the great solar farm atop the barren heights, harnessing the unrelenting sun to power distant lands. While their ingenuity is lauded, the book laments the loss of Lushspire’s verdant beauty, now buried beneath endless sands.
 """
 
+"lore.011.hero_profecy.part_1" = """
+Profecy of the Hero - Part 1
+--
+In the twilight of chaos, a child of the soil and a stranger from the stars shall rise. 
+Bound by fate yet divided by choice, they will traverse the shattered lands, bearing steel that whispers death. 
+The first shall walk with fire in their soul, while the second wields the blade of uncertainty.
+The shadows of the past and the light of the unknown will converge, challenging the faith of all who dwell within the Veil of Eternity.
+"""
+
+"lore.011.hero_profecy.part_2" = """
+Profecy of the Hero - Part 2
+--
+When the land shivers under the Demon Lord’s shadow, the destined ones shall uncover the Keys of Passage hidden deep within the earth, waters, and winds. 
+From the blazing deserts to the whispering forests, the trials of strength, wit, and heart will forge their resolve. 
+Only the worthy will step forward, yet even the chosen may stumble, for a greater force beyond destiny binds their paths to the wheel of time.
+"""
+
+"lore.011.hero_profecy.part_3" = """
+Profecy of the Hero - Part 3
+--
+As the final hour approaches, the fractured bond will be made whole, yet the truth of the hero will shatter illusions. 
+The one foretold to bear the burden shall stand before the throne of ruin, and the blade of salvation will fall. 
+In this reckoning, not strength nor skill will prevail, but the unyielding spirit of purpose. 
+Beware, for the hand that defeats darkness may yet obscure the light, and the cycle of the eternal struggle will begin anew.
+"""
+
 "1001.entrance" = "Welcome to Evergrove Village!"
 "1003.entrance" = """
 Welcome to Aridreach
@@ -398,8 +424,13 @@ What the hell are you doing here...?
 Are you... After the keys!?
 """
 
+"quest.hero.punk.lets_see_who_gets_them_first" = """
+Let's see if you can gather the keys faster than me... 
+Maybe you'll get to "save" the world.
+"""
+
 "quest.hero.wizard.gather_the_keys" = """
-To enter this realm you need to fetch the keys from the 5 dungeons....
+To enter this realm you need to fetch the keys from the 5 dungeons...
 No one can tell if you really are the hero of the profecy.
 But please, help us gather the keys, before someone else, or something else, does!
 """
@@ -412,6 +443,12 @@ it's because I failed as a father.
 "quest.hero.silver.i_am_punk_father" = """
 The hero of the profect is... was... My son.
 He run away long ago, even changed his name.
+"""
+
+"quest.hero.silver.i_am_a_proud_father" = """
+All he ever asked was to be trusted.
+I promise you, I will put in the work to gain his forgiveness.
+I should be proud of... "Punk"
 """
 
 "quest.hero.punk.the_problem" = """
