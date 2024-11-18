@@ -3416,7 +3416,7 @@
     },
     {
         "id": 1110,
-        "name": "npc.name.assasin_girl",
+        "name": "npc.name.assassin_girl",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,

@@ -51,7 +51,7 @@
 "npc.menu.remove" = "Remove"
 "npc.menu.title" = "NPC Options"
 
-"npc.name.assasin_girl" = "Nyx"
+"npc.name.assassin_girl" = "Nyx"
 "npc.name.male.black.blue_hair" = "Villager"
 "npc.name.blonde.apron" = "Villager"
 "npc.name.blonde_guy" = "Villager"
@@ -340,6 +340,22 @@ No matter how many times we get rid of the monster, he always comes back.
 I guess the drinks were too good!
 """
 
+"lore.013.snail_pig_farming" = """
+Pig-Snail farming
+"""
+
+"lore.014.snail_pig_farming_owner" = """
+I came up with the idea of breeding snails and pigs together!
+No... It's not worked out yet.
+I'm certain it's because of the monsters in the power plant, they create a bad vibes for the snails.
+"""
+
+"lore.015.depopulation" = """
+People jockingly talk about farming as a dream job.
+They don't realize it's basically impossible...
+Do you have any idea how much it would cost to startup a farming activity!?
+"""
+
 "1001.entrance" = "Welcome to Evergrove Village!"
 "1003.entrance" = """
 Welcome to Aridreach
@@ -592,6 +608,26 @@ F*** that guy.
 Told you... Barrels, monsters, Demon Lords, ...
 Doesn't matter.
 One shot is enough for ANY foe.
+"""
+
+"quest.ninja_skills.nyx.next_target_is_kurogane" = """
+Welcome to the Assassin's Guild Headquarters! How can I help you?
+Oh wait... You're the our who made me lose our last customer!
+This time our target is the head of the Kurogane family, don't get in the way!
+"""
+
+"quest.ninja_skills.nyx.nyx_notes" = """
+Nyx Notes
+--
+Target: 
+A. Kurogane, aka "The Red Ninja", head of the Kurogane family.
+--
+Last Known Location:
+Mountains North of Vintoria
+--
+Target is hiding somewhere in the mountains, but is probably using a hidden passage to get around unseen.
+Looked at the blueprints for the sewer system, looks like there is a second dungen.
+Entrance seems to be somewhere in the South-East of the area.
 """
 
 "quest.manafren_research.serena.keep_out_of_research_area" = """
