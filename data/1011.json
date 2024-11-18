@@ -20815,7 +20815,7 @@
         },
         {
           "text": "quest.manafren_research.dr_voss.thanks_for_the_info_still_working_on_it",
-          "key": "dialogue.answer.quest.manafren_research.6",
+          "key": "dialogue.answer.quest.manafren_research.dr_voss.thanks_for_the_info",
           "expected_value": 1,
           "reward": null
         },
@@ -20827,7 +20827,7 @@
         },
         {
           "text": "quest.manafren_research.dr_voss.waiting_for_info",
-          "key": "dialogue.answer.quest.manafren_research.2",
+          "key": "dialogue.answer.quest.manafren_research.dr_voss.introduction",
           "expected_value": 1,
           "reward": null
         },

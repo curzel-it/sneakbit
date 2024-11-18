@@ -484,7 +484,7 @@
       "dialogues": [
         {
           "text": "quest.manafren_research.duskhaven_village_elder.have_you_checked_the_dungeon",
-          "key": "dialogue.answer.quest.manafren_research.3",
+          "key": "dialogue.answer.quest.manafren_research.duskhaven_village_elder.check_the_dungeon",
           "expected_value": 1,
           "reward": null
         },
