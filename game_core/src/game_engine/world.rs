@@ -81,7 +81,7 @@ impl World {
     pub fn add_entity(&mut self, entity: Entity) -> (usize, u32) {
         let id = entity.id;
 
-        if !entity.should_be_visible(self) {
+        if !self.creative_mode && !entity.should_be_visible(self) {
             return (0, 0)
         }
 
