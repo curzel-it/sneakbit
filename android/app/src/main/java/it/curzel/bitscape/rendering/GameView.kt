@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
+import it.curzel.bitscape.BuildConfig
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
@@ -110,7 +111,10 @@ class GameView @JvmOverloads constructor(
             renderNight(canvas)
             renderEntities(canvas)
             renderLimitedVisibility(canvas)
-            renderDebugInfo(canvas)
+
+            if (BuildConfig.DEBUG) {
+                renderDebugInfo(canvas)
+            }
         }
     }
 

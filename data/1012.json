@@ -10,7 +10,7 @@
       "333333333333553555555555533111121133333333331111111111113333111411111111111111111CC11111111111111113",
       "111311111335353331553113333333121133333333331111111111113331111111111111111111CCC1111111111111111113",
       "111113311131111113333333333333111333311111111111111111333331111111111111111CC11111111111111111111113",
-      "1111111111111111113333333333313333311111111111111111333333333111111111111CCCC11111111111111111111113",
+      "1111111111111111113333333333313333311111111111111111333333333111111111A11CCCC11111111111111111111113",
       "3333333331111133333333331113113221111111111111333333333333311111111111111111111111111111111111111113",
       "3333333333333333333333111322222221111111133333333333333311111111111111111111111111111111111111111113",
       "3333333333333333311111111321111111333333333333311333331111111111111111111111111111111111111111111113",
@@ -18,8 +18,8 @@
       "1111111111113333333333333321333333331111111111111111111111111111111111111111111111111111114441111113",
       "3333333333333333333333331313333333331111111111111111111111111111111111111111111111111141111411111113",
       "3333333333333111111111131222313111111111111111111111111111111111111111111111111111111141111411111113",
-      "1111111111111111411111111222311111111111111111111111111111111111111111111111111111111144444411111113",
-      "1111113111111111411111111111111111111111111111111111111HHH111111111111111111111111111111111411111113",
+      "1111111111111111111111111222311111111111111111111111111111111111111111111111111111111144444411111113",
+      "1111113111111111111111111111111111111111111111111111111HHH111111111111111111111111111111111411111113",
       "1111111111111111111111111111111111111111111111111111111HHH111111111111111111111111111111111411111113",
       "1111111111111111111111111111111111111111111111111111111HHH111111111111111111111111111111111411111113",
       "1111111111111111111111111111111111111111141HHHHHHHHHHHHHHH111111111111111111111111111111111411111113",
@@ -46,11 +46,11 @@
       "311111111FFF11CCCC1111DDD1D111C1141HHHHHHHHHHHHHHHHH111FFF1111111111111111111111111HHHHHHHHHHHHHH113",
       "31111111FFFF11C11CCC1DD1DDD111C1141HHHHHHHHHHHHHHHHH111FF1111111111111111111111111HHHHHHHHHHHHHHH113",
       "311111111FFFF1C11DDDDD11111111C1141HHHHHHHHHHHHHHHHH111FF1111111111111111111111111HHHHHHHHHHHHHHH113",
-      "311111111FF1FFCCCCC111111111CCC1141HHHHHHHHHHHHHHHHH111FF1111111111HHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
-      "311111111F111F11CCC111111111C1C1141HHHHHHHHHHHHHHHHH111111111111111HHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
-      "311111111FFF111111111111111CC1C1141HHHHHHHHHHHHHHHHH11111111111HHHHHHHHHHHHHHHHH11111111111111111113",
-      "311111111111111111111111CCCC11C1141HHHHHHHHHHHHHHHHH11111111111HHHHHHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
-      "31111111111111111111111111CC11CC141HHHHHHHHHHHHHHHHH11111111111HHHHHHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
+      "311111111FF1FFCCCCC1111E1111CCC1141HHHHHHHHHHHHHHHHH111FF1111111111HHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
+      "311111111F111F11CCC11111E111CEE1141HHHHHHHHHHHHHHHHH111111111111111HHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
+      "311111111FFF111111111111111CEEEE141HHHHHHHHHHHHHHHHH11111111111HHHHHHHHHHHHHHHHH11111111111111111113",
+      "311111111111111111111111CCCC1EEE141HHHHHHHHHHHHHHHHH11111111111HHHHHHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
+      "31111111111111111111111111CC11EE141HHHHHHHHHHHHHHHHH11111111111HHHHHHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
       "3111111111111111111111111111111C141HHHHHHHHHHHHHHHHH1111111HHHHHHHHHHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
       "31111111111111111111111111111111141HHHHHHHHHHHHHHHHH1111111HHHHHHHHHHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
       "31111111111111111111111111111111141HHHHHHHHHHHHHHHHH1111111HHHHHHHHHHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
@@ -73,8 +73,8 @@
       "31133313311111133333333333331111111111HHHHHHHH141111111111333333114444444444444444113333333333333333",
       "33331113111113333333333333331111111111HHHHHHHH144444411111133333114111111111111114113333333333333333",
       "31111333333333333331111333333111111111HHHHHHHH111111411111111111114111131111111336333333333333333333",
-      "3113333333333333311111333333331111111111111111111111444444444444444111333333333336333333333333333333",
-      "3333333333333333313333113333331131111111111111111111111111111111111333333333333336663333333333335555",
+      "3113333333333333311133333333331111111111111111111111444444444444444111333333333336333333333333333333",
+      "3333333333333333313333313333331131111111111111111111111111111111111333333333333336663333333333335555",
       "3333333333331113133333311333333113311111111111111111111113313131111333333333553333363333333333335555",
       "3333333333111133111113311333333111331111111111111111111133133111133333333335553333363333333333335555",
       "3333333333113333111133111133333311133111111111111131111131111333333333355533533553663355555555555555",
@@ -102,16 +102,16 @@
       "8888880888888800000000000M0M00M0M0000000000888888888888888088888888888000000000008888888800000888888",
       "88888808888000000000000M0M0M00M0M0M08888888888888888888888088888888880088888888888800000800000888888",
       "88888800000000000000000M0M0M00M0M0M08888888888888888888888088888888880888888888888800000800000888888",
-      "00000000000008000000000M0M0M0MMMMMM88888888888888888800000088888888880888888888888800000800000888888",
-      "88888888888888000000000M0M0M0M0000000000000008888888808888888888888880888888888888800000000008888888",
-      "88888888888000000000000MMMMMMM08888888888888088888888080K0888888888800888888888888880000000008888888",
-      "88888800000000000000000000000008888888888888000000000080K0880000000008888888888888888800000088888888",
+      "00000000000008888888000M0M0M0MMMMMM88888888888888888800000088888888880888888888888800000800000888888",
+      "88888888888888888880000M0M0M0M0000000000000008888888808888888888888880888888888888800000000008888888",
+      "88888888888888800000000MMMMMMM08888888888888088888888080K0888888888800888888888888880000000008888888",
+      "88888888880000000000000000000008888888888888000000000080K0880000000008888888888888888800000088888888",
       "88888800000000000000000000000008888888888008888888888880K0800888888888888888888888888888880088888888",
-      "80880000000000000000000800000008880000000000KKKKKKKKKKKKK0808888888888888888888888888888888088888888",
-      "000000000KKKKKKKKKKKKK0800000008800000000000KKKKKKKKKKKKK0808888888888888888888888888888888088888888",
-      "800000000KKKKKKKKKKKKK080000000880000000000000000000000000808888888800000800000888888888888088888888",
-      "800KKKKKKKKKKKKKKKKKKK088800088880000000000000000000000000008888888800000800000888888888888088888888",
-      "800KKKKKKKKKKKKKKKKKKK088800000000000000000000000000000000088888888800000800000888888000000088888888",
+      "80880000000000000000888800000008880000000000KKKKKKKKKKKKK0808888888888888888888888888888888088888888",
+      "000000000KKKKKKKKKKKKK8800000008800000000000KKKKKKKKKKKKK0808888888888888888888888888888888088888888",
+      "888000000KKKKKKKKKKKKK080000000880000000000000000000000000808888888800000800000888888888888088888888",
+      "880KKKKKKKKKKKKKKKKKKK088800088880000000000000000000000000008888888800000800000888888888888088888888",
+      "880KKKKKKKKKKKKKKKKKKK088800000000000000000000000000000000088888888800000800000888888000000088888888",
       "800KKKKKKKKKKKK0000000000000000000000000000888888888088888888888888000000000000000000088888888888888",
       "800KKKKKKKKKKKK0000000000000000000000000008888888888088888888880000088888888888888888888888888888888",
       "800KKKKKKKKKKKK0000000000000000000000000008888888888088888000000888888888888888888888888888888888888",
@@ -127,15 +127,15 @@
       "8888888888000888888888888888888880000000000000000000088888888800888880000000008888000000000000000000",
       "8888888088000000008888888888888800009090909090909090008888880008008888888000008888080000000000000088",
       "88880888800000000000000000000000000099909090999090900000000008000808888888888888000000KKKKKKKKKKK888",
-      "8888088800000000000000000000000000009099909999909090000008808080000000088888888808000KKKKKKKKKKKK888",
-      "888880800000000000000000000000080000909090909990909000088888000808000000000008880000KKKKKKKKKKKKK888",
-      "88888800000000000000000000000008000090909990909099900888888888888000000000000000000KKKKKKKKKKKKKK888",
-      "88888880000000000000000000000000000090909090909090900888888888888000000000000000000KKKKKKKKKKKKKK888",
-      "88888880000000000000000000000000000090909090909090900888888880000000KKKKKKKKKKK000KKKKKKKKKKKKKKK888",
-      "88888880000000000000000000000000000090999099999090900888888880000000KKKKKKKKKKK000000000000000000888",
-      "8888888000000000000000000000000000009090909990909090088888888000KKKKKKKKKKKKKKK000000000000000000888",
-      "8888888800000000000000000000000000009990909090909090088880000000KKKKKKKKKKKKKKK000KKKKKKKKKKKKKKK888",
-      "8888888880000000000000000000000000009990999990909990088880000000KKKKKKKKKKKKKKK000KKKKKKKKKKKKKKK888",
+      "8888088800111111111111111111110000009099909999909090000008808080000000088888888808000KKKKKKKKKKKK888",
+      "888880800010000000000000000001080000909090909990909000088888000808000000000008880000KKKKKKKKKKKKK888",
+      "88888800001000000000000000000108000090909990909099900888888888888000000000000000000KKKKKKKKKKKKKK888",
+      "88888880001000000000000000000100000090909090909090900888888888888000000000000000000KKKKKKKKKKKKKK888",
+      "88888880001000000000000000000100000090909090909090900888888880000000KKKKKKKKKKK000KKKKKKKKKKKKKKK888",
+      "88888880001000000000000000000100000090999099999090900888888880000000KKKKKKKKKKK000000000000000000888",
+      "8888888000100000000000000000010000009090909990909090088888888000KKKKKKKKKKKKKKK000000000000000000888",
+      "8888888800100000000000000000010000009990909090909090088880000000KKKKKKKKKKKKKKK000KKKKKKKKKKKKKKK888",
+      "8888888880111111111111111111110000009990999990909990088880000000KKKKKKKKKKKKKKK000KKKKKKKKKKKKKKK888",
       "888888888888888800000000000000000000909090999090909008880000KKKKKKKKKKKKKKKKKKK000KKKKKKKKKKKKKKK888",
       "888888888888888888000000000000000000909090999090909000000000KKKKKKKKKKKKKKKKKKK000KKKKKKKKKKKKKKK888",
       "8888888800000000000000000000000000000000000000000000000000000000000000000000000000000000000008888888",
@@ -157,11 +157,11 @@
       "888888888800800880008888880000000000000KKKKKKK000000000000000000000000000000000000088888800000888888",
       "888888888800008800000000088888000000000KKKKKKK000000000000000000000000000000000000880000000888888888",
       "888888888000088000000000088808880000000KKKKKKK000000000000000000000000000000008880880000000888000000",
-      "8888888800088880000000000808888000000000000000000000000000000000000000000000008000000000008888088888",
+      "8888888800088880000008000808888000000000000000000000000000000000000000000000008000000000008888088888",
       "8888880000000000008888000008888000000000000000000000000000000000000000000888888080888888888888000000",
       "8888880000000000008080000000888800000000000000000000000000000000000088888800000080008888888888008888",
-      "8888880000000088808880800008888880000000000000000000000000000000000080000000008880000000000000008888",
-      "0000000008888880088880880000888888000000000000000000800000088888800080800000080000808000000000008888",
+      "8888880000000088808880000008888880000000000000000000000000000000000080000000008880000000000000008888",
+      "0000000008888880088880080000888888000000000000000000800000088888800080800000080000808000000000008888",
       "8888888008888888880088880000088880888000000080000000000000088888800080000888880888008088888888888888",
       "8888880888888888888888888000008880888888800800008000000008888880000000000800000800000088888888888888",
       "0000000000888000088888888000000088888888888888880000000088888880800000088808888808088888888888888888",
@@ -36356,47 +36356,6 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 11105516,
-      "frame": {
-        "x": 70,
-        "y": 6,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 4005,
-      "entity_type": "Npc",
-      "direction": "Down",
-      "current_speed": 1.0,
-      "is_rigid": true,
-      "z_index": 150,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 8,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 8,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
-      "display_conditions": [],
-      "movement_directions": "Free",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": false,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
       "id": 11109549,
       "frame": {
         "x": 25,
@@ -37550,26 +37509,26 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 11110803,
+      "id": 11944662,
       "frame": {
-        "x": 14,
-        "y": 12,
-        "w": 4,
-        "h": 3
+        "x": 50,
+        "y": 8,
+        "w": 1,
+        "h": 1
       },
-      "species_id": 1033,
-      "entity_type": "Building",
+      "species_id": 44415,
+      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 0,
+      "z_index": 100,
       "sprite": {
-        "sheet_id": 1004,
+        "sheet_id": 1010,
         "frame": {
-          "x": 31,
-          "y": 7,
-          "w": 4,
-          "h": 3
+          "x": 15,
+          "y": 1,
+          "w": 1,
+          "h": 1
         },
         "number_of_frames": 1
       },
@@ -37577,54 +37536,8 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 31,
-        "y": 7,
-        "w": 4,
-        "h": 3
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 11110805,
-      "frame": {
-        "x": 16,
-        "y": 14,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": {
-        "world": 11110804,
-        "x": 0,
-        "y": 0,
-        "direction": "Unknown"
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
+        "x": 15,
+        "y": 1,
         "w": 1,
         "h": 1
       },
@@ -37689,7 +37602,7 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
@@ -37708,7 +37621,7 @@
         "y": 0,
         "direction": "Unknown"
       },
-      "lock_type": "None",
+      "lock_type": "Permanent",
       "original_sprite_frame": {
         "x": 7,
         "y": 5,
@@ -38334,6 +38247,548 @@
         "y": 5,
         "w": 1,
         "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11942877,
+      "frame": {
+        "x": 14,
+        "y": 39,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1104,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.5,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 12,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 12,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11942878,
+      "frame": {
+        "x": 14,
+        "y": 42,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1104,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.5,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 12,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 12,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11942879,
+      "frame": {
+        "x": 20,
+        "y": 43,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1104,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.5,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 12,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 12,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11942880,
+      "frame": {
+        "x": 23,
+        "y": 42,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1104,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.5,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 12,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 12,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11942881,
+      "frame": {
+        "x": 26,
+        "y": 41,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1104,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.5,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 12,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 12,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11942882,
+      "frame": {
+        "x": 20,
+        "y": 40,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1104,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.5,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 12,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 12,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11942883,
+      "frame": {
+        "x": 16,
+        "y": 43,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1105,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.5,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 16,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11942884,
+      "frame": {
+        "x": 12,
+        "y": 42,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1105,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.5,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 16,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11942885,
+      "frame": {
+        "x": 23,
+        "y": 43,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1105,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.5,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 16,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11942886,
+      "frame": {
+        "x": 24,
+        "y": 39,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1105,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.5,
+      "is_rigid": true,
+      "z_index": 150,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 16,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 16,
+        "y": 0,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11942887,
+      "frame": {
+        "x": 30,
+        "y": 40,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 10000,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 300,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 0,
+          "y": 4,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 0,
+        "y": 4,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": "lore.013.snail_pig_farming",
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11943061,
+      "frame": {
+        "x": 23,
+        "y": 31,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": false,
+      "z_index": 200,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": {
+        "world": 11718861,
+        "x": 0,
+        "y": 0,
+        "direction": "Unknown"
+      },
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 7,
+        "y": 5,
+        "w": 1,
+        "h": 1
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11945288,
+      "frame": {
+        "x": 37,
+        "y": 19,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1122,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": true,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 52,
+          "y": 19,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [
+        {
+            "text": "lore.015.depopulation"
+        }
+      ],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 52,
+        "y": 19,
+        "w": 1,
+        "h": 2
       },
       "display_conditions": [],
       "movement_directions": "None",

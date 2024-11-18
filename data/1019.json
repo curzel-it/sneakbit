@@ -96,9 +96,9 @@
   },
   "entities": [
     {
-      "id": 11826442,
+      "id": 11944661,
       "frame": {
-        "x": 1,
+        "x": 7,
         "y": 1,
         "w": 1,
         "h": 1
@@ -125,47 +125,6 @@
       "original_sprite_frame": {
         "x": 1,
         "y": 4,
-        "w": 1,
-        "h": 1
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 11826443,
-      "frame": {
-        "x": 7,
-        "y": 1,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 6002,
-      "entity_type": "StaticObject",
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 350,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 6,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 8
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 0,
-        "y": 6,
         "w": 1,
         "h": 1
       },

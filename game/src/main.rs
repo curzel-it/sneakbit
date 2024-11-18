@@ -17,7 +17,7 @@ fn main() {
     let creative_mode = env::args().any(|arg| arg == "creative");
 
     initialize_config_paths(
-        TILE_SIZE * 2.0,
+        TILE_SIZE * 1.8,
         current_locale(),
         local_path("data"),
         local_path("data/species.json"),
@@ -99,7 +99,8 @@ fn start_rl() -> (RaylibHandle, RaylibThread) {
         textures,
         rendering_scale: 2.0,
         font_rendering_scale: 2.0,
-        canvas_size: Vector2d::new(1.0, 1.0)
+        canvas_size: Vector2d::new(1.0, 1.0),
+        show_debug_info: is_debug_build()
     });
 
     (rl, thread)
@@ -300,4 +301,8 @@ fn current_locale() -> String {
     } else {
         "en".to_string()
     }
+}
+
+fn is_debug_build() -> bool {
+    cfg!(debug_assertions)
 }

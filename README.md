@@ -66,11 +66,11 @@ I'm taking notes about characters and lore [here](https://github.com/curzel-it/s
 ![World Map](docs/world_map.png)
 
 ## TODO:
-- On mobile, show "fire" button only where there are bullets available
-- On mobile, show number of bullets on the "fire" button
-- On mobile, show "interact" button only where there are available interactions
-- Controller support (requirement for release on Steam)
-- Unify inventory and safe files
+- Make slopes reflect bullets
+- Add option to reboot/reset game
+- Add end of game credits
+- Add sound effects
+- Add soundtracks (?)
 - More Quests
 - More Lore
 - More Game

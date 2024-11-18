@@ -6,6 +6,7 @@
         "z_index": 150,
         "base_speed": 4.0,
         "is_rigid": true,
+        "is_invulnerable": false,
         "inventory_texture_offset": [
             0,
             0
@@ -1361,6 +1362,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             8,
             3
@@ -1382,6 +1384,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             8,
             4
@@ -1403,6 +1406,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             8,
             5
@@ -1424,6 +1428,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             8,
             6
@@ -1445,6 +1450,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             8,
             7
@@ -2772,7 +2778,7 @@
     },
     {
         "id": 1080,
-        "name": "npc.name.male.emo_hair",
+        "name": "npc.name.punk",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -3212,7 +3218,7 @@
     },
     {
         "id": 1100,
-        "name": "npc.name.middle_aged.man.long_silver_hair",
+        "name": "npc.name.silver",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -3411,7 +3417,7 @@
     },
     {
         "id": 1110,
-        "name": "npc.name.assasin_girl",
+        "name": "npc.name.assassin_girl",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,

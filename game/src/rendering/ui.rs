@@ -9,7 +9,8 @@ pub struct RenderingConfig {
     pub textures: HashMap<u32, Texture2D>,
     pub rendering_scale: f32,
     pub font_rendering_scale: f32,
-    pub canvas_size: Vector2d
+    pub canvas_size: Vector2d,
+    pub show_debug_info: bool
 }
 
 pub static INIT_RENDERING_CONFIG: Once = Once::new();
