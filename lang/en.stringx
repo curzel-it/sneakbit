@@ -344,6 +344,13 @@ I guess the drinks were too good!
 Pig-Snail farming
 """
 
+"lore.014.manafren_trees.caretaker" = """
+I am the taking care of the trees around here.
+They are a famous tourist attraction after all, somebody needs to be sure they are presentable!
+Did you know the hero used to live here? 
+His old man is still in their old house.
+"""
+
 "lore.014.snail_pig_farming_owner" = """
 I came up with the idea of breeding snails and pigs together!
 No... It's not worked out yet.

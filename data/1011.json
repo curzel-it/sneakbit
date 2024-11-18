@@ -19,13 +19,13 @@
       "AAAAAAAAAAAAAAAAAAA3355555533333335533333333335555555555555555555555555555555553",
       "3AAAAAA3AA33AAAAA333555353533333355533333333335555555555555555555555555555555553",
       "33333333333333333355333333333333335333555555555555555555555555555555555555555553",
-      "3333333333333333333553333333333333553355555AAAA55AAAAA55555555555555555555555553",
-      "3333333333333333333333333333333333353555555A111A5A1AAA55555555555555555555555553",
-      "3333333353333333333333333333333333555555555AAAAA5AAAAA55555555555555555555555553",
-      "3333333555553333333333333333333333555555555AAAAA5AAAAA55555555555555555555555553",
-      "3333335555555333333333333333333333AAAA55555555A55555A555555555555555555555555553",
-      "3333333335553333333333333333333333AAAA55AAAAAAAAAAAAAAAA555555555555555555555553",
-      "3333333333353333333333333333333333AAAAAAAAAAAAAAAAAAAAAAAAAA55555555555555555553",
+      "33333333333333333335533333333333335533555555555555555555555555555555555555555553",
+      "3333333333333333333333333333333333353555555AAAAA55555555555555555555555555555553",
+      "3333333353333333333333333333333333555555555A5AAA55555555555555555555555555555553",
+      "3333333555553333333333333333333333555555555AAAAA55AAA555555555555555555555555553",
+      "3333335555555333333333333333333333AAAA55555555A55AAA5555555555555555555555555553",
+      "3333333335553333333333333333333333AAAA55AAAAAAAAAAAA5555555555555555555555555553",
+      "3333333333353333333333333333333333AAAAAAAAAAAAAAAAAAA5A55AAA55555555555555555553",
       "333333333555555333333333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA55A5555555555555553",
       "33AAA333335555333333333333AAAAAAAAJAJJAAAAAAAAAAAAAAAAAAAAAAA5AA55AA55A555555553",
       "AAAAAAAA33533333333333AAAAAJJJJJJJJJJAJAAAAAAAAAAAAAAAAAAAAAAAAA5AAA555555555553",
@@ -261,52 +261,6 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 11454391,
-      "frame": {
-        "x": 52,
-        "y": 18,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1019,
-      "entity_type": "Teleporter",
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": {
-        "world": 11454389,
-        "x": 0,
-        "y": 0,
-        "direction": "Unknown"
-      },
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
       "id": 11454200,
       "frame": {
         "x": 28,
@@ -522,26 +476,26 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 11454388,
+      "id": 11945928,
       "frame": {
-        "x": 49,
-        "y": 14,
-        "w": 5,
-        "h": 5
+        "x": 53,
+        "y": 47,
+        "w": 2,
+        "h": 2
       },
-      "species_id": 1085,
-      "entity_type": "Building",
+      "species_id": 1016,
+      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
       "is_rigid": false,
-      "z_index": 0,
+      "z_index": 200,
       "sprite": {
-        "sheet_id": 1004,
+        "sheet_id": 1010,
         "frame": {
-          "x": 5,
-          "y": 15,
-          "w": 5,
-          "h": 5
+          "x": 4,
+          "y": 0,
+          "w": 2,
+          "h": 2
         },
         "number_of_frames": 1
       },
@@ -549,10 +503,10 @@
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 5,
-        "y": 15,
-        "w": 5,
-        "h": 5
+        "x": 4,
+        "y": 0,
+        "w": 2,
+        "h": 2
       },
       "display_conditions": [],
       "movement_directions": "None",
@@ -19227,14 +19181,14 @@
     {
       "id": 11022216,
       "frame": {
-        "x": 8,
-        "y": 28,
+        "x": 12,
+        "y": 31,
         "w": 1,
         "h": 1
       },
       "species_id": 9000,
       "entity_type": "RailObject",
-      "direction": "Left",
+      "direction": "Down",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -20708,14 +20662,14 @@
     {
       "id": 11022214,
       "frame": {
-        "x": 29,
-        "y": 15,
+        "x": 16,
+        "y": 18,
         "w": 1,
         "h": 1
       },
       "species_id": 9000,
       "entity_type": "RailObject",
-      "direction": "Left",
+      "direction": "Right",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -35092,36 +35046,40 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 11945928,
+      "id": 11947383,
       "frame": {
-        "x": 53,
-        "y": 47,
-        "w": 2,
+        "x": 58,
+        "y": 30,
+        "w": 1,
         "h": 2
       },
-      "species_id": 1016,
-      "entity_type": "StaticObject",
+      "species_id": 1118,
+      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
+      "is_rigid": true,
+      "z_index": 0,
       "sprite": {
-        "sheet_id": 1010,
+        "sheet_id": 1009,
         "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 2,
+          "x": 36,
+          "y": 19,
+          "w": 1,
           "h": 2
         },
-        "number_of_frames": 1
+        "number_of_frames": 4
       },
-      "dialogues": [],
+      "dialogues": [
+        {
+            "text": "lore.014.manafren_trees.caretaker"
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 2,
+        "x": 36,
+        "y": 19,
+        "w": 1,
         "h": 2
       },
       "display_conditions": [],
