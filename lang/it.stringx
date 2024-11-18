@@ -364,7 +364,7 @@ Ovest: Duskhaven
 Sud: Thermoria
 """
 
-"quest.hero.prologue" = """
+"quest.hero.wizard.prologue" = """
 Dici che una "sorta di magia" ti ha portato qui? Interessante...
 Purtroppo, non c'è molta guida che un vecchio come me possa darti, forse se fossi più giovane...
 Ti consiglio di iniziare il tuo viaggio per conoscere meglio questo mondo.
@@ -373,35 +373,33 @@ Se cerchi indicazioni, i segnali stradali possono essere utili.
 Ora vai, ci vedremo presto!
 """
 
-"quest.hero.1" = """
+"quest.hero.punk.so_you_are_the_outerworlder" = """
 Vieni da un'altro mondo, eh?
 Scommetto che è stato quel vecchio di Evergrove ad evocarti.
 Non abbiamo bisogno di eroi, vattene.
 """
 
-"quest.hero.2" = """
+"quest.hero.punk.no_use_killing_monsters" = """
 È inutile correre in giro uccidendo mostri,
 il loro numero non diminuisce mai davvero.
 Questo mondo stesso, inoltre, ha respinto il concetto di "eroe".
 """
 
-"quest.hero.3" = """
+"quest.hero.punk.third_time_is_the_charm" = """
 Dicono che la terza volta sia quella buona.
 Cosa diavolo ci fai qui...?
 Sei... alla ricerca delle chiavi!?
 """
 
-"quest.hero.4" = """
-Vedi, il problema con te, con il mago, con questo mondo...
-è la fiducia.
+"quest.hero.punk.the_problem" = """
+Vedi, il problema con te, con il mago, con questo mondo... È la fiducia.
 Il microonde è rotto? Aggiustalo con la magia.
 La scienza è rotta? Preghiamo gli dei per conoscenza.
-Il mondo è rotto? 
-Certo, evochiamo un tizio a caso da un altro mondo per aggiustarlo!
+Il mondo è rotto? Evochiamo un tizio a caso da un altro mondo per aggiustarlo!
 Sei stato così occupato, così preoccupato, che non ti è mai passato per la mente che potremmo essere in grado di gestire la situazione da soli.
 """
 
-"quest.hero.5" = """
+"quest.hero.silver.i_am_the_father_of_the_hero" = """
 Quindi sei lo straniero...
 Sai anche perché sei qui?
 Semplice... È perché ho fallito come padre.

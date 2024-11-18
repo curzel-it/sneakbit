@@ -1475,13 +1475,13 @@
           "dialogues": [
             {
               "text": "quest.hero.finale.a",
-              "key": "quest.hero.5",
+              "key": "quest.hero.silver.i_am_the_father_of_the_hero",
               "expected_value": 1,
               "reward": null
             },
             {
               "text": "quest.hero.finale.b",
-              "key": "dialogue.answer.quest.hero.1",
+              "key": "dialogue.answer.quest.hero.punk.so_you_are_the_outerworlder",
               "expected_value": 1,
               "reward": null
             },

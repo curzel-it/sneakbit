@@ -21673,11 +21673,11 @@
             "dialogues": [
                 {
                     "text": "quest.hero.finale.finale",
-                    "key": "dialogue.answer.quest.hero.1",
+                    "key": "dialogue.answer.quest.hero.punk.so_you_are_the_outerworlder",
                     "expected_value": 1
                 },
                 {
-                    "text": "quest.hero.1"
+                    "text": "quest.hero.punk.so_you_are_the_outerworlder"
                 }
             ],
             "destination": null,
@@ -21690,7 +21690,7 @@
             },
             "display_conditions": [
                 {
-                    "key": "dialogue.answer.quest.hero.1",
+                    "key": "dialogue.answer.quest.hero.punk.so_you_are_the_outerworlder",
                     "expected_value": 1,
                     "visible": false
                 },

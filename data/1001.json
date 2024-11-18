@@ -1003,7 +1003,7 @@
       },
       "dialogues": [
         {
-          "text": "quest.hero.prologue",
+          "text": "quest.hero.wizard.prologue",
           "key": "always",
           "expected_value": 0,
           "reward": null
@@ -1019,7 +1019,7 @@
       },
       "display_conditions": [
         {
-          "key": "dialogue.answer.quest.hero.prologue",
+          "key": "dialogue.answer.quest.hero.wizard.prologue",
           "expected_value": 1,
           "visible": false
         },

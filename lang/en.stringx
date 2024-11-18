@@ -367,7 +367,7 @@ West: Duskhaven
 South: Thermoria
 """
 
-"quest.hero.prologue" = """
+"quest.hero.wizard.prologue" = """
 You say "some kind of magic" brought you here? Interesting...
 Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
 I suggest you start your own journey to learn more about this world.
@@ -376,36 +376,38 @@ If you're looking for directions, road signs can be useful.
 Now go, I shall see you soon!
 """
 
-"quest.hero.1" = """
+"quest.hero.punk.so_you_are_the_outerworlder" = """
 So you're an outer-worlder eh?
 I bet that old geezer in Evergrove summoned you here.
 We don't need any heroes, go away.
 """
 
-"quest.hero.2" = """
-I told you, it's no use running around killing monsters,
-their number never really lowers.
-This very world, too, has rejected the concept of a "hero".
+"quest.hero.wizard.met_anyone_important" = """
+Punk said I was the one who brought you here... Mmmh
+Maybe we do need you nad he just doesn't realize it yet.
+Maybe we don't...
 """
 
-"quest.hero.3" = """
+"quest.hero.punk.no_use_killing_monsters" = """
+No use running around killing monsters, their number never really lowers.
+It's the nature of this world.
+"""
+
+"quest.hero.punk.third_time_is_the_charm" = """
 They say the third time is the charm.
 What the hell are you doing here...?
 Are you... After the keys!?
 """
 
-"quest.hero.4" = """
-You see, the problem with you, with the wizard, with this world...
-Is trust.
+"quest.hero.punk.the_problem" = """
+You see, the problem with you, with the wizard, with this world... Is trust.
 The microwave is broken? Fix it with magic.
 Science is broken? Let's pray the gods for knowledge.
-The world is broken? 
-Sure, let's summon a random dude from another world to fix it!
-You have been so busy, so worried, it never even came to 
-your mind we might just be able to handle the situation ourself.
+The world is broken? Let's summon a random dude from another world to fix it!
+You have been so busy, so worried, it never even came to your mind we might just be able to handle the situation ourself.
 """
 
-"quest.hero.5" = """
+"quest.hero.silver.i_am_the_father_of_the_hero" = """
 So you're the outer-worlder...
 Do you even know why you're here?
 Simple... It's because I failed as a father.
