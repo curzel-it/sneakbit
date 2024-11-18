@@ -49,7 +49,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_initializeConfig(
     releaseCString(currentLang, current_lang);
     releaseCString(levelsPath, levels_path);
     releaseCString(speciesPath, species_path);
-    releaseCString(inventoryPath, inventory_path);
     releaseCString(keyValueStoragePath, key_value_storage_path);
     releaseCString(localizedStringsPath, localized_strings_path);
 }

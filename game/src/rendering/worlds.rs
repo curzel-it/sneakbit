@@ -41,13 +41,15 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
     let hud = engine.hud_ui(d.get_screen_width(), d.get_screen_height());
     render_layout(&hud, &mut d);
     
-    draw_debug_info(
-        &mut d, 
-        fps, 
-        world.id,
-        world.cached_hero_props.hittable_frame.x, 
-        world.cached_hero_props.hittable_frame.y
-    );
+    if get_rendering_config().show_debug_info {
+        draw_debug_info(
+            &mut d, 
+            fps, 
+            world.id,
+            world.cached_hero_props.hittable_frame.x, 
+            world.cached_hero_props.hittable_frame.y
+        );
+    }
 }
 
 fn draw_debug_info(d: &mut RaylibDrawHandle, fps: u32, world_id: u32, hero_x: i32, hero_y: i32) {

@@ -24,7 +24,10 @@ class GameView: UIView {
             renderNight(rect, in: context)
             renderEntities(in: context)
             renderLimitedVisibility(rect, in: context)
-            renderDebugInfo(context: context, rect: rect)
+            
+            #if DEBUG
+                renderDebugInfo(context: context, rect: rect)
+            #endif
         }
     }
     
