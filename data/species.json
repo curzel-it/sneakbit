@@ -3212,7 +3212,7 @@
     },
     {
         "id": 1100,
-        "name": "npc.name.middle_aged.man.long_silver_hair",
+        "name": "npc.name.silver",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,

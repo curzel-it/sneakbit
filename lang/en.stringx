@@ -73,7 +73,7 @@
 "npc.name.goddess" = "Goddess"
 "npc.name.female.green_hair" = "Villager"
 "npc.name.punk" = "Punk"
-"npc.name.middle_aged.man.long_silver_hair" = "Silveroak"
+"npc.name.silver" = "Silveroak"
 "npc.name.monster" = "Monster"
 "npc.name.mr_bubblegum" = "Mr Bubblegum"
 "npc.name.ninja.black" = "Black Ninja"
@@ -384,45 +384,53 @@ We don't need any heroes, go away.
 
 "quest.hero.wizard.met_anyone_important" = """
 Punk said I was the one who brought you here... Mmmh
-Maybe we do need you nad he just doesn't realize it yet.
-Maybe we don't...
+Maybe it's true we don't need heroes...
+Or maybe we do and he just doesn't realize it yet.
 """
 
 "quest.hero.punk.no_use_killing_monsters" = """
 No use running around killing monsters, their number never really lowers.
-It's the nature of this world.
+It's the nature of this world and we must accept it.
 """
 
-"quest.hero.punk.third_time_is_the_charm" = """
-They say the third time is the charm.
+"quest.hero.punk.are_you_after_the_keys" = """
 What the hell are you doing here...?
 Are you... After the keys!?
 """
 
-"quest.hero.punk.the_problem" = """
-You see, the problem with you, with the wizard, with this world... Is trust.
-The microwave is broken? Fix it with magic.
-Science is broken? Let's pray the gods for knowledge.
-The world is broken? Let's summon a random dude from another world to fix it!
-You have been so busy, so worried, it never even came to your mind we might just be able to handle the situation ourself.
+"quest.hero.wizard.gather_the_keys" = """
+To enter this realm you need to fetch the keys from the 5 dungeons....
+No one can tell if you really are the hero of the profecy.
+But please, help us gather the keys, before someone else, or something else, does!
 """
 
-"quest.hero.silver.i_am_the_father_of_the_hero" = """
-So you're the outer-worlder...
-Do you even know why you're here?
-Simple... It's because I failed as a father.
+"quest.hero.silver.i_failed" = """
+Outer-worlder... Do you even know why you're here?
+it's because I failed as a father.
+"""
+
+"quest.hero.silver.i_am_punk_father" = """
+The hero of the profect is... was... My son.
+He run away long ago, even changed his name.
+"""
+
+"quest.hero.punk.the_problem" = """
+You see, the problem with the wizard, with my father, with this world... Is trust.
+The microwave is broken? Fix it with magic.
+Science is broken? Let's pray the gods for knowledge.
+The world is broken? Let's summon a random dude from another world!
+You have been so busy, so worried, it never even came to your mind we might just be able to handle the situation ourself.
 """
 
 "quest.hero.finale.a" = """
 No point in hiding it since you probably already know everything.
-I am the hero of the profecy, but have not always been.
+I am the hero of the profecy....
 I grew up with the weight of the profecy but no skills to back it up.
 The looks on people faces, especially that damn old creep...
 All I saw was distrust, so I left.
 When I met you, my "replacement", rage took over...
 I realized the world was not waiting for me and had to take action.
-The head of the Demon Lord was my destiny, 
-but I think I owe you an apolegy nonetheless for taking you prey.
+The head of the Demon Lord was my destiny, but I think I owe you an apology nonetheless for taking your prey.
 """
 
 "quest.hero.finale.b" = """

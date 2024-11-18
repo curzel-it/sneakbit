@@ -179,7 +179,7 @@
       "88888888888888888888888888888880800080008080800080000080008000008000008888888888888888888888888888888",
       "88888888888888888888888888888888808080808080888088888080808088888880808888888888888888888888888888888",
       "88888888888888888888888888888880008080808000000080008080808080000080808888888888888888888888888888888",
-      "88888888888888888888888888888880888880808888888880808880808088808080808888888888888888888888888888888",
+      "88888888888888888888888888888880888880808888888880808880808088808080808888888088888888888888888888888",
       "88888888888888888888888888888880000000800000000000800000800000008000800000000000000000000000000000000",
       "88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888",
       "88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888",
@@ -1410,6 +1410,62 @@
       "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
+    },
+    {
+      "id": 11925452,
+      "frame": {
+        "x": 77,
+        "y": 67,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 3007,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": true,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 32,
+          "y": 0,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [
+        {
+            "text": "quest.hero.wizard.gather_the_keys"
+        }
+    ],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 32,
+        "y": 0,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [
+        {
+            "key": "dialogue.answer.quest.hero.wizard.gather_the_keys",
+            "expected_value": 1,
+            "visible": true
+        },
+        {
+            "key": "always",
+            "expected_value": 1,
+            "visible": false
+        }
+      ],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": true,
+      "vanishes_after_dialogue": true
     }
   ],
   "is_interior": false,
@@ -1475,7 +1531,7 @@
           "dialogues": [
             {
               "text": "quest.hero.finale.a",
-              "key": "quest.hero.silver.i_am_the_father_of_the_hero",
+              "key": "dialogue.answer.quest.hero.silver.i_am_punk_father",
               "expected_value": 1,
               "reward": null
             },

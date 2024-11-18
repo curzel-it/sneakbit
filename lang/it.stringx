@@ -73,7 +73,7 @@
 "npc.name.goddess" = "Dea"
 "npc.name.female.green_hair" = "Abitante"
 "npc.name.punk" = "Punk"
-"npc.name.middle_aged.man.long_silver_hair" = "Silveroak"
+"npc.name.silver" = "Silveroak"
 "npc.name.monster" = "Mostro"
 "npc.name.mr_bubblegum" = "Signor Bubblegum"
 "npc.name.ninja.black" = "Ninja Nero"
@@ -385,7 +385,7 @@ il loro numero non diminuisce mai davvero.
 Questo mondo stesso, inoltre, ha respinto il concetto di "eroe".
 """
 
-"quest.hero.punk.third_time_is_the_charm" = """
+"quest.hero.punk.are_you_after_the_keys" = """
 Dicono che la terza volta sia quella buona.
 Cosa diavolo ci fai qui...?
 Sei... alla ricerca delle chiavi!?
@@ -399,7 +399,7 @@ Il mondo è rotto? Evochiamo un tizio a caso da un altro mondo per aggiustarlo!
 Sei stato così occupato, così preoccupato, che non ti è mai passato per la mente che potremmo essere in grado di gestire la situazione da soli.
 """
 
-"quest.hero.silver.i_am_the_father_of_the_hero" = """
+"quest.hero.silver.i_failed" = """
 Quindi sei lo straniero...
 Sai anche perché sei qui?
 Semplice... È perché ho fallito come padre.
