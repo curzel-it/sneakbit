@@ -423,6 +423,26 @@ Aye, I was one of the lucky ones in fact, or cursed, depending how you see it.
 We dug too deep, woke something that should've stayed asleep...
 """
 
+"lore.017.this_place_is_great_for_surfing" = """
+This place is great for surfing!
+"""
+
+"lore.017.this_place_is_great_fish" = """
+The seafood here is amazing!
+"""
+
+"lore.017.this_place_is_great_for_sun" = """
+I love to hang out in the sun!
+"""
+
+"lore.017.this_place_was_great_for_dancing" = """
+Me an my wife used to come here for dancing smooth when we were young.
+"""
+
+"lore.017.this_place_had_a_great_nudist_beach" = """
+Do you know where the nudist beach is?
+"""
+
 "1001.entrance" = "Welcome to Evergrove Village!"
 "1003.entrance" = """
 Welcome to Aridreach
