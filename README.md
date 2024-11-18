@@ -67,6 +67,10 @@ I'm taking notes about characters and lore [here](https://github.com/curzel-it/s
 
 ## TODO:
 - Make slopes reflect bullets
+- Add option to reboot/reset game
+- Add end of game credits
+- Add sound effects
+- Add soundtrack (?)
 - More Quests
 - More Lore
 - More Game
