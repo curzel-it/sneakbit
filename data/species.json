@@ -1361,6 +1361,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             8,
             3
@@ -1382,6 +1383,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             8,
             4
@@ -1403,6 +1405,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             8,
             5
@@ -1424,6 +1427,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             8,
             6
@@ -1445,6 +1449,7 @@
         "z_index": 300,
         "base_speed": 0.0,
         "is_rigid": true,
+        "is_invulnerable": true,
         "inventory_texture_offset": [
             8,
             7

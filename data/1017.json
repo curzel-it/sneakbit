@@ -412,7 +412,7 @@
       },
       "dialogues": [],
       "destination": null,
-      "lock_type": "Yellow",
+      "lock_type": "Red",
       "original_sprite_frame": {
         "x": 7,
         "y": 5,
@@ -1452,12 +1452,12 @@
         {
             "key": "dialogue.answer.quest.hero.wizard.gather_the_keys",
             "expected_value": 1,
-            "visible": true
+            "visible": false
         },
         {
             "key": "always",
             "expected_value": 1,
-            "visible": false
+            "visible": true
         }
       ],
       "movement_directions": "None",
