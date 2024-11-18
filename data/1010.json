@@ -9233,6 +9233,11 @@
         },
         "display_conditions": [
             {
+                "key": "dialogue.answer.quest.hero.punk.the_problem",
+                "expected_value": 1,
+                "visible": false
+            },
+            {
                 "key": "dialogue.answer.quest.hero.wizard.gather_the_keys",
                 "expected_value": 1,
                 "visible": true

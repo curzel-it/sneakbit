@@ -19188,7 +19188,7 @@
       },
       "species_id": 9000,
       "entity_type": "RailObject",
-      "direction": "Down",
+      "direction": "Left",
       "current_speed": 1.0,
       "is_rigid": true,
       "z_index": 50,
@@ -35071,7 +35071,10 @@
       },
       "dialogues": [
         {
-            "text": "lore.014.manafren_trees.caretaker"
+          "text": "lore.014.manafren_trees.caretaker",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
         }
       ],
       "destination": null,

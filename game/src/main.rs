@@ -17,7 +17,7 @@ fn main() {
     let creative_mode = env::args().any(|arg| arg == "creative");
 
     initialize_config_paths(
-        TILE_SIZE * 2.0,
+        TILE_SIZE * 1.8,
         current_locale(),
         local_path("data"),
         local_path("data/species.json"),
