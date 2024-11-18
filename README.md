@@ -70,7 +70,7 @@ I'm taking notes about characters and lore [here](https://github.com/curzel-it/s
 - Add option to reboot/reset game
 - Add end of game credits
 - Add sound effects
-- Add soundtrack (?)
+- Add soundtracks (?)
 - More Quests
 - More Lore
 - More Game
