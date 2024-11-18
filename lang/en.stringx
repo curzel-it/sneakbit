@@ -80,11 +80,11 @@
 "npc.name.ninja.blue" = "Blue Ninja"
 "npc.name.ninja.red" = "Red Ninja"
 "npc.name.old_man" = "Villager"
-"npc.name.old_man_mustache" = "Old Man Willow"
-"npc.name.old_man_mustache.black" = "Old Man Gus"
+"npc.name.old_man_mustache" = "Villager"
+"npc.name.old_man_mustache.black" = "Villager"
 "npc.name.old_woman" = "Elder Maren"
 "npc.name.piglet" = "Piglet"
-"npc.name.purple_alien" = "aaa"
+"npc.name.purple_alien" = "Alien"
 "npc.name.purple_mohawk" = "Villager"
 "npc.name.rasta_girl" = "Villager"
 "npc.name.male.kid.red_hair.blue_suit.green_hat" = "Villager"
@@ -260,24 +260,14 @@ fueling life and wonder in Duskhaven.
 """
 
 "lore.manafren_trees.botanics_book" = """
-The Manafern Tree, a botanical marvel exclusive 
-to the ever-twilit region of Duskhaven, 
-has long captivated scholars and mystics alike. 
+The Manafern Tree, a botanical marvel exclusive to the ever-twilit region of Duskhaven, has long captivated scholars and mystics alike. 
 
-This unique broadleaf species, 
-identifiable by its vibrant purple foliage, 
-exhibits an unparalleled ability to produce raw mana.
+This unique broadleaf species, identifiable by its vibrant purple foliage, exhibits an unparalleled ability to produce raw mana.
 
-Through a complex interaction between its deep-rooted system 
-and the ambient twilight of the region, 
-the Manafern absorbs ethereal particles from both the soil and air. 
-These particles, once drawn into the tree's intricate vascular system, 
-undergo a natural process akin to photosynthesis but far more extraordinary. 
-The tree converts these particles into pure mana, 
-which radiates through its leaves, casting a subtle, 
-luminescent glow. Locals often speak of how these trees 'hum' with life, 
-their energy harnessed to illuminate homes, power devices, 
-and even sustain the vibrant ecosystem of Duskhaven itself. 
+Through a complex interaction between its deep-rooted system and the ambient twilight of the region, the Manafern absorbs ethereal particles from both the soil and air. 
+These particles, once drawn into the tree's intricate vascular system, undergo a natural process akin to photosynthesis but far more extraordinary. 
+The tree converts these particles into pure mana, which radiates through its leaves, casting a subtle, luminescent glow. 
+Locals often speak of how these trees 'hum' with life, their energy harnessed to illuminate homes, power devices, and even sustain the vibrant ecosystem of Duskhaven itself. 
 """
 
 "lore.006.vintoria_power_station" = """
@@ -286,8 +276,7 @@ Harnessing the might of the waterfall to power the valley with life-giving mana
 """
 
 "lore.007.vintoria_entrance" = """
-Welcome to Vintoria Valley
-where the thundering falls weave mana into prosperity  and the vineyards whisper tales of timeless beauty.
+Welcome to Vintoria Valley!
 """
 
 "lore.008.mount_ignis" = """
@@ -303,9 +292,16 @@ Dock of Thermoria — Gateway to Maritide Haven
 "lore.010.aridreach_before_the_solar_age" = """
 The Rise and Fall of Lushspire Peaks
 --
-Once, Aridreach was a land of life and beauty, known as Lushspire Peaks. Its towering mountains cradled vast forests, crystal streams, and fertile valleys. The people thrived in harmony with the land, their bounty plentiful and enduring.
-Then came the cataclysm. The skies darkened, the rivers dried, and the mountains began to wither. No record remains of its cause, but the transformation was swift and unrelenting. The lush greenery gave way to scorched earth, and the proud peaks became lifeless dunes. What was once a haven turned into the unforgiving expanse now called the Grimsun Desert.
-In the face of desolation, the survivors endured. They built the great solar farm atop the barren heights, harnessing the unrelenting sun to power distant lands. While their ingenuity is lauded, the book laments the loss of Lushspire’s verdant beauty, now buried beneath endless sands.
+Once, Aridreach was a land of life and beauty, known as Lushspire Peaks. 
+Its towering mountains cradled vast forests, crystal streams, and fertile valleys. 
+The people thrived in harmony with the land, their bounty plentiful and enduring.
+Then came the cataclysm. The skies darkened, the rivers dried, and the mountains began to wither. 
+No record remains of its cause, but the transformation was swift and unrelenting. 
+The lush greenery gave way to scorched earth, and the proud peaks became lifeless dunes. 
+What was once a haven turned into the unforgiving expanse now called the Grimsun Desert.
+In the face of desolation, the survivors endured. 
+They built the great solar farm atop the barren heights, harnessing the unrelenting sun to power distant lands. 
+While their ingenuity is lauded, the book laments the loss of Lushspire’s verdant beauty, now buried beneath endless sands.
 """
 
 "lore.011.hero_profecy.part_1" = """
@@ -361,6 +357,88 @@ I'm certain it's because of the monsters in the power plant, they create a bad v
 People jockingly talk about farming as a dream job.
 They don't realize it's basically impossible...
 Do you have any idea how much it would cost to startup a farming activity!?
+"""
+
+"lore.016.the_silver_legacy_of_maritide_haven" = """
+The Silver Legacy of Maritide Haven
+Maritide Haven, once the jewel of the Silver Coast, owed its prosperity to the rich veins of silver buried deep beneath its rocky terrain. 
+The mine, a marvel of engineering and determination, provided wealth and trade to the region for centuries. 
+Merchants from distant lands would dock at its bustling port, their ships laden with goods to exchange for Maritide's famed silver ingots. 
+Yet, the very ground that promised such riches also whispered ominous warnings. 
+Tales of strange tremors and ghostly winds from the mine’s depths were dismissed as mere superstition by those who sought fortune.
+
+Then, the same cataclysm that destroyed Thermoria, transformed this thriving island into a fragmented memory of its former self.
+The collapse of the mine swallowed much of the settlement into the earth, leaving only scattered islets in its wake.
+Today, Maritide Haven clings to survival as a humble fishing village, its wind turbines silently spinning over waters that once teemed with merchant fleets. 
+The mine, now sealed, serves as a grim monument to the dangers of human ambition and the unknown forces lurking in the deep.
+"""
+
+"lore.016.silver_vein_chronicles" = """
+July 1st 1293
+Production continues at a steady pace. 
+The northern vein shows signs of thinning, but the new exploratory shafts promise richer yields below the 700-foot mark. 
+Engineers have voiced concerns over the rock density at these depths, but management insists on pushing forward.
+--
+July 24th 1293
+Miners report unusual vibrations emanating from the deeper tunnels. 
+Some claim to hear faint echoes, almost like whispers. 
+Dismissing these claims as fatigue-induced hallucinations. 
+Expanding operations toward the northern seam.
+--
+August 4th 1293
+Discovered an unprecedented silver vein at the 900-foot mark. 
+However, equipment failures are becoming frequent, and the tremors are intensifying. 
+Still no explanation for the phenomena, but management remains adamant about continuing.
+--
+August 13th 1293
+An earthen roar shook the mines as the lower tunnels collapsed, swallowing miners and machinery alike. 
+Personell outside of the mine recount visions of a fiery glow and an unearthly howl before the ground gave way. 
+This is not an ordinary disaster. All operations are suspended indefinitely.
+No known survivors.
+"""
+
+"lore.016.silver_vein_survivors" = """
+Letter from the last day of the miners
+--
+To those who uncover this scroll, heed these words as a warning and a plea. 
+We were miners, delving deeper in search of wealth until we unearthed not silver, but ruin. 
+Our drills breached a cavern unlike any we had seen—its walls pulsing with veins of crimson and gold, as if alive. 
+From the depths emerged a shadowed terror, a demon whose name we dared not speak. 
+Its presence alone sundered the ground and unleashed a force that tore our island asunder.
+We managed to seal him away using the last of our explosives.
+Now that is being left alone again, it seems to have calmed down.
+"""
+
+"lore.016.fisherman_tales.1" = """
+Yeah tourists think this place is peaceful...
+Old fishermen like me remember otherwise!
+The wind coming from the old mines still gives me the chills...
+"""
+
+"lore.016.fisherman_tales.2" = """
+So, you’ve read it, have you? The scroll. 
+I was one of the lucky ones, or cursed, depending how you see it. 
+We dug too deep, woke something that should've stayed asleep...
+"""
+
+"lore.017.this_place_is_great_for_surfing" = """
+This place is great for surfing!
+"""
+
+"lore.017.this_place_is_great_fish" = """
+The seafood here is amazing!
+"""
+
+"lore.017.this_place_is_great_for_sun" = """
+I love to hang out in the sun!
+"""
+
+"lore.017.this_place_was_great_for_dancing" = """
+Me an my wife used to come here for dancing smooth when we were young.
+"""
+
+"lore.017.this_place_had_a_great_nudist_beach" = """
+Do you know where the nudist beach is?
 """
 
 "1001.entrance" = "Welcome to Evergrove Village!"
@@ -598,8 +676,7 @@ I just hope they are coming home soon!
 """
 
 "quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
-This job requires me to stay away from home for
-long periods of time... 
+This job requires me to stay away from home for long periods of time... 
 My children are all about your age...
 """
 

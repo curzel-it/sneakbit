@@ -1,5 +1,5 @@
 {
-  "id": 10909075,
+  "id": 11964417,
   "revision": 0,
   "ephemeral_state": false,
   "biome_tiles": {
@@ -12,27 +12,69 @@
       "066666666660000000000000000000",
       "066666666660000000000000000000",
       "066666666660000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
       "000000000000000000000000000000"
     ],
     "sheet_id": 1002
   },
   "constructions_tiles": {
     "tiles": [
-      "OOOOOOOOOOO0000000000000000000",
-      "OOO6666OOOO0000000000000000000",
-      "O00666600000000000000000000000",
-      "O00000000000000000000000000000",
-      "O00000000000000000000000000000",
-      "O00000000000000000000000000000",
-      "O00000000000000000000000000000",
-      "O00000000000000000000000000000",
-      "OOOOO00OOOO0000000000000000000"
+      "444444444440000000000000000000",
+      "444444444440000000000000000000",
+      "400000000000000000000000000000",
+      "400000000000000000000000000000",
+      "400000000000000000000000000000",
+      "400000000000000000000000000000",
+      "400000000000000000000000000000",
+      "400000000000000000000000000000",
+      "444440044440000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000"
     ],
     "sheet_id": 1003
   },
   "entities": [
     {
-      "id": 10909077,
+      "id": 11964419,
       "frame": {
         "x": 5,
         "y": 8,
@@ -78,7 +120,7 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10909078,
+      "id": 11964420,
       "frame": {
         "x": 6,
         "y": 8,
@@ -124,7 +166,7 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10909079,
+      "id": 11964421,
       "frame": {
         "x": 1,
         "y": 4,
@@ -135,7 +177,7 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
@@ -165,7 +207,7 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10909080,
+      "id": 11964422,
       "frame": {
         "x": 1,
         "y": 4,
@@ -206,7 +248,7 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10909081,
+      "id": 11964423,
       "frame": {
         "x": 2,
         "y": 4,
@@ -247,7 +289,7 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10909082,
+      "id": 11964424,
       "frame": {
         "x": 1,
         "y": 6,
@@ -288,7 +330,7 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10909083,
+      "id": 11964425,
       "frame": {
         "x": 2,
         "y": 6,
@@ -325,211 +367,6 @@
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 11962756,
-      "frame": {
-        "x": 9,
-        "y": 2,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1017,
-      "entity_type": "StaticObject",
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 2,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 0,
-        "y": 2,
-        "w": 1,
-        "h": 2
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 11962757,
-      "frame": {
-        "x": 7,
-        "y": 2,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1017,
-      "entity_type": "StaticObject",
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 2,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 0,
-        "y": 2,
-        "w": 1,
-        "h": 2
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 11962758,
-      "frame": {
-        "x": 1,
-        "y": 1,
-        "w": 2,
-        "h": 2
-      },
-      "species_id": 1092,
-      "entity_type": "StaticObject",
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 12,
-          "w": 2,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 2,
-        "y": 12,
-        "w": 2,
-        "h": 2
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": false,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 11962759,
-      "frame": {
-        "x": 8,
-        "y": 2,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1090,
-      "entity_type": "StaticObject",
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 12,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 0,
-        "y": 12,
-        "w": 1,
-        "h": 1
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": false,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 11962760,
-      "frame": {
-        "x": 10,
-        "y": 2,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1090,
-      "entity_type": "StaticObject",
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 12,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 0,
-        "y": 12,
-        "w": 1,
-        "h": 1
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
     }
