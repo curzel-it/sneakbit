@@ -34,14 +34,14 @@
             "KKKKKKKKKKK4444444444444444444444744444444HHHHH474KKKKKKKKKKKKKKKKKKKK",
             "KKKKKKKKKKKK4444444444444444444447444444HHHHHHH474KKKKKKKKKKKKKKKKKKKK",
             "KKKKKKKKKKKK4444444444444444444447444444HHHHHHH474KKKKKKKKKKKKKKKKKKKK",
-            "KKKKKKKKKKKK444444444444444444444744444HHHHHHHH474KKKKKKKKKKKKKKKKKKKK",
-            "KKKKKKKKKKKK444444444444444444444744HHHHHHHHHHH474KKKKKKKKKKKKKKKKKKKK",
-            "KKKKKKKKKKKKK44444444444444444444774HHHHHHHHHHH474KKKKKKKKKKKKKKKKKKKK",
-            "KKKKKKKKKKKKK44444444444444444KK4474HHHHHHHHHHH4744KKKKKKKKKKKKKKKKKKK",
-            "KKKKKKKKKKKKK4444444444444444KKKK474HHHHHHHHHHH4744KKKKKKKKKKKKKKKKKKK",
-            "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK474444444444444744KKKKKKKKKKKKKKKKKKK",
-            "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK4744444444444447444KKKKKKKKKKKKKKKKKK",
-            "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK4777777777777777444KKKKKKKKKKKKKKKKKK",
+            "KKKKKKKKKKKK4444444444444444444447444444HHHHHHH474KKKKKKKKKKKKKKKKKKKK",
+            "KKKKKKKKKKKK44444444444444444444474444444444444474KKKKKKKKKKKKKKKKKKKK",
+            "KKKKKKKKKKKKK4444444444444444444477777777777777774KKKKKKKKKKKKKKKKKKKK",
+            "KKKKKKKKKKKKK44444444444444444KK4444444444444444744KKKKKKKKKKKKKKKKKKK",
+            "KKKKKKKKKKKKK4444444444444444KKKK4HHHHHHHHHHHHH4744KKKKKKKKKKKKKKKKKKK",
+            "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK4HHHHHHHHHHHHH4744KKKKKKKKKKKKKKKKKKK",
+            "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK4HHHHHHHHHHHHH47444KKKKKKKKKKKKKKKKKK",
+            "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK4HHHHHHHHHHHHH47444KKKKKKKKKKKKKKKKKK",
             "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK4444444444444447444KKKKKKKKKKKKKKKKKK",
             "4KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK474KKKKKKKKKKKKKKKKKKKK",
             "4KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK7KKKKKKKKKKKKKKKKKKKKK",
@@ -84,20 +84,20 @@
             "JJJJJ000J0000JJJ00J000JJJ0J0J0J0J00000J0000000000000BBJBBBBBBJ000BJJJJ",
             "JJ00J000J0JJ000000J000JJJ000J0J0J0000000000000000000JJJJJ00JB000BBJJJJ",
             "JJ0JJ00J000J0JJJ00J00000J0000J0JJ00J00000000000000000JJB0J0JB00JBJJJJJ",
-            "00000000000000J00000000000J0JJJ000000000000000000000J0JB0J0JB00JBJJJJJ",
-            "JJJJ0J000J00000J00000000JJJ0J00JJ00JJ0000000990000000JJBJ00JB0JJBJJJJJ",
-            "00000000000000000000000000000JJ0J00000000000000000000JJB0JJJB0JJBJ0JJJ",
-            "J0JJJJJJ0JJ0JJ00000000000JJJJ0JJ0000J000099999000000JJJB000JB0JJBJJJJJ",
-            "80J0J0JJ0000JJ00000000000JJ00J0JJ0000000000000000000J0JB00JJB0JJBJJJJJ",
-            "8JJ0J000J0J0JJ0000000000000J0000000000009999990000000JJB0J00B0JJBJJJJJ",
-            "8JJJ00J000J00JJ0JJJJJJJJJJJ00JJ0J0JJ0000000000000000BBBBBBBBBBBBBJJJJJ",
-            "8J00J000000J0JJ00JJJJJJJ0000J000J00J0999999999000000J0J00000B0JJJJJJJJ",
-            "880J0J0LLL000JJ00000000000000000000J000000000000000000J0JJJJB0JJJJJJJJ",
-            "80J0000000000JJJJJJJJJJ0000J0000000000000000000000J000J0JJ00B0JJJJJJJJ",
-            "880JJJ00LLL000000000000000000000000JJ0J000J0000000J0000000JJB0JJBJJJJJ",
-            "80J800J0JJJJ00000000000000000000000JJJ00J000000000000J000JJJB0JJBJJJJJ",
-            "88JJJJ00LLL0LLL0LLL0LLL00LL0LLL00000000000000000000000BBBBBBBBBBBJJJJJ",
-            "808JJ8J0JJJJJ000000000000000000000000000000000000000JJJJJJJJBJJJJJJJJJ",
+            "00000000000000J00000000000J0JJJ00000000000JJJ0000000J0JB0J0JB00JBJJJJJ",
+            "JJJJ0J000J00000J00000000JJJ0J00JJ00JJ00000J0990000000JJBJ00JB0JJBJJJJJ",
+            "00000000000000000000000000000JJ0J000000JJJ00990000000JJB0JJJB0JJBJ0JJJ",
+            "J0JJJJJJ0JJ0JJ00000000000JJJJ0JJ0000J00J099999000000JJJB000JB0JJBJJJJJ",
+            "80J0J0JJ0000JJ00000000000JJ00J0JJ000000J0999990J0000J0JB00JJB0JJBJJJJJ",
+            "8JJ0J000J0J0JJ0000000000000J00000000000J0000000J00000JJB0J00B0JJBJJJJJ",
+            "8JJJ00J000J00JJ0JJJJJJJJJJJ00JJ0J0JJJJJJJJJJJJJJ0000BBBBBBBBBBBBBJJJJJ",
+            "8J00J000000J0JJ00JJJJJJJ0000J000J0000000000000000000J0J00000B0JJJJJJJJ",
+            "880J0J0LLL000JJ000000000000000000JJJJJJJJJJJJJJJ0J0000J0JJJJB0JJJJJJJJ",
+            "80J0000000000JJJJJJJJJJ0000J00000J0090909090900J0JJ000J0JJ00B0JJJJJJJJ",
+            "880JJJ00LLL0000000000000000000000J0999999999990J0JJ0000000JJB0JJBJJJJJ",
+            "80J800J0JJJJ000000000000000000000J0999999999990J00000J000JJJB0JJBJJJJJ",
+            "88JJJJ00LLL0LLL0LLL0LLL00LL0LLL00J0000000000000J000J00BBBBBBBBBBBJJJJJ",
+            "808JJ8J0JJJJJ00000000000000000000JJJJJJJJJJJJJJJ000JJJJJJJJJBJJJJJJJJJ",
             "8808J0J0LLL0LLL0LLL0LLL0LLL0LLL0000000000000000000000JJ0JJJJJJJJJJJ8JJ",
             "8880JJ0JJJJJJJJJJJJJJJJJJJJJJJJ000000JJJJJ00JJJJ0JJ000JJJ0JJJJJJJJJJJJ",
             "8808JJJJ0LLL0LLL0LLL0LLL0LLL0LLL0LLL0LLL0LLL000J0J000J0J0JJJBJJJJJJJJJ",
@@ -390,47 +390,6 @@
                 "x": 0,
                 "y": 15,
                 "w": 2,
-                "h": 2
-            },
-            "display_conditions": [],
-            "movement_directions": "None",
-            "is_consumable": false,
-            "contents": null,
-            "is_invulnerable": true,
-            "demands_attention": false,
-            "vanishes_after_dialogue": false
-        },
-        {
-            "id": 11114096,
-            "frame": {
-                "x": 46,
-                "y": 24,
-                "w": 1,
-                "h": 2
-            },
-            "species_id": 3005,
-            "entity_type": "Npc",
-            "direction": "Down",
-            "current_speed": 0.0,
-            "is_rigid": true,
-            "z_index": 0,
-            "sprite": {
-                "sheet_id": 1009,
-                "frame": {
-                    "x": 4,
-                    "y": 0,
-                    "w": 1,
-                    "h": 2
-                },
-                "number_of_frames": 4
-            },
-            "dialogues": [],
-            "destination": null,
-            "lock_type": "None",
-            "original_sprite_frame": {
-                "x": 4,
-                "y": 0,
-                "w": 1,
                 "h": 2
             },
             "display_conditions": [],
@@ -21674,32 +21633,38 @@
                 {
                     "text": "quest.hero.finale.finale",
                     "key": "dialogue.answer.quest.hero.punk.the_problem",
-                    "expected_value": 1
+                    "expected_value": 1,
+                    "reward": null
                 },
                 {
                     "text": "quest.hero.punk.the_problem",
                     "key": "dialogue.answer.quest.hero.silver.i_failed",
-                    "expected_value": 1
+                    "expected_value": 1,
+                    "reward": null
                 },
                 {
                     "text": "quest.hero.punk.the_problem",
                     "key": "dialogue.answer.quest.hero.wizard.gather_the_keys",
-                    "expected_value": 1
+                    "expected_value": 1,
+                    "reward": null
                 },
                 {
                     "text": "quest.hero.punk.no_use_killing_monsters",
                     "key": "dialogue.answer.quest.hero.wizard.met_anyone_important",
-                    "expected_value": 1
+                    "expected_value": 1,
+                    "reward": null
                 },
                 {
                     "text": "quest.hero.finale.finale",
                     "key": "dialogue.answer.quest.hero.punk.so_you_are_the_outerworlder",
-                    "expected_value": 1
+                    "expected_value": 1,
+                    "reward": null
                 },
                 {
                     "text": "quest.hero.punk.so_you_are_the_outerworlder",
                     "key": "always",
-                    "expected_value": 1
+                    "expected_value": 1,
+                    "reward": null
                 }
             ],
             "destination": null,
@@ -21722,6 +21687,54 @@
                     "visible": true
                 }
             ],
+            "movement_directions": "None",
+            "is_consumable": false,
+            "contents": null,
+            "is_invulnerable": true,
+            "demands_attention": false,
+            "vanishes_after_dialogue": false
+        },
+        {
+            "id": 11939601,
+            "frame": {
+                "x": 46,
+                "y": 23,
+                "w": 1,
+                "h": 2
+            },
+            "species_id": 1127,
+            "entity_type": "Npc",
+            "direction": "Down",
+            "current_speed": 0.0,
+            "is_rigid": true,
+            "z_index": 0,
+            "sprite": {
+                "sheet_id": 1009,
+                "frame": {
+                    "x": 28,
+                    "y": 19,
+                    "w": 1,
+                    "h": 2
+                },
+                "number_of_frames": 4
+            },
+            "dialogues": [
+                {
+                    "text": "lore.012.hunted_pub",
+                    "key": "always",
+                    "expected_value": 0,
+                    "reward": null
+                }
+            ],
+            "destination": null,
+            "lock_type": "None",
+            "original_sprite_frame": {
+                "x": 28,
+                "y": 19,
+                "w": 1,
+                "h": 2
+            },
+            "display_conditions": [],
             "movement_directions": "None",
             "is_consumable": false,
             "contents": null,
