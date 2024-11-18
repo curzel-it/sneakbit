@@ -6656,9 +6656,9 @@
       },
       "display_conditions": [
         {
-            "key": "dialogue.answer.quest.hero.punk.the_problem",
-            "expected_value": 1,
-            "visible": false
+          "key": "dialogue.answer.quest.hero.punk.the_problem",
+          "expected_value": 1,
+          "visible": false
         },
         {
           "key": "dialogue.answer.quest.hero.punk.no_use_killing_monsters",

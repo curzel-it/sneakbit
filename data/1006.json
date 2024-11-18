@@ -308,14 +308,14 @@
       },
       "display_conditions": [
         {
-            "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
-            "expected_value": 1,
-            "visible": false
+          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
+          "expected_value": 1,
+          "visible": false
         },
         {
-            "key": "always",
-            "expected_value": 0,
-            "visible": true
+          "key": "always",
+          "expected_value": 0,
+          "visible": true
         }
       ],
       "movement_directions": "None",
@@ -6268,14 +6268,14 @@
       },
       "display_conditions": [
         {
-            "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
-            "expected_value": 1,
-            "visible": false
+          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
+          "expected_value": 1,
+          "visible": false
         },
         {
-            "key": "always",
-            "expected_value": 0,
-            "visible": true
+          "key": "always",
+          "expected_value": 0,
+          "visible": true
         }
       ],
       "movement_directions": "None",
@@ -6361,14 +6361,14 @@
       },
       "display_conditions": [
         {
-            "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
-            "expected_value": 1,
-            "visible": false
+          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
+          "expected_value": 1,
+          "visible": false
         },
         {
-            "key": "always",
-            "expected_value": 0,
-            "visible": true
+          "key": "always",
+          "expected_value": 0,
+          "visible": true
         }
       ],
       "movement_directions": "None",
@@ -6426,14 +6426,14 @@
       },
       "display_conditions": [
         {
-            "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
-            "expected_value": 1,
-            "visible": false
+          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
+          "expected_value": 1,
+          "visible": false
         },
         {
-            "key": "always",
-            "expected_value": 0,
-            "visible": true
+          "key": "always",
+          "expected_value": 0,
+          "visible": true
         }
       ],
       "movement_directions": "None",
@@ -6485,14 +6485,14 @@
       },
       "display_conditions": [
         {
-            "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
-            "expected_value": 1,
-            "visible": false
+          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
+          "expected_value": 1,
+          "visible": false
         },
         {
-            "key": "always",
-            "expected_value": 0,
-            "visible": true
+          "key": "always",
+          "expected_value": 0,
+          "visible": true
         }
       ],
       "movement_directions": "None",

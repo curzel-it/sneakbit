@@ -38779,7 +38779,10 @@
       },
       "dialogues": [
         {
-            "text": "lore.015.depopulation"
+          "text": "lore.015.depopulation",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
         }
       ],
       "destination": null,
