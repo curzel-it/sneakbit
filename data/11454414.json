@@ -415,7 +415,19 @@
         },
         {
           "text": "quest.hero.silver.i_am_punk_father",
-          "key": "did read profecy",
+          "key": "content_read.11931938",
+          "expected_value": 1,
+          "reward": null
+        },
+        {
+          "text": "quest.hero.silver.i_am_punk_father",
+          "key": "content_read.11931516",
+          "expected_value": 1,
+          "reward": null
+        },
+        {
+          "text": "quest.hero.silver.i_am_punk_father",
+          "key": "content_read.11932013",
           "expected_value": 1,
           "reward": null
         },
