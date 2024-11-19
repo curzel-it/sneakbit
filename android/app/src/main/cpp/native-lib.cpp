@@ -321,7 +321,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_toastConfig(JNIEnv *env, jobject thiz
 
     jfloat opacity = toastDescriptor.background_color.alpha / 255.0f;
     jstring text = env->NewStringUTF(toastDescriptor.text);
-    jboolean isImportant = (toastDescriptor.mode == ToastMode_Important) ? JNI_TRUE : JNI_FALSE;
+    jboolean isHint = (toastDescriptor.mode == ToastMode_Hint) ? JNI_TRUE : JNI_FALSE;
 
     jobject spriteSheetId = nullptr;
     if (toastDescriptor.image.sprite_sheet_id != 0) {
@@ -355,7 +355,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_toastConfig(JNIEnv *env, jobject thiz
             backgroundColorArgb,
             opacity,
             text,
-            isImportant,
+            isHint,
             spriteSheetId,
             textureFrame
     );

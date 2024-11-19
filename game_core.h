@@ -112,7 +112,7 @@
 
 typedef enum ToastMode {
   ToastMode_Regular = 0,
-  ToastMode_Important,
+  ToastMode_Hint,
 } ToastMode;
 
 typedef struct BordersTextures BordersTextures;

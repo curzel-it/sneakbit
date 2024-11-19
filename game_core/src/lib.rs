@@ -2,7 +2,7 @@ use std::{cmp::Ordering, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
 use entities::known_species::SPECIES_KUNAI;
-use features::light_conditions::LightConditions;
+use features::{light_conditions::LightConditions, sound_effects::SoundEffect};
 use game_engine::{engine::GameEngine, entity::Entity, storage::inventory_count};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::IntRect, vector::Vector2d};
@@ -342,10 +342,32 @@ pub extern "C" fn is_interaction_available() -> bool {
 
 #[no_mangle]
 pub extern "C" fn start_new_game() {
-    engine_mut().start_new_game();
-    
+    engine_mut().start_new_game();    
 }
 
 pub fn engine_set_wants_fullscreen() {
     engine_mut().wants_fullscreen = true;
+}
+
+#[no_mangle]
+pub extern "C" fn get_current_sound_effects(length: *mut usize) -> *mut SoundEffect {
+    let items = engine().sound_effects.current_sound_effects.clone();
+    let len = items.len();
+    
+    unsafe {
+        ptr::write(length, len);
+    }
+
+    let ptr = items.as_ptr() as *mut SoundEffect;
+    std::mem::forget(items);
+    ptr
+}
+
+#[no_mangle]
+pub extern "C" fn free_sound_effects(ptr: *mut SoundEffect, length: usize) {
+    if !ptr.is_null() {
+        unsafe {
+            let _ = Vec::from_raw_parts(ptr, length, length);
+        }
+    }
 }

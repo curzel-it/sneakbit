@@ -183,7 +183,7 @@ impl World {
     } 
 
     pub fn apply_state_updates(&mut self, updates: Vec<WorldStateUpdate>) -> Vec<EngineStateUpdate> {
-        updates.into_iter().filter_map(|u| self.apply_state_update(u)).collect()
+        updates.into_iter().flat_map(|u| self.apply_state_update(u)).collect()
     }
 
     fn log_update(&self, update: &WorldStateUpdate) {
@@ -194,7 +194,7 @@ impl World {
         }        
     }
 
-    fn apply_state_update(&mut self, update: WorldStateUpdate) -> Option<EngineStateUpdate> {
+    fn apply_state_update(&mut self, update: WorldStateUpdate) -> Vec<EngineStateUpdate> {
         self.log_update(&update);
 
         match update {
@@ -232,7 +232,7 @@ impl World {
                 self.stop_hero_movement()
             }
             WorldStateUpdate::EngineUpdate(update) => {
-                return Some(update)
+                return vec![update]
             }
             WorldStateUpdate::UpdateDestinationWorld(entity_id, world) => {
                 self.change_destination_world(entity_id, world)
@@ -244,13 +244,13 @@ impl World {
                 self.change_destination_y(entity_id, y)
             }
             WorldStateUpdate::HandleBulletStopped(bullet_id) => {
-                self.handle_bullet_stopped(bullet_id)
+                return self.handle_bullet_stopped(bullet_id)
             }
             WorldStateUpdate::HandleBulletCatched(bullet_id) => {
                 self.handle_bullet_catched(bullet_id)
             }
             WorldStateUpdate::HandleHit(bullet_id, target_id) => {
-                self.handle_hit(bullet_id, target_id)
+                return self.handle_hit(bullet_id, target_id)
             }
             WorldStateUpdate::SetPressurePlateState(lock_type, is_down) => {
                 match lock_type {
@@ -264,10 +264,10 @@ impl World {
                 }                
             }
         };
-        None
+        vec![]
     }
 
-    fn handle_hit(&mut self, bullet_id: EntityId, target_id: EntityId) {
+    fn handle_hit(&mut self, bullet_id: EntityId, target_id: EntityId) -> Vec<EngineStateUpdate> {
         let mut did_hit = false;
 
         let mut entities = self.entities.borrow_mut();
@@ -292,11 +292,12 @@ impl World {
         drop(entities);
 
         if did_hit && bullet_id != 0 && !has_piercing_bullet_skill() {
-            self.handle_bullet_stopped(bullet_id);
-        }
+            return self.handle_bullet_stopped(bullet_id);
+        } 
+        vec![]
     }
 
-    fn handle_bullet_stopped(&mut self, bullet_id: u32) {
+    fn handle_bullet_stopped(&mut self, bullet_id: u32) -> Vec<EngineStateUpdate> {
         if has_boomerang_skill() {
             let mut entities = self.entities.borrow_mut();
             if let Some(bullet) = entities.iter_mut().find(|e| e.id == bullet_id) {
@@ -305,12 +306,13 @@ impl World {
                     let (dx, dy) = bullet.direction.as_col_row_offset();
                     bullet.frame.x += dx;
                     bullet.frame.y += dy;
-                    return
+                    return vec![EngineStateUpdate::BulletBounced]
                 }
             }
             drop(entities);
         }
-        self.remove_entity_by_id(bullet_id)
+        self.remove_entity_by_id(bullet_id);
+        vec![]
     }
 
     fn handle_bullet_catched(&mut self, bullet_id: u32) {

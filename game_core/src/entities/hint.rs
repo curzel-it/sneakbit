@@ -36,7 +36,7 @@ impl Entity {
     fn toast(&self) -> WorldStateUpdate {
         let hint = self.key().localized();
         WorldStateUpdate::EngineUpdate(EngineStateUpdate::Toast(            
-            Toast::important(hint)
+            Toast::hint(hint)
         ))
     }
 

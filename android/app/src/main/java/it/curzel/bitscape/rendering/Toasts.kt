@@ -43,7 +43,7 @@ data class ToastConfig(
     val backgroundColorArgb: Long,
     val opacity: Float,
     val text: String,
-    val isImportant: Boolean,
+    val isHint: Boolean,
     val spriteSheetId: Int?,
     val textureFrame: IntRect?
 ) {
@@ -52,7 +52,7 @@ data class ToastConfig(
             backgroundColorArgb = 0x00000000,
             opacity = 0.0f,
             text = "",
-            isImportant = false,
+            isHint = false,
             spriteSheetId = NativeLib.SPRITE_SHEET_BLANK.toInt(),
             textureFrame = IntRect(0, 0, 1, 1)
         )
@@ -61,7 +61,7 @@ data class ToastConfig(
             backgroundColorArgb = 0xFF000000,
             opacity = 1.0f,
             text = "Hello world!",
-            isImportant = true,
+            isHint = true,
             spriteSheetId = NativeLib.SPRITE_SHEET_INVENTORY.toInt(),
             textureFrame = IntRect(3, 3, 1, 1)
         )
@@ -185,8 +185,8 @@ class ToastViewModel(
         _opacity.value = toast.opacity
         _text.value = toast.text.ifEmpty { "..." }
         _isVisible.value = _opacity.value > 0.05f
-        _alignment.value = if (toast.isImportant) Alignment.TopStart else Alignment.TopEnd
-        _borderColor.value = if (toast.isImportant) Color.Yellow else Color.Cyan
+        _alignment.value = if (toast.isHint) Alignment.TopStart else Alignment.TopEnd
+        _borderColor.value = if (toast.isHint) Color.Yellow else Color.Cyan
 
         toast.spriteSheetId?.let { spriteSheetId ->
             toast.textureFrame?.let { textureRect ->

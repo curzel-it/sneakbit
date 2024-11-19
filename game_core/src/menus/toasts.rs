@@ -7,7 +7,7 @@ use crate::{constants::SPRITE_SHEET_MENU, features::animated_sprite::AnimatedSpr
 #[repr(C)]
 pub enum ToastMode {
     Regular = 0,
-    Important
+    Hint
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -86,7 +86,7 @@ impl ToastDisplay {
 impl ToastMode {
     fn duration(&self) -> f32 {
         match self {
-            ToastMode::Important => 1.8,
+            ToastMode::Hint => 1.8,
             ToastMode::Regular => 1.0
         }
     }
@@ -115,18 +115,18 @@ impl Toast {
         Toast { text, mode: ToastMode::Regular, image: Some(image) }
     }
     
-    pub fn important(text: String) -> Self {
-        Toast { text, mode: ToastMode::Important, image: None }
+    pub fn hint(text: String) -> Self {
+        Toast { text, mode: ToastMode::Hint, image: None }
     }
     
-    pub fn important_with_image(text: String, image: ToastImage) -> Self {
-        Toast { text, mode: ToastMode::Important, image: Some(image) }
+    pub fn hint_with_image(text: String, image: ToastImage) -> Self {
+        Toast { text, mode: ToastMode::Hint, image: Some(image) }
     }
 }
 
 impl ToastDisplay {
-    pub fn important_toast_ui(&self) -> View { 
-        if matches!(self.mode, ToastMode::Important) {       
+    pub fn hint_toast_ui(&self) -> View { 
+        if matches!(self.mode, ToastMode::Hint) {       
             self.ui()
         } else {
             empty_view()
@@ -166,7 +166,7 @@ impl ToastDisplay {
                 vstack!(Spacing::Zero, spacing!(Spacing::SM), text)
             };
 
-            if matches!(self.mode, ToastMode::Important) {
+            if matches!(self.mode, ToastMode::Hint) {
                 hstack!(Spacing::MD, image, text)
             } else {
                 hstack!(Spacing::MD, text, image)
@@ -177,8 +177,8 @@ impl ToastDisplay {
     }
 
     fn border_texture(&self) -> BordersTextures {
-        if matches!(self.mode, ToastMode::Important) {
-            TOAST_IMPORTANT_BORDERS_TEXTURES
+        if matches!(self.mode, ToastMode::Hint) {
+            TOAST_HINT_BORDERS_TEXTURES
         } else {
             TOAST_BORDERS_TEXTURES
         }
@@ -258,7 +258,7 @@ const TOAST_BORDERS_TEXTURES: BordersTextures = BordersTextures {
     side_left:           TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 3, y: 1, w: 1, h: 1 } },
 };
 
-const TOAST_IMPORTANT_BORDERS_TEXTURES: BordersTextures = BordersTextures {
+const TOAST_HINT_BORDERS_TEXTURES: BordersTextures = BordersTextures {
     corner_top_left:     TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 6, y: 0, w: 1, h: 1 } },
     corner_top_right:    TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 8, y: 0, w: 1, h: 1 } },
     corner_bottom_right: TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 8, y: 2, w: 1, h: 1 } },
