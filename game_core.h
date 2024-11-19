@@ -100,6 +100,8 @@
 
 #define SPECIES_KUNAI 7000
 
+#define SPECIES_KUNAI_BUNDLE 7001
+
 #define SPECIES_TELEPORTER 1019
 
 #define SPECIES_ZOMBIE 4002
@@ -109,6 +111,32 @@
 #define SPECIES_MONSTER 4004
 
 #define SPECIES_DEEP_HOLE 5001
+
+#define SPECIES_BARREL_PURPLE 1038
+
+#define SPECIES_BARREL_GREEN 1039
+
+#define SPECIES_BARREL_BROWN 1073
+
+#define SPECIES_BARREL_WOOD 1074
+
+enum SoundEffect {
+  SoundEffect_AmmoCollected = 1,
+  SoundEffect_KeyCollected,
+  SoundEffect_BulletFired,
+  SoundEffect_BulletBounced,
+  SoundEffect_DeathOfMonster,
+  SoundEffect_DeathOfNonMonster,
+  SoundEffect_SmallExplosion,
+  SoundEffect_Interaction,
+  SoundEffect_NoAmmo,
+  SoundEffect_GameOver,
+  SoundEffect_PlayerResurrected,
+  SoundEffect_WorldChange,
+  SoundEffect_StepTaken,
+  SoundEffect_HintReceived,
+};
+typedef uint8_t SoundEffect;
 
 typedef enum ToastMode {
   ToastMode_Regular = 0,
@@ -257,5 +285,9 @@ bool is_limited_visibility(void);
 bool is_interaction_available(void);
 
 void start_new_game(void);
+
+SoundEffect *get_current_sound_effects(uintptr_t *length);
+
+void free_sound_effects(SoundEffect *ptr, uintptr_t length);
 
 #endif  /* GAME_CORE_H */
