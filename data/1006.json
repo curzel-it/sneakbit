@@ -4497,43 +4497,61 @@
       "vanishes_after_dialogue": false
     },
     {
-      "id": 10830606,
+      "id": 11774920,
       "frame": {
-        "x": 67,
-        "y": 47,
+        "x": 47,
+        "y": 33,
         "w": 1,
         "h": 2
       },
-      "species_id": 1076,
-      "entity_type": "StaticObject",
+      "species_id": 1108,
+      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
+      "is_rigid": true,
       "z_index": 0,
       "sprite": {
-        "sheet_id": 1010,
+        "sheet_id": 1009,
         "frame": {
-          "x": 5,
-          "y": 10,
+          "x": 80,
+          "y": 19,
           "w": 1,
           "h": 2
         },
-        "number_of_frames": 1
+        "number_of_frames": 8
       },
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "quest.thugs_and_assassins.mr_bubblegum.intro",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
-        "x": 5,
-        "y": 10,
+        "x": 80,
+        "y": 19,
         "w": 1,
         "h": 2
       },
-      "display_conditions": [],
+      "display_conditions": [
+        {
+          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
+          "expected_value": 1,
+          "visible": false
+        },
+        {
+          "key": "always",
+          "expected_value": 0,
+          "visible": true
+        }
+      ],
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
+      "is_invulnerable": true,
       "demands_attention": false,
       "vanishes_after_dialogue": false
     },
@@ -4657,47 +4675,6 @@
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 10830605,
-      "frame": {
-        "x": 66,
-        "y": 47,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1076,
-      "entity_type": "StaticObject",
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 5,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 5,
-        "y": 10,
-        "w": 1,
-        "h": 2
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "vanishes_after_dialogue": false
     },
@@ -6309,7 +6286,14 @@
         },
         "number_of_frames": 4
       },
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.018.mount_ignis_intro",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
@@ -6421,65 +6405,6 @@
       "original_sprite_frame": {
         "x": 84,
         "y": 0,
-        "w": 1,
-        "h": 2
-      },
-      "display_conditions": [
-        {
-          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
-          "expected_value": 1,
-          "visible": false
-        },
-        {
-          "key": "always",
-          "expected_value": 0,
-          "visible": true
-        }
-      ],
-      "movement_directions": "None",
-      "is_consumable": false,
-      "contents": null,
-      "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 11774920,
-      "frame": {
-        "x": 47,
-        "y": 33,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1108,
-      "entity_type": "Npc",
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 80,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 8
-      },
-      "dialogues": [
-        {
-          "text": "quest.thugs_and_assassins.mr_bubblegum.intro",
-          "key": "always",
-          "expected_value": 0,
-          "reward": null
-        }
-      ],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 80,
-        "y": 19,
         "w": 1,
         "h": 2
       },

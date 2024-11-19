@@ -445,6 +445,11 @@ Me an my wife used to come here for dancing smooth when we were young.
 Do you know where the nudist beach is?
 """
 
+"lore.018.mount_ignis_intro" = """
+Careful around here, Mount Ignis isn't as calm as it looks. 
+Last time the volcano was active it caused the collapse of the mines in the nearby islands. 
+"""
+
 "1001.entrance" = "Welcome to Evergrove Village!"
 "1003.entrance" = """
 Welcome to Aridreach

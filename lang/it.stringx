@@ -445,6 +445,11 @@ Io e mia moglie venivamo qui a ballare lentamente quando eravamo giovani.
 Sai dov'è la spiaggia nudista?
 """
 
+"lore.018.mount_ignis_intro" = """
+Stai attento, il Monte Ignis non è calmo come può sembrare.
+L'ultima attività vulcanica è stata così forte da causare il collasso di alcune miniere delle isole circostanti.
+"""
+
 "1001.entrance" = "Benvenuto al Villaggio di Evergrove!"
 "1003.entrance" = """
 Benvenuto ad Aridreach
