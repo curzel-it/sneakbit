@@ -1,6 +1,6 @@
 # Game Description
 > Warning!<br>
-> This document contains game spoilers and AI generated slope and it's garbage in general.
+> This document contains game spoilers, lots of AI generated slope and it's garbage in general.
 
 ## Overview
 SneakBit game concept combines adventure and action elements, allowing players to explore a world populated by demons and to engage in combat with unique mechanics. The player can throw kunai (small knives) to defeat or weaken demonic creatures encountered throughout various landscapes, immersing the player in a journey with elements of both strategy and action wrapped in a gameboy-like pixel art aesthetics.

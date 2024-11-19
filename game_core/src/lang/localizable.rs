@@ -101,6 +101,7 @@ fn parse_strings_content(content: &str) -> HashMap<String, String> {
 fn cleaned(original: String) -> String {
     original
         .replace("à", "a`")
+        .replace("é", "e`")
         .replace("è", "e`")
         .replace("ì", "i`")
         .replace("ò", "o`")

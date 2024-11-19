@@ -84,10 +84,10 @@ impl RenderingConfig {
 
 pub fn render_layout(layout: &Layout, d: &mut RaylibDrawHandle) {
     d.draw_rectangle(
-        0, 
-        0, 
-        d.get_screen_width(), 
-        d.get_screen_height(), 
+        -100, 
+        -100, 
+        d.get_screen_width() + 200, 
+        d.get_screen_height() + 200, 
         as_rcolor(&layout.background_color)
     );
 

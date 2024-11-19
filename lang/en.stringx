@@ -84,7 +84,7 @@
 "npc.name.old_man" = "Villager"
 "npc.name.old_man_mustache" = "Villager"
 "npc.name.old_man_mustache.black" = "Villager"
-"npc.name.old_woman" = "Elder Maren"
+"npc.name.old_woman" = "Villager"
 "npc.name.piglet" = "Piglet"
 "npc.name.purple_alien" = "Alien"
 "npc.name.purple_mohawk" = "Villager"
@@ -443,6 +443,18 @@ Me an my wife used to come here for dancing smooth when we were young.
 
 "lore.017.this_place_had_a_great_nudist_beach" = """
 Do you know where the nudist beach is?
+"""
+
+"lore.018.mount_ignis_intro" = """
+Careful around here, Mount Ignis isn't as calm as it looks. 
+Last time the volcano was active it caused the collapse of the mines in the nearby islands. 
+"""
+
+"lore.018.mount_ignis_aridreach" = """
+Aridreach was not always a desert you know?
+I lived there when I was a kid, before the eruption of Mount Ignis.
+They thought the Manafern trees could save us, their mana healing the world. 
+But they only fed the darkness, didn't they? 
 """
 
 "1001.entrance" = "Welcome to Evergrove Village!"

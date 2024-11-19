@@ -84,7 +84,7 @@
 "npc.name.old_man" = "Abitante"
 "npc.name.old_man_mustache" = "Abitante"
 "npc.name.old_man_mustache.black" = "Abitante"
-"npc.name.old_woman" = "Anziana Maren"
+"npc.name.old_woman" = "Abitante"
 "npc.name.piglet" = "Porcellino"
 "npc.name.purple_alien" = "Alieno"
 "npc.name.purple_mohawk" = "Abitante"
@@ -443,6 +443,18 @@ Io e mia moglie venivamo qui a ballare lentamente quando eravamo giovani.
 
 "lore.017.this_place_had_a_great_nudist_beach" = """
 Sai dov'è la spiaggia nudista?
+"""
+
+"lore.018.mount_ignis_intro" = """
+Stai attento, il Monte Ignis non è calmo come può sembrare.
+L'ultima attività vulcanica è stata così forte da causare il collasso di alcune miniere delle isole circostanti.
+"""
+
+"lore.018.mount_ignis_aridreach" = """
+Aridreach non è sempre stato un deserto, sai?
+Ci vivevo da bambina, prima dell'eruzione del Monte Ignis.
+Pensavano che gli alberi di Manafern potessero salvarci, che il loro mana avrebbe guarito il mondo.
+Ma hanno solo alimentato l'oscurità, non è così?
 """
 
 "1001.entrance" = "Benvenuto al Villaggio di Evergrove!"
