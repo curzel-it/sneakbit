@@ -1,8 +1,10 @@
+import Firebase
 import SwiftUI
 
 @main
 struct SneakBitApp: App {
     init() {
+        FirebaseApp.configure()
         Dependencies.setup()
     }
     

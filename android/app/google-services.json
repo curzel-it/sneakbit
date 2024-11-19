@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "812372613482",
+    "project_id": "sneakbit-60de9",
+    "storage_bucket": "sneakbit-60de9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812372613482:android:1f681be7ea546108f2ed13",
+        "android_client_info": {
+          "package_name": "it.curzel.bitscape"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAKLaqPDRKg6hWjJoFVAnHAIFZzW7iFrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

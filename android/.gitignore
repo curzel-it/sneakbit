@@ -1,4 +1,6 @@
 Rust/
+*.apk
+*.aab
 app/src/main/assets/data
 app/src/main/assets/lang
 app/src/main/assets/assets

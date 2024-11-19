@@ -11,6 +11,8 @@
 		1E06CD752CC9A7B4001231D7 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 1E06CD742CC9A7B4001231D7 /* data */; };
 		1E06CD772CC9A7BD001231D7 /* lang in Resources */ = {isa = PBXBuildFile; fileRef = 1E06CD762CC9A7BD001231D7 /* lang */; };
 		1E28046A2CCB93D500DBC189 /* Schwifty in Frameworks */ = {isa = PBXBuildFile; productRef = 1E2804692CCB93D500DBC189 /* Schwifty */; };
+		1E3A0AE72CEC8A840093325F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1E3A0AE62CEC8A840093325F /* FirebaseAnalytics */; };
+		1E3A0AE92CEC8A840093325F /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1E3A0AE82CEC8A840093325F /* FirebaseCrashlytics */; };
 		1EC6323D2CCC5D2F00B37D70 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 1EC6323C2CCC5D2F00B37D70 /* Swinject */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +55,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E28046A2CCB93D500DBC189 /* Schwifty in Frameworks */,
+				1E3A0AE92CEC8A840093325F /* FirebaseCrashlytics in Frameworks */,
+				1E3A0AE72CEC8A840093325F /* FirebaseAnalytics in Frameworks */,
 				1EC6323D2CCC5D2F00B37D70 /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -60,6 +64,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1E3A0AE52CEC8A840093325F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1EE034732CC8585400159636 = {
 			isa = PBXGroup;
 			children = (
@@ -68,6 +79,7 @@
 				1E06CD722CC9A7AB001231D7 /* assets */,
 				1EF8E9362CC8598400867F59 /* Rust */,
 				1EE0347E2CC8585400159636 /* SneakBit */,
+				1E3A0AE52CEC8A840093325F /* Frameworks */,
 				1EE0347D2CC8585400159636 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,6 +115,8 @@
 			packageProductDependencies = (
 				1E2804692CCB93D500DBC189 /* Schwifty */,
 				1EC6323C2CCC5D2F00B37D70 /* Swinject */,
+				1E3A0AE62CEC8A840093325F /* FirebaseAnalytics */,
+				1E3A0AE82CEC8A840093325F /* FirebaseCrashlytics */,
 			);
 			productName = SneakBit;
 			productReference = 1EE0347C2CC8585400159636 /* SneakBit.app */;
@@ -136,6 +150,7 @@
 			packageReferences = (
 				1E2804682CCB93D500DBC189 /* XCRemoteSwiftPackageReference "schwifty" */,
 				1EC6323B2CCC5D2F00B37D70 /* XCRemoteSwiftPackageReference "Swinject" */,
+				1E3A0AE42CEC8A760093325F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1EE0347D2CC8585400159636 /* Products */;
@@ -412,6 +427,14 @@
 				minimumVersion = 1.2.9;
 			};
 		};
+		1E3A0AE42CEC8A760093325F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.5.0;
+			};
+		};
 		1EC6323B2CCC5D2F00B37D70 /* XCRemoteSwiftPackageReference "Swinject" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swinject/Swinject";
@@ -427,6 +450,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1E2804682CCB93D500DBC189 /* XCRemoteSwiftPackageReference "schwifty" */;
 			productName = Schwifty;
+		};
+		1E3A0AE62CEC8A840093325F /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E3A0AE42CEC8A760093325F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		1E3A0AE82CEC8A840093325F /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E3A0AE42CEC8A760093325F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 		1EC6323C2CCC5D2F00B37D70 /* Swinject */ = {
 			isa = XCSwiftPackageProductDependency;
