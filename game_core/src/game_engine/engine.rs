@@ -295,7 +295,7 @@ impl GameEngine {
                 return previous
             }
         }
-        return World::load_or_create(destination_world)
+        World::load_or_create(destination_world)
     }
 
     fn previous_world(&self) -> u32 {

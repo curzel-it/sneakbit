@@ -39,6 +39,7 @@ fn is_large_two_floors_house(species_id: u32) -> bool {
     matches!(species_id, 1010 | 1088)
 }
 
+#[allow(clippy::manual_range_patterns)]
 fn is_shop(species_id: u32) -> bool {
     matches!(species_id, 1070 | 1071 | 1072)
 }

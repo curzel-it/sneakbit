@@ -266,6 +266,6 @@ impl<Item: MenuItem> Menu<Item> {
         if let Some(text) = self.text.clone() {
             return text
         }
-        return "".to_owned()
+        "".to_owned()
     }
 }

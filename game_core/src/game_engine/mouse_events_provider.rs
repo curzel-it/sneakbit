@@ -23,6 +23,7 @@ impl MouseEventsProvider {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub fn update(
         &mut self, 
         mouse_left_down: bool, 

@@ -146,7 +146,7 @@ impl GameMenu {
                 self.new_game_confirmation.show(                
                     &"game.menu.new_game".localized(),
                     &"game.menu.new_game_are_you_sure".localized(),
-                    &vec![
+                    &[
                         WorldStateUpdate::EngineUpdate(EngineStateUpdate::NewGame),
                         WorldStateUpdate::EngineUpdate(EngineStateUpdate::ResumeGame)
                     ]
@@ -171,7 +171,7 @@ impl GameMenu {
         if !is_open {
             self.state = MenuState::Open;
         }
-        return updates;
+        updates
     }
 
     fn update_from_close(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {

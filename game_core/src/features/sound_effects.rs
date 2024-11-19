@@ -42,7 +42,7 @@ impl SoundEffectsManager {
 }
 
 impl SoundEffectsManager {
-    pub fn update(&mut self, keyboard: &KeyboardEventsProvider, updates: &Vec<EngineStateUpdate>) {
+    pub fn update(&mut self, keyboard: &KeyboardEventsProvider, updates: &[EngineStateUpdate]) {
         self.check_sounds_for_state_updates(updates);
 
         if did_interact_with_menu(keyboard) {
@@ -63,7 +63,7 @@ impl SoundEffectsManager {
         self.confirm_next_batch();
     }
 
-    fn check_sounds_for_state_updates(&mut self, updates: &Vec<EngineStateUpdate>) {
+    fn check_sounds_for_state_updates(&mut self, updates: &[EngineStateUpdate]) {
         updates.iter().for_each(|update| {
             self.check_sounds_for_state_update(update)
         });

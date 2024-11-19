@@ -317,7 +317,7 @@ impl World {
 
     fn handle_bullet_catched(&mut self, bullet_id: u32) {
         if has_bullet_catcher_skill() {
-            let species_id = self.entities.borrow().iter().find(|e| e.id == bullet_id).and_then(|e| Some(e.species_id));
+            let species_id = self.entities.borrow().iter().find(|e| e.id == bullet_id).map(|e| e.species_id);
             self.remove_entity_by_id(bullet_id);
 
             if let Some(species_id) = species_id {
@@ -424,10 +424,10 @@ impl World {
                     if dest_a.world > dest_b.world { return Ordering::Greater }
                 }
             }
-            return Ordering::Equal            
+            Ordering::Equal            
         });
 
-        if teleporters.len() > 0 {
+        if !teleporters.is_empty() {
             Some(teleporters[0].frame)
         } else {
             None

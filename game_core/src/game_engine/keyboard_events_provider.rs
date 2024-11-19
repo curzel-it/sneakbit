@@ -98,6 +98,7 @@ impl HoldableKey {
 }
 
 impl KeyboardEventsProvider {
+    #[allow(clippy::too_many_arguments)]
     pub fn update(
         &mut self,
         up_pressed: bool,

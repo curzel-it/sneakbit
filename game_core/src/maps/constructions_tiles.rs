@@ -52,6 +52,7 @@ impl SpriteTile for ConstructionTile {
 }
 
 impl ConstructionTile {
+    #[allow(clippy::match_like_matches_macro)]
     pub fn is_obstacle(&self) -> bool {
         match self.tile_type {
             Construction::Nothing => false,
