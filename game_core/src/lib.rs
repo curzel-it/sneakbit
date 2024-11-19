@@ -1,3 +1,5 @@
+#![allow(clippy::new_without_default, clippy::not_unsafe_ptr_arg_deref)]
+
 use std::{cmp::Ordering, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;

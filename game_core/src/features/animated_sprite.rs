@@ -74,13 +74,7 @@ impl TimedContentProvider<i32> {
 }
 
 fn supports_directions(sheet_id: u32) -> bool {
-    match sheet_id {
-        SPRITE_SHEET_HUMANOIDS_1X1 => true,
-        SPRITE_SHEET_HUMANOIDS_1X2 => true,
-        SPRITE_SHEET_HUMANOIDS_2X2 => true,
-        SPRITE_SHEET_HUMANOIDS_2X3 => true,
-        _ => false
-    }
+    matches!(sheet_id, SPRITE_SHEET_HUMANOIDS_1X1 | SPRITE_SHEET_HUMANOIDS_1X2 | SPRITE_SHEET_HUMANOIDS_2X2 | SPRITE_SHEET_HUMANOIDS_2X3)
 }
 
 #[derive(Serialize, Deserialize)]
