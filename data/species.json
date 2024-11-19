@@ -3810,5 +3810,27 @@
         "sprite_sheet_id": 1009,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
+    },
+    {
+        "id": 1128,
+        "name": "The end!",
+        "entity_type": "StaticObject",
+        "z_index": 300,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "is_invulnerable": true,
+        "inventory_texture_offset": [
+            8,
+            6
+        ],
+        "sprite_frame": {
+            "x": 3,
+            "y": 5,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
     }
 ]
