@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"]
+
 mod rendering;
 
 use std::{collections::HashMap, env, path::PathBuf};
