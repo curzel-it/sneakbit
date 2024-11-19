@@ -53,6 +53,7 @@ class NativeLib {
     external fun isNight(): Boolean
     external fun isLimitedVisibility(): Boolean
     external fun isInteractionAvailable(): Boolean
+    external fun startNewGame()
 
     companion object {
         const val TILE_SIZE: Int = 16

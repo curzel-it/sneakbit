@@ -29,6 +29,8 @@
 "game.menu.inventory" = "Inventory"
 "game.menu.key_bindings" = "Key Bindings"
 "game.menu.map_editor" = "Map Editor"
+"game.menu.new_game" = "New Game"
+"game.menu.new_game_are_you_sure" = "You'll be starting from ZERO.\nAre you sure?"
 "game.menu.resume" = "Resume"
 "game.menu.save" = "Save Game"
 "game.menu.save_and_exit" = "Save & Exit"
@@ -204,6 +206,7 @@
 
 "ok" = "Ok"
 "ok_action" = ">> Ok"
+"no" = "No"
 "picked_up_item" = "Picked up `%s`!"
 "teleporter.locked" = "You need a %s key to open this door."
 "teleporter.name" = "Teleporter"
@@ -211,6 +214,7 @@
 "teleporter.unlock.title" = "Unlock the door?"
 "telepoter.locked.permanent" = "This door is locked."
 "text_input.hint" = "ENTER to confirm, ESC to cancel"
+"yes" = "Yes"
 "you" = "You"
 
 "hint.001.pickup" = """

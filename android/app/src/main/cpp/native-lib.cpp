@@ -465,3 +465,8 @@ JNIEXPORT jboolean JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_isInteractionAvailable(JNIEnv *env, jobject thiz) {
     return is_interaction_available();
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_startNewGame(JNIEnv *env, jobject thiz) {
+    start_new_game();
+}

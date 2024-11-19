@@ -20,6 +20,7 @@ interface SomeGameEngine {
     fun isNight(): Boolean
     fun isLimitedVisibility(): Boolean
     fun isInteractionEnabled(): StateFlow<Boolean>
+    fun startNewGame()
 }
 
 class MockGameEngine: SomeGameEngine {
@@ -65,5 +66,9 @@ class MockGameEngine: SomeGameEngine {
 
     override fun isInteractionEnabled(): StateFlow<Boolean> {
         return MutableStateFlow(false).asStateFlow()
+    }
+
+    override fun startNewGame() {
+        // ...
     }
 }

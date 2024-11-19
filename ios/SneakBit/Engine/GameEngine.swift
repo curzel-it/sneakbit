@@ -85,6 +85,11 @@ class GameEngine {
         flushKeyboard()
     }
     
+    func startNewGame() {
+        showsDeathScreen.send(false)
+        start_new_game()
+    }
+    
     func renderEntities(_ render: @escaping (RenderableItem) -> Void) {
         fetchRenderableItems { items in
             items.forEach { item in

@@ -13,19 +13,53 @@ struct DeathScreen: View {
                     .foregroundStyle(Color.black.opacity(0.7))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                VStack(spacing: 100) {
-                    Text("death_screen.title".localized())
-                        .typography(.largeTitle)
-                        .foregroundStyle(Color.white)
+                if viewModel.showNewGameAlert {
+                    VStack(spacing: 40) {
+                        Text("new_game_confirmation_title".localized())
+                            .typography(.largeTitle)
+                        
+                        Text("new_game_confirmation_message".localized())
+                            .textAlign(.center)
+                            .typography(.text)
+                        
+                        Text("new_game_confirm".localized())
+                            .foregroundStyle(Color.red)
+                            .onTapGesture {
+                                viewModel.confirmNewGame()
+                            }
+                        
+                        Text("new_game_cancel".localized())
+                            .onTapGesture {
+                                viewModel.cancelNewGame()
+                            }
+                    }
+                    .typography(.title)
+                    .foregroundStyle(Color.white)
+                    .positioned(.middle)
+                } else {
+                    VStack(spacing: 100) {
+                        Text("death_screen.title".localized())
+                            .typography(.largeTitle)
+                            .foregroundStyle(Color.white)
+                        
+                        Text("death_screen.subtitle".localized())
+                            .typography(.title)
+                            .foregroundStyle(Color.accentColor)
+                            .onTapGesture {
+                                viewModel.tryAgain()
+                            }
+                    }
+                    .positioned(.middle)
                     
-                    Text("death_screen.subtitle".localized())
-                        .typography(.title)
-                        .foregroundStyle(Color.accentColor)
+                    Text("new_game".localized())
+                        .typography(.menuOption)
+                        .foregroundStyle(Color.red)
                         .onTapGesture {
-                            viewModel.tryAgain()
+                            viewModel.askForNewGame()
                         }
+                        .positioned(.bottom)
+                        .padding(.bottom, viewModel.safeAreaInsets.bottom)
                 }
-                .positioned(.middle)
             }
         }
     }
@@ -35,6 +69,11 @@ private class DeathScreenViewModel: ObservableObject {
     @Inject private var engine: GameEngine
     
     @Published var isVisible: Bool = false
+    @Published var showNewGameAlert: Bool = false
+    
+    var safeAreaInsets: UIEdgeInsets {
+        engine.safeAreaInsets
+    }
     
     private var disposables = Set<AnyCancellable>()
     
@@ -55,5 +94,24 @@ private class DeathScreenViewModel: ObservableObject {
     
     func tryAgain() {
         engine.setKeyDown(.confirm)
+    }
+    
+    func askForNewGame() {
+        withAnimation {
+            showNewGameAlert = true
+        }
+    }
+    
+    func confirmNewGame() {
+        withAnimation {
+            showNewGameAlert = false
+        }
+        engine.startNewGame()
+    }
+    
+    func cancelNewGame() {
+        withAnimation {
+            showNewGameAlert = false
+        }
     }
 }

@@ -39,7 +39,8 @@ pub enum EngineStateUpdate {
     DisplayLongText(String, String),
     DeathScreen,
     ResumeGame,
-    ToggleFullScreen
+    ToggleFullScreen,
+    NewGame
 }
 
 #[cfg(test)]

@@ -256,4 +256,6 @@ bool is_limited_visibility(void);
 
 bool is_interaction_available(void);
 
+void start_new_game(void);
+
 #endif  /* GAME_CORE_H */

@@ -1,6 +1,6 @@
 use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, ammo_counter::AmmoCounter, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, set_value_for_key, StorageKey}, world::World};
+use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
 
 pub struct GameEngine {
     pub menu: GameMenu,
@@ -213,6 +213,9 @@ impl GameEngine {
             EngineStateUpdate::ToggleFullScreen => {
                 self.wants_fullscreen = !self.wants_fullscreen
             }
+            EngineStateUpdate::NewGame => {
+                self.start_new_game()
+            }
         }
     }
     
@@ -339,6 +342,16 @@ impl GameEngine {
             self.menu.select_option_at_index(index);
             return
         }
+    }
+
+    pub fn start_new_game(&mut self) {
+        self.death_screen.is_open = false;
+        self.previous_world = None;
+        self.world.cached_hero_props.direction = Direction::Unknown;        
+        reset_all_stored_values();
+        self.world = World::load(1000).unwrap();
+        self.teleport_to_previous();
+        reset_all_stored_values();
     }
 }
 

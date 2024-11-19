@@ -88,16 +88,12 @@ impl World {
             let ny = y + i * oy + y_fix;
     
             if ny == y && nx == x || ny == y+1 && nx == x {
-                println!("Check {}, hero position, ok", i);
                 continue;
             }
             if ny < 0 || ny >= self.hitmap.len() as i32 || nx < 0 || nx >= self.hitmap[0].len() as i32 {
-                println!("Check {}, out of bounds, ok", i);
                 continue;
             }    
             if self.hitmap[ny as usize][nx as usize] {
-                let what = self.entities_map[ny as usize][nx as usize];
-                println!("Exiting at check {}, hits {}", i, what);
                 return false;
             }
         }    

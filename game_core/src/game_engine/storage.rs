@@ -236,3 +236,13 @@ pub fn inventory_count(species_id: &SpeciesId) -> u32 {
 pub fn has_species_in_inventory(species_id: &SpeciesId) -> bool {
     inventory_count(species_id) > 0
 }
+
+pub fn reset_all_stored_values() {
+    {
+        let mut storage = KEY_VALUE_STORAGE.write().unwrap();
+        storage.clear();
+    }
+    let storage = KEY_VALUE_STORAGE.read().unwrap().clone();
+    let tx = &SAVE_THREAD.0;
+    tx.send(storage).expect("Failed to send data to save thread");
+}

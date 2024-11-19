@@ -1,12 +1,13 @@
 use crate::{constants::WORLD_ID_NONE, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}}, lang::localizable::LocalizableText, spacing, ui::components::{Spacing, View}, utils::rect::IntRect};
 
-use super::{map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
+use super::{confirmation::ConfirmationDialog, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
 pub struct GameMenu {
     pub current_world_id: u32,
     state: MenuState,
     pub menu: Menu<GameMenuItem>,
     map_editor: MapEditor,
+    new_game_confirmation: ConfirmationDialog
 }
 
 #[derive(Debug)]
@@ -15,12 +16,14 @@ enum MenuState {
     Open,
     MapEditor,
     PlaceItem,
+    NewGameConfirmation,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum GameMenuItem {
     Resume,
     ToggleFullScreen,
+    NewGame,
     Save,
     MapEditor,
     Exit,
@@ -33,6 +36,7 @@ impl MenuItem for GameMenuItem {
             GameMenuItem::Resume => "game.menu.resume".localized(),
             GameMenuItem::ToggleFullScreen => "game.menu.toggle_fullscreen".localized(),
             GameMenuItem::Save => "game.menu.save".localized(),
+            GameMenuItem::NewGame => "game.menu.new_game".localized(),
             GameMenuItem::MapEditor => "game.menu.map_editor".localized(),
             GameMenuItem::Exit => "game.menu.exit".localized(),
             GameMenuItem::SaveAndExit => "game.menu.save_and_exit".localized(),
@@ -54,6 +58,7 @@ impl GameMenu {
             state: MenuState::Closed,
             menu,
             map_editor: MapEditor::new(),
+            new_game_confirmation: ConfirmationDialog::new()
         }
     }
 
@@ -70,6 +75,7 @@ impl GameMenu {
             vec![
                 GameMenuItem::Resume,
                 GameMenuItem::ToggleFullScreen,
+                GameMenuItem::NewGame,
                 GameMenuItem::Exit,
             ]
         }
@@ -102,6 +108,7 @@ impl GameMenu {
             MenuState::Open => self.update_from_open(keyboard, time_since_last_update),
             MenuState::MapEditor => self.update_from_map_editor(camera_vieport, keyboard, mouse),
             MenuState::PlaceItem => self.update_from_place_item(camera_vieport, keyboard, mouse),
+            MenuState::NewGameConfirmation => self.update_from_new_game(keyboard, time_since_last_update)
         };
         (self.is_open(), updates)
     }
@@ -135,11 +142,36 @@ impl GameMenu {
                     WorldStateUpdate::EngineUpdate(EngineStateUpdate::Exit),
                 ]
             }
+            GameMenuItem::NewGame => {
+                self.new_game_confirmation.show(                
+                    &"game.menu.new_game".localized(),
+                    &"game.menu.new_game_are_you_sure".localized(),
+                    &vec![
+                        WorldStateUpdate::EngineUpdate(EngineStateUpdate::NewGame),
+                        WorldStateUpdate::EngineUpdate(EngineStateUpdate::ResumeGame)
+                    ]
+                );
+                self.state = MenuState::NewGameConfirmation;
+                vec![]
+            }
             GameMenuItem::Exit => {
                 self.close();
                 vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::Exit)]
             }
         }
+    }
+
+    fn update_from_new_game(&mut self, keyboard: &KeyboardEventsProvider, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
+        if keyboard.has_back_been_pressed {
+            self.state = MenuState::Open;
+            return vec![];
+        }
+        let (is_open, updates) = self.new_game_confirmation.update(keyboard, time_since_last_update);
+
+        if !is_open {
+            self.state = MenuState::Open;
+        }
+        return updates;
     }
 
     fn update_from_close(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
@@ -185,6 +217,7 @@ impl GameMenu {
         match self.state {
             MenuState::Closed => spacing!(Spacing::Zero),
             MenuState::Open => self.menu.ui(),
+            MenuState::NewGameConfirmation => self.new_game_confirmation.ui(),
             MenuState::MapEditor | MenuState::PlaceItem => self.map_editor.ui(camera_viewport),
         }
     }

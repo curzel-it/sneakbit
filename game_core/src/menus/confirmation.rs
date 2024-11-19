@@ -5,7 +5,7 @@ use super::menu::{Menu, MenuItem, MenuUpdate};
 
 pub struct ConfirmationDialog {
     pub menu: Menu<ConfirmationOption>,
-    on_confirm: Vec<WorldStateUpdate>
+    pub on_confirm: Vec<WorldStateUpdate>
 }
 
 #[derive(Debug, Copy, Clone)]

@@ -1,2 +1,7 @@
 "death_screen.title" = "Sei morto";
 "death_screen.subtitle" = "Riprova";
+"new_game" = "New Game";
+"new_game_confirmation_title" = "New Game";
+"new_game_confirmation_message" = "Ripartirai da ZERO.\nSei sicuro?";
+"new_game_cancel" = "Annulla";
+"new_game_confirm" = "Ricomincia";

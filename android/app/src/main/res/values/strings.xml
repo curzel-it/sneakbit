@@ -2,4 +2,10 @@
     <string name="app_name">SneakBit</string>
     <string name="death_screen_title">You\'re dead</string>
     <string name="death_screen_subtitle">Tap to try again</string>
+    <string name="new_game">"New Game"</string>
+    <string name="new_game_confirmation_title">"New Game"</string>
+    <string name="new_game_confirmation_message">"You will be starting from ZERO.\nAre you sure?"</string>
+    <string name="new_game_cancel">"Go back"</string>
+    <string name="new_game_confirm">"Start over"</string>
+
 </resources>

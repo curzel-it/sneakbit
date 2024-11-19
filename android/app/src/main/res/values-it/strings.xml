@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SneakBit</string>
+    <string name="death_screen_title">Sei morto</string>
+    <string name="death_screen_subtitle">Tocca per riprovare</string>
+    <string name="new_game">"Nuova partita"</string>
+    <string name="new_game_confirmation_title">"Nuova partita"</string>
+    <string name="new_game_confirmation_message">"Stai per ricominciare il gioco da ZERO\nSei sicuro?"</string>
+    <string name="new_game_cancel">"Annulla"</string>
+    <string name="new_game_confirm">"Ricomincia"</string>
+
+</resources>

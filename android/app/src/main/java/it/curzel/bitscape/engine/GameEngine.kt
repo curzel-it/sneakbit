@@ -152,6 +152,11 @@ class GameEngine(
         return _isInteractionEnabled.asStateFlow()
     }
 
+    override fun startNewGame() {
+        _showsDeathScreen.value = false
+        nativeLib.startNewGame()
+    }
+
     fun renderableItems(): List<RenderableItem> {
         return nativeLib.fetchRenderableItems()
     }

@@ -340,6 +340,12 @@ pub extern "C" fn is_interaction_available() -> bool {
     engine().world.entities.borrow().iter().any(|e| e.is_in_interaction_range)
 }
 
+#[no_mangle]
+pub extern "C" fn start_new_game() {
+    engine_mut().start_new_game();
+    
+}
+
 pub fn engine_set_wants_fullscreen() {
     engine_mut().wants_fullscreen = true;
 }
