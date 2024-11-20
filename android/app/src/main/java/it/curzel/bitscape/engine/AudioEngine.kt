@@ -48,6 +48,7 @@ class AudioEngine(
     )
 
     private val soundPool: SoundPool
+    private var currentSoundTrackResId: Int? = null
     private var currentSoundTrackSoundId: Int? = null
     private var currentSoundTrackStreamId: Int? = null
     private var soundEffectsEnabled: Boolean = false
@@ -105,10 +106,16 @@ class AudioEngine(
         if (!musicEnabled) {
             return
         }
-        currentSoundTrackStreamId?.let { soundPool.stop(it) }
         val resId = soundTrackResourceIdFromFileName(nativeLib.currentSoundTrack()) ?: return
-        val soundId = soundPool.load(context, resId, 1)
-        currentSoundTrackSoundId = soundId
+
+        if (currentSoundTrackResId != resId) {
+            currentSoundTrackResId = resId
+            currentSoundTrackStreamId?.let { soundPool.stop(it) }
+            currentSoundTrackStreamId = null
+
+            val soundId = soundPool.load(context, resId, 1)
+            currentSoundTrackSoundId = soundId
+        }
     }
 
     private fun setupSoundLoadingListener() {
@@ -122,26 +129,17 @@ class AudioEngine(
     private fun soundTrackResourceIdFromFileName(filename: String): Int? {
         return when (filename) {
             "pol_the_dojo_short.wav" -> R.raw.pol_the_dojo_short
-            "pol_aquatic_circus_short.wav" -> R.raw.pol_aquatic_circus_short
-            "pol_bomb_carrier_short.wav" -> R.raw.pol_bomb_carrier_short
             "pol_brave_worm_short.wav" -> R.raw.pol_brave_worm_short
             "pol_cactus_land_short.wav" -> R.raw.pol_cactus_land_short
             "pol_chubby_cat_short.wav" -> R.raw.pol_chubby_cat_short
             "pol_clouds_castle_short.wav" -> R.raw.pol_clouds_castle_short
-            "pol_code_geek_short.wav" -> R.raw.pol_code_geek_short
             "pol_combat_plan_short.wav" -> R.raw.pol_combat_plan_short
-            "pol_dream_course_short.wav" -> R.raw.pol_dream_course_short
-            "pol_final_sacrifice_short.wav" -> R.raw.pol_final_sacrifice_short
             "pol_flash_run_short.wav" -> R.raw.pol_flash_run_short
-            "pol_fortress_short.wav" -> R.raw.pol_fortress_short
             "pol_king_of_coins_short.wav" -> R.raw.pol_king_of_coins_short
             "pol_magical_sun_short.wav" -> R.raw.pol_magical_sun_short
             "pol_nuts_and_bolts_short.wav" -> R.raw.pol_nuts_and_bolts_short
             "pol_palm_beach_short.wav" -> R.raw.pol_palm_beach_short
             "pol_pyramid_sands_short.wav" -> R.raw.pol_pyramid_sands_short
-            "pol_rocketman_short.wav" -> R.raw.pol_rocketman_short
-            "pol_smash_bros_short.wav" -> R.raw.pol_smash_bros_short
-            "pol_snowy_hill_short.wav" -> R.raw.pol_snowy_hill_short
             "pol_spirits_dance_short.wav" -> R.raw.pol_spirits_dance_short
             else -> null
         }

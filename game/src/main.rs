@@ -77,7 +77,7 @@ fn main() {
         if latest_world_id != current_world {
             latest_world_id = current_world;
             load_tile_map_textures(&mut rl, &thread, current_world);
-            update_sound_track(&sound_library);
+            update_sound_track(&mut sound_library);
         }
 
         render_frame(&mut rl, &thread);  
@@ -87,7 +87,7 @@ fn main() {
         }
         if is_music_enabled() {
             music_was_enabled = true;
-            update_sound_track(&sound_library);
+            update_sound_track(&mut sound_library);
         } else if music_was_enabled {
             music_was_enabled = false;
             stop_music(&mut sound_library);
@@ -109,12 +109,22 @@ fn stop_music(sound_library: &mut HashMap<AppSound, Sound>) {
     });
 }
 
-fn update_sound_track(sound_library: &HashMap<AppSound, Sound>) {
+fn update_sound_track(sound_library: &mut HashMap<AppSound, Sound>) {
     if let Some(track_name) = current_soundtrack_string() {
-        let key = &AppSound::Track(track_name);
-        if let Some(sound) = sound_library.get(key) {
-            if !sound.is_playing() {
-                sound.play();
+        if !track_name.is_empty() {
+            
+            let key = &AppSound::Track(track_name);
+            
+            if let Some(sound) = sound_library.get(key) {
+                if !sound.is_playing() {
+                    let _ = sound;
+                    stop_music(sound_library);
+                }
+            }            
+            if let Some(sound) = sound_library.get(key) {
+                if !sound.is_playing() {
+                    sound.play();
+                }
             }
         }
     }
@@ -387,26 +397,17 @@ fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitErro
             (AppSound::Effect(SoundEffect::GameOver), "sfx_sounds_negative1.wav"),
             (AppSound::Effect(SoundEffect::PlayerResurrected), "sfx_sounds_powerup1.wav"), 
             (AppSound::Effect(SoundEffect::NoAmmo), "sfx_wpn_noammo3.wav"),
-            track_track_pair("pol_aquatic_circus_short.wav"),
-            track_track_pair("pol_bomb_carrier_short.wav"),
             track_track_pair("pol_brave_worm_short.wav"),
             track_track_pair("pol_cactus_land_short.wav"),
             track_track_pair("pol_chubby_cat_short.wav"),
             track_track_pair("pol_clouds_castle_short.wav"),
-            track_track_pair("pol_code_geek_short.wav"),
             track_track_pair("pol_combat_plan_short.wav"),
-            track_track_pair("pol_dream_course_short.wav"),
-            track_track_pair("pol_final_sacrifice_short.wav"),
             track_track_pair("pol_flash_run_short.wav"),
-            track_track_pair("pol_fortress_short.wav"),
             track_track_pair("pol_king_of_coins_short.wav"),
             track_track_pair("pol_magical_sun_short.wav"),
             track_track_pair("pol_nuts_and_bolts_short.wav"),
             track_track_pair("pol_palm_beach_short.wav"),
             track_track_pair("pol_pyramid_sands_short.wav"),
-            track_track_pair("pol_rocketman_short.wav"),
-            track_track_pair("pol_smash_bros_short.wav"),
-            track_track_pair("pol_snowy_hill_short.wav"),
             track_track_pair("pol_spirits_dance_short.wav"),
             track_track_pair("pol_the_dojo_short.wav"),
 

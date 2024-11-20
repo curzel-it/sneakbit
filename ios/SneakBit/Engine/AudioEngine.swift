@@ -11,6 +11,7 @@ class AudioEngine {
     private let soundTrackVolume: Float = 0.3
     private var soundPlayers: [SoundEffect: AVAudioPlayer] = [:]
     private var soundTrackPlayer: AVAudioPlayer?
+    private var currentSoundTrackFileName: String?
     
     private let queue = DispatchQueue(label: "it.curzel.bitscape.AudioEngine", qos: .userInitiated)
     
@@ -52,10 +53,14 @@ class AudioEngine {
     func updateSoundTrack() {
         guard musicEnabled else { return }
         
+        let next = currentSoundTrack()
+        guard next != "" && next != currentSoundTrackFileName else { return }
+        
+        currentSoundTrackFileName = next
         soundTrackPlayer?.stop()
         soundTrackPlayer = nil
         
-        if let player = createAudioPlayer(for: currentSoundTrack()) {
+        if let player = createAudioPlayer(for: next) {
             player.numberOfLoops = 100
             player.volume = 0.0
             player.setVolume(soundTrackVolume, fadeDuration: 1.5)

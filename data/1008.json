@@ -1926,5 +1926,6 @@
   ],
   "is_interior": false,
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": "pol_magical_sun_short.wav"    
 }

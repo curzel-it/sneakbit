@@ -4889,5 +4889,6 @@
   ],
   "is_interior": true,
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": "pol_combat_plan_short.wav"
 }

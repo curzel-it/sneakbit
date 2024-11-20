@@ -11934,5 +11934,6 @@
   ],
   "is_interior": true,
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": "pol_flash_run_short.wav"
 }
