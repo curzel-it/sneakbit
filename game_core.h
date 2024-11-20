@@ -120,7 +120,7 @@
 
 #define SPECIES_BARREL_WOOD 1074
 
-enum SoundEffect {
+typedef enum SoundEffect {
   SoundEffect_AmmoCollected = 1,
   SoundEffect_KeyCollected,
   SoundEffect_BulletFired,
@@ -135,8 +135,7 @@ enum SoundEffect {
   SoundEffect_WorldChange,
   SoundEffect_StepTaken,
   SoundEffect_HintReceived,
-};
-typedef uint8_t SoundEffect;
+} SoundEffect;
 
 typedef enum ToastMode {
   ToastMode_Regular = 0,
@@ -286,8 +285,8 @@ bool is_interaction_available(void);
 
 void start_new_game(void);
 
-SoundEffect *get_current_sound_effects(uintptr_t *length);
+enum SoundEffect *get_current_sound_effects(uintptr_t *length);
 
-void free_sound_effects(SoundEffect *ptr, uintptr_t length);
+void free_sound_effects(enum SoundEffect *ptr, uintptr_t length);
 
 #endif  /* GAME_CORE_H */

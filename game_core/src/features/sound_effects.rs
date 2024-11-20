@@ -5,7 +5,7 @@ use common_macros::hash_set;
 use crate::{constants::WORLD_ID_NONE, current_menu, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::EngineStateUpdate}, is_interaction_available, menus::toasts::{Toast, ToastMode}};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-#[repr(u8)]
+#[repr(C)]
 pub enum SoundEffect { 
     AmmoCollected = 1,
     KeyCollected,
@@ -128,7 +128,7 @@ impl SoundEffectsManager {
     }
 
     fn check_teleportation(&mut self, destination: u32) {
-        if self.last_world != destination && self.last_world != WORLD_ID_NONE {            
+        if self.last_world != destination && self.last_world != 0 && self.last_world != WORLD_ID_NONE {            
             self.prepare(SoundEffect::WorldChange);
         }
         self.last_world = destination;
@@ -141,12 +141,12 @@ impl SoundEffectsManager {
     }
 
     fn check_hero_movement(&mut self, x: i32, y: i32) {
-        if self.last_hero_position == (0, 0) {
+        if self.last_hero_position != (0, 0) {
             if self.last_hero_position.0 != x || self.last_hero_position.1 != y {
                 self.prepare(SoundEffect::StepTaken);
             }
-            self.last_hero_position = (x, y);
         }
+        self.last_hero_position = (x, y);
     }
 
     fn did_fire_but_no_ammo(&self, keyboard: &KeyboardEventsProvider) -> bool { 

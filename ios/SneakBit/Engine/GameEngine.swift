@@ -6,6 +6,7 @@ import Schwifty
 class GameEngine {
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
     @Inject private var tileMapsStorage: TileMapsStorage
+    @Inject private var audioEngine: AudioEngine
     
     let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
@@ -83,6 +84,7 @@ class GameEngine {
         
         updateFpsCounter()
         flushKeyboard()
+        audioEngine.update()
     }
     
     func startNewGame() {

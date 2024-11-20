@@ -367,7 +367,7 @@ fn volume_for_sound_effect(sound_effect: &SoundEffect) -> f32 {
         SoundEffect::BulletFired => 0.3,
         SoundEffect::BulletBounced => 0.2,
         SoundEffect::WorldChange => 0.7,
-        SoundEffect::AmmoCollected => 0.7,
+        SoundEffect::AmmoCollected => 0.6,
         _ => 0.8
     }
 }
