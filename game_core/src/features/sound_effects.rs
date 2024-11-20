@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common_macros::hash_set;
 
-use crate::{constants::WORLD_ID_NONE, current_menu, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::EngineStateUpdate}, is_interaction_available, menus::toasts::{Toast, ToastMode}};
+use crate::{constants::WORLD_ID_NONE, current_menu, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::EngineStateUpdate, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_interaction_available, menus::toasts::{Toast, ToastMode}};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[repr(C)]
@@ -167,4 +167,24 @@ fn did_interact_with_menu(keyboard: &KeyboardEventsProvider) -> bool {
 
 fn did_interact_with_entity(keyboard: &KeyboardEventsProvider) -> bool {
     is_interaction_available() && keyboard.has_confirmation_been_pressed
+}
+
+pub fn are_sound_effects_enabled() -> bool {
+    !bool_for_global_key(&StorageKey::are_sound_effects_disabled())
+}
+
+pub fn toggle_sound_effects() {
+    if are_sound_effects_enabled() {
+        disable_sound_effects();
+    } else {
+        enable_sound_effects();
+    }
+}
+
+fn enable_sound_effects() {
+    set_value_for_key(&StorageKey::are_sound_effects_disabled(), 0);
+}
+
+fn disable_sound_effects() {
+    set_value_for_key(&StorageKey::are_sound_effects_disabled(), 1);
 }

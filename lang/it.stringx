@@ -25,6 +25,8 @@
 "entity.menu.title" = "Opzioni Entità"
 "entity.menu.toggle_demand_attention" = "Attiva/Disattiva Richiesta Attenzione"
 "entity.menu.use" = "Usa"
+"game.menu.disable_sound_effects" = "Disablita Effetti Sonori"
+"game.menu.enable_sound_effects" = "Ablita Effetti Sonori"
 "game.menu.exit" = "Esci"
 "game.menu.inventory" = "Inventario"
 "game.menu.key_bindings" = "Assegnazione Tasti"

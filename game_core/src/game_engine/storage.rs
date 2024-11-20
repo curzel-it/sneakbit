@@ -32,6 +32,10 @@ impl StorageKey {
         "fullscreen".to_owned()
     }
 
+    pub fn are_sound_effects_disabled() -> String {
+        "desktop_only.game_settings.sound_effects_disabled".to_owned()
+    }
+
     fn dialogue_answer(dialogue: &str) -> String {
         format!("dialogue.answer.{}", dialogue)
     }
