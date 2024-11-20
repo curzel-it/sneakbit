@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.R
-import it.curzel.bitscape.engine.SomeGameEngine
+import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.ui.theme.DSTypography
@@ -70,7 +70,7 @@ data class ToastConfig(
 
 @Composable
 fun ToastView(
-    gameEngine: SomeGameEngine,
+    gameEngine: GameEngine,
     spritesProvider: SpritesProvider
 ) {
     val viewModel: ToastViewModel = remember {
@@ -147,7 +147,7 @@ private fun ToastView(
 }
 
 class ToastViewModel(
-    private val gameEngine: SomeGameEngine,
+    private val gameEngine: GameEngine,
     private val spritesProvider: SpritesProvider
 ) : ViewModel() {
 

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.controller.EmulatedKey
-import it.curzel.bitscape.engine.SomeGameEngine
+import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.ui.theme.DSTypography
 import kotlinx.coroutines.launch
 
@@ -52,7 +52,7 @@ data class MenuConfig(
 
 @Composable
 fun MenuView(
-    gameEngine: SomeGameEngine,
+    gameEngine: GameEngine,
     modifier: Modifier = Modifier
 ) {
     val viewModel = remember { MenuViewModel(gameEngine) }
@@ -180,7 +180,7 @@ fun MenuViewPreview() {
     )
 }
 
-class MenuViewModel(private val gameEngine: SomeGameEngine) : ViewModel() {
+class MenuViewModel(private val gameEngine: GameEngine) : ViewModel() {
     private val _menuConfig = mutableStateOf<MenuConfig?>(null)
     val menuConfig: State<MenuConfig?> = _menuConfig
 

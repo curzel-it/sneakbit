@@ -1,6 +1,5 @@
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +26,7 @@ import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.controller.JoystickView
 import it.curzel.bitscape.controller.KeyEmulatorView
 import it.curzel.bitscape.controller.keyEmulatorViewPadding
-import it.curzel.bitscape.engine.SomeGameEngine
+import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.ui.theme.DSTypography
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,7 +36,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ControllerEmulatorView(
-    gameEngine: SomeGameEngine,
+    gameEngine: GameEngine,
     modifier: Modifier = Modifier
 ) {
     val viewModel = remember { ControllerEmulatorViewModel(gameEngine) }
@@ -111,7 +110,7 @@ private fun ControllerEmulatorView(
 }
 
 class ControllerEmulatorViewModel(
-    private val engine: SomeGameEngine
+    private val engine: GameEngine
 ) : ViewModel() {
     private val _isConfirmVisible = MutableStateFlow(false)
     val isConfirmVisible: StateFlow<Boolean> = _isConfirmVisible.asStateFlow()
