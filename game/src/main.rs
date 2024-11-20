@@ -84,6 +84,7 @@ fn main() {
         if are_sound_effects_enabled() {
             play_sound_effects(&sound_library);
         }
+        update_sound_track(&sound_library);
     }
 }
 
@@ -91,7 +92,9 @@ fn update_sound_track(sound_library: &HashMap<AppSound, Sound>) {
     if let Some(track_name) = current_soundtrack_string() {
         let key = &AppSound::Track(track_name);
         if let Some(sound) = sound_library.get(key) {
-            sound.play();
+            if !sound.is_playing() {
+                sound.play();
+            }
         }
     }
 }
@@ -418,7 +421,7 @@ fn volume_for_sound_effect(sound: &AppSound) -> f32 {
             SoundEffect::AmmoCollected => 0.6,
             _ => 0.8
         },
-        AppSound::Track(_) => 0.4
+        AppSound::Track(_) => 0.3
     }
 }
 
