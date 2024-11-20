@@ -5,3 +5,7 @@
 "new_game_confirmation_message" = "You will be starting from ZERO.\nAre you sure?";
 "new_game_cancel" = "Go back";
 "new_game_confirm" = "Start over";
+"game_menu_title" = "Game Menu";
+"game_menu_resume" = "Resume";
+"game_menu_enable_sound_effects" = "Enable Sound Effects";
+"game_menu_disable_sound_effects" = "Disable Sound Effects";

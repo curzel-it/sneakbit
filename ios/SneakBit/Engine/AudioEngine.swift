@@ -24,16 +24,30 @@ class AudioEngine {
         SoundEffect_NoAmmo: "sfx_wpn_noammo3"
     ]
     
+    private(set) var soundEffectsEnabled: Bool = true
+    
     init() {
+        loadSettings()
         loadSounds()
     }
     
     func update() {
-        fetchSoundEffects { [weak self] soundEffects in
-            for effect in soundEffects {
-                self?.playSound(effect)
+        if soundEffectsEnabled {
+            fetchSoundEffects { [weak self] soundEffects in
+                for effect in soundEffects {
+                    self?.playSound(effect)
+                }
             }
         }
+    }
+    
+    func toggleSoundEffects() {
+        soundEffectsEnabled.toggle()
+        UserDefaults.standard.set(soundEffectsEnabled, forKey: kSoundEffectsEnabled)
+    }
+    
+    private func loadSettings() {
+        soundEffectsEnabled = UserDefaults.standard.bool(forKey: kSoundEffectsEnabled)
     }
     
     private func loadSounds() {
@@ -88,3 +102,5 @@ class AudioEngine {
 }
 
 extension SoundEffect: Hashable {}
+
+private let kSoundEffectsEnabled = "kSoundEffectsEnabled"

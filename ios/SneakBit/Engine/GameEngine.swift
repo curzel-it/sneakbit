@@ -92,6 +92,14 @@ class GameEngine {
         start_new_game()
     }
     
+    func pause() {
+        isBusy = true
+    }
+    
+    func resume() {
+        isBusy = false
+    }
+    
     func renderEntities(_ render: @escaping (RenderableItem) -> Void) {
         fetchRenderableItems { items in
             items.forEach { item in
