@@ -377,3 +377,12 @@ pub extern "C" fn free_sound_effects(ptr: *mut SoundEffect, length: usize) {
         }
     }
 }
+
+pub fn current_soundtrack_string() -> Option<String> {
+    engine().world.soundtrack.clone()
+}
+
+#[no_mangle]
+pub extern "C" fn current_soundtrack() -> *const c_char {
+    string_to_c_char(current_soundtrack_string().unwrap_or_default())
+}

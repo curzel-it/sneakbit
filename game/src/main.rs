@@ -5,7 +5,7 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_sound_effects, current_world_id, engine, engine_set_wants_fullscreen, features::sound_effects::{are_sound_effects_enabled, SoundEffect}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::sound_effects::{are_sound_effects_enabled, SoundEffect}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
 use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
@@ -76,12 +76,22 @@ fn main() {
         if latest_world_id != current_world {
             latest_world_id = current_world;
             load_tile_map_textures(&mut rl, &thread, current_world);
+            update_sound_track(&sound_library);
         }
 
         render_frame(&mut rl, &thread);  
         
         if are_sound_effects_enabled() {
             play_sound_effects(&sound_library);
+        }
+    }
+}
+
+fn update_sound_track(sound_library: &HashMap<AppSound, Sound>) {
+    if let Some(track_name) = current_soundtrack_string() {
+        let key = &AppSound::Track(track_name);
+        if let Some(sound) = sound_library.get(key) {
+            sound.play();
         }
     }
 }
@@ -321,31 +331,61 @@ fn is_debug_build() -> bool {
     cfg!(debug_assertions)
 }
 
-fn play_sound_effects(sound_library: &HashMap<SoundEffect, Sound>) {
-    current_sound_effects().iter().for_each(|sound_effect| {
-        if let Some(sound) = sound_library.get(sound_effect) {
+fn play_sound_effects(sound_library: &HashMap<AppSound, Sound>) {
+    current_sound_effects().iter().for_each(|effect| {
+        let key = &AppSound::Effect(effect.clone());
+        if let Some(sound) = sound_library.get(key) {
             sound.play();
         }
     })
 }
 
-fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitError>) -> HashMap<SoundEffect, Sound> {
+#[derive(Clone, PartialEq, Eq, Hash)]
+enum AppSound {
+    Effect(SoundEffect),
+    Track(String)
+}
+
+fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitError>) -> HashMap<AppSound, Sound> {
     if let Ok(rl) = rl {
         vec![
-            (SoundEffect::DeathOfNonMonster, "sfx_deathscream_android7.wav"),
-            (SoundEffect::DeathOfMonster, "sfx_deathscream_human11.wav"),
-            (SoundEffect::SmallExplosion, "sfx_exp_short_hard8.wav"),
-            (SoundEffect::WorldChange, "sfx_movement_dooropen1.wav"),
-            (SoundEffect::StepTaken, "sfx_movement_footsteps1a.wav"),
-            (SoundEffect::BulletFired, "sfx_movement_jump12_landing.wav"),
-            (SoundEffect::BulletBounced, "sfx_movement_jump20.wav"),
-            (SoundEffect::HintReceived, "sfx_sound_neutral5.wav"),
-            (SoundEffect::KeyCollected, "sfx_sounds_fanfare3.wav"),
-            (SoundEffect::Interaction, "sfx_sounds_interaction9.wav"),
-            (SoundEffect::AmmoCollected, "sfx_sounds_interaction22.wav"),
-            (SoundEffect::GameOver, "sfx_sounds_negative1.wav"),
-            (SoundEffect::PlayerResurrected, "sfx_sounds_powerup1.wav"), 
-            (SoundEffect::NoAmmo, "sfx_wpn_noammo3.wav"),
+            (AppSound::Effect(SoundEffect::DeathOfNonMonster), "sfx_deathscream_android7.wav"),
+            (AppSound::Effect(SoundEffect::DeathOfMonster), "sfx_deathscream_human11.wav"),
+            (AppSound::Effect(SoundEffect::SmallExplosion), "sfx_exp_short_hard8.wav"),
+            (AppSound::Effect(SoundEffect::WorldChange), "sfx_movement_dooropen1.wav"),
+            (AppSound::Effect(SoundEffect::StepTaken), "sfx_movement_footsteps1a.wav"),
+            (AppSound::Effect(SoundEffect::BulletFired), "sfx_movement_jump12_landing.wav"),
+            (AppSound::Effect(SoundEffect::BulletBounced), "sfx_movement_jump20.wav"),
+            (AppSound::Effect(SoundEffect::HintReceived), "sfx_sound_neutral5.wav"),
+            (AppSound::Effect(SoundEffect::KeyCollected), "sfx_sounds_fanfare3.wav"),
+            (AppSound::Effect(SoundEffect::Interaction), "sfx_sounds_interaction9.wav"),
+            (AppSound::Effect(SoundEffect::AmmoCollected), "sfx_sounds_interaction22.wav"),
+            (AppSound::Effect(SoundEffect::GameOver), "sfx_sounds_negative1.wav"),
+            (AppSound::Effect(SoundEffect::PlayerResurrected), "sfx_sounds_powerup1.wav"), 
+            (AppSound::Effect(SoundEffect::NoAmmo), "sfx_wpn_noammo3.wav"),
+            track_track_pair("POL-aquatic-circus-short.wav"),
+            track_track_pair("POL-bomb-carrier-short.wav"),
+            track_track_pair("POL-brave-worm-short.wav"),
+            track_track_pair("POL-cactus-land-short.wav"),
+            track_track_pair("POL-chubby-cat-short.wav"),
+            track_track_pair("POL-clouds-castle-short.wav"),
+            track_track_pair("POL-code-geek-short.wav"),
+            track_track_pair("POL-combat-plan-short.wav"),
+            track_track_pair("POL-dream-course-short.wav"),
+            track_track_pair("POL-final-sacrifice-short.wav"),
+            track_track_pair("POL-flash-run-short.wav"),
+            track_track_pair("POL-fortress-short.wav"),
+            track_track_pair("POL-king-of-coins-short.wav"),
+            track_track_pair("POL-magical-sun-short.wav"),
+            track_track_pair("POL-nuts-and-bolts-short.wav"),
+            track_track_pair("POL-palm-beach-short.wav"),
+            track_track_pair("POL-pyramid-sands-short.wav"),
+            track_track_pair("POL-rocketman-short.wav"),
+            track_track_pair("POL-smash-bros-short.wav"),
+            track_track_pair("POL-snowy-hill-short.wav"),
+            track_track_pair("POL-spirits-dance-short.wav"),
+            track_track_pair("POL-the-dojo-short.wav"),
+
         ]
         .into_iter()
         .filter_map(|(effect, filename)| {
@@ -363,15 +403,22 @@ fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitErro
     }
 }
 
-fn volume_for_sound_effect(sound_effect: &SoundEffect) -> f32 {
-    match sound_effect {
-        SoundEffect::StepTaken => 0.1,
-        SoundEffect::Interaction => 0.2,
-        SoundEffect::BulletFired => 0.3,
-        SoundEffect::BulletBounced => 0.2,
-        SoundEffect::WorldChange => 0.7,
-        SoundEffect::AmmoCollected => 0.6,
-        _ => 0.8
+fn track_track_pair(filename: &str) -> (AppSound, &str) {
+    (AppSound::Track(filename.to_owned()), filename)
+}
+
+fn volume_for_sound_effect(sound: &AppSound) -> f32 {
+    match sound {
+        AppSound::Effect(effect) => match effect {
+            SoundEffect::StepTaken => 0.1,
+            SoundEffect::Interaction => 0.2,
+            SoundEffect::BulletFired => 0.3,
+            SoundEffect::BulletBounced => 0.2,
+            SoundEffect::WorldChange => 0.7,
+            SoundEffect::AmmoCollected => 0.6,
+            _ => 0.8
+        },
+        AppSound::Track(_) => 0.4
     }
 }
 
