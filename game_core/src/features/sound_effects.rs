@@ -141,10 +141,8 @@ impl SoundEffectsManager {
     }
 
     fn check_hero_movement(&mut self, x: i32, y: i32) {
-        if self.last_hero_position != (0, 0) {
-            if self.last_hero_position.0 != x || self.last_hero_position.1 != y {
-                self.prepare(SoundEffect::StepTaken);
-            }
+        if self.last_hero_position != (0, 0) && (self.last_hero_position.0 != x || self.last_hero_position.1 != y) {
+            self.prepare(SoundEffect::StepTaken);
         }
         self.last_hero_position = (x, y);
     }
