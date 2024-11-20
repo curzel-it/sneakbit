@@ -3,10 +3,16 @@ import AVFoundation
 import Schwifty
 
 class AudioEngine {
+    private let tag = "AudioEngine"
+    
+    private(set) var soundEffectsEnabled: Bool = true
+    private(set) var musicEnabled: Bool = true
+    
+    private let soundTrackVolume: Float = 0.3
     private var soundPlayers: [SoundEffect: AVAudioPlayer] = [:]
     private var soundTrackPlayer: AVAudioPlayer?
     
-    private let tag = "AudioEngine"
+    private let queue = DispatchQueue(label: "it.curzel.bitscape.AudioEngine", qos: .userInitiated)
     
     private let soundEffectFilenames = [
         SoundEffect_DeathOfNonMonster: "sfx_deathscream_android7",
@@ -24,11 +30,6 @@ class AudioEngine {
         SoundEffect_PlayerResurrected: "sfx_sounds_powerup1",
         SoundEffect_NoAmmo: "sfx_wpn_noammo3"
     ]
-    
-    private(set) var soundEffectsEnabled: Bool = true
-    private(set) var musicEnabled: Bool = true
-    
-    private let queue = DispatchQueue(label: "it.curzel.bitscape.AudioEngine", qos: .userInitiated)
     
     init() {
         loadSettings()
@@ -57,7 +58,7 @@ class AudioEngine {
         if let player = createAudioPlayer(for: currentSoundTrack()) {
             player.numberOfLoops = 100
             player.volume = 0.0
-            player.setVolume(0.3, fadeDuration: 1.5)
+            player.setVolume(soundTrackVolume, fadeDuration: 1.5)
             player.prepareToPlay()
             player.play()
             soundTrackPlayer = player

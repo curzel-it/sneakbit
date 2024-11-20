@@ -45,6 +45,7 @@ fun OptionsScreen(
     val viewModel = remember { OptionsScreenViewModel(gameEngine, audioEngine) }
 
     val toggleSoundEffectsTitle by viewModel.toggleSoundEffectsTitle.collectAsState()
+    val toggleMusicTitle by viewModel.toggleMusicTitle.collectAsState()
     val isVisible by viewModel.isVisible.collectAsState()
     val showNewGameAlert by viewModel.showNewGameAlert.collectAsState()
     val menuButtonOpacity by viewModel.menuButtonOpacity.collectAsState()
@@ -55,12 +56,14 @@ fun OptionsScreen(
     )
 
     OptionsScreen(
-        toggleSoundEffectsTitle = toggleSoundEffectsTitle,
         isVisible = isVisible,
         showNewGameAlert = showNewGameAlert,
         menuButtonOpacity = animatedAlpha,
         resumeGame = { viewModel.resumeGame() },
+        toggleSoundEffectsTitle = toggleSoundEffectsTitle,
         toggleSoundEffects = { viewModel.toggleSoundEffects() },
+        toggleMusicTitle = toggleMusicTitle,
+        toggleMusic = { viewModel.toggleMusic() },
         askForNewGame = { viewModel.askForNewGame() },
         confirmNewGame = { viewModel.confirmNewGame() },
         cancelNewGame = { viewModel.cancelNewGame() },
@@ -72,11 +75,13 @@ fun OptionsScreen(
 @Composable
 private fun OptionsScreen(
     toggleSoundEffectsTitle: Int,
+    toggleSoundEffects: () -> Unit,
+    toggleMusicTitle: Int,
+    toggleMusic: () -> Unit,
     isVisible: Boolean,
     showNewGameAlert: Boolean,
     menuButtonOpacity: Float,
     resumeGame: () -> Unit,
-    toggleSoundEffects: () -> Unit,
     askForNewGame: () -> Unit,
     confirmNewGame: () -> Unit,
     cancelNewGame: () -> Unit,
@@ -104,9 +109,11 @@ private fun OptionsScreen(
                         )
                     } else {
                         OptionsContent(
+                            toggleMusicTitle = toggleMusicTitle,
+                            toggleMusic = toggleMusic,
                             toggleSoundEffectsTitle = toggleSoundEffectsTitle,
-                            resumeGame = resumeGame,
                             toggleSoundEffects = toggleSoundEffects,
+                            resumeGame = resumeGame,
                             askForNewGame = askForNewGame
                         )
                     }
@@ -135,15 +142,18 @@ private fun OptionsScreen(
 
 @Composable
 private fun OptionsContent(
+    toggleMusicTitle: Int,
+    toggleMusic: () -> Unit,
     toggleSoundEffectsTitle: Int,
-    resumeGame: () -> Unit,
     toggleSoundEffects: () -> Unit,
-    askForNewGame: () -> Unit
+    resumeGame: () -> Unit,
+    askForNewGame: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(40.dp),
-        modifier = Modifier
+        modifier = modifier
             .padding(32.dp)
             .widthIn(max = 300.dp)
     ) {
@@ -168,6 +178,13 @@ private fun OptionsContent(
                 .padding(vertical = 8.dp)
         )
         Text(
+            text = stringResource(id = toggleMusicTitle),
+            style = DSTypography.gameMenuOption,
+            modifier = Modifier
+                .clickable { toggleMusic() }
+                .padding(vertical = 8.dp)
+        )
+        Text(
             text = stringResource(id = R.string.new_game),
             style = DSTypography.gameMenuOption,
             color = Color.Red,
@@ -181,12 +198,13 @@ private fun OptionsContent(
 @Composable
 private fun NewGameAlert(
     confirmNewGame: () -> Unit,
-    cancelNewGame: () -> Unit
+    cancelNewGame: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(50.dp),
-        modifier = Modifier
+        modifier = modifier
             .background(Color.Black.copy(alpha = 0.5f))
             .padding(32.dp)
             .widthIn(max = 300.dp)
@@ -227,6 +245,9 @@ private class OptionsScreenViewModel(
     private val _toggleSoundEffectsTitle = MutableStateFlow(R.string.dots)
     val toggleSoundEffectsTitle: StateFlow<Int> = _toggleSoundEffectsTitle
 
+    private val _toggleMusicTitle = MutableStateFlow(R.string.dots)
+    val toggleMusicTitle: StateFlow<Int> = _toggleMusicTitle
+
     private val _isVisible = MutableStateFlow(false)
     val isVisible: StateFlow<Boolean> = _isVisible
 
@@ -241,6 +262,7 @@ private class OptionsScreenViewModel(
     init {
         viewModelScope.launch {
             loadToggleSoundEffectsTitle()
+            loadToggleMusicTitle()
             delay(3000L)
             makeButtonSemiTransparent()
         }
@@ -263,6 +285,11 @@ private class OptionsScreenViewModel(
         loadToggleSoundEffectsTitle()
     }
 
+    fun toggleMusic() {
+        audioEngine.toggleMusic()
+        loadToggleMusicTitle()
+    }
+
     fun askForNewGame() {
         _showNewGameAlert.value = true
     }
@@ -278,8 +305,16 @@ private class OptionsScreenViewModel(
         _showNewGameAlert.value = false
     }
 
+    private fun loadToggleMusicTitle() {
+        _toggleMusicTitle.value = if (audioEngine.isMusicEnabled()) {
+            R.string.game_menu_disable_music
+        } else {
+            R.string.game_menu_enable_music
+        }
+    }
+
     private fun loadToggleSoundEffectsTitle() {
-        _toggleSoundEffectsTitle.value = if (audioEngine.soundEffectsEnabled) {
+        _toggleSoundEffectsTitle.value = if (audioEngine.areSoundEffectsEnabled()) {
             R.string.game_menu_disable_sound_effects
         } else {
             R.string.game_menu_enable_sound_effects
@@ -287,7 +322,7 @@ private class OptionsScreenViewModel(
     }
 
     private fun makeButtonSemiTransparent() {
-        _menuButtonOpacity.value = 0.1f
+        _menuButtonOpacity.value = 0.2f
     }
 }
 
@@ -296,16 +331,18 @@ private class OptionsScreenViewModel(
 fun OptionsScreenPreview() {
     OptionsScreen(
         toggleSoundEffectsTitle = R.string.game_menu_disable_sound_effects,
+        toggleSoundEffects = {},
+        toggleMusicTitle = R.string.game_menu_disable_music,
+        toggleMusic = {},
         isVisible = false,
         showNewGameAlert = false,
         menuButtonOpacity = 1.0f,
         resumeGame = {},
-        toggleSoundEffects = {},
         askForNewGame = {},
         confirmNewGame = {},
         cancelNewGame = {},
         showMenu = {},
-        modifier = Modifier
+        modifier = Modifier.background(Color.Black)
     )
 }
 
@@ -314,9 +351,12 @@ fun OptionsScreenPreview() {
 fun OptionsContentPreview() {
     OptionsContent(
         toggleSoundEffectsTitle = R.string.game_menu_disable_sound_effects,
-        resumeGame = {},
         toggleSoundEffects = {},
-        askForNewGame = {}
+        toggleMusicTitle = R.string.game_menu_disable_music,
+        toggleMusic = {},
+        resumeGame = {},
+        askForNewGame = {},
+        modifier = Modifier.background(Color.Black)
     )
 }
 
@@ -325,6 +365,7 @@ fun OptionsContentPreview() {
 fun NewGameAlertPreview() {
     NewGameAlert(
         confirmNewGame = {},
-        cancelNewGame = {}
+        cancelNewGame = {},
+        modifier = Modifier.background(Color.Black)
     )
 }

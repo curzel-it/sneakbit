@@ -108,6 +108,7 @@ class GameEngine(
             keyDown.clear()
             keyPressed.clear()
             updateTileMapImages(freshWorldId)
+            audioEngine.updateSoundTrack()
         }
 
         updateFpsCounter()

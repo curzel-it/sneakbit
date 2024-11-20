@@ -196,7 +196,7 @@ class OptionsViewModel: ObservableObject {
     
     private func makeButtonSemiTransparent() {
         withAnimation(.easeInOut(duration: 1)) {
-            menuButtonOpacity = 0.1
+            menuButtonOpacity = 0.2
         }
     }
 }

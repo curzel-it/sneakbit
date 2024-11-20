@@ -12,4 +12,6 @@
     <string name="game_menu_resume">"Riprendi"</string>
     <string name="game_menu_enable_sound_effects">"Abilita Effetti Sonori"</string>
     <string name="game_menu_disable_sound_effects">"Disabilita Effetti Sonori"</string>
+    <string name="game_menu_enable_music">"Abilita Musica"</string>
+    <string name="game_menu_disable_music">"Disabilita Musica"</string>
 </resources>

@@ -585,3 +585,11 @@ Java_it_curzel_bitscape_gamecore_NativeLib_currentSoundEffects(JNIEnv *env, jobj
     // Step 8: Return the populated ArrayList
     return arrayList;
 }
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_currentSoundTrack(JNIEnv *env, jobject thiz) {
+    auto value = current_soundtrack();
+    jstring text = env->NewStringUTF(value);
+    return text;
+}
