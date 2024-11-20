@@ -119230,5 +119230,6 @@
   ],
   "is_interior": false,
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": "pol_pyramid_sands_short.wav"    
 }

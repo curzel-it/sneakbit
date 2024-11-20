@@ -5,7 +5,7 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_sound_effects, current_world_id, engine, engine_set_wants_fullscreen, features::sound_effects::{are_sound_effects_enabled, SoundEffect}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
 use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
@@ -15,6 +15,7 @@ const MAX_FPS: u32 = 60;
 fn main() {
     let mut needs_window_init = true;
     let mut latest_world_id = 0;
+    let mut music_was_enabled = true;
     let mut is_fullscreen = false;
     let creative_mode = env::args().any(|arg| arg == "creative");
 
@@ -31,7 +32,7 @@ fn main() {
     let (mut rl, thread) = start_rl();
     
     let mut rl_audio = start_rl_audio();
-    let sound_library = load_sounds(&mut rl_audio);
+    let mut sound_library = load_sounds(&mut rl_audio);
 
     rl.set_window_min_size(360, 240);
         
@@ -76,12 +77,55 @@ fn main() {
         if latest_world_id != current_world {
             latest_world_id = current_world;
             load_tile_map_textures(&mut rl, &thread, current_world);
+            update_sound_track(&mut sound_library);
         }
 
         render_frame(&mut rl, &thread);  
         
         if are_sound_effects_enabled() {
             play_sound_effects(&sound_library);
+        }
+        if is_music_enabled() {
+            music_was_enabled = true;
+            update_sound_track(&mut sound_library);
+        } else if music_was_enabled {
+            music_was_enabled = false;
+            stop_music(&mut sound_library);
+        }
+    }
+}
+
+fn stop_music(sound_library: &mut HashMap<AppSound, Sound>) {
+    let sounds: Vec<AppSound> = sound_library.keys().cloned().collect();
+
+    sounds.iter().for_each(|key| {
+        if matches!(key, AppSound::Track(_)) {
+            if let Some(sound) = sound_library.get_mut(&key) {
+                if sound.is_playing() {
+                    sound.stop();
+                }
+            }
+        }
+    });
+}
+
+fn update_sound_track(sound_library: &mut HashMap<AppSound, Sound>) {
+    if let Some(track_name) = current_soundtrack_string() {
+        if !track_name.is_empty() {
+            
+            let key = &AppSound::Track(track_name);
+            
+            if let Some(sound) = sound_library.get(key) {
+                if !sound.is_playing() {
+                    let _ = sound;
+                    stop_music(sound_library);
+                }
+            }            
+            if let Some(sound) = sound_library.get(key) {
+                if !sound.is_playing() {
+                    sound.play();
+                }
+            }
         }
     }
 }
@@ -321,31 +365,52 @@ fn is_debug_build() -> bool {
     cfg!(debug_assertions)
 }
 
-fn play_sound_effects(sound_library: &HashMap<SoundEffect, Sound>) {
-    current_sound_effects().iter().for_each(|sound_effect| {
-        if let Some(sound) = sound_library.get(sound_effect) {
+fn play_sound_effects(sound_library: &HashMap<AppSound, Sound>) {
+    current_sound_effects().iter().for_each(|effect| {
+        let key = &AppSound::Effect(effect.clone());
+        if let Some(sound) = sound_library.get(key) {
             sound.play();
         }
     })
 }
 
-fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitError>) -> HashMap<SoundEffect, Sound> {
+#[derive(Clone, PartialEq, Eq, Hash)]
+enum AppSound {
+    Effect(SoundEffect),
+    Track(String)
+}
+
+fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitError>) -> HashMap<AppSound, Sound> {
     if let Ok(rl) = rl {
         vec![
-            (SoundEffect::DeathOfNonMonster, "sfx_deathscream_android7.wav"),
-            (SoundEffect::DeathOfMonster, "sfx_deathscream_human11.wav"),
-            (SoundEffect::SmallExplosion, "sfx_exp_short_hard8.wav"),
-            (SoundEffect::WorldChange, "sfx_movement_dooropen1.wav"),
-            (SoundEffect::StepTaken, "sfx_movement_footsteps1a.wav"),
-            (SoundEffect::BulletFired, "sfx_movement_jump12_landing.wav"),
-            (SoundEffect::BulletBounced, "sfx_movement_jump20.wav"),
-            (SoundEffect::HintReceived, "sfx_sound_neutral5.wav"),
-            (SoundEffect::KeyCollected, "sfx_sounds_fanfare3.wav"),
-            (SoundEffect::Interaction, "sfx_sounds_interaction9.wav"),
-            (SoundEffect::AmmoCollected, "sfx_sounds_interaction22.wav"),
-            (SoundEffect::GameOver, "sfx_sounds_negative1.wav"),
-            (SoundEffect::PlayerResurrected, "sfx_sounds_powerup1.wav"), 
-            (SoundEffect::NoAmmo, "sfx_wpn_noammo3.wav"),
+            (AppSound::Effect(SoundEffect::DeathOfNonMonster), "sfx_deathscream_android7.wav"),
+            (AppSound::Effect(SoundEffect::DeathOfMonster), "sfx_deathscream_human11.wav"),
+            (AppSound::Effect(SoundEffect::SmallExplosion), "sfx_exp_short_hard8.wav"),
+            (AppSound::Effect(SoundEffect::WorldChange), "sfx_movement_dooropen1.wav"),
+            (AppSound::Effect(SoundEffect::StepTaken), "sfx_movement_footsteps1a.wav"),
+            (AppSound::Effect(SoundEffect::BulletFired), "sfx_movement_jump12_landing.wav"),
+            (AppSound::Effect(SoundEffect::BulletBounced), "sfx_movement_jump20.wav"),
+            (AppSound::Effect(SoundEffect::HintReceived), "sfx_sound_neutral5.wav"),
+            (AppSound::Effect(SoundEffect::KeyCollected), "sfx_sounds_fanfare3.wav"),
+            (AppSound::Effect(SoundEffect::Interaction), "sfx_sounds_interaction9.wav"),
+            (AppSound::Effect(SoundEffect::AmmoCollected), "sfx_sounds_interaction22.wav"),
+            (AppSound::Effect(SoundEffect::GameOver), "sfx_sounds_negative1.wav"),
+            (AppSound::Effect(SoundEffect::PlayerResurrected), "sfx_sounds_powerup1.wav"), 
+            (AppSound::Effect(SoundEffect::NoAmmo), "sfx_wpn_noammo3.wav"),
+            track_track_pair("pol_brave_worm_short.wav"),
+            track_track_pair("pol_cactus_land_short.wav"),
+            track_track_pair("pol_chubby_cat_short.wav"),
+            track_track_pair("pol_clouds_castle_short.wav"),
+            track_track_pair("pol_combat_plan_short.wav"),
+            track_track_pair("pol_flash_run_short.wav"),
+            track_track_pair("pol_king_of_coins_short.wav"),
+            track_track_pair("pol_magical_sun_short.wav"),
+            track_track_pair("pol_nuts_and_bolts_short.wav"),
+            track_track_pair("pol_palm_beach_short.wav"),
+            track_track_pair("pol_pyramid_sands_short.wav"),
+            track_track_pair("pol_spirits_dance_short.wav"),
+            track_track_pair("pol_the_dojo_short.wav"),
+
         ]
         .into_iter()
         .filter_map(|(effect, filename)| {
@@ -363,15 +428,22 @@ fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitErro
     }
 }
 
-fn volume_for_sound_effect(sound_effect: &SoundEffect) -> f32 {
-    match sound_effect {
-        SoundEffect::StepTaken => 0.1,
-        SoundEffect::Interaction => 0.2,
-        SoundEffect::BulletFired => 0.3,
-        SoundEffect::BulletBounced => 0.2,
-        SoundEffect::WorldChange => 0.7,
-        SoundEffect::AmmoCollected => 0.6,
-        _ => 0.8
+fn track_track_pair(filename: &str) -> (AppSound, &str) {
+    (AppSound::Track(filename.to_owned()), filename)
+}
+
+fn volume_for_sound_effect(sound: &AppSound) -> f32 {
+    match sound {
+        AppSound::Effect(effect) => match effect {
+            SoundEffect::StepTaken => 0.1,
+            SoundEffect::Interaction => 0.2,
+            SoundEffect::BulletFired => 0.3,
+            SoundEffect::BulletBounced => 0.2,
+            SoundEffect::WorldChange => 0.7,
+            SoundEffect::AmmoCollected => 0.6,
+            _ => 0.8
+        },
+        AppSound::Track(_) => 0.3
     }
 }
 

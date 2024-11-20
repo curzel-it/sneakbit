@@ -12,4 +12,6 @@
     <string name="game_menu_resume">"Resume"</string>
     <string name="game_menu_enable_sound_effects">"Enable Sound Effects"</string>
     <string name="game_menu_disable_sound_effects">"Disable Sound Effects"</string>
+    <string name="game_menu_enable_music">"Enable Music"</string>
+    <string name="game_menu_disable_music">"Disable Music"</string>
 </resources>

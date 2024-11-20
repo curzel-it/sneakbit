@@ -14,3 +14,7 @@ func fetchSoundEffects(_ callback: @escaping ([SoundEffect]) -> Void) {
     callback(items)
     free_sound_effects(ptr, length)
 }
+
+func currentSoundTrack() -> String? {
+    string(from: current_soundtrack())?.components(separatedBy: ".").first
+}

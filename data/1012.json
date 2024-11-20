@@ -38804,5 +38804,6 @@
   ],
   "is_interior": false,
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": "pol_clouds_castle_short.wav"
 }

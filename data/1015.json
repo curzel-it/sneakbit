@@ -5594,5 +5594,6 @@
   ],
   "is_interior": true,
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": "pol_brave_worm_short.wav"    
 }

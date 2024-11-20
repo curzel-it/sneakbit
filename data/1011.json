@@ -35096,5 +35096,6 @@
   ],
   "is_interior": false,
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": "pol_flash_run_short.wav"
 }

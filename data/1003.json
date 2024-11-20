@@ -21745,5 +21745,6 @@
     ],
     "is_interior": false,
     "light_conditions": "Day",
-    "cutscenes": []
+    "cutscenes": [],
+    "soundtrack": "pol_cactus_land_short.wav"    
 }

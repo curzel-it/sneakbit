@@ -3,9 +3,17 @@ import AVFoundation
 import Schwifty
 
 class AudioEngine {
-    private var soundPlayers: [SoundEffect: AVAudioPlayer] = [:]
-    
     private let tag = "AudioEngine"
+    
+    private(set) var soundEffectsEnabled: Bool = true
+    private(set) var musicEnabled: Bool = true
+    
+    private let soundTrackVolume: Float = 0.3
+    private var soundPlayers: [SoundEffect: AVAudioPlayer] = [:]
+    private var soundTrackPlayer: AVAudioPlayer?
+    private var currentSoundTrackFileName: String?
+    
+    private let queue = DispatchQueue(label: "it.curzel.bitscape.AudioEngine", qos: .userInitiated)
     
     private let soundEffectFilenames = [
         SoundEffect_DeathOfNonMonster: "sfx_deathscream_android7",
@@ -24,20 +32,41 @@ class AudioEngine {
         SoundEffect_NoAmmo: "sfx_wpn_noammo3"
     ]
     
-    private(set) var soundEffectsEnabled: Bool = true
-    
     init() {
         loadSettings()
-        loadSounds()
+        
+        DispatchQueue.global().async {
+            self.loadSounds()
+        }
     }
     
     func update() {
-        if soundEffectsEnabled {
-            fetchSoundEffects { [weak self] soundEffects in
-                for effect in soundEffects {
-                    self?.playSound(effect)
-                }
+        guard soundEffectsEnabled else { return }
+        
+        fetchSoundEffects { soundEffects in
+            for effect in soundEffects {
+                self.playSound(effect)
             }
+        }
+    }
+    
+    func updateSoundTrack() {
+        guard musicEnabled else { return }
+        
+        let next = currentSoundTrack()
+        guard next != "" && next != currentSoundTrackFileName else { return }
+        
+        currentSoundTrackFileName = next
+        soundTrackPlayer?.stop()
+        soundTrackPlayer = nil
+        
+        if let player = createAudioPlayer(for: next) {
+            player.numberOfLoops = 100
+            player.volume = 0.0
+            player.setVolume(soundTrackVolume, fadeDuration: 1.5)
+            player.prepareToPlay()
+            player.play()
+            soundTrackPlayer = player
         }
     }
     
@@ -46,14 +75,34 @@ class AudioEngine {
         UserDefaults.standard.set(soundEffectsEnabled, forKey: kSoundEffectsEnabled)
     }
     
+    func toggleMusic() {
+        soundTrackPlayer?.stop()
+        soundTrackPlayer = nil
+        musicEnabled.toggle()
+        UserDefaults.standard.set(musicEnabled, forKey: kMusicEnabled)
+        updateSoundTrack()
+    }
+    
     private func loadSettings() {
-        soundEffectsEnabled = UserDefaults.standard.bool(forKey: kSoundEffectsEnabled)
+        let isFirstTime = UserDefaults.standard.value(forKey: kSoundEffectsEnabled) == nil
+        
+        if isFirstTime {
+            UserDefaults.standard.set(true, forKey: kSoundEffectsEnabled)
+            UserDefaults.standard.set(true, forKey: kMusicEnabled)
+            soundEffectsEnabled = true
+            musicEnabled = true
+        } else {
+            soundEffectsEnabled = UserDefaults.standard.bool(forKey: kSoundEffectsEnabled)
+            musicEnabled = UserDefaults.standard.bool(forKey: kMusicEnabled)
+        }
     }
     
     private func loadSounds() {
         for effect in soundEffectFilenames.keys {
             if let player = createAudioPlayer(for: effect) {
-                soundPlayers[effect] = player
+                queue.async {
+                    self.soundPlayers[effect] = player
+                }
             } else {
                 Logger.error(tag, "Failed to load sound for effect: \(effect)")
             }
@@ -61,8 +110,15 @@ class AudioEngine {
     }
     
     private func createAudioPlayer(for effect: SoundEffect) -> AVAudioPlayer? {
-        guard let url = Bundle.main.url(forResource: filename(for: effect), withExtension: "wav", subdirectory: "audio") else {
-            Logger.error(tag, "Audio file not found for \(effect)")
+        createAudioPlayer(for: filename(for: effect))
+    }
+    
+    private func createAudioPlayer(for filename: String?) -> AVAudioPlayer? {
+        guard let filename, !filename.isEmpty else {
+            return nil
+        }
+        guard let url = Bundle.main.url(forResource: filename, withExtension: "wav", subdirectory: "audio") else {
+            Logger.error(tag, "Audio file not found for \(filename)")
             return nil
         }
         
@@ -71,7 +127,7 @@ class AudioEngine {
             player.prepareToPlay()
             return player
         } catch {
-            Logger.error(tag, "Error loading sound \(effect.rawValue): \(error.localizedDescription)")
+            Logger.error(tag, "Error loading audio \(filename): \(error.localizedDescription)")
             return nil
         }
     }
@@ -91,6 +147,12 @@ class AudioEngine {
     }
     
     private func playSound(_ effect: SoundEffect) {
+        queue.async {
+            self.playSoundNow(effect)
+        }
+    }
+    
+    private func playSoundNow(_ effect: SoundEffect) {
         guard let player = soundPlayers[effect] else {
             Logger.error(tag, "No player found for sound effect: \(effect.rawValue)")
             return
@@ -104,3 +166,4 @@ class AudioEngine {
 extension SoundEffect: Hashable {}
 
 private let kSoundEffectsEnabled = "kSoundEffectsEnabled"
+private let kMusicEnabled = "kMusicEnabled"

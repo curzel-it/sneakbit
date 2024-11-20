@@ -9,4 +9,5 @@
 "game_menu_resume" = "Riprendi";
 "game_menu_enable_sound_effects" = "Abilita Effetti Sonori";
 "game_menu_disable_sound_effects" = "Disabilita Effetti Sonori";
-
+"game_menu_enable_music" = "Abilita Musica";
+"game_menu_disable_music" = "Disabilita Musica";

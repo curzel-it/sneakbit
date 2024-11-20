@@ -6681,5 +6681,6 @@
   ],
   "is_interior": false,
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": "pol_king_of_coins_short.wav"
 }

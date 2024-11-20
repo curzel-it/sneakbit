@@ -8,15 +8,16 @@ Like the game or have cool ideas? Join the [Discord](https://discord.gg/MCdEgXKS
 
 ## Play it now!
 <div style="display: flex; gap: 10px; justify-content: left; margin: 20px 0;">
+<!--
     <a href="https://discord.gg/MCdEgXKSH5">
         <img src="docs/playstore_badge.webp" alt="Play Store" style="max-width: 150px; height: auto;">
-    </a>
+    </a> -->
     <a href="https://discord.gg/MCdEgXKSH5">
         <img src="docs/appstore_badge.webp" alt="App Store" style="max-width: 150px; height: auto;">
     </a>
 </div>
 
-(Coming soon to Steam for Linux, Windows and macOS)
+Coming soon to the Play Store for Android and to Steam for Linux, Windows and macOS
 
 ## Build from source
 ### macOS, Linux
@@ -40,39 +41,27 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 ### iOS and Android
 The engine is the same, the rendering is a simple set of custom views.
 
-I have a bunch of helpers to generate and copy over resources to the correct places in the mobile projects:
-```bash
-# Aseprite -> Png
-python3 scripts/compile_sprites.py
+The `game_core` create is compiled via `cargo-lipo` and `cargo-ndk`.
 
-# Copy ALL assets, including headers to ios and android projects
+```bash
+sh scripts/build_ios.sh
+sh scripts/build_android.sh
 python3 scripts/sync_assets.py
 ```
 
-As a simple but significant optimization,iOS and Android use a pre-rendered image instead of rendering individual tiles, which is much, much faster.
+## Credits
+### Music
+Found a great bundle [by Filippo Vicarelli](https://www.filippovicarelli.com/8bit-game-background-music)
 
-#### iOS
-The build uses cargo-lipo, just run the script and open the project in Xcode.
-```bash
-sh scripts/build_ios.sh
-```
-
-#### Android
-The build uses cargo-ndk, just run the script and open the project in Android Studio.
-```bash
-sh scripts/build_android.sh
-```
-
-## Why lib + bin?
-I'm trying to have the engine by completely independent from rendering, which has proved useful for porting the project to iOS and Android.
+### Sounds effects
+Found a great bundle [by SubspaceAudio](https://opengameart.org/content/512-sound-effects-8-bit-style) over at OpenGameArt.org
 
 ## Screenshots
 ![Game intro](docs/1.png)
 ![First level](docs/2.png)
-![Dialogues](docs/4.png)
 ![Map Editor](docs/6.png)
-![Android](docs/android.png)
-![iOS](docs/ios.jpeg)
+<img src="docs/android.png" alt="Android Screenshot" style="height: 500px">
+<img src="docs/ios.jpeg" alt="iOS Screenshot" style="height: 500px;">
 
 ## More about the game
 I'm taking notes about characters and lore [here](https://github.com/curzel-it/sneakbit/blob/main/docs/game_design_document.md).
@@ -80,11 +69,6 @@ I'm taking notes about characters and lore [here](https://github.com/curzel-it/s
 
 ## TODO:
 - Make slopes reflect bullets
-- Soundtracks (?)
 - More Quests
 - More Lore
 - More Game!
-
-## Credits
-### Sounds effects
-Found a great bundle over at OpenGameArt.org [by SubspaceAudio](https://opengameart.org/content/512-sound-effects-8-bit-style)

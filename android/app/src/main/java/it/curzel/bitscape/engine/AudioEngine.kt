@@ -7,6 +7,10 @@ import android.media.SoundPool
 import android.util.Log
 import it.curzel.bitscape.R
 import it.curzel.bitscape.gamecore.NativeLib
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class AudioEngine(
     private val context: Context,
@@ -14,6 +18,8 @@ class AudioEngine(
 ) {
     private val TAG = "AudioEngine"
     private val soundMap: MutableMap<SoundEffect, Int> = mutableMapOf()
+
+    private val soundTrackVolume = 0.3f
 
     private val volumeMap: Map<SoundEffect, Float> = mapOf(
         SoundEffect.StepTaken to 0.01f,
@@ -42,22 +48,101 @@ class AudioEngine(
     )
 
     private val soundPool: SoundPool
-    var soundEffectsEnabled: Boolean = false
+    private var currentSoundTrackResId: Int? = null
+    private var currentSoundTrackSoundId: Int? = null
+    private var currentSoundTrackStreamId: Int? = null
+    private var soundEffectsEnabled: Boolean = false
+    private var musicEnabled: Boolean = false
     private val preferences: SharedPreferences = context.getSharedPreferences("AudioSettings", Context.MODE_PRIVATE)
 
     init {
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
             .build()
 
         soundPool = SoundPool.Builder()
-            .setMaxStreams(soundEffectFilenames.size)
+            .setMaxStreams(soundEffectFilenames.size + 20)
             .setAudioAttributes(audioAttributes)
             .build()
 
-        loadSounds()
         loadSettings()
+        setupSoundLoadingListener()
+
+        CoroutineScope(Dispatchers.IO + Job()).launch {
+            loadSounds()
+        }
+    }
+
+    fun areSoundEffectsEnabled(): Boolean {
+        return soundEffectsEnabled
+    }
+
+    fun toggleSoundEffects() {
+        soundEffectsEnabled = !soundEffectsEnabled
+        preferences.edit().putBoolean(SOUND_EFFECTS_ENABLED, soundEffectsEnabled).apply()
+    }
+
+    fun isMusicEnabled(): Boolean {
+        return musicEnabled
+    }
+
+    fun toggleMusic() {
+        currentSoundTrackStreamId?.let { soundPool.stop(it) }
+        musicEnabled = !musicEnabled
+        preferences.edit().putBoolean(MUSIC_ENABLED, musicEnabled).apply()
+        updateSoundTrack()
+    }
+
+    fun update() {
+        if (soundEffectsEnabled) {
+            nativeLib.currentSoundEffects()
+                .mapNotNull { SoundEffect.fromInt(it) }
+                .forEach { playSound(it) }
+        }
+    }
+
+    fun updateSoundTrack() {
+        if (!musicEnabled) {
+            return
+        }
+        val resId = soundTrackResourceIdFromFileName(nativeLib.currentSoundTrack()) ?: return
+
+        if (currentSoundTrackResId != resId) {
+            currentSoundTrackResId = resId
+            currentSoundTrackStreamId?.let { soundPool.stop(it) }
+            currentSoundTrackStreamId = null
+
+            val soundId = soundPool.load(context, resId, 1)
+            currentSoundTrackSoundId = soundId
+        }
+    }
+
+    private fun setupSoundLoadingListener() {
+        soundPool.setOnLoadCompleteListener { soundPool, loadedSoundId, status ->
+            if (status == 0 && loadedSoundId == currentSoundTrackSoundId) {
+                currentSoundTrackStreamId = soundPool.play(loadedSoundId, soundTrackVolume, soundTrackVolume, 1, -1, 1f)
+            }
+        }
+    }
+
+    private fun soundTrackResourceIdFromFileName(filename: String): Int? {
+        return when (filename) {
+            "pol_the_dojo_short.wav" -> R.raw.pol_the_dojo_short
+            "pol_brave_worm_short.wav" -> R.raw.pol_brave_worm_short
+            "pol_cactus_land_short.wav" -> R.raw.pol_cactus_land_short
+            "pol_chubby_cat_short.wav" -> R.raw.pol_chubby_cat_short
+            "pol_clouds_castle_short.wav" -> R.raw.pol_clouds_castle_short
+            "pol_combat_plan_short.wav" -> R.raw.pol_combat_plan_short
+            "pol_flash_run_short.wav" -> R.raw.pol_flash_run_short
+            "pol_king_of_coins_short.wav" -> R.raw.pol_king_of_coins_short
+            "pol_magical_sun_short.wav" -> R.raw.pol_magical_sun_short
+            "pol_nuts_and_bolts_short.wav" -> R.raw.pol_nuts_and_bolts_short
+            "pol_palm_beach_short.wav" -> R.raw.pol_palm_beach_short
+            "pol_pyramid_sands_short.wav" -> R.raw.pol_pyramid_sands_short
+            "pol_spirits_dance_short.wav" -> R.raw.pol_spirits_dance_short
+            else -> null
+        }
     }
 
     private fun loadSounds() {
@@ -80,31 +165,43 @@ class AudioEngine(
         }
 
         val volume = volumeMap[effect] ?: 0.8f
-        soundPool.play(
-            soundId,
-            volume, // left volume
-            volume, // right volume
-            1, // priority
-            0, // loop (0 = no loop)
-            1f // playback rate (1.0 = normal)
-        )
+        soundPool.play(soundId, volume, volume, 1, 0, 1f)
     }
 
-    fun update() {
-        if (soundEffectsEnabled) {
-            nativeLib.currentSoundEffects()
-                .mapNotNull { SoundEffect.fromInt(it) }
-                .forEach { playSound(it) }
+    private fun loadSettings() {
+        soundEffectsEnabled = preferences.getBoolean(SOUND_EFFECTS_ENABLED, true)
+        musicEnabled = preferences.getBoolean(MUSIC_ENABLED, true)
+    }
+
+    fun pauseMusic() {
+        currentSoundTrackStreamId?.let {
+            soundPool.pause(it)
+            Log.d(TAG, "Music paused")
         }
     }
 
-    fun toggleSoundEffects() {
-        soundEffectsEnabled = !soundEffectsEnabled
-        preferences.edit().putBoolean("soundEffectsEnabled", soundEffectsEnabled).apply()
+    fun resumeMusic() {
+        if (musicEnabled && currentSoundTrackSoundId != null) {
+            currentSoundTrackStreamId = soundPool.play(
+                currentSoundTrackSoundId!!,
+                soundTrackVolume,
+                soundTrackVolume,
+                1,
+                -1,
+                1f
+            )
+            Log.d(TAG, "Music resumed")
+        }
     }
 
-    fun loadSettings() {
-        soundEffectsEnabled = preferences.getBoolean("soundEffectsEnabled", true)
+    fun release() {
+        soundPool.release()
+        Log.d(TAG, "SoundPool released")
+    }
+
+    companion object {
+        const val MUSIC_ENABLED = "kMusicEnabled"
+        const val SOUND_EFFECTS_ENABLED = "kSoundEffectsEnabled"
     }
 }
 

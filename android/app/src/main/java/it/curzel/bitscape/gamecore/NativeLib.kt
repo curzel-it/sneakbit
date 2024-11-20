@@ -55,6 +55,7 @@ class NativeLib {
     external fun isInteractionAvailable(): Boolean
     external fun startNewGame()
     external fun currentSoundEffects(): List<Int>
+    external fun currentSoundTrack(): String
 
     companion object {
         const val TILE_SIZE: Int = 16

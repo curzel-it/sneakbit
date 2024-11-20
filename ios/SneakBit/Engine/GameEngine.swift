@@ -80,6 +80,7 @@ class GameEngine {
             keyDown.removeAll()
             keyPressed.removeAll()
             updateTileMapImages()
+            audioEngine.updateSoundTrack()
         }
         
         updateFpsCounter()
@@ -192,8 +193,6 @@ class GameEngine {
     }
     
     private func updateKeyboardState(timeSinceLastUpdate: Float) {
-        // logKeyboardState()
-        
         update_keyboard(
             keyPressed.contains(.up),
             keyPressed.contains(.right),
@@ -253,27 +252,5 @@ class GameEngine {
         canRender = !mode.isVisible
         isBusy = mode.isVisible
         loadingScreenConfig.send(mode)
-    }
-    
-    private func logKeyboardState() {
-        print("=== Keyboard State Update ===")
-        print("Directional Keys Pressed:")
-        print("  Up: \(keyPressed.contains(.up))")
-        print("  Right: \(keyPressed.contains(.right))")
-        print("  Down: \(keyPressed.contains(.down))")
-        print("  Left: \(keyPressed.contains(.left))")
-        print("Directional Keys Down:")
-        print("  Up: \(keyDown.contains(.up))")
-        print("  Right: \(keyDown.contains(.right))")
-        print("  Down: \(keyDown.contains(.down))")
-        print("  Left: \(keyDown.contains(.left))")
-        print("Action Keys Pressed:")
-        print("  Escape: \(keyPressed.contains(.escape))")
-        print("  Menu: \(keyPressed.contains(.menu))")
-        print("  Confirm: \(keyPressed.contains(.confirm))")
-        print("  Attack: \(keyPressed.contains(.attack))")
-        print("  Backspace: \(keyPressed.contains(.backspace))")
-        print("Current Character: \(currentChar)")
-        print("------------------------------")
     }
 }

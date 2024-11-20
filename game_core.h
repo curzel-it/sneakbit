@@ -289,4 +289,6 @@ enum SoundEffect *get_current_sound_effects(uintptr_t *length);
 
 void free_sound_effects(enum SoundEffect *ptr, uintptr_t length);
 
+const char *current_soundtrack(void);
+
 #endif  /* GAME_CORE_H */

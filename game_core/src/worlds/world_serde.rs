@@ -109,6 +109,9 @@ struct WorldData {
     ephemeral_state: bool,
 
     #[serde(default)]
+    soundtrack: Option<String>,
+
+    #[serde(default)]
     cutscenes: Vec<CutScene>
 }
 
@@ -129,6 +132,7 @@ impl Serialize for World {
         state.serialize_field("is_interior", &self.is_interior)?;
         state.serialize_field("light_conditions", &self.light_conditions)?;
         state.serialize_field("cutscenes", &self.cutscenes)?;
+        state.serialize_field("soundtrack", &self.soundtrack)?;
         state.end()
     }
 }
@@ -143,6 +147,7 @@ impl<'de> Deserialize<'de> for World {
         world.is_interior = data.is_interior;
         world.light_conditions = data.light_conditions;
         world.cutscenes = data.cutscenes;
+        world.soundtrack = data.soundtrack;
         data.entities.into_iter().for_each(|e| _ = world.add_entity(e));        
         world.load_biome_tiles(data.biome_tiles);
         world.load_construction_tiles(data.constructions_tiles);

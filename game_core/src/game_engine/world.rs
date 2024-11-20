@@ -36,6 +36,7 @@ pub struct World {
     pub pressure_plate_down_yellow: bool,
     pub spawn_point: (i32, i32),
     pub light_conditions: LightConditions,
+    pub soundtrack: Option<String>,
     pub cutscenes: Vec<CutScene>,
 }
 
@@ -74,7 +75,8 @@ impl World {
             buildings: hash_set![],
             light_conditions: LightConditions::Day,
             cutscenes: vec![],
-            spawn_point: (0, 0)
+            spawn_point: (0, 0),
+            soundtrack: None
         }
     }
 

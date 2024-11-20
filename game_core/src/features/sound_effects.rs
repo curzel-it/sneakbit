@@ -186,3 +186,23 @@ fn enable_sound_effects() {
 fn disable_sound_effects() {
     set_value_for_key(&StorageKey::are_sound_effects_disabled(), 1);
 }
+
+pub fn is_music_enabled() -> bool {
+    !bool_for_global_key(&StorageKey::is_music_disabled())
+}
+
+pub fn toggle_music() {
+    if is_music_enabled() {
+        disable_music();
+    } else {
+        enable_music();
+    }
+}
+
+fn enable_music() {
+    set_value_for_key(&StorageKey::is_music_disabled(), 0);
+}
+
+fn disable_music() {
+    set_value_for_key(&StorageKey::is_music_disabled(), 1);
+}
