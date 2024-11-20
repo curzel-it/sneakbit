@@ -56,6 +56,21 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        gameViewModel.engine.audioEngine.resumeMusic()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        gameViewModel.engine.audioEngine.pauseMusic()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        gameViewModel.engine.audioEngine.release()
+    }
 }
 
 class GameViewModel(application: Application) : AndroidViewModel(application) {

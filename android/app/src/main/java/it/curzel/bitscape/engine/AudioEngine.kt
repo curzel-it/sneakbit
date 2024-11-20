@@ -57,11 +57,11 @@ class AudioEngine(
     init {
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
             .build()
 
         soundPool = SoundPool.Builder()
-            .setMaxStreams(soundEffectFilenames.size)
+            .setMaxStreams(soundEffectFilenames.size + 20)
             .setAudioAttributes(audioAttributes)
             .build()
 
@@ -114,14 +114,7 @@ class AudioEngine(
     private fun setupSoundLoadingListener() {
         soundPool.setOnLoadCompleteListener { soundPool, loadedSoundId, status ->
             if (status == 0 && loadedSoundId == currentSoundTrackSoundId) {
-                currentSoundTrackStreamId = soundPool.play(
-                    loadedSoundId,
-                    soundTrackVolume,
-                    soundTrackVolume,
-                    1,
-                    -1,
-                    1f
-                )
+                currentSoundTrackStreamId = soundPool.play(loadedSoundId, soundTrackVolume, soundTrackVolume, 1, -1, 1f)
             }
         }
     }
@@ -174,19 +167,38 @@ class AudioEngine(
         }
 
         val volume = volumeMap[effect] ?: 0.8f
-        soundPool.play(
-            soundId,
-            volume, // left volume
-            volume, // right volume
-            1, // priority
-            0, // loop (0 = no loop)
-            1f // playback rate (1.0 = normal)
-        )
+        soundPool.play(soundId, volume, volume, 1, 0, 1f)
     }
 
     private fun loadSettings() {
         soundEffectsEnabled = preferences.getBoolean(SOUND_EFFECTS_ENABLED, true)
         musicEnabled = preferences.getBoolean(MUSIC_ENABLED, true)
+    }
+
+    fun pauseMusic() {
+        currentSoundTrackStreamId?.let {
+            soundPool.pause(it)
+            Log.d(TAG, "Music paused")
+        }
+    }
+
+    fun resumeMusic() {
+        if (musicEnabled && currentSoundTrackSoundId != null) {
+            currentSoundTrackStreamId = soundPool.play(
+                currentSoundTrackSoundId!!,
+                soundTrackVolume,
+                soundTrackVolume,
+                1,
+                -1,
+                1f
+            )
+            Log.d(TAG, "Music resumed")
+        }
+    }
+
+    fun release() {
+        soundPool.release()
+        Log.d(TAG, "SoundPool released")
     }
 
     companion object {
