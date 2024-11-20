@@ -32,6 +32,9 @@ class GameEngine(
     private val renderingScaleUseCase: RenderingScaleUseCase,
     private val tileMapsStorage: TileMapsStorage
 ): SomeGameEngine {
+    private val nativeLib = NativeLib()
+    private val audioEngine = AudioEngine(context, nativeLib)
+
     private val _loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.none)
     private val _showsDeathScreen = MutableStateFlow(false)
     private val _numberOfKunai = MutableStateFlow(0)
@@ -65,8 +68,6 @@ class GameEngine(
 
     private var tileMapImages = emptyList<Bitmap>()
     private var currentBiomeVariant = 0
-
-    private val nativeLib = NativeLib()
 
     init {
         val dataPath = AssetUtils.extractAssetFolder(context, "data", "data")
@@ -110,6 +111,7 @@ class GameEngine(
 
         updateFpsCounter()
         flushKeyboard()
+        audioEngine.update()
     }
 
     private fun currentLang(): String {
