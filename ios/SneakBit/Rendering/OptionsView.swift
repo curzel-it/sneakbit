@@ -55,6 +55,11 @@ private struct OptionsContent: View {
                     .onTapGesture {
                         viewModel.toggleSoundEffects()
                     }
+                
+                Text(viewModel.toggleMusicTitle)
+                    .onTapGesture {
+                        viewModel.toggleMusic()
+                    }
             }
             .positioned(.middle)
             
@@ -108,6 +113,7 @@ class OptionsViewModel: ObservableObject {
     @Published var showNewGameAlert: Bool = false
     @Published var menuButtonOpacity: CGFloat = 1
     @Published var toggleSoundEffectsTitle: String = "..."
+    @Published var toggleMusicTitle: String = "..."
     
     private var isBeingShown = false
     
@@ -118,6 +124,7 @@ class OptionsViewModel: ObservableObject {
     init() {
         Task { @MainActor in
             loadToggleSoundEffectsTitle()
+            loadToggleMusicTitle()
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
                 self?.makeButtonSemiTransparent()
@@ -128,6 +135,11 @@ class OptionsViewModel: ObservableObject {
     func toggleSoundEffects() {
         audio.toggleSoundEffects()
         loadToggleSoundEffectsTitle()
+    }
+    
+    func toggleMusic() {
+        audio.toggleMusic()
+        loadToggleMusicTitle()
     }
     
     func showMenu() {
@@ -160,6 +172,7 @@ class OptionsViewModel: ObservableObject {
             isVisible = false
             showNewGameAlert = false
         }
+        isBeingShown = false
         engine.startNewGame()
         engine.resume()
     }
@@ -168,6 +181,7 @@ class OptionsViewModel: ObservableObject {
         withAnimation {
             showNewGameAlert = false
         }
+        isBeingShown = false
     }
     
     private func loadToggleSoundEffectsTitle() {
@@ -175,9 +189,14 @@ class OptionsViewModel: ObservableObject {
         toggleSoundEffectsTitle = key.localized()
     }
     
+    private func loadToggleMusicTitle() {
+        let key = audio.musicEnabled ? "game_menu_disable_music" : "game_menu_enable_music"
+        toggleMusicTitle = key.localized()
+    }
+    
     private func makeButtonSemiTransparent() {
         withAnimation(.easeInOut(duration: 1)) {
-            menuButtonOpacity = 0.05
+            menuButtonOpacity = 0.1
         }
     }
 }

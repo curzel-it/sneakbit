@@ -9,3 +9,6 @@
 "game_menu_resume" = "Resume";
 "game_menu_enable_sound_effects" = "Enable Sound Effects";
 "game_menu_disable_sound_effects" = "Disable Sound Effects";
+"game_menu_enable_music" = "Enable Music";
+"game_menu_disable_music" = "Disable Music";
+
