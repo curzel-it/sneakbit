@@ -1,6 +1,7 @@
 package it.curzel.bitscape.engine
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.media.AudioAttributes
 import android.media.SoundPool
 import android.util.Log
@@ -41,6 +42,8 @@ class AudioEngine(
     )
 
     private val soundPool: SoundPool
+    var soundEffectsEnabled: Boolean = false
+    private val preferences: SharedPreferences = context.getSharedPreferences("AudioSettings", Context.MODE_PRIVATE)
 
     init {
         val audioAttributes = AudioAttributes.Builder()
@@ -54,6 +57,7 @@ class AudioEngine(
             .build()
 
         loadSounds()
+        loadSettings()
     }
 
     private fun loadSounds() {
@@ -87,19 +91,20 @@ class AudioEngine(
     }
 
     fun update() {
-        nativeLib.currentSoundEffects()
-            .mapNotNull { SoundEffect.fromInt(it) }
-            .forEach { playSound(it) }
+        if (soundEffectsEnabled) {
+            nativeLib.currentSoundEffects()
+                .mapNotNull { SoundEffect.fromInt(it) }
+                .forEach { playSound(it) }
+        }
     }
 
-    private fun fetchSoundEffects(callback: (List<SoundEffect>) -> Unit) {
-        // Example: Fetch sound effects from a queue or another source
-        // For demonstration, we'll just call the callback with an empty list
-        callback(emptyList())
+    fun toggleSoundEffects() {
+        soundEffectsEnabled = !soundEffectsEnabled
+        preferences.edit().putBoolean("soundEffectsEnabled", soundEffectsEnabled).apply()
     }
 
-    fun release() {
-        soundPool.release()
+    fun loadSettings() {
+        soundEffectsEnabled = preferences.getBoolean("soundEffectsEnabled", true)
     }
 }
 

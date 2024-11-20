@@ -33,7 +33,8 @@ class GameEngine(
     private val tileMapsStorage: TileMapsStorage
 ) {
     private val nativeLib = NativeLib()
-    private val audioEngine = AudioEngine(context, nativeLib)
+
+    val audioEngine = AudioEngine(context, nativeLib)
 
     private val _loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.none)
     private val _showsDeathScreen = MutableStateFlow(false)
@@ -112,6 +113,14 @@ class GameEngine(
         updateFpsCounter()
         flushKeyboard()
         audioEngine.update()
+    }
+
+    fun pause() {
+        isBusy = true
+    }
+
+    fun resume() {
+        isBusy = false
     }
 
     private fun currentLang(): String {

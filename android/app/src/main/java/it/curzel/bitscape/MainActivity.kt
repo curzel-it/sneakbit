@@ -21,6 +21,7 @@ import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.GameViewComposable
 import it.curzel.bitscape.rendering.LoadingScreen
 import it.curzel.bitscape.rendering.MenuView
+import it.curzel.bitscape.rendering.OptionsScreen
 import it.curzel.bitscape.rendering.SpritesProvider
 import it.curzel.bitscape.rendering.ToastView
 import it.curzel.bitscape.ui.theme.SneakBitTheme
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val engine = gameViewModel.engine
+        val audioEngine = gameViewModel.engine.audioEngine
         val spritesProvider = gameViewModel.spritesProvider
 
         enableEdgeToEdge()
@@ -46,6 +48,7 @@ class MainActivity : ComponentActivity() {
                             ToastView(engine, spritesProvider)
                         }
                         MenuView(engine)
+                        OptionsScreen(engine, audioEngine)
                         LoadingScreen(engine)
                         DeathScreen(engine)
                     }
