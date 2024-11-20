@@ -5,7 +5,7 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::sound_effects::{are_sound_effects_enabled, SoundEffect}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
 use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
@@ -15,6 +15,7 @@ const MAX_FPS: u32 = 60;
 fn main() {
     let mut needs_window_init = true;
     let mut latest_world_id = 0;
+    let mut music_was_enabled = true;
     let mut is_fullscreen = false;
     let creative_mode = env::args().any(|arg| arg == "creative");
 
@@ -31,7 +32,7 @@ fn main() {
     let (mut rl, thread) = start_rl();
     
     let mut rl_audio = start_rl_audio();
-    let sound_library = load_sounds(&mut rl_audio);
+    let mut sound_library = load_sounds(&mut rl_audio);
 
     rl.set_window_min_size(360, 240);
         
@@ -84,8 +85,28 @@ fn main() {
         if are_sound_effects_enabled() {
             play_sound_effects(&sound_library);
         }
-        update_sound_track(&sound_library);
+        if is_music_enabled() {
+            music_was_enabled = true;
+            update_sound_track(&sound_library);
+        } else if music_was_enabled {
+            music_was_enabled = false;
+            stop_music(&mut sound_library);
+        }
     }
+}
+
+fn stop_music(sound_library: &mut HashMap<AppSound, Sound>) {
+    let sounds: Vec<AppSound> = sound_library.keys().cloned().collect();
+
+    sounds.iter().for_each(|key| {
+        if matches!(key, AppSound::Track(_)) {
+            if let Some(sound) = sound_library.get_mut(&key) {
+                if sound.is_playing() {
+                    sound.stop();
+                }
+            }
+        }
+    });
 }
 
 fn update_sound_track(sound_library: &HashMap<AppSound, Sound>) {

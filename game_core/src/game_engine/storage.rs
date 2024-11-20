@@ -36,6 +36,10 @@ impl StorageKey {
         "desktop_only.game_settings.sound_effects_disabled".to_owned()
     }
 
+    pub fn is_music_disabled() -> String {
+        "desktop_only.game_settings.music_disabled".to_owned()
+    }
+
     fn dialogue_answer(dialogue: &str) -> String {
         format!("dialogue.answer.{}", dialogue)
     }

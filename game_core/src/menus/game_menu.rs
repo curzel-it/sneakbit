@@ -1,4 +1,4 @@
-use crate::{constants::WORLD_ID_NONE, features::sound_effects::{are_sound_effects_enabled, toggle_sound_effects}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}}, lang::localizable::LocalizableText, spacing, ui::components::{Spacing, View}, utils::rect::IntRect};
+use crate::{constants::WORLD_ID_NONE, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}}, lang::localizable::LocalizableText, spacing, ui::components::{Spacing, View}, utils::rect::IntRect};
 
 use super::{confirmation::ConfirmationDialog, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
@@ -29,6 +29,7 @@ pub enum GameMenuItem {
     Exit,
     SaveAndExit,
     ToggleSoundEffects,
+    ToggleMusic,
 }
 
 impl MenuItem for GameMenuItem {
@@ -41,10 +42,17 @@ impl MenuItem for GameMenuItem {
             GameMenuItem::Exit => "game.menu.exit".localized(),
             GameMenuItem::SaveAndExit => "game.menu.save_and_exit".localized(),
             GameMenuItem::ToggleFullScreen => "game.menu.toggle_fullscreen".localized(),
+            
             GameMenuItem::ToggleSoundEffects => if are_sound_effects_enabled() {
                 "game.menu.disable_sound_effects"
             } else {
                 "game.menu.enable_sound_effects"
+            }.localized(),
+
+            GameMenuItem::ToggleMusic => if is_music_enabled() {
+                "game.menu.disable_music"
+            } else {
+                "game.menu.enable_music"
             }.localized(),
         }
     }
@@ -74,6 +82,7 @@ impl GameMenu {
                 GameMenuItem::Save,
                 GameMenuItem::Resume,
                 GameMenuItem::ToggleFullScreen,
+                GameMenuItem::ToggleMusic,
                 GameMenuItem::ToggleSoundEffects,
                 GameMenuItem::MapEditor,
                 GameMenuItem::SaveAndExit,
@@ -82,6 +91,7 @@ impl GameMenu {
             vec![
                 GameMenuItem::Resume,
                 GameMenuItem::ToggleFullScreen,
+                GameMenuItem::ToggleMusic,
                 GameMenuItem::ToggleSoundEffects,
                 GameMenuItem::NewGame,
                 GameMenuItem::Exit,
@@ -145,6 +155,10 @@ impl GameMenu {
             }
             GameMenuItem::ToggleSoundEffects => {
                 toggle_sound_effects();
+                vec![]
+            }
+            GameMenuItem::ToggleMusic => {
+                toggle_music();
                 vec![]
             }
             GameMenuItem::SaveAndExit => {
