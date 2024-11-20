@@ -77,7 +77,10 @@ fn main() {
         if latest_world_id != current_world {
             latest_world_id = current_world;
             load_tile_map_textures(&mut rl, &thread, current_world);
-            update_sound_track(&mut sound_library);
+            
+            if is_music_enabled() {
+                update_sound_track(&mut sound_library);
+            }
         }
 
         render_frame(&mut rl, &thread);  

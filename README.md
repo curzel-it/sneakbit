@@ -68,6 +68,7 @@ I'm taking notes about characters and lore [here](https://github.com/curzel-it/s
 ![World Map](docs/world_map.png)
 
 ## TODO:
+- Add proper credits in-game
 - Make slopes reflect bullets
 - More Quests
 - More Lore

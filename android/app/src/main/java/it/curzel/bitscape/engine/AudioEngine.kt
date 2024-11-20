@@ -54,6 +54,7 @@ class AudioEngine(
     private var soundEffectsEnabled: Boolean = false
     private var musicEnabled: Boolean = false
     private val preferences: SharedPreferences = context.getSharedPreferences("AudioSettings", Context.MODE_PRIVATE)
+    private val scope = CoroutineScope(Dispatchers.IO + Job())
 
     init {
         val audioAttributes = AudioAttributes.Builder()
@@ -95,10 +96,12 @@ class AudioEngine(
     }
 
     fun update() {
-        if (soundEffectsEnabled) {
-            nativeLib.currentSoundEffects()
-                .mapNotNull { SoundEffect.fromInt(it) }
-                .forEach { playSound(it) }
+        scope.launch {
+            if (soundEffectsEnabled) {
+                nativeLib.currentSoundEffects()
+                    .mapNotNull { SoundEffect.fromInt(it) }
+                    .forEach { playSound(it) }
+            }
         }
     }
 
