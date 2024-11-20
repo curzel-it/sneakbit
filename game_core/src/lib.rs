@@ -1,6 +1,6 @@
 #![allow(clippy::new_without_default, clippy::not_unsafe_ptr_arg_deref)]
 
-use std::{cmp::Ordering, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
+use std::{cmp::Ordering, collections::HashSet, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
 use entities::known_species::SPECIES_KUNAI;
@@ -351,9 +351,13 @@ pub fn engine_set_wants_fullscreen() {
     engine_mut().wants_fullscreen = true;
 }
 
+pub fn current_sound_effects() -> HashSet<SoundEffect> {
+    engine().sound_effects.current_sound_effects.clone()
+}
+
 #[no_mangle]
 pub extern "C" fn get_current_sound_effects(length: *mut usize) -> *mut SoundEffect {
-    let items = engine().sound_effects.current_sound_effects.clone();
+    let items: Vec<SoundEffect> = current_sound_effects().into_iter().collect();
     let len = items.len();
     
     unsafe {

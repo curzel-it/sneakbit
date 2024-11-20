@@ -27,7 +27,7 @@ pub enum WorldStateUpdate {
 
 #[derive(Debug, Clone)]
 pub enum EngineStateUpdate {
-    EntityRemoved(EntityId, SpeciesId),
+    EntityShoot(EntityId, SpeciesId),
     CenterCamera(i32, i32, Vector2d),
     Teleport(Destination),
     SaveGame,

@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common_macros::hash_set;
 
-use crate::{current_menu, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::EngineStateUpdate}, is_interaction_available, menus::toasts::{Toast, ToastMode}};
+use crate::{constants::WORLD_ID_NONE, current_menu, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::EngineStateUpdate}, is_interaction_available, menus::toasts::{Toast, ToastMode}};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[repr(u8)]
@@ -24,7 +24,7 @@ pub enum SoundEffect {
 }
 
 pub struct SoundEffectsManager {
-    pub current_sound_effects: Vec<SoundEffect>,
+    pub current_sound_effects: HashSet<SoundEffect>,
     next_sound_effects: HashSet<SoundEffect>,
     last_hero_position: (i32, i32),
     last_world: u32,
@@ -33,10 +33,10 @@ pub struct SoundEffectsManager {
 impl SoundEffectsManager {
     pub fn new() -> Self {
         Self {
-            current_sound_effects: vec![],
+            current_sound_effects: hash_set![],
             next_sound_effects: hash_set![],
             last_hero_position: (0, 0),
-            last_world: 0
+            last_world: 0,
         }
     }
 }
@@ -54,13 +54,17 @@ impl SoundEffectsManager {
         if self.did_fire_but_no_ammo(keyboard) {
             self.prepare(SoundEffect::NoAmmo);
         }
-
         self.confirm_next_batch();
     }
 
-    pub fn handle_player_resurrected(&mut self) {
+    pub fn handle_resurrection(&mut self) {
         self.prepare(SoundEffect::PlayerResurrected);
         self.confirm_next_batch();
+    }
+
+    pub fn clear(&mut self) {
+        self.next_sound_effects.clear();
+        self.current_sound_effects.clear();
     }
 
     fn check_sounds_for_state_updates(&mut self, updates: &[EngineStateUpdate]) {
@@ -71,7 +75,7 @@ impl SoundEffectsManager {
 
     fn check_sounds_for_state_update(&mut self, update: &EngineStateUpdate) {
         match update {
-            EngineStateUpdate::EntityRemoved(_, species_id) => self.check_entity_death(*species_id),
+            EngineStateUpdate::EntityShoot(_, species_id) => self.check_entity_death(*species_id),
             EngineStateUpdate::BulletBounced => self.prepare(SoundEffect::BulletBounced),
             EngineStateUpdate::CenterCamera(x, y, _) => self.check_hero_movement(*x, *y),
             EngineStateUpdate::Teleport(destination) => self.check_teleportation(destination.world),
@@ -124,9 +128,7 @@ impl SoundEffectsManager {
     }
 
     fn check_teleportation(&mut self, destination: u32) {
-        if self.last_world == destination {
-            self.prepare(SoundEffect::PlayerResurrected);
-        } else if self.last_world != 0 {
+        if self.last_world != destination && self.last_world != WORLD_ID_NONE {            
             self.prepare(SoundEffect::WorldChange);
         }
         self.last_world = destination;
@@ -134,16 +136,16 @@ impl SoundEffectsManager {
     }
 
     fn confirm_next_batch(&mut self) {
-        self.next_sound_effects.iter().for_each(|sound_effect| {
-            self.current_sound_effects.push(sound_effect.clone());
-        });
+        self.current_sound_effects = self.next_sound_effects.clone();        
         self.next_sound_effects.clear();
     }
 
     fn check_hero_movement(&mut self, x: i32, y: i32) {
-        if self.last_hero_position.0 != x || self.last_hero_position.1 != y {
+        if self.last_hero_position == (0, 0) {
+            if self.last_hero_position.0 != x || self.last_hero_position.1 != y {
+                self.prepare(SoundEffect::StepTaken);
+            }
             self.last_hero_position = (x, y);
-            self.prepare(SoundEffect::StepTaken);
         }
     }
 
@@ -153,12 +155,14 @@ impl SoundEffectsManager {
 }
 
 fn did_interact_with_menu(keyboard: &KeyboardEventsProvider) -> bool {
-    current_menu().is_visible && 
-    keyboard.has_back_been_pressed && 
-    keyboard.has_menu_been_pressed && 
-    keyboard.has_confirmation_been_pressed && 
-    keyboard.has_attack_key_been_pressed && 
-    keyboard.has_backspace_been_pressed
+    current_menu().is_visible && (
+        keyboard.has_back_been_pressed || 
+        keyboard.has_menu_been_pressed || 
+        keyboard.has_confirmation_been_pressed || 
+        keyboard.has_attack_key_been_pressed || 
+        keyboard.has_backspace_been_pressed || 
+        keyboard.has_any_arrow_key_been_pressed()
+    )
 }
 
 fn did_interact_with_entity(keyboard: &KeyboardEventsProvider) -> bool {

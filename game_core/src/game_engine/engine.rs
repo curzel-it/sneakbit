@@ -57,7 +57,8 @@ impl GameEngine {
         self.creative_mode = enabled;
     }
 
-    pub fn update(&mut self, time_since_last_update: f32) {        
+    pub fn update(&mut self, time_since_last_update: f32) {     
+        let mut did_resurrect = false;   
         self.toast.update(time_since_last_update);
 
         if self.death_screen.is_open {
@@ -66,14 +67,20 @@ impl GameEngine {
                 self.previous_world = None;
                 self.world.cached_hero_props.direction = Direction::Unknown;
                 self.teleport_to_previous();
-                self.sound_effects.handle_player_resurrected();
+                did_resurrect = true;
             } else {
+                self.sound_effects.clear();
                 return;
             }
         }
 
         self.loading_screen.update(time_since_last_update);
         if self.loading_screen.progress() < 0.4 { 
+            self.sound_effects.clear();
+
+            if did_resurrect {
+                self.sound_effects.handle_resurrection();
+            }
             return;
         }
 
@@ -220,7 +227,7 @@ impl GameEngine {
             EngineStateUpdate::NewGame => {
                 self.start_new_game()
             }
-            EngineStateUpdate::EntityRemoved(_, _) => {
+            EngineStateUpdate::EntityShoot(_, _) => {
                 // ...
             }
             EngineStateUpdate::BulletBounced => {

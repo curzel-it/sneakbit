@@ -5,8 +5,8 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_world_id, engine, engine_set_wants_fullscreen, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
-use raylib::{ffi::{GamepadAxis, GamepadButton, KeyboardKey, MouseButton}, texture::Texture2D, window::{get_current_monitor, get_monitor_height, get_monitor_width}, RaylibHandle, RaylibThread};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_sound_effects, current_world_id, engine, engine_set_wants_fullscreen, features::sound_effects::SoundEffect, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
 
@@ -29,6 +29,10 @@ fn main() {
     initialize_game(creative_mode);
     
     let (mut rl, thread) = start_rl();
+    
+    let mut rl_audio = start_rl_audio();
+    let sound_library = load_sounds(&mut rl_audio);
+
     rl.set_window_min_size(360, 240);
         
     if bool_for_global_key(&StorageKey::fullscreen()) {
@@ -75,6 +79,7 @@ fn main() {
         }
 
         render_frame(&mut rl, &thread);  
+        play_sound_effects(&sound_library);
     }
 }
 
@@ -106,6 +111,10 @@ fn start_rl() -> (RaylibHandle, RaylibThread) {
     });
 
     (rl, thread)
+}
+
+fn start_rl_audio() -> Result<raylib::prelude::RaylibAudio, RaylibAudioInitError> {
+    RaylibAudio::init_audio_device()
 }
 
 fn handle_window_size_changed(width: f32, height: f32) {
@@ -234,7 +243,7 @@ fn current_joystick_directions(rl: &RaylibHandle) -> (bool, bool, bool, bool) {
     };
     
     let (joystick_right, joystick_left) = if left_y.abs() < left_x.abs() {
-         if left_x > threshold {
+        if left_x > threshold {
             (true, false)
         } else if left_x < -threshold {
             (false, true)
@@ -307,4 +316,65 @@ fn current_locale() -> String {
 
 fn is_debug_build() -> bool {
     cfg!(debug_assertions)
+}
+
+fn play_sound_effects(sound_library: &HashMap<SoundEffect, Sound>) {
+    current_sound_effects().iter().for_each(|sound_effect| {
+        if let Some(sound) = sound_library.get(sound_effect) {
+            sound.play();
+        }
+    })
+}
+
+fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitError>) -> HashMap<SoundEffect, Sound> {
+    if let Ok(rl) = rl {
+        vec![
+            (SoundEffect::DeathOfNonMonster, "sfx_deathscream_android7.wav"),
+            (SoundEffect::DeathOfMonster, "sfx_deathscream_human11.wav"),
+            (SoundEffect::SmallExplosion, "sfx_exp_short_hard8.wav"),
+            (SoundEffect::WorldChange, "sfx_movement_dooropen1.wav"),
+            (SoundEffect::StepTaken, "sfx_movement_footsteps1a.wav"),
+            (SoundEffect::BulletFired, "sfx_movement_jump12_landing.wav"),
+            (SoundEffect::BulletBounced, "sfx_movement_jump20.wav"),
+            (SoundEffect::HintReceived, "sfx_sound_neutral5.wav"),
+            (SoundEffect::KeyCollected, "sfx_sounds_fanfare3.wav"),
+            (SoundEffect::Interaction, "sfx_sounds_interaction9.wav"),
+            (SoundEffect::AmmoCollected, "sfx_sounds_interaction22.wav"),
+            (SoundEffect::GameOver, "sfx_sounds_negative1.wav"),
+            (SoundEffect::PlayerResurrected, "sfx_sounds_powerup1.wav"), 
+            (SoundEffect::NoAmmo, "sfx_wpn_noammo3.wav"),
+        ]
+        .into_iter()
+        .filter_map(|(effect, filename)| {
+            if let Some(path) = audio_path_for_filename(filename).as_os_str().to_str() {
+                if let Ok(mut sound) = rl.new_sound(path) {
+                    sound.set_volume(volume_for_sound_effect(&effect));
+                    return Some((effect, sound))
+                }
+            }
+            None
+        })
+        .collect()
+    } else {
+        hash_map!()
+    }
+}
+
+fn volume_for_sound_effect(sound_effect: &SoundEffect) -> f32 {
+    match sound_effect {
+        SoundEffect::StepTaken => 0.1,
+        SoundEffect::Interaction => 0.2,
+        SoundEffect::BulletFired => 0.3,
+        SoundEffect::BulletBounced => 0.2,
+        SoundEffect::WorldChange => 0.7,
+        SoundEffect::AmmoCollected => 0.7,
+        _ => 0.8
+    }
+}
+
+fn audio_path_for_filename(filename: &str) -> PathBuf {
+    let mut path = root_path();
+    path.push("audio");
+    path.push(filename);
+    path
 }

@@ -268,6 +268,7 @@ impl World {
     }
 
     fn handle_hit(&mut self, bullet_id: EntityId, target_id: EntityId) -> Vec<EngineStateUpdate> {
+        let mut updates: Vec<EngineStateUpdate> = vec![];
         let mut did_hit = false;
 
         let mut entities = self.entities.borrow_mut();
@@ -287,14 +288,15 @@ impl World {
                     IntRect::new(0, 10, 1, 1), 
                     5
                 );
+                updates.push(EngineStateUpdate::EntityShoot(target.id, target.species_id));
             }
         }
         drop(entities);
 
         if did_hit && bullet_id != 0 && !has_piercing_bullet_skill() {
-            return self.handle_bullet_stopped(bullet_id);
+            updates.append(&mut self.handle_bullet_stopped(bullet_id));
         } 
-        vec![]
+        updates
     }
 
     fn handle_bullet_stopped(&mut self, bullet_id: u32) -> Vec<EngineStateUpdate> {

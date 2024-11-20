@@ -1,4 +1,4 @@
-use crate::{constants::{HERO_KUNAI_COOLDOWN, TILE_SIZE}, entities::{known_species::SPECIES_KUNAI, species::species_by_id}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, has_species_in_inventory}, world::World}};
+use crate::{constants::{HERO_KUNAI_COOLDOWN, TILE_SIZE}, entities::{known_species::SPECIES_KUNAI, species::species_by_id}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
 
 impl Entity {
     pub fn setup_hero(&mut self, creative_mode: bool) {
@@ -56,7 +56,6 @@ impl Entity {
         }
 
         self.action_cooldown_remaining = HERO_KUNAI_COOLDOWN;
-        decrease_inventory_count(&SPECIES_KUNAI);
 
         let mut bullet = species_by_id(SPECIES_KUNAI).make_entity();
         bullet.direction = world.cached_hero_props.direction;
@@ -72,6 +71,9 @@ impl Entity {
         bullet.remaining_lifespan = 3.0;
         bullet.reset_speed();
 
-        vec![WorldStateUpdate::AddEntity(Box::new(bullet))]
+        vec![
+            WorldStateUpdate::EngineUpdate(EngineStateUpdate::RemoveFromInventory(SPECIES_KUNAI)),
+            WorldStateUpdate::AddEntity(Box::new(bullet))
+        ]
     }
 }
