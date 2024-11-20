@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">SneakBit</string>
+    <string name="dots">...</string>
     <string name="death_screen_title">You\'re dead</string>
     <string name="death_screen_subtitle">Tap to try again</string>
     <string name="new_game">"New Game"</string>
@@ -7,5 +8,8 @@
     <string name="new_game_confirmation_message">"You will be starting from ZERO.\nAre you sure?"</string>
     <string name="new_game_cancel">"Go back"</string>
     <string name="new_game_confirm">"Start over"</string>
-
+    <string name="game_menu_title">"Game Menu"</string>
+    <string name="game_menu_resume">"Resume"</string>
+    <string name="game_menu_enable_sound_effects">"Enable Sound Effects"</string>
+    <string name="game_menu_disable_sound_effects">"Disable Sound Effects"</string>
 </resources>

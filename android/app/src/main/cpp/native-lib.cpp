@@ -321,7 +321,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_toastConfig(JNIEnv *env, jobject thiz
 
     jfloat opacity = toastDescriptor.background_color.alpha / 255.0f;
     jstring text = env->NewStringUTF(toastDescriptor.text);
-    jboolean isImportant = (toastDescriptor.mode == ToastMode_Important) ? JNI_TRUE : JNI_FALSE;
+    jboolean isHint = (toastDescriptor.mode == ToastMode_Hint) ? JNI_TRUE : JNI_FALSE;
 
     jobject spriteSheetId = nullptr;
     if (toastDescriptor.image.sprite_sheet_id != 0) {
@@ -355,7 +355,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_toastConfig(JNIEnv *env, jobject thiz
             backgroundColorArgb,
             opacity,
             text,
-            isImportant,
+            isHint,
             spriteSheetId,
             textureFrame
     );
@@ -460,13 +460,128 @@ JNIEXPORT jboolean JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_isLimitedVisibility(JNIEnv *env, jobject thiz) {
     return is_limited_visibility();
 }
+
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_isInteractionAvailable(JNIEnv *env, jobject thiz) {
     return is_interaction_available();
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_startNewGame(JNIEnv *env, jobject thiz) {
     start_new_game();
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_currentSoundEffects(JNIEnv *env, jobject thiz) {
+    // Step 1: Retrieve native sound effects array and its length
+    uintptr_t length = 0;
+    SoundEffect* sound_effects = get_current_sound_effects(&length);
+
+    // Step 2: Handle cases where retrieval fails or returns no sound effects
+    if (sound_effects == nullptr || length == 0) {
+        // Optionally, you can throw an exception or return an empty list
+        // Here, we'll return an empty ArrayList
+
+        // Find the ArrayList class
+        jclass arrayListClass = env->FindClass("java/util/ArrayList");
+        if (arrayListClass == nullptr) {
+            // If ArrayList class not found, return null
+            return nullptr;
+        }
+
+        // Get the constructor ID for ArrayList()
+        jmethodID arrayListInit = env->GetMethodID(arrayListClass, "<init>", "()V");
+        if (arrayListInit == nullptr) {
+            // If constructor not found, return null
+            return nullptr;
+        }
+
+        // Create a new ArrayList instance
+        jobject emptyList = env->NewObject(arrayListClass, arrayListInit);
+        return emptyList;
+    }
+
+    // Step 3: Find the ArrayList class and its constructor and add method
+    jclass arrayListClass = env->FindClass("java/util/ArrayList");
+    if (arrayListClass == nullptr) {
+        // ArrayList class not found, handle error
+        free_sound_effects(sound_effects, length);
+        return nullptr;
+    }
+
+    // Get the constructor ID for ArrayList()
+    jmethodID arrayListInit = env->GetMethodID(arrayListClass, "<init>", "()V");
+    if (arrayListInit == nullptr) {
+        // Constructor not found, handle error
+        free_sound_effects(sound_effects, length);
+        return nullptr;
+    }
+
+    // Get the add method ID for ArrayList.add(Object)
+    jmethodID arrayListAdd = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
+    if (arrayListAdd == nullptr) {
+        // Add method not found, handle error
+        free_sound_effects(sound_effects, length);
+        return nullptr;
+    }
+
+    // Step 4: Find the Integer class and its valueOf(int) static method
+    jclass integerClass = env->FindClass("java/lang/Integer");
+    if (integerClass == nullptr) {
+        // Integer class not found, handle error
+        free_sound_effects(sound_effects, length);
+        return nullptr;
+    }
+
+    // Get the static method ID for Integer.valueOf(int)
+    jmethodID integerValueOf = env->GetStaticMethodID(integerClass, "valueOf", "(I)Ljava/lang/Integer;");
+    if (integerValueOf == nullptr) {
+        // valueOf method not found, handle error
+        free_sound_effects(sound_effects, length);
+        return nullptr;
+    }
+
+    // Step 5: Create a new ArrayList instance
+    jobject arrayList = env->NewObject(arrayListClass, arrayListInit);
+    if (arrayList == nullptr) {
+        // Failed to create ArrayList instance, handle error
+        free_sound_effects(sound_effects, length);
+        return nullptr;
+    }
+
+    // Step 6: Iterate through the native sound effects and populate the Java list
+    for (uintptr_t i = 0; i < length; ++i) {
+        SoundEffect effect = sound_effects[i];
+
+        // Convert the SoundEffect enum to its integer value
+        jint effectValue = static_cast<jint>(effect);
+
+        // Box the integer into a java.lang.Integer object using Integer.valueOf(int)
+        jobject integerObject = env->CallStaticObjectMethod(integerClass, integerValueOf, effectValue);
+
+        if (integerObject == nullptr) {
+            // Failed to box integer, skip adding to the list
+            continue;
+        }
+
+        // Add the Integer object to the ArrayList
+        jboolean added = env->CallBooleanMethod(arrayList, arrayListAdd, integerObject);
+
+        // Optionally, check if the add operation was successful
+        if (added == JNI_FALSE) {
+            // Failed to add to the list, handle if necessary
+        }
+
+        // Delete local reference to the Integer object to prevent memory leaks
+        env->DeleteLocalRef(integerObject);
+    }
+
+    // Step 7: Free the native sound effects array
+    free_sound_effects(sound_effects, length);
+
+    // Step 8: Return the populated ArrayList
+    return arrayList;
 }

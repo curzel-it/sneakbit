@@ -14,6 +14,7 @@
 		1E3A0AE72CEC8A840093325F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1E3A0AE62CEC8A840093325F /* FirebaseAnalytics */; };
 		1E3A0AE92CEC8A840093325F /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1E3A0AE82CEC8A840093325F /* FirebaseCrashlytics */; };
 		1EC6323D2CCC5D2F00B37D70 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 1EC6323C2CCC5D2F00B37D70 /* Swinject */; };
+		1EF582B92CEDDD8A0039ACEB /* audio in Resources */ = {isa = PBXBuildFile; fileRef = 1EF582B82CEDDD8A0039ACEB /* audio */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		1E06CD742CC9A7B4001231D7 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = Resources/data; sourceTree = "<group>"; };
 		1E06CD762CC9A7BD001231D7 /* lang */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lang; path = Resources/lang; sourceTree = "<group>"; };
 		1EE0347C2CC8585400159636 /* SneakBit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SneakBit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1EF582B82CEDDD8A0039ACEB /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = audio; path = ../audio; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -74,6 +76,7 @@
 		1EE034732CC8585400159636 = {
 			isa = PBXGroup;
 			children = (
+				1EF582B82CEDDD8A0039ACEB /* audio */,
 				1E06CD762CC9A7BD001231D7 /* lang */,
 				1E06CD742CC9A7B4001231D7 /* data */,
 				1E06CD722CC9A7AB001231D7 /* assets */,
@@ -167,6 +170,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EF582B92CEDDD8A0039ACEB /* audio in Resources */,
 				1E06CD772CC9A7BD001231D7 /* lang in Resources */,
 				1E06CD752CC9A7B4001231D7 /* data in Resources */,
 				1E06CD732CC9A7AB001231D7 /* assets in Resources */,
@@ -315,7 +319,7 @@
 				CODE_SIGN_ENTITLEMENTS = SneakBit/SneakBit.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 9L5V9XNS25;
@@ -338,7 +342,7 @@
 					"$(PROJECT_DIR)/SneakBit",
 					"$(PROJECT_DIR)/Rust",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = it.curzel.bitscape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -361,7 +365,7 @@
 				CODE_SIGN_ENTITLEMENTS = SneakBit/SneakBit.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 9L5V9XNS25;
 				ENABLE_PREVIEWS = YES;
@@ -383,7 +387,7 @@
 					"$(PROJECT_DIR)/SneakBit",
 					"$(PROJECT_DIR)/Rust",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = it.curzel.bitscape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

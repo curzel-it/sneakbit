@@ -25,6 +25,8 @@
 "entity.menu.title" = "Entity Options"
 "entity.menu.toggle_demand_attention" = "Toggle Demand Attention"
 "entity.menu.use" = "Use"
+"game.menu.disable_sound_effects" = "Disable Sound Effects"
+"game.menu.enable_sound_effects" = "Enable Sound Effects"
 "game.menu.exit" = "Exit"
 "game.menu.inventory" = "Inventory"
 "game.menu.key_bindings" = "Key Bindings"

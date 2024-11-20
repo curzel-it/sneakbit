@@ -4,6 +4,7 @@ struct Dependencies {
     static func setup() {
         let container = Container()
         container.registerEagerSingleton(GameEngine())
+        container.registerEagerSingleton(AudioEngine())
         container.registerSingleton(SpritesProvider.self) { _ in
             MemCachedSpritesProvider(
                 spriteSheetFileNames: [

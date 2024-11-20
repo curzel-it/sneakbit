@@ -63,6 +63,13 @@ impl KeyboardEventsProvider {
             || self.direction_down.is_down
             || self.direction_left.is_down
     }
+
+    pub fn has_any_arrow_key_been_pressed(&self) -> bool {
+        self.direction_up.is_pressed
+            || self.direction_right.is_pressed
+            || self.direction_down.is_pressed
+            || self.direction_left.is_pressed
+    }
 }
 
 pub struct HoldableKey {
@@ -98,6 +105,7 @@ impl HoldableKey {
 }
 
 impl KeyboardEventsProvider {
+    #[allow(clippy::too_many_arguments)]
     pub fn update(
         &mut self,
         up_pressed: bool,

@@ -18,3 +18,6 @@ os.system(f"cp -r {path}/../assets {path}/../android/app/src/main/assets/assets"
 os.system(f"cp -r {path}/../data {path}/../android/app/src/main/assets/data")
 os.system(f"cp -r {path}/../lang {path}/../android/app/src/main/assets/lang")
 os.system(f"rm -rf {path}/../android/app/src/main/assets/data/save.json")
+
+os.system(f"rm -rf {path}/../android/app/src/main/res/raw")
+os.system(f"cp -r {path}/../audio {path}/../android/app/src/main/res/raw")

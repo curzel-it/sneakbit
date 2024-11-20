@@ -32,6 +32,10 @@ impl StorageKey {
         "fullscreen".to_owned()
     }
 
+    pub fn are_sound_effects_disabled() -> String {
+        "desktop_only.game_settings.sound_effects_disabled".to_owned()
+    }
+
     fn dialogue_answer(dialogue: &str) -> String {
         format!("dialogue.answer.{}", dialogue)
     }
@@ -124,9 +128,9 @@ pub fn get_value_for_global_key(key: &str) -> Option<u32> {
     }
     if key.contains(",") {
         let keys = key.split_terminator(",");
-        let values: HashSet<Option<u32>> = keys.map(|k| get_value_for_global_key(k)).collect();
+        let values: HashSet<Option<u32>> = keys.map(get_value_for_global_key).collect();
         if values.len() == 1 {
-            return values.iter().next().unwrap_or(&None).clone()
+            return *values.iter().next().unwrap_or(&None)
         } else {
             return None
         }
@@ -219,7 +223,7 @@ fn decrease_value(key: &str) {
 pub fn increment_inventory_count(species_id: &SpeciesId) {
     let species = species_by_id(*species_id);
     if !species.bundle_contents.is_empty() {
-        species.bundle_contents.iter().for_each(|id|increment_inventory_count(id));
+        species.bundle_contents.iter().for_each(increment_inventory_count);
     } else {
         increment_value(&StorageKey::species_inventory_count(species_id));
     }

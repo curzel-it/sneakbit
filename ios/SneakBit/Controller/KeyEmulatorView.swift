@@ -11,6 +11,24 @@ struct KeyEmulatorView: View {
     
     @State private var isBeingPressed = false
     
+    private let setKeyUp: (EmulatedKey) -> Void
+    private let setKeyDown: (EmulatedKey) -> Void
+    
+    init(key: EmulatedKey) {
+        @Inject var engine: GameEngine
+        self.init(key: key, setKeyUp: engine.setKeyUp, setKeyDown: engine.setKeyDown)
+    }
+    
+    init(
+        key: EmulatedKey,
+        setKeyUp: @escaping (EmulatedKey) -> Void,
+        setKeyDown: @escaping (EmulatedKey) -> Void
+    ) {
+        self.key = key
+        self.setKeyUp = setKeyUp
+        self.setKeyDown = setKeyDown
+    }
+    
     var body: some View {
         Image("\(key.imageName)_button_\(isBeingPressed ? "down" : "up")")
             .interpolation(.none)
@@ -24,14 +42,12 @@ struct KeyEmulatorView: View {
                     .onChanged { _ in
                         if !isBeingPressed {
                             isBeingPressed = true
-                            @Inject var engine: GameEngine
-                            engine.setKeyDown(key)
+                            setKeyDown(key)
                         }
                     }
                     .onEnded { _ in
                         isBeingPressed = false
-                        @Inject var engine: GameEngine
-                        engine.setKeyUp(key)
+                        setKeyUp(key)
                     }
             )
     }

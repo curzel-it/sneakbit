@@ -54,6 +54,7 @@ class NativeLib {
     external fun isLimitedVisibility(): Boolean
     external fun isInteractionAvailable(): Boolean
     external fun startNewGame()
+    external fun currentSoundEffects(): List<Int>
 
     companion object {
         const val TILE_SIZE: Int = 16

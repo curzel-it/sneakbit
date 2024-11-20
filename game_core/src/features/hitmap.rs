@@ -50,6 +50,7 @@ impl World {
         (hitmap, idsmap, weightsmap)
     }
 
+    #[allow(clippy::needless_range_loop)] 
     pub fn update_tiles_hitmap(&mut self) {    
         let mut hitmap = vec![vec![false; self.bounds.w as usize]; self.bounds.h as usize];
 

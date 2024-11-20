@@ -26,7 +26,7 @@ pub fn initialize_config_paths(
     localized_strings_path: PathBuf,
 ) {
     unsafe {
-        let supported_languages = vec!["en", "it"];
+        let supported_languages = ["en", "it"];
         let user_lang_supported = supported_languages.contains(&user_lang.as_str());
         let actual_lang = if user_lang_supported { user_lang } else { "en".to_string() };
 

@@ -26,12 +26,10 @@ impl Entity {
                 } else {
                     vec![self.show_locked_message()]
                 }                
+            } else if let Some(destination) = self.destination.clone() {
+                vec![self.engine_update_push_world(destination)]
             } else {
-                if let Some(destination) = self.destination.clone() {
-                    vec![self.engine_update_push_world(destination)]
-                } else {
-                    vec![]
-                }
+                vec![]
             }
         } else {
             vec![]

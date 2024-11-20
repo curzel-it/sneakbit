@@ -5,3 +5,8 @@
 "new_game_confirmation_message" = "Ripartirai da ZERO.\nSei sicuro?";
 "new_game_cancel" = "Annulla";
 "new_game_confirm" = "Ricomincia";
+"game_menu_title" = "Opzioni";
+"game_menu_resume" = "Riprendi";
+"game_menu_enable_sound_effects" = "Abilita Effetti Sonori";
+"game_menu_disable_sound_effects" = "Disabilita Effetti Sonori";
+

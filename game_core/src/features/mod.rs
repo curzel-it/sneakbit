@@ -13,3 +13,4 @@ pub mod light_conditions;
 pub mod linear_movement;
 pub mod loading_screen;
 pub mod melee;
+pub mod sound_effects;

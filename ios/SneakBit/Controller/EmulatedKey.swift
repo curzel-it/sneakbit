@@ -13,20 +13,6 @@ enum EmulatedKey {
 }
 
 extension EmulatedKey {
-    var systemImageName: String {
-        switch self {
-        case .up: "arrow.up"
-        case .down: "arrow.down"
-        case .left: "arrow.left"
-        case .right: "arrow.right"
-        case .attack: "flame"
-        case .backspace: "delete.left"
-        case .confirm: "checkmark"
-        case .escape: "xmark"
-        case .menu: "list.bullet"
-        }
-    }
-    
     var imageName: String {
         switch self {
         case .up: "up"
@@ -37,7 +23,7 @@ extension EmulatedKey {
         case .backspace: ""
         case .confirm: "confirm"
         case .escape: ""
-        case .menu: ""
+        case .menu: "menu"
         }
     }
 }

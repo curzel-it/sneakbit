@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">SneakBit</string>
+    <string name="dots">...</string>
     <string name="death_screen_title">Sei morto</string>
     <string name="death_screen_subtitle">Tocca per riprovare</string>
     <string name="new_game">"Nuova partita"</string>
@@ -7,5 +8,8 @@
     <string name="new_game_confirmation_message">"Stai per ricominciare il gioco da ZERO\nSei sicuro?"</string>
     <string name="new_game_cancel">"Annulla"</string>
     <string name="new_game_confirm">"Ricomincia"</string>
-
+    <string name="game_menu_title">"Opzioni"</string>
+    <string name="game_menu_resume">"Riprendi"</string>
+    <string name="game_menu_enable_sound_effects">"Abilita Effetti Sonori"</string>
+    <string name="game_menu_disable_sound_effects">"Disabilita Effetti Sonori"</string>
 </resources>

@@ -244,6 +244,7 @@ impl Biome {
         self == &other || (self.is_grass() && other.is_grass())
     }
 
+    #[allow(clippy::match_like_matches_macro)]
     fn is_grass(&self) -> bool {
         match self {
             Biome::Grass => true,
@@ -258,10 +259,7 @@ impl Biome {
 
 impl Biome {
     pub fn stops_bullets(&self) -> bool {
-        match self {
-            Biome::Nothing => true,
-            _ => false
-        }
+        matches!(self, Biome::Nothing)
     }
 }
 

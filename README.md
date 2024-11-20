@@ -80,8 +80,11 @@ I'm taking notes about characters and lore [here](https://github.com/curzel-it/s
 
 ## TODO:
 - Make slopes reflect bullets
-- Add sound effects
-- Add soundtracks (?)
+- Soundtracks (?)
 - More Quests
 - More Lore
-- More Game
+- More Game!
+
+## Credits
+### Sounds effects
+Found a great bundle over at OpenGameArt.org [by SubspaceAudio](https://opengameart.org/content/512-sound-effects-8-bit-style)

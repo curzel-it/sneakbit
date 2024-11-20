@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen}, menus::{confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, ammo_counter::AmmoCounter, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, menus::{ammo_counter::AmmoCounter, confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
 
@@ -19,7 +19,8 @@ pub struct GameEngine {
     pub camera_viewport_offset: Vector2d,
     pub is_running: bool,
     pub creative_mode: bool,
-    pub wants_fullscreen: bool
+    pub wants_fullscreen: bool,
+    pub sound_effects: SoundEffectsManager
 }
 
 impl GameEngine {
@@ -41,7 +42,8 @@ impl GameEngine {
             is_running: true,
             creative_mode: false,
             inventory_status: AmmoCounter::new(),
-            wants_fullscreen: false
+            wants_fullscreen: false,
+            sound_effects: SoundEffectsManager::new()
         }
     }
 
@@ -55,7 +57,8 @@ impl GameEngine {
         self.creative_mode = enabled;
     }
 
-    pub fn update(&mut self, time_since_last_update: f32) {        
+    pub fn update(&mut self, time_since_last_update: f32) {     
+        let mut did_resurrect = false;   
         self.toast.update(time_since_last_update);
 
         if self.death_screen.is_open {
@@ -64,13 +67,20 @@ impl GameEngine {
                 self.previous_world = None;
                 self.world.cached_hero_props.direction = Direction::Unknown;
                 self.teleport_to_previous();
+                did_resurrect = true;
             } else {
+                self.sound_effects.clear();
                 return;
             }
         }
 
         self.loading_screen.update(time_since_last_update);
         if self.loading_screen.progress() < 0.4 { 
+            self.sound_effects.clear();
+
+            if did_resurrect {
+                self.sound_effects.handle_resurrection();
+            }
             return;
         }
 
@@ -84,6 +94,7 @@ impl GameEngine {
         };
 
         let updates = self.world.update(game_update_time, &camera_viewport, world_keyboard);
+        self.sound_effects.update(&self.keyboard, &updates);
         self.apply_state_updates(updates);
     } 
 
@@ -216,6 +227,12 @@ impl GameEngine {
             EngineStateUpdate::NewGame => {
                 self.start_new_game()
             }
+            EngineStateUpdate::EntityShoot(_, _) => {
+                // ...
+            }
+            EngineStateUpdate::BulletBounced => {
+                // ...
+            }
         }
     }
     
@@ -285,7 +302,7 @@ impl GameEngine {
                 return previous
             }
         }
-        return World::load_or_create(destination_world)
+        World::load_or_create(destination_world)
     }
 
     fn previous_world(&self) -> u32 {

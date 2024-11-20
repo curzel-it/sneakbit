@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import it.curzel.bitscape.engine.SomeGameEngine
+import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.ui.theme.DSTypography
 import kotlinx.coroutines.launch
 
@@ -49,7 +49,7 @@ data class LoadingScreenConfig(
 
 @Composable
 fun LoadingScreen(
-    gameEngine: SomeGameEngine,
+    gameEngine: GameEngine,
     modifier: Modifier = Modifier
 ) {
     val viewModel: LoadingScreenViewModel = remember { LoadingScreenViewModel(gameEngine) }
@@ -99,7 +99,7 @@ private fun LoadingScreen(
     }
 }
 
-class LoadingScreenViewModel(private val gameEngine: SomeGameEngine) : ViewModel() {
+class LoadingScreenViewModel(private val gameEngine: GameEngine) : ViewModel() {
     private val _isVisible = mutableStateOf(false)
     val isVisible: State<Boolean> = _isVisible
 

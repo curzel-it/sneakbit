@@ -15,7 +15,7 @@ impl GameEngine {
                 (AnchorPoint::BottomCenter, self.confirmation_dialog.ui()),
                 (AnchorPoint::BottomCenter, self.long_text_display.ui()),
                 (AnchorPoint::TopRight, self.toast.regular_toast_ui()),
-                (AnchorPoint::TopLeft, self.toast.important_toast_ui()),
+                (AnchorPoint::TopLeft, self.toast.hint_toast_ui()),
                 (AnchorPoint::Center, self.death_screen.ui()),
                 (AnchorPoint::Center, self.loading_screen.ui())
             ]

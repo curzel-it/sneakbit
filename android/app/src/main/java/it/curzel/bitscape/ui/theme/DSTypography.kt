@@ -1,5 +1,6 @@
 package it.curzel.bitscape.ui.theme
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -20,6 +21,13 @@ object DSTypography {
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         color = Yellow,
+    )
+
+    val gameMenuOption = TextStyle(
+        fontFamily = PixelOperator8,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp,
+        color = Color.White.copy(alpha = 0.9f),
     )
 }
 

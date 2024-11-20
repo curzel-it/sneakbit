@@ -31,7 +31,11 @@ class GameEngine(
     private val context: Context,
     private val renderingScaleUseCase: RenderingScaleUseCase,
     private val tileMapsStorage: TileMapsStorage
-): SomeGameEngine {
+) {
+    private val nativeLib = NativeLib()
+
+    val audioEngine = AudioEngine(context, nativeLib)
+
     private val _loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.none)
     private val _showsDeathScreen = MutableStateFlow(false)
     private val _numberOfKunai = MutableStateFlow(0)
@@ -65,8 +69,6 @@ class GameEngine(
 
     private var tileMapImages = emptyList<Bitmap>()
     private var currentBiomeVariant = 0
-
-    private val nativeLib = NativeLib()
 
     init {
         val dataPath = AssetUtils.extractAssetFolder(context, "data", "data")
@@ -110,6 +112,15 @@ class GameEngine(
 
         updateFpsCounter()
         flushKeyboard()
+        audioEngine.update()
+    }
+
+    fun pause() {
+        isBusy = true
+    }
+
+    fun resume() {
+        isBusy = false
     }
 
     private fun currentLang(): String {
@@ -120,39 +131,39 @@ class GameEngine(
             .firstOrNull() ?: "en"
     }
 
-    override fun numberOfKunai(): StateFlow<Int> {
+    fun numberOfKunai(): StateFlow<Int> {
         return _numberOfKunai.asStateFlow()
     }
 
-    override fun showsDeathScreen(): StateFlow<Boolean> {
+    fun showsDeathScreen(): StateFlow<Boolean> {
         return _showsDeathScreen.asStateFlow()
     }
 
-    override fun loadingScreenConfig(): StateFlow<LoadingScreenConfig> {
+    fun loadingScreenConfig(): StateFlow<LoadingScreenConfig> {
         return _loadingScreenConfig.asStateFlow()
     }
 
-    override fun toastConfig(): StateFlow<ToastConfig> {
+    fun toastConfig(): StateFlow<ToastConfig> {
         return _toastConfig.asStateFlow()
     }
 
-    override fun menuConfig(): StateFlow<MenuConfig> {
+    fun menuConfig(): StateFlow<MenuConfig> {
         return _menuConfig.asStateFlow()
     }
 
-    override fun isNight(): Boolean {
+    fun isNight(): Boolean {
         return _isNight
     }
 
-    override fun isLimitedVisibility(): Boolean {
+    fun isLimitedVisibility(): Boolean {
         return _isLimitedVisibility
     }
 
-    override fun isInteractionEnabled(): StateFlow<Boolean> {
+    fun isInteractionEnabled(): StateFlow<Boolean> {
         return _isInteractionEnabled.asStateFlow()
     }
 
-    override fun startNewGame() {
+    fun startNewGame() {
         _showsDeathScreen.value = false
         nativeLib.startNewGame()
     }
@@ -209,13 +220,13 @@ class GameEngine(
         currentChar = 0
     }
 
-    override fun setKeyDown(key: EmulatedKey) {
+    fun setKeyDown(key: EmulatedKey) {
         if (keyDown.add(key)) {
             keyPressed.add(key)
         }
     }
 
-    override fun setKeyUp(key: EmulatedKey) {
+    fun setKeyUp(key: EmulatedKey) {
         keyPressed.remove(key)
         keyDown.remove(key)
     }
@@ -276,7 +287,7 @@ class GameEngine(
         }
     }
 
-    override fun onMenuItemSelection(index: Int) {
+    fun onMenuItemSelection(index: Int) {
         nativeLib.selectCurrentMenuOptionAtIndex(index)
         setKeyDown(EmulatedKey.CONFIRM)
     }

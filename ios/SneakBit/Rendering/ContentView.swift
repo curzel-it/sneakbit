@@ -8,6 +8,7 @@ struct ContentView: View {
             ControllerEmulatorView()
             ToastView()
             MenuView()
+            OptionsView()
             LoadingScreen()
             DeathScreen()
         }
