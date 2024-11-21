@@ -10,10 +10,10 @@ Like the game or have cool ideas? Join the [Discord](https://discord.gg/MCdEgXKS
 <div style="display: flex; gap: 10px; justify-content: left; margin: 20px 0;">
 <!--
     <a href="https://discord.gg/MCdEgXKSH5">
-        <img src="docs/playstore_badge.webp" alt="Play Store" style="max-width: 150px; height: auto;">
+        <img src="docs/playstore_badge.webp" alt="Play Store" style="width: 150px; height: auto;">
     </a> -->
     <a href="https://discord.gg/MCdEgXKSH5">
-        <img src="docs/appstore_badge.webp" alt="App Store" style="max-width: 150px; height: auto;">
+        <img src="docs/appstore_badge.webp" alt="App Store" style="width: 150px; height: auto;">
     </a>
 </div>
 
