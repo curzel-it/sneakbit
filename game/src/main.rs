@@ -93,9 +93,11 @@ fn set_fullscreen(rl: &mut RaylibHandle, wants_fullscreen: bool) {
         let height = get_monitor_height(monitor);
         rl.set_window_size(width, height);
         rl.toggle_fullscreen();
+        rl.disable_cursor();
     } else {
         rl.toggle_fullscreen();
         rl.set_window_size(960, 640);
+        rl.enable_cursor();
     }
 }
 
