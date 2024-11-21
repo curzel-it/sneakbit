@@ -131,19 +131,19 @@ class AudioEngine(
 
     private fun soundTrackResourceIdFromFileName(filename: String): Int? {
         return when (filename) {
-            "pol_the_dojo_short.wav" -> R.raw.pol_the_dojo_short
-            "pol_brave_worm_short.wav" -> R.raw.pol_brave_worm_short
-            "pol_cactus_land_short.wav" -> R.raw.pol_cactus_land_short
-            "pol_chubby_cat_short.wav" -> R.raw.pol_chubby_cat_short
-            "pol_clouds_castle_short.wav" -> R.raw.pol_clouds_castle_short
-            "pol_combat_plan_short.wav" -> R.raw.pol_combat_plan_short
-            "pol_flash_run_short.wav" -> R.raw.pol_flash_run_short
-            "pol_king_of_coins_short.wav" -> R.raw.pol_king_of_coins_short
-            "pol_magical_sun_short.wav" -> R.raw.pol_magical_sun_short
-            "pol_nuts_and_bolts_short.wav" -> R.raw.pol_nuts_and_bolts_short
-            "pol_palm_beach_short.wav" -> R.raw.pol_palm_beach_short
-            "pol_pyramid_sands_short.wav" -> R.raw.pol_pyramid_sands_short
-            "pol_spirits_dance_short.wav" -> R.raw.pol_spirits_dance_short
+            "pol_the_dojo_short.mp3" -> R.raw.pol_the_dojo_short
+            "pol_brave_worm_short.mp3" -> R.raw.pol_brave_worm_short
+            "pol_cactus_land_short.mp3" -> R.raw.pol_cactus_land_short
+            "pol_chubby_cat_short.mp3" -> R.raw.pol_chubby_cat_short
+            "pol_clouds_castle_short.mp3" -> R.raw.pol_clouds_castle_short
+            "pol_combat_plan_short.mp3" -> R.raw.pol_combat_plan_short
+            "pol_flash_run_short.mp3" -> R.raw.pol_flash_run_short
+            "pol_king_of_coins_short.mp3" -> R.raw.pol_king_of_coins_short
+            "pol_magical_sun_short.mp3" -> R.raw.pol_magical_sun_short
+            "pol_nuts_and_bolts_short.mp3" -> R.raw.pol_nuts_and_bolts_short
+            "pol_palm_beach_short.mp3" -> R.raw.pol_palm_beach_short
+            "pol_pyramid_sands_short.mp3" -> R.raw.pol_pyramid_sands_short
+            "pol_spirits_dance_short.mp3" -> R.raw.pol_spirits_dance_short
             else -> null
         }
     }

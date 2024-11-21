@@ -4,7 +4,7 @@ use std::{cmp::Ordering, collections::HashSet, ffi::{c_char, CStr, CString}, pat
 
 use config::initialize_config_paths;
 use entities::known_species::SPECIES_KUNAI;
-use features::{light_conditions::LightConditions, sound_effects::SoundEffect};
+use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
 use game_engine::{engine::GameEngine, entity::Entity, storage::inventory_count};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::IntRect, vector::Vector2d};
@@ -385,4 +385,8 @@ pub fn current_soundtrack_string() -> Option<String> {
 #[no_mangle]
 pub extern "C" fn current_soundtrack() -> *const c_char {
     string_to_c_char(current_soundtrack_string().unwrap_or_default())
+}
+
+pub fn set_links_handler(handler: Box<dyn LinksHandler>) {
+    engine_mut().links_handler = handler;
 }

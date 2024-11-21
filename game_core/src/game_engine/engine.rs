@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, menus::{ammo_counter::AmmoCounter, confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, menus::{ammo_counter::AmmoCounter, confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
 
@@ -20,7 +20,8 @@ pub struct GameEngine {
     pub is_running: bool,
     pub creative_mode: bool,
     pub wants_fullscreen: bool,
-    pub sound_effects: SoundEffectsManager
+    pub sound_effects: SoundEffectsManager,
+    pub links_handler: Box<dyn LinksHandler>
 }
 
 impl GameEngine {
@@ -43,7 +44,8 @@ impl GameEngine {
             creative_mode: false,
             inventory_status: AmmoCounter::new(),
             wants_fullscreen: false,
-            sound_effects: SoundEffectsManager::new()
+            sound_effects: SoundEffectsManager::new(),
+            links_handler: Box::new(NoLinksHandler::new())
         }
     }
 
@@ -232,6 +234,9 @@ impl GameEngine {
             }
             EngineStateUpdate::BulletBounced => {
                 // ...
+            }
+            EngineStateUpdate::ExternalLink(link) => {
+                self.links_handler.open(link);
             }
         }
     }

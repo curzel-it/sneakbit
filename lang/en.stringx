@@ -53,6 +53,7 @@
 "map_editor.placement" = "CONFIRM to place, ESC to cancel"
 "map_editor.subtitle" = "Press CONFIRM to select something"
 "map_editor.title" = "Map Editor"
+"menu_back" = "Back"
 "npc.menu.play_dialog" = "Play dialog"
 "npc.menu.remove" = "Remove"
 "npc.menu.title" = "NPC Options"
@@ -865,3 +866,13 @@ Stupid new-age money.
 This was my first game, I hope you liked it.
 Thanks for playing!
 """
+
+"credits" = "Credits"
+"credits.developer" = "Game by Federico Curzel"
+"credits.developer.link" = "https://www.youtube.com/@HiddenMugs"
+"credits.open_source" = "The project is Open Source"
+"credits.open_source.link" = "https://github.com/curzel-it/sneakbit/"
+"credits.music" = "Music by Filippo Vicarelli"
+"credits.music.link" = "https://www.filippovicarelli.com/8bit-game-background-music"
+"credits.sound_effects" = "Sound Effects by SubspaceAudio"
+"credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style"

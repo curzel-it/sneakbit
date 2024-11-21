@@ -43,6 +43,11 @@ pub enum EngineStateUpdate {
     ToggleFullScreen,
     NewGame,
     BulletBounced,
+    ExternalLink(String)
+}
+
+pub fn visit(link: &str) -> WorldStateUpdate {
+    WorldStateUpdate::EngineUpdate(EngineStateUpdate::ExternalLink(link.to_owned()))
 }
 
 #[cfg(test)]
