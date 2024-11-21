@@ -53,6 +53,7 @@
 "map_editor.placement" = "CONFERMA per posizionare, ESC per annullare"
 "map_editor.subtitle" = "Premi CONFERMA per selezionare qualcosa"
 "map_editor.title" = "Editor Mappa"
+"menu_back" = "Indietro"
 "npc.menu.play_dialog" = "Avvia dialogo"
 "npc.menu.remove" = "Rimuovi"
 "npc.menu.title" = "Opzioni NPC"
@@ -865,3 +866,13 @@ Stupidi soldi moderni.
 Questo era il mio primo videogame, spero ti sia piaciuto.
 Grazie per aver giocato!
 """
+
+"credits" = "Crediti"
+"credits.developer" = "Game by Federico Curzel"
+"credits.developer.link" = "https://www.youtube.com/@HiddenMugs"
+"credits.open_source" = "The project is Open Source"
+"credits.open_source.link" = "https://github.com/curzel-it/sneakbit/"
+"credits.music" = "Music by Filippo Vicarelli"
+"credits.music.link" = "https://www.filippovicarelli.com/8bit-game-background-music"
+"credits.sound_effects" = "Sound Effects by SubspaceAudio"
+"credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style"

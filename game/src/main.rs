@@ -5,7 +5,7 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
 use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
@@ -27,14 +27,12 @@ fn main() {
         local_path("data/save.json"),
         local_path("lang")
     );
-    initialize_game(creative_mode);
-    
-    let (mut rl, thread) = start_rl();
-    
+    initialize_game(creative_mode);    
+    set_links_handler(Box::new(MyLinkHandler {}));
+
+    let (mut rl, thread) = start_rl();    
     let mut rl_audio = start_rl_audio();
     let mut sound_library = load_sounds(&mut rl_audio);
-
-    rl.set_window_min_size(360, 240);
         
     if bool_for_global_key(&StorageKey::fullscreen()) {
         engine_set_wants_fullscreen();
@@ -47,17 +45,7 @@ fn main() {
         if wants_fullscreen != is_fullscreen {
             is_fullscreen = wants_fullscreen;
             needs_window_init = true;
-            
-            if wants_fullscreen {
-                let monitor = get_current_monitor();
-                let width = get_monitor_width(monitor);
-                let height = get_monitor_height(monitor);
-                rl.set_window_size(width, height);
-                rl.toggle_fullscreen();
-            } else {
-                rl.toggle_fullscreen();
-                rl.set_window_size(960, 640);
-            }
+            set_fullscreen(&mut rl, wants_fullscreen);
             println!("Toggled fullscreen (now {})", is_fullscreen);
         }
 
@@ -95,6 +83,19 @@ fn main() {
             music_was_enabled = false;
             stop_music(&mut sound_library);
         }
+    }
+}
+
+fn set_fullscreen(rl: &mut RaylibHandle, wants_fullscreen: bool) {
+    if wants_fullscreen {
+        let monitor = get_current_monitor();
+        let width = get_monitor_width(monitor);
+        let height = get_monitor_height(monitor);
+        rl.set_window_size(width, height);
+        rl.toggle_fullscreen();
+    } else {
+        rl.toggle_fullscreen();
+        rl.set_window_size(960, 640);
     }
 }
 
@@ -148,6 +149,7 @@ fn start_rl() -> (RaylibHandle, RaylibThread) {
     let font_bold = rl.load_font(&thread, "fonts/PixelOperator/PixelOperator8-Bold.ttf").unwrap();                     
     
     rl.set_target_fps(MAX_FPS);
+    rl.set_window_min_size(360, 240);
 
     let textures: HashMap<u32, Texture2D> = load_textures(&mut rl, &thread);
     init_rendering_config(RenderingConfig {
@@ -386,33 +388,33 @@ enum AppSound {
 fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitError>) -> HashMap<AppSound, Sound> {
     if let Ok(rl) = rl {
         vec![
-            (AppSound::Effect(SoundEffect::DeathOfNonMonster), "sfx_deathscream_android7.wav"),
-            (AppSound::Effect(SoundEffect::DeathOfMonster), "sfx_deathscream_human11.wav"),
-            (AppSound::Effect(SoundEffect::SmallExplosion), "sfx_exp_short_hard8.wav"),
-            (AppSound::Effect(SoundEffect::WorldChange), "sfx_movement_dooropen1.wav"),
-            (AppSound::Effect(SoundEffect::StepTaken), "sfx_movement_footsteps1a.wav"),
-            (AppSound::Effect(SoundEffect::BulletFired), "sfx_movement_jump12_landing.wav"),
-            (AppSound::Effect(SoundEffect::BulletBounced), "sfx_movement_jump20.wav"),
-            (AppSound::Effect(SoundEffect::HintReceived), "sfx_sound_neutral5.wav"),
-            (AppSound::Effect(SoundEffect::KeyCollected), "sfx_sounds_fanfare3.wav"),
-            (AppSound::Effect(SoundEffect::Interaction), "sfx_sounds_interaction9.wav"),
-            (AppSound::Effect(SoundEffect::AmmoCollected), "sfx_sounds_interaction22.wav"),
-            (AppSound::Effect(SoundEffect::GameOver), "sfx_sounds_negative1.wav"),
-            (AppSound::Effect(SoundEffect::PlayerResurrected), "sfx_sounds_powerup1.wav"), 
-            (AppSound::Effect(SoundEffect::NoAmmo), "sfx_wpn_noammo3.wav"),
-            track_track_pair("pol_brave_worm_short.wav"),
-            track_track_pair("pol_cactus_land_short.wav"),
-            track_track_pair("pol_chubby_cat_short.wav"),
-            track_track_pair("pol_clouds_castle_short.wav"),
-            track_track_pair("pol_combat_plan_short.wav"),
-            track_track_pair("pol_flash_run_short.wav"),
-            track_track_pair("pol_king_of_coins_short.wav"),
-            track_track_pair("pol_magical_sun_short.wav"),
-            track_track_pair("pol_nuts_and_bolts_short.wav"),
-            track_track_pair("pol_palm_beach_short.wav"),
-            track_track_pair("pol_pyramid_sands_short.wav"),
-            track_track_pair("pol_spirits_dance_short.wav"),
-            track_track_pair("pol_the_dojo_short.wav"),
+            (AppSound::Effect(SoundEffect::DeathOfNonMonster), "sfx_deathscream_android7.mp3"),
+            (AppSound::Effect(SoundEffect::DeathOfMonster), "sfx_deathscream_human11.mp3"),
+            (AppSound::Effect(SoundEffect::SmallExplosion), "sfx_exp_short_hard8.mp3"),
+            (AppSound::Effect(SoundEffect::WorldChange), "sfx_movement_dooropen1.mp3"),
+            (AppSound::Effect(SoundEffect::StepTaken), "sfx_movement_footsteps1a.mp3"),
+            (AppSound::Effect(SoundEffect::BulletFired), "sfx_movement_jump12_landing.mp3"),
+            (AppSound::Effect(SoundEffect::BulletBounced), "sfx_movement_jump20.mp3"),
+            (AppSound::Effect(SoundEffect::HintReceived), "sfx_sound_neutral5.mp3"),
+            (AppSound::Effect(SoundEffect::KeyCollected), "sfx_sounds_fanfare3.mp3"),
+            (AppSound::Effect(SoundEffect::Interaction), "sfx_sounds_interaction9.mp3"),
+            (AppSound::Effect(SoundEffect::AmmoCollected), "sfx_sounds_interaction22.mp3"),
+            (AppSound::Effect(SoundEffect::GameOver), "sfx_sounds_negative1.mp3"),
+            (AppSound::Effect(SoundEffect::PlayerResurrected), "sfx_sounds_powerup1.mp3"), 
+            (AppSound::Effect(SoundEffect::NoAmmo), "sfx_wpn_noammo3.mp3"),
+            track_track_pair("pol_brave_worm_short.mp3"),
+            track_track_pair("pol_cactus_land_short.mp3"),
+            track_track_pair("pol_chubby_cat_short.mp3"),
+            track_track_pair("pol_clouds_castle_short.mp3"),
+            track_track_pair("pol_combat_plan_short.mp3"),
+            track_track_pair("pol_flash_run_short.mp3"),
+            track_track_pair("pol_king_of_coins_short.mp3"),
+            track_track_pair("pol_magical_sun_short.mp3"),
+            track_track_pair("pol_nuts_and_bolts_short.mp3"),
+            track_track_pair("pol_palm_beach_short.mp3"),
+            track_track_pair("pol_pyramid_sands_short.mp3"),
+            track_track_pair("pol_spirits_dance_short.mp3"),
+            track_track_pair("pol_the_dojo_short.mp3"),
 
         ]
         .into_iter()
@@ -455,4 +457,12 @@ fn audio_path_for_filename(filename: &str) -> PathBuf {
     path.push("audio");
     path.push(filename);
     path
+}
+
+struct MyLinkHandler;
+
+impl LinksHandler for MyLinkHandler {
+    fn open(&self, link: &str) {
+        let _ = open::that(link);
+    }
 }

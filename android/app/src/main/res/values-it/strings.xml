@@ -14,4 +14,14 @@
     <string name="game_menu_disable_sound_effects">"Disabilita Effetti Sonori"</string>
     <string name="game_menu_enable_music">"Abilita Musica"</string>
     <string name="game_menu_disable_music">"Disabilita Musica"</string>
+    <string name="credits">"Credits"</string>
+    <string name="credits.developer">"Game by HiddenMugs"</string>
+    <string name="credits.developer.link">"https://www.youtube.com/@HiddenMugs"</string>
+    <string name="credits.open_source">"The project is Open Source"</string>
+    <string name="credits.open_source.link">"https://github.com/curzel-it/sneakbit/"</string>
+    <string name="credits.music">"Music by Filippo Vicarelli"</string>
+    <string name="credits.music.link">"https://www.filippovicarelli.com/8bit-game-background-music"</string>
+    <string name="credits.sound_effects">"Sound Effects by SubspaceAudio"</string>
+    <string name="credits.sound_effects.link">"https://opengameart.org/content/512-sound-effects-8-bit-style"</string>
+    <string name="menu_back">"Indietro"</string>
 </resources>
