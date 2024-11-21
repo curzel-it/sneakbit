@@ -51,7 +51,7 @@ fn main() {
 
         if needs_window_init || rl.is_window_resized() {
             needs_window_init = false;
-            handle_window_size_changed(rl.get_screen_width() as f32, rl.get_screen_height() as f32);
+            handle_window_size_changed(&mut rl);
         }
         if rl.window_should_close() && !rl.is_key_pressed(raylib::consts::KeyboardKey::KEY_ESCAPE) {
             stop_game();
@@ -171,10 +171,13 @@ fn start_rl_audio() -> Result<raylib::prelude::RaylibAudio, RaylibAudioInitError
     RaylibAudio::init_audio_device()
 }
 
-fn handle_window_size_changed(width: f32, height: f32) {
+fn handle_window_size_changed(rl: &mut RaylibHandle) {
     if !is_rendering_config_initialized() {
         return
     }
+    let width = rl.get_screen_width() as f32;
+    let height = rl.get_screen_height() as f32;
+
     println!("Window size changed to {}x{}", width, height);
     let (scale, font_scale) = rendering_scale_for_screen_width(width);
     
@@ -323,14 +326,14 @@ fn get_char_pressed(rl: &mut RaylibHandle) -> u32 {
 fn rendering_scale_for_screen_width(width: f32) -> (f32, f32) {
     if is_creative_mode() {
         return (2.0, 2.0)
-    }
-    if width < 500.0 {
+    } else if width < 500.0 {
         (1.0, 1.0)
     } else if width < 1400.0 {
         (2.0, 2.0)
+    } else if width < 2000.0 {
+        (3.0, 3.0)
     } else {
-        let scale = (width / 950.0).ceil();
-        (scale, scale)
+        (4.0, 4.0)
     }
 }
 
