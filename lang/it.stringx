@@ -867,7 +867,7 @@ Questo era il mio primo videogame, spero ti sia piaciuto.
 Grazie per aver giocato!
 """
 
-"credits" = "Credits"
+"credits" = "Crediti"
 "credits.developer" = "Game by Federico Curzel"
 "credits.developer.link" = "https://www.youtube.com/@HiddenMugs"
 "credits.open_source" = "The project is Open Source"

@@ -14,6 +14,8 @@ struct OptionsView: View {
                 
                 if viewModel.showNewGameAlert {
                     NewGameView()
+                } else if viewModel.showCredits {
+                    CreditsView()
                 } else {
                     OptionsContent()
                 }
@@ -60,6 +62,11 @@ private struct OptionsContent: View {
                     .onTapGesture {
                         viewModel.toggleMusic()
                     }
+                
+                Text("credits".localized())
+                    .onTapGesture {
+                        viewModel.openCredits()
+                    }
             }
             .positioned(.middle)
             
@@ -73,6 +80,46 @@ private struct OptionsContent: View {
         }
         .typography(.title)
         .foregroundStyle(Color.white.opacity(0.9))
+    }
+}
+
+private struct CreditsView: View {
+    @EnvironmentObject var viewModel: OptionsViewModel
+    
+    var body: some View {
+        VStack(spacing: 50) {
+            Text("credits".localized())
+                .typography(.largeTitle)
+            
+            CreditsItem(key: "developer")
+            CreditsItem(key: "open_source")
+            CreditsItem(key: "music")
+            CreditsItem(key: "sound_effects")
+            
+            Text("menu_back".localized())
+                .textAlign(.center)
+                .onTapGesture {
+                    viewModel.closeCredits()
+                }
+                .padding(.top)
+        }
+        .typography(.text)
+        .foregroundStyle(Color.white)
+        .positioned(.middle)
+    }
+}
+
+private struct CreditsItem: View {
+    @EnvironmentObject var viewModel: OptionsViewModel
+    
+    let key: String
+    
+    var body: some View {
+        Text("credits.\(key)".localized())
+            .textAlign(.center)
+            .onTapGesture {
+                viewModel.visitUrl(key: "credits.\(key).link")
+            }
     }
 }
 
@@ -114,6 +161,7 @@ class OptionsViewModel: ObservableObject {
     @Published var menuButtonOpacity: CGFloat = 1
     @Published var toggleSoundEffectsTitle: String = "..."
     @Published var toggleMusicTitle: String = "..."
+    @Published var showCredits: Bool = false
     
     private var isBeingShown = false
     
@@ -181,7 +229,24 @@ class OptionsViewModel: ObservableObject {
         withAnimation {
             showNewGameAlert = false
         }
-        isBeingShown = false
+    }
+    
+    func openCredits() {
+        withAnimation {
+            showCredits = true
+        }
+    }
+    
+    func closeCredits() {
+        withAnimation {
+            showCredits = false
+        }
+    }
+    
+    func visitUrl(key: String) {
+        if let url = URL(string: key.localized()) {
+            UIApplication.shared.open(url)
+        }
     }
     
     private func loadToggleSoundEffectsTitle() {
