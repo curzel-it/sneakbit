@@ -61,7 +61,6 @@ def main():
         src = directory
         dest = os.path.join(version_dir, directory)
         copy_directory(src, dest)
-    os.makedirs(os.path.join(version_dir, "game"), exist_ok=True)
 
     # Remove data/save.json if it exists
     save_json_path = os.path.join(version_dir, "data", "save.json")
