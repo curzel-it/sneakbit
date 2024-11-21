@@ -104,7 +104,7 @@ fn stop_music(sound_library: &mut HashMap<AppSound, Sound>) {
 
     sounds.iter().for_each(|key| {
         if matches!(key, AppSound::Track(_)) {
-            if let Some(sound) = sound_library.get_mut(&key) {
+            if let Some(sound) = sound_library.get_mut(key) {
                 if sound.is_playing() {
                     sound.stop();
                 }
@@ -145,8 +145,8 @@ fn start_rl() -> (RaylibHandle, RaylibThread) {
         .vsync()
         .build();        
     
-    let font = rl.load_font(&thread, "fonts/PixelOperator/PixelOperator8.ttf").unwrap();
-    let font_bold = rl.load_font(&thread, "fonts/PixelOperator/PixelOperator8-Bold.ttf").unwrap();                     
+    let font = rl.load_font(&thread, &regular_font_path()).unwrap();
+    let font_bold = rl.load_font(&thread, &bold_font_path()).unwrap();                     
     
     rl.set_target_fps(MAX_FPS);
     rl.set_window_min_size(360, 240);
@@ -338,6 +338,20 @@ fn local_path(filename: &str) -> PathBuf {
     path
 }
 
+fn regular_font_path() -> String {
+    let mut path = local_path("fonts");
+    path.push("PixelOperator");
+    path.push("PixelOperator8.ttf");
+    path.as_os_str().to_str().unwrap().to_owned()
+}
+
+fn bold_font_path() -> String {
+    let mut path = local_path("fonts");
+    path.push("PixelOperator");
+    path.push("PixelOperator8-Bold.ttf");
+    path.as_os_str().to_str().unwrap().to_owned()
+}
+
 fn root_path() -> PathBuf {
     let cargo_manifest_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let exe_path = env::current_exe().unwrap_or(cargo_manifest_path);
@@ -348,9 +362,10 @@ fn root_path() -> PathBuf {
         .replace("target\\debug\\game", "game")
         .replace("target\\release\\game", "game");
 
-    let mut path = PathBuf::from(base);
-    path.push("..");
-    path
+    let path = PathBuf::from(base);
+    let mut components = path.components();
+    components.next_back();
+    components.as_path().to_path_buf()
 }
 
 fn current_locale() -> String {
