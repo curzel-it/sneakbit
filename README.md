@@ -1,4 +1,4 @@
-<img src="docs/logo_text.png" alt="Logo" style="width: 250px; height: auto; image-rendering: pixelated;">
+<img src="docs/logo_text.png" alt="Logo" style="width: 324px; height: auto; image-rendering: pixelated;">
 <br>
 <br>
 Got bored, started sperimenting a bit with Rust, ended up with a game!
