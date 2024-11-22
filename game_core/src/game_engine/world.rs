@@ -3,7 +3,7 @@ use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}
 use common_macros::hash_set;
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, increment_inventory_count, lock_override, save_lock_override}};
+use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 #[derive(Clone)]
 pub struct World {
@@ -112,11 +112,17 @@ impl World {
         }
     }
 
-    fn remove_entity_by_id(&mut self, id: u32) {
+    pub fn remove_entity_by_id(&mut self, id: u32) {
         if id != HERO_ENTITY_ID {
             if let Some(index) = self.index_for_entity(id) {
                 self.remove_entity_at_index(index);
             }
+        }
+    }
+
+    fn mark_as_collected_if_needed(&self, entity_id: u32) {
+        if !self.ephemeral_state && entity_id != HERO_ENTITY_ID {
+            set_value_for_key(&StorageKey::item_collected(entity_id), 1);
         }
     }
 
@@ -130,6 +136,7 @@ impl World {
         if matches!(entity.entity_type, EntityType::Building) {
             self.buildings.remove(&entity.id);
         }
+        self.mark_as_collected_if_needed(entity.id);
         drop(entities);
 
         self.entities.borrow_mut().swap_remove(index);
@@ -290,6 +297,7 @@ impl World {
                     IntRect::new(0, 10, 1, 1), 
                     5
                 );
+                self.mark_as_collected_if_needed(target_id);
                 updates.push(EngineStateUpdate::EntityShoot(target.id, target.species_id));
             }
         }

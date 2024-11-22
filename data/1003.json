@@ -21720,6 +21720,12 @@
             },
             "dialogues": [
                 {
+                    "text": "lore.012.hunted_pub.he_always_comes_back",
+                    "key": "item_collected.11767738",
+                    "expected_value": 1,
+                    "reward": 7001
+                },
+                {
                     "text": "lore.012.hunted_pub",
                     "key": "always",
                     "expected_value": 0,

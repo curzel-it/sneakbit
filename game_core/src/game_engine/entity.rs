@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{Dialogue, EntityDialogues}, directions::MovementDirections}, game_engine::storage::{set_value_for_key, StorageKey}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::key_value_matches, world::World};
+use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}, world::World};
 
 #[derive(Debug, Copy, Clone)]
 pub struct EntityProps {
@@ -151,6 +151,9 @@ impl Entity {
     }
 
     pub fn should_be_visible(&self, world: &World) -> bool {
+        if bool_for_global_key(&StorageKey::item_collected(self.id)) {
+            return false;
+        }
         for condition in &self.display_conditions{
             if key_value_matches(&condition.key, world, condition.expected_value) {
                 return condition.visible

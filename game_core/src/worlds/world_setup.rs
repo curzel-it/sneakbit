@@ -3,6 +3,7 @@ use crate::{entities::{known_species::SPECIES_HERO, species::make_entity_by_spec
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
         self.remove_hero();
+        self.remove_dying_entities();
         self.visible_entities = self.compute_visible_entities(&self.bounds);
         self.update_tiles_hitmap();
         self.update_hitmaps();
@@ -72,6 +73,14 @@ impl World {
         }
 
         options
+    }
+
+    fn remove_dying_entities(&mut self) {
+        let dying_ids: Vec<u32> = self.entities.borrow().iter()
+            .filter_map(|e| { if e.is_dying { Some(e.id) } else { None } })
+            .collect();
+
+        dying_ids.into_iter().for_each(|id| self.remove_entity_by_id(id));
     }
 
     fn has_space_for_hero_in_direction(&self, x: i32, y: i32, direction: &Direction) -> bool {

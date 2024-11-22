@@ -40,6 +40,10 @@ impl StorageKey {
         "desktop_only.game_settings.music_disabled".to_owned()
     }
 
+    pub fn item_collected(id: EntityId) -> String {
+        format!("item_collected.{}", id)
+    }
+
     fn dialogue_answer(dialogue: &str) -> String {
         format!("dialogue.answer.{}", dialogue)
     }

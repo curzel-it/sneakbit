@@ -345,6 +345,10 @@ Non importa quante volte ci liberiamo del mostro, torna sempre.
 Forse le bevande erano troppo buone!
 """
 
+"lore.012.hunted_pub.he_always_comes_back" = """
+Grazie, ma sono sicura che tornerà prima o poi!
+"""
+
 "lore.013.snail_pig_farming" = """
 Allevamento di maiali-lumaca
 """

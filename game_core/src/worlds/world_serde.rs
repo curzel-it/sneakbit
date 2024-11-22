@@ -112,7 +112,7 @@ struct WorldData {
     soundtrack: Option<String>,
 
     #[serde(default)]
-    cutscenes: Vec<CutScene>
+    cutscenes: Vec<CutScene>,
 }
 
 impl Serialize for World {

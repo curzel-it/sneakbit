@@ -345,6 +345,10 @@ No matter how many times we get rid of the monster, he always comes back.
 I guess the drinks were too good!
 """
 
+"lore.012.hunted_pub.he_always_comes_back" = """
+Thanks, but he'll come back eventually!
+"""
+
 "lore.013.snail_pig_farming" = """
 Pig-Snail farming
 """
