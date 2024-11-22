@@ -178,10 +178,13 @@ fn handle_window_size_changed(rl: &mut RaylibHandle) {
     if !is_rendering_config_initialized() {
         return
     }
-    let width = rl.get_screen_width() as f32;
-    let height = rl.get_screen_height() as f32;
+    let window_scale = rl.get_window_scale_dpi().x;
+    let real_width = rl.get_render_width() as f32;
+    let real_height = rl.get_render_height() as f32;
+    let width = real_width / window_scale;
+    let height = real_height / window_scale;
 
-    println!("Window size changed to {}x{}", width, height);
+    println!("Window size changed to {}x{} @ {}", width, height, window_scale);
     let (scale, font_scale) = rendering_scale_for_screen_width(width);
     
     println!("Updated rendering scale to {}", scale);
@@ -190,8 +193,14 @@ fn handle_window_size_changed(rl: &mut RaylibHandle) {
     let config = get_rendering_config_mut();
     config.rendering_scale = scale;
     config.font_rendering_scale = font_scale;
-    config.canvas_size.x = width;
-    config.canvas_size.y = height;
+
+    if rl.is_window_fullscreen() {
+        config.canvas_size.x = real_width;
+        config.canvas_size.y = real_height;
+    } else {
+        config.canvas_size.x = width;
+        config.canvas_size.y = height;
+    }
 
     let font_size = config.scaled_font_size(&Typography::Regular);
     let line_spacing = config.font_lines_spacing(&Typography::Regular);
