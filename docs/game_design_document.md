@@ -1,4 +1,4 @@
-# Game Description
+# Game Design Document
 > Warning!<br>
 > This document contains game spoilers, lots of AI generated slope and it's garbage in general.
 
@@ -157,6 +157,8 @@ Reward: Thugs are gone and the passage to Maritide Have via Thermoria's dock
 
 ## Lore
 ### Locations
+![World Map](world_map.png)
+
 #### Evergrove Village (1001)
 The small village near the spawn location of the MC.
 

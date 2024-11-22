@@ -1,8 +1,7 @@
-# SneakBit
-
-So, I got bored, wanted to speriment a bit with Rust, and love GameBoy games, here's the result!
-
-I really enjoyed the process, but have no idea what the final result should be, for now at least.
+<img src="docs/logo_text.png" alt="Logo" style="width: 250px; height: auto; image-rendering: pixelated;">
+<br>
+<br>
+Got bored, started sperimenting a bit with Rust, ended up with a game!
 
 Like the game or have cool ideas? Join the [Discord](https://discord.gg/MCdEgXKSH5)!
 
@@ -49,6 +48,13 @@ sh scripts/build_android.sh
 python3 scripts/sync_assets.py
 ```
 
+## Screenshots
+<img src="docs/steam/4.png" style="width: 756px; height: auto; image-rendering: pixelated;">
+<img src="docs/steam/5.png" style="width: 756px; height: auto; image-rendering: pixelated;">
+<img src="docs/steam/1.png" style="width: 756px; height: auto; image-rendering: pixelated;">
+<img src="docs/steam/2.png" style="width: 756px; height: auto; image-rendering: pixelated;">
+<img src="docs/steam/3.png" style="width: 756px; height: auto; image-rendering: pixelated;">
+
 ## Credits
 ### Music
 Found a great bundle [by Filippo Vicarelli](https://www.filippovicarelli.com/8bit-game-background-music)
@@ -56,20 +62,14 @@ Found a great bundle [by Filippo Vicarelli](https://www.filippovicarelli.com/8bi
 ### Sounds effects
 Found a great bundle [by SubspaceAudio](https://opengameart.org/content/512-sound-effects-8-bit-style) over at OpenGameArt.org
 
-## Screenshots
-![Game intro](docs/1.png)
-![First level](docs/2.png)
-![Map Editor](docs/6.png)
-<img src="docs/android.png" alt="Android Screenshot" style="height: 500px">
-<img src="docs/ios.jpeg" alt="iOS Screenshot" style="height: 500px;">
-
-## More about the game
-I'm taking notes about characters and lore [here](https://github.com/curzel-it/sneakbit/blob/main/docs/game_design_document.md).
-![World Map](docs/world_map.png)
-
 ## TODO:
 - Add proper credits in-game
 - Make slopes reflect bullets
 - More Quests
 - More Lore
 - More Game!
+
+## Game Design Document
+> Warning: Spoilers!
+
+Notes about lore, quests and characters can be found [here](https://github.com/curzel-it/sneakbit/blob/main/docs/game_design_document.md).
