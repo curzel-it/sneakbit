@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 game_core = { path = "../game_core" }
-raylib = "5.0.1"
+raylib = "5.0.2"
 common_macros = "0.1.1"
 sys-locale = "0.3.1"
 open = "5.3.1"

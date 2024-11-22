@@ -17,7 +17,7 @@ fn main() {
     let mut latest_world_id = 0;
     let mut music_was_enabled = true;
     let mut is_fullscreen = false;
-    let mut using_controller = false;
+    let mut total_run_time: f32 = 0.0;
     let creative_mode = env::args().any(|arg| arg == "creative");
 
     initialize_config_paths(
@@ -34,8 +34,7 @@ fn main() {
     let (mut rl, thread) = start_rl();    
     let mut rl_audio = start_rl_audio();
     let mut sound_library = load_sounds(&mut rl_audio);
-
-    using_controller = rl.is_gamepad_available(0);
+    let mut using_controller = false;
         
     if bool_for_global_key(&StorageKey::fullscreen()) {
         engine_set_wants_fullscreen();
@@ -43,6 +42,7 @@ fn main() {
 
     while is_game_running() {
         let time_since_last_update = rl.get_frame_time().min(0.5);
+        total_run_time += time_since_last_update;
 
         let wants_fullscreen = engine().wants_fullscreen;
         if wants_fullscreen != is_fullscreen {
@@ -60,7 +60,7 @@ fn main() {
             stop_game();
         }
 
-        using_controller = handle_keyboard_updates(&mut rl, time_since_last_update, using_controller);
+        using_controller = handle_keyboard_updates(&mut rl, total_run_time, time_since_last_update, using_controller);
         handle_mouse_updates(&mut rl, get_rendering_config().rendering_scale);
         update_game(time_since_last_update);
 
@@ -270,12 +270,12 @@ fn handle_mouse_updates(rl: &mut RaylibHandle, rendering_scale: f32) {
     );
 }
 
-fn handle_keyboard_updates(rl: &mut RaylibHandle, time_since_last_update: f32, using_controller: bool) -> bool {
+fn handle_keyboard_updates(rl: &mut RaylibHandle, total_run_time: f32, time_since_last_update: f32, using_controller: bool) -> bool {
     let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl);
     let previous_keyboard_state = &engine().keyboard;
 
     let has_controller_now = rl.is_gamepad_available(0);
-    let controller_availability_changed = using_controller != has_controller_now;    
+    let controller_availability_changed = total_run_time > 0.5 && (using_controller != has_controller_now);    
 
     update_keyboard(
         rl.is_key_pressed(KeyboardKey::KEY_W) || rl.is_key_pressed(KeyboardKey::KEY_UP) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!previous_keyboard_state.direction_up.is_down && joystick_up), 
@@ -294,7 +294,7 @@ fn handle_keyboard_updates(rl: &mut RaylibHandle, time_since_last_update: f32, u
         get_char_pressed(rl),
         time_since_last_update
     );
-    using_controller
+    has_controller_now
 }
 
 fn current_joystick_directions(rl: &RaylibHandle) -> (bool, bool, bool, bool) {
