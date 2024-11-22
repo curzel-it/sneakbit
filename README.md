@@ -63,7 +63,6 @@ Found a great bundle [by Filippo Vicarelli](https://www.filippovicarelli.com/8bi
 Found a great bundle [by SubspaceAudio](https://opengameart.org/content/512-sound-effects-8-bit-style) over at OpenGameArt.org
 
 ## TODO:
-- Add proper credits in-game
 - Make slopes reflect bullets
 - More Quests
 - More Lore
