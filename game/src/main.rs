@@ -60,7 +60,12 @@ fn main() {
             stop_game();
         }
 
-        using_controller = handle_keyboard_updates(&mut rl, total_run_time, time_since_last_update, using_controller);
+        using_controller = handle_keyboard_updates(
+            &mut rl, 
+            total_run_time, 
+            time_since_last_update, 
+            using_controller
+        );
         handle_mouse_updates(&mut rl, get_rendering_config().rendering_scale);
         update_game(time_since_last_update);
 
@@ -275,7 +280,9 @@ fn handle_keyboard_updates(rl: &mut RaylibHandle, total_run_time: f32, time_sinc
     let previous_keyboard_state = &engine().keyboard;
 
     let has_controller_now = rl.is_gamepad_available(0);
-    let controller_availability_changed = total_run_time > 0.5 && (using_controller != has_controller_now);    
+    let controller_availability_changed = total_run_time > 0.5 && (using_controller != has_controller_now);  
+    let lost_focus = !rl.is_window_focused();
+    let should_pause = controller_availability_changed || lost_focus;
 
     update_keyboard(
         rl.is_key_pressed(KeyboardKey::KEY_W) || rl.is_key_pressed(KeyboardKey::KEY_UP) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!previous_keyboard_state.direction_up.is_down && joystick_up), 
@@ -287,7 +294,7 @@ fn handle_keyboard_updates(rl: &mut RaylibHandle, total_run_time: f32, time_sinc
         rl.is_key_down(KeyboardKey::KEY_S) || rl.is_key_down(KeyboardKey::KEY_DOWN) || rl.is_gamepad_button_down(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || joystick_down, 
         rl.is_key_down(KeyboardKey::KEY_A) || rl.is_key_down(KeyboardKey::KEY_LEFT) || rl.is_gamepad_button_down(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || joystick_left, 
         rl.is_key_pressed(KeyboardKey::KEY_ESCAPE) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
-        controller_availability_changed || rl.is_key_pressed(KeyboardKey::KEY_ENTER) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_MIDDLE), 
+        should_pause || rl.is_key_pressed(KeyboardKey::KEY_ENTER) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
         rl.is_key_pressed(KeyboardKey::KEY_E) || rl.is_key_pressed(KeyboardKey::KEY_K) || rl.is_key_pressed(KeyboardKey::KEY_SPACE) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
         rl.is_key_pressed(KeyboardKey::KEY_F) || rl.is_key_pressed(KeyboardKey::KEY_J) || rl.is_key_pressed(KeyboardKey::KEY_Q) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
         rl.is_key_pressed(KeyboardKey::KEY_BACKSPACE), 
