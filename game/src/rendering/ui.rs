@@ -86,8 +86,8 @@ pub fn render_layout(layout: &Layout, d: &mut RaylibDrawHandle) {
     d.draw_rectangle(
         -100, 
         -100, 
-        d.get_screen_width() + 200, 
-        d.get_screen_height() + 200, 
+        d.get_render_width() + 200, 
+        d.get_render_height() + 200, 
         as_rcolor(&layout.background_color)
     );
 

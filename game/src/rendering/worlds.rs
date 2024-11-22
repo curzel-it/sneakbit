@@ -7,9 +7,10 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
     let engine = engine();
     let world = &engine.world;
 
+    let config = get_rendering_config();
     let fps = rl.get_fps();
-    let screen_width = rl.get_screen_width();
-    let screen_height = rl.get_screen_height();
+    let screen_width = rl.get_render_width();
+    let screen_height = rl.get_render_height();
 
     let mut d = rl.begin_drawing(thread);
     d.clear_background(Color::BLACK);
@@ -38,10 +39,13 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
         render_limited_visibility(&mut d, screen_width, screen_height);
     }
 
-    let hud = engine.hud_ui(d.get_screen_width(), d.get_screen_height());
+    let hud = engine.hud_ui(
+        config.canvas_size.x as i32, 
+        config.canvas_size.y as i32
+    );
     render_layout(&hud, &mut d);
     
-    if get_rendering_config().show_debug_info {
+    if config.show_debug_info {
         draw_debug_info(
             &mut d, 
             fps, 
