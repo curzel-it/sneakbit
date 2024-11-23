@@ -175,5 +175,6 @@
   "entities": [],
   "is_interior": false,
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": null
 }
