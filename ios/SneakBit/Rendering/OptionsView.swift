@@ -22,18 +22,22 @@ struct OptionsView: View {
             }
             .environmentObject(viewModel)
         } else {
-            Image("menu_button_up")
-                .interpolation(.none)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: KeyEmulatorView.size.width, height: KeyEmulatorView.size.height)
-                .contentShape(Rectangle())
-                .opacity(viewModel.menuButtonOpacity)
-                .onTapGesture { viewModel.showMenu() }
-                .positioned(.trailingTop)
-                .padding(.trailing, viewModel.safeAreaInsets.right)
-                .padding(.top, viewModel.safeAreaInsets.top)
-                .padding()
+            GeometryReader { geo in
+                let isLandscape = geo.size.width >= geo.size.height
+                Image("menu_button_up")
+                    .interpolation(.none)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: KeyEmulatorView.size.width, height: KeyEmulatorView.size.height)
+                    .padding(KeyEmulatorView.padding)
+                    .contentShape(Rectangle())
+                    .opacity(viewModel.menuButtonOpacity)
+                    .onTapGesture { viewModel.showMenu() }
+                    .positioned(.trailingTop)
+                    .padding(.trailing, isLandscape ? 90 : 25)
+                    .padding(.trailing, viewModel.safeAreaInsets.right)
+                    .padding(.top, viewModel.safeAreaInsets.top)
+            }
         }
     }
 }

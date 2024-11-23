@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -75,9 +76,18 @@ private fun ControllerEmulatorView(
             verticalAlignment = Alignment.Bottom,
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(start = if (isLandscape) 85.dp else 20.dp)
-                .padding(bottom = if (isLandscape) 100.dp else 140.dp)
+                .padding(end = if (isLandscape) 110.dp else 25.dp)
+                .padding(bottom = if (isLandscape) 80.dp else 125.dp)
         ) {
+            Spacer(modifier = Modifier.weight(1.0f))
+
+            AnimatedVisibility(
+                visible = isConfirmVisible,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                KeyEmulatorView(EmulatedKey.CONFIRM, setKeyDown, setKeyUp)
+            }
             AnimatedVisibility(
                 visible = isAttackVisible,
                 enter = fadeIn(),
@@ -96,14 +106,6 @@ private fun ControllerEmulatorView(
                         color = Color.Black.copy(alpha = 0.9f)
                     )
                 }
-            }
-
-            AnimatedVisibility(
-                visible = isConfirmVisible,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                KeyEmulatorView(EmulatedKey.CONFIRM, setKeyDown, setKeyUp)
             }
         }
     }

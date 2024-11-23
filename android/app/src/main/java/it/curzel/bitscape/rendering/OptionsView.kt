@@ -2,6 +2,7 @@ package it.curzel.bitscape.rendering
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -29,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
@@ -108,6 +110,9 @@ private fun OptionsScreen(
     showMenu: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
     Box(modifier = modifier.fillMaxSize()) {
         if (isVisible) {
             AnimatedVisibility(
@@ -146,22 +151,24 @@ private fun OptionsScreen(
                 }
             }
         } else {
-            Image(
-                bitmap = ImageBitmap.imageResource(R.drawable.menu_button_up),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                filterQuality = FilterQuality.None,
-                alpha = menuButtonOpacity,
-                modifier = modifier
-                    .size(90.dp)
-                    .padding(keyEmulatorViewPadding)
-                    .clickable { showMenu() }
+            Box(
+                modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(
-                        end = 16.dp,
-                        top = 16.dp
-                    )
-            )
+                    .padding(end = if (isLandscape) 110.dp else 25.dp)
+                    .padding(top = 20.dp)
+            ) {
+                Image(
+                    bitmap = ImageBitmap.imageResource(R.drawable.menu_button_up),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    filterQuality = FilterQuality.None,
+                    alpha = menuButtonOpacity,
+                    modifier = modifier
+                        .size(90.dp)
+                        .padding(keyEmulatorViewPadding)
+                        .clickable { showMenu() }
+                )
+            }
         }
     }
 }

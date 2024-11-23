@@ -14,6 +14,9 @@ struct ControllerEmulatorView: View {
                 JoystickView()
                 
                 HStack(spacing: .zero) {
+                    if viewModel.isConfirmVisible {
+                        KeyEmulatorView(key: .confirm)
+                    }
                     if viewModel.isAttackVisible {
                         KeyEmulatorView(key: .attack)
                             .overlay(
@@ -24,14 +27,12 @@ struct ControllerEmulatorView: View {
                                     .foregroundStyle(Color.black.opacity(0.9))
                             )
                     }
-                    if viewModel.isConfirmVisible {
-                        KeyEmulatorView(key: .confirm)
-                    }
                 }
-                .positioned(.leadingBottom)
-                .padding(.leading, isLandscape ? 85 : 20)
-                .padding(.leading, viewModel.safeAreaInsets.left)
-                .padding(.bottom, isLandscape ? 120 : 140)                
+                .positioned(.trailingBottom)
+                .padding(.trailing, isLandscape ? 90 : 25)
+                .padding(.trailing, viewModel.safeAreaInsets.right)
+                .padding(.bottom, isLandscape ? 55 : 85)
+                .padding(.bottom, viewModel.safeAreaInsets.bottom)
             }
             .padding(.top, viewModel.safeAreaInsets.top)
             .padding(.bottom, viewModel.safeAreaInsets.bottom)
