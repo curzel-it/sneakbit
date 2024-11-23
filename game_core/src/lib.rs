@@ -143,15 +143,19 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
 
         let ay = a.frame.y + if a.frame.h > 1 { 1 } else { 0 };
         let by = b.frame.y + if b.frame.h > 1 { 1 } else { 0 };
+        let ax = a.frame.x;
+        let bx = b.frame.x;
 
         if a.z_index < b.z_index && a.z_index < 0 { return Ordering::Less; }
         if a.z_index > b.z_index && b.z_index < 0 { return Ordering::Greater; }
         if ay < by { return Ordering::Less; }
         if ay > by { return Ordering::Greater; }
-        if a.z_index < b.z_index { return Ordering::Less; }
-        if a.z_index > b.z_index { return Ordering::Greater; }
-        if a.frame.x < b.frame.x { return Ordering::Less; }
-        if a.frame.x > b.frame.x { return Ordering::Greater; }
+        if ay == by && a.offset.y < b.offset.y { return Ordering::Less; }
+        if ay == by && b.offset.y < a.offset.y { return Ordering::Greater; }
+        if ax < bx { return Ordering::Less; }
+        if ax > bx { return Ordering::Greater; }
+        if ax == bx && a.offset.x < b.offset.x { return Ordering::Less; }
+        if ax == bx && b.offset.x < a.offset.x { return Ordering::Greater; }
         Ordering::Equal
     });
 
