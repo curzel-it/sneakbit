@@ -117,7 +117,7 @@ class AudioEngine {
         guard let filename, !filename.isEmpty else {
             return nil
         }
-        guard let url = Bundle.main.url(forResource: filename, withExtension: "wav", subdirectory: "audio") else {
+        guard let url = Bundle.main.url(forResource: filename, withExtension: "mp3", subdirectory: "audio") else {
             Logger.error(tag, "Audio file not found for \(filename)")
             return nil
         }
