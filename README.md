@@ -1,6 +1,5 @@
 <img src="docs/logo_text.png" alt="Logo" style="width: 324px; height: auto; image-rendering: pixelated;">
 <br>
-<br>
 Got bored, started sperimenting a bit with Rust, ended up with a game!
 
 Like the game or have cool ideas? Join the [Discord](https://discord.gg/MCdEgXKSH5)!
@@ -11,12 +10,14 @@ Like the game or have cool ideas? Join the [Discord](https://discord.gg/MCdEgXKS
     <a href="https://discord.gg/MCdEgXKSH5">
         <img src="docs/playstore_badge.webp" alt="Play Store" style="width: 200px; height: auto;">
     </a> -->
-    <a href="https://discord.gg/MCdEgXKSH5">
+    <a href="https://apps.apple.com/app/sneakbit/id6737452377">
         <img src="docs/appstore_badge.webp" alt="App Store" style="width: 200px; height: auto;">
     </a>
 </div>
 
-Coming soon to the Play Store for Android and to Steam for Linux, Windows and macOS
+Coming soon to the Play Store for Android and to Steam for Linux, Windows and macOS.
+
+Please consider buying the game from any store to support the project 🙏
 
 ## Build from source
 ### macOS, Linux
