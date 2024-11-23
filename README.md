@@ -57,11 +57,9 @@ python3 scripts/sync_assets.py
 <img src="docs/steam/3.png" style="width: 756px; height: auto; image-rendering: pixelated;">
 
 ## Credits
-### Music
-Found a great bundle [by Filippo Vicarelli](https://www.filippovicarelli.com/8bit-game-background-music)
-
-### Sounds effects
-Found a great bundle [by SubspaceAudio](https://opengameart.org/content/512-sound-effects-8-bit-style) over at OpenGameArt.org
+* Music by [Filippo Vicarelli](https://www.filippovicarelli.com/8bit-game-background-music)
+* Sound Effects by [SubspaceAudio](https://opengameart.org/content/512-sound-effects-8-bit-style)
+* Font by [HarvettFox96](https://dl.dafont.com/dl/?f=pixel_operator)
 
 ## TODO:
 - Make slopes reflect bullets
