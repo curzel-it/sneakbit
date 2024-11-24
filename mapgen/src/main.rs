@@ -36,16 +36,13 @@ pub fn generate_tile_map_image(
     output_image_path: &str,
 ) -> Result<(), Box<dyn Error>> {
     let tile_size = TILE_SIZE;
-
     let sprite_sheet_biome = image::open(sprite_sheet_biome_tiles_path)?.to_rgba8();
     let sprite_sheet_construction = image::open(sprite_sheet_construction_tiles_path)?.to_rgba8();
-
     let world_height = biome_tiles.tiles.len();
     let world_width = if world_height > 0 { biome_tiles.tiles[0].len() } else { 0 };
-
     let map_width = ((world_width as f32) * tile_size) as u32;
     let map_height = ((world_height as f32) * tile_size) as u32;
-    let mut composed_image: RgbaImage = ImageBuffer::new(map_width, map_height);
+    let mut composed_image: RgbaImage = ImageBuffer::from_pixel(map_width, map_height, image::Rgba([0, 0, 0, 255]));
 
     let mut biome_tiles_copy = biome_tiles.tiles.clone(); 
     for row in 0..world_height {
