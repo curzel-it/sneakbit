@@ -60,7 +60,7 @@ class GameView: UIView {
         ]
         let textSize = fpsText.size(withAttributes: attributes)
         let textRect = CGRect(
-            x: rect.maxX - textSize.width - 10,
+            x: rect.minX + 10,
             y: rect.minY + 10,
             width: textSize.width,
             height: textSize.height

@@ -27,3 +27,12 @@ extension EmulatedKey {
         }
     }
 }
+
+extension EmulatedKey {
+    var isMovement: Bool {
+        switch self {
+        case .up, .right, .down, .left: true
+        default: false
+        }
+    }
+}
