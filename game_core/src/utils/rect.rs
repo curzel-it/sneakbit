@@ -88,6 +88,15 @@ impl IntRect {
         let max_y = self.y + self.h;
         self.x <= x && x < max_x && self.y <= y && y < max_y
     }
+    
+    pub fn scaled(&self, scalar: f32) -> IntRect {
+        IntRect::new(
+            ((self.x as f32) * scalar) as i32,
+            ((self.y as f32) * scalar) as i32,
+            ((self.w as f32) * scalar) as i32,
+            ((self.h as f32) * scalar) as i32
+        )
+    }
 }
 
 #[cfg(test)]
