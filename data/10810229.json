@@ -142,7 +142,11 @@
         },
         "number_of_frames": 4
       },
-      "dialogues": [],
+      "dialogues": [
+        {
+            "text": "references.dbz.goku"
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "original_sprite_frame": {
