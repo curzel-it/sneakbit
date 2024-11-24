@@ -3870,7 +3870,7 @@
         "sprite_frame": {
             "x": 36,
             "y": 0,
-            "w": 5,
+            "w": 3,
             "h": 3
         },
         "sprite_sheet_id": 1004,

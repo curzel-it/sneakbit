@@ -24,11 +24,11 @@ pub fn new_building(source_world_id: u32, x: i32, y: i32, species: &Species) -> 
 }
 
 fn is_small_house(species_id: u32) -> bool {
-    matches!(species_id, 1033)
+    matches!(species_id, 1033 | 1130)
 }
 
 fn is_house(species_id: u32) -> bool {
-    matches!(species_id, 1002 | 1003 | 1004 | 1084 | 1086 | 1087)
+    matches!(species_id, 1002 | 1003 | 1004 | 1084 | 1086 | 1087 | 1129)
 }
 
 fn is_two_floors_house(species_id: u32) -> bool {
