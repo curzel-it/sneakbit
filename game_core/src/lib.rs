@@ -156,6 +156,8 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
         if ax > bx { return Ordering::Greater; }
         if ax == bx && a.offset.x < b.offset.x { return Ordering::Less; }
         if ax == bx && b.offset.x < a.offset.x { return Ordering::Greater; }
+        if a.id < b.id { return Ordering::Less }
+        if a.id > b.id { return Ordering::Greater }
         Ordering::Equal
     });
 

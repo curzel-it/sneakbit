@@ -3832,5 +3832,49 @@
         "sprite_sheet_id": 1010,
         "sprite_number_of_frames": 1,
         "lock_type": "None"
+    },
+    {
+        "id": 1129,
+        "name": "building.name.igloo",
+        "entity_type": "Building",
+        "is_invulnerable": true,
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            5,
+            23
+        ],
+        "sprite_frame": {
+            "x": 31,
+            "y": 0,
+            "w": 5,
+            "h": 3
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1130,
+        "name": "building.name.igloo",
+        "entity_type": "Building",
+        "is_invulnerable": true,
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            5,
+            24
+        ],
+        "sprite_frame": {
+            "x": 36,
+            "y": 0,
+            "w": 5,
+            "h": 3
+        },
+        "sprite_sheet_id": 1004,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
     }
 ]
