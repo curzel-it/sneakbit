@@ -1,12 +1,8 @@
-use game_core::config::initialize_config_paths;
-use image::{GenericImageView, ImageBuffer, RgbaImage};
-use image::imageops::overlay;
-use std::path::Path;
-use std::fs;
+use image::{DynamicImage, GenericImageView, ImageBuffer, RgbImage, RgbaImage, imageops::overlay};
+use std::{io::BufWriter, path::Path, fs::{self, File}, error::Error};
 use regex::Regex;
-use std::error::Error;
 
-use game_core::{constants::TILE_SIZE, game_engine::world::World, maps::{tiles::{TileSet, SpriteTile}, biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}}};
+use game_core::{config::initialize_config_paths, constants::TILE_SIZE, game_engine::world::World, maps::{tiles::{TileSet, SpriteTile}, biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}}};
 
 pub fn generate_tile_map_image_from_json(
     world_id: u32,
@@ -94,7 +90,19 @@ pub fn generate_tile_map_image(
         }
     }
 
-    composed_image.save(output_image_path)?;
+    let rgb_image: RgbImage = DynamicImage::ImageRgba8(composed_image).to_rgb8();
+
+    let file = File::create(output_image_path)?;
+    let ref mut w = BufWriter::new(file);
+
+    let mut encoder = png::Encoder::new(w, map_width, map_height);
+    encoder.set_color(png::ColorType::Rgb);
+    encoder.set_depth(png::BitDepth::Eight);
+    encoder.set_compression(png::Compression::Best);
+    let mut writer = encoder.write_header()?;
+    let image_data = rgb_image.as_raw();
+    writer.write_image_data(image_data)?;
+
     Ok(())
 }
 
@@ -123,7 +131,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         let world_id = filename.split('.').next().unwrap_or("unknown");
         if world_id.parse::<u32>().is_err() {
-            println!("Invalid world id: {}", world_id);
+            println!("!..Invalid world id: {}", world_id);
             continue;
         }
 
@@ -146,17 +154,17 @@ fn main() -> Result<(), Box<dyn Error>> {
             };
 
             if !regenerate {
-                println!("Skipping '{}'; it is already up-to-date.", output_image_filename);
+                println!("...Skipping '{}'; it is already up-to-date.", output_image_filename);
                 continue;
             }
 
-            println!("Generating image for '{}', variant {}", world_id, variant);
+            println!("...Generating image for '{}', variant {}", world_id, variant);
 
             let sprite_sheet_biome_tiles_path = assets_dir.join("tiles_biome.png");
             let sprite_sheet_construction_tiles_path = assets_dir.join("tiles_constructions.png");
 
             if !sprite_sheet_biome_tiles_path.exists() || !sprite_sheet_construction_tiles_path.exists() {
-                eprintln!("Sprite sheets not found in 'assets' directory.");
+                eprintln!("!..Sprite sheets not found in 'assets' directory.");
                 continue;
             }
 
@@ -167,9 +175,9 @@ fn main() -> Result<(), Box<dyn Error>> {
                 &sprite_sheet_construction_tiles_path.to_string_lossy(),
                 &output_image_path.to_string_lossy(),
             ) {
-                eprintln!("Error generating image '{}': {}", output_image_filename, e);
+                eprintln!("!..Error generating image '{}': {}", output_image_filename, e);
             } else {
-                println!("Tile map image saved to '{}'", output_image_filename);
+                println!("!..Tile map image saved to '{}'", output_image_filename);
             }
         }
     }

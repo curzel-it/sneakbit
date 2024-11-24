@@ -14,7 +14,7 @@ impl World {
             let result: Result<Self, Error> = serde_json::from_reader(reader);
 
             if let Ok(world) = result {
-                println!("Game saved successfully!");
+                println!("World loaded successfully!");
                 return Some(world)
             } else {
                 println!("Failed to parse game {}.json: {:#?}", id, result.err());
