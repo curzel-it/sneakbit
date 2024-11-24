@@ -1,3 +1,4 @@
+use game_core::config::initialize_config_paths;
 use image::{GenericImageView, ImageBuffer, RgbaImage};
 use image::imageops::overlay;
 use std::path::Path;
@@ -5,11 +6,7 @@ use std::fs;
 use regex::Regex;
 use std::error::Error;
 
-use game_core::game_engine::world::World;
-use game_core::maps::tiles::{TileSet, SpriteTile};
-use game_core::maps::biome_tiles::{Biome, BiomeTile};
-use game_core::maps::constructions_tiles::{Construction, ConstructionTile};
-use game_core::constants::TILE_SIZE;
+use game_core::{constants::TILE_SIZE, game_engine::world::World, maps::{tiles::{TileSet, SpriteTile}, biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}}};
 
 pub fn generate_tile_map_image_from_json(
     world_id: u32,
@@ -105,6 +102,15 @@ pub fn generate_tile_map_image(
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    initialize_config_paths(
+        TILE_SIZE * 1.8,
+        "en".to_owned(),
+        Path::new("data").to_path_buf(),
+        Path::new("data/species.json").to_path_buf(),
+        Path::new("data/save.json").to_path_buf(),
+        Path::new("lang").to_path_buf()
+    );
+
     let data_dir = Path::new("data");
     let assets_dir = Path::new("assets");
     let re = Regex::new(r"^\d+\.json$")?;
@@ -116,9 +122,15 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         if !re.is_match(filename) {
             continue;
-        }
+        };
 
         let world_id = filename.split('.').next().unwrap_or("unknown");
+        if world_id.parse::<u32>().is_err() {
+            println!("Invalid world id: {}", world_id);
+            continue;
+        }
+
+        let world_id_u32 = world_id.parse::<u32>().unwrap();
         let json_file_path = data_dir.join(filename);
 
         let json_metadata = fs::metadata(&json_file_path)?;
@@ -152,7 +164,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
 
             if let Err(e) = generate_tile_map_image_from_json(
-                world_id.parse::<u32>().unwrap(),
+                world_id_u32,
                 variant,
                 &sprite_sheet_biome_tiles_path.to_string_lossy(),
                 &sprite_sheet_construction_tiles_path.to_string_lossy(),
