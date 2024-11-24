@@ -23,10 +23,10 @@ Please consider buying the game from any store to support the project 🙏
 ### macOS, Linux
 ```bash
 # Run the game
-cargo run
+cargo run --package game
 
 # Run the game in creative mode to build levels
-cargo run creative
+cargo run --package game creative
 ```
 
 ### Windows
@@ -36,7 +36,7 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 1. Installed CMake from [here](https://cmake.org/download/)
 2. Added CMake to path
 3. Installed LLVM via `winget install LLVM.LLVM`
-4. `cargo run` 
+4. `cargo run --package game` 
 
 ### iOS and Android
 The engine is the same, the rendering is a simple set of custom views.
