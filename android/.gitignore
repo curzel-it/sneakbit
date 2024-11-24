@@ -6,6 +6,7 @@ app/src/main/assets/lang
 app/src/main/assets/assets
 app/src/main/cpp/game_core.h
 app/src/main/jniLibs/
+app/src/main/res/raw/*.mp3
 
 *.iml
 .gradle

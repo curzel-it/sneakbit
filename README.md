@@ -39,14 +39,13 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 4. `cargo run --package game` 
 
 ### iOS and Android
-The engine is the same, the rendering is a simple set of custom views.
+The engine is the same, the rendering is a simple set of custom views for the game itself, menus and such
 
 The `game_core` create is compiled via `cargo-lipo` and `cargo-ndk`.
 
+The `build_all.sh` script will build `game_core`, compile all resources and copy them to the correct folders for both mobile projects.
 ```bash
-sh scripts/build_ios.sh
-sh scripts/build_android.sh
-python3 scripts/sync_assets.py
+sh scripts/build_all.sh
 ```
 
 ## Screenshots
