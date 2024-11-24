@@ -34,7 +34,7 @@ struct OptionsView: View {
                     .opacity(viewModel.menuButtonOpacity)
                     .onTapGesture { viewModel.showMenu() }
                     .positioned(.trailingTop)
-                    .padding(.trailing, isLandscape ? 90 : 25)
+                    .padding(.trailing, isLandscape ? 60 : 25)
                     .padding(.trailing, viewModel.safeAreaInsets.right)
                     .padding(.top, viewModel.safeAreaInsets.top)
             }

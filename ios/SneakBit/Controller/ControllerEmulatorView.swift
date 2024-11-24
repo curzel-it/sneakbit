@@ -29,7 +29,7 @@ struct ControllerEmulatorView: View {
                     }
                 }
                 .positioned(.trailingBottom)
-                .padding(.trailing, isLandscape ? 90 : 25)
+                .padding(.trailing, isLandscape ? 60 : 25)
                 .padding(.trailing, viewModel.safeAreaInsets.right)
                 .padding(.bottom, isLandscape ? 55 : 85)
                 .padding(.bottom, viewModel.safeAreaInsets.bottom)

@@ -76,7 +76,7 @@ private fun ControllerEmulatorView(
             verticalAlignment = Alignment.Bottom,
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(end = if (isLandscape) 110.dp else 25.dp)
+                .padding(end = if (isLandscape) 80.dp else 25.dp)
                 .padding(bottom = if (isLandscape) 80.dp else 125.dp)
         ) {
             Spacer(modifier = Modifier.weight(1.0f))

@@ -154,7 +154,7 @@ private fun OptionsScreen(
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(end = if (isLandscape) 110.dp else 25.dp)
+                    .padding(end = if (isLandscape) 80.dp else 25.dp)
                     .padding(top = 20.dp)
             ) {
                 Image(
