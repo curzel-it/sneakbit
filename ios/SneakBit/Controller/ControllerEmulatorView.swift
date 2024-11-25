@@ -8,78 +8,138 @@ struct ControllerEmulatorView: View {
     
     var body: some View {
         GeometryReader { geo in
-            let screenSize = geo.size
-            let isLandscape = screenSize.width >= screenSize.height
+            let isLandscape = geo.size.width >= geo.size.height
             
             ZStack {
                 JoystickView()
                 
-                if viewModel.isConfirmVisible {
-                    let defaultPosition = CGPoint(
-                        x: screenSize.width - (isLandscape ? 60 : 25) - viewModel.safeAreaInsets.right,
-                        y: screenSize.height - (isLandscape ? 55 : 85) - viewModel.safeAreaInsets.bottom
-                    )
-                    
-                    DraggableButtonView(
-                        key: .confirm,
-                        label: nil,
-                        position: $viewModel.confirmButtonPosition,
-                        defaultPosition: defaultPosition,
-                        savePosition: {
-                            viewModel.saveButtonPositions()
-                        }
-                    )
+                HStack(spacing: .zero) {
+                    if !viewModel.confirmOnRightSide(isLandscape) && viewModel.isConfirmVisible {
+                        KeyEmulatorView(key: .confirm)
+                    }
+                    if viewModel.isAttackVisible {
+                        KeyEmulatorView(key: .attack)
+                            .overlay(
+                                Text(viewModel.attackLabel)
+                                    .positioned(.bottom)
+                                    .padding(.bottom, 12 + KeyEmulatorView.padding)
+                                    .typography(.buttonCaption)
+                                    .foregroundStyle(Color.black.opacity(0.9))
+                            )
+                    }
+                    if viewModel.confirmOnRightSide(isLandscape) && viewModel.isConfirmVisible {
+                        KeyEmulatorView(key: .confirm)
+                    }
                 }
-                
-                if viewModel.isAttackVisible {
-                    let defaultPosition = CGPoint(
-                        x: screenSize.width - (isLandscape ? 60 : 25) - viewModel.safeAreaInsets.right,
-                        y: screenSize.height - (isLandscape ? 55 : 85) - viewModel.safeAreaInsets.bottom
-                    )
-                    
-                    DraggableButtonView(
-                        key: .attack,
-                        label: viewModel.attackLabel,
-                        position: $viewModel.attackButtonPosition,
-                        defaultPosition: defaultPosition,
-                        savePosition: {
-                            viewModel.saveButtonPositions()
+                .background(Color.clear)
+                .offset(viewModel.currentOffset(isLandscape: isLandscape))
+                .gesture(
+                    LongPressGesture(minimumDuration: 0.2)
+                        .sequenced(before: DragGesture())
+                        .onChanged { value in
+                            switch value {
+                            case .first(true): viewModel.isDragging = true
+                            case .second(true, let drag?): viewModel.dragOffset = drag.translation
+                            default: break
+                            }
                         }
-                    )
+                        .onEnded { value in
+                            if case .second(true, let drag?) = value {
+                                viewModel.updateSavedOffset(
+                                    canvasSize: geo.size,
+                                    translation: drag.translation,
+                                    isLandscape: isLandscape
+                                )
+                            }
+                            viewModel.isDragging = false
+                            viewModel.dragOffset = .zero
+                        }
+                )
+                .positioned(.middle)
+                .onChange(of: isLandscape) { oldValue, newValue in
+                    if oldValue != newValue {
+                        viewModel.reloadSettings()
+                    }
                 }
             }
-            .coordinateSpace(name: "controllerArea")
-            .onChange(of: isLandscape) { _, newValue in
-                viewModel.isLandscape = newValue
-                viewModel.loadButtonPositions()
-            }
-            .onAppear {
-                viewModel.isLandscape = isLandscape
-                viewModel.loadButtonPositions()
-            }
+            .padding(.top, viewModel.safeAreaInsets.top)
+            .padding(.bottom, viewModel.safeAreaInsets.bottom)
         }
     }
 }
 
 private class ControllerEmulatorViewModel: ObservableObject {
     @Inject private var engine: GameEngine
+    @Inject private var settingsStorage: ControllerSettingsStorage
     
     @Published var isConfirmVisible: Bool = false
     @Published var isAttackVisible: Bool = false
     @Published var attackLabel: String = ""
-    @Published var attackButtonPosition: CGPoint = .zero
-    @Published var confirmButtonPosition: CGPoint = .zero
-    @Published var isLandscape: Bool = false
     
     var safeAreaInsets: UIEdgeInsets {
         engine.safeAreaInsets
     }
     
+    var isLandscape: Bool {
+        engine.isLandscape
+    }
+    
+    @Published var dragOffset: CGSize = .zero
+    @Published var isDragging: Bool = false
+    @Published private var savedOffsetPortraitX: CGFloat = 0
+    @Published private var savedOffsetPortraitY: CGFloat = 0
+    @Published private var savedOffsetLandscapeX: CGFloat = 0
+    @Published private var savedOffsetLandscapeY: CGFloat = 0
+    
     private var disposables = Set<AnyCancellable>()
     
     init() {
+        reloadSettings()
         bindNumberOfKunais()
         bindInteractionAvailable()
+    }
+    
+    func confirmOnRightSide(_ isLandscape: Bool) -> Bool {
+        let x = isLandscape ? savedOffsetLandscapeX : savedOffsetPortraitX
+        return x < 0
+    }
+    
+    func reloadSettings() {
+        savedOffsetPortraitX = settingsStorage.offset(axis: .x, orientation: .portrait)
+        savedOffsetPortraitY = settingsStorage.offset(axis: .y, orientation: .portrait)
+        savedOffsetLandscapeX = settingsStorage.offset(axis: .x, orientation: .landscape)
+        savedOffsetLandscapeY = settingsStorage.offset(axis: .y, orientation: .landscape)
+    }
+    
+    func currentOffset(isLandscape: Bool) -> CGSize {
+        if isLandscape {
+            return CGSize(width: savedOffsetLandscapeX, height: savedOffsetLandscapeY) + dragOffset
+        } else {
+            return CGSize(width: savedOffsetPortraitX, height: savedOffsetPortraitY) + dragOffset
+        }
+    }
+    
+    func updateSavedOffset(canvasSize: CGSize, translation: CGSize, isLandscape: Bool) {
+        let maxX = canvasSize.width / 2 - KeyEmulatorView.size.width
+        let maxY = canvasSize.height / 2 - KeyEmulatorView.size.height - 50
+        let minX = -canvasSize.width / 2 + KeyEmulatorView.size.width
+        let minY = -canvasSize.height / 2 + KeyEmulatorView.size.height * 2
+        
+        if isLandscape {
+            let newX = savedOffsetLandscapeX + translation.width
+            let newY = savedOffsetLandscapeY + translation.height
+            savedOffsetLandscapeX = max(min(newX, maxX), minX)
+            savedOffsetLandscapeY = max(min(newY, maxY), minY)
+            settingsStorage.store(offset: savedOffsetLandscapeX, axis: .x, orientation: .landscape)
+            settingsStorage.store(offset: savedOffsetLandscapeY, axis: .y, orientation: .landscape)
+        } else {
+            let newX = savedOffsetPortraitX + translation.width
+            let newY = savedOffsetPortraitY + translation.height
+            savedOffsetPortraitX = max(min(newX, maxX), minX)
+            savedOffsetPortraitY = max(min(newY, maxY), minY)
+            settingsStorage.store(offset: savedOffsetPortraitX, axis: .x, orientation: .portrait)
+            settingsStorage.store(offset: savedOffsetPortraitY, axis: .y, orientation: .portrait)
+        }
     }
     
     private func bindNumberOfKunais() {
@@ -106,88 +166,10 @@ private class ControllerEmulatorViewModel: ObservableObject {
             }
             .store(in: &disposables)
     }
-    
-    func saveButtonPositions() {
-        savePosition(attackButtonPosition, forKey: "attackButtonPosition")
-        savePosition(confirmButtonPosition, forKey: "confirmButtonPosition")
-    }
-    
-    func loadButtonPositions() {
-        if let attackPosition = loadPosition(forKey: "attackButtonPosition") {
-            self.attackButtonPosition = attackPosition
-        }
-        if let confirmPosition = loadPosition(forKey: "confirmButtonPosition") {
-            self.confirmButtonPosition = confirmPosition
-        }
-    }
-    
-    private func savePosition(_ position: CGPoint, forKey key: String) {
-        let orientationKey = isLandscape ? "Landscape" : "Portrait"
-        let keyWithOrientation = "\(key)_\(orientationKey)"
-        let positionDict = ["x": position.x, "y": position.y]
-        UserDefaults.standard.set(positionDict, forKey: keyWithOrientation)
-    }
-
-    private func loadPosition(forKey key: String) -> CGPoint? {
-        let orientationKey = isLandscape ? "Landscape" : "Portrait"
-        let keyWithOrientation = "\(key)_\(orientationKey)"
-        if let positionDict = UserDefaults.standard.dictionary(forKey: keyWithOrientation) as? [String: CGFloat],
-           let x = positionDict["x"],
-           let y = positionDict["y"] {
-            return CGPoint(x: x, y: y)
-        }
-        return nil
-    }
 }
 
-struct DraggableButtonView: View {
-    let key: EmulatedKey
-    let label: String?
-    @Binding var position: CGPoint
-    var defaultPosition: CGPoint
-    var savePosition: () -> Void
-
-    @GestureState private var dragOffset = CGSize.zero
-    @State private var isDragging = false
-
-    var body: some View {
-        let actualPosition = (position == .zero) ? defaultPosition : position
-
-        let longPressDragGesture = LongPressGesture(minimumDuration: 0.5)
-            .sequenced(before: DragGesture())
-            .updating($dragOffset) { value, state, _ in
-                switch value {
-                case .second(true, let drag?):
-                    state = drag.translation
-                default:
-                    break
-                }
-            }
-            .onEnded { value in
-                isDragging = false
-                switch value {
-                case .second(true, let drag?):
-                    position = CGPoint(
-                        x: actualPosition.x + drag.translation.width,
-                        y: actualPosition.y + drag.translation.height
-                    )
-                    savePosition()
-                default:
-                    break
-                }
-            }
-
-        KeyEmulatorView(key: key)
-            .overlay(
-                label.map {
-                    Text($0)
-                        .positioned(.bottom)
-                        .padding(.bottom, 12 + KeyEmulatorView.padding)
-                        .typography(.buttonCaption)
-                        .foregroundStyle(Color.black.opacity(0.9))
-                }
-            )
-            .position(x: actualPosition.x + dragOffset.width, y: actualPosition.y + dragOffset.height)
-            .gesture(longPressDragGesture)
+extension CGSize {
+    static func + (lhs: CGSize, rhs: CGSize) -> CGSize {
+        CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
     }
 }
