@@ -29,6 +29,7 @@ struct Dependencies {
         container.register(RenderingScaleUseCase.self) { _ in RenderingScaleUseCaseImpl() }
         container.register(TileMapsStorage.self) { _ in TileMapsStorageImpl() }
         container.register(GameSetupUseCase.self) { _ in GameSetupUseCaseImpl() }
+        container.register(ControllerSettingsStorage.self) { _ in ControllerSettingsStorageImpl() }
         Container.main = container.synchronize()
     }
 }

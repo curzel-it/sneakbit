@@ -11,22 +11,16 @@ struct KeyEmulatorView: View {
     
     @State private var isBeingPressed = false
     
-    private let setKeyUp: (EmulatedKey) -> Void
-    private let setKeyDown: (EmulatedKey) -> Void
+    private let onKeyDown: (EmulatedKey) -> Void
     
     init(key: EmulatedKey) {
         @Inject var engine: GameEngine
-        self.init(key: key, setKeyUp: engine.setKeyUp, setKeyDown: engine.setKeyDown)
+        self.init(key: key, onKeyDown: engine.setKeyDown)
     }
     
-    init(
-        key: EmulatedKey,
-        setKeyUp: @escaping (EmulatedKey) -> Void,
-        setKeyDown: @escaping (EmulatedKey) -> Void
-    ) {
+    init(key: EmulatedKey, onKeyDown: @escaping (EmulatedKey) -> Void) {
         self.key = key
-        self.setKeyUp = setKeyUp
-        self.setKeyDown = setKeyDown
+        self.onKeyDown = onKeyDown
     }
     
     var body: some View {
@@ -37,18 +31,8 @@ struct KeyEmulatorView: View {
             .frame(width: KeyEmulatorView.size.width, height: KeyEmulatorView.size.height)
             .padding(KeyEmulatorView.padding)
             .contentShape(Rectangle())
-            .gesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged { _ in
-                        if !isBeingPressed {
-                            isBeingPressed = true
-                            setKeyDown(key)
-                        }
-                    }
-                    .onEnded { _ in
-                        isBeingPressed = false
-                        setKeyUp(key)
-                    }
-            )
+            .onTapGesture {
+                onKeyDown(key)
+            }
     }
 }

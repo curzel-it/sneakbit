@@ -180,7 +180,7 @@ class GameEngine {
     }
     
     private func flushKeyboard() {
-        for key in keyPressed {
+        for key in keyPressed where key.isMovement {
             keyDown.insert(key)
         }
         keyPressed.removeAll()

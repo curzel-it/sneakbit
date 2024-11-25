@@ -22,22 +22,17 @@ struct OptionsView: View {
             }
             .environmentObject(viewModel)
         } else {
-            GeometryReader { geo in
-                let isLandscape = geo.size.width >= geo.size.height
-                Image("menu_button_up")
-                    .interpolation(.none)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: KeyEmulatorView.size.width, height: KeyEmulatorView.size.height)
-                    .padding(KeyEmulatorView.padding)
-                    .contentShape(Rectangle())
-                    .opacity(viewModel.menuButtonOpacity)
-                    .onTapGesture { viewModel.showMenu() }
-                    .positioned(.trailingTop)
-                    .padding(.trailing, isLandscape ? 90 : 25)
-                    .padding(.trailing, viewModel.safeAreaInsets.right)
-                    .padding(.top, viewModel.safeAreaInsets.top)
-            }
+            Image("menu_button_up")
+                .interpolation(.none)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: KeyEmulatorView.size.width, height: KeyEmulatorView.size.height)
+                .padding(KeyEmulatorView.padding)
+                .contentShape(Rectangle())
+                .opacity(viewModel.menuButtonOpacity)
+                .onTapGesture { viewModel.showMenu() }
+                .positioned(.trailingTop)
+                .padding()
         }
     }
 }
@@ -83,7 +78,7 @@ private struct OptionsContent: View {
                 .padding(.bottom, viewModel.safeAreaInsets.bottom + 20)
         }
         .typography(.title)
-        .foregroundStyle(Color.white.opacity(0.9))
+        .foregroundStyle(Color.white.opacity(0.8))
     }
 }
 

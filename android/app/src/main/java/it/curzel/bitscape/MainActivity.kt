@@ -13,7 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AndroidViewModel
+import it.curzel.bitscape.controller.ControllerSettingsStorage
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.engine.RenderingScaleUseCase
 import it.curzel.bitscape.engine.TileMapsStorage
@@ -39,12 +43,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            val configuration = LocalConfiguration.current
+            val density = LocalDensity.current
+            val controllerSettingsStorage = ControllerSettingsStorage(
+                this,
+                configuration.screenWidthDp.dp,
+                configuration.screenHeightDp.dp,
+                density
+            )
+
             SneakBitTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box {
                         Box(modifier = Modifier.padding(innerPadding)) {
                             GameViewComposable(engine, spritesProvider)
-                            ControllerEmulatorView(engine)
+                            ControllerEmulatorView(engine, controllerSettingsStorage)
                             ToastView(engine, spritesProvider)
                         }
                         MenuView(engine)
@@ -75,7 +88,7 @@ class MainActivity : ComponentActivity() {
 
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     val spritesProvider: SpritesProvider = buildSpritesProvider(application)
-    val engine: GameEngine = buildEngine(application, spritesProvider)
+    val engine: GameEngine = buildEngine(application)
 
     private fun buildSpritesProvider(application: Application): SpritesProvider {
         return SpritesProvider(
@@ -100,7 +113,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
-    private fun buildEngine(application: Application, spritesProvider: SpritesProvider): GameEngine {
+    private fun buildEngine(application: Application): GameEngine {
         return GameEngine(
             context = application,
             renderingScaleUseCase = RenderingScaleUseCase(application),

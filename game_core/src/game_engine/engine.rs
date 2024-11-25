@@ -89,15 +89,12 @@ impl GameEngine {
         let camera_viewport = self.camera_viewport;
         let is_game_paused = self.update_menus(time_since_last_update);
 
-        let (world_keyboard, game_update_time) = if is_game_paused {
-            (&NO_KEYBOARD_EVENTS, time_since_last_update/20.0)
-        } else {
-            (&self.keyboard, time_since_last_update)
+        if !is_game_paused {
+            let updates = self.world.update(time_since_last_update, &camera_viewport, &self.keyboard);
+            self.sound_effects.update(&self.keyboard, &updates);
+            self.apply_state_updates(updates);
         };
 
-        let updates = self.world.update(game_update_time, &camera_viewport, world_keyboard);
-        self.sound_effects.update(&self.keyboard, &updates);
-        self.apply_state_updates(updates);
     } 
 
     fn update_menus(&mut self, time_since_last_update: f32) -> bool {
@@ -115,16 +112,24 @@ impl GameEngine {
             let keyboard = if self.confirmation_dialog.is_open() { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
             let (pause, world_updates) = self.confirmation_dialog.update(keyboard, time_since_last_update);
             is_game_paused = is_game_paused || pause;
-            let engine_updates = self.world.apply_state_updates(world_updates);
-            self.apply_state_updates(engine_updates);
+            
+            if !world_updates.is_empty() {
+                let engine_updates = self.world.apply_state_updates(world_updates);
+                self.apply_state_updates(engine_updates);
+                self.world.update(0.01, &self.camera_viewport, &NO_KEYBOARD_EVENTS);
+            }
         }
 
         if !is_game_paused {
             let keyboard = if self.entity_options_menu.is_open() { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
             let (pause, world_updates) = self.entity_options_menu.update(keyboard, time_since_last_update);
             is_game_paused = is_game_paused || pause;
-            let engine_updates = self.world.apply_state_updates(world_updates);
-            self.apply_state_updates(engine_updates);
+
+            if !world_updates.is_empty() {
+                let engine_updates = self.world.apply_state_updates(world_updates);
+                self.apply_state_updates(engine_updates);
+                self.world.update(0.01, &self.camera_viewport, &NO_KEYBOARD_EVENTS);
+            }
         }
 
         if !is_game_paused {
@@ -132,8 +137,12 @@ impl GameEngine {
             let keyboard = if can_handle { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
             let (pause, world_updates) = self.menu.update(&self.camera_viewport, keyboard, &self.mouse, time_since_last_update);
             is_game_paused = is_game_paused || pause;
-            let engine_updates = self.world.apply_state_updates(world_updates);
-            self.apply_state_updates(engine_updates);
+
+            if !world_updates.is_empty() {
+                let engine_updates = self.world.apply_state_updates(world_updates);
+                self.apply_state_updates(engine_updates);
+                self.world.update(0.01, &self.camera_viewport, &NO_KEYBOARD_EVENTS);
+            }
         }
         
         is_game_paused
