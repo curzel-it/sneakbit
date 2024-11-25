@@ -47,10 +47,14 @@ impl ToastDisplay {
     pub fn show(&mut self, toast: &Toast) {
         if self.animator.is_active {
             if self.text == toast.text {
-                return;
+                return
+            }
+            if matches!(toast.mode, ToastMode::Hint) {
+                self.show_now(toast.clone());
+                return
             }
             if self.queue.iter().any(|queued| queued.text == toast.text) {
-                return;
+                return
             }
             self.queue.push_back(toast.clone());
         } else {
