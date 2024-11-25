@@ -66,6 +66,7 @@ fn main() {
             time_since_last_update, 
             using_controller
         );
+
         handle_mouse_updates(&mut rl, get_rendering_config().rendering_scale);
         update_game(time_since_last_update);
 
@@ -301,6 +302,14 @@ fn handle_keyboard_updates(rl: &mut RaylibHandle, total_run_time: f32, time_sinc
         get_char_pressed(rl),
         time_since_last_update
     );
+    
+    if controller_availability_changed {        
+        if has_controller_now {
+            rl.hide_cursor();
+        } else {
+            rl.show_cursor();
+        }
+    }
     has_controller_now
 }
 
