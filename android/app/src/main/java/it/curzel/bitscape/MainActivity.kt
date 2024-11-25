@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AndroidViewModel
 import it.curzel.bitscape.controller.ControllerSettingsStorage
@@ -43,10 +44,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val configuration = LocalConfiguration.current
+            val density = LocalDensity.current
             val controllerSettingsStorage = ControllerSettingsStorage(
                 this,
                 configuration.screenWidthDp.dp,
-                configuration.screenHeightDp.dp
+                configuration.screenHeightDp.dp,
+                density
             )
 
             SneakBitTheme {
@@ -85,7 +88,7 @@ class MainActivity : ComponentActivity() {
 
 class GameViewModel(application: Application) : AndroidViewModel(application) {
     val spritesProvider: SpritesProvider = buildSpritesProvider(application)
-    val engine: GameEngine = buildEngine(application, spritesProvider)
+    val engine: GameEngine = buildEngine(application)
 
     private fun buildSpritesProvider(application: Application): SpritesProvider {
         return SpritesProvider(
@@ -110,7 +113,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
-    private fun buildEngine(application: Application, spritesProvider: SpritesProvider): GameEngine {
+    private fun buildEngine(application: Application): GameEngine {
         return GameEngine(
             context = application,
             renderingScaleUseCase = RenderingScaleUseCase(application),

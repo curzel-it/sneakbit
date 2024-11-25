@@ -3,11 +3,17 @@ package it.curzel.bitscape.controller
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.min
 
 class ControllerSettingsStorage(
     context: Context,
     screenWidthDp: Dp,
-    screenHeightDp: Dp
+    screenHeightDp: Dp,
+    density: Density
 ) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -24,7 +30,7 @@ class ControllerSettingsStorage(
 
     init {
         if (!didSetDefaults()) {
-            loadDefaults(screenWidthDp, screenHeightDp)
+            loadDefaults(screenWidthDp, screenHeightDp, density)
             setDefaultsLoaded()
         }
     }
@@ -57,15 +63,20 @@ class ControllerSettingsStorage(
         sharedPreferences.edit().putBoolean(KEY_DID_SET_DEFAULTS, true).apply()
     }
 
-    private fun loadDefaults(screenWidth: Dp, screenHeight: Dp) {
-        val portraitX = ((screenWidth / 2) - keyEmulatorViewSize).value
-        store(portraitX, ControllerOffsetAxis.X, ControllerOrientation.PORTRAIT)
-        val portraitY = ((screenHeight / 2) - keyEmulatorViewSize).value - 150f
-        store(portraitY, ControllerOffsetAxis.Y, ControllerOrientation.PORTRAIT)
-        val landscapeX = ((screenHeight / 2) - keyEmulatorViewSize).value - 40f
-        store(landscapeX, ControllerOffsetAxis.X, ControllerOrientation.LANDSCAPE)
-        val landscapeY = ((screenWidth / 2) - keyEmulatorViewSize).value - 100f
-        store(landscapeY, ControllerOffsetAxis.Y, ControllerOrientation.LANDSCAPE)
+    private fun loadDefaults(screenWidth: Dp, screenHeight: Dp, density: Density) {
+        val width = min(screenWidth, screenHeight)
+        val height = max(screenWidth, screenHeight)
+
+        val portraitX = width - keyEmulatorViewSize * 1.0f - 20.dp
+        val portraitY = height - keyEmulatorViewSize - 90.dp
+
+        val landscapeX = height - keyEmulatorViewSize - 70.dp
+        val landscapeY = width - keyEmulatorViewSize - 70.dp
+
+        store(portraitX.value * density.density, ControllerOffsetAxis.X, ControllerOrientation.PORTRAIT)
+        store(portraitY.value * density.density, ControllerOffsetAxis.Y, ControllerOrientation.PORTRAIT)
+        store(landscapeX.value * density.density, ControllerOffsetAxis.X, ControllerOrientation.LANDSCAPE)
+        store(landscapeY.value * density.density, ControllerOffsetAxis.Y, ControllerOrientation.LANDSCAPE)
     }
 }
 
