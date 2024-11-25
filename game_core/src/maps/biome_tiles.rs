@@ -124,7 +124,6 @@ impl BiomeTile {
                 (Biome::DarkRock, Biome::Snow) => 0,
                 (Biome::DarkRock, Biome::Desert) => 0,
                 (Biome::DarkRock, Biome::DarkSand) => 0,
-                (_, Biome::Nothing) => 0,
                 _ => default_index
             }
         }        

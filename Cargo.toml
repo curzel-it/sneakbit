@@ -2,6 +2,7 @@
 members = [
     "game_core",
     "game",
-    "mapgen"
+    "mapgen",
+    "dungen"
 ]
 resolver = "2"
