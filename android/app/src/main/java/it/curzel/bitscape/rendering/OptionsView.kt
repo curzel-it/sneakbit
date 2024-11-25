@@ -110,9 +110,6 @@ private fun OptionsScreen(
     showMenu: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-
     Box(modifier = modifier.fillMaxSize()) {
         if (isVisible) {
             AnimatedVisibility(
@@ -154,8 +151,7 @@ private fun OptionsScreen(
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(end = if (isLandscape) 80.dp else 25.dp)
-                    .padding(top = 20.dp)
+                    .padding()
             ) {
                 Image(
                     bitmap = ImageBitmap.imageResource(R.drawable.menu_button_up),

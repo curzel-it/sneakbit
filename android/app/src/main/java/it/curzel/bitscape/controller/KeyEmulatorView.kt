@@ -1,7 +1,7 @@
 package it.curzel.bitscape.controller
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -12,19 +12,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 val keyEmulatorViewPadding = 15.dp
+val keyEmulatorViewSize = 90.dp
 
 @Composable
 fun KeyEmulatorView(
     key: EmulatedKey,
-    setKeyDown: (EmulatedKey) -> Unit,
-    setKeyUp: (EmulatedKey) -> Unit,
+    onKeyDown: (EmulatedKey) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isBeingPressed by remember { mutableStateOf(false) }
@@ -36,21 +35,10 @@ fun KeyEmulatorView(
         contentScale = ContentScale.FillBounds,
         filterQuality = FilterQuality.None,
         modifier = modifier
-            .size(90.dp)
+            .size(keyEmulatorViewSize)
             .padding(keyEmulatorViewPadding)
-            .pointerInput(key) {
-                detectTapGestures(
-                    onPress = {
-                        isBeingPressed = true
-                        setKeyDown(key)
-                        try {
-                            awaitRelease()
-                        } finally {
-                            isBeingPressed = false
-                            setKeyUp(key)
-                        }
-                    }
-                )
+            .clickable {
+                onKeyDown(key)
             }
     )
 }
@@ -58,5 +46,5 @@ fun KeyEmulatorView(
 @Preview(showBackground = true)
 @Composable
 fun KeyEmulatorViewPreview() {
-    KeyEmulatorView(EmulatedKey.CONFIRM, {}, {})
+    KeyEmulatorView(EmulatedKey.CONFIRM, {})
 }

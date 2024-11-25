@@ -13,7 +13,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AndroidViewModel
+import it.curzel.bitscape.controller.ControllerSettingsStorage
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.engine.RenderingScaleUseCase
 import it.curzel.bitscape.engine.TileMapsStorage
@@ -39,12 +42,19 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
+            val configuration = LocalConfiguration.current
+            val controllerSettingsStorage = ControllerSettingsStorage(
+                this,
+                configuration.screenWidthDp.dp,
+                configuration.screenHeightDp.dp
+            )
+
             SneakBitTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box {
                         Box(modifier = Modifier.padding(innerPadding)) {
                             GameViewComposable(engine, spritesProvider)
-                            ControllerEmulatorView(engine)
+                            ControllerEmulatorView(engine, controllerSettingsStorage)
                             ToastView(engine, spritesProvider)
                         }
                         MenuView(engine)
