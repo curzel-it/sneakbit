@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 pub struct Config {
+    pub is_mobile: bool,
     pub base_entity_speed: f32,
     pub current_lang: String,
     pub levels_path: PathBuf,
@@ -18,6 +19,7 @@ pub fn config() -> &'static Config {
 }
 
 pub fn initialize_config_paths(
+    is_mobile: bool,
     base_entity_speed: f32,
     user_lang: String,
     levels_path: PathBuf,
@@ -31,6 +33,7 @@ pub fn initialize_config_paths(
         let actual_lang = if user_lang_supported { user_lang } else { "en".to_string() };
 
         let config = Config {
+            is_mobile,
             base_entity_speed,
             current_lang: actual_lang,
             levels_path,

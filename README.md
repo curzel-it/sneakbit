@@ -70,3 +70,22 @@ sh scripts/build_all.sh
 > Warning: Spoilers!
 
 Notes about lore, quests and characters can be found [here](https://github.com/curzel-it/sneakbit/blob/main/docs/game_design_document.md).
+
+## Controls
+| Action | Desktop + Keyboard | Desktop + Gamepad | Mobile |
+|--|--|--|--|
+| UP | `Arrow Up` or `W` | `Left Side / Up` or `Left Joystick` | Drag gesture |
+| RIGHT | `Arrow Right` or `D` | `Left Side / Right` or `Left Joystick` | Drag gesture |
+| DOWN | `Arrow Down` or `S` | `Left Side / Down` or `Left Joystick` | Drag gesture |
+| LEFT | `Arrow Left` or `A` | `Left Side / Left` or `Left Joystick` | Drag gesture |
+| ATTACK | `R` or `F` or `J` or `Q` | `Right Side / Down` | Dedicated button |
+| CONFIRM | `E` or `K` or `SPACE` | `Right Side / Right` | Dedicated button |
+| MENU | `X` or `ENTER` | `Middle Buttons / Left` | Top-right button |
+| BACK | `ESCAPE` | `Middle Buttons / Right` | n/a|
+
+#### Notes:
+* On mobile "dedicated buttons" show up only when applicable, for example, the "fire" button only shows up if you have ammo.
+* Controller is only supported on desktop
+* Connecting or disconnecting a controller automatically pauses the game
+* Mouse is only required for "creative mode"
+* Cursor is automatically hidden when connecting a controller and when entering fullscreen

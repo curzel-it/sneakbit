@@ -70,6 +70,7 @@
 "npc.name.dbz2" = "Gohan's Godfather"
 "npc.name.dbz3" = "Son Monkey"
 "npc.name.demon_lord" = "Demon Lord"
+"npc.name.developer" = "Hidden Mugs"
 "npc.name.male.black.doctor" = "Dr Voss"
 "npc.name.ethan" = "Ethan"
 "npc.name.female.dark_blonde" = "Villager"
@@ -227,8 +228,12 @@
 Pick up objects by passing over them
 """
 
+"hint.002.throw_knife.mobile" = """
+Attack by pressing the button with the knife icon
+"""
+
 "hint.002.throw_knife" = """
-Throw knifes by pressing FIRE
+Throw knifes by pressing R, F, J or Q
 """
 
 "hint.003.not_all_places_have_loot" = """

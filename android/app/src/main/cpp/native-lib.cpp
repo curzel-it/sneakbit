@@ -32,6 +32,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_initializeConfig(
     const char *localized_strings_path = getCString(localizedStringsPath);
 
     initialize_config(
+            true,
             base_entity_speed,
             current_lang,
             levels_path,

@@ -108,6 +108,7 @@ pub fn generate_tile_map_image(
 
 fn main() -> Result<(), Box<dyn Error>> {
     initialize_config_paths(
+        false,
         TILE_SIZE * 1.8,
         "en".to_owned(),
         Path::new("data").to_path_buf(),

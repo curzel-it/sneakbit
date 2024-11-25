@@ -108,7 +108,9 @@ private fun ToastView(
     if (isVisible) {
         Box(
             contentAlignment = alignment,
-            modifier = Modifier.fillMaxSize().padding(16.dp)
+            modifier = Modifier.fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .padding(top = 32.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

@@ -6,21 +6,37 @@ use lazy_static::lazy_static;
 use crate::config::config;
 
 pub trait LocalizableText {
+    fn try_localize(&self) -> Option<String>;
     fn localized(&self) -> String; 
 }
 
 impl LocalizableText for String {
-    fn localized(&self) -> String {
+    fn try_localize(&self) -> Option<String> {
         if let Some(strings) = LOCALIZED_STRINGS.get(config().current_lang.as_str()) {
             if let Some(localized_string) = strings.get(self) {
-                return localized_string.clone();
+                return Some(localized_string.clone());
             }
         }
-        self.clone()
+        None
+    }
+
+    fn localized(&self) -> String {
+        if config().is_mobile {
+            let key = format!("{}.mobile", self);
+
+            if let Some(mobile_text) = key.try_localize() {
+                return mobile_text
+            }
+        }
+        return self.try_localize().unwrap_or(self.clone())
     }
 }
 
 impl LocalizableText for &str {
+    fn try_localize(&self) -> Option<String> {
+        self.to_string().try_localize()
+    }
+
     fn localized(&self) -> String {
         self.to_string().localized()
     }

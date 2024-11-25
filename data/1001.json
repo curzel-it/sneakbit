@@ -817,7 +817,7 @@
       "id": 11170798,
       "frame": {
         "x": 69,
-        "y": 34,
+        "y": 30,
         "w": 1,
         "h": 1
       },
@@ -1644,7 +1644,7 @@
       "id": 11169819,
       "frame": {
         "x": 69,
-        "y": 30,
+        "y": 28,
         "w": 1,
         "h": 1
       },
@@ -1685,47 +1685,6 @@
       "id": 11170188,
       "frame": {
         "x": 69,
-        "y": 26,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 50000,
-      "entity_type": "Hint",
-      "direction": "Down",
-      "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
-      "sprite": {
-        "sheet_id": 1001,
-        "frame": {
-          "x": 4,
-          "y": 2,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 2,
-        "w": 1,
-        "h": 1
-      },
-      "display_conditions": [],
-      "movement_directions": "None",
-      "is_consumable": true,
-      "contents": "hint.001.pickup",
-      "is_invulnerable": true,
-      "demands_attention": false,
-      "vanishes_after_dialogue": false
-    },
-    {
-      "id": 11170189,
-      "frame": {
-        "x": 71,
         "y": 25,
         "w": 1,
         "h": 1

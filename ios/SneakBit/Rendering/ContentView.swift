@@ -6,11 +6,11 @@ struct ContentView: View {
         ZStack {
             GameViewRepresentable()
             ControllerEmulatorView()
-            ToastView()
             MenuView()
             OptionsView()
             LoadingScreen()
             DeathScreen()
+            ToastView()
         }
         .ignoresSafeArea()
         .typography(.text)

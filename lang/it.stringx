@@ -70,6 +70,7 @@
 "npc.name.dbz2" = "Padrino di Gohan"
 "npc.name.dbz3" = "Scimmia Son"
 "npc.name.demon_lord" = "Signore dei Demoni"
+"npc.name.developer" = "Hidden Mugs"
 "npc.name.male.black.doctor" = "Dr Voss"
 "npc.name.ethan" = "Ethan"
 "npc.name.female.dark_blonde" = "Abitante"
@@ -227,8 +228,12 @@
 Raccogli gli oggetti passandoci sopra
 """
 
+"hint.002.throw_knife.mobile" = """
+Attacca premendo il bottone con l'icona del coltello
+"""
+
 "hint.002.throw_knife" = """
-Lancia i coltelli premendo FIRE
+Lancia i coltelli premendo R, F, J o Q
 """
 
 "hint.003.not_all_places_have_loot" = """

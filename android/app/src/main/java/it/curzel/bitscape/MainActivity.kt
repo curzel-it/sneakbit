@@ -58,12 +58,14 @@ class MainActivity : ComponentActivity() {
                         Box(modifier = Modifier.padding(innerPadding)) {
                             GameViewComposable(engine, spritesProvider)
                             ControllerEmulatorView(engine, controllerSettingsStorage)
-                            ToastView(engine, spritesProvider)
                         }
                         MenuView(engine)
                         OptionsScreen(engine, audioEngine)
                         LoadingScreen(engine)
                         DeathScreen(engine)
+                        Box(modifier = Modifier.padding(innerPadding)) {
+                            ToastView(engine, spritesProvider)
+                        }
                     }
                 }
             }

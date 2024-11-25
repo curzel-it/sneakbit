@@ -48,6 +48,7 @@ class GameEngine {
     
     init() {
         initialize_config(
+            true,
             Float(TILE_SIZE * 1.8),
             currentLang(),
             dataFolder(),

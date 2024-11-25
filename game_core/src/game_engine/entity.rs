@@ -152,7 +152,7 @@ impl Entity {
 
     pub fn should_be_visible(&self, world: &World) -> bool {
         if bool_for_global_key(&StorageKey::item_collected(self.id)) {
-            return false;
+            return false
         }
         for condition in &self.display_conditions{
             if key_value_matches(&condition.key, world, condition.expected_value) {
