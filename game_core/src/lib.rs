@@ -3,7 +3,7 @@
 use std::{cmp::Ordering, collections::HashSet, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
-use entities::known_species::SPECIES_KUNAI;
+use entities::{known_species::SPECIES_KUNAI, species::EntityType};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
 use game_engine::{engine::GameEngine, entity::Entity, storage::inventory_count};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
@@ -150,8 +150,15 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
         if a.z_index > b.z_index && b.z_index < 0 { return Ordering::Greater; }
         if ay < by { return Ordering::Less; }
         if ay > by { return Ordering::Greater; }
+
+        let a_pushable = matches!(a.entity_type, EntityType::PushableObject);
+        let b_pushable = matches!(b.entity_type, EntityType::PushableObject);
+        if !a_pushable && b_pushable { return Ordering::Less; }
+        if a_pushable && !b_pushable { return Ordering::Greater; }
+        
         if ay == by && a.offset.y < b.offset.y { return Ordering::Less; }
         if ay == by && b.offset.y < a.offset.y { return Ordering::Greater; }
+
         if ax < bx { return Ordering::Less; }
         if ax > bx { return Ordering::Greater; }
         if ax == bx && a.offset.x < b.offset.x { return Ordering::Less; }

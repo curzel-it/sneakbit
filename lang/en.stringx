@@ -92,6 +92,8 @@
 "npc.name.old_man" = "Villager"
 "npc.name.old_man_mustache" = "Villager"
 "npc.name.old_man_mustache.black" = "Villager"
+"npc.name.old_man_swag_purple" = "Villager"
+"npc.name.old_man_swag_brown" = "Villager"
 "npc.name.old_woman" = "Villager"
 "npc.name.piglet" = "Piglet"
 "npc.name.purple_alien" = "Alien"
@@ -471,6 +473,22 @@ Aridreach was not always a desert you know?
 I lived there when I was a kid, before the eruption of Mount Ignis.
 They thought the Manafern trees could save us, their mana healing the world. 
 But they only fed the darkness, didn't they? 
+"""
+
+"lore.019.grimsun_basin.intro" = """
+The legend says a precious artifact is hidden somwhere in the Grimsun desert.
+I went there a couple of times, back in my day, but never found anything.
+"""
+
+"lore.019.grimsun_basin.intro2" = """
+Did you go to the desert?
+Found anything interesting?
+"""
+
+"lore.019.grimsun_basin.key_found" = """
+You found a key...?
+Mmmh...
+I don't like the aura it gives off...
 """
 
 "1001.entrance" = "Welcome to Evergrove Village!"

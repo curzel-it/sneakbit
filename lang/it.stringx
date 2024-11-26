@@ -92,6 +92,8 @@
 "npc.name.old_man" = "Abitante"
 "npc.name.old_man_mustache" = "Abitante"
 "npc.name.old_man_mustache.black" = "Abitante"
+"npc.name.old_man_swag_purple" = "Abitante"
+"npc.name.old_man_swag_brown" = "Abitante"
 "npc.name.old_woman" = "Abitante"
 "npc.name.piglet" = "Porcellino"
 "npc.name.purple_alien" = "Alieno"
@@ -471,6 +473,22 @@ Aridreach non è sempre stato un deserto, sai?
 Ci vivevo da bambina, prima dell'eruzione del Monte Ignis.
 Pensavano che gli alberi di Manafern potessero salvarci, che il loro mana avrebbe guarito il mondo.
 Ma hanno solo alimentato l'oscurità, non è così?
+"""
+
+"lore.019.grimsun_basin.intro" = """
+Si dice che nel deserto di Grimsum sia nascoto un prezioso artifatto antico.
+Ci sono stato più volte, ma non ho mai trovato nulla.
+"""
+
+"lore.019.grimsun_basin.intro2" = """
+Sei stato nel deserto?
+Trovato qualcosa di interessante?
+"""
+
+"lore.019.grimsun_basin.key_found" = """
+Hai trovato una chiave...?
+Mmmh...
+Emana un'aura molto strana, non mi piace...
 """
 
 "1001.entrance" = "Benvenuto al Villaggio di Evergrove!"

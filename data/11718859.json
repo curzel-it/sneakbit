@@ -666,9 +666,55 @@
       "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12626310,
+      "frame": {
+        "x": 6,
+        "y": 2,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1132,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "is_rigid": true,
+      "z_index": 0,
+      "sprite": {
+        "sheet_id": 1009,
+        "frame": {
+          "x": 4,
+          "y": 38,
+          "w": 1,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [
+        {"text": "lore.019.grimsun_basin.key_found", "key": "inventory.amount.2000", "expected_value": 1},
+        {"text": "lore.019.grimsun_basin.intro2", "key": "dialogue.answer.lore.019.grimsun_basin.intro", "expected_value": 1},
+        {"text": "lore.019.grimsun_basin.intro", "key": "always", "expected_value": 0}
+      ],
+      "destination": null,
+      "lock_type": "None",
+      "original_sprite_frame": {
+        "x": 4,
+        "y": 38,
+        "w": 1,
+        "h": 2
+      },
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
     }
   ],
   "is_interior": true,
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": null
 }
