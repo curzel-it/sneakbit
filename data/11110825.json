@@ -39,17 +39,10 @@
         "w": 1,
         "h": 2
       },
-      "name": "Stairs (Down)",
       "species_id": 1011,
       "entity_type": "StaticObject",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 1000,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -63,12 +56,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
@@ -85,14 +72,8 @@
       },
       "species_id": 1019,
       "entity_type": "Teleporter",
-      "offset": {
-        "x": 0.0,
-        "y": 0.0
-      },
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -110,12 +91,6 @@
         "y": 0
       },
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "movement_directions": "None",
       "is_consumable": false,
       "contents": null,

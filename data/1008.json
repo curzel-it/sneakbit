@@ -225,8 +225,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -240,12 +238,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 9,
-        "y": 19,
-        "w": 2,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -266,8 +258,6 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -286,12 +276,6 @@
         "direction": "Up"
       },
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -312,8 +296,6 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -332,12 +314,6 @@
         "direction": "Up"
       },
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -358,8 +334,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -373,12 +347,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -399,8 +367,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -414,12 +380,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -440,8 +400,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -455,12 +413,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -481,8 +433,6 @@
       "entity_type": "Building",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1004,
         "frame": {
@@ -496,12 +446,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 5,
-        "y": 10,
-        "w": 5,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -522,8 +466,6 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 1.0,
-      "is_rigid": true,
-      "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
         "frame": {
@@ -537,12 +479,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 8,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "Free",
       "is_consumable": false,
@@ -563,8 +499,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -578,12 +512,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -604,8 +532,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -619,12 +545,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -645,8 +565,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -660,12 +578,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -686,8 +598,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -701,12 +611,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -727,8 +631,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -742,12 +644,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -768,8 +664,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -783,12 +677,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -809,8 +697,6 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -829,12 +715,6 @@
         "direction": "Unknown"
       },
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -855,8 +735,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -870,12 +748,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -896,8 +768,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -911,12 +781,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -937,8 +801,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -952,12 +814,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -978,8 +834,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -993,12 +847,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1019,8 +867,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 300,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -1034,12 +880,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 4,
-        "w": 2,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1060,8 +900,6 @@
       "entity_type": "RailObject",
       "direction": "Left",
       "current_speed": 1.0,
-      "is_rigid": true,
-      "z_index": 50,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -1075,12 +913,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 2,
-        "y": 3,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": true,
@@ -1101,8 +933,6 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -1121,12 +951,6 @@
         "direction": "Unknown"
       },
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1147,8 +971,6 @@
       "entity_type": "RailObject",
       "direction": "Down",
       "current_speed": 1.0,
-      "is_rigid": true,
-      "z_index": 50,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -1162,12 +984,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 2,
-        "y": 3,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": true,
@@ -1188,8 +1004,6 @@
       "entity_type": "RailObject",
       "direction": "Left",
       "current_speed": 1.0,
-      "is_rigid": true,
-      "z_index": 50,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -1203,12 +1017,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 2,
-        "y": 3,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": true,
@@ -1229,8 +1037,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1012,
         "frame": {
@@ -1244,12 +1050,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 17,
-        "y": 16,
-        "w": 3,
-        "h": 5
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1270,8 +1070,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 1000,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -1285,12 +1083,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1311,8 +1103,6 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -1331,12 +1121,6 @@
         "direction": "Unknown"
       },
       "lock_type": "Permanent",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1357,8 +1141,6 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -1377,12 +1159,6 @@
         "direction": "Unknown"
       },
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1403,8 +1179,6 @@
       "entity_type": "Building",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1004,
         "frame": {
@@ -1418,12 +1192,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 0,
-        "y": 11,
-        "w": 5,
-        "h": 4
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1444,8 +1212,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 1000,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -1459,12 +1225,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1485,8 +1245,6 @@
       "entity_type": "Building",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1004,
         "frame": {
@@ -1500,12 +1258,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 0,
-        "y": 11,
-        "w": 5,
-        "h": 4
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1526,8 +1278,6 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -1546,12 +1296,6 @@
         "direction": "Unknown"
       },
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1572,8 +1316,6 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1009,
         "frame": {
@@ -1594,12 +1336,6 @@
       ],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 19,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1620,8 +1356,6 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1009,
         "frame": {
@@ -1642,12 +1376,6 @@
       ],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 24,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1668,8 +1396,6 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1009,
         "frame": {
@@ -1690,12 +1416,6 @@
       ],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 8,
-        "y": 19,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1716,8 +1436,6 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1009,
         "frame": {
@@ -1738,12 +1456,6 @@
       ],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1764,8 +1476,6 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1009,
         "frame": {
@@ -1786,12 +1496,6 @@
       ],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 8,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -1812,8 +1516,6 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": true,
-      "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
         "frame": {
@@ -1827,12 +1529,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 12,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "Free",
       "is_consumable": false,
@@ -1853,8 +1549,6 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": true,
-      "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
         "frame": {
@@ -1868,12 +1562,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 12,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "Free",
       "is_consumable": false,
@@ -1894,8 +1582,6 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.5,
-      "is_rigid": true,
-      "z_index": 150,
       "sprite": {
         "sheet_id": 1014,
         "frame": {
@@ -1909,12 +1595,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 12,
-        "y": 0,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "Free",
       "is_consumable": false,
@@ -1927,5 +1607,5 @@
   "is_interior": false,
   "light_conditions": "Day",
   "cutscenes": [],
-  "soundtrack": "pol_magical_sun_short.mp3"    
+  "soundtrack": "pol_magical_sun_short.mp3"
 }

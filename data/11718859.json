@@ -85,8 +85,6 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -105,12 +103,6 @@
         "direction": "Unknown"
       },
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -131,8 +123,6 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -151,12 +141,6 @@
         "direction": "Unknown"
       },
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -177,8 +161,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 1000,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -192,12 +174,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 1,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -218,8 +194,6 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -238,12 +212,6 @@
         "direction": "Unknown"
       },
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -264,8 +232,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -279,12 +245,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 2,
-        "y": 12,
-        "w": 2,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -305,8 +265,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 1000,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -320,12 +278,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -346,8 +298,6 @@
       "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 200,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -366,12 +316,6 @@
         "direction": "Down"
       },
       "lock_type": "Permanent",
-      "original_sprite_frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -392,8 +336,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -407,12 +349,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 10,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -433,8 +369,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -448,12 +382,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 10,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -474,8 +402,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -489,12 +415,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 10,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -515,8 +435,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -530,12 +448,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 10,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -556,8 +468,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -571,12 +481,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 10,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -597,8 +501,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -612,12 +514,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 10,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -638,8 +534,6 @@
       "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": false,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1010,
         "frame": {
@@ -653,12 +547,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 3,
-        "y": 10,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
@@ -679,8 +567,6 @@
       "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.0,
-      "is_rigid": true,
-      "z_index": 0,
       "sprite": {
         "sheet_id": 1009,
         "frame": {
@@ -692,18 +578,24 @@
         "number_of_frames": 4
       },
       "dialogues": [
-        {"text": "lore.019.grimsun_basin.key_found", "key": "inventory.amount.2000", "expected_value": 1},
-        {"text": "lore.019.grimsun_basin.intro2", "key": "dialogue.answer.lore.019.grimsun_basin.intro", "expected_value": 1},
-        {"text": "lore.019.grimsun_basin.intro", "key": "always", "expected_value": 0}
+        {
+          "text": "lore.019.grimsun_basin.key_found",
+          "key": "inventory.amount.2000",
+          "expected_value": 1
+        },
+        {
+          "text": "lore.019.grimsun_basin.intro2",
+          "key": "dialogue.answer.lore.019.grimsun_basin.intro",
+          "expected_value": 1
+        },
+        {
+          "text": "lore.019.grimsun_basin.intro",
+          "key": "always",
+          "expected_value": 0
+        }
       ],
       "destination": null,
       "lock_type": "None",
-      "original_sprite_frame": {
-        "x": 4,
-        "y": 38,
-        "w": 1,
-        "h": 2
-      },
       "display_conditions": [],
       "movement_directions": "None",
       "is_consumable": false,
