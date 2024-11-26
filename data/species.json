@@ -3887,15 +3887,15 @@
         "is_rigid": true,
         "inventory_texture_offset": [
             10,
-            22
+            26
         ],
         "sprite_frame": {
             "x": 0,
-            "y": 38,
-            "w": 1,
+            "y": 0,
+            "w": 2,
             "h": 2
         },
-        "sprite_sheet_id": 1009,
+        "sprite_sheet_id": 1016,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
     },
@@ -3957,6 +3957,28 @@
         ],
         "sprite_frame": {
             "x": 12,
+            "y": 38,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1135,
+        "name": "npc.name.man_beard",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            10,
+            22
+        ],
+        "sprite_frame": {
+            "x": 0,
             "y": 38,
             "w": 1,
             "h": 2
