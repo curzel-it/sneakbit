@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define BUILD_NUMBER 28
+
 #define ANIMATIONS_FPS 10.0
 
 #define UNLIMITED_LIFESPAN -420.0
@@ -111,6 +113,8 @@
 #define SPECIES_MONSTER 4004
 
 #define SPECIES_DEEP_HOLE 5001
+
+#define SPECIES_MR_MUGS 1131
 
 #define SPECIES_BARREL_PURPLE 1038
 

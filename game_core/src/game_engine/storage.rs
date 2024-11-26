@@ -44,6 +44,10 @@ impl StorageKey {
         format!("item_collected.{}", id)
     }
 
+    pub fn build_number() -> String {
+        "build_number".to_owned()
+    }
+
     fn dialogue_answer(dialogue: &str) -> String {
         format!("dialogue.answer.{}", dialogue)
     }

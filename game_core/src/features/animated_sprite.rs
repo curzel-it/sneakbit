@@ -40,7 +40,7 @@ impl Entity {
     pub fn update_sprite_for_current_state(&mut self) {
         if self.remaining_lifespan == UNLIMITED_LIFESPAN || self.remaining_lifespan > 1.0 {
             if self.demands_attention {
-                self.sprite.frame.y = self.sprite.frame.h * 8
+                self.sprite.frame.y = self.sprite.original_frame.y + self.sprite.frame.h * 8
             } else {
                 self.update_sprite_for_direction_speed(self.direction, self.current_speed)
             }

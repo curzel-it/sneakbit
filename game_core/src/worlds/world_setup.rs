@@ -1,4 +1,4 @@
-use crate::{entities::{known_species::SPECIES_HERO, species::make_entity_by_species}, game_engine::world::World, utils::directions::Direction};
+use crate::{constants::BUILD_NUMBER, entities::{known_species::{SPECIES_HERO, SPECIES_KUNAI, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::Dialogue, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World}, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
@@ -7,7 +7,34 @@ impl World {
         self.visible_entities = self.compute_visible_entities(&self.bounds);
         self.update_tiles_hitmap();
         self.update_hitmaps();
+        self.spawn_hero(source, hero_direction, original_x, original_y, direction);
+        self.spawn_changelog_man_if_needed();
+    }    
 
+    pub fn set_creative_mode(&mut self, enabled: bool) {
+        self.creative_mode = enabled;
+        self.entities.borrow_mut().iter_mut().for_each(|e| e.setup(enabled));
+    }
+
+    fn spawn_changelog_man_if_needed(&mut self) {
+        if is_first_visit_after_update() && self.allows_for_changelog_display() {
+            set_update_handled();
+            clear_previous_changelog_dialogues();
+
+            let hero = self.cached_hero_props;
+            let mut mugs = species_by_id(SPECIES_MR_MUGS).make_entity();
+            mugs.direction = Direction::Down;
+            mugs.demands_attention = true;
+            mugs.frame = hero.frame
+                .offset_by(hero.direction.as_col_row_offset())
+                .offset_by(hero.direction.as_col_row_offset());
+            mugs.dialogues = vec![Dialogue::new("changelog", "always", 0, Some(SPECIES_KUNAI))];
+            mugs.vanishes_after_dialogue = true;
+            self.add_entity(mugs);
+        }
+    }
+
+    fn spawn_hero(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
         let (x, y) = self.destination_x_y(source, original_x, original_y);
         let mut entity = make_entity_by_species(SPECIES_HERO);
         
@@ -38,11 +65,6 @@ impl World {
         entity.immobilize_for_seconds(0.2);
         self.cached_hero_props = entity.props();
         self.add_entity(entity);
-    }    
-
-    pub fn set_creative_mode(&mut self, enabled: bool) {
-        self.creative_mode = enabled;
-        self.entities.borrow_mut().iter_mut().for_each(|e| e.setup(enabled));
     }
 
     fn likely_direction_for_hero(&self, x: i32, y: i32, current_direction: &Direction) -> Vec<Direction> {
@@ -132,5 +154,27 @@ impl World {
         let actual_y = original_y.min(self.bounds.y + self.bounds.h - 1).max(self.bounds.y - 1);
         (actual_x, actual_y)
     }
+
+    fn allows_for_changelog_display(&self) -> bool {
+        !matches!(self.id, 1000 | 1001)
+    }
+}
+    
+fn is_first_visit_after_update() -> bool {
+    if let Some(last_build) = get_value_for_global_key(&StorageKey::build_number()) {
+        last_build != BUILD_NUMBER
+    } else {
+        true
+    }    
 }
 
+fn set_update_handled() {
+    set_value_for_key(&StorageKey::build_number(), BUILD_NUMBER);
+}
+
+fn clear_previous_changelog_dialogues() {
+    set_value_for_key("dialogue.answer.changelog", 0);
+    set_value_for_key("dialogue.answer.changelog.mobile", 0);
+    set_value_for_key("dialogue.reward.changelog", 0);
+    set_value_for_key("dialogue.reward.changelog.mobile", 0);
+}

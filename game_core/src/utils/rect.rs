@@ -50,6 +50,10 @@ impl IntRect {
         Self::new(self.x + dx, self.y + dy, self.w, self.h)
     }
 
+    pub fn offset_by(&self, delta: (i32, i32)) -> Self {
+        self.offset(delta.0, delta.1)
+    }
+
     pub fn offset_x(&self, dx: i32) -> Self {
         self.offset(dx, 0)
     }

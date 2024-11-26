@@ -19,6 +19,15 @@ pub struct Dialogue {
 }
 
 impl Dialogue {
+    pub fn new(text: &str, key: &str, expected_value: u32, reward: Option<SpeciesId>) -> Self {
+        Self {
+            text: text.to_owned(),
+            key: key.to_owned(),
+            expected_value,
+            reward
+        }
+    }
+
     pub fn localized_text(&self) -> String {
         self.text.localized()
     }
