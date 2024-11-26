@@ -155,7 +155,7 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
         let b_pushable = matches!(b.entity_type, EntityType::PushableObject);
         if !a_pushable && b_pushable { return Ordering::Less; }
         if a_pushable && !b_pushable { return Ordering::Greater; }
-        
+
         if ay == by && a.offset.y < b.offset.y { return Ordering::Less; }
         if ay == by && b.offset.y < a.offset.y { return Ordering::Greater; }
 
@@ -404,4 +404,8 @@ pub extern "C" fn current_soundtrack() -> *const c_char {
 
 pub fn set_links_handler(handler: Box<dyn LinksHandler>) {
     engine_mut().links_handler = handler;
+}
+
+pub fn is_hero_on_slippery_surface() -> bool {
+    engine().world.is_hero_on_slippery_surface()
 }
