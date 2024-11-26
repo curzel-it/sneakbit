@@ -27,7 +27,6 @@ impl World {
             mugs.demands_attention = true;
             mugs.frame = hero.frame
                 .offset_by(hero.direction.as_col_row_offset())
-                .offset_by(hero.direction.as_col_row_offset())
                 .offset_by(hero.direction.as_col_row_offset());
             mugs.dialogues = vec![Dialogue::new("changelog", "always", 0, Some(SPECIES_KUNAI))];
             mugs.after_dialogue = AfterDialogueBehavior::FlyAwayEast;

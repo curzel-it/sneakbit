@@ -75,56 +75,46 @@ impl BiomeTile {
 
     fn texture_index_for_neighbors(&self) -> i32 {
         if let Some((neighbor, directions)) = self.best_neighbor() {
-            let default_index = neighbor.texture_index() * Biome::number_of_combinations() + self.texture_index_for_directions(&directions) + 1;
+            let with_overlaps = neighbor.texture_index() * Biome::number_of_combinations() + self.texture_index_for_directions(&directions) + 1;
+            let completely_filled: i32 = 0;
 
-            if self.tile_type.is_grass() {
-                return match neighbor {
-                    Biome::Desert => 0,
-                    Biome::Rock => 0,
-                    Biome::DarkRock => 0,
-                    Biome::Snow => 0,
-                    Biome::DarkGrass => 0,
-                    _ => default_index
-                }
+            if self.tile_type.is_liquid() {
+                return completely_filled
+            }
+            if neighbor.is_liquid() {
+                return with_overlaps
+            }
+            if self.tile_type.is_light_grass() {     
+                return completely_filled
+            }
+            if neighbor.is_light_grass() {     
+                return with_overlaps
+            }
+            if self.tile_type.is_dark_grass() && !neighbor.is_light_grass() {
+                return completely_filled
             }
 
             return match (self.tile_type, neighbor) {
-                (Biome::Water, Biome::Desert) => 0,
-                (Biome::Water, Biome::Grass) => 0,
-                (Biome::Water, Biome::DarkGrass) => 0,
-                (Biome::Water, Biome::Rock) => 0,
-                (Biome::DarkWater, Biome::DarkSand) => 0,
-                (Biome::DarkWater, Biome::Desert) => 0,
-                (Biome::DarkWater, Biome::Grass) => 0,
-                (Biome::DarkWater, Biome::DarkGrass) => 0,
-                (Biome::Lava, Biome::DarkSand) => 0,
-                (Biome::Lava, Biome::Desert) => 0,
-                (Biome::Lava, Biome::Grass) => 0,
-                (Biome::Lava, Biome::DarkGrass) => 0,
-                (Biome::Grass, Biome::DarkSand) => 0,
-                (Biome::Grass, Biome::Desert) => 0,
-                (Biome::Grass, Biome::Rock) => 0,
-                (Biome::Grass, Biome::DarkRock) => 0,
-                (Biome::Grass, Biome::Snow) => 0,
-                (Biome::DarkGrass, Biome::DarkSand) => 0,
-                (Biome::DarkGrass, Biome::Desert) => 0,
-                (Biome::DarkGrass, Biome::Rock) => 0,
-                (Biome::DarkGrass, Biome::DarkRock) => 0,
-                (Biome::DarkGrass, Biome::Snow) => 0,
-                (Biome::Grass, Biome::DarkGrass) => 0,
-                (Biome::Rock, Biome::Snow) => 0,
-                (Biome::Water, Biome::DarkRock) => 0,
-                (Biome::DarkWater, Biome::DarkRock) => 0,
-                (Biome::Lava, Biome::DarkRock) => 0,
-                (Biome::DarkSand, Biome::Snow) => 0,
-                (Biome::Desert, Biome::Snow) => 0,
-                (Biome::Desert, Biome::DarkSand) => 0,
-                (Biome::Rock, Biome::Desert) => 0,
-                (Biome::Rock, Biome::DarkSand) => 0,
-                (Biome::DarkRock, Biome::Snow) => 0,
-                (Biome::DarkRock, Biome::Desert) => 0,
-                (Biome::DarkRock, Biome::DarkSand) => 0,
-                _ => default_index
+                (Biome::Water, Biome::Desert) => completely_filled,
+                (Biome::Water, Biome::Rock) => completely_filled,
+                (Biome::DarkWater, Biome::DarkSand) => completely_filled,
+                (Biome::DarkWater, Biome::Desert) => completely_filled,
+                (Biome::Lava, Biome::DarkSand) => completely_filled,
+                (Biome::Lava, Biome::Desert) => completely_filled,
+                (Biome::Rock, Biome::Snow) => completely_filled,
+                (Biome::Water, Biome::DarkRock) => completely_filled,
+                (Biome::DarkWater, Biome::DarkRock) => completely_filled,
+                (Biome::Lava, Biome::DarkRock) => completely_filled,
+                (Biome::DarkSand, Biome::Snow) => completely_filled,
+                (Biome::Desert, Biome::Snow) => completely_filled,
+                (Biome::Desert, Biome::DarkSand) => completely_filled,
+                (Biome::Rock, Biome::Desert) => completely_filled,
+                (Biome::Rock, Biome::DarkSand) => completely_filled,
+                (Biome::DarkRock, Biome::Snow) => completely_filled,
+                (Biome::DarkRock, Biome::Desert) => completely_filled,
+                (Biome::DarkRock, Biome::DarkSand) => completely_filled,
+                (_, Biome::Nothing) => completely_filled,
+                _ => with_overlaps
             }
         }        
         0 
@@ -240,17 +230,32 @@ impl Biome {
     }
 
     fn is_same(&self, other: Biome) -> bool {
-        self == &other || (self.is_grass() && other.is_grass())
+        self == &other || (self.is_light_grass() && other.is_light_grass())
     }
 
-    #[allow(clippy::match_like_matches_macro)]
-    fn is_grass(&self) -> bool {
+    fn is_light_grass(&self) -> bool {
         match self {
             Biome::Grass => true,
             Biome::GrassFlowersRed => true,
             Biome::GrassFlowersBlue => true,
             Biome::GrassFlowersYellow => true,
             Biome::GrassFlowersPurple => true,
+            _ => false
+        }
+    }
+
+    fn is_dark_grass(&self) -> bool {
+        match self {
+            Biome::DarkGrass => true,
+            _ => false
+        }
+    }
+
+    fn is_liquid(&self) -> bool {
+        match self {
+            Biome::Water => true,
+            Biome::DarkWater => true,
+            Biome::Lava => true,
             _ => false
         }
     }
