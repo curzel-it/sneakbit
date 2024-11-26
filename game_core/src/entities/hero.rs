@@ -1,5 +1,7 @@
 use crate::{constants::{HERO_KUNAI_COOLDOWN, TILE_SIZE}, entities::{known_species::SPECIES_KUNAI, species::species_by_id}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
 
+use super::trails::leave_footsteps;
+
 impl Entity {
     pub fn setup_hero(&mut self, creative_mode: bool) {
         self.speed_multiplier = if creative_mode { 2.0 } else { 1.0 };
@@ -23,6 +25,7 @@ impl Entity {
         world_updates.push(self.cache_props());
         world_updates.push(self.move_camera_update());
         world_updates.append(&mut self.shoot_kunai(world, time_since_last_update));
+        world_updates.append(&mut self.leave_footsteps(world));
         world_updates
     }
 
@@ -42,6 +45,18 @@ impl Entity {
         )
     }
     
+    fn leave_footsteps(&self, world: &World) -> Vec<WorldStateUpdate> {
+        let previous = world.cached_hero_props.hittable_frame;
+        let x = self.frame.x;
+        let y = self.frame.y + 1;
+
+        if previous.x != x || previous.y != y {
+            leave_footsteps(world, &self.direction, x, y)
+        } else {
+            vec![]
+        }
+    }
+
     fn shoot_kunai(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
         self.action_cooldown_remaining -= time_since_last_update;
         

@@ -1,6 +1,5 @@
 use crate::game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World};
 
-
 impl Entity {
     pub fn update_building(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {  
         if world.creative_mode && world.is_hero_interacting(&self.frame) {

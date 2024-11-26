@@ -3986,5 +3986,27 @@
         "sprite_sheet_id": 1009,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
+    },
+    {
+        "id": 1136,
+        "name": "objects.name.footsteps_trail",
+        "is_invulnerable": true,
+        "entity_type": "Trail",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            0,
+            0
+        ],
+        "sprite_frame": {
+            "x": 20,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 15,
+        "lock_type": "None"
     }
 ]

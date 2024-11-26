@@ -21,6 +21,7 @@ pub const SPECIES_GHOST: u32 = 4003;
 pub const SPECIES_MONSTER: u32 = 4004;
 pub const SPECIES_DEEP_HOLE: u32 = 5001;
 pub const SPECIES_MR_MUGS: u32 = 1131;
+pub const SPECIES_FOOTSTEPS: u32 = 1136;
 
 pub const SPECIES_BARREL_PURPLE: u32 = 1038;
 pub const SPECIES_BARREL_GREEN: u32 = 1039;

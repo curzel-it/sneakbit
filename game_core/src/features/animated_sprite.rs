@@ -34,6 +34,10 @@ impl AnimatedSprite {
     pub fn texture_source_rect(&self) -> IntRect {
         self.frame
     }
+
+    pub fn completed_loops(&self) -> u32 {
+        self.frames_provider.completed_loops
+    }
 }
 
 impl Entity {

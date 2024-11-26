@@ -126,6 +126,7 @@ impl Entity {
             EntityType::Bullet => self.update_bullet(world, time_since_last_update),
             EntityType::RailObject => self.update_rail(world, time_since_last_update),
             EntityType::Hint => self.update_hint(world, time_since_last_update),
+            EntityType::Trail => self.update_trail(),
         };        
         self.sprite.update(time_since_last_update); 
         let mut more_updates = self.check_remaining_lifespan(time_since_last_update);
@@ -153,6 +154,7 @@ impl Entity {
             EntityType::Bullet => self.setup_bullet(),
             EntityType::RailObject => self.setup_rail(),
             EntityType::Hint => self.setup_hint(creative_mode),
+            EntityType::Trail => self.setup_generic(creative_mode),
         }
     }
 

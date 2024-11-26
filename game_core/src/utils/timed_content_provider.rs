@@ -4,7 +4,7 @@ pub struct TimedContentProvider<T> {
     frames: Vec<T>,
     frame_duration: f32,
     current_frame_index: usize,
-    completed_loops: u32,
+    pub completed_loops: u32,
     leftover: f32
 }
 
