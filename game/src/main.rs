@@ -450,7 +450,6 @@ fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitErro
             (AppSound::Effect(SoundEffect::BulletBounced), "sfx_movement_jump20.mp3"),
             (AppSound::Effect(SoundEffect::HintReceived), "sfx_sound_neutral5.mp3"),
             (AppSound::Effect(SoundEffect::KeyCollected), "sfx_sounds_fanfare3.mp3"),
-            (AppSound::Effect(SoundEffect::Interaction), "sfx_sounds_interaction9.mp3"),
             (AppSound::Effect(SoundEffect::AmmoCollected), "sfx_sounds_interaction22.mp3"),
             (AppSound::Effect(SoundEffect::GameOver), "sfx_sounds_negative1.mp3"),
             (AppSound::Effect(SoundEffect::PlayerResurrected), "sfx_sounds_powerup1.mp3"), 
@@ -494,7 +493,6 @@ fn volume_for_sound_effect(sound: &AppSound) -> f32 {
     match sound {
         AppSound::Effect(effect) => match effect {
             SoundEffect::StepTaken => 0.1,
-            SoundEffect::Interaction => 0.2,
             SoundEffect::BulletFired => 0.3,
             SoundEffect::BulletBounced => 0.2,
             SoundEffect::WorldChange => 0.7,

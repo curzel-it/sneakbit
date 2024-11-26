@@ -25,7 +25,6 @@ class AudioEngine {
         SoundEffect_BulletBounced: "sfx_movement_jump20",
         SoundEffect_HintReceived: "sfx_sound_neutral5",
         SoundEffect_KeyCollected: "sfx_sounds_fanfare3",
-        SoundEffect_Interaction: "sfx_sounds_interaction9",
         SoundEffect_AmmoCollected: "sfx_sounds_interaction22",
         SoundEffect_GameOver: "sfx_sounds_negative1",
         SoundEffect_PlayerResurrected: "sfx_sounds_powerup1",
@@ -139,7 +138,7 @@ class AudioEngine {
     private func volume(for effect: SoundEffect) -> Float {
         switch effect {
         case SoundEffect_StepTaken: 0.01
-        case SoundEffect_Interaction, SoundEffect_BulletBounced:0.2
+        case SoundEffect_BulletBounced: 0.2
         case SoundEffect_BulletFired: 0.3
         case SoundEffect_WorldChange, SoundEffect_AmmoCollected: 0.6
         default: 0.8

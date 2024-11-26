@@ -146,10 +146,14 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
         let ax = a.frame.x;
         let bx = b.frame.x;
 
-        if a.z_index < b.z_index && a.z_index < 0 { return Ordering::Less; }
-        if a.z_index > b.z_index && b.z_index < 0 { return Ordering::Greater; }
+        if a.z_index < 0 || b.z_index < 0 {
+            if a.z_index < b.z_index { return Ordering::Less; }
+            if a.z_index > b.z_index { return Ordering::Greater; }
+        }
         if ay < by { return Ordering::Less; }
         if ay > by { return Ordering::Greater; }
+        if a.z_index < b.z_index { return Ordering::Less; }
+        if a.z_index > b.z_index { return Ordering::Greater; }
 
         let a_pushable = matches!(a.entity_type, EntityType::PushableObject);
         let b_pushable = matches!(b.entity_type, EntityType::PushableObject);
@@ -297,7 +301,6 @@ pub extern "C" fn current_menu() -> MenuDescriptorC {
     }
     MenuDescriptorC::empty()
 }
-
 
 pub fn string_to_c_char(s: String) -> *const c_char {
     let c_string = CString::new(s).expect("Failed to convert String to CString");

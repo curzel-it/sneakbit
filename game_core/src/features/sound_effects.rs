@@ -2,25 +2,24 @@ use std::collections::HashSet;
 
 use common_macros::hash_set;
 
-use crate::{constants::WORLD_ID_NONE, current_menu, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::EngineStateUpdate, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_hero_on_slippery_surface, is_interaction_available, menus::toasts::{Toast, ToastMode}};
+use crate::{constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{AddToInventoryReason, EngineStateUpdate}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_hero_on_slippery_surface, menus::toasts::{Toast, ToastMode}};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[repr(C)]
 pub enum SoundEffect { 
     AmmoCollected = 1,
-    KeyCollected,
-    BulletFired,
-    BulletBounced,
-    DeathOfMonster,
-    DeathOfNonMonster,
-    SmallExplosion,
-    Interaction,
-    NoAmmo,
-    GameOver,
-    PlayerResurrected,
-    WorldChange,
-    StepTaken,
-    HintReceived,
+    KeyCollected = 2,
+    BulletFired = 3,
+    BulletBounced = 4,
+    DeathOfMonster = 5,
+    DeathOfNonMonster = 6,
+    SmallExplosion = 7,
+    NoAmmo = 8,
+    GameOver = 9,
+    PlayerResurrected = 10,
+    WorldChange = 11,
+    StepTaken = 12,
+    HintReceived = 13,
 }
 
 pub struct SoundEffectsManager {
@@ -45,12 +44,6 @@ impl SoundEffectsManager {
     pub fn update(&mut self, keyboard: &KeyboardEventsProvider, updates: &[EngineStateUpdate]) {
         self.check_sounds_for_state_updates(updates);
 
-        if did_interact_with_menu(keyboard) {
-            self.prepare(SoundEffect::Interaction);
-        }
-        if did_interact_with_entity(keyboard) {
-            self.prepare(SoundEffect::Interaction);
-        }
         if self.did_fire_but_no_ammo(keyboard) {
             self.prepare(SoundEffect::NoAmmo);
         }
@@ -80,7 +73,7 @@ impl SoundEffectsManager {
             EngineStateUpdate::CenterCamera(x, y, _) => self.check_hero_movement(*x, *y),
             EngineStateUpdate::Teleport(destination) => self.check_teleportation(destination.world),
             EngineStateUpdate::RemoveFromInventory(species_id) => self.check_bullet_fired(*species_id),
-            EngineStateUpdate::AddToInventory(species_id) => self.handle_item_collection(*species_id),
+            EngineStateUpdate::AddToInventory(species_id, reason) => self.handle_item_collection(*species_id, reason),
             EngineStateUpdate::Toast(toast) => self.check_hint_received(toast),
             EngineStateUpdate::DeathScreen => self.handle_game_over(),
             _ => {}
@@ -103,7 +96,10 @@ impl SoundEffectsManager {
         }
     }
 
-    fn handle_item_collection(&mut self, species_id: u32) {
+    fn handle_item_collection(&mut self, species_id: u32, reason: &AddToInventoryReason) {
+        if matches!(reason, AddToInventoryReason::Reward) {
+            return
+        }
         if is_ammo(species_id) {
             self.prepare(SoundEffect::AmmoCollected);
         } else if is_key(species_id) {
@@ -152,21 +148,6 @@ impl SoundEffectsManager {
     fn did_fire_but_no_ammo(&self, keyboard: &KeyboardEventsProvider) -> bool { 
         keyboard.has_attack_key_been_pressed && !self.next_sound_effects.contains(&SoundEffect::BulletFired)
     }
-}
-
-fn did_interact_with_menu(keyboard: &KeyboardEventsProvider) -> bool {
-    current_menu().is_visible && (
-        keyboard.has_back_been_pressed || 
-        keyboard.has_menu_been_pressed || 
-        keyboard.has_confirmation_been_pressed || 
-        keyboard.has_attack_key_been_pressed || 
-        keyboard.has_backspace_been_pressed || 
-        keyboard.has_any_arrow_key_been_pressed()
-    )
-}
-
-fn did_interact_with_entity(keyboard: &KeyboardEventsProvider) -> bool {
-    is_interaction_available() && keyboard.has_confirmation_been_pressed
 }
 
 pub fn are_sound_effects_enabled() -> bool {

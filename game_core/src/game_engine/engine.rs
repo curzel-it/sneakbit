@@ -212,7 +212,7 @@ impl GameEngine {
             EngineStateUpdate::ShowEntityOptions(entity) => {
                 self.entity_options_menu.show(entity.clone(), self.creative_mode)
             }
-            EngineStateUpdate::AddToInventory(species_id) => {
+            EngineStateUpdate::AddToInventory(species_id, _) => {
                 increment_inventory_count(species_id)
             }
             EngineStateUpdate::RemoveFromInventory(species_id) => {

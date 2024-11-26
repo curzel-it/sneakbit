@@ -5,9 +5,7 @@ use super::{menu::{Menu, MenuItem, MenuUpdate}, text_input::TextInput};
 pub enum EntityOptionMenuItem {
     Remove,
     Rename,
-    PickUp,
     ToggleDemandAttention,
-    UseItem,
     ChangeLock,
     ChangeDestinationWorld,
     ChangeDestinationX,
@@ -19,8 +17,6 @@ impl MenuItem for EntityOptionMenuItem {
         match self {
             EntityOptionMenuItem::Remove => "entity.menu.remove".localized(),
             EntityOptionMenuItem::Rename => "entity.menu.rename".localized(),
-            EntityOptionMenuItem::PickUp => "entity.menu.pickup".localized(),
-            EntityOptionMenuItem::UseItem => "entity.menu.use".localized(),
             EntityOptionMenuItem::ToggleDemandAttention => "entity.menu.toggle_demand_attention".localized(),
             EntityOptionMenuItem::ChangeLock => "entity.menu.change_lock".localized(),
             EntityOptionMenuItem::ChangeDestinationWorld => "entity.menu.change_destination_world".localized(),
@@ -210,32 +206,6 @@ impl EntityOptionsMenu {
                         WorldStateUpdate::ToggleDemandAttention(self.entity.id),
                     ]
                 },
-                EntityOptionMenuItem::PickUp => {
-                    self.menu.clear_selection();
-                    self.menu.close();
-                    vec![
-                        WorldStateUpdate::EngineUpdate(EngineStateUpdate::AddToInventory(self.entity.species_id)),
-                        WorldStateUpdate::RemoveEntity(self.entity.id),
-                        WorldStateUpdate::EngineUpdate(EngineStateUpdate::SaveGame),
-                    ]
-                },
-                EntityOptionMenuItem::UseItem => {
-                    self.menu.clear_selection();
-                    self.menu.close();
-                    vec![
-                        WorldStateUpdate::EngineUpdate(
-                            EngineStateUpdate::ResumeGame
-                        ),
-                        WorldStateUpdate::EngineUpdate(
-                            EngineStateUpdate::RemoveFromInventory(
-                                self.entity.id
-                            )
-                        ),
-                        WorldStateUpdate::UseItem(
-                            self.entity.species_id
-                        )
-                    ]
-                },
                 EntityOptionMenuItem::ChangeLock => {
                     self.menu.clear_selection();
                     self.ask_for_lock_type();
@@ -307,7 +277,7 @@ impl EntityOptionsMenu {
         if creative_mode {
             self.available_options_creative()
         } else {
-            self.available_options_regular()
+            vec![]
         }
     }
 
@@ -321,60 +291,16 @@ impl EntityOptionsMenu {
                 EntityOptionMenuItem::ToggleDemandAttention,
                 EntityOptionMenuItem::Remove,
             ],
-            EntityType::Building => vec![
-                EntityOptionMenuItem::Remove,
-            ],
-            EntityType::StaticObject => vec![
-                EntityOptionMenuItem::Remove,
-            ],
-            EntityType::PickableObject | EntityType::Bundle => vec![
-                EntityOptionMenuItem::PickUp,
-                EntityOptionMenuItem::Remove,
-            ],
             EntityType::Teleporter => vec![
                 EntityOptionMenuItem::ChangeDestinationWorld,
                 EntityOptionMenuItem::ChangeDestinationX,
                 EntityOptionMenuItem::ChangeDestinationY,
                 EntityOptionMenuItem::ChangeLock
             ],
-            EntityType::PushableObject => vec![
-                EntityOptionMenuItem::Remove,
-            ],
-            EntityType::RailObject => vec![
-                EntityOptionMenuItem::Remove,
-            ],
-            EntityType::Gate => vec![
-                EntityOptionMenuItem::Remove,
-            ],
-            EntityType::InverseGate => vec![
-                EntityOptionMenuItem::Remove,
-            ],
-            EntityType::PressurePlate => vec![
-                EntityOptionMenuItem::Remove,
-            ],
-            EntityType::Hint => vec![
-                EntityOptionMenuItem::Remove,
-            ],
-            EntityType::Bullet => vec![
-                EntityOptionMenuItem::PickUp,
+            _ => vec![
                 EntityOptionMenuItem::Remove,
             ],
         }
-    }
-
-    fn available_options_regular(&self) -> Vec<EntityOptionMenuItem> {
-        let mut options: Vec<EntityOptionMenuItem> = vec![];
-
-        if self.entity.is_consumable {
-            options.push(EntityOptionMenuItem::UseItem)
-        }
-
-        match self.entity.entity_type {
-            EntityType::PickableObject | EntityType::Bundle => options.push(EntityOptionMenuItem::PickUp),
-            EntityType::Bullet => options.push(EntityOptionMenuItem::PickUp),
-            _ => {}
-        }
-        options
     }
 
     pub fn select_option_at_index(&mut self, index: usize) {

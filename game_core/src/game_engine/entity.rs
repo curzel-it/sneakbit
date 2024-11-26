@@ -37,13 +37,19 @@ pub struct Entity {
     pub entity_type: EntityType,  
     pub direction: Direction,
     pub current_speed: f32,
-    pub is_rigid: bool,
-    pub z_index: i32,
     pub sprite: AnimatedSprite,
     pub dialogues: EntityDialogues,
     pub destination: Option<Destination>,
     pub lock_type: LockType,
+    
+    #[serde(skip)]
     pub original_sprite_frame: IntRect,
+    
+    #[serde(skip)]
+    pub is_rigid: bool,
+    
+    #[serde(skip)]
+    pub z_index: i32,
     
     #[serde(skip)]
     pub offset: Vector2d,

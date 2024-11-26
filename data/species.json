@@ -313,9 +313,9 @@
         "name": "objects.name.stairs_up",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 1000,
+        "z_index": -1,
         "base_speed": 0.0,
-        "is_rigid": true,
+        "is_rigid": false,
         "inventory_texture_offset": [
             3,
             1
@@ -335,9 +335,9 @@
         "name": "objects.name.stairs_down",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 1000,
+        "z_index": -1,
         "base_speed": 0.0,
-        "is_rigid": true,
+        "is_rigid": false,
         "inventory_texture_offset": [
             3,
             2
@@ -445,7 +445,7 @@
         "name": "objects.name.table",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -467,7 +467,7 @@
         "name": "objects.name.bed",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -489,7 +489,7 @@
         "name": "objects.name.key_yellow",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 200,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -511,7 +511,7 @@
         "name": "objects.name.key_red",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 200,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -533,7 +533,7 @@
         "name": "objects.name.key_green",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 200,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -555,7 +555,7 @@
         "name": "objects.name.key_blue",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 200,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -577,7 +577,7 @@
         "name": "objects.name.key_silver",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 200,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -599,7 +599,7 @@
         "name": "objects.name.teleporter",
         "is_invulnerable": true,
         "entity_type": "Teleporter",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -621,7 +621,7 @@
         "name": "objects.name.boulder",
         "is_invulnerable": true,
         "entity_type": "PushableObject",
-        "z_index": 200,
+        "z_index": 150,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -643,7 +643,7 @@
         "name": "objects.name.boulder",
         "is_invulnerable": true,
         "entity_type": "PushableObject",
-        "z_index": 200,
+        "z_index": 150,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -665,7 +665,7 @@
         "name": "objects.name.gate.yellow",
         "is_invulnerable": true,
         "entity_type": "Gate",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -687,7 +687,7 @@
         "name": "objects.name.gate.red",
         "is_invulnerable": true,
         "entity_type": "Gate",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -709,7 +709,7 @@
         "name": "objects.name.gate.green",
         "is_invulnerable": true,
         "entity_type": "Gate",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -731,7 +731,7 @@
         "name": "objects.name.gate.blue",
         "is_invulnerable": true,
         "entity_type": "Gate",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -753,7 +753,7 @@
         "name": "objects.name.gate.silver",
         "is_invulnerable": true,
         "entity_type": "Gate",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -885,7 +885,7 @@
         "name": "objects.name.inverse_gate.yellow",
         "is_invulnerable": true,
         "entity_type": "InverseGate",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -907,7 +907,7 @@
         "name": "objects.name.inverse_gate.red",
         "is_invulnerable": true,
         "entity_type": "InverseGate",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -929,7 +929,7 @@
         "name": "objects.name.inverse_gate.green",
         "is_invulnerable": true,
         "entity_type": "InverseGate",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -951,7 +951,7 @@
         "name": "objects.name.inverse_gate.blue",
         "is_invulnerable": true,
         "entity_type": "InverseGate",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -973,7 +973,7 @@
         "name": "objects.name.inverse_gate.silver",
         "is_invulnerable": true,
         "entity_type": "InverseGate",
-        "z_index": 200,
+        "z_index": 100,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1107,7 +1107,7 @@
         "name": "objects.name.deep_hole",
         "is_invulnerable": true,
         "entity_type": "Teleporter",
-        "z_index": 0,
+        "z_index": -1,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1129,7 +1129,7 @@
         "name": "objects.name.book_red",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 350,
+        "z_index": 140,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1151,7 +1151,7 @@
         "name": "objects.name.book_blue",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 350,
+        "z_index": 140,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1173,7 +1173,7 @@
         "name": "objects.name.book_green",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 350,
+        "z_index": 140,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1195,7 +1195,7 @@
         "name": "objects.name.book_purple",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 350,
+        "z_index": 140,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1217,7 +1217,7 @@
         "name": "objects.name.book_black",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 350,
+        "z_index": 140,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1238,7 +1238,7 @@
         "id": 7000,
         "name": "objects.name.kunai",
         "entity_type": "Bullet",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 7.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1259,7 +1259,7 @@
         "id": 7001,
         "name": "objects.name.kunai.x10",
         "entity_type": "Bundle",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 5.0,
         "is_rigid": false,
         "is_invulnerable": true,
@@ -1315,7 +1315,7 @@
         "id": 10000,
         "name": "objects.name.sign",
         "entity_type": "StaticObject",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1337,7 +1337,7 @@
         "id": 10001,
         "name": "objects.name.large_sign",
         "entity_type": "StaticObject",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1359,7 +1359,7 @@
         "id": 10002,
         "name": "objects.name.scroll.brown",
         "entity_type": "StaticObject",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1381,7 +1381,7 @@
         "id": 10003,
         "name": "objects.name.scroll.red",
         "entity_type": "StaticObject",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1403,7 +1403,7 @@
         "id": 10004,
         "name": "objects.name.scroll.blue",
         "entity_type": "StaticObject",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1425,7 +1425,7 @@
         "id": 10005,
         "name": "objects.name.scroll.yellow",
         "entity_type": "StaticObject",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1447,7 +1447,7 @@
         "id": 10006,
         "name": "objects.name.scroll.green",
         "entity_type": "StaticObject",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1513,7 +1513,7 @@
         "id": 11001,
         "name": "objects.name.well",
         "entity_type": "StaticObject",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1535,7 +1535,7 @@
         "id": 11002,
         "name": "objects.name.fountain",
         "entity_type": "StaticObject",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1558,7 +1558,7 @@
         "name": "objects.name.torch",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 350,
+        "z_index": 145,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1624,7 +1624,7 @@
         "name": "objects.name.slope.top_left.grass",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1645,7 +1645,7 @@
         "name": "objects.name.slope.top_right.grass",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1666,7 +1666,7 @@
         "name": "objects.name.slope.bottom_right.grass",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1687,7 +1687,7 @@
         "name": "objects.name.slope.bottom_left.grass",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1708,7 +1708,7 @@
         "name": "objects.name.slope.side_bottom.grass",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1729,7 +1729,7 @@
         "name": "objects.name.slope.side_top.grass",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1750,7 +1750,7 @@
         "name": "objects.name.slope.side_left.grass",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1771,7 +1771,7 @@
         "name": "objects.name.slope.side_right.grass",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1792,7 +1792,7 @@
         "name": "objects.name.slope.top_left.rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1813,7 +1813,7 @@
         "name": "objects.name.slope.top_right.rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1834,7 +1834,7 @@
         "name": "objects.name.slope.bottom_right.rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1855,7 +1855,7 @@
         "name": "objects.name.slope.bottom_left.rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1876,7 +1876,7 @@
         "name": "objects.name.slope.side_bottom.rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1897,7 +1897,7 @@
         "name": "objects.name.slope.side_top.rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1918,7 +1918,7 @@
         "name": "objects.name.slope.side_left.rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1939,7 +1939,7 @@
         "name": "objects.name.slope.side_right.rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1960,7 +1960,7 @@
         "name": "objects.name.slope.top_left.sand",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1981,7 +1981,7 @@
         "name": "objects.name.slope.top_right.sand",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2002,7 +2002,7 @@
         "name": "objects.name.slope.bottom_right.sand",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2023,7 +2023,7 @@
         "name": "objects.name.slope.bottom_left.sand",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2044,7 +2044,7 @@
         "name": "objects.name.slope.side_bottom.sand",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2065,7 +2065,7 @@
         "name": "objects.name.slope.side_top.sand",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2086,7 +2086,7 @@
         "name": "objects.name.slope.side_left.sand",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2107,7 +2107,7 @@
         "name": "objects.name.slope.side_right.sand",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2128,7 +2128,7 @@
         "name": "objects.name.slope.top_left.dark_rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2149,7 +2149,7 @@
         "name": "objects.name.slope.top_right.dark_rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2170,7 +2170,7 @@
         "name": "objects.name.slope.bottom_right.dark_rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2191,7 +2191,7 @@
         "name": "objects.name.slope.bottom_left.dark_rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2212,7 +2212,7 @@
         "name": "objects.name.slope.side_bottom.dark_rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2233,7 +2233,7 @@
         "name": "objects.name.slope.side_top.dark_rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2254,7 +2254,7 @@
         "name": "objects.name.slope.side_left.dark_rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2275,7 +2275,7 @@
         "name": "objects.name.slope.side_right.dark_rock",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": -1,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2406,7 +2406,7 @@
         "name": "objects.name.skull",
         "is_invulnerable": true,
         "entity_type": "PushableObject",
-        "z_index": 200,
+        "z_index": 150,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -3815,7 +3815,7 @@
         "id": 1128,
         "name": "The end!",
         "entity_type": "StaticObject",
-        "z_index": 300,
+        "z_index": 140,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,

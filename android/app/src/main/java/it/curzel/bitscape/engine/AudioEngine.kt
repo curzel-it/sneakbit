@@ -23,7 +23,6 @@ class AudioEngine(
 
     private val volumeMap: Map<SoundEffect, Float> = mapOf(
         SoundEffect.StepTaken to 0.01f,
-        SoundEffect.Interaction to 0.2f,
         SoundEffect.BulletBounced to 0.2f,
         SoundEffect.BulletFired to 0.3f,
         SoundEffect.WorldChange to 0.6f,
@@ -40,7 +39,6 @@ class AudioEngine(
         SoundEffect.BulletBounced to R.raw.sfx_movement_jump20,
         SoundEffect.HintReceived to R.raw.sfx_sound_neutral5,
         SoundEffect.KeyCollected to R.raw.sfx_sounds_fanfare3,
-        SoundEffect.Interaction to R.raw.sfx_sounds_interaction9,
         SoundEffect.AmmoCollected to R.raw.sfx_sounds_interaction22,
         SoundEffect.GameOver to R.raw.sfx_sounds_negative1,
         SoundEffect.PlayerResurrected to R.raw.sfx_sounds_powerup1,
@@ -218,7 +216,6 @@ private enum class SoundEffect {
     BulletBounced,
     HintReceived,
     KeyCollected,
-    Interaction,
     AmmoCollected,
     GameOver,
     PlayerResurrected,
@@ -234,13 +231,12 @@ private enum class SoundEffect {
                 5 -> DeathOfMonster
                 6 -> DeathOfNonMonster
                 7 -> SmallExplosion
-                8 -> Interaction
-                9 -> NoAmmo
-                10 -> GameOver
-                11 -> PlayerResurrected
-                12 -> WorldChange
-                13 -> StepTaken
-                14 -> HintReceived
+                8 -> NoAmmo
+                9 -> GameOver
+                10 -> PlayerResurrected
+                11 -> WorldChange
+                12 -> StepTaken
+                13 -> HintReceived
                 else -> null
             }
         }

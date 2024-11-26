@@ -128,6 +128,7 @@ impl Species {
         entity.speed_multiplier = 1.0;
         entity.is_consumable = self.is_consumable;
         entity.is_invulnerable = self.is_invulnerable;
+        entity.z_index = self.z_index;
         entity.movement_directions = self.movement_directions;
     }
 

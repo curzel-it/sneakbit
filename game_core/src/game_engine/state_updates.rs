@@ -33,7 +33,7 @@ pub enum EngineStateUpdate {
     SaveGame,
     Exit,
     ShowEntityOptions(Box<Entity>),
-    AddToInventory(SpeciesId),
+    AddToInventory(SpeciesId, AddToInventoryReason),
     RemoveFromInventory(SpeciesId),
     Toast(Toast),
     Confirmation(String, String, Vec<WorldStateUpdate>),
@@ -44,6 +44,12 @@ pub enum EngineStateUpdate {
     NewGame,
     BulletBounced,
     ExternalLink(String)
+}
+
+#[derive(Debug, Clone)]
+pub enum AddToInventoryReason {
+    PickedUp,
+    Reward
 }
 
 pub fn visit(link: &str) -> WorldStateUpdate {

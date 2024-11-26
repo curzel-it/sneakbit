@@ -132,7 +132,6 @@ typedef enum SoundEffect {
   SoundEffect_DeathOfMonster,
   SoundEffect_DeathOfNonMonster,
   SoundEffect_SmallExplosion,
-  SoundEffect_Interaction,
   SoundEffect_NoAmmo,
   SoundEffect_GameOver,
   SoundEffect_PlayerResurrected,
