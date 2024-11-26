@@ -75,7 +75,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10754390,
@@ -121,7 +121,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10754391,
@@ -162,7 +162,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10754392,
@@ -203,7 +203,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10754393,
@@ -244,7 +244,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10754394,
@@ -285,7 +285,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10754395,
@@ -326,7 +326,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 11171396,
@@ -367,7 +367,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 11171398,
@@ -408,7 +408,7 @@
       "contents": "quest.ninja_skills.black_ninja.note",
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     }
   ],
   "is_interior": true,

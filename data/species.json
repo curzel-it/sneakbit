@@ -3879,7 +3879,7 @@
     },
     {
         "id": 1131,
-        "name": "npc.name.developer",
+        "name": "npc.name.developer_messenger",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
@@ -3967,7 +3967,7 @@
     },
     {
         "id": 1135,
-        "name": "npc.name.man_beard",
+        "name": "npc.name.developer",
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,

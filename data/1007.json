@@ -212,7 +212,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10843057,
@@ -258,7 +258,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844508,
@@ -299,7 +299,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844509,
@@ -340,7 +340,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844510,
@@ -381,7 +381,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844511,
@@ -422,7 +422,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844513,
@@ -463,7 +463,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844514,
@@ -504,7 +504,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844515,
@@ -545,7 +545,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844517,
@@ -586,7 +586,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844518,
@@ -627,7 +627,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844519,
@@ -668,7 +668,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844520,
@@ -709,7 +709,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844521,
@@ -750,7 +750,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844522,
@@ -791,7 +791,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844523,
@@ -832,7 +832,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844524,
@@ -873,7 +873,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844525,
@@ -914,7 +914,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844526,
@@ -955,7 +955,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844527,
@@ -996,7 +996,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844528,
@@ -1037,7 +1037,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844529,
@@ -1078,7 +1078,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844530,
@@ -1119,7 +1119,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844531,
@@ -1160,7 +1160,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844532,
@@ -1201,7 +1201,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844533,
@@ -1242,7 +1242,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844534,
@@ -1283,7 +1283,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844535,
@@ -1324,7 +1324,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844536,
@@ -1365,7 +1365,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844537,
@@ -1406,7 +1406,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844538,
@@ -1447,7 +1447,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844539,
@@ -1488,7 +1488,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844540,
@@ -1529,7 +1529,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844541,
@@ -1570,7 +1570,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844542,
@@ -1611,7 +1611,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844543,
@@ -1652,7 +1652,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844544,
@@ -1693,7 +1693,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844545,
@@ -1734,7 +1734,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844546,
@@ -1775,7 +1775,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844547,
@@ -1816,7 +1816,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844548,
@@ -1857,7 +1857,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844549,
@@ -1898,7 +1898,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844588,
@@ -1939,7 +1939,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844551,
@@ -1980,7 +1980,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844552,
@@ -2021,7 +2021,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844553,
@@ -2062,7 +2062,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844554,
@@ -2103,7 +2103,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844556,
@@ -2144,7 +2144,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844558,
@@ -2185,7 +2185,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844559,
@@ -2226,7 +2226,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844560,
@@ -2267,7 +2267,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844561,
@@ -2308,7 +2308,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844562,
@@ -2349,7 +2349,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844563,
@@ -2390,7 +2390,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844564,
@@ -2431,7 +2431,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844565,
@@ -2472,7 +2472,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844566,
@@ -2513,7 +2513,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844567,
@@ -2554,7 +2554,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844568,
@@ -2595,7 +2595,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844569,
@@ -2636,7 +2636,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847688,
@@ -2677,7 +2677,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844571,
@@ -2718,7 +2718,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847686,
@@ -2759,7 +2759,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844573,
@@ -2800,7 +2800,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844574,
@@ -2841,7 +2841,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844575,
@@ -2882,7 +2882,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844576,
@@ -2923,7 +2923,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844577,
@@ -2964,7 +2964,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844578,
@@ -3005,7 +3005,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844579,
@@ -3046,7 +3046,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844580,
@@ -3087,7 +3087,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844581,
@@ -3128,7 +3128,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844582,
@@ -3169,7 +3169,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844583,
@@ -3210,7 +3210,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844584,
@@ -3251,7 +3251,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844585,
@@ -3292,7 +3292,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844586,
@@ -3333,7 +3333,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10844587,
@@ -3374,7 +3374,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10845815,
@@ -3415,7 +3415,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10845816,
@@ -3456,7 +3456,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10845817,
@@ -3497,7 +3497,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847687,
@@ -3538,7 +3538,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847689,
@@ -3579,7 +3579,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847690,
@@ -3620,7 +3620,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847691,
@@ -3661,7 +3661,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847692,
@@ -3702,7 +3702,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847693,
@@ -3743,7 +3743,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847694,
@@ -3784,7 +3784,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847695,
@@ -3825,7 +3825,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847696,
@@ -3866,7 +3866,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847697,
@@ -3907,7 +3907,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847698,
@@ -3948,7 +3948,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847699,
@@ -3989,7 +3989,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847700,
@@ -4030,7 +4030,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847701,
@@ -4071,7 +4071,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847702,
@@ -4112,7 +4112,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847703,
@@ -4153,7 +4153,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847704,
@@ -4194,7 +4194,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847705,
@@ -4235,7 +4235,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847706,
@@ -4276,7 +4276,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847707,
@@ -4317,7 +4317,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847708,
@@ -4358,7 +4358,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847709,
@@ -4399,7 +4399,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847710,
@@ -4440,7 +4440,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847711,
@@ -4481,7 +4481,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847712,
@@ -4522,7 +4522,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847713,
@@ -4563,7 +4563,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847714,
@@ -4604,7 +4604,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847715,
@@ -4645,7 +4645,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847716,
@@ -4686,7 +4686,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847717,
@@ -4727,7 +4727,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847718,
@@ -4768,7 +4768,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847719,
@@ -4809,7 +4809,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847720,
@@ -4850,7 +4850,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847721,
@@ -4891,7 +4891,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847722,
@@ -4932,7 +4932,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847723,
@@ -4973,7 +4973,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847724,
@@ -5014,7 +5014,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847725,
@@ -5055,7 +5055,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847726,
@@ -5096,7 +5096,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847727,
@@ -5137,7 +5137,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847728,
@@ -5178,7 +5178,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847729,
@@ -5219,7 +5219,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847730,
@@ -5260,7 +5260,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847731,
@@ -5301,7 +5301,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847732,
@@ -5342,7 +5342,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847733,
@@ -5383,7 +5383,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847734,
@@ -5424,7 +5424,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847735,
@@ -5465,7 +5465,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847736,
@@ -5506,7 +5506,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847737,
@@ -5547,7 +5547,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847738,
@@ -5588,7 +5588,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847739,
@@ -5629,7 +5629,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847740,
@@ -5670,7 +5670,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847741,
@@ -5711,7 +5711,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847742,
@@ -5752,7 +5752,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847743,
@@ -5793,7 +5793,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847744,
@@ -5834,7 +5834,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847745,
@@ -5875,7 +5875,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847746,
@@ -5916,7 +5916,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847747,
@@ -5957,7 +5957,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847748,
@@ -5998,7 +5998,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847749,
@@ -6039,7 +6039,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847750,
@@ -6080,7 +6080,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847751,
@@ -6121,7 +6121,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847752,
@@ -6162,7 +6162,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847753,
@@ -6203,7 +6203,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847754,
@@ -6244,7 +6244,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847755,
@@ -6285,7 +6285,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847756,
@@ -6326,7 +6326,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847757,
@@ -6367,7 +6367,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847758,
@@ -6408,7 +6408,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847759,
@@ -6449,7 +6449,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847760,
@@ -6490,7 +6490,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847761,
@@ -6531,7 +6531,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847762,
@@ -6572,7 +6572,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847763,
@@ -6613,7 +6613,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847764,
@@ -6654,7 +6654,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847765,
@@ -6695,7 +6695,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847766,
@@ -6736,7 +6736,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847767,
@@ -6777,7 +6777,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847768,
@@ -6818,7 +6818,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847769,
@@ -6859,7 +6859,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847770,
@@ -6900,7 +6900,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847771,
@@ -6941,7 +6941,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847772,
@@ -6982,7 +6982,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847773,
@@ -7023,7 +7023,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847774,
@@ -7064,7 +7064,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847775,
@@ -7105,7 +7105,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847776,
@@ -7146,7 +7146,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847777,
@@ -7187,7 +7187,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847778,
@@ -7228,7 +7228,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847779,
@@ -7269,7 +7269,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847780,
@@ -7310,7 +7310,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847781,
@@ -7351,7 +7351,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847782,
@@ -7392,7 +7392,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847783,
@@ -7433,7 +7433,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847784,
@@ -7474,7 +7474,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847785,
@@ -7515,7 +7515,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847786,
@@ -7556,7 +7556,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847787,
@@ -7597,7 +7597,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847788,
@@ -7638,7 +7638,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847789,
@@ -7679,7 +7679,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847790,
@@ -7720,7 +7720,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847791,
@@ -7761,7 +7761,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847792,
@@ -7802,7 +7802,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847793,
@@ -7843,7 +7843,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847794,
@@ -7884,7 +7884,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847795,
@@ -7925,7 +7925,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847796,
@@ -7966,7 +7966,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847797,
@@ -8007,7 +8007,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847798,
@@ -8048,7 +8048,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847799,
@@ -8089,7 +8089,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847800,
@@ -8130,7 +8130,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847801,
@@ -8171,7 +8171,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847802,
@@ -8212,7 +8212,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847803,
@@ -8253,7 +8253,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847804,
@@ -8294,7 +8294,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847805,
@@ -8335,7 +8335,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847806,
@@ -8376,7 +8376,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847807,
@@ -8417,7 +8417,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847808,
@@ -8458,7 +8458,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847809,
@@ -8499,7 +8499,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847813,
@@ -8540,7 +8540,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847814,
@@ -8581,7 +8581,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847828,
@@ -8622,7 +8622,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847818,
@@ -8663,7 +8663,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847819,
@@ -8704,7 +8704,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847820,
@@ -8745,7 +8745,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847821,
@@ -8786,7 +8786,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847822,
@@ -8827,7 +8827,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847823,
@@ -8868,7 +8868,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847824,
@@ -8909,7 +8909,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847825,
@@ -8950,7 +8950,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847826,
@@ -8991,7 +8991,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847829,
@@ -9032,7 +9032,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847830,
@@ -9073,7 +9073,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847831,
@@ -9114,7 +9114,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847832,
@@ -9155,7 +9155,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847833,
@@ -9196,7 +9196,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847834,
@@ -9237,7 +9237,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847835,
@@ -9278,7 +9278,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847836,
@@ -9319,7 +9319,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847837,
@@ -9360,7 +9360,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847838,
@@ -9401,7 +9401,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847839,
@@ -9442,7 +9442,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847840,
@@ -9483,7 +9483,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847841,
@@ -9524,7 +9524,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847842,
@@ -9565,7 +9565,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847843,
@@ -9606,7 +9606,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847844,
@@ -9647,7 +9647,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847845,
@@ -9688,7 +9688,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847846,
@@ -9729,7 +9729,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847847,
@@ -9770,7 +9770,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847848,
@@ -9811,7 +9811,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847849,
@@ -9852,7 +9852,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847850,
@@ -9893,7 +9893,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847851,
@@ -9934,7 +9934,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847852,
@@ -9975,7 +9975,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847853,
@@ -10016,7 +10016,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847854,
@@ -10057,7 +10057,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847855,
@@ -10098,7 +10098,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847856,
@@ -10139,7 +10139,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847857,
@@ -10180,7 +10180,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847858,
@@ -10221,7 +10221,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847859,
@@ -10262,7 +10262,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847860,
@@ -10303,7 +10303,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847861,
@@ -10344,7 +10344,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847862,
@@ -10385,7 +10385,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847863,
@@ -10426,7 +10426,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847864,
@@ -10467,7 +10467,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847865,
@@ -10508,7 +10508,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847866,
@@ -10549,7 +10549,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847867,
@@ -10590,7 +10590,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847868,
@@ -10631,7 +10631,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847869,
@@ -10672,7 +10672,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847870,
@@ -10713,7 +10713,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847871,
@@ -10754,7 +10754,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847872,
@@ -10795,7 +10795,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847873,
@@ -10836,7 +10836,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847874,
@@ -10877,7 +10877,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10847875,
@@ -10918,7 +10918,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849499,
@@ -10959,7 +10959,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849479,
@@ -11000,7 +11000,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849480,
@@ -11041,7 +11041,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849481,
@@ -11082,7 +11082,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849482,
@@ -11123,7 +11123,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849483,
@@ -11164,7 +11164,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849484,
@@ -11205,7 +11205,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849485,
@@ -11246,7 +11246,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849486,
@@ -11287,7 +11287,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849487,
@@ -11328,7 +11328,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849488,
@@ -11369,7 +11369,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849489,
@@ -11410,7 +11410,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849490,
@@ -11451,7 +11451,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849491,
@@ -11492,7 +11492,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849492,
@@ -11533,7 +11533,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849493,
@@ -11574,7 +11574,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849494,
@@ -11615,7 +11615,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849495,
@@ -11656,7 +11656,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849496,
@@ -11697,7 +11697,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849497,
@@ -11738,7 +11738,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 10849498,
@@ -11779,7 +11779,7 @@
       "contents": null,
       "is_invulnerable": false,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 11775910,
@@ -11820,7 +11820,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 11775911,
@@ -11866,7 +11866,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": false,
-      "vanishes_after_dialogue": false
+      "after_dialogue": "Nothing"
     },
     {
       "id": 11885850,
@@ -11929,7 +11929,7 @@
       "contents": null,
       "is_invulnerable": true,
       "demands_attention": true,
-      "vanishes_after_dialogue": true
+      "after_dialogue": "Disappear"
     }
   ],
   "is_interior": true,

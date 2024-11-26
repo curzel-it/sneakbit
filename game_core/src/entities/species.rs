@@ -5,6 +5,7 @@ use std::io::Read;
 use crate::config::config;
 use crate::constants::{HERO_ENTITY_ID, NO_PARENT, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN};
 use crate::features::animated_sprite::AnimatedSprite;
+use crate::features::dialogues::AfterDialogueBehavior;
 use crate::features::directions::MovementDirections;
 use crate::game_engine::entity::Entity;
 use crate::game_engine::locks::LockType;
@@ -107,7 +108,7 @@ impl Species {
             is_consumable: self.is_consumable,
             movement_directions: self.movement_directions,
             display_conditions: vec![],
-            vanishes_after_dialogue: false,
+            after_dialogue: AfterDialogueBehavior::Nothing,
             is_in_interaction_range: false,
         }
     }

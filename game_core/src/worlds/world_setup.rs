@@ -1,4 +1,4 @@
-use crate::{constants::BUILD_NUMBER, entities::{known_species::{SPECIES_HERO, SPECIES_KUNAI, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::Dialogue, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World}, utils::directions::Direction};
+use crate::{constants::BUILD_NUMBER, entities::{known_species::{SPECIES_HERO, SPECIES_KUNAI, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World}, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
@@ -30,7 +30,7 @@ impl World {
                 .offset_by(hero.direction.as_col_row_offset())
                 .offset_by(hero.direction.as_col_row_offset());
             mugs.dialogues = vec![Dialogue::new("changelog", "always", 0, Some(SPECIES_KUNAI))];
-            mugs.vanishes_after_dialogue = true;
+            mugs.after_dialogue = AfterDialogueBehavior::FlyAwayEast;
             self.add_entity(mugs);
         }
     }

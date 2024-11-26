@@ -87,3 +87,11 @@ impl Dialogue {
         vec![]
     }
 }
+
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, Default)]
+pub enum AfterDialogueBehavior {
+    #[default]
+    Nothing,
+    Disappear,
+    FlyAwayEast
+}

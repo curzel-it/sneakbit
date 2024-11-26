@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}, world::World}, utils::directions::direction_between_rects};
+use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, features::dialogues::AfterDialogueBehavior, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}, world::World}, utils::directions::{direction_between_rects, Direction}};
 
 pub type NpcId = u32;
 
@@ -57,7 +57,6 @@ impl Entity {
 
             if world.has_confirmation_key_been_pressed {
                 self.demands_attention = false;
-
                 set_value_for_key(&StorageKey::npc_interaction(self.id), 1);
 
                 let show_dialogue = vec![
@@ -65,19 +64,25 @@ impl Entity {
                         EngineStateUpdate::DisplayLongText(format!("{}:", self.name.clone()), dialogue.localized_text())
                     )
                 ];
-
                 let reward = dialogue.handle_reward();
-
-                let vanishing = if self.vanishes_after_dialogue {
-                    vec![WorldStateUpdate::RemoveEntity(self.id)]
-                } else {
-                    vec![]
-                };
-
+                let vanishing = self.handle_after_dialogue();
                 return vec![show_dialogue, reward, vanishing].into_iter().flatten().collect();
             }
         }             
         
         vec![]
+    }
+
+    fn handle_after_dialogue(&mut self) -> Vec<WorldStateUpdate> {
+        match self.after_dialogue {
+            AfterDialogueBehavior::Nothing => vec![],
+            AfterDialogueBehavior::Disappear => vec![WorldStateUpdate::RemoveEntity(self.id)],
+            AfterDialogueBehavior::FlyAwayEast => {
+                self.is_rigid = false;
+                self.direction = Direction::Left;
+                self.reset_speed();
+                vec![]
+            }
+        }
     }
 }
