@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common_macros::hash_set;
 
-use crate::{constants::WORLD_ID_NONE, current_menu, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::EngineStateUpdate, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_interaction_available, menus::toasts::{Toast, ToastMode}};
+use crate::{constants::WORLD_ID_NONE, current_menu, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::EngineStateUpdate, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_hero_on_slippery_surface, is_interaction_available, menus::toasts::{Toast, ToastMode}};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[repr(C)]
@@ -142,7 +142,9 @@ impl SoundEffectsManager {
 
     fn check_hero_movement(&mut self, x: i32, y: i32) {
         if self.last_hero_position != (0, 0) && (self.last_hero_position.0 != x || self.last_hero_position.1 != y) {
-            self.prepare(SoundEffect::StepTaken);
+            if !is_hero_on_slippery_surface() {
+                self.prepare(SoundEffect::StepTaken);
+            }
         }
         self.last_hero_position = (x, y);
     }

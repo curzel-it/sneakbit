@@ -166,6 +166,7 @@ impl GameEngine {
         self.camera_viewport.h = (height / (scale * TILE_SIZE)) as i32;
         self.long_text_display.max_line_length = (width / font_size).floor() as usize;
         self.long_text_display.visible_line_count = (0.4 * height / (line_spacing + font_size)).floor() as usize;
+        self.menu.menu.visible_item_count = self.long_text_display.visible_line_count - 3;
     }
 
     fn apply_state_updates(&mut self, updates: Vec<EngineStateUpdate>) {
