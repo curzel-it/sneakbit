@@ -70,7 +70,7 @@
 "npc.name.dbz2" = "Gohan's Godfather"
 "npc.name.dbz3" = "Son Monkey"
 "npc.name.demon_lord" = "Demon Lord"
-"npc.name.developer" = "Hidden Mugs"
+"npc.name.developer" = "Mr Mugs"
 "npc.name.developer_messenger" = "Mugs's Bird"
 "npc.name.male.black.doctor" = "Dr Voss"
 "npc.name.ethan" = "Ethan"
@@ -490,6 +490,11 @@ Found anything interesting?
 You found a key...?
 Mmmh...
 I don't like the aura it gives off...
+"""
+
+"lore.020.developer.intro" = """
+I like when I visit a place I've been before and find something new.
+I want this world to continuously evolve, that'd be pretty cool!
 """
 
 "1001.entrance" = "Welcome to Evergrove Village!"

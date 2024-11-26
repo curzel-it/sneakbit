@@ -70,7 +70,7 @@
 "npc.name.dbz2" = "Padrino di Gohan"
 "npc.name.dbz3" = "Scimmia Son"
 "npc.name.demon_lord" = "Signore dei Demoni"
-"npc.name.developer" = "Hidden Mugs"
+"npc.name.developer" = "Mr Mugs"
 "npc.name.developer_messenger" = "Mugs's Bird"
 "npc.name.male.black.doctor" = "Dr Voss"
 "npc.name.ethan" = "Ethan"
@@ -490,6 +490,11 @@ Trovato qualcosa di interessante?
 Hai trovato una chiave...?
 Mmmh...
 Emana un'aura molto strana, non mi piace...
+"""
+
+"lore.020.developer.intro" = """
+Quando torno in posti dove sono già stato mi piace vedere cose nuove.
+Voglio che anche questo mondo continui ad evolversi, sarebbe fico!
 """
 
 "1001.entrance" = "Benvenuto al Villaggio di Evergrove!"
