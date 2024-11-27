@@ -6,18 +6,20 @@ Like the game or have cool ideas? Join the [Discord](https://discord.gg/MCdEgXKS
 
 ## Play it now!
 <div style="display: flex; gap: 10px; justify-content: left; margin: 20px 0;">
-<!--
-    <a href="https://discord.gg/MCdEgXKSH5">
-        <img src="docs/playstore_badge.webp" alt="Play Store" style="width: 200px; height: auto;">
-    </a> -->
+    <a href="https://store.steampowered.com/app/3360860/SneakBit/">
+        <img src="docs/steam_badge.webp" alt="Steam" style="width: 200px; height: auto;">
+    </a>
     <a href="https://apps.apple.com/app/sneakbit/id6737452377">
         <img src="docs/appstore_badge.webp" alt="App Store" style="width: 200px; height: auto;">
     </a>
+    <a href="https://play.google.com/store/apps/details?id=it.curzel.bitscape">
+        <img src="docs/playstore_badge.webp" alt="Play Store" style="width: 200px; height: auto;">
+    </a>
 </div>
 
-Coming soon to the Play Store for Android and to Steam for Linux, Windows and macOS.
+Please consider buying the game to support the project 🙏
 
-Please consider buying the game from any store to support the project 🙏
+Coming soon to macOS and Linux via Steam!
 
 ## Build from source
 ### macOS, Linux
