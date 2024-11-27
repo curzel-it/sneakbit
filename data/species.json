@@ -3884,7 +3884,7 @@
         "entity_type": "Npc",
         "z_index": 0,
         "base_speed": 2.0,
-        "is_rigid": true,
+        "is_rigid": false,
         "inventory_texture_offset": [
             10,
             26
@@ -4007,6 +4007,163 @@
         },
         "sprite_sheet_id": 1014,
         "sprite_number_of_frames": 15,
+        "lock_type": "None"
+    },
+    {
+        "id": 1137,
+        "name": "npc.name.bearwolf",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            10,
+            27
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 0,
+            "w": 2,
+            "h": 2
+        },
+        "sprite_sheet_id": 1016,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1138,
+        "name": "npc.name.piglet_blue",
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 1.5,
+        "is_rigid": false,
+        "is_invulnerable": false,
+        "inventory_texture_offset": [
+            8,
+            19
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 10,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "Free"
+    },
+    {
+        "id": 1139,
+        "name": "npc.name.slime_blue",
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 1.5,
+        "is_rigid": false,
+        "is_invulnerable": false,
+        "inventory_texture_offset": [
+            8,
+            23
+        ],
+        "sprite_frame": {
+            "x": 8,
+            "y": 10,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "Free"
+    },
+    {
+        "id": 1140,
+        "name": "npc.name.cat_brown",
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 1.5,
+        "is_rigid": false,
+        "is_invulnerable": false,
+        "inventory_texture_offset": [
+            8,
+            24
+        ],
+        "sprite_frame": {
+            "x": 4,
+            "y": 10,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "Free"
+    },
+    {
+        "id": 1141,
+        "name": "objects.name.camp_fire",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 140,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            8,
+            25
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 11,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 5,
+        "lock_type": "None"
+    },
+    {
+        "id": 1142,
+        "name": "npc.name.winter_apron",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            26
+        ],
+        "sprite_frame": {
+            "x": 16,
+            "y": 38,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1143,
+        "name": "npc.name.winter_black_red",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            8,
+            27
+        ],
+        "sprite_frame": {
+            "x": 20,
+            "y": 38,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1009,
+        "sprite_number_of_frames": 4,
         "lock_type": "None"
     }
 ]

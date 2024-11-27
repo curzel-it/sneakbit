@@ -129,7 +129,7 @@
       "QQQQQQQ0Q0QQQQQQ00QQQQQQQQQQ00QQQQQQQQQQQQ00000000000000000000000000000000QQQ00QQ000QQQQ0Q",
       "QQQ00000QQQQQQQ000000000000000QQQQQQQQQQQQQ0000000000000000000000000000000000000000QQQQQ00",
       "QQQ0QQQQQ0Q0QQ0QQ0QQQQ0QQQQQQQQQQQQQQQQQQQQQ0000Q00000000000000000000000000QQQQQQ0QQQQQQQQ",
-      "QQQ00Q0Q0QQQQQQQQQ0QQQQQQQQQQQQQQQQQQQQQQQQQQ00QQQQ000000QQ0QQ00000000000000QQQQQ0QQQQQQQQ",
+      "QQQ00Q0Q0QQQQQQQQQ0QQQQQQQQQQQQQQQQQQQQQQQQQQ00QQ0Q000000QQ0QQ00000000000000QQQQQ0QQQQQQQQ",
       "QQQ00QQQQQQQQQQQ0QQ0QQQQQQQQQQQQQQQQQQQQQQQQQ0QQQQQQQQQQQQ0QQ0QQ00000000Q0000QQQQ000QQQQQQ",
       "QQQ0QQQ0QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ0QQQQQQQQQQQQQQQQQQQQ000000000QQ0QQQQQ0QQQQQQ",
       "QQQ00Q00QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ0Q0Q00QQQQ0QQ00QQQQQQQQQ0Q00000000QQQQQQ0000000",
@@ -25632,6 +25632,861 @@
           "h": 1
         },
         "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745541,
+      "frame": {
+        "x": 49,
+        "y": 25,
+        "w": 2,
+        "h": 2
+      },
+      "species_id": 1137,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1016,
+        "frame": {
+          "x": 8,
+          "y": 0,
+          "w": 2,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745551,
+      "frame": {
+        "x": 51,
+        "y": 56,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1139,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.5,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 8,
+          "y": 10,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745543,
+      "frame": {
+        "x": 12,
+        "y": 34,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1138,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.5,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 0,
+          "y": 10,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745542,
+      "frame": {
+        "x": 31,
+        "y": 20,
+        "w": 2,
+        "h": 2
+      },
+      "species_id": 1137,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1016,
+        "frame": {
+          "x": 8,
+          "y": 0,
+          "w": 2,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745544,
+      "frame": {
+        "x": 81,
+        "y": 28,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1138,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.5,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 0,
+          "y": 10,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745545,
+      "frame": {
+        "x": 84,
+        "y": 36,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1140,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.5,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 10,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745548,
+      "frame": {
+        "x": 30,
+        "y": 16,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1140,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.5,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 10,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745547,
+      "frame": {
+        "x": 47,
+        "y": 41,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1140,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.5,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 10,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745546,
+      "frame": {
+        "x": 57,
+        "y": 20,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1140,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 1.5,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 4,
+          "y": 10,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "Free",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745540,
+      "frame": {
+        "x": 70,
+        "y": 26,
+        "w": 2,
+        "h": 2
+      },
+      "species_id": 1137,
+      "entity_type": "Npc",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1016,
+        "frame": {
+          "x": 8,
+          "y": 0,
+          "w": 2,
+          "h": 2
+        },
+        "number_of_frames": 4
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745770,
+      "frame": {
+        "x": 53,
+        "y": 34,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": {
+        "world": 12745769,
+        "x": 0,
+        "y": 0,
+        "direction": "Unknown"
+      },
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745768,
+      "frame": {
+        "x": 52,
+        "y": 32,
+        "w": 3,
+        "h": 3
+      },
+      "species_id": 1130,
+      "entity_type": "Building",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1004,
+        "frame": {
+          "x": 36,
+          "y": 0,
+          "w": 3,
+          "h": 3
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745778,
+      "frame": {
+        "x": 77,
+        "y": 31,
+        "w": 3,
+        "h": 3
+      },
+      "species_id": 1130,
+      "entity_type": "Building",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1004,
+        "frame": {
+          "x": 36,
+          "y": 0,
+          "w": 3,
+          "h": 3
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745780,
+      "frame": {
+        "x": 78,
+        "y": 33,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": {
+        "world": 12745779,
+        "x": 0,
+        "y": 0,
+        "direction": "Unknown"
+      },
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745857,
+      "frame": {
+        "x": 72,
+        "y": 30,
+        "w": 3,
+        "h": 3
+      },
+      "species_id": 1130,
+      "entity_type": "Building",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1004,
+        "frame": {
+          "x": 36,
+          "y": 0,
+          "w": 3,
+          "h": 3
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745849,
+      "frame": {
+        "x": 70,
+        "y": 24,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": {
+        "world": 12745848,
+        "x": 0,
+        "y": 0,
+        "direction": "Unknown"
+      },
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745869,
+      "frame": {
+        "x": 58,
+        "y": 27,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": {
+        "world": 12745868,
+        "x": 0,
+        "y": 0,
+        "direction": "Unknown"
+      },
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745839,
+      "frame": {
+        "x": 65,
+        "y": 27,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": {
+        "world": 12745838,
+        "x": 0,
+        "y": 0,
+        "direction": "Unknown"
+      },
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745847,
+      "frame": {
+        "x": 68,
+        "y": 22,
+        "w": 5,
+        "h": 3
+      },
+      "species_id": 1129,
+      "entity_type": "Building",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1004,
+        "frame": {
+          "x": 31,
+          "y": 0,
+          "w": 5,
+          "h": 3
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745867,
+      "frame": {
+        "x": 57,
+        "y": 25,
+        "w": 3,
+        "h": 3
+      },
+      "species_id": 1130,
+      "entity_type": "Building",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1004,
+        "frame": {
+          "x": 36,
+          "y": 0,
+          "w": 3,
+          "h": 3
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745859,
+      "frame": {
+        "x": 73,
+        "y": 32,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "entity_type": "Teleporter",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 7,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": {
+        "world": 12745858,
+        "x": 0,
+        "y": 0,
+        "direction": "Unknown"
+      },
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12745837,
+      "frame": {
+        "x": 63,
+        "y": 25,
+        "w": 5,
+        "h": 3
+      },
+      "species_id": 1129,
+      "entity_type": "Building",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1004,
+        "frame": {
+          "x": 31,
+          "y": 0,
+          "w": 5,
+          "h": 3
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12746426,
+      "frame": {
+        "x": 78,
+        "y": 35,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1141,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1012,
+        "frame": {
+          "x": 0,
+          "y": 11,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 8
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12746425,
+      "frame": {
+        "x": 70,
+        "y": 26,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1141,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1012,
+        "frame": {
+          "x": 0,
+          "y": 11,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 8
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12746424,
+      "frame": {
+        "x": 65,
+        "y": 29,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1141,
+      "entity_type": "StaticObject",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1012,
+        "frame": {
+          "x": 0,
+          "y": 11,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 8
       },
       "dialogues": [],
       "destination": null,
