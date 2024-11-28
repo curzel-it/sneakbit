@@ -56,7 +56,6 @@
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
-      "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
@@ -91,7 +90,6 @@
         "y": 0
       },
       "lock_type": "None",
-      "movement_directions": "None",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
