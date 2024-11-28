@@ -49,11 +49,12 @@ pub struct Species {
     pub is_invulnerable: bool,
 }
 
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Default, Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub enum EntityType {
     Hero,
     Building,   
     Npc, 
+    #[default]
     StaticObject,
     PickableObject,
     Teleporter,

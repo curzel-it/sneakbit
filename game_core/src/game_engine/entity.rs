@@ -34,13 +34,17 @@ pub struct Entity {
     pub id: EntityId,
     pub frame: IntRect,  
     pub species_id: u32,  
-    pub entity_type: EntityType,  
     pub direction: Direction,
     pub current_speed: f32,
-    pub sprite: AnimatedSprite,
     pub dialogues: EntityDialogues,
     pub destination: Option<Destination>,
     pub lock_type: LockType,
+
+    #[serde(skip)]
+    pub entity_type: EntityType,  
+
+    #[serde(skip)]
+    pub sprite: AnimatedSprite,
     
     #[serde(skip)]
     pub original_sprite_frame: IntRect,

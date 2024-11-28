@@ -1,6 +1,6 @@
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use crate::{constants::{ANIMATIONS_FPS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, UNLIMITED_LIFESPAN}, game_engine::entity::Entity, utils::{directions::Direction, rect::IntRect, timed_content_provider::TimedContentProvider}};
+use crate::{constants::{ANIMATIONS_FPS, SPRITE_SHEET_BLANK, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, UNLIMITED_LIFESPAN}, game_engine::entity::Entity, utils::{directions::Direction, rect::IntRect, timed_content_provider::TimedContentProvider}};
 
 #[derive(Debug, Clone)]
 pub struct AnimatedSprite {
@@ -104,5 +104,18 @@ impl<'de> Deserialize<'de> for AnimatedSprite {
         let AnimatedSpriteData { sheet_id, frame, number_of_frames } = AnimatedSpriteData::deserialize(deserializer)?;
         let sprite = AnimatedSprite::new(sheet_id, frame, number_of_frames);
         Ok(sprite)
+    }
+}
+
+impl Default for AnimatedSprite {
+    fn default() -> Self {
+        Self { 
+            sheet_id: SPRITE_SHEET_BLANK, 
+            frame: IntRect::square_from_origin(1), 
+            supports_directions: false, 
+            original_frame: IntRect::square_from_origin(1), 
+            number_of_frames: 1,
+            frames_provider: TimedContentProvider::new(vec![0], ANIMATIONS_FPS)
+        }
     }
 }

@@ -182,19 +182,8 @@
         "h": 2
       },
       "species_id": 1010,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -213,19 +202,8 @@
         "h": 1
       },
       "species_id": 1019,
-      "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": {
         "world": 1006,
@@ -249,19 +227,8 @@
         "h": 1
       },
       "species_id": 1041,
-      "entity_type": "Gate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Red",
@@ -280,19 +247,8 @@
         "h": 1
       },
       "species_id": 1041,
-      "entity_type": "Gate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Red",
@@ -311,19 +267,8 @@
         "h": 1
       },
       "species_id": 1041,
-      "entity_type": "Gate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Red",
@@ -342,19 +287,8 @@
         "h": 1
       },
       "species_id": 1041,
-      "entity_type": "Gate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Red",
@@ -373,19 +307,8 @@
         "h": 1
       },
       "species_id": 1061,
-      "entity_type": "InverseGate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Red",
@@ -404,19 +327,8 @@
         "h": 1
       },
       "species_id": 1041,
-      "entity_type": "Gate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Red",
@@ -435,19 +347,8 @@
         "h": 1
       },
       "species_id": 1043,
-      "entity_type": "Gate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 3,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Blue",
@@ -466,19 +367,8 @@
         "h": 1
       },
       "species_id": 1043,
-      "entity_type": "Gate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 3,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Blue",
@@ -497,19 +387,8 @@
         "h": 1
       },
       "species_id": 1063,
-      "entity_type": "InverseGate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 3,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Blue",
@@ -528,19 +407,8 @@
         "h": 1
       },
       "species_id": 1042,
-      "entity_type": "Gate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 2,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Green",
@@ -559,19 +427,8 @@
         "h": 1
       },
       "species_id": 1052,
-      "entity_type": "PressurePlate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 8,
-          "y": 2,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Green",
@@ -590,19 +447,8 @@
         "h": 1
       },
       "species_id": 1053,
-      "entity_type": "PressurePlate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 8,
-          "y": 3,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Blue",
@@ -621,19 +467,8 @@
         "h": 1
       },
       "species_id": 1041,
-      "entity_type": "Gate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Red",
@@ -652,19 +487,8 @@
         "h": 1
       },
       "species_id": 7001,
-      "entity_type": "Bundle",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 4,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -683,19 +507,8 @@
         "h": 1
       },
       "species_id": 1051,
-      "entity_type": "PressurePlate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 8,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Red",
@@ -714,19 +527,8 @@
         "h": 1
       },
       "species_id": 1030,
-      "entity_type": "PushableObject",
       "direction": "Up",
       "current_speed": 9.6,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 2,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -745,19 +547,8 @@
         "h": 1
       },
       "species_id": 1030,
-      "entity_type": "PushableObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 2,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -776,19 +567,8 @@
         "h": 1
       },
       "species_id": 1030,
-      "entity_type": "PushableObject",
       "direction": "Left",
       "current_speed": 9.6,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 2,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -807,19 +587,8 @@
         "h": 1
       },
       "species_id": 2001,
-      "entity_type": "PickableObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 8
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Red",
@@ -838,19 +607,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -870,19 +628,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -902,19 +649,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -934,19 +670,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -966,19 +691,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -998,19 +712,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1030,19 +733,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1062,19 +754,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1094,19 +775,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1126,19 +796,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1158,19 +817,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1190,19 +838,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1222,19 +859,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1254,19 +880,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1286,19 +901,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1318,19 +922,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1350,19 +943,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1382,19 +964,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1414,19 +985,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1446,19 +1006,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1478,19 +1027,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1510,19 +1048,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1542,19 +1069,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1574,19 +1090,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1606,19 +1111,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1638,19 +1132,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1670,19 +1153,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1702,19 +1174,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1734,19 +1195,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1766,19 +1216,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1798,19 +1237,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1830,19 +1258,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1862,19 +1279,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1894,19 +1300,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1926,19 +1321,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1958,19 +1342,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1990,19 +1363,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2022,19 +1384,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2054,19 +1405,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2086,19 +1426,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2118,19 +1447,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2150,19 +1468,8 @@
         "h": 1
       },
       "species_id": 1041,
-      "entity_type": "Gate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 1,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Red",
@@ -2181,19 +1488,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2213,19 +1509,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2245,19 +1530,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2277,19 +1551,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2309,19 +1572,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2341,19 +1593,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2373,19 +1614,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2405,19 +1635,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2437,19 +1656,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2469,19 +1677,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2501,19 +1698,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2533,19 +1719,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2565,19 +1740,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2597,19 +1761,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2629,19 +1782,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2661,19 +1803,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2693,19 +1824,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2725,19 +1845,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2757,19 +1866,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2789,19 +1887,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2821,19 +1908,8 @@
         "h": 2
       },
       "species_id": 4004,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 2.5,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 28,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2853,19 +1929,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2884,19 +1949,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2915,19 +1969,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2946,19 +1989,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -2977,19 +2009,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3008,19 +2029,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3039,19 +2049,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3070,19 +2069,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3101,19 +2089,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3132,19 +2109,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3163,19 +2129,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3194,19 +2149,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3225,19 +2169,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3256,19 +2189,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3287,19 +2209,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3318,19 +2229,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3349,19 +2249,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3380,19 +2269,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3411,19 +2289,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3442,19 +2309,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3473,19 +2329,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3504,19 +2349,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3535,19 +2369,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3566,19 +2389,8 @@
         "h": 1
       },
       "species_id": 1075,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 4,
-          "y": 11,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3597,19 +2409,8 @@
         "h": 2
       },
       "species_id": 1077,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3628,19 +2429,8 @@
         "h": 2
       },
       "species_id": 1077,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3659,19 +2449,8 @@
         "h": 2
       },
       "species_id": 1077,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3690,19 +2469,8 @@
         "h": 2
       },
       "species_id": 1077,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3721,19 +2489,8 @@
         "h": 2
       },
       "species_id": 1077,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3752,19 +2509,8 @@
         "h": 2
       },
       "species_id": 1077,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3783,19 +2529,8 @@
         "h": 2
       },
       "species_id": 1077,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3814,19 +2549,8 @@
         "h": 2
       },
       "species_id": 1077,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3845,19 +2569,8 @@
         "h": 2
       },
       "species_id": 1077,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3876,19 +2589,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3907,19 +2609,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3938,19 +2629,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -3969,19 +2649,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4000,19 +2669,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4031,19 +2689,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4062,19 +2709,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4093,19 +2729,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4124,19 +2749,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4155,19 +2769,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4186,19 +2789,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4217,19 +2809,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4248,19 +2829,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4279,19 +2849,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4310,19 +2869,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4341,19 +2889,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4372,19 +2909,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4403,19 +2929,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4434,19 +2949,8 @@
         "h": 1
       },
       "species_id": 4001,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.5,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 0,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4465,19 +2969,8 @@
         "h": 1
       },
       "species_id": 4001,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.5,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 0,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4496,19 +2989,8 @@
         "h": 1
       },
       "species_id": 4001,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.5,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 0,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4527,19 +3009,8 @@
         "h": 1
       },
       "species_id": 4001,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.5,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 0,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4558,19 +3029,8 @@
         "h": 1
       },
       "species_id": 4001,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.5,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 0,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4589,19 +3049,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4620,19 +3069,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4651,19 +3089,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4682,19 +3109,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4713,19 +3129,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4744,19 +3149,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4775,19 +3169,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4806,19 +3189,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4837,19 +3209,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4868,19 +3229,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4899,19 +3249,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4930,19 +3269,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4961,19 +3289,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -4992,19 +3309,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5023,19 +3329,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5054,19 +3349,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5085,19 +3369,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5116,19 +3389,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5147,19 +3409,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5178,19 +3429,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5209,19 +3449,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5240,19 +3469,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5271,19 +3489,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5302,19 +3509,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5333,19 +3529,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5364,19 +3549,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5395,19 +3569,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5426,19 +3589,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5457,19 +3609,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5488,19 +3629,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5519,19 +3649,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5550,19 +3669,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5581,19 +3689,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5612,19 +3709,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5643,19 +3729,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5674,19 +3749,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5705,19 +3769,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5736,19 +3789,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5767,19 +3809,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5798,19 +3829,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5829,19 +3849,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5860,19 +3869,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5891,19 +3889,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5922,19 +3909,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5953,19 +3929,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -5984,19 +3949,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6015,19 +3969,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6046,19 +3989,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6077,19 +4009,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6108,19 +4029,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6139,19 +4049,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6170,19 +4069,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6201,19 +4089,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6232,19 +4109,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6263,19 +4129,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6294,19 +4149,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6325,19 +4169,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6356,19 +4189,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6387,19 +4209,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6418,19 +4229,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6449,19 +4249,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6480,19 +4269,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6511,19 +4289,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6542,19 +4309,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6573,19 +4329,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6604,19 +4349,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6635,19 +4369,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6666,19 +4389,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6697,19 +4409,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6728,19 +4429,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6759,19 +4449,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6790,19 +4469,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6821,19 +4489,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6852,19 +4509,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6883,19 +4529,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6914,19 +4549,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6945,19 +4569,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -6976,19 +4589,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7007,19 +4609,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7038,19 +4629,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7069,19 +4649,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7100,19 +4669,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7131,19 +4689,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7162,19 +4709,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7193,19 +4729,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7224,19 +4749,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7255,19 +4769,8 @@
         "h": 2
       },
       "species_id": 1038,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 0,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7286,19 +4789,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7317,19 +4809,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7348,19 +4829,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7379,19 +4849,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7410,19 +4869,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7441,19 +4889,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7472,19 +4909,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7503,19 +4929,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7534,19 +4949,8 @@
         "h": 2
       },
       "species_id": 1077,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7565,19 +4969,8 @@
         "h": 2
       },
       "species_id": 1077,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1012,
-        "frame": {
-          "x": 0,
-          "y": 19,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7596,19 +4989,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7627,19 +5009,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7658,19 +5029,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7689,19 +5049,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7720,19 +5069,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7751,19 +5089,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7782,19 +5109,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7813,19 +5129,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7844,19 +5149,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7875,19 +5169,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7906,19 +5189,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7937,19 +5209,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7968,19 +5229,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -7999,19 +5249,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8030,19 +5269,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8061,19 +5289,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8092,19 +5309,8 @@
         "h": 2
       },
       "species_id": 1073,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 2,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8123,19 +5329,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8154,19 +5349,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8185,19 +5369,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8216,19 +5389,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8247,19 +5409,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8278,19 +5429,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8309,19 +5449,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8340,19 +5469,8 @@
         "h": 2
       },
       "species_id": 1039,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 10,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8371,19 +5489,8 @@
         "h": 1
       },
       "species_id": 1042,
-      "entity_type": "Gate",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 6,
-          "y": 2,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "Green",
@@ -8402,19 +5509,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8433,19 +5529,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8464,19 +5549,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8495,19 +5569,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8526,19 +5589,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8557,19 +5609,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8588,19 +5629,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8619,19 +5649,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8650,19 +5669,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8681,19 +5689,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8712,19 +5709,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8743,19 +5729,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8774,19 +5749,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8805,19 +5769,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8836,19 +5789,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8867,19 +5809,8 @@
         "h": 1
       },
       "species_id": 7001,
-      "entity_type": "Bundle",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 4,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8898,19 +5829,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8929,19 +5849,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8960,19 +5869,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -8991,19 +5889,8 @@
         "h": 1
       },
       "species_id": 7000,
-      "entity_type": "Bullet",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1014,
-        "frame": {
-          "x": 4,
-          "y": 0,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -9022,19 +5909,8 @@
         "h": 2
       },
       "species_id": 1010,
-      "entity_type": "StaticObject",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 1,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -9053,19 +5929,8 @@
         "h": 1
       },
       "species_id": 1019,
-      "entity_type": "Teleporter",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1010,
-        "frame": {
-          "x": 7,
-          "y": 5,
-          "w": 1,
-          "h": 1
-        },
-        "number_of_frames": 1
-      },
       "dialogues": [],
       "destination": {
         "world": 1006,
@@ -9089,19 +5954,8 @@
         "h": 2
       },
       "species_id": 1080,
-      "entity_type": "Npc",
       "direction": "Down",
       "current_speed": 0.0,
-      "sprite": {
-        "sheet_id": 1009,
-        "frame": {
-          "x": 48,
-          "y": 0,
-          "w": 1,
-          "h": 2
-        },
-        "number_of_frames": 4
-      },
       "dialogues": [
         {
           "text": "quest.hero.punk.lets_see_who_gets_them_first",

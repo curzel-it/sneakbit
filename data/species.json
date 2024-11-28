@@ -4015,7 +4015,7 @@
         "is_invulnerable": true,
         "entity_type": "Npc",
         "z_index": 0,
-        "base_speed": 2.0,
+        "base_speed": 1.2,
         "is_rigid": false,
         "inventory_texture_offset": [
             10,
