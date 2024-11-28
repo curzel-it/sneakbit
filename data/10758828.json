@@ -41,7 +41,6 @@
       },
       "species_id": 1011,
       "direction": "Down",
-      "current_speed": 0.0,
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -59,7 +58,6 @@
       },
       "species_id": 1019,
       "direction": "Down",
-      "current_speed": 0.0,
       "dialogues": [],
       "destination": {
         "world": 10758827,

@@ -79,7 +79,7 @@ impl Species {
     pub fn make_entity(&self) -> Entity {
         let sprite = self.make_sprite(false);
         let original_sprite_frame = sprite.frame; 
-        let initial_speed = if self.movement_directions.moves_by_default() { self.base_speed } else { 0.0 };
+        let initial_speed = self.movement_directions.initial_speed(self.base_speed);
         
         Entity {
             id: self.next_entity_id(),
@@ -116,7 +116,9 @@ impl Species {
     }
 
     pub fn reload_props(&self, entity: &mut Entity) {
-        let sprite = self.make_sprite(false);        
+        let sprite = self.make_sprite(false);      
+        let initial_speed = self.movement_directions.initial_speed(self.base_speed);
+
         entity.frame.w = sprite.frame.w;  
         entity.frame.h = sprite.frame.h;  
         entity.offset = Vector2d::zero();
@@ -132,6 +134,10 @@ impl Species {
         entity.is_invulnerable = self.is_invulnerable;
         entity.z_index = self.z_index;
         entity.movement_directions = self.movement_directions;
+
+        if entity.parent_id == NO_PARENT {
+            entity.current_speed = initial_speed;
+        }
     }
 
     pub fn inventory_sprite_frame(&self) -> IntRect {

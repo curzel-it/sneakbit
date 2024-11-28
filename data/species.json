@@ -4012,7 +4012,7 @@
     {
         "id": 1137,
         "name": "npc.name.bearwolf",
-        "is_invulnerable": true,
+        "is_invulnerable": false,
         "entity_type": "Npc",
         "z_index": 0,
         "base_speed": 1.2,

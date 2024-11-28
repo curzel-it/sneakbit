@@ -12,12 +12,12 @@ pub enum MovementDirections {
 }
 
 impl MovementDirections {
-    pub fn moves_by_default(&self) -> bool {
+    pub fn initial_speed(&self, speed: f32) -> f32 {
         match self {
-            MovementDirections::None => false,
-            MovementDirections::Keyboard => false,
-            MovementDirections::Free => true,
-            MovementDirections::FindHero => true,
+            MovementDirections::None => 0.0,
+            MovementDirections::Keyboard => 0.0,
+            MovementDirections::Free => speed,
+            MovementDirections::FindHero => speed,
         }
     }
 }

@@ -35,10 +35,12 @@ pub struct Entity {
     pub frame: IntRect,  
     pub species_id: u32,  
     pub direction: Direction,
-    pub current_speed: f32,
     pub dialogues: EntityDialogues,
     pub destination: Option<Destination>,
     pub lock_type: LockType,
+    
+    #[serde(skip)]
+    pub current_speed: f32,
 
     #[serde(skip)]
     pub entity_type: EntityType,  
