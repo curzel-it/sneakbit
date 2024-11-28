@@ -40,6 +40,24 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 3. Installed LLVM via `winget install LLVM.LLVM`
 4. `cargo run --package game` 
 
+### Cross-Compile from macOS for Windows
+Setup:
+```bash
+rustup target add x86_64-pc-windows-gnu
+brew install mingw-w64
+```
+
+Build:
+```bash
+cargo build --package game --release --target x86_64-pc-windows-gnu
+```
+
+(Optional) Run with Wine:
+```bash
+brew install --cask wine-stable
+wine target/x86_64-pc-windows-gnu/debug/game.exe
+```
+
 ### iOS and Android
 The engine is the same, the rendering is a simple set of custom views for the game itself, menus and such
 

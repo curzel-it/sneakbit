@@ -7,7 +7,6 @@ def get_version():
     with open(cargo_toml_path, "r") as f:
         for line in f:
             if line.strip().startswith("version"):
-                # Assumes the line is in the format: version = "1.2.3"
                 return line.split("=")[1].strip().strip('"')
     raise ValueError("Version not found in Cargo.toml")
 
