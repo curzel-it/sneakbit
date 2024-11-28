@@ -11,6 +11,9 @@ pub fn generate_tile_map_image_from_json(
     sprite_sheet_construction_tiles_path: &str,
     output_image_path: &str,
 ) -> Result<(), Box<dyn Error>> {
+    if world_id == 1000 {
+        return Ok(())
+    }
     let world = World::load(world_id).unwrap();
 
     generate_tile_map_image(

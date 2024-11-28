@@ -4029,7 +4029,8 @@
         },
         "sprite_sheet_id": 1016,
         "sprite_number_of_frames": 4,
-        "lock_type": "None"
+        "lock_type": "None",
+        "movement_directions": "Free"
     },
     {
         "id": 1138,

@@ -71,7 +71,7 @@
       "555555535555599999999999999999999999999999999999999959999999999999999999999995355555555555",
       "555555535555599999999999955999999999999999999999995999999999999999999555999995355555555555",
       "555555533335599999999999559999999999999999599999999999999999999999995559999995355555555555",
-      "555555555535555999999999999999999999999999999999999999999999999999955599999955355555555555",
+      "555555555535555999999999999999999999999999599999999999999999999999955599999955355555555555",
       "555555555535555599999999999995599999999999999999999999999999999999955999999555355555555555",
       "555555555533333559999999999999999999999999999999959999999999999999959999999533355555555555",
       "555555555555553559999999999999999999999999999999559999999999999999599999999535555555555555",
@@ -25655,7 +25655,7 @@
       "species_id": 1137,
       "entity_type": "Npc",
       "direction": "Down",
-      "current_speed": 0.0,
+      "current_speed": 2.0,
       "sprite": {
         "sheet_id": 1016,
         "frame": {
@@ -25670,7 +25670,7 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "None",
+      "movement_directions": "Free",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
@@ -25754,7 +25754,7 @@
       "species_id": 1137,
       "entity_type": "Npc",
       "direction": "Down",
-      "current_speed": 0.0,
+      "current_speed": 2.0,
       "sprite": {
         "sheet_id": 1016,
         "frame": {
@@ -25769,7 +25769,7 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "None",
+      "movement_directions": "Free",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
@@ -25952,7 +25952,7 @@
       "species_id": 1137,
       "entity_type": "Npc",
       "direction": "Down",
-      "current_speed": 0.0,
+      "current_speed": 2.0,
       "sprite": {
         "sheet_id": 1016,
         "frame": {
@@ -25967,7 +25967,7 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "None",
+      "movement_directions": "Free",
       "is_consumable": false,
       "contents": null,
       "is_invulnerable": true,
@@ -26420,7 +26420,7 @@
           "w": 1,
           "h": 1
         },
-        "number_of_frames": 8
+        "number_of_frames": 5
       },
       "dialogues": [],
       "destination": null,
@@ -26453,7 +26453,7 @@
           "w": 1,
           "h": 1
         },
-        "number_of_frames": 8
+        "number_of_frames": 5
       },
       "dialogues": [],
       "destination": null,
@@ -26486,7 +26486,738 @@
           "w": 1,
           "h": 1
         },
-        "number_of_frames": 8
+        "number_of_frames": 5
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12748665,
+      "frame": {
+        "x": 42,
+        "y": 66,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 5001,
+      "entity_type": "Teleporter",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1010,
+        "frame": {
+          "x": 8,
+          "y": 5,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 1
+      },
+      "dialogues": [],
+      "destination": {
+        "world": 1021,
+        "x": 0,
+        "y": 0,
+        "direction": "Unknown"
+      },
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781656,
+      "frame": {
+        "x": 64,
+        "y": 28,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781657,
+      "frame": {
+        "x": 64,
+        "y": 29,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781658,
+      "frame": {
+        "x": 64,
+        "y": 30,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781659,
+      "frame": {
+        "x": 64,
+        "y": 31,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781660,
+      "frame": {
+        "x": 64,
+        "y": 32,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781661,
+      "frame": {
+        "x": 64,
+        "y": 33,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781662,
+      "frame": {
+        "x": 64,
+        "y": 34,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781663,
+      "frame": {
+        "x": 64,
+        "y": 35,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781664,
+      "frame": {
+        "x": 64,
+        "y": 36,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781665,
+      "frame": {
+        "x": 64,
+        "y": 37,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781666,
+      "frame": {
+        "x": 64,
+        "y": 38,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781667,
+      "frame": {
+        "x": 64,
+        "y": 39,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781668,
+      "frame": {
+        "x": 64,
+        "y": 40,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781669,
+      "frame": {
+        "x": 64,
+        "y": 41,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781670,
+      "frame": {
+        "x": 64,
+        "y": 42,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781671,
+      "frame": {
+        "x": 64,
+        "y": 43,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781672,
+      "frame": {
+        "x": 64,
+        "y": 44,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781673,
+      "frame": {
+        "x": 64,
+        "y": 45,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781674,
+      "frame": {
+        "x": 64,
+        "y": 46,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781675,
+      "frame": {
+        "x": 64,
+        "y": 47,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "movement_directions": "None",
+      "is_consumable": false,
+      "contents": null,
+      "is_invulnerable": true,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12781676,
+      "frame": {
+        "x": 64,
+        "y": 48,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "entity_type": "Trail",
+      "direction": "Down",
+      "current_speed": 0.0,
+      "sprite": {
+        "sheet_id": 1014,
+        "frame": {
+          "x": 20,
+          "y": 0,
+          "w": 1,
+          "h": 1
+        },
+        "number_of_frames": 15
       },
       "dialogues": [],
       "destination": null,

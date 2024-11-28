@@ -117,7 +117,7 @@ impl Entity {
 
     fn is_obstacle_in_direction(&self, hitmap: &[Vec<bool>], direction: Direction) -> bool {
         let (next_dx, next_dy) = direction.as_col_row_offset();
-        let next_x = self.frame.x + next_dx;
+        let next_x = self.frame.x + next_dx + if next_dx > 0 { self.frame.w - 1 } else { 0 };
         let next_y = self.frame.y + next_dy + if self.frame.h > 1 { 1 } else { 0 };
 
         if next_x < 0

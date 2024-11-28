@@ -63,7 +63,7 @@ pub struct Entity {
     #[serde(default)]
     pub display_conditions: Vec<DisplayCondition>,
 
-    #[serde(default)]
+    #[serde(skip)]
     pub movement_directions: MovementDirections,
 
     #[serde(default)]

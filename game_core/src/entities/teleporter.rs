@@ -37,7 +37,7 @@ impl Entity {
     }
 
     fn should_teleport(&self, world: &World) -> bool {
-        if !world.is_any_arrow_key_down { return false }
+        if !(world.is_any_arrow_key_down || world.is_hero_on_slippery_surface()) { return false }
         if world.cached_hero_props.speed <= 0.0 { return false }
 
         let hero = world.cached_hero_props.hittable_frame;
