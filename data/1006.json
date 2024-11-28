@@ -241,7 +241,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -303,7 +302,6 @@
       ],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -335,7 +333,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -372,7 +369,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -404,7 +400,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -441,7 +436,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -473,7 +467,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -510,7 +503,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -542,7 +534,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -579,7 +570,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -611,7 +601,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -643,7 +632,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": "lore.009.thermoria_dock",
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -675,7 +663,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -707,7 +694,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -739,7 +725,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -771,7 +756,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -803,7 +787,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -840,7 +823,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -872,7 +854,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -904,7 +885,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -936,7 +916,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -968,7 +947,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1000,7 +978,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1032,7 +1009,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1064,7 +1040,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1096,7 +1071,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1133,7 +1107,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1165,7 +1138,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1197,7 +1169,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1229,7 +1200,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1261,7 +1231,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1293,7 +1262,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1325,7 +1293,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1357,7 +1324,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1389,7 +1355,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1421,7 +1386,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1453,7 +1417,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1485,7 +1448,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1517,7 +1479,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1549,7 +1510,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1581,7 +1541,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1613,7 +1572,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1645,7 +1603,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1677,7 +1634,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1709,7 +1665,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1741,7 +1696,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1773,7 +1727,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1805,7 +1758,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1837,7 +1789,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1869,7 +1820,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1901,7 +1851,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1933,7 +1882,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1965,7 +1913,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1997,7 +1944,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2029,7 +1975,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2061,7 +2006,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2093,7 +2037,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2125,7 +2068,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2157,7 +2099,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2189,7 +2130,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2221,7 +2161,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2253,7 +2192,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2285,7 +2223,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2317,7 +2254,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2349,7 +2285,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2381,7 +2316,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2413,7 +2347,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2445,7 +2378,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2477,7 +2409,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2509,7 +2440,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2541,7 +2471,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2573,7 +2502,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2605,7 +2533,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2637,7 +2564,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2669,7 +2595,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2701,7 +2626,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2733,7 +2657,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2765,7 +2688,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2797,7 +2719,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2829,7 +2750,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2861,7 +2781,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2893,7 +2812,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2925,7 +2843,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2957,7 +2874,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2989,7 +2905,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3021,7 +2936,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3053,7 +2967,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3085,7 +2998,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3117,7 +3029,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3149,7 +3060,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3181,7 +3091,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3213,7 +3122,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3245,7 +3153,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3277,7 +3184,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3309,7 +3215,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3341,7 +3246,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3373,7 +3277,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3405,7 +3308,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3437,7 +3339,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3469,7 +3370,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3501,7 +3401,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3533,7 +3432,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3565,7 +3463,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3615,7 +3512,6 @@
       ],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3647,7 +3543,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3679,7 +3574,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3711,7 +3605,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3743,7 +3636,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3775,7 +3667,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": "lore.008.mount_ignis",
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3807,7 +3698,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3839,7 +3729,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3871,7 +3760,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3903,7 +3791,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3935,7 +3822,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3967,7 +3853,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3999,7 +3884,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4031,7 +3915,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4063,7 +3946,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4095,7 +3977,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4127,7 +4008,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4159,7 +4039,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4191,7 +4070,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4223,7 +4101,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4255,7 +4132,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4287,7 +4163,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4319,7 +4194,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4351,7 +4225,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4383,7 +4256,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4415,7 +4287,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4447,7 +4318,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4479,7 +4349,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4511,7 +4380,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4543,7 +4411,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4575,7 +4442,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4607,7 +4473,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4639,7 +4504,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4671,7 +4535,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4703,7 +4566,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4735,7 +4597,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4767,7 +4628,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4804,7 +4664,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4841,7 +4700,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4878,7 +4736,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4910,7 +4767,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": "1006.entrance",
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4953,7 +4809,6 @@
       ],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4992,7 +4847,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5035,7 +4889,6 @@
       ],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5091,7 +4944,6 @@
       ],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     }

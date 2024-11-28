@@ -93,7 +93,7 @@ pub struct Entity {
     #[serde(skip)]
     pub is_in_interaction_range: bool,
 
-    #[serde(default)]
+    #[serde(skip)]
     pub is_invulnerable: bool,
 
     #[serde(default)]

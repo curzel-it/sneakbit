@@ -106,7 +106,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -143,7 +142,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -175,7 +173,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -207,7 +204,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -239,7 +235,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -271,7 +266,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -303,7 +297,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -335,7 +328,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -367,7 +359,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -399,7 +390,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -438,7 +428,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -488,7 +477,6 @@
       ],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -520,7 +508,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": "quest.ninja_skills.nyx.nyx_notes",
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     }

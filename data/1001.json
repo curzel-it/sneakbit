@@ -201,7 +201,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -238,7 +237,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -270,7 +268,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -302,7 +299,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -334,7 +330,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -371,7 +366,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -403,7 +397,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -440,7 +433,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -472,7 +464,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -509,7 +500,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -541,7 +531,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -578,7 +567,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -610,7 +598,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -642,7 +629,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -675,7 +661,6 @@
       "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -707,7 +692,6 @@
       "display_conditions": [],
       "is_consumable": true,
       "contents": "hint.002.throw_knife",
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -740,7 +724,6 @@
       "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -773,7 +756,6 @@
       "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -806,7 +788,6 @@
       "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -856,7 +837,6 @@
       ],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": true,
       "after_dialogue": "Disappear"
     },
@@ -888,7 +868,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -920,7 +899,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -952,7 +930,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1009,7 +986,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1041,7 +1017,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1074,7 +1049,6 @@
       "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1106,7 +1080,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1138,7 +1111,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1170,7 +1142,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1202,7 +1173,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1234,7 +1204,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1266,7 +1235,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1298,7 +1266,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1335,7 +1302,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1367,7 +1333,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1399,7 +1364,6 @@
       "display_conditions": [],
       "is_consumable": true,
       "contents": "hint.001.pickup",
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1431,7 +1395,6 @@
       "display_conditions": [],
       "is_consumable": true,
       "contents": "hint.002.throw_knife",
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1464,7 +1427,6 @@
       "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1496,7 +1458,6 @@
       "display_conditions": [],
       "is_consumable": false,
       "contents": "1001.entrance",
-      "is_invulnerable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1529,7 +1490,6 @@
       "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     }

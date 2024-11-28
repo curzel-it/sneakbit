@@ -62,7 +62,6 @@
       "lock_type": "None",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -96,7 +95,6 @@
       "lock_type": "None",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -126,7 +124,6 @@
       "lock_type": "None",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -160,7 +157,6 @@
       "lock_type": "None",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -190,7 +186,6 @@
       "lock_type": "None",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -220,7 +215,6 @@
       "lock_type": "None",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -250,7 +244,6 @@
       "lock_type": "None",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -280,7 +273,6 @@
       "lock_type": "None",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false
     },
     {
@@ -310,7 +302,6 @@
       "lock_type": "None",
       "is_consumable": false,
       "contents": null,
-      "is_invulnerable": true,
       "demands_attention": false
     }
   ],
