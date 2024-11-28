@@ -1,8 +1,11 @@
 import Swinject
+import Schwifty
 
 struct Dependencies {
     static func setup() {
         let container = Container()
+        container.registerEagerSingleton(RuntimeEventsBroker.self, RuntimeEventsBrokerImpl())
+        container.registerEagerSingleton(FirebaseAnalyticsService())
         container.registerEagerSingleton(GameEngine())
         container.registerEagerSingleton(AudioEngine())
         container.registerSingleton(SpritesProvider.self) { _ in
@@ -31,5 +34,20 @@ struct Dependencies {
         container.register(GameSetupUseCase.self) { _ in GameSetupUseCaseImpl() }
         container.register(ControllerSettingsStorage.self) { _ in ControllerSettingsStorageImpl() }
         Container.main = container.synchronize()
+    }
+}
+
+protocol Loggable {
+    func log(_ content: String)
+    func logError(_ content: String)
+}
+
+extension Loggable {
+    func log(_ content: String) {
+        Logger.debug("[\(type(of: self))] \(content)")
+    }
+    
+    func logError(_ content: String) {
+        Logger.error("[\(type(of: self))] \(content)")
     }
 }

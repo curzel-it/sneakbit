@@ -157,7 +157,6 @@ private fun MenuContent(
                     Text(
                         text = option,
                         style = DSTypography.menuOption,
-                        color = Color.White,
                         modifier = Modifier
                             .height(36.dp)
                             .fillMaxWidth()

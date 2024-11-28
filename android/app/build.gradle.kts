@@ -3,13 +3,13 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    id("com.google.gms.google-services") version "4.4.2" apply false
-    id("com.google.firebase.crashlytics") version "3.0.2" apply false
+    id("com.google.gms.google-services") version "4.4.2"
+    id("com.google.firebase.crashlytics") version "3.0.2"
 }
 
 android {
     namespace = "it.curzel.bitscape"
-    compileSdk = 34
+    compileSdk = 35
     buildFeatures.buildConfig = true
 
     sourceSets {
@@ -21,9 +21,9 @@ android {
     defaultConfig {
         applicationId = "it.curzel.bitscape"
         minSdk = 30
-        targetSdk = 34
-        versionCode = 28
-        versionName = "1.2.4"
+        targetSdk = 35
+        versionCode = 29
+        versionName = "1.2.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

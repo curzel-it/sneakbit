@@ -2,9 +2,7 @@ import SwiftUI
 import AVFoundation
 import Schwifty
 
-class AudioEngine {
-    private let tag = "AudioEngine"
-    
+class AudioEngine: Loggable {
     private(set) var soundEffectsEnabled: Bool = true
     private(set) var musicEnabled: Bool = true
     
@@ -103,7 +101,7 @@ class AudioEngine {
                     self.soundPlayers[effect] = player
                 }
             } else {
-                Logger.error(tag, "Failed to load sound for effect: \(effect)")
+                logError("Failed to load sound for effect: \(effect)")
             }
         }
     }
@@ -117,7 +115,7 @@ class AudioEngine {
             return nil
         }
         guard let url = Bundle.main.url(forResource: filename, withExtension: "mp3", subdirectory: "audio") else {
-            Logger.error(tag, "Audio file not found for \(filename)")
+            logError("Audio file not found for \(filename)")
             return nil
         }
         
@@ -126,7 +124,7 @@ class AudioEngine {
             player.prepareToPlay()
             return player
         } catch {
-            Logger.error(tag, "Error loading audio \(filename): \(error.localizedDescription)")
+            logError("Error loading audio \(filename): \(error.localizedDescription)")
             return nil
         }
     }
@@ -153,7 +151,7 @@ class AudioEngine {
     
     private func playSoundNow(_ effect: SoundEffect) {
         guard let player = soundPlayers[effect] else {
-            Logger.error(tag, "No player found for sound effect: \(effect.rawValue)")
+            logError("No player found for sound effect: \(effect.rawValue)")
             return
         }
         player.currentTime = 0

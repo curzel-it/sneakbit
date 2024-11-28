@@ -152,8 +152,8 @@ private struct NewGameView: View {
 }
 
 class OptionsViewModel: ObservableObject {
-    @Inject private var engine: GameEngine
     @Inject private var audio: AudioEngine
+    @Inject private var engine: GameEngine
     
     @Published var isVisible: Bool = false
     @Published var showNewGameAlert: Bool = false

@@ -17,10 +17,12 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AndroidViewModel
+import it.curzel.bitscape.analytics.AnalyticsService
+import it.curzel.bitscape.analytics.RuntimeEvent
+import it.curzel.bitscape.analytics.RuntimeEventsBroker
 import it.curzel.bitscape.controller.ControllerSettingsStorage
+import it.curzel.bitscape.engine.AudioEngine
 import it.curzel.bitscape.engine.GameEngine
-import it.curzel.bitscape.engine.RenderingScaleUseCase
-import it.curzel.bitscape.engine.TileMapsStorage
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.GameViewComposable
 import it.curzel.bitscape.rendering.LoadingScreen
@@ -33,13 +35,14 @@ import it.curzel.bitscape.ui.theme.SneakBitTheme
 class MainActivity : ComponentActivity() {
     private val gameViewModel: GameViewModel by viewModels()
 
+    private val engine: GameEngine get() = gameViewModel.engine
+    private val spritesProvider: SpritesProvider get() = gameViewModel.spritesProvider
+    private val audioEngine: AudioEngine get() = gameViewModel.audioEngine
+    private val broker: RuntimeEventsBroker get() = gameViewModel.broker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val engine = gameViewModel.engine
-        val audioEngine = gameViewModel.engine.audioEngine
-        val spritesProvider = gameViewModel.spritesProvider
-
+        broker.send(RuntimeEvent.Launched)
         enableEdgeToEdge()
 
         setContent {
@@ -74,52 +77,47 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        gameViewModel.engine.audioEngine.resumeMusic()
+        gameViewModel.audioEngine.resumeMusic()
+        gameViewModel.broker.send(RuntimeEvent.WillEnterForeground)
     }
 
     override fun onPause() {
         super.onPause()
-        gameViewModel.engine.audioEngine.pauseMusic()
+        gameViewModel.audioEngine.pauseMusic()
+        gameViewModel.broker.send(RuntimeEvent.DidEnterBackground)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        gameViewModel.engine.audioEngine.release()
+        gameViewModel.audioEngine.release()
     }
 }
 
 class GameViewModel(application: Application) : AndroidViewModel(application) {
-    val spritesProvider: SpritesProvider = buildSpritesProvider(application)
-    val engine: GameEngine = buildEngine(application)
+    val nativeLib: NativeLib = NativeLib()
+    val broker: RuntimeEventsBroker = RuntimeEventsBroker()
+    val audioEngine = AudioEngine(application, nativeLib)
+    val engine = GameEngine(application, nativeLib, audioEngine, broker)
+    val analytics: AnalyticsService = AnalyticsService(broker, nativeLib, application)
 
-    private fun buildSpritesProvider(application: Application): SpritesProvider {
-        return SpritesProvider(
-            context = application,
-            spriteSheetFileNames = hashMapOf(
-                NativeLib.SPRITE_SHEET_INVENTORY to "inventory",
-                NativeLib.SPRITE_SHEET_BIOME_TILES to "tiles_biome",
-                NativeLib.SPRITE_SHEET_CONSTRUCTION_TILES to "tiles_constructions",
-                NativeLib.SPRITE_SHEET_BUILDINGS to "buildings",
-                NativeLib.SPRITE_SHEET_BASE_ATTACK to "baseattack",
-                NativeLib.SPRITE_SHEET_STATIC_OBJECTS to "static_objects",
-                NativeLib.SPRITE_SHEET_MENU to "menu",
-                NativeLib.SPRITE_SHEET_ANIMATED_OBJECTS to "animated_objects",
-                NativeLib.SPRITE_SHEET_HUMANOIDS_1X1 to "humanoids_1x1",
-                NativeLib.SPRITE_SHEET_HUMANOIDS_1X2 to "humanoids_1x2",
-                NativeLib.SPRITE_SHEET_HUMANOIDS_2X2 to "humanoids_2x2",
-                NativeLib.SPRITE_SHEET_HUMANOIDS_2X3 to "humanoids_2x3",
-                NativeLib.SPRITE_SHEET_AVATARS to "avatars",
-                NativeLib.SPRITE_SHEET_FARM_PLANTS to "farm_plants",
-                NativeLib.SPRITE_SHEET_CAVE_DARKNESS to "cave_darkness"
-            )
+    val spritesProvider = SpritesProvider(
+        context = application,
+        spriteSheetFileNames = hashMapOf(
+            NativeLib.SPRITE_SHEET_INVENTORY to "inventory",
+            NativeLib.SPRITE_SHEET_BIOME_TILES to "tiles_biome",
+            NativeLib.SPRITE_SHEET_CONSTRUCTION_TILES to "tiles_constructions",
+            NativeLib.SPRITE_SHEET_BUILDINGS to "buildings",
+            NativeLib.SPRITE_SHEET_BASE_ATTACK to "baseattack",
+            NativeLib.SPRITE_SHEET_STATIC_OBJECTS to "static_objects",
+            NativeLib.SPRITE_SHEET_MENU to "menu",
+            NativeLib.SPRITE_SHEET_ANIMATED_OBJECTS to "animated_objects",
+            NativeLib.SPRITE_SHEET_HUMANOIDS_1X1 to "humanoids_1x1",
+            NativeLib.SPRITE_SHEET_HUMANOIDS_1X2 to "humanoids_1x2",
+            NativeLib.SPRITE_SHEET_HUMANOIDS_2X2 to "humanoids_2x2",
+            NativeLib.SPRITE_SHEET_HUMANOIDS_2X3 to "humanoids_2x3",
+            NativeLib.SPRITE_SHEET_AVATARS to "avatars",
+            NativeLib.SPRITE_SHEET_FARM_PLANTS to "farm_plants",
+            NativeLib.SPRITE_SHEET_CAVE_DARKNESS to "cave_darkness"
         )
-    }
-
-    private fun buildEngine(application: Application): GameEngine {
-        return GameEngine(
-            context = application,
-            renderingScaleUseCase = RenderingScaleUseCase(application),
-            tileMapsStorage = TileMapsStorage(application)
-        )
-    }
+    )
 }

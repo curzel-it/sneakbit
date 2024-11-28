@@ -116,6 +116,8 @@
 
 #define SPECIES_MR_MUGS 1131
 
+#define SPECIES_FOOTSTEPS 1136
+
 #define SPECIES_BARREL_PURPLE 1038
 
 #define SPECIES_BARREL_GREEN 1039
@@ -126,18 +128,18 @@
 
 typedef enum SoundEffect {
   SoundEffect_AmmoCollected = 1,
-  SoundEffect_KeyCollected,
-  SoundEffect_BulletFired,
-  SoundEffect_BulletBounced,
-  SoundEffect_DeathOfMonster,
-  SoundEffect_DeathOfNonMonster,
-  SoundEffect_SmallExplosion,
-  SoundEffect_NoAmmo,
-  SoundEffect_GameOver,
-  SoundEffect_PlayerResurrected,
-  SoundEffect_WorldChange,
-  SoundEffect_StepTaken,
-  SoundEffect_HintReceived,
+  SoundEffect_KeyCollected = 2,
+  SoundEffect_BulletFired = 3,
+  SoundEffect_BulletBounced = 4,
+  SoundEffect_DeathOfMonster = 5,
+  SoundEffect_DeathOfNonMonster = 6,
+  SoundEffect_SmallExplosion = 7,
+  SoundEffect_NoAmmo = 8,
+  SoundEffect_GameOver = 9,
+  SoundEffect_PlayerResurrected = 10,
+  SoundEffect_WorldChange = 11,
+  SoundEffect_StepTaken = 12,
+  SoundEffect_HintReceived = 13,
 } SoundEffect;
 
 typedef enum ToastMode {

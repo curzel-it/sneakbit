@@ -4,9 +4,10 @@ import UIKit
 import Schwifty
 
 class GameEngine {
+    @Inject private var audioEngine: AudioEngine
+    @Inject private var broker: RuntimeEventsBroker
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
     @Inject private var tileMapsStorage: TileMapsStorage
-    @Inject private var audioEngine: AudioEngine
     
     let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
@@ -61,6 +62,8 @@ class GameEngine {
     
     func update(deltaTime: Float) {
         guard !isBusy else { return }
+        let wasDead = showsDeathScreen.value
+        let isDead = shows_death_screen()
         
         updateKeyboardState(timeSinceLastUpdate: deltaTime)
         update_game(deltaTime)
@@ -68,13 +71,17 @@ class GameEngine {
         menus.send(current_menu())
         kunai.send(number_of_kunai_in_inventory())
         isInteractionAvailable.send(is_interaction_available())
-        showsDeathScreen.send(shows_death_screen())
+        showsDeathScreen.send(isDead)
         currentBiomeVariant = Int(current_biome_tiles_variant())
         cameraViewport = camera_viewport()
         cameraViewportOffset = camera_viewport_offset()
         
+        if isDead && !wasDead {
+            broker.send(.gameOver)
+        }
+        
         if current_world_id() != currentWorldId {
-            print("World changed from \(currentWorldId) to \(current_world_id())")
+            broker.send(.worldTransition(source: currentWorldId, destination: current_world_id()))
             currentWorldId = current_world_id()
             isNight = is_night()
             isLimitedVisibility = is_limited_visibility()
@@ -91,6 +98,7 @@ class GameEngine {
     
     func startNewGame() {
         showsDeathScreen.send(false)
+        broker.send(.newGame)
         start_new_game()
     }
     

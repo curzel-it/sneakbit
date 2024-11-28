@@ -8,6 +8,8 @@ import android.os.Looper
 import android.util.Log
 import android.util.Size
 import it.curzel.bitscape.AssetUtils
+import it.curzel.bitscape.analytics.RuntimeEvent
+import it.curzel.bitscape.analytics.RuntimeEventsBroker
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
@@ -29,14 +31,14 @@ import java.util.Locale
 
 class GameEngine(
     private val context: Context,
-    private val renderingScaleUseCase: RenderingScaleUseCase,
-    private val tileMapsStorage: TileMapsStorage
+    private val nativeLib: NativeLib,
+    private val audioEngine: AudioEngine,
+    private val broker: RuntimeEventsBroker
 ) {
-    private val nativeLib = NativeLib()
+    private val renderingScaleUseCase = RenderingScaleUseCase(context)
+    private val tileMapsStorage = TileMapsStorage(context)
 
-    val audioEngine = AudioEngine(context, nativeLib)
-
-    private val _loadingScreenConfig = MutableStateFlow<LoadingScreenConfig>(LoadingScreenConfig.none)
+    private val _loadingScreenConfig = MutableStateFlow(LoadingScreenConfig.none)
     private val _showsDeathScreen = MutableStateFlow(false)
     private val _numberOfKunai = MutableStateFlow(0)
     private val _toastConfig = MutableStateFlow(ToastConfig.none)
@@ -87,21 +89,27 @@ class GameEngine(
 
     fun update(deltaTime: Float) {
         if (isBusy) return
+        val wasDead = _showsDeathScreen.value
+        val isDead = nativeLib.showsDeathScreen()
 
         updateKeyboardState(deltaTime)
         nativeLib.updateGame(deltaTime)
         _menuConfig.value = nativeLib.menuConfig()
         _toastConfig.value = nativeLib.toastConfig()
         _numberOfKunai.value = nativeLib.numberOfKunaiInInventory()
-        _showsDeathScreen.value = nativeLib.showsDeathScreen()
+        _showsDeathScreen.value = isDead
         _isInteractionEnabled.value = nativeLib.isInteractionAvailable()
         currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
         cameraViewport = nativeLib.cameraViewport().toRect()
         cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
 
+        if (isDead && !wasDead) {
+            broker.send(RuntimeEvent.GameOver)
+        }
+
         val freshWorldId = nativeLib.currentWorldId().toUInt()
         if (freshWorldId != currentWorldId) {
-            println("World changed from $currentWorldId to $freshWorldId")
+            broker.send(RuntimeEvent.WorldTransition(currentWorldId, freshWorldId))
             currentWorldId = freshWorldId
             _isNight = nativeLib.isNight()
             _isLimitedVisibility = nativeLib.isLimitedVisibility()
@@ -165,6 +173,7 @@ class GameEngine(
     }
 
     fun startNewGame() {
+        broker.send(RuntimeEvent.NewGame)
         _showsDeathScreen.value = false
         nativeLib.startNewGame()
     }

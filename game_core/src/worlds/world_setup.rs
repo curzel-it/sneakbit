@@ -156,7 +156,7 @@ impl World {
     }
 
     fn allows_for_changelog_display(&self) -> bool {
-        !matches!(self.id, 1000 | 1001)
+        !matches!(self.id, 1000 | 1001) && !self.is_interior
     }
 }
     
