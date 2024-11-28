@@ -2,14 +2,6 @@ import os
 import shutil
 import sys
 
-def get_version():
-    cargo_toml_path = os.path.join("game", "Cargo.toml")
-    with open(cargo_toml_path, "r") as f:
-        for line in f:
-            if line.strip().startswith("version"):
-                return line.split("=")[1].strip().strip('"')
-    raise ValueError("Version not found in Cargo.toml")
-
 def build_project():
     build_command = "cargo build --release"
     result = os.system(build_command)
@@ -32,49 +24,47 @@ def remove_file(file_path):
     else:
         print(f"File '{file_path}' does not exist. Skipping removal.")
 
-def copy_executable(version_dir):
-    target_dir = os.path.join("target", "release")
-    executable_name = f"game{executable_extension()}"
-    src_executable = os.path.join(target_dir, executable_name)
-
-    if not os.path.exists(src_executable):
-        print(f"Executable '{src_executable}' does not exist. Build might have failed.")
-        sys.exit(1)
-        
-    dest_executable = os.path.join(version_dir, f"SneakBit{executable_extension()}")
-    shutil.copy2(src_executable, dest_executable)
+def copy_executable(source_executable, dest_executable):
+    if not os.path.exists(source_executable):
+        print(f"Executable '{source_executable}' does not exist. Skipping.")
+        return
+    shutil.copy2(source_executable, dest_executable)
     print(f"Copied executable to '{dest_executable}'.")
 
 def main():
     build_project()
-    version = get_version()
-    print(f"Version: {version}")
 
-    version_dir = version
-    os.makedirs(version_dir, exist_ok=True)
-    print(f"Created directory '{version_dir}'.")
+    platforms = {
+        "macOS": {
+            "executable_source": os.path.join("target", "release", "game"),
+            "executable_dest": "SneakBit" 
+        },
+        "windows": {
+            "executable_source": os.path.join("target", "x86_64-pc-windows-gnu", "release", "game.exe"),
+            "executable_dest": "SneakBit.exe" 
+        }
+    }
 
-    # List of directories to copy
     directories_to_copy = ["assets", "audio", "data", "lang", "fonts"]
-    for directory in directories_to_copy:
-        src = directory
-        dest = os.path.join(version_dir, directory)
-        copy_directory(src, dest)
 
-    # Remove data/save.json if it exists
-    save_json_path = os.path.join(version_dir, "data", "save.json")
-    remove_file(save_json_path)
+    for platform_name, paths in platforms.items():
+        platform_dir = os.path.join(f"__release", platform_name)
+        os.makedirs(platform_dir, exist_ok=True)
+        print(f"Created directory '{platform_dir}'.")
 
-    # Determine the executable name based on the OS
-    copy_executable(version_dir)
+        for directory in directories_to_copy:
+            src = directory
+            dest = os.path.join(platform_dir, directory)
+            copy_directory(src, dest)
+
+        save_json_path = os.path.join(platform_dir, "data", "save.json")
+        remove_file(save_json_path)
+
+        executable_source = paths["executable_source"]
+        executable_dest = os.path.join(platform_dir, paths["executable_dest"])
+        copy_executable(executable_source, executable_dest)
 
     print("Packaging completed successfully.")
 
-def executable_extension():
-    if sys.platform.startswith("win"):
-        return ".exe"
-    else:
-        return ""
-    
 if __name__ == "__main__":
     main()
