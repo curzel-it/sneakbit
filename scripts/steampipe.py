@@ -1,6 +1,5 @@
 import os
 import subprocess
-import platform
 from getpass import getpass
 
 BUILDER_OSX_PATH = "/Users/curzel/dev/steamworks-sdk/tools/ContentBuilder/builder_osx"
@@ -11,20 +10,33 @@ BUILD_CONTENT_ROOT = f"{TEMP_FOLDER}/build.vdf"
 
 def steam_upload_script():
     upload_script = """
-    "appbuild"
+    "AppBuild"
     {
-    "appid" "3360860"
-    "desc" "MacOS build"
-    "buildoutput" "%TEMP_FOLDER%"
-    "contentroot" "%PROJECT_FOLDER%/%VERSION%"
-    "setlive" "default"
-    "depots"
-    {
-        "3360862"
+        "AppID" "3360860"
+        "Desc" "Build %VERSION%"
+        "BuildOutput" "%TEMP_FOLDER%"
+        "ContentRoot" "%PROJECT_FOLDER%/__release"
+        "Depots"
         {
-        "path" "."
+            "3360861"
+            {
+                "FileMapping"
+                {
+                    "LocalPath" "windows/*"
+                    "DepotPath" "."
+                    "recursive" "1"
+                }
+            }
+            "3360862"
+            {
+                "FileMapping"
+                {
+                    "LocalPath" "macOS/*"
+                    "DepotPath" "."
+                    "recursive" "1"
+                }
+            }
         }
-    }
     }
     """
     upload_script = upload_script.replace("%VERSION%", get_version())
@@ -50,29 +62,22 @@ def main():
     with open(STEAM_BUILD_VDF, "w") as f:
         f.write(steam_upload_script())
     
-    # Determine the steamcmd executable path
-    if platform.system() == "Darwin":
-        steamcmd_path = os.path.join(BUILDER_OSX_PATH, "steamcmd")
-        if not os.path.isfile(steamcmd_path):
-            steamcmd_path = os.path.join(BUILDER_OSX_PATH, "Steam.AppBundle", "Steam", "Contents", "MacOS", "steamcmd")
-    else:
-        raise EnvironmentError("This script is intended for macOS only.")
+    steamcmd_path = os.path.join(BUILDER_OSX_PATH, "steamcmd")
+    if not os.path.isfile(steamcmd_path):
+        steamcmd_path = os.path.join(BUILDER_OSX_PATH, "Steam.AppBundle", "Steam", "Contents", "MacOS", "steamcmd")
 
-    # Set environment variables
     env = os.environ.copy()
     env["DYLD_LIBRARY_PATH"] = BUILDER_OSX_PATH
     env["DYLD_FRAMEWORK_PATH"] = BUILDER_OSX_PATH
     env["ULIMIT"] = "2048"
     
-    # Prompt for Steam credentials
     username, password = get_steam_credentials()
     
-    # Log in and upload the build
     args = [
         steamcmd_path,
         "+login", username, password,
         "+run_app_build", STEAM_BUILD_VDF,
-        "+quit"  # Ensure SteamCMD exits after completion
+        "+quit"
     ]
     
     try:
