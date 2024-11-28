@@ -73,6 +73,7 @@
 "npc.name.demon_lord" = "Signore dei Demoni"
 "npc.name.developer" = "Mr Mugs"
 "npc.name.developer_messenger" = "Mugs's Bird"
+"npc.name.elf_priestess" = "Sacerdotessa"
 "npc.name.ethan" = "Ethan"
 "npc.name.female.blue_hair" = "Lyria Kurogane"
 "npc.name.female.brown_hair" = "Abitante"
@@ -504,6 +505,10 @@ Quando torno in posti dove sono già stato mi piace vedere cose nuove.
 Voglio che anche questo mondo continui ad evolversi, sarebbe fico!
 """
 
+"lore.021.levek_peak_intro" = """
+Stai attento, abbiamo appena liberato il passaggio dalla neve ed è ancora instabile
+"""
+
 "1001.entrance" = "Benvenuto al Villaggio di Evergrove!"
 "1003.entrance" = """
 Benvenuto ad Aridreach
@@ -531,6 +536,9 @@ Benvenuto al Villaggio del Crepuscolo: Duskhaven
 -- 
 Si prega di non toccare gli Alberi di Manafern.
 Si prega di non scattare foto con il flash.
+-- 
+Ovest: Vetta di Levek
+Est: Paludi di Murkmire
 """
 "1012.entrance" = "Benvenuto a Vintoria!"
 "1013.entrance" = "Grimsun Basin"

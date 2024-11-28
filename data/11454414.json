@@ -281,5 +281,6 @@
   ],
   "is_interior": true,
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": null
 }
