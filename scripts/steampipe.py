@@ -1,3 +1,4 @@
+import keyring
 import os
 import subprocess
 from getpass import getpass
@@ -53,10 +54,44 @@ def get_version():
     raise ValueError("Version not found in Cargo.toml")
 
 def get_steam_credentials():
+    service_name = "Steam"
+    saved_username = keyring.get_password(service_name, "username")
+    
+    if saved_username:
+        print(f"Found saved credentials for {saved_username}.")
+        use_saved = input("Would you like to use the saved credentials? (y/n): ").strip().lower()
+        if use_saved == 'y':
+            saved_password = keyring.get_password(service_name, saved_username)
+            if saved_password:
+                return saved_username, saved_password
+            else:
+                print("Password not found. Please re-enter your credentials.")
+    
     print("Please log in to Steam.")
     username = input("Steam Username: ")
     password = getpass("Steam Password: ")
+    
+    save_credentials = input("Would you like to save these credentials to the macOS Keychain? (y/n): ").strip().lower()
+    if save_credentials == 'y':
+        keyring.set_password(service_name, "username", username)
+        keyring.set_password(service_name, username, password)
+        print("Credentials saved to macOS Keychain.")
+    
     return username, password
+
+def clear_steam_credentials():
+    service_name = "Steam"
+    try:
+        saved_username = keyring.get_password(service_name, "username")
+        keyring.delete_password(service_name, "username")
+        keyring.delete_password(service_name, saved_username)
+        print("Old credentials cleared")
+    except Exception as e:
+        print(f"An error occurred while clearing credentials: {e}")
+
+def is_login_issue(e):
+    s = f"{e}".lower()
+    return "login" in s or "credentials" in s or "auth" in s
 
 def main():
     with open(STEAM_BUILD_VDF, "w") as f:
@@ -84,9 +119,11 @@ def main():
         subprocess.run(args, check=True, env=env)
     except subprocess.CalledProcessError as e:
         print(f"SteamCMD failed with return code {e.returncode}")
+        if is_login_issue(e): clear_steam_credentials()
         raise
     except Exception as e:
         print("An unexpected error occurred:", e)
+        if is_login_issue(e): clear_steam_credentials()
         raise
 
 if __name__ == "__main__":
