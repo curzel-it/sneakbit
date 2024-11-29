@@ -33,7 +33,10 @@ pub enum Construction {
     BroadleafPurple,
     WoodenWall,
     SnowPile,
-    SnowyForest
+    SnowyForest,
+    Darkness15,
+    Darkness30,
+    Darkness45
 }
 
 #[derive(Debug, Default, Clone, Copy)]
@@ -131,7 +134,10 @@ impl Construction {
             Construction::BroadleafPurple => 22,
             Construction::WoodenWall => 23,
             Construction::SnowPile => 24,
-            Construction::SnowyForest => 25
+            Construction::SnowyForest => 25,
+            Construction::Darkness15 => 26,
+            Construction::Darkness30 => 27,
+            Construction::Darkness45 => 28,
         }
     }
 }
@@ -190,6 +196,9 @@ impl Construction {
             'O' => Construction::WoodenWall,
             'P' => Construction::SnowPile,
             'Q' => Construction::SnowyForest,
+            'R' => Construction::Darkness15,
+            'S' => Construction::Darkness30,
+            'T' => Construction::Darkness45,
             _ => Construction::Nothing,
         }
     }
@@ -220,7 +229,10 @@ impl Construction {
             Construction::BroadleafPurple => 'N',
             Construction::WoodenWall => 'O',
             Construction::SnowPile => 'P',
-            Construction::SnowyForest => 'Q'
+            Construction::SnowyForest => 'Q',
+            Construction::Darkness15 => 'R',
+            Construction::Darkness30 => 'S',
+            Construction::Darkness45 => 'T',
         }
     }
 }
@@ -317,6 +329,9 @@ impl Construction {
             Construction::WoodenWall => true,
             Construction::SnowPile => false,
             Construction::SnowyForest => true,
+            Construction::Darkness15 => false,
+            Construction::Darkness30 => false,
+            Construction::Darkness45 => false,
         }
     }
 }

@@ -4166,5 +4166,49 @@
         "sprite_sheet_id": 1009,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
+    },
+    {
+        "id": 1145,
+        "name": "npc.name.tentacle",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            6,
+            20
+        ],
+        "sprite_frame": {
+            "x": 1,
+            "y": 0,
+            "w": 5,
+            "h": 3
+        },
+        "sprite_sheet_id": 1021,
+        "sprite_number_of_frames": 35,
+        "lock_type": "None"
+    },
+    {
+        "id": 1146,
+        "name": "npc.name.tentacle",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            6,
+            21
+        ],
+        "sprite_frame": {
+            "x": 1,
+            "y": 3,
+            "w": 6,
+            "h": 6
+        },
+        "sprite_sheet_id": 1021,
+        "sprite_number_of_frames": 18,
+        "lock_type": "None"
     }
 ]

@@ -373,7 +373,7 @@ Allevamento di maiali-lumaca
 
 "lore.014.manafren_trees.caretaker" = """
 Mi occupo degli alberi qui intorno.
-Dopotutto sono una famosa attrazione turistica, qualcuno deve assicurarsi che siano presentabili!
+Sono una famosa attrazione turistica, qualcuno deve assicurarsi che siano presentabili!
 Sapevi che l'eroe viveva qui? 
 Suo padre è ancora nella loro vecchia casa.
 """
@@ -433,11 +433,10 @@ Lettera dell'ultimo giorno dei minatori
 --
 A chiunque trovi questa pergamena, prenda queste parole come un avvertimento e una preghiera. 
 Eravamo minatori, scavando sempre più in profondità alla ricerca di ricchezza finché non abbiamo scoperto non argento, ma rovina. 
-I nostri trapani hanno perforato una caverna diversa da qualsiasi altra avessimo visto—le sue pareti pulsavano con vene di cremisi e oro, come se fossero vive. 
-Dalle profondità è emersa una terribile ombra, un demone il cui nome non osiamo pronunciare. 
+I nostri trapani hanno perforato una caverna diversa da qualsiasi altra avessimo visto—le sue pareti pulsavano con vene di cremisi, come se fossero vive. 
+Dalle profondità è emersa una terribile ombra, il cui nome non osiamo pronunciare. 
 La sua sola presenza ha fatto crollare il terreno e scatenato una forza che ha distrutto la nostra isola.
-Siamo riusciti a sigillarlo usando l'ultimo degli esplosivi.
-Ora che è di nuovo lasciato in pace, sembra essersi calmato.
+Dopo aver fatto crollare la miniera sembra essersi calmato, forse voleva solo restare indisturbato.
 """
 
 "lore.016.fisherman_tales.1" = """
