@@ -31,14 +31,15 @@ cargo run --package game
 cargo run --package game creative
 ```
 
-### Windows
-The project uses [Raylib](https://docs.rs/raylib/latest/raylib/), so you will need to setup and add to path cmake, libc and the usual stuff before running the steps above.
+### Cross-Compile from macOS for Windows
+```bash
+# Setup
+rustup target add x86_64-pc-windows-gnu
+brew install mingw-w64
 
-Personally (but I have no idea what I'm doing and haven't used a windows machine in 10+ years) I did the following:
-1. Installed CMake from [here](https://cmake.org/download/)
-2. Added CMake to path
-3. Installed LLVM via `winget install LLVM.LLVM`
-4. `cargo run --package game` 
+# Build
+cargo build --package game --release --target x86_64-pc-windows-gnu
+```
 
 ### iOS and Android
 The engine is the same, the rendering is a simple set of custom views for the game itself, menus and such
@@ -49,6 +50,15 @@ The `build_all.sh` script will build `game_core`, compile all resources and copy
 ```bash
 sh scripts/build_all.sh
 ```
+
+### Windows
+The project uses [Raylib](https://docs.rs/raylib/latest/raylib/), so you will need to setup and add to path cmake, libc and the usual stuff before running the steps above.
+
+Personally (but I have no idea what I'm doing and haven't used a windows machine in 10+ years) I did the following:
+1. Installed CMake from [here](https://cmake.org/download/)
+2. Added CMake to path
+3. Installed LLVM via `winget install LLVM.LLVM`
+4. `cargo run --package game` 
 
 ## Screenshots
 <img src="docs/steam/4.png" style="width: 756px; height: auto; image-rendering: pixelated;">

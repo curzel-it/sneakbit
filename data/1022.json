@@ -1,0 +1,269 @@
+{
+  "id": 1022,
+  "revision": 0,
+  "ephemeral_state": false,
+  "biome_tiles": {
+    "tiles": [
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666",
+      "66666666666666666666666666666666666666666"
+    ],
+    "sheet_id": 1002
+  },
+  "constructions_tiles": {
+    "tiles": [
+      "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH",
+      "0000000000000000H0H00000H000000000000000H",
+      "HHHHH0HHH0HHHHH0H0H0H0HHH0HHH0HHHHHHHHHHH",
+      "H00000H000H000H0H000H0000000H0000000H000H",
+      "H0HHHHHHHHH0HHH0H0HHHHHHHHHHH0HHHHH0H0H0H",
+      "H00000000000H000H0H00000H000H000H000H0H0H",
+      "HHHHHHHHHHHHH0HHH0HHHHH0H0H0HHHHH0HHH0H0H",
+      "H0H000H00000H0H0H0H00000H0H0H000H00000H0H",
+      "H0H0H0H0HHH0H0H0H0H0HHHHH0H0H0H0HHHHHHH0H",
+      "H000H00000H0H0H0H0H000H000H0H0H000H00000H",
+      "H0HHHHHHHHH0H0H0H0HHH0H0HHH0H0HHH0H0HHH0H",
+      "H0H000H000H0H0H0000000H000H000H0H000H000H",
+      "HHH0H0H0H0H0H0H0HHHHHHHHH0HHHHH0HHHHH0HHH",
+      "H000H000H000H0H0H0H00000H000H0000000H000H",
+      "H0HHH0HHHHHHH0H0H0H0HHH0HHH0H0H0HHH0HHH0H",
+      "H0H000H000H000H0H0H0H0000000H0H000H000H0H",
+      "H0HHHHH0H0H0HHH0H0H0HHHHHHH0HHHHH0HHHHH0H",
+      "H000H000H0H0H0H000H0000000H0H000H0000000H",
+      "H0H0H0HHH0H0H0HHH0HHHHHHH0HHH0H0HHHHHHH0H",
+      "H0H000H000H0H000000000H000H000H0000000H0H",
+      "H0HHHHH0HHH0H0HHHHHHHHH0H0H0HHHHHHHHH0HHH",
+      "H000H0H0H000H000H000H000H0H0H0000000H000H",
+      "HHH0H0H0H0HHHHH0H0H0H0HHHHH0H0H0HHH0HHH0H",
+      "H0H000H000H000H0H0H0H0000000H0H0H0H000H0H",
+      "H0HHH0HHHHH0H0HHH0H0HHHHH0HHHHH0H0HHH0H0H",
+      "H00000H00000H00000H0H000H0000000H0H000H0H",
+      "H0HHHHHHH0HHHHHHHHH0H0H0HHH0HHHHH0H0HHH0H",
+      "H000H00000H0H00000H0H0H0H000H000H000H000H",
+      "HHH0H0HHHHH0H0H0HHH0H0H0HHHHH0H0HHHHH0H0H",
+      "H00000H0000000H0000000H0000000H0000000H00",
+      "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+    ],
+    "sheet_id": 1003
+  },
+  "entities": [
+    {
+      "id": 12834430,
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1010,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12834431,
+      "frame": {
+        "x": 21,
+        "y": 14,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1010,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12834432,
+      "frame": {
+        "x": 40,
+        "y": 28,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1010,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12834433,
+      "frame": {
+        "x": 21,
+        "y": 15,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": {
+        "world": 12833488,
+        "x": 6,
+        "y": 2,
+        "direction": "Down"
+      },
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12834434,
+      "frame": {
+        "x": 40,
+        "y": 29,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": {
+        "world": 1011,
+        "x": 51,
+        "y": 33,
+        "direction": "Left"
+      },
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12834435,
+      "frame": {
+        "x": 0,
+        "y": 1,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1019,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": {
+        "world": 1011,
+        "x": 29,
+        "y": 13,
+        "direction": "Down"
+      },
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12837659,
+      "frame": {
+        "x": 23,
+        "y": 4,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 4004,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12837660,
+      "frame": {
+        "x": 33,
+        "y": 8,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 4004,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12837661,
+      "frame": {
+        "x": 11,
+        "y": 18,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 4004,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    }
+  ],
+  "is_interior": false,
+  "light_conditions": "CantSeeShit",
+  "cutscenes": [],
+  "soundtrack": null
+}

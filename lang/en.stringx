@@ -73,6 +73,7 @@
 "npc.name.demon_lord" = "Demon Lord"
 "npc.name.developer" = "Mr Mugs"
 "npc.name.developer_messenger" = "Mugs's Bird"
+"npc.name.elf_priestess" = "Priestess"
 "npc.name.ethan" = "Ethan"
 "npc.name.female.blue_hair" = "Lyria Kurogane"
 "npc.name.female.brown_hair" = "Villager"
@@ -504,6 +505,10 @@ I like when I visit a place I've been before and find something new.
 I want this world to continuously evolve, that'd be pretty cool!
 """
 
+"lore.021.levek_peak_intro" = """
+Be careful, we just freed up the passage from the snow, but it's still unstable.
+"""
+
 "1001.entrance" = "Welcome to Evergrove Village!"
 "1003.entrance" = """
 Welcome to Aridreach
@@ -530,7 +535,10 @@ Boats to Thermoria available at the dock
 Welcome to the Village of Twilight: Duskhaven
 -- 
 Please do not touch the Manafren Trees.
-Please do not take pictures using the flash.
+Do NOT take pictures using the flash.
+-- 
+West: Levek Peak
+Est: Murkmire Swamps
 """
 "1012.entrance" = "Welcome to Vintoria!"
 "1013.entrance" = "Grimsun Basin"
@@ -785,8 +793,8 @@ This zone is off limits without a permit!
 "quest.manafren_research.dr_voss.introduction" = """
 Ah, just who I needed. 
 I’ve studied these Manafren trees extensively, by all accounts, they’re miraculous...
-Yet, I can’t shake this feeling of something dark, something ancient lurking beneath. 
-Maybe there’s something we’ve overlooked in the ancient scrolls...
+Lately something seems to be happening the them, the data we gathere is all over the place...
+Maybe this already happend in the past and there’s something about it in the old scrolls!
 Unfortunately, the village elder is the only one with access to them, but he won't talk to me anymore...
 """
 
@@ -808,18 +816,16 @@ Did you find anything interesting in the dungeon?
 """
 
 "quest.manafren_research.dungeon_scroll.contents" = """
-In ages past, when twilight lay thick over Duskhaven, a pact was struck. 
-The trees would flourish, drawing life from the soil and skies, breathing mana into the land. 
-Yet, for this... <unreadable>
-Beneath their roots flows the darkness, and with each pulse, a reminder of... <unreadable>. 
-Those who seek this path must journey east to the mountains, where the source of the pact lies buried.
+Mmmh... This scroll looks very old...
+It clearly talks about the trees, but it's mostly unreadable.
+There's a mention of something being buried in the mountains West of here...
 """
 
 "quest.manafren_research.ancient_book.contents" = """
-It was here, beneath these stones, that the trees were first granted their cursed life. 
-The Lord of Darkness poured his very essence into their roots, binding their growth to his will. 
-Each leaf holds a shard of his presence, and with each season, his dominion spreads quietly. 
-Let this record serve as both a warning and a call to vigilance. As the trees grow, so does he.
+I have uncovered a chilling truth buried beneath these ancient stones. 
+Here lies the origin of the trees, twisted and cursed with unnatural life. 
+It is said that the Demon Lord himself poured his essence into their roots, tethering their growth to his malignant will. 
+Each leaf carries a fragment of his presence, and with every passing season, his influence stretches further into the world, unseen but undeniable. 
 """
 
 "quest.manafren_research.dr_voss.thanks_for_the_info" = """
@@ -838,6 +844,20 @@ The suspicious dark aura is gone.
 I have to say, I am a bit pissed, I was so close...
 It's hard to do science in a world with magic.
 Maybe they should get an outer-worlder to do my job - no offense.
+"""
+
+"quest.manafren_research.priestess.thanks_for_the_info" = """
+So that's what the diary said!? Haha!
+Well, the adventurer who wrote it clearly was onto something, but not quite there yet.
+The trees are not "evil" in the slightest, they basically absorb and purify darkness - both magical and literal! 
+That's why they primarly grow here, where it's always twilight.
+Unfortunately, with the influence of the Demon Lord growing stronger, they are getting sick.
+Please don't tell the human scientist, I'm sure he'll want to find the answer on is own!
+"""
+
+"quest.manafren_research.priestess.research_was_inconclusive" = """
+The trees have already started to heal.
+You gave Punk the push he needed, thank you!
 """
 
 "quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
