@@ -508,6 +508,12 @@ Voglio che anche questo mondo continui ad evolversi, sarebbe fico!
 Stai attento, abbiamo appena liberato il passaggio dalla neve ed è ancora instabile
 """
 
+"lore.022.railroad" = """
+La ferrovia non arrivava fino a qui, la zona è troppo isolata.
+Quindi sto facendo la mia ferrovia, con black jack e squillo di lusso!
+Forse ci metterei meno senza la ferrovia...
+"""
+
 "1001.entrance" = "Benvenuto al Villaggio di Evergrove!"
 "1003.entrance" = """
 Benvenuto ad Aridreach

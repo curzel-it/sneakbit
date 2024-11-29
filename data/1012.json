@@ -56,8 +56,8 @@
       "31111111111111111111111111111111141HHHHHHHHHHHHHHHHH1111111HHHHHHHHHHHHHHHHHHHHH1HHHHHHHHHHHHHHHH113",
       "3111111111111111111111DDD111111114111111111111111111111111111111111111111111111111111111111111111113",
       "311111111111111111111111D1111111141111111111111111111111HHHHHHHHHHHHHHHHHH1HHHHHHHHHHHHH111111111113",
-      "31111111111111CCCCCCCCCCDD111111141111111111111111111111HHHHHHHHHHHHHHHHHH1HHHHHHHHHHHHH111111111113",
-      "3111111111111111111111DDDDDDD11114111111111111111HHHHHH1HHHHHHHHHHHHHHHHHH1HHHHHHHHHHH11111111111113",
+      "31111111111111CCCCCCCCCCDD111E11141111111111111111111111HHHHHHHHHHHHHHHHHH1HHHHHHHHHHHHH111111111113",
+      "3111111111111111111111DDDDDEE11114111111111111111HHHHHH1HHHHHHHHHHHHHHHHHH1HHHHHHHHHHH11111111111113",
       "31111CCCCC11111111111111DDDD111444444444444444441HHHHHH1HHHHHHHHHHHHHHHHHH1HHHHHHHHHHH1111111HHHH133",
       "31111CCCC1111111111111111111111111111111111111141HHHHHH1HHHHHHHHHHHHHHHHHH1HHHHHHHH1111111111HHHH133",
       "31111111111111111111111111111111111111HHHHHHHH141HHHHHH1HHHHHHHHHHHHHHHHHH1111111111111111111HHHH133",
@@ -138,11 +138,11 @@
       "8888888880111111111111111111110000009990999990909990088880000000KKKKKKKKKKKKKKK000KKKKKKKKKKKKKKK888",
       "888888888888888800000000000000000000909090999090909008880000KKKKKKKKKKKKKKKKKKK000KKKKKKKKKKKKKKK888",
       "888888888888888888000000000000000000909090999090909000000000KKKKKKKKKKKKKKKKKKK000KKKKKKKKKKKKKKK888",
-      "8888888800000000000000000000000000000000000000000000000000000000000000000000000000000000000008888888",
-      "8888888880888880000000000000000000000000000000000000000000000000000000000000000000000000000888888888",
-      "000000000088880000000000000000000000000000000000000000000KKKKKKKKKKKKKKKKK00KKKKKKKKKKKK008888888888",
-      "888888888888000000000000000000000000000000000000000000000KKKKKKKKKKKKKKKKK00KKKKKKKKKK00888000000000",
-      "88888888888000000000000000000000000000000000000000KKKK000KKKKKKKKKKKKKKKKK00KKKKKKKKKK88888000000888",
+      "8888888800000000000000B0B000000000000000000000000000000000000000000000000000000000000000000008888888",
+      "8888888880888880000000B0B000000000000000000000000000000000000000000000000000000000000000000888888888",
+      "0000000000888800BBBBB0B0B00000000000000000000000000000000KKKKKKKKKKKKKKKKK00KKKKKKKKKKKK008888888888",
+      "8888888888880000000000B0B0B0B0000000000000000000000000000KKKKKKKKKKKKKKKKK00KKKKKKKKKK00888000000000",
+      "8888888888800000BBBBB0B0B00B0B00000000000000000000KKKK000KKKKKKKKKKKKKKKKK00KKKKKKKKKK88888000000888",
       "88888888808000000000000000000000000000000000000000KKKK000KKKKKKKKKKKKKKKKK00KKKKKKK00888880000KKK888",
       "88888880808000000000000000000000000000000000000000KKKK000KKKKKKKKKKKKKKKKK00000000008888880000KKK888",
       "888088888880000000000000000000000000000KKKKKKK0000KKKK000KKKKKKKKKKKKKKKKK00000000008888880000KKK888",
@@ -18086,6 +18086,127 @@
       "dialogues": [
         {
           "text": "lore.015.depopulation",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
+        }
+      ],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12919329,
+      "frame": {
+        "x": 16,
+        "y": 52,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 9000,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": true,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12919330,
+      "frame": {
+        "x": 17,
+        "y": 52,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 9000,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": true,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12919331,
+      "frame": {
+        "x": 18,
+        "y": 52,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 9000,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": true,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12919332,
+      "frame": {
+        "x": 19,
+        "y": 52,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 9000,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": true,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12919333,
+      "frame": {
+        "x": 20,
+        "y": 52,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 9000,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": true,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12919334,
+      "frame": {
+        "x": 25,
+        "y": 49,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1117,
+      "direction": "Down",
+      "dialogues": [
+        {
+          "text": "lore.022.railroad",
           "key": "always",
           "expected_value": 0,
           "reward": null

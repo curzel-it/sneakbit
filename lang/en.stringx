@@ -508,6 +508,12 @@ I want this world to continuously evolve, that'd be pretty cool!
 Be careful, we just freed up the passage from the snow, but it's still unstable.
 """
 
+"lore.022.railroad" = """
+The railroad never arrived here, the area is just too isolated.
+So I'm building my own railroad, with Black Jack and high-end hookers!
+Maybe it would take less time without the railroad...
+"""
+
 "1001.entrance" = "Welcome to Evergrove Village!"
 "1003.entrance" = """
 Welcome to Aridreach
