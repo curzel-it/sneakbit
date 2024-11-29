@@ -193,8 +193,8 @@
       "dialogues": [],
       "destination": {
         "world": 1011,
-        "x": 23,
-        "y": 30,
+        "x": 29,
+        "y": 13,
         "direction": "Down"
       },
       "lock_type": "None",
