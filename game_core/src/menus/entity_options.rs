@@ -1,4 +1,4 @@
-use crate::{entities::species::{EntityType, SPECIES_NONE}, game_engine::{entity::Entity, keyboard_events_provider::KeyboardEventsProvider, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}}, lang::localizable::LocalizableText, ui::components::View};
+use crate::{entities::species::{EntityType, SPECIES_NONE}, game_engine::{entity::Entity, keyboard_events_provider::KeyboardEventsProvider, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}}, is_creative_mode, lang::localizable::LocalizableText, ui::components::View};
 use super::{menu::{Menu, MenuItem, MenuUpdate}, text_input::TextInput};
 
 #[derive(Debug, Clone)]
@@ -47,8 +47,7 @@ pub struct EntityOptionsMenu {
     pub menu: Menu<EntityOptionMenuItem>,
     state: EntityOptionsMenuState,
     text_input: TextInput,
-    lock_menu: Menu<LockType>,
-    creative_mode: bool
+    lock_menu: Menu<LockType>
 }
 
 impl EntityOptionsMenu {
@@ -59,7 +58,6 @@ impl EntityOptionsMenu {
             menu: Menu::new("entity.menu.title".localized(), vec![]),
             state: EntityOptionsMenuState::Closed,
             text_input: TextInput::new(),
-            creative_mode: false,
             lock_menu: Menu::new("entity.menu.change_lock_title".localized(), vec![
                 LockType::None,
                 LockType::Yellow,
@@ -72,25 +70,24 @@ impl EntityOptionsMenu {
         }
     }
 
-    pub fn show(&mut self, entity: Box<Entity>, creative_mode: bool) {
+    pub fn show(&mut self, entity: Box<Entity>) {
         if self.time_since_last_closed < 0.5 {
             return;
         }
         self.entity = entity;
         self.time_since_last_closed = 0.0;
-        self.menu.items = self.available_options(creative_mode);
+        self.menu.items = self.available_options();
 
         if self.menu.items.is_empty() {
             return
         }
 
-        if creative_mode {
+        if is_creative_mode() {
             self.menu.title = format!("{} #{}", self.entity.name, self.entity.id);
         } else {
             self.menu.title = self.entity.name.clone();
         }
         self.menu.show();
-        self.creative_mode = creative_mode;
         self.state = EntityOptionsMenuState::Closed;
     }
 
@@ -273,8 +270,8 @@ impl EntityOptionsMenu {
         self.text_input.title = "entity.menu.change_destination_y".localized();
     }
 
-    fn available_options(&self, creative_mode: bool) -> Vec<EntityOptionMenuItem> {
-        if creative_mode {
+    fn available_options(&self) -> Vec<EntityOptionMenuItem> {
+        if is_creative_mode() {
             self.available_options_creative()
         } else {
             vec![]

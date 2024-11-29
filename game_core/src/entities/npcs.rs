@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, features::dialogues::AfterDialogueBehavior, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}, world::World}, utils::directions::{direction_between_rects, Direction}};
+use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, features::dialogues::AfterDialogueBehavior, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}, world::World}, is_creative_mode, utils::directions::{direction_between_rects, Direction}};
 
 pub type NpcId = u32;
 
@@ -16,7 +16,7 @@ impl Entity {
             self.update_sprite_for_current_state();
         }
         
-        if !world.creative_mode {
+        if !is_creative_mode() {
             self.update_direction(world);
             self.move_linearly(world, time_since_last_update);
             
@@ -40,7 +40,7 @@ impl Entity {
         if world.has_confirmation_key_been_pressed {
             self.direction = direction_between_rects(&self.frame, &world.cached_hero_props.hittable_frame);
 
-            if world.creative_mode {
+            if is_creative_mode() {
                 let vec = vec![
                     WorldStateUpdate::EngineUpdate(
                         EngineStateUpdate::ShowEntityOptions(

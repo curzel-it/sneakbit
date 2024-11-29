@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, directions::MovementDirections}, game_engine::storage::{set_value_for_key, StorageKey}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, directions::MovementDirections}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}, world::World};
 
@@ -140,32 +140,32 @@ impl Entity {
         updates
     }
 
-    pub fn setup(&mut self, creative_mode: bool) {    
+    pub fn setup(&mut self) {    
         if self.parent_id == NO_PARENT {  
             self.remaining_lifespan = UNLIMITED_LIFESPAN;
         }
         species_by_id(self.species_id).reload_props(self);
         
         match self.entity_type {
-            EntityType::Hero => self.setup_hero(creative_mode),
+            EntityType::Hero => self.setup_hero(),
             EntityType::Npc => self.setup_npc(),
-            EntityType::Building => self.setup_generic(creative_mode),
-            EntityType::StaticObject => self.setup_generic(creative_mode),
-            EntityType::PickableObject | EntityType::Bundle => self.setup_generic(creative_mode),
-            EntityType::Teleporter => self.setup_teleporter(creative_mode),
-            EntityType::PushableObject => self.setup_generic(creative_mode),
-            EntityType::Gate => self.setup_gate(creative_mode),
-            EntityType::InverseGate => self.setup_inverse_gate(creative_mode),
+            EntityType::Building => self.setup_generic(),
+            EntityType::StaticObject => self.setup_generic(),
+            EntityType::PickableObject | EntityType::Bundle => self.setup_generic(),
+            EntityType::Teleporter => self.setup_teleporter(),
+            EntityType::PushableObject => self.setup_generic(),
+            EntityType::Gate => self.setup_gate(),
+            EntityType::InverseGate => self.setup_inverse_gate(),
             EntityType::PressurePlate => self.setup_pressure_plate(),
             EntityType::Bullet => self.setup_bullet(),
             EntityType::RailObject => self.setup_rail(),
-            EntityType::Hint => self.setup_hint(creative_mode),
-            EntityType::Trail => self.setup_generic(creative_mode),
+            EntityType::Hint => self.setup_hint(),
+            EntityType::Trail => self.setup_generic(),
         }
     }
 
     pub fn should_be_visible(&self, world: &World) -> bool {
-        if world.creative_mode {
+        if is_creative_mode() {
             return true
         }
         if bool_for_global_key(&StorageKey::item_collected(self.id)) {
@@ -234,8 +234,8 @@ impl Entity {
 }
 
 impl Entity {
-    fn setup_generic(&mut self, creative_mode: bool) {
-        if creative_mode {
+    fn setup_generic(&mut self) {
+        if is_creative_mode() {
             self.is_rigid = false
         }
     }

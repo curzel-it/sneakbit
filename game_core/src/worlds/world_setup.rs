@@ -7,13 +7,13 @@ impl World {
         self.visible_entities = self.compute_visible_entities(&self.bounds);
         self.update_tiles_hitmap();
         self.update_hitmaps();
+        self.setup_entities();
         self.spawn_hero(source, hero_direction, original_x, original_y, direction);
         self.spawn_changelog_man_if_needed();
     }    
 
-    pub fn set_creative_mode(&mut self, enabled: bool) {
-        self.creative_mode = enabled;
-        self.entities.borrow_mut().iter_mut().for_each(|e| e.setup(enabled));
+    fn setup_entities(&mut self) {
+        self.entities.borrow_mut().iter_mut().for_each(|e| e.setup());
     }
 
     fn spawn_changelog_man_if_needed(&mut self) {

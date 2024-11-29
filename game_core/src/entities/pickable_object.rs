@@ -1,8 +1,8 @@
-use crate::{constants::SPRITE_SHEET_INVENTORY, entities::species::species_by_id, game_engine::{entity::Entity, state_updates::{AddToInventoryReason, EngineStateUpdate, WorldStateUpdate}, world::World}, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastImage}};
+use crate::{constants::SPRITE_SHEET_INVENTORY, entities::species::species_by_id, game_engine::{entity::Entity, state_updates::{AddToInventoryReason, EngineStateUpdate, WorldStateUpdate}, world::World}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastImage}};
 
 impl Entity {
     pub fn update_pickable_object(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {              
-        if !world.creative_mode && world.is_hero_at(self.frame.x, self.frame.y) {
+        if !is_creative_mode() && world.is_hero_at(self.frame.x, self.frame.y) {
             object_pick_up_sequence(self)
         } else {
             vec![]

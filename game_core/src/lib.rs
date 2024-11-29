@@ -23,6 +23,7 @@ pub mod utils;
 pub mod worlds;
 
 static mut ENGINE: *mut GameEngine = std::ptr::null_mut();
+static mut CREATIVE_MODE: *mut bool = std::ptr::null_mut();
 
 pub fn engine() -> &'static GameEngine {
     unsafe {
@@ -41,15 +42,17 @@ pub extern "C" fn initialize_game(creative_mode: bool) {
     unsafe {
         let boxed = Box::new(GameEngine::new());
         ENGINE = Box::into_raw(boxed);      
+        CREATIVE_MODE = Box::into_raw(Box::new(creative_mode));
     }
     let engine = engine_mut();
-    engine.set_creative_mode(creative_mode);
     engine.start();
 }
 
 #[no_mangle]
 pub extern "C" fn is_creative_mode() -> bool {
-    engine().creative_mode
+    unsafe {
+        *CREATIVE_MODE
+    }
 }
 
 #[no_mangle]
@@ -349,9 +352,9 @@ pub extern "C" fn is_night() -> bool {
 }
 
 #[no_mangle]
-pub extern "C" fn is_limited_visibility() -> bool {
+pub extern "C" fn is_limited_visibility() -> bool {    
+    if is_creative_mode() { return false }
     let world = &engine().world;
-    if world.creative_mode { return false }
     matches!(world.light_conditions, LightConditions::CantSeeShit)
 }
 

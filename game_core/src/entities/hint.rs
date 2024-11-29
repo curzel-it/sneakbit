@@ -1,10 +1,10 @@
-use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_STATIC_OBJECTS}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World}, lang::localizable::LocalizableText, menus::toasts::Toast};
+use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_STATIC_OBJECTS}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::Toast};
 
 use super::species::species_by_id;
 
 impl Entity {
-    pub fn setup_hint(&mut self, creative_mode: bool) {
-        if creative_mode { 
+    pub fn setup_hint(&mut self) {
+        if is_creative_mode() { 
             let species = species_by_id(self.species_id);
             self.sprite.sheet_id = SPRITE_SHEET_INVENTORY;
             self.sprite.frame.x = species.inventory_texture_offset.1;
@@ -17,7 +17,7 @@ impl Entity {
     }
 
     pub fn update_hint(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {   
-        if !world.creative_mode && world.is_hero_at(self.frame.x, self.frame.y) {
+        if !is_creative_mode() && world.is_hero_at(self.frame.x, self.frame.y) {
             self.hint_updates()    
         } else {
             vec![]

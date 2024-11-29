@@ -1,10 +1,10 @@
-use crate::{constants::{HERO_KUNAI_COOLDOWN, TILE_SIZE}, entities::{known_species::SPECIES_KUNAI, species::species_by_id}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
+use crate::{constants::{HERO_KUNAI_COOLDOWN, TILE_SIZE}, entities::{known_species::SPECIES_KUNAI, species::species_by_id}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory, world::World}, is_creative_mode};
 
 use super::trails::leave_footsteps;
 
 impl Entity {
-    pub fn setup_hero(&mut self, creative_mode: bool) {
-        self.speed_multiplier = if creative_mode { 2.0 } else { 1.0 };
+    pub fn setup_hero(&mut self) {
+        self.speed_multiplier = if is_creative_mode() { 2.0 } else { 1.0 };
     }
 
     pub fn update_hero(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {        

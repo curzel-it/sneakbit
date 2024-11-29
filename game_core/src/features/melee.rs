@@ -1,8 +1,8 @@
-use crate::game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World};
+use crate::{game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, is_creative_mode};
 
 impl Entity {
     pub fn handle_melee_attack(&mut self, world: &World) -> Vec<WorldStateUpdate> {
-        if self.is_dying || world.creative_mode {
+        if self.is_dying || is_creative_mode() {
             return vec![]
         }
 

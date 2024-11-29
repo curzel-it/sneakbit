@@ -1,4 +1,4 @@
-use crate::{game_engine::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, utils::directions::Direction};
+use crate::{game_engine::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::directions::Direction};
 
 use super::pickable_object::object_pick_up_sequence;
 
@@ -17,7 +17,7 @@ impl Entity {
             return vec![WorldStateUpdate::RemoveEntity(self.id)]
         }
 
-        if self.current_speed == 0.0 && !world.creative_mode && world.is_hero_at(self.frame.x, self.frame.y) {   
+        if self.current_speed == 0.0 && !is_creative_mode() && world.is_hero_at(self.frame.x, self.frame.y) {   
             return object_pick_up_sequence(self);
         }
 

@@ -1,15 +1,15 @@
-use crate::{features::destination::Destination, game_engine::{entity::Entity, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory, world::World}, lang::localizable::LocalizableText, menus::toasts::Toast, utils::directions::Direction};
+use crate::{features::destination::Destination, game_engine::{entity::Entity, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory, world::World}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::Toast, utils::directions::Direction};
 
 impl Entity {
-    pub fn setup_teleporter(&mut self, creative_mode: bool) {
-        self.sprite.frame.y = if creative_mode { 5 } else { 6 };
+    pub fn setup_teleporter(&mut self) {
+        self.sprite.frame.y = if is_creative_mode() { 5 } else { 6 };
         self.is_rigid = false;
     }
 
     pub fn update_teleporter(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {   
         self.is_rigid = !matches!(self.lock_type, LockType::None);
 
-        if world.creative_mode && world.is_hero_interacting(&self.frame) {
+        if is_creative_mode() && world.is_hero_interacting(&self.frame) {
             return vec![
                 WorldStateUpdate::EngineUpdate(
                     EngineStateUpdate::ShowEntityOptions(
@@ -20,7 +20,7 @@ impl Entity {
         } 
 
         if self.should_teleport(world) {
-            if !world.creative_mode && self.lock_type != LockType::None {
+            if !is_creative_mode() && self.lock_type != LockType::None {
                 if has_species_in_inventory(&self.lock_type.key_species_id()) {
                     vec![self.show_unlock_confirmation()]
                 } else {

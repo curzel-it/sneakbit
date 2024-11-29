@@ -799,85 +799,87 @@
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
-      "after_dialogue": "Nothing"    
+      "after_dialogue": "Nothing"
     },
-      {
-        "id": 12659603,
-        "frame": {
-          "x": 56,
-          "y": 51,
-          "w": 1,
-          "h": 2
-        },
-        "species_id": 1135,
-        "direction": "Down",
-        "dialogues": [
-          {
-            "key": "always",
-            "expected_value": 0,
-            "text": "lore.020.developer.intro"
-          }
-        ],
-        "destination": null,
-        "lock_type": "None",
-        "display_conditions": [
-          {
-            "key": "dialogue.answer.lore.020.developer.intro",
-            "expected_value": 1,
-            "visible": false
-          },
-          {
-            "key": "always",
-            "expected_value": 1,
-            "visible": true
-          }
-        ],
-        "is_consumable": false,
-        "contents": null,
-        "demands_attention": false,
-        "after_dialogue": "Nothing"
+    {
+      "id": 12659603,
+      "frame": {
+        "x": 56,
+        "y": 51,
+        "w": 1,
+        "h": 2
       },
-      {
-        "id": 11887215,
-        "frame": {
-          "x": 75,
-          "y": 27,
-          "w": 1,
-          "h": 2
+      "species_id": 1135,
+      "direction": "Down",
+      "dialogues": [
+        {
+          "text": "lore.020.developer.intro",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
+        }
+      ],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [
+        {
+          "key": "dialogue.answer.lore.020.developer.intro",
+          "expected_value": 1,
+          "visible": false
         },
-        "species_id": 3007,
-        "direction": "Down",
-        "dialogues": [
-          {
-            "key": "always",
-            "expected_value": 0,
-            "text": "quest.hero.wizard.met_anyone_important"
-          }
-        ],
-        "destination": null,
-        "lock_type": "None",
-        "display_conditions": [
-          {
-            "key": "dialogue.answer.quest.hero.wizard.met_anyone_important",
-            "expected_value": 1,
-            "visible": false
-          },
-          {
-            "key": "dialogue.answer.quest.hero.punk.so_you_are_the_outerworlder",
-            "expected_value": 1,
-            "visible": true
-          },
-          {
-            "key": "always",
-            "expected_value": 0,
-            "visible": false
-          }
-        ],
-        "is_consumable": false,
-        "contents": null,
-        "demands_attention": true,
-        "vanishes_after_dialogue": true
-      }  
+        {
+          "key": "always",
+          "expected_value": 1,
+          "visible": true
+        }
+      ],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 11887215,
+      "frame": {
+        "x": 75,
+        "y": 27,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 3007,
+      "direction": "Down",
+      "dialogues": [
+        {
+          "text": "quest.hero.wizard.met_anyone_important",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
+        }
+      ],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [
+        {
+          "key": "dialogue.answer.quest.hero.wizard.met_anyone_important",
+          "expected_value": 1,
+          "visible": false
+        },
+        {
+          "key": "dialogue.answer.quest.hero.punk.so_you_are_the_outerworlder",
+          "expected_value": 1,
+          "visible": true
+        },
+        {
+          "key": "always",
+          "expected_value": 0,
+          "visible": false
+        }
+      ],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": true,
+      "after_dialogue": "Nothing"
+    }
   ],
   "is_interior": false,
   "light_conditions": "Day",

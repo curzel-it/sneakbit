@@ -1,4 +1,4 @@
-use crate::{constants::WORLD_ID_NONE, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}}, lang::localizable::LocalizableText, spacing, ui::components::{Spacing, View}, utils::rect::IntRect};
+use crate::{constants::WORLD_ID_NONE, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}}, is_creative_mode, lang::localizable::LocalizableText, spacing, ui::components::{Spacing, View}, utils::rect::IntRect};
 
 use super::{confirmation::ConfirmationDialog, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
@@ -92,8 +92,8 @@ impl GameMenu {
         }
     }
 
-    pub fn set_creative_mode(&mut self, creative_mode: bool) {
-        self.menu.items = if creative_mode {
+    pub fn setup(&mut self) {
+        self.menu.items = if is_creative_mode() {
             vec![
                 GameMenuItem::Save,
                 GameMenuItem::Resume,

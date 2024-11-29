@@ -1,4 +1,4 @@
-use crate::{constants::HERO_ENTITY_ID, entities::{known_species::SPECIES_DEEP_HOLE, species::EntityType}, game_engine::{entity::{Entity, EntityId}, world::World}, maps::constructions_tiles::Construction};
+use crate::{constants::HERO_ENTITY_ID, entities::{known_species::SPECIES_DEEP_HOLE, species::EntityType}, game_engine::{entity::{Entity, EntityId}, world::World}, is_creative_mode, maps::constructions_tiles::Construction};
 
 pub type Hitmap = Vec<Vec<bool>>;
 pub type EntityIdsMap = Vec<Vec<EntityId>>;
@@ -54,7 +54,7 @@ impl World {
     pub fn update_tiles_hitmap(&mut self) {    
         let mut hitmap = vec![vec![false; self.bounds.w as usize]; self.bounds.h as usize];
 
-        if !self.creative_mode && !self.biome_tiles.tiles.is_empty() {
+        if !is_creative_mode() && !self.biome_tiles.tiles.is_empty() {
             let min_row = self.bounds.y as usize;
             let max_row = ((self.bounds.y + self.bounds.h) as usize).min(self.biome_tiles.tiles.len());
             let min_col = self.bounds.x as usize;

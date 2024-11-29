@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, menus::{ammo_counter::AmmoCounter, confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, menus::{ammo_counter::AmmoCounter, confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
 
@@ -18,7 +18,6 @@ pub struct GameEngine {
     pub camera_viewport: IntRect,
     pub camera_viewport_offset: Vector2d,
     pub is_running: bool,
-    pub creative_mode: bool,
     pub wants_fullscreen: bool,
     pub sound_effects: SoundEffectsManager,
     pub links_handler: Box<dyn LinksHandler>
@@ -41,7 +40,6 @@ impl GameEngine {
             camera_viewport: INITIAL_CAMERA_VIEWPORT,
             camera_viewport_offset: Vector2d::zero(),
             is_running: true,
-            creative_mode: false,
             inventory_status: AmmoCounter::new(),
             wants_fullscreen: false,
             sound_effects: SoundEffectsManager::new(),
@@ -50,13 +48,8 @@ impl GameEngine {
     }
 
     pub fn start(&mut self) {
+        self.menu.setup();
         self.teleport_to_previous();
-    }
-
-    pub fn set_creative_mode(&mut self, enabled: bool) {
-        self.menu.set_creative_mode(enabled);
-        self.world.set_creative_mode(enabled);
-        self.creative_mode = enabled;
     }
 
     pub fn update(&mut self, time_since_last_update: f32) {     
@@ -210,7 +203,7 @@ impl GameEngine {
                 self.exit()
             }
             EngineStateUpdate::ShowEntityOptions(entity) => {
-                self.entity_options_menu.show(entity.clone(), self.creative_mode)
+                self.entity_options_menu.show(entity.clone())
             }
             EngineStateUpdate::AddToInventory(species_id, _) => {
                 increment_inventory_count(species_id)
@@ -265,7 +258,7 @@ impl GameEngine {
     }
 
     fn save(&self) {
-        if self.creative_mode {
+        if is_creative_mode() {
             set_value_for_key(&StorageKey::latest_world(), self.world.id);     
             self.world.save();
         }
@@ -274,7 +267,7 @@ impl GameEngine {
     fn teleport(&mut self, destination: &Destination) {
         self.loading_screen.animate_world_transition();
 
-        if self.creative_mode {
+        if is_creative_mode() {
             self.world.save();
         }
             
@@ -283,7 +276,6 @@ impl GameEngine {
         }
         
         let mut new_world = self.world_by_id(destination.world);
-        new_world.set_creative_mode(self.creative_mode);
         new_world.setup(
             self.previous_world(), 
             &self.world.cached_hero_props.direction, 
