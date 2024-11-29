@@ -59,7 +59,7 @@ JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_initializeGame(JNIEnv *env, jobject thiz,
                                                           jboolean creativeMode) {
     bool creative_mode = static_cast<bool>(creativeMode);
-    initialize_game();
+    initialize_game(creative_mode);
 }
 
 extern "C"
