@@ -793,8 +793,8 @@ This zone is off limits without a permit!
 "quest.manafren_research.dr_voss.introduction" = """
 Ah, just who I needed. 
 I’ve studied these Manafren trees extensively, by all accounts, they’re miraculous...
-Yet, I can’t shake this feeling of something dark, something ancient lurking beneath. 
-Maybe there’s something we’ve overlooked in the ancient scrolls...
+Lately something seems to be happening the them, the data we gathere is all over the place...
+Maybe this already happend in the past and there’s something about it in the old scrolls!
 Unfortunately, the village elder is the only one with access to them, but he won't talk to me anymore...
 """
 
@@ -849,10 +849,10 @@ Maybe they should get an outer-worlder to do my job - no offense.
 "quest.manafren_research.priestess.thanks_for_the_info" = """
 So that's what the diary said!? Haha!
 Well, the adventurer who wrote it clearly was onto something, but not quite there yet.
-The trees are not "evil" in the slightest, basically absorb and purify darkness - both magical and literal! 
-That's why they grow primarly here, where it's always twilight.
+The trees are not "evil" in the slightest, they basically absorb and purify darkness - both magical and literal! 
+That's why they primarly grow here, where it's always twilight.
 Unfortunately, with the influence of the Demon Lord growing stronger, they are getting sick.
-Please don't tell the human scientist, I'm sure he'll find the answer on is own!
+Please don't tell the human scientist, I'm sure he'll want to find the answer on is own!
 """
 
 "quest.manafren_research.priestess.research_was_inconclusive" = """

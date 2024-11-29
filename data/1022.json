@@ -203,10 +203,67 @@
       "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12837659,
+      "frame": {
+        "x": 23,
+        "y": 4,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 4004,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12837660,
+      "frame": {
+        "x": 33,
+        "y": 8,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 4004,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12837661,
+      "frame": {
+        "x": 11,
+        "y": 18,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 4004,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
     }
   ],
   "is_interior": false,
-  "light_conditions": "Day",
+  "light_conditions": "CantSeeShit",
   "cutscenes": [],
   "soundtrack": null
 }

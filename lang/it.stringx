@@ -793,8 +793,8 @@ Questa zona è vietata senza permesso!
 "quest.manafren_research.dr_voss.introduction" = """
 Ah, proprio chi mi serviva. 
 Ho studiato questi alberi di Manafern a fondo, per tutti i motivi, sono miracolosi...
-Eppure, non riesco a scrollarmi di dosso questa sensazione di qualcosa di oscuro, qualcosa di antico che si nasconde sotto. 
-Forse c'è qualcosa che ci è sfuggito nei rotoli antichi...
+Ultimamente però hanno qualcosa che non va, i dati che abbiamo raccolto sono davvero strani.
+Forse è un fenomeno già visto in epoche passate, dovrei controllare le antiche scritture!
 Purtroppo, l'anziano del villaggio è l'unico con accesso a essi, ma non vuole più parlarmi...
 """
 
@@ -816,18 +816,16 @@ Hai trovato qualcosa di interessante nel dungeon?
 """
 
 "quest.manafren_research.dungeon_scroll.contents" = """
-In epoche passate, quando il crepuscolo si posava fitto su Duskhaven, fu stretto un patto. 
-Gli alberi sarebbero fioriti, attingendo vita dal suolo e dai cieli, respirando mana nella terra. 
-Eppure, per questo... <illeggibile>
-Sotto le loro radici scorre l'oscurità, e con ogni impulso, un promemoria di... <illeggibile>. 
-Coloro che cercano questo cammino devono viaggiare a est verso le montagne, dove la fonte del patto è sepolta.
+Mmh... Questo pergamena sembra molto antica...
+Parla chiaramente degli alberi, ma è per lo più illeggibile.
+C'è un accenno a qualcosa sepolto nelle montagne a ovest di qui...
 """
 
 "quest.manafren_research.ancient_book.contents" = """
-Fu qui, sotto queste pietre, che gli alberi ricevettero per la prima volta la loro vita maledetta. 
-Il Signore delle Tenebre versò la sua stessa essenza nelle loro radici, legando la loro crescita alla sua volontà. 
-Ogni foglia contiene un frammento della sua presenza, e con ogni stagione, il suo dominio si diffonde silenziosamente. 
-Lascia che questo resoconto serva sia come avvertimento che come richiamo alla vigilanza. Mentre gli alberi crescono, anche lui cresce.
+Ho scoperto una verità inquietante sepolta sotto queste antiche pietre.
+Qui giace l'origine degli alberi, distorti e maledetti con una vita innaturale.
+Si dice che il Signore dei Demoni stesso abbia versato la sua essenza nelle loro radici, legando la loro crescita alla sua volontà maligna.
+Ogni foglia porta un frammento della sua presenza e, con ogni stagione che passa, la sua influenza si estende ulteriormente nel mondo, invisibile ma innegabile.
 """
 
 "quest.manafren_research.dr_voss.thanks_for_the_info" = """
@@ -846,6 +844,20 @@ La sospetta aura oscura è sparita.
 Devo dire, sono un po' seccato, ero così vicino...
 È difficile fare scienza in un mondo con la magia.
 Forse dovrebbero chiamare un outer-worlder per fare il mio lavoro - senza offesa.
+"""
+
+"quest.manafren_research.priestess.thanks_for_the_info" = """
+Cosa diceva il diario!? Haha!
+Beh, l'avventuriero che l'ha scritto era sulla strada giusta, più o meno...
+Gli alberi non sono "malvagi", anzi! Vivono assorbendo e purificando oscurità, magica e non.
+È questo il motivo per cui crescono principalmente in quest'area sempre in penombra...
+Purtroppo, con l'influenza crescente del Signore dei Demoni, si stanno ammalando.
+Non dirlo allo scienziato umano, sono sicuro che vuole trovare le risposte da solo!
+"""
+
+"quest.manafren_research.priestess.research_was_inconclusive" = """
+Gli alberi stanno già guarendo.
+Hai dato a Punk la spinta che gli serviva, grazie!
 """
 
 "quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """

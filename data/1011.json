@@ -36,12 +36,12 @@
       "33333333333333333AAAAA3333AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA55A5555A",
       "53355533333333333AAA3333333AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5555555A",
       "55555533333333333AAA3333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA55A5555A",
-      "55555533333333333AAA3333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5A5555A",
+      "55555533333333333AAA333333BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5A5555A",
       "55555533333333333AAAA333333AAAAAAAAAAAAAAAAAAA33333333AAAAAAAAAAAAAAAAAA5555555A",
       "55555553333333333AAAAAAA333AAAAAAAAAAAAAAAAAAA33333333AAAAAAAAAAAAAAAAAAAAA555AA",
       "55555555333333333AAAAAAA333AAAAAAAAAAAAAAAAAAA33333333AAAAAAAAAAAAAAAAA5AAA555AA",
       "55555555333333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAA33333AAAAAAAAAAAAAAAAAAA55AAAAAAAA",
-      "55555555333333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAA33333AAAAAAAAAAAAAAAAAAA55AAAAAAAA",
+      "55555555333333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAA333B3AAAAAAAAAAAAAAAAAAA55AAAAAAAA",
       "55555555533333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5555AA",
       "55555553333333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
       "55555555533333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -8964,13 +8964,13 @@
     {
       "id": 11022216,
       "frame": {
-        "x": 13,
-        "y": 31,
+        "x": 8,
+        "y": 29,
         "w": 1,
         "h": 1
       },
       "species_id": 9000,
-      "direction": "Left",
+      "direction": "Up",
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -9615,13 +9615,13 @@
     {
       "id": 11022214,
       "frame": {
-        "x": 22,
-        "y": 18,
+        "x": 28,
+        "y": 16,
         "w": 1,
         "h": 1
       },
       "species_id": 9000,
-      "direction": "Right",
+      "direction": "Up",
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -15461,25 +15461,6 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12834945,
-      "frame": {
-        "x": 26,
-        "y": 32,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 44418,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
       "id": 12834946,
       "frame": {
         "x": 26,
@@ -15789,19 +15770,53 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12835342,
+      "id": 12835553,
       "frame": {
         "x": 49,
-        "y": 37,
+        "y": 33,
         "w": 1,
-        "h": 1
+        "h": 2
       },
-      "species_id": 44415,
+      "species_id": 1134,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "quest.manafren_research.priestess.research_was_inconclusive",
+          "key": "demon_lord_defeat",
+          "expected_value": 1,
+          "reward": null
+        },
+        {
+          "text": "quest.manafren_research.priestess.thanks_for_the_info",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
+        }
+      ],
       "destination": null,
       "lock_type": "None",
-      "display_conditions": [],
+      "display_conditions": [
+        {
+          "key": "demon_lord_defeat",
+          "expected_value": 1,
+          "visible": true
+        },
+        {
+          "key": "dialogue.answer.quest.manafren_research.priestess.thanks_for_the_info",
+          "expected_value": 1,
+          "visible": false
+        },
+        {
+          "key": "content_read.11022247",
+          "expected_value": 1,
+          "visible": true
+        },
+        {
+          "key": "always",
+          "expected_value": 0,
+          "visible": false
+        }
+      ],
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
@@ -16239,25 +16254,6 @@
         "h": 1
       },
       "species_id": 7001,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 12835553,
-      "frame": {
-        "x": 49,
-        "y": 33,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1134,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
