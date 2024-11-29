@@ -4210,5 +4210,27 @@
         "sprite_sheet_id": 1021,
         "sprite_number_of_frames": 18,
         "lock_type": "None"
+    },
+    {
+        "id": 1147,
+        "name": "npc.name.lava_splash",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 0,
+        "base_speed": 2.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            6,
+            22
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
+        "lock_type": "None"
     }
 ]
