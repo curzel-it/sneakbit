@@ -165,6 +165,9 @@ impl Entity {
     }
 
     pub fn should_be_visible(&self, world: &World) -> bool {
+        if world.creative_mode {
+            return true
+        }
         if bool_for_global_key(&StorageKey::item_collected(self.id)) {
             return false
         }
