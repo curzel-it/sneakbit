@@ -595,6 +595,28 @@
         "lock_type": "Silver"
     },
     {
+        "id": 2005,
+        "name": "objects.name.key_white",
+        "is_invulnerable": true,
+        "entity_type": "PickableObject",
+        "z_index": 140,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            25
+        ],
+        "sprite_frame": {
+            "x": 30,
+            "y": 10,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 8,
+        "lock_type": "Silver"
+    },
+    {
         "id": 1019,
         "name": "objects.name.teleporter",
         "is_invulnerable": true,
@@ -771,6 +793,28 @@
         "lock_type": "Silver"
     },
     {
+        "id": 1045,
+        "name": "objects.name.gate.white",
+        "is_invulnerable": true,
+        "entity_type": "Gate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            3,
+            22
+        ],
+        "sprite_frame": {
+            "x": 13,
+            "y": 4,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Silver"
+    },
+    {
         "id": 1050,
         "name": "objects.name.pressure_plate.yellow",
         "is_invulnerable": true,
@@ -881,6 +925,28 @@
         "lock_type": "Silver"
     },
     {
+        "id": 1055,
+        "name": "objects.name.pressure_plate.white",
+        "is_invulnerable": true,
+        "entity_type": "PressurePlate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            3,
+            24
+        ],
+        "sprite_frame": {
+            "x": 15,
+            "y": 4,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Silver"
+    },
+    {
         "id": 1060,
         "name": "objects.name.inverse_gate.yellow",
         "is_invulnerable": true,
@@ -982,6 +1048,28 @@
         ],
         "sprite_frame": {
             "x": 6,
+            "y": 4,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "Silver"
+    },
+    {
+        "id": 1065,
+        "name": "objects.name.inverse_gate.white",
+        "is_invulnerable": true,
+        "entity_type": "InverseGate",
+        "z_index": 100,
+        "base_speed": 0.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            3,
+            23
+        ],
+        "sprite_frame": {
+            "x": 15,
             "y": 4,
             "w": 1,
             "h": 1
