@@ -4425,6 +4425,25 @@
       "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
+    },
+    {
+      "id": 12924784,
+      "frame": {
+        "x": 31,
+        "y": 53,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1148,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
     }
   ],
   "is_interior": false,

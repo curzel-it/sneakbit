@@ -4232,5 +4232,28 @@
         "sprite_sheet_id": 1012,
         "sprite_number_of_frames": 8,
         "lock_type": "None"
+    },
+    {
+        "id": 1148,
+        "name": "npc.name.small_monster",
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 3.0,
+        "is_rigid": false,
+        "melee_attacks_hero": true,
+        "inventory_texture_offset": [
+            3,
+            21
+        ],
+        "sprite_frame": {
+            "x": 12,
+            "y": 10,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "FindHero"
     }
 ]
