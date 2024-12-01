@@ -1,312 +1,251 @@
+"1001.entrance" = "Welcome to Evergrove Village!"
+
+"1002.entrance" = """
+Welcome to the Verdant Way
+--
+North-East: Aridreach
+North-West: Shadowveil Path
+South-West: Murkmire Swamps
+"""
+
+"1003.entrance" = """
+Welcome to Aridreach
+--
+North: Grimsun Basin
+South: Verdant Way
+"""
+
+"1004.entrance" = "Duskhaven's Dungeon Lv 1"
+
+"1005.entrance" = "Duskhaven's Dungeon Lv 2"
+
+"1006.entrance" = """
+Welcome to Thermoria
+--
+North: Murkmire Swamps
+Boats to Maritide Haven available at the dock
+"""
+
+"1007.entrance" = "Underneath Mount Ignis"
+
+"1008.entrance" = """
+Welcome to Maritide Haven
+--
+Boats to Thermoria available at the dock
+"""
+
+"1009.entrance" = "Old Mining Complex underneath Maritide Haven"
+
+"1010.entrance" = """
+Welcome to te Shadowveil Path
+--
+North: Vintoria
+West: Demon Maze
+South: Verdant Way
+"""
+
+"1011.entrance" = """
+Welcome to the Village of Twilight: Duskhaven
+--
+Please do not touch the Manafren Trees.
+Do NOT take pictures using the flash.
+--
+West: Levek Peak
+Est: Murkmire Swamps
+"""
+
+"1012.entrance" = "Welcome to Vintoria!"
+
+"1013.entrance" = "Grimsun Basin"
+
+"1014.entrance" = "Hydroelectric Power Plant Lv 1"
+
+"1015.entrance" = "Hydroelectric Power Plant Lv 2"
+
+"1016.entrance" = "Hydroelectric Power Plant Lv 3"
+
+"1017.entrance" = "Demon Maze"
+
+"1018.entrance" = """
+Welcome to the Murkmire Swamps
+--
+North: Verdant Way
+West: Duskhaven
+South: Thermoria
+"""
+
+"1020.entrance" = """
+Welcome to Peak Levek
+--
+North: Road currently closed by the ice
+East: Duskhaven
+South: Road currently closed by the ice
+"""
+
 "building.name.demon_lord_castle" = "Demon Lord Castle"
+
 "building.name.house" = "House"
+
 "building.name.house_two_floors" = "House (two stories)"
+
 "building.name.igloo" = "Igloo"
+
+"changelog" = """
+My Master has a message for you...
+He told my about how the game now pauses when you talk to someone, open the menu or connect/disconnect the controller...
+...
+I have no idea what that means...
+I have to go now, see you around!
+"""
+
+"changelog.mobile" = """
+My Master has a message for you...
+He told me about how you can now long-press the FIRE button and move it around for better ergonomics.
+Also something about how the game now pauses when you talk to someone or open the menu...
+...
+I have no idea what that means...
+I have to go now, see you around!
+"""
+
 "combat.options.attack" = "Attack"
+
 "combat.options.inventory" = "Inventory"
+
 "combat.options.run" = "Run"
+
 "confirmation.cancel" = "Nope"
+
 "confirmation.confirm" = "Ok"
+
+"credits" = "Credits"
+
+"credits.developer" = "Game by Federico Curzel"
+
+"credits.developer.link" = "https://www.youtube.com/@HiddenMugs"
+
+"credits.music" = "Music by Filippo Vicarelli"
+
+"credits.music.link" = "https://www.filippovicarelli.com/8bit-game-background-music"
+
+"credits.open_source" = "The project is Open Source"
+
+"credits.open_source.link" = "https://github.com/curzel-it/sneakbit/"
+
+"credits.sound_effects" = "Sound Effects by SubspaceAudio"
+
+"credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style"
+
 "death_screen.subtitle" = "Press CONFIRM to try again"
+
 "death_screen.title" = "You're dead."
+
 "dialogue.reward_received" = "You received `%s`!"
+
 "dialogue.select_option" = "Select an option:"
+
 "empty_dialogue" = "What do you want?"
+
+"end_game_credits" = """
+This was my first game, I hope you liked it.
+Thanks for playing!
+"""
+
 "entity.menu.change_destination_world" = "Change Destination World"
+
 "entity.menu.change_destination_x" = "Change Destination X"
+
 "entity.menu.change_destination_y" = "Change Destination Y"
+
 "entity.menu.change_lock" = "Change Lock"
+
 "entity.menu.change_lock_title" = "Select Key Color"
+
 "entity.menu.change_on_off" = "Flip On/Off"
+
 "entity.menu.pickup" = "Pick up"
+
 "entity.menu.read" = "Read"
+
 "entity.menu.remove" = "Remove"
+
 "entity.menu.rename" = "Rename"
+
 "entity.menu.rename_title" = "Enter new name"
+
 "entity.menu.title" = "Entity Options"
+
 "entity.menu.toggle_demand_attention" = "Toggle Demand Attention"
+
 "entity.menu.use" = "Use"
-"game.menu.disable_sound_effects" = "Disable Sound Effects"
+
 "game.menu.disable_music" = "Disable Music"
-"game.menu.enable_sound_effects" = "Enable Sound Effects"
+
+"game.menu.disable_sound_effects" = "Disable Sound Effects"
+
 "game.menu.enable_music" = "Enable Music"
+
+"game.menu.enable_sound_effects" = "Enable Sound Effects"
+
 "game.menu.exit" = "Exit"
+
 "game.menu.inventory" = "Inventory"
+
 "game.menu.key_bindings" = "Key Bindings"
+
 "game.menu.map_editor" = "Map Editor"
+
 "game.menu.new_game" = "New Game"
+
 "game.menu.new_game_are_you_sure" = "You'll be starting from ZERO.\nAre you sure?"
+
 "game.menu.resume" = "Resume"
+
 "game.menu.save" = "Save Game"
+
 "game.menu.save_and_exit" = "Save & Exit"
+
 "game.menu.status" = "Status"
+
 "game.menu.title" = "Game Menu"
+
 "game.menu.toggle_fullscreen" = "Toggle Fullscreen"
-"inventory.subtitle" = "Stuff in your backpack"
-"inventory.title" = "Inventory"
-"lock.name.blue" = "Blue"
-"lock.name.green" = "Green"
-"lock.name.none" = "None"
-"lock.name.permanent" = "Permanent"
-"lock.name.red" = "Red"
-"lock.name.silver" = "Silver"
-"lock.name.yellow" = "Yellow"
-"map_editor.placement" = "CONFIRM to place, ESC to cancel"
-"map_editor.subtitle" = "Press CONFIRM to select something"
-"map_editor.title" = "Map Editor"
-"menu_back" = "Back"
-"npc.menu.play_dialog" = "Play dialog"
-"npc.menu.remove" = "Remove"
-"npc.menu.title" = "NPC Options"
 
-"npc.name.assassin_girl" = "Nyx"
-"npc.name.bearwolf" = "Bearwolf"
-"npc.name.blonde.apron" = "Villager"
-"npc.name.blonde_guy" = "Villager"
-"npc.name.blue_mohawk" = "Villager"
-"npc.name.brown_mohawk" = "Villager"
-"npc.name.cat" = "Cat"
-"npc.name.cat_brown" = "Cat"
-"npc.name.dbz1" = "Android's husband"
-"npc.name.dbz2" = "Gohan's Godfather"
-"npc.name.dbz3" = "Son Monkey"
-"npc.name.demon_lord" = "Demon Lord"
-"npc.name.developer" = "Mr Mugs"
-"npc.name.developer_messenger" = "Mugs's Bird"
-"npc.name.elf_priestess" = "Priestess"
-"npc.name.ethan" = "Ethan"
-"npc.name.female.blue_hair" = "Lyria Kurogane"
-"npc.name.female.brown_hair" = "Villager"
-"npc.name.female.dark_blonde" = "Villager"
-"npc.name.female.green_hair" = "Villager"
-"npc.name.female.green_hair" = "Villager"
-"npc.name.generic" = "Villager"
-"npc.name.generic.apron" = "Villager"
-"npc.name.goddess" = "Goddess"
-"npc.name.male.black.blue_hair" = "Villager"
-"npc.name.male.black.doctor" = "Dr Voss"
-"npc.name.male.kid.red_hair.blue_suit.green_hat" = "Villager"
-"npc.name.monster" = "Monster"
-"npc.name.mr_bubblegum" = "Mr Bubblegum"
-"npc.name.ninja.black" = "Black Ninja"
-"npc.name.ninja.blue" = "Blue Ninja"
-"npc.name.ninja.red" = "Red Ninja"
-"npc.name.old_man" = "Villager"
-"npc.name.old_man_mustache" = "Villager"
-"npc.name.old_man_mustache.black" = "Villager"
-"npc.name.old_man_swag_brown" = "Villager"
-"npc.name.old_man_swag_purple" = "Villager"
-"npc.name.old_woman" = "Villager"
-"npc.name.piglet" = "Piglet"
-"npc.name.piglet_blue" = "Piglet"
-"npc.name.punk" = "Punk"
-"npc.name.purple_alien" = "Alien"
-"npc.name.purple_mohawk" = "Villager"
-"npc.name.rasta_girl" = "Villager"
-"npc.name.silver" = "Silveroak"
-"npc.name.slime" = "Slime"
-"npc.name.slime_blue" = "Slime"
-"npc.name.snail" = "Snail"
-"npc.name.soldier" = "Captain 'Ironside' Thorne"
-"npc.name.soldier.female.red" = "Serena Flameheart"
-"npc.name.swag_kid" = "Villager"
-"npc.name.swag_kid_2" = "Villager"
-"npc.name.swag_kid_3" = "Villager"
-"npc.name.winter_apron" = "Villager"
-"npc.name.winter_black_red" = "Villager"
-"npc.name.wizard" = "Mogarth the Sage"
+"hint.001.pickup" = "Pick up objects by passing over them"
 
-"objects.name.amanita" = "Amanita Mushroom"
-"objects.name.barrel.brown" = "Brown Barrel"
-"objects.name.barrel.green" = "Green Barrel"
-"objects.name.barrel.purple" = "Purple Barrel"
-"objects.name.barrel.wood" = "Wooden Barrel"
-"objects.name.bed" = "Bed"
-"objects.name.boat.small" = "Small Boat"
-"objects.name.book_black" = "Black Book"
-"objects.name.book_blue" = "Blue Book"
-"objects.name.book_green" = "Green Book"
-"objects.name.book_purple" = "Purple Book"
-"objects.name.book_red" = "Red Book"
-"objects.name.boulder" = "Boulder"
-"objects.name.cabinet.lg.beige" = "Beige Wardrobe"
-"objects.name.cabinet.lg.brown" = "Brown Wardrobe"
-"objects.name.cabinet.lg.white" = "White Wardrobe"
-"objects.name.cabinet.md.beige" = "Beige Locker"
-"objects.name.cabinet.md.brown" = "Brown Locker"
-"objects.name.cabinet.md.white" = "White Locker"
-"objects.name.cabinet.sm.beige" = "Beige Drawer"
-"objects.name.cabinet.sm.brown" = "Brown Drawer"
-"objects.name.cabinet.sm.white" = "White Drawer"
-"objects.name.camp_fire" = "Campfire"
-"objects.name.deep_hole" = "Deep Hole"
-"objects.name.footsteps_trail" = "Footsteps Trail"
-"objects.name.fountain" = "Fountain"
-"objects.name.gate.blue" = "Blue Gate"
-"objects.name.gate.green" = "Green Gate"
-"objects.name.gate.red" = "Red Gate"
-"objects.name.gate.silver" = "Silver Gate"
-"objects.name.gate.yellow" = "Yellow Gate"
-"objects.name.hint_consumable" = "Hint (One Time)"
-"objects.name.hint_permanent" = "Hint (Permanent)"
-"objects.name.key" = "Key"
-"objects.name.key_blue" = "key from Maritide mines"
-"objects.name.key_green" = "key from Duskhaven's dungeons"
-"objects.name.key_red" = "key from Mount Ignis"
-"objects.name.key_silver" = "key from Vintoria's dungeons"
-"objects.name.key_yellow" = "key from Grimsun desert"
-"objects.name.key_white" = "key from Peak Levek"
-"objects.name.kunai" = "Kunai"
-"objects.name.kunai.x10" = "Kunai x10"
-"objects.name.large_sign" = "Signboard"
-"objects.name.magic_circle.blue" = "Magic Circle"
-"objects.name.magic_circle.small" = "Magic Circle"
-"objects.name.magic_circle.summoning" = "Magic Circle"
-"objects.name.magic_circle.summoning.evil" = "Magic Circle"
-"objects.name.pressure_plate.blue" = "Blue Pressure Plate"
-"objects.name.pressure_plate.green" = "Green Pressure Plate"
-"objects.name.pressure_plate.red" = "Red Pressure Plate"
-"objects.name.pressure_plate.silver" = "Silver Pressure Plate"
-"objects.name.pressure_plate.yellow" = "Yellow Pressure Plate"
-"objects.name.rail.cart" = "Cart"
-"objects.name.scroll.blue" = "Blue Scroll"
-"objects.name.scroll.brown" = "Brown Scroll"
-"objects.name.scroll.green" = "Green Scroll"
-"objects.name.scroll.red" = "Red Scroll"
-"objects.name.scroll.yellow" = "Yellow Scroll"
-"objects.name.seat_brown" = "Brown Seat"
-"objects.name.seat_green" = "Green Seat"
-"objects.name.seat_orange" = "Orange Seat"
-"objects.name.seat_pink" = "Pink Seat"
-"objects.name.sign" = "Sign"
-"objects.name.skull" = "Skull"
-"objects.name.slope.bottom_left.dark_rock" = "Slope"
-"objects.name.slope.bottom_left.grass" = "Slope"
-"objects.name.slope.bottom_left.rock" = "Slope"
-"objects.name.slope.bottom_left.sand" = "Slope"
-"objects.name.slope.bottom_right.dark_rock" = "Slope"
-"objects.name.slope.bottom_right.grass" = "Slope"
-"objects.name.slope.bottom_right.rock" = "Slope"
-"objects.name.slope.bottom_right.sand" = "Slope"
-"objects.name.slope.side_bottom.dark_rock" = "Slope"
-"objects.name.slope.side_bottom.grass" = "Slope"
-"objects.name.slope.side_bottom.rock" = "Slope"
-"objects.name.slope.side_bottom.sand" = "Slope"
-"objects.name.slope.side_left.dark_rock" = "Slope"
-"objects.name.slope.side_left.grass" = "Slope"
-"objects.name.slope.side_left.rock" = "Slope"
-"objects.name.slope.side_left.sand" = "Slope"
-"objects.name.slope.side_right.dark_rock" = "Slope"
-"objects.name.slope.side_right.grass" = "Slope"
-"objects.name.slope.side_right.rock" = "Slope"
-"objects.name.slope.side_right.sand" = "Slope"
-"objects.name.slope.side_top.dark_rock" = "Slope"
-"objects.name.slope.side_top.grass" = "Slope"
-"objects.name.slope.side_top.rock" = "Slope"
-"objects.name.slope.side_top.sand" = "Slope"
-"objects.name.slope.top_left.dark_rock" = "Slope"
-"objects.name.slope.top_left.grass" = "Slope"
-"objects.name.slope.top_left.rock" = "Slope"
-"objects.name.slope.top_left.sand" = "Slope"
-"objects.name.slope.top_right.dark_rock" = "Slope"
-"objects.name.slope.top_right.grass" = "Slope"
-"objects.name.slope.top_right.rock" = "Slope"
-"objects.name.slope.top_right.sand" = "Slope"
-"objects.name.stairs_down" = "Stairs (Down)"
-"objects.name.stairs_up" = "Stairs (Up)"
-"objects.name.table" = "Table"
-"objects.name.teleporter" = "Teleporter"
-"objects.name.torch" = "Torch"
-"objects.name.well" = "Well"
-"objects.power.kidneys" = "Power Kidneys"
-"objects.power.tower.off" = "Mana Tower"
-"objects.power.tower.on" = "Mana Tower"
-"objects.waterfall" = "Waterfall"
-"objects.wind_turbine" = "Wind Turbine"
+"hint.002.throw_knife" = "Throw knifes by pressing R, F, J or Q"
 
-"ok" = "Ok"
-"ok_action" = ">> Ok"
-"no" = "No"
-"picked_up_item" = "Picked up `%s`!"
-"teleporter.locked" = "You need a %s key to open this door."
-"teleporter.name" = "Teleporter"
-"teleporter.unlock.message" = "You will lose one %s key."
-"teleporter.unlock.title" = "Unlock the door?"
-"telepoter.locked.permanent" = "This door is locked."
-"text_input.hint" = "ENTER to confirm, ESC to cancel"
-"yes" = "Yes"
-"you" = "You"
-
-"hint.001.pickup" = """
-Pick up objects by passing over them
-"""
-
-"hint.002.throw_knife.mobile" = """
-Attack by pressing the button with the knife icon
-"""
-
-"hint.002.throw_knife" = """
-Throw knifes by pressing R, F, J or Q
-"""
+"hint.002.throw_knife.mobile" = "Attack by pressing the button with the knife icon"
 
 "hint.003.not_all_places_have_loot" = """
-What? 
+What?
 You expected every house to have loot?
 Also, what the hell are you doing in my house!?
 """
 
-"references.dbz.krillin" = "I hope you brought Senzu beans!"
-"references.dbz.goku" = "Wait, this isn't universe 7... Byeee!"
-"references.dbz.piccolo" = "I am The Namek who has long since forgotten his name"
+"inventory.subtitle" = "Stuff in your backpack"
 
-"lore.evergrove.monster_sightings_nowadays" = """
-Monsters have been part of this world for a long time.
-They've been around for as long as I can remember at least.
-But they never left the deeper woods until recently.
-I pity newer generations for having to deal with this many.
-"""
+"inventory.title" = "Inventory"
 
-"lore.evergrove.monster_sightings_logs" = """
-Monster Sightings Log
-Property of Evergrove Village Historical Records
---
-January 4th, 1330: Spotted 1 monster near the village outskirts. First in many years.
-June 27th, 1331: Saw the first monster since last year. Stayed near the forest edge.
-March 15th, 1332: Two monsters appeared near Verdant Way. No harm done, but unsettling.
-October 9th, 1333: A strange, dark creature wandered into the village at dusk. Count: 3.
-May 20th, 1334: Four monsters sighted.
-July 13th, 1335: It's been a while since last sighting, five today.
-December 2nd, 1336: Six monsters attacked a passing caravan. Survivors returned shaken.
-September 22nd, 1338: Village attacked by eight creatures. Guards struggled to fend them off.
-November 16th, 1340: Count has reached 14 monsters roaming near Verdant Way. Never seen so many at once. No victims, so far.
-"""
+"lock.name.blue" = "Blue"
 
-"lore.manafren_trees.tourists_sign" = """
-Manafern Trees
-Famous worldwide for their mystical energy properties. 
-Their unique purple leaves harness the essence of twilight, 
-fueling life and wonder in Duskhaven.
-"""
+"lock.name.green" = "Green"
 
-"lore.manafren_trees.botanics_book" = """
-The Manafern Tree, a botanical marvel exclusive to the ever-twilit region of Duskhaven, has long captivated scholars and mystics alike. 
+"lock.name.none" = "None"
 
-This unique broadleaf species, identifiable by its vibrant purple foliage, exhibits an unparalleled ability to produce raw mana.
+"lock.name.permanent" = "Permanent"
 
-Through a complex interaction between its deep-rooted system and the ambient twilight of the region, the Manafern absorbs ethereal particles from both the soil and air. 
-These particles, once drawn into the tree's intricate vascular system, undergo a natural process akin to photosynthesis but far more extraordinary. 
-The tree converts these particles into pure mana, which radiates through its leaves, casting a subtle, luminescent glow. 
-Locals often speak of how these trees 'hum' with life, their energy harnessed to illuminate homes, power devices, and even sustain the vibrant ecosystem of Duskhaven itself. 
-"""
+"lock.name.red" = "Red"
+
+"lock.name.silver" = "Silver"
+
+"lock.name.yellow" = "Yellow"
 
 "lore.006.vintoria_power_station" = """
 Vintoria’s Cascade Station
 Harnessing the might of the waterfall to power the valley with life-giving mana
 """
 
-"lore.007.vintoria_entrance" = """
-Welcome to Vintoria Valley!
-"""
+"lore.007.vintoria_entrance" = "Welcome to Vintoria Valley!"
 
 "lore.008.mount_ignis" = """
 Warning
@@ -314,30 +253,28 @@ Extreme heat and volatile ground.
 Proceed with caution and respect the power of Mount Ignis.
 """
 
-"lore.009.thermoria_dock" = """
-Dock of Thermoria — Gateway to Maritide Haven
-"""
+"lore.009.thermoria_dock" = "Dock of Thermoria — Gateway to Maritide Haven"
 
 "lore.010.aridreach_before_the_solar_age" = """
 The Rise and Fall of Lushspire Peaks
 --
-Once, Aridreach was a land of life and beauty, known as Lushspire Peaks. 
-Its towering mountains cradled vast forests, crystal streams, and fertile valleys. 
+Once, Aridreach was a land of life and beauty, known as Lushspire Peaks.
+Its towering mountains cradled vast forests, crystal streams, and fertile valleys.
 The people thrived in harmony with the land, their bounty plentiful and enduring.
-Then came the cataclysm. The skies darkened, the rivers dried, and the mountains began to wither. 
-No record remains of its cause, but the transformation was swift and unrelenting. 
-The lush greenery gave way to scorched earth, and the proud peaks became lifeless dunes. 
+Then came the cataclysm. The skies darkened, the rivers dried, and the mountains began to wither.
+No record remains of its cause, but the transformation was swift and unrelenting.
+The lush greenery gave way to scorched earth, and the proud peaks became lifeless dunes.
 What was once a haven turned into the unforgiving expanse now called the Grimsun Desert.
-In the face of desolation, the survivors endured. 
-They built the great solar farm atop the barren heights, harnessing the unrelenting sun to power distant lands. 
+In the face of desolation, the survivors endured.
+They built the great solar farm atop the barren heights, harnessing the unrelenting sun to power distant lands.
 While their ingenuity is lauded, the book laments the loss of Lushspire’s verdant beauty, now buried beneath endless sands.
 """
 
 "lore.011.hero_profecy.part_1" = """
 Profecy of the Hero - Part 1
 --
-In the twilight of chaos, a child of the soil and a stranger from the stars shall rise. 
-Bound by fate yet divided by choice, they will traverse the shattered lands, bearing steel that whispers death. 
+In the twilight of chaos, a child of the soil and a stranger from the stars shall rise.
+Bound by fate yet divided by choice, they will traverse the shattered lands, bearing steel that whispers death.
 The first shall walk with fire in their soul, while the second wields the blade of uncertainty.
 The shadows of the past and the light of the unknown will converge, challenging the faith of all who dwell within the Veil of Eternity.
 """
@@ -345,17 +282,17 @@ The shadows of the past and the light of the unknown will converge, challenging 
 "lore.011.hero_profecy.part_2" = """
 Profecy of the Hero - Part 2
 --
-When the land shivers under the Demon Lord’s shadow, the destined ones shall uncover the Keys of Passage hidden deep within the earth, waters, and winds. 
-From the blazing deserts to the whispering forests, the trials of strength, wit, and heart will forge their resolve. 
+When the land shivers under the Demon Lord’s shadow, the destined ones shall uncover the Keys of Passage hidden deep within the earth, waters, and winds.
+From the blazing deserts to the whispering forests, the trials of strength, wit, and heart will forge their resolve.
 Only the worthy will step forward, yet even the chosen may stumble, for a greater force beyond destiny binds their paths to the wheel of time.
 """
 
 "lore.011.hero_profecy.part_3" = """
 Profecy of the Hero - Part 3
 --
-As the final hour approaches, the fractured bond will be made whole, yet the truth of the hero will shatter illusions. 
-The one foretold to bear the burden shall stand before the throne of ruin, and the blade of salvation will fall. 
-In this reckoning, not strength nor skill will prevail, but the unyielding spirit of purpose. 
+As the final hour approaches, the fractured bond will be made whole, yet the truth of the hero will shatter illusions.
+The one foretold to bear the burden shall stand before the throne of ruin, and the blade of salvation will fall.
+In this reckoning, not strength nor skill will prevail, but the unyielding spirit of purpose.
 Beware, for the hand that defeats darkness may yet obscure the light, and the cycle of the eternal struggle will begin anew.
 """
 
@@ -365,18 +302,14 @@ No matter how many times we get rid of the monster, he always comes back.
 I guess the drinks were too good!
 """
 
-"lore.012.hunted_pub.he_always_comes_back" = """
-Thanks, but he'll come back eventually!
-"""
+"lore.012.hunted_pub.he_always_comes_back" = "Thanks, but he'll come back eventually!"
 
-"lore.013.snail_pig_farming" = """
-Pig-Snail farming
-"""
+"lore.013.snail_pig_farming" = "Pig-Snail farming"
 
 "lore.014.manafren_trees.caretaker" = """
 I am the taking care of the trees around here.
 They are a famous tourist attraction after all, somebody needs to be sure they are presentable!
-Did you know the hero used to live here? 
+Did you know the hero used to live here?
 His old man is still in their old house.
 """
 
@@ -392,55 +325,6 @@ They don't realize it's basically impossible...
 Do you have any idea how much it would cost to startup a farming activity!?
 """
 
-"lore.016.the_silver_legacy_of_maritide_haven" = """
-The Silver Legacy of Maritide Haven
-Maritide Haven, once the jewel of the Silver Coast, owed its prosperity to the rich veins of silver buried deep beneath its rocky terrain. 
-The mine, a marvel of engineering and determination, provided wealth and trade to the region for centuries. 
-Merchants from distant lands would dock at its bustling port, their ships laden with goods to exchange for Maritide's famed silver ingots. 
-Yet, the very ground that promised such riches also whispered ominous warnings. 
-Tales of strange tremors and ghostly winds from the mine’s depths were dismissed as mere superstition by those who sought fortune.
-
-Then, the same cataclysm that destroyed Thermoria, transformed this thriving island into a fragmented memory of its former self.
-The collapse of the mine swallowed much of the settlement into the earth, leaving only scattered islets in its wake.
-Today, Maritide Haven clings to survival as a humble fishing village, its wind turbines silently spinning over waters that once teemed with merchant fleets. 
-The mine, now sealed, serves as a grim monument to the dangers of human ambition and the unknown forces lurking in the deep.
-"""
-
-"lore.016.silver_vein_chronicles" = """
-July 1st 1293
-Production continues at a steady pace. 
-The northern vein shows signs of thinning, but the new exploratory shafts promise richer yields below the 700-foot mark. 
-Engineers have voiced concerns over the rock density at these depths, but management insists on pushing forward.
---
-July 24th 1293
-Miners report unusual vibrations emanating from the deeper tunnels. 
-Some claim to hear faint echoes, almost like whispers. 
-Dismissing these claims as fatigue-induced hallucinations. 
-Expanding operations toward the northern seam.
---
-August 4th 1293
-Discovered an unprecedented silver vein at the 900-foot mark. 
-However, equipment failures are becoming frequent, and the tremors are intensifying. 
-Still no explanation for the phenomena, but management remains adamant about continuing.
---
-August 13th 1293
-An earthen roar shook the mines as the lower tunnels collapsed, swallowing miners and machinery alike. 
-Personell outside of the mine recount visions of a fiery glow and an unearthly howl before the ground gave way. 
-This is not an ordinary disaster. All operations are suspended indefinitely.
-No known survivors.
-"""
-
-"lore.016.silver_vein_survivors" = """
-Letter from the last day of the miners
---
-To those who uncover this scroll, heed these words as a warning and a plea. 
-We were miners, delving deeper in search of wealth until we unearthed not silver, but ruin. 
-Our drills breached a cavern unlike any we had seen—its walls pulsing with veins of crimson and gold, as if alive. 
-From the depths emerged a shadowed terror, whose name we dared not speak. 
-Its presence alone sundered the ground and unleashed a force that tore our island asunder.
-After collapsing the mine he seems to have calmed down, maybe he just wanted to be left undisturbed.
-"""
-
 "lore.016.fisherman_tales.1" = """
 Yeah tourists think this place is peaceful...
 Old fishermen like me remember otherwise!
@@ -448,41 +332,80 @@ The wind coming from the old mines still gives me the chills...
 """
 
 "lore.016.fisherman_tales.2" = """
-So, you’ve read it, have you? The scroll. 
-I was one of the lucky ones, or cursed, depending how you see it. 
+So, you’ve read it, have you? The scroll.
+I was one of the lucky ones, or cursed, depending how you see it.
 We dug too deep, woke something that should've stayed asleep...
 """
 
-"lore.017.this_place_is_great_for_surfing" = """
-This place is great for surfing!
+"lore.016.silver_vein_chronicles" = """
+July 1st 1293
+Production continues at a steady pace.
+The northern vein shows signs of thinning, but the new exploratory shafts promise richer yields below the 700-foot mark.
+Engineers have voiced concerns over the rock density at these depths, but management insists on pushing forward.
+--
+July 24th 1293
+Miners report unusual vibrations emanating from the deeper tunnels.
+Some claim to hear faint echoes, almost like whispers.
+Dismissing these claims as fatigue-induced hallucinations.
+Expanding operations toward the northern seam.
+--
+August 4th 1293
+Discovered an unprecedented silver vein at the 900-foot mark.
+However, equipment failures are becoming frequent, and the tremors are intensifying.
+Still no explanation for the phenomena, but management remains adamant about continuing.
+--
+August 13th 1293
+An earthen roar shook the mines as the lower tunnels collapsed, swallowing miners and machinery alike.
+Personell outside of the mine recount visions of a fiery glow and an unearthly howl before the ground gave way.
+This is not an ordinary disaster. All operations are suspended indefinitely.
+No known survivors.
 """
 
-"lore.017.this_place_is_great_fish" = """
-The seafood here is amazing!
+"lore.016.silver_vein_survivors" = """
+Letter from the last day of the miners
+--
+To those who uncover this scroll, heed these words as a warning and a plea.
+We were miners, delving deeper in search of wealth until we unearthed not silver, but ruin.
+Our drills breached a cavern unlike any we had seen—its walls pulsing with veins of crimson and gold, as if alive.
+From the depths emerged a shadowed terror, whose name we dared not speak.
+Its presence alone sundered the ground and unleashed a force that tore our island asunder.
+After collapsing the mine he seems to have calmed down, maybe he just wanted to be left undisturbed.
 """
 
-"lore.017.this_place_is_great_for_sun" = """
-I love to hang out in the sun!
+"lore.016.the_silver_legacy_of_maritide_haven" = """
+The Silver Legacy of Maritide Haven
+Maritide Haven, once the jewel of the Silver Coast, owed its prosperity to the rich veins of silver buried deep beneath its rocky terrain.
+The mine, a marvel of engineering and determination, provided wealth and trade to the region for centuries.
+Merchants from distant lands would dock at its bustling port, their ships laden with goods to exchange for Maritide's famed silver ingots.
+Yet, the very ground that promised such riches also whispered ominous warnings.
+Tales of strange tremors and ghostly winds from the mine’s depths were dismissed as mere superstition by those who sought fortune.
+
+Then, the same cataclysm that destroyed Thermoria, transformed this thriving island into a fragmented memory of its former self.
+The collapse of the mine swallowed much of the settlement into the earth, leaving only scattered islets in its wake.
+Today, Maritide Haven clings to survival as a humble fishing village, its wind turbines silently spinning over waters that once teemed with merchant fleets.
+The mine, now sealed, serves as a grim monument to the dangers of human ambition and the unknown forces lurking in the deep.
 """
 
-"lore.017.this_place_was_great_for_dancing" = """
-Me an my wife used to come here for dancing smooth when we were young.
-"""
+"lore.017.this_place_had_a_great_nudist_beach" = "Do you know where the nudist beach is?"
 
-"lore.017.this_place_had_a_great_nudist_beach" = """
-Do you know where the nudist beach is?
-"""
+"lore.017.this_place_is_great_fish" = "The seafood here is amazing!"
 
-"lore.018.mount_ignis_intro" = """
-Careful around here, Mount Ignis isn't as calm as it looks. 
-Last time the volcano was active it caused the collapse of the mines in the nearby islands. 
-"""
+"lore.017.this_place_is_great_for_sun" = "I love to hang out in the sun!"
+
+"lore.017.this_place_is_great_for_surfing" = "This place is great for surfing!"
+
+"lore.017.this_place_was_great_for_dancing" = "Me an my wife used to come here for dancing smooth when we were young."
 
 "lore.018.mount_ignis_aridreach" = """
 Aridreach was not always a desert you know?
 I lived there when I was a kid, before the eruption of Mount Ignis.
-They thought the Manafern trees could save us, their mana healing the world. 
-But they only fed the darkness, didn't they? 
+They thought the Manafern trees could save us, their mana healing the world.
+But they only fed the darkness, didn't they?
+"""
+
+"lore.018.mount_ignis_intro" = """
+Careful around here, Mount Ignis isn't as calm as it looks.
+Last time the volcano was active it caused the collapse of the mines in the nearby islands.
 """
 
 "lore.019.grimsun_basin.intro" = """
@@ -506,9 +429,7 @@ I like when I visit a place I've been before and find something new.
 I want this world to continuously evolve, that'd be pretty cool!
 """
 
-"lore.021.levek_peak_intro" = """
-Be careful, we just freed up the passage from the snow, but it's still unstable.
-"""
+"lore.021.levek_peak_intro" = "Be careful, we just freed up the passage from the snow, but it's still unstable."
 
 "lore.022.railroad" = """
 The railroad never arrived here, the area is just too isolated.
@@ -517,8 +438,8 @@ Maybe it would take less time without the railroad...
 """
 
 "lore.023.bearwolfes" = """
-You know, bearwolves aren’t as scary as they look. 
-My grandpa used to tell me they’d help lost travelers find their way in the snow. 
+You know, bearwolves aren’t as scary as they look.
+My grandpa used to tell me they’d help lost travelers find their way in the snow.
 You just gotta keep calm and show them respect — they’ll even share their kills if you’re lucky!
 """
 
@@ -528,15 +449,15 @@ I'm getting too old for working as a lumberjack
 """
 
 "lore.024.ice_is_slippery" = """
-Careful when stepping on the ice! 
-One wrong move, and you’ll be sliding all the way back to Evergrove. 
+Careful when stepping on the ice!
+One wrong move, and you’ll be sliding all the way back to Evergrove.
 Hah! Trust me, I've seen it happen.
 """
 
 "lore.025.stonehenge" = """
-These ruins hold so many secrets! 
-My research suggests there used to be an entrance to the underground caverns here, but it’s sealed with some ancient magic. 
-A colleague swears there’s another way in by the frozen lake, though. 
+These ruins hold so many secrets!
+My research suggests there used to be an entrance to the underground caverns here, but it’s sealed with some ancient magic.
+A colleague swears there’s another way in by the frozen lake, though.
 Could you check it out?
 """
 
@@ -546,144 +467,409 @@ And you found this key in there?
 It's definately a magical item, but I have no clue about what it could be.
 """
 
-"lore.026.cats_cats_cats" = """
-Don't you love cats?
-"""
+"lore.026.cats_cats_cats" = "Don't you love cats?"
 
-"1001.entrance" = "Welcome to Evergrove Village!"
-"1003.entrance" = """
-Welcome to Aridreach
+"lore.evergrove.monster_sightings_logs" = """
+Monster Sightings Log
+Property of Evergrove Village Historical Records
 --
-North: Grimsun Basin
-South: Verdant Way
-"""
-"1004.entrance" = "Duskhaven's Dungeon Lv 1"
-"1005.entrance" = "Duskhaven's Dungeon Lv 2"
-"1006.entrance" = """
-Welcome to Thermoria
---
-North: Murkmire Swamps
-Boats to Maritide Haven available at the dock
-"""
-"1007.entrance" = "Underneath Mount Ignis"
-"1008.entrance" = """
-Welcome to Maritide Haven
---
-Boats to Thermoria available at the dock
-"""
-"1009.entrance" = "Old Mining Complex underneath Maritide Haven"
-"1011.entrance" = """
-Welcome to the Village of Twilight: Duskhaven
--- 
-Please do not touch the Manafren Trees.
-Do NOT take pictures using the flash.
--- 
-West: Levek Peak
-Est: Murkmire Swamps
-"""
-"1012.entrance" = "Welcome to Vintoria!"
-"1013.entrance" = "Grimsun Basin"
-"1014.entrance" = "Hydroelectric Power Plant Lv 1"
-"1015.entrance" = "Hydroelectric Power Plant Lv 2"
-"1016.entrance" = "Hydroelectric Power Plant Lv 3"
-"1017.entrance" = "Demon Maze"
-
-"1002.entrance" = """
-Welcome to the Verdant Way
---
-North-East: Aridreach
-North-West: Shadowveil Path
-South-West: Murkmire Swamps
+January 4th, 1330: Spotted 1 monster near the village outskirts. First in many years.
+June 27th, 1331: Saw the first monster since last year. Stayed near the forest edge.
+March 15th, 1332: Two monsters appeared near Verdant Way. No harm done, but unsettling.
+October 9th, 1333: A strange, dark creature wandered into the village at dusk. Count: 3.
+May 20th, 1334: Four monsters sighted.
+July 13th, 1335: It's been a while since last sighting, five today.
+December 2nd, 1336: Six monsters attacked a passing caravan. Survivors returned shaken.
+September 22nd, 1338: Village attacked by eight creatures. Guards struggled to fend them off.
+November 16th, 1340: Count has reached 14 monsters roaming near Verdant Way. Never seen so many at once. No victims, so far.
 """
 
-"1010.entrance" = """
-Welcome to te Shadowveil Path
---
-North: Vintoria
-West: Demon Maze
-South: Verdant Way
+"lore.evergrove.monster_sightings_nowadays" = """
+Monsters have been part of this world for a long time.
+They've been around for as long as I can remember at least.
+But they never left the deeper woods until recently.
+I pity newer generations for having to deal with this many.
 """
 
-"1018.entrance" = """
-Welcome to the Murkmire Swamps
---
-North: Verdant Way
-West: Duskhaven
-South: Thermoria
+"lore.manafren_trees.botanics_book" = """
+The Manafern Tree, a botanical marvel exclusive to the ever-twilit region of Duskhaven, has long captivated scholars and mystics alike.
+
+This unique broadleaf species, identifiable by its vibrant purple foliage, exhibits an unparalleled ability to produce raw mana.
+
+Through a complex interaction between its deep-rooted system and the ambient twilight of the region, the Manafern absorbs ethereal particles from both the soil and air.
+These particles, once drawn into the tree's intricate vascular system, undergo a natural process akin to photosynthesis but far more extraordinary.
+The tree converts these particles into pure mana, which radiates through its leaves, casting a subtle, luminescent glow.
+Locals often speak of how these trees 'hum' with life, their energy harnessed to illuminate homes, power devices, and even sustain the vibrant ecosystem of Duskhaven itself.
 """
 
-"1020.entrance" = """
-Welcome to Peak Levek
--- 
-North: Road currently closed by the ice
-West: Duskhaven
-South: Road currently closed by the ice
+"lore.manafren_trees.tourists_sign" = """
+Manafern Trees
+Famous worldwide for their mystical energy properties.
+Their unique purple leaves harness the essence of twilight,
+fueling life and wonder in Duskhaven.
 """
 
-"quest.hero.wizard.prologue" = """
-You say "some kind of magic" brought you here? Interesting...
-Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
-I suggest you start your own journey to learn more about this world.
-The closest city is Aridreach, West from here, why don't you start from there?
-If you're looking for directions, road signs can be useful.
-Now go, I shall see you soon!
+"map_editor.placement" = "CONFIRM to place, ESC to cancel"
+
+"map_editor.subtitle" = "Press CONFIRM to select something"
+
+"map_editor.title" = "Map Editor"
+
+"menu_back" = "Back"
+
+"no" = "No"
+
+"npc.menu.play_dialog" = "Play dialog"
+
+"npc.menu.remove" = "Remove"
+
+"npc.menu.title" = "NPC Options"
+
+"npc.name.assassin_girl" = "Nyx"
+
+"npc.name.bearwolf" = "Bearwolf"
+
+"npc.name.blonde.apron" = "Villager"
+
+"npc.name.blonde_guy" = "Villager"
+
+"npc.name.blue_mohawk" = "Villager"
+
+"npc.name.brown_mohawk" = "Villager"
+
+"npc.name.cat" = "Cat"
+
+"npc.name.cat_brown" = "Cat"
+
+"npc.name.dbz1" = "Android's husband"
+
+"npc.name.dbz2" = "Gohan's Godfather"
+
+"npc.name.dbz3" = "Son Monkey"
+
+"npc.name.demon_lord" = "Demon Lord"
+
+"npc.name.developer" = "Mr Mugs"
+
+"npc.name.developer_messenger" = "Mugs's Bird"
+
+"npc.name.elf_priestess" = "Priestess"
+
+"npc.name.ethan" = "Ethan"
+
+"npc.name.female.blue_hair" = "Lyria Kurogane"
+
+"npc.name.female.brown_hair" = "Villager"
+
+"npc.name.female.dark_blonde" = "Villager"
+
+"npc.name.female.green_hair" = "Villager"
+
+"npc.name.generic" = "Villager"
+
+"npc.name.generic.apron" = "Villager"
+
+"npc.name.goddess" = "Goddess"
+
+"npc.name.male.black.blue_hair" = "Villager"
+
+"npc.name.male.black.doctor" = "Dr Voss"
+
+"npc.name.male.kid.red_hair.blue_suit.green_hat" = "Villager"
+
+"npc.name.monster" = "Monster"
+
+"npc.name.mr_bubblegum" = "Mr Bubblegum"
+
+"npc.name.ninja.black" = "Black Ninja"
+
+"npc.name.ninja.blue" = "Blue Ninja"
+
+"npc.name.ninja.red" = "Red Ninja"
+
+"npc.name.old_man" = "Villager"
+
+"npc.name.old_man_mustache" = "Villager"
+
+"npc.name.old_man_mustache.black" = "Villager"
+
+"npc.name.old_man_swag_brown" = "Villager"
+
+"npc.name.old_man_swag_purple" = "Villager"
+
+"npc.name.old_woman" = "Villager"
+
+"npc.name.piglet" = "Piglet"
+
+"npc.name.piglet_blue" = "Piglet"
+
+"npc.name.punk" = "Punk"
+
+"npc.name.purple_alien" = "Alien"
+
+"npc.name.purple_mohawk" = "Villager"
+
+"npc.name.rasta_girl" = "Villager"
+
+"npc.name.silver" = "Silveroak"
+
+"npc.name.slime" = "Slime"
+
+"npc.name.slime_blue" = "Slime"
+
+"npc.name.snail" = "Snail"
+
+"npc.name.soldier" = "Captain 'Ironside' Thorne"
+
+"npc.name.soldier.female.red" = "Serena Flameheart"
+
+"npc.name.swag_kid" = "Villager"
+
+"npc.name.swag_kid_2" = "Villager"
+
+"npc.name.swag_kid_3" = "Villager"
+
+"npc.name.winter_apron" = "Villager"
+
+"npc.name.winter_black_red" = "Villager"
+
+"npc.name.wizard" = "Mogarth the Sage"
+
+"objects.name.amanita" = "Amanita Mushroom"
+
+"objects.name.barrel.brown" = "Brown Barrel"
+
+"objects.name.barrel.green" = "Green Barrel"
+
+"objects.name.barrel.purple" = "Purple Barrel"
+
+"objects.name.barrel.wood" = "Wooden Barrel"
+
+"objects.name.bed" = "Bed"
+
+"objects.name.boat.small" = "Small Boat"
+
+"objects.name.book_black" = "Black Book"
+
+"objects.name.book_blue" = "Blue Book"
+
+"objects.name.book_green" = "Green Book"
+
+"objects.name.book_purple" = "Purple Book"
+
+"objects.name.book_red" = "Red Book"
+
+"objects.name.boulder" = "Boulder"
+
+"objects.name.cabinet.lg.beige" = "Beige Wardrobe"
+
+"objects.name.cabinet.lg.brown" = "Brown Wardrobe"
+
+"objects.name.cabinet.lg.white" = "White Wardrobe"
+
+"objects.name.cabinet.md.beige" = "Beige Locker"
+
+"objects.name.cabinet.md.brown" = "Brown Locker"
+
+"objects.name.cabinet.md.white" = "White Locker"
+
+"objects.name.cabinet.sm.beige" = "Beige Drawer"
+
+"objects.name.cabinet.sm.brown" = "Brown Drawer"
+
+"objects.name.cabinet.sm.white" = "White Drawer"
+
+"objects.name.camp_fire" = "Campfire"
+
+"objects.name.deep_hole" = "Deep Hole"
+
+"objects.name.footsteps_trail" = "Footsteps Trail"
+
+"objects.name.fountain" = "Fountain"
+
+"objects.name.gate.blue" = "Blue Gate"
+
+"objects.name.gate.green" = "Green Gate"
+
+"objects.name.gate.red" = "Red Gate"
+
+"objects.name.gate.silver" = "Silver Gate"
+
+"objects.name.gate.yellow" = "Yellow Gate"
+
+"objects.name.hint_consumable" = "Hint (One Time)"
+
+"objects.name.hint_permanent" = "Hint (Permanent)"
+
+"objects.name.key" = "Key"
+
+"objects.name.key_blue" = "key from Maritide mines"
+
+"objects.name.key_green" = "key from Duskhaven's dungeons"
+
+"objects.name.key_red" = "key from Mount Ignis"
+
+"objects.name.key_silver" = "key from Vintoria's dungeons"
+
+"objects.name.key_white" = "key from Peak Levek"
+
+"objects.name.key_yellow" = "key from Grimsun desert"
+
+"objects.name.kunai" = "Kunai"
+
+"objects.name.kunai.x10" = "Kunai x10"
+
+"objects.name.large_sign" = "Signboard"
+
+"objects.name.magic_circle.blue" = "Magic Circle"
+
+"objects.name.magic_circle.small" = "Magic Circle"
+
+"objects.name.magic_circle.summoning" = "Magic Circle"
+
+"objects.name.magic_circle.summoning.evil" = "Magic Circle"
+
+"objects.name.pressure_plate.blue" = "Blue Pressure Plate"
+
+"objects.name.pressure_plate.green" = "Green Pressure Plate"
+
+"objects.name.pressure_plate.red" = "Red Pressure Plate"
+
+"objects.name.pressure_plate.silver" = "Silver Pressure Plate"
+
+"objects.name.pressure_plate.yellow" = "Yellow Pressure Plate"
+
+"objects.name.rail.cart" = "Cart"
+
+"objects.name.scroll.blue" = "Blue Scroll"
+
+"objects.name.scroll.brown" = "Brown Scroll"
+
+"objects.name.scroll.green" = "Green Scroll"
+
+"objects.name.scroll.red" = "Red Scroll"
+
+"objects.name.scroll.yellow" = "Yellow Scroll"
+
+"objects.name.seat_brown" = "Brown Seat"
+
+"objects.name.seat_green" = "Green Seat"
+
+"objects.name.seat_orange" = "Orange Seat"
+
+"objects.name.seat_pink" = "Pink Seat"
+
+"objects.name.sign" = "Sign"
+
+"objects.name.skull" = "Skull"
+
+"objects.name.slope.bottom_left.dark_rock" = "Slope"
+
+"objects.name.slope.bottom_left.grass" = "Slope"
+
+"objects.name.slope.bottom_left.rock" = "Slope"
+
+"objects.name.slope.bottom_left.sand" = "Slope"
+
+"objects.name.slope.bottom_right.dark_rock" = "Slope"
+
+"objects.name.slope.bottom_right.grass" = "Slope"
+
+"objects.name.slope.bottom_right.rock" = "Slope"
+
+"objects.name.slope.bottom_right.sand" = "Slope"
+
+"objects.name.slope.side_bottom.dark_rock" = "Slope"
+
+"objects.name.slope.side_bottom.grass" = "Slope"
+
+"objects.name.slope.side_bottom.rock" = "Slope"
+
+"objects.name.slope.side_bottom.sand" = "Slope"
+
+"objects.name.slope.side_left.dark_rock" = "Slope"
+
+"objects.name.slope.side_left.grass" = "Slope"
+
+"objects.name.slope.side_left.rock" = "Slope"
+
+"objects.name.slope.side_left.sand" = "Slope"
+
+"objects.name.slope.side_right.dark_rock" = "Slope"
+
+"objects.name.slope.side_right.grass" = "Slope"
+
+"objects.name.slope.side_right.rock" = "Slope"
+
+"objects.name.slope.side_right.sand" = "Slope"
+
+"objects.name.slope.side_top.dark_rock" = "Slope"
+
+"objects.name.slope.side_top.grass" = "Slope"
+
+"objects.name.slope.side_top.rock" = "Slope"
+
+"objects.name.slope.side_top.sand" = "Slope"
+
+"objects.name.slope.top_left.dark_rock" = "Slope"
+
+"objects.name.slope.top_left.grass" = "Slope"
+
+"objects.name.slope.top_left.rock" = "Slope"
+
+"objects.name.slope.top_left.sand" = "Slope"
+
+"objects.name.slope.top_right.dark_rock" = "Slope"
+
+"objects.name.slope.top_right.grass" = "Slope"
+
+"objects.name.slope.top_right.rock" = "Slope"
+
+"objects.name.slope.top_right.sand" = "Slope"
+
+"objects.name.stairs_down" = "Stairs (Down)"
+
+"objects.name.stairs_up" = "Stairs (Up)"
+
+"objects.name.table" = "Table"
+
+"objects.name.teleporter" = "Teleporter"
+
+"objects.name.torch" = "Torch"
+
+"objects.name.well" = "Well"
+
+"objects.power.kidneys" = "Power Kidneys"
+
+"objects.power.tower.off" = "Mana Tower"
+
+"objects.power.tower.on" = "Mana Tower"
+
+"objects.waterfall" = "Waterfall"
+
+"objects.wind_turbine" = "Wind Turbine"
+
+"ok" = "Ok"
+
+"ok_action" = ">> Ok"
+
+"picked_up_item" = "Picked up `%s`!"
+
+"quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
+So you saw him, didn’t you? You talked to him? Oh, I knew it!
+But don’t you see now? Don’t you see what I’ve been saying?
+He’s not just *hiding*, he’s *placed*.
+Everything in here, everyone in here... They’re puppets...
 """
 
-"quest.hero.punk.so_you_are_the_outerworlder" = """
-So you're an outer-worlder eh?
-I bet that old geezer in Evergrove summoned you here.
-We don't need any heroes, go away.
-"""
+"quest.crazy_conspiracy.girl.black_ninja_i_knew_it_again" = "Sssh... They're watching us..."
 
-"quest.hero.wizard.met_anyone_important" = """
-Punk said I was the one who brought you here... Mmmh
-Maybe it's true we don't need heroes...
-Or maybe we do and he just doesn't realize it yet.
-"""
-
-"quest.hero.punk.no_use_killing_monsters" = """
-No use running around killing monsters, their number never really lowers.
-It's the nature of this world and we must accept it.
-"""
-
-"quest.hero.punk.are_you_after_the_keys" = """
-What the hell are you doing here...?
-Are you... After the keys!?
-"""
-
-"quest.hero.punk.lets_see_who_gets_them_first" = """
-Let's see if you can gather the keys faster than me... 
-Maybe you'll get to "save" the world.
-"""
-
-"quest.hero.wizard.gather_the_keys" = """
-To enter this realm you need to fetch the keys from the 5 dungeons...
-No one can tell if you really are the hero of the profecy.
-But please, help us gather the keys, before someone else, or something else, does!
-"""
-
-"quest.hero.silver.i_failed" = """
-Outer-worlder... Do you even know why you're here?
-it's because I failed as a father.
-"""
-
-"quest.hero.silver.i_am_punk_father" = """
-The hero of the profecy is... was... My son.
-He run away long ago, even changed his name...
-"""
-
-"quest.hero.silver.i_am_a_proud_father" = """
-All he ever asked was to be trusted.
-I promise you, I will put in the work to gain his forgiveness.
-I should be proud of... "Punk"
-"""
-
-"quest.hero.punk.the_problem" = """
-You see, the problem with the wizard, with my father, with this world... Is trust.
-The microwave is broken? Fix it with magic.
-Science is broken? Let's pray the gods for knowledge.
-The world is broken? Let's summon a random dude from another world!
-You have been so busy, so worried, it never even came to your mind we might just be able to handle the situation ourself.
+"quest.crazy_conspiracy.girl.stonehenge" = """
+You’ve seen the stones, haven’t you? Up on the peak? Tell me, how do you think they got there?
+You think some *villagers* hauled those massive rocks up the tallest mountain in the world? Don’t make me laugh!
+No, no, no. Those stones are *too big*. Too perfect. They’re not natural, but they’re not man-made either.
+They were *placed*. By who? Was it gods? Aliens?
+Or maybe... maybe *he* put them there, just to mess with us.
 """
 
 "quest.hero.finale.a" = """
@@ -703,66 +889,146 @@ Tried to force yourself onto someone else's destiny, did you?
 Piss off.
 """
 
-"quest.hero.finale.c" = """
-Who the hell are you?
-"""
+"quest.hero.finale.c" = "Who the hell are you?"
 
 "quest.hero.finale.finale" = """
 We have nothing else to talk about.
 Go back to your world, or stay... Whatever...
 """
 
-"quest.ninja_skills.black_ninja.note" = """
-Yo, 
-I'm out on a mission.
-Also, what the hell are you doing in my house!?
-Get out!
-- Black Ninja
+"quest.hero.punk.are_you_after_the_keys" = """
+What the hell are you doing here...?
+Are you... After the keys!?
 """
 
-"quest.ninja_skills.girl.black_ninja_location_hint" = """
-He’s hiding around here, you know... but it’s not just him, oh no. 
-This place - it’s not what it looks like. 
-The dunes? They’re not just sand... 
-They’re watchers, silent guardians keeping everything locked inside. 
-And the Black Ninja? He’s no ordinary man. They’ve got him here for a reason, he knows something!
-Or maybe... maybe he’s the key. Or maybe... he’s the lock.
+"quest.hero.punk.lets_see_who_gets_them_first" = """
+Let's see if you can gather the keys faster than me...
+Maybe you'll get to "save" the world.
 """
 
-"quest.ninja_skills.blue_ninja.note" = """
-Yo, 
-I'm out on a mission.
-Also, what the hell are you doing in my house!?
-Get out!
-- Blue Ninja
+"quest.hero.punk.no_use_killing_monsters" = """
+No use running around killing monsters, their number never really lowers.
+It's the nature of this world and we must accept it.
 """
 
-"quest.ninja_skills.lyria.hoarding_issues" = """
-One of my brothers has a hoarding issue...
-I'm waiting for him to get home so I can force him to clean up.
-I just hope they didn't have any trouble on the mission...
+"quest.hero.punk.so_you_are_the_outerworlder" = """
+So you're an outer-worlder eh?
+I bet that old geezer in Evergrove summoned you here.
+We don't need any heroes, go away.
 """
 
-"quest.ninja_skills.black_ninja.please_check_on_sister" = """
-So you came all the way from Evergrove?
-Can you check on my sister and let her know I'm ok?
-My brother should be back home by now, but with our job you never know...
-If you do, I'll teach you one of my ninja skills!
+"quest.hero.punk.the_problem" = """
+You see, the problem with the wizard, with my father, with this world... Is trust.
+The microwave is broken? Fix it with magic.
+Science is broken? Let's pray the gods for knowledge.
+The world is broken? Let's summon a random dude from another world!
+You have been so busy, so worried, it never even came to your mind we might just be able to handle the situation ourself.
 """
 
-"quest.ninja_skills.blue_ninja.please_check_on_sister" = """
-So you came all the way from Evergrove?
-Can you check on my sister and let her know I'm ok?
-My brother should be back home by now, but with our job you never know...
-If you do, I'll teach you one of my ninja skills!
+"quest.hero.silver.i_am_a_proud_father" = """
+All he ever asked was to be trusted.
+I promise you, I will put in the work to gain his forgiveness.
+I should be proud of... "Punk"
 """
 
-"quest.ninja_skills.lyria.thats_my_brother_black" = """
-A ninja dressed in black... 
-That's my brother!
-Please tell him to come home soon, I need help cleaning our brother's house!
-Was my other brother with him? 
-He dresses in blue.
+"quest.hero.silver.i_am_punk_father" = """
+The hero of the profecy is... was... My son.
+He run away long ago, even changed his name...
+"""
+
+"quest.hero.silver.i_failed" = """
+Outer-worlder... Do you even know why you're here?
+it's because I failed as a father.
+"""
+
+"quest.hero.wizard.gather_the_keys" = """
+To enter this realm you need to fetch the keys from the 5 dungeons...
+No one can tell if you really are the hero of the profecy.
+But please, help us gather the keys, before someone else, or something else, does!
+"""
+
+"quest.hero.wizard.met_anyone_important" = """
+Punk said I was the one who brought you here... Mmmh
+Maybe it's true we don't need heroes...
+Or maybe we do and he just doesn't realize it yet.
+"""
+
+"quest.hero.wizard.prologue" = """
+You say "some kind of magic" brought you here? Interesting...
+Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
+I suggest you start your own journey to learn more about this world.
+The closest city is Aridreach, West from here, why don't you start from there?
+If you're looking for directions, road signs can be useful.
+Now go, I shall see you soon!
+"""
+
+"quest.manafren_research.ancient_book.contents" = """
+I have uncovered a chilling truth buried beneath these ancient stones.
+Here lies the origin of the trees, twisted and cursed with unnatural life.
+It is said that the Demon Lord himself poured his essence into their roots, tethering their growth to his malignant will.
+Each leaf carries a fragment of his presence, and with every passing season, his influence stretches further into the world, unseen but undeniable.
+"""
+
+"quest.manafren_research.dr_voss.introduction" = """
+Ah, just who I needed.
+I’ve studied these Manafren trees extensively, by all accounts, they’re miraculous...
+Lately something seems to be happening the them, the data we gathere is all over the place...
+Maybe this already happend in the past and there’s something about it in the old scrolls!
+Unfortunately, the village elder is the only one with access to them, but he won't talk to me anymore...
+"""
+
+"quest.manafren_research.dr_voss.research_was_inconclusive" = """
+The suspicious dark aura is gone.
+I have to say, I am a bit pissed, I was so close...
+It's hard to do science in a world with magic.
+Maybe they should get an outer-worlder to do my job - no offense.
+"""
+
+"quest.manafren_research.dr_voss.thanks_for_the_info" = """
+You… you found it.
+So, the trees truly are bound to some dark force, and their energy, our very life here in Duskhaven, comes from this curse.
+I had suspicions, but these findings, well, they change everything.
+I’ll need time to process what this means, but take this as a token.
+"""
+
+"quest.manafren_research.dr_voss.thanks_for_the_info_still_working_on_it" = "I’ll need time to process the latest findings..."
+
+"quest.manafren_research.dr_voss.waiting_for_info" = "My research continues, but I can't get the feeling of dread off my mind."
+
+"quest.manafren_research.dungeon_scroll.contents" = """
+Mmmh... This scroll looks very old...
+It clearly talks about the trees, but it's mostly unreadable.
+There's a mention of something being buried in the mountains West of here...
+"""
+
+"quest.manafren_research.duskhaven_village_elder.check_the_dungeon" = """
+Dr. Voss sent you, did he?
+Ah, well… I don’t put much stock in all his science...
+These trees, they hold a power older than you or me, a power that whispers secrets to those willing to listen.
+There’s an old scroll tucked away in the dungeon nearby.
+Maybe you’ll find what you seek there.
+Just beware of what’s hidden within those words.
+"""
+
+"quest.manafren_research.duskhaven_village_elder.have_you_checked_the_dungeon" = "Did you find anything interesting in the dungeon?"
+
+"quest.manafren_research.priestess.research_was_inconclusive" = """
+The trees have already started to heal.
+You gave Punk the push he needed, thank you!
+"""
+
+"quest.manafren_research.priestess.thanks_for_the_info" = """
+So that's what the diary said!? Haha!
+Well, the adventurer who wrote it clearly was onto something, but not quite there yet.
+The trees are not "evil" in the slightest, they basically absorb and purify darkness - both magical and literal!
+That's why they primarly grow here, where it's always twilight.
+Unfortunately, with the influence of the Demon Lord growing stronger, they are getting sick.
+Please don't tell the human scientist, I'm sure he'll want to find the answer on is own!
+"""
+
+"quest.manafren_research.serena.keep_out_of_research_area" = """
+What do you think you are doing here!?
+This zone is off limits without a permit!
 """
 
 "quest.ninja_skills.black_ninja.gain_bouncing_knifes_skill" = """
@@ -772,21 +1038,52 @@ As promised, your knife will now bounce off most surfaces!
 Pretty cool eh? You'll see!
 """
 
-"quest.ninja_skills.lyria.thats_my_brother_blue" = """
-A ninja dressed in blue... 
-That's my brother!
-Please tell him to come home soon, we need to clean up his place, it's full of junk!
-Was my other brother with him? 
-He dresses in black.
+"quest.ninja_skills.black_ninja.note" = """
+Yo,
+I'm out on a mission.
+Also, what the hell are you doing in my house!?
+Get out!
+- Black Ninja
+"""
+
+"quest.ninja_skills.black_ninja.please_check_on_sister" = """
+So you came all the way from Evergrove?
+Can you check on my sister and let her know I'm ok?
+My brother should be back home by now, but with our job you never know...
+If you do, I'll teach you one of my ninja skills!
 """
 
 "quest.ninja_skills.blue_ninja.gain_knife_catcher_skill" = """
-Junk!? 
+Junk!?
 It's not junk! It's weapons and other ninja stuff!
 Oh well...
 As promised, you can now catch knifes mid-air bare handed.
 Obviously, you need knifes to be coming at you to use this skill.
 But I'm sure you'll find some use for it eventually!
+"""
+
+"quest.ninja_skills.blue_ninja.note" = """
+Yo,
+I'm out on a mission.
+Also, what the hell are you doing in my house!?
+Get out!
+- Blue Ninja
+"""
+
+"quest.ninja_skills.blue_ninja.please_check_on_sister" = """
+So you came all the way from Evergrove?
+Can you check on my sister and let her know I'm ok?
+My brother should be back home by now, but with our job you never know...
+If you do, I'll teach you one of my ninja skills!
+"""
+
+"quest.ninja_skills.girl.black_ninja_location_hint" = """
+He’s hiding around here, you know... but it’s not just him, oh no.
+This place - it’s not what it looks like.
+The dunes? They’re not just sand...
+They’re watchers, silent guardians keeping everything locked inside.
+And the Black Ninja? He’s no ordinary man. They’ve got him here for a reason, he knows something!
+Or maybe... maybe he’s the key. Or maybe... he’s the lock.
 """
 
 "quest.ninja_skills.lyria.father_introduction" = """
@@ -795,23 +1092,26 @@ Since they joined our father, the Great Red Ninja, in the "family business" I am
 I just hope they are coming home soon!
 """
 
-"quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
-This job requires me to stay away from home for long periods of time... 
-My children are all about your age...
+"quest.ninja_skills.lyria.hoarding_issues" = """
+One of my brothers has a hoarding issue...
+I'm waiting for him to get home so I can force him to clean up.
+I just hope they didn't have any trouble on the mission...
 """
 
-"quest.ninja_skills.red_ninja.gain_piercing_knife_skill" = """
-My kids are all well? That's a relief!
-As a reward, I'll teach the ultimate ninja skill.
-If only I had the chance, I KNOW I could defeat the 
-Demon Lord himself in one blow with it.
-F*** that guy.
+"quest.ninja_skills.lyria.thats_my_brother_black" = """
+A ninja dressed in black...
+That's my brother!
+Please tell him to come home soon, I need help cleaning our brother's house!
+Was my other brother with him?
+He dresses in blue.
 """
 
-"quest.ninja_skills.red_ninja.about_piercing_knife_skill" = """
-Told you... Barrels, monsters, Demon Lords, ...
-Doesn't matter.
-One shot is enough for ANY foe.
+"quest.ninja_skills.lyria.thats_my_brother_blue" = """
+A ninja dressed in blue...
+That's my brother!
+Please tell him to come home soon, we need to clean up his place, it's full of junk!
+Was my other brother with him?
+He dresses in black.
 """
 
 "quest.ninja_skills.nyx.next_target_is_kurogane" = """
@@ -823,7 +1123,7 @@ This time our target is the head of the Kurogane family, don't get in the way!
 "quest.ninja_skills.nyx.nyx_notes" = """
 Nyx Notes
 --
-Target: 
+Target:
 A. Kurogane, aka "The Red Ninja", head of the Kurogane family.
 --
 Last Known Location:
@@ -834,117 +1134,30 @@ Looked at the blueprints for the sewer system, looks like there is a second dung
 Entrance seems to be somewhere in the South-East of the area.
 """
 
-"quest.manafren_research.serena.keep_out_of_research_area" = """
-What do you think you are doing here!?
-This zone is off limits without a permit!
+"quest.ninja_skills.red_ninja.about_piercing_knife_skill" = """
+Told you... Barrels, monsters, Demon Lords, ...
+Doesn't matter.
+One shot is enough for ANY foe.
 """
 
-"quest.manafren_research.dr_voss.introduction" = """
-Ah, just who I needed. 
-I’ve studied these Manafren trees extensively, by all accounts, they’re miraculous...
-Lately something seems to be happening the them, the data we gathere is all over the place...
-Maybe this already happend in the past and there’s something about it in the old scrolls!
-Unfortunately, the village elder is the only one with access to them, but he won't talk to me anymore...
+"quest.ninja_skills.red_ninja.gain_piercing_knife_skill" = """
+My kids are all well? That's a relief!
+As a reward, I'll teach the ultimate ninja skill.
+If only I had the chance, I KNOW I could defeat the
+Demon Lord himself in one blow with it.
+F*** that guy.
 """
 
-"quest.manafren_research.dr_voss.waiting_for_info" = """
-My research continues, but I can't get the feeling of dread off my mind.
+"quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
+This job requires me to stay away from home for long periods of time...
+My children are all about your age...
 """
 
-"quest.manafren_research.duskhaven_village_elder.check_the_dungeon" = """
-Dr. Voss sent you, did he? 
-Ah, well… I don’t put much stock in all his science...
-These trees, they hold a power older than you or me, a power that whispers secrets to those willing to listen. 
-There’s an old scroll tucked away in the dungeon nearby. 
-Maybe you’ll find what you seek there. 
-Just beware of what’s hidden within those words.
-"""
-
-"quest.manafren_research.duskhaven_village_elder.have_you_checked_the_dungeon" = """
-Did you find anything interesting in the dungeon?
-"""
-
-"quest.manafren_research.dungeon_scroll.contents" = """
-Mmmh... This scroll looks very old...
-It clearly talks about the trees, but it's mostly unreadable.
-There's a mention of something being buried in the mountains West of here...
-"""
-
-"quest.manafren_research.ancient_book.contents" = """
-I have uncovered a chilling truth buried beneath these ancient stones. 
-Here lies the origin of the trees, twisted and cursed with unnatural life. 
-It is said that the Demon Lord himself poured his essence into their roots, tethering their growth to his malignant will. 
-Each leaf carries a fragment of his presence, and with every passing season, his influence stretches further into the world, unseen but undeniable. 
-"""
-
-"quest.manafren_research.dr_voss.thanks_for_the_info" = """
-You… you found it. 
-So, the trees truly are bound to some dark force, and their energy, our very life here in Duskhaven, comes from this curse. 
-I had suspicions, but these findings, well, they change everything. 
-I’ll need time to process what this means, but take this as a token. 
-"""
-
-"quest.manafren_research.dr_voss.thanks_for_the_info_still_working_on_it" = """
-I’ll need time to process the latest findings...
-"""
-
-"quest.manafren_research.dr_voss.research_was_inconclusive" = """
-The suspicious dark aura is gone.
-I have to say, I am a bit pissed, I was so close...
-It's hard to do science in a world with magic.
-Maybe they should get an outer-worlder to do my job - no offense.
-"""
-
-"quest.manafren_research.priestess.thanks_for_the_info" = """
-So that's what the diary said!? Haha!
-Well, the adventurer who wrote it clearly was onto something, but not quite there yet.
-The trees are not "evil" in the slightest, they basically absorb and purify darkness - both magical and literal! 
-That's why they primarly grow here, where it's always twilight.
-Unfortunately, with the influence of the Demon Lord growing stronger, they are getting sick.
-Please don't tell the human scientist, I'm sure he'll want to find the answer on is own!
-"""
-
-"quest.manafren_research.priestess.research_was_inconclusive" = """
-The trees have already started to heal.
-You gave Punk the push he needed, thank you!
-"""
-
-"quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
-So you saw him, didn’t you? You talked to him? Oh, I knew it! 
-But don’t you see now? Don’t you see what I’ve been saying? 
-He’s not just *hiding*, he’s *placed*. 
-Everything in here, everyone in here... They’re puppets...
-"""
-
-"quest.crazy_conspiracy.girl.black_ninja_i_knew_it_again" = """
-Sssh... They're watching us... 
-"""
-
-"quest.crazy_conspiracy.girl.stonehenge" = """
-You’ve seen the stones, haven’t you? Up on the peak? Tell me, how do you think they got there? 
-You think some *villagers* hauled those massive rocks up the tallest mountain in the world? Don’t make me laugh!  
-No, no, no. Those stones are *too big*. Too perfect. They’re not natural, but they’re not man-made either. 
-They were *placed*. By who? Was it gods? Aliens? 
-Or maybe... maybe *he* put them there, just to mess with us.  
-"""
+"quest.thugs_and_assassins.mr_bubblegum.intro" = "..."
 
 "quest.thugs_and_assassins.nyx.intro" = """
 Stop messing around!
 You're lucky we are taking break right now.
-"""
-
-"quest.thugs_and_assassins.mr_bubblegum.intro" = """
-...
-"""
-
-"quest.thugs_and_assassins.thug_boss.intro" = """
-Go away kid, nobody is getting near the dock until I say so.
-"""
-
-"quest.thugs_and_assassins.thermoria_town_chief.i_hired_assassins" = """
-The guys outside? Yeah they are assassins.
-Oh no, I'm not their boss, I just hired them for a job.
-Some thugs have blocked the dock and we need to sail out some goods.
 """
 
 "quest.thugs_and_assassins.nyx.we_are_about_to_strike" = """
@@ -952,15 +1165,33 @@ No need to rush, we are about to go and take care of them.
 Let me just finish my coffee first.
 """
 
-"quest.thugs_and_assassins.thug_boss.we_are_not_thugs" = """
-The Village Chief hired WHO!? 
-Dude we're not "thugs", we're unpaid workers on strike!
-Please, please, talk to Chief so we can resolve this peacefully...
+"quest.thugs_and_assassins.thermoria_town_chief.finale" = "Stupid new-age money."
+
+"quest.thugs_and_assassins.thermoria_town_chief.i_hired_assassins" = """
+The guys outside? Yeah they are assassins.
+Oh no, I'm not their boss, I just hired them for a job.
+Some thugs have blocked the dock and we need to sail out some goods.
 """
 
 "quest.thugs_and_assassins.thermoria_town_chief.it_was_about_the_money" = """
 Oh my... This thing again....
 I did pay them! I gave each one of them a check already!
+"""
+
+"quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids" = """
+Basically you're telling me they are so young they don't know what a check is?
+Yes I know what crypto is, I'm not that old...
+...
+Done, everyone paid in full...
+Stupid kids.
+"""
+
+"quest.thugs_and_assassins.thug_boss.intro" = "Go away kid, nobody is getting near the dock until I say so."
+
+"quest.thugs_and_assassins.thug_boss.we_are_not_thugs" = """
+The Village Chief hired WHO!?
+Dude we're not "thugs", we're unpaid workers on strike!
+Please, please, talk to Chief so we can resolve this peacefully...
 """
 
 "quest.thugs_and_assassins.thug_boss.what_is_a_check" = """
@@ -969,46 +1200,25 @@ Well, we threw them away LOL
 Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
 """
 
-"quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids" = """
-Basically you're telling me they are so young they don't know what a check is?
-Yes I know what crypto is, I'm not that old... 
-...
-Done, everyone paid in full...
-Stupid kids.
-"""
+"references.dbz.goku" = "Wait, this isn't universe 7... Byeee!"
 
-"quest.thugs_and_assassins.thermoria_town_chief.finale" = """
-Stupid new-age money.
-"""
+"references.dbz.krillin" = "I hope you brought Senzu beans!"
 
-"end_game_credits" = """
-This was my first game, I hope you liked it.
-Thanks for playing!
-"""
+"references.dbz.piccolo" = "I am The Namek who has long since forgotten his name"
 
-"credits" = "Credits"
-"credits.developer" = "Game by Federico Curzel"
-"credits.developer.link" = "https://www.youtube.com/@HiddenMugs"
-"credits.open_source" = "The project is Open Source"
-"credits.open_source.link" = "https://github.com/curzel-it/sneakbit/"
-"credits.music" = "Music by Filippo Vicarelli"
-"credits.music.link" = "https://www.filippovicarelli.com/8bit-game-background-music"
-"credits.sound_effects" = "Sound Effects by SubspaceAudio"
-"credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style"
+"teleporter.locked" = "You need a %s key to open this door."
 
-"changelog" = """
-My Master has a message for you...
-He told my about how the game now pauses when you talk to someone, open the menu or connect/disconnect the controller...
-...
-I have no idea what that means...
-I have to go now, see you around!
-"""
+"teleporter.name" = "Teleporter"
 
-"changelog.mobile" = """
-My Master has a message for you...
-He told me about how you can now long-press the FIRE button and move it around for better ergonomics.
-Also something about how the game now pauses when you talk to someone or open the menu...
-...
-I have no idea what that means...
-I have to go now, see you around!
-"""
+"teleporter.unlock.message" = "You will lose one %s key."
+
+"teleporter.unlock.title" = "Unlock the door?"
+
+"telepoter.locked.permanent" = "This door is locked."
+
+"text_input.hint" = "ENTER to confirm, ESC to cancel"
+
+"yes" = "Yes"
+
+"you" = "You"
+

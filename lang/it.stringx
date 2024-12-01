@@ -1,311 +1,251 @@
+"1001.entrance" = "Benvenuto al Villaggio di Evergrove!"
+
+"1002.entrance" = """
+Benvenuto al Sentiero Verdant
+--
+Nord-Est: Aridreach
+Nord-Ovest: Sentiero Shadowveil
+Sud-Ovest: Paludi di Murkmire
+"""
+
+"1003.entrance" = """
+Benvenuto ad Aridreach
+--
+Nord: Grimsun Basin
+Sud: Sentiero Verdant
+"""
+
+"1004.entrance" = "Dungeon di Duskhaven Lv 1"
+
+"1005.entrance" = "Dungeon di Duskhaven Lv 2"
+
+"1006.entrance" = """
+Benvenuto a Thermoria
+--
+Nord: Paludi di Murkmire
+Barche per Maritide Haven disponibili al molo
+"""
+
+"1007.entrance" = "Sotto il Monte Ignis"
+
+"1008.entrance" = """
+Benvenuto a Maritide Haven
+--
+Barche per Thermoria disponibili al molo
+"""
+
+"1009.entrance" = "Vecchio Complesso Minerario sotto Maritide Haven"
+
+"1010.entrance" = """
+Benvenuto al Sentiero Shadowveil
+--
+Nord: Vintoria
+Ovest: Labirinto Demoniaco
+Sud: Sentiero Verdant
+"""
+
+"1011.entrance" = """
+Benvenuto al Villaggio del Crepuscolo: Duskhaven
+--
+Si prega di non toccare gli Alberi di Manafern.
+Si prega di non scattare foto con il flash.
+--
+Ovest: Vetta di Levek
+Est: Paludi di Murkmire
+"""
+
+"1012.entrance" = "Benvenuto a Vintoria!"
+
+"1013.entrance" = "Grimsun Basin"
+
+"1014.entrance" = "Centrale Idroelettrica Lv 1"
+
+"1015.entrance" = "Centrale Idroelettrica Lv 2"
+
+"1016.entrance" = "Centrale Idroelettrica Lv 3"
+
+"1017.entrance" = "Labirinto Demoniaco"
+
+"1018.entrance" = """
+Benvenuto alle Paludi di Murkmire
+--
+Nord: Sentiero Verdant
+Ovest: Duskhaven
+Sud: Thermoria
+"""
+
+"1020.entrance" = """
+Benvenuti sulla Vetta di Levek
+--
+Nord: Strada bloccata dal ghiaccio
+East: Duskhaven
+Sud: Strada bloccata dal ghiaccio
+"""
+
 "building.name.demon_lord_castle" = "Castello del Signore dei Demoni"
+
 "building.name.house" = "Casa"
+
 "building.name.house_two_floors" = "Casa (due piani)"
+
 "building.name.igloo" = "Iglù"
+
+"changelog" = """
+Il mio Capo ha un messaggio per te...
+Parlava di come ora il gioco vada in pausa quando parli con qualcuno, apri il menu o connetti/disconnetti il controller...
+...
+Non ho idea di cosa significhi...
+Devo andare ora, alla prossima!
+"""
+
+"changelog.mobile" = """
+Il mio Capo ha un messaggio per te...
+Parlava di come tenendo premuto il tasto SPARA questo ora si possa spostare per un maggiore comfort...
+Ha anche accennato al fatto che ora il gioco va in pausa quando parli con qualcuno o apri il menu...
+...
+Non ho idea di cosa significhi...
+Devo andare ora, alla prossima!
+"""
+
 "combat.options.attack" = "Attacca"
+
 "combat.options.inventory" = "Inventario"
+
 "combat.options.run" = "Fuggi"
+
 "confirmation.cancel" = "No"
+
 "confirmation.confirm" = "Ok"
+
+"credits" = "Crediti"
+
+"credits.developer" = "Game by Federico Curzel"
+
+"credits.developer.link" = "https://www.youtube.com/@HiddenMugs"
+
+"credits.music" = "Music by Filippo Vicarelli"
+
+"credits.music.link" = "https://www.filippovicarelli.com/8bit-game-background-music"
+
+"credits.open_source" = "The project is Open Source"
+
+"credits.open_source.link" = "https://github.com/curzel-it/sneakbit/"
+
+"credits.sound_effects" = "Sound Effects by SubspaceAudio"
+
+"credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style"
+
 "death_screen.subtitle" = "Premi CONFERMA per riprovare"
+
 "death_screen.title" = "Sei morto."
+
 "dialogue.reward_received" = "Hai ricevuto `%s`!"
+
 "dialogue.select_option" = "Seleziona un'opzione:"
+
 "empty_dialogue" = "Cosa vuoi?"
+
+"end_game_credits" = """
+Questo era il mio primo videogame, spero ti sia piaciuto.
+Grazie per aver giocato!
+"""
+
 "entity.menu.change_destination_world" = "Cambia Destinazione Mondo"
+
 "entity.menu.change_destination_x" = "Cambia Destinazione X"
+
 "entity.menu.change_destination_y" = "Cambia Destinazione Y"
+
 "entity.menu.change_lock" = "Cambia Blocco"
+
 "entity.menu.change_lock_title" = "Seleziona il Colore della Chiave"
+
 "entity.menu.change_on_off" = "Attiva/Disattiva"
+
 "entity.menu.pickup" = "Raccogli"
+
 "entity.menu.read" = "Leggi"
+
 "entity.menu.remove" = "Rimuovi"
+
 "entity.menu.rename" = "Rinomina"
+
 "entity.menu.rename_title" = "Inserisci nuovo nome"
+
 "entity.menu.title" = "Opzioni Entità"
+
 "entity.menu.toggle_demand_attention" = "Attiva/Disattiva Richiesta Attenzione"
+
 "entity.menu.use" = "Usa"
-"game.menu.disable_sound_effects" = "Disablita Effetti Sonori"
+
 "game.menu.disable_music" = "Disablita Musica"
-"game.menu.enable_sound_effects" = "Ablita Effetti Sonori"
+
+"game.menu.disable_sound_effects" = "Disablita Effetti Sonori"
+
 "game.menu.enable_music" = "Ablita Musica"
+
+"game.menu.enable_sound_effects" = "Ablita Effetti Sonori"
+
 "game.menu.exit" = "Esci"
+
 "game.menu.inventory" = "Inventario"
+
 "game.menu.key_bindings" = "Assegnazione Tasti"
+
 "game.menu.map_editor" = "Editor Mappa"
+
 "game.menu.new_game" = "New Game"
+
 "game.menu.new_game_are_you_sure" = "Ricomincerai da ZERO.\nSei sicuro"
+
 "game.menu.resume" = "Riprendi"
+
 "game.menu.save" = "Salva Gioco"
+
 "game.menu.save_and_exit" = "Salva ed Esci"
+
 "game.menu.status" = "Stato"
+
 "game.menu.title" = "Menu di Gioco"
+
 "game.menu.toggle_fullscreen" = "Toggle Fullscreen"
-"inventory.subtitle" = "Oggetti nello zaino"
-"inventory.title" = "Inventario"
-"lock.name.blue" = "Blu"
-"lock.name.green" = "Verde"
-"lock.name.none" = "Nessuno"
-"lock.name.permanent" = "Permanente"
-"lock.name.red" = "Rosso"
-"lock.name.silver" = "Argento"
-"lock.name.yellow" = "Giallo"
-"map_editor.placement" = "CONFERMA per posizionare, ESC per annullare"
-"map_editor.subtitle" = "Premi CONFERMA per selezionare qualcosa"
-"map_editor.title" = "Editor Mappa"
-"menu_back" = "Indietro"
-"npc.menu.play_dialog" = "Avvia dialogo"
-"npc.menu.remove" = "Rimuovi"
-"npc.menu.title" = "Opzioni NPC"
 
-"npc.name.assassin_girl" = "Nyx"
-"npc.name.bearwolf" = "Orsolupo"
-"npc.name.blonde.apron" = "Abitante"
-"npc.name.blonde_guy" = "Abitante"
-"npc.name.blue_mohawk" = "Abitante"
-"npc.name.brown_mohawk" = "Abitante"
-"npc.name.cat" = "Gatto"
-"npc.name.cat_brown" = "Gatto"
-"npc.name.dbz1" = "Marito dell'Androide"
-"npc.name.dbz2" = "Padrino di Gohan"
-"npc.name.dbz3" = "Scimmia Son"
-"npc.name.demon_lord" = "Signore dei Demoni"
-"npc.name.developer" = "Mr Mugs"
-"npc.name.developer_messenger" = "Mugs's Bird"
-"npc.name.elf_priestess" = "Sacerdotessa"
-"npc.name.ethan" = "Ethan"
-"npc.name.female.blue_hair" = "Lyria Kurogane"
-"npc.name.female.brown_hair" = "Abitante"
-"npc.name.female.dark_blonde" = "Abitante"
-"npc.name.female.green_hair" = "Abitante"
-"npc.name.female.green_hair" = "Abitante"
-"npc.name.generic" = "Abitante"
-"npc.name.generic.apron" = "Abitante"
-"npc.name.goddess" = "Dea"
-"npc.name.male.black.blue_hair" = "Abitante"
-"npc.name.male.black.doctor" = "Dr Voss"
-"npc.name.male.kid.red_hair.blue_suit.green_hat" = "Abitante"
-"npc.name.monster" = "Mostro"
-"npc.name.mr_bubblegum" = "Mr Bubblegum"
-"npc.name.ninja.black" = "Ninja Nero"
-"npc.name.ninja.blue" = "Ninja Blu"
-"npc.name.ninja.red" = "Ninja Rosso"
-"npc.name.old_man" = "Abitante"
-"npc.name.old_man_mustache" = "Abitante"
-"npc.name.old_man_mustache.black" = "Abitante"
-"npc.name.old_man_swag_brown" = "Abitante"
-"npc.name.old_man_swag_purple" = "Abitante"
-"npc.name.old_woman" = "Abitante"
-"npc.name.piglet" = "Porcellino"
-"npc.name.piglet_blue" = "Porcellino"
-"npc.name.punk" = "Punk"
-"npc.name.purple_alien" = "Alieno"
-"npc.name.purple_mohawk" = "Abitante"
-"npc.name.rasta_girl" = "Abitante"
-"npc.name.silver" = "Silveroak"
-"npc.name.slime" = "Melma"
-"npc.name.slime_blue" = "Slime"
-"npc.name.snail" = "Lumaca"
-"npc.name.soldier" = "Capitano 'Ironside' Thorne"
-"npc.name.soldier.female.red" = "Serena Flameheart"
-"npc.name.swag_kid" = "Abitante"
-"npc.name.swag_kid_2" = "Abitante"
-"npc.name.swag_kid_3" = "Abitante"
-"npc.name.winter_apron" = "Abitante"
-"npc.name.winter_black_red" = "Abitante"
-"npc.name.wizard" = "Mogarth il Saggio"
+"hint.001.pickup" = "Raccogli gli oggetti passandoci sopra"
 
-"objects.name.amanita" = "Fungo Amanita"
-"objects.name.barrel.brown" = "Barile Marrone"
-"objects.name.barrel.green" = "Barile Verde"
-"objects.name.barrel.purple" = "Barile Viola"
-"objects.name.barrel.wood" = "Barile di Legno"
-"objects.name.bed" = "Letto"
-"objects.name.boat.small" = "Barca Piccola"
-"objects.name.book_black" = "Libro Nero"
-"objects.name.book_blue" = "Libro Blu"
-"objects.name.book_green" = "Libro Verde"
-"objects.name.book_purple" = "Libro Viola"
-"objects.name.book_red" = "Libro Rosso"
-"objects.name.boulder" = "Masso"
-"objects.name.cabinet.lg.beige" = "Armadio Beige"
-"objects.name.cabinet.lg.brown" = "Armadio Marrone"
-"objects.name.cabinet.lg.white" = "Armadio Bianco"
-"objects.name.cabinet.md.beige" = "Cassettiera Beige"
-"objects.name.cabinet.md.brown" = "Cassettiera Marrone"
-"objects.name.cabinet.md.white" = "Cassettiera Bianca"
-"objects.name.cabinet.sm.beige" = "Cassetto Beige"
-"objects.name.cabinet.sm.brown" = "Cassetto Marrone"
-"objects.name.cabinet.sm.white" = "Cassetto Bianco"
-"objects.name.camp_fire" = "Falò"
-"objects.name.deep_hole" = "Fossa Profonda"
-"objects.name.footsteps_trail" = "Impronte"
-"objects.name.fountain" = "Fontana"
-"objects.name.gate.blue" = "Cancello Blu"
-"objects.name.gate.green" = "Cancello Verde"
-"objects.name.gate.red" = "Cancello Rosso"
-"objects.name.gate.silver" = "Cancello Argento"
-"objects.name.gate.yellow" = "Cancello Giallo"
-"objects.name.hint_consumable" = "Suggerimento (Usa e Getta)"
-"objects.name.hint_permanent" = "Suggerimento (Permanente)"
-"objects.name.key" = "Chiave"
-"objects.name.key_blue" = "chiave delle miniere di Maritide"
-"objects.name.key_green" = "chiave dei sotterranei di Duskhaven"
-"objects.name.key_red" = "chiave del Monte Ignis"
-"objects.name.key_silver" = "chiave dei sotterranei di Vintoria"
-"objects.name.key_yellow" = "chiave del deserto di Grimsun"
-"objects.name.key_white" = "chiave della vetta Levek"
-"objects.name.kunai" = "Kunai"
-"objects.name.kunai.x10" = "Kunai x10"
-"objects.name.large_sign" = "Cartellone"
-"objects.name.magic_circle.blue" = "Cerchio Magico"
-"objects.name.magic_circle.small" = "Cerchio Magico"
-"objects.name.magic_circle.summoning" = "Cerchio Magico"
-"objects.name.magic_circle.summoning.evil" = "Cerchio Magico"
-"objects.name.pressure_plate.blue" = "Piastra di Pressione Blu"
-"objects.name.pressure_plate.green" = "Piastra di Pressione Verde"
-"objects.name.pressure_plate.red" = "Piastra di Pressione Rossa"
-"objects.name.pressure_plate.silver" = "Piastra di Pressione Argento"
-"objects.name.pressure_plate.yellow" = "Piastra di Pressione Gialla"
-"objects.name.rail.cart" = "Carrello"
-"objects.name.scroll.blue" = "Pergamena Blu"
-"objects.name.scroll.brown" = "Pergamena Marrone"
-"objects.name.scroll.green" = "Pergamena Verde"
-"objects.name.scroll.red" = "Pergamena Rossa"
-"objects.name.scroll.yellow" = "Pergamena Gialla"
-"objects.name.seat_brown" = "Sedia Marrone"
-"objects.name.seat_green" = "Sedia Verde"
-"objects.name.seat_orange" = "Sedia Arancione"
-"objects.name.seat_pink" = "Sedia Rosa"
-"objects.name.sign" = "Segnale"
-"objects.name.skull" = "Teschio"
-"objects.name.slope.bottom_left.dark_rock" = "Pendenza"
-"objects.name.slope.bottom_left.grass" = "Pendenza"
-"objects.name.slope.bottom_left.rock" = "Pendenza"
-"objects.name.slope.bottom_left.sand" = "Pendenza"
-"objects.name.slope.bottom_right.dark_rock" = "Pendenza"
-"objects.name.slope.bottom_right.grass" = "Pendenza"
-"objects.name.slope.bottom_right.rock" = "Pendenza"
-"objects.name.slope.bottom_right.sand" = "Pendenza"
-"objects.name.slope.side_bottom.dark_rock" = "Pendenza"
-"objects.name.slope.side_bottom.grass" = "Pendenza"
-"objects.name.slope.side_bottom.rock" = "Pendenza"
-"objects.name.slope.side_bottom.sand" = "Pendenza"
-"objects.name.slope.side_left.dark_rock" = "Pendenza"
-"objects.name.slope.side_left.grass" = "Pendenza"
-"objects.name.slope.side_left.rock" = "Pendenza"
-"objects.name.slope.side_left.sand" = "Pendenza"
-"objects.name.slope.side_right.dark_rock" = "Pendenza"
-"objects.name.slope.side_right.grass" = "Pendenza"
-"objects.name.slope.side_right.rock" = "Pendenza"
-"objects.name.slope.side_right.sand" = "Pendenza"
-"objects.name.slope.side_top.dark_rock" = "Pendenza"
-"objects.name.slope.side_top.grass" = "Pendenza"
-"objects.name.slope.side_top.rock" = "Pendenza"
-"objects.name.slope.side_top.sand" = "Pendenza"
-"objects.name.slope.top_left.dark_rock" = "Pendenza"
-"objects.name.slope.top_left.grass" = "Pendenza"
-"objects.name.slope.top_left.rock" = "Pendenza"
-"objects.name.slope.top_left.sand" = "Pendenza"
-"objects.name.slope.top_right.dark_rock" = "Pendenza"
-"objects.name.slope.top_right.grass" = "Pendenza"
-"objects.name.slope.top_right.rock" = "Pendenza"
-"objects.name.slope.top_right.sand" = "Pendenza"
-"objects.name.stairs_down" = "Scale (Giù)"
-"objects.name.stairs_up" = "Scale (Su)"
-"objects.name.table" = "Tavolo"
-"objects.name.teleporter" = "Teletrasporto"
-"objects.name.torch" = "Torcia"
-"objects.name.well" = "Pozzo"
-"objects.power.kidneys" = "Reni Potenti"
-"objects.power.tower.off" = "Torre del Mana"
-"objects.power.tower.on" = "Torre del Mana"
-"objects.waterfall" = "Cascata"
-"objects.wind_turbine" = "Turbina Eolica"
+"hint.002.throw_knife" = "Lancia i coltelli premendo R, F, J o Q"
 
-"ok" = "Ok"
-"ok_action" = ">> Ok"
-"no" = "No"
-"picked_up_item" = "Raccolto `%s`!"
-"teleporter.locked" = "Hai bisogno di una chiave %s per aprire questa porta."
-"teleporter.name" = "Teletrasporto"
-"teleporter.unlock.message" = "Perderai una chiave %s."
-"teleporter.unlock.title" = "Sbloccare la porta?"
-"telepoter.locked.permanent" = "Questa porta è bloccata."
-"text_input.hint" = "ENTER per confermare, ESC per annullare"
-"yes" = "Yes"
-"you" = "Tu"
-
-"hint.001.pickup" = """
-Raccogli gli oggetti passandoci sopra
-"""
-
-"hint.002.throw_knife.mobile" = """
-Attacca premendo il bottone con l'icona del coltello
-"""
-
-"hint.002.throw_knife" = """
-Lancia i coltelli premendo R, F, J o Q
-"""
+"hint.002.throw_knife.mobile" = "Attacca premendo il bottone con l'icona del coltello"
 
 "hint.003.not_all_places_have_loot" = """
-Cosa? 
+Cosa?
 Ti aspettavi che ogni casa avesse dei tesori?
 E poi, cosa diavolo ci fai a casa mia!?
 """
 
-"references.dbz.krillin" = "Spero che tu abbia portato i fagioli Senzu!"
-"references.dbz.goku" = "Aspetta, questo non è l'universo 7... Ciaooo!"
+"inventory.subtitle" = "Oggetti nello zaino"
 
-"lore.evergrove.monster_sightings_nowadays" = """
-I mostri fanno parte di questo mondo da molto tempo.
-Sono qui da quando riesco a ricordare, almeno.
-Ma non si avvicinavano mai alle zone abitate fino a poco tempo fa.
-Provo compassione per le nuove generazioni che devono affrontarne così tanti.
-"""
+"inventory.title" = "Inventario"
 
-"lore.evergrove.monster_sightings_logs" = """
-Registro Avvistamenti di Mostri
-Proprietà degli Archivi Storici del Villaggio di Evergrove
---
-4 gennaio 1330: Avvistato 1 mostro ai margini del villaggio. Il primo da molti anni.
-27 giugno 1331: Visto il primo mostro dall'anno scorso. Rimasto vicino al limite della foresta.
-15 marzo 1332: Due mostri sono apparsi vicino a Verdant Way. Nessun danno, ma inquietante.
-9 ottobre 1333: Una strana creatura oscura è entrata nel villaggio al crepuscolo. Conto: 3.
-20 maggio 1334: Avvistati quattro mostri.
-13 luglio 1335: È passato un po' dall'ultimo avvistamento, oggi cinque.
-2 dicembre 1336: Sei mostri hanno attaccato una carovana in transito. I sopravvissuti sono tornati sconvolti.
-22 settembre 1338: Il villaggio è stato attaccato da otto creature. Le guardie hanno lottato per respingerle.
-16 novembre 1340: Il numero è salito a 14 mostri che si aggirano vicino a Verdant Way. Mai visti così tanti tutti insieme. Nessuna vittima, per ora.
-"""
+"lock.name.blue" = "Blu"
 
-"lore.manafren_trees.tourists_sign" = """
-Alberi di Manafern
-Famosi in tutto il mondo per le loro proprietà energetiche mistiche. 
-Le loro uniche foglie viola catturano l'essenza del crepuscolo, 
-alimentando la vita e il fascino di Duskhaven.
-"""
+"lock.name.green" = "Verde"
 
-"lore.manafren_trees.botanics_book" = """
-L'Albero di Manafern, un prodigio botanico esclusivo della regione sempre crepuscolare di Duskhaven, ha a lungo affascinato studiosi e mistici. 
+"lock.name.none" = "Nessuno"
 
-Questa specie unica di latifoglie, riconoscibile dal suo fogliame viola vibrante, mostra un'abilità senza pari nel produrre mana grezzo.
+"lock.name.permanent" = "Permanente"
 
-Attraverso una complessa interazione tra il suo profondo sistema radicale e il crepuscolo ambientale della regione, il Manafern assorbe particelle eteree sia dal suolo che dall'aria. 
-Queste particelle, una volta introdotte nel complesso sistema vascolare dell'albero, subiscono un processo naturale simile alla fotosintesi ma molto più straordinario. 
-L'albero converte queste particelle in puro mana, che si irradia attraverso le sue foglie, emanando un leggero bagliore luminescente. 
-Gli abitanti locali spesso raccontano di come questi alberi 'vibrino' di vita, la loro energia utilizzata per illuminare case, alimentare dispositivi e persino sostenere il vibrante ecosistema di Duskhaven stesso. 
-"""
+"lock.name.red" = "Rosso"
+
+"lock.name.silver" = "Argento"
+
+"lock.name.yellow" = "Giallo"
 
 "lore.006.vintoria_power_station" = """
 Centrale Cascata di Vintoria
 Sfruttando la forza della cascata per alimentare la valle con mana vitale
 """
 
-"lore.007.vintoria_entrance" = """
-Benvenuti nella Valle di Vintoria!
-"""
+"lore.007.vintoria_entrance" = "Benvenuti nella Valle di Vintoria!"
 
 "lore.008.mount_ignis" = """
 Attenzione
@@ -313,30 +253,28 @@ Calore estremo e terreno instabile.
 Procedere con cautela e rispettare la potenza del Monte Ignis.
 """
 
-"lore.009.thermoria_dock" = """
-Molo di Thermoria — Porta per Maritide Haven
-"""
+"lore.009.thermoria_dock" = "Molo di Thermoria — Porta per Maritide Haven"
 
 "lore.010.aridreach_before_the_solar_age" = """
 L'Ascesa e la Caduta delle Vette di Lushspire
 --
-Un tempo, Aridreach era una terra di vita e bellezza, conosciuta come le Vette di Lushspire. 
-Le sue montagne torreggianti ospitavano vasti boschi, ruscelli cristallini e valli fertili. 
+Un tempo, Aridreach era una terra di vita e bellezza, conosciuta come le Vette di Lushspire.
+Le sue montagne torreggianti ospitavano vasti boschi, ruscelli cristallini e valli fertili.
 La gente prosperava in armonia con la terra, il loro raccolto abbondante e duraturo.
-Poi arrivò la catastrofe. I cieli si oscurarono, i fiumi si prosciugarono e le montagne iniziarono a inaridirsi. 
-Non resta alcuna traccia della sua causa, ma la trasformazione fu rapida e inesorabile. 
-La rigogliosa vegetazione lasciò il posto a una terra arida, e le orgogliose vette divennero dune desolate. 
+Poi arrivò la catastrofe. I cieli si oscurarono, i fiumi si prosciugarono e le montagne iniziarono a inaridirsi.
+Non resta alcuna traccia della sua causa, ma la trasformazione fu rapida e inesorabile.
+La rigogliosa vegetazione lasciò il posto a una terra arida, e le orgogliose vette divennero dune desolate.
 Ciò che una volta era un rifugio si trasformò nell'implacabile distesa ora chiamata Deserto di Grimsun.
-Di fronte alla desolazione, i sopravvissuti resistettero. 
-Costruirono il grande impianto solare sulle altezze brulle, sfruttando il sole implacabile per alimentare terre lontane. 
+Di fronte alla desolazione, i sopravvissuti resistettero.
+Costruirono il grande impianto solare sulle altezze brulle, sfruttando il sole implacabile per alimentare terre lontane.
 Mentre la loro ingegnosità è lodata, il libro lamenta la perdita della bellezza rigogliosa di Lushspire, ora sepolta sotto sabbie infinite.
 """
 
 "lore.011.hero_profecy.part_1" = """
 Profezia dell'Eroe - Parte 1
 --
-Nel crepuscolo del caos, un figlio della terra e uno straniero dalle stelle sorgeranno. 
-Legati dal destino ma divisi dalla scelta, attraverseranno le terre frantumate, portando acciaio che sussurra morte. 
+Nel crepuscolo del caos, un figlio della terra e uno straniero dalle stelle sorgeranno.
+Legati dal destino ma divisi dalla scelta, attraverseranno le terre frantumate, portando acciaio che sussurra morte.
 Il primo camminerà con il fuoco nell'anima, mentre il secondo brandirà la lama dell'incertezza.
 Le ombre del passato e la luce dell'ignoto convergeranno, sfidando la fede di tutti coloro che abitano il Velo dell'Eternità.
 """
@@ -344,17 +282,17 @@ Le ombre del passato e la luce dell'ignoto convergeranno, sfidando la fede di tu
 "lore.011.hero_profecy.part_2" = """
 Profezia dell'Eroe - Parte 2
 --
-Quando la terra tremerà sotto l'ombra del Signore dei Demoni, i prescelti scopriranno le Chiavi del Passaggio nascoste nel profondo della terra, delle acque e dei venti. 
-Dai deserti infuocati alle foreste sussurranti, le prove di forza, ingegno e cuore forgeranno la loro determinazione. 
+Quando la terra tremerà sotto l'ombra del Signore dei Demoni, i prescelti scopriranno le Chiavi del Passaggio nascoste nel profondo della terra, delle acque e dei venti.
+Dai deserti infuocati alle foreste sussurranti, le prove di forza, ingegno e cuore forgeranno la loro determinazione.
 Solo i degni avanzeranno, eppure anche i prescelti potrebbero inciampare, poiché una forza più grande del destino lega i loro cammini alla ruota del tempo.
 """
 
 "lore.011.hero_profecy.part_3" = """
 Profezia dell'Eroe - Parte 3
 --
-Mentre l'ora finale si avvicina, il legame spezzato sarà ricomposto, ma la verità sull'eroe infrangerà le illusioni. 
-Colui che è destinato a portare il peso si troverà davanti al trono della rovina, e la lama della salvezza cadrà. 
-In questo giudizio, non prevarranno né la forza né l'abilità, ma lo spirito incrollabile dello scopo. 
+Mentre l'ora finale si avvicina, il legame spezzato sarà ricomposto, ma la verità sull'eroe infrangerà le illusioni.
+Colui che è destinato a portare il peso si troverà davanti al trono della rovina, e la lama della salvezza cadrà.
+In questo giudizio, non prevarranno né la forza né l'abilità, ma lo spirito incrollabile dello scopo.
 Attenti, poiché la mano che sconfigge l'oscurità potrebbe oscurare la luce, e il ciclo della lotta eterna inizierà di nuovo.
 """
 
@@ -364,18 +302,14 @@ Non importa quante volte ci liberiamo del mostro, torna sempre.
 Forse le bevande erano troppo buone!
 """
 
-"lore.012.hunted_pub.he_always_comes_back" = """
-Grazie, ma sono sicura che tornerà prima o poi!
-"""
+"lore.012.hunted_pub.he_always_comes_back" = "Grazie, ma sono sicura che tornerà prima o poi!"
 
-"lore.013.snail_pig_farming" = """
-Allevamento di maiali-lumaca
-"""
+"lore.013.snail_pig_farming" = "Allevamento di maiali-lumaca"
 
 "lore.014.manafren_trees.caretaker" = """
 Mi occupo degli alberi qui intorno.
 Sono una famosa attrazione turistica, qualcuno deve assicurarsi che siano presentabili!
-Sapevi che l'eroe viveva qui? 
+Sapevi che l'eroe viveva qui?
 Suo padre è ancora nella loro vecchia casa.
 """
 
@@ -391,55 +325,6 @@ Non si rendono conto che è praticamente impossibile...
 Hai idea di quanto costerebbe avviare un'attività agricola!?
 """
 
-"lore.016.the_silver_legacy_of_maritide_haven" = """
-L'eredità d'argento di Maritide Haven
-Maritide Haven, una volta il gioiello della Costa d'Argento, doveva la sua prosperità alle ricche vene di argento sepolte nelle sue rocce. 
-La miniera, una meraviglia di ingegneria e determinazione, ha fornito ricchezza e commercio alla regione per secoli. 
-Mercanti da terre lontane attraccavano nel suo vivace porto, le loro navi cariche di merci da scambiare con i famosi lingotti d'argento di Maritide. 
-Eppure, il terreno che prometteva tali ricchezze sussurrava anche sinistri avvertimenti. 
-Racconti di strani tremori e venti spettrali provenienti dalle profondità della miniera venivano liquidati come mere superstizioni da chi cercava fortuna.
-
-Poi, lo stesso cataclisma che distrusse Thermoria trasformò quest'isola fiorente in un ricordo frammentato di ciò che era un tempo.
-Il crollo della miniera inghiottì gran parte dell'insediamento, lasciando solo isolotti sparsi.
-Oggi, Maritide Haven sopravvive come un umile villaggio di pescatori, le sue turbine eoliche ruotano silenziosamente sopra acque che un tempo pullulavano di flotte mercantili. 
-La miniera, ora sigillata, funge da cupo monumento ai pericoli dell'ambizione umana e alle forze sconosciute che si nascondono nelle profondità.
-"""
-
-"lore.016.silver_vein_chronicles" = """
-1 Luglio 1293
-La produzione continua a un ritmo costante. 
-La vena settentrionale mostra segni di esaurimento, ma i nuovi pozzi esplorativi promettono rese più ricche sotto i 700 piedi. 
-Gli ingegneri hanno espresso preoccupazioni per la densità delle rocce a queste profondità, ma la direzione insiste nel proseguire.
---
-24 Luglio 1293
-I minatori segnalano vibrazioni insolite provenienti dai tunnel più profondi. 
-Alcuni affermano di sentire echi deboli, quasi come sussurri. 
-Liquidando queste affermazioni come allucinazioni dovute alla fatica. 
-Espandendo le operazioni verso il filone settentrionale.
---
-4 Agosto 1293
-Scoperta una vena d'argento senza precedenti a 900 piedi di profondità. 
-Tuttavia, i guasti alle attrezzature stanno diventando frequenti e i tremori si stanno intensificando. 
-Ancora nessuna spiegazione per il fenomeno, ma la direzione resta irremovibile nel continuare.
---
-13 Agosto 1293
-Un ruggito terrestre ha scosso le miniere mentre i tunnel inferiori crollavano, inghiottendo minatori e macchinari. 
-Il personale al di fuori della miniera racconta visioni di un bagliore infuocato e un ululato ultraterreno prima che il terreno cedesse. 
-Questo non è un disastro ordinario. Tutte le operazioni sono sospese a tempo indeterminato.
-Nessun sopravvissuto noto.
-"""
-
-"lore.016.silver_vein_survivors" = """
-Lettera dell'ultimo giorno dei minatori
---
-A chiunque trovi questa pergamena, prenda queste parole come un avvertimento e una preghiera. 
-Eravamo minatori, scavando sempre più in profondità alla ricerca di ricchezza finché non abbiamo scoperto non argento, ma rovina. 
-I nostri trapani hanno perforato una caverna diversa da qualsiasi altra avessimo visto—le sue pareti pulsavano con vene di cremisi, come se fossero vive. 
-Dalle profondità è emersa una terribile ombra, il cui nome non osiamo pronunciare. 
-La sua sola presenza ha fatto crollare il terreno e scatenato una forza che ha distrutto la nostra isola.
-Dopo aver fatto crollare la miniera sembra essersi calmato, forse voleva solo restare indisturbato.
-"""
-
 "lore.016.fisherman_tales.1" = """
 Sì, i turisti pensano che questo posto sia tranquillo...
 Ma i vecchi pescatori come me pensano altrimenti...
@@ -447,41 +332,80 @@ Il vento che viene dalle vecchie miniere mi mette ancora i brividi...
 """
 
 "lore.016.fisherman_tales.2" = """
-Quindi, l'hai letto, vero? La pergamena. 
-Io ero uno dei fortunati, o maledetti, a seconda di come la vedi. 
+Quindi, l'hai letto, vero? La pergamena.
+Io ero uno dei fortunati, o maledetti, a seconda di come la vedi.
 Abbiamo scavato troppo in profondità, abbiamo svegliato qualcosa che avrebbe dovuto restare addormentato...
 """
 
-"lore.017.this_place_is_great_for_surfing" = """
-Questo posto è fantastico per fare surf!
+"lore.016.silver_vein_chronicles" = """
+1 Luglio 1293
+La produzione continua a un ritmo costante.
+La vena settentrionale mostra segni di esaurimento, ma i nuovi pozzi esplorativi promettono rese più ricche sotto i 700 piedi.
+Gli ingegneri hanno espresso preoccupazioni per la densità delle rocce a queste profondità, ma la direzione insiste nel proseguire.
+--
+24 Luglio 1293
+I minatori segnalano vibrazioni insolite provenienti dai tunnel più profondi.
+Alcuni affermano di sentire echi deboli, quasi come sussurri.
+Liquidando queste affermazioni come allucinazioni dovute alla fatica.
+Espandendo le operazioni verso il filone settentrionale.
+--
+4 Agosto 1293
+Scoperta una vena d'argento senza precedenti a 900 piedi di profondità.
+Tuttavia, i guasti alle attrezzature stanno diventando frequenti e i tremori si stanno intensificando.
+Ancora nessuna spiegazione per il fenomeno, ma la direzione resta irremovibile nel continuare.
+--
+13 Agosto 1293
+Un ruggito terrestre ha scosso le miniere mentre i tunnel inferiori crollavano, inghiottendo minatori e macchinari.
+Il personale al di fuori della miniera racconta visioni di un bagliore infuocato e un ululato ultraterreno prima che il terreno cedesse.
+Questo non è un disastro ordinario. Tutte le operazioni sono sospese a tempo indeterminato.
+Nessun sopravvissuto noto.
 """
 
-"lore.017.this_place_is_great_fish" = """
-Il pesce qui è incredibile!
+"lore.016.silver_vein_survivors" = """
+Lettera dell'ultimo giorno dei minatori
+--
+A chiunque trovi questa pergamena, prenda queste parole come un avvertimento e una preghiera.
+Eravamo minatori, scavando sempre più in profondità alla ricerca di ricchezza finché non abbiamo scoperto non argento, ma rovina.
+I nostri trapani hanno perforato una caverna diversa da qualsiasi altra avessimo visto—le sue pareti pulsavano con vene di cremisi, come se fossero vive.
+Dalle profondità è emersa una terribile ombra, il cui nome non osiamo pronunciare.
+La sua sola presenza ha fatto crollare il terreno e scatenato una forza che ha distrutto la nostra isola.
+Dopo aver fatto crollare la miniera sembra essersi calmato, forse voleva solo restare indisturbato.
 """
 
-"lore.017.this_place_is_great_for_sun" = """
-Adoro stare al sole!
+"lore.016.the_silver_legacy_of_maritide_haven" = """
+L'eredità d'argento di Maritide Haven
+Maritide Haven, una volta il gioiello della Costa d'Argento, doveva la sua prosperità alle ricche vene di argento sepolte nelle sue rocce.
+La miniera, una meraviglia di ingegneria e determinazione, ha fornito ricchezza e commercio alla regione per secoli.
+Mercanti da terre lontane attraccavano nel suo vivace porto, le loro navi cariche di merci da scambiare con i famosi lingotti d'argento di Maritide.
+Eppure, il terreno che prometteva tali ricchezze sussurrava anche sinistri avvertimenti.
+Racconti di strani tremori e venti spettrali provenienti dalle profondità della miniera venivano liquidati come mere superstizioni da chi cercava fortuna.
+
+Poi, lo stesso cataclisma che distrusse Thermoria trasformò quest'isola fiorente in un ricordo frammentato di ciò che era un tempo.
+Il crollo della miniera inghiottì gran parte dell'insediamento, lasciando solo isolotti sparsi.
+Oggi, Maritide Haven sopravvive come un umile villaggio di pescatori, le sue turbine eoliche ruotano silenziosamente sopra acque che un tempo pullulavano di flotte mercantili.
+La miniera, ora sigillata, funge da cupo monumento ai pericoli dell'ambizione umana e alle forze sconosciute che si nascondono nelle profondità.
 """
 
-"lore.017.this_place_was_great_for_dancing" = """
-Io e mia moglie venivamo qui a ballare lentamente quando eravamo giovani.
-"""
+"lore.017.this_place_had_a_great_nudist_beach" = "Sai dov'è la spiaggia nudista?"
 
-"lore.017.this_place_had_a_great_nudist_beach" = """
-Sai dov'è la spiaggia nudista?
-"""
+"lore.017.this_place_is_great_fish" = "Il pesce qui è incredibile!"
 
-"lore.018.mount_ignis_intro" = """
-Stai attento, il Monte Ignis non è calmo come può sembrare.
-L'ultima attività vulcanica è stata così forte da causare il collasso di alcune miniere delle isole circostanti.
-"""
+"lore.017.this_place_is_great_for_sun" = "Adoro stare al sole!"
+
+"lore.017.this_place_is_great_for_surfing" = "Questo posto è fantastico per fare surf!"
+
+"lore.017.this_place_was_great_for_dancing" = "Io e mia moglie venivamo qui a ballare lentamente quando eravamo giovani."
 
 "lore.018.mount_ignis_aridreach" = """
 Aridreach non è sempre stato un deserto, sai?
 Ci vivevo da bambina, prima dell'eruzione del Monte Ignis.
 Pensavano che gli alberi di Manafern potessero salvarci, che il loro mana avrebbe guarito il mondo.
 Ma hanno solo alimentato l'oscurità, non è così?
+"""
+
+"lore.018.mount_ignis_intro" = """
+Stai attento, il Monte Ignis non è calmo come può sembrare.
+L'ultima attività vulcanica è stata così forte da causare il collasso di alcune miniere delle isole circostanti.
 """
 
 "lore.019.grimsun_basin.intro" = """
@@ -505,9 +429,7 @@ Quando torno in posti dove sono già stato mi piace vedere cose nuove.
 Voglio che anche questo mondo continui ad evolversi, sarebbe fico!
 """
 
-"lore.021.levek_peak_intro" = """
-Stai attento, abbiamo appena liberato il passaggio dalla neve ed è ancora instabile
-"""
+"lore.021.levek_peak_intro" = "Stai attento, abbiamo appena liberato il passaggio dalla neve ed è ancora instabile"
 
 "lore.022.railroad" = """
 La ferrovia non arrivava fino a qui, la zona è troppo isolata.
@@ -515,132 +437,439 @@ Quindi sto facendo la mia ferrovia, con black jack e squillo di lusso!
 Forse ci metterei meno senza la ferrovia...
 """
 
-"1001.entrance" = "Benvenuto al Villaggio di Evergrove!"
-"1003.entrance" = """
-Benvenuto ad Aridreach
+"lore.023.bearwolfes" = """
+Sai, gli orsolupi non sono così spaventosi come sembrano.
+Mio nonno mi raccontava che aiutavano i viaggiatori smarriti a ritrovare la strada nella neve.
+Devi solo mantenere la calma e mostrare rispetto — se sei fortunato, potrebbero persino condividere le loro prede!
+"""
+
+"lore.023.lumberjack" = """
+Gli alberi? Ah...
+Sto diventando troppo vecchio fare il boscaiolo.
+"""
+
+"lore.024.ice_is_slippery" = """
+Attento quando cammini sul ghiaccio!
+Un passo falso e scivolerai tutto il tragitto fino a Evergrove.
+Ahah! Fidati, l'ho visto succedere.
+"""
+
+"lore.025.stonehenge" = """
+Queste rovine custodiscono tanti segreti!
+Le mie ricerche suggeriscono che qui ci fosse un'entrata per le caverne sotterranee, ma è sigillata con una magia antica.
+Un collega giura che c'è un'altra entrata vicino al lago ghiacciato.
+Potresti controllare?
+"""
+
+"lore.025.stonehenge_second_entrance_found" = """
+Quindi c'è una seconda entrata!
+E hai trovato questa chiave lì dentro?
+È sicuramente un oggetto magico, ma non ho idea di cosa potrebbe essere.
+"""
+
+"lore.026.cats_cats_cats" = "Non ami i gatti?"
+
+"lore.evergrove.monster_sightings_logs" = """
+Registro Avvistamenti di Mostri
+Proprietà degli Archivi Storici del Villaggio di Evergrove
 --
-Nord: Grimsun Basin
-Sud: Sentiero Verdant
-"""
-"1004.entrance" = "Dungeon di Duskhaven Lv 1"
-"1005.entrance" = "Dungeon di Duskhaven Lv 2"
-"1006.entrance" = """
-Benvenuto a Thermoria
---
-Nord: Paludi di Murkmire
-Barche per Maritide Haven disponibili al molo
-"""
-"1007.entrance" = "Sotto il Monte Ignis"
-"1008.entrance" = """
-Benvenuto a Maritide Haven
---
-Barche per Thermoria disponibili al molo
-"""
-"1009.entrance" = "Vecchio Complesso Minerario sotto Maritide Haven"
-"1011.entrance" = """
-Benvenuto al Villaggio del Crepuscolo: Duskhaven
--- 
-Si prega di non toccare gli Alberi di Manafern.
-Si prega di non scattare foto con il flash.
--- 
-Ovest: Vetta di Levek
-Est: Paludi di Murkmire
-"""
-"1012.entrance" = "Benvenuto a Vintoria!"
-"1013.entrance" = "Grimsun Basin"
-"1014.entrance" = "Centrale Idroelettrica Lv 1"
-"1015.entrance" = "Centrale Idroelettrica Lv 2"
-"1016.entrance" = "Centrale Idroelettrica Lv 3"
-"1017.entrance" = "Labirinto Demoniaco"
-
-"1002.entrance" = """
-Benvenuto al Sentiero Verdant
---
-Nord-Est: Aridreach
-Nord-Ovest: Sentiero Shadowveil
-Sud-Ovest: Paludi di Murkmire
+4 gennaio 1330: Avvistato 1 mostro ai margini del villaggio. Il primo da molti anni.
+27 giugno 1331: Visto il primo mostro dall'anno scorso. Rimasto vicino al limite della foresta.
+15 marzo 1332: Due mostri sono apparsi vicino a Verdant Way. Nessun danno, ma inquietante.
+9 ottobre 1333: Una strana creatura oscura è entrata nel villaggio al crepuscolo. Conto: 3.
+20 maggio 1334: Avvistati quattro mostri.
+13 luglio 1335: È passato un po' dall'ultimo avvistamento, oggi cinque.
+2 dicembre 1336: Sei mostri hanno attaccato una carovana in transito. I sopravvissuti sono tornati sconvolti.
+22 settembre 1338: Il villaggio è stato attaccato da otto creature. Le guardie hanno lottato per respingerle.
+16 novembre 1340: Il numero è salito a 14 mostri che si aggirano vicino a Verdant Way. Mai visti così tanti tutti insieme. Nessuna vittima, per ora.
 """
 
-"1010.entrance" = """
-Benvenuto al Sentiero Shadowveil
---
-Nord: Vintoria
-Ovest: Labirinto Demoniaco
-Sud: Sentiero Verdant
+"lore.evergrove.monster_sightings_nowadays" = """
+I mostri fanno parte di questo mondo da molto tempo.
+Sono qui da quando riesco a ricordare, almeno.
+Ma non si avvicinavano mai alle zone abitate fino a poco tempo fa.
+Provo compassione per le nuove generazioni che devono affrontarne così tanti.
 """
 
-"1018.entrance" = """
-Benvenuto alle Paludi di Murkmire
---
-Nord: Sentiero Verdant
-Ovest: Duskhaven
-Sud: Thermoria
+"lore.manafren_trees.botanics_book" = """
+L'Albero di Manafern, un prodigio botanico esclusivo della regione sempre crepuscolare di Duskhaven, ha a lungo affascinato studiosi e mistici.
+
+Questa specie unica di latifoglie, riconoscibile dal suo fogliame viola vibrante, mostra un'abilità senza pari nel produrre mana grezzo.
+
+Attraverso una complessa interazione tra il suo profondo sistema radicale e il crepuscolo ambientale della regione, il Manafern assorbe particelle eteree sia dal suolo che dall'aria.
+Queste particelle, una volta introdotte nel complesso sistema vascolare dell'albero, subiscono un processo naturale simile alla fotosintesi ma molto più straordinario.
+L'albero converte queste particelle in puro mana, che si irradia attraverso le sue foglie, emanando un leggero bagliore luminescente.
+Gli abitanti locali spesso raccontano di come questi alberi 'vibrino' di vita, la loro energia utilizzata per illuminare case, alimentare dispositivi e persino sostenere il vibrante ecosistema di Duskhaven stesso.
 """
 
-"quest.hero.wizard.prologue" = """
-Dici che "qualche tipo di magia" ti ha portato qui? Interessante...
-Sfortunatamente, non c'è molto aiuto che un vecchio come me possa offrirti, forse se fossi più giovane...
-Ti suggerisco di iniziare il tuo viaggio per conoscere meglio questo mondo.
-La città più vicina è Aridreach, a Ovest da qui, perché non cominci da lì?
-Se cerchi indicazioni, i segnali stradali possono essere utili.
-Ora vai, ci vedremo presto!
+"lore.manafren_trees.tourists_sign" = """
+Alberi di Manafern
+Famosi in tutto il mondo per le loro proprietà energetiche mistiche.
+Le loro uniche foglie viola catturano l'essenza del crepuscolo,
+alimentando la vita e il fascino di Duskhaven.
 """
 
-"quest.hero.punk.so_you_are_the_outerworlder" = """
-Quindi sei un estraneo proveniente da un altro mondo, eh?
-Scommetto che quel vecchio nel Villaggio di Evergrove ti ha evocato qui.
-Non abbiamo bisogno di eroi, vattene.
+"map_editor.placement" = "CONFERMA per posizionare, ESC per annullare"
+
+"map_editor.subtitle" = "Premi CONFERMA per selezionare qualcosa"
+
+"map_editor.title" = "Editor Mappa"
+
+"menu_back" = "Indietro"
+
+"no" = "No"
+
+"npc.menu.play_dialog" = "Avvia dialogo"
+
+"npc.menu.remove" = "Rimuovi"
+
+"npc.menu.title" = "Opzioni NPC"
+
+"npc.name.assassin_girl" = "Nyx"
+
+"npc.name.bearwolf" = "Orsolupo"
+
+"npc.name.blonde.apron" = "Abitante"
+
+"npc.name.blonde_guy" = "Abitante"
+
+"npc.name.blue_mohawk" = "Abitante"
+
+"npc.name.brown_mohawk" = "Abitante"
+
+"npc.name.cat" = "Gatto"
+
+"npc.name.cat_brown" = "Gatto"
+
+"npc.name.dbz1" = "Marito dell'Androide"
+
+"npc.name.dbz2" = "Padrino di Gohan"
+
+"npc.name.dbz3" = "Scimmia Son"
+
+"npc.name.demon_lord" = "Signore dei Demoni"
+
+"npc.name.developer" = "Mr Mugs"
+
+"npc.name.developer_messenger" = "Mugs's Bird"
+
+"npc.name.elf_priestess" = "Sacerdotessa"
+
+"npc.name.ethan" = "Ethan"
+
+"npc.name.female.blue_hair" = "Lyria Kurogane"
+
+"npc.name.female.brown_hair" = "Abitante"
+
+"npc.name.female.dark_blonde" = "Abitante"
+
+"npc.name.female.green_hair" = "Abitante"
+
+"npc.name.generic" = "Abitante"
+
+"npc.name.generic.apron" = "Abitante"
+
+"npc.name.goddess" = "Dea"
+
+"npc.name.male.black.blue_hair" = "Abitante"
+
+"npc.name.male.black.doctor" = "Dr Voss"
+
+"npc.name.male.kid.red_hair.blue_suit.green_hat" = "Abitante"
+
+"npc.name.monster" = "Mostro"
+
+"npc.name.mr_bubblegum" = "Mr Bubblegum"
+
+"npc.name.ninja.black" = "Ninja Nero"
+
+"npc.name.ninja.blue" = "Ninja Blu"
+
+"npc.name.ninja.red" = "Ninja Rosso"
+
+"npc.name.old_man" = "Abitante"
+
+"npc.name.old_man_mustache" = "Abitante"
+
+"npc.name.old_man_mustache.black" = "Abitante"
+
+"npc.name.old_man_swag_brown" = "Abitante"
+
+"npc.name.old_man_swag_purple" = "Abitante"
+
+"npc.name.old_woman" = "Abitante"
+
+"npc.name.piglet" = "Porcellino"
+
+"npc.name.piglet_blue" = "Porcellino"
+
+"npc.name.punk" = "Punk"
+
+"npc.name.purple_alien" = "Alieno"
+
+"npc.name.purple_mohawk" = "Abitante"
+
+"npc.name.rasta_girl" = "Abitante"
+
+"npc.name.silver" = "Silveroak"
+
+"npc.name.slime" = "Melma"
+
+"npc.name.slime_blue" = "Slime"
+
+"npc.name.snail" = "Lumaca"
+
+"npc.name.soldier" = "Capitano 'Ironside' Thorne"
+
+"npc.name.soldier.female.red" = "Serena Flameheart"
+
+"npc.name.swag_kid" = "Abitante"
+
+"npc.name.swag_kid_2" = "Abitante"
+
+"npc.name.swag_kid_3" = "Abitante"
+
+"npc.name.winter_apron" = "Abitante"
+
+"npc.name.winter_black_red" = "Abitante"
+
+"npc.name.wizard" = "Mogarth il Saggio"
+
+"objects.name.amanita" = "Fungo Amanita"
+
+"objects.name.barrel.brown" = "Barile Marrone"
+
+"objects.name.barrel.green" = "Barile Verde"
+
+"objects.name.barrel.purple" = "Barile Viola"
+
+"objects.name.barrel.wood" = "Barile di Legno"
+
+"objects.name.bed" = "Letto"
+
+"objects.name.boat.small" = "Barca Piccola"
+
+"objects.name.book_black" = "Libro Nero"
+
+"objects.name.book_blue" = "Libro Blu"
+
+"objects.name.book_green" = "Libro Verde"
+
+"objects.name.book_purple" = "Libro Viola"
+
+"objects.name.book_red" = "Libro Rosso"
+
+"objects.name.boulder" = "Masso"
+
+"objects.name.cabinet.lg.beige" = "Armadio Beige"
+
+"objects.name.cabinet.lg.brown" = "Armadio Marrone"
+
+"objects.name.cabinet.lg.white" = "Armadio Bianco"
+
+"objects.name.cabinet.md.beige" = "Cassettiera Beige"
+
+"objects.name.cabinet.md.brown" = "Cassettiera Marrone"
+
+"objects.name.cabinet.md.white" = "Cassettiera Bianca"
+
+"objects.name.cabinet.sm.beige" = "Cassetto Beige"
+
+"objects.name.cabinet.sm.brown" = "Cassetto Marrone"
+
+"objects.name.cabinet.sm.white" = "Cassetto Bianco"
+
+"objects.name.camp_fire" = "Falò"
+
+"objects.name.deep_hole" = "Fossa Profonda"
+
+"objects.name.footsteps_trail" = "Impronte"
+
+"objects.name.fountain" = "Fontana"
+
+"objects.name.gate.blue" = "Cancello Blu"
+
+"objects.name.gate.green" = "Cancello Verde"
+
+"objects.name.gate.red" = "Cancello Rosso"
+
+"objects.name.gate.silver" = "Cancello Argento"
+
+"objects.name.gate.yellow" = "Cancello Giallo"
+
+"objects.name.hint_consumable" = "Suggerimento (Usa e Getta)"
+
+"objects.name.hint_permanent" = "Suggerimento (Permanente)"
+
+"objects.name.key" = "Chiave"
+
+"objects.name.key_blue" = "chiave delle miniere di Maritide"
+
+"objects.name.key_green" = "chiave dei sotterranei di Duskhaven"
+
+"objects.name.key_red" = "chiave del Monte Ignis"
+
+"objects.name.key_silver" = "chiave dei sotterranei di Vintoria"
+
+"objects.name.key_white" = "chiave della vetta Levek"
+
+"objects.name.key_yellow" = "chiave del deserto di Grimsun"
+
+"objects.name.kunai" = "Kunai"
+
+"objects.name.kunai.x10" = "Kunai x10"
+
+"objects.name.large_sign" = "Cartellone"
+
+"objects.name.magic_circle.blue" = "Cerchio Magico"
+
+"objects.name.magic_circle.small" = "Cerchio Magico"
+
+"objects.name.magic_circle.summoning" = "Cerchio Magico"
+
+"objects.name.magic_circle.summoning.evil" = "Cerchio Magico"
+
+"objects.name.pressure_plate.blue" = "Piastra di Pressione Blu"
+
+"objects.name.pressure_plate.green" = "Piastra di Pressione Verde"
+
+"objects.name.pressure_plate.red" = "Piastra di Pressione Rossa"
+
+"objects.name.pressure_plate.silver" = "Piastra di Pressione Argento"
+
+"objects.name.pressure_plate.yellow" = "Piastra di Pressione Gialla"
+
+"objects.name.rail.cart" = "Carrello"
+
+"objects.name.scroll.blue" = "Pergamena Blu"
+
+"objects.name.scroll.brown" = "Pergamena Marrone"
+
+"objects.name.scroll.green" = "Pergamena Verde"
+
+"objects.name.scroll.red" = "Pergamena Rossa"
+
+"objects.name.scroll.yellow" = "Pergamena Gialla"
+
+"objects.name.seat_brown" = "Sedia Marrone"
+
+"objects.name.seat_green" = "Sedia Verde"
+
+"objects.name.seat_orange" = "Sedia Arancione"
+
+"objects.name.seat_pink" = "Sedia Rosa"
+
+"objects.name.sign" = "Segnale"
+
+"objects.name.skull" = "Teschio"
+
+"objects.name.slope.bottom_left.dark_rock" = "Pendenza"
+
+"objects.name.slope.bottom_left.grass" = "Pendenza"
+
+"objects.name.slope.bottom_left.rock" = "Pendenza"
+
+"objects.name.slope.bottom_left.sand" = "Pendenza"
+
+"objects.name.slope.bottom_right.dark_rock" = "Pendenza"
+
+"objects.name.slope.bottom_right.grass" = "Pendenza"
+
+"objects.name.slope.bottom_right.rock" = "Pendenza"
+
+"objects.name.slope.bottom_right.sand" = "Pendenza"
+
+"objects.name.slope.side_bottom.dark_rock" = "Pendenza"
+
+"objects.name.slope.side_bottom.grass" = "Pendenza"
+
+"objects.name.slope.side_bottom.rock" = "Pendenza"
+
+"objects.name.slope.side_bottom.sand" = "Pendenza"
+
+"objects.name.slope.side_left.dark_rock" = "Pendenza"
+
+"objects.name.slope.side_left.grass" = "Pendenza"
+
+"objects.name.slope.side_left.rock" = "Pendenza"
+
+"objects.name.slope.side_left.sand" = "Pendenza"
+
+"objects.name.slope.side_right.dark_rock" = "Pendenza"
+
+"objects.name.slope.side_right.grass" = "Pendenza"
+
+"objects.name.slope.side_right.rock" = "Pendenza"
+
+"objects.name.slope.side_right.sand" = "Pendenza"
+
+"objects.name.slope.side_top.dark_rock" = "Pendenza"
+
+"objects.name.slope.side_top.grass" = "Pendenza"
+
+"objects.name.slope.side_top.rock" = "Pendenza"
+
+"objects.name.slope.side_top.sand" = "Pendenza"
+
+"objects.name.slope.top_left.dark_rock" = "Pendenza"
+
+"objects.name.slope.top_left.grass" = "Pendenza"
+
+"objects.name.slope.top_left.rock" = "Pendenza"
+
+"objects.name.slope.top_left.sand" = "Pendenza"
+
+"objects.name.slope.top_right.dark_rock" = "Pendenza"
+
+"objects.name.slope.top_right.grass" = "Pendenza"
+
+"objects.name.slope.top_right.rock" = "Pendenza"
+
+"objects.name.slope.top_right.sand" = "Pendenza"
+
+"objects.name.stairs_down" = "Scale (Giù)"
+
+"objects.name.stairs_up" = "Scale (Su)"
+
+"objects.name.table" = "Tavolo"
+
+"objects.name.teleporter" = "Teletrasporto"
+
+"objects.name.torch" = "Torcia"
+
+"objects.name.well" = "Pozzo"
+
+"objects.power.kidneys" = "Reni Potenti"
+
+"objects.power.tower.off" = "Torre del Mana"
+
+"objects.power.tower.on" = "Torre del Mana"
+
+"objects.waterfall" = "Cascata"
+
+"objects.wind_turbine" = "Turbina Eolica"
+
+"ok" = "Ok"
+
+"ok_action" = ">> Ok"
+
+"picked_up_item" = "Raccolto `%s`!"
+
+"quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
+Quindi l'hai visto, vero? Gli hai parlato? Oh, lo sapevo!
+Ma ora non capisci? Non vedi quello che sto dicendo?
+Non si sta solo *nascondendo*, è *collocato*.
+Tutto qui dentro, tutti qui dentro... Sono burattini...
 """
 
-"quest.hero.wizard.met_anyone_important" = """
-Punk ha detto che sono stato io a portarti qui... Mmmh
-Forse è vero che non abbiamo bisogno di eroi...
-O forse ne abbiamo bisogno e lui ancora non se ne rende conto.
-"""
+"quest.crazy_conspiracy.girl.black_ninja_i_knew_it_again" = "Sssh... Ci stanno osservando..."
 
-"quest.hero.punk.no_use_killing_monsters" = """
-Non serve a nulla correre in giro uccidendo mostri, il loro numero non diminuisce mai davvero.
-È la natura di questo mondo e dobbiamo accettarla.
-"""
-
-"quest.hero.punk.are_you_after_the_keys" = """
-Che diavolo stai facendo qui...?
-Stai cercando le chiavi!?
-"""
-
-"quest.hero.punk.lets_see_who_gets_them_first" = """
-Vediamo se riesci a raccogliere le chiavi più velocemente di me...
-Forse riuscirai a "salvare" il mondo.
-"""
-
-"quest.hero.wizard.gather_the_keys" = """
-Per entrare in questo regno devi recuperare le chiavi dai 5 dungeon...
-Nessuno può dire se sei davvero l'eroe della profezia.
-Ma ti prego, aiutaci a raccogliere le chiavi, prima che qualcun altro, o qualcos'altro, lo faccia!
-"""
-
-"quest.hero.silver.i_failed" = """
-Estraneo... Sai anche perché sei qui?
-È perché ho fallito come padre.
-"""
-
-"quest.hero.silver.i_am_punk_father" = """
-L'eroe della profezia è... era... Mio figlio.
-È scappato molto tempo fa, ha persino cambiato nome...
-"""
-
-"quest.hero.silver.i_am_a_proud_father" = """
-Tutto ciò che ha sempre chiesto era essere degno di fiducia.
-Ti prometto, farò tutto il necessario per ottenere il suo perdono.
-Dovrei essere orgoglioso di... "Punk"
-"""
-
-"quest.hero.punk.the_problem" = """
-Vedi, il problema con il mago, con mio padre, con questo mondo... È la fiducia.
-Il microonde è rotto? Aggiustiamolo con la magia.
-La scienza è rotta? Preghiamo gli dei per ottenere conoscenza.
-Il mondo è rotto? Evochiamo uno sconosciuto da un altro mondo!
-Siete stati così impegnati, così preoccupati, che non vi è mai venuto in mente che potremmo essere in grado di gestire la situazione da soli.
+"quest.crazy_conspiracy.girl.stonehenge" = """
+Hai visto le pietre, vero? Lassù sulla vetta? Dimmi, come pensi che siano arrivate lì?
+Pensi che alcuni *paesani* abbiano trascinato quei massi giganteschi sulla montagna più alta del mondo? Non farmi ridere!
+No, no, no. Quelle pietre sono *troppo grandi*. Troppo perfette. Non sono naturali, ma nemmeno fatte dall'uomo.
+Sono state *posizionate*. Da chi? Erano dèi? Alieni?
+O forse... forse *lui* le ha messe lì, solo per prenderci in giro.
 """
 
 "quest.hero.finale.a" = """
@@ -660,171 +889,77 @@ Hai provato a infilarti nel destino di qualcun altro, vero?
 Vattene.
 """
 
-"quest.hero.finale.c" = """
-Chi diavolo sei?
-"""
+"quest.hero.finale.c" = "Chi diavolo sei?"
 
 "quest.hero.finale.finale" = """
 Non abbiamo altro di cui parlare.
 Torna al tuo mondo, o resta... Come preferisci...
 """
 
-"quest.ninja_skills.black_ninja.note" = """
-Ehi,
-Sono in missione.
-E comunque, che diavolo ci fai a casa mia!?
-Fuori!
-- Black Ninja
+"quest.hero.punk.are_you_after_the_keys" = """
+Che diavolo stai facendo qui...?
+Stai cercando le chiavi!?
 """
 
-"quest.ninja_skills.girl.black_ninja_location_hint" = """
-Si nasconde qui intorno, sai... ma non è solo lui, oh no. 
-Questo posto - non è come sembra. 
-Le dune? Non sono solo sabbia... 
-Sono osservatori, guardiani silenziosi che tengono tutto intrappolato. 
-E il Black Ninja? Non è un uomo comune. Lo tengono qui per un motivo, sa qualcosa!
-O forse... forse lui è la chiave. O forse... è la serratura.
+"quest.hero.punk.lets_see_who_gets_them_first" = """
+Vediamo se riesci a raccogliere le chiavi più velocemente di me...
+Forse riuscirai a "salvare" il mondo.
 """
 
-"quest.ninja_skills.blue_ninja.note" = """
-Ehi,
-Sono in missione.
-E comunque, che diavolo ci fai a casa mia!?
-Fuori!
-- Blue Ninja
+"quest.hero.punk.no_use_killing_monsters" = """
+Non serve a nulla correre in giro uccidendo mostri, il loro numero non diminuisce mai davvero.
+È la natura di questo mondo e dobbiamo accettarla.
 """
 
-"quest.ninja_skills.lyria.hoarding_issues" = """
-Uno dei miei fratelli ha un problema con l'accumulo...
-Sto aspettando che torni a casa per costringerlo a fare pulizia.
-Spero solo che non abbia avuto problemi durante la missione...
+"quest.hero.punk.so_you_are_the_outerworlder" = """
+Quindi sei un estraneo proveniente da un altro mondo, eh?
+Scommetto che quel vecchio nel Villaggio di Evergrove ti ha evocato qui.
+Non abbiamo bisogno di eroi, vattene.
 """
 
-"quest.ninja_skills.black_ninja.please_check_on_sister" = """
-Quindi vieni da Evergrove?
-Puoi controllare mia sorella e farle sapere che sto bene?
-Mio fratello dovrebbe essere già a casa, ma con il nostro lavoro non si sa mai...
-Se lo fai, ti insegnerò una delle mie abilità ninja!
+"quest.hero.punk.the_problem" = """
+Vedi, il problema con il mago, con mio padre, con questo mondo... È la fiducia.
+Il microonde è rotto? Aggiustiamolo con la magia.
+La scienza è rotta? Preghiamo gli dei per ottenere conoscenza.
+Il mondo è rotto? Evochiamo uno sconosciuto da un altro mondo!
+Siete stati così impegnati, così preoccupati, che non vi è mai venuto in mente che potremmo essere in grado di gestire la situazione da soli.
 """
 
-"quest.ninja_skills.blue_ninja.please_check_on_sister" = """
-Quindi vieni da Evergrove?
-Puoi controllare mia sorella e farle sapere che sto bene?
-Mio fratello dovrebbe essere già a casa, ma con il nostro lavoro non si sa mai...
-Se lo fai, ti insegnerò una delle mie abilità ninja!
+"quest.hero.silver.i_am_a_proud_father" = """
+Tutto ciò che ha sempre chiesto era essere degno di fiducia.
+Ti prometto, farò tutto il necessario per ottenere il suo perdono.
+Dovrei essere orgoglioso di... "Punk"
 """
 
-"quest.ninja_skills.lyria.thats_my_brother_black" = """
-Un ninja vestito di nero... 
-È mio fratello!
-Per favore, digli di tornare presto a casa, ho bisogno di aiuto per pulire la casa di mio fratello!
-Il mio altro fratello era con lui? 
-Si veste di blu.
+"quest.hero.silver.i_am_punk_father" = """
+L'eroe della profezia è... era... Mio figlio.
+È scappato molto tempo fa, ha persino cambiato nome...
 """
 
-"quest.ninja_skills.black_ninja.gain_bouncing_knifes_skill" = """
-Pulire la casa!? LOL
-Non so se ce la farò, sai, siamo un po' nel mezzo di una guerra per la sopravvivenza dell'umanità qui!
-Come promesso, ora il tuo coltello rimbalzerà sulla maggior parte delle superfici!
-Piuttosto figo, eh? Vedrai!
+"quest.hero.silver.i_failed" = """
+Estraneo... Sai anche perché sei qui?
+È perché ho fallito come padre.
 """
 
-"quest.ninja_skills.lyria.thats_my_brother_blue" = """
-Un ninja vestito di blu... 
-È mio fratello!
-Per favore, digli di tornare presto a casa, dobbiamo pulire il suo posto, è pieno di cianfrusaglie!
-Il mio altro fratello era con lui? 
-Si veste di nero.
+"quest.hero.wizard.gather_the_keys" = """
+Per entrare in questo regno devi recuperare le chiavi dai 5 dungeon...
+Nessuno può dire se sei davvero l'eroe della profezia.
+Ma ti prego, aiutaci a raccogliere le chiavi, prima che qualcun altro, o qualcos'altro, lo faccia!
 """
 
-"quest.ninja_skills.blue_ninja.gain_knife_catcher_skill" = """
-Cianfrusaglie!? 
-Non sono cianfrusaglie! Sono armi e altra roba da ninja!
-Oh beh...
-Come promesso, ora puoi afferrare i coltelli a mezz'aria a mani nude.
-Ovviamente, devi essere attaccato con un coltello per usare questa abilità.
-Ma sono sicuro che troverai un modo per utilizzarla!
+"quest.hero.wizard.met_anyone_important" = """
+Punk ha detto che sono stato io a portarti qui... Mmmh
+Forse è vero che non abbiamo bisogno di eroi...
+O forse ne abbiamo bisogno e lui ancora non se ne rende conto.
 """
 
-"quest.ninja_skills.lyria.father_introduction" = """
-Grazie per aver controllato i miei fratelli...
-Da quando si sono uniti a nostro padre, il Grande Red Ninja, nel "business di famiglia" sono sempre un po' preoccupata...
-Spero solo che tornino presto a casa!
-"""
-
-"quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
-Questo lavoro richiede che io stia lontano da casa per lunghi periodi di tempo... 
-I miei figli hanno tutti la tua età...
-"""
-
-"quest.ninja_skills.red_ninja.gain_piercing_knife_skill" = """
-I miei figli stanno tutti bene? Che sollievo!
-Come ricompensa, ti insegnerò l'abilità ninja definitiva.
-Se solo avessi l'occasione, SO che potrei sconfiggere il 
-Signore dei Demoni con un solo colpo.
-Maledetto quel tizio.
-"""
-
-"quest.ninja_skills.red_ninja.about_piercing_knife_skill" = """
-Te l'ho detto... Barili, mostri, Signori dei Demoni, ...
-Non importa.
-Un colpo è sufficiente per QUALSIASI nemico.
-"""
-
-"quest.ninja_skills.nyx.next_target_is_kurogane" = """
-Benvenuto al Quartier Generale della Gilda degli Assassini! Come posso aiutarti?
-Oh aspetta... Sei tu quello che mi ha fatto perdere l'ultimo cliente!
-Questa volta il nostro obiettivo è il capo della famiglia Kurogane, non intralciare!
-"""
-
-"quest.ninja_skills.nyx.nyx_notes" = """
-Appunti di Nyx
---
-Obiettivo: 
-A. Kurogane, alias "Il Red Ninja", capo della famiglia Kurogane.
---
-Ultima Posizione Conosciuta:
-Montagne a Nord di Vintoria
---
-L'obiettivo si nasconde da qualche parte nelle montagne, ma probabilmente usa un passaggio nascosto per muoversi senza essere visto.
-Ho guardato le planimetrie del sistema fognario, sembra che ci sia un secondo dungeon.
-L'ingresso sembra essere da qualche parte a Sud-Est dell'area.
-"""
-
-"quest.manafren_research.serena.keep_out_of_research_area" = """
-Che cosa credi di fare qui!?
-Questa zona è vietata senza permesso!
-"""
-
-"quest.manafren_research.dr_voss.introduction" = """
-Ah, proprio chi mi serviva. 
-Ho studiato questi alberi di Manafern a fondo, per tutti i motivi, sono miracolosi...
-Ultimamente però hanno qualcosa che non va, i dati che abbiamo raccolto sono davvero strani.
-Forse è un fenomeno già visto in epoche passate, dovrei controllare le antiche scritture!
-Purtroppo, l'anziano del villaggio è l'unico con accesso a essi, ma non vuole più parlarmi...
-"""
-
-"quest.manafren_research.dr_voss.waiting_for_info" = """
-Le mie ricerche continuano, ma non riesco a togliermi di dosso questa sensazione di terrore.
-"""
-
-"quest.manafren_research.duskhaven_village_elder.check_the_dungeon" = """
-Il dottor Voss ti ha mandato, vero? 
-Ah, beh… Non do molto peso a tutta la sua scienza...
-Questi alberi, contengono un potere più antico di te o di me, un potere che sussurra segreti a chi è disposto ad ascoltare. 
-C'è un vecchio rotolo nascosto nel dungeon qui vicino. 
-Forse troverai quello che cerchi lì. 
-Ma stai attento a ciò che è nascosto in quelle parole.
-"""
-
-"quest.manafren_research.duskhaven_village_elder.have_you_checked_the_dungeon" = """
-Hai trovato qualcosa di interessante nel dungeon?
-"""
-
-"quest.manafren_research.dungeon_scroll.contents" = """
-Mmh... Questo pergamena sembra molto antica...
-Parla chiaramente degli alberi, ma è per lo più illeggibile.
-C'è un accenno a qualcosa sepolto nelle montagne a ovest di qui...
+"quest.hero.wizard.prologue" = """
+Dici che "qualche tipo di magia" ti ha portato qui? Interessante...
+Sfortunatamente, non c'è molto aiuto che un vecchio come me possa offrirti, forse se fossi più giovane...
+Ti suggerisco di iniziare il tuo viaggio per conoscere meglio questo mondo.
+La città più vicina è Aridreach, a Ovest da qui, perché non cominci da lì?
+Se cerchi indicazioni, i segnali stradali possono essere utili.
+Ora vai, ci vedremo presto!
 """
 
 "quest.manafren_research.ancient_book.contents" = """
@@ -834,15 +969,12 @@ Si dice che il Signore dei Demoni stesso abbia versato la sua essenza nelle loro
 Ogni foglia porta un frammento della sua presenza e, con ogni stagione che passa, la sua influenza si estende ulteriormente nel mondo, invisibile ma innegabile.
 """
 
-"quest.manafren_research.dr_voss.thanks_for_the_info" = """
-Tu... lo hai trovato. 
-Quindi, gli alberi sono davvero legati a qualche forza oscura, e la loro energia, la nostra stessa vita qui a Duskhaven, deriva da questa maledizione. 
-Avevo dei sospetti, ma queste scoperte, beh, cambiano tutto. 
-Avrò bisogno di tempo per elaborare cosa significhi, ma prendi questo come simbolo.
-"""
-
-"quest.manafren_research.dr_voss.thanks_for_the_info_still_working_on_it" = """
-Avrò bisogno di tempo per elaborare le ultime scoperte...
+"quest.manafren_research.dr_voss.introduction" = """
+Ah, proprio chi mi serviva.
+Ho studiato questi alberi di Manafern a fondo, per tutti i motivi, sono miracolosi...
+Ultimamente però hanno qualcosa che non va, i dati che abbiamo raccolto sono davvero strani.
+Forse è un fenomeno già visto in epoche passate, dovrei controllare le antiche scritture!
+Purtroppo, l'anziano del villaggio è l'unico con accesso a essi, ma non vuole più parlarmi...
 """
 
 "quest.manafren_research.dr_voss.research_was_inconclusive" = """
@@ -850,6 +982,39 @@ La sospetta aura oscura è sparita.
 Devo dire, sono un po' seccato, ero così vicino...
 È difficile fare scienza in un mondo con la magia.
 Forse dovrebbero chiamare un outer-worlder per fare il mio lavoro - senza offesa.
+"""
+
+"quest.manafren_research.dr_voss.thanks_for_the_info" = """
+Tu... lo hai trovato.
+Quindi, gli alberi sono davvero legati a qualche forza oscura, e la loro energia, la nostra stessa vita qui a Duskhaven, deriva da questa maledizione.
+Avevo dei sospetti, ma queste scoperte, beh, cambiano tutto.
+Avrò bisogno di tempo per elaborare cosa significhi, ma prendi questo come simbolo.
+"""
+
+"quest.manafren_research.dr_voss.thanks_for_the_info_still_working_on_it" = "Avrò bisogno di tempo per elaborare le ultime scoperte..."
+
+"quest.manafren_research.dr_voss.waiting_for_info" = "Le mie ricerche continuano, ma non riesco a togliermi di dosso questa sensazione di terrore."
+
+"quest.manafren_research.dungeon_scroll.contents" = """
+Mmh... Questo pergamena sembra molto antica...
+Parla chiaramente degli alberi, ma è per lo più illeggibile.
+C'è un accenno a qualcosa sepolto nelle montagne a ovest di qui...
+"""
+
+"quest.manafren_research.duskhaven_village_elder.check_the_dungeon" = """
+Il dottor Voss ti ha mandato, vero?
+Ah, beh… Non do molto peso a tutta la sua scienza...
+Questi alberi, contengono un potere più antico di te o di me, un potere che sussurra segreti a chi è disposto ad ascoltare.
+C'è un vecchio rotolo nascosto nel dungeon qui vicino.
+Forse troverai quello che cerchi lì.
+Ma stai attento a ciò che è nascosto in quelle parole.
+"""
+
+"quest.manafren_research.duskhaven_village_elder.have_you_checked_the_dungeon" = "Hai trovato qualcosa di interessante nel dungeon?"
+
+"quest.manafren_research.priestess.research_was_inconclusive" = """
+Gli alberi stanno già guarendo.
+Hai dato a Punk la spinta che gli serviva, grazie!
 """
 
 "quest.manafren_research.priestess.thanks_for_the_info" = """
@@ -861,39 +1026,138 @@ Purtroppo, con l'influenza crescente del Signore dei Demoni, si stanno ammalando
 Non dirlo allo scienziato umano, sono sicuro che vuole trovare le risposte da solo!
 """
 
-"quest.manafren_research.priestess.research_was_inconclusive" = """
-Gli alberi stanno già guarendo.
-Hai dato a Punk la spinta che gli serviva, grazie!
+"quest.manafren_research.serena.keep_out_of_research_area" = """
+Che cosa credi di fare qui!?
+Questa zona è vietata senza permesso!
 """
 
-"quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
-Quindi l'hai visto, vero? Gli hai parlato? Oh, lo sapevo! 
-Ma ora non capisci? Non vedi quello che sto dicendo? 
-Non si sta solo *nascondendo*, è *collocato*. 
-Tutto qui dentro, tutti qui dentro... Sono burattini...
+"quest.ninja_skills.black_ninja.gain_bouncing_knifes_skill" = """
+Pulire la casa!? LOL
+Non so se ce la farò, sai, siamo un po' nel mezzo di una guerra per la sopravvivenza dell'umanità qui!
+Come promesso, ora il tuo coltello rimbalzerà sulla maggior parte delle superfici!
+Piuttosto figo, eh? Vedrai!
 """
 
-"quest.crazy_conspiracy.girl.black_ninja_i_knew_it_again" = """
-Sssh... Ci stanno osservando... 
+"quest.ninja_skills.black_ninja.note" = """
+Ehi,
+Sono in missione.
+E comunque, che diavolo ci fai a casa mia!?
+Fuori!
+- Black Ninja
 """
+
+"quest.ninja_skills.black_ninja.please_check_on_sister" = """
+Quindi vieni da Evergrove?
+Puoi controllare mia sorella e farle sapere che sto bene?
+Mio fratello dovrebbe essere già a casa, ma con il nostro lavoro non si sa mai...
+Se lo fai, ti insegnerò una delle mie abilità ninja!
+"""
+
+"quest.ninja_skills.blue_ninja.gain_knife_catcher_skill" = """
+Cianfrusaglie!?
+Non sono cianfrusaglie! Sono armi e altra roba da ninja!
+Oh beh...
+Come promesso, ora puoi afferrare i coltelli a mezz'aria a mani nude.
+Ovviamente, devi essere attaccato con un coltello per usare questa abilità.
+Ma sono sicuro che troverai un modo per utilizzarla!
+"""
+
+"quest.ninja_skills.blue_ninja.note" = """
+Ehi,
+Sono in missione.
+E comunque, che diavolo ci fai a casa mia!?
+Fuori!
+- Blue Ninja
+"""
+
+"quest.ninja_skills.blue_ninja.please_check_on_sister" = """
+Quindi vieni da Evergrove?
+Puoi controllare mia sorella e farle sapere che sto bene?
+Mio fratello dovrebbe essere già a casa, ma con il nostro lavoro non si sa mai...
+Se lo fai, ti insegnerò una delle mie abilità ninja!
+"""
+
+"quest.ninja_skills.girl.black_ninja_location_hint" = """
+Si nasconde qui intorno, sai... ma non è solo lui, oh no.
+Questo posto - non è come sembra.
+Le dune? Non sono solo sabbia...
+Sono osservatori, guardiani silenziosi che tengono tutto intrappolato.
+E il Black Ninja? Non è un uomo comune. Lo tengono qui per un motivo, sa qualcosa!
+O forse... forse lui è la chiave. O forse... è la serratura.
+"""
+
+"quest.ninja_skills.lyria.father_introduction" = """
+Grazie per aver controllato i miei fratelli...
+Da quando si sono uniti a nostro padre, il Grande Red Ninja, nel "business di famiglia" sono sempre un po' preoccupata...
+Spero solo che tornino presto a casa!
+"""
+
+"quest.ninja_skills.lyria.hoarding_issues" = """
+Uno dei miei fratelli ha un problema con l'accumulo...
+Sto aspettando che torni a casa per costringerlo a fare pulizia.
+Spero solo che non abbia avuto problemi durante la missione...
+"""
+
+"quest.ninja_skills.lyria.thats_my_brother_black" = """
+Un ninja vestito di nero...
+È mio fratello!
+Per favore, digli di tornare presto a casa, ho bisogno di aiuto per pulire la casa di mio fratello!
+Il mio altro fratello era con lui?
+Si veste di blu.
+"""
+
+"quest.ninja_skills.lyria.thats_my_brother_blue" = """
+Un ninja vestito di blu...
+È mio fratello!
+Per favore, digli di tornare presto a casa, dobbiamo pulire il suo posto, è pieno di cianfrusaglie!
+Il mio altro fratello era con lui?
+Si veste di nero.
+"""
+
+"quest.ninja_skills.nyx.next_target_is_kurogane" = """
+Benvenuto al Quartier Generale della Gilda degli Assassini! Come posso aiutarti?
+Oh aspetta... Sei tu quello che mi ha fatto perdere l'ultimo cliente!
+Questa volta il nostro obiettivo è il capo della famiglia Kurogane, non intralciare!
+"""
+
+"quest.ninja_skills.nyx.nyx_notes" = """
+Appunti di Nyx
+--
+Obiettivo:
+A. Kurogane, alias "Il Red Ninja", capo della famiglia Kurogane.
+--
+Ultima Posizione Conosciuta:
+Montagne a Nord di Vintoria
+--
+L'obiettivo si nasconde da qualche parte nelle montagne, ma probabilmente usa un passaggio nascosto per muoversi senza essere visto.
+Ho guardato le planimetrie del sistema fognario, sembra che ci sia un secondo dungeon.
+L'ingresso sembra essere da qualche parte a Sud-Est dell'area.
+"""
+
+"quest.ninja_skills.red_ninja.about_piercing_knife_skill" = """
+Te l'ho detto... Barili, mostri, Signori dei Demoni, ...
+Non importa.
+Un colpo è sufficiente per QUALSIASI nemico.
+"""
+
+"quest.ninja_skills.red_ninja.gain_piercing_knife_skill" = """
+I miei figli stanno tutti bene? Che sollievo!
+Come ricompensa, ti insegnerò l'abilità ninja definitiva.
+Se solo avessi l'occasione, SO che potrei sconfiggere il
+Signore dei Demoni con un solo colpo.
+Maledetto quel tizio.
+"""
+
+"quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
+Questo lavoro richiede che io stia lontano da casa per lunghi periodi di tempo...
+I miei figli hanno tutti la tua età...
+"""
+
+"quest.thugs_and_assassins.mr_bubblegum.intro" = "..."
 
 "quest.thugs_and_assassins.nyx.intro" = """
 Smettila di scherzare!
 Sei fortunato che stiamo facendo una pausa adesso.
-"""
-
-"quest.thugs_and_assassins.mr_bubblegum.intro" = """
-...
-"""
-
-"quest.thugs_and_assassins.thug_boss.intro" = """
-Vai via ragazzo, nessuno si avvicinerà al molo finché non lo dico io.
-"""
-
-"quest.thugs_and_assassins.thermoria_town_chief.i_hired_assassins" = """
-Quelli fuori? Sì, sono assassini.
-Oh no, non sono il loro capo, li ho solo assunti per un lavoro.
-Alcuni teppisti hanno bloccato il molo e dobbiamo spedire alcune merci.
 """
 
 "quest.thugs_and_assassins.nyx.we_are_about_to_strike" = """
@@ -901,15 +1165,33 @@ Non c'è bisogno di correre, stiamo per andare a occuparci di loro.
 Fammi finire il caffè prima.
 """
 
-"quest.thugs_and_assassins.thug_boss.we_are_not_thugs" = """
-Il capo del villaggio ha assunto CHI!? 
-Amico, non siamo "teppisti", siamo lavoratori non pagati in sciopero!
-Per favore, parla con il capo in modo che possiamo risolvere questa situazione pacificamente...
+"quest.thugs_and_assassins.thermoria_town_chief.finale" = "Stupidi soldi moderni."
+
+"quest.thugs_and_assassins.thermoria_town_chief.i_hired_assassins" = """
+Quelli fuori? Sì, sono assassini.
+Oh no, non sono il loro capo, li ho solo assunti per un lavoro.
+Alcuni teppisti hanno bloccato il molo e dobbiamo spedire alcune merci.
 """
 
 "quest.thugs_and_assassins.thermoria_town_chief.it_was_about_the_money" = """
 Oh mio... Questa storia di nuovo...
 Li ho pagati! Ho dato a ciascuno di loro un assegno!
+"""
+
+"quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids" = """
+Praticamente mi stai dicendo che sono così giovani da non sapere cos'è un assegno?
+Sì, so cos'è il crypto, non sono così vecchio...
+...
+Fatto, tutti pagati.
+Stupidi ragazzi.
+"""
+
+"quest.thugs_and_assassins.thug_boss.intro" = "Vai via ragazzo, nessuno si avvicinerà al molo finché non lo dico io."
+
+"quest.thugs_and_assassins.thug_boss.we_are_not_thugs" = """
+Il capo del villaggio ha assunto CHI!?
+Amico, non siamo "teppisti", siamo lavoratori non pagati in sciopero!
+Per favore, parla con il capo in modo che possiamo risolvere questa situazione pacificamente...
 """
 
 "quest.thugs_and_assassins.thug_boss.what_is_a_check" = """
@@ -918,46 +1200,29 @@ Beh, li abbiamo buttati via LOL
 Digli di mandarci dei *soldi veri*, tipo crypto, e ce ne andremo in un baleno.
 """
 
-"quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids" = """
-Praticamente mi stai dicendo che sono così giovani da non sapere cos'è un assegno?
-Sì, so cos'è il crypto, non sono così vecchio... 
+"references.dbz.goku" = "Aspetta, questo non è l'universo 7... Ciaooo!"
+
+"references.dbz.krillin" = "Spero che tu abbia portato i fagioli Senzu!"
+
+"references.dbz.piccolo" = """
 ...
-Fatto, tutti pagati.
-Stupidi ragazzi.
-"""
-
-"quest.thugs_and_assassins.thermoria_town_chief.finale" = """
-Stupidi soldi moderni.
-"""
-
-"end_game_credits" = """
-Questo era il mio primo videogame, spero ti sia piaciuto.
-Grazie per aver giocato!
-"""
-
-"credits" = "Crediti"
-"credits.developer" = "Game by Federico Curzel"
-"credits.developer.link" = "https://www.youtube.com/@HiddenMugs"
-"credits.open_source" = "The project is Open Source"
-"credits.open_source.link" = "https://github.com/curzel-it/sneakbit/"
-"credits.music" = "Music by Filippo Vicarelli"
-"credits.music.link" = "https://www.filippovicarelli.com/8bit-game-background-music"
-"credits.sound_effects" = "Sound Effects by SubspaceAudio"
-"credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style"
-
-"changelog" = """
-Il mio Capo ha un messaggio per te...
-Parlava di come ora il gioco vada in pausa quando parli con qualcuno, apri il menu o connetti/disconnetti il controller...
 ...
-Non ho idea di cosa significhi...
-Devo andare ora, alla prossima!
+Hai un aura potentissima!
 """
 
-"changelog.mobile" = """
-Il mio Capo ha un messaggio per te...
-Parlava di come tenendo premuto il tasto SPARA questo ora si possa spostare per un maggiore comfort...
-Ha anche accennato al fatto che ora il gioco va in pausa quando parli con qualcuno o apri il menu...
-...
-Non ho idea di cosa significhi...
-Devo andare ora, alla prossima!
-"""
+"teleporter.locked" = "Hai bisogno di una chiave %s per aprire questa porta."
+
+"teleporter.name" = "Teletrasporto"
+
+"teleporter.unlock.message" = "Perderai una chiave %s."
+
+"teleporter.unlock.title" = "Sbloccare la porta?"
+
+"telepoter.locked.permanent" = "Questa porta è bloccata."
+
+"text_input.hint" = "ENTER per confermare, ESC per annullare"
+
+"yes" = "Yes"
+
+"you" = "Tu"
+

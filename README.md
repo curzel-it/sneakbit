@@ -73,11 +73,8 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 * Font by [HarvettFox96](https://dl.dafont.com/dl/?f=pixel_operator)
 
 ## TODO:
-- Italian translations for latest stuff
-- Tool for localizations
 - Some defense ability
 - Some wide-area ability
-- Update in-game changelog 
 - Update final boss area
 - Update game map 
 - Make slopes reflect bullets
