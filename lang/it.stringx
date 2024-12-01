@@ -296,6 +296,8 @@ In questo giudizio, non prevarranno né la forza né l'abilità, ma lo spirito i
 Attenti, poiché la mano che sconfigge l'oscurità potrebbe oscurare la luce, e il ciclo della lotta eterna inizierà di nuovo.
 """
 
+"lore.011.hero_profecy.part_4" = "Il cancello si aprirà solo davanti agli eroi."
+
 "lore.012.hunted_pub" = """
 Non entrare nel pub, è infestato...
 Non importa quante volte ci liberiamo del mostro, torna sempre.
@@ -564,6 +566,8 @@ alimentando la vita e il fascino di Duskhaven.
 "npc.name.female.dark_blonde" = "Abitante"
 
 "npc.name.female.green_hair" = "Abitante"
+
+"npc.name.gate_to_demon_lord" = "Guardiano del Cancello"
 
 "npc.name.generic" = "Abitante"
 
@@ -942,7 +946,7 @@ Estraneo... Sai anche perché sei qui?
 """
 
 "quest.hero.wizard.gather_the_keys" = """
-Per entrare in questo regno devi recuperare le chiavi dai 5 dungeon...
+Per entrare in questo regno devi recuperare le chiavi dei 6 dungeon...
 Nessuno può dire se sei davvero l'eroe della profezia.
 Ma ti prego, aiutaci a raccogliere le chiavi, prima che qualcun altro, o qualcos'altro, lo faccia!
 """

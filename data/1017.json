@@ -179,7 +179,7 @@
       "88888888888888888888888888888880800080008080800080000080008000008000008888888888888888888888888888888",
       "88888888888888888888888888888888808080808080888088888080808088888880808888888888888888888888888888888",
       "88888888888888888888888888888880008080808000000080008080808080000080808888888888888888888888888888888",
-      "88888888888888888888888888888880888880808888888880808880808088808080808888888088888888888888888888888",
+      "88888888888888888888888888888880888880808888888880808880808088808080800888888088888888888888888888888",
       "88888888888888888888888888888880000000800000000000800000800000008000800000000000000000000000000000000",
       "88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888",
       "88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888",
@@ -218,18 +218,18 @@
   },
   "entities": [
     {
-      "id": 11233278,
+      "id": 11326691,
       "frame": {
-        "x": 72,
-        "y": 69,
+        "x": 31,
+        "y": 31,
         "w": 1,
         "h": 1
       },
-      "species_id": 1019,
+      "species_id": 7000,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
-      "lock_type": "Blue",
+      "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
@@ -237,42 +237,41 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 11233280,
+      "id": 11925452,
       "frame": {
-        "x": 69,
+        "x": 77,
         "y": 67,
         "w": 1,
-        "h": 1
+        "h": 2
       },
-      "species_id": 1019,
+      "species_id": 3007,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "quest.hero.wizard.gather_the_keys",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
+        }
+      ],
       "destination": null,
-      "lock_type": "Silver",
-      "display_conditions": [],
+      "lock_type": "None",
+      "display_conditions": [
+        {
+          "key": "dialogue.answer.quest.hero.wizard.gather_the_keys",
+          "expected_value": 1,
+          "visible": false
+        },
+        {
+          "key": "always",
+          "expected_value": 1,
+          "visible": true
+        }
+      ],
       "is_consumable": false,
       "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 11233279,
-      "frame": {
-        "x": 70,
-        "y": 69,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1019,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "Yellow",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "demands_attention": true,
+      "after_dialogue": "Disappear"
     },
     {
       "id": 11167356,
@@ -299,18 +298,18 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 11233275,
+      "id": 11326689,
       "frame": {
-        "x": 76,
-        "y": 69,
+        "x": 61,
+        "y": 39,
         "w": 1,
         "h": 1
       },
-      "species_id": 1019,
+      "species_id": 7000,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
-      "lock_type": "Red",
+      "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
@@ -318,18 +317,18 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 11233277,
+      "id": 11326690,
       "frame": {
-        "x": 74,
-        "y": 69,
+        "x": 57,
+        "y": 33,
         "w": 1,
         "h": 1
       },
-      "species_id": 1019,
+      "species_id": 7000,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
-      "lock_type": "Green",
+      "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
       "contents": null,
@@ -407,7 +406,6 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
@@ -427,7 +425,6 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
@@ -447,7 +444,6 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
@@ -467,7 +463,6 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
@@ -487,7 +482,6 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
@@ -507,7 +501,6 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
@@ -527,7 +520,6 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
@@ -547,7 +539,6 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
@@ -567,7 +558,6 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
@@ -587,7 +577,6 @@
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
-      "movement_directions": "FindHero",
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,
@@ -727,101 +716,65 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 11326689,
+      "id": 13042762,
       "frame": {
-        "x": 61,
-        "y": 39,
-        "w": 1,
-        "h": 1
+        "x": 69,
+        "y": 66,
+        "w": 2,
+        "h": 3
       },
-      "species_id": 7000,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 11326690,
-      "frame": {
-        "x": 57,
-        "y": 33,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 7000,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 11326691,
-      "frame": {
-        "x": 31,
-        "y": 31,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 7000,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 11925452,
-      "frame": {
-        "x": 77,
-        "y": 67,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 3007,
+      "species_id": 1152,
       "direction": "Down",
       "dialogues": [
         {
-          "text": "quest.hero.wizard.gather_the_keys",
-          "key": "always",
-          "expected_value": 0,
-          "reward": null
+            "text": "lore.011.hero_profecy.part_4"
         }
       ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [
         {
-          "key": "dialogue.answer.quest.hero.wizard.gather_the_keys",
-          "expected_value": 1,
-          "visible": false
+            "key": "inventory.amount.2000",
+            "expected_value": 0,
+            "visible": true
         },
         {
-          "key": "always",
-          "expected_value": 1,
-          "visible": true
+            "key": "inventory.amount.2001",
+            "expected_value": 0,
+            "visible": true
+        },
+        {
+            "key": "inventory.amount.2002",
+            "expected_value": 0,
+            "visible": true
+        },
+        {
+            "key": "inventory.amount.2003",
+            "expected_value": 0,
+            "visible": true
+        },
+        {
+            "key": "inventory.amount.2004",
+            "expected_value": 0,
+            "visible": true
+        },
+        {
+            "key": "inventory.amount.2005",
+            "expected_value": 0,
+            "visible": true
+        },
+        {
+            "key": "always",
+            "expected_value": 0,
+            "visible": false
         }
       ],
       "is_consumable": false,
       "contents": null,
-      "demands_attention": true,
-      "after_dialogue": "Disappear"
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
     }
   ],
-  "world_type": "Exterior",
   "light_conditions": "Day",
   "cutscenes": [
     {
@@ -866,35 +819,13 @@
             "h": 2
           },
           "species_id": 1128,
-          "entity_type": "StaticObject",
           "direction": "Down",
-          "current_speed": 0.0,
-          "is_rigid": false,
-          "z_index": 300,
-          "sprite": {
-            "sheet_id": 1010,
-            "frame": {
-              "x": 3,
-              "y": 5,
-              "w": 1,
-              "h": 2
-            },
-            "number_of_frames": 1
-          },
           "dialogues": [],
           "destination": null,
           "lock_type": "None",
-          "original_sprite_frame": {
-            "x": 3,
-            "y": 5,
-            "w": 1,
-            "h": 2
-          },
           "display_conditions": [],
-          "movement_directions": "None",
           "is_consumable": false,
           "contents": "end_game_credits",
-          "is_invulnerable": true,
           "demands_attention": false,
           "after_dialogue": "Nothing"
         },
@@ -907,21 +838,7 @@
             "h": 2
           },
           "species_id": 1080,
-          "entity_type": "Npc",
           "direction": "Down",
-          "current_speed": 0.0,
-          "is_rigid": true,
-          "z_index": 0,
-          "sprite": {
-            "sheet_id": 1009,
-            "frame": {
-              "x": 48,
-              "y": 0,
-              "w": 1,
-              "h": 2
-            },
-            "number_of_frames": 4
-          },
           "dialogues": [
             {
               "text": "quest.hero.finale.a",
@@ -962,22 +879,15 @@
           ],
           "destination": null,
           "lock_type": "None",
-          "original_sprite_frame": {
-            "x": 48,
-            "y": 0,
-            "w": 1,
-            "h": 2
-          },
           "display_conditions": [],
-          "movement_directions": "None",
           "is_consumable": false,
           "contents": null,
-          "is_invulnerable": true,
           "demands_attention": false,
           "after_dialogue": "Nothing"
         }
       ]
     }
   ],
-  "soundtrack": "pol_spirits_dance_short.mp3"
+  "soundtrack": "pol_spirits_dance_short.mp3",
+  "world_type": "Exterior"
 }

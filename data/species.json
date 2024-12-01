@@ -4390,5 +4390,27 @@
         "sprite_number_of_frames": 4,
         "lock_type": "None",
         "movement_directions": "Free"
+    },
+    {
+        "id": 1152,
+        "name": "npc.name.gate_to_demon_lord",
+        "is_invulnerable": true,
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 1.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            5,
+            25
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 2,
+            "w": 2,
+            "h": 3
+        },
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
     }
 ]

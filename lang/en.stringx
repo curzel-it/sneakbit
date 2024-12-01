@@ -296,6 +296,8 @@ In this reckoning, not strength nor skill will prevail, but the unyielding spiri
 Beware, for the hand that defeats darkness may yet obscure the light, and the cycle of the eternal struggle will begin anew.
 """
 
+"lore.011.hero_profecy.part_4" = "This gate shall only open for the heroes."
+
 "lore.012.hunted_pub" = """
 Don't enter the pub, it's hunted...
 No matter how many times we get rid of the monster, he always comes back.
@@ -564,6 +566,8 @@ fueling life and wonder in Duskhaven.
 "npc.name.female.dark_blonde" = "Villager"
 
 "npc.name.female.green_hair" = "Villager"
+
+"npc.name.gate_to_demon_lord" = "Gate's Guardian"
 
 "npc.name.generic" = "Villager"
 
@@ -942,7 +946,7 @@ it's because I failed as a father.
 """
 
 "quest.hero.wizard.gather_the_keys" = """
-To enter this realm you need to fetch the keys from the 5 dungeons...
+To enter this realm you need to fetch the keys from the 6 dungeons...
 No one can tell if you really are the hero of the profecy.
 But please, help us gather the keys, before someone else, or something else, does!
 """

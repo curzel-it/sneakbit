@@ -75,7 +75,6 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 ## TODO:
 - Some defense ability
 - Some wide-area ability
-- Update final boss area
 - Update game map 
 - Make slopes reflect bullets
 - More Quests
