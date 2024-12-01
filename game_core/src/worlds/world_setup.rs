@@ -51,7 +51,6 @@ impl World {
             
             for new_direction in &likely_directions {
                 if self.has_space_for_hero_in_direction(x, y, new_direction) {
-                    println!("Has space to go {:#?}", new_direction);
                     let (ox, oy) = new_direction.as_col_row_offset();
                     entity.frame.x = x + ox;
                     entity.frame.y = y - 1 + oy;
@@ -68,6 +67,14 @@ impl World {
     }
 
     fn likely_direction_for_hero(&self, x: i32, y: i32, current_direction: &Direction) -> Vec<Direction> {
+        if matches!(self.world_type, WorldType::HouseInterior) {
+            return if y < 4 {
+                vec![Direction::Down]
+            } else {
+                vec![Direction::Up]
+            }
+        }
+
         let mut options: Vec<Direction> = vec![];
 
         let going_horizontally = matches!(current_direction, Direction::Left | Direction::Right);

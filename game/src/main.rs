@@ -468,6 +468,8 @@ fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitErro
             track_track_pair("pol_pyramid_sands_short.mp3"),
             track_track_pair("pol_spirits_dance_short.mp3"),
             track_track_pair("pol_the_dojo_short.mp3"),
+            track_track_pair("pol_final_sacrifice_short.mp3"),
+            track_track_pair("pol_code_geek_short.mp3"),
 
         ]
         .into_iter()

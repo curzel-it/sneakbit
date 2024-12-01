@@ -15480,8 +15480,8 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "world_type": "Exterior",
   "light_conditions": "Day",
   "cutscenes": [],
-  "soundtrack": null
+  "soundtrack": "pol_code_geek_short.mp3",
+  "world_type": "Exterior"
 }

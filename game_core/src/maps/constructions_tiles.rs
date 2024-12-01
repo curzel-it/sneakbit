@@ -65,6 +65,9 @@ impl ConstructionTile {
             Construction::Box => false,
             Construction::Rail => false,
             Construction::Bridge => false,
+            Construction::Darkness15 => false,
+            Construction::Darkness30 => false,
+            Construction::Darkness45 => false,
             _ => true
         }
     }

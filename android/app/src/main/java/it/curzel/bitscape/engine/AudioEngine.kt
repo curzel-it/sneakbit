@@ -142,6 +142,8 @@ class AudioEngine(
             "pol_palm_beach_short.mp3" -> R.raw.pol_palm_beach_short
             "pol_pyramid_sands_short.mp3" -> R.raw.pol_pyramid_sands_short
             "pol_spirits_dance_short.mp3" -> R.raw.pol_spirits_dance_short
+            "pol_final_sacrifice_short.mp3" -> R.raw.pol_final_sacrifice_short
+            "pol_code_geek_short.mp3" -> R.raw.pol_code_geek_short
             else -> null
         }
     }

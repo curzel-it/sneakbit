@@ -319,8 +319,8 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "world_type": "HouseInterior",
   "light_conditions": "Day",
   "cutscenes": [],
-  "soundtrack": null
+  "soundtrack": null,
+  "world_type": "HouseInterior"
 }
