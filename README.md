@@ -52,7 +52,7 @@ sh scripts/build_all.sh
 ```
 
 ### Windows
-The project uses [Raylib](https://docs.rs/raylib/latest/raylib/), so you will need to setup and add to path cmake, libc and the usual stuff before running the steps above.
+The project uses [Raylib](https://docs.rs/raylib/latest/raylib/), so there are some extra steps after setting up Rust.
 
 Personally (but I have no idea what I'm doing and haven't used a windows machine in 10+ years) I did the following:
 1. Installed CMake from [here](https://cmake.org/download/)

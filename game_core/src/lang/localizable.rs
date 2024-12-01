@@ -4,6 +4,7 @@ use std::path::Path;
 use lazy_static::lazy_static;
 
 use crate::config::config;
+use crate::game_engine::storage::{get_value_for_global_key, StorageKey};
 
 pub trait LocalizableText {
     fn try_localize(&self) -> Option<String>;
@@ -12,7 +13,7 @@ pub trait LocalizableText {
 
 impl LocalizableText for String {
     fn try_localize(&self) -> Option<String> {
-        if let Some(strings) = LOCALIZED_STRINGS.get(config().current_lang.as_str()) {
+        if let Some(strings) = LOCALIZED_STRINGS.get(language().as_str()) {
             if let Some(localized_string) = strings.get(self) {
                 return Some(localized_string.clone());
             }
@@ -44,6 +45,17 @@ impl LocalizableText for &str {
 
 lazy_static! {
     pub static ref LOCALIZED_STRINGS: HashMap<String, HashMap<String, String>> = load_localized_strings();
+}
+
+pub const LANG_EN: &str = "en";
+pub const LANG_IT: &str = "it";
+
+fn language() -> String {
+    match get_value_for_global_key(&StorageKey::language()).unwrap_or(0) {
+        1 => LANG_EN.to_owned(),
+        2 => LANG_IT.to_owned(),
+        _ => config().current_lang.clone()
+    }
 }
 
 fn load_localized_strings() -> HashMap<String, HashMap<String, String>> {

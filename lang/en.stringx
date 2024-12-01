@@ -192,6 +192,14 @@ Thanks for playing!
 
 "game.menu.key_bindings" = "Key Bindings"
 
+"game.menu.language" = "Language"
+
+"game.menu.language.system" = "Use system language"
+
+"game.menu.language.en" = "English"
+
+"game.menu.language.it" = "Italiano"
+
 "game.menu.map_editor" = "Map Editor"
 
 "game.menu.new_game" = "New Game"

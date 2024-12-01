@@ -48,6 +48,10 @@ impl StorageKey {
         "build_number".to_owned()
     }
 
+    pub fn language() -> String {
+        "language".to_owned()
+    }
+
     fn dialogue_answer(dialogue: &str) -> String {
         format!("dialogue.answer.{}", dialogue)
     }

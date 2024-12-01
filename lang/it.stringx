@@ -192,6 +192,14 @@ Grazie per aver giocato!
 
 "game.menu.key_bindings" = "Assegnazione Tasti"
 
+"game.menu.language" = "Lingua"
+
+"game.menu.language.system" = "Usa la lingua di sistema"
+
+"game.menu.language.en" = "English"
+
+"game.menu.language.it" = "Italiano"
+
 "game.menu.map_editor" = "Editor Mappa"
 
 "game.menu.new_game" = "New Game"

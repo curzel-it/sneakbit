@@ -1,4 +1,4 @@
-use crate::{constants::WORLD_ID_NONE, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}}, is_creative_mode, lang::localizable::LocalizableText, spacing, ui::components::{Spacing, View}, utils::rect::IntRect};
+use crate::{constants::WORLD_ID_NONE, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, lang::localizable::LocalizableText, spacing, ui::components::{Spacing, View}, utils::rect::IntRect};
 
 use super::{confirmation::ConfirmationDialog, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
@@ -8,7 +8,8 @@ pub struct GameMenu {
     pub menu: Menu<GameMenuItem>,
     map_editor: MapEditor,
     new_game_confirmation: ConfirmationDialog,
-    credits_menu: Menu<String>
+    credits_menu: Menu<String>,
+    languages_menu: Menu<String>
 }
 
 #[derive(Debug)]
@@ -18,6 +19,7 @@ enum MenuState {
     MapEditor,
     PlaceItem,
     NewGameConfirmation,
+    ShowingLanguageSettings,
     ShowingCredits,
 }
 
@@ -33,6 +35,7 @@ pub enum GameMenuItem {
     ToggleSoundEffects,
     ToggleMusic,
     Credits,
+    LanguageSettings,
 }
 
 impl MenuItem for GameMenuItem {
@@ -46,6 +49,7 @@ impl MenuItem for GameMenuItem {
             GameMenuItem::SaveAndExit => "game.menu.save_and_exit".localized(),
             GameMenuItem::ToggleFullScreen => "game.menu.toggle_fullscreen".localized(),
             GameMenuItem::Credits => "credits".localized(),
+            GameMenuItem::LanguageSettings => "game.menu.language".localized(),
             
             GameMenuItem::ToggleSoundEffects => if are_sound_effects_enabled() {
                 "game.menu.disable_sound_effects"
@@ -82,17 +86,31 @@ impl GameMenu {
             ]
         );
 
+        let languages_menu = Menu::new(
+            "game.menu.language".localized(),
+            vec![
+                "game.menu.language.system".localized(),
+                "game.menu.language.en".localized(),
+                "game.menu.language.it".localized()
+            ]
+        );
+
         Self {
             current_world_id: WORLD_ID_NONE,
             state: MenuState::Closed,
             menu,
             map_editor: MapEditor::new(),
             new_game_confirmation: ConfirmationDialog::new(),
-            credits_menu
+            credits_menu,
+            languages_menu
         }
     }
 
     pub fn setup(&mut self) {
+        self.menu.title = "game.menu.title".localized();
+        self.languages_menu.title = "game.menu.language".localized();
+        self.credits_menu.title = "credits".localized();
+
         self.menu.items = if is_creative_mode() {
             vec![
                 GameMenuItem::Save,
@@ -101,6 +119,7 @@ impl GameMenu {
                 GameMenuItem::ToggleMusic,
                 GameMenuItem::ToggleSoundEffects,
                 GameMenuItem::MapEditor,
+                GameMenuItem::LanguageSettings,
                 GameMenuItem::SaveAndExit,
             ]
         } else {
@@ -110,6 +129,7 @@ impl GameMenu {
                 GameMenuItem::ToggleMusic,
                 GameMenuItem::ToggleSoundEffects,
                 GameMenuItem::NewGame,
+                GameMenuItem::LanguageSettings,
                 GameMenuItem::Credits,
                 GameMenuItem::Exit,
             ]
@@ -144,6 +164,7 @@ impl GameMenu {
             MenuState::MapEditor => self.update_from_map_editor(camera_vieport, keyboard, mouse),
             MenuState::PlaceItem => self.update_from_place_item(camera_vieport, keyboard, mouse),
             MenuState::NewGameConfirmation => self.update_from_new_game(keyboard, time_since_last_update),
+            MenuState::ShowingLanguageSettings => self.update_from_language(keyboard, time_since_last_update),
             MenuState::ShowingCredits => self.update_from_credits(keyboard, time_since_last_update)
         };
         (self.is_open(), updates)
@@ -177,6 +198,11 @@ impl GameMenu {
             }
             GameMenuItem::ToggleMusic => {
                 toggle_music();
+                vec![]
+            }
+            GameMenuItem::LanguageSettings => {
+                self.languages_menu.show();
+                self.state = MenuState::ShowingLanguageSettings;
                 vec![]
             }
             GameMenuItem::SaveAndExit => {
@@ -244,6 +270,25 @@ impl GameMenu {
         updates
     }
 
+    fn update_from_language(&mut self, keyboard: &KeyboardEventsProvider, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
+        if keyboard.has_back_been_pressed {
+            self.state = MenuState::Open;
+            return vec![];
+        }
+        self.languages_menu.update(keyboard, time_since_last_update);
+        
+        if self.languages_menu.selection_has_been_confirmed {
+            set_value_for_key(&StorageKey::language(), self.languages_menu.selected_index as u32);
+            self.languages_menu.clear_selection();
+            self.languages_menu.close();
+            self.menu.clear_selection();
+            self.menu.close();
+            self.setup();
+            self.state = MenuState::Closed;
+        }
+        vec![]
+    }
+
     fn update_from_close(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
         if keyboard.has_menu_been_pressed {
             self.state = MenuState::Open;
@@ -259,7 +304,6 @@ impl GameMenu {
             self.menu.clear_selection();
             self.menu.close();
             self.state = MenuState::Closed;
-            return updates
         }
         updates
     }
@@ -289,6 +333,7 @@ impl GameMenu {
             MenuState::Open => self.menu.ui(),
             MenuState::ShowingCredits => self.credits_menu.ui(),
             MenuState::NewGameConfirmation => self.new_game_confirmation.ui(),
+            MenuState::ShowingLanguageSettings => self.languages_menu.ui(),
             MenuState::MapEditor | MenuState::PlaceItem => self.map_editor.ui(camera_viewport),
         }
     }

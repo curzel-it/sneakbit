@@ -1,5 +1,7 @@
 use std::path::PathBuf;
 
+use crate::lang::localizable::{LANG_EN, LANG_IT};
+
 pub struct Config {
     pub is_mobile: bool,
     pub base_entity_speed: f32,
@@ -28,7 +30,7 @@ pub fn initialize_config_paths(
     localized_strings_path: PathBuf,
 ) {
     unsafe {
-        let supported_languages = ["en", "it"];
+        let supported_languages = [LANG_EN, LANG_IT];
         let user_lang_supported = supported_languages.contains(&user_lang.as_str());
         let actual_lang = if user_lang_supported { user_lang } else { "en".to_string() };
 
