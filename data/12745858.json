@@ -40,13 +40,13 @@
   "constructions_tiles": {
     "tiles": [
       "444444444440000000000000000000",
-      "444444444440000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
+      "444664444660000000000000000000",
+      "4TT66TTTT660000000000000000000",
+      "4TTTTTTTTTT0000000000000000000",
+      "4TTTTTTTTTT0000000000000000000",
+      "4TTTTTTTTTT0000000000000000000",
+      "4TTTTTTTTTT0000000000000000000",
+      "4TTTTTTTTTT0000000000000000000",
       "444440044440000000000000000000",
       "000000000000000000000000000000",
       "000000000000000000000000000000",
@@ -122,10 +122,29 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12745862,
+      "id": 13011643,
+      "frame": {
+        "x": 6,
+        "y": 4,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 7000,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13011644,
       "frame": {
         "x": 1,
-        "y": 4,
+        "y": 2,
         "w": 2,
         "h": 2
       },
@@ -141,14 +160,14 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12745863,
+      "id": 13011645,
       "frame": {
         "x": 1,
-        "y": 4,
+        "y": 2,
         "w": 1,
         "h": 1
       },
-      "species_id": 1013,
+      "species_id": 1012,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -160,14 +179,33 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12745864,
+      "id": 13011646,
+      "frame": {
+        "x": 2,
+        "y": 2,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1012,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13011647,
       "frame": {
         "x": 2,
         "y": 4,
         "w": 1,
         "h": 1
       },
-      "species_id": 1013,
+      "species_id": 1012,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -179,14 +217,14 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12745865,
+      "id": 13011648,
       "frame": {
         "x": 1,
-        "y": 6,
+        "y": 4,
         "w": 1,
         "h": 1
       },
-      "species_id": 1013,
+      "species_id": 1012,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -198,14 +236,14 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12745866,
+      "id": 13011649,
       "frame": {
-        "x": 2,
-        "y": 6,
-        "w": 1,
-        "h": 1
+        "x": 6,
+        "y": 1,
+        "w": 2,
+        "h": 2
       },
-      "species_id": 1013,
+      "species_id": 1092,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -217,7 +255,7 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "is_interior": true,
+  "world_type": "HouseInterior",
   "light_conditions": "Day",
   "cutscenes": [],
   "soundtrack": null

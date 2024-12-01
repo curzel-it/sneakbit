@@ -258,7 +258,7 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "is_interior": true,
+  "world_type": "Dungeon",
   "light_conditions": "CantSeeShit",
   "cutscenes": [],
   "soundtrack": "pol_combat_plan_short.mp3"

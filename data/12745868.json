@@ -6,12 +6,12 @@
     "tiles": [
       "000000000000000000000000000000",
       "000000000000000000000000000000",
-      "066666666660000000000000000000",
-      "066666666660000000000000000000",
-      "066666666660000000000000000000",
-      "066666666660000000000000000000",
-      "066666666660000000000000000000",
-      "066666666660000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
       "000000000000000000000000000000",
       "000000000000000000000000000000",
       "000000000000000000000000000000",
@@ -39,15 +39,15 @@
   },
   "constructions_tiles": {
     "tiles": [
-      "444444444440000000000000000000",
-      "444444444440000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "400000000000000000000000000000",
-      "444440044440000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
+      "000000000000000000000000000000",
       "000000000000000000000000000000",
       "000000000000000000000000000000",
       "000000000000000000000000000000",
@@ -72,153 +72,9 @@
     ],
     "sheet_id": 1003
   },
-  "entities": [
-    {
-      "id": 12745870,
-      "frame": {
-        "x": 5,
-        "y": 8,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1019,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": {
-        "world": 1020,
-        "x": 0,
-        "y": 0,
-        "direction": "Unknown"
-      },
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 12745871,
-      "frame": {
-        "x": 6,
-        "y": 8,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1019,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": {
-        "world": 1020,
-        "x": 0,
-        "y": 0,
-        "direction": "Unknown"
-      },
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 12745872,
-      "frame": {
-        "x": 1,
-        "y": 4,
-        "w": 2,
-        "h": 2
-      },
-      "species_id": 1016,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 12745873,
-      "frame": {
-        "x": 1,
-        "y": 4,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 12745874,
-      "frame": {
-        "x": 2,
-        "y": 4,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 12745875,
-      "frame": {
-        "x": 1,
-        "y": 6,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 12745876,
-      "frame": {
-        "x": 2,
-        "y": 6,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    }
-  ],
-  "is_interior": true,
+  "entities": [],
   "light_conditions": "Day",
   "cutscenes": [],
-  "soundtrack": null
+  "soundtrack": null,
+  "world_type": "HouseInterior"
 }

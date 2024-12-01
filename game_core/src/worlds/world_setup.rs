@@ -1,4 +1,4 @@
-use crate::{constants::BUILD_NUMBER, entities::{known_species::{SPECIES_HERO, SPECIES_KUNAI, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World}, utils::directions::Direction};
+use crate::{constants::BUILD_NUMBER, entities::{known_species::{SPECIES_HERO, SPECIES_KUNAI, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
@@ -86,12 +86,19 @@ impl World {
             vec![Direction::Down, Direction::Up]
         };
 
-        if self.is_interior {
-            options.extend(vertical);
-            options.extend(horizontal);
-        } else {
-            options.extend(horizontal);
-            options.extend(vertical);
+        match self.world_type {
+            WorldType::Dungeon => {
+                options.extend(vertical);
+                options.extend(horizontal);
+            },
+            WorldType::Exterior => {
+                options.extend(horizontal);
+                options.extend(vertical);
+            },
+            WorldType::HouseInterior => {
+                options.extend(vertical);
+                options.extend(horizontal);
+            },
         }
 
         options
@@ -156,7 +163,7 @@ impl World {
     }
 
     fn allows_for_changelog_display(&self) -> bool {
-        !matches!(self.id, 1000 | 1001) && !self.is_interior
+        !matches!(self.id, 1000 | 1001) && matches!(self.world_type, WorldType::Exterior)
     }
 }
     

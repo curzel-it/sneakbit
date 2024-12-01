@@ -2,7 +2,7 @@ use image::{DynamicImage, GenericImageView, ImageBuffer, RgbImage, RgbaImage, im
 use std::{io::BufWriter, path::Path, fs::{self, File}, error::Error};
 use regex::Regex;
 
-use game_core::{config::initialize_config_paths, constants::TILE_SIZE, game_engine::world::World, maps::{tiles::{TileSet, SpriteTile}, biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}}};
+use game_core::{config::initialize_config_paths, constants::TILE_SIZE, game_engine::world::World, initialize_game, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::{SpriteTile, TileSet}}};
 
 pub fn generate_tile_map_image_from_json(
     world_id: u32,
@@ -119,14 +119,21 @@ fn main() -> Result<(), Box<dyn Error>> {
         Path::new("data/save.json").to_path_buf(),
         Path::new("lang").to_path_buf()
     );
+    initialize_game(false);
 
     let data_dir = Path::new("data");
     let assets_dir = Path::new("assets");
     let re = Regex::new(r"^\d+\.json$")?;
 
-    for entry in fs::read_dir(data_dir)? {
-        let entry = entry?;
+    let mut entries: Vec<fs::DirEntry> = fs::read_dir(data_dir)?
+        .filter_map(|res| res.ok())
+        .collect();
+
+    entries.sort_by_key(|entry| entry.file_name());
+
+    for entry in entries {
         let path = entry.path();
+        println!("> Checking: {:#?}", path);
         let filename = path.file_name().unwrap().to_str().unwrap();
 
         if !re.is_match(filename) {

@@ -3,7 +3,7 @@ use rand::Rng;
 use std::fs::File;
 use std::io::Write;
 
-use game_core::{maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile, tiles::TileSet}, game_engine::world::World};
+use game_core::{game_engine::world::{World, WorldType}, maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile, tiles::TileSet}};
 
 /*
 Dungeon 
@@ -452,7 +452,7 @@ fn main() {
     let mut world = World::new(args.world_id);
     world.biome_tiles = biome_tileset;
     world.constructions_tiles = construction_tileset;
-    world.is_interior = args.padding == 0;
+    world.world_type = if args.padding == 0 { WorldType::Dungeon } else { WorldType::Exterior };
     world.ephemeral_state = true;
 
     // Serialize world to JSON

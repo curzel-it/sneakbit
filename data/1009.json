@@ -5000,7 +5000,7 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "is_interior": false,
+  "world_type": "Dungeon",
   "light_conditions": "Day",
   "cutscenes": [],
   "soundtrack": "pol_the_dojo_short.mp3"

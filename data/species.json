@@ -1191,28 +1191,6 @@
         "movement_directions": "FindHero"
     },
     {
-        "id": 5001,
-        "name": "objects.name.deep_hole",
-        "is_invulnerable": true,
-        "entity_type": "Teleporter",
-        "z_index": -1,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            10
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 5,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
         "id": 6001,
         "name": "objects.name.book_red",
         "is_invulnerable": true,
@@ -4343,5 +4321,74 @@
         "sprite_number_of_frames": 4,
         "lock_type": "None",
         "movement_directions": "FindHero"
+    },
+    {
+        "id": 1149,
+        "name": "npc.name.cat",
+        "is_invulnerable": false,
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            6,
+            23
+        ],
+        "sprite_frame": {
+            "x": 16,
+            "y": 10,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "Free"
+    },
+    {
+        "id": 1150,
+        "name": "npc.name.cat",
+        "is_invulnerable": false,
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            6,
+            24
+        ],
+        "sprite_frame": {
+            "x": 20,
+            "y": 10,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "Free"
+    },
+    {
+        "id": 1151,
+        "name": "npc.name.cat",
+        "is_invulnerable": false,
+        "entity_type": "Npc",
+        "z_index": 150,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            6,
+            25
+        ],
+        "sprite_frame": {
+            "x": 24,
+            "y": 10,
+            "w": 1,
+            "h": 1
+        },
+        "sprite_sheet_id": 1014,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None",
+        "movement_directions": "Free"
     }
 ]

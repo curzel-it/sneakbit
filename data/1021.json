@@ -52,7 +52,7 @@
       "555555555555000599999999999500000008888888A8AAAAA8888888AAA8888888888888888888880000000000000000000000000000000000000000",
       "555555555555550599999999999500000008888888AA88A8888888888888888888888888888888880000000888888888880000000000000008888880",
       "555555555555555599999999999500000008888888A88AA8888888888888888888888888888888888888888888888888888888888888888888888888",
-      "555555555555555599999999955500000008888888AAAAA8888888888888888888888888888888888888888888888888888888808888888888888888",
+      "555555555555555599999999955500000008888888AAAAA8888888888888888888888888888888888888888888888888888888888888888888888888",
       "555555555555000599999999999500000008888888AAAAA8888888888888888888888888888888888888888888888888888888888888888888888888",
       "555555555555085599999999999580000008888888AAAAA8888888880008888888888808888888888000000888888888888888888888888888888888",
       "855555555558059999999999999950000000888AAAAAJAA8888888880008888888888800000888880000000888888888888888888888888888888888",
@@ -689,13 +689,13 @@
     {
       "id": 12983859,
       "frame": {
-        "x": 51,
+        "x": 44,
         "y": 42,
         "w": 1,
         "h": 1
       },
       "species_id": 9000,
-      "direction": "Left",
+      "direction": "Down",
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -1238,14 +1238,14 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12983957,
+      "id": 12984309,
       "frame": {
-        "x": 101,
-        "y": 47,
+        "x": 88,
+        "y": 61,
         "w": 1,
         "h": 2
       },
-      "species_id": 4004,
+      "species_id": 1010,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -1257,14 +1257,14 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12983958,
+      "id": 12984283,
       "frame": {
-        "x": 106,
-        "y": 47,
+        "x": 76,
+        "y": 64,
         "w": 1,
-        "h": 2
+        "h": 1
       },
-      "species_id": 4004,
+      "species_id": 1148,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -1295,14 +1295,14 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12983960,
+      "id": 12984305,
       "frame": {
-        "x": 100,
-        "y": 47,
+        "x": 9,
+        "y": 1,
         "w": 1,
         "h": 2
       },
-      "species_id": 4004,
+      "species_id": 1010,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -1516,9 +1516,9 @@
       "dialogues": [],
       "destination": {
         "world": 1020,
-        "x": 0,
-        "y": 0,
-        "direction": "Unknown"
+        "x": 10,
+        "y": 5,
+        "direction": "Down"
       },
       "lock_type": "None",
       "display_conditions": [],
@@ -1540,9 +1540,9 @@
       "dialogues": [],
       "destination": {
         "world": 1020,
-        "x": 0,
-        "y": 0,
-        "direction": "Unknown"
+        "x": 42,
+        "y": 66,
+        "direction": "Down"
       },
       "lock_type": "None",
       "display_conditions": [],
@@ -1560,25 +1560,6 @@
         "h": 1
       },
       "species_id": 1148,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 12984060,
-      "frame": {
-        "x": 103,
-        "y": 48,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1030,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -3262,14 +3243,14 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12984283,
+      "id": 13005257,
       "frame": {
-        "x": 76,
-        "y": 64,
+        "x": 98,
+        "y": 47,
         "w": 1,
-        "h": 1
+        "h": 2
       },
-      "species_id": 1148,
+      "species_id": 4004,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -3281,14 +3262,14 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12984305,
+      "id": 13005258,
       "frame": {
-        "x": 9,
-        "y": 1,
+        "x": 103,
+        "y": 47,
         "w": 1,
         "h": 2
       },
-      "species_id": 1010,
+      "species_id": 4004,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -3300,14 +3281,14 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 12984309,
+      "id": 13005259,
       "frame": {
-        "x": 88,
-        "y": 61,
+        "x": 106,
+        "y": 47,
         "w": 1,
         "h": 2
       },
-      "species_id": 1010,
+      "species_id": 4004,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -3319,7 +3300,7 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "is_interior": true,
+  "world_type": "Dungeon",
   "light_conditions": "Day",
   "cutscenes": [],
   "soundtrack": null

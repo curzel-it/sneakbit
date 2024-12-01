@@ -158,7 +158,7 @@ world_data = {
         "sheet_id": 1003
     },
     "entities": [],
-    "is_interior": False,
+    "world_type": "Exterior",
 }
 
 output_filename = f"/Users/curzel/dev/sneakbit/data/{args.world_id}.json"

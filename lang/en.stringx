@@ -257,6 +257,7 @@ Also, what the hell are you doing in my house!?
 
 "references.dbz.krillin" = "I hope you brought Senzu beans!"
 "references.dbz.goku" = "Wait, this isn't universe 7... Byeee!"
+"references.dbz.piccolo" = "I am The Namek who has long since forgotten his name"
 
 "lore.evergrove.monster_sightings_nowadays" = """
 Monsters have been part of this world for a long time.
@@ -515,6 +516,40 @@ So I'm building my own railroad, with Black Jack and high-end hookers!
 Maybe it would take less time without the railroad...
 """
 
+"lore.023.bearwolfes" = """
+You know, bearwolves aren’t as scary as they look. 
+My grandpa used to tell me they’d help lost travelers find their way in the snow. 
+You just gotta keep calm and show them respect — they’ll even share their kills if you’re lucky!
+"""
+
+"lore.023.lumberjack" = """
+The trees? Ah...
+I'm getting too old for working as a lumberjack
+"""
+
+"lore.024.ice_is_slippery" = """
+Careful when stepping on the ice! 
+One wrong move, and you’ll be sliding all the way back to Evergrove. 
+Hah! Trust me, I've seen it happen.
+"""
+
+"lore.025.stonehenge" = """
+These ruins hold so many secrets! 
+My research suggests there used to be an entrance to the underground caverns here, but it’s sealed with some ancient magic. 
+A colleague swears there’s another way in by the frozen lake, though. 
+Could you check it out?
+"""
+
+"lore.025.stonehenge_second_entrance_found" = """
+So there is a second entrace!
+And you found this key in there?
+It's definately a magical item, but I have no clue about what it could be.
+"""
+
+"lore.026.cats_cats_cats" = """
+Don't you love cats?
+"""
+
 "1001.entrance" = "Welcome to Evergrove Village!"
 "1003.entrance" = """
 Welcome to Aridreach
@@ -575,6 +610,14 @@ Welcome to the Murkmire Swamps
 North: Verdant Way
 West: Duskhaven
 South: Thermoria
+"""
+
+"1020.entrance" = """
+Welcome to Peak Levek
+-- 
+North: Road currently closed by the ice
+West: Duskhaven
+South: Road currently closed by the ice
 """
 
 "quest.hero.wizard.prologue" = """
@@ -875,6 +918,14 @@ Everything in here, everyone in here... They’re puppets...
 
 "quest.crazy_conspiracy.girl.black_ninja_i_knew_it_again" = """
 Sssh... They're watching us... 
+"""
+
+"quest.crazy_conspiracy.girl.stonehenge" = """
+You’ve seen the stones, haven’t you? Up on the peak? Tell me, how do you think they got there? 
+You think some *villagers* hauled those massive rocks up the tallest mountain in the world? Don’t make me laugh!  
+No, no, no. Those stones are *too big*. Too perfect. They’re not natural, but they’re not man-made either. 
+They were *placed*. By who? Was it gods? Aliens? 
+Or maybe... maybe *he* put them there, just to mess with us.  
 """
 
 "quest.thugs_and_assassins.nyx.intro" = """

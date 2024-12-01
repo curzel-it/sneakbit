@@ -1044,7 +1044,7 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "is_interior": false,
+  "world_type": "Exterior",
   "light_conditions": "Day",
   "cutscenes": [],
   "soundtrack": "pol_magical_sun_short.mp3"

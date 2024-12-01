@@ -55636,7 +55636,7 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "is_interior": false,
+  "world_type": "Dungeon",
   "light_conditions": "Day",
   "cutscenes": [],
   "soundtrack": "pol_pyramid_sands_short.mp3"

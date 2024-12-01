@@ -2,7 +2,7 @@ use std::{fs::File, io::{BufReader, Write}};
 
 use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Error;
-use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::known_species::SPECIES_HERO, features::{cutscenes::CutScene, light_conditions::LightConditions}, game_engine::{entity::Entity, world::World}, maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile, tiles::TileSet}};
+use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::known_species::SPECIES_HERO, features::{cutscenes::CutScene, light_conditions::LightConditions}, game_engine::{entity::Entity, world::{World, WorldType}}, maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile, tiles::TileSet}};
 
 impl World {
     pub fn load(id: u32) -> Option<Self> {
@@ -86,6 +86,7 @@ impl World {
 #[derive(Serialize, Deserialize)]
 struct WorldData {
     id: u32,
+    world_type: WorldType,
 
     #[serde(default)]
     revision: u32,
@@ -129,10 +130,10 @@ impl Serialize for World {
         state.serialize_field("biome_tiles", &self.biome_tiles)?;
         state.serialize_field("constructions_tiles", &self.constructions_tiles)?;
         state.serialize_field("entities", &entities)?;
-        state.serialize_field("is_interior", &self.is_interior)?;
         state.serialize_field("light_conditions", &self.light_conditions)?;
         state.serialize_field("cutscenes", &self.cutscenes)?;
         state.serialize_field("soundtrack", &self.soundtrack)?;
+        state.serialize_field("world_type", &self.world_type)?;
         state.end()
     }
 }
@@ -144,7 +145,7 @@ impl<'de> Deserialize<'de> for World {
         let mut world = World::new(data.id);        
         world.revision = data.revision;
         world.ephemeral_state = data.ephemeral_state;
-        world.is_interior = data.is_interior;
+        world.world_type = data.world_type;
         world.light_conditions = data.light_conditions;
         world.cutscenes = data.cutscenes;
         world.soundtrack = data.soundtrack;

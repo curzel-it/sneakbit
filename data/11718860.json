@@ -311,7 +311,7 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "is_interior": true,
+  "world_type": "HouseInterior",
   "light_conditions": "Day",
   "cutscenes": []
 }

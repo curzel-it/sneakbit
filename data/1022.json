@@ -262,7 +262,7 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "is_interior": false,
+  "world_type": "Dungeon",
   "light_conditions": "CantSeeShit",
   "cutscenes": [],
   "soundtrack": null

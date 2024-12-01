@@ -1,4 +1,4 @@
-use crate::{constants::HERO_ENTITY_ID, entities::{known_species::SPECIES_DEEP_HOLE, species::EntityType}, game_engine::{entity::{Entity, EntityId}, world::World}, is_creative_mode, maps::constructions_tiles::Construction};
+use crate::{constants::HERO_ENTITY_ID, entities::species::EntityType, game_engine::{entity::{Entity, EntityId}, world::World}, is_creative_mode, maps::constructions_tiles::Construction};
 
 pub type Hitmap = Vec<Vec<bool>>;
 pub type EntityIdsMap = Vec<Vec<EntityId>>;
@@ -83,7 +83,7 @@ impl World {
 
 impl Entity {
     fn has_weight(&self) -> bool {
-        self.species_id != SPECIES_DEEP_HOLE && !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate)
+        !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate)
     }
 }
 

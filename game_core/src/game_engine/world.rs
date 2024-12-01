@@ -1,6 +1,7 @@
 use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
 
 use common_macros::hash_set;
+use serde::{Deserialize, Serialize};
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, light_conditions::LightConditions}, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
@@ -27,7 +28,7 @@ pub struct World {
     pub is_any_arrow_key_down: bool,
     pub has_attack_key_been_pressed: bool,
     pub has_confirmation_key_been_pressed: bool,
-    pub is_interior: bool,
+    pub world_type: WorldType,
     pub pressure_plate_down_red: bool,
     pub pressure_plate_down_green: bool,
     pub pressure_plate_down_blue: bool,
@@ -41,6 +42,13 @@ pub struct World {
 
 const WORLD_SIZE_COLUMNS: usize = 30;
 const WORLD_SIZE_ROWS: usize = 30;
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub enum WorldType {
+    HouseInterior,
+    Dungeon,
+    Exterior
+}
 
 impl World {
     pub fn new(id: u32) -> Self {
@@ -63,7 +71,7 @@ impl World {
             is_any_arrow_key_down: false,
             has_attack_key_been_pressed: false,
             has_confirmation_key_been_pressed: false,
-            is_interior: false,
+            world_type: WorldType::HouseInterior,
             pressure_plate_down_red: false,
             pressure_plate_down_green: false,
             pressure_plate_down_blue: false,

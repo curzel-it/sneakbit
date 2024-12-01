@@ -1014,7 +1014,7 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "is_interior": false,
+  "world_type": "Exterior",
   "light_conditions": "Day",
   "cutscenes": [],
   "soundtrack": "pol_chubby_cat_short.mp3"

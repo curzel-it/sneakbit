@@ -2137,7 +2137,7 @@
       "after_dialogue": "Disappear"
     }
   ],
-  "is_interior": true,
+  "world_type": "Dungeon",
   "light_conditions": "Day",
   "cutscenes": [],
   "soundtrack": "pol_combat_plan_short.mp3"

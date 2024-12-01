@@ -2913,7 +2913,7 @@
       "after_dialogue": "Nothing"
     }
   ],
-  "is_interior": true,
+  "world_type": "Dungeon",
   "light_conditions": "Day",
   "cutscenes": [],
   "soundtrack": "pol_brave_worm_short.mp3"
