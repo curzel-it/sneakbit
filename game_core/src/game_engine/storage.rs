@@ -24,10 +24,6 @@ impl StorageKey {
         format!("npc_interactions.{}", id)
     }
 
-    pub fn content_read(id: u32) -> String {
-        format!("content_read.{}", id)   
-    }
-
     pub fn fullscreen() -> String {
         "fullscreen".to_owned()
     }

@@ -664,12 +664,18 @@
       },
       "species_id": 6002,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.016.silver_vein_chronicles",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.016.silver_vein_chronicles",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     }

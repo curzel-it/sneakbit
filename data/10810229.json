@@ -86,7 +86,10 @@
       "direction": "Down",
       "dialogues": [
         {
-          "text": "references.dbz.goku"
+          "text": "references.dbz.goku",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
         }
       ],
       "destination": null,
@@ -104,7 +107,6 @@
         }
       ],
       "is_consumable": false,
-      "contents": "references.dbz.goku",
       "demands_attention": false,
       "after_dialogue": "Disappear"
     },

@@ -278,12 +278,18 @@
       },
       "species_id": 6001,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.010.aridreach_before_the_solar_age",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.010.aridreach_before_the_solar_age",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },

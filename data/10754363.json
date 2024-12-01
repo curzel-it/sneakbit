@@ -283,11 +283,17 @@
       },
       "species_id": 6004,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.evergrove.monster_sightings_logs",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "is_consumable": false,
-      "contents": "lore.evergrove.monster_sightings_logs",
       "demands_attention": false
     },
     {

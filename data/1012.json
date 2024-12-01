@@ -8553,12 +8553,18 @@
       },
       "species_id": 10001,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.007.vintoria_entrance",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.007.vintoria_entrance",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8572,12 +8578,18 @@
       },
       "species_id": 10000,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.006.vintoria_power_station",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.006.vintoria_power_station",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -18040,12 +18052,18 @@
       },
       "species_id": 10000,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.013.snail_pig_farming",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.013.snail_pig_farming",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },

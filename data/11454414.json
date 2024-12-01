@@ -247,19 +247,19 @@
         },
         {
           "text": "quest.hero.silver.i_am_punk_father",
-          "key": "content_read.11931938",
+          "key": "dialogue.answer.lore.011.hero_profecy.part_1",
           "expected_value": 1,
           "reward": null
         },
         {
           "text": "quest.hero.silver.i_am_punk_father",
-          "key": "content_read.11931516",
+          "key": "dialogue.answer.lore.011.hero_profecy.part_2",
           "expected_value": 1,
           "reward": null
         },
         {
           "text": "quest.hero.silver.i_am_punk_father",
-          "key": "content_read.11932013",
+          "key": "dialogue.answer.lore.011.hero_profecy.part_3",
           "expected_value": 1,
           "reward": null
         },

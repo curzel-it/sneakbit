@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{directions::MovementDirections, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}, world::World};
 
@@ -83,9 +83,6 @@ pub struct Entity {
     
     #[serde(skip)]
     pub is_dying: bool,
-
-    #[serde(default)]
-    pub contents: Option<String>,  
 
     #[serde(skip)]
     pub remaining_lifespan: f32,  
@@ -236,6 +233,48 @@ impl Entity {
 }
 
 impl Entity {
+    pub fn handle_dialogue_interaction(&mut self, world: &World) -> Option<Vec<WorldStateUpdate>> {
+        if let Some(dialogue) = self.next_dialogue(world) {
+            self.is_in_interaction_range = true;
+
+            if world.has_confirmation_key_been_pressed {
+                self.demands_attention = false;
+                set_value_for_key(&StorageKey::npc_interaction(self.id), 1);
+
+                let show_dialogue = vec![
+                    WorldStateUpdate::EngineUpdate(
+                        EngineStateUpdate::DisplayLongText(format!("{}:", self.name.clone()), dialogue.localized_text())
+                    )
+                ];
+                let reward = dialogue.handle_reward();
+                let vanishing = self.handle_after_dialogue();
+                let updates = vec![show_dialogue, reward, vanishing].into_iter().flatten().collect();
+                return Some(updates)
+            }
+        }   
+        None
+    }
+
+    fn handle_after_dialogue(&mut self) -> Vec<WorldStateUpdate> {
+        match self.after_dialogue {
+            AfterDialogueBehavior::Nothing => vec![],
+            AfterDialogueBehavior::Disappear => 
+                if is_creative_mode() {
+                    vec![]
+                } else {
+                    vec![WorldStateUpdate::RemoveEntity(self.id)]
+                },
+            AfterDialogueBehavior::FlyAwayEast => {
+                self.is_rigid = false;
+                self.direction = Direction::Left;
+                self.reset_speed();
+                vec![]
+            }
+        }
+    }
+}
+
+impl Entity {
     fn setup_generic(&mut self) {
         if is_creative_mode() {
             self.is_rigid = false
@@ -246,25 +285,9 @@ impl Entity {
         self.is_in_interaction_range = false;
 
         if world.is_hero_around_and_on_collision_with(&self.frame) {    
-            if let Some(contents) = self.contents.clone() {
-                self.is_in_interaction_range = true;
-
-                if world.has_confirmation_key_been_pressed {        
-                    let species_name = species_by_id(self.species_id).localized_name();
-
-                    set_value_for_key(&StorageKey::content_read(self.id), 1);
-
-                    return vec![
-                        WorldStateUpdate::EngineUpdate(
-                            EngineStateUpdate::DisplayLongText(
-                                format!("{}:", species_name), 
-                                contents.localized()
-                            )
-                        )
-                    ];   
-                }
-            }
+            self.handle_dialogue_interaction(world).unwrap_or_default()
+        } else {
+            vec![]
         }
-        vec![]
     }
 }

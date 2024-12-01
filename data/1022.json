@@ -1,7 +1,7 @@
 {
   "id": 1022,
   "revision": 0,
-  "ephemeral_state": false,
+  "ephemeral_state": true,
   "biome_tiles": {
     "tiles": [
       "66666666666666666666666666666666666666666",

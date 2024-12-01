@@ -25,7 +25,7 @@ impl Entity {
     }
 
     fn hint_updates(&self) -> Vec<WorldStateUpdate> {
-        if self.is_consumable && self.has_been_read() || self.contents.is_none() {
+        if self.is_consumable && self.has_been_read() || self.dialogues.is_empty() {
             vec![]
         } else {
             self.set_read();
@@ -41,7 +41,11 @@ impl Entity {
     }
 
     fn key(&self) -> String {
-        self.contents.clone().unwrap_or("".to_owned())
+        if self.dialogues.len() < 1 {
+            "".to_owned()
+        } else {
+            self.dialogues[0].text.clone()
+        }
     }
 
     fn has_been_read(&self) -> bool {

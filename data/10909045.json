@@ -298,12 +298,18 @@
       },
       "species_id": 6001,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.016.the_silver_legacy_of_maritide_haven",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.016.the_silver_legacy_of_maritide_haven",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },

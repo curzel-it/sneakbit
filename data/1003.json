@@ -5966,12 +5966,18 @@
       },
       "species_id": 10001,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "1003.entrance",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "1003.entrance",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },

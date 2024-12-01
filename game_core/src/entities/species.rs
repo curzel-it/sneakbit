@@ -89,7 +89,6 @@ impl Species {
             destination: None,
             lock_type: self.lock_type,
             original_sprite_frame,
-            contents: None,
             remaining_lifespan: UNLIMITED_LIFESPAN,
             action_cooldown_remaining: 0.0,
             parent_id: NO_PARENT,

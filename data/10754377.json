@@ -304,11 +304,17 @@
       },
       "species_id": 10002,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "hint.003.not_all_places_have_loot",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "is_consumable": false,
-      "contents": "hint.003.not_all_places_have_loot",
       "demands_attention": false
     }
   ],

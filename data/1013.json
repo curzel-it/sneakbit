@@ -26336,12 +26336,18 @@
       },
       "species_id": 10001,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "1013.entrance",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "1013.entrance",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -55319,12 +55325,18 @@
       },
       "species_id": 10005,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.011.hero_profecy.part_1",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.011.hero_profecy.part_1",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },

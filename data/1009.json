@@ -4752,12 +4752,18 @@
       },
       "species_id": 10005,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.011.hero_profecy.part_2",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.011.hero_profecy.part_2",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4857,12 +4863,18 @@
       },
       "species_id": 10002,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.016.silver_vein_survivors",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.016.silver_vein_survivors",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },

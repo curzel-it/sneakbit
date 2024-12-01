@@ -203,12 +203,18 @@
       },
       "species_id": 10002,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "quest.ninja_skills.black_ninja.note",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "quest.ninja_skills.black_ninja.note",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     }

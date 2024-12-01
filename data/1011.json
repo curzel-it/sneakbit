@@ -207,12 +207,18 @@
       },
       "species_id": 10001,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "1011.entrance",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "1011.entrance",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9204,12 +9210,18 @@
       },
       "species_id": 6003,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.manafren_trees.botanics_book",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.manafren_trees.botanics_book",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9280,12 +9292,18 @@
       },
       "species_id": 6005,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "quest.manafren_research.ancient_book.contents",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "quest.manafren_research.ancient_book.contents",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9641,12 +9659,18 @@
       },
       "species_id": 10000,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.manafren_trees.tourists_sign",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.manafren_trees.tourists_sign",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9675,7 +9699,7 @@
         },
         {
           "text": "quest.manafren_research.dr_voss.thanks_for_the_info",
-          "key": "content_read.11022247",
+          "key": "dialogue.answer.quest.manafren_research.ancient_book.contents",
           "expected_value": 1,
           "reward": 7001
         },
@@ -14116,12 +14140,18 @@
       },
       "species_id": 10001,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "1011.entrance",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "1011.entrance",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15769,7 +15799,7 @@
           "visible": false
         },
         {
-          "key": "content_read.11022247",
+          "key": "dialogue.answer.quest.manafren_research.ancient_book.contents",
           "expected_value": 1,
           "visible": true
         },

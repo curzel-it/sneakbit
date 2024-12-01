@@ -3040,12 +3040,18 @@
       },
       "species_id": 10005,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.011.hero_profecy.part_3",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.011.hero_profecy.part_3",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     }

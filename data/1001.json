@@ -494,12 +494,18 @@
       },
       "species_id": 50000,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "hint.002.throw_knife",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": true,
-      "contents": "hint.002.throw_knife",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -926,12 +932,18 @@
       },
       "species_id": 50000,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "hint.001.pickup",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": true,
-      "contents": "hint.001.pickup",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -945,12 +957,18 @@
       },
       "species_id": 50000,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "hint.002.throw_knife",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": true,
-      "contents": "hint.002.throw_knife",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -984,12 +1002,18 @@
       },
       "species_id": 10001,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "1001.entrance",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "1001.entrance",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },

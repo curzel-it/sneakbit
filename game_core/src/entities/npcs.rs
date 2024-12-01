@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, features::dialogues::AfterDialogueBehavior, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}, world::World}, is_creative_mode, utils::directions::{direction_between_rects, Direction}};
+use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::directions::direction_between_rects};
 
 pub type NpcId = u32;
 
@@ -40,44 +40,8 @@ impl Entity {
         if world.has_confirmation_key_been_pressed {
             self.direction = direction_between_rects(&self.frame, &world.cached_hero_props.hittable_frame);
             self.update_sprite_for_current_state();
-        }
-
-        if let Some(dialogue) = self.next_dialogue(world) {
-            self.is_in_interaction_range = true;
-
-            if world.has_confirmation_key_been_pressed {
-                self.demands_attention = false;
-                set_value_for_key(&StorageKey::npc_interaction(self.id), 1);
-
-                let show_dialogue = vec![
-                    WorldStateUpdate::EngineUpdate(
-                        EngineStateUpdate::DisplayLongText(format!("{}:", self.name.clone()), dialogue.localized_text())
-                    )
-                ];
-                let reward = dialogue.handle_reward();
-                let vanishing = self.handle_after_dialogue();
-                return vec![show_dialogue, reward, vanishing].into_iter().flatten().collect();
-            }
-        }             
+        }          
         
-        vec![]
-    }
-
-    fn handle_after_dialogue(&mut self) -> Vec<WorldStateUpdate> {
-        match self.after_dialogue {
-            AfterDialogueBehavior::Nothing => vec![],
-            AfterDialogueBehavior::Disappear => 
-                if is_creative_mode() {
-                    vec![]
-                } else {
-                    vec![WorldStateUpdate::RemoveEntity(self.id)]
-                },
-            AfterDialogueBehavior::FlyAwayEast => {
-                self.is_rigid = false;
-                self.direction = Direction::Left;
-                self.reset_speed();
-                vec![]
-            }
-        }
+        self.handle_dialogue_interaction(world).unwrap_or_default()
     }
 }

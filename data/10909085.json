@@ -92,7 +92,7 @@
       "dialogues": [
         {
           "text": "lore.016.fisherman_tales.2",
-          "key": "content_read.11963408",
+          "key": "dialogue.answer.lore.016.silver_vein_survivors",
           "expected_value": 1,
           "reward": null
         },

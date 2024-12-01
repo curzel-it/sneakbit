@@ -482,12 +482,18 @@
       },
       "species_id": 10000,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.009.thermoria_dock",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.009.thermoria_dock",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2353,12 +2359,18 @@
       },
       "species_id": 10000,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "lore.008.mount_ignis",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "lore.008.mount_ignis",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3033,12 +3045,18 @@
       },
       "species_id": 10001,
       "direction": "Down",
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "1006.entrance",
+          "key": "always",
+          "reward": null,
+          "expected_value": 1
+        }
+      ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": "1006.entrance",
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
