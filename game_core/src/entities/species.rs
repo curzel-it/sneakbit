@@ -2,18 +2,8 @@ use serde::{Deserialize, Serialize};
 use lazy_static::lazy_static;
 use std::fs::File;
 use std::io::Read;
-use crate::config::config;
-use crate::constants::{HERO_ENTITY_ID, NO_PARENT, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN};
-use crate::features::animated_sprite::AnimatedSprite;
-use crate::features::dialogues::AfterDialogueBehavior;
-use crate::features::directions::MovementDirections;
-use crate::game_engine::entity::Entity;
-use crate::game_engine::locks::LockType;
-use crate::lang::localizable::LocalizableText;
-use crate::utils::directions::Direction;
-use crate::utils::ids::get_next_id;
-use crate::utils::rect::IntRect;
-use crate::utils::vector::Vector2d;
+
+use crate::{config::config, constants::{HERO_ENTITY_ID, NO_PARENT, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::animated_sprite::AnimatedSprite, features::dialogues::AfterDialogueBehavior, game_engine::directions::MovementDirections, game_engine::entity::Entity, game_engine::locks::LockType, lang::localizable::LocalizableText, utils::directions::Direction, utils::ids::get_next_id, utils::rect::IntRect, utils::vector::Vector2d};
 
 pub type SpeciesId = u32;
 

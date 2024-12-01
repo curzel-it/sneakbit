@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, directions::MovementDirections}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}, world::World};
+use super::{directions::MovementDirections, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}, world::World};
 
 #[derive(Debug, Copy, Clone)]
 pub struct EntityProps {

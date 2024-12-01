@@ -1,6 +1,4 @@
-use crate::{config::config, constants::{HERO_ENTITY_ID, TILE_SIZE}, game_engine::{entity::Entity, world::World}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
-
-use super::hitmap::{Hitmap, WeightsMap};
+use crate::{config::config, constants::{HERO_ENTITY_ID, TILE_SIZE}, game_engine::{entity::Entity, hitmap::{Hitmap, WeightsMap}, world::World}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 
