@@ -488,14 +488,14 @@
       "after_dialogue": "Nothing"
     },
     {
-      "id": 11326677,
+      "id": 13048194,
       "frame": {
-        "x": 49,
-        "y": 30,
+        "x": 65,
+        "y": 41,
         "w": 1,
-        "h": 2
+        "h": 1
       },
-      "species_id": 4004,
+      "species_id": 1148,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
@@ -727,48 +727,165 @@
       "direction": "Down",
       "dialogues": [
         {
-            "text": "lore.011.hero_profecy.part_4"
+          "text": "lore.011.hero_profecy.part_4",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
         }
       ],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [
         {
-            "key": "inventory.amount.2000",
-            "expected_value": 0,
-            "visible": true
+          "key": "inventory.amount.2000",
+          "expected_value": 0,
+          "visible": true
         },
         {
-            "key": "inventory.amount.2001",
-            "expected_value": 0,
-            "visible": true
+          "key": "inventory.amount.2001",
+          "expected_value": 0,
+          "visible": true
         },
         {
-            "key": "inventory.amount.2002",
-            "expected_value": 0,
-            "visible": true
+          "key": "inventory.amount.2002",
+          "expected_value": 0,
+          "visible": true
         },
         {
-            "key": "inventory.amount.2003",
-            "expected_value": 0,
-            "visible": true
+          "key": "inventory.amount.2003",
+          "expected_value": 0,
+          "visible": true
         },
         {
-            "key": "inventory.amount.2004",
-            "expected_value": 0,
-            "visible": true
+          "key": "inventory.amount.2004",
+          "expected_value": 0,
+          "visible": true
         },
         {
-            "key": "inventory.amount.2005",
-            "expected_value": 0,
-            "visible": true
+          "key": "inventory.amount.2005",
+          "expected_value": 0,
+          "visible": true
         },
         {
-            "key": "always",
-            "expected_value": 0,
-            "visible": false
+          "key": "always",
+          "expected_value": 0,
+          "visible": false
         }
       ],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13048196,
+      "frame": {
+        "x": 49,
+        "y": 32,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1148,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13048197,
+      "frame": {
+        "x": 57,
+        "y": 55,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1148,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13048198,
+      "frame": {
+        "x": 66,
+        "y": 31,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 7000,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13048199,
+      "frame": {
+        "x": 46,
+        "y": 31,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 7000,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13048200,
+      "frame": {
+        "x": 67,
+        "y": 69,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 7000,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13048201,
+      "frame": {
+        "x": 43,
+        "y": 54,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1148,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
       "is_consumable": false,
       "contents": null,
       "demands_attention": false,

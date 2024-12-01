@@ -75,7 +75,6 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 ## TODO:
 - Some defense ability
 - Some wide-area ability
-- Update game map 
 - Make slopes reflect bullets
 - More Quests
 - More Lore
@@ -96,7 +95,7 @@ Notes about lore, quests and characters can be found [here](https://github.com/c
 | ATTACK | `R` or `F` or `J` or `Q` | `Right Side / Down` | Dedicated button |
 | CONFIRM | `E` or `K` or `SPACE` | `Right Side / Right` | Dedicated button |
 | MENU | `X` or `ENTER` | `Middle Buttons / Left` | Top-right button |
-| BACK | `ESCAPE` | `Middle Buttons / Right` | n/a|
+| BACK | `ESCAPE` | `Middle Buttons / Right` | n/a |
 
 #### Notes:
 * On mobile "dedicated buttons" show up only when applicable, for example, the "fire" button only shows up if you have ammo.

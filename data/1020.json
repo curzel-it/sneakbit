@@ -15478,6 +15478,44 @@
       "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13047061,
+      "frame": {
+        "x": 42,
+        "y": 53,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13047062,
+      "frame": {
+        "x": 42,
+        "y": 58,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
     }
   ],
   "light_conditions": "Day",
