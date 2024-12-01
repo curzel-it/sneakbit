@@ -66,7 +66,8 @@ pub enum EntityType {
     Bundle,
     RailObject,
     Hint,
-    Trail
+    Trail,
+    Equipment
 }
 
 impl Species {

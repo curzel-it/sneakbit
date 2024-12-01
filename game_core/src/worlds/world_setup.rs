@@ -3,6 +3,7 @@ use crate::{constants::BUILD_NUMBER, entities::{known_species::{SPECIES_HERO, SP
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
         self.remove_hero();
+        self.remove_all_equipment();
         self.remove_dying_entities();
         self.visible_entities = self.compute_visible_entities(&self.bounds);
         self.update_tiles_hitmap();

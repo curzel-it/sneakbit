@@ -118,6 +118,19 @@ impl World {
         }
     }
 
+    pub fn remove_all_equipment(&mut self) {
+        let equipment_ids: Vec<u32> = self.entities.borrow().iter().filter_map(|e| {
+            if matches!(e.entity_type, EntityType::Equipment) {
+                Some(e.id)
+            } else {
+                None
+            }
+        })
+        .collect();
+    
+        equipment_ids.into_iter().for_each(|id| self.remove_entity_by_id(id));
+    }
+
     pub fn remove_entity_by_id(&mut self, id: u32) {
         if id != HERO_ENTITY_ID {
             if let Some(index) = self.index_for_entity(id) {
