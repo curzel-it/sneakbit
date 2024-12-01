@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, menus::{ammo_counter::AmmoCounter, confirmation::ConfirmationDialog, entity_options::EntityOptionsMenu, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, menus::{ammo_counter::AmmoCounter, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
 
@@ -12,7 +12,6 @@ pub struct GameEngine {
     pub death_screen: DeathScreen,
     pub toast: ToastDisplay,
     pub inventory_status: AmmoCounter,
-    pub entity_options_menu: EntityOptionsMenu,
     pub keyboard: KeyboardEventsProvider,
     pub mouse: MouseEventsProvider,
     pub camera_viewport: IntRect,
@@ -34,7 +33,6 @@ impl GameEngine {
             confirmation_dialog: ConfirmationDialog::new(),
             death_screen: DeathScreen::new(),
             toast: ToastDisplay::new(),
-            entity_options_menu: EntityOptionsMenu::new(),
             keyboard: KeyboardEventsProvider::new(),
             mouse: MouseEventsProvider::new(),
             camera_viewport: INITIAL_CAMERA_VIEWPORT,
@@ -106,18 +104,6 @@ impl GameEngine {
             let (pause, world_updates) = self.confirmation_dialog.update(keyboard, time_since_last_update);
             is_game_paused = is_game_paused || pause;
             
-            if !world_updates.is_empty() {
-                let engine_updates = self.world.apply_state_updates(world_updates);
-                self.apply_state_updates(engine_updates);
-                self.world.update(0.01, &self.camera_viewport, &NO_KEYBOARD_EVENTS);
-            }
-        }
-
-        if !is_game_paused {
-            let keyboard = if self.entity_options_menu.is_open() { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
-            let (pause, world_updates) = self.entity_options_menu.update(keyboard, time_since_last_update);
-            is_game_paused = is_game_paused || pause;
-
             if !world_updates.is_empty() {
                 let engine_updates = self.world.apply_state_updates(world_updates);
                 self.apply_state_updates(engine_updates);
@@ -201,9 +187,6 @@ impl GameEngine {
             }
             EngineStateUpdate::Exit => {
                 self.exit()
-            }
-            EngineStateUpdate::ShowEntityOptions(entity) => {
-                self.entity_options_menu.show(entity.clone())
             }
             EngineStateUpdate::AddToInventory(species_id, _) => {
                 increment_inventory_count(species_id)
@@ -328,10 +311,6 @@ impl GameEngine {
     pub fn select_current_menu_option_at_index(&mut self, index: usize) {
         if self.confirmation_dialog.is_open() {
             self.confirmation_dialog.select_option_at_index(index);
-            return
-        }
-        if self.entity_options_menu.is_open() {
-            self.entity_options_menu.select_option_at_index(index);
             return
         }
         if self.menu.is_open() {

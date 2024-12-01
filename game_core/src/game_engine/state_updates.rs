@@ -32,7 +32,6 @@ pub enum EngineStateUpdate {
     Teleport(Destination),
     SaveGame,
     Exit,
-    ShowEntityOptions(Box<Entity>),
     AddToInventory(SpeciesId, AddToInventoryReason),
     RemoveFromInventory(SpeciesId),
     Toast(Toast),

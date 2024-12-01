@@ -9,16 +9,6 @@ impl Entity {
     pub fn update_teleporter(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {   
         self.is_rigid = !matches!(self.lock_type, LockType::None);
 
-        if is_creative_mode() && world.is_hero_interacting(&self.frame) {
-            return vec![
-                WorldStateUpdate::EngineUpdate(
-                    EngineStateUpdate::ShowEntityOptions(
-                        Box::new(self.clone())
-                    )
-                )
-            ];
-        } 
-
         if self.should_teleport(world) {
             if !is_creative_mode() && self.lock_type != LockType::None {
                 if has_species_in_inventory(&self.lock_type.key_species_id()) {

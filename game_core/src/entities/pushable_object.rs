@@ -1,17 +1,7 @@
-use crate::{features::linear_movement::{would_collide, would_over_weight}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, is_creative_mode, utils::directions::Direction};
+use crate::{features::linear_movement::{would_collide, would_over_weight}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::directions::Direction};
 
 impl Entity {
     pub fn update_pushable(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
-        if is_creative_mode() && world.is_hero_interacting(&self.frame) {
-            return vec![
-                WorldStateUpdate::EngineUpdate(
-                    EngineStateUpdate::ShowEntityOptions(
-                        Box::new(self.clone())
-                    )
-                )
-            ];   
-        }
-
         let hero = world.cached_hero_props.hittable_frame;
         let hero_direction = world.cached_hero_props.direction;       
         let hero_offset = world.cached_hero_props.offset;        

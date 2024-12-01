@@ -11,7 +11,6 @@ impl GameEngine {
             vec![
                 (AnchorPoint::TopRight, self.inventory_status.ui()),
                 (AnchorPoint::BottomCenter, self.menu.ui(&self.camera_viewport)),
-                (AnchorPoint::BottomCenter, self.entity_options_menu.ui()),
                 (AnchorPoint::BottomCenter, self.confirmation_dialog.ui()),
                 (AnchorPoint::BottomCenter, self.long_text_display.ui()),
                 (AnchorPoint::TopRight, self.toast.regular_toast_ui()),

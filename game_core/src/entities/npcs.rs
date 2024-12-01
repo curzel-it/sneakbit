@@ -39,17 +39,7 @@ impl Entity {
 
         if world.has_confirmation_key_been_pressed {
             self.direction = direction_between_rects(&self.frame, &world.cached_hero_props.hittable_frame);
-
-            if is_creative_mode() {
-                let vec = vec![
-                    WorldStateUpdate::EngineUpdate(
-                        EngineStateUpdate::ShowEntityOptions(
-                            Box::new(self.clone())
-                        )
-                    )
-                ];
-                return vec;  
-            }
+            self.update_sprite_for_current_state();
         }
 
         if let Some(dialogue) = self.next_dialogue(world) {
@@ -76,7 +66,12 @@ impl Entity {
     fn handle_after_dialogue(&mut self) -> Vec<WorldStateUpdate> {
         match self.after_dialogue {
             AfterDialogueBehavior::Nothing => vec![],
-            AfterDialogueBehavior::Disappear => vec![WorldStateUpdate::RemoveEntity(self.id)],
+            AfterDialogueBehavior::Disappear => 
+                if is_creative_mode() {
+                    vec![]
+                } else {
+                    vec![WorldStateUpdate::RemoveEntity(self.id)]
+                },
             AfterDialogueBehavior::FlyAwayEast => {
                 self.is_rigid = false;
                 self.direction = Direction::Left;
