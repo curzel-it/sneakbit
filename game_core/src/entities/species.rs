@@ -26,6 +26,9 @@ pub struct Species {
     #[serde(default)]
     pub lock_type: LockType,
 
+    #[serde(default="one")]
+    pub scale: f32,
+
     #[serde(default)]
     pub is_consumable: bool,
 
@@ -109,8 +112,8 @@ impl Species {
         let sprite = self.make_sprite(false);      
         let initial_speed = self.movement_directions.initial_speed(self.base_speed);
 
-        entity.frame.w = sprite.frame.w;  
-        entity.frame.h = sprite.frame.h;  
+        entity.frame.w = (sprite.frame.w as f32 * self.scale) as i32;  
+        entity.frame.h = (sprite.frame.h as f32 * self.scale) as i32;  
         entity.offset = Vector2d::zero();
         entity.original_sprite_frame = sprite.frame;
         entity.entity_type = self.entity_type;
@@ -165,6 +168,7 @@ pub const SPECIES_NONE: Species = Species {
     name: String::new(),
     entity_type: EntityType::Npc,
     z_index: 1000,
+    scale: 1.0,
     base_speed: 0.0,
     is_rigid: false,
     inventory_texture_offset: (0, 0),
@@ -185,4 +189,8 @@ pub fn species_by_id(species_id: u32) -> Species {
 
 pub fn make_entity_by_species(species_id: u32) -> Entity {
     species_by_id(species_id).make_entity()
+}
+
+fn one() -> f32 {
+    1.0
 }

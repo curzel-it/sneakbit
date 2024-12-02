@@ -149,7 +149,7 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
         let ax = a.frame.x;
         let bx = b.frame.x;
 
-        if a.z_index < 0 || b.z_index < 0 {
+        if a.z_index < 0 || b.z_index < 0 || a.z_index > 1000 || b.z_index > 1000 {
             if a.z_index < b.z_index { return Ordering::Less; }
             if a.z_index > b.z_index { return Ordering::Greater; }
         }

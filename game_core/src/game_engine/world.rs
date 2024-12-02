@@ -15,7 +15,7 @@ pub struct World {
     pub biome_tiles: TileSet<BiomeTile>,
     pub constructions_tiles: TileSet<ConstructionTile>,
     pub entities: RefCell<Vec<Entity>>,    
-    pub visible_entities: HashSet<(usize, u32)>,
+    pub visible_entities: Vec<(usize, u32)>,
     melee_attackers: HashSet<u32>,
     buildings: HashSet<u32>,
     pub ephemeral_state: bool,
@@ -60,7 +60,7 @@ impl World {
             biome_tiles: TileSet::empty(),
             constructions_tiles: TileSet::empty(),
             entities: RefCell::new(vec![]),
-            visible_entities: hash_set![],
+            visible_entities: vec![],
             ephemeral_state: false,
             cached_hero_props: EntityProps::default(),
             hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
@@ -87,29 +87,38 @@ impl World {
     }
 
     pub fn add_entity(&mut self, entity: Entity) -> (usize, u32) {
+        let index = self.entities.borrow().len();
+        let id = entity.id;
+
+        if self.insert_entity(entity, index) {
+            (index, id)
+        } else {
+            (0, 0)
+        }
+    }
+
+    pub fn insert_entity(&mut self, entity: Entity, index: usize) -> bool {
         let id = entity.id;
 
         if !is_creative_mode() && !entity.should_be_visible(self) {
-            return (0, 0)
+            return false
         }
 
         let mut entities = self.entities.borrow_mut();        
-        let new_index = entities.len();
-        entities.push(entity);        
+        entities.insert(index, entity);
 
-        entities[new_index].setup();
+        entities[index].setup();
 
         if let Some(lock_type) = lock_override(&id) {
-            entities[new_index].lock_type = lock_type;
+            entities[index].lock_type = lock_type;
         }
-        if entities[new_index].melee_attacks_hero {
+        if entities[index].melee_attacks_hero {
             self.melee_attackers.insert(id);
         }
-        if matches!(entities[new_index].entity_type, EntityType::Building) {
+        if matches!(entities[index].entity_type, EntityType::Building) {
             self.buildings.insert(id);
         }
-
-        (new_index, id)
+        true
     }
 
     pub fn remove_hero(&mut self) {
@@ -182,9 +191,45 @@ impl World {
 
         self.biome_tiles.update(time_since_last_update);
 
+        let mut engine_updates: Vec<EngineStateUpdate> = vec![];
+        engine_updates.extend(self.update_hero(time_since_last_update));
+        engine_updates.extend(self.update_entities(time_since_last_update));
+        engine_updates.extend(self.update_cutscenes(time_since_last_update));
+
+        self.visible_entities = self.compute_visible_entities(viewport);
+        self.update_hitmaps();
+        engine_updates
+    }
+
+    fn update_hero(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> { 
         let mut entities = self.entities.borrow_mut();
 
-        let entity_state_updates: Vec<WorldStateUpdate> = self.visible_entities.iter()
+        if let Some(hero) = entities.get_mut(0) {
+            let hero_updates = hero.update(self, time_since_last_update);
+            _ = hero;
+            drop(entities);
+            let hero_engine_updates = self.apply_state_updates(hero_updates);
+            hero_engine_updates
+        } else {
+            vec![]
+        }
+    }
+
+    fn update_entities(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> { 
+        let updates: Vec<WorldStateUpdate> = self.cutscenes.iter_mut()
+            .flat_map(|c| 
+                c.update(&self.cached_hero_props.hittable_frame, time_since_last_update)
+            )
+            .collect();
+        
+        self.apply_state_updates(updates)
+    }
+
+    fn update_cutscenes(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> { 
+        let mut entities = self.entities.borrow_mut();
+
+        let updates: Vec<WorldStateUpdate> = self.visible_entities.iter()
+            .skip(1)
             .flat_map(|(index, _)| {
                 if let Some(entity) = entities.get_mut(*index) {
                     entity.update(self, time_since_last_update)
@@ -193,22 +238,10 @@ impl World {
                 }                
             })
             .collect();
+        
         drop(entities);
-
-        let cutscene_state_updates: Vec<WorldStateUpdate> = self.cutscenes.iter_mut()
-            .flat_map(|c| 
-                c.update(&self.cached_hero_props.hittable_frame, time_since_last_update)
-            )
-            .collect();
-
-        let mut engine_updates = self.apply_state_updates(entity_state_updates);
-        let cutscene_engine_updates = self.apply_state_updates(cutscene_state_updates);
-        engine_updates.extend(cutscene_engine_updates);
-
-        self.visible_entities = self.compute_visible_entities(viewport);
-        self.update_hitmaps();
-        engine_updates
-    } 
+        self.apply_state_updates(updates)
+    }
 
     pub fn apply_state_updates(&mut self, updates: Vec<WorldStateUpdate>) -> Vec<EngineStateUpdate> {
         updates.into_iter().flat_map(|u| self.apply_state_update(u)).collect()

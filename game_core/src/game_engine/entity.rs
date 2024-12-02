@@ -204,9 +204,9 @@ impl Entity {
     }
 
     pub fn props(&self) -> EntityProps {
-        let x_offset = (self.sprite.frame.w - 1) / 2;
-        let y_offset = if self.sprite.frame.h > 1 { 1 } else { 0 };
-        let height = if self.sprite.frame.h > 1 { self.sprite.frame.h - 1 } else { self.sprite.frame.h };
+        let x_offset = (self.frame.w - 1) / 2;
+        let y_offset = if self.frame.h > 1 { 1 } else { 0 };
+        let height = if self.frame.h > 1 { self.frame.h - 1 } else { self.frame.h };
 
         EntityProps {
             frame: self.frame,
@@ -217,7 +217,7 @@ impl Entity {
             hittable_frame: IntRect {
                 x: self.frame.x + x_offset,
                 y: self.frame.y + y_offset,
-                w: self.sprite.frame.w,
+                w: self.frame.w,
                 h: height,
             },
         }            

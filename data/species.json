@@ -4418,7 +4418,7 @@
         "name": "npc.name.shield",
         "is_invulnerable": true,
         "entity_type": "Equipment",
-        "z_index": 250,
+        "z_index": 1100,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4428,9 +4428,32 @@
         "sprite_frame": {
             "x": 1,
             "y": 1,
-            "w": 2,
-            "h": 2
+            "w": 4,
+            "h": 4
         },
+        "sprite_sheet_id": 1022,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1154,
+        "name": "npc.name.shotgun",
+        "is_invulnerable": true,
+        "entity_type": "Equipment",
+        "z_index": 1000,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            0,
+            0
+        ],
+        "sprite_frame": {
+            "x": 17,
+            "y": 1,
+            "w": 8,
+            "h": 8
+        },
+        "scale": 0.5,
         "sprite_sheet_id": 1022,
         "sprite_number_of_frames": 4,
         "lock_type": "None"

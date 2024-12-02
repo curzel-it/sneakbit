@@ -64,7 +64,7 @@ impl World {
         println!("Spawning hero at {}, {}", entity.frame.x, entity.frame.y); 
         entity.immobilize_for_seconds(0.2);
         self.cached_hero_props = entity.props();
-        self.add_entity(entity);
+        self.insert_entity(entity, 0);
     }
 
     fn likely_direction_for_hero(&self, x: i32, y: i32, current_direction: &Direction) -> Vec<Direction> {

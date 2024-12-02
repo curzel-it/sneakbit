@@ -374,6 +374,7 @@ impl MapEditor {
         let mut species: Vec<Stockable> = ALL_SPECIES
             .iter()
             .filter(|s| s.inventory_texture_offset != (0, 0))
+            .filter(|s| !matches!(s.entity_type, EntityType::Equipment))
             .map(|s| Stockable::Entity(s.clone()))
             .collect();
         all.append(&mut species);
