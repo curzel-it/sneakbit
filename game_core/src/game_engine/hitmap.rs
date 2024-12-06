@@ -20,16 +20,12 @@ impl World {
     
         for &(index, id) in &self.visible_entities {
             let entity = &entities[index];
-            let col_start = entity.frame.x as usize;
-            let col_end = (col_start + entity.frame.w as usize).min(width);
-    
-            let (row_start, row_end) = if entity.frame.h == 1 {
-                (entity.frame.y as usize, (entity.frame.y + 1) as usize)
-            } else {
-                let start = (entity.frame.y + 1) as usize;
-                let end = (entity.frame.y + entity.frame.h) as usize;
-                (start, end.min(height))
-            };
+            let hittable_frame = entity.hittable_frame();
+
+            let col_start = hittable_frame.x.max(0) as usize;
+            let col_end = ((hittable_frame.x + hittable_frame.w) as usize).max(0).min(width);            
+            let row_start = hittable_frame.y.max(0) as usize;
+            let row_end = ((hittable_frame.y + hittable_frame.h)  as usize).max(0).min(height);
     
             let is_rigid = entity.is_rigid && id != HERO_ENTITY_ID;
             let has_weight = entity.has_weight();

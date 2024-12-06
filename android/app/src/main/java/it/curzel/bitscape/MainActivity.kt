@@ -107,7 +107,6 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             NativeLib.SPRITE_SHEET_BIOME_TILES to "tiles_biome",
             NativeLib.SPRITE_SHEET_CONSTRUCTION_TILES to "tiles_constructions",
             NativeLib.SPRITE_SHEET_BUILDINGS to "buildings",
-            NativeLib.SPRITE_SHEET_BASE_ATTACK to "baseattack",
             NativeLib.SPRITE_SHEET_STATIC_OBJECTS to "static_objects",
             NativeLib.SPRITE_SHEET_MENU to "menu",
             NativeLib.SPRITE_SHEET_ANIMATED_OBJECTS to "animated_objects",

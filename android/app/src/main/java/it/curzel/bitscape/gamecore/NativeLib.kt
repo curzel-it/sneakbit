@@ -66,7 +66,6 @@ class NativeLib {
         const val SPRITE_SHEET_BIOME_TILES: UInt = 1002u
         const val SPRITE_SHEET_CONSTRUCTION_TILES: UInt = 1003u
         const val SPRITE_SHEET_BUILDINGS: UInt = 1004u
-        const val SPRITE_SHEET_BASE_ATTACK: UInt = 1005u
         const val SPRITE_SHEET_HUMANOIDS_1X2: UInt = 1009u
         const val SPRITE_SHEET_STATIC_OBJECTS: UInt = 1010u
         const val SPRITE_SHEET_MENU: UInt = 1011u

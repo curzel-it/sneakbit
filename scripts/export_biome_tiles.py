@@ -55,33 +55,25 @@ def export_biome_tiles(aseprite_assets, destination_folder):
 
     number_of_frames = 4
     biomes = [
-        "water", 
-        "desert", 
-        "grass", 
-        "rock", 
-        "snow", 
-        "lightwood", 
-        "darkwood", 
-        "nothing", 
-        "darkrock", 
-        "ice", 
-        "darkgrass", 
-        "rockpavement",
-        "grass_red_flowers",
-        "grass_yellow_flowers",
-        "grass_blue_flowers",
-        "grass_purple_flowers",
-        "lava",
-        "farmland",
-        "dark_water",
-        "dark_sand",
-        "sand_plates"
+        "Nothing",
+        "Grass",
+        "Water",
+        "Rock",
+        "Desert",
+        "Snow",
+        "DarkWood",
+        "LightWood",
+        "DarkRock",
+        "Ice",
+        "DarkGrass",
+        "RockPlates",
+        "Lava",
+        "Farmland",
+        "DarkWater",
+        "DarkSand",
+        "SandPlates"
     ]
 
-    # 1060 tiles
-    # 1060 = number_of_frames x 212
-    # 212 = number_of_biomes x 53
-    # 53 = number_of_combinations x (number_of_biomes - 1) + 1
     w = len(combinations) * len(biomes) + 1
     h = len(biomes) * number_of_frames
     overall = Image.new("RGBA", (tile_size * w, tile_size * h), (0, 0, 0, 255))

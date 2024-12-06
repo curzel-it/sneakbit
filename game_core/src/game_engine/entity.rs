@@ -203,23 +203,28 @@ impl Entity {
         None
     }
 
-    pub fn props(&self) -> EntityProps {
-        let x_offset = (self.frame.w - 1) / 2;
+    pub fn hittable_frame(&self) -> IntRect {
+        let x_offset = 0;
         let y_offset = if self.frame.h > 1 { 1 } else { 0 };
+        let width = self.frame.w;
         let height = if self.frame.h > 1 { self.frame.h - 1 } else { self.frame.h };
 
+        IntRect {
+            x: self.frame.x + x_offset,
+            y: self.frame.y + y_offset,
+            w: width.max(1),
+            h: height.max(1),
+        }
+    }
+
+    pub fn props(&self) -> EntityProps {
         EntityProps {
             frame: self.frame,
             direction: self.direction,
             offset: self.offset,
             speed: self.current_speed,
-            is_invulnerable: self.is_invulnerable,
-            hittable_frame: IntRect {
-                x: self.frame.x + x_offset,
-                y: self.frame.y + y_offset,
-                w: self.frame.w,
-                h: height,
-            },
+            is_invulnerable: self.is_invulnerable,            
+            hittable_frame: self.hittable_frame()
         }            
     }
 

@@ -144,8 +144,8 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
         let a = entity_a;
         let b = entity_b;
 
-        let ay = a.frame.y + if a.frame.h > 1 { 1 } else { 0 };
-        let by = b.frame.y + if b.frame.h > 1 { 1 } else { 0 };
+        let ay = a.frame.y + a.frame.h;
+        let by = b.frame.y + b.frame.h;
         let ax = a.frame.x;
         let bx = b.frame.x;
 

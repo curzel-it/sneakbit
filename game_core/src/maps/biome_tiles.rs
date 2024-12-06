@@ -1,35 +1,58 @@
+use std::collections::HashMap;
+
+use lazy_static::lazy_static;
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer, de::Deserializer};
-
 use crate::utils::{directions::Direction, rect::IntRect};
-
 use super::tiles::{SpriteTile, TileSet};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[derive(Default)]
-#[repr(u32)]
+#[repr(i32)]
 pub enum Biome {
-    Nothing = 0,
+    Water = 0,
+    Desert = 1,
+    Grass = 2,
+    Rock = 3,
+    Snow = 4,
+    LightWood = 5,
+    DarkWood = 6,
     #[default]
-    Grass,
-    GrassFlowersRed,
-    GrassFlowersYellow,
-    GrassFlowersBlue,
-    GrassFlowersPurple,
-    Water,
-    Rock,
-    Desert, 
-    Snow, 
-    DarkWood, 
-    LightWood,
-    DarkRock,
-    Ice,
-    DarkGrass,
-    RockPlates,
-    Lava,
-    Farmland,
-    DarkWater,
-    DarkSand,
-    SandPlates
+    Nothing = 7,
+    DarkRock = 8,
+    Ice = 9,
+    DarkGrass = 10,
+    RockPlates = 11,
+    Lava = 12,
+    Farmland = 13,
+    DarkWater = 14,
+    DarkSand = 15,
+    SandPlates = 16
+}
+
+lazy_static! {
+    static ref BIOME_ENCODINGS: Vec<(char, Biome)> = vec![
+        ('0', Biome::Nothing),
+        ('1', Biome::Grass),
+        ('2', Biome::Water),
+        ('3', Biome::Rock),
+        ('4', Biome::Desert),
+        ('5', Biome::Snow),
+        ('6', Biome::DarkWood),
+        ('7', Biome::LightWood),
+        ('8', Biome::DarkRock),
+        ('9', Biome::Ice),
+        ('A', Biome::DarkGrass),
+        ('B', Biome::RockPlates),
+        ('G', Biome::Lava),
+        ('H', Biome::Farmland),
+        ('J', Biome::DarkWater),
+        ('K', Biome::DarkSand),
+        ('L', Biome::SandPlates)
+    ];
+
+    static ref NUMBER_OF_BIOMES: i32 = BIOME_ENCODINGS.len() as i32;
+    static ref CHAR_TO_BIOME: HashMap<char, Biome> = BIOME_ENCODINGS.clone().into_iter().collect();
+    static ref BIOME_TO_CHAR: HashMap<Biome, char> = BIOME_ENCODINGS.clone().into_iter().map(|(char, biome)| (biome, char)).collect();
 }
 
 #[derive(Default, Debug, Clone)]
@@ -48,7 +71,7 @@ impl SpriteTile for BiomeTile {
     fn texture_source_rect(&self, variant: i32) -> IntRect {
         IntRect::new(
             self.texture_offset_x,
-            self.texture_offset_y + variant * Biome::number_of_biomes(),
+            self.texture_offset_y + variant * *NUMBER_OF_BIOMES,
             1, 
             1
         )
@@ -199,19 +222,11 @@ impl Biome {
         15
     }
 
-    fn number_of_biomes() -> i32 {
-        21
-    }
-
     fn texture_index(&self) -> i32 {
         match self {
             Biome::Water => 0,
             Biome::Desert => 1,
             Biome::Grass => 2,
-            Biome::GrassFlowersRed => 12,
-            Biome::GrassFlowersYellow => 13,
-            Biome::GrassFlowersBlue => 14,
-            Biome::GrassFlowersPurple => 15,
             Biome::Rock => 3,
             Biome::Snow => 4,
             Biome::LightWood => 5,
@@ -221,11 +236,11 @@ impl Biome {
             Biome::Ice => 9,
             Biome::DarkGrass => 10,
             Biome::RockPlates => 11,
-            Biome::Lava => 16,
-            Biome::Farmland => 17,
-            Biome::DarkWater => 18,
-            Biome::DarkSand => 19,
-            Biome::SandPlates => 20
+            Biome::Lava => 12,
+            Biome::Farmland => 13,
+            Biome::DarkWater => 14,
+            Biome::DarkSand => 15,
+            Biome::SandPlates => 16
         }
     }
 
@@ -234,14 +249,7 @@ impl Biome {
     }
 
     fn is_light_grass(&self) -> bool {
-        match self {
-            Biome::Grass => true,
-            Biome::GrassFlowersRed => true,
-            Biome::GrassFlowersBlue => true,
-            Biome::GrassFlowersYellow => true,
-            Biome::GrassFlowersPurple => true,
-            _ => false
-        }
+        matches!(self, Biome::Grass)
     }
 
     fn is_dark_grass(&self) -> bool {
@@ -295,57 +303,12 @@ impl TileSet<BiomeTile> {
 }
 
 impl Biome {
-    pub const fn from_char(c: char) -> Self {
-        match c {
-            '0' => Biome::Nothing,
-            '1' => Biome::Grass,
-            'C' => Biome::GrassFlowersRed,
-            'D' => Biome::GrassFlowersYellow,
-            'E' => Biome::GrassFlowersBlue,
-            'F' => Biome::GrassFlowersPurple,
-            '2' => Biome::Water,
-            '3' => Biome::Rock,
-            '4' => Biome::Desert,
-            '5' => Biome::Snow,
-            '6' => Biome::DarkWood,
-            '7' => Biome::LightWood,
-            '8' => Biome::DarkRock,
-            '9' => Biome::Ice,
-            'A' => Biome::DarkGrass,
-            'B' => Biome::RockPlates,
-            'G' => Biome::Lava,
-            'H' => Biome::Farmland,
-            'J' => Biome::DarkWater,
-            'K' => Biome::DarkSand,
-            'L' => Biome::SandPlates,
-            _ => Biome::Nothing,
-        }
+    pub fn from_char(c: char) -> Self {
+        CHAR_TO_BIOME.get(&c).unwrap_or(&Biome::Nothing).clone()
     }
 
     pub fn to_char(self) -> char {
-        match self {
-            Biome::Nothing => '0',
-            Biome::Grass => '1',
-            Biome::Water => '2',
-            Biome::Rock => '3',
-            Biome::Desert => '4',
-            Biome::Snow => '5',
-            Biome::DarkWood => '6',
-            Biome::LightWood => '7',
-            Biome::DarkRock => '8',
-            Biome::Ice => '9',
-            Biome::DarkGrass => 'A',
-            Biome::RockPlates => 'B',
-            Biome::GrassFlowersRed => 'C',
-            Biome::GrassFlowersYellow => 'D',
-            Biome::GrassFlowersBlue => 'E',
-            Biome::GrassFlowersPurple => 'F',
-            Biome::Lava => 'G',
-            Biome::Farmland => 'H',
-            Biome::DarkWater => 'J',
-            Biome::DarkSand => 'K',
-            Biome::SandPlates => 'L'
-        }
+        BIOME_TO_CHAR.get(&self).unwrap_or(&'0').clone()
     }
 }
 

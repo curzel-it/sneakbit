@@ -9,30 +9,35 @@ pngs_folder = "assets"
 
 def export_aseprite(file_path, destination_folder):
     filename = file_path.split("/")[-1]
-    if filename == "palette.aseprite": return
-    elif filename.startswith("world_"): export_world(file_path, destination_folder)
-    elif filename.startswith("tiles_"): return
-    else: export_character(file_path, destination_folder)
-
-def export_world(file_path, destination_folder):
-    world_name = file_path.split("/")[-1].split(".")[0].replace("world_", "")
-    path = f"{destination_folder}/../worlds/{world_name}_biome.png"
-    cmd = f"{aseprite_path} -b {file_path} --layer biome --save-as {path} --format png"
-    os.system(cmd)
-
-    path = f"{destination_folder}/../worlds/{world_name}_constructions.png"
-    cmd = f"{aseprite_path} -b {file_path} --layer constructions --save-as {path} --format png"
-    os.system(cmd)
+    
+    if filename.startswith("building"): 
+        export_building(file_path, destination_folder)
+    elif filename.startswith("tiles"):
+        return 
+    else: 
+        export_character(file_path, destination_folder)
 
 def list_layers(path):
     command = [aseprite_path, "-b", "--list-layers", path]
     result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     layers = result.stdout.strip().splitlines()    
     return layers
+    
+def export_building(file_path, destination_folder):
+    asset_name = asset_name_from_file_path(file_path)
+    output_path = os.path.join(destination_folder, f"{asset_name}.png")
+
+    cmd = [aseprite_path, "-b", file_path, "--all-layers", "--sheet", output_path]
+    
+    try:
+        subprocess.run(cmd, check=True)
+        print(f"Exported building asset: {output_path}")
+    except subprocess.CalledProcessError as e:
+        print(f"Error exporting {file_path}: {e}")
 
 def export_character(file_path, destination_folder):
     asset_name = asset_name_from_file_path(file_path)
-    cmd = f"{aseprite_path} -b --split-layers {file_path} --sheet-type rows --sheet {destination_folder}/{asset_name}.png"
+    cmd = f"{aseprite_path} -b {file_path} --all-layers --sheet {destination_folder}/{asset_name}.png"
     os.system(cmd)
 
 def asset_name_from_file_path(file_path):
