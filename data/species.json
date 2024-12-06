@@ -4437,7 +4437,7 @@
     },
     {
         "id": 1154,
-        "name": "npc.name.shotgun",
+        "name": "npc.name.testgun",
         "is_invulnerable": true,
         "entity_type": "Equipment",
         "z_index": 1000,
@@ -4450,10 +4450,10 @@
         "sprite_frame": {
             "x": 17,
             "y": 1,
-            "w": 8,
-            "h": 8
+            "w": 4,
+            "h": 4
         },
-        "scale": 0.5,
+        "scale": 1,
         "sprite_sheet_id": 1022,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
