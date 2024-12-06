@@ -10,7 +10,7 @@ pngs_folder = "assets"
 def export_aseprite(file_path, destination_folder):
     filename = file_path.split("/")[-1]
     
-    if filename.startswith("building"): 
+    if filename.startswith("building") or filename.startswith("demon_lord_defeat"): 
         export_building(file_path, destination_folder)
     elif filename.startswith("tiles"):
         return 

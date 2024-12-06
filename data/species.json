@@ -4457,5 +4457,97 @@
         "sprite_sheet_id": 1022,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
+    },
+    {
+        "id": 1155,
+        "name": "objects.name.terrain.flowers.red",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 1000,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            0,
+            12
+        ],
+        "sprite_frame": {
+            "x": 35,
+            "y": 13,
+            "w": 1,
+            "h": 1
+        },
+        "scale": 1,
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1156,
+        "name": "objects.name.terrain.flowers.yellow",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 1000,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            0,
+            13
+        ],
+        "sprite_frame": {
+            "x": 35,
+            "y": 14,
+            "w": 1,
+            "h": 1
+        },
+        "scale": 1,
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1157,
+        "name": "objects.name.terrain.flowers.purple",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 1000,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            0,
+            15
+        ],
+        "sprite_frame": {
+            "x": 35,
+            "y": 15,
+            "w": 1,
+            "h": 1
+        },
+        "scale": 1,
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1157,
+        "name": "objects.name.terrain.flowers.blue",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 1000,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            0,
+            14
+        ],
+        "sprite_frame": {
+            "x": 35,
+            "y": 16,
+            "w": 1,
+            "h": 1
+        },
+        "scale": 1,
+        "sprite_sheet_id": 1012,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
     }
 ]
