@@ -9,11 +9,15 @@ pub const ANIMATIONS_FPS: f32 = 10.0;
 pub const INITIAL_CAMERA_VIEWPORT: IntRect = IntRect::new(0, 0, 60, 40);
 pub const UNLIMITED_LIFESPAN: f32 = -420.0;
 pub const NO_PARENT: u32 = 0;
-pub const KUNAI_LAUNCHER_COOLDOWN: f32 = 0.1;
-pub const SWORD_SLASH_COOLDOWN: f32 = 0.4;
 pub const PRESSURE_PLATE_SWITCH_COOLDOWN: f32 = 0.3;
+
+// Weapons
 pub const KUNAI_LIFESPAN: f32 = 3.0;
-pub const SLASH_LIFESPAN: f32 = 0.3;
+pub const KUNAI_LAUNCHER_COOLDOWN: f32 = 0.1;
+pub const SWORD_SLASH_LIFESPAN: f32 = 0.3;
+pub const SWORD_SLASH_COOLDOWN: f32 = 0.4;
+pub const CLAYMORE_SLASH_LIFESPAN: f32 = 0.35;
+pub const CLAYMORE_SLASH_COOLDOWN: f32 = 0.5;
 
 // Input
 pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST: f32 = 0.4;

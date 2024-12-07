@@ -1,4 +1,4 @@
-use crate::{constants::{SLASH_LIFESPAN, SWORD_SLASH_COOLDOWN}, entities::{bullets::make_hero_bullet, known_species::SPECIES_SLASH, species::species_by_id}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::{directions::Direction, vector::Vector2d}};
+use crate::{constants::{CLAYMORE_SLASH_COOLDOWN, CLAYMORE_SLASH_LIFESPAN, SWORD_SLASH_COOLDOWN, SWORD_SLASH_LIFESPAN}, entities::{bullets::make_hero_bullet, known_species::{SPECIES_CLAYMORE, SPECIES_CLAYMORE_SLASH, SPECIES_SWORD_SLASH}, species::SpeciesId}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::{directions::Direction, vector::Vector2d}};
 
 use super::equipment::is_equipped;
 
@@ -11,17 +11,13 @@ impl Entity {
     pub fn update_sword(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {   
         let mut updates: Vec<WorldStateUpdate> = vec![];
 
-        println!("Updating sword...");
-
         self.is_equipped = is_equipped(self.species_id);
         self.update_equipment_position(world);
         
         if self.is_equipped {
-            println!("Sword equipped! {}", self.id);
             updates.extend(self.slash(world, time_since_last_update));
             updates
         } else {
-            println!("Sword invisible {}", self.id);
             vec![]
         }
     }
@@ -34,19 +30,18 @@ impl Entity {
             return vec![]
         }
         if world.has_close_attack_key_been_pressed {
-            self.action_cooldown_remaining = SWORD_SLASH_COOLDOWN;
-            self.sprite.reset();
-            self.sprite.frame.y = slash_sprite_y_for_direction(&self.direction);
-            
-            let base_speed = species_by_id(self.species_id).base_speed;
+            let config = slash_config_by_sword_type(self.species_id);
             let offsets = bullet_offsets(world.cached_hero_props.direction);
+
+            self.action_cooldown_remaining = config.cooldown;
+            self.sprite.reset();
+            self.sprite.frame.y = slash_sprite_y_for_direction(&self.direction);            
 
             return offsets.into_iter()
                 .map(|(dx, dy)| {
-                    let mut bullet = make_hero_bullet(SPECIES_SLASH, world, SLASH_LIFESPAN);
+                    let mut bullet = make_hero_bullet(config.species, world, config.lifespan);
                     bullet.offset = Vector2d::zero();
                     bullet.frame = bullet.frame.offset_by((dx, dy)); 
-                    bullet.current_speed = base_speed;
                     WorldStateUpdate::AddEntity(Box::new(bullet))
                 })
                 .collect();
@@ -55,6 +50,27 @@ impl Entity {
 
         vec![]
     } 
+}
+
+struct SlashConfig {
+    cooldown: f32,
+    species: SpeciesId,
+    lifespan: f32
+}
+
+fn slash_config_by_sword_type(sword_species_id: SpeciesId) -> SlashConfig {
+    match sword_species_id {
+        SPECIES_CLAYMORE => SlashConfig { 
+            cooldown: CLAYMORE_SLASH_COOLDOWN, 
+            species: SPECIES_CLAYMORE_SLASH, 
+            lifespan: CLAYMORE_SLASH_LIFESPAN
+        },
+        _ => SlashConfig { 
+            cooldown: SWORD_SLASH_COOLDOWN, 
+            species: SPECIES_SWORD_SLASH, 
+            lifespan: SWORD_SLASH_LIFESPAN
+        }
+    }
 }
 
 fn slash_sprite_y_for_direction(direction: &Direction) -> i32 {

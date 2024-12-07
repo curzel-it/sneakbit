@@ -40,6 +40,12 @@ pub struct Species {
 
     #[serde(default)]
     pub is_invulnerable: bool,
+
+    #[serde(default="one_hundred")]
+    pub hp: f32,
+
+    #[serde(default="zero")]
+    pub dps: f32,
 }
 
 #[derive(Default, Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
@@ -183,7 +189,9 @@ pub const SPECIES_NONE: Species = Species {
     is_consumable: false,
     bundle_contents: vec![],
     is_invulnerable: false,
-    movement_directions: MovementDirections::None
+    movement_directions: MovementDirections::None,
+    hp: one_hundred(),
+    dps: zero(),
 };
 
 pub fn species_by_id(species_id: u32) -> Species {
@@ -196,4 +204,12 @@ pub fn make_entity_by_species(species_id: u32) -> Entity {
 
 fn one() -> f32 {
     1.0
+}
+
+const fn zero() -> f32 {
+    0.0
+}
+
+const fn one_hundred() -> f32 {
+    100.0
 }
