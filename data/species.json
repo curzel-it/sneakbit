@@ -4556,7 +4556,7 @@
         "is_invulnerable": true,
         "entity_type": "Sword",
         "z_index": 1000,
-        "base_speed": 1.0,
+        "base_speed": 2.0,
         "is_rigid": false,
         "inventory_texture_offset": [
             0,
@@ -4579,7 +4579,7 @@
         "is_invulnerable": true,
         "entity_type": "Sword",
         "z_index": 1000,
-        "base_speed": 1.0,
+        "base_speed": 3.0,
         "is_rigid": false,
         "inventory_texture_offset": [
             0,
@@ -4624,7 +4624,7 @@
         "name": "objects.name.slash",
         "entity_type": "Bullet",
         "z_index": 140,
-        "base_speed": 4.0,
+        "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
             0,
@@ -4633,10 +4633,10 @@
         "sprite_frame": {
             "x": 0,
             "y": 0,
-            "w": 4,
-            "h": 4
+            "w": 1,
+            "h": 1
         },
-        "sprite_sheet_id": 1019,
+        "sprite_sheet_id": 1000,
         "sprite_number_of_frames": 1,
         "lock_type": "None"
     }

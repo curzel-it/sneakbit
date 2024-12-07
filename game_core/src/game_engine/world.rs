@@ -66,7 +66,7 @@ impl World {
             hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
             tiles_hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
             weights_map: vec![vec![0; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
-            entities_map: vec![vec![0; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
+            entities_map: vec![vec![vec![]; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
             direction_based_on_current_keys: Direction::Unknown,
             is_any_arrow_key_down: false,
             has_attack_key_been_pressed: false,
@@ -572,8 +572,12 @@ impl World {
         self.melee_attackers.contains(&id)
     }
 
-    pub fn is_building(&self, id: u32) -> bool {
-        self.buildings.contains(&id)
+    pub fn is_building(&self, id: &u32) -> bool {
+        self.buildings.contains(id)
+    }
+
+    pub fn contains_building(&self, ids: &[u32]) -> bool {
+        ids.iter().any(|id| self.is_building(id))
     }
 
     pub fn is_pressure_plate_down(&self, lock_type: &LockType) -> bool {

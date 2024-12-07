@@ -33,17 +33,21 @@ impl Entity {
     }
 
     fn check_hits(&self, world: &World) -> Vec<WorldStateUpdate> {
-        let hit = world.entities_map[self.frame.y as usize][self.frame.x as usize];
-        if self.is_valid_hit_target(hit) { 
-            return vec![WorldStateUpdate::HandleHit(self.id, hit)]
-        }
-
         let (previous_x, previous_y) = self.previous_position();
-        let hit = world.entities_map[previous_y as usize][previous_x as usize];
-        if self.is_valid_hit_target(hit) { 
-            return vec![WorldStateUpdate::HandleHit(self.id, hit)]
+        let previous_hits = world.entities_map[previous_y as usize][previous_x as usize].to_owned();
+        let current_hits = world.entities_map[self.frame.y as usize][self.frame.x as usize].to_owned();
+
+        let valid_hits: Vec<u32> = vec![previous_hits, current_hits]
+            .into_iter()
+            .flat_map(|id| id)
+            .filter(|id| self.is_valid_hit_target(*id))
+            .collect();
+
+        if let Some(hit) = valid_hits.first() {
+            vec![WorldStateUpdate::HandleHit(self.id, *hit)]
+        } else {
+            vec![]
         }
-        vec![]
     }
 
     fn check_stoppers(&self, world: &World) -> Vec<WorldStateUpdate> {
@@ -54,12 +58,12 @@ impl Entity {
         
         let construction = &world.constructions_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
         let biome = &world.biome_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
-        let hit = world.entities_map[self.frame.y as usize][self.frame.x as usize];
+        let hits = world.entities_map[self.frame.y as usize][self.frame.x as usize].to_owned();
 
-        if construction.tile_type.stops_bullets() || biome.tile_type.stops_bullets() || world.is_building(hit) {
+        if construction.tile_type.stops_bullets() || biome.tile_type.stops_bullets() || world.contains_building(&hits) {
             return vec![WorldStateUpdate::HandleBulletStopped(self.id)]
         }
-        if hit == self.parent_id {
+        if hits.contains(&self.parent_id) {
             return vec![WorldStateUpdate::HandleBulletCatched(self.id)]
         }
         vec![]

@@ -1,7 +1,7 @@
 use crate::{constants::HERO_ENTITY_ID, entities::species::EntityType, game_engine::{entity::{Entity, EntityId}, world::World}, is_creative_mode, maps::constructions_tiles::Construction};
 
 pub type Hitmap = Vec<Vec<bool>>;
-pub type EntityIdsMap = Vec<Vec<EntityId>>;
+pub type EntityIdsMap = Vec<Vec<Vec<EntityId>>>;
 pub type WeightsMap = Vec<Vec<i32>>;
 
 impl World {    
@@ -15,7 +15,7 @@ impl World {
         let width = self.bounds.w as usize;
     
         let mut hitmap = self.tiles_hitmap.clone();
-        let mut idsmap = vec![vec![0; width]; height];
+        let mut idsmap = vec![vec![vec![]; width]; height];
         let mut weightsmap = vec![vec![0; width]; height];
     
         for &(index, id) in &self.visible_entities {
@@ -38,7 +38,7 @@ impl World {
                     if has_weight {
                         weightsmap[y][x] += 1;
                     }
-                    idsmap[y][x] = id;
+                    idsmap[y][x].push(id);
                 }
             }
         }
