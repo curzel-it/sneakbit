@@ -4549,5 +4549,28 @@
         "sprite_sheet_id": 1012,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
+    },
+    {
+        "id": 1158,
+        "name": "npc.name.testsword",
+        "is_invulnerable": true,
+        "entity_type": "Equipment",
+        "z_index": 1000,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            0,
+            0
+        ],
+        "sprite_frame": {
+            "x": 33,
+            "y": 1,
+            "w": 4,
+            "h": 4
+        },
+        "scale": 1,
+        "sprite_sheet_id": 1022,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
     }
 ]

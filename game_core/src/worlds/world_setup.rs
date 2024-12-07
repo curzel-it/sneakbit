@@ -66,7 +66,7 @@ impl World {
         self.cached_hero_props = entity.props();
         self.insert_entity(entity, 0);
 
-        let gun = species_by_id(1154).make_entity();
+        let gun = species_by_id(1158).make_entity();
         self.add_entity(gun);
     }
 
