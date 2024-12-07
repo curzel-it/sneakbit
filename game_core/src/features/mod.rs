@@ -5,7 +5,6 @@ pub mod cutscenes;
 pub mod death_screen;
 pub mod destination;
 pub mod dialogues;
-pub mod equipment;
 pub mod keyboard_directions;
 pub mod item_effects;
 pub mod light_conditions;

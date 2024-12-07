@@ -4618,5 +4618,26 @@
         "sprite_sheet_id": 1000,
         "sprite_number_of_frames": 1,
         "lock_type": "None"
+    },
+    {
+        "id": 1161,
+        "name": "objects.name.slash",
+        "entity_type": "Bullet",
+        "z_index": 140,
+        "base_speed": 4.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            0,
+            0
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 0,
+            "w": 4,
+            "h": 4
+        },
+        "sprite_sheet_id": 1019,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
     }
 ]

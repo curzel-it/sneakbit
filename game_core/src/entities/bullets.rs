@@ -1,6 +1,6 @@
-use crate::{game_engine::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::directions::Direction};
+use crate::{constants::{HERO_ENTITY_ID, TILE_SIZE}, game_engine::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::pickable_object::object_pick_up_sequence;
+use super::{pickable_object::object_pick_up_sequence, species::species_by_id};
 
 pub type BulletId = EntityId;
 
@@ -73,4 +73,40 @@ impl Entity {
         let (ox, oy) = self.direction.as_col_row_offset();
         (self.frame.x - ox, self.frame.y - oy)
     } 
+}
+
+fn make_bullet_ex(
+    species: u32, 
+    parent_id: u32, 
+    starting_frame: &IntRect, 
+    starting_offset: &Vector2d, 
+    direction: Direction, 
+    lifespan: f32
+) -> Entity {
+    let mut bullet = species_by_id(species).make_entity();
+    bullet.direction = direction;
+    let (dx, dy) = direction.as_col_row_offset();
+    bullet.frame = starting_frame.offset(dx, dy); 
+    
+    if starting_offset.x > TILE_SIZE / 2.0 { bullet.frame.x += 1 }
+    if starting_offset.x < -TILE_SIZE / 2.0 { bullet.frame.x -= 1 }
+    if starting_offset.y > TILE_SIZE / 2.0 { bullet.frame.y += 1 }
+    if starting_offset.y < -TILE_SIZE / 2.0 { bullet.frame.y -= 1 }
+    
+    bullet.parent_id = parent_id;
+    bullet.remaining_lifespan = lifespan;
+    bullet.reset_speed();
+    bullet
+}
+
+pub fn make_hero_bullet(species: u32, world: &World, lifespan: f32) -> Entity {
+    let hero = world.cached_hero_props;
+    make_bullet_ex(
+        species,
+        HERO_ENTITY_ID,
+        &hero.hittable_frame,
+        &hero.offset,
+        hero.direction,
+        lifespan
+    )
 }

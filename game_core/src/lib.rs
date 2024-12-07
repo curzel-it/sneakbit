@@ -12,6 +12,7 @@ use utils::{rect::IntRect, vector::Vector2d};
 pub mod config;
 pub mod constants;
 pub mod entities;
+pub mod equipment;
 pub mod features;
 pub mod game_engine;
 pub mod lang;

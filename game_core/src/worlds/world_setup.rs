@@ -66,11 +66,14 @@ impl World {
         self.cached_hero_props = entity.props();
         self.insert_entity(entity, 0);
 
-        let kunai_launcher = species_by_id(1160).make_entity();
-        self.add_entity(kunai_launcher);
+        // let kunai_launcher = species_by_id(1160).make_entity();
+        // self.add_entity(kunai_launcher);
 
-        // let gun = species_by_id(1159).make_entity();
+        // let gun = species_by_id(1154).make_entity();
         // self.add_entity(gun);
+
+        let sword = species_by_id(1159).make_entity();
+        self.add_entity(sword);
     }
 
     fn likely_direction_for_hero(&self, x: i32, y: i32, current_direction: &Direction) -> Vec<Direction> {

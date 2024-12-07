@@ -13,7 +13,6 @@ pub const SPECIES_KEY_RED: u32 = 2001;
 pub const SPECIES_KEY_GREEN: u32 = 2002;
 pub const SPECIES_KEY_BLUE: u32 = 2003;
 pub const SPECIES_KEY_SILVER: u32 = 2004;
-pub const SPECIES_KUNAI: u32 = 7000;
 pub const SPECIES_KUNAI_BUNDLE: u32 = 7001;
 pub const SPECIES_TELEPORTER: u32 = 1019;
 pub const SPECIES_ZOMBIE: u32 = 4002;
@@ -22,6 +21,14 @@ pub const SPECIES_MONSTER: u32 = 4004;
 pub const SPECIES_SMALL_MONSTER: u32 = 1148;
 pub const SPECIES_MR_MUGS: u32 = 1131;
 pub const SPECIES_FOOTSTEPS: u32 = 1136;
+
+pub const SPECIES_KUNAI: u32 = 7000;
+pub const SPECIES_SLASH: u32 = 1161;
+
+pub const SPECIES_KUNAI_LAUNCHER: u32 = 1160;
+pub const SPECIES_SWORD: u32 = 1158;
+pub const SPECIES_CLAYMORE: u32 = 1159;
+pub const SPECIES_AR15: u32 = 1154;
 
 pub const SPECIES_BARREL_PURPLE: u32 = 1038;
 pub const SPECIES_BARREL_GREEN: u32 = 1039;
