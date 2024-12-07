@@ -9,10 +9,9 @@ use super::tiles::{SpriteTile, TileSet};
 #[derive(Default)]
 #[repr(i32)]
 pub enum Construction {
-    #[default]
-    Nothing = 0,
     WoodenFence = 1,
-    MetalFence = 2,
+    #[default]
+    Nothing = 2,
     DarkRock = 3,
     LightWall = 4,
     Counter = 5,
@@ -26,18 +25,19 @@ pub enum Construction {
     IndicatorArrow = 13,
     Bridge = 14,
     Broadleaf = 15,
-    StoneBox = 16,
-    SpoiledTree = 17,
-    WineTree = 18,
-    SolarPanel = 19,
-    Pipe = 20,
-    BroadleafPurple = 21,
-    WoodenWall = 22,
-    SnowPile = 23,
-    SnowyForest = 24,
-    Darkness15 = 25,
-    Darkness30 = 26,
-    Darkness45 = 27
+    MetalFence = 16,       
+    StoneBox = 17,
+    SpoiledTree = 18,
+    WineTree = 19,
+    SolarPanel = 20,
+    Pipe = 21,
+    BroadleafPurple = 22,
+    WoodenWall = 23,
+    SnowPile = 24,
+    SnowyForest = 25,
+    Darkness15 = 26,
+    Darkness30 = 27,
+    Darkness45 = 28
 }
 
 lazy_static! {

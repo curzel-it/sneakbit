@@ -6,7 +6,8 @@ pub struct KeyboardEventsProvider {
     pub has_back_been_pressed: bool,
     pub has_menu_been_pressed: bool,
     pub has_confirmation_been_pressed: bool,
-    pub has_attack_key_been_pressed: bool,
+    pub has_close_attack_key_been_pressed: bool,
+    pub has_ranged_attack_key_been_pressed: bool,
     pub has_backspace_been_pressed: bool,
 
     pub direction_up: HoldableKey,
@@ -23,7 +24,8 @@ impl KeyboardEventsProvider {
         Self {
             has_back_been_pressed: false,
             has_menu_been_pressed: false,
-            has_attack_key_been_pressed: false,
+            has_close_attack_key_been_pressed: false,
+            has_ranged_attack_key_been_pressed: false,
             has_confirmation_been_pressed: false,
             has_backspace_been_pressed: false,
             direction_up: HoldableKey::new(),
@@ -119,7 +121,8 @@ impl KeyboardEventsProvider {
         escape_pressed: bool,
         menu_pressed: bool,
         confirm_pressed: bool,
-        attack_pressed: bool,
+        close_attack_pressed: bool,
+        ranged_attack_pressed: bool,
         backspace_pressed: bool,
         current_char: Option<char>,
         time_since_last_update: f32
@@ -134,7 +137,8 @@ impl KeyboardEventsProvider {
         self.has_back_been_pressed = escape_pressed;
         self.has_menu_been_pressed = menu_pressed;
         self.has_confirmation_been_pressed = confirm_pressed;
-        self.has_attack_key_been_pressed = attack_pressed;
+        self.has_close_attack_key_been_pressed = close_attack_pressed;
+        self.has_ranged_attack_key_been_pressed = ranged_attack_pressed;
         self.has_backspace_been_pressed = backspace_pressed;
     
         self.direction_up.update(up_pressed, up_down, time_since_last_update);

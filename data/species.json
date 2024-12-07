@@ -4437,7 +4437,7 @@
     },
     {
         "id": 1154,
-        "name": "objects.name.testgun",
+        "name": "objects.name.ar15.weapon",
         "is_invulnerable": true,
         "entity_type": "Equipment",
         "z_index": 1000,
@@ -4453,7 +4453,6 @@
             "w": 4,
             "h": 4
         },
-        "scale": 1,
         "sprite_sheet_id": 1022,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
@@ -4476,7 +4475,6 @@
             "w": 1,
             "h": 1
         },
-        "scale": 1,
         "sprite_sheet_id": 1012,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
@@ -4499,7 +4497,6 @@
             "w": 1,
             "h": 1
         },
-        "scale": 1,
         "sprite_sheet_id": 1012,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
@@ -4522,7 +4519,6 @@
             "w": 1,
             "h": 1
         },
-        "scale": 1,
         "sprite_sheet_id": 1012,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
@@ -4545,14 +4541,13 @@
             "w": 1,
             "h": 1
         },
-        "scale": 1,
         "sprite_sheet_id": 1012,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
     },
     {
         "id": 1158,
-        "name": "objects.name.testsword",
+        "name": "objects.name.sword.weapon",
         "is_invulnerable": true,
         "entity_type": "Sword",
         "z_index": 1000,
@@ -4568,14 +4563,13 @@
             "w": 4,
             "h": 4
         },
-        "scale": 1,
         "sprite_sheet_id": 1022,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
     },
     {
         "id": 1159,
-        "name": "objects.name.testclaymore",
+        "name": "objects.name.claymore.weapon",
         "is_invulnerable": true,
         "entity_type": "Sword",
         "z_index": 1000,
@@ -4591,7 +4585,6 @@
             "w": 4,
             "h": 4
         },
-        "scale": 1,
         "sprite_sheet_id": 1022,
         "sprite_number_of_frames": 4,
         "lock_type": "None"
@@ -4614,7 +4607,6 @@
             "w": 1,
             "h": 1
         },
-        "scale": 1,
         "sprite_sheet_id": 1000,
         "sprite_number_of_frames": 1,
         "lock_type": "None"
@@ -4638,6 +4630,72 @@
         },
         "sprite_sheet_id": 1000,
         "sprite_number_of_frames": 1,
+        "lock_type": "None"
+    },
+    {
+        "id": 1162,
+        "name": "objects.name.ar15.item",
+        "is_invulnerable": true,
+        "entity_type": "PickableObject",
+        "z_index": 1000,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            11,
+            3
+        ],
+        "sprite_frame": {
+            "x": 17,
+            "y": 69,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1022,
+        "sprite_number_of_frames": 8,
+        "lock_type": "None"
+    },
+    {
+        "id": 1163,
+        "name": "objects.name.sword.item",
+        "is_invulnerable": true,
+        "entity_type": "PickableObject",
+        "z_index": 1000,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            11,
+            2
+        ],
+        "sprite_frame": {
+            "x": 34,
+            "y": 69,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1022,
+        "sprite_number_of_frames": 8,
+        "lock_type": "None"
+    },
+    {
+        "id": 1164,
+        "name": "objects.name.claymore.item",
+        "is_invulnerable": true,
+        "entity_type": "PickableObject",
+        "z_index": 1000,
+        "base_speed": 3.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            11,
+            1
+        ],
+        "sprite_frame": {
+            "x": 49,
+            "y": 69,
+            "w": 1,
+            "h": 2
+        },
+        "sprite_sheet_id": 1022,
+        "sprite_number_of_frames": 8,
         "lock_type": "None"
     }
 ]

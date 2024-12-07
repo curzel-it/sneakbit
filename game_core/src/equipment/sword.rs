@@ -1,4 +1,5 @@
-use crate::{constants::{SLASH_LIFESPAN, SWORD_SLASH_COOLDOWN}, entities::{bullets::make_hero_bullet, known_species::SPECIES_SLASH, species::species_by_id}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::{directions::Direction, vector::Vector2d}};
+use crate::{constants::{SLASH_LIFESPAN, SWORD_SLASH_COOLDOWN}, entities::{bullets::make_hero_bullet, known_species::{SPECIES_CLAYMORE, SPECIES_CLAYMORE_ITEM, SPECIES_SLASH, SPECIES_SWORD, SPECIES_SWORD_ITEM}, species::species_by_id}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::inventory_count, world::World}, utils::{directions::Direction, vector::Vector2d}};
+
 
 impl Entity {
     pub fn setup_sword(&mut self) {
@@ -7,9 +8,15 @@ impl Entity {
 
     pub fn update_sword(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {   
         let mut updates: Vec<WorldStateUpdate> = vec![];
-        self.update_equipment_position(world);
-        updates.extend(self.slash(world, time_since_last_update));
-        updates
+
+        if self.is_equipped() {
+            self.update_equipment_position(world);
+            updates.extend(self.slash(world, time_since_last_update));
+            updates
+        } else {
+            self.hide();
+            vec![]
+        }
     }
 
     fn slash(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
@@ -19,7 +26,7 @@ impl Entity {
             self.sprite.frame.y = slash_sprite_y_for_direction(&self.direction);
             return vec![]
         }
-        if world.has_attack_key_been_pressed {
+        if world.has_close_attack_key_been_pressed {
             self.action_cooldown_remaining = SWORD_SLASH_COOLDOWN;
             self.sprite.reset();
             self.sprite.frame.y = slash_sprite_y_for_direction(&self.direction);
@@ -41,6 +48,14 @@ impl Entity {
 
         vec![]
     } 
+
+    fn is_equipped(&self) -> bool {
+        match self.species_id {
+            SPECIES_CLAYMORE => inventory_count(&SPECIES_CLAYMORE_ITEM) > 0,
+            SPECIES_SWORD => inventory_count(&SPECIES_SWORD_ITEM) > 0,
+            _ => false
+        }        
+    }
 }
 
 fn slash_sprite_y_for_direction(direction: &Direction) -> i32 {

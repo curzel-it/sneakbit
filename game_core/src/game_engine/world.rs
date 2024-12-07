@@ -26,7 +26,8 @@ pub struct World {
     pub entities_map: EntityIdsMap,
     pub direction_based_on_current_keys: Direction,
     pub is_any_arrow_key_down: bool,
-    pub has_attack_key_been_pressed: bool,
+    pub has_ranged_attack_key_been_pressed: bool,
+    pub has_close_attack_key_been_pressed: bool,
     pub has_confirmation_key_been_pressed: bool,
     pub world_type: WorldType,
     pub pressure_plate_down_red: bool,
@@ -69,7 +70,8 @@ impl World {
             entities_map: vec![vec![vec![]; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
             direction_based_on_current_keys: Direction::Unknown,
             is_any_arrow_key_down: false,
-            has_attack_key_been_pressed: false,
+            has_ranged_attack_key_been_pressed: false,
+            has_close_attack_key_been_pressed: false,
             has_confirmation_key_been_pressed: false,
             world_type: WorldType::HouseInterior,
             pressure_plate_down_red: false,
@@ -186,7 +188,8 @@ impl World {
         self.total_elapsed_time += time_since_last_update;
         self.direction_based_on_current_keys = keyboard.direction_based_on_current_keys(self.cached_hero_props.direction);
         self.is_any_arrow_key_down = keyboard.is_any_arrow_key_down();
-        self.has_attack_key_been_pressed = keyboard.has_attack_key_been_pressed;
+        self.has_ranged_attack_key_been_pressed = keyboard.has_ranged_attack_key_been_pressed;
+        self.has_close_attack_key_been_pressed = keyboard.has_close_attack_key_been_pressed;
         self.has_confirmation_key_been_pressed = keyboard.has_confirmation_been_pressed;
 
         self.biome_tiles.update(time_since_last_update);

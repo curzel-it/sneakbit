@@ -178,7 +178,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -204,7 +203,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -223,7 +221,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -242,7 +239,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -261,7 +257,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -280,7 +275,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -299,7 +293,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -318,7 +311,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -337,7 +329,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -356,7 +347,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -375,7 +365,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -394,7 +383,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -413,7 +401,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -432,7 +419,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -451,7 +437,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -470,7 +455,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -489,7 +473,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -508,7 +491,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -527,7 +509,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -546,7 +527,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -565,7 +545,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -584,7 +563,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -603,7 +581,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -622,7 +599,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -641,7 +617,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -660,7 +635,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -679,7 +653,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -698,7 +671,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -717,7 +689,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -736,7 +707,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -755,7 +725,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -774,7 +743,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -793,7 +761,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -812,7 +779,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -831,7 +797,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -850,7 +815,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -869,7 +833,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -888,7 +851,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -907,7 +869,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -926,7 +887,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -945,7 +905,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -964,7 +923,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -983,7 +941,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1002,7 +959,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1021,7 +977,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1040,7 +995,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1059,7 +1013,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1078,7 +1031,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1097,7 +1049,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1116,7 +1067,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1135,7 +1085,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1154,7 +1103,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1173,7 +1121,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1192,7 +1139,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1211,7 +1157,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1230,7 +1175,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1249,7 +1193,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1268,7 +1211,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1287,7 +1229,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1306,7 +1247,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1325,7 +1265,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1344,7 +1283,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1363,7 +1301,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1382,7 +1319,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1401,7 +1337,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1420,7 +1355,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1439,7 +1373,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1458,7 +1391,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1477,7 +1409,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1496,7 +1427,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1515,7 +1445,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1534,7 +1463,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1553,7 +1481,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1572,7 +1499,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1591,7 +1517,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1610,7 +1535,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1629,7 +1553,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1648,7 +1571,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1667,7 +1589,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1686,7 +1607,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1705,7 +1625,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1724,7 +1643,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1743,7 +1661,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1762,7 +1679,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1781,7 +1697,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1800,7 +1715,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1819,7 +1733,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1838,7 +1751,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1857,7 +1769,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1876,7 +1787,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1895,7 +1805,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1914,7 +1823,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1933,7 +1841,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1952,7 +1859,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1971,7 +1877,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -1990,7 +1895,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2009,7 +1913,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2028,7 +1931,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2047,7 +1949,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2066,7 +1967,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2085,7 +1985,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2104,7 +2003,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2123,7 +2021,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2142,7 +2039,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2161,7 +2057,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2180,7 +2075,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2199,7 +2093,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2218,7 +2111,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2237,7 +2129,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2256,7 +2147,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2275,7 +2165,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2294,7 +2183,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2313,7 +2201,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2332,7 +2219,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2351,7 +2237,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2370,7 +2255,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2389,7 +2273,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2408,7 +2291,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2427,7 +2309,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2446,7 +2327,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2465,7 +2345,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2484,7 +2363,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2503,7 +2381,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2522,7 +2399,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2541,7 +2417,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2560,7 +2435,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2579,7 +2453,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2598,7 +2471,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2617,7 +2489,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2636,7 +2507,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2655,7 +2525,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2674,7 +2543,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2693,7 +2561,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2712,7 +2579,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2731,7 +2597,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2750,7 +2615,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2769,7 +2633,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2788,7 +2651,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2807,7 +2669,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2826,7 +2687,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2845,7 +2705,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2864,7 +2723,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2883,7 +2741,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2902,7 +2759,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2921,7 +2777,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2940,7 +2795,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2959,7 +2813,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2978,7 +2831,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -2997,7 +2849,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3016,7 +2867,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3035,7 +2885,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3054,7 +2903,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3073,7 +2921,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3092,7 +2939,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3111,7 +2957,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3130,7 +2975,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3149,7 +2993,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3168,7 +3011,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3187,7 +3029,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3206,7 +3047,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3225,7 +3065,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3244,7 +3083,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3263,7 +3101,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3282,7 +3119,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3301,7 +3137,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3320,7 +3155,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3339,7 +3173,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3358,7 +3191,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3377,7 +3209,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3396,7 +3227,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3415,7 +3245,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3434,7 +3263,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3453,7 +3281,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3472,7 +3299,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3491,7 +3317,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3510,7 +3335,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3529,7 +3353,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3548,7 +3371,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3567,7 +3389,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3586,7 +3407,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3605,7 +3425,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3624,7 +3443,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3643,7 +3461,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3662,7 +3479,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3681,7 +3497,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3700,7 +3515,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3719,7 +3533,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3738,7 +3551,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3757,7 +3569,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3776,7 +3587,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3795,7 +3605,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3814,7 +3623,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3833,7 +3641,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3852,7 +3659,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3871,7 +3677,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3890,7 +3695,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3909,7 +3713,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3928,7 +3731,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3947,7 +3749,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3966,7 +3767,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -3985,7 +3785,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4004,7 +3803,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4023,7 +3821,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4042,7 +3839,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4061,7 +3857,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4080,7 +3875,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4099,7 +3893,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4118,7 +3911,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4137,7 +3929,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4156,7 +3947,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4175,7 +3965,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4194,7 +3983,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4213,7 +4001,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4232,7 +4019,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4251,7 +4037,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4270,7 +4055,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4289,7 +4073,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4308,7 +4091,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4327,7 +4109,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4346,7 +4127,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4365,7 +4145,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4384,7 +4163,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4403,7 +4181,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4422,7 +4199,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4441,7 +4217,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4460,7 +4235,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4479,7 +4253,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4498,7 +4271,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4517,7 +4289,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4536,7 +4307,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4555,7 +4325,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4574,7 +4343,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4593,7 +4361,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4612,7 +4379,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4631,7 +4397,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4650,7 +4415,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4669,7 +4433,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4688,7 +4451,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4707,7 +4469,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4726,7 +4487,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4745,7 +4505,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4764,7 +4523,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4783,7 +4541,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4802,7 +4559,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4821,7 +4577,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4840,7 +4595,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4859,7 +4613,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4878,7 +4631,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4897,7 +4649,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4916,7 +4667,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4935,7 +4685,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4954,7 +4703,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4973,7 +4721,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -4992,7 +4739,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5011,7 +4757,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5030,7 +4775,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5049,7 +4793,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5068,7 +4811,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5087,7 +4829,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5106,7 +4847,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5125,7 +4865,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5144,7 +4883,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5163,7 +4901,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5182,7 +4919,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5201,7 +4937,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5220,7 +4955,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5239,7 +4973,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5258,7 +4991,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5277,7 +5009,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5296,7 +5027,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5315,7 +5045,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5334,7 +5063,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5353,7 +5081,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5372,7 +5099,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5391,7 +5117,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5410,7 +5135,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5429,7 +5153,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5448,7 +5171,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5467,7 +5189,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5486,7 +5207,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5505,7 +5225,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5524,7 +5243,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5543,7 +5261,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5562,7 +5279,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5581,7 +5297,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5600,7 +5315,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5619,7 +5333,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5638,7 +5351,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5657,7 +5369,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5676,7 +5387,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5695,7 +5405,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5714,7 +5423,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5733,7 +5441,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5752,7 +5459,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5771,7 +5477,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5790,7 +5495,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5809,7 +5513,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5828,7 +5531,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5847,7 +5549,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5866,7 +5567,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5885,7 +5585,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5904,7 +5603,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5923,7 +5621,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5942,7 +5639,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5961,7 +5657,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5980,7 +5675,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -5999,7 +5693,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6018,7 +5711,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6037,7 +5729,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6056,7 +5747,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6075,7 +5765,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6094,7 +5783,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6113,7 +5801,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6132,7 +5819,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6151,7 +5837,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6170,7 +5855,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6189,7 +5873,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6208,7 +5891,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6227,7 +5909,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6246,7 +5927,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6265,7 +5945,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6284,7 +5963,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6303,7 +5981,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6322,7 +5999,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6341,7 +6017,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6360,7 +6035,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6379,7 +6053,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6398,7 +6071,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6417,7 +6089,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6436,7 +6107,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6455,7 +6125,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6474,7 +6143,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6493,7 +6161,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6512,7 +6179,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6531,7 +6197,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6550,7 +6215,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6569,7 +6233,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6588,7 +6251,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6607,7 +6269,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6626,7 +6287,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6645,7 +6305,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6664,7 +6323,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6683,7 +6341,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6702,7 +6359,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6721,7 +6377,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6740,7 +6395,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6759,7 +6413,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6778,7 +6431,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6797,7 +6449,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6816,7 +6467,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6835,7 +6485,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6854,7 +6503,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6873,7 +6521,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6892,7 +6539,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6911,7 +6557,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6930,7 +6575,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6949,7 +6593,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6968,7 +6611,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -6987,7 +6629,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7006,7 +6647,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7025,7 +6665,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7044,7 +6683,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7063,7 +6701,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7082,7 +6719,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7101,7 +6737,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7120,7 +6755,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7139,7 +6773,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7158,7 +6791,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7177,7 +6809,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7196,7 +6827,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7215,7 +6845,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7234,7 +6863,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7253,7 +6881,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7272,7 +6899,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7291,7 +6917,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7310,7 +6935,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7329,7 +6953,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7348,7 +6971,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7367,7 +6989,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7386,7 +7007,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7405,7 +7025,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7424,7 +7043,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7443,7 +7061,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7462,7 +7079,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7481,7 +7097,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7500,7 +7115,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7519,7 +7133,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7538,7 +7151,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7557,7 +7169,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7576,7 +7187,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7595,7 +7205,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7614,7 +7223,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7633,7 +7241,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7652,7 +7259,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7671,7 +7277,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7690,7 +7295,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7709,7 +7313,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7728,7 +7331,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7747,7 +7349,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7766,7 +7367,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7785,7 +7385,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7804,7 +7403,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7823,7 +7421,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7842,7 +7439,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7861,7 +7457,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7880,7 +7475,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7899,7 +7493,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7918,7 +7511,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7937,7 +7529,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7956,7 +7547,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7975,7 +7565,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -7994,7 +7583,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8013,7 +7601,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8032,7 +7619,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8051,7 +7637,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8070,7 +7655,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8089,7 +7673,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8108,7 +7691,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8127,7 +7709,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8146,7 +7727,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8165,7 +7745,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8184,7 +7763,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8203,7 +7781,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8222,7 +7799,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8241,7 +7817,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8260,7 +7835,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8279,7 +7853,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8298,7 +7871,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8317,7 +7889,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8336,7 +7907,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8355,7 +7925,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8374,7 +7943,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8393,7 +7961,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8412,7 +7979,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8431,7 +7997,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8450,7 +8015,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8469,7 +8033,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8488,7 +8051,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8507,7 +8069,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8526,7 +8087,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8545,7 +8105,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8564,7 +8123,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8583,7 +8141,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8602,7 +8159,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8621,7 +8177,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8640,7 +8195,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8659,7 +8213,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8678,7 +8231,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8697,7 +8249,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8716,7 +8267,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8735,7 +8285,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8754,7 +8303,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8773,7 +8321,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8792,7 +8339,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8811,7 +8357,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8830,7 +8375,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8849,7 +8393,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8868,7 +8411,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8887,7 +8429,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8906,7 +8447,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8925,7 +8465,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8944,7 +8483,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8963,7 +8501,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -8982,7 +8519,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9001,7 +8537,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9020,7 +8555,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9039,7 +8573,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9058,7 +8591,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9077,7 +8609,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9096,7 +8627,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9115,7 +8645,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9134,7 +8663,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9153,7 +8681,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9172,7 +8699,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9191,7 +8717,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9210,7 +8735,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9229,7 +8753,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9248,7 +8771,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9267,7 +8789,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9286,7 +8807,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9305,7 +8825,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9324,7 +8843,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9343,7 +8861,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9362,7 +8879,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9381,7 +8897,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9400,7 +8915,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9419,7 +8933,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9438,7 +8951,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9457,7 +8969,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9476,7 +8987,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9495,7 +9005,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9514,7 +9023,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9533,7 +9041,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9552,7 +9059,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9571,7 +9077,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9590,7 +9095,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9609,7 +9113,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9628,7 +9131,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9647,7 +9149,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9666,7 +9167,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9685,7 +9185,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9704,7 +9203,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9723,7 +9221,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9742,7 +9239,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9761,7 +9257,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9780,7 +9275,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9799,7 +9293,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9818,7 +9311,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9837,7 +9329,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9856,7 +9347,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9875,7 +9365,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9894,7 +9383,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9913,7 +9401,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9932,7 +9419,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9951,7 +9437,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9970,7 +9455,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -9989,7 +9473,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10008,7 +9491,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10027,7 +9509,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10046,7 +9527,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10065,7 +9545,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10084,7 +9563,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10103,7 +9581,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10122,7 +9599,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10141,7 +9617,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10160,7 +9635,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10179,7 +9653,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10198,7 +9671,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10217,7 +9689,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10236,7 +9707,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10255,7 +9725,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10274,7 +9743,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10293,7 +9761,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10312,7 +9779,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10331,7 +9797,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10350,7 +9815,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10369,7 +9833,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10388,7 +9851,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10407,7 +9869,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10426,7 +9887,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10445,7 +9905,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10464,7 +9923,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10483,7 +9941,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10502,7 +9959,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10521,7 +9977,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10540,7 +9995,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10559,7 +10013,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10578,7 +10031,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10597,7 +10049,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10616,7 +10067,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10635,7 +10085,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10654,7 +10103,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10673,7 +10121,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10692,7 +10139,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10711,7 +10157,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10730,7 +10175,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10749,7 +10193,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10768,7 +10211,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10787,7 +10229,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10806,7 +10247,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10825,7 +10265,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10844,7 +10283,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10863,7 +10301,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10882,7 +10319,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10901,7 +10337,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10920,7 +10355,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10939,7 +10373,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10958,7 +10391,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10977,7 +10409,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -10996,7 +10427,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11015,7 +10445,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11034,7 +10463,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11053,7 +10481,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11072,7 +10499,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11091,7 +10517,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11110,7 +10535,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11129,7 +10553,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11148,7 +10571,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11167,7 +10589,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11186,7 +10607,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11205,7 +10625,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11224,7 +10643,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11243,7 +10661,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11262,7 +10679,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11281,7 +10697,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11300,7 +10715,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11319,7 +10733,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11338,7 +10751,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11357,7 +10769,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11376,7 +10787,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11395,7 +10805,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11414,7 +10823,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11433,7 +10841,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11452,7 +10859,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11471,7 +10877,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11490,7 +10895,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11509,7 +10913,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11528,7 +10931,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11547,7 +10949,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11566,7 +10967,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11585,7 +10985,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11604,7 +11003,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11623,7 +11021,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11642,7 +11039,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11661,7 +11057,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11680,7 +11075,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11699,7 +11093,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11718,7 +11111,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11737,7 +11129,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11756,7 +11147,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11775,7 +11165,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11794,7 +11183,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11813,7 +11201,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11832,7 +11219,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11851,7 +11237,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11870,7 +11255,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11889,7 +11273,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11908,7 +11291,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11927,7 +11309,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11946,7 +11327,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11965,7 +11345,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -11984,7 +11363,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12003,7 +11381,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12022,7 +11399,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12041,7 +11417,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12060,7 +11435,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12079,7 +11453,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12098,7 +11471,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12117,7 +11489,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12136,7 +11507,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12155,7 +11525,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12174,7 +11543,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12193,7 +11561,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12212,7 +11579,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12231,7 +11597,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12250,7 +11615,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12269,7 +11633,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12288,7 +11651,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12307,7 +11669,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12326,7 +11687,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12345,7 +11705,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12364,7 +11723,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12383,7 +11741,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12402,7 +11759,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12421,7 +11777,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12440,7 +11795,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12459,7 +11813,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12478,7 +11831,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12497,7 +11849,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12516,7 +11867,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12535,7 +11885,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12554,7 +11903,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12573,7 +11921,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12592,7 +11939,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12611,7 +11957,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12630,7 +11975,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12649,7 +11993,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12668,7 +12011,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12687,7 +12029,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12706,7 +12047,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12725,7 +12065,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12744,7 +12083,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12763,7 +12101,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12782,7 +12119,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12801,7 +12137,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12820,7 +12155,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12839,7 +12173,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12858,7 +12191,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12877,7 +12209,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12896,7 +12227,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12915,7 +12245,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12934,7 +12263,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12953,7 +12281,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12972,7 +12299,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -12991,7 +12317,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13010,7 +12335,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13029,7 +12353,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13048,7 +12371,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13067,7 +12389,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13086,7 +12407,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13105,7 +12425,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13124,7 +12443,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13143,7 +12461,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13162,7 +12479,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13181,7 +12497,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13200,7 +12515,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13219,7 +12533,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13238,7 +12551,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13257,7 +12569,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13276,7 +12587,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13295,7 +12605,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13314,7 +12623,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13333,7 +12641,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13352,7 +12659,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13371,7 +12677,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13390,7 +12695,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13409,7 +12713,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13428,7 +12731,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13447,7 +12749,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13466,7 +12767,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13485,7 +12785,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13504,7 +12803,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13523,7 +12821,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13542,7 +12839,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13561,7 +12857,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13580,7 +12875,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13599,7 +12893,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13618,7 +12911,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13637,7 +12929,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13656,7 +12947,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13675,7 +12965,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13694,7 +12983,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13713,7 +13001,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13732,7 +13019,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13751,7 +13037,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13770,7 +13055,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13789,7 +13073,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13808,7 +13091,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13827,7 +13109,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13846,7 +13127,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13865,7 +13145,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13884,7 +13163,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13903,7 +13181,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13922,7 +13199,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13941,7 +13217,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13960,7 +13235,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13979,7 +13253,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -13998,7 +13271,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14017,7 +13289,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14036,7 +13307,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14055,7 +13325,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14074,7 +13343,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14093,7 +13361,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14112,7 +13379,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14131,7 +13397,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14150,7 +13415,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14169,7 +13433,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14188,7 +13451,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14207,7 +13469,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14226,7 +13487,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14245,7 +13505,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14264,7 +13523,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14283,7 +13541,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14302,7 +13559,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14321,7 +13577,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14340,7 +13595,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14359,7 +13613,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14378,7 +13631,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14397,7 +13649,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14416,7 +13667,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14435,7 +13685,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14454,7 +13703,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14473,7 +13721,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14492,7 +13739,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14511,7 +13757,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14530,7 +13775,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14549,7 +13793,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14568,7 +13811,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14587,7 +13829,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14606,7 +13847,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14625,7 +13865,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14644,7 +13883,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14682,7 +13920,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14701,7 +13938,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14720,7 +13956,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14739,7 +13974,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14758,7 +13992,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14777,7 +14010,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14796,7 +14028,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14820,7 +14051,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14839,7 +14069,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14858,7 +14087,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14877,7 +14105,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14896,7 +14123,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14915,7 +14141,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14934,26 +14159,24 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
     {
-      "id": 13011865,
+      "id": 13600665,
       "frame": {
-        "x": 24,
-        "y": 14,
+        "x": 23,
+        "y": 10,
         "w": 1,
-        "h": 1
+        "h": 2
       },
-      "species_id": 44415,
+      "species_id": 1164,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14972,7 +14195,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -14991,7 +14213,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15010,7 +14231,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15034,7 +14254,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15053,7 +14272,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15072,7 +14290,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15096,7 +14313,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15115,7 +14331,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15139,7 +14354,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15163,7 +14377,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15187,7 +14400,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15206,7 +14418,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15225,7 +14436,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15249,7 +14459,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15268,7 +14477,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15287,7 +14495,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15306,7 +14513,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15325,7 +14531,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15351,7 +14556,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15375,7 +14579,6 @@
       "lock_type": "Permanent",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15394,7 +14597,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15413,7 +14615,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15437,7 +14638,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -15455,8 +14655,8 @@
         {
           "text": "1020.entrance",
           "key": "always",
-          "reward": null,
-          "expected_value": 1
+          "expected_value": 1,
+          "reward": null
         }
       ],
       "destination": null,
@@ -15481,45 +14681,240 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
     {
-      "id": 13047061,
+      "id": 13600579,
       "frame": {
-        "x": 42,
-        "y": 53,
-        "w": 1,
-        "h": 1
+        "x": 49,
+        "y": 1,
+        "w": 4,
+        "h": 4
       },
-      "species_id": 1136,
+      "species_id": 1159,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
     {
-      "id": 13047062,
+      "id": 13600578,
       "frame": {
-        "x": 42,
-        "y": 58,
+        "x": 30,
+        "y": 13,
         "w": 1,
         "h": 1
       },
-      "species_id": 1136,
+      "species_id": 1160,
+      "direction": "Left",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13600664,
+      "frame": {
+        "x": 24,
+        "y": 14,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1010,
       "direction": "Down",
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13600978,
+      "frame": {
+        "x": 30,
+        "y": 13,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1160,
+      "direction": "Left",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13600979,
+      "frame": {
+        "x": 49,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "species_id": 1159,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13601053,
+      "frame": {
+        "x": 35,
+        "y": 14,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "direction": "Left",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13601054,
+      "frame": {
+        "x": 34,
+        "y": 14,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "direction": "Left",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13601056,
+      "frame": {
+        "x": 31,
+        "y": 14,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "direction": "Left",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13601055,
+      "frame": {
+        "x": 32,
+        "y": 14,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "direction": "Left",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13601059,
+      "frame": {
+        "x": 25,
+        "y": 10,
+        "w": 1,
+        "h": 2
+      },
+      "species_id": 1163,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13601052,
+      "frame": {
+        "x": 36,
+        "y": 14,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "direction": "Left",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13601057,
+      "frame": {
+        "x": 30,
+        "y": 14,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1136,
+      "direction": "Left",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13601058,
+      "frame": {
+        "x": 22,
+        "y": 12,
+        "w": 2,
+        "h": 2
+      },
+      "species_id": 1162,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     }

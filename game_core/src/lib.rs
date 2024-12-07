@@ -89,7 +89,8 @@ pub extern "C" fn update_keyboard(
     escape_pressed: bool,
     menu_pressed: bool,
     confirm_pressed: bool,
-    attack_pressed: bool,
+    close_attack_pressed: bool,
+    ranged_attack_pressed: bool,
     backspace_pressed: bool,
     current_char: u32,
     time_since_last_update: f32
@@ -97,7 +98,9 @@ pub extern "C" fn update_keyboard(
     engine_mut().keyboard.update(
         up_pressed, right_pressed, down_pressed, left_pressed, 
         up_down, right_down, down_down, left_down, 
-        escape_pressed, menu_pressed, confirm_pressed, attack_pressed, backspace_pressed, 
+        escape_pressed, menu_pressed, confirm_pressed, 
+        close_attack_pressed, ranged_attack_pressed, 
+        backspace_pressed, 
         if current_char == 0 { None } else { char::from_u32(current_char) }, 
         time_since_last_update
     );

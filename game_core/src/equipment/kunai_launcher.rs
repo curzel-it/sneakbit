@@ -18,7 +18,7 @@ impl Entity {
         if self.action_cooldown_remaining > 0.0 {
             return vec![]
         }
-        if !world.has_attack_key_been_pressed {
+        if !world.has_ranged_attack_key_been_pressed {
             return vec![]
         }
         if !has_species_in_inventory(&SPECIES_KUNAI) {
