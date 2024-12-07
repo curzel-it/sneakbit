@@ -1,4 +1,4 @@
-use crate::{constants::BUILD_NUMBER, entities::{known_species::{SPECIES_HERO, SPECIES_KUNAI, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, utils::directions::Direction};
+use crate::{constants::BUILD_NUMBER, entities::{known_species::{SPECIES_CLAYMORE, SPECIES_HERO, SPECIES_KUNAI, SPECIES_KUNAI_LAUNCHER, SPECIES_MR_MUGS, SPECIES_SWORD}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
@@ -66,10 +66,13 @@ impl World {
         self.cached_hero_props = entity.props();
         self.insert_entity(entity, 0);
 
-        let kunai_launcher = species_by_id(1160).make_entity();
+        let kunai_launcher = species_by_id(SPECIES_KUNAI_LAUNCHER).make_entity();
         self.add_entity(kunai_launcher);
 
-        let sword = species_by_id(1159).make_entity();
+        let claymore = species_by_id(SPECIES_CLAYMORE).make_entity();
+        self.add_entity(claymore);
+
+        let sword = species_by_id(SPECIES_SWORD).make_entity();
         self.add_entity(sword);
     }
 

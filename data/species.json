@@ -4697,5 +4697,27 @@
         "sprite_sheet_id": 1022,
         "sprite_number_of_frames": 8,
         "lock_type": "None"
+    },
+    {
+        "id": 1165,
+        "name": "objects.name.stonehenge",
+        "is_invulnerable": true,
+        "entity_type": "StaticObject",
+        "z_index": 1000,
+        "base_speed": 3.0,
+        "is_rigid": true,
+        "inventory_texture_offset": [
+            11,
+            4
+        ],
+        "sprite_frame": {
+            "x": 13,
+            "y": 5,
+            "w": 4,
+            "h": 3
+        },
+        "sprite_sheet_id": 1010,
+        "sprite_number_of_frames": 1,
+        "lock_type": "None"
     }
 ]

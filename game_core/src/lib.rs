@@ -142,6 +142,7 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
 
     let mut entities: Vec<&Entity> = visible_entities.iter()
         .map(|(index, _)| &entities_map[*index])
+        .filter(|e| !e.is_equipment() || e.is_equipped)
         .collect();
 
     entities.sort_by(|entity_a, entity_b| {

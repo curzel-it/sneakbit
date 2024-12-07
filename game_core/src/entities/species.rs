@@ -107,6 +107,7 @@ impl Species {
             display_conditions: vec![],
             after_dialogue: AfterDialogueBehavior::Nothing,
             is_in_interaction_range: false,
+            is_equipped: false,
         }
     }
 

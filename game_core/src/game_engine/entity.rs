@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{NO_PARENT, SPRITE_SHEET_BLANK, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{directions::MovementDirections, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}, world::World};
 
@@ -98,6 +98,9 @@ pub struct Entity {
 
     #[serde(skip)]
     pub is_invulnerable: bool,
+
+    #[serde(skip)]
+    pub is_equipped: bool,
 
     #[serde(default)]
     pub demands_attention: bool,
@@ -302,9 +305,7 @@ impl Entity {
 }
 
 impl Entity {
-    pub fn hide(&mut self) {
-        self.sprite.sheet_id = SPRITE_SHEET_BLANK;
-        self.sprite.frame = IntRect::square_from_origin(1);
-        self.sprite.reset();
+    pub fn is_equipment(&self) -> bool {
+        matches!(self.entity_type, EntityType::Equipment | EntityType::Sword)
     }
 }

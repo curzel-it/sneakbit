@@ -142,7 +142,7 @@ impl World {
         equipment_ids.into_iter().for_each(|id| self.remove_entity_by_id(id));
     }
 
-    pub fn remove_entity_by_id(&mut self, id: u32) {
+    pub fn remove_entity_by_id(&mut self, id: u32) {        
         if id != HERO_ENTITY_ID {
             if let Some(index) = self.index_for_entity(id) {
                 self.remove_entity_at_index(index);
@@ -159,7 +159,10 @@ impl World {
     fn remove_entity_at_index(&mut self, index: usize) {
         let entities = self.entities.borrow();
         let entity = &entities[index];
-        
+
+        if matches!(entity.entity_type, EntityType::Equipment | EntityType::Sword) {
+            println!("Dio cane?? Removing entity {:#?}", entity);
+        }
         if entity.melee_attacks_hero {
             self.melee_attackers.remove(&entity.id);
         }

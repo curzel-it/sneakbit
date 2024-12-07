@@ -1,4 +1,6 @@
-use crate::{constants::{SLASH_LIFESPAN, SWORD_SLASH_COOLDOWN}, entities::{bullets::make_hero_bullet, known_species::{SPECIES_CLAYMORE, SPECIES_CLAYMORE_ITEM, SPECIES_SLASH, SPECIES_SWORD, SPECIES_SWORD_ITEM}, species::species_by_id}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::inventory_count, world::World}, utils::{directions::Direction, vector::Vector2d}};
+use crate::{constants::{SLASH_LIFESPAN, SWORD_SLASH_COOLDOWN}, entities::{bullets::make_hero_bullet, known_species::SPECIES_SLASH, species::species_by_id}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::{directions::Direction, vector::Vector2d}};
+
+use super::equipment::is_equipped;
 
 
 impl Entity {
@@ -9,12 +11,17 @@ impl Entity {
     pub fn update_sword(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {   
         let mut updates: Vec<WorldStateUpdate> = vec![];
 
-        if self.is_equipped() {
-            self.update_equipment_position(world);
+        println!("Updating sword...");
+
+        self.is_equipped = is_equipped(self.species_id);
+        self.update_equipment_position(world);
+        
+        if self.is_equipped {
+            println!("Sword equipped! {}", self.id);
             updates.extend(self.slash(world, time_since_last_update));
             updates
         } else {
-            self.hide();
+            println!("Sword invisible {}", self.id);
             vec![]
         }
     }
@@ -48,14 +55,6 @@ impl Entity {
 
         vec![]
     } 
-
-    fn is_equipped(&self) -> bool {
-        match self.species_id {
-            SPECIES_CLAYMORE => inventory_count(&SPECIES_CLAYMORE_ITEM) > 0,
-            SPECIES_SWORD => inventory_count(&SPECIES_SWORD_ITEM) > 0,
-            _ => false
-        }        
-    }
 }
 
 fn slash_sprite_y_for_direction(direction: &Direction) -> i32 {
