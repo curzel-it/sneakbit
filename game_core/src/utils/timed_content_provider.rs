@@ -48,6 +48,12 @@ impl<T> TimedContentProvider<T> {
             self.completed_loops += 1;
         }
     }    
+
+    pub fn reset(&mut self) {
+        self.current_frame_index = 0;
+        self.leftover = 0.0;
+        self.completed_loops = 0;
+    }
 }
 
 #[cfg(test)]

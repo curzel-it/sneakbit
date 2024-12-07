@@ -38,6 +38,10 @@ impl AnimatedSprite {
     pub fn completed_loops(&self) -> u32 {
         self.frames_provider.completed_loops
     }
+
+    pub fn reset(&mut self) {
+        self.frames_provider.reset()
+    }
 }
 
 impl Entity {

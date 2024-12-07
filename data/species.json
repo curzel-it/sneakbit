@@ -4437,7 +4437,7 @@
     },
     {
         "id": 1154,
-        "name": "npc.name.testgun",
+        "name": "objects.name.testgun",
         "is_invulnerable": true,
         "entity_type": "Equipment",
         "z_index": 1000,
@@ -4552,9 +4552,9 @@
     },
     {
         "id": 1158,
-        "name": "npc.name.testsword",
+        "name": "objects.name.testsword",
         "is_invulnerable": true,
-        "entity_type": "Equipment",
+        "entity_type": "Sword",
         "z_index": 1000,
         "base_speed": 1.0,
         "is_rigid": false,
@@ -4571,6 +4571,52 @@
         "scale": 1,
         "sprite_sheet_id": 1022,
         "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1159,
+        "name": "objects.name.testclaymore",
+        "is_invulnerable": true,
+        "entity_type": "Sword",
+        "z_index": 1000,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            0,
+            0
+        ],
+        "sprite_frame": {
+            "x": 49,
+            "y": 1,
+            "w": 4,
+            "h": 4
+        },
+        "scale": 1,
+        "sprite_sheet_id": 1022,
+        "sprite_number_of_frames": 4,
+        "lock_type": "None"
+    },
+    {
+        "id": 1160,
+        "name": "objects.name.kunai_launcher",
+        "is_invulnerable": true,
+        "entity_type": "KunaiLauncher",
+        "z_index": 1000,
+        "base_speed": 1.0,
+        "is_rigid": false,
+        "inventory_texture_offset": [
+            0,
+            0
+        ],
+        "sprite_frame": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+        },
+        "scale": 1,
+        "sprite_sheet_id": 1000,
+        "sprite_number_of_frames": 1,
         "lock_type": "None"
     }
 ]

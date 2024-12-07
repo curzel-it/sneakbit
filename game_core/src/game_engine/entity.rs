@@ -131,6 +131,8 @@ impl Entity {
             EntityType::Hint => self.update_hint(world, time_since_last_update),
             EntityType::Trail => self.update_trail(),
             EntityType::Equipment => self.update_equipment(world, time_since_last_update),
+            EntityType::Sword => self.update_sword(world, time_since_last_update),
+            EntityType::KunaiLauncher => self.update_kunai_launcher(world, time_since_last_update),
         };        
         self.sprite.update(time_since_last_update); 
         let mut more_updates = self.check_remaining_lifespan(time_since_last_update);
@@ -160,6 +162,8 @@ impl Entity {
             EntityType::Hint => self.setup_hint(),
             EntityType::Trail => self.setup_generic(),
             EntityType::Equipment => self.setup_equipment(),
+            EntityType::Sword => self.setup_sword(),
+            EntityType::KunaiLauncher => self.setup_kunai_launcher(),
         }
     }
 

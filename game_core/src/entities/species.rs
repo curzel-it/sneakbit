@@ -60,7 +60,9 @@ pub enum EntityType {
     RailObject,
     Hint,
     Trail,
-    Equipment
+    Equipment,
+    Sword,
+    KunaiLauncher
 }
 
 impl Species {

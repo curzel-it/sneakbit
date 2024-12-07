@@ -9,9 +9,14 @@ pngs_folder = "assets"
 
 def export_aseprite(file_path, destination_folder):
     filename = file_path.split("/")[-1]
-    
+
+    if ".bak." in filename: 
+        return 
+
     if filename.startswith("building") or filename.startswith("demon_lord_defeat"): 
         export_building(file_path, destination_folder)
+    elif filename.startswith("weapons"):
+        export_weapons(file_path, destination_folder)
     elif filename.startswith("tiles"):
         return 
     else: 
@@ -32,6 +37,27 @@ def export_building(file_path, destination_folder):
     try:
         subprocess.run(cmd, check=True)
         print(f"Exported building asset: {output_path}")
+    except subprocess.CalledProcessError as e:
+        print(f"Error exporting {file_path}: {e}")
+    
+def export_weapons(file_path, destination_folder):
+    asset_name = asset_name_from_file_path(file_path)
+    output_path = os.path.join(destination_folder, f"{asset_name}.png")
+
+    cmd = [
+        aseprite_path, 
+        "-b", 
+        file_path, 
+        "--layer", "Slashes", 
+        "--layer", "Weapons", 
+        "--ignore-layer", "Reference", 
+        "--save-as",
+        output_path
+    ]
+    
+    try:
+        subprocess.run(cmd, check=True)
+        print(f"Exported weapons asset: {output_path}")
     except subprocess.CalledProcessError as e:
         print(f"Error exporting {file_path}: {e}")
 
