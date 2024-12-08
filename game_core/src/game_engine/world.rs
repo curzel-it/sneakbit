@@ -604,6 +604,37 @@ impl World {
 }
 
 impl World {
+    pub fn hits(&self, x: usize, y: usize) -> bool {
+        if y >= self.hitmap.len() { false }
+        else if x >= self.hitmap[y].len() { false }
+        else { self.hitmap[y][x] }
+    }
+
+    pub fn hits_i32(&self, x: i32, y: i32) -> bool {
+        if x < 0 || y < 0 { return false }
+        self.hits(x as usize, y as usize)
+    }
+
+    pub fn hits_or_out_of_bounds_i32(&self, x: i32, y: i32) -> bool {
+        x < 0 || y < 0 || self.hits(x as usize, y as usize)
+    }
+
+    pub fn entity_ids(&self, x: i32, y: i32) -> Vec<u32> {
+        if x < 0 || y < 0 { return vec![] }
+        self.entities_map[y as usize][x as usize].clone()
+    }
+
+    pub fn weight(&self, x: usize, y: usize) -> i32 {
+        if y >= self.weights_map.len() { 0 }
+        else if x >= self.weights_map[y].len() { 0 }
+        else { self.weights_map[y][x] }
+    }
+
+    pub fn weight_i32(&self, x: i32, y: i32) -> i32 {
+        if x < 0 || y < 0 { return 0 }
+        self.weight(x as usize, y as usize)
+    }
+
     pub fn is_creep(&self, id: u32) -> bool {
         self.melee_attackers.contains(&id)
     }

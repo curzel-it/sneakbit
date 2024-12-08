@@ -9,7 +9,7 @@ impl Entity {
             return vec![]
         }
 
-        let hits = world.entities_map[self.frame.y as usize][self.frame.x as usize].to_owned();
+        let hits = world.entity_ids(self.frame.x, self.frame.y);
 
         for hit in hits {        
             if self.is_valid_hit_target(hit) && world.is_creep(hit) {

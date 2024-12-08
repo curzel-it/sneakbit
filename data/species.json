@@ -4441,7 +4441,7 @@
         "name": "objects.name.ar15.weapon",
         "is_invulnerable": true,
         "entity_type": "Equipment",
-        "z_index": 1000,
+        "z_index": 160,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4551,7 +4551,7 @@
         "name": "objects.name.sword.weapon",
         "is_invulnerable": true,
         "entity_type": "Sword",
-        "z_index": 1000,
+        "z_index": 160,
         "base_speed": 2.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4573,7 +4573,7 @@
         "name": "objects.name.claymore.weapon",
         "is_invulnerable": true,
         "entity_type": "Sword",
-        "z_index": 1000,
+        "z_index": 160,
         "base_speed": 3.0,
         "is_rigid": false,
         "inventory_texture_offset": [

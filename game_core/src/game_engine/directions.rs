@@ -36,8 +36,8 @@ impl Entity {
         if self.offset.x != 0.0 || self.offset.y != 0.0 {
             return
         }
-        if self.is_obstacle_in_direction(&world.hitmap, self.direction) {
-            self.pick_next_direction(&world.hitmap);
+        if self.is_obstacle_in_direction(&world, self.direction) {
+            self.pick_next_direction(&world);
         }
     }
 
@@ -47,12 +47,12 @@ impl Entity {
         }
         if self.is_hero_in_line_of_sight(world) {
             self.change_direction_towards_hero(world);
-        } else if self.is_obstacle_in_direction(&world.hitmap, self.direction) {
-            self.pick_next_direction(&world.hitmap);
+        } else if self.is_obstacle_in_direction(&world, self.direction) {
+            self.pick_next_direction(&world);
         }
     }
 
-    fn pick_next_direction(&mut self, hitmap: &[Vec<bool>]) {
+    fn pick_next_direction(&mut self, world: &World) {
         let directions = [
             self.direction.turn_right(),
             self.direction.turn_left(),
@@ -60,7 +60,7 @@ impl Entity {
         ];
 
         for &dir in &directions {
-            if !self.is_obstacle_in_direction(hitmap, dir) {
+            if !self.is_obstacle_in_direction(world, dir) {
                 self.direction = dir;
                 break;
             }
@@ -76,7 +76,7 @@ impl Entity {
             let min_y = npc_y.min(hero.y);
             let max_y = npc_y.max(hero.y);
             for y in (min_y + 1)..max_y {
-                if world.hitmap[y as usize][npc.x as usize] {
+                if world.hits_i32(npc.x, y) {
                     return false;
                 }
             }
@@ -85,7 +85,7 @@ impl Entity {
             let min_x = npc.x.min(hero.x);
             let max_x = npc.x.max(hero.x);
             for x in (min_x + 1)..max_x {
-                if world.hitmap[npc_y as usize][x as usize] {
+                if world.hits_i32(x, npc.y) {
                     return false;
                 }
             }
@@ -115,18 +115,10 @@ impl Entity {
         }
     }
 
-    fn is_obstacle_in_direction(&self, hitmap: &[Vec<bool>], direction: Direction) -> bool {
+    fn is_obstacle_in_direction(&self, world: &World, direction: Direction) -> bool {
         let (next_dx, next_dy) = direction.as_col_row_offset();
         let next_x = self.frame.x + next_dx + if next_dx > 0 { self.frame.w - 1 } else { 0 };
         let next_y = self.frame.y + next_dy + if self.frame.h > 1 { 1 } else { 0 };
-
-        if next_x < 0
-            || next_x >= hitmap[0].len() as i32
-            || next_y < 0
-            || next_y >= hitmap.len() as i32 {
-            return true; 
-        }
-
-        hitmap[next_y as usize][next_x as usize]
+        world.hits_or_out_of_bounds_i32(next_x, next_y)
     }
 }

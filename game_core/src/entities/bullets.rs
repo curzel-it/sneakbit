@@ -35,8 +35,8 @@ impl Entity {
 
     fn check_hits(&self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
         let (previous_x, previous_y) = self.previous_position();
-        let previous_hits = world.entities_map[previous_y as usize][previous_x as usize].to_owned();
-        let current_hits = world.entities_map[self.frame.y as usize][self.frame.x as usize].to_owned();
+        let previous_hits = world.entity_ids(previous_x, previous_y);
+        let current_hits = world.entity_ids(self.frame.x, self.frame.y);
 
         let valid_hits: Vec<u32> = vec![previous_hits, current_hits]
             .into_iter()
@@ -57,7 +57,7 @@ impl Entity {
         
         let construction = &world.constructions_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
         let biome = &world.biome_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
-        let hits = world.entities_map[self.frame.y as usize][self.frame.x as usize].to_owned();
+        let hits = world.entity_ids(self.frame.x, self.frame.y);
 
         if construction.tile_type.stops_bullets() || biome.tile_type.stops_bullets() || world.contains_building(&hits) {
             return vec![WorldStateUpdate::HandleBulletStopped(self.id)]
