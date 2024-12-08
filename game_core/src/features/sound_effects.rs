@@ -68,7 +68,7 @@ impl SoundEffectsManager {
 
     fn check_sounds_for_state_update(&mut self, update: &EngineStateUpdate) {
         match update {
-            EngineStateUpdate::EntityShoot(_, species_id) => self.check_entity_death(*species_id),
+            EngineStateUpdate::EntityKilled(_, species_id) => self.check_entity_death(*species_id),
             EngineStateUpdate::BulletBounced => self.prepare(SoundEffect::BulletBounced),
             EngineStateUpdate::CenterCamera(x, y, _) => self.check_hero_movement(*x, *y),
             EngineStateUpdate::Teleport(destination) => self.check_teleportation(destination.world),

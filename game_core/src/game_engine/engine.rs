@@ -215,7 +215,7 @@ impl GameEngine {
             EngineStateUpdate::NewGame => {
                 self.start_new_game()
             }
-            EngineStateUpdate::EntityShoot(_, _) => {
+            EngineStateUpdate::EntityKilled(_, _) => {
                 // ...
             }
             EngineStateUpdate::BulletBounced => {

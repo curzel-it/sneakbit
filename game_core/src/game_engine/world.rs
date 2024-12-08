@@ -383,8 +383,11 @@ impl World {
         });
 
         for target in targets {
-            bullet_expended = self.handle_target_hit(damage, target);
-            updates.push(EngineStateUpdate::EntityShoot(target.id, target.species_id));
+            let did_kill = self.handle_target_hit(damage, target);
+            bullet_expended = bullet_expended || did_kill;
+            if did_kill {
+                updates.push(EngineStateUpdate::EntityKilled(target.id, target.species_id));
+            }
         }
         drop(entities);
 
