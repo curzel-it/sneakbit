@@ -2,9 +2,10 @@
 
 mod rendering;
 
-use std::{collections::HashMap, env, path::PathBuf};
+use std::{collections::HashMap, env, path::PathBuf, sync::{Arc, Mutex}, thread};
 
 use common_macros::hash_map;
+use crossbeam::channel::{unbounded, Receiver};
 use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, SPRITE_SHEET_TENTACLES, SPRITE_SHEET_WEAPONS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, lang::localizable::LANG_EN, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
 use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
@@ -12,17 +13,21 @@ use sys_locale::get_locale;
 
 const MAX_FPS: u32 = 60;
 
-struct GameContext<'a> {
+struct GameContext {
     rl: RaylibHandle,
     rl_thread: RaylibThread,
-    sound_library: HashMap<AppSound, Sound<'a>>,
     needs_window_init: bool,
     latest_world_id: u32,
-    music_was_enabled: bool,
     is_fullscreen: bool,
     total_run_time: f32,
-    creative_mode: bool,
     using_controller: bool
+}
+
+unsafe impl Send for GameContext {}
+unsafe impl Sync for GameContext {}
+
+enum GameCommand {
+    GameUpdated
 }
 
 fn main() {
@@ -37,29 +42,42 @@ fn main() {
     );
 
     let (rl, rl_thread) = start_rl();    
-    let mut rl_audio = start_rl_audio();
+    let creative_mode = env::args().any(|arg| arg == "creative");    
+    let (sender, receiver) = unbounded();
 
-    let mut context = GameContext {
+    let main_context = GameContext {
         rl,
         rl_thread,
-        sound_library: load_sounds(&mut rl_audio),
         needs_window_init: true,
         latest_world_id: 0,
-        music_was_enabled: true,
         is_fullscreen: false,
         total_run_time: 0.0,
-        creative_mode: env::args().any(|arg| arg == "creative"),
         using_controller: false
     };
+    let shared_context = Arc::new(Mutex::new(main_context));
 
-    initialize_game(context.creative_mode);    
+    initialize_game(creative_mode);    
     set_links_handler(Box::new(MyLinkHandler {}));
         
     if bool_for_global_key(&StorageKey::fullscreen()) {
         engine_set_wants_fullscreen();
     }
 
+    // let render_context = Arc::clone(&shared_context);
+    // let render_handle = thread::spawn(move || { render_thread(render_context); });
+
+    // let logic_context = Arc::clone(&shared_context);
+    // let logic_handle = thread::spawn(move || { logic_thread(logic_context); });
+
+    let sound_handle = {
+        let sound_receiver = receiver.clone();
+        thread::spawn(move || {
+            sound_thread(sound_receiver);
+        })
+    };
+
     while is_game_running() {
+        let mut context = shared_context.lock().unwrap();
         let time_since_last_update = context.rl.get_frame_time().min(0.5);
         context.total_run_time += time_since_last_update;
 
@@ -70,10 +88,47 @@ fn main() {
         handle_mouse_updates(&mut context.rl, get_rendering_config().rendering_scale);
         update_game(time_since_last_update);
         handle_world_changed(&mut context);
-        render_frame(&mut context.rl, &context.rl_thread);  
-        play_sound_effects(&context.sound_library);
+        render_frame_with_context(&mut context);  
+
+        sender.send(GameCommand::GameUpdated).unwrap();
+    }
+    
+    // render_handle.join().unwrap();
+    // logic_handle.join().unwrap();
+    sound_handle.join().unwrap();
+}
+
+struct SoundContext<'a> {
+    latest_world: u32,
+    music_was_enabled: bool,
+    sound_library: HashMap<AppSound, Sound<'a>>
+}
+
+fn sound_thread(receiver: Receiver<GameCommand>) {
+    let mut rl_audio = start_rl_audio();
+    
+    let mut context = SoundContext {
+        latest_world: 0,
+        music_was_enabled: true,
+        sound_library: load_sounds(&mut rl_audio)
+    };
+
+    while let Ok(_) = receiver.recv() {
+        let current_world = current_world_id();
+        if context.latest_world != current_world {
+            context.latest_world = current_world;
+
+            if is_music_enabled() {
+                update_sound_track(&mut context);
+            }
+        }
+        play_sound_effects(&context);
         play_music(&mut context);
     }
+}
+
+fn render_frame_with_context(context: &mut GameContext) {
+    render_frame(&mut context.rl, &context.rl_thread);
 }
 
 fn handle_world_changed(context: &mut GameContext) {
@@ -81,10 +136,6 @@ fn handle_world_changed(context: &mut GameContext) {
     if context.latest_world_id != current_world {
         context.latest_world_id = current_world;
         load_tile_map_textures(&mut context.rl, &context.rl_thread, current_world);
-        
-        if is_music_enabled() {
-            update_sound_track(&mut context.sound_library);
-        }
     }
 }
 
@@ -119,12 +170,12 @@ fn set_fullscreen(rl: &mut RaylibHandle, wants_fullscreen: bool) {
     }
 }
 
-fn stop_music(sound_library: &mut HashMap<AppSound, Sound>) {
-    let sounds: Vec<AppSound> = sound_library.keys().cloned().collect();
+fn stop_music(context: &mut SoundContext) {
+    let sounds: Vec<AppSound> = context.sound_library.keys().cloned().collect();
 
     sounds.iter().for_each(|key| {
         if matches!(key, AppSound::Track(_)) {
-            if let Some(sound) = sound_library.get_mut(key) {
+            if let Some(sound) = context.sound_library.get_mut(key) {
                 if sound.is_playing() {
                     sound.stop();
                 }
@@ -133,19 +184,19 @@ fn stop_music(sound_library: &mut HashMap<AppSound, Sound>) {
     });
 }
 
-fn update_sound_track(sound_library: &mut HashMap<AppSound, Sound>) {
+fn update_sound_track(context: &mut SoundContext) {
     if let Some(track_name) = current_soundtrack_string() {
         if !track_name.is_empty() {
             
             let key = &AppSound::Track(track_name);
             
-            if let Some(sound) = sound_library.get(key) {
+            if let Some(sound) = context.sound_library.get(key) {
                 if !sound.is_playing() {
                     let _ = sound;
-                    stop_music(sound_library);
+                    stop_music(context);
                 }
             }            
-            if let Some(sound) = sound_library.get(key) {
+            if let Some(sound) = context.sound_library.get(key) {
                 if !sound.is_playing() {
                     sound.play();
                 }
@@ -168,7 +219,7 @@ fn start_rl() -> (RaylibHandle, RaylibThread) {
     let font = rl.load_font(&thread, &regular_font_path()).unwrap();
     let font_bold = rl.load_font(&thread, &bold_font_path()).unwrap();                     
     
-    rl.set_target_fps(MAX_FPS);
+    // rl.set_target_fps(MAX_FPS);
     rl.set_window_min_size(360, 240);
 
     let textures: HashMap<u32, Texture2D> = load_textures(&mut rl, &thread);
@@ -441,7 +492,7 @@ fn is_debug_build() -> bool {
     cfg!(debug_assertions)
 }
 
-fn play_sound_effects(sound_library: &HashMap<AppSound, Sound>) {
+fn play_sound_effects(context: &SoundContext) {
     let sound_effects = current_sound_effects();
     if sound_effects.is_empty() {
         return
@@ -451,19 +502,19 @@ fn play_sound_effects(sound_library: &HashMap<AppSound, Sound>) {
     }
     sound_effects.iter().for_each(|effect| {
         let key = &AppSound::Effect(effect.clone());
-        if let Some(sound) = sound_library.get(key) {
+        if let Some(sound) = context.sound_library.get(key) {
             sound.play();
         }
     })
 }
 
-fn play_music(context: &mut GameContext) {
+fn play_music(context: &mut SoundContext) {
     if is_music_enabled() {
         context.music_was_enabled = true;
-        update_sound_track(&mut context.sound_library);
+        update_sound_track(context);
     } else if context.music_was_enabled {
         context.music_was_enabled = false;
-        stop_music(&mut context.sound_library);
+        stop_music(context);
     }
 }
 
