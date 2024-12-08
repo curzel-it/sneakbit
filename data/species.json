@@ -4463,7 +4463,7 @@
         "name": "objects.name.terrain.flowers.red",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 1000,
+        "z_index": -1,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4485,7 +4485,7 @@
         "name": "objects.name.terrain.flowers.yellow",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 1000,
+        "z_index": -1,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4507,7 +4507,7 @@
         "name": "objects.name.terrain.flowers.purple",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 1000,
+        "z_index": -1,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4529,7 +4529,7 @@
         "name": "objects.name.terrain.flowers.blue",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 1000,
+        "z_index": -1,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4616,17 +4616,17 @@
         "id": 1161,
         "name": "objects.name.slash",
         "entity_type": "Bullet",
-        "dps": 60,
+        "dps": 180,
         "z_index": 140,
-        "base_speed": 2.0,
+        "base_speed": 3.0,
         "is_rigid": false,
         "inventory_texture_offset": [
             0,
             0
         ],
         "sprite_frame": {
-            "x": 4,
-            "y": 0,
+            "x": 28,
+            "y": 10,
             "w": 1,
             "h": 1
         },
@@ -4726,7 +4726,7 @@
         "id": 1166,
         "name": "objects.name.slash.claymore",
         "entity_type": "Bullet",
-        "dps": 110,
+        "dps": 330,
         "z_index": 140,
         "base_speed": 3.0,
         "is_rigid": false,
@@ -4735,8 +4735,8 @@
             0
         ],
         "sprite_frame": {
-            "x": 4,
-            "y": 0,
+            "x": 28,
+            "y": 10,
             "w": 1,
             "h": 1
         },

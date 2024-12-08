@@ -1,4 +1,4 @@
-use crate::{entities::{bullets::BulletId, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast, utils::vector::Vector2d};
+use crate::{entities::{bullets::{BulletId, Damage}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast, utils::vector::Vector2d};
 
 use super::{entity::{Entity, EntityId, EntityProps}, locks::LockType};
 
@@ -19,7 +19,7 @@ pub enum WorldStateUpdate {
     StopHeroMovement,
     ConstructionTileChange(usize, usize, Construction),
     EngineUpdate(EngineStateUpdate),
-    HandleHit(BulletId, EntityId),
+    HandleHits(BulletId, Vec<EntityId>, Damage),
     HandleBulletCatched(BulletId),
     HandleBulletStopped(BulletId),
     SetPressurePlateState(LockType, bool)

@@ -72,6 +72,12 @@ pub struct Entity {
     #[serde(skip)]
     pub movement_directions: MovementDirections,
 
+    #[serde(skip)]
+    pub hp: f32,
+
+    #[serde(skip)]
+    pub dps: f32,
+
     #[serde(default)]
     pub is_consumable: bool,
     

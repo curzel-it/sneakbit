@@ -114,6 +114,8 @@ impl Species {
             after_dialogue: AfterDialogueBehavior::Nothing,
             is_in_interaction_range: false,
             is_equipped: false,
+            hp: self.hp,
+            dps: self.dps
         }
     }
 
@@ -136,6 +138,7 @@ impl Species {
         entity.is_invulnerable = self.is_invulnerable;
         entity.z_index = self.z_index;
         entity.movement_directions = self.movement_directions;
+        entity.hp = self.hp;
 
         if entity.parent_id == NO_PARENT {
             entity.current_speed = initial_speed;

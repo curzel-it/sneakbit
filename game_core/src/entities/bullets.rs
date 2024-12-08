@@ -3,6 +3,7 @@ use crate::{constants::{HERO_ENTITY_ID, TILE_SIZE}, game_engine::{entity::{Entit
 use super::{pickable_object::object_pick_up_sequence, species::species_by_id};
 
 pub type BulletId = EntityId;
+pub type Damage = f32;
 
 impl Entity {
     pub fn setup_bullet(&mut self) {
@@ -29,10 +30,10 @@ impl Entity {
         if !updates.is_empty() {
             return updates
         }
-        self.check_hits(world)
+        self.check_hits(world, time_since_last_update)
     }
 
-    fn check_hits(&self, world: &World) -> Vec<WorldStateUpdate> {
+    fn check_hits(&self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
         let (previous_x, previous_y) = self.previous_position();
         let previous_hits = world.entities_map[previous_y as usize][previous_x as usize].to_owned();
         let current_hits = world.entities_map[self.frame.y as usize][self.frame.x as usize].to_owned();
@@ -43,11 +44,9 @@ impl Entity {
             .filter(|id| self.is_valid_hit_target(*id))
             .collect();
 
-        if let Some(hit) = valid_hits.first() {
-            vec![WorldStateUpdate::HandleHit(self.id, *hit)]
-        } else {
-            vec![]
-        }
+        let damage = self.dps * time_since_last_update;
+
+        vec![WorldStateUpdate::HandleHits(self.id, valid_hits, damage)]
     }
 
     fn check_stoppers(&self, world: &World) -> Vec<WorldStateUpdate> {

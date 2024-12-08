@@ -160,9 +160,6 @@ impl World {
         let entities = self.entities.borrow();
         let entity = &entities[index];
 
-        if matches!(entity.entity_type, EntityType::Equipment | EntityType::Sword) {
-            println!("Dio cane?? Removing entity {:#?}", entity);
-        }
         if entity.melee_attacks_hero {
             self.melee_attackers.remove(&entity.id);
         }
@@ -316,8 +313,8 @@ impl World {
             WorldStateUpdate::HandleBulletCatched(bullet_id) => {
                 self.handle_bullet_catched(bullet_id)
             }
-            WorldStateUpdate::HandleHit(bullet_id, target_id) => {
-                return self.handle_hit(bullet_id, target_id)
+            WorldStateUpdate::HandleHits(bullet_id, target_ids, damage) => {
+                return self.handle_hits(bullet_id, target_ids, damage)
             }
             WorldStateUpdate::SetPressurePlateState(lock_type, is_down) => {
                 match lock_type {
@@ -334,34 +331,64 @@ impl World {
         vec![]
     }
 
-    fn handle_hit(&mut self, bullet_id: EntityId, target_id: EntityId) -> Vec<EngineStateUpdate> {
+    fn can_be_hit_by_bullet(&self, target: &Entity) -> bool {
+        if target.is_invulnerable {
+            return false
+        }
+        if target.is_dying {
+            return false
+        }
+        if target.parent_id == HERO_ENTITY_ID {
+            return false
+        }
+        if matches!(target.entity_type, EntityType::Bullet | EntityType::Bundle | EntityType::PickableObject) {
+            return false
+        }
+        true
+    }
+
+    fn kill_with_animation(&self, target: &mut Entity) {
+        target.direction = Direction::Unknown;
+        target.current_speed = 0.0;
+        target.is_rigid = false;
+        target.is_dying = true;
+        target.remaining_lifespan = 10.0 / ANIMATIONS_FPS;                
+        target.frame = IntRect::new(target.frame.x, target.frame.y, 1, 1).offset_y(if target.frame.h > 1 { 1 } else { 0 });
+        target.sprite = AnimatedSprite::new(
+            SPRITE_SHEET_ANIMATED_OBJECTS, 
+            IntRect::new(0, 10, 1, 1), 
+            5
+        );
+        self.mark_as_collected_if_needed(target.id);
+    }
+
+    fn handle_target_hit(&self, damage: f32, target: &mut Entity) -> bool {
+        target.hp -= damage;
+        
+        if target.hp <= 0.0 {
+            self.kill_with_animation(target);
+            true
+        } else {
+            false
+        }
+    }
+
+    fn handle_hits(&mut self, bullet_id: EntityId, target_ids: Vec<EntityId>, damage: f32) -> Vec<EngineStateUpdate> {
         let mut updates: Vec<EngineStateUpdate> = vec![];
-        let mut did_hit = false;
-
+        let mut bullet_expended = false;
         let mut entities = self.entities.borrow_mut();
-        if let Some(target) = entities.iter_mut().find(|e| e.id == target_id) {    
-            let is_vulnerable = !target.is_invulnerable || (has_piercing_bullet_skill() && target.melee_attacks_hero);
 
-            if !target.is_dying && is_vulnerable && target.parent_id != HERO_ENTITY_ID && !matches!(target.entity_type, EntityType::Bullet) && !matches!(target.entity_type, EntityType::Bundle) {
-                did_hit = true;
-                target.direction = Direction::Unknown;
-                target.current_speed = 0.0;
-                target.is_rigid = false;
-                target.is_dying = true;
-                target.remaining_lifespan = 10.0 / ANIMATIONS_FPS;                
-                target.frame = IntRect::new(target.frame.x, target.frame.y, 1, 1).offset_y(if target.frame.h > 1 { 1 } else { 0 });
-                target.sprite = AnimatedSprite::new(
-                    SPRITE_SHEET_ANIMATED_OBJECTS, 
-                    IntRect::new(0, 10, 1, 1), 
-                    5
-                );
-                self.mark_as_collected_if_needed(target_id);
-                updates.push(EngineStateUpdate::EntityShoot(target.id, target.species_id));
-            }
+        let targets = entities.iter_mut().filter(|e| {
+            target_ids.contains(&e.id) && self.can_be_hit_by_bullet(e)
+        });
+
+        for target in targets {
+            bullet_expended = self.handle_target_hit(damage, target);
+            updates.push(EngineStateUpdate::EntityShoot(target.id, target.species_id));
         }
         drop(entities);
 
-        if did_hit && bullet_id != 0 && !has_piercing_bullet_skill() {
+        if bullet_expended && bullet_id != 0 && !has_piercing_bullet_skill() {
             updates.append(&mut self.handle_bullet_stopped(bullet_id));
         } 
         updates

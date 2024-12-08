@@ -30,6 +30,7 @@ impl Entity {
             return vec![]
         }
         if world.has_close_attack_key_been_pressed {
+            let hero = world.cached_hero_props;
             let config = slash_config_by_sword_type(self.species_id);
             let offsets = bullet_offsets(world.cached_hero_props.direction);
 
@@ -41,7 +42,7 @@ impl Entity {
                 .map(|(dx, dy)| {
                     let mut bullet = make_hero_bullet(config.species, world, config.lifespan);
                     bullet.offset = Vector2d::zero();
-                    bullet.frame = bullet.frame.offset_by((dx, dy)); 
+                    bullet.frame = hero.hittable_frame.offset_by((dx, dy)); 
                     WorldStateUpdate::AddEntity(Box::new(bullet))
                 })
                 .collect();
@@ -87,16 +88,16 @@ fn slash_sprite_y_for_direction(direction: &Direction) -> i32 {
 fn bullet_offsets(direction: Direction) -> Vec<(i32, i32)> {
     match direction {
         Direction::Up => vec![
-            (-1, 0), (0, -1), (1, 0)
+            (-1, -1), (0, -2), (0, -1), (1, -1)
         ],
         Direction::Down | Direction::Unknown | Direction::Still => vec![
-            (-1, 0), (0, 1), (1, 0)
+            (-1, 1), (0, 2), (0, 1), (1, 1)
         ],
         Direction::Right => vec![
-            (0, -1), (1, 0), (0, 1)
+            (1, -1), (2, 0), (1, 0), (1, 1)
         ],
         Direction::Left => vec![
-            (0, -1), (-1, 0), (0, 1)
+            (-1, -1), (-2, 0), (-1, 0), (-1, 1)
         ],
     }
 }
