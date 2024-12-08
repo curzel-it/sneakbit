@@ -24,7 +24,7 @@ pub struct World {
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
     pub weights_map: Hitmap,
-    pub entities_map: EntityIdsMap,
+    pub idsmap: EntityIdsMap,
     pub direction_based_on_current_keys: Direction,
     pub is_any_arrow_key_down: bool,
     pub has_ranged_attack_key_been_pressed: bool,
@@ -76,7 +76,7 @@ impl World {
             hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             weights_map: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
-            entities_map: hash_map!(),
+            idsmap: hash_map!(),
             direction_based_on_current_keys: Direction::Unknown,
             is_any_arrow_key_down: false,
             has_ranged_attack_key_been_pressed: false,
@@ -614,7 +614,7 @@ impl World {
     pub fn entity_ids(&self, x: i32, y: i32) -> Vec<u32> {
         if x < 0 || y < 0 { return vec![] }
         let index = (x + y * self.bounds.w) as usize;
-        self.entities_map.get(&index).cloned().unwrap_or_default()
+        self.idsmap.get(&index).cloned().unwrap_or_default()
     }
 
     pub fn has_weight(&self, x: i32, y: i32) -> bool {
@@ -677,13 +677,10 @@ impl World {
     }
 
     pub fn update_hitmaps(&mut self) {
-        self.hitmap = self.tiles_hitmap.clone_from();
+        self.hitmap.bits.copy_from_bitslice(&self.tiles_hitmap.bits);
         self.weights_map.clear();
-        self.entities_map.clear();
-        self.compute_hitmap();
-    }
-
-    fn compute_hitmap(&mut self) {
+        self.idsmap.clear();
+        
         let entities = self.entities.borrow();
         let height = self.bounds.h as usize;
         let width = self.bounds.w as usize;
@@ -713,9 +710,7 @@ impl World {
                     if has_weight {
                         self.weights_map.set(x, y, true);
                     }
-                    //self.entities_map[y][x].push(id);
-                    //let index = x + y * self.bounds.w;
-                    self.entities_map.entry(idx).or_default().push(id);
+                    self.idsmap.entry(idx).or_default().push(id);
                 }
             }
         });
@@ -725,6 +720,8 @@ impl World {
     pub fn update_tiles_hitmap(&mut self) {    
         self.weights_map = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
         self.tiles_hitmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
+        self.hitmap.bits.resize(self.tiles_hitmap.bits.len(), false);
+        self.hitmap.width = self.tiles_hitmap.width;
 
         if !is_creative_mode() && !self.biome_tiles.tiles.is_empty() {
             let min_row = self.bounds.y as usize;
@@ -783,11 +780,12 @@ impl Hitmap {
         let index = self.get_index(x, y);
         self.bits.set(index, value);
     }
-
+    
     fn clone_from(&self) -> Self {
         Hitmap {
             bits: self.bits.clone(),
             width: self.width,
         }
     }
+
 }
