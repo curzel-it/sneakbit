@@ -6,7 +6,6 @@ pub mod death_screen;
 pub mod destination;
 pub mod dialogues;
 pub mod keyboard_directions;
-pub mod item_effects;
 pub mod light_conditions;
 pub mod linear_movement;
 pub mod links;

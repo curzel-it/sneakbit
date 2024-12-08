@@ -2,7 +2,7 @@ use std::{fs::File, io::{BufReader, Write}};
 
 use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Error;
-use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::known_species::SPECIES_HERO, features::{cutscenes::CutScene, light_conditions::LightConditions}, game_engine::{entity::Entity, world::{World, WorldType}}, maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile, tiles::TileSet}};
+use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::known_species::SPECIES_HERO, features::{cutscenes::CutScene, light_conditions::LightConditions}, game_engine::{entity::Entity, world::{World, WorldType}}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::ConstructionTile, tiles::TileSet}, utils::rect::IntRect};
 
 impl World {
     pub fn load(id: u32) -> Option<Self> {
@@ -80,7 +80,36 @@ impl World {
         world.load_construction_tiles(construction_tile_set);
 
         world
-    }    
+    }
+    
+    fn load_biome_tiles(&mut self, tiles: TileSet<BiomeTile>) {
+        let mut grass = BiomeTile::from_data('1');
+        grass.setup_neighbors(Biome::Grass, Biome::Grass, Biome::Grass, Biome::Grass);
+
+        let tiles = if tiles.tiles.is_empty() {
+            TileSet::<BiomeTile>::with_tiles(
+                SPRITE_SHEET_BIOME_TILES,
+                vec![vec![grass; self.bounds.w as usize]; self.bounds.h as usize]
+            )
+        } else {
+            tiles
+        };
+        self.bounds = IntRect::new(0, 0, tiles.tiles[0].len() as i32, tiles.tiles.len() as i32);
+        self.biome_tiles = tiles;            
+    }
+
+    fn load_construction_tiles(&mut self, tiles: TileSet<ConstructionTile>) {
+        let nothing = ConstructionTile::from_data('0');
+        let tiles = if tiles.tiles.is_empty() {
+            TileSet::<ConstructionTile>::with_tiles(
+                SPRITE_SHEET_CONSTRUCTION_TILES,
+                vec![vec![nothing; self.bounds.w as usize]; self.bounds.y as usize]
+            )
+        } else {
+            tiles
+        };
+        self.constructions_tiles = tiles;     
+    }
 }
 
 #[derive(Serialize, Deserialize)]

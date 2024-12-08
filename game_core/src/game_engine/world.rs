@@ -1,12 +1,12 @@
-use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
+use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::Debug};
 
 use common_macros::hash_set;
 use serde::{Deserialize, Serialize};
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{entity::{Entity, EntityId, EntityProps}, hitmap::{EntityIdsMap, Hitmap, WeightsMap}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
+use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct World {
     pub id: u32,
     pub revision: u32,
@@ -43,6 +43,10 @@ pub struct World {
 
 const WORLD_SIZE_COLUMNS: usize = 30;
 const WORLD_SIZE_ROWS: usize = 30;
+
+pub type Hitmap = Vec<Vec<bool>>;
+pub type EntityIdsMap = Vec<Vec<Vec<EntityId>>>;
+pub type WeightsMap = Vec<Vec<i32>>;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum WorldType {
@@ -276,9 +280,6 @@ impl World {
             }
             WorldStateUpdate::ToggleDemandAttention(id) => {
                 self.toggle_demand_attention(id)
-            }
-            WorldStateUpdate::UseItem(species_id) => {
-                self.use_item(species_id)
             }
             WorldStateUpdate::CacheHeroProps(props) => { 
                 self.cached_hero_props = *props; 
@@ -584,26 +585,13 @@ impl World {
             self.remove_entity_at_index(index)
         }      
     }
-}
-
-impl Debug for World {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("Game")
-            .field("bounds", &self.bounds)
-            .field("entities", &self.entities)
-            .finish()
-    }
-}
-
-impl World {        
+    
     pub fn update_no_input(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> {
         let keyboard = &NO_KEYBOARD_EVENTS;
         let viewport = self.bounds;
         self.update(time_since_last_update, &viewport, keyboard)
     }
-}
 
-impl World {
     pub fn hits(&self, x: usize, y: usize) -> bool {
         if y >= self.hitmap.len() { false }
         else if x >= self.hitmap[y].len() { false }
@@ -661,5 +649,106 @@ impl World {
 
     pub fn is_pressure_plate_up(&self, lock_type: &LockType) -> bool {
         !self.is_pressure_plate_down(lock_type)
+    }
+    
+    pub fn compute_visible_entities(&self, viewport: &IntRect) -> Vec<(usize, u32)> {
+        let min_row = viewport.y - 1;
+        let max_row = viewport.y + viewport.h + 1;
+        let min_col = viewport.x - 1;
+        let max_col = viewport.x + viewport.w + 1;
+
+        self.entities.borrow().iter()
+            .enumerate()
+            .filter_map(|(index, e)| {
+                let id = e.id;
+                let frame = e.frame;
+                let max_y = frame.y + frame.h;
+                let max_x = frame.x + frame.w;
+                let is_inside_viewport = max_y >= min_row && frame.y <= max_row && max_x >= min_col && frame.x <= max_col;
+
+                if id == HERO_ENTITY_ID || is_inside_viewport {
+                    Some((index, id))
+                } else {
+                    None
+                }
+            })
+            .collect()
+    }
+
+    pub fn update_hitmaps(&mut self) {
+        (self.hitmap, self.entities_map, self.weights_map) = self.compute_hitmap();
+    }    
+
+    fn compute_hitmap(&self) -> (Hitmap, EntityIdsMap, WeightsMap) {
+        let entities = self.entities.borrow();    
+        let height = self.bounds.h as usize;
+        let width = self.bounds.w as usize;
+    
+        let mut hitmap = self.tiles_hitmap.clone();
+        let mut idsmap = vec![vec![vec![]; width]; height];
+        let mut weightsmap = vec![vec![0; width]; height];
+    
+        for &(index, id) in &self.visible_entities {
+            let entity = &entities[index];
+            let hittable_frame = entity.hittable_frame();
+
+            let col_start = hittable_frame.x.max(0) as usize;
+            let col_end = ((hittable_frame.x + hittable_frame.w) as usize).max(0).min(width);            
+            let row_start = hittable_frame.y.max(0) as usize;
+            let row_end = ((hittable_frame.y + hittable_frame.h)  as usize).max(0).min(height);
+    
+            let is_rigid = entity.is_rigid && id != HERO_ENTITY_ID;
+            let has_weight = entity.has_weight();
+    
+            for x in col_start..col_end {
+                for y in row_start..row_end {
+                    if is_rigid {
+                        hitmap[y][x] = true;
+                    }
+                    if has_weight {
+                        weightsmap[y][x] += 1;
+                    }
+                    idsmap[y][x].push(id);
+                }
+            }
+        }
+    
+        (hitmap, idsmap, weightsmap)
+    }
+
+    #[allow(clippy::needless_range_loop)] 
+    pub fn update_tiles_hitmap(&mut self) {    
+        let mut hitmap = vec![vec![false; self.bounds.w as usize]; self.bounds.h as usize];
+
+        if !is_creative_mode() && !self.biome_tiles.tiles.is_empty() {
+            let min_row = self.bounds.y as usize;
+            let max_row = ((self.bounds.y + self.bounds.h) as usize).min(self.biome_tiles.tiles.len());
+            let min_col = self.bounds.x as usize;
+            let max_col = ((self.bounds.x + self.bounds.w) as usize).min(self.biome_tiles.tiles[0].len());
+    
+            for row in min_row..max_row {
+                for col in min_col..max_col {
+                    if !hitmap[row][col] {
+                        let biome_tile = &self.biome_tiles.tiles[row][col];
+                        let construction_tile = &self.constructions_tiles.tiles[row][col];
+    
+                        let is_obstacle = !matches!(construction_tile.tile_type, Construction::Bridge) && (
+                            biome_tile.is_obstacle() || construction_tile.is_obstacle()
+                        );
+    
+                        if is_obstacle {
+                            hitmap[row][col] = true;
+                        }
+                    }
+                }
+            }
+        }
+        self.tiles_hitmap = hitmap;
+    }
+}
+
+impl Entity {
+    fn has_weight(&self) -> bool {
+        !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate)
     }
 }
