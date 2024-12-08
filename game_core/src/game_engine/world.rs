@@ -604,7 +604,11 @@ impl World {
         if x < 0 || y < 0 { false }
         else if y >= self.bounds.h { false }
         else if x >= self.bounds.w { false }
-        else { self.hitmap.hits(x as usize, y as usize) }
+        else { 
+            let x = x as usize;
+            let y = y as usize;
+            self.hitmap.hits(x, y) || self.tiles_hitmap.hits(x, y) 
+        }
     }
 
     pub fn hits_or_out_of_bounds_i32(&self, x: i32, y: i32) -> bool {
@@ -677,7 +681,7 @@ impl World {
     }
 
     pub fn update_hitmaps(&mut self) {
-        self.hitmap.bits.copy_from_bitslice(&self.tiles_hitmap.bits);
+        self.hitmap.clear();
         self.weights_map.clear();
         self.idsmap.clear();
         
@@ -720,8 +724,7 @@ impl World {
     pub fn update_tiles_hitmap(&mut self) {    
         self.weights_map = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
         self.tiles_hitmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
-        self.hitmap.bits.resize(self.tiles_hitmap.bits.len(), false);
-        self.hitmap.width = self.tiles_hitmap.width;
+        self.hitmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
 
         if !is_creative_mode() && !self.biome_tiles.tiles.is_empty() {
             let min_row = self.bounds.y as usize;
@@ -780,12 +783,4 @@ impl Hitmap {
         let index = self.get_index(x, y);
         self.bits.set(index, value);
     }
-    
-    fn clone_from(&self) -> Self {
-        Hitmap {
-            bits: self.bits.clone(),
-            width: self.width,
-        }
-    }
-
 }
