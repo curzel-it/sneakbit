@@ -80,7 +80,7 @@ pub fn would_over_weight(frame: &IntRect, direction: &Direction, world: &World) 
     let base_x = frame.x;
     let x = base_x + col_offset;
     let y = base_y + row_offset;
-    world.weight_i32(x, y) > 0
+    world.has_weight(x, y)
 }
 
 pub fn would_collide_with_hero(frame: &IntRect, direction: &Direction, world: &World) -> bool {

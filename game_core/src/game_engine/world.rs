@@ -23,7 +23,7 @@ pub struct World {
     pub cached_hero_props: EntityProps,
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
-    pub weights_map: WeightsMap,
+    pub weights_map: Hitmap,
     pub entities_map: EntityIdsMap,
     pub direction_based_on_current_keys: Direction,
     pub is_any_arrow_key_down: bool,
@@ -59,12 +59,17 @@ impl Hitmap {
         }
     }
 
+    fn clear(&mut self) {
+        self.bits.fill(false);
+    }
+
     fn get_index(&self, x: usize, y: usize) -> usize {
         y * self.width + x
     }
 
     fn hits(&self, x: usize, y: usize) -> bool {
-        self.bits[self.get_index(x, y)]
+        let index = self.get_index(x, y);
+        self.bits[index]
     }
 
     fn set(&mut self, x: usize, y: usize, value: bool) {
@@ -105,7 +110,7 @@ impl World {
             cached_hero_props: EntityProps::default(),
             hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
-            weights_map: vec![vec![0; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
+            weights_map: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             entities_map: vec![vec![vec![]; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
             direction_based_on_current_keys: Direction::Unknown,
             is_any_arrow_key_down: false,
@@ -628,7 +633,7 @@ impl World {
     }
 
     pub fn hits_i32(&self, x: i32, y: i32) -> bool {
-        if x < 0 || y < 0 { return false }
+        if x < 0 || y < 0 { false }
         else if y >= self.bounds.h { false }
         else if x >= self.bounds.w { false }
         else { self.hitmap.hits(x as usize, y as usize) }
@@ -643,15 +648,11 @@ impl World {
         self.entities_map[y as usize][x as usize].clone()
     }
 
-    pub fn weight(&self, x: usize, y: usize) -> i32 {
-        if y >= self.weights_map.len() { 0 }
-        else if x >= self.weights_map[y].len() { 0 }
-        else { self.weights_map[y][x] }
-    }
-
-    pub fn weight_i32(&self, x: i32, y: i32) -> i32 {
-        if x < 0 || y < 0 { return 0 }
-        self.weight(x as usize, y as usize)
+    pub fn has_weight(&self, x: i32, y: i32) -> bool {
+        if x < 0 || y < 0 { false }
+        else if y >= self.bounds.h { false }
+        else if x >= self.bounds.w { false }
+        else { self.weights_map.hits(x as usize, y as usize) }
     }
 
     pub fn is_creep(&self, id: u32) -> bool {
@@ -708,7 +709,7 @@ impl World {
 
     pub fn update_hitmaps(&mut self) {
         self.hitmap = self.tiles_hitmap.clone_from();
-        self.weights_map = vec![vec![0; self.bounds.w as usize]; self.bounds.h as usize];
+        self.weights_map.clear();
         self.entities_map = vec![vec![vec![]; self.bounds.w as usize]; self.bounds.h as usize];
         self.compute_hitmap();
     }
@@ -741,7 +742,7 @@ impl World {
                         self.hitmap.bits.set(idx, true);
                     }
                     if has_weight {
-                        self.weights_map[y][x] += 1;
+                        self.weights_map.set(x, y, true);
                     }
                     self.entities_map[y][x].push(id);
                 }
@@ -751,6 +752,7 @@ impl World {
 
     #[allow(clippy::needless_range_loop)] 
     pub fn update_tiles_hitmap(&mut self) {    
+        self.weights_map = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
         self.tiles_hitmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
 
         if !is_creative_mode() && !self.biome_tiles.tiles.is_empty() {
