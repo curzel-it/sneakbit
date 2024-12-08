@@ -1,12 +1,13 @@
 use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::Debug};
 
+use bitvec::prelude::*;
 use common_macros::hash_set;
 use serde::{Deserialize, Serialize};
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct World {
     pub id: u32,
     pub revision: u32,
@@ -44,7 +45,41 @@ pub struct World {
 const WORLD_SIZE_COLUMNS: usize = 30;
 const WORLD_SIZE_ROWS: usize = 30;
 
-pub type Hitmap = Vec<Vec<bool>>;
+#[derive(Clone)]
+pub struct Hitmap {
+    bits: BitVec,
+    width: usize,
+}
+
+impl Hitmap {
+    fn new(width: usize, height: usize) -> Self {
+        Hitmap {
+            bits: bitvec![0; width * height],
+            width,
+        }
+    }
+
+    fn get_index(&self, x: usize, y: usize) -> usize {
+        y * self.width + x
+    }
+
+    fn hits(&self, x: usize, y: usize) -> bool {
+        self.bits[self.get_index(x, y)]
+    }
+
+    fn set(&mut self, x: usize, y: usize, value: bool) {
+        let index = self.get_index(x, y);
+        self.bits.set(index, value);
+    }
+
+    fn clone_from(&self) -> Self {
+        Hitmap {
+            bits: self.bits.clone(),
+            width: self.width,
+        }
+    }
+}
+
 pub type EntityIdsMap = Vec<Vec<Vec<EntityId>>>;
 pub type WeightsMap = Vec<Vec<i32>>;
 
@@ -68,8 +103,8 @@ impl World {
             visible_entities: vec![],
             ephemeral_state: false,
             cached_hero_props: EntityProps::default(),
-            hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
-            tiles_hitmap: vec![vec![false; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
+            hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
+            tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             weights_map: vec![vec![0; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
             entities_map: vec![vec![vec![]; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
             direction_based_on_current_keys: Direction::Unknown,
@@ -556,7 +591,7 @@ impl World {
         if hero.is_around_and_pointed_at(target, &hero_direction) {
             return true 
         }
-        if self.hitmap[(hero.y as usize).saturating_sub(1)][hero.x as usize] && hero.x == target.x && hero.y.saturating_sub(3) == target.y && matches!(hero_direction, Direction::Up) {
+        if self.hits_i32(hero.x, hero.y - 1) && hero.x == target.x && hero.y.saturating_sub(3) == target.y && matches!(hero_direction, Direction::Up) {
             return true
         }
         false
@@ -592,19 +627,15 @@ impl World {
         self.update(time_since_last_update, &viewport, keyboard)
     }
 
-    pub fn hits(&self, x: usize, y: usize) -> bool {
-        if y >= self.hitmap.len() { false }
-        else if x >= self.hitmap[y].len() { false }
-        else { self.hitmap[y][x] }
-    }
-
     pub fn hits_i32(&self, x: i32, y: i32) -> bool {
         if x < 0 || y < 0 { return false }
-        self.hits(x as usize, y as usize)
+        else if y >= self.bounds.h { false }
+        else if x >= self.bounds.w { false }
+        else { self.hitmap.hits(x as usize, y as usize) }
     }
 
     pub fn hits_or_out_of_bounds_i32(&self, x: i32, y: i32) -> bool {
-        x < 0 || y < 0 || self.hits(x as usize, y as usize)
+        x < 0 || y < 0 || self.hits_i32(x, y)
     }
 
     pub fn entity_ids(&self, x: i32, y: i32) -> Vec<u32> {
@@ -676,49 +707,51 @@ impl World {
     }
 
     pub fn update_hitmaps(&mut self) {
-        (self.hitmap, self.entities_map, self.weights_map) = self.compute_hitmap();
-    }    
+        self.hitmap = self.tiles_hitmap.clone_from();
+        self.weights_map = vec![vec![0; self.bounds.w as usize]; self.bounds.h as usize];
+        self.entities_map = vec![vec![vec![]; self.bounds.w as usize]; self.bounds.h as usize];
+        self.compute_hitmap();
+    }
 
-    fn compute_hitmap(&self) -> (Hitmap, EntityIdsMap, WeightsMap) {
-        let entities = self.entities.borrow();    
+    fn compute_hitmap(&mut self) {
+        let entities = self.entities.borrow();
         let height = self.bounds.h as usize;
         let width = self.bounds.w as usize;
-    
-        let mut hitmap = self.tiles_hitmap.clone();
-        let mut idsmap = vec![vec![vec![]; width]; height];
-        let mut weightsmap = vec![vec![0; width]; height];
-    
-        for &(index, id) in &self.visible_entities {
+
+        self.visible_entities.iter().for_each(|&(index, id)| {
             let entity = &entities[index];
             let hittable_frame = entity.hittable_frame();
 
             let col_start = hittable_frame.x.max(0) as usize;
-            let col_end = ((hittable_frame.x + hittable_frame.w) as usize).max(0).min(width);            
+            let col_end = ((hittable_frame.x + hittable_frame.w) as usize).min(width);
             let row_start = hittable_frame.y.max(0) as usize;
-            let row_end = ((hittable_frame.y + hittable_frame.h)  as usize).max(0).min(height);
-    
+            let row_end = ((hittable_frame.y + hittable_frame.h) as usize).min(height);
+
             let is_rigid = entity.is_rigid && id != HERO_ENTITY_ID;
             let has_weight = entity.has_weight();
-    
-            for x in col_start..col_end {
-                for y in row_start..row_end {
+
+            if !is_rigid && !has_weight {
+                return;
+            }
+
+            for y in row_start..row_end {
+                for x in col_start..col_end {
+                    let idx = y * width + x;
                     if is_rigid {
-                        hitmap[y][x] = true;
+                        self.hitmap.bits.set(idx, true);
                     }
                     if has_weight {
-                        weightsmap[y][x] += 1;
+                        self.weights_map[y][x] += 1;
                     }
-                    idsmap[y][x].push(id);
+                    self.entities_map[y][x].push(id);
                 }
             }
-        }
-    
-        (hitmap, idsmap, weightsmap)
+        });
     }
 
     #[allow(clippy::needless_range_loop)] 
     pub fn update_tiles_hitmap(&mut self) {    
-        let mut hitmap = vec![vec![false; self.bounds.w as usize]; self.bounds.h as usize];
+        self.tiles_hitmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
 
         if !is_creative_mode() && !self.biome_tiles.tiles.is_empty() {
             let min_row = self.bounds.y as usize;
@@ -728,7 +761,7 @@ impl World {
     
             for row in min_row..max_row {
                 for col in min_col..max_col {
-                    if !hitmap[row][col] {
+                    if !self.tiles_hitmap.hits(col, row) {
                         let biome_tile = &self.biome_tiles.tiles[row][col];
                         let construction_tile = &self.constructions_tiles.tiles[row][col];
     
@@ -737,13 +770,12 @@ impl World {
                         );
     
                         if is_obstacle {
-                            hitmap[row][col] = true;
+                            self.tiles_hitmap.set(col, row, true);
                         }
                     }
                 }
             }
         }
-        self.tiles_hitmap = hitmap;
     }
 }
 

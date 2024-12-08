@@ -145,10 +145,7 @@ impl World {
             if ny == y && nx == x || ny == y+1 && nx == x {
                 continue;
             }
-            if ny < 0 || ny >= self.hitmap.len() as i32 || nx < 0 || nx >= self.hitmap[0].len() as i32 {
-                continue;
-            }    
-            if self.hitmap[ny as usize][nx as usize] {
+            if self.hits_i32(nx, ny) {
                 return false;
             }
         }    
@@ -168,7 +165,7 @@ impl World {
                 let x = self.bounds.w / 2;
                 let mut y = self.bounds.h / 2;
 
-                while y < self.bounds.h - 1 && self.hitmap[y as usize][x as usize] {
+                while y < self.bounds.h - 1 && self.hits_i32(x, y) {
                     y += 1
                 }
                 return (x, y)

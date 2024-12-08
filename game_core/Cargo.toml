@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+bitvec = "1.0.1"
 common_macros = "0.1.1"
 lazy_static = "1.5.0"
 rand = "0.8.5"
