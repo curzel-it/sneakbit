@@ -137,11 +137,12 @@ pub struct RenderableItem {
 
 pub fn get_renderables_vec() -> Vec<RenderableItem> {
     let world = &engine().world;
-    let visible_entities = &world.visible_entities;
-    let entities_map = world.entities.borrow();    
+    let visible_entity_ids = &world.visible_entities;
+    let all_entities = world.entities.borrow();    
 
-    let mut entities: Vec<&Entity> = visible_entities.iter()
-        .map(|(index, _)| &entities_map[*index])
+    let mut entities: Vec<&Entity> = visible_entity_ids
+        .iter()
+        .map(|(index, _)| &all_entities[*index])
         .filter(|e| !e.is_equipment() || e.is_equipped)
         .collect();
 
