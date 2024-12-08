@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{HERO_ENTITY_ID, NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{directions::MovementDirections, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}, world::World};
 
@@ -313,5 +313,21 @@ impl Entity {
 impl Entity {
     pub fn is_equipment(&self) -> bool {
         matches!(self.entity_type, EntityType::Equipment | EntityType::Sword)
+    }
+
+    pub fn can_be_hit_by_bullet(&self) -> bool {
+        if self.is_invulnerable {
+            return false
+        }
+        if self.is_dying {
+            return false
+        }
+        if self.parent_id == HERO_ENTITY_ID {
+            return false
+        }
+        if matches!(self.entity_type, EntityType::Bullet | EntityType::Bundle | EntityType::PickableObject) {
+            return false
+        }
+        true
     }
 }

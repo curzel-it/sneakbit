@@ -340,22 +340,6 @@ impl World {
         vec![]
     }
 
-    fn can_be_hit_by_bullet(&self, target: &Entity) -> bool {
-        if target.is_invulnerable {
-            return false
-        }
-        if target.is_dying {
-            return false
-        }
-        if target.parent_id == HERO_ENTITY_ID {
-            return false
-        }
-        if matches!(target.entity_type, EntityType::Bullet | EntityType::Bundle | EntityType::PickableObject) {
-            return false
-        }
-        true
-    }
-
     fn kill_with_animation(&self, target: &mut Entity) {
         target.direction = Direction::Unknown;
         target.current_speed = 0.0;
@@ -388,7 +372,7 @@ impl World {
         let mut entities = self.entities.borrow_mut();
 
         let targets = entities.iter_mut().filter(|e| {
-            target_ids.contains(&e.id) && self.can_be_hit_by_bullet(e)
+            target_ids.contains(&e.id) && e.can_be_hit_by_bullet()
         });
 
         for target in targets {
