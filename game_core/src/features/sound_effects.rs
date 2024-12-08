@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common_macros::hash_set;
 
-use crate::{constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{AddToInventoryReason, EngineStateUpdate}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_hero_on_slippery_surface, menus::toasts::{Toast, ToastMode}};
+use crate::{constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{AddToInventoryReason, EngineStateUpdate, SpecialEffect}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_hero_on_slippery_surface, menus::toasts::{Toast, ToastMode}};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[repr(C)]
@@ -20,6 +20,8 @@ pub enum SoundEffect {
     WorldChange = 11,
     StepTaken = 12,
     HintReceived = 13,
+    SwordSlash = 14,
+    ClaymoreSlash = 15,
 }
 
 pub struct SoundEffectsManager {
@@ -76,12 +78,20 @@ impl SoundEffectsManager {
             EngineStateUpdate::AddToInventory(species_id, reason) => self.handle_item_collection(*species_id, reason),
             EngineStateUpdate::Toast(toast) => self.check_hint_received(toast),
             EngineStateUpdate::DeathScreen => self.handle_game_over(),
+            EngineStateUpdate::SpecialEffect(effect) => self.handle_special_effect(effect),
             _ => {}
         }
     }
 
     fn prepare(&mut self, sound_effect: SoundEffect) {
         self.next_sound_effects.insert(sound_effect);
+    }
+
+    fn handle_special_effect(&mut self, effect: &SpecialEffect) {
+        match effect {
+            SpecialEffect::SwordSlash => self.prepare(SoundEffect::SwordSlash),
+            SpecialEffect::ClaymoreSlash => self.prepare(SoundEffect::ClaymoreSlash),
+        }
     }
 
     fn handle_game_over(&mut self) {

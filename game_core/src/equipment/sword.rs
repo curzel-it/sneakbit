@@ -1,4 +1,4 @@
-use crate::{constants::{CLAYMORE_SLASH_COOLDOWN, CLAYMORE_SLASH_LIFESPAN, SWORD_SLASH_COOLDOWN, SWORD_SLASH_LIFESPAN}, entities::{bullets::make_hero_bullet, known_species::{SPECIES_CLAYMORE, SPECIES_CLAYMORE_SLASH, SPECIES_SWORD_SLASH}, species::SpeciesId}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::{directions::Direction, vector::Vector2d}};
+use crate::{constants::{CLAYMORE_SLASH_COOLDOWN, CLAYMORE_SLASH_LIFESPAN, SWORD_SLASH_COOLDOWN, SWORD_SLASH_LIFESPAN}, entities::{bullets::make_hero_bullet, known_species::{SPECIES_CLAYMORE, SPECIES_CLAYMORE_SLASH, SPECIES_SWORD_SLASH}, species::SpeciesId}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
 
 use super::equipment::is_equipped;
 
@@ -38,7 +38,7 @@ impl Entity {
             self.sprite.reset();
             self.sprite.frame.y = slash_sprite_y_for_direction(&self.direction);            
 
-            return offsets.into_iter()
+            let mut updates: Vec<WorldStateUpdate> = offsets.into_iter()
                 .map(|(dx, dy)| {
                     let mut bullet = make_hero_bullet(config.species, world, config.lifespan);
                     bullet.offset = Vector2d::zero();
@@ -46,6 +46,10 @@ impl Entity {
                     WorldStateUpdate::AddEntity(Box::new(bullet))
                 })
                 .collect();
+
+            updates.push(WorldStateUpdate::EngineUpdate(EngineStateUpdate::SpecialEffect(config.effect)));
+
+            return updates
         }
         self.update_sprite_for_current_state();
 
@@ -56,7 +60,8 @@ impl Entity {
 struct SlashConfig {
     cooldown: f32,
     species: SpeciesId,
-    lifespan: f32
+    lifespan: f32,
+    effect: SpecialEffect
 }
 
 fn slash_config_by_sword_type(sword_species_id: SpeciesId) -> SlashConfig {
@@ -64,12 +69,14 @@ fn slash_config_by_sword_type(sword_species_id: SpeciesId) -> SlashConfig {
         SPECIES_CLAYMORE => SlashConfig { 
             cooldown: CLAYMORE_SLASH_COOLDOWN, 
             species: SPECIES_CLAYMORE_SLASH, 
-            lifespan: CLAYMORE_SLASH_LIFESPAN
+            lifespan: CLAYMORE_SLASH_LIFESPAN,
+            effect: SpecialEffect::ClaymoreSlash
         },
         _ => SlashConfig { 
             cooldown: SWORD_SLASH_COOLDOWN, 
             species: SPECIES_SWORD_SLASH, 
-            lifespan: SWORD_SLASH_LIFESPAN
+            lifespan: SWORD_SLASH_LIFESPAN,
+            effect: SpecialEffect::SwordSlash
         }
     }
 }

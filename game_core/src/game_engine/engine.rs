@@ -215,15 +215,10 @@ impl GameEngine {
             EngineStateUpdate::NewGame => {
                 self.start_new_game()
             }
-            EngineStateUpdate::EntityKilled(_, _) => {
-                // ...
-            }
-            EngineStateUpdate::BulletBounced => {
-                // ...
-            }
             EngineStateUpdate::ExternalLink(link) => {
                 self.links_handler.open(link);
             }
+            _ => {}
         }
     }
     

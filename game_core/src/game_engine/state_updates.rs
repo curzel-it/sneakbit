@@ -42,7 +42,14 @@ pub enum EngineStateUpdate {
     ToggleFullScreen,
     NewGame,
     BulletBounced,
+    SpecialEffect(SpecialEffect),
     ExternalLink(String)
+}
+
+#[derive(Debug, Clone)]
+pub enum SpecialEffect {
+    SwordSlash,
+    ClaymoreSlash
 }
 
 #[derive(Debug, Clone)]
