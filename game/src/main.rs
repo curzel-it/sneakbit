@@ -12,14 +12,20 @@ use sys_locale::get_locale;
 
 const MAX_FPS: u32 = 60;
 
-fn main() {
-    let mut needs_window_init = true;
-    let mut latest_world_id = 0;
-    let mut music_was_enabled = true;
-    let mut is_fullscreen = false;
-    let mut total_run_time: f32 = 0.0;
-    let creative_mode = env::args().any(|arg| arg == "creative");
+struct GameContext<'a> {
+    rl: RaylibHandle,
+    rl_thread: RaylibThread,
+    sound_library: HashMap<AppSound, Sound<'a>>,
+    needs_window_init: bool,
+    latest_world_id: u32,
+    music_was_enabled: bool,
+    is_fullscreen: bool,
+    total_run_time: f32,
+    creative_mode: bool,
+    using_controller: bool
+}
 
+fn main() {
     initialize_config_paths(
         false,
         TILE_SIZE * 1.8,
@@ -29,70 +35,72 @@ fn main() {
         local_path("data/save.json"),
         local_path("lang")
     );
-    initialize_game(creative_mode);    
-    set_links_handler(Box::new(MyLinkHandler {}));
 
-    let (mut rl, thread) = start_rl();    
+    let (rl, rl_thread) = start_rl();    
     let mut rl_audio = start_rl_audio();
-    let mut sound_library = load_sounds(&mut rl_audio);
-    let mut using_controller = false;
+
+    let mut context = GameContext {
+        rl,
+        rl_thread,
+        sound_library: load_sounds(&mut rl_audio),
+        needs_window_init: true,
+        latest_world_id: 0,
+        music_was_enabled: true,
+        is_fullscreen: false,
+        total_run_time: 0.0,
+        creative_mode: env::args().any(|arg| arg == "creative"),
+        using_controller: false
+    };
+
+    initialize_game(context.creative_mode);    
+    set_links_handler(Box::new(MyLinkHandler {}));
         
     if bool_for_global_key(&StorageKey::fullscreen()) {
         engine_set_wants_fullscreen();
     }
 
     while is_game_running() {
-        let time_since_last_update = rl.get_frame_time().min(0.5);
-        total_run_time += time_since_last_update;
+        let time_since_last_update = context.rl.get_frame_time().min(0.5);
+        context.total_run_time += time_since_last_update;
 
-        let wants_fullscreen = engine().wants_fullscreen;
-        if wants_fullscreen != is_fullscreen {
-            is_fullscreen = wants_fullscreen;
-            needs_window_init = true;
-            set_fullscreen(&mut rl, wants_fullscreen);
-            println!("Toggled fullscreen (now {})", is_fullscreen);
-        }
-
-        if needs_window_init || rl.is_window_resized() {
-            needs_window_init = false;
-            handle_window_size_changed(&mut rl);
-        }
-        if rl.window_should_close() && !rl.is_key_pressed(raylib::consts::KeyboardKey::KEY_ESCAPE) {
-            stop_game();
-        }
-
-        using_controller = handle_keyboard_updates(
-            &mut rl, 
-            total_run_time, 
-            time_since_last_update, 
-            using_controller
-        );
-
-        handle_mouse_updates(&mut rl, get_rendering_config().rendering_scale);
+        handle_fullscreen_changed(&mut context);
+        handle_window_size_changed(&mut context);
+        handle_game_closed(&mut context);
+        handle_keyboard_updates(&mut context, time_since_last_update);
+        handle_mouse_updates(&mut context.rl, get_rendering_config().rendering_scale);
         update_game(time_since_last_update);
+        handle_world_changed(&mut context);
+        render_frame(&mut context.rl, &context.rl_thread);  
+        play_sound_effects(&context.sound_library);
+        play_music(&mut context);
+    }
+}
 
-        let current_world = current_world_id(); 
-        if latest_world_id != current_world {
-            latest_world_id = current_world;
-            load_tile_map_textures(&mut rl, &thread, current_world);
-            
-            if is_music_enabled() {
-                update_sound_track(&mut sound_library);
-            }
-        }
-
-        render_frame(&mut rl, &thread);  
+fn handle_world_changed(context: &mut GameContext) {
+    let current_world = current_world_id(); 
+    if context.latest_world_id != current_world {
+        context.latest_world_id = current_world;
+        load_tile_map_textures(&mut context.rl, &context.rl_thread, current_world);
         
-        if are_sound_effects_enabled() {
-            play_sound_effects(&sound_library);
-        }
         if is_music_enabled() {
-            music_was_enabled = true;
-            update_sound_track(&mut sound_library);
-        } else if music_was_enabled {
-            music_was_enabled = false;
-            stop_music(&mut sound_library);
+            update_sound_track(&mut context.sound_library);
         }
+    }
+}
+
+fn handle_game_closed(context: &mut GameContext) {
+    if context.rl.window_should_close() && !context.rl.is_key_pressed(raylib::consts::KeyboardKey::KEY_ESCAPE) {
+        stop_game();
+    }
+}
+
+fn handle_fullscreen_changed(context: &mut GameContext) {
+    let wants_fullscreen = engine().wants_fullscreen;
+    if wants_fullscreen != context.is_fullscreen {
+        context.is_fullscreen = wants_fullscreen;
+        context.needs_window_init = true;
+        set_fullscreen(&mut context.rl, wants_fullscreen);
+        println!("Toggled fullscreen (now {})", context.is_fullscreen);
     }
 }
 
@@ -181,37 +189,41 @@ fn start_rl_audio() -> Result<raylib::prelude::RaylibAudio, RaylibAudioInitError
     RaylibAudio::init_audio_device()
 }
 
-fn handle_window_size_changed(rl: &mut RaylibHandle) {
-    if !is_rendering_config_initialized() {
-        return
+fn handle_window_size_changed(context: &mut GameContext) {
+    if context.needs_window_init || context.rl.is_window_resized() {
+        context.needs_window_init = false;
+
+        if !is_rendering_config_initialized() {
+            return
+        }
+        let window_scale = context.rl.get_window_scale_dpi().x;
+        let real_width = context.rl.get_render_width() as f32;
+        let real_height = context.rl.get_render_height() as f32;
+        let width = real_width / window_scale;
+        let height = real_height / window_scale;
+
+        println!("Window size changed to {}x{} @ {}", width, height, window_scale);
+        let (scale, font_scale) = rendering_scale_for_screen_width(width);
+        
+        println!("Updated rendering scale to {}", scale);
+        println!("Updated font scale to {}", scale);
+        
+        let config = get_rendering_config_mut();
+        config.rendering_scale = scale;
+        config.font_rendering_scale = font_scale;
+
+        if context.rl.is_window_fullscreen() {
+            config.canvas_size.x = real_width;
+            config.canvas_size.y = real_height;
+        } else {
+            config.canvas_size.x = width;
+            config.canvas_size.y = height;
+        }
+
+        let font_size = config.scaled_font_size(&Typography::Regular);
+        let line_spacing = config.font_lines_spacing(&Typography::Regular);
+        window_size_changed(width, height, scale, font_size, line_spacing);
     }
-    let window_scale = rl.get_window_scale_dpi().x;
-    let real_width = rl.get_render_width() as f32;
-    let real_height = rl.get_render_height() as f32;
-    let width = real_width / window_scale;
-    let height = real_height / window_scale;
-
-    println!("Window size changed to {}x{} @ {}", width, height, window_scale);
-    let (scale, font_scale) = rendering_scale_for_screen_width(width);
-    
-    println!("Updated rendering scale to {}", scale);
-    println!("Updated font scale to {}", scale);
-    
-    let config = get_rendering_config_mut();
-    config.rendering_scale = scale;
-    config.font_rendering_scale = font_scale;
-
-    if rl.is_window_fullscreen() {
-        config.canvas_size.x = real_width;
-        config.canvas_size.y = real_height;
-    } else {
-        config.canvas_size.x = width;
-        config.canvas_size.y = height;
-    }
-
-    let font_size = config.scaled_font_size(&Typography::Regular);
-    let line_spacing = config.font_lines_spacing(&Typography::Regular);
-    window_size_changed(width, height, scale, font_size, line_spacing);
 }
 
 fn load_textures(rl: &mut RaylibHandle, thread: &RaylibThread) -> HashMap<u32, Texture2D> {    
@@ -278,12 +290,15 @@ fn handle_mouse_updates(rl: &mut RaylibHandle, rendering_scale: f32) {
     );
 }
 
-fn handle_keyboard_updates(rl: &mut RaylibHandle, total_run_time: f32, time_since_last_update: f32, using_controller: bool) -> bool {
+fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f32) -> bool {
+    let current_char = get_char_pressed(&mut context.rl);
+
+    let rl = &context.rl;
     let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl);
     let previous_keyboard_state = &engine().keyboard;
 
     let has_controller_now = rl.is_gamepad_available(0);
-    let controller_availability_changed = total_run_time > 0.5 && (using_controller != has_controller_now);  
+    let controller_availability_changed = context.total_run_time > 0.5 && (context.using_controller != has_controller_now);  
     let lost_focus = !rl.is_window_focused();
     let should_pause = controller_availability_changed || lost_focus;
 
@@ -302,15 +317,16 @@ fn handle_keyboard_updates(rl: &mut RaylibHandle, total_run_time: f32, time_sinc
         rl.is_key_pressed(KeyboardKey::KEY_R) || rl.is_key_pressed(KeyboardKey::KEY_Q) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_LEFT), 
         rl.is_key_pressed(KeyboardKey::KEY_F) || rl.is_key_pressed(KeyboardKey::KEY_J) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
         rl.is_key_pressed(KeyboardKey::KEY_BACKSPACE), 
-        get_char_pressed(rl),
+        current_char,
         time_since_last_update
     );
+    _ = rl;
 
     if controller_availability_changed {        
         if has_controller_now {
-            rl.hide_cursor();
+            context.rl.hide_cursor();
         } else {
-            rl.show_cursor();
+            context.rl.show_cursor();
         }
     }
     has_controller_now
@@ -426,12 +442,24 @@ fn is_debug_build() -> bool {
 }
 
 fn play_sound_effects(sound_library: &HashMap<AppSound, Sound>) {
-    current_sound_effects().iter().for_each(|effect| {
-        let key = &AppSound::Effect(effect.clone());
-        if let Some(sound) = sound_library.get(key) {
-            sound.play();
-        }
-    })
+    if are_sound_effects_enabled() {
+        current_sound_effects().iter().for_each(|effect| {
+            let key = &AppSound::Effect(effect.clone());
+            if let Some(sound) = sound_library.get(key) {
+                sound.play();
+            }
+        })
+    }
+}
+
+fn play_music(context: &mut GameContext) {
+    if is_music_enabled() {
+        context.music_was_enabled = true;
+        update_sound_track(&mut context.sound_library);
+    } else if context.music_was_enabled {
+        context.music_was_enabled = false;
+        stop_music(&mut context.sound_library);
+    }
 }
 
 #[derive(Clone, PartialEq, Eq, Hash)]
