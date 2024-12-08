@@ -442,14 +442,19 @@ fn is_debug_build() -> bool {
 }
 
 fn play_sound_effects(sound_library: &HashMap<AppSound, Sound>) {
-    if are_sound_effects_enabled() {
-        current_sound_effects().iter().for_each(|effect| {
-            let key = &AppSound::Effect(effect.clone());
-            if let Some(sound) = sound_library.get(key) {
-                sound.play();
-            }
-        })
+    let sound_effects = current_sound_effects();
+    if sound_effects.is_empty() {
+        return
     }
+    if !are_sound_effects_enabled() {
+        return
+    }
+    sound_effects.iter().for_each(|effect| {
+        let key = &AppSound::Effect(effect.clone());
+        if let Some(sound) = sound_library.get(key) {
+            sound.play();
+        }
+    })
 }
 
 fn play_music(context: &mut GameContext) {

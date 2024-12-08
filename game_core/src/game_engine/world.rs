@@ -1,7 +1,7 @@
-use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::Debug};
+use std::{cell::RefCell, cmp::Ordering, collections::{HashMap, HashSet}, fmt::Debug};
 
 use bitvec::prelude::*;
-use common_macros::hash_set;
+use common_macros::{hash_map, hash_set};
 use serde::{Deserialize, Serialize};
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
@@ -51,42 +51,7 @@ pub struct Hitmap {
     width: usize,
 }
 
-impl Hitmap {
-    fn new(width: usize, height: usize) -> Self {
-        Hitmap {
-            bits: bitvec![0; width * height],
-            width,
-        }
-    }
-
-    fn clear(&mut self) {
-        self.bits.fill(false);
-    }
-
-    fn get_index(&self, x: usize, y: usize) -> usize {
-        y * self.width + x
-    }
-
-    fn hits(&self, x: usize, y: usize) -> bool {
-        let index = self.get_index(x, y);
-        self.bits[index]
-    }
-
-    fn set(&mut self, x: usize, y: usize, value: bool) {
-        let index = self.get_index(x, y);
-        self.bits.set(index, value);
-    }
-
-    fn clone_from(&self) -> Self {
-        Hitmap {
-            bits: self.bits.clone(),
-            width: self.width,
-        }
-    }
-}
-
-pub type EntityIdsMap = Vec<Vec<Vec<EntityId>>>;
-pub type WeightsMap = Vec<Vec<i32>>;
+pub type EntityIdsMap = HashMap<usize, Vec<EntityId>>;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum WorldType {
@@ -111,7 +76,7 @@ impl World {
             hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             weights_map: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
-            entities_map: vec![vec![vec![]; WORLD_SIZE_COLUMNS]; WORLD_SIZE_ROWS],
+            entities_map: hash_map!(),
             direction_based_on_current_keys: Direction::Unknown,
             is_any_arrow_key_down: false,
             has_ranged_attack_key_been_pressed: false,
@@ -263,16 +228,6 @@ impl World {
     }
 
     fn update_entities(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> { 
-        let updates: Vec<WorldStateUpdate> = self.cutscenes.iter_mut()
-            .flat_map(|c| 
-                c.update(&self.cached_hero_props.hittable_frame, time_since_last_update)
-            )
-            .collect();
-        
-        self.apply_state_updates(updates)
-    }
-
-    fn update_cutscenes(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> { 
         let mut entities = self.entities.borrow_mut();
 
         let updates: Vec<WorldStateUpdate> = self.visible_entities.iter()
@@ -287,6 +242,19 @@ impl World {
             .collect();
         
         drop(entities);
+        self.apply_state_updates(updates)
+    }
+
+    fn update_cutscenes(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> { 
+        if self.cutscenes.is_empty() {
+            return vec![]
+        }
+        let updates: Vec<WorldStateUpdate> = self.cutscenes.iter_mut()
+            .flat_map(|c| 
+                c.update(&self.cached_hero_props.hittable_frame, time_since_last_update)
+            )
+            .collect();
+        
         self.apply_state_updates(updates)
     }
 
@@ -645,7 +613,8 @@ impl World {
 
     pub fn entity_ids(&self, x: i32, y: i32) -> Vec<u32> {
         if x < 0 || y < 0 { return vec![] }
-        self.entities_map[y as usize][x as usize].clone()
+        let index = (x + y * self.bounds.w) as usize;
+        self.entities_map.get(&index).cloned().unwrap_or_default()
     }
 
     pub fn has_weight(&self, x: i32, y: i32) -> bool {
@@ -710,7 +679,7 @@ impl World {
     pub fn update_hitmaps(&mut self) {
         self.hitmap = self.tiles_hitmap.clone_from();
         self.weights_map.clear();
-        self.entities_map = vec![vec![vec![]; self.bounds.w as usize]; self.bounds.h as usize];
+        self.entities_map.clear();
         self.compute_hitmap();
     }
 
@@ -744,7 +713,9 @@ impl World {
                     if has_weight {
                         self.weights_map.set(x, y, true);
                     }
-                    self.entities_map[y][x].push(id);
+                    //self.entities_map[y][x].push(id);
+                    //let index = x + y * self.bounds.w;
+                    self.entities_map.entry(idx).or_default().push(id);
                 }
             }
         });
@@ -784,5 +755,39 @@ impl World {
 impl Entity {
     fn has_weight(&self) -> bool {
         !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate)
+    }
+}
+
+impl Hitmap {
+    fn new(width: usize, height: usize) -> Self {
+        Hitmap {
+            bits: bitvec![0; width * height],
+            width,
+        }
+    }
+
+    fn clear(&mut self) {
+        self.bits.fill(false);
+    }
+
+    fn get_index(&self, x: usize, y: usize) -> usize {
+        y * self.width + x
+    }
+
+    fn hits(&self, x: usize, y: usize) -> bool {
+        let index = self.get_index(x, y);
+        self.bits[index]
+    }
+
+    fn set(&mut self, x: usize, y: usize, value: bool) {
+        let index = self.get_index(x, y);
+        self.bits.set(index, value);
+    }
+
+    fn clone_from(&self) -> Self {
+        Hitmap {
+            bits: self.bits.clone(),
+            width: self.width,
+        }
     }
 }
