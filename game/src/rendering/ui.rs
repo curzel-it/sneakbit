@@ -83,19 +83,21 @@ impl RenderingConfig {
 }
 
 pub fn render_layout(layout: &Layout, d: &mut RaylibDrawHandle) {
-    d.draw_rectangle(
-        -100, 
-        -100, 
-        d.get_render_width() + 200, 
-        d.get_render_height() + 200, 
-        as_rcolor(&layout.background_color)
-    );
-
     let config = get_rendering_config();
+
+    if layout.background_color.3 > 0 {
+        d.draw_rectangle(
+            -100, 
+            -100, 
+            config.canvas_size.x as i32 + 200, 
+            config.canvas_size.y as i32 + 200,
+            as_rcolor(&layout.background_color)
+        );
+    }
 
     for (anchor, view) in &layout.children {
         let position = calculate_position(layout, anchor, view, config);
-        render_view(view, d, config, &position);
+        render_view(view, d, config, &position); 
     }
 }
 

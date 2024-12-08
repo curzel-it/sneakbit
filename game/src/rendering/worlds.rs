@@ -9,8 +9,8 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
 
     let config = get_rendering_config();
     let fps = rl.get_fps();
-    let screen_width = rl.get_render_width();
-    let screen_height = rl.get_render_height();
+    let screen_width = config.canvas_size.x as i32;
+    let screen_height = config.canvas_size.y as i32;
 
     let mut d = rl.begin_drawing(thread);
     d.clear_background(Color::BLACK);
