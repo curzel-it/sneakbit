@@ -3,6 +3,8 @@ use crate::{constants::BUILD_NUMBER, entities::{known_species::{SPECIES_CLAYMORE
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
         self.idsmap.reserve(1000);
+        self.visible_entities.reserve(1000);
+
         self.remove_hero();
         self.remove_all_equipment();
         self.remove_dying_entities();

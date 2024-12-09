@@ -648,30 +648,30 @@ impl World {
     }
     
     pub fn update_visible_entities(&mut self, viewport: &IntRect) {
+        self.visible_entities.clear();
+        self.visible_entities.push((0, HERO_ENTITY_ID));
+
         let min_row = viewport.y - 1;
         let max_row = viewport.y + viewport.h + 1;
         let min_col = viewport.x - 1;
         let max_col = viewport.x + viewport.w + 1;
 
-        self.visible_entities = self.entities.borrow().iter()
-            .enumerate()
-            .filter_map(|(index, e)| {
-                if e.id == HERO_ENTITY_ID {
-                    return Some((index, e.id))
-                }
+        let entities = self.entities.borrow();
 
-                let frame = e.frame;
-                let max_y = frame.y + frame.h;
-                let max_x = frame.x + frame.w;
-                let is_inside_viewport = max_y >= min_row && frame.y <= max_row && max_x >= min_col && frame.x <= max_col;
+        for index in 1..entities.len() {
+            let entity = &entities[index];
 
-                if is_inside_viewport {
-                    Some((index, e.id))
-                } else {
-                    None
-                }
-            })
-            .collect()
+            let frame = entity.frame;
+            let frame_y = frame.y;
+            let frame_x = frame.x;
+
+            let max_y = frame_y + frame.h;
+            let max_x = frame_x + frame.w;
+
+            if max_y >= min_row && frame_y <= max_row && max_x >= min_col && frame_x <= max_col{
+                self.visible_entities.push((index, entity.id));
+            }
+        }
     }
 
     pub fn update_hitmaps(&mut self) {
