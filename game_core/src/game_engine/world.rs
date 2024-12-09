@@ -232,8 +232,7 @@ impl World {
 
         for &(index, _) in &self.visible_entities {
             if index == 0 { continue }
-            unsafe {
-                let entity = entities.get_unchecked_mut(index);
+            if let Some(entity) = entities.get_mut(index) {
                 let entity_updates = entity.update(self, time_since_last_update);
                 updates.extend(entity_updates);
             }

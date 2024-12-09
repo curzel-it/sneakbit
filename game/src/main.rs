@@ -385,7 +385,7 @@ fn get_char_pressed(rl: &mut RaylibHandle) -> u32 {
 
 fn rendering_scale_for_screen_width(width: f32) -> (f32, f32) {
     if is_creative_mode() {
-        return (1.0, 2.0)
+        return (2.0, 2.0)
     } else if width < 500.0 {
         (1.0, 1.0)
     } else if width < 1400.0 {

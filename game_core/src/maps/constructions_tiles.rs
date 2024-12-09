@@ -37,7 +37,15 @@ pub enum Construction {
     SnowyForest = 25,
     Darkness15 = 26,
     Darkness30 = 27,
-    Darkness45 = 28
+    Darkness45 = 28,
+    SlopeGreen1 = 29,
+    SlopeRock1 = 30,
+    SlopeSand1 = 31,
+    SlopeDark1 = 32,
+    SlopeGreen2 = 33,
+    SlopeRock2 = 34,
+    SlopeSand2 = 35,
+    SlopeDark3 = 36,
 }
 
 lazy_static! {
@@ -70,6 +78,15 @@ lazy_static! {
         ('R', Construction::Darkness15),
         ('S', Construction::Darkness30),
         ('T', Construction::Darkness45),
+        ('U', Construction::SlopeGreen1),
+        ('V', Construction::SlopeRock1),
+        ('W', Construction::SlopeSand1),
+        ('X', Construction::SlopeDark1),
+        ('Y', Construction::SlopeGreen2),
+        ('Z', Construction::SlopeRock2),
+        ('a', Construction::SlopeSand2),
+        ('b', Construction::SlopeDark3),
+
     ];
 
     static ref CHAR_TO_CONSTRUCTION: HashMap<char, Construction> = CONSTRUCTION_ENCODINGS.clone().into_iter().collect();
@@ -288,6 +305,14 @@ impl Construction {
             Construction::Darkness15 => false,
             Construction::Darkness30 => false,
             Construction::Darkness45 => false,
+            Construction::SlopeGreen1 => true,
+            Construction::SlopeRock1 => true,
+            Construction::SlopeSand1 => true,
+            Construction::SlopeDark1 => true,
+            Construction::SlopeGreen2 => true,
+            Construction::SlopeRock2 => true,
+            Construction::SlopeSand2 => true,
+            Construction::SlopeDark3 => true,
         }
     }
 }
