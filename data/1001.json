@@ -174,24 +174,6 @@
   },
   "entities": [
     {
-      "id": 13775009,
-      "frame": {
-        "x": 33,
-        "y": 42,
-        "w": 4,
-        "h": 4
-      },
-      "species_id": 1158,
-      "direction": "Up",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
       "id": 10753997,
       "frame": {
         "x": 67,
@@ -1886,96 +1868,6 @@
       },
       "species_id": 1157,
       "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 13775007,
-      "frame": {
-        "x": 33,
-        "y": 42,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1160,
-      "direction": "Up",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 13775008,
-      "frame": {
-        "x": 33,
-        "y": 42,
-        "w": 4,
-        "h": 4
-      },
-      "species_id": 1159,
-      "direction": "Up",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 13775013,
-      "frame": {
-        "x": 33,
-        "y": 42,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1160,
-      "direction": "Up",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 13775014,
-      "frame": {
-        "x": 33,
-        "y": 42,
-        "w": 4,
-        "h": 4
-      },
-      "species_id": 1159,
-      "direction": "Up",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
-      "is_consumable": false,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
-    },
-    {
-      "id": 13775015,
-      "frame": {
-        "x": 33,
-        "y": 42,
-        "w": 4,
-        "h": 4
-      },
-      "species_id": 1158,
-      "direction": "Up",
       "dialogues": [],
       "destination": null,
       "lock_type": "None",

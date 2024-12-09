@@ -225,12 +225,12 @@
       "id": 13775016,
       "frame": {
         "x": 5,
-        "y": 6,
+        "y": 5,
         "w": 1,
         "h": 1
       },
       "species_id": 1160,
-      "direction": "Down",
+      "direction": "Up",
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -243,12 +243,12 @@
       "id": 13775017,
       "frame": {
         "x": 5,
-        "y": 6,
+        "y": 5,
         "w": 4,
         "h": 4
       },
       "species_id": 1159,
-      "direction": "Down",
+      "direction": "Up",
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -261,12 +261,12 @@
       "id": 13775018,
       "frame": {
         "x": 5,
-        "y": 6,
+        "y": 5,
         "w": 4,
         "h": 4
       },
       "species_id": 1158,
-      "direction": "Down",
+      "direction": "Up",
       "dialogues": [],
       "destination": null,
       "lock_type": "None",
@@ -290,6 +290,85 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13779358,
+      "frame": {
+        "x": 5,
+        "y": 5,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1160,
+      "direction": "Up",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13779359,
+      "frame": {
+        "x": 5,
+        "y": 5,
+        "w": 4,
+        "h": 4
+      },
+      "species_id": 1159,
+      "direction": "Up",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13779360,
+      "frame": {
+        "x": 5,
+        "y": 5,
+        "w": 4,
+        "h": 4
+      },
+      "species_id": 1158,
+      "direction": "Up",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13779361,
+      "frame": {
+        "x": 5,
+        "y": 5,
+        "w": 4,
+        "h": 4
+      },
+      "species_id": 50000,
+      "direction": "Down",
+      "dialogues": [
+        {
+          "text": "hint.004.swing_sword",
+          "key": "always",
+          "expected_value": 1,
+          "reward": null
+        }
+      ],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": true,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     }

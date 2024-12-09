@@ -92,18 +92,24 @@ South: Road currently closed by the ice
 
 "changelog" = """
 My Master has a message for you...
-He told my about how the game now pauses when you talk to someone, open the menu or connect/disconnect the controller...
+I didn't understand much, something about how the game now pauses when you talk to someone, open the menu or connect/disconnect the controller...
+And... Swords! Something about swords!
+In Evergrove maybe?
 ...
-I have no idea what that means...
+I don't remember, really, but he seemed very excited about it
+...
 I have to go now, see you around!
 """
 
 "changelog.mobile" = """
 My Master has a message for you...
-He told me about how you can now long-press the FIRE button and move it around for better ergonomics.
-Also something about how the game now pauses when you talk to someone or open the menu...
+I didn't understand much, something about long-pressing the FIRE button to move it maybe?
+Mmmh... Something about how the game now pauses when you talk to someone or open the menu...
+And... Swords! Something about swords!
+In Evergrove maybe?
 ...
-I have no idea what that means...
+I don't remember, really, but he seemed very excited about it
+...
 I have to go now, see you around!
 """
 
@@ -194,11 +200,11 @@ Thanks for playing!
 
 "game.menu.language" = "Language"
 
-"game.menu.language.system" = "Use system language"
-
 "game.menu.language.en" = "English"
 
 "game.menu.language.it" = "Italiano"
+
+"game.menu.language.system" = "Use system language"
 
 "game.menu.map_editor" = "Map Editor"
 
@@ -230,8 +236,9 @@ You expected every house to have loot?
 Also, what the hell are you doing in my house!?
 """
 
-"hint.004.swing_sword" = "After picking it up, use the sword by pressing R or Q"
-"hint.004.swing_sword.mobile" = ""
+"hint.004.swing_sword" = "Swing the sword by pressing R or Q"
+
+"hint.004.swing_sword.mobile" = "Swing the sword using the dedicated button"
 
 "inventory.subtitle" = "Stuff in your backpack"
 
@@ -652,6 +659,10 @@ fueling life and wonder in Duskhaven.
 
 "objects.name.amanita" = "Amanita Mushroom"
 
+"objects.name.ar15.item" = "AR 15";"
+
+"objects.name.ar15.weapon" = "AR 15";"
+
 "objects.name.barrel.brown" = "Brown Barrel"
 
 "objects.name.barrel.green" = "Green Barrel"
@@ -696,6 +707,10 @@ fueling life and wonder in Duskhaven.
 
 "objects.name.camp_fire" = "Campfire"
 
+"objects.name.claymore.item" = "Sword"
+
+"objects.name.claymore.weapon" = "Sword"
+
 "objects.name.deep_hole" = "Deep Hole"
 
 "objects.name.footsteps_trail" = "Footsteps Trail"
@@ -733,6 +748,8 @@ fueling life and wonder in Duskhaven.
 "objects.name.kunai" = "Kunai"
 
 "objects.name.kunai.x10" = "Kunai x10"
+
+"objects.name.kunai_launcher.weapon" = "Kunai"
 
 "objects.name.large_sign" = "Signboard"
 
@@ -777,6 +794,10 @@ fueling life and wonder in Duskhaven.
 "objects.name.sign" = "Sign"
 
 "objects.name.skull" = "Skull"
+
+"objects.name.slash" = "Slash!"
+
+"objects.name.slash.claymore" = "Slash!"
 
 "objects.name.slope.bottom_left.dark_rock" = "Slope"
 
@@ -846,9 +867,23 @@ fueling life and wonder in Duskhaven.
 
 "objects.name.stairs_up" = "Stairs (Up)"
 
+"objects.name.stonehenge" = "Ancient Ruins"
+
+"objects.name.sword.item" = "Short Sword"
+
+"objects.name.sword.weapon" = "Short Sword"
+
 "objects.name.table" = "Table"
 
 "objects.name.teleporter" = "Teleporter"
+
+"objects.name.terrain.flowers.blue" = "Blue Flowers"
+
+"objects.name.terrain.flowers.purple" = "Purple Flowers"
+
+"objects.name.terrain.flowers.red" = "Red Flowers"
+
+"objects.name.terrain.flowers.yellow" = "Yellow Flowers"
 
 "objects.name.torch" = "Torch"
 
@@ -1166,6 +1201,20 @@ F*** that guy.
 "quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
 This job requires me to stay away from home for long periods of time...
 My children are all about your age...
+"""
+
+"quest.sword.a_thing_of_beauty" = "My old sword, a thing of beauty isn't it?"
+
+"quest.sword.did_you_find_my_sword" = """
+So you're from Evergrove too?
+...And you came all this way without a sword!?
+I have a spare one back at home, feel free to pick it up if you pass by.
+It's the small house by the lake.
+"""
+
+"quest.sword.thats_my_sword" = """
+Wait a minute... That's my sword!
+Oh well, it's old and rusted, I guess you can keep it...
 """
 
 "quest.thugs_and_assassins.mr_bubblegum.intro" = "..."

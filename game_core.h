@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define BUILD_NUMBER 28
+#define BUILD_NUMBER 29
 
 #define ANIMATIONS_FPS 10.0
 
@@ -14,9 +14,19 @@
 
 #define NO_PARENT 0
 
+#define PRESSURE_PLATE_SWITCH_COOLDOWN 0.3
+
+#define KUNAI_LIFESPAN 3.0
+
 #define KUNAI_LAUNCHER_COOLDOWN 0.1
 
-#define PRESSURE_PLATE_SWITCH_COOLDOWN 0.3
+#define SWORD_SLASH_LIFESPAN 0.25
+
+#define SWORD_SLASH_COOLDOWN 0.2
+
+#define CLAYMORE_SLASH_LIFESPAN 0.35
+
+#define CLAYMORE_SLASH_COOLDOWN 0.35
 
 #define KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST 0.4
 
@@ -31,6 +41,10 @@
 #define MENU_CLOSE_TIME 0.2
 
 #define MENU_OPEN_TIME 0.1
+
+#define Z_INDEX_OVERLAY 99
+
+#define Z_INDEX_UNDERLAY -1
 
 #define HOUSE_INTERIOR_ROWS 6
 
@@ -102,8 +116,6 @@
 
 #define SPECIES_KEY_SILVER 2004
 
-#define SPECIES_KUNAI 7000
-
 #define SPECIES_KUNAI_BUNDLE 7001
 
 #define SPECIES_TELEPORTER 1019
@@ -119,6 +131,26 @@
 #define SPECIES_MR_MUGS 1131
 
 #define SPECIES_FOOTSTEPS 1136
+
+#define SPECIES_KUNAI 7000
+
+#define SPECIES_KUNAI_LAUNCHER 1160
+
+#define SPECIES_SWORD 1158
+
+#define SPECIES_SWORD_ITEM 1163
+
+#define SPECIES_SWORD_SLASH 1161
+
+#define SPECIES_CLAYMORE 1159
+
+#define SPECIES_CLAYMORE_ITEM 1164
+
+#define SPECIES_CLAYMORE_SLASH 1166
+
+#define SPECIES_AR15 1154
+
+#define SPECIES_AR15_ITEM 1162
 
 #define SPECIES_BARREL_PURPLE 1038
 
@@ -142,6 +174,8 @@ typedef enum SoundEffect {
   SoundEffect_WorldChange = 11,
   SoundEffect_StepTaken = 12,
   SoundEffect_HintReceived = 13,
+  SoundEffect_SwordSlash = 14,
+  SoundEffect_ClaymoreSlash = 15,
 } SoundEffect;
 
 typedef enum ToastMode {
@@ -168,6 +202,7 @@ typedef struct RenderableItem {
   struct IntRect texture_rect;
   struct Vector2d offset;
   struct IntRect frame;
+  uint32_t sorting_key;
 } RenderableItem;
 
 typedef struct NonColorC {
@@ -230,7 +265,8 @@ void update_keyboard(bool up_pressed,
                      bool escape_pressed,
                      bool menu_pressed,
                      bool confirm_pressed,
-                     bool attack_pressed,
+                     bool close_attack_pressed,
+                     bool ranged_attack_pressed,
                      bool backspace_pressed,
                      uint32_t current_char,
                      float time_since_last_update);

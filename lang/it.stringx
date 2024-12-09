@@ -92,18 +92,24 @@ Sud: Strada bloccata dal ghiaccio
 
 "changelog" = """
 Il mio Capo ha un messaggio per te...
-Parlava di come ora il gioco vada in pausa quando parli con qualcuno, apri il menu o connetti/disconnetti il controller...
+Non ci ho capito molto, qualcosa su come ora il gioco vada in pausa quando parli con qualcuno, apri il menu o connetti/disconnetti il controller...
+Mmmh e spade credo! Qualcosa riguardo a delle spade!
+Da qualche parte a Evergrove forse?
 ...
-Non ho idea di cosa significhi...
+Non mi ricordo molto scusa!
+...
 Devo andare ora, alla prossima!
 """
 
 "changelog.mobile" = """
 Il mio Capo ha un messaggio per te...
-Parlava di come tenendo premuto il tasto SPARA questo ora si possa spostare per un maggiore comfort...
+Non ci ho capito molto, qualcosa su come tenendo premuto il tasto SPARA questo ora si possa spostare per un maggiore comfort...
 Ha anche accennato al fatto che ora il gioco va in pausa quando parli con qualcuno o apri il menu...
+Mmmh e spade credo! Qualcosa riguardo a delle spade!
+Da qualche parte a Evergrove forse?
 ...
-Non ho idea di cosa significhi...
+Non mi ricordo molto scusa!
+...
 Devo andare ora, alla prossima!
 """
 
@@ -194,11 +200,11 @@ Grazie per aver giocato!
 
 "game.menu.language" = "Lingua"
 
-"game.menu.language.system" = "Usa la lingua di sistema"
-
 "game.menu.language.en" = "English"
 
 "game.menu.language.it" = "Italiano"
+
+"game.menu.language.system" = "Usa la lingua di sistema"
 
 "game.menu.map_editor" = "Editor Mappa"
 
@@ -231,6 +237,7 @@ E poi, cosa diavolo ci fai a casa mia!?
 """
 
 "hint.004.swing_sword" = "Dopo averla raccolta, usa la spada con i tasti R o Q"
+
 "hint.004.swing_sword.mobile" = ""
 
 "inventory.subtitle" = "Oggetti nello zaino"
@@ -652,6 +659,10 @@ alimentando la vita e il fascino di Duskhaven.
 
 "objects.name.amanita" = "Fungo Amanita"
 
+"objects.name.ar15.item" = "AR 15";"
+
+"objects.name.ar15.weapon" = "AR 15";"
+
 "objects.name.barrel.brown" = "Barile Marrone"
 
 "objects.name.barrel.green" = "Barile Verde"
@@ -696,6 +707,10 @@ alimentando la vita e il fascino di Duskhaven.
 
 "objects.name.camp_fire" = "Falò"
 
+"objects.name.claymore.item" = "Spada"
+
+"objects.name.claymore.weapon" = "Spada"
+
 "objects.name.deep_hole" = "Fossa Profonda"
 
 "objects.name.footsteps_trail" = "Impronte"
@@ -733,6 +748,8 @@ alimentando la vita e il fascino di Duskhaven.
 "objects.name.kunai" = "Kunai"
 
 "objects.name.kunai.x10" = "Kunai x10"
+
+"objects.name.kunai_launcher.weapon" = "Kunai"
 
 "objects.name.large_sign" = "Cartellone"
 
@@ -777,6 +794,10 @@ alimentando la vita e il fascino di Duskhaven.
 "objects.name.sign" = "Segnale"
 
 "objects.name.skull" = "Teschio"
+
+"objects.name.slash" = "Slash!"
+
+"objects.name.slash.claymore" = "Slash!"
 
 "objects.name.slope.bottom_left.dark_rock" = "Pendenza"
 
@@ -846,9 +867,23 @@ alimentando la vita e il fascino di Duskhaven.
 
 "objects.name.stairs_up" = "Scale (Su)"
 
+"objects.name.stonehenge" = "Antiche Rovine"
+
+"objects.name.sword.item" = "Spada Corta"
+
+"objects.name.sword.weapon" = "Spada Corta"
+
 "objects.name.table" = "Tavolo"
 
 "objects.name.teleporter" = "Teletrasporto"
+
+"objects.name.terrain.flowers.blue" = "Fiori Blu"
+
+"objects.name.terrain.flowers.purple" = "Fiori Viola"
+
+"objects.name.terrain.flowers.red" = "Fiori Rossi"
+
+"objects.name.terrain.flowers.yellow" = "Fiori Gialli"
 
 "objects.name.torch" = "Torcia"
 
@@ -1166,6 +1201,20 @@ Maledetto quel tizio.
 "quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
 Questo lavoro richiede che io stia lontano da casa per lunghi periodi di tempo...
 I miei figli hanno tutti la tua età...
+"""
+
+"quest.sword.a_thing_of_beauty" = "Ah, la mia vecchia spada... Non taglia più niente, ma è stupenda vero?"
+
+"quest.sword.did_you_find_my_sword" = """
+Quindi vieni da Evergrove anche tu?
+...E hai fatto tutta questa strada senza una spada!?
+Ne tengo una vecchia di riserva a casa, puoi prenderla se ci passi.
+È la piccola casa in riva al lago.
+"""
+
+"quest.sword.thats_my_sword" = """
+Aspetta un secondo... Quella spada è mia!
+Vabbè... È vecchia e arrugginita, puoi tenerla...
 """
 
 "quest.thugs_and_assassins.mr_bubblegum.intro" = "..."

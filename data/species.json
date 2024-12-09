@@ -3651,28 +3651,6 @@
         "lock_type": "None"
     },
     {
-        "id": 1153,
-        "name": "npc.name.shield",
-        "is_invulnerable": true,
-        "entity_type": "Equipment",
-        "z_index": 16,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            0
-        ],
-        "sprite_frame": {
-            "x": 1,
-            "y": 1,
-            "w": 4,
-            "h": 4
-        },
-        "sprite_sheet_id": 1022,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
         "id": 1154,
         "name": "objects.name.ar15.weapon",
         "is_invulnerable": true,

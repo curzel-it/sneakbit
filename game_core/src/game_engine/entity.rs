@@ -350,7 +350,7 @@ impl Entity {
 
 impl Entity {
     pub fn is_equipment(&self) -> bool {
-        matches!(self.entity_type, EntityType::Equipment | EntityType::Sword)
+        matches!(self.entity_type, EntityType::Equipment | EntityType::Sword | EntityType::KunaiLauncher)
     }
 
     pub fn can_be_hit_by_bullet(&self) -> bool {
