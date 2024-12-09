@@ -158,8 +158,8 @@ impl World {
         }
     }
 
-    fn mark_as_collected_if_needed(&self, entity_id: u32) {
-        if !self.ephemeral_state && entity_id != HERO_ENTITY_ID {
+    fn mark_as_collected_if_needed(&self, entity_id: u32, parent_id: u32) {
+        if !self.ephemeral_state && entity_id != HERO_ENTITY_ID && parent_id != HERO_ENTITY_ID {
             set_value_for_key(&StorageKey::item_collected(entity_id), 1);
         }
     }
@@ -174,7 +174,7 @@ impl World {
         if matches!(entity.entity_type, EntityType::Building) {
             self.buildings.remove(&entity.id);
         }
-        self.mark_as_collected_if_needed(entity.id);
+        self.mark_as_collected_if_needed(entity.id, entity.parent_id);
         drop(entities);
 
         self.entities.borrow_mut().swap_remove(index);
@@ -349,7 +349,7 @@ impl World {
             IntRect::new(0, 10, 1, 1), 
             5
         );
-        self.mark_as_collected_if_needed(target.id);
+        self.mark_as_collected_if_needed(target.id, target.parent_id);
     }
 
     fn handle_target_hit(&self, damage: f32, target: &mut Entity) -> bool {
