@@ -647,7 +647,6 @@ impl World {
     
     pub fn update_visible_entities(&mut self, viewport: &IntRect) {
         self.visible_entities.clear();
-        self.visible_entities.push((0, HERO_ENTITY_ID));
 
         let min_row = viewport.y - 1;
         let max_row = viewport.y + viewport.h + 1;
@@ -656,15 +655,17 @@ impl World {
 
         let entities = self.entities.borrow();
 
-        for (index, entity) in entities.iter().enumerate().skip(1) {
-            let frame = entity.frame;
-            let frame_y = frame.y;
-            let frame_x = frame.x;
+        for (index, entity) in entities.iter().enumerate() {
+            let is_visible = index == 0 || {
+                let frame = entity.frame;
+                let frame_y = frame.y;
+                let frame_x = frame.x;
+                let max_y = frame_y + frame.h;
+                let max_x = frame_x + frame.w;
+                max_y >= min_row && frame_y <= max_row && max_x >= min_col && frame_x <= max_col
+            };
 
-            let max_y = frame_y + frame.h;
-            let max_x = frame_x + frame.w;
-
-            if max_y >= min_row && frame_y <= max_row && max_x >= min_col && frame_x <= max_col{
+            if is_visible {
                 self.visible_entities.push((index, entity.id));
             }
         }
@@ -756,7 +757,7 @@ impl Hitmap {
     }
 
     fn clear(&mut self) {
-        self.bits.fill(false);
+        self.bits = vec![false; self.bits.len()];
     }
 
     fn get_index(&self, x: usize, y: usize) -> usize {
