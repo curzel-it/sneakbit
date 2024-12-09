@@ -229,17 +229,16 @@ impl World {
 
     fn update_entities(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> { 
         let mut entities = self.entities.borrow_mut();
+        let mut updates: Vec<WorldStateUpdate> = vec![];
 
-        let updates: Vec<WorldStateUpdate> = self.visible_entities.iter()
-            .skip(1)
-            .flat_map(|(index, _)| {
-                if let Some(entity) = entities.get_mut(*index) {
-                    entity.update(self, time_since_last_update)
-                } else {
-                    vec![]
-                }                
-            })
-            .collect();
+        for &(index, _) in &self.visible_entities {
+            if index == 0 { continue }
+            unsafe {
+                let entity = entities.get_unchecked_mut(index);
+                let entity_updates = entity.update(self, time_since_last_update);
+                updates.extend(entity_updates);
+            }
+        }
         
         drop(entities);
         self.apply_state_updates(updates)
