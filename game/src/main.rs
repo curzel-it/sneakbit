@@ -34,8 +34,8 @@ fn main() {
         local_path("lang")
     );
 
-    let (rl, rl_thread) = start_rl();    
     let creative_mode = env::args().any(|arg| arg == "creative");    
+    let (rl, rl_thread) = start_rl(creative_mode);    
 
     let mut rl_audio = start_rl_audio();    
     let mut sound_context = SoundContext {
@@ -164,7 +164,7 @@ fn update_sound_track(context: &mut SoundContext) {
     }
 }
 
-fn start_rl() -> (RaylibHandle, RaylibThread) {    
+fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {    
     let width = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.w as f32) as i32;
     let height = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.h as f32) as i32;
 
@@ -188,7 +188,8 @@ fn start_rl() -> (RaylibHandle, RaylibThread) {
         rendering_scale: 2.0,
         font_rendering_scale: 2.0,
         canvas_size: Vector2d::new(1.0, 1.0),
-        show_debug_info: is_debug_build()
+        show_debug_info: is_debug_build(),
+        render_using_individual_tiles: creative_mode
     });
 
     (rl, thread)

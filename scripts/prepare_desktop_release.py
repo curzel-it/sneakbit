@@ -47,8 +47,10 @@ def main():
 
     directories_to_copy = ["assets", "audio", "data", "lang", "fonts"]
 
+    os.system("rm -rf __release")
+
     for platform_name, paths in platforms.items():
-        platform_dir = os.path.join(f"__release", platform_name)
+        platform_dir = os.path.join(f"__release", platform_name)        
         os.makedirs(platform_dir, exist_ok=True)
         print(f"Created directory '{platform_dir}'.")
 

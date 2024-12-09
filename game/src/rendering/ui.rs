@@ -11,7 +11,8 @@ pub struct RenderingConfig {
     pub rendering_scale: f32,
     pub font_rendering_scale: f32,
     pub canvas_size: Vector2d,
-    pub show_debug_info: bool
+    pub show_debug_info: bool,
+    pub render_using_individual_tiles: bool
 }
 
 pub static INIT_RENDERING_CONFIG: Once = Once::new();
