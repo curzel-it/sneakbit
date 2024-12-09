@@ -6,7 +6,7 @@ impl World {
         self.remove_hero();
         self.remove_all_equipment();
         self.remove_dying_entities();
-        self.visible_entities = self.compute_visible_entities(&self.bounds);
+        self.update_visible_entities(&self.bounds.clone());
         self.update_tiles_hitmap();
         self.update_hitmaps();
         self.setup_entities();

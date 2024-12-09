@@ -208,7 +208,7 @@ impl World {
         engine_updates.extend(self.update_entities(time_since_last_update));
         engine_updates.extend(self.update_cutscenes(time_since_last_update));
 
-        self.visible_entities = self.compute_visible_entities(viewport);
+        self.update_visible_entities(viewport);
         self.update_hitmaps();
         engine_updates
     }
@@ -647,23 +647,26 @@ impl World {
         !self.is_pressure_plate_down(lock_type)
     }
     
-    pub fn compute_visible_entities(&self, viewport: &IntRect) -> Vec<(usize, u32)> {
+    pub fn update_visible_entities(&mut self, viewport: &IntRect) {
         let min_row = viewport.y - 1;
         let max_row = viewport.y + viewport.h + 1;
         let min_col = viewport.x - 1;
         let max_col = viewport.x + viewport.w + 1;
 
-        self.entities.borrow().iter()
+        self.visible_entities = self.entities.borrow().iter()
             .enumerate()
             .filter_map(|(index, e)| {
-                let id = e.id;
+                if e.id == HERO_ENTITY_ID {
+                    return Some((index, e.id))
+                }
+
                 let frame = e.frame;
                 let max_y = frame.y + frame.h;
                 let max_x = frame.x + frame.w;
                 let is_inside_viewport = max_y >= min_row && frame.y <= max_row && max_x >= min_col && frame.x <= max_col;
 
-                if id == HERO_ENTITY_ID || is_inside_viewport {
-                    Some((index, id))
+                if is_inside_viewport {
+                    Some((index, e.id))
                 } else {
                     None
                 }
