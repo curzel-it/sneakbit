@@ -728,12 +728,9 @@ impl World {
         for row in min_row..max_row {
             for col in min_col..max_col {
                 if !self.tiles_hitmap.hits(col, row) {
-                    let biome_tile = &self.biome_tiles.tiles[row][col];
-                    let construction_tile = &self.constructions_tiles.tiles[row][col];
-
-                    let is_obstacle = !matches!(construction_tile.tile_type, Construction::Bridge) && (
-                        biome_tile.is_obstacle() || construction_tile.is_obstacle()
-                    );
+                    let biome = &self.biome_tiles.tiles[row][col];
+                    let constructions = &self.constructions_tiles.tiles[row][col];
+                    let is_obstacle = (biome.is_obstacle() || constructions.is_obstacle()) && !constructions.is_bridge();
 
                     if is_obstacle {
                         self.tiles_hitmap.set(col, row, true);

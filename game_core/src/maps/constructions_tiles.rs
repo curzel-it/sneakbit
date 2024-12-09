@@ -109,6 +109,10 @@ impl ConstructionTile {
         }
     }
 
+    pub fn is_bridge(&self) -> bool {
+        matches!(self.tile_type, Construction::Bridge)
+    }
+
     pub fn setup_neighbors(&mut self, up: Construction, right: Construction, bottom: Construction, left: Construction) {
         self.tile_up_type = up;
         self.tile_right_type = right;
