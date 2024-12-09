@@ -659,9 +659,9 @@ fueling life and wonder in Duskhaven.
 
 "objects.name.amanita" = "Amanita Mushroom"
 
-"objects.name.ar15.item" = "AR 15";"
+"objects.name.ar15.item" = "AR 15"
 
-"objects.name.ar15.weapon" = "AR 15";"
+"objects.name.ar15.weapon" = "AR 15"
 
 "objects.name.barrel.brown" = "Brown Barrel"
 
@@ -1187,15 +1187,14 @@ Entrance seems to be somewhere in the South-East of the area.
 "quest.ninja_skills.red_ninja.about_piercing_knife_skill" = """
 Told you... Barrels, monsters, Demon Lords, ...
 Doesn't matter.
-One shot is enough for ANY foe.
+Your knifes can now cut through any living thing.
 """
 
 "quest.ninja_skills.red_ninja.gain_piercing_knife_skill" = """
 My kids are all well? That's a relief!
 As a reward, I'll teach the ultimate ninja skill.
-If only I had the chance, I KNOW I could defeat the
-Demon Lord himself in one blow with it.
-F*** that guy.
+If only I had the chance, I KNOW I could defeat the Demon Lord himself with this.
+Curse that guy.
 """
 
 "quest.ninja_skills.red_ninja.please_check_on_my_kids" = """

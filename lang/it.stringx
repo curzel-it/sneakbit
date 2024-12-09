@@ -659,9 +659,9 @@ alimentando la vita e il fascino di Duskhaven.
 
 "objects.name.amanita" = "Fungo Amanita"
 
-"objects.name.ar15.item" = "AR 15";"
+"objects.name.ar15.item" = "AR 15"
 
-"objects.name.ar15.weapon" = "AR 15";"
+"objects.name.ar15.weapon" = "AR 15"
 
 "objects.name.barrel.brown" = "Barile Marrone"
 
@@ -1187,14 +1187,13 @@ L'ingresso sembra essere da qualche parte a Sud-Est dell'area.
 "quest.ninja_skills.red_ninja.about_piercing_knife_skill" = """
 Te l'ho detto... Barili, mostri, Signori dei Demoni, ...
 Non importa.
-Un colpo è sufficiente per QUALSIASI nemico.
+I tuoi pugnali ora possono attraversare qualsasi cosa respiri.
 """
 
 "quest.ninja_skills.red_ninja.gain_piercing_knife_skill" = """
 I miei figli stanno tutti bene? Che sollievo!
 Come ricompensa, ti insegnerò l'abilità ninja definitiva.
-Se solo avessi l'occasione, SO che potrei sconfiggere il
-Signore dei Demoni con un solo colpo.
+Se solo avessi l'occasione, SO che potrei sconfiggere anche il Signore dei Demoni con questa tecnica.
 Maledetto quel tizio.
 """
 

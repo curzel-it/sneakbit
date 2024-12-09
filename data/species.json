@@ -3806,7 +3806,7 @@
     },
     {
         "id": 1160,
-        "name": "objects.name.kunai_launcher",
+        "name": "objects.name.kunai_launcher.weapon",
         "is_invulnerable": true,
         "entity_type": "KunaiLauncher",
         "z_index": 99,
