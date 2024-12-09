@@ -302,8 +302,12 @@ impl Entity {
     fn update_static(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {  
         self.is_in_interaction_range = false;
 
-        if world.is_hero_around_and_on_collision_with(&self.frame) {    
-            self.handle_dialogue_interaction(world).unwrap_or_default()
+        if !self.dialogues.is_empty() {
+            if world.is_hero_around_and_on_collision_with(&self.frame) {    
+                self.handle_dialogue_interaction(world).unwrap_or_default()
+            } else {
+                vec![]
+            }
         } else {
             vec![]
         }

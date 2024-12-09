@@ -51,7 +51,7 @@ pub struct Hitmap {
     width: usize,
 }
 
-pub type EntityIdsMap = HashSet<(i32, i32, EntityId)>;
+pub type EntityIdsMap = Vec<(i32, i32, EntityId)>;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum WorldType {
@@ -76,7 +76,7 @@ impl World {
             hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             weights_map: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
-            idsmap: hash_set![],
+            idsmap: vec![],
             direction_based_on_current_keys: Direction::Unknown,
             is_any_arrow_key_down: false,
             has_ranged_attack_key_been_pressed: false,
@@ -698,14 +698,13 @@ impl World {
 
             for y in row_start..row_end {
                 for x in col_start..col_end {
-                    let idx = y * width + x;
                     if is_rigid {
-                        self.hitmap.bits.set(idx, true);
+                        self.hitmap.set(x, y, true);
                     }
                     if has_weight {
                         self.weights_map.set(x, y, true);
                     }
-                    self.idsmap.insert((x as i32, y as i32, id));
+                    self.idsmap.push((x as i32, y as i32, id));
                 }
             }
         }
@@ -784,7 +783,7 @@ impl Debug for Hitmap {
                 let bit = if self.hits(x, y) { '1' } else { '0' };
                 write!(f, "{}", bit)?;
             }
-            writeln!(f)?; // Move to the next row
+            writeln!(f)?; 
         }
         Ok(())
     }
