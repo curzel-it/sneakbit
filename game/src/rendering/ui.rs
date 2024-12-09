@@ -1,12 +1,13 @@
-use std::{collections::HashMap, sync::Once};
+use std::sync::Once;
 
+use nohash_hasher::IntMap;
 use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View}, layouts::{AnchorPoint, Layout}}, utils::{rect::IntRect, vector::Vector2d}};
 use raylib::prelude::*;
 
 pub struct RenderingConfig {
     pub font: Font,
     pub font_bold: Font,
-    pub textures: HashMap<u32, Texture2D>,
+    pub textures: IntMap<u32, Texture2D>,
     pub rendering_scale: f32,
     pub font_rendering_scale: f32,
     pub canvas_size: Vector2d,
