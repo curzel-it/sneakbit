@@ -11,7 +11,7 @@ use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
 
-const MAX_FPS: u32 = 600;
+const MAX_FPS: u32 = 60;
 
 struct GameContext {
     rl: RaylibHandle,
