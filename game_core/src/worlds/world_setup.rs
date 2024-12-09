@@ -145,7 +145,7 @@ impl World {
             if ny == y && nx == x || ny == y+1 && nx == x {
                 continue;
             }
-            if self.hits_i32(nx, ny) {
+            if self.hits(nx, ny) {
                 return false;
             }
         }    
@@ -165,7 +165,7 @@ impl World {
                 let x = self.bounds.w / 2;
                 let mut y = self.bounds.h / 2;
 
-                while y < self.bounds.h - 1 && self.hits_i32(x, y) {
+                while y < self.bounds.h - 1 && self.hits(x, y) {
                     y += 1
                 }
                 return (x, y)

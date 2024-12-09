@@ -76,7 +76,7 @@ impl Entity {
             let min_y = npc_y.min(hero.y);
             let max_y = npc_y.max(hero.y);
             for y in (min_y + 1)..max_y {
-                if world.hits_i32(npc.x, y) {
+                if world.hits(npc.x, y) {
                     return false;
                 }
             }
@@ -85,7 +85,7 @@ impl Entity {
             let min_x = npc.x.min(hero.x);
             let max_x = npc.x.max(hero.x);
             for x in (min_x + 1)..max_x {
-                if world.hits_i32(x, npc.y) {
+                if world.hits(x, npc.y) {
                     return false;
                 }
             }
@@ -119,6 +119,6 @@ impl Entity {
         let (next_dx, next_dy) = direction.as_col_row_offset();
         let next_x = self.frame.x + next_dx + if next_dx > 0 { self.frame.w - 1 } else { 0 };
         let next_y = self.frame.y + next_dy + if self.frame.h > 1 { 1 } else { 0 };
-        world.hits_or_out_of_bounds_i32(next_x, next_y)
+        world.hits_or_out_of_bounds(next_x, next_y)
     }
 }

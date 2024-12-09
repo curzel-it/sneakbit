@@ -71,7 +71,7 @@ pub fn would_collide(frame: &IntRect, direction: &Direction, world: &World) -> b
     let base_x = frame.x;
     let x = base_x + col_offset;
     let y = base_y + row_offset;
-    world.hits_i32(x, y)
+    world.hits(x, y)
 }
 
 pub fn would_over_weight(frame: &IntRect, direction: &Direction, world: &World) -> bool {

@@ -1,7 +1,7 @@
-use std::{cell::RefCell, cmp::Ordering, collections::{HashMap, HashSet}, fmt::Debug};
+use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::Debug};
 
 use bitvec::prelude::*;
-use common_macros::{hash_map, hash_set};
+use common_macros::hash_set;
 use serde::{Deserialize, Serialize};
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
@@ -51,7 +51,7 @@ pub struct Hitmap {
     width: usize,
 }
 
-pub type EntityIdsMap = Vec<(i32, i32, EntityId)>;
+pub type EntityIdsMap = HashSet<(i32, i32, EntityId)>;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum WorldType {
@@ -76,7 +76,7 @@ impl World {
             hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             weights_map: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
-            idsmap: vec![],
+            idsmap: hash_set![],
             direction_based_on_current_keys: Direction::Unknown,
             is_any_arrow_key_down: false,
             has_ranged_attack_key_been_pressed: false,
@@ -548,7 +548,7 @@ impl World {
         if hero.is_around_and_pointed_at(target, &hero_direction) {
             return true 
         }
-        if self.hits_i32(hero.x, hero.y - 1) && hero.x == target.x && hero.y.saturating_sub(3) == target.y && matches!(hero_direction, Direction::Up) {
+        if self.hits(hero.x, hero.y - 1) && hero.x == target.x && hero.y.saturating_sub(3) == target.y && matches!(hero_direction, Direction::Up) {
             return true
         }
         false
@@ -584,7 +584,7 @@ impl World {
         self.update(time_since_last_update, &viewport, keyboard)
     }
 
-    pub fn hits_i32(&self, x: i32, y: i32) -> bool {
+    pub fn hits(&self, x: i32, y: i32) -> bool {
         if x < 0 || y < 0 { false }
         else if y >= self.bounds.h { false }
         else if x >= self.bounds.w { false }
@@ -595,8 +595,8 @@ impl World {
         }
     }
 
-    pub fn hits_or_out_of_bounds_i32(&self, x: i32, y: i32) -> bool {
-        x < 0 || y < 0 || self.hits_i32(x, y)
+    pub fn hits_or_out_of_bounds(&self, x: i32, y: i32) -> bool {
+        x < 0 || y < 0 || self.hits(x, y)
     }
 
     pub fn entity_ids(&self, x: i32, y: i32) -> Vec<u32> {
@@ -680,21 +680,21 @@ impl World {
         let height = self.bounds.h as usize;
         let width = self.bounds.w as usize;
 
-        self.visible_entities.iter().for_each(|&(index, id)| {
+        for &(index, id) in &self.visible_entities {
             let entity = &entities[index];
+            let is_rigid = entity.is_rigid && id != HERO_ENTITY_ID;
+            let has_weight = entity.has_weight();
+
+            if !is_rigid && !has_weight {
+                continue;
+            }
+
             let hittable_frame = entity.hittable_frame();
 
             let col_start = hittable_frame.x.max(0) as usize;
             let col_end = ((hittable_frame.x + hittable_frame.w) as usize).min(width);
             let row_start = hittable_frame.y.max(0) as usize;
             let row_end = ((hittable_frame.y + hittable_frame.h) as usize).min(height);
-
-            let is_rigid = entity.is_rigid && id != HERO_ENTITY_ID;
-            let has_weight = entity.has_weight();
-
-            if !is_rigid && !has_weight {
-                return;
-            }
 
             for y in row_start..row_end {
                 for x in col_start..col_end {
@@ -705,10 +705,10 @@ impl World {
                     if has_weight {
                         self.weights_map.set(x, y, true);
                     }
-                    self.idsmap.push((x as i32, y as i32, id));
+                    self.idsmap.insert((x as i32, y as i32, id));
                 }
             }
-        });
+        }
     }
 
     #[allow(clippy::needless_range_loop)] 
