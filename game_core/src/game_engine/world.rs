@@ -51,7 +51,7 @@ pub struct Hitmap {
     width: usize,
 }
 
-pub type EntityIdsMap = HashMap<usize, Vec<EntityId>>;
+pub type EntityIdsMap = Vec<(i32, i32, EntityId)>;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum WorldType {
@@ -76,7 +76,7 @@ impl World {
             hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             weights_map: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
-            idsmap: hash_map!(),
+            idsmap: vec![],
             direction_based_on_current_keys: Direction::Unknown,
             is_any_arrow_key_down: false,
             has_ranged_attack_key_been_pressed: false,
@@ -600,9 +600,16 @@ impl World {
     }
 
     pub fn entity_ids(&self, x: i32, y: i32) -> Vec<u32> {
-        if x < 0 || y < 0 { return vec![] }
-        let index = (x + y * self.bounds.w) as usize;
-        self.idsmap.get(&index).cloned().unwrap_or_default()
+        self.idsmap
+            .iter()
+            .filter_map(|&(ex, ey, id)| {
+                if ex == x && ey == y {
+                    Some(id)
+                } else {
+                    None
+                }
+            })
+            .collect()
     }
 
     pub fn has_weight(&self, x: i32, y: i32) -> bool {
@@ -698,7 +705,7 @@ impl World {
                     if has_weight {
                         self.weights_map.set(x, y, true);
                     }
-                    self.idsmap.entry(idx).or_default().push(id);
+                    self.idsmap.push((x as i32, y as i32, id));
                 }
             }
         });
