@@ -139,7 +139,7 @@ impl World {
 
     pub fn remove_all_equipment(&mut self) {
         let equipment_ids: Vec<u32> = self.entities.borrow().iter().filter_map(|e| {
-            if matches!(e.entity_type, EntityType::Equipment) {
+            if e.is_equipment() {
                 Some(e.id)
             } else {
                 None

@@ -74,9 +74,6 @@ impl World {
 
         let claymore = species_by_id(SPECIES_CLAYMORE).make_entity();
         self.add_entity(claymore);
-
-        let sword = species_by_id(SPECIES_SWORD).make_entity();
-        self.add_entity(sword);
     }
 
     fn likely_direction_for_hero(&self, x: i32, y: i32, current_direction: &Direction) -> Vec<Direction> {
