@@ -3542,6 +3542,7 @@
         "entity_type": "Npc",
         "z_index": 15,
         "base_speed": 3.0,
+        "hp": 80,
         "is_rigid": false,
         "melee_attacks_hero": true,
         "inventory_texture_offset": [
