@@ -43,6 +43,8 @@ impl Entity {
                     let mut bullet = make_hero_bullet(config.species, world, config.lifespan);
                     bullet.offset = Vector2d::zero();
                     bullet.frame = hero.hittable_frame.offset_by((dx, dy)); 
+                    bullet.direction = hero.direction;
+                    bullet.current_speed = bullet.current_speed + hero.speed;
                     WorldStateUpdate::AddEntity(Box::new(bullet))
                 })
                 .collect();

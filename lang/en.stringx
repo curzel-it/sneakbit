@@ -220,7 +220,7 @@ Thanks for playing!
 
 "hint.001.pickup" = "Pick up objects by passing over them"
 
-"hint.002.throw_knife" = "Throw knifes by pressing R, F, J or Q"
+"hint.002.throw_knife" = "Throw knifes by pressing F or J"
 
 "hint.002.throw_knife.mobile" = "Attack by pressing the button with the knife icon"
 
@@ -229,6 +229,9 @@ What?
 You expected every house to have loot?
 Also, what the hell are you doing in my house!?
 """
+
+"hint.004.swing_sword" = "After picking it up, use the sword by pressing R or Q"
+"hint.004.swing_sword.mobile" = ""
 
 "inventory.subtitle" = "Stuff in your backpack"
 

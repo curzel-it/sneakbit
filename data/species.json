@@ -3854,14 +3854,14 @@
         "entity_type": "Bullet",
         "dps": 280,
         "z_index": 99,
-        "base_speed": 3.0,
+        "base_speed": 2.0,
         "is_rigid": false,
         "inventory_texture_offset": [
             0,
             0
         ],
         "sprite_frame": {
-            "x": 32,
+            "x": 28,
             "y": 10,
             "w": 1,
             "h": 1
@@ -3960,14 +3960,14 @@
         "entity_type": "Bullet",
         "dps": 430,
         "z_index": 14,
-        "base_speed": 3.0,
+        "base_speed": 2.0,
         "is_rigid": false,
         "inventory_texture_offset": [
             0,
             0
         ],
         "sprite_frame": {
-            "x": 32,
+            "x": 28,
             "y": 10,
             "w": 1,
             "h": 1

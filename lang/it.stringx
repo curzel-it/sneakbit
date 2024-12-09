@@ -220,7 +220,7 @@ Grazie per aver giocato!
 
 "hint.001.pickup" = "Raccogli gli oggetti passandoci sopra"
 
-"hint.002.throw_knife" = "Lancia i coltelli premendo R, F, J o Q"
+"hint.002.throw_knife" = "Lancia i coltelli premendo F o J"
 
 "hint.002.throw_knife.mobile" = "Attacca premendo il bottone con l'icona del coltello"
 
@@ -229,6 +229,9 @@ Cosa?
 Ti aspettavi che ogni casa avesse dei tesori?
 E poi, cosa diavolo ci fai a casa mia!?
 """
+
+"hint.004.swing_sword" = "Dopo averla raccolta, usa la spada con i tasti R o Q"
+"hint.004.swing_sword.mobile" = ""
 
 "inventory.subtitle" = "Oggetti nello zaino"
 
