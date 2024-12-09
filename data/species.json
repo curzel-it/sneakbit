@@ -1627,7 +1627,7 @@
         "entity_type": "StaticObject",
         "z_index": 145,
         "base_speed": 1.0,
-        "is_rigid": true,
+        "is_rigid": false,
         "inventory_texture_offset": [
             7,
             7

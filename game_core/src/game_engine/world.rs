@@ -1,4 +1,4 @@
-use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::Debug};
+use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
 
 use bitvec::prelude::*;
 use common_macros::hash_set;
@@ -709,6 +709,7 @@ impl World {
                 }
             }
         }
+        
     }
 
     #[allow(clippy::needless_range_loop)] 
@@ -745,7 +746,7 @@ impl World {
 
 impl Entity {
     fn has_weight(&self) -> bool {
-        !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate)
+        !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate | EntityType::Equipment | EntityType::Sword)
     }
 }
 
@@ -773,5 +774,18 @@ impl Hitmap {
     fn set(&mut self, x: usize, y: usize, value: bool) {
         let index = self.get_index(x, y);
         self.bits.set(index, value);
+    }
+}
+
+impl Debug for Hitmap {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        for y in 0..(self.bits.len() / self.width) {
+            for x in 0..self.width {
+                let bit = if self.hits(x, y) { '1' } else { '0' };
+                write!(f, "{}", bit)?;
+            }
+            writeln!(f)?; // Move to the next row
+        }
+        Ok(())
     }
 }
