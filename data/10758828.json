@@ -1,8 +1,6 @@
 {
-  "id": 10758828,
-  "revision": 0,
-  "ephemeral_state": false,
   "biome_tiles": {
+    "sheet_id": 1002,
     "tiles": [
       "000000000000000000000000000000",
       "000000000000000000000000000000",
@@ -13,10 +11,10 @@
       "066666666660000000000000000000",
       "066666666660000000000000000000",
       "000000000000000000000000000000"
-    ],
-    "sheet_id": 1002
+    ]
   },
   "constructions_tiles": {
+    "sheet_id": 1003,
     "tiles": [
       "444444444440000000000000000000",
       "444444444440000000000000000000",
@@ -27,49 +25,51 @@
       "400000000000000000000000000000",
       "400000000000000000000000000000",
       "444444444440000000000000000000"
-    ],
-    "sheet_id": 1003
+    ]
   },
   "entities": [
     {
-      "id": 10758839,
-      "frame": {
-        "x": 8,
-        "y": 1,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1011,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "is_consumable": false,
       "contents": null,
-      "demands_attention": false
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 8,
+        "y": 1
+      },
+      "id": 10758839,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1011
     },
     {
-      "id": 10758840,
-      "frame": {
-        "x": 8,
-        "y": 2,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1019,
-      "direction": "Down",
-      "dialogues": [],
+      "contents": null,
+      "demands_attention": false,
       "destination": {
         "world": 10758827,
         "x": 0,
         "y": 0
       },
-      "lock_type": "None",
+      "dialogues": [],
+      "direction": "Down",
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 8,
+        "y": 2
+      },
+      "id": 10758840,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1019
     }
   ],
-  "world_type": "HouseInterior",
-  "light_conditions": "Day"
+  "ephemeral_state": false,
+  "id": 10758828,
+  "light_conditions": "Day",
+  "revision": 0,
+  "world_type": "HouseInterior"
 }

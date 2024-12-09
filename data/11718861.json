@@ -1,8 +1,6 @@
 {
-  "id": 11718861,
-  "revision": 0,
-  "ephemeral_state": false,
   "biome_tiles": {
+    "sheet_id": 1002,
     "tiles": [
       "000000000000000000000000000000",
       "000000000000000000000000000000",
@@ -34,10 +32,10 @@
       "000000000000000000000000000000",
       "000000000000000000000000000000",
       "000000000000000000000000000000"
-    ],
-    "sheet_id": 1002
+    ]
   },
   "constructions_tiles": {
+    "sheet_id": 1003,
     "tiles": [
       "OOOOOOOOOOOOO00000000000000000",
       "O66O6666OOOOO00000000000000000",
@@ -69,300 +67,302 @@
       "000000000000000000000000000000",
       "000000000000000000000000000000",
       "000000000000000000000000000000"
-    ],
-    "sheet_id": 1003
+    ]
   },
+  "cutscenes": [],
   "entities": [
     {
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": {
+        "direction": "Unknown",
+        "world": 1012,
+        "x": 0,
+        "y": 0
+      },
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 5,
+        "y": 8
+      },
       "id": 11718862,
-      "frame": {
-        "x": 5,
-        "y": 8,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1019,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": {
-        "world": 1012,
-        "x": 0,
-        "y": 0,
-        "direction": "Unknown"
-      },
-      "lock_type": "None",
-      "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1019
     },
     {
-      "id": 11718863,
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": {
+        "direction": "Unknown",
+        "world": 1012,
+        "x": 0,
+        "y": 0
+      },
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
       "frame": {
+        "h": 1,
+        "w": 1,
         "x": 6,
-        "y": 8,
-        "w": 1,
-        "h": 1
+        "y": 8
       },
-      "species_id": 1019,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": {
-        "world": 1012,
-        "x": 0,
-        "y": 0,
-        "direction": "Unknown"
-      },
-      "lock_type": "None",
-      "display_conditions": [],
+      "id": 11718863,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1019
     },
     {
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 3,
+        "y": 6
+      },
       "id": 11761584,
-      "frame": {
-        "x": 3,
-        "y": 6,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1074,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1074
     },
     {
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 2,
+        "y": 6
+      },
       "id": 11761583,
-      "frame": {
-        "x": 2,
-        "y": 6,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1074,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1074
     },
     {
-      "id": 11761577,
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
       "frame": {
-        "x": 11,
-        "y": 1,
+        "h": 2,
         "w": 2,
-        "h": 2
+        "x": 11,
+        "y": 1
       },
-      "species_id": 1092,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
+      "id": 11761577,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1092
     },
     {
-      "id": 11761585,
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
       "frame": {
+        "h": 2,
+        "w": 1,
         "x": 4,
-        "y": 6,
-        "w": 1,
-        "h": 2
+        "y": 6
       },
-      "species_id": 1074,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
+      "id": 11761585,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1074
     },
     {
-      "id": 11761579,
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
       "frame": {
+        "h": 2,
+        "w": 1,
         "x": 3,
-        "y": 5,
-        "w": 1,
-        "h": 2
+        "y": 5
       },
-      "species_id": 1074,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
+      "id": 11761579,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1074
     },
     {
-      "id": 11761580,
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
       "frame": {
+        "h": 2,
+        "w": 1,
         "x": 2,
-        "y": 5,
-        "w": 1,
-        "h": 2
+        "y": 5
       },
-      "species_id": 1074,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
+      "id": 11761580,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1074
     },
     {
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 1,
+        "y": 5
+      },
       "id": 11761581,
-      "frame": {
-        "x": 1,
-        "y": 5,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1074,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1074
     },
     {
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 1,
+        "y": 6
+      },
       "id": 11761582,
-      "frame": {
-        "x": 1,
-        "y": 6,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1074,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1074
     },
     {
-      "id": 11943186,
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [
+        {
+          "expected_value": 0,
+          "key": "always",
+          "reward": null,
+          "text": "quest.thugs_and_assassins.mr_bubblegum.intro"
+        }
+      ],
+      "direction": "Down",
+      "display_conditions": [],
       "frame": {
+        "h": 2,
+        "w": 1,
         "x": 12,
-        "y": 3,
-        "w": 1,
-        "h": 2
+        "y": 3
       },
-      "species_id": 1108,
-      "direction": "Down",
-      "dialogues": [
-        {
-          "text": "quest.thugs_and_assassins.mr_bubblegum.intro",
-          "key": "always",
-          "expected_value": 0,
-          "reward": null
-        }
-      ],
-      "destination": null,
-      "lock_type": "None",
-      "display_conditions": [],
+      "id": 11943186,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1108
     },
     {
-      "id": 11943187,
-      "frame": {
-        "x": 5,
-        "y": 2,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1110,
-      "direction": "Down",
+      "after_dialogue": "Nothing",
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
       "dialogues": [
         {
-          "text": "quest.ninja_skills.nyx.next_target_is_kurogane",
-          "key": "always",
           "expected_value": 0,
-          "reward": null
+          "key": "always",
+          "reward": null,
+          "text": "quest.ninja_skills.nyx.next_target_is_kurogane"
         }
       ],
-      "destination": null,
-      "lock_type": "None",
+      "direction": "Down",
       "display_conditions": [
         {
-          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
           "expected_value": 1,
+          "key": "dialogue.answer.quest.thugs_and_assassins.thermoria_town_chief.stupid_crypto_kids",
           "visible": true
         },
         {
-          "key": "always",
           "expected_value": 1,
+          "key": "always",
           "visible": false
         }
       ],
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 5,
+        "y": 2
+      },
+      "id": 11943187,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 1110
     },
     {
-      "id": 11944534,
-      "frame": {
-        "x": 8,
-        "y": 3,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 6002,
-      "direction": "Down",
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
       "dialogues": [
         {
-          "text": "quest.ninja_skills.nyx.nyx_notes",
+          "expected_value": 1,
           "key": "always",
           "reward": null,
-          "expected_value": 1
+          "text": "quest.ninja_skills.nyx.nyx_notes"
         }
       ],
-      "destination": null,
-      "lock_type": "None",
+      "direction": "Down",
       "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 8,
+        "y": 3
+      },
+      "id": 11944534,
       "is_consumable": false,
-      "demands_attention": false,
-      "after_dialogue": "Nothing"
+      "lock_type": "None",
+      "species_id": 6002
     }
   ],
-  "world_type": "HouseInterior",
+  "ephemeral_state": false,
+  "id": 11718861,
   "light_conditions": "Day",
-  "cutscenes": []
+  "revision": 0,
+  "world_type": "HouseInterior"
 }

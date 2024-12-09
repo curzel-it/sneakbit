@@ -1,8 +1,6 @@
 {
-  "id": 10754377,
-  "revision": 0,
-  "ephemeral_state": false,
   "biome_tiles": {
+    "sheet_id": 1002,
     "tiles": [
       "000000000000000000000000000000",
       "000000000000000000000000000000",
@@ -13,10 +11,10 @@
       "066666666660000000000000000000",
       "066666666660000000000000000000",
       "000000000000000000000000000000"
-    ],
-    "sheet_id": 1002
+    ]
   },
   "constructions_tiles": {
+    "sheet_id": 1003,
     "tiles": [
       "444444444440000000000000000000",
       "466646666440000000000000000000",
@@ -27,297 +25,299 @@
       "400000000000000000000000000000",
       "400000000000000000000000000000",
       "444440044440000000000000000000"
-    ],
-    "sheet_id": 1003
+    ]
   },
   "entities": [
     {
-      "id": 10754379,
+      "contents": null,
+      "demands_attention": false,
+      "destination": {
+        "world": 1001,
+        "x": 0,
+        "y": 0
+      },
+      "dialogues": [],
+      "direction": "Down",
       "frame": {
+        "h": 1,
+        "w": 1,
         "x": 5,
-        "y": 8,
-        "w": 1,
-        "h": 1
+        "y": 8
       },
-      "species_id": 1019,
-      "direction": "Down",
-      "dialogues": [],
+      "id": 10754379,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1019
+    },
+    {
+      "contents": null,
+      "demands_attention": false,
       "destination": {
         "world": 1001,
         "x": 0,
         "y": 0
       },
-      "lock_type": "None",
-      "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
-    },
-    {
-      "id": 10754380,
+      "dialogues": [],
+      "direction": "Down",
       "frame": {
+        "h": 1,
+        "w": 1,
         "x": 6,
-        "y": 8,
-        "w": 1,
-        "h": 1
+        "y": 8
       },
-      "species_id": 1019,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": {
-        "world": 1001,
-        "x": 0,
-        "y": 0
-      },
-      "lock_type": "None",
+      "id": 10754380,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1019
     },
     {
-      "id": 10754381,
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
       "frame": {
-        "x": 1,
-        "y": 4,
+        "h": 2,
         "w": 2,
-        "h": 2
+        "x": 1,
+        "y": 4
       },
-      "species_id": 1016,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
+      "id": 10754381,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1016
     },
     {
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 1,
+        "y": 4
+      },
       "id": 10754382,
-      "frame": {
-        "x": 1,
-        "y": 4,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1013
     },
     {
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 2,
+        "y": 4
+      },
       "id": 10754383,
-      "frame": {
-        "x": 2,
-        "y": 4,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1013
     },
     {
-      "id": 10754384,
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
       "frame": {
+        "h": 1,
+        "w": 1,
         "x": 1,
-        "y": 6,
-        "w": 1,
-        "h": 1
+        "y": 6
       },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
+      "id": 10754384,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1013
     },
     {
-      "id": 10754385,
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
       "frame": {
+        "h": 1,
+        "w": 1,
         "x": 2,
-        "y": 6,
-        "w": 1,
-        "h": 1
+        "y": 6
       },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
+      "id": 10754385,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1013
     },
     {
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 8,
+        "y": 4
+      },
       "id": 11187187,
-      "frame": {
-        "x": 8,
-        "y": 4,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1017,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1017
     },
     {
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 8,
+        "y": 4
+      },
       "id": 11187188,
-      "frame": {
-        "x": 8,
-        "y": 4,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1013
     },
     {
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 9,
+        "y": 1
+      },
       "id": 11187196,
-      "frame": {
-        "x": 9,
-        "y": 1,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 1091,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1091
     },
     {
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 7,
+        "y": 4
+      },
       "id": 11187190,
-      "frame": {
-        "x": 7,
-        "y": 4,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1013
     },
     {
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 7,
+        "y": 5
+      },
       "id": 11187191,
-      "frame": {
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1013
     },
     {
-      "id": 11187195,
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
       "frame": {
+        "h": 2,
+        "w": 1,
         "x": 10,
-        "y": 1,
-        "w": 1,
-        "h": 2
+        "y": 1
       },
-      "species_id": 1091,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
+      "id": 11187195,
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1091
     },
     {
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 9,
+        "y": 5
+      },
       "id": 11187193,
-      "frame": {
-        "x": 9,
-        "y": 5,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1013
     },
     {
+      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 9,
+        "y": 4
+      },
       "id": 11187194,
-      "frame": {
-        "x": 9,
-        "y": 4,
-        "w": 1,
-        "h": 1
-      },
-      "species_id": 1013,
-      "direction": "Down",
-      "dialogues": [],
-      "destination": null,
-      "lock_type": "None",
       "is_consumable": false,
-      "contents": null,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 1013
     },
     {
-      "id": 11190382,
-      "frame": {
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 2
-      },
-      "species_id": 10002,
-      "direction": "Down",
+      "demands_attention": false,
+      "destination": null,
       "dialogues": [
         {
-          "text": "hint.003.not_all_places_have_loot",
+          "expected_value": 1,
           "key": "always",
           "reward": null,
-          "expected_value": 1
+          "text": "hint.003.not_all_places_have_loot"
         }
       ],
-      "destination": null,
-      "lock_type": "None",
+      "direction": "Down",
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 4,
+        "y": 0
+      },
+      "id": 11190382,
       "is_consumable": false,
-      "demands_attention": false
+      "lock_type": "None",
+      "species_id": 10002
     }
   ],
-  "world_type": "HouseInterior",
-  "light_conditions": "Day"
+  "ephemeral_state": false,
+  "id": 10754377,
+  "light_conditions": "Day",
+  "revision": 0,
+  "world_type": "HouseInterior"
 }
