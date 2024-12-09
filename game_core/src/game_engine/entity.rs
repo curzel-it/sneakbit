@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{HERO_ENTITY_ID, NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{HERO_ENTITY_ID, NO_PARENT, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{directions::MovementDirections, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}, world::World};
 
@@ -113,6 +113,39 @@ pub struct Entity {
 
     #[serde(default)]
     pub after_dialogue: AfterDialogueBehavior,
+    
+    #[serde(skip)]
+    pub sorting_key: u32,
+}
+
+impl Entity {
+    /*
+    over/under  y   z   pushable 
+            Z AAA BBB   P
+    Z AAA BBB   P
+    ZAAABBBP
+    ZA_AAB_BBP
+    10_000_000 Z
+        10_000 A
+            10 B
+    */
+    pub fn update_sorting_key(&mut self) {
+        let z = if self.z_index == Z_INDEX_OVERLAY { 20_000_000 }
+        else if self.z_index == Z_INDEX_UNDERLAY { 0 }
+        else { 10_000_000 };
+
+        let accounting_y = if self.is_equipment() {
+            self.frame.center().y.floor() as i32
+        } else {
+            self.frame.y + self.frame.h
+        };
+
+        let a = accounting_y * 10_000;
+        let b = if self.z_index != Z_INDEX_OVERLAY && self.z_index != Z_INDEX_UNDERLAY { self.z_index * 10 } else { 0 };
+        let p = if matches!(self.entity_type, EntityType::PushableObject) { 1 } else { 0 };
+
+        self.sorting_key = (z + a + b + p) as u32;
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -153,6 +186,7 @@ impl Entity {
         if self.parent_id == NO_PARENT {  
             self.remaining_lifespan = UNLIMITED_LIFESPAN;
         }
+        self.update_sorting_key();
         species_by_id(self.species_id).reload_props(self);
         
         match self.entity_type {

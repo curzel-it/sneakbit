@@ -12,7 +12,6 @@ pub struct Species {
     pub id: SpeciesId,
     pub name: String,
     pub entity_type: EntityType,
-    pub z_index: i32,
     pub base_speed: f32,
     pub is_rigid: bool,
     pub inventory_texture_offset: (i32, i32),
@@ -20,6 +19,9 @@ pub struct Species {
     pub sprite_sheet_id: u32,
     pub sprite_number_of_frames: i32,
     
+    #[serde(default="zero_i32")]
+    pub z_index: i32,
+
     #[serde(default)]
     pub movement_directions: MovementDirections,
     
@@ -115,7 +117,8 @@ impl Species {
             is_in_interaction_range: false,
             is_equipped: false,
             hp: self.hp,
-            dps: self.dps
+            dps: self.dps,
+            sorting_key: 0,
         }
     }
 
@@ -211,6 +214,10 @@ fn one() -> f32 {
 
 const fn zero() -> f32 {
     0.0
+}
+
+const fn zero_i32() -> i32 {
+    0
 }
 
 const fn one_hundred() -> f32 {

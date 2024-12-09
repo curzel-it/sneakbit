@@ -21,6 +21,7 @@ impl Entity {
         self.frame.y = hero.frame.y;
         self.offset.x = hero.offset.x - 1.5 * TILE_SIZE;
         self.offset.y = hero.offset.y - 1.0 * TILE_SIZE;
+        self.update_sorting_key();
     }
 }
 

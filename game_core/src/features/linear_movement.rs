@@ -34,6 +34,7 @@ impl Entity {
 
         if tiles_x != 0.0 || tiles_y != 0.0 {
             self.offset = Vector2d::zero();
+            self.update_sorting_key();
         } else {
             self.offset = Vector2d::new(
                 updated_offset.x - tiles_x * TILE_SIZE,

@@ -3,7 +3,7 @@
         "id": 1001,
         "name": "Hero",
         "entity_type": "Hero",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 4.0,
         "is_rigid": true,
         "is_invulnerable": false,
@@ -27,7 +27,6 @@
         "name": "building.name.house",
         "entity_type": "Building",
         "is_invulnerable": true,
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -49,7 +48,6 @@
         "name": "building.name.house",
         "is_invulnerable": true,
         "entity_type": "Building",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -71,7 +69,6 @@
         "name": "building.name.house",
         "is_invulnerable": true,
         "entity_type": "Building",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -93,7 +90,6 @@
         "name": "building.name.house_two_floors",
         "is_invulnerable": true,
         "entity_type": "Building",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -115,7 +111,6 @@
         "name": "building.name.house_two_floors",
         "is_invulnerable": true,
         "entity_type": "Building",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -137,7 +132,6 @@
         "name": "building.name.house_two_floors",
         "is_invulnerable": true,
         "entity_type": "Building",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -159,7 +153,6 @@
         "name": "building.name.broken_house",
         "is_invulnerable": true,
         "entity_type": "Building",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -181,7 +174,6 @@
         "name": "building.name.broken_house",
         "is_invulnerable": true,
         "entity_type": "Building",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -203,7 +195,6 @@
         "name": "building.name.villa",
         "is_invulnerable": true,
         "entity_type": "Building",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -225,7 +216,6 @@
         "name": "npc.name.old_man",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -247,7 +237,6 @@
         "name": "npc.name.old_woman",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -269,7 +258,6 @@
         "name": "npc.name.wizard",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -291,7 +279,6 @@
         "name": "npc.name.male.kid.red_hair.blue_suit.green_hat",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -357,7 +344,7 @@
         "name": "objects.name.seat_brown",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -379,7 +366,7 @@
         "name": "objects.name.seat_green",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -401,7 +388,7 @@
         "name": "objects.name.seat_orange",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -423,7 +410,7 @@
         "name": "objects.name.seat_pink",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -445,7 +432,7 @@
         "name": "objects.name.table",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -467,7 +454,7 @@
         "name": "objects.name.bed",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -489,7 +476,7 @@
         "name": "objects.name.key_yellow",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -511,7 +498,7 @@
         "name": "objects.name.key_red",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -533,7 +520,7 @@
         "name": "objects.name.key_green",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -555,7 +542,7 @@
         "name": "objects.name.key_blue",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -577,7 +564,7 @@
         "name": "objects.name.key_silver",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -599,7 +586,7 @@
         "name": "objects.name.key_white",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -621,7 +608,7 @@
         "name": "objects.name.teleporter",
         "is_invulnerable": true,
         "entity_type": "Teleporter",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -643,7 +630,7 @@
         "name": "objects.name.boulder",
         "is_invulnerable": true,
         "entity_type": "PushableObject",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -665,7 +652,7 @@
         "name": "objects.name.boulder",
         "is_invulnerable": true,
         "entity_type": "PushableObject",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -687,7 +674,7 @@
         "name": "objects.name.gate.yellow",
         "is_invulnerable": true,
         "entity_type": "Gate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -709,7 +696,7 @@
         "name": "objects.name.gate.red",
         "is_invulnerable": true,
         "entity_type": "Gate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -731,7 +718,7 @@
         "name": "objects.name.gate.green",
         "is_invulnerable": true,
         "entity_type": "Gate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -753,7 +740,7 @@
         "name": "objects.name.gate.blue",
         "is_invulnerable": true,
         "entity_type": "Gate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -775,7 +762,7 @@
         "name": "objects.name.gate.silver",
         "is_invulnerable": true,
         "entity_type": "Gate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -797,7 +784,7 @@
         "name": "objects.name.gate.white",
         "is_invulnerable": true,
         "entity_type": "Gate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -819,7 +806,7 @@
         "name": "objects.name.pressure_plate.yellow",
         "is_invulnerable": true,
         "entity_type": "PressurePlate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -841,7 +828,7 @@
         "name": "objects.name.pressure_plate.red",
         "is_invulnerable": true,
         "entity_type": "PressurePlate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -863,7 +850,7 @@
         "name": "objects.name.pressure_plate.green",
         "is_invulnerable": true,
         "entity_type": "PressurePlate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -885,7 +872,7 @@
         "name": "objects.name.pressure_plate.blue",
         "is_invulnerable": true,
         "entity_type": "PressurePlate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -907,7 +894,7 @@
         "name": "objects.name.pressure_plate.silver",
         "is_invulnerable": true,
         "entity_type": "PressurePlate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -929,7 +916,7 @@
         "name": "objects.name.pressure_plate.white",
         "is_invulnerable": true,
         "entity_type": "PressurePlate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -951,7 +938,7 @@
         "name": "objects.name.inverse_gate.yellow",
         "is_invulnerable": true,
         "entity_type": "InverseGate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -973,7 +960,7 @@
         "name": "objects.name.inverse_gate.red",
         "is_invulnerable": true,
         "entity_type": "InverseGate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -995,7 +982,7 @@
         "name": "objects.name.inverse_gate.green",
         "is_invulnerable": true,
         "entity_type": "InverseGate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1017,7 +1004,7 @@
         "name": "objects.name.inverse_gate.blue",
         "is_invulnerable": true,
         "entity_type": "InverseGate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1039,7 +1026,7 @@
         "name": "objects.name.inverse_gate.silver",
         "is_invulnerable": true,
         "entity_type": "InverseGate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1061,7 +1048,7 @@
         "name": "objects.name.inverse_gate.white",
         "is_invulnerable": true,
         "entity_type": "InverseGate",
-        "z_index": 100,
+        "z_index": 10,
         "base_speed": 0.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1083,7 +1070,6 @@
         "name": "building.name.shop",
         "is_invulnerable": true,
         "entity_type": "Building",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1105,7 +1091,6 @@
         "name": "building.name.shop",
         "is_invulnerable": true,
         "entity_type": "Building",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1127,7 +1112,6 @@
         "name": "building.name.shop",
         "is_invulnerable": true,
         "entity_type": "Building",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -1148,7 +1132,7 @@
         "id": 4001,
         "name": "npc.name.slime",
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 0.5,
         "is_invulnerable": false,
         "is_rigid": false,
@@ -1171,7 +1155,7 @@
         "id": 4004,
         "name": "npc.name.monster",
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 2.5,
         "is_rigid": false,
         "melee_attacks_hero": true,
@@ -1195,7 +1179,7 @@
         "name": "objects.name.book_red",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1217,7 +1201,7 @@
         "name": "objects.name.book_blue",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1239,7 +1223,7 @@
         "name": "objects.name.book_green",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1261,7 +1245,7 @@
         "name": "objects.name.book_purple",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1283,7 +1267,7 @@
         "name": "objects.name.book_black",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1304,7 +1288,7 @@
         "id": 7000,
         "name": "objects.name.kunai",
         "entity_type": "Bullet",
-        "z_index": 140,
+        "z_index": 99,
         "dps": 1000,
         "base_speed": 7.0,
         "is_rigid": false,
@@ -1326,7 +1310,7 @@
         "id": 7001,
         "name": "objects.name.kunai.x10",
         "entity_type": "Bundle",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 5.0,
         "is_rigid": false,
         "is_invulnerable": true,
@@ -1360,7 +1344,7 @@
         "id": 9000,
         "name": "objects.name.rail.cart",
         "entity_type": "RailObject",
-        "z_index": 50,
+        "z_index": 5,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -1382,7 +1366,7 @@
         "id": 10000,
         "name": "objects.name.sign",
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1404,7 +1388,7 @@
         "id": 10001,
         "name": "objects.name.large_sign",
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1426,7 +1410,7 @@
         "id": 10002,
         "name": "objects.name.scroll.brown",
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1448,7 +1432,7 @@
         "id": 10003,
         "name": "objects.name.scroll.red",
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1470,7 +1454,7 @@
         "id": 10004,
         "name": "objects.name.scroll.blue",
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1492,7 +1476,7 @@
         "id": 10005,
         "name": "objects.name.scroll.yellow",
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1514,7 +1498,7 @@
         "id": 10006,
         "name": "objects.name.scroll.green",
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1580,7 +1564,7 @@
         "id": 11001,
         "name": "objects.name.well",
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1602,7 +1586,7 @@
         "id": 11002,
         "name": "objects.name.fountain",
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -1625,7 +1609,7 @@
         "name": "objects.name.torch",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 145,
+        "z_index": 14,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -2364,7 +2348,6 @@
         "is_invulnerable": true,
         "is_consumable": true,
         "entity_type": "Hint",
-        "z_index": 0,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -2386,7 +2369,6 @@
         "is_invulnerable": true,
         "is_consumable": false,
         "entity_type": "Hint",
-        "z_index": 0,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -2407,7 +2389,6 @@
         "name": "building.name.demon_lord_castle",
         "entity_type": "Building",
         "is_invulnerable": true,
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2473,7 +2454,7 @@
         "name": "objects.name.skull",
         "is_invulnerable": true,
         "entity_type": "PushableObject",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 0.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -2495,7 +2476,7 @@
         "name": "npc.name.cat",
         "is_invulnerable": false,
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -2518,7 +2499,6 @@
         "name": "building.name.house",
         "entity_type": "Building",
         "is_invulnerable": true,
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2540,7 +2520,6 @@
         "name": "npc.name.ninja.black",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2562,7 +2541,6 @@
         "name": "npc.name.ninja.blue",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2584,7 +2562,6 @@
         "name": "npc.name.female.blue_hair",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2606,7 +2583,6 @@
         "name": "building.name.power_station",
         "entity_type": "Building",
         "is_invulnerable": true,
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2628,7 +2604,6 @@
         "name": "objects.name.barrel.purple",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2650,7 +2625,6 @@
         "name": "objects.name.barrel.green",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2672,7 +2646,6 @@
         "name": "objects.name.barrel.brown",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2694,7 +2667,6 @@
         "name": "objects.name.barrel.wood",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2716,7 +2688,6 @@
         "name": "objects.power.kidneys",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2738,7 +2709,6 @@
         "name": "objects.power.tower.off",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2760,7 +2730,6 @@
         "name": "objects.power.tower.on",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2782,7 +2751,6 @@
         "name": "objects.name.boat.small",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2804,7 +2772,6 @@
         "name": "objects.wind_turbine",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2826,7 +2793,6 @@
         "name": "npc.name.punk",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2848,7 +2814,6 @@
         "name": "npc.name.ethan",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2870,7 +2835,6 @@
         "name": "npc.name.male.black.doctor",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2892,7 +2856,6 @@
         "name": "objects.name.amanita",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2914,7 +2877,6 @@
         "name": "building.name.house",
         "entity_type": "Building",
         "is_invulnerable": true,
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2936,7 +2898,6 @@
         "name": "building.name.house",
         "entity_type": "Building",
         "is_invulnerable": true,
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2958,7 +2919,6 @@
         "name": "building.name.house",
         "entity_type": "Building",
         "is_invulnerable": true,
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -2980,7 +2940,6 @@
         "name": "building.name.house",
         "entity_type": "Building",
         "is_invulnerable": true,
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3002,7 +2961,6 @@
         "name": "building.name.house",
         "entity_type": "Building",
         "is_invulnerable": true,
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3024,7 +2982,6 @@
         "name": "objects.waterfall",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3046,7 +3003,6 @@
         "name": "objects.name.cabinet.sm.brown",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3068,7 +3024,6 @@
         "name": "objects.name.cabinet.md.brown",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3090,7 +3045,6 @@
         "name": "objects.name.cabinet.lg.brown",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3112,7 +3066,6 @@
         "name": "objects.name.cabinet.sm.beige",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3134,7 +3087,6 @@
         "name": "objects.name.cabinet.md.beige",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3156,7 +3108,6 @@
         "name": "objects.name.cabinet.lg.beige",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3178,7 +3129,6 @@
         "name": "objects.name.cabinet.sm.white",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3200,7 +3150,6 @@
         "name": "objects.name.cabinet.md.white",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3222,7 +3171,6 @@
         "name": "objects.name.cabinet.lg.white",
         "entity_type": "StaticObject",
         "is_invulnerable": false,
-        "z_index": 0,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3244,7 +3192,6 @@
         "name": "npc.name.ninja.red",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3266,7 +3213,6 @@
         "name": "npc.name.silver",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3288,7 +3234,6 @@
         "name": "npc.name.female.brown_hair",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3310,7 +3255,6 @@
         "name": "npc.name.soldier.female.red",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3331,7 +3275,7 @@
         "id": 1104,
         "name": "npc.name.snail",
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 0.5,
         "is_rigid": false,
         "is_invulnerable": false,
@@ -3354,7 +3298,7 @@
         "id": 1105,
         "name": "npc.name.piglet",
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 1.5,
         "is_rigid": false,
         "is_invulnerable": false,
@@ -3377,7 +3321,7 @@
         "id": 1106,
         "name": "npc.name.old_man_mustache",
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3399,7 +3343,6 @@
         "name": "npc.name.generic",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3421,7 +3364,6 @@
         "name": "npc.name.mr_bubblegum",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3443,7 +3385,6 @@
         "name": "npc.name.swag_kid",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3465,7 +3406,6 @@
         "name": "npc.name.assassin_girl",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3487,7 +3427,6 @@
         "name": "npc.name.blonde_guy",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3509,7 +3448,6 @@
         "name": "npc.name.rasta_girl",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3531,7 +3469,6 @@
         "name": "npc.name.swag_kid_2",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3553,7 +3490,6 @@
         "name": "npc.name.dbz1",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3575,7 +3511,6 @@
         "name": "npc.name.dbz2",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3597,7 +3532,6 @@
         "name": "npc.name.dbz3",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3619,7 +3553,6 @@
         "name": "npc.name.female.green_hair",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3641,7 +3574,6 @@
         "name": "npc.name.blue_mohawk",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3663,7 +3595,6 @@
         "name": "npc.name.generic.apron",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3685,7 +3616,6 @@
         "name": "npc.name.old_man_mustache.black",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3707,7 +3637,6 @@
         "name": "npc.name.male.black.blue_hair",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3729,7 +3658,6 @@
         "name": "npc.name.female.dark_blonde",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3751,7 +3679,6 @@
         "name": "npc.name.swag_kid_3",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3773,7 +3700,6 @@
         "name": "npc.name.purple_alien",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3795,7 +3721,6 @@
         "name": "npc.name.blonde.apron",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3817,7 +3742,6 @@
         "name": "npc.name.brown_mohawk",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3839,7 +3763,6 @@
         "name": "npc.name.purple_mohawk",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3860,7 +3783,7 @@
         "id": 1128,
         "name": "The end!",
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 0.0,
         "is_rigid": true,
         "is_invulnerable": true,
@@ -3883,7 +3806,6 @@
         "name": "building.name.igloo",
         "entity_type": "Building",
         "is_invulnerable": true,
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3905,7 +3827,6 @@
         "name": "building.name.igloo",
         "entity_type": "Building",
         "is_invulnerable": true,
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3927,7 +3848,6 @@
         "name": "npc.name.developer_messenger",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -3949,7 +3869,6 @@
         "name": "npc.name.old_man_swag_purple",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3971,7 +3890,6 @@
         "name": "npc.name.old_man_swag_brown",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -3993,7 +3911,6 @@
         "name": "npc.name.elf_priestess",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -4015,7 +3932,6 @@
         "name": "npc.name.developer",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -4037,7 +3953,6 @@
         "name": "objects.name.footsteps_trail",
         "is_invulnerable": true,
         "entity_type": "Trail",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4059,7 +3974,6 @@
         "name": "npc.name.bearwolf",
         "is_invulnerable": false,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 1.2,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4081,7 +3995,7 @@
         "id": 1138,
         "name": "npc.name.piglet_blue",
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 1.5,
         "is_rigid": false,
         "is_invulnerable": false,
@@ -4104,7 +4018,7 @@
         "id": 1139,
         "name": "npc.name.slime_blue",
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 1.5,
         "is_rigid": false,
         "is_invulnerable": false,
@@ -4127,7 +4041,7 @@
         "id": 1140,
         "name": "npc.name.cat_brown",
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 1.5,
         "is_rigid": false,
         "is_invulnerable": false,
@@ -4151,7 +4065,7 @@
         "name": "objects.name.camp_fire",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4173,7 +4087,6 @@
         "name": "npc.name.winter_apron",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -4195,7 +4108,6 @@
         "name": "npc.name.winter_black_red",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -4217,7 +4129,6 @@
         "name": "npc.name.soldier",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -4239,7 +4150,6 @@
         "name": "npc.name.tentacle",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4261,7 +4171,6 @@
         "name": "npc.name.tentacle",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4283,7 +4192,6 @@
         "name": "npc.name.lava_splash",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 0,
         "base_speed": 2.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4304,7 +4212,7 @@
         "id": 1148,
         "name": "npc.name.small_monster",
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 3.0,
         "is_rigid": false,
         "melee_attacks_hero": true,
@@ -4328,7 +4236,7 @@
         "name": "npc.name.cat",
         "is_invulnerable": false,
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4351,7 +4259,7 @@
         "name": "npc.name.cat",
         "is_invulnerable": false,
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4374,7 +4282,7 @@
         "name": "npc.name.cat",
         "is_invulnerable": false,
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4397,7 +4305,7 @@
         "name": "npc.name.gate_to_demon_lord",
         "is_invulnerable": true,
         "entity_type": "Npc",
-        "z_index": 150,
+        "z_index": 15,
         "base_speed": 1.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -4419,7 +4327,7 @@
         "name": "npc.name.shield",
         "is_invulnerable": true,
         "entity_type": "Equipment",
-        "z_index": 1100,
+        "z_index": 16,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4441,7 +4349,7 @@
         "name": "objects.name.ar15.weapon",
         "is_invulnerable": true,
         "entity_type": "Equipment",
-        "z_index": 160,
+        "z_index": 16,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4551,7 +4459,7 @@
         "name": "objects.name.sword.weapon",
         "is_invulnerable": true,
         "entity_type": "Sword",
-        "z_index": 160,
+        "z_index": 16,
         "base_speed": 2.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4573,7 +4481,7 @@
         "name": "objects.name.claymore.weapon",
         "is_invulnerable": true,
         "entity_type": "Sword",
-        "z_index": 160,
+        "z_index": 16,
         "base_speed": 3.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4595,7 +4503,7 @@
         "name": "objects.name.kunai_launcher",
         "is_invulnerable": true,
         "entity_type": "KunaiLauncher",
-        "z_index": 1000,
+        "z_index": 99,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4617,7 +4525,7 @@
         "name": "objects.name.slash",
         "entity_type": "Bullet",
         "dps": 180,
-        "z_index": 140,
+        "z_index": 99,
         "base_speed": 3.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4639,7 +4547,6 @@
         "name": "objects.name.ar15.item",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 1000,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4661,7 +4568,6 @@
         "name": "objects.name.sword.item",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 1000,
         "base_speed": 1.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4683,7 +4589,6 @@
         "name": "objects.name.claymore.item",
         "is_invulnerable": true,
         "entity_type": "PickableObject",
-        "z_index": 1000,
         "base_speed": 3.0,
         "is_rigid": false,
         "inventory_texture_offset": [
@@ -4705,7 +4610,6 @@
         "name": "objects.name.stonehenge",
         "is_invulnerable": true,
         "entity_type": "StaticObject",
-        "z_index": 1000,
         "base_speed": 3.0,
         "is_rigid": true,
         "inventory_texture_offset": [
@@ -4727,7 +4631,7 @@
         "name": "objects.name.slash.claymore",
         "entity_type": "Bullet",
         "dps": 330,
-        "z_index": 140,
+        "z_index": 14,
         "base_speed": 3.0,
         "is_rigid": false,
         "inventory_texture_offset": [

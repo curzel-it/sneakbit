@@ -1,11 +1,11 @@
 #![allow(clippy::new_without_default, clippy::not_unsafe_ptr_arg_deref)]
 
-use std::{cmp::Ordering, collections::HashSet, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
+use std::{collections::HashSet, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
-use entities::{known_species::SPECIES_KUNAI, species::EntityType};
+use entities::known_species::SPECIES_KUNAI;
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
-use game_engine::{engine::GameEngine, entity::Entity, storage::inventory_count};
+use game_engine::{engine::GameEngine, storage::inventory_count};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::IntRect, vector::Vector2d};
 
@@ -132,7 +132,8 @@ pub struct RenderableItem {
     pub sprite_sheet_id: u32,
     pub texture_rect: IntRect,
     pub offset: Vector2d,
-    pub frame: IntRect
+    pub frame: IntRect,
+    pub sorting_key: u32
 }
 
 pub fn get_renderables_vec() -> Vec<RenderableItem> {
@@ -140,57 +141,22 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
     let visible_entity_ids = &world.visible_entities;
     let all_entities = world.entities.borrow();    
 
-    let mut entities: Vec<&Entity> = visible_entity_ids
+    let mut renderables: Vec<RenderableItem> = visible_entity_ids
         .iter()
         .map(|(index, _)| &all_entities[*index])
         .filter(|e| !e.is_equipment() || e.is_equipped)
-        .collect();
-
-    entities.sort_by(|entity_a, entity_b| {
-        let a = entity_a;
-        let b = entity_b;
-
-        let ay = a.frame.y + a.frame.h;
-        let by = b.frame.y + b.frame.h;
-        let ax = a.frame.x;
-        let bx = b.frame.x;
-
-        if a.z_index < 0 || b.z_index < 0 || a.z_index > 1000 || b.z_index > 1000 {
-            if a.z_index < b.z_index { return Ordering::Less; }
-            if a.z_index > b.z_index { return Ordering::Greater; }
-        }
-        if ay < by { return Ordering::Less; }
-        if ay > by { return Ordering::Greater; }
-        if a.z_index < b.z_index { return Ordering::Less; }
-        if a.z_index > b.z_index { return Ordering::Greater; }
-
-        let a_pushable = matches!(a.entity_type, EntityType::PushableObject);
-        let b_pushable = matches!(b.entity_type, EntityType::PushableObject);
-        if !a_pushable && b_pushable { return Ordering::Less; }
-        if a_pushable && !b_pushable { return Ordering::Greater; }
-
-        if ay == by && a.offset.y < b.offset.y { return Ordering::Less; }
-        if ay == by && b.offset.y < a.offset.y { return Ordering::Greater; }
-
-        if ax < bx { return Ordering::Less; }
-        if ax > bx { return Ordering::Greater; }
-        if ax == bx && a.offset.x < b.offset.x { return Ordering::Less; }
-        if ax == bx && b.offset.x < a.offset.x { return Ordering::Greater; }
-        if a.id < b.id { return Ordering::Less }
-        if a.id > b.id { return Ordering::Greater }
-        Ordering::Equal
-    });
-
-    let mut renderables: Vec<RenderableItem> = entities.iter()
         .map(|e| {
             RenderableItem {
                 sprite_sheet_id: e.sprite_sheet(),
                 texture_rect: e.texture_source_rect(),
                 offset: e.offset,
-                frame: e.frame
+                frame: e.frame,
+                sorting_key: e.sorting_key
             }
         })
         .collect();
+
+    renderables.sort_by_key(|e| e.sorting_key);
 
     renderables.extend(
         world.cutscenes.iter().map(|c| c.renderable_item())

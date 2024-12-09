@@ -33,6 +33,8 @@ pub const WORLD_ID_NONE: u32 = 1000;
 pub const WORLD_TRANSITION_TIME: f32 = 0.3;
 pub const MENU_CLOSE_TIME: f32 = 0.2;
 pub const MENU_OPEN_TIME: f32 = 0.1;
+pub const Z_INDEX_OVERLAY: i32 = 99;
+pub const Z_INDEX_UNDERLAY: i32 = -1;
 
 // Prefabs
 pub const HOUSE_INTERIOR_ROWS: usize = 6;
