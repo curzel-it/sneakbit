@@ -26,7 +26,7 @@ fn next_sprite(current_sprite_x: i32) -> AnimatedSprite {
     let (x, y) = match current_sprite_x {
         28 => (44, 0),
         44 => (24, 38),
-        24 => (24, 38),
+        24 => (32, 38),
         _ => (28, 0)
     };
     AnimatedSprite::new(
@@ -41,6 +41,7 @@ fn next_hp(current_sprite_x: i32) -> f32 {
         28 => 100.0,
         44 => 600.0,
         24 => 1300.0,
+        32 => 2000.0,
         _ => 100.0
     }
 }
