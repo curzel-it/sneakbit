@@ -1,6 +1,5 @@
 use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
 
-use bitvec::prelude::*;
 use common_macros::hash_set;
 use serde::{Deserialize, Serialize};
 use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
@@ -47,7 +46,7 @@ const WORLD_SIZE_ROWS: usize = 30;
 
 #[derive(Clone)]
 pub struct Hitmap {
-    bits: BitVec,
+    bits: Vec<bool>,
     width: usize,
 }
 
@@ -657,9 +656,7 @@ impl World {
 
         let entities = self.entities.borrow();
 
-        for index in 1..entities.len() {
-            let entity = &entities[index];
-
+        for (index, entity) in entities.iter().enumerate().skip(1) {
             let frame = entity.frame;
             let frame_y = frame.y;
             let frame_x = frame.x;
@@ -719,25 +716,27 @@ impl World {
         self.tiles_hitmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
         self.hitmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
 
-        if !is_creative_mode() && !self.biome_tiles.tiles.is_empty() {
-            let min_row = self.bounds.y as usize;
-            let max_row = ((self.bounds.y + self.bounds.h) as usize).min(self.biome_tiles.tiles.len());
-            let min_col = self.bounds.x as usize;
-            let max_col = ((self.bounds.x + self.bounds.w) as usize).min(self.biome_tiles.tiles[0].len());
-    
-            for row in min_row..max_row {
-                for col in min_col..max_col {
-                    if !self.tiles_hitmap.hits(col, row) {
-                        let biome_tile = &self.biome_tiles.tiles[row][col];
-                        let construction_tile = &self.constructions_tiles.tiles[row][col];
-    
-                        let is_obstacle = !matches!(construction_tile.tile_type, Construction::Bridge) && (
-                            biome_tile.is_obstacle() || construction_tile.is_obstacle()
-                        );
-    
-                        if is_obstacle {
-                            self.tiles_hitmap.set(col, row, true);
-                        }
+        if is_creative_mode() || self.biome_tiles.tiles.is_empty() {
+            return;
+        }
+
+        let min_row = self.bounds.y as usize;
+        let max_row = ((self.bounds.y + self.bounds.h) as usize).min(self.biome_tiles.tiles.len());
+        let min_col = self.bounds.x as usize;
+        let max_col = ((self.bounds.x + self.bounds.w) as usize).min(self.biome_tiles.tiles[0].len());
+
+        for row in min_row..max_row {
+            for col in min_col..max_col {
+                if !self.tiles_hitmap.hits(col, row) {
+                    let biome_tile = &self.biome_tiles.tiles[row][col];
+                    let construction_tile = &self.constructions_tiles.tiles[row][col];
+
+                    let is_obstacle = !matches!(construction_tile.tile_type, Construction::Bridge) && (
+                        biome_tile.is_obstacle() || construction_tile.is_obstacle()
+                    );
+
+                    if is_obstacle {
+                        self.tiles_hitmap.set(col, row, true);
                     }
                 }
             }
@@ -754,7 +753,7 @@ impl Entity {
 impl Hitmap {
     fn new(width: usize, height: usize) -> Self {
         Hitmap {
-            bits: bitvec![0; width * height],
+            bits: vec![false; width * height],
             width,
         }
     }
@@ -774,7 +773,7 @@ impl Hitmap {
 
     fn set(&mut self, x: usize, y: usize, value: bool) {
         let index = self.get_index(x, y);
-        self.bits.set(index, value);
+        self.bits[index] = value;
     }
 }
 
