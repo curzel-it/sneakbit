@@ -9,8 +9,9 @@ impl Entity {
 
     pub fn update_hero(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {        
         let mut updates: Vec<WorldStateUpdate> = vec![];
+        let is_slipping = world.frame_is_slippery_surface(&self.hittable_frame());
 
-        if !(world.is_hero_on_slippery_surface() && self.current_speed > 0.0) {
+        if !(is_slipping && self.current_speed > 0.0) {
             self.update_direction(world);
             self.update_sprite_for_current_state();
         } else {

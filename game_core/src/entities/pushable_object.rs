@@ -1,31 +1,46 @@
-use crate::{features::linear_movement::{would_collide, would_over_weight}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::directions::Direction};
+use crate::{features::linear_movement::{would_collide, would_over_weight}, game_engine::{entity::{Entity, EntityProps}, state_updates::WorldStateUpdate, world::World}, utils::directions::Direction};
 
 impl Entity {
     pub fn update_pushable(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
-        let hero = world.cached_players_props.player1.hittable_frame;
-        let hero_direction = world.cached_players_props.player1.direction;       
-        let hero_offset = world.cached_players_props.player1.offset;        
-        let non_zero_offset = hero_offset.x != 0.0 || hero_offset.y != 0.0;
+        for player_props in world.active_player_props() {
+            let updates = self.update_pushable_with_player_props(
+                player_props, 
+                world, 
+                time_since_last_update
+            );
+            if !updates.is_empty() {
+                return updates
+            }
+        }
+
+        vec![]
+    }
+
+    fn update_pushable_with_player_props(&mut self, player_props: &EntityProps, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
+        let player = player_props.hittable_frame;
+        let player_direction = player_props.direction;       
+        let player_offset = player_props.offset;        
+        let non_zero_offset = player_offset.x != 0.0 || player_offset.y != 0.0;
         
         if non_zero_offset {
-            let is_around = match hero_direction {
-                Direction::Up => hero.y == self.frame.y + self.frame.h && hero.x >= self.frame.x && hero.x < self.frame.x + self.frame.w,
-                Direction::Right => hero.x == self.frame.x - 1 && hero.y >= self.frame.y && hero.y < self.frame.y + self.frame.h,
-                Direction::Down => hero.y == self.frame.y && hero.x >= self.frame.x && hero.x < self.frame.x + self.frame.w,
-                Direction::Left => hero.x == self.frame.x + self.frame.w && hero.y >= self.frame.y && hero.y < self.frame.y + self.frame.h,
+            let is_around = match player_direction {
+                Direction::Up => player.y == self.frame.y + self.frame.h && player.x >= self.frame.x && player.x < self.frame.x + self.frame.w,
+                Direction::Right => player.x == self.frame.x - 1 && player.y >= self.frame.y && player.y < self.frame.y + self.frame.h,
+                Direction::Down => player.y == self.frame.y && player.x >= self.frame.x && player.x < self.frame.x + self.frame.w,
+                Direction::Left => player.x == self.frame.x + self.frame.w && player.y >= self.frame.y && player.y < self.frame.y + self.frame.h,
                 Direction::Unknown => false,
                 Direction::Still => false,
             };
             if is_around {
-                let hits = would_collide(&self.frame, &hero_direction, &world);
-                let weights = would_over_weight(&self.frame, &hero_direction, &world);
+                let hits = would_collide(&self.frame, &player_direction, &world);
+                let weights = would_over_weight(&self.frame, &player_direction, &world);
                 
                 if hits {
                     return vec![]
                 } else if weights {
                     return vec![WorldStateUpdate::StopHeroMovement]
                 } else {
-                    self.direction = hero_direction;
+                    self.direction = player_direction;
                     self.current_speed = 1.2 * world.cached_players_props.player1.speed;
                     self.move_linearly(world, time_since_last_update);
                 }

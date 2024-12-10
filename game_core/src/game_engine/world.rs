@@ -2,7 +2,7 @@ use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}
 
 use common_macros::hash_set;
 use serde::{Deserialize, Serialize};
-use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
@@ -564,7 +564,7 @@ impl World {
         }
     }
 
-    pub fn is_hero_on_slippery_surface(&self) -> bool {
+    pub fn is_any_hero_on_a_slippery_surface(&self) -> bool {
         let frame = self.cached_players_props.player1.hittable_frame;
         
         if self.biome_tiles.tiles.len() > frame.y as usize {
@@ -586,13 +586,17 @@ impl World {
         self.is_slippery_surface(frame.x as usize, frame.y as usize)
     }
 
-    fn is_slippery_surface(&self, x: usize, y: usize) -> bool {
+    pub fn is_slippery_surface(&self, x: usize, y: usize) -> bool {
         if y < self.biome_tiles.tiles.len() {
             let tile = self.biome_tiles.tiles[y][x].tile_type;
             matches!(tile, Biome::Ice)
         } else {
             false
         }
+    }
+
+    pub fn frame_is_slippery_surface(&self, frame: &IntRect) -> bool {
+        self.is_slippery_surface(frame.x as usize, frame.y as usize)
     }
 
     pub fn is_hero_around_and_on_collision_with(&self, target: &IntRect) -> bool {
@@ -797,6 +801,30 @@ impl World {
                     }
                 }
             }
+        }
+    }
+
+    pub fn active_player_props(&self) -> Vec<&EntityProps> {
+        match number_of_players() {
+            1 => vec![
+                &self.cached_players_props.player1
+            ],
+            2 => vec![
+                &self.cached_players_props.player1,
+                &self.cached_players_props.player2
+            ],
+            3 => vec![
+                &self.cached_players_props.player1,
+                &self.cached_players_props.player2,
+                &self.cached_players_props.player3
+            ],
+            4 => vec![
+                &self.cached_players_props.player1,
+                &self.cached_players_props.player2,
+                &self.cached_players_props.player3,
+                &self.cached_players_props.player4
+            ],
+            _ => vec![]
         }
     }
 }
