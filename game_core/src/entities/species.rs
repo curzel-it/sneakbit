@@ -119,6 +119,7 @@ impl Species {
             hp: self.hp,
             dps: self.dps,
             sorting_key: 0,
+            player_index: 0
         }
     }
 

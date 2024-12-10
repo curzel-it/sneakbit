@@ -29,7 +29,7 @@ impl Entity {
             self.sprite.frame.y = slash_sprite_y_for_direction(&self.direction);
             return vec![]
         }
-        if world.has_close_attack_key_been_pressed {
+        if world.players[self.player_index].has_close_attack_key_been_pressed {
             let hero = world.players[0].props;
             let config = slash_config_by_sword_type(self.species_id);
             let offsets = bullet_offsets(world.players[0].props.direction);

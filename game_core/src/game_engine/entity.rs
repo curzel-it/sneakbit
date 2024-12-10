@@ -117,6 +117,9 @@ pub struct Entity {
     
     #[serde(skip)]
     pub sorting_key: u32,
+    
+    #[serde(skip)]
+    pub player_index: usize,
 }
 
 impl Entity {
@@ -297,7 +300,7 @@ impl Entity {
         if let Some(dialogue) = self.next_dialogue(world) {
             self.is_in_interaction_range = true;
 
-            if world.has_confirmation_key_been_pressed {
+            if world.has_confirmation_key_been_pressed_by_anyone {
                 self.demands_attention = false;
                 set_value_for_key(&StorageKey::npc_interaction(self.id), 1);
 

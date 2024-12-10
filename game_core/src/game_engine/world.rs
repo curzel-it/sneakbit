@@ -10,7 +10,6 @@ use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{
 pub struct World {
     pub id: u32,
     pub revision: u32,
-    pub total_elapsed_time: f32,
     pub bounds: IntRect,
     pub biome_tiles: TileSet<BiomeTile>,
     pub constructions_tiles: TileSet<ConstructionTile>,
@@ -20,14 +19,12 @@ pub struct World {
     buildings: HashSet<u32>,
     pub ephemeral_state: bool,
     pub players: Vec<PlayerProps>,
+    pub has_confirmation_key_been_pressed_by_anyone: bool,
+    pub is_any_arrow_key_down: bool,
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
     pub weights_map: Hitmap,
     pub idsmap: EntityIdsMap,
-    pub is_any_arrow_key_down: bool,
-    pub has_ranged_attack_key_been_pressed: bool,
-    pub has_close_attack_key_been_pressed: bool,
-    pub has_confirmation_key_been_pressed: bool,
     pub world_type: WorldType,
     pub pressure_plate_down_red: bool,
     pub pressure_plate_down_green: bool,
@@ -63,7 +60,6 @@ impl World {
         Self {
             id,
             revision: 0,
-            total_elapsed_time: 0.0,
             bounds: IntRect::from_origin(WORLD_SIZE_COLUMNS as i32, WORLD_SIZE_ROWS as i32),
             biome_tiles: TileSet::empty(),
             constructions_tiles: TileSet::empty(),
@@ -71,14 +67,12 @@ impl World {
             visible_entities: vec![],
             ephemeral_state: false,
             players: vec![PlayerProps::new(0), PlayerProps::new(1), PlayerProps::new(2), PlayerProps::new(3)],
+            has_confirmation_key_been_pressed_by_anyone: false,
+            is_any_arrow_key_down: false,
             hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             weights_map: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             idsmap: vec![],
-            is_any_arrow_key_down: false,
-            has_ranged_attack_key_been_pressed: false,
-            has_close_attack_key_been_pressed: false,
-            has_confirmation_key_been_pressed: false,
             world_type: WorldType::HouseInterior,
             pressure_plate_down_red: false,
             pressure_plate_down_green: false,
@@ -215,11 +209,12 @@ impl World {
         viewport: &IntRect,
         keyboard: &KeyboardEventsProvider
     ) -> Vec<EngineStateUpdate> {
-        self.total_elapsed_time += time_since_last_update;
         self.players[0].update(keyboard);
         self.players[1].update(keyboard);
         self.players[2].update(keyboard);
         self.players[3].update(keyboard);
+        self.has_confirmation_key_been_pressed_by_anyone = keyboard.has_confirmation_been_pressed_by_anyone();
+        self.is_any_arrow_key_down = keyboard.is_any_arrow_key_down_for_anyone();
         self.biome_tiles.update(time_since_last_update);
 
         let mut engine_updates: Vec<EngineStateUpdate> = vec![];
@@ -597,10 +592,6 @@ impl World {
             return true
         }
         false
-    }
-
-    pub fn is_hero_interacting(&self, target: &IntRect) -> bool {
-        self.is_hero_around_and_on_collision_with(target) && self.has_confirmation_key_been_pressed
     }
 
     pub fn is_any_hero_at(&self, x: i32, y: i32) -> bool {

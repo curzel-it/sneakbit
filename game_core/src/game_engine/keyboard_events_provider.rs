@@ -42,6 +42,15 @@ impl KeyboardEventsProvider {
         false
     }
 
+    pub fn is_any_arrow_key_down_for_anyone(&self) -> bool {
+        for player in &self.players {
+            if player.is_any_arrow_key_down() {
+                return true
+            }
+        }
+        false
+    }
+
     pub fn has_close_attack_key_been_pressed_by_anyone(&self) -> bool {
         for player in &self.players {
             if player.has_close_attack_key_been_pressed {

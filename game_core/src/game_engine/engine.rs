@@ -43,7 +43,7 @@ impl GameEngine {
             wants_fullscreen: false,
             sound_effects: SoundEffectsManager::new(),
             links_handler: Box::new(NoLinksHandler::new()),
-            number_of_players: 1
+            number_of_players: 2
         }
     }
 

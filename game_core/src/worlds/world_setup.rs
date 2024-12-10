@@ -94,15 +94,17 @@ impl World {
     }
 
     fn spawn_equipment(&mut self) {
-        for id in self.hero_entity_ids() {
+        for (index, &id) in self.hero_entity_ids().iter().enumerate() {
             let mut kunai_launcher = species_by_id(SPECIES_KUNAI_LAUNCHER).make_entity();
             kunai_launcher.parent_id = id;
+            kunai_launcher.player_index = index;
             kunai_launcher.frame.x = self.players[0].props.frame.x;
             kunai_launcher.frame.y = self.players[0].props.frame.y;
             self.add_entity(kunai_launcher);
 
             let mut claymore = species_by_id(SPECIES_CLAYMORE).make_entity();
             claymore.parent_id = id;
+            claymore.player_index = index;
             claymore.frame.x = self.players[0].props.frame.x;
             claymore.frame.y = self.players[0].props.frame.y;
             self.add_entity(claymore);
