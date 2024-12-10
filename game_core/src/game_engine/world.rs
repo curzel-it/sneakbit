@@ -110,7 +110,7 @@ impl World {
     pub fn insert_entity(&mut self, entity: Entity, index: usize) -> bool {
         let id = entity.id;
 
-        if !is_creative_mode() && !entity.should_be_visible(self) {
+        if !entity.should_be_visible(self) {
             return false
         }
 

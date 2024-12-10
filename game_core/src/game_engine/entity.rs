@@ -215,10 +215,13 @@ impl Entity {
         if is_creative_mode() {
             return true
         }
+        if self.is_equipment() {
+            return true
+        }
         if bool_for_global_key(&StorageKey::item_collected(self.id)) {
             return false
         }
-        for condition in &self.display_conditions{
+        for condition in &self.display_conditions {
             if key_value_matches(&condition.key, world, condition.expected_value) {
                 return condition.visible
             }

@@ -13,6 +13,7 @@ impl World {
         self.update_hitmaps();
         self.setup_entities();
         self.spawn_hero(source, hero_direction, original_x, original_y, direction);
+        self.spawn_equipment();
         self.spawn_changelog_man_if_needed();
     }    
 
@@ -68,11 +69,17 @@ impl World {
         entity.immobilize_for_seconds(0.2);
         self.cached_hero_props = entity.props();
         self.insert_entity(entity, 0);
+    }
 
-        let kunai_launcher = species_by_id(SPECIES_KUNAI_LAUNCHER).make_entity();
+    fn spawn_equipment(&mut self) {
+        let mut kunai_launcher = species_by_id(SPECIES_KUNAI_LAUNCHER).make_entity();
+        kunai_launcher.frame.x = self.cached_hero_props.frame.x;
+        kunai_launcher.frame.y = self.cached_hero_props.frame.y;
         self.add_entity(kunai_launcher);
 
-        let claymore = species_by_id(SPECIES_CLAYMORE).make_entity();
+        let mut claymore = species_by_id(SPECIES_CLAYMORE).make_entity();
+        claymore.frame.x = self.cached_hero_props.frame.x;
+        claymore.frame.y = self.cached_hero_props.frame.y;
         self.add_entity(claymore);
     }
 
