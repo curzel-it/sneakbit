@@ -25,6 +25,8 @@ import it.curzel.bitscape.engine.AudioEngine
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.GameViewComposable
+import it.curzel.bitscape.rendering.HpView
+import it.curzel.bitscape.rendering.HpViewPreview
 import it.curzel.bitscape.rendering.LoadingScreen
 import it.curzel.bitscape.rendering.MenuView
 import it.curzel.bitscape.rendering.OptionsScreen
@@ -60,6 +62,7 @@ class MainActivity : ComponentActivity() {
                     Box {
                         Box(modifier = Modifier.padding(innerPadding)) {
                             GameViewComposable(engine, spritesProvider)
+                            HpView(engine)
                             ControllerEmulatorView(engine, controllerSettingsStorage)
                         }
                         MenuView(engine)
@@ -116,7 +119,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             NativeLib.SPRITE_SHEET_HUMANOIDS_2X3 to "humanoids_2x3",
             NativeLib.SPRITE_SHEET_AVATARS to "avatars",
             NativeLib.SPRITE_SHEET_FARM_PLANTS to "farm_plants",
-            NativeLib.SPRITE_SHEET_CAVE_DARKNESS to "cave_darkness"
+            NativeLib.SPRITE_SHEET_CAVE_DARKNESS to "cave_darkness",
+            NativeLib.SPRITE_SHEET_TENTACLES to "tentacles",
+            NativeLib.SPRITE_SHEET_WEAPONS to "weapons"
         )
     )
 }

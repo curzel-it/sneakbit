@@ -40,6 +40,8 @@ class GameEngine(
 
     private val _loadingScreenConfig = MutableStateFlow(LoadingScreenConfig.none)
     private val _showsDeathScreen = MutableStateFlow(false)
+    private val _heroHp = MutableStateFlow(100.0f)
+    private val _isSwordEquipped = MutableStateFlow(false)
     private val _numberOfKunai = MutableStateFlow(0)
     private val _toastConfig = MutableStateFlow(ToastConfig.none)
     private val _menuConfig = MutableStateFlow(MenuConfig.none)
@@ -96,6 +98,8 @@ class GameEngine(
         nativeLib.updateGame(deltaTime)
         _menuConfig.value = nativeLib.menuConfig()
         _toastConfig.value = nativeLib.toastConfig()
+        _isSwordEquipped.value = nativeLib.isSwordEquipped()
+        _heroHp.value = nativeLib.currentHeroHp()
         _numberOfKunai.value = nativeLib.numberOfKunaiInInventory()
         _showsDeathScreen.value = isDead
         _isInteractionEnabled.value = nativeLib.isInteractionAvailable()
@@ -146,6 +150,14 @@ class GameEngine(
 
     fun showsDeathScreen(): StateFlow<Boolean> {
         return _showsDeathScreen.asStateFlow()
+    }
+
+    fun heroHp(): StateFlow<Float> {
+        return _heroHp.asStateFlow()
+    }
+
+    fun isSwordEquipped(): StateFlow<Boolean> {
+        return _isSwordEquipped.asStateFlow()
     }
 
     fun loadingScreenConfig(): StateFlow<LoadingScreenConfig> {
@@ -245,7 +257,8 @@ class GameEngine(
         keyPressed.clear()
         keyDown.removeAll(
             listOf(
-                EmulatedKey.ATTACK,
+                EmulatedKey.CLOSE_RANGE_ATTACK,
+                EmulatedKey.RANGED_ATTACK,
                 EmulatedKey.BACKSPACE,
                 EmulatedKey.CONFIRM,
                 EmulatedKey.ESCAPE,
@@ -269,7 +282,8 @@ class GameEngine(
             keyPressed.contains(EmulatedKey.ESCAPE),
             keyPressed.contains(EmulatedKey.MENU),
             keyPressed.contains(EmulatedKey.CONFIRM),
-            keyPressed.contains(EmulatedKey.ATTACK),
+            keyPressed.contains(EmulatedKey.CLOSE_RANGE_ATTACK),
+            keyPressed.contains(EmulatedKey.RANGED_ATTACK),
             keyPressed.contains(EmulatedKey.BACKSPACE),
             currentChar,
             deltaTime
@@ -338,30 +352,6 @@ class GameEngine(
         } else {
             Log.d("MainActivity", "File already exists: ${file.absolutePath}")
         }
-    }
-
-    private fun logKeyboardState() {
-        val state = mutableListOf<String>()
-        state.add("=== Keyboard State Update ===")
-        state.add("Directional Keys Pressed:")
-        state.add("  Up: ${keyPressed.contains(EmulatedKey.UP)}")
-        state.add("  Right: ${keyPressed.contains(EmulatedKey.RIGHT)}")
-        state.add("  Down: ${keyPressed.contains(EmulatedKey.DOWN)}")
-        state.add("  Left: ${keyPressed.contains(EmulatedKey.LEFT)}")
-        state.add("Directional Keys Down:")
-        state.add("  Up: ${keyDown.contains(EmulatedKey.UP)}")
-        state.add("  Right: ${keyDown.contains(EmulatedKey.RIGHT)}")
-        state.add("  Down: ${keyDown.contains(EmulatedKey.DOWN)}")
-        state.add("  Left: ${keyDown.contains(EmulatedKey.LEFT)}")
-        state.add("Action Keys Pressed:")
-        state.add("  Escape: ${keyPressed.contains(EmulatedKey.ESCAPE)}")
-        state.add("  Menu: ${keyPressed.contains(EmulatedKey.MENU)}")
-        state.add("  Confirm: ${keyPressed.contains(EmulatedKey.CONFIRM)}")
-        state.add("  Attack: ${keyPressed.contains(EmulatedKey.ATTACK)}")
-        state.add("  Backspace: ${keyPressed.contains(EmulatedKey.BACKSPACE)}")
-        state.add("Current Character: $currentChar")
-        state.add("------------------------------")
-        Log.d("GameEngine", "Keyboard state: ${state.joinToString("\n")}")
     }
 }
 

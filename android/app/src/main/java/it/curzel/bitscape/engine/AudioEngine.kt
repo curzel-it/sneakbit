@@ -42,7 +42,9 @@ class AudioEngine(
         SoundEffect.AmmoCollected to R.raw.sfx_sounds_interaction22,
         SoundEffect.GameOver to R.raw.sfx_sounds_negative1,
         SoundEffect.PlayerResurrected to R.raw.sfx_sounds_powerup1,
-        SoundEffect.NoAmmo to R.raw.sfx_wpn_noammo3
+        SoundEffect.NoAmmo to R.raw.sfx_wpn_noammo3,
+        SoundEffect.SwordSlash to R.raw.sfx_wpn_sword3,
+        SoundEffect.ClaymoreSlash to R.raw.sfx_wpn_sword2
     )
 
     private val soundPool: SoundPool
@@ -209,19 +211,21 @@ class AudioEngine(
 }
 
 private enum class SoundEffect {
-    DeathOfNonMonster,
-    DeathOfMonster,
-    SmallExplosion,
-    WorldChange,
-    StepTaken,
+    AmmoCollected,
+    KeyCollected,
     BulletFired,
     BulletBounced,
-    HintReceived,
-    KeyCollected,
-    AmmoCollected,
+    DeathOfMonster,
+    DeathOfNonMonster,
+    SmallExplosion,
+    NoAmmo,
     GameOver,
     PlayerResurrected,
-    NoAmmo;
+    WorldChange,
+    StepTaken,
+    HintReceived,
+    SwordSlash,
+    ClaymoreSlash;
 
     companion object {
         fun fromInt(value: Int): SoundEffect? {
@@ -239,6 +243,8 @@ private enum class SoundEffect {
                 11 -> WorldChange
                 12 -> StepTaken
                 13 -> HintReceived
+                14 -> SwordSlash
+                15 -> ClaymoreSlash
                 else -> null
             }
         }

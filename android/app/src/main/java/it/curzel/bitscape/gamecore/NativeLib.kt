@@ -35,7 +35,8 @@ class NativeLib {
         escapePressed: Boolean,
         menuPressed: Boolean,
         confirmPressed: Boolean,
-        attackPressed: Boolean,
+        closeAttackPressed: Boolean,
+        rangedAttackPressed: Boolean,
         backspacePressed: Boolean,
         currentChar: Int,
         timeSinceLastUpdate: Float
@@ -56,6 +57,8 @@ class NativeLib {
     external fun startNewGame()
     external fun currentSoundEffects(): List<Int>
     external fun currentSoundTrack(): String
+    external fun isSwordEquipped(): Boolean
+    external fun currentHeroHp(): Float
 
     companion object {
         const val TILE_SIZE: Int = 16
@@ -76,6 +79,8 @@ class NativeLib {
         const val SPRITE_SHEET_FARM_PLANTS: UInt = 1017u
         const val SPRITE_SHEET_HUMANOIDS_2X3: UInt = 1018u
         const val SPRITE_SHEET_CAVE_DARKNESS: UInt = 1019u
+        const val SPRITE_SHEET_TENTACLES: UInt = 1021u
+        const val SPRITE_SHEET_WEAPONS: UInt = 1022u
 
         init {
             System.loadLibrary("game_core")
