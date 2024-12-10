@@ -88,6 +88,6 @@ pub fn would_collide_with_hero(frame: &IntRect, direction: &Direction, world: &W
     let (col_offset, row_offset) = direction.as_col_row_offset();
     let y = frame.y + frame.h - 1 + row_offset;
     let x = frame.x + col_offset;
-    let hero = world.cached_players_props.player1.hittable_frame;
+    let hero = world.players[0].props.hittable_frame;
     hero.x == x && hero.y == y 
 }

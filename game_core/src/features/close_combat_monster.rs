@@ -38,8 +38,8 @@ impl Entity {
             return vec![]
         }
 
-        let hero_invulnerable = world.cached_players_props.player1.is_invulnerable;
-        let hero = world.cached_players_props.player1.hittable_frame;
+        let hero_invulnerable = world.players[0].props.is_invulnerable;
+        let hero = world.players[0].props.hittable_frame;
         let x = self.frame.x;
         let y = self.frame.y + if self.frame.h > 1 { 1 } else { 0 };
         
@@ -65,6 +65,7 @@ impl Entity {
                 self.sprite = next_sprite(self.sprite.original_frame.x);
                 self.hp = hp_for_sprite(self.sprite.original_frame.x);
                 self.dps = dps_for_sprite(self.sprite.original_frame.x);
+                self.current_speed *= 1.1;
                 return vec![WorldStateUpdate::RemoveEntity(hit)]
             }
         }

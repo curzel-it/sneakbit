@@ -2,7 +2,7 @@ use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}
 
 use common_macros::hash_set;
 use serde::{Deserialize, Serialize};
-use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
@@ -19,12 +19,11 @@ pub struct World {
     melee_attackers: HashSet<u32>,
     buildings: HashSet<u32>,
     pub ephemeral_state: bool,
-    pub cached_players_props: PlayersProps,
+    pub players: Vec<PlayerProps>,
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
     pub weights_map: Hitmap,
     pub idsmap: EntityIdsMap,
-    pub direction_based_on_current_keys: Direction,
     pub is_any_arrow_key_down: bool,
     pub has_ranged_attack_key_been_pressed: bool,
     pub has_close_attack_key_been_pressed: bool,
@@ -43,14 +42,6 @@ pub struct World {
 
 const WORLD_SIZE_COLUMNS: usize = 30;
 const WORLD_SIZE_ROWS: usize = 30;
-
-#[derive(Clone, Default, Debug)]
-pub struct PlayersProps {
-    pub player1: EntityProps,
-    pub player2: EntityProps,
-    pub player3: EntityProps,
-    pub player4: EntityProps
-}
 
 #[derive(Clone)]
 pub struct Hitmap {
@@ -79,12 +70,11 @@ impl World {
             entities: RefCell::new(vec![]),
             visible_entities: vec![],
             ephemeral_state: false,
-            cached_players_props: PlayersProps::default(),
+            players: vec![PlayerProps::new(0), PlayerProps::new(1), PlayerProps::new(2), PlayerProps::new(3)],
             hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             weights_map: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             idsmap: vec![],
-            direction_based_on_current_keys: Direction::Unknown,
             is_any_arrow_key_down: false,
             has_ranged_attack_key_been_pressed: false,
             has_close_attack_key_been_pressed: false,
@@ -204,6 +194,21 @@ impl World {
             .map(|(index, _)| index)
     }
 
+    pub fn direction_based_on_current_keys_for_player_by_entity_id(&self, entity_id: u32) -> Direction {
+        let index = self.player_index_by_entity_id(entity_id);
+        self.players[index].direction_based_on_current_keys
+    } 
+
+    fn player_index_by_entity_id(&self, entity_id: u32) -> usize {
+        match entity_id {
+            PLAYER1_ENTITY_ID => 0,
+            PLAYER2_ENTITY_ID => 1,
+            PLAYER3_ENTITY_ID => 2,
+            PLAYER4_ENTITY_ID => 3,
+            _ => 0
+        }
+    }
+
     pub fn update(
         &mut self, 
         time_since_last_update: f32,
@@ -211,12 +216,10 @@ impl World {
         keyboard: &KeyboardEventsProvider
     ) -> Vec<EngineStateUpdate> {
         self.total_elapsed_time += time_since_last_update;
-        self.direction_based_on_current_keys = keyboard.direction_based_on_current_keys(0, self.cached_players_props.player1.direction);
-        self.is_any_arrow_key_down = keyboard.is_any_arrow_key_down(0);
-        self.has_ranged_attack_key_been_pressed = keyboard.has_ranged_attack_key_been_pressed_by_anyone();
-        self.has_close_attack_key_been_pressed = keyboard.has_close_attack_key_been_pressed_by_anyone();
-        self.has_confirmation_key_been_pressed = keyboard.has_confirmation_been_pressed_by_anyone();
-
+        self.players[0].update(keyboard);
+        self.players[1].update(keyboard);
+        self.players[2].update(keyboard);
+        self.players[3].update(keyboard);
         self.biome_tiles.update(time_since_last_update);
 
         let mut engine_updates: Vec<EngineStateUpdate> = vec![];
@@ -265,7 +268,7 @@ impl World {
         }
         let updates: Vec<WorldStateUpdate> = self.cutscenes.iter_mut()
             .flat_map(|c| 
-                c.update(&self.cached_players_props.player1.hittable_frame, time_since_last_update)
+                c.update(&self.players[0].props.hittable_frame, time_since_last_update)
             )
             .collect();
         
@@ -304,14 +307,8 @@ impl World {
                 self.toggle_demand_attention(id)
             }
             WorldStateUpdate::CacheHeroProps(props) => { 
-                match props.id {
-                    PLAYER1_ENTITY_ID => self.cached_players_props.player1 = *props,
-                    PLAYER2_ENTITY_ID => self.cached_players_props.player2 = *props,
-                    PLAYER3_ENTITY_ID => self.cached_players_props.player3 = *props,
-                    PLAYER4_ENTITY_ID => self.cached_players_props.player4 = *props,
-                    _ => {}
-                }
-                
+                let index = self.player_index_by_entity_id(props.id);
+                self.players[index].props = *props;                
             }
             WorldStateUpdate::ChangeLock(entity_id, lock_type) => {
                 self.change_lock(entity_id, lock_type)
@@ -565,24 +562,11 @@ impl World {
     }
 
     pub fn is_any_hero_on_a_slippery_surface(&self) -> bool {
-        let frame = self.cached_players_props.player1.hittable_frame;
-        
-        if self.biome_tiles.tiles.len() > frame.y as usize {
-            let tile = self.biome_tiles.tiles[frame.y as usize][frame.x as usize].tile_type;
-            matches!(tile, Biome::Ice)
-        } else {
-            false
-        }
+        self.is_player_by_index_on_slippery_surface(0) || self.is_player_by_index_on_slippery_surface(1) || self.is_player_by_index_on_slippery_surface(2) || self.is_player_by_index_on_slippery_surface(3)
     }
 
     pub fn is_player_by_index_on_slippery_surface(&self, index: usize) -> bool {
-        let frame = match index {
-            0 => self.cached_players_props.player1.hittable_frame,
-            1 => self.cached_players_props.player2.hittable_frame,
-            2 => self.cached_players_props.player3.hittable_frame,
-            3 => self.cached_players_props.player4.hittable_frame,
-            _ => self.cached_players_props.player1.hittable_frame
-        };
+        let frame = self.players[index].props.hittable_frame;
         self.is_slippery_surface(frame.x as usize, frame.y as usize)
     }
 
@@ -600,8 +584,8 @@ impl World {
     }
 
     pub fn is_hero_around_and_on_collision_with(&self, target: &IntRect) -> bool {
-        let hero = self.cached_players_props.player1.hittable_frame;
-        let hero_direction: Direction = self.cached_players_props.player1.direction;        
+        let hero = self.players[0].props.hittable_frame;
+        let hero_direction: Direction = self.players[0].props.direction;        
         
         if self.is_any_hero_at(target.x, target.y) {
             return true
@@ -620,8 +604,8 @@ impl World {
     }
 
     pub fn is_any_hero_at(&self, x: i32, y: i32) -> bool {
-        self.active_player_props().iter().any(|p| {
-            p.hittable_frame.x == x && p.hittable_frame.y == y
+        self.players.iter().any(|p| {
+            p.props.hittable_frame.x == x && p.props.hittable_frame.y == y
         })        
     }
 
@@ -804,30 +788,6 @@ impl World {
             }
         }
     }
-
-    pub fn active_player_props(&self) -> Vec<&EntityProps> {
-        match number_of_players() {
-            1 => vec![
-                &self.cached_players_props.player1
-            ],
-            2 => vec![
-                &self.cached_players_props.player1,
-                &self.cached_players_props.player2
-            ],
-            3 => vec![
-                &self.cached_players_props.player1,
-                &self.cached_players_props.player2,
-                &self.cached_players_props.player3
-            ],
-            4 => vec![
-                &self.cached_players_props.player1,
-                &self.cached_players_props.player2,
-                &self.cached_players_props.player3,
-                &self.cached_players_props.player4
-            ],
-            _ => vec![]
-        }
-    }
 }
 
 impl Entity {
@@ -873,5 +833,38 @@ impl Debug for Hitmap {
             writeln!(f)?; 
         }
         Ok(())
+    }
+}
+
+#[derive(Clone, Default, Debug)]
+pub struct PlayerProps {
+    pub index: usize,
+    pub direction_based_on_current_keys: Direction,
+    pub is_any_arrow_key_down: bool,
+    pub has_ranged_attack_key_been_pressed: bool,
+    pub has_close_attack_key_been_pressed: bool,
+    pub has_confirmation_key_been_pressed: bool,
+    pub props: EntityProps
+}
+
+impl PlayerProps {
+    fn new(index: usize) -> Self {
+        Self {
+            index,
+            direction_based_on_current_keys: Direction::Unknown,
+            is_any_arrow_key_down: false,
+            has_ranged_attack_key_been_pressed: false,
+            has_close_attack_key_been_pressed: false,
+            has_confirmation_key_been_pressed: false,
+            props: EntityProps::default()
+        }
+    }
+
+    fn update(&mut self, keyboard: &KeyboardEventsProvider) {
+        self.direction_based_on_current_keys = keyboard.direction_based_on_current_keys(self.index, self.props.direction);
+        self.is_any_arrow_key_down = keyboard.is_any_arrow_key_down(0);
+        self.has_ranged_attack_key_been_pressed = keyboard.has_ranged_attack_key_been_pressed_by_anyone();
+        self.has_close_attack_key_been_pressed = keyboard.has_close_attack_key_been_pressed_by_anyone();
+        self.has_confirmation_key_been_pressed = keyboard.has_confirmation_been_pressed_by_anyone();
     }
 }

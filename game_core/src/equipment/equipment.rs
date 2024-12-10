@@ -14,7 +14,7 @@ impl Entity {
     }
 
     pub fn update_equipment_position(&mut self, world: &World) {   
-        let hero = world.cached_players_props.player1;
+        let hero = world.players[0].props;
         self.direction = hero.direction;
         self.current_speed = hero.speed;
         self.frame.x = hero.frame.x;

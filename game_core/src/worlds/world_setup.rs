@@ -27,7 +27,7 @@ impl World {
             set_update_handled();
             clear_previous_changelog_dialogues();
 
-            let hero = self.cached_players_props.player1;
+            let hero = self.players[0].props;
             let mut mugs = species_by_id(SPECIES_MR_MUGS).make_entity();
             mugs.direction = Direction::Down;
             mugs.demands_attention = true;
@@ -68,7 +68,7 @@ impl World {
 
         println!("Spawning hero at {}, {}", entity.frame.x, entity.frame.y); 
         entity.immobilize_for_seconds(0.2);
-        self.cached_players_props.player1 = entity.props();
+        self.players[0].props = entity.props();
         self.insert_entity(entity, 0);
     }
 
@@ -85,8 +85,8 @@ impl World {
     fn spawn_other_players(&mut self) {
         for (index, &id) in self.hero_entity_ids().iter().enumerate().skip(1) {
             let mut entity = make_entity_by_species(SPECIES_HERO);
-            entity.frame = self.cached_players_props.player1.frame;
-            entity.direction = self.cached_players_props.player1.direction;
+            entity.frame = self.players[0].props.frame;
+            entity.direction = self.players[0].props.direction;
             entity.id = id;
             entity.immobilize_for_seconds(0.2);
             self.insert_entity(entity, index);
@@ -97,14 +97,14 @@ impl World {
         for id in self.hero_entity_ids() {
             let mut kunai_launcher = species_by_id(SPECIES_KUNAI_LAUNCHER).make_entity();
             kunai_launcher.parent_id = id;
-            kunai_launcher.frame.x = self.cached_players_props.player1.frame.x;
-            kunai_launcher.frame.y = self.cached_players_props.player1.frame.y;
+            kunai_launcher.frame.x = self.players[0].props.frame.x;
+            kunai_launcher.frame.y = self.players[0].props.frame.y;
             self.add_entity(kunai_launcher);
 
             let mut claymore = species_by_id(SPECIES_CLAYMORE).make_entity();
             claymore.parent_id = id;
-            claymore.frame.x = self.cached_players_props.player1.frame.x;
-            claymore.frame.y = self.cached_players_props.player1.frame.y;
+            claymore.frame.x = self.players[0].props.frame.x;
+            claymore.frame.y = self.players[0].props.frame.y;
             self.add_entity(claymore);
         }
     }

@@ -103,7 +103,7 @@ fn make_bullet_ex(
 }
 
 pub fn make_hero_bullet(species: u32, world: &World, lifespan: f32) -> Entity {
-    let hero = world.cached_players_props.player1;
+    let hero = world.players[0].props;
     make_bullet_ex(
         species,
         PLAYER1_ENTITY_ID,

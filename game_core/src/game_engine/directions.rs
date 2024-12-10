@@ -26,7 +26,9 @@ impl Entity {
     pub fn update_direction(&mut self, world: &World) {
         match self.movement_directions {
             MovementDirections::None => {},
-            MovementDirections::Keyboard => self.update_direction_for_current_keys(world.direction_based_on_current_keys),
+            MovementDirections::Keyboard => self.update_direction_for_current_keys(
+                world.direction_based_on_current_keys_for_player_by_entity_id(self.id)
+            ),
             MovementDirections::Free => self.move_around_free(world),
             MovementDirections::FindHero => self.search_for_hero(world),
         }
@@ -68,7 +70,7 @@ impl Entity {
     }
 
     fn is_hero_in_line_of_sight(&self, world: &World) -> bool {
-        let hero = &world.cached_players_props.player1.hittable_frame;        
+        let hero = &world.players[0].props.hittable_frame;        
         let npc = &self.frame;
         let npc_y = self.frame.y + if self.frame.h > 1 { 1 } else { 0 };
 
@@ -96,7 +98,7 @@ impl Entity {
     }
 
     fn change_direction_towards_hero(&mut self, world: &World) {
-        let hero = &world.cached_players_props.player1.hittable_frame;
+        let hero = &world.players[0].props.hittable_frame;
         let npc = &self.frame;
         let npc_y = self.frame.y + if self.frame.h > 1 { 1 } else { 0 };
 

@@ -314,16 +314,14 @@ pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
 
 #[no_mangle]
 pub extern "C" fn current_hero_hp() -> f32 {
-    engine().world.cached_players_props.player1.hp
+    engine().world.players[0].props.hp
 }
 
 pub fn cached_players_positions() -> Vec<IntPoint> {
-    vec![
-        engine().world.cached_players_props.player1.hittable_frame.origin(),
-        engine().world.cached_players_props.player2.hittable_frame.origin(),
-        engine().world.cached_players_props.player3.hittable_frame.origin(),
-        engine().world.cached_players_props.player4.hittable_frame.origin()
-    ]
+    engine().world.players
+        .iter()
+        .map(|p| p.props.hittable_frame.origin())
+        .collect()
 }
 
 #[no_mangle]

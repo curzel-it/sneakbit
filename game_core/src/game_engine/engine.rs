@@ -60,7 +60,7 @@ impl GameEngine {
             if self.keyboard.has_confirmation_been_pressed_by_anyone() {
                 self.death_screen.is_open = false;
                 self.previous_world = None;
-                self.world.cached_players_props.player1.direction = Direction::Unknown;
+                self.world.players[0].props.direction = Direction::Unknown;
                 self.teleport_to_previous();
                 did_resurrect = true;
             } else {
@@ -169,47 +169,37 @@ impl GameEngine {
     }
 
     fn center_camera_onto_players(&mut self) {
-        match self.number_of_players {
-            2 => {
-                let p1 = self.world.cached_players_props.player1;
-                let p2 = self.world.cached_players_props.player2;
-                let cx = (p1.hittable_frame.x as f32 + p2.hittable_frame.x as f32) / 2.0;
-                let cy = (p1.hittable_frame.y as f32 + p2.hittable_frame.y as f32) / 2.0;
-                let x = cx.floor();
-                let y = cy.floor();
-                let ox = p1.offset.x - p2.offset.x + cx - x;
-                let oy = p1.offset.y - p2.offset.y + cy - y;
-                self.center_camera_at(x as i32, y as i32, &Vector2d::new(ox, oy));
-            },
-            3 => {
-                let p1 = self.world.cached_players_props.player1;
-                let p2 = self.world.cached_players_props.player2;
-                let p3 = self.world.cached_players_props.player3;
-                let cx = (p1.hittable_frame.x as f32 + p2.hittable_frame.x as f32 + p3.hittable_frame.x as f32) / 3.0;
-                let cy = (p1.hittable_frame.y as f32 + p2.hittable_frame.y as f32 + p3.hittable_frame.y as f32) / 3.0;
-                let x = cx.floor();
-                let y = cy.floor();
-                let ox = (p1.offset.x + p2.offset.x + p3.offset.x) / 3.0 + cx - x;
-                let oy = (p1.offset.y + p2.offset.y + p3.offset.y) / 3.0 + cy - y;
-                self.center_camera_at(x as i32, y as i32, &Vector2d::new(ox, oy));
-            },
-            4 => {
-                let p1 = self.world.cached_players_props.player1;
-                let p2 = self.world.cached_players_props.player2;
-                let p3 = self.world.cached_players_props.player3;
-                let p4 = self.world.cached_players_props.player4;
-                let cx = (p1.hittable_frame.x as f32 + p2.hittable_frame.x as f32 + p3.hittable_frame.x as f32 + p4.hittable_frame.x as f32) / 4.0;
-                let cy = (p1.hittable_frame.y as f32 + p2.hittable_frame.y as f32 + p3.hittable_frame.y as f32 + p4.hittable_frame.y as f32) / 4.0;
-                let x = cx.floor();
-                let y = cy.floor();
-                let ox = (p1.offset.x + p2.offset.x + p3.offset.x + p4.offset.x) / 4.0 + cx - x;
-                let oy = (p1.offset.y + p2.offset.y + p3.offset.y + p4.offset.y) / 4.0 + cy - y;
-                self.center_camera_at(x as i32, y as i32, &Vector2d::new(ox, oy));
-            },
-            _ => {
-                let p1 = self.world.cached_players_props.player1;
-                self.center_camera_at(p1.hittable_frame.x, p1.hittable_frame.y, &p1.offset);
-            } 
+        if self.number_of_players == 1 {
+            let p1 = self.world.players[0].props;
+            self.center_camera_at(p1.hittable_frame.x, p1.hittable_frame.y, &p1.offset);
+        } else {
+            let sum: (f32, f32) = self.world.players
+                .iter()
+                .take(self.number_of_players)
+                .map(|p| {
+                    let x = p.props.hittable_frame.x as f32;
+                    let y = p.props.hittable_frame.y as f32;
+                    let ox = p.props.offset.x / TILE_SIZE;
+                    let oy = p.props.offset.y / TILE_SIZE;
+                    (x + ox, y + oy)
+                })
+                .fold((0.0, 0.0), |acc, (x, y)| {
+                    (acc.0 + x, acc.1 + y)
+                });
+
+            let x = sum.0 / self.number_of_players as f32;                
+            let y = sum.1 / self.number_of_players as f32;
+            let fx = x.floor();
+            let fy = y.floor();
+
+            self.center_camera_at(
+                fx as i32, 
+                fy as i32, 
+                &Vector2d::new(
+                    (x - fx) * TILE_SIZE, 
+                    (y - fy) * TILE_SIZE
+                )
+            );
         }
     }
 
@@ -298,7 +288,7 @@ impl GameEngine {
         let mut new_world = self.world_by_id(destination.world);
         new_world.setup(
             self.previous_world(), 
-            &self.world.cached_players_props.player1.direction, 
+            &self.world.players[0].props.direction, 
             destination.x, 
             destination.y,
             destination.direction
@@ -307,7 +297,7 @@ impl GameEngine {
         new_world.update_no_input(0.001);
         new_world.update_no_input(0.001);
 
-        let hero_frame = new_world.cached_players_props.player1.frame;
+        let hero_frame = new_world.players[0].props.frame;
         if !self.world.ephemeral_state {
             self.previous_world = Some(self.world.clone());
         }
@@ -359,7 +349,7 @@ impl GameEngine {
     pub fn start_new_game(&mut self) {
         self.death_screen.is_open = false;
         self.previous_world = None;
-        self.world.cached_players_props.player1.direction = Direction::Unknown;        
+        self.world.players[0].props.direction = Direction::Unknown;        
         reset_all_stored_values();
         self.world = World::load(1000).unwrap();
         self.teleport_to_previous();
