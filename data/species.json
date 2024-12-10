@@ -4395,7 +4395,7 @@
         "id": 1152,
         "name": "npc.name.gate_to_demon_lord",
         "is_invulnerable": true,
-        "entity_type": "Npc",
+        "entity_type": "StaticObject",
         "z_index": 150,
         "base_speed": 1.0,
         "is_rigid": true,
