@@ -37,15 +37,18 @@ impl Entity {
         if self.is_dying || is_creative_mode() {
             return vec![]
         }
-
-        let hero_invulnerable = world.players[0].props.is_invulnerable;
-        let hero = world.players[0].props.hittable_frame;
+        if world.players[0].props.is_invulnerable {
+            return vec![]
+        }
+        
         let x = self.frame.x;
         let y = self.frame.y + if self.frame.h > 1 { 1 } else { 0 };
-        
-        if x == hero.x && y == hero.y && !hero_invulnerable {
-            let damage = self.dps * time_since_last_update;
-            return vec![WorldStateUpdate::HandleHeroDamage(damage)];
+
+        for player in &world.players {        
+            if x == player.props.hittable_frame.x && y == player.props.hittable_frame.y {
+                let damage = self.dps * time_since_last_update;
+                return vec![WorldStateUpdate::HandleHeroDamage(damage)];
+            }
         }
         vec![]
     }
