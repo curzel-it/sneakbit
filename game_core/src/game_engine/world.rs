@@ -122,7 +122,7 @@ impl World {
         if let Some(lock_type) = lock_override(&id) {
             entities[index].lock_type = lock_type;
         }
-        if entities[index].melee_attacks_hero {
+        if entities[index].melee_attacks_hero() {
             self.melee_attackers.insert(id);
         }
         if matches!(entities[index].entity_type, EntityType::Building) {
@@ -168,7 +168,7 @@ impl World {
         let entities = self.entities.borrow();
         let entity = &entities[index];
 
-        if entity.melee_attacks_hero {
+        if entity.melee_attacks_hero() {
             self.melee_attackers.remove(&entity.id);
         }
         if matches!(entity.entity_type, EntityType::Building) {
@@ -322,6 +322,9 @@ impl World {
             WorldStateUpdate::HandleHits(bullet_id, target_ids, damage) => {
                 return self.handle_hits(bullet_id, target_ids, damage)
             }
+            WorldStateUpdate::HandleHeroDamage(damage) => {
+                return self.handle_hero_damage(damage)
+            }
             WorldStateUpdate::SetPressurePlateState(lock_type, is_down) => {
                 match lock_type {
                     LockType::Yellow => self.pressure_plate_down_yellow = is_down,
@@ -334,6 +337,16 @@ impl World {
                 }                
             }
         };
+        vec![]
+    }
+
+    fn handle_hero_damage(&mut self, damage: f32) -> Vec<EngineStateUpdate> {
+        if let Some(hero) = self.entities.borrow_mut().get_mut(0) {
+            hero.hp -= damage;
+            if hero.hp <= 0.0 {
+                return vec![EngineStateUpdate::DeathScreen]
+            }
+        }
         vec![]
     }
 

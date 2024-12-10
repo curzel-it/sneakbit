@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common_macros::hash_set;
 
-use crate::{constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{AddToInventoryReason, EngineStateUpdate, SpecialEffect}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_hero_on_slippery_surface, menus::toasts::{Toast, ToastMode}};
+use crate::{constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_explosive, is_key, is_monster, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{AddToInventoryReason, EngineStateUpdate, SpecialEffect}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_hero_on_slippery_surface, menus::toasts::{Toast, ToastMode}};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[repr(C)]
@@ -118,7 +118,7 @@ impl SoundEffectsManager {
     }
 
     fn check_entity_death(&mut self, species_id: u32) {
-        if is_enemy(species_id) {
+        if is_monster(species_id) {
             self.prepare(SoundEffect::DeathOfMonster);
         } else if is_explosive(species_id) {
             self.prepare(SoundEffect::SmallExplosion);

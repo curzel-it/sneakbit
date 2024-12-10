@@ -45,7 +45,7 @@ impl Entity {
 }
 
 fn can_step_over_hero(entity: &Entity) -> bool {
-    entity.id == HERO_ENTITY_ID || entity.melee_attacks_hero
+    entity.id == HERO_ENTITY_ID || entity.melee_attacks_hero()
 }
 
 fn updated_offset(offset: &Vector2d, direction: &Direction, speed: f32, time_since_last_update: f32) -> Vector2d {

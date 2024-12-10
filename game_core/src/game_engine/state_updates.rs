@@ -19,6 +19,7 @@ pub enum WorldStateUpdate {
     ConstructionTileChange(usize, usize, Construction),
     EngineUpdate(EngineStateUpdate),
     HandleHits(BulletId, Vec<EntityId>, Damage),
+    HandleHeroDamage(Damage),
     HandleBulletCatched(BulletId),
     HandleBulletStopped(BulletId),
     SetPressurePlateState(LockType, bool)

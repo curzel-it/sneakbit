@@ -19,18 +19,6 @@ impl Entity {
         if !is_creative_mode() {
             self.update_direction(world);
             self.move_linearly(world, time_since_last_update);
-            
-            if self.melee_attacks_hero {
-                let updates = self.handle_melee_attack(world);                
-                if !updates.is_empty() {
-                    return updates
-                }
-
-                let updates = self.fuse_with_other_creeps_if_possible(world);
-                if !updates.is_empty() {
-                    return updates
-                }
-            }
         }
 
         if !self.dialogues.is_empty() && world.is_hero_around_and_on_collision_with(&self.frame) {            

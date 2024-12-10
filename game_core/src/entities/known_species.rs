@@ -41,10 +41,6 @@ pub const SPECIES_BARREL_GREEN: u32 = 1039;
 pub const SPECIES_BARREL_BROWN: u32 = 1073;
 pub const SPECIES_BARREL_WOOD: u32 = 1074;
 
-pub fn is_enemy(species_id: u32) -> bool {
-    species_by_id(species_id).melee_attacks_hero
-}
-
 pub fn is_explosive(species_id: u32) -> bool {
     matches!(species_id, SPECIES_BARREL_PURPLE | SPECIES_BARREL_GREEN | SPECIES_BARREL_BROWN | SPECIES_BARREL_WOOD)
 }

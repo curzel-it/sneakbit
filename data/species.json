@@ -1154,8 +1154,9 @@
     {
         "id": 4004,
         "name": "npc.name.monster",
-        "entity_type": "Npc",
+        "entity_type": "CloseCombatMonster",
         "z_index": 15,
+        "dps": 300.0,
         "base_speed": 2.5,
         "is_rigid": false,
         "melee_attacks_hero": true,
@@ -3539,9 +3540,10 @@
     {
         "id": 1148,
         "name": "npc.name.small_monster",
-        "entity_type": "Npc",
+        "entity_type": "CloseCombatMonster",
         "z_index": 15,
         "base_speed": 3.0,
+        "dps": 200.0,
         "hp": 80,
         "is_rigid": false,
         "melee_attacks_hero": true,

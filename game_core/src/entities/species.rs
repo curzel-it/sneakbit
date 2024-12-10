@@ -70,7 +70,8 @@ pub enum EntityType {
     Trail,
     Equipment,
     Sword,
-    KunaiLauncher
+    KunaiLauncher,
+    CloseCombatMonster
 }
 
 impl Species {
@@ -106,7 +107,6 @@ impl Species {
             action_cooldown_remaining: 0.0,
             parent_id: NO_PARENT,
             is_dying: false,
-            melee_attacks_hero: self.melee_attacks_hero,
             speed_multiplier: 1.0,
             is_invulnerable: false,
             demands_attention: false,
@@ -135,13 +135,13 @@ impl Species {
         entity.sprite = sprite;
         entity.name = self.name.localized();
         entity.action_cooldown_remaining = 0.0;
-        entity.melee_attacks_hero = self.melee_attacks_hero;
         entity.speed_multiplier = 1.0;
         entity.is_consumable = self.is_consumable;
         entity.is_invulnerable = self.is_invulnerable;
         entity.z_index = self.z_index;
         entity.movement_directions = self.movement_directions;
         entity.hp = self.hp;
+        entity.dps = self.dps;
 
         if entity.parent_id == NO_PARENT {
             entity.current_speed = initial_speed;
