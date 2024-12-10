@@ -17,7 +17,7 @@ impl Entity {
     }
 
     pub fn update_hint(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {   
-        if !is_creative_mode() && world.is_hero_at(self.frame.x, self.frame.y) {
+        if !is_creative_mode() && world.is_any_hero_at(self.frame.x, self.frame.y) {
             self.hint_updates()    
         } else {
             vec![]

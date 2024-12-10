@@ -603,7 +603,7 @@ impl World {
         let hero = self.cached_players_props.player1.hittable_frame;
         let hero_direction: Direction = self.cached_players_props.player1.direction;        
         
-        if self.is_hero_at(target.x, target.y) {
+        if self.is_any_hero_at(target.x, target.y) {
             return true
         }
         if hero.is_around_and_pointed_at(target, &hero_direction) {
@@ -619,9 +619,10 @@ impl World {
         self.is_hero_around_and_on_collision_with(target) && self.has_confirmation_key_been_pressed
     }
 
-    pub fn is_hero_at(&self, x: i32, y: i32) -> bool {
-        let hero = self.cached_players_props.player1.hittable_frame;
-        hero.x == x && hero.y == y
+    pub fn is_any_hero_at(&self, x: i32, y: i32) -> bool {
+        self.active_player_props().iter().any(|p| {
+            p.hittable_frame.x == x && p.hittable_frame.y == y
+        })        
     }
 
     fn find_non_hero_entity_at_coords(&self, row: usize, col: usize) -> Option<(usize, u32)> {

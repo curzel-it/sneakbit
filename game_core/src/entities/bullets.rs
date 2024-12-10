@@ -18,7 +18,7 @@ impl Entity {
             return vec![WorldStateUpdate::RemoveEntity(self.id)]
         }
 
-        if self.current_speed == 0.0 && !is_creative_mode() && world.is_hero_at(self.frame.x, self.frame.y) {   
+        if self.current_speed == 0.0 && !is_creative_mode() && world.is_any_hero_at(self.frame.x, self.frame.y) {   
             return object_pick_up_sequence(self);
         }
 
