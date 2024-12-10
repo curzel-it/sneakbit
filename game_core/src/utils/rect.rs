@@ -11,6 +11,23 @@ pub struct IntRect {
     pub h: i32,
 }
 
+#[derive(Copy, Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
+#[repr(C)]
+pub struct IntPoint {
+    pub x: i32,
+    pub y: i32,
+}
+
+impl IntPoint {
+    pub fn new(x: i32, y: i32) -> Self {
+        Self { x, y }
+    }
+
+    pub fn zero() -> Self {
+        Self::new(0, 0)
+    }
+}
+
 impl IntRect {
     pub const fn new(x: i32, y: i32, w: i32, h: i32) -> Self {
         IntRect { x, y, w, h }
@@ -29,6 +46,10 @@ impl IntRect {
             self.x as f32 + self.w as f32 / 2.0, 
             self.y as f32 + self.h as f32 / 2.0
         )
+    }
+
+    pub fn origin(&self) -> IntPoint {
+        IntPoint::new(self.x, self.y)
     }
 
     pub fn center_in(&mut self, other: &IntRect) {

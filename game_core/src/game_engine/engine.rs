@@ -19,7 +19,8 @@ pub struct GameEngine {
     pub is_running: bool,
     pub wants_fullscreen: bool,
     pub sound_effects: SoundEffectsManager,
-    pub links_handler: Box<dyn LinksHandler>
+    pub links_handler: Box<dyn LinksHandler>,
+    pub number_of_players: usize
 }
 
 impl GameEngine {
@@ -41,7 +42,8 @@ impl GameEngine {
             basic_info_hud: BasicInfoHud::new(),
             wants_fullscreen: false,
             sound_effects: SoundEffectsManager::new(),
-            links_handler: Box::new(NoLinksHandler::new())
+            links_handler: Box::new(NoLinksHandler::new()),
+            number_of_players: 1
         }
     }
 
@@ -84,6 +86,7 @@ impl GameEngine {
             let updates = self.world.update(time_since_last_update, &camera_viewport, &self.keyboard);
             self.sound_effects.update(&self.keyboard, &updates);
             self.apply_state_updates(updates);
+            self.center_camera_onto_players();
         };
 
     } 
@@ -165,20 +168,59 @@ impl GameEngine {
         sorted_updates.iter().for_each(|u| self.apply_state_update(u));
     }
 
+    fn center_camera_onto_players(&mut self) {
+        match self.number_of_players {
+            2 => {
+                let p1 = self.world.cached_players_props.player1;
+                let p2 = self.world.cached_players_props.player2;
+                let cx = (p1.hittable_frame.x as f32 + p2.hittable_frame.x as f32) / 2.0;
+                let cy = (p1.hittable_frame.y as f32 + p2.hittable_frame.y as f32) / 2.0;
+                let x = cx.floor();
+                let y = cy.floor();
+                let ox = p1.offset.x - p2.offset.x + cx - x;
+                let oy = p1.offset.y - p2.offset.y + cy - y;
+                self.center_camera_at(x as i32, y as i32, &Vector2d::new(ox, oy));
+            },
+            3 => {
+                let p1 = self.world.cached_players_props.player1;
+                let p2 = self.world.cached_players_props.player2;
+                let p3 = self.world.cached_players_props.player3;
+                let cx = (p1.hittable_frame.x as f32 + p2.hittable_frame.x as f32 + p3.hittable_frame.x as f32) / 3.0;
+                let cy = (p1.hittable_frame.y as f32 + p2.hittable_frame.y as f32 + p3.hittable_frame.y as f32) / 3.0;
+                let x = cx.floor();
+                let y = cy.floor();
+                let ox = (p1.offset.x + p2.offset.x + p3.offset.x) / 3.0 + cx - x;
+                let oy = (p1.offset.y + p2.offset.y + p3.offset.y) / 3.0 + cy - y;
+                self.center_camera_at(x as i32, y as i32, &Vector2d::new(ox, oy));
+            },
+            4 => {
+                let p1 = self.world.cached_players_props.player1;
+                let p2 = self.world.cached_players_props.player2;
+                let p3 = self.world.cached_players_props.player3;
+                let p4 = self.world.cached_players_props.player4;
+                let cx = (p1.hittable_frame.x as f32 + p2.hittable_frame.x as f32 + p3.hittable_frame.x as f32 + p4.hittable_frame.x as f32) / 4.0;
+                let cy = (p1.hittable_frame.y as f32 + p2.hittable_frame.y as f32 + p3.hittable_frame.y as f32 + p4.hittable_frame.y as f32) / 4.0;
+                let x = cx.floor();
+                let y = cy.floor();
+                let ox = (p1.offset.x + p2.offset.x + p3.offset.x + p4.offset.x) / 4.0 + cx - x;
+                let oy = (p1.offset.y + p2.offset.y + p3.offset.y + p4.offset.y) / 4.0 + cy - y;
+                self.center_camera_at(x as i32, y as i32, &Vector2d::new(ox, oy));
+            },
+            _ => {
+                let p1 = self.world.cached_players_props.player1;
+                self.center_camera_at(p1.hittable_frame.x, p1.hittable_frame.y, &p1.offset);
+            } 
+        }
+    }
+
     fn log_update(&self, update: &EngineStateUpdate) {
-        match update {
-            EngineStateUpdate::CenterCamera(_, _, _) => {},
-            _ => println!("Engine update: {:#?}", update)
-        }     
+        println!("Engine update: {:#?}", update)
     }
 
     fn apply_state_update(&mut self, update: &EngineStateUpdate) {   
         self.log_update(update);
 
         match update {
-            EngineStateUpdate::CenterCamera(x, y, offset) => {
-                self.center_camera_at(*x, *y, offset)
-            }
             EngineStateUpdate::Teleport(destination) => {
                 self.teleport(destination)
             }

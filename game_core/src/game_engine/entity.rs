@@ -6,6 +6,7 @@ use super::{directions::MovementDirections, locks::LockType, state_updates::{Eng
 
 #[derive(Debug, Copy, Clone)]
 pub struct EntityProps {
+    pub id: u32,
     pub direction: Direction,
     pub frame: IntRect,
     pub offset: Vector2d,
@@ -18,6 +19,7 @@ pub struct EntityProps {
 impl Default for EntityProps {
     fn default() -> Self {
         Self { 
+            id: 0,
             direction: Default::default(), 
             frame: IntRect::square_from_origin(1), 
             offset: Vector2d::zero(),
@@ -270,6 +272,7 @@ impl Entity {
 
     pub fn props(&self) -> EntityProps {
         EntityProps {
+            id: self.id,
             frame: self.frame,
             direction: self.direction,
             offset: self.offset,

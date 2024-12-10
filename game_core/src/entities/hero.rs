@@ -1,4 +1,4 @@
-use crate::{constants::HERO_RECOVERY_PS, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, is_creative_mode};
+use crate::{constants::HERO_RECOVERY_PS, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, is_creative_mode};
 
 use super::trails::leave_footsteps;
 
@@ -26,7 +26,6 @@ impl Entity {
         }
         
         updates.push(self.cache_props());
-        updates.push(self.move_camera_update());
         updates.extend(self.leave_footsteps(world));
         updates
     }
@@ -34,16 +33,6 @@ impl Entity {
     fn cache_props(&self) -> WorldStateUpdate {
         WorldStateUpdate::CacheHeroProps(
             Box::new(self.props())
-        )
-    }
-
-    fn move_camera_update(&self) -> WorldStateUpdate {
-        WorldStateUpdate::EngineUpdate(
-            EngineStateUpdate::CenterCamera(
-                self.frame.x, 
-                self.frame.y,
-                self.offset
-            )
         )
     }
     

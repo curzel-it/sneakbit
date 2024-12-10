@@ -7,7 +7,7 @@ use entities::known_species::{SPECIES_CLAYMORE_ITEM, SPECIES_KUNAI};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
 use game_engine::{engine::GameEngine, storage::inventory_count};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
-use utils::{rect::IntRect, vector::Vector2d};
+use utils::{rect::{IntPoint, IntRect}, vector::Vector2d};
 
 pub mod config;
 pub mod constants;
@@ -315,6 +315,15 @@ pub extern "C" fn current_hero_hp() -> f32 {
     engine().world.cached_players_props.player1.hp
 }
 
+pub fn cached_players_positions() -> Vec<IntPoint> {
+    vec![
+        engine().world.cached_players_props.player1.hittable_frame.origin(),
+        engine().world.cached_players_props.player2.hittable_frame.origin(),
+        engine().world.cached_players_props.player3.hittable_frame.origin(),
+        engine().world.cached_players_props.player4.hittable_frame.origin()
+    ]
+}
+
 #[no_mangle]
 pub extern "C" fn is_sword_equipped() -> bool {
     inventory_count(&SPECIES_CLAYMORE_ITEM) > 0
@@ -393,4 +402,8 @@ pub fn set_links_handler(handler: Box<dyn LinksHandler>) {
 
 pub fn is_hero_on_slippery_surface() -> bool {
     engine().world.is_hero_on_slippery_surface()
+}
+
+pub fn is_player_by_index_on_slippery_surface(index: usize) -> bool {
+    engine().world.is_player_by_index_on_slippery_surface(index)
 }

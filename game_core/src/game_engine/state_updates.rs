@@ -1,4 +1,4 @@
-use crate::{entities::{bullets::{BulletId, Damage}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast, utils::vector::Vector2d};
+use crate::{entities::{bullets::{BulletId, Damage}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast};
 
 use super::{entity::{Entity, EntityId, EntityProps}, locks::LockType};
 
@@ -28,7 +28,6 @@ pub enum WorldStateUpdate {
 #[derive(Debug, Clone)]
 pub enum EngineStateUpdate {
     EntityKilled(EntityId, SpeciesId),
-    CenterCamera(i32, i32, Vector2d),
     Teleport(Destination),
     SaveGame,
     Exit,

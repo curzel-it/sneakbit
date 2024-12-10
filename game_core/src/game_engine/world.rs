@@ -304,7 +304,14 @@ impl World {
                 self.toggle_demand_attention(id)
             }
             WorldStateUpdate::CacheHeroProps(props) => { 
-                self.cached_players_props.player1 = *props; 
+                match props.id {
+                    PLAYER1_ENTITY_ID => self.cached_players_props.player1 = *props,
+                    PLAYER2_ENTITY_ID => self.cached_players_props.player2 = *props,
+                    PLAYER3_ENTITY_ID => self.cached_players_props.player3 = *props,
+                    PLAYER4_ENTITY_ID => self.cached_players_props.player4 = *props,
+                    _ => {}
+                }
+                
             }
             WorldStateUpdate::ChangeLock(entity_id, lock_type) => {
                 self.change_lock(entity_id, lock_type)
@@ -562,6 +569,26 @@ impl World {
         
         if self.biome_tiles.tiles.len() > frame.y as usize {
             let tile = self.biome_tiles.tiles[frame.y as usize][frame.x as usize].tile_type;
+            matches!(tile, Biome::Ice)
+        } else {
+            false
+        }
+    }
+
+    pub fn is_player_by_index_on_slippery_surface(&self, index: usize) -> bool {
+        let frame = match index {
+            0 => self.cached_players_props.player1.hittable_frame,
+            1 => self.cached_players_props.player2.hittable_frame,
+            2 => self.cached_players_props.player3.hittable_frame,
+            3 => self.cached_players_props.player4.hittable_frame,
+            _ => self.cached_players_props.player1.hittable_frame
+        };
+        self.is_slippery_surface(frame.x as usize, frame.y as usize)
+    }
+
+    fn is_slippery_surface(&self, x: usize, y: usize) -> bool {
+        if y < self.biome_tiles.tiles.len() {
+            let tile = self.biome_tiles.tiles[y][x].tile_type;
             matches!(tile, Biome::Ice)
         } else {
             false
