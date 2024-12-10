@@ -1,4 +1,4 @@
-use crate::{game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, is_creative_mode};
+use crate::{constants::HERO_RECOVERY_PS, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, is_creative_mode};
 
 use super::trails::leave_footsteps;
 
@@ -20,6 +20,9 @@ impl Entity {
         self.time_immobilized -= time_since_last_update;
         if self.time_immobilized <= 0.0 {
             self.move_linearly(world, time_since_last_update)
+        }
+        if self.hp < 100.0 {
+            self.hp += HERO_RECOVERY_PS * time_since_last_update
         }
         
         updates.push(self.cache_props());

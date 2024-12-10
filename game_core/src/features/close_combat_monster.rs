@@ -98,10 +98,10 @@ fn hp_for_sprite(current_sprite_x: i32) -> f32 {
 
 fn dps_for_sprite(current_sprite_x: i32) -> f32 {
     match current_sprite_x {
-        28 => 300.0,
-        44 => 400.0,
-        24 => 500.0,
-        32 => 600.0,
-        _ => 300.0
+        28 => 400.0,
+        44 => 500.0,
+        24 => 600.0,
+        32 => 700.0,
+        _ => 400.0
     }
 }

@@ -12,6 +12,7 @@ pub struct EntityProps {
     pub speed: f32,
     pub hittable_frame: IntRect,
     pub is_invulnerable: bool,
+    pub hp: f32,
 }
 
 impl Default for EntityProps {
@@ -23,6 +24,7 @@ impl Default for EntityProps {
             speed: 0.0,
             hittable_frame: IntRect::square_from_origin(1),
             is_invulnerable: false,
+            hp: 0.0
         }
     }
 }
@@ -270,7 +272,8 @@ impl Entity {
             offset: self.offset,
             speed: self.current_speed,
             is_invulnerable: self.is_invulnerable,            
-            hittable_frame: self.hittable_frame()
+            hittable_frame: self.hittable_frame(),
+            hp: self.hp
         }            
     }
 
