@@ -311,6 +311,11 @@ pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
 }
 
 #[no_mangle]
+pub extern "C" fn current_hero_hp() -> f32 {
+    engine().world.cached_hero_props.hp
+}
+
+#[no_mangle]
 pub extern "C" fn is_day() -> bool {
     matches!(engine().world.light_conditions, LightConditions::Day)
 }
