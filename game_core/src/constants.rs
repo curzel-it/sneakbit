@@ -14,7 +14,7 @@ pub const HERO_RECOVERY_PS: f32 = 1.0;
 
 // Weapons
 pub const KUNAI_LIFESPAN: f32 = 1.2;
-pub const KUNAI_LAUNCHER_COOLDOWN: f32 = 0.2;
+pub const KUNAI_LAUNCHER_COOLDOWN: f32 = 0.15;
 pub const SWORD_SLASH_LIFESPAN: f32 = 0.25;
 pub const SWORD_SLASH_COOLDOWN: f32 = 0.2;
 pub const CLAYMORE_SLASH_LIFESPAN: f32 = 0.3;
