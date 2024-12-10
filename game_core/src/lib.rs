@@ -3,9 +3,9 @@
 use std::{collections::HashSet, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
-use entities::known_species::SPECIES_KUNAI;
+use entities::known_species::{SPECIES_CLAYMORE, SPECIES_CLAYMORE_ITEM, SPECIES_KUNAI};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
-use game_engine::{engine::GameEngine, storage::inventory_count};
+use game_engine::{engine::GameEngine, storage::{get_value_for_global_key, get_value_for_key, inventory_count, StorageKey}};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::IntRect, vector::Vector2d};
 
@@ -313,6 +313,11 @@ pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
 #[no_mangle]
 pub extern "C" fn current_hero_hp() -> f32 {
     engine().world.cached_hero_props.hp
+}
+
+#[no_mangle]
+pub extern "C" fn is_sword_equipped() -> bool {
+    inventory_count(&SPECIES_CLAYMORE_ITEM) > 0
 }
 
 #[no_mangle]

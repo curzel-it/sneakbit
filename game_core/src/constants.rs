@@ -1,6 +1,6 @@
 use crate::utils::rect::IntRect;
 
-pub const BUILD_NUMBER: u32 = 29;
+pub const BUILD_NUMBER: u32 = 33;
 
 // Fps
 pub const ANIMATIONS_FPS: f32 = 10.0;

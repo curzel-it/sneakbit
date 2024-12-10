@@ -14,19 +14,21 @@ class AudioEngine: Loggable {
     private let queue = DispatchQueue(label: "it.curzel.bitscape.AudioEngine", qos: .userInitiated)
     
     private let soundEffectFilenames = [
-        SoundEffect_DeathOfNonMonster: "sfx_deathscream_android7",
-        SoundEffect_DeathOfMonster: "sfx_deathscream_human11",
-        SoundEffect_SmallExplosion: "sfx_exp_short_hard8",
-        SoundEffect_WorldChange: "sfx_movement_dooropen1",
-        SoundEffect_StepTaken: "sfx_movement_footsteps1a",
+        SoundEffect_AmmoCollected: "sfx_sounds_interaction22",
+        SoundEffect_KeyCollected: "sfx_sounds_fanfare3",
         SoundEffect_BulletFired: "sfx_movement_jump12_landing",
         SoundEffect_BulletBounced: "sfx_movement_jump20",
-        SoundEffect_HintReceived: "sfx_sound_neutral5",
-        SoundEffect_KeyCollected: "sfx_sounds_fanfare3",
-        SoundEffect_AmmoCollected: "sfx_sounds_interaction22",
+        SoundEffect_DeathOfMonster: "sfx_deathscream_human11",
+        SoundEffect_DeathOfNonMonster: "sfx_deathscream_android7",
+        SoundEffect_SmallExplosion: "sfx_exp_short_hard8",
+        SoundEffect_NoAmmo: "sfx_wpn_noammo3",
         SoundEffect_GameOver: "sfx_sounds_negative1",
         SoundEffect_PlayerResurrected: "sfx_sounds_powerup1",
-        SoundEffect_NoAmmo: "sfx_wpn_noammo3"
+        SoundEffect_WorldChange: "sfx_movement_dooropen1",
+        SoundEffect_StepTaken: "sfx_movement_footsteps1a",
+        SoundEffect_HintReceived: "sfx_sound_neutral5",
+        SoundEffect_SwordSlash: "sfx_wpn_sword3.mp3",
+        SoundEffect_ClaymoreSlash: "sfx_wpn_sword2.mp3"
     ]
     
     init() {

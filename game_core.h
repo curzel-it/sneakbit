@@ -16,6 +16,8 @@
 
 #define PRESSURE_PLATE_SWITCH_COOLDOWN 0.3
 
+#define HERO_RECOVERY_PS 1.0
+
 #define KUNAI_LIFESPAN 3.0
 
 #define KUNAI_LAUNCHER_COOLDOWN 0.1
@@ -318,6 +320,10 @@ bool shows_death_screen(void);
 void select_current_menu_option_at_index(uint32_t index);
 
 int32_t number_of_kunai_in_inventory(void);
+
+float current_hero_hp(void);
+
+bool is_sword_equipped(void);
 
 bool is_day(void);
 
