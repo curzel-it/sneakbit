@@ -1,4 +1,4 @@
-use crate::{constants::{KUNAI_LAUNCHER_COOLDOWN, KUNAI_LIFESPAN}, entities::{bullets::make_hero_bullet, known_species::SPECIES_KUNAI}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
+use crate::{constants::{KUNAI_LAUNCHER_COOLDOWN, KUNAI_LIFESPAN}, entities::{bullets::make_player_bullet, known_species::SPECIES_KUNAI}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
 
 impl Entity {
     pub fn setup_kunai_launcher(&mut self) {
@@ -27,7 +27,7 @@ impl Entity {
 
         self.action_cooldown_remaining = KUNAI_LAUNCHER_COOLDOWN;
 
-        let bullet = make_hero_bullet(SPECIES_KUNAI, world, KUNAI_LIFESPAN);
+        let bullet = make_player_bullet(self.parent_id, world, SPECIES_KUNAI, KUNAI_LIFESPAN);
         
         vec![
             WorldStateUpdate::EngineUpdate(EngineStateUpdate::RemoveFromInventory(SPECIES_KUNAI)),

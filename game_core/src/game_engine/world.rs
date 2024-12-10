@@ -193,7 +193,7 @@ impl World {
         self.players[index].direction_based_on_current_keys
     } 
 
-    fn player_index_by_entity_id(&self, entity_id: u32) -> usize {
+    pub fn player_index_by_entity_id(&self, entity_id: u32) -> usize {
         match entity_id {
             PLAYER1_ENTITY_ID => 0,
             PLAYER2_ENTITY_ID => 1,
@@ -853,9 +853,9 @@ impl PlayerProps {
 
     fn update(&mut self, keyboard: &KeyboardEventsProvider) {
         self.direction_based_on_current_keys = keyboard.direction_based_on_current_keys(self.index, self.props.direction);
-        self.is_any_arrow_key_down = keyboard.is_any_arrow_key_down(0);
-        self.has_ranged_attack_key_been_pressed = keyboard.has_ranged_attack_key_been_pressed_by_anyone();
-        self.has_close_attack_key_been_pressed = keyboard.has_close_attack_key_been_pressed_by_anyone();
-        self.has_confirmation_key_been_pressed = keyboard.has_confirmation_been_pressed_by_anyone();
+        self.is_any_arrow_key_down = keyboard.is_any_arrow_key_down(self.index);
+        self.has_ranged_attack_key_been_pressed = keyboard.has_ranged_attack_key_been_pressed(self.index);
+        self.has_close_attack_key_been_pressed = keyboard.has_close_attack_key_been_pressed(self.index);
+        self.has_confirmation_key_been_pressed = keyboard.has_confirmation_been_pressed(self.index);
     }
 }

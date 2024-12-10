@@ -1,4 +1,4 @@
-use crate::{constants::{PLAYER1_ENTITY_ID, TILE_SIZE}, game_engine::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::TILE_SIZE, game_engine::{entity::{is_player, Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{pickable_object::object_pick_up_sequence, species::species_by_id};
 
@@ -41,7 +41,7 @@ impl Entity {
         let valid_hits: Vec<u32> = vec![previous_hits, current_hits]
             .into_iter()
             .flat_map(|id| id)
-            .filter(|id| self.is_valid_hit_target(*id))
+            .filter(|id| self.is_valid_hit_target(*id) && !is_player(*id))
             .collect();
 
         let damage = self.dps * time_since_last_update;
@@ -102,14 +102,16 @@ fn make_bullet_ex(
     bullet
 }
 
-pub fn make_hero_bullet(species: u32, world: &World, lifespan: f32) -> Entity {
-    let hero = world.players[0].props;
+pub fn make_player_bullet(parent_id: u32, world: &World, species: u32, lifespan: f32) -> Entity {
+    let index = world.player_index_by_entity_id(parent_id);
+    let player = world.players[index].props;
+
     make_bullet_ex(
         species,
-        PLAYER1_ENTITY_ID,
-        &hero.hittable_frame,
-        &hero.offset,
-        hero.direction,
+        parent_id,
+        &player.hittable_frame,
+        &player.offset,
+        player.direction,
         lifespan
     )
 }

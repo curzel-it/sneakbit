@@ -1,4 +1,4 @@
-use crate::{constants::{CLAYMORE_SLASH_COOLDOWN, CLAYMORE_SLASH_LIFESPAN, SWORD_SLASH_COOLDOWN, SWORD_SLASH_LIFESPAN}, entities::{bullets::make_hero_bullet, known_species::{SPECIES_CLAYMORE, SPECIES_CLAYMORE_SLASH, SPECIES_SWORD_SLASH}, species::SpeciesId}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
+use crate::{constants::{CLAYMORE_SLASH_COOLDOWN, CLAYMORE_SLASH_LIFESPAN, SWORD_SLASH_COOLDOWN, SWORD_SLASH_LIFESPAN}, entities::{bullets::make_player_bullet, known_species::{SPECIES_CLAYMORE, SPECIES_CLAYMORE_SLASH, SPECIES_SWORD_SLASH}, species::SpeciesId}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
 
 use super::equipment::is_equipped;
 
@@ -30,9 +30,9 @@ impl Entity {
             return vec![]
         }
         if world.players[self.player_index].has_close_attack_key_been_pressed {
-            let hero = world.players[0].props;
+            let hero = world.players[self.player_index].props;
             let config = slash_config_by_sword_type(self.species_id);
-            let offsets = bullet_offsets(world.players[0].props.direction);
+            let offsets = bullet_offsets(world.players[self.player_index].props.direction);
 
             self.action_cooldown_remaining = config.cooldown;
             self.sprite.reset();
@@ -40,7 +40,7 @@ impl Entity {
 
             let mut updates: Vec<WorldStateUpdate> = offsets.into_iter()
                 .map(|(dx, dy)| {
-                    let mut bullet = make_hero_bullet(config.species, world, config.lifespan);
+                    let mut bullet = make_player_bullet(self.parent_id, world, config.species, config.lifespan);
                     bullet.offset = Vector2d::zero();
                     bullet.frame = hero.hittable_frame.offset_by((dx, dy)); 
                     bullet.direction = hero.direction;

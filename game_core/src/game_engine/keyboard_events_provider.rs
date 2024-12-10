@@ -172,6 +172,18 @@ impl KeyboardEventsProvider {
         self.players[player].has_any_arrow_key_been_pressed()
     }
     
+    pub fn has_ranged_attack_key_been_pressed(&self, player: usize) -> bool {
+        self.players[player].has_ranged_attack_key_been_pressed
+    }
+    
+    pub fn has_close_attack_key_been_pressed(&self, player: usize) -> bool {
+        self.players[player].has_close_attack_key_been_pressed
+    }
+    
+    pub fn has_confirmation_been_pressed(&self, player: usize) -> bool {
+        self.players[player].has_confirmation_been_pressed
+    }
+
     #[allow(clippy::too_many_arguments)]
     pub fn update(
         &mut self,
