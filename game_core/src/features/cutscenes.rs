@@ -31,7 +31,8 @@ impl CutScene {
             sprite_sheet_id: sprite.sheet_id,
             texture_rect: sprite.frame,
             offset: Vector2d::zero(),
-            frame: self.frame
+            frame: self.frame,
+            sorting_key: 2_000_000_000
         }
     }
 

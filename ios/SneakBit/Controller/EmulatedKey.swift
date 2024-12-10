@@ -5,7 +5,8 @@ enum EmulatedKey {
     case right
     case down
     case left
-    case attack
+    case closeRangeAttack
+    case rangedAttack
     case backspace
     case confirm
     case escape
@@ -19,7 +20,8 @@ extension EmulatedKey {
         case .down: "down"
         case .left: "left"
         case .right: "right"
-        case .attack: "attack"
+        case .closeRangeAttack: "close_attack"
+        case .rangedAttack: "attack"
         case .backspace: ""
         case .confirm: "confirm"
         case .escape: ""

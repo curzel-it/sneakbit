@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common_macros::hash_set;
 
-use crate::{constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_enemy, is_explosive, is_key, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{AddToInventoryReason, EngineStateUpdate}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_hero_on_slippery_surface, menus::toasts::{Toast, ToastMode}};
+use crate::{constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_explosive, is_key, is_monster, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{AddToInventoryReason, EngineStateUpdate, SpecialEffect}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_hero_on_slippery_surface, menus::toasts::{Toast, ToastMode}};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[repr(C)]
@@ -20,6 +20,8 @@ pub enum SoundEffect {
     WorldChange = 11,
     StepTaken = 12,
     HintReceived = 13,
+    SwordSlash = 14,
+    ClaymoreSlash = 15,
 }
 
 pub struct SoundEffectsManager {
@@ -68,7 +70,7 @@ impl SoundEffectsManager {
 
     fn check_sounds_for_state_update(&mut self, update: &EngineStateUpdate) {
         match update {
-            EngineStateUpdate::EntityShoot(_, species_id) => self.check_entity_death(*species_id),
+            EngineStateUpdate::EntityKilled(_, species_id) => self.check_entity_death(*species_id),
             EngineStateUpdate::BulletBounced => self.prepare(SoundEffect::BulletBounced),
             EngineStateUpdate::CenterCamera(x, y, _) => self.check_hero_movement(*x, *y),
             EngineStateUpdate::Teleport(destination) => self.check_teleportation(destination.world),
@@ -76,12 +78,20 @@ impl SoundEffectsManager {
             EngineStateUpdate::AddToInventory(species_id, reason) => self.handle_item_collection(*species_id, reason),
             EngineStateUpdate::Toast(toast) => self.check_hint_received(toast),
             EngineStateUpdate::DeathScreen => self.handle_game_over(),
+            EngineStateUpdate::SpecialEffect(effect) => self.handle_special_effect(effect),
             _ => {}
         }
     }
 
     fn prepare(&mut self, sound_effect: SoundEffect) {
         self.next_sound_effects.insert(sound_effect);
+    }
+
+    fn handle_special_effect(&mut self, effect: &SpecialEffect) {
+        match effect {
+            SpecialEffect::SwordSlash => self.prepare(SoundEffect::SwordSlash),
+            SpecialEffect::ClaymoreSlash => self.prepare(SoundEffect::ClaymoreSlash),
+        }
     }
 
     fn handle_game_over(&mut self) {
@@ -108,7 +118,7 @@ impl SoundEffectsManager {
     }
 
     fn check_entity_death(&mut self, species_id: u32) {
-        if is_enemy(species_id) {
+        if is_monster(species_id) {
             self.prepare(SoundEffect::DeathOfMonster);
         } else if is_explosive(species_id) {
             self.prepare(SoundEffect::SmallExplosion);
@@ -146,7 +156,7 @@ impl SoundEffectsManager {
     }
 
     fn did_fire_but_no_ammo(&self, keyboard: &KeyboardEventsProvider) -> bool { 
-        keyboard.has_attack_key_been_pressed && !self.next_sound_effects.contains(&SoundEffect::BulletFired)
+        keyboard.has_ranged_attack_key_been_pressed && !self.next_sound_effects.contains(&SoundEffect::BulletFired)
     }
 }
 

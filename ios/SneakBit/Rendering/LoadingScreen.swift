@@ -28,7 +28,7 @@ struct LoadingScreen: View {
     }
 }
 
-struct LoadingScreenConfig {
+struct LoadingScreenConfig: Equatable {
     let isVisible: Bool
     let message: String
     let showsActivityIndicator: Bool
@@ -55,6 +55,7 @@ private class LoadingScreenViewModel: ObservableObject {
     
     private func bind() {
         engine.loadingScreenConfig
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.apply(config: $0) }
             .store(in: &disposables)

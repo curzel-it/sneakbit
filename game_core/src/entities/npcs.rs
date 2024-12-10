@@ -19,29 +19,16 @@ impl Entity {
         if !is_creative_mode() {
             self.update_direction(world);
             self.move_linearly(world, time_since_last_update);
+        }
+
+        if !self.dialogues.is_empty() && world.is_hero_around_and_on_collision_with(&self.frame) {            
+            if world.has_confirmation_key_been_pressed {
+                self.direction = direction_between_rects(&self.frame, &world.cached_hero_props.hittable_frame);
+                self.update_sprite_for_current_state();
+            }         
             
-            if self.melee_attacks_hero {
-                let updates = self.handle_melee_attack(world);                
-                if !updates.is_empty() {
-                    return updates
-                }
-
-                let updates = self.fuse_with_other_creeps_if_possible(world);
-                if !updates.is_empty() {
-                    return updates
-                }
-            }
+            return self.handle_dialogue_interaction(world).unwrap_or_default()
         }
-
-        if !world.is_hero_around_and_on_collision_with(&self.frame) {
-            return vec![]
-        }
-
-        if world.has_confirmation_key_been_pressed {
-            self.direction = direction_between_rects(&self.frame, &world.cached_hero_props.hittable_frame);
-            self.update_sprite_for_current_state();
-        }          
-        
-        self.handle_dialogue_interaction(world).unwrap_or_default()
+        vec![]
     }
 }

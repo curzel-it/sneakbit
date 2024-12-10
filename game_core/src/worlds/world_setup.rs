@@ -1,11 +1,14 @@
-use crate::{constants::BUILD_NUMBER, entities::{known_species::{SPECIES_HERO, SPECIES_KUNAI, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, utils::directions::Direction};
+use crate::{constants::BUILD_NUMBER, entities::{known_species::{SPECIES_CLAYMORE, SPECIES_HERO, SPECIES_KUNAI, SPECIES_KUNAI_LAUNCHER, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
+        self.idsmap.reserve(1000);
+        self.visible_entities.reserve(1000);
+
         self.remove_hero();
         self.remove_all_equipment();
         self.remove_dying_entities();
-        self.visible_entities = self.compute_visible_entities(&self.bounds);
+        self.update_visible_entities(&self.bounds.clone());
         self.update_tiles_hitmap();
         self.update_hitmaps();
         self.setup_entities();
@@ -65,6 +68,12 @@ impl World {
         entity.immobilize_for_seconds(0.2);
         self.cached_hero_props = entity.props();
         self.insert_entity(entity, 0);
+
+        let kunai_launcher = species_by_id(SPECIES_KUNAI_LAUNCHER).make_entity();
+        self.add_entity(kunai_launcher);
+
+        let claymore = species_by_id(SPECIES_CLAYMORE).make_entity();
+        self.add_entity(claymore);
     }
 
     fn likely_direction_for_hero(&self, x: i32, y: i32, current_direction: &Direction) -> Vec<Direction> {
@@ -136,10 +145,7 @@ impl World {
             if ny == y && nx == x || ny == y+1 && nx == x {
                 continue;
             }
-            if ny < 0 || ny >= self.hitmap.len() as i32 || nx < 0 || nx >= self.hitmap[0].len() as i32 {
-                continue;
-            }    
-            if self.hitmap[ny as usize][nx as usize] {
+            if self.hits(nx, ny) {
                 return false;
             }
         }    
@@ -159,7 +165,7 @@ impl World {
                 let x = self.bounds.w / 2;
                 let mut y = self.bounds.h / 2;
 
-                while y < self.bounds.h - 1 && self.hitmap[y as usize][x as usize] {
+                while y < self.bounds.h - 1 && self.hits(x, y) {
                     y += 1
                 }
                 return (x, y)

@@ -15,10 +15,14 @@ Both kinds of tiles can represent an obstacle, the player cannot walk on water, 
 To mimic the effect of density, different construction tiles have different properties, for example some can reflect bullets (walls) while others don't.
 
 ### Combat System
-The only available weapon are throwing knifes.
+At the moment, the only available weapons are throwing knifes and a sword.
+#### Kunai
 Knifes can be found on the ground here and there, the player can pick them up by just walking by.
 When pressing FIRE a knife is throw in the direction the player is currently looking at.
 The bullet goes perfectly straight until stopped or it expires (3 seconds).
+
+#### Swords
+Works by creating several bullets around the character that travel for a short time in the direction the character is looking at.
 
 ### Skills
 The player can complete optional quests to gain special combat skills:
@@ -135,6 +139,13 @@ Reward: Knife catcher skill
 4. Meet with the Red Ninja
 
 Reward: Piercing Knife skill
+
+### Side Quest: My old sword
+1. (Optional) Meet with the guy with a pink shirt in Peak Levek
+2. Go back to Evergrove to visit his house
+3. Pick up the sword
+
+Reward: Keep the sword
 
 ### Side Quest: Manafren Research
 1. Meet with Dr Voss

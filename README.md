@@ -75,7 +75,6 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 ## TODO:
 - Some defense ability
 - Some wide-area ability
-- Make slopes reflect bullets
 - More Quests
 - More Lore
 - More Game!
@@ -92,7 +91,8 @@ Notes about lore, quests and characters can be found [here](https://github.com/c
 | RIGHT | `Arrow Right` or `D` | `Left Side / Right` or `Left Joystick` | Drag gesture |
 | DOWN | `Arrow Down` or `S` | `Left Side / Down` or `Left Joystick` | Drag gesture |
 | LEFT | `Arrow Left` or `A` | `Left Side / Left` or `Left Joystick` | Drag gesture |
-| ATTACK | `R` or `F` or `J` or `Q` | `Right Side / Down` | Dedicated button |
+| RANGED ATTACK | `F` or `J` | `Right Side / Down` | Dedicated button |
+| CLOSE ATTACK | `R` or `Q` | `Right Side / Left` | Dedicated button |
 | CONFIRM | `E` or `K` or `SPACE` | `Right Side / Right` | Dedicated button |
 | MENU | `X` or `ENTER` | `Middle Buttons / Left` | Top-right button |
 | BACK | `ESCAPE` | `Middle Buttons / Right` | n/a |

@@ -15,6 +15,8 @@ class GameEngine {
     let isInteractionAvailable = CurrentValueSubject<Bool, Never>(false)
     let loadingScreenConfig = CurrentValueSubject<LoadingScreenConfig, Never>(.none)
     let showsDeathScreen = CurrentValueSubject<Bool, Never>(false)
+    let heroHp = CurrentValueSubject<Float32, Never>(100)
+    let isSwordEquipped = CurrentValueSubject<Bool, Never>(false)
     
     var size: CGSize = .zero
     var fps: Double = 0.0
@@ -70,6 +72,8 @@ class GameEngine {
         toast.send(current_toast())
         menus.send(current_menu())
         kunai.send(number_of_kunai_in_inventory())
+        heroHp.send(current_hero_hp())
+        isSwordEquipped.send(is_sword_equipped())
         isInteractionAvailable.send(is_interaction_available())
         showsDeathScreen.send(isDead)
         currentBiomeVariant = Int(current_biome_tiles_variant())
@@ -194,7 +198,8 @@ class GameEngine {
         }
         keyPressed.removeAll()
         
-        keyDown.remove(.attack)
+        keyDown.remove(.closeRangeAttack)
+        keyDown.remove(.rangedAttack)
         keyDown.remove(.backspace)
         keyDown.remove(.confirm)
         keyDown.remove(.escape)
@@ -214,7 +219,8 @@ class GameEngine {
             keyPressed.contains(.escape),
             keyPressed.contains(.menu),
             keyPressed.contains(.confirm),
-            keyPressed.contains(.attack),
+            keyPressed.contains(.closeRangeAttack),
+            keyPressed.contains(.rangedAttack),
             keyPressed.contains(.backspace),
             currentChar,
             timeSinceLastUpdate

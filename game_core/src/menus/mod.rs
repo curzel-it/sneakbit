@@ -1,4 +1,4 @@
-pub mod ammo_counter;
+pub mod basic_info_hud;
 pub mod confirmation;
 pub mod game_menu;
 pub mod long_text_display;

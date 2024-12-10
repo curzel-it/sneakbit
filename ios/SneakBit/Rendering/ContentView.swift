@@ -5,6 +5,7 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             GameViewRepresentable()
+            HpView()
             ControllerEmulatorView()
             MenuView()
             OptionsView()

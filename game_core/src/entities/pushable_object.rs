@@ -17,8 +17,8 @@ impl Entity {
                 Direction::Still => false,
             };
             if is_around {
-                let hits = would_collide(&self.frame, &hero_direction, &world.hitmap);
-                let weights = would_over_weight(&self.frame, &hero_direction, &world.weights_map);
+                let hits = would_collide(&self.frame, &hero_direction, &world);
+                let weights = would_over_weight(&self.frame, &hero_direction, &world);
                 
                 if hits {
                     return vec![]

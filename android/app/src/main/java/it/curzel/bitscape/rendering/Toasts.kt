@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -159,7 +160,7 @@ class ToastViewModel(
     private val _borderColor = mutableStateOf(Color.Black)
     val borderColor: State<Color> = _borderColor
 
-    private val _opacity = mutableStateOf(0f)
+    private val _opacity = mutableFloatStateOf(0f)
     val opacity: State<Float> = _opacity
 
     private val _text = mutableStateOf("")
@@ -184,9 +185,9 @@ class ToastViewModel(
 
     private fun loadToast(toast: ToastConfig) {
         _backgroundColor.value = Color(toast.backgroundColorArgb).copy(alpha = 1.0f)
-        _opacity.value = toast.opacity
+        _opacity.floatValue = toast.opacity
         _text.value = toast.text.ifEmpty { "..." }
-        _isVisible.value = _opacity.value > 0.05f
+        _isVisible.value = _opacity.floatValue > 0.05f
         _alignment.value = if (toast.isHint) Alignment.TopStart else Alignment.TopEnd
         _borderColor.value = if (toast.isHint) Color.Yellow else Color.Cyan
 

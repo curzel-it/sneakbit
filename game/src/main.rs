@@ -5,21 +5,25 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BASE_ATTACK, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, SPRITE_SHEET_TENTACLES, SPRITE_SHEET_WEAPONS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, lang::localizable::LANG_EN, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, SPRITE_SHEET_TENTACLES, SPRITE_SHEET_WEAPONS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, lang::localizable::LANG_EN, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use nohash_hasher::IntMap;
 use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
 
 const MAX_FPS: u32 = 60;
 
-fn main() {
-    let mut needs_window_init = true;
-    let mut latest_world_id = 0;
-    let mut music_was_enabled = true;
-    let mut is_fullscreen = false;
-    let mut total_run_time: f32 = 0.0;
-    let creative_mode = env::args().any(|arg| arg == "creative");
+struct GameContext {
+    rl: RaylibHandle,
+    rl_thread: RaylibThread,
+    needs_window_init: bool,
+    latest_world: u32,
+    is_fullscreen: bool,
+    total_run_time: f32,
+    using_controller: bool
+}
 
+fn main() {
     initialize_config_paths(
         false,
         TILE_SIZE * 1.8,
@@ -29,70 +33,84 @@ fn main() {
         local_path("data/save.json"),
         local_path("lang")
     );
+
+    let creative_mode = env::args().any(|arg| arg == "creative");    
+    let (rl, rl_thread) = start_rl(creative_mode);    
+
+    let mut rl_audio = start_rl_audio();    
+    let mut sound_context = SoundContext {
+        music_was_enabled: true,
+        sound_library: load_sounds(&mut rl_audio)
+    };
+
+    let mut context = GameContext {
+        rl,
+        rl_thread,
+        needs_window_init: true,
+        latest_world: 0,
+        is_fullscreen: false,
+        total_run_time: 0.0,
+        using_controller: false
+    };
+
     initialize_game(creative_mode);    
     set_links_handler(Box::new(MyLinkHandler {}));
-
-    let (mut rl, thread) = start_rl();    
-    let mut rl_audio = start_rl_audio();
-    let mut sound_library = load_sounds(&mut rl_audio);
-    let mut using_controller = false;
         
     if bool_for_global_key(&StorageKey::fullscreen()) {
         engine_set_wants_fullscreen();
     }
 
     while is_game_running() {
-        let time_since_last_update = rl.get_frame_time().min(0.5);
-        total_run_time += time_since_last_update;
+        let time_since_last_update = context.rl.get_frame_time().min(0.5);
+        context.total_run_time += time_since_last_update;
 
-        let wants_fullscreen = engine().wants_fullscreen;
-        if wants_fullscreen != is_fullscreen {
-            is_fullscreen = wants_fullscreen;
-            needs_window_init = true;
-            set_fullscreen(&mut rl, wants_fullscreen);
-            println!("Toggled fullscreen (now {})", is_fullscreen);
-        }
-
-        if needs_window_init || rl.is_window_resized() {
-            needs_window_init = false;
-            handle_window_size_changed(&mut rl);
-        }
-        if rl.window_should_close() && !rl.is_key_pressed(raylib::consts::KeyboardKey::KEY_ESCAPE) {
-            stop_game();
-        }
-
-        using_controller = handle_keyboard_updates(
-            &mut rl, 
-            total_run_time, 
-            time_since_last_update, 
-            using_controller
-        );
-
-        handle_mouse_updates(&mut rl, get_rendering_config().rendering_scale);
+        handle_fullscreen_changed(&mut context);
+        handle_window_size_changed(&mut context);
+        handle_game_closed(&mut context);
+        handle_keyboard_updates(&mut context, time_since_last_update);
+        handle_mouse_updates(&mut context.rl, get_rendering_config().rendering_scale);
         update_game(time_since_last_update);
+        handle_world_changed(&mut context, &mut sound_context);
+        render_frame_with_context(&mut context);  
+        play_sound_effects(&sound_context);
+        play_music(&mut sound_context);
+    }
+}
 
-        let current_world = current_world_id(); 
-        if latest_world_id != current_world {
-            latest_world_id = current_world;
-            load_tile_map_textures(&mut rl, &thread, current_world);
-            
-            if is_music_enabled() {
-                update_sound_track(&mut sound_library);
-            }
-        }
+struct SoundContext<'a> {
+    music_was_enabled: bool,
+    sound_library: HashMap<AppSound, Sound<'a>>
+}
 
-        render_frame(&mut rl, &thread);  
-        
-        if are_sound_effects_enabled() {
-            play_sound_effects(&sound_library);
-        }
+fn render_frame_with_context(context: &mut GameContext) {
+    render_frame(&mut context.rl, &context.rl_thread);
+}
+
+fn handle_world_changed(context: &mut GameContext, sound_context: &mut SoundContext) {
+    let current_world = current_world_id(); 
+    if context.latest_world != current_world {
+        context.latest_world = current_world;
+        load_tile_map_textures(&mut context.rl, &context.rl_thread, current_world);
+
         if is_music_enabled() {
-            music_was_enabled = true;
-            update_sound_track(&mut sound_library);
-        } else if music_was_enabled {
-            music_was_enabled = false;
-            stop_music(&mut sound_library);
+            update_sound_track(sound_context);
         }
+    }
+}
+
+fn handle_game_closed(context: &mut GameContext) {
+    if context.rl.window_should_close() && !context.rl.is_key_pressed(raylib::consts::KeyboardKey::KEY_ESCAPE) {
+        stop_game();
+    }
+}
+
+fn handle_fullscreen_changed(context: &mut GameContext) {
+    let wants_fullscreen = engine().wants_fullscreen;
+    if wants_fullscreen != context.is_fullscreen {
+        context.is_fullscreen = wants_fullscreen;
+        context.needs_window_init = true;
+        set_fullscreen(&mut context.rl, wants_fullscreen);
+        println!("Toggled fullscreen (now {})", context.is_fullscreen);
     }
 }
 
@@ -111,12 +129,12 @@ fn set_fullscreen(rl: &mut RaylibHandle, wants_fullscreen: bool) {
     }
 }
 
-fn stop_music(sound_library: &mut HashMap<AppSound, Sound>) {
-    let sounds: Vec<AppSound> = sound_library.keys().cloned().collect();
+fn stop_music(context: &mut SoundContext) {
+    let sounds: Vec<AppSound> = context.sound_library.keys().cloned().collect();
 
     sounds.iter().for_each(|key| {
         if matches!(key, AppSound::Track(_)) {
-            if let Some(sound) = sound_library.get_mut(key) {
+            if let Some(sound) = context.sound_library.get_mut(key) {
                 if sound.is_playing() {
                     sound.stop();
                 }
@@ -125,19 +143,19 @@ fn stop_music(sound_library: &mut HashMap<AppSound, Sound>) {
     });
 }
 
-fn update_sound_track(sound_library: &mut HashMap<AppSound, Sound>) {
+fn update_sound_track(context: &mut SoundContext) {
     if let Some(track_name) = current_soundtrack_string() {
         if !track_name.is_empty() {
             
             let key = &AppSound::Track(track_name);
             
-            if let Some(sound) = sound_library.get(key) {
+            if let Some(sound) = context.sound_library.get(key) {
                 if !sound.is_playing() {
                     let _ = sound;
-                    stop_music(sound_library);
+                    stop_music(context);
                 }
             }            
-            if let Some(sound) = sound_library.get(key) {
+            if let Some(sound) = context.sound_library.get(key) {
                 if !sound.is_playing() {
                     sound.play();
                 }
@@ -146,7 +164,7 @@ fn update_sound_track(sound_library: &mut HashMap<AppSound, Sound>) {
     }
 }
 
-fn start_rl() -> (RaylibHandle, RaylibThread) {    
+fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {    
     let width = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.w as f32) as i32;
     let height = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.h as f32) as i32;
 
@@ -163,15 +181,15 @@ fn start_rl() -> (RaylibHandle, RaylibThread) {
     rl.set_target_fps(MAX_FPS);
     rl.set_window_min_size(360, 240);
 
-    let textures: HashMap<u32, Texture2D> = load_textures(&mut rl, &thread);
     init_rendering_config(RenderingConfig {
         font,
         font_bold,
-        textures,
+        textures: load_textures(&mut rl, &thread),
         rendering_scale: 2.0,
         font_rendering_scale: 2.0,
         canvas_size: Vector2d::new(1.0, 1.0),
-        show_debug_info: is_debug_build()
+        show_debug_info: is_debug_build(),
+        render_using_individual_tiles: creative_mode
     });
 
     (rl, thread)
@@ -181,46 +199,49 @@ fn start_rl_audio() -> Result<raylib::prelude::RaylibAudio, RaylibAudioInitError
     RaylibAudio::init_audio_device()
 }
 
-fn handle_window_size_changed(rl: &mut RaylibHandle) {
-    if !is_rendering_config_initialized() {
-        return
+fn handle_window_size_changed(context: &mut GameContext) {
+    if context.needs_window_init || context.rl.is_window_resized() {
+        context.needs_window_init = false;
+
+        if !is_rendering_config_initialized() {
+            return
+        }
+        let window_scale = context.rl.get_window_scale_dpi().x;
+        let real_width = context.rl.get_render_width() as f32;
+        let real_height = context.rl.get_render_height() as f32;
+        let width = real_width / window_scale;
+        let height = real_height / window_scale;
+
+        println!("Window size changed to {}x{} @ {}", width, height, window_scale);
+        let (scale, font_scale) = rendering_scale_for_screen_width(width);
+        
+        println!("Updated rendering scale to {}", scale);
+        println!("Updated font scale to {}", scale);
+        
+        let config = get_rendering_config_mut();
+        config.rendering_scale = scale;
+        config.font_rendering_scale = font_scale;
+
+        if context.rl.is_window_fullscreen() {
+            config.canvas_size.x = real_width;
+            config.canvas_size.y = real_height;
+        } else {
+            config.canvas_size.x = width;
+            config.canvas_size.y = height;
+        }
+
+        let font_size = config.scaled_font_size(&Typography::Regular);
+        let line_spacing = config.font_lines_spacing(&Typography::Regular);
+        window_size_changed(width, height, scale, font_size, line_spacing);
     }
-    let window_scale = rl.get_window_scale_dpi().x;
-    let real_width = rl.get_render_width() as f32;
-    let real_height = rl.get_render_height() as f32;
-    let width = real_width / window_scale;
-    let height = real_height / window_scale;
-
-    println!("Window size changed to {}x{} @ {}", width, height, window_scale);
-    let (scale, font_scale) = rendering_scale_for_screen_width(width);
-    
-    println!("Updated rendering scale to {}", scale);
-    println!("Updated font scale to {}", scale);
-    
-    let config = get_rendering_config_mut();
-    config.rendering_scale = scale;
-    config.font_rendering_scale = font_scale;
-
-    if rl.is_window_fullscreen() {
-        config.canvas_size.x = real_width;
-        config.canvas_size.y = real_height;
-    } else {
-        config.canvas_size.x = width;
-        config.canvas_size.y = height;
-    }
-
-    let font_size = config.scaled_font_size(&Typography::Regular);
-    let line_spacing = config.font_lines_spacing(&Typography::Regular);
-    window_size_changed(width, height, scale, font_size, line_spacing);
 }
 
-fn load_textures(rl: &mut RaylibHandle, thread: &RaylibThread) -> HashMap<u32, Texture2D> {    
-    let mut textures: HashMap<u32, Texture2D> = hash_map!();
+fn load_textures(rl: &mut RaylibHandle, thread: &RaylibThread) -> IntMap<u32, Texture2D> {    
+    let mut textures: IntMap<u32, Texture2D> = IntMap::default();
     textures.insert(SPRITE_SHEET_INVENTORY, texture(rl, thread, "inventory").unwrap());
     textures.insert(SPRITE_SHEET_BIOME_TILES, texture(rl, thread, "tiles_biome").unwrap());
     textures.insert(SPRITE_SHEET_CONSTRUCTION_TILES, texture(rl, thread, "tiles_constructions").unwrap());
     textures.insert(SPRITE_SHEET_BUILDINGS, texture(rl, thread, "buildings").unwrap());
-    textures.insert(SPRITE_SHEET_BASE_ATTACK, texture(rl, thread, "baseattack").unwrap());
     textures.insert(SPRITE_SHEET_STATIC_OBJECTS, texture(rl, thread, "static_objects").unwrap());
     textures.insert(SPRITE_SHEET_MENU, texture(rl, thread, "menu").unwrap());        
     textures.insert(SPRITE_SHEET_ANIMATED_OBJECTS, texture(rl, thread, "animated_objects").unwrap());     
@@ -279,12 +300,15 @@ fn handle_mouse_updates(rl: &mut RaylibHandle, rendering_scale: f32) {
     );
 }
 
-fn handle_keyboard_updates(rl: &mut RaylibHandle, total_run_time: f32, time_since_last_update: f32, using_controller: bool) -> bool {
+fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f32) -> bool {
+    let current_char = get_char_pressed(&mut context.rl);
+
+    let rl = &context.rl;
     let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl);
     let previous_keyboard_state = &engine().keyboard;
 
     let has_controller_now = rl.is_gamepad_available(0);
-    let controller_availability_changed = total_run_time > 0.5 && (using_controller != has_controller_now);  
+    let controller_availability_changed = context.total_run_time > 0.5 && (context.using_controller != has_controller_now);  
     let lost_focus = !rl.is_window_focused();
     let should_pause = controller_availability_changed || lost_focus;
 
@@ -300,17 +324,19 @@ fn handle_keyboard_updates(rl: &mut RaylibHandle, total_run_time: f32, time_sinc
         rl.is_key_pressed(KeyboardKey::KEY_ESCAPE) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
         should_pause || rl.is_key_pressed(KeyboardKey::KEY_X) || rl.is_key_pressed(KeyboardKey::KEY_ENTER) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
         rl.is_key_pressed(KeyboardKey::KEY_E) || rl.is_key_pressed(KeyboardKey::KEY_K) || rl.is_key_pressed(KeyboardKey::KEY_SPACE) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
-        rl.is_key_pressed(KeyboardKey::KEY_R) || rl.is_key_pressed(KeyboardKey::KEY_F) || rl.is_key_pressed(KeyboardKey::KEY_J) || rl.is_key_pressed(KeyboardKey::KEY_Q) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
+        rl.is_key_pressed(KeyboardKey::KEY_R) || rl.is_key_pressed(KeyboardKey::KEY_Q) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_LEFT), 
+        rl.is_key_pressed(KeyboardKey::KEY_F) || rl.is_key_pressed(KeyboardKey::KEY_J) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
         rl.is_key_pressed(KeyboardKey::KEY_BACKSPACE), 
-        get_char_pressed(rl),
+        current_char,
         time_since_last_update
     );
+    _ = rl;
 
     if controller_availability_changed {        
         if has_controller_now {
-            rl.hide_cursor();
+            context.rl.hide_cursor();
         } else {
-            rl.show_cursor();
+            context.rl.show_cursor();
         }
     }
     has_controller_now
@@ -360,7 +386,7 @@ fn get_char_pressed(rl: &mut RaylibHandle) -> u32 {
 
 fn rendering_scale_for_screen_width(width: f32) -> (f32, f32) {
     if is_creative_mode() {
-        return (1.0, 2.0)
+        return (2.0, 2.0)
     } else if width < 500.0 {
         (1.0, 1.0)
     } else if width < 1400.0 {
@@ -425,13 +451,30 @@ fn is_debug_build() -> bool {
     cfg!(debug_assertions)
 }
 
-fn play_sound_effects(sound_library: &HashMap<AppSound, Sound>) {
-    current_sound_effects().iter().for_each(|effect| {
+fn play_sound_effects(context: &SoundContext) {
+    let sound_effects = current_sound_effects();
+    if sound_effects.is_empty() {
+        return
+    }
+    if !are_sound_effects_enabled() {
+        return
+    }
+    sound_effects.iter().for_each(|effect| {
         let key = &AppSound::Effect(effect.clone());
-        if let Some(sound) = sound_library.get(key) {
+        if let Some(sound) = context.sound_library.get(key) {
             sound.play();
         }
     })
+}
+
+fn play_music(context: &mut SoundContext) {
+    if is_music_enabled() {
+        context.music_was_enabled = true;
+        update_sound_track(context);
+    } else if context.music_was_enabled {
+        context.music_was_enabled = false;
+        stop_music(context);
+    }
 }
 
 #[derive(Clone, PartialEq, Eq, Hash)]
@@ -456,6 +499,8 @@ fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitErro
             (AppSound::Effect(SoundEffect::GameOver), "sfx_sounds_negative1.mp3"),
             (AppSound::Effect(SoundEffect::PlayerResurrected), "sfx_sounds_powerup1.mp3"), 
             (AppSound::Effect(SoundEffect::NoAmmo), "sfx_wpn_noammo3.mp3"),
+            (AppSound::Effect(SoundEffect::SwordSlash), "sfx_wpn_sword3.mp3"),
+            (AppSound::Effect(SoundEffect::ClaymoreSlash), "sfx_wpn_sword2.mp3"),
             track_track_pair("pol_brave_worm_short.mp3"),
             track_track_pair("pol_cactus_land_short.mp3"),
             track_track_pair("pol_chubby_cat_short.mp3"),

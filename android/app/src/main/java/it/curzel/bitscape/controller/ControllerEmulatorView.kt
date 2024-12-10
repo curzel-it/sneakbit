@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -66,14 +67,16 @@ fun ControllerEmulatorView(
     }
 
     val isConfirmVisible by viewModel.isConfirmVisible.collectAsState()
-    val isAttackVisible by viewModel.isAttackVisible.collectAsState()
+    val isCloseRangeAttackVisible by viewModel.isCloseRangeAttackVisible.collectAsState()
+    val isRangedAttackVisible by viewModel.isRangedAttackVisible.collectAsState()
     val attackLabel by viewModel.attackLabel.collectAsState()
     val currentOffset by viewModel.currentOffset.collectAsState()
     val confirmOnRight by viewModel.confirmOnRight.collectAsState()
 
     ControllerEmulatorView(
         isConfirmVisible = isConfirmVisible,
-        isAttackVisible = isAttackVisible,
+        isCloseRangeAttackVisible = isCloseRangeAttackVisible,
+        isRangedAttackVisible = isRangedAttackVisible,
         attackLabel = attackLabel,
         currentOffset = currentOffset,
         confirmOnRight = confirmOnRight,
@@ -88,7 +91,8 @@ fun ControllerEmulatorView(
 @Composable
 private fun ControllerEmulatorView(
     isConfirmVisible: Boolean,
-    isAttackVisible: Boolean,
+    isCloseRangeAttackVisible: Boolean,
+    isRangedAttackVisible: Boolean,
     attackLabel: String,
     currentOffset: Offset,
     confirmOnRight: Boolean,
@@ -138,23 +142,36 @@ private fun ControllerEmulatorView(
             if (!confirmOnRight && isConfirmVisible) {
                 KeyEmulatorView(key = EmulatedKey.CONFIRM, onKeyDown = { setKeyDown(it) })
             }
-            AnimatedVisibility(
-                visible = isAttackVisible,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                Box {
-                    KeyEmulatorView(key = EmulatedKey.ATTACK, onKeyDown = { setKeyDown(it) })
-                    Text(
-                        text = attackLabel,
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 12.dp)
-                            .padding(bottom = keyEmulatorViewPadding),
-                        textAlign = TextAlign.Center,
-                        style = DSTypography.buttonCaption,
-                        color = Color.Black.copy(alpha = 0.9f)
-                    )
+            Column {
+                AnimatedVisibility(
+                    visible = isRangedAttackVisible,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Box {
+                        KeyEmulatorView(
+                            key = EmulatedKey.RANGED_ATTACK,
+                            onKeyDown = { setKeyDown(it) })
+                        Text(
+                            text = attackLabel,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 12.dp)
+                                .padding(bottom = keyEmulatorViewPadding),
+                            textAlign = TextAlign.Center,
+                            style = DSTypography.buttonCaption,
+                            color = Color.Black.copy(alpha = 0.9f)
+                        )
+                    }
+                }
+                AnimatedVisibility(
+                    visible = isCloseRangeAttackVisible,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    KeyEmulatorView(
+                        key = EmulatedKey.CLOSE_RANGE_ATTACK,
+                        onKeyDown = { setKeyDown(it) })
                 }
             }
             if (confirmOnRight) {
@@ -174,8 +191,11 @@ class ControllerEmulatorViewModel(
     private val _isConfirmVisible = MutableStateFlow(false)
     val isConfirmVisible: StateFlow<Boolean> = _isConfirmVisible.asStateFlow()
 
-    private val _isAttackVisible = MutableStateFlow(false)
-    val isAttackVisible: StateFlow<Boolean> = _isAttackVisible.asStateFlow()
+    private val _isRangedAttackVisible = MutableStateFlow(false)
+    val isRangedAttackVisible: StateFlow<Boolean> = _isRangedAttackVisible.asStateFlow()
+
+    private val _isCloseRangeAttackVisible = MutableStateFlow(false)
+    val isCloseRangeAttackVisible: StateFlow<Boolean> = _isCloseRangeAttackVisible.asStateFlow()
 
     private val _confirmOnRight = MutableStateFlow(false)
     val confirmOnRight: StateFlow<Boolean> = _confirmOnRight.asStateFlow()
@@ -200,6 +220,7 @@ class ControllerEmulatorViewModel(
     init {
         updateCurrentOffset()
         observeKunaiCount()
+        observeSwordEquipped()
         observeInteractionAvailable()
     }
 
@@ -253,8 +274,17 @@ class ControllerEmulatorViewModel(
         viewModelScope.launch {
             engine.numberOfKunai()
                 .collect { count ->
-                    _isAttackVisible.value = count > 0
+                    _isRangedAttackVisible.value = count > 0
                     _attackLabel.value = "x$count"
+                }
+        }
+    }
+
+    private fun observeSwordEquipped() {
+        viewModelScope.launch {
+            engine.isSwordEquipped()
+                .collect { isEquipped ->
+                    _isCloseRangeAttackVisible.value = isEquipped
                 }
         }
     }
@@ -274,7 +304,8 @@ class ControllerEmulatorViewModel(
 fun ControllerEmulatorViewPreview() {
     ControllerEmulatorView(
         isConfirmVisible = true,
-        isAttackVisible = true,
+        isCloseRangeAttackVisible = true,
+        isRangedAttackVisible = true,
         attackLabel = "x99",
         currentOffset = Offset.Zero,
         confirmOnRight = true,
@@ -291,7 +322,8 @@ fun ControllerEmulatorViewPreview() {
 fun ControllerEmulatorViewOnlyAttackPreview() {
     ControllerEmulatorView(
         isConfirmVisible = false,
-        isAttackVisible = true,
+        isCloseRangeAttackVisible = true,
+        isRangedAttackVisible = true,
         attackLabel = "x99",
         currentOffset = Offset.Zero,
         confirmOnRight = true,
@@ -308,7 +340,8 @@ fun ControllerEmulatorViewOnlyAttackPreview() {
 fun ControllerEmulatorViewOnlyConfirmPreview() {
     ControllerEmulatorView(
         isConfirmVisible = true,
-        isAttackVisible = false,
+        isCloseRangeAttackVisible = false,
+        isRangedAttackVisible = false,
         attackLabel = "",
         currentOffset = Offset.Zero,
         confirmOnRight = true,

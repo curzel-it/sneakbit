@@ -1,4 +1,4 @@
-use crate::{config::config, constants::{HERO_ENTITY_ID, TILE_SIZE}, game_engine::{entity::Entity, hitmap::{Hitmap, WeightsMap}, world::World}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{config::config, constants::{HERO_ENTITY_ID, TILE_SIZE}, game_engine::{entity::Entity, world::World}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 
@@ -11,7 +11,7 @@ impl Entity {
             return
         }
         if self.is_rigid {
-            if would_collide(&frame, &self.direction, &world.hitmap) {
+            if would_collide(&frame, &self.direction, &world) {
                 if self.id == HERO_ENTITY_ID && world.is_hero_on_slippery_surface() {
                     self.current_speed = 0.0;
                 }
@@ -34,6 +34,7 @@ impl Entity {
 
         if tiles_x != 0.0 || tiles_y != 0.0 {
             self.offset = Vector2d::zero();
+            self.update_sorting_key();
         } else {
             self.offset = Vector2d::new(
                 updated_offset.x - tiles_x * TILE_SIZE,
@@ -44,7 +45,7 @@ impl Entity {
 }
 
 fn can_step_over_hero(entity: &Entity) -> bool {
-    entity.id == HERO_ENTITY_ID || entity.melee_attacks_hero
+    entity.id == HERO_ENTITY_ID || entity.melee_attacks_hero()
 }
 
 fn updated_offset(offset: &Vector2d, direction: &Direction, speed: f32, time_since_last_update: f32) -> Vector2d {
@@ -65,32 +66,22 @@ fn would_exit_bounds(frame: &IntRect, direction: &Direction, bounds: &IntRect) -
     }
 }
 
-pub fn would_collide(frame: &IntRect, direction: &Direction, hitmap: &Hitmap) -> bool {
+pub fn would_collide(frame: &IntRect, direction: &Direction, world: &World) -> bool {
     let (col_offset, row_offset) = direction.as_col_row_offset();
     let base_y = frame.y + frame.h - 1;
     let base_x = frame.x;
     let x = base_x + col_offset;
     let y = base_y + row_offset;
-
-    if y < 0 || y >= hitmap.len() as i32 || x < 0 || x >= hitmap[0].len() as i32 {
-        true
-    } else {
-        hitmap[y as usize][x as usize]
-    }
+    world.hits(x, y)
 }
 
-pub fn would_over_weight(frame: &IntRect, direction: &Direction, weights_map: &WeightsMap) -> bool {
+pub fn would_over_weight(frame: &IntRect, direction: &Direction, world: &World) -> bool {
     let (col_offset, row_offset) = direction.as_col_row_offset();
     let base_y = frame.y + frame.h - 1;
     let base_x = frame.x;
     let x = base_x + col_offset;
     let y = base_y + row_offset;
-
-    if y < 0 || y >= weights_map.len() as i32 || x < 0 || x >= weights_map[0].len() as i32 {
-        true
-    } else {
-        weights_map[y as usize][x as usize] > 0
-    }
+    world.has_weight(x, y)
 }
 
 pub fn would_collide_with_hero(frame: &IntRect, direction: &Direction, world: &World) -> bool {

@@ -12,7 +12,6 @@ pub struct Species {
     pub id: SpeciesId,
     pub name: String,
     pub entity_type: EntityType,
-    pub z_index: i32,
     pub base_speed: f32,
     pub is_rigid: bool,
     pub inventory_texture_offset: (i32, i32),
@@ -20,6 +19,9 @@ pub struct Species {
     pub sprite_sheet_id: u32,
     pub sprite_number_of_frames: i32,
     
+    #[serde(default="zero_i32")]
+    pub z_index: i32,
+
     #[serde(default)]
     pub movement_directions: MovementDirections,
     
@@ -40,6 +42,12 @@ pub struct Species {
 
     #[serde(default)]
     pub is_invulnerable: bool,
+
+    #[serde(default="one_hundred")]
+    pub hp: f32,
+
+    #[serde(default="zero")]
+    pub dps: f32,
 }
 
 #[derive(Default, Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
@@ -60,7 +68,10 @@ pub enum EntityType {
     RailObject,
     Hint,
     Trail,
-    Equipment
+    Equipment,
+    Sword,
+    KunaiLauncher,
+    CloseCombatMonster
 }
 
 impl Species {
@@ -96,7 +107,6 @@ impl Species {
             action_cooldown_remaining: 0.0,
             parent_id: NO_PARENT,
             is_dying: false,
-            melee_attacks_hero: self.melee_attacks_hero,
             speed_multiplier: 1.0,
             is_invulnerable: false,
             demands_attention: false,
@@ -105,6 +115,10 @@ impl Species {
             display_conditions: vec![],
             after_dialogue: AfterDialogueBehavior::Nothing,
             is_in_interaction_range: false,
+            is_equipped: false,
+            hp: self.hp,
+            dps: self.dps,
+            sorting_key: 0,
         }
     }
 
@@ -121,12 +135,13 @@ impl Species {
         entity.sprite = sprite;
         entity.name = self.name.localized();
         entity.action_cooldown_remaining = 0.0;
-        entity.melee_attacks_hero = self.melee_attacks_hero;
         entity.speed_multiplier = 1.0;
         entity.is_consumable = self.is_consumable;
         entity.is_invulnerable = self.is_invulnerable;
         entity.z_index = self.z_index;
         entity.movement_directions = self.movement_directions;
+        entity.hp = self.hp;
+        entity.dps = self.dps;
 
         if entity.parent_id == NO_PARENT {
             entity.current_speed = initial_speed;
@@ -180,7 +195,9 @@ pub const SPECIES_NONE: Species = Species {
     is_consumable: false,
     bundle_contents: vec![],
     is_invulnerable: false,
-    movement_directions: MovementDirections::None
+    movement_directions: MovementDirections::None,
+    hp: one_hundred(),
+    dps: zero(),
 };
 
 pub fn species_by_id(species_id: u32) -> Species {
@@ -193,4 +210,16 @@ pub fn make_entity_by_species(species_id: u32) -> Entity {
 
 fn one() -> f32 {
     1.0
+}
+
+const fn zero() -> f32 {
+    0.0
+}
+
+const fn zero_i32() -> i32 {
+    0
+}
+
+const fn one_hundred() -> f32 {
+    100.0
 }

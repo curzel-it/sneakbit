@@ -1,42 +1,143 @@
+use std::collections::HashMap;
+
+use lazy_static::lazy_static;
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer, de::Deserializer};
-
 use crate::utils::rect::IntRect;
-
 use super::tiles::{SpriteTile, TileSet};
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 #[derive(Default)]
-#[repr(u32)]
+#[repr(i32)]
 pub enum Construction {
+    WoodenFence = 1,
     #[default]
-    Nothing = 0,
-    WoodenFence,
-    MetalFence,
-    DarkRock,
-    LightWall,
-    Counter,
-    Library,
-    TallGrass,
-    Forest,
-    Bamboo,
-    Box,
-    Rail,
-    StoneWall,
-    IndicatorArrow,
-    Bridge,
-    Broadleaf,
-    StoneBox,
-    SpoiledTree,
-    WineTree,
-    SolarPanel,
-    Pipe,
-    BroadleafPurple,
-    WoodenWall,
-    SnowPile,
-    SnowyForest,
-    Darkness15,
-    Darkness30,
-    Darkness45
+    Nothing = 2,
+    DarkRock = 3,
+    LightWall = 4,
+    Counter = 5,
+    Library = 6,
+    TallGrass = 7,
+    Forest = 8,
+    Bamboo = 9,
+    Box = 10,
+    Rail = 11,
+    StoneWall = 12,
+    IndicatorArrow = 13,
+    Bridge = 14,
+    Broadleaf = 15,
+    MetalFence = 16,       
+    StoneBox = 17,
+    SpoiledTree = 18,
+    WineTree = 19,
+    SolarPanel = 20,
+    Pipe = 21,
+    BroadleafPurple = 22,
+    WoodenWall = 23,
+    SnowPile = 24,
+    SnowyForest = 25,
+    Darkness15 = 26,
+    Darkness30 = 27,
+    Darkness45 = 28,
+    SlopeGreenTopLeft = 29,
+    SlopeGreenTopRight = 30,
+    SlopeGreenBottomRight = 31,
+    SlopeGreenBottomLeft = 32,
+    SlopeGreenBottom = 33,
+    SlopeGreenTop = 34,
+    SlopeGreenLeft = 35,
+    SlopeGreenRight = 36,
+    SlopeRockTopLeft = 37,
+    SlopeRockTopRight = 38,
+    SlopeRockBottomRight = 39,
+    SlopeRockBottomLeft = 40,
+    SlopeRockBottom = 41,
+    SlopeRockTop = 42,
+    SlopeRockLeft = 43,
+    SlopeRockRight = 44,
+    SlopeSandTopLeft = 45,
+    SlopeSandTopRight = 46,
+    SlopeSandBottomRight = 47,
+    SlopeSandBottomLeft = 48,
+    SlopeSandBottom = 49,
+    SlopeSandTop = 50,
+    SlopeSandLeft = 51,
+    SlopeSandRight = 52,
+    SlopeDarkRockTopLeft = 53,
+    SlopeDarkRockTopRight = 54,
+    SlopeDarkRockBottomRight = 55,
+    SlopeDarkRockBottomLeft = 56,
+    SlopeDarkRockBottom = 57,
+    SlopeDarkRockTop = 58,
+    SlopeDarkRockLeft = 59,
+    SlopeDarkRockRight = 60,
+}
+
+lazy_static! {
+    static ref CONSTRUCTION_ENCODINGS: Vec<(char, Construction)> = vec![
+        ('0', Construction::Nothing),
+        ('1', Construction::WoodenFence),
+        ('3', Construction::DarkRock),
+        ('4', Construction::LightWall),
+        ('5', Construction::Counter),
+        ('6', Construction::Library),
+        ('7', Construction::TallGrass),
+        ('8', Construction::Forest),
+        ('9', Construction::Bamboo),
+        ('A', Construction::Box),
+        ('B', Construction::Rail),
+        ('C', Construction::StoneWall),
+        ('D', Construction::IndicatorArrow),
+        ('E', Construction::Bridge),
+        ('F', Construction::Broadleaf),
+        ('G', Construction::MetalFence),
+        ('H', Construction::StoneBox),
+        ('J', Construction::SpoiledTree),
+        ('K', Construction::WineTree),
+        ('L', Construction::SolarPanel),
+        ('M', Construction::Pipe),
+        ('N', Construction::BroadleafPurple),
+        ('O', Construction::WoodenWall),
+        ('P', Construction::SnowPile),
+        ('Q', Construction::SnowyForest),
+        ('R', Construction::Darkness15),
+        ('S', Construction::Darkness30),
+        ('T', Construction::Darkness45),
+        ('U', Construction::SlopeGreenTopLeft),
+        ('V', Construction::SlopeGreenTopRight),
+        ('W', Construction::SlopeGreenBottomRight),
+        ('X', Construction::SlopeGreenBottomLeft),
+        ('Y', Construction::SlopeGreenBottom),
+        ('Z', Construction::SlopeGreenTop),
+        ('a', Construction::SlopeGreenLeft),
+        ('b', Construction::SlopeGreenRight),
+        ('c', Construction::SlopeRockTopLeft),
+        ('d', Construction::SlopeRockTopRight),
+        ('e', Construction::SlopeRockBottomRight),
+        ('f', Construction::SlopeRockBottomLeft),
+        ('g', Construction::SlopeRockBottom),
+        ('h', Construction::SlopeRockTop),
+        ('j', Construction::SlopeRockLeft),
+        ('k', Construction::SlopeRockRight),
+        ('i', Construction::SlopeSandTopLeft),
+        ('l', Construction::SlopeSandTopRight),
+        ('m', Construction::SlopeSandBottomRight),
+        ('n', Construction::SlopeSandBottomLeft),
+        ('o', Construction::SlopeSandBottom),
+        ('p', Construction::SlopeSandTop),
+        ('q', Construction::SlopeSandLeft),
+        ('r', Construction::SlopeSandRight),
+        ('s', Construction::SlopeDarkRockTopLeft),
+        ('t', Construction::SlopeDarkRockTopRight),
+        ('u', Construction::SlopeDarkRockBottomRight),
+        ('v', Construction::SlopeDarkRockBottomLeft),
+        ('w', Construction::SlopeDarkRockBottom),
+        ('x', Construction::SlopeDarkRockTop),
+        ('y', Construction::SlopeDarkRockLeft),
+        ('z', Construction::SlopeDarkRockRight),
+    ];
+
+    static ref CHAR_TO_CONSTRUCTION: HashMap<char, Construction> = CONSTRUCTION_ENCODINGS.clone().into_iter().collect();
+    static ref CONSTRUCTION_TO_CHAR: HashMap<Construction, char> = CONSTRUCTION_ENCODINGS.clone().into_iter().map(|(char, biome)| (biome, char)).collect();
 }
 
 #[derive(Debug, Default, Clone, Copy)]
@@ -70,6 +171,10 @@ impl ConstructionTile {
             Construction::Darkness45 => false,
             _ => true
         }
+    }
+
+    pub fn is_bridge(&self) -> bool {
+        matches!(self.tile_type, Construction::Bridge)
     }
 
     pub fn setup_neighbors(&mut self, up: Construction, right: Construction, bottom: Construction, left: Construction) {
@@ -112,36 +217,7 @@ impl ConstructionTile {
 
 impl Construction {
     fn texture_offset_x(&self) -> i32 {
-        match self {
-            Construction::Nothing => 0,
-            Construction::WoodenFence => 1,
-            Construction::DarkRock => 3,
-            Construction::LightWall => 4,
-            Construction::Counter => 5,
-            Construction::Library => 6,
-            Construction::TallGrass => 7,
-            Construction::Forest => 8,
-            Construction::Bamboo => 9,
-            Construction::Box => 10,
-            Construction::Rail => 11,
-            Construction::StoneWall => 12,
-            Construction::IndicatorArrow => 13,
-            Construction::Bridge => 14,
-            Construction::Broadleaf => 15,
-            Construction::MetalFence => 16,
-            Construction::StoneBox => 17,
-            Construction::SpoiledTree => 18,
-            Construction::WineTree => 19,
-            Construction::SolarPanel => 20,
-            Construction::Pipe => 21,
-            Construction::BroadleafPurple => 22,
-            Construction::WoodenWall => 23,
-            Construction::SnowPile => 24,
-            Construction::SnowyForest => 25,
-            Construction::Darkness15 => 26,
-            Construction::Darkness30 => 27,
-            Construction::Darkness45 => 28,
-        }
+        *self as i32
     }
 }
 
@@ -172,71 +248,12 @@ impl TileSet<ConstructionTile> {
 }
 
 impl Construction {
-    fn from_char(c: char) -> Self {
-        match c {
-            '0' => Construction::Nothing,
-            '1' => Construction::WoodenFence,
-            '3' => Construction::DarkRock,
-            '4' => Construction::LightWall,
-            '5' => Construction::Counter,
-            '6' => Construction::Library,
-            '7' => Construction::TallGrass,
-            '8' => Construction::Forest,
-            '9' => Construction::Bamboo,
-            'A' => Construction::Box,
-            'B' => Construction::Rail,
-            'C' => Construction::StoneWall,
-            'D' => Construction::IndicatorArrow,
-            'E' => Construction::Bridge,
-            'F' => Construction::Broadleaf,
-            'G' => Construction::MetalFence,
-            'H' => Construction::StoneBox,
-            'J' => Construction::SpoiledTree,
-            'K' => Construction::WineTree,
-            'L' => Construction::SolarPanel,
-            'M' => Construction::Pipe,
-            'N' => Construction::BroadleafPurple,
-            'O' => Construction::WoodenWall,
-            'P' => Construction::SnowPile,
-            'Q' => Construction::SnowyForest,
-            'R' => Construction::Darkness15,
-            'S' => Construction::Darkness30,
-            'T' => Construction::Darkness45,
-            _ => Construction::Nothing,
-        }
+    pub fn from_char(c: char) -> Self {
+        CHAR_TO_CONSTRUCTION.get(&c).unwrap_or(&Construction::Nothing).clone()
     }
 
     pub fn to_char(self) -> char {
-        match self {
-            Construction::Nothing => '0',
-            Construction::WoodenFence => '1',
-            Construction::DarkRock => '3',
-            Construction::LightWall => '4',
-            Construction::Counter => '5',
-            Construction::Library => '6',
-            Construction::TallGrass => '7',
-            Construction::Forest => '8',
-            Construction::Bamboo => '9',
-            Construction::Box => 'A',
-            Construction::Rail => 'B',
-            Construction::StoneWall => 'C',
-            Construction::IndicatorArrow => 'D',
-            Construction::Bridge => 'E',
-            Construction::Broadleaf => 'F',
-            Construction::MetalFence => 'G',
-            Construction::StoneBox => 'H',
-            Construction::SpoiledTree => 'J',
-            Construction::WineTree => 'K',
-            Construction::SolarPanel => 'L',
-            Construction::Pipe => 'M',
-            Construction::BroadleafPurple => 'N',
-            Construction::WoodenWall => 'O',
-            Construction::SnowPile => 'P',
-            Construction::SnowyForest => 'Q',
-            Construction::Darkness15 => 'R',
-            Construction::Darkness30 => 'S',
-            Construction::Darkness45 => 'T',
-        }
+        CONSTRUCTION_TO_CHAR.get(&self).unwrap_or(&'0').clone()
     }
 }
 
@@ -335,6 +352,38 @@ impl Construction {
             Construction::Darkness15 => false,
             Construction::Darkness30 => false,
             Construction::Darkness45 => false,
+            Construction::SlopeGreenTopLeft => true,
+            Construction::SlopeGreenTopRight => true,
+            Construction::SlopeGreenBottomRight => true,
+            Construction::SlopeGreenBottomLeft => true,
+            Construction::SlopeGreenBottom => true,
+            Construction::SlopeGreenTop => true,
+            Construction::SlopeGreenLeft => true,
+            Construction::SlopeGreenRight => true,
+            Construction::SlopeRockTopLeft => true,
+            Construction::SlopeRockTopRight => true,
+            Construction::SlopeRockBottomRight => true,
+            Construction::SlopeRockBottomLeft => true,
+            Construction::SlopeRockBottom => true,
+            Construction::SlopeRockTop => true,
+            Construction::SlopeRockLeft => true,
+            Construction::SlopeRockRight => true,
+            Construction::SlopeSandTopLeft => true,
+            Construction::SlopeSandTopRight => true,
+            Construction::SlopeSandBottomRight => true,
+            Construction::SlopeSandBottomLeft => true,
+            Construction::SlopeSandBottom => true,
+            Construction::SlopeSandTop => true,
+            Construction::SlopeSandLeft => true,
+            Construction::SlopeSandRight => true,
+            Construction::SlopeDarkRockTopLeft => true,
+            Construction::SlopeDarkRockTopRight => true,
+            Construction::SlopeDarkRockBottomRight => true,
+            Construction::SlopeDarkRockBottomLeft => true,
+            Construction::SlopeDarkRockBottom => true,
+            Construction::SlopeDarkRockTop => true,
+            Construction::SlopeDarkRockLeft => true,
+            Construction::SlopeDarkRockRight => true,
         }
     }
 }

@@ -12,7 +12,7 @@ impl Entity {
         }
 
         let hero_on_it = world.is_hero_at(self.frame.x, self.frame.y);
-        let weight_on_it = world.weights_map[self.frame.y as usize][self.frame.x as usize] > 0;
+        let weight_on_it = world.has_weight(self.frame.x, self.frame.y);
         let is_being_pressed_down = hero_on_it || weight_on_it;
         let is_up = world.is_pressure_plate_up(&self.lock_type);
 

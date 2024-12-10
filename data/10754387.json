@@ -51,7 +51,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -75,7 +74,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -94,7 +92,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -113,7 +110,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -132,7 +128,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -151,7 +146,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -170,7 +164,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -189,7 +182,6 @@
       "lock_type": "None",
       "display_conditions": [],
       "is_consumable": false,
-      "contents": null,
       "demands_attention": false,
       "after_dialogue": "Nothing"
     },
@@ -207,8 +199,8 @@
         {
           "text": "quest.ninja_skills.black_ninja.note",
           "key": "always",
-          "reward": null,
-          "expected_value": 1
+          "expected_value": 1,
+          "reward": null
         }
       ],
       "destination": null,
@@ -217,9 +209,118 @@
       "is_consumable": false,
       "demands_attention": false,
       "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13775010,
+      "frame": {
+        "x": 5,
+        "y": 6,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1160,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13775011,
+      "frame": {
+        "x": 49,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "species_id": 1159,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13775012,
+      "frame": {
+        "x": 33,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "species_id": 1158,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13779352,
+      "frame": {
+        "x": 5,
+        "y": 6,
+        "w": 1,
+        "h": 1
+      },
+      "species_id": 1160,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13779353,
+      "frame": {
+        "x": 49,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "species_id": 1159,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    },
+    {
+      "id": 13779354,
+      "frame": {
+        "x": 33,
+        "y": 1,
+        "w": 4,
+        "h": 4
+      },
+      "species_id": 1158,
+      "direction": "Down",
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
     }
   ],
-  "world_type": "HouseInterior",
   "light_conditions": "Day",
-  "cutscenes": []
+  "cutscenes": [],
+  "soundtrack": null,
+  "world_type": "HouseInterior"
 }

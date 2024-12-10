@@ -8,7 +8,8 @@ enum class EmulatedKey {
     RIGHT,
     DOWN,
     LEFT,
-    ATTACK,
+    CLOSE_RANGE_ATTACK,
+    RANGED_ATTACK,
     BACKSPACE,
     CONFIRM,
     ESCAPE,
@@ -16,14 +17,16 @@ enum class EmulatedKey {
 
     @get:DrawableRes
     val imageKeyUp: Int get() = when (this) {
-        ATTACK -> R.drawable.attack_button_up
+        CLOSE_RANGE_ATTACK -> R.drawable.close_attack_button_up
+        RANGED_ATTACK -> R.drawable.attack_button_up
         CONFIRM -> R.drawable.confirm_button_up
         else -> 0
     }
 
     @get:DrawableRes
     val imageKeyDown: Int get() = when (this) {
-        ATTACK -> R.drawable.attack_button_down
+        CLOSE_RANGE_ATTACK -> R.drawable.close_attack_button_down
+        RANGED_ATTACK -> R.drawable.attack_button_down
         CONFIRM -> R.drawable.confirm_button_down
         else -> 0
     }

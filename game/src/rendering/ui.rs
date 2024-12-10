@@ -1,16 +1,18 @@
-use std::{collections::HashMap, sync::Once};
+use std::sync::Once;
 
+use nohash_hasher::IntMap;
 use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View}, layouts::{AnchorPoint, Layout}}, utils::{rect::IntRect, vector::Vector2d}};
 use raylib::prelude::*;
 
 pub struct RenderingConfig {
     pub font: Font,
     pub font_bold: Font,
-    pub textures: HashMap<u32, Texture2D>,
+    pub textures: IntMap<u32, Texture2D>,
     pub rendering_scale: f32,
     pub font_rendering_scale: f32,
     pub canvas_size: Vector2d,
-    pub show_debug_info: bool
+    pub show_debug_info: bool,
+    pub render_using_individual_tiles: bool
 }
 
 pub static INIT_RENDERING_CONFIG: Once = Once::new();
@@ -83,19 +85,21 @@ impl RenderingConfig {
 }
 
 pub fn render_layout(layout: &Layout, d: &mut RaylibDrawHandle) {
-    d.draw_rectangle(
-        -100, 
-        -100, 
-        d.get_render_width() + 200, 
-        d.get_render_height() + 200, 
-        as_rcolor(&layout.background_color)
-    );
-
     let config = get_rendering_config();
+
+    if layout.background_color.3 > 0 {
+        d.draw_rectangle(
+            -100, 
+            -100, 
+            config.canvas_size.x as i32 + 200, 
+            config.canvas_size.y as i32 + 200,
+            as_rcolor(&layout.background_color)
+        );
+    }
 
     for (anchor, view) in &layout.children {
         let position = calculate_position(layout, anchor, view, config);
-        render_view(view, d, config, &position);
+        render_view(view, d, config, &position); 
     }
 }
 

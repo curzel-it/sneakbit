@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{NO_PARENT, UNLIMITED_LIFESPAN}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{HERO_ENTITY_ID, NO_PARENT, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{directions::MovementDirections, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}, world::World};
 
@@ -12,6 +12,7 @@ pub struct EntityProps {
     pub speed: f32,
     pub hittable_frame: IntRect,
     pub is_invulnerable: bool,
+    pub hp: f32,
 }
 
 impl Default for EntityProps {
@@ -23,6 +24,7 @@ impl Default for EntityProps {
             speed: 0.0,
             hittable_frame: IntRect::square_from_origin(1),
             is_invulnerable: false,
+            hp: 0.0
         }
     }
 }
@@ -72,14 +74,17 @@ pub struct Entity {
     #[serde(skip)]
     pub movement_directions: MovementDirections,
 
+    #[serde(skip)]
+    pub hp: f32,
+
+    #[serde(skip)]
+    pub dps: f32,
+
     #[serde(default)]
     pub is_consumable: bool,
     
     #[serde(skip)]
     pub speed_multiplier: f32,
-
-    #[serde(skip)]
-    pub melee_attacks_hero: bool,
     
     #[serde(skip)]
     pub is_dying: bool,
@@ -99,11 +104,47 @@ pub struct Entity {
     #[serde(skip)]
     pub is_invulnerable: bool,
 
+    #[serde(skip)]
+    pub is_equipped: bool,
+
     #[serde(default)]
     pub demands_attention: bool,
 
     #[serde(default)]
     pub after_dialogue: AfterDialogueBehavior,
+    
+    #[serde(skip)]
+    pub sorting_key: u32,
+}
+
+impl Entity {
+    /*
+    over/under  y   z   pushable 
+            Z AAA BBB   P
+    Z AAA BBB   P
+    ZAAABBBP
+    ZA_AAB_BBP
+    10_000_000 Z
+        10_000 A
+            10 B
+    */
+    pub fn update_sorting_key(&mut self) {
+        let z = if self.z_index == Z_INDEX_OVERLAY { 20_000_000 }
+        else if self.z_index == Z_INDEX_UNDERLAY { 0 }
+        else { 10_000_000 };
+
+        let accounting_y = if self.is_equipment() {
+            self.frame.center().y.floor() as i32
+        } else {
+            self.frame.y + self.frame.h
+        };
+
+        let a = accounting_y * 10_000;
+        let b = if self.z_index != Z_INDEX_OVERLAY && self.z_index != Z_INDEX_UNDERLAY { self.z_index * 10 } else { 0 };
+        let p = if matches!(self.entity_type, EntityType::PushableObject) { 1 } else { 0 };
+
+        self.sorting_key = (z + a + b + p) as u32;
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -118,6 +159,7 @@ impl Entity {
         let mut updates = match self.entity_type {
             EntityType::Hero => self.update_hero(world, time_since_last_update),
             EntityType::Npc => self.update_npc(world, time_since_last_update),
+            EntityType::CloseCombatMonster => self.update_close_combat_creep(world, time_since_last_update),
             EntityType::Building => self.update_building(world, time_since_last_update),
             EntityType::StaticObject => self.update_static(world, time_since_last_update),
             EntityType::PickableObject | EntityType::Bundle => self.update_pickable_object(world, time_since_last_update),
@@ -131,6 +173,8 @@ impl Entity {
             EntityType::Hint => self.update_hint(world, time_since_last_update),
             EntityType::Trail => self.update_trail(),
             EntityType::Equipment => self.update_equipment(world, time_since_last_update),
+            EntityType::Sword => self.update_sword(world, time_since_last_update),
+            EntityType::KunaiLauncher => self.update_kunai_launcher(world, time_since_last_update),
         };        
         self.sprite.update(time_since_last_update); 
         let mut more_updates = self.check_remaining_lifespan(time_since_last_update);
@@ -142,11 +186,13 @@ impl Entity {
         if self.parent_id == NO_PARENT {  
             self.remaining_lifespan = UNLIMITED_LIFESPAN;
         }
+        self.update_sorting_key();
         species_by_id(self.species_id).reload_props(self);
         
         match self.entity_type {
             EntityType::Hero => self.setup_hero(),
             EntityType::Npc => self.setup_npc(),
+            EntityType::CloseCombatMonster => self.setup_close_combat_creep(),
             EntityType::Building => self.setup_generic(),
             EntityType::StaticObject => self.setup_generic(),
             EntityType::PickableObject | EntityType::Bundle => self.setup_generic(),
@@ -160,6 +206,8 @@ impl Entity {
             EntityType::Hint => self.setup_hint(),
             EntityType::Trail => self.setup_generic(),
             EntityType::Equipment => self.setup_equipment(),
+            EntityType::Sword => self.setup_sword(),
+            EntityType::KunaiLauncher => self.setup_kunai_launcher(),
         }
     }
 
@@ -203,23 +251,29 @@ impl Entity {
         None
     }
 
-    pub fn props(&self) -> EntityProps {
-        let x_offset = (self.frame.w - 1) / 2;
+    pub fn hittable_frame(&self) -> IntRect {
+        let x_offset = 0;
         let y_offset = if self.frame.h > 1 { 1 } else { 0 };
+        let width = self.frame.w;
         let height = if self.frame.h > 1 { self.frame.h - 1 } else { self.frame.h };
 
+        IntRect {
+            x: self.frame.x + x_offset,
+            y: self.frame.y + y_offset,
+            w: width.max(1),
+            h: height.max(1),
+        }
+    }
+
+    pub fn props(&self) -> EntityProps {
         EntityProps {
             frame: self.frame,
             direction: self.direction,
             offset: self.offset,
             speed: self.current_speed,
-            is_invulnerable: self.is_invulnerable,
-            hittable_frame: IntRect {
-                x: self.frame.x + x_offset,
-                y: self.frame.y + y_offset,
-                w: self.frame.w,
-                h: height,
-            },
+            is_invulnerable: self.is_invulnerable,            
+            hittable_frame: self.hittable_frame(),
+            hp: self.hp
         }            
     }
 
@@ -284,10 +338,36 @@ impl Entity {
     fn update_static(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {  
         self.is_in_interaction_range = false;
 
-        if world.is_hero_around_and_on_collision_with(&self.frame) {    
-            self.handle_dialogue_interaction(world).unwrap_or_default()
+        if !self.dialogues.is_empty() {
+            if world.is_hero_around_and_on_collision_with(&self.frame) {    
+                self.handle_dialogue_interaction(world).unwrap_or_default()
+            } else {
+                vec![]
+            }
         } else {
             vec![]
         }
+    }
+}
+
+impl Entity {
+    pub fn is_equipment(&self) -> bool {
+        matches!(self.entity_type, EntityType::Equipment | EntityType::Sword | EntityType::KunaiLauncher)
+    }
+
+    pub fn can_be_hit_by_bullet(&self) -> bool {
+        if self.is_invulnerable {
+            return false
+        }
+        if self.is_dying {
+            return false
+        }
+        if self.parent_id == HERO_ENTITY_ID {
+            return false
+        }
+        if matches!(self.entity_type, EntityType::Bullet | EntityType::Bundle | EntityType::PickableObject) {
+            return false
+        }
+        true
     }
 }

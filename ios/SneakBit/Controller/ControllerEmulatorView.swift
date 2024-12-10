@@ -17,15 +17,20 @@ struct ControllerEmulatorView: View {
                     if !viewModel.confirmOnRightSide(isLandscape) && viewModel.isConfirmVisible {
                         KeyEmulatorView(key: .confirm)
                     }
-                    if viewModel.isAttackVisible {
-                        KeyEmulatorView(key: .attack)
-                            .overlay(
-                                Text(viewModel.attackLabel)
-                                    .positioned(.bottom)
-                                    .padding(.bottom, 12 + KeyEmulatorView.padding)
-                                    .typography(.buttonCaption)
-                                    .foregroundStyle(Color.black.opacity(0.9))
-                            )
+                    VStack(spacing: 8) {
+                        if viewModel.isRangedAttackVisible {
+                            KeyEmulatorView(key: .rangedAttack)
+                                .overlay(
+                                    Text(viewModel.attackLabel)
+                                        .positioned(.bottom)
+                                        .padding(.bottom, 12 + KeyEmulatorView.padding)
+                                        .typography(.buttonCaption)
+                                        .foregroundStyle(Color.black.opacity(0.9))
+                                )
+                        }
+                        if viewModel.isCloseAttackVisible {
+                            KeyEmulatorView(key: .closeRangeAttack)
+                        }
                     }
                     if viewModel.confirmOnRightSide(isLandscape) && viewModel.isConfirmVisible {
                         KeyEmulatorView(key: .confirm)
@@ -73,7 +78,8 @@ private class ControllerEmulatorViewModel: ObservableObject {
     @Inject private var settingsStorage: ControllerSettingsStorage
     
     @Published var isConfirmVisible: Bool = false
-    @Published var isAttackVisible: Bool = false
+    @Published var isRangedAttackVisible: Bool = false
+    @Published var isCloseAttackVisible: Bool = false
     @Published var attackLabel: String = ""
     
     var safeAreaInsets: UIEdgeInsets {
@@ -148,8 +154,18 @@ private class ControllerEmulatorViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] count in
                 withAnimation {
-                    self?.isAttackVisible = count > 0
+                    self?.isRangedAttackVisible = count > 0
                     self?.attackLabel = "x\(count)"
+                }
+            }
+            .store(in: &disposables)
+        
+        engine.isSwordEquipped
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] equipped in
+                withAnimation {
+                    self?.isCloseAttackVisible = equipped
                 }
             }
             .store(in: &disposables)

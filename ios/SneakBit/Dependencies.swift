@@ -15,7 +15,6 @@ struct Dependencies {
                     UInt32(SPRITE_SHEET_BIOME_TILES): "tiles_biome",
                     UInt32(SPRITE_SHEET_CONSTRUCTION_TILES): "tiles_constructions",
                     UInt32(SPRITE_SHEET_BUILDINGS): "buildings",
-                    UInt32(SPRITE_SHEET_BASE_ATTACK): "baseattack",
                     UInt32(SPRITE_SHEET_STATIC_OBJECTS): "static_objects",
                     UInt32(SPRITE_SHEET_MENU): "menu",
                     UInt32(SPRITE_SHEET_ANIMATED_OBJECTS): "animated_objects",
@@ -25,7 +24,9 @@ struct Dependencies {
                     UInt32(SPRITE_SHEET_HUMANOIDS_2X3): "humanoids_2x3",
                     UInt32(SPRITE_SHEET_AVATARS): "avatars",
                     UInt32(SPRITE_SHEET_FARM_PLANTS): "farm_plants",
-                    UInt32(SPRITE_SHEET_CAVE_DARKNESS): "cave_darkness"
+                    UInt32(SPRITE_SHEET_CAVE_DARKNESS): "cave_darkness",
+                    UInt32(SPRITE_SHEET_TENTACLES): "tentacles",
+                    UInt32(SPRITE_SHEET_WEAPONS): "weapons"
                 ]
             )
         }

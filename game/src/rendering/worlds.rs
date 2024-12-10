@@ -1,4 +1,4 @@
-use game_core::{camera_viewport, camera_viewport_offset, can_render_frame, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, engine, is_creative_mode, is_limited_visibility, is_night};
+use game_core::{camera_viewport, camera_viewport_offset, can_render_frame, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, engine, game_engine::entity::EntityProps, is_limited_visibility, is_night};
 use raylib::prelude::*;
 
 use super::{entities::render_entities, tile_map::render_tile_map, tiles::render_tiles, ui::{get_rendering_config, render_layout}};
@@ -9,8 +9,8 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
 
     let config = get_rendering_config();
     let fps = rl.get_fps();
-    let screen_width = rl.get_render_width();
-    let screen_height = rl.get_render_height();
+    let screen_width = config.canvas_size.x as i32;
+    let screen_height = config.canvas_size.y as i32;
 
     let mut d = rl.begin_drawing(thread);
     d.clear_background(Color::BLACK);
@@ -19,7 +19,7 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
         let camera_viewport = camera_viewport();
         let camera_viewport_offset = camera_viewport_offset();
 
-        if is_creative_mode() {
+        if config.render_using_individual_tiles {
             render_tiles(
                 &mut d, 
                 &camera_viewport, 
@@ -50,16 +50,16 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
             &mut d, 
             fps, 
             world.id,
-            world.cached_hero_props.hittable_frame.x, 
-            world.cached_hero_props.hittable_frame.y
+            &world.cached_hero_props
         );
     }
 }
 
-fn draw_debug_info(d: &mut RaylibDrawHandle, fps: u32, world_id: u32, hero_x: i32, hero_y: i32) {
+fn draw_debug_info(d: &mut RaylibDrawHandle, fps: u32, world_id: u32, hero: &EntityProps) {
     d.draw_text(&format!("FPS: {}", fps), 10, 10, 20, Color::RED);
-    d.draw_text(&format!("x {}, y {}", hero_x, hero_y), 10, 40, 20, Color::RED);
+    d.draw_text(&format!("x {}, y {}", hero.hittable_frame.x, hero.hittable_frame.y), 10, 40, 20, Color::RED);
     d.draw_text(&format!("World {}", world_id), 10, 70, 20, Color::RED);
+    d.draw_text(&format!("HP {}", hero.hp), 10, 130, 20, Color::RED);
 }
 
 fn render_night(d: &mut RaylibDrawHandle, screen_width: i32, screen_height: i32) {
