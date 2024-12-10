@@ -1,4 +1,4 @@
-use crate::{constants::{HERO_ENTITY_ID, TILE_SIZE}, game_engine::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{PLAYER1_ENTITY_ID, TILE_SIZE}, game_engine::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{pickable_object::object_pick_up_sequence, species::species_by_id};
 
@@ -103,10 +103,10 @@ fn make_bullet_ex(
 }
 
 pub fn make_hero_bullet(species: u32, world: &World, lifespan: f32) -> Entity {
-    let hero = world.cached_hero_props;
+    let hero = world.cached_players_props.player1;
     make_bullet_ex(
         species,
-        HERO_ENTITY_ID,
+        PLAYER1_ENTITY_ID,
         &hero.hittable_frame,
         &hero.offset,
         hero.direction,

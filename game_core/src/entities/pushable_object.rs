@@ -2,9 +2,9 @@ use crate::{features::linear_movement::{would_collide, would_over_weight}, game_
 
 impl Entity {
     pub fn update_pushable(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
-        let hero = world.cached_hero_props.hittable_frame;
-        let hero_direction = world.cached_hero_props.direction;       
-        let hero_offset = world.cached_hero_props.offset;        
+        let hero = world.cached_players_props.player1.hittable_frame;
+        let hero_direction = world.cached_players_props.player1.direction;       
+        let hero_offset = world.cached_players_props.player1.offset;        
         let non_zero_offset = hero_offset.x != 0.0 || hero_offset.y != 0.0;
         
         if non_zero_offset {
@@ -26,7 +26,7 @@ impl Entity {
                     return vec![WorldStateUpdate::StopHeroMovement]
                 } else {
                     self.direction = hero_direction;
-                    self.current_speed = 1.2 * world.cached_hero_props.speed;
+                    self.current_speed = 1.2 * world.cached_players_props.player1.speed;
                     self.move_linearly(world, time_since_last_update);
                 }
             }

@@ -30,9 +30,9 @@ impl Entity {
             return vec![]
         }
         if world.has_close_attack_key_been_pressed {
-            let hero = world.cached_hero_props;
+            let hero = world.cached_players_props.player1;
             let config = slash_config_by_sword_type(self.species_id);
-            let offsets = bullet_offsets(world.cached_hero_props.direction);
+            let offsets = bullet_offsets(world.cached_players_props.player1.direction);
 
             self.action_cooldown_remaining = config.cooldown;
             self.sprite.reset();

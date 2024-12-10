@@ -48,7 +48,7 @@ impl Entity {
     }
     
     fn leave_footsteps(&self, world: &World) -> Vec<WorldStateUpdate> {
-        let previous = world.cached_hero_props.hittable_frame;
+        let previous = world.cached_players_props.player1.hittable_frame;
         let x = self.frame.x;
         let y = self.frame.y + 1;
 

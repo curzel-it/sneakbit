@@ -2,7 +2,7 @@ use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}
 
 use common_macros::hash_set;
 use serde::{Deserialize, Serialize};
-use crate::{constants::{ANIMATIONS_FPS, HERO_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
@@ -19,7 +19,7 @@ pub struct World {
     melee_attackers: HashSet<u32>,
     buildings: HashSet<u32>,
     pub ephemeral_state: bool,
-    pub cached_hero_props: EntityProps,
+    pub cached_players_props: PlayersProps,
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
     pub weights_map: Hitmap,
@@ -43,6 +43,14 @@ pub struct World {
 
 const WORLD_SIZE_COLUMNS: usize = 30;
 const WORLD_SIZE_ROWS: usize = 30;
+
+#[derive(Clone, Default, Debug)]
+pub struct PlayersProps {
+    pub player1: EntityProps,
+    pub player2: EntityProps,
+    pub player3: EntityProps,
+    pub player4: EntityProps
+}
 
 #[derive(Clone)]
 pub struct Hitmap {
@@ -71,7 +79,7 @@ impl World {
             entities: RefCell::new(vec![]),
             visible_entities: vec![],
             ephemeral_state: false,
-            cached_hero_props: EntityProps::default(),
+            cached_players_props: PlayersProps::default(),
             hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             weights_map: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
@@ -131,8 +139,17 @@ impl World {
         true
     }
 
-    pub fn remove_hero(&mut self) {
-        if let Some(index) = self.index_for_entity(HERO_ENTITY_ID) {
+    pub fn remove_players(&mut self) {
+        if let Some(index) = self.index_for_entity(PLAYER1_ENTITY_ID) {
+            self.remove_entity_at_index(index);
+        }
+        if let Some(index) = self.index_for_entity(PLAYER2_ENTITY_ID) {
+            self.remove_entity_at_index(index);
+        }
+        if let Some(index) = self.index_for_entity(PLAYER3_ENTITY_ID) {
+            self.remove_entity_at_index(index);
+        }
+        if let Some(index) = self.index_for_entity(PLAYER4_ENTITY_ID) {
             self.remove_entity_at_index(index);
         }
     }
@@ -151,7 +168,7 @@ impl World {
     }
 
     pub fn remove_entity_by_id(&mut self, id: u32) {        
-        if id != HERO_ENTITY_ID {
+        if !is_player(id) {
             if let Some(index) = self.index_for_entity(id) {
                 self.remove_entity_at_index(index);
             }
@@ -159,7 +176,7 @@ impl World {
     }
 
     fn mark_as_collected_if_needed(&self, entity_id: u32, parent_id: u32) {
-        if !self.ephemeral_state && entity_id != HERO_ENTITY_ID && parent_id != HERO_ENTITY_ID {
+        if !self.ephemeral_state && !is_player(entity_id) && !is_player(parent_id) {
             set_value_for_key(&StorageKey::item_collected(entity_id), 1);
         }
     }
@@ -194,7 +211,7 @@ impl World {
         keyboard: &KeyboardEventsProvider
     ) -> Vec<EngineStateUpdate> {
         self.total_elapsed_time += time_since_last_update;
-        self.direction_based_on_current_keys = keyboard.direction_based_on_current_keys(self.cached_hero_props.direction);
+        self.direction_based_on_current_keys = keyboard.direction_based_on_current_keys(self.cached_players_props.player1.direction);
         self.is_any_arrow_key_down = keyboard.is_any_arrow_key_down();
         self.has_ranged_attack_key_been_pressed = keyboard.has_ranged_attack_key_been_pressed;
         self.has_close_attack_key_been_pressed = keyboard.has_close_attack_key_been_pressed;
@@ -248,7 +265,7 @@ impl World {
         }
         let updates: Vec<WorldStateUpdate> = self.cutscenes.iter_mut()
             .flat_map(|c| 
-                c.update(&self.cached_hero_props.hittable_frame, time_since_last_update)
+                c.update(&self.cached_players_props.player1.hittable_frame, time_since_last_update)
             )
             .collect();
         
@@ -287,7 +304,7 @@ impl World {
                 self.toggle_demand_attention(id)
             }
             WorldStateUpdate::CacheHeroProps(props) => { 
-                self.cached_hero_props = *props; 
+                self.cached_players_props.player1 = *props; 
             }
             WorldStateUpdate::ChangeLock(entity_id, lock_type) => {
                 self.change_lock(entity_id, lock_type)
@@ -404,7 +421,7 @@ impl World {
         if has_boomerang_skill() {
             let mut entities = self.entities.borrow_mut();
             if let Some(bullet) = entities.iter_mut().find(|e| e.id == bullet_id) {
-                if bullet.parent_id == HERO_ENTITY_ID {
+                if is_player(bullet.parent_id) {
                     bullet.direction = bullet.direction.opposite();
                     let (dx, dy) = bullet.direction.as_col_row_offset();
                     bullet.frame.x += dx;
@@ -430,11 +447,14 @@ impl World {
     }
 
     fn stop_hero_movement(&mut self) {
-        let mut entities = self.entities.borrow_mut();
-        if let Some(entity) = entities.iter_mut().find(|e| e.id == HERO_ENTITY_ID) {            
-            entity.offset = Vector2d::zero();
-            entity.current_speed = 0.0;
-        }
+        self.entities
+            .borrow_mut()
+            .iter_mut()
+            .filter(|e| e.is_player())
+            .for_each(|e| {            
+                e.offset = Vector2d::zero();
+                e.current_speed = 0.0;
+            });
     }
 
     fn toggle_demand_attention(&mut self, id: u32) {
@@ -538,7 +558,7 @@ impl World {
     }
 
     pub fn is_hero_on_slippery_surface(&self) -> bool {
-        let frame = self.cached_hero_props.hittable_frame;
+        let frame = self.cached_players_props.player1.hittable_frame;
         
         if self.biome_tiles.tiles.len() > frame.y as usize {
             let tile = self.biome_tiles.tiles[frame.y as usize][frame.x as usize].tile_type;
@@ -549,8 +569,8 @@ impl World {
     }
 
     pub fn is_hero_around_and_on_collision_with(&self, target: &IntRect) -> bool {
-        let hero = self.cached_hero_props.hittable_frame;
-        let hero_direction: Direction = self.cached_hero_props.direction;        
+        let hero = self.cached_players_props.player1.hittable_frame;
+        let hero_direction: Direction = self.cached_players_props.player1.direction;        
         
         if self.is_hero_at(target.x, target.y) {
             return true
@@ -569,11 +589,11 @@ impl World {
     }
 
     pub fn is_hero_at(&self, x: i32, y: i32) -> bool {
-        let hero = self.cached_hero_props.hittable_frame;
+        let hero = self.cached_players_props.player1.hittable_frame;
         hero.x == x && hero.y == y
     }
 
-    fn find_non_hero_entity_id_at_coords(&self, row: usize, col: usize) -> Option<(usize, u32)> {
+    fn find_non_hero_entity_at_coords(&self, row: usize, col: usize) -> Option<(usize, u32)> {
         self.entities.borrow().iter()
             .enumerate()
             .find(|(_, entity)| {
@@ -583,7 +603,7 @@ impl World {
     }
 
     fn remove_entities_by_coords(&mut self, row: usize, col: usize) {
-        while let Some((index, _)) = self.find_non_hero_entity_id_at_coords(row, col) {
+        while let Some((index, _)) = self.find_non_hero_entity_at_coords(row, col) {
             self.remove_entity_at_index(index)
         }      
     }
@@ -694,7 +714,7 @@ impl World {
 
         for &(index, id) in &self.visible_entities {
             let entity = &entities[index];
-            let is_rigid = entity.is_rigid && id != HERO_ENTITY_ID;
+            let is_rigid = entity.is_rigid && !is_player(id);
             let has_weight = entity.has_weight();
 
             if !is_rigid && !has_weight {

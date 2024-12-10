@@ -38,8 +38,8 @@ impl Entity {
             return vec![]
         }
 
-        let hero_invulnerable = world.cached_hero_props.is_invulnerable;
-        let hero = world.cached_hero_props.hittable_frame;
+        let hero_invulnerable = world.cached_players_props.player1.is_invulnerable;
+        let hero = world.cached_players_props.player1.hittable_frame;
         let x = self.frame.x;
         let y = self.frame.y + if self.frame.h > 1 { 1 } else { 0 };
         

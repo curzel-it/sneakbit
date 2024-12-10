@@ -25,7 +25,10 @@ pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST: f32 = 0.4;
 pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS: f32 = 0.1;
 
 // Known entities
-pub const HERO_ENTITY_ID: u32 = 420;
+pub const PLAYER1_ENTITY_ID: u32 = 420;
+pub const PLAYER2_ENTITY_ID: u32 = 421;
+pub const PLAYER3_ENTITY_ID: u32 = 422;
+pub const PLAYER4_ENTITY_ID: u32 = 423;
 
 // Known locations
 pub const WORLD_ID_NONE: u32 = 1000;

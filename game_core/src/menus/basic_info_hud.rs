@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_INVENTORY, current_hero_hp, number_of_kunai_in_inventory, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use crate::{constants::SPRITE_SHEET_INVENTORY, current_hero_hp, number_of_kunai_in_inventory, shows_death_screen, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 pub struct BasicInfoHud {
     number_of_kunais: i32,
@@ -27,7 +27,7 @@ impl BasicInfoHud {
     }
 
     fn hp_ui(&self) -> View {
-        if self.hp < 60.0 {
+        if self.hp < 60.0 && !shows_death_screen() {
             let typography = if self.hp < 30.0 { Typography::Selected } else { Typography::Regular };
             zstack!(
                 Spacing::MD,

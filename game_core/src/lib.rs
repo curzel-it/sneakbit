@@ -312,7 +312,7 @@ pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
 
 #[no_mangle]
 pub extern "C" fn current_hero_hp() -> f32 {
-    engine().world.cached_hero_props.hp
+    engine().world.cached_players_props.player1.hp
 }
 
 #[no_mangle]

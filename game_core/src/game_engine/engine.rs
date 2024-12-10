@@ -58,7 +58,7 @@ impl GameEngine {
             if self.keyboard.has_confirmation_been_pressed {
                 self.death_screen.is_open = false;
                 self.previous_world = None;
-                self.world.cached_hero_props.direction = Direction::Unknown;
+                self.world.cached_players_props.player1.direction = Direction::Unknown;
                 self.teleport_to_previous();
                 did_resurrect = true;
             } else {
@@ -256,7 +256,7 @@ impl GameEngine {
         let mut new_world = self.world_by_id(destination.world);
         new_world.setup(
             self.previous_world(), 
-            &self.world.cached_hero_props.direction, 
+            &self.world.cached_players_props.player1.direction, 
             destination.x, 
             destination.y,
             destination.direction
@@ -265,7 +265,7 @@ impl GameEngine {
         new_world.update_no_input(0.001);
         new_world.update_no_input(0.001);
 
-        let hero_frame = new_world.cached_hero_props.frame;
+        let hero_frame = new_world.cached_players_props.player1.frame;
         if !self.world.ephemeral_state {
             self.previous_world = Some(self.world.clone());
         }
@@ -317,7 +317,7 @@ impl GameEngine {
     pub fn start_new_game(&mut self) {
         self.death_screen.is_open = false;
         self.previous_world = None;
-        self.world.cached_hero_props.direction = Direction::Unknown;        
+        self.world.cached_players_props.player1.direction = Direction::Unknown;        
         reset_all_stored_values();
         self.world = World::load(1000).unwrap();
         self.teleport_to_previous();

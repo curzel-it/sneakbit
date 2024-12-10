@@ -5,7 +5,7 @@ impl World {
         self.idsmap.reserve(1000);
         self.visible_entities.reserve(1000);
 
-        self.remove_hero();
+        self.remove_players();
         self.remove_all_equipment();
         self.remove_dying_entities();
         self.update_visible_entities(&self.bounds.clone());
@@ -26,7 +26,7 @@ impl World {
             set_update_handled();
             clear_previous_changelog_dialogues();
 
-            let hero = self.cached_hero_props;
+            let hero = self.cached_players_props.player1;
             let mut mugs = species_by_id(SPECIES_MR_MUGS).make_entity();
             mugs.direction = Direction::Down;
             mugs.demands_attention = true;
@@ -67,19 +67,19 @@ impl World {
 
         println!("Spawning hero at {}, {}", entity.frame.x, entity.frame.y); 
         entity.immobilize_for_seconds(0.2);
-        self.cached_hero_props = entity.props();
+        self.cached_players_props.player1 = entity.props();
         self.insert_entity(entity, 0);
     }
 
     fn spawn_equipment(&mut self) {
         let mut kunai_launcher = species_by_id(SPECIES_KUNAI_LAUNCHER).make_entity();
-        kunai_launcher.frame.x = self.cached_hero_props.frame.x;
-        kunai_launcher.frame.y = self.cached_hero_props.frame.y;
+        kunai_launcher.frame.x = self.cached_players_props.player1.frame.x;
+        kunai_launcher.frame.y = self.cached_players_props.player1.frame.y;
         self.add_entity(kunai_launcher);
 
         let mut claymore = species_by_id(SPECIES_CLAYMORE).make_entity();
-        claymore.frame.x = self.cached_hero_props.frame.x;
-        claymore.frame.y = self.cached_hero_props.frame.y;
+        claymore.frame.x = self.cached_players_props.player1.frame.x;
+        claymore.frame.y = self.cached_players_props.player1.frame.y;
         self.add_entity(claymore);
     }
 

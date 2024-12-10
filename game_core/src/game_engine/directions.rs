@@ -68,7 +68,7 @@ impl Entity {
     }
 
     fn is_hero_in_line_of_sight(&self, world: &World) -> bool {
-        let hero = &world.cached_hero_props.hittable_frame;        
+        let hero = &world.cached_players_props.player1.hittable_frame;        
         let npc = &self.frame;
         let npc_y = self.frame.y + if self.frame.h > 1 { 1 } else { 0 };
 
@@ -96,7 +96,7 @@ impl Entity {
     }
 
     fn change_direction_towards_hero(&mut self, world: &World) {
-        let hero = &world.cached_hero_props.hittable_frame;
+        let hero = &world.cached_players_props.player1.hittable_frame;
         let npc = &self.frame;
         let npc_y = self.frame.y + if self.frame.h > 1 { 1 } else { 0 };
 

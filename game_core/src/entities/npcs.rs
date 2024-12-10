@@ -23,7 +23,7 @@ impl Entity {
 
         if !self.dialogues.is_empty() && world.is_hero_around_and_on_collision_with(&self.frame) {            
             if world.has_confirmation_key_been_pressed {
-                self.direction = direction_between_rects(&self.frame, &world.cached_hero_props.hittable_frame);
+                self.direction = direction_between_rects(&self.frame, &world.cached_players_props.player1.hittable_frame);
                 self.update_sprite_for_current_state();
             }         
             

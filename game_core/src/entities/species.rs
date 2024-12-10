@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 use std::fs::File;
 use std::io::Read;
 
-use crate::{config::config, constants::{HERO_ENTITY_ID, NO_PARENT, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::animated_sprite::AnimatedSprite, features::dialogues::AfterDialogueBehavior, game_engine::directions::MovementDirections, game_engine::entity::Entity, game_engine::locks::LockType, lang::localizable::LocalizableText, utils::directions::Direction, utils::ids::get_next_id, utils::rect::IntRect, utils::vector::Vector2d};
+use crate::{config::config, constants::{PLAYER1_ENTITY_ID, NO_PARENT, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::animated_sprite::AnimatedSprite, features::dialogues::AfterDialogueBehavior, game_engine::directions::MovementDirections, game_engine::entity::Entity, game_engine::locks::LockType, lang::localizable::LocalizableText, utils::directions::Direction, utils::ids::get_next_id, utils::rect::IntRect, utils::vector::Vector2d};
 
 pub type SpeciesId = u32;
 
@@ -162,7 +162,7 @@ impl Species {
 
     fn next_entity_id(&self) -> u32 {
         match self.entity_type {
-            EntityType::Hero => HERO_ENTITY_ID,
+            EntityType::Hero => PLAYER1_ENTITY_ID,
             _ => get_next_id()
         }
     }
