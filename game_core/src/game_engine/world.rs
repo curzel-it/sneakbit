@@ -595,9 +595,12 @@ impl World {
     }
 
     pub fn is_any_hero_at(&self, x: i32, y: i32) -> bool {
-        self.players.iter().any(|p| {
-            p.props.hittable_frame.x == x && p.props.hittable_frame.y == y
-        })        
+        for p in &self.players {
+            if p.props.hittable_frame.x == x && p.props.hittable_frame.y == y {
+                return true
+            }
+        }
+        false
     }
 
     fn find_non_hero_entity_at_coords(&self, row: usize, col: usize) -> Option<(usize, u32)> {

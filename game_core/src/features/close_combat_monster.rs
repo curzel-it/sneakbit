@@ -40,15 +40,12 @@ impl Entity {
         if world.players[0].props.is_invulnerable {
             return vec![]
         }
-        
-        let x = self.frame.x;
-        let y = self.frame.y + if self.frame.h > 1 { 1 } else { 0 };
 
-        for player in &world.players {        
-            if x == player.props.hittable_frame.x && y == player.props.hittable_frame.y {
-                let damage = self.dps * time_since_last_update;
-                return vec![WorldStateUpdate::HandleHeroDamage(damage)];
-            }
+        let frame = self.hittable_frame();     
+           
+        if world.is_any_hero_at(frame.x, frame.y) {
+            let damage = self.dps * time_since_last_update;
+            return vec![WorldStateUpdate::HandleHeroDamage(damage)];
         }
         vec![]
     }
