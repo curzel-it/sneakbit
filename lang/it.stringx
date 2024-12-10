@@ -314,7 +314,9 @@ In questo giudizio, non prevarranno né la forza né l'abilità, ma lo spirito i
 Attenti, poiché la mano che sconfigge l'oscurità potrebbe oscurare la luce, e il ciclo della lotta eterna inizierà di nuovo.
 """
 
-"lore.011.hero_profecy.part_4" = "Il cancello si aprirà solo davanti agli eroi."
+"lore.011.hero_profecy.part_4" = """
+Il cancello si aprirà solo davanti agli eroi che hanno raccolto le sei chiavi dai dungeon.
+"""
 
 "lore.012.hunted_pub" = """
 Non entrare nel pub, è infestato...

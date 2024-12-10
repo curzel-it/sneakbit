@@ -314,7 +314,9 @@ In this reckoning, not strength nor skill will prevail, but the unyielding spiri
 Beware, for the hand that defeats darkness may yet obscure the light, and the cycle of the eternal struggle will begin anew.
 """
 
-"lore.011.hero_profecy.part_4" = "This gate shall only open for the heroes."
+"lore.011.hero_profecy.part_4" = """
+This gate shall only open for the heroes who gathered the six keys from the dungeons.
+"""
 
 "lore.012.hunted_pub" = """
 Don't enter the pub, it's hunted...
