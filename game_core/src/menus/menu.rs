@@ -91,13 +91,13 @@ impl<Item: MenuItem> Menu<Item> {
 
 impl<Item: MenuItem> Menu<Item> {
     fn do_update(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
-        if keyboard.has_back_been_pressed {
+        if keyboard.has_back_been_pressed_by_anyone(){
             self.close();
         }
     
         let max_index = self.items.len() - 1;
         
-        if keyboard.direction_up.is_pressed && self.selected_index > 0 {
+        if keyboard.is_direction_up_pressed_by_anyone() && self.selected_index > 0 {
             self.selected_index -= 1;
 
             if self.selected_index < self.scroll_offset {
@@ -105,7 +105,7 @@ impl<Item: MenuItem> Menu<Item> {
             }
         }
     
-        if keyboard.direction_down.is_pressed && self.selected_index < max_index {
+        if keyboard.is_direction_down_pressed_by_anyone() && self.selected_index < max_index {
             self.selected_index += 1;
 
             if self.selected_index >= self.scroll_offset + self.visible_item_count {
@@ -113,7 +113,7 @@ impl<Item: MenuItem> Menu<Item> {
             }
         }
     
-        if keyboard.has_confirmation_been_pressed {
+        if keyboard.has_confirmation_been_pressed_by_anyone() {
             self.selection_has_been_confirmed = true;
         }    
         vec![]

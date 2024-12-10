@@ -62,17 +62,17 @@ impl MapEditor {
         selected_index: usize,
         keyboard: &KeyboardEventsProvider,
     ) -> Vec<WorldStateUpdate> {
-        if keyboard.direction_up.is_pressed {
+        if keyboard.is_direction_up_pressed_by_anyone() {
             if selected_index >= self.columns {
                 self.state = MapEditorState::SelectingItem(selected_index - self.columns);
             } else {
                 self.state = MapEditorState::SelectingItem(self.stock.len() - (self.columns - selected_index));
             }
         }
-        if keyboard.direction_right.is_pressed && selected_index < self.stock.len() - 1 {
+        if keyboard.is_direction_right_pressed_by_anyone() && selected_index < self.stock.len() - 1 {
             self.state = MapEditorState::SelectingItem(selected_index + 1);
         }
-        if keyboard.direction_down.is_pressed {
+        if keyboard.is_direction_down_pressed_by_anyone() {
             if selected_index + self.columns < self.stock.len() {
                 self.state = MapEditorState::SelectingItem(selected_index + self.columns);
             } else {
@@ -81,10 +81,10 @@ impl MapEditor {
                 );
             }
         }
-        if keyboard.direction_left.is_pressed && selected_index > 0 {
+        if keyboard.is_direction_left_pressed_by_anyone() && selected_index > 0 {
             self.state = MapEditorState::SelectingItem(selected_index - 1);
         }
-        if keyboard.has_confirmation_been_pressed {
+        if keyboard.has_confirmation_been_pressed_by_anyone() {
             let selection = self.stock[selected_index].clone();
             let indicator_frame = self.initial_selection_frame(&selection);
 
@@ -125,10 +125,10 @@ impl MapEditor {
             self.state = MapEditorState::PlacingItem(selected_index, item.clone(), updated_frame);
             return self.place_item(item, frame);
         }
-        if mouse.has_left_been_pressed || keyboard.has_confirmation_been_pressed {
+        if mouse.has_left_been_pressed || keyboard.has_confirmation_been_pressed_by_anyone() {
             return self.place_item(item, frame);
         }
-        if keyboard.has_back_been_pressed {
+        if keyboard.has_back_been_pressed_by_anyone(){
             self.state = MapEditorState::SelectingItem(selected_index);
             return vec![];
         }
@@ -146,16 +146,16 @@ impl MapEditor {
             let y = mouse.y  + self.camera_viewport.y;
             updated_frame = IntRect::new(x, y, updated_frame.w, updated_frame.h);
         } else {
-            if keyboard.direction_up.is_pressed {
+            if keyboard.is_direction_up_pressed_by_anyone() {
                 updated_frame = updated_frame.offset_y(-1);
             }
-            if keyboard.direction_right.is_pressed {
+            if keyboard.is_direction_right_pressed_by_anyone() {
                 updated_frame = updated_frame.offset_x(1);
             }
-            if keyboard.direction_down.is_pressed {
+            if keyboard.is_direction_down_pressed_by_anyone() {
                 updated_frame = updated_frame.offset_y(1);
             }
-            if keyboard.direction_left.is_pressed {
+            if keyboard.is_direction_left_pressed_by_anyone() {
                 updated_frame = updated_frame.offset_x(-1);
             }     
         }

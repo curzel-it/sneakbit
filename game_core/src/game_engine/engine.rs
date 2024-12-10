@@ -57,7 +57,7 @@ impl GameEngine {
         self.toast.update(time_since_last_update);
 
         if self.death_screen.is_open {
-            if self.keyboard.has_confirmation_been_pressed {
+            if self.keyboard.has_confirmation_been_pressed_by_anyone() {
                 self.death_screen.is_open = false;
                 self.previous_world = None;
                 self.world.cached_players_props.player1.direction = Direction::Unknown;
@@ -115,7 +115,7 @@ impl GameEngine {
         }
 
         if !is_game_paused {
-            let can_handle = self.menu.is_open() || self.keyboard.has_menu_been_pressed;
+            let can_handle = self.menu.is_open() || self.keyboard.has_menu_been_pressed_by_anyone();
             let keyboard = if can_handle { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
             let (pause, world_updates) = self.menu.update(&self.camera_viewport, keyboard, &self.mouse, time_since_last_update);
             is_game_paused = is_game_paused || pause;

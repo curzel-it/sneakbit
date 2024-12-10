@@ -258,7 +258,7 @@ impl GameMenu {
     }
 
     fn update_from_new_game(&mut self, keyboard: &KeyboardEventsProvider, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
-        if keyboard.has_back_been_pressed {
+        if keyboard.has_back_been_pressed_by_anyone() {
             self.state = MenuState::Open;
             return vec![];
         }
@@ -271,7 +271,7 @@ impl GameMenu {
     }
 
     fn update_from_language(&mut self, keyboard: &KeyboardEventsProvider, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
-        if keyboard.has_back_been_pressed {
+        if keyboard.has_back_been_pressed_by_anyone() {
             self.state = MenuState::Open;
             return vec![];
         }
@@ -290,7 +290,7 @@ impl GameMenu {
     }
 
     fn update_from_close(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
-        if keyboard.has_menu_been_pressed {
+        if keyboard.has_menu_been_pressed_by_anyone() {
             self.state = MenuState::Open;
             self.menu.show(); 
         }
@@ -309,7 +309,7 @@ impl GameMenu {
     }
 
     fn update_from_map_editor(&mut self, camera_vieport: &IntRect, keyboard: &KeyboardEventsProvider, mouse: &MouseEventsProvider) -> Vec<WorldStateUpdate> {
-        if keyboard.has_back_been_pressed {
+        if keyboard.has_back_been_pressed_by_anyone(){
             self.state = MenuState::Open;
         }
         self.map_editor.update(camera_vieport, keyboard, mouse);
@@ -321,7 +321,7 @@ impl GameMenu {
     }
 
     fn update_from_place_item(&mut self, camera_vieport: &IntRect, keyboard: &KeyboardEventsProvider, mouse: &MouseEventsProvider) -> Vec<WorldStateUpdate> {
-        if keyboard.has_back_been_pressed {
+        if keyboard.has_back_been_pressed_by_anyone(){
             self.state = MenuState::MapEditor;
         }
         self.map_editor.update(camera_vieport, keyboard, mouse)

@@ -211,11 +211,11 @@ impl World {
         keyboard: &KeyboardEventsProvider
     ) -> Vec<EngineStateUpdate> {
         self.total_elapsed_time += time_since_last_update;
-        self.direction_based_on_current_keys = keyboard.direction_based_on_current_keys(self.cached_players_props.player1.direction);
-        self.is_any_arrow_key_down = keyboard.is_any_arrow_key_down();
-        self.has_ranged_attack_key_been_pressed = keyboard.has_ranged_attack_key_been_pressed;
-        self.has_close_attack_key_been_pressed = keyboard.has_close_attack_key_been_pressed;
-        self.has_confirmation_key_been_pressed = keyboard.has_confirmation_been_pressed;
+        self.direction_based_on_current_keys = keyboard.direction_based_on_current_keys(0, self.cached_players_props.player1.direction);
+        self.is_any_arrow_key_down = keyboard.is_any_arrow_key_down(0);
+        self.has_ranged_attack_key_been_pressed = keyboard.has_ranged_attack_key_been_pressed_by_anyone();
+        self.has_close_attack_key_been_pressed = keyboard.has_close_attack_key_been_pressed_by_anyone();
+        self.has_confirmation_key_been_pressed = keyboard.has_confirmation_been_pressed_by_anyone();
 
         self.biome_tiles.update(time_since_last_update);
 

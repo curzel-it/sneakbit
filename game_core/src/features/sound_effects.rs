@@ -162,7 +162,7 @@ impl SoundEffectsManager {
     }
 
     fn did_fire_but_no_ammo(&self, keyboard: &KeyboardEventsProvider) -> bool { 
-        keyboard.has_ranged_attack_key_been_pressed && !self.next_sound_effects.contains(&SoundEffect::BulletFired)
+        keyboard.has_ranged_attack_key_been_pressed_by_anyone() && !self.next_sound_effects.contains(&SoundEffect::BulletFired)
     }
 }
 

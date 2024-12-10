@@ -78,6 +78,7 @@ pub extern "C" fn update_game(time_since_last_update: f32) {
 
 #[no_mangle]
 pub extern "C" fn update_keyboard(
+    player: usize,
     up_pressed: bool,
     right_pressed: bool,
     down_pressed: bool,
@@ -96,6 +97,7 @@ pub extern "C" fn update_keyboard(
     time_since_last_update: f32
 ) {
     engine_mut().keyboard.update(
+        player,
         up_pressed, right_pressed, down_pressed, left_pressed, 
         up_down, right_down, down_down, left_down, 
         escape_pressed, menu_pressed, confirm_pressed, 

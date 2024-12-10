@@ -26,32 +26,32 @@ impl TextInput {
     }
 
     pub fn update(&mut self, keyboard: &KeyboardEventsProvider, time_since_last_update: f32) {
-        let did_not_press_character = keyboard.currently_pressed_character.is_none();
+        let did_not_press_character = keyboard.currently_pressed_character().is_none();
 
         self.time_since_shown += time_since_last_update;
         self.cursor_visible = (self.time_since_shown * 2.3).floor() as u32 % 2 == 0;
 
-        if let Some(character) = keyboard.currently_pressed_character {
+        if let Some(character) = keyboard.currently_pressed_character() {
             if self.cursor_position <= self.text.len() {
                 self.text.insert(self.cursor_position, character);
                 self.cursor_position += 1; 
             }
         }
 
-        if keyboard.has_menu_been_pressed {
+        if keyboard.has_menu_been_pressed_by_anyone() {
             self.is_confirmed = true;
         }
-        if keyboard.has_backspace_been_pressed && self.cursor_position > 0 {
+        if keyboard.has_backspace_been_pressed() && self.cursor_position > 0 {
             self.text.remove(self.cursor_position - 1);
             self.cursor_position -= 1; 
         }
-        if keyboard.has_back_been_pressed {
+        if keyboard.has_back_been_pressed_by_anyone(){
             self.is_cancelled = true;
         }
-        if keyboard.direction_left.is_pressed && self.cursor_position > 0 && did_not_press_character {
+        if keyboard.is_direction_left_pressed_by_anyone() && self.cursor_position > 0 && did_not_press_character {
             self.cursor_position -= 1;
         }
-        if keyboard.direction_right.is_pressed && self.cursor_position < self.text.len() && did_not_press_character {
+        if keyboard.is_direction_right_pressed_by_anyone() && self.cursor_position < self.text.len() && did_not_press_character {
             self.cursor_position += 1;
         }
     }
