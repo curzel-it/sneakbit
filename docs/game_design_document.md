@@ -23,7 +23,7 @@ When pressing FIRE a knife is throw in the direction the player is currently loo
 The bullet goes perfectly straight until stopped or it expires (3 seconds).
 
 #### Swords
-Works by creating several bullets around the character that travel for a short time in the direction the character is looking at.
+Works by creating several invisible bullets around the character that travel for a short time in the direction the character is looking at.
 
 ### Skills
 The player can complete optional quests to gain special combat skills:

@@ -19,7 +19,16 @@ Like the game or have cool ideas? Join the [Discord](https://discord.gg/MCdEgXKS
 
 Please consider buying the game to support the project 🙏
 
-Coming soon to macOS and Linux via Steam!
+Available now on [Steam](https://store.steampowered.com/app/3360860/SneakBit) for Windows and macOS, support for Linux coming soon!
+
+## Features
+* Adventure-action gameplay with kunai and sword combat.
+* Grid-based tiling system with biomes and constructions.
+* Unlockable combat skills
+* Story-driven plot with an unexpected hero twist.
+* Nostalgic Gameboy-like pixel art aesthetics.
+* Coming soon! Local co-op multiplayer mode for PC
+* Coming soon! Linux / Steam Deck support
 
 ## Build from source
 ### macOS, Linux

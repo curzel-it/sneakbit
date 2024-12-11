@@ -3,11 +3,10 @@ import shutil
 import sys
 
 def build_project():
-    build_command = "cargo build --release"
-    result = os.system(build_command)
-    if result != 0:
-        print("Build failed.")
-        sys.exit(1)
+    os.system("mkdir -p game/assets")
+    os.system("cp docs/game_icon.ico game/assets/game_icon.ico")
+    os.system("cargo build --release")
+    os.system("cargo build --package game --release --target x86_64-pc-windows-gnu")
     print("Build succeeded.")
 
 def copy_directory(src, dest):
