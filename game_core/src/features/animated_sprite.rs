@@ -40,7 +40,7 @@ impl AnimatedSprite {
     }
 
     pub fn reset(&mut self) {
-        self.frames_provider.reset()
+        self.frames_provider = TimedContentProvider::frames(self.original_frame.x, self.number_of_frames, self.original_frame.w);
     }
 }
 

@@ -88,6 +88,7 @@ impl World {
             entity.frame = self.players[0].props.frame;
             entity.direction = self.players[0].props.direction;
             entity.id = id;
+            entity.setup_hero_with_player_index(index);
             entity.immobilize_for_seconds(0.2);
             self.insert_entity(entity, index);
         }

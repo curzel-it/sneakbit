@@ -31,6 +31,22 @@ impl Entity {
         updates
     }
 
+    pub fn setup_hero_with_player_index(&mut self, player_index: usize) {
+        self.player_index = player_index;
+
+
+        let (x, y) = match player_index {
+            1 => (36, 38),
+            2 => (40, 38),
+            3 => (44, 38),
+            _ => (12, 0),
+        };
+        println!("Player #{}, sprite x {} y {}", self.player_index, x, y);
+        self.sprite.original_frame.x = x;
+        self.sprite.original_frame.y = y;
+        self.sprite.reset();
+    }
+
     fn cache_props(&self) -> WorldStateUpdate {
         WorldStateUpdate::CacheHeroProps(
             Box::new(self.props())
