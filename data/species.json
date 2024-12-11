@@ -1291,7 +1291,7 @@
         "name": "objects.name.kunai",
         "entity_type": "Bullet",
         "z_index": 99,
-        "dps": 1000,
+        "dps": 1150,
         "base_speed": 7.0,
         "is_rigid": false,
         "inventory_texture_offset": [
