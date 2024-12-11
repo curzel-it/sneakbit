@@ -411,3 +411,7 @@ pub fn is_player_by_index_on_slippery_surface(index: usize) -> bool {
 pub fn number_of_players() -> usize {
     engine().number_of_players
 }
+
+pub fn update_number_of_players(count: usize) {
+    engine_mut().update_number_of_players(count)
+}

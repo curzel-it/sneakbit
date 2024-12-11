@@ -1287,3 +1287,9 @@ Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
 
 "you" = "You"
 
+"game.menu.number_of_players" = "Number of Players" 
+"game.menu.number_of_players.subtitle" = "Controller is required for player 2, 3 and 4" 
+"game.menu.number_of_players.1" = "Single Player" 
+"game.menu.number_of_players.2" = "Two Players" 
+"game.menu.number_of_players.3" = "3 Players" 
+"game.menu.number_of_players.4" = "4 Players" 
