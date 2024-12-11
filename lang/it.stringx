@@ -1291,3 +1291,9 @@ Hai un aura potentissima!
 
 "you" = "Tu"
 
+"game.menu.number_of_players" = "Numero di giocatori" 
+"game.menu.number_of_players.subtitle" = "I giocatori 2, 3 e 4 possono giocare con un controller" 
+"game.menu.number_of_players.1" = "Single Player" 
+"game.menu.number_of_players.2" = "2 Giocatori" 
+"game.menu.number_of_players.3" = "3 Giocatori" 
+"game.menu.number_of_players.4" = "4 Giocatori" 

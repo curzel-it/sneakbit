@@ -1,4 +1,4 @@
-use crate::{constants::WORLD_ID_NONE, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, lang::localizable::LocalizableText, spacing, ui::components::{Spacing, View}, utils::rect::IntRect};
+use crate::{constants::WORLD_ID_NONE, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, lang::localizable::LocalizableText, spacing, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
 
 use super::{confirmation::ConfirmationDialog, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
@@ -9,6 +9,7 @@ pub struct GameMenu {
     map_editor: MapEditor,
     new_game_confirmation: ConfirmationDialog,
     credits_menu: Menu<String>,
+    number_of_players_menu: Menu<String>,
     languages_menu: Menu<String>
 }
 
@@ -21,6 +22,7 @@ enum MenuState {
     NewGameConfirmation,
     ShowingLanguageSettings,
     ShowingCredits,
+    SelectingNumberOfPlayers,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -34,6 +36,7 @@ pub enum GameMenuItem {
     SaveAndExit,
     ToggleSoundEffects,
     ToggleMusic,
+    NumberOfPlayers,
     Credits,
     LanguageSettings,
 }
@@ -48,6 +51,7 @@ impl MenuItem for GameMenuItem {
             GameMenuItem::Exit => "game.menu.exit".localized(),
             GameMenuItem::SaveAndExit => "game.menu.save_and_exit".localized(),
             GameMenuItem::ToggleFullScreen => "game.menu.toggle_fullscreen".localized(),
+            GameMenuItem::NumberOfPlayers => "game.menu.number_of_players".localized(),
             GameMenuItem::Credits => "credits".localized(),
             GameMenuItem::LanguageSettings => "game.menu.language".localized(),
             
@@ -95,6 +99,17 @@ impl GameMenu {
             ]
         );
 
+        let mut number_of_players_menu = Menu::new(
+            "game.menu.number_of_players".localized(),
+            vec![
+                "game.menu.number_of_players.1".localized(),
+                "game.menu.number_of_players.2".localized(),
+                "game.menu.number_of_players.3".localized(),
+                "game.menu.number_of_players.4".localized()
+            ]
+        );
+        number_of_players_menu.text = Some("game.menu.number_of_players.subtitle".localized());
+
         Self {
             current_world_id: WORLD_ID_NONE,
             state: MenuState::Closed,
@@ -102,7 +117,8 @@ impl GameMenu {
             map_editor: MapEditor::new(),
             new_game_confirmation: ConfirmationDialog::new(),
             credits_menu,
-            languages_menu
+            languages_menu,
+            number_of_players_menu
         }
     }
 
@@ -129,6 +145,7 @@ impl GameMenu {
                 GameMenuItem::ToggleMusic,
                 GameMenuItem::ToggleSoundEffects,
                 GameMenuItem::NewGame,
+                GameMenuItem::NumberOfPlayers,
                 GameMenuItem::LanguageSettings,
                 GameMenuItem::Credits,
                 GameMenuItem::Exit,
@@ -165,7 +182,8 @@ impl GameMenu {
             MenuState::PlaceItem => self.update_from_place_item(camera_vieport, keyboard, mouse),
             MenuState::NewGameConfirmation => self.update_from_new_game(keyboard, time_since_last_update),
             MenuState::ShowingLanguageSettings => self.update_from_language(keyboard, time_since_last_update),
-            MenuState::ShowingCredits => self.update_from_credits(keyboard, time_since_last_update)
+            MenuState::ShowingCredits => self.update_from_credits(keyboard, time_since_last_update),
+            MenuState::SelectingNumberOfPlayers => self.update_from_number_of_players(keyboard, time_since_last_update)
         };
         (self.is_open(), updates)
     }
@@ -203,6 +221,11 @@ impl GameMenu {
             GameMenuItem::LanguageSettings => {
                 self.languages_menu.show();
                 self.state = MenuState::ShowingLanguageSettings;
+                vec![]
+            }
+            GameMenuItem::NumberOfPlayers => {
+                self.number_of_players_menu.show();
+                self.state = MenuState::SelectingNumberOfPlayers;
                 vec![]
             }
             GameMenuItem::SaveAndExit => {
@@ -270,6 +293,25 @@ impl GameMenu {
         updates
     }
 
+    fn update_from_number_of_players(&mut self, keyboard: &KeyboardEventsProvider, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
+        if keyboard.has_back_been_pressed_by_anyone() {
+            self.state = MenuState::Open;
+            return vec![];
+        }
+        self.number_of_players_menu.update(keyboard, time_since_last_update);
+        
+        if self.number_of_players_menu.selection_has_been_confirmed {
+            update_number_of_players(self.number_of_players_menu.selected_index + 1);
+            self.number_of_players_menu.clear_selection();
+            self.number_of_players_menu.close();
+            self.menu.clear_selection();
+            self.menu.close();
+            self.setup();
+            self.state = MenuState::Closed;
+        }
+        vec![]
+    }
+
     fn update_from_language(&mut self, keyboard: &KeyboardEventsProvider, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
         if keyboard.has_back_been_pressed_by_anyone() {
             self.state = MenuState::Open;
@@ -335,6 +377,7 @@ impl GameMenu {
             MenuState::NewGameConfirmation => self.new_game_confirmation.ui(),
             MenuState::ShowingLanguageSettings => self.languages_menu.ui(),
             MenuState::MapEditor | MenuState::PlaceItem => self.map_editor.ui(camera_viewport),
+            MenuState::SelectingNumberOfPlayers => self.number_of_players_menu.ui()
         }
     }
 

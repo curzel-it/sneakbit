@@ -1,4 +1,4 @@
-use crate::{constants::{BUILD_NUMBER, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID}, entities::{known_species::{SPECIES_CLAYMORE, SPECIES_HERO, SPECIES_KUNAI, SPECIES_KUNAI_LAUNCHER, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, number_of_players, utils::directions::Direction};
+use crate::{constants::{BUILD_NUMBER, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::{known_species::{SPECIES_CLAYMORE, SPECIES_HERO, SPECIES_KUNAI, SPECIES_KUNAI_LAUNCHER, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, number_of_players, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
@@ -83,10 +83,14 @@ impl World {
     }
 
     fn spawn_other_players(&mut self) {
+        let offset = TILE_SIZE / 3.0;
+
         for (index, &id) in self.hero_entity_ids().iter().enumerate().skip(1) {
             let mut entity = make_entity_by_species(SPECIES_HERO);
             entity.frame = self.players[0].props.frame;
             entity.direction = self.players[0].props.direction;
+            entity.offset.x = if index == 1 { offset } else { 0.0 };
+            entity.offset.y = if index == 2 { offset } else if index == 3 { -offset } else { 0.0 };
             entity.id = id;
             entity.setup_hero_with_player_index(index);
             entity.immobilize_for_seconds(0.2);

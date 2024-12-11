@@ -5,13 +5,11 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_AVATARS, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_FARM_PLANTS, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, SPRITE_SHEET_TENTACLES, SPRITE_SHEET_WEAPONS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, lang::localizable::LANG_EN, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, SPRITE_SHEET_TENTACLES, SPRITE_SHEET_WEAPONS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, lang::localizable::LANG_EN, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
 use nohash_hasher::IntMap;
 use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
 use sys_locale::get_locale;
-
-const MAX_FPS: u32 = 60;
 
 struct GameContext {
     rl: RaylibHandle,
@@ -164,6 +162,12 @@ fn update_sound_track(context: &mut SoundContext) {
     }
 }
 
+fn update_target_refresh_rate(rl: &mut RaylibHandle) {
+    let monitor = get_current_monitor();
+    let monitor_refresh_rate = get_monitor_refresh_rate(monitor);
+    rl.set_target_fps(monitor_refresh_rate as u32);
+}
+
 fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {    
     let width = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.w as f32) as i32;
     let height = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.h as f32) as i32;
@@ -172,13 +176,12 @@ fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {
         .size(width, height)
         .resizable()
         .title("SneakBit")
-        .vsync()
         .build();        
     
     let font = rl.load_font(&thread, &regular_font_path()).unwrap();
     let font_bold = rl.load_font(&thread, &bold_font_path()).unwrap();                     
     
-    rl.set_target_fps(MAX_FPS);
+    update_target_refresh_rate(&mut rl);
     rl.set_window_min_size(360, 240);
 
     init_rendering_config(RenderingConfig {
@@ -233,6 +236,8 @@ fn handle_window_size_changed(context: &mut GameContext) {
         let font_size = config.scaled_font_size(&Typography::Regular);
         let line_spacing = config.font_lines_spacing(&Typography::Regular);
         window_size_changed(width, height, scale, font_size, line_spacing);
+
+        update_target_refresh_rate(&mut context.rl);
     }
 }
 
@@ -248,9 +253,6 @@ fn load_textures(rl: &mut RaylibHandle, thread: &RaylibThread) -> IntMap<u32, Te
     textures.insert(SPRITE_SHEET_HUMANOIDS_1X1, texture(rl, thread, "humanoids_1x1").unwrap());      
     textures.insert(SPRITE_SHEET_HUMANOIDS_1X2, texture(rl, thread, "humanoids_1x2").unwrap());
     textures.insert(SPRITE_SHEET_HUMANOIDS_2X2, texture(rl, thread, "humanoids_2x2").unwrap());
-    textures.insert(SPRITE_SHEET_HUMANOIDS_2X3, texture(rl, thread, "humanoids_2x3").unwrap());
-    textures.insert(SPRITE_SHEET_AVATARS, texture(rl, thread, "avatars").unwrap());     
-    textures.insert(SPRITE_SHEET_FARM_PLANTS, texture(rl, thread, "farm_plants").unwrap());    
     textures.insert(SPRITE_SHEET_DEMON_LORD_DEFEAT, texture(rl, thread, "demon_lord_defeat").unwrap());         
     textures.insert(SPRITE_SHEET_CAVE_DARKNESS, texture(rl, thread, "cave_darkness").unwrap());       
     textures.insert(SPRITE_SHEET_TENTACLES, texture(rl, thread, "tentacles").unwrap()); 

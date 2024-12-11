@@ -1,6 +1,6 @@
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use crate::{constants::{ANIMATIONS_FPS, SPRITE_SHEET_BLANK, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_HUMANOIDS_2X3, UNLIMITED_LIFESPAN}, game_engine::entity::Entity, utils::{directions::Direction, rect::IntRect, timed_content_provider::TimedContentProvider}};
+use crate::{constants::{ANIMATIONS_FPS, SPRITE_SHEET_BLANK, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, UNLIMITED_LIFESPAN}, game_engine::entity::Entity, utils::{directions::Direction, rect::IntRect, timed_content_provider::TimedContentProvider}};
 
 #[derive(Debug, Clone)]
 pub struct AnimatedSprite {
@@ -82,7 +82,7 @@ impl TimedContentProvider<i32> {
 }
 
 fn supports_directions(sheet_id: u32) -> bool {
-    matches!(sheet_id, SPRITE_SHEET_HUMANOIDS_1X1 | SPRITE_SHEET_HUMANOIDS_1X2 | SPRITE_SHEET_HUMANOIDS_2X2 | SPRITE_SHEET_HUMANOIDS_2X3)
+    matches!(sheet_id, SPRITE_SHEET_HUMANOIDS_1X1 | SPRITE_SHEET_HUMANOIDS_1X2 | SPRITE_SHEET_HUMANOIDS_2X2)
 }
 
 #[derive(Serialize, Deserialize)]

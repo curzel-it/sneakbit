@@ -355,6 +355,12 @@ impl GameEngine {
         self.teleport_to_previous();
         reset_all_stored_values();
     }
+
+    pub fn update_number_of_players(&mut self, count: usize) {
+        if count == self.number_of_players { return }
+        self.number_of_players = count;
+        self.teleport_to_previous();
+    }
 }
 
 #[cfg(test)]
