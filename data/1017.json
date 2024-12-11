@@ -238,7 +238,14 @@
           "contents": "end_game_credits",
           "demands_attention": false,
           "destination": null,
-          "dialogues": [],
+          "dialogues": [
+            {
+              "expected_value": 1,
+              "key": "always",
+              "reward": null,
+              "text": "end_game_credits"
+            }
+          ],
           "direction": "Down",
           "display_conditions": [],
           "frame": {

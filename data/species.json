@@ -1156,6 +1156,7 @@
         "name": "npc.name.monster",
         "entity_type": "CloseCombatMonster",
         "z_index": 15,
+        "hp": 200,
         "dps": 400.0,
         "base_speed": 2.5,
         "is_rigid": false,
@@ -1290,7 +1291,7 @@
         "name": "objects.name.kunai",
         "entity_type": "Bullet",
         "z_index": 99,
-        "dps": 1500,
+        "dps": 1000,
         "base_speed": 7.0,
         "is_rigid": false,
         "inventory_texture_offset": [

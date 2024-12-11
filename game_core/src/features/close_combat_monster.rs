@@ -89,11 +89,11 @@ fn next_sprite(current_sprite_x: i32) -> AnimatedSprite {
 
 fn hp_for_sprite(current_sprite_x: i32) -> f32 {
     match current_sprite_x {
-        28 => 100.0,
+        28 => 200.0,
         44 => 600.0,
         24 => 1300.0,
         32 => 2000.0,
-        _ => 100.0
+        _ => 200.0
     }
 }
 
