@@ -129,7 +129,6 @@ impl Species {
 
         entity.frame.w = (sprite.frame.w as f32 * self.scale) as i32;  
         entity.frame.h = (sprite.frame.h as f32 * self.scale) as i32;  
-        entity.offset = Vector2d::zero();
         entity.original_sprite_frame = sprite.frame;
         entity.entity_type = self.entity_type;
         entity.is_rigid = self.is_rigid;
@@ -138,6 +137,7 @@ impl Species {
             entity.sprite.reset();
         } else {
             entity.sprite = sprite;
+            entity.offset = Vector2d::zero();
         }
         entity.name = self.name.localized();
         entity.action_cooldown_remaining = 0.0;
