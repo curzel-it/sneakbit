@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 use std::fs::File;
 use std::io::Read;
 
-use crate::{config::config, constants::{HERO_ENTITY_ID, NO_PARENT, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::animated_sprite::AnimatedSprite, features::dialogues::AfterDialogueBehavior, game_engine::directions::MovementDirections, game_engine::entity::Entity, game_engine::locks::LockType, lang::localizable::LocalizableText, utils::directions::Direction, utils::ids::get_next_id, utils::rect::IntRect, utils::vector::Vector2d};
+use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, game_engine::{directions::MovementDirections, entity::Entity, locks::LockType}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::IntRect, vector::Vector2d}};
 
 pub type SpeciesId = u32;
 
@@ -82,7 +82,7 @@ impl Species {
 
 impl Species {
     pub fn make_entity(&self) -> Entity {
-        let sprite = self.make_sprite(false);
+        let sprite = self.make_sprite();
         let original_sprite_frame = sprite.frame; 
         let initial_speed = self.movement_directions.initial_speed(self.base_speed);
         
@@ -119,11 +119,12 @@ impl Species {
             hp: self.hp,
             dps: self.dps,
             sorting_key: 0,
+            player_index: 0
         }
     }
 
     pub fn reload_props(&self, entity: &mut Entity) {
-        let sprite = self.make_sprite(false);      
+        let sprite = self.make_sprite();      
         let initial_speed = self.movement_directions.initial_speed(self.base_speed);
 
         entity.frame.w = (sprite.frame.w as f32 * self.scale) as i32;  
@@ -132,7 +133,12 @@ impl Species {
         entity.original_sprite_frame = sprite.frame;
         entity.entity_type = self.entity_type;
         entity.is_rigid = self.is_rigid;
-        entity.sprite = sprite;
+        
+        if entity.is_player() {
+            entity.sprite.reset();
+        } else {
+            entity.sprite = sprite;
+        }
         entity.name = self.name.localized();
         entity.action_cooldown_remaining = 0.0;
         entity.speed_multiplier = 1.0;
@@ -152,7 +158,7 @@ impl Species {
         IntRect::new(self.inventory_texture_offset.1, self.inventory_texture_offset.0, 1, 1)
     }
 
-    fn make_sprite(&self, _: bool) -> AnimatedSprite {
+    fn make_sprite(&self) -> AnimatedSprite {
         AnimatedSprite::new(
             self.sprite_sheet_id,
             self.sprite_frame,
@@ -162,7 +168,7 @@ impl Species {
 
     fn next_entity_id(&self) -> u32 {
         match self.entity_type {
-            EntityType::Hero => HERO_ENTITY_ID,
+            EntityType::Hero => PLAYER1_ENTITY_ID,
             _ => get_next_id()
         }
     }

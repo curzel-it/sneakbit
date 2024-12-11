@@ -1,4 +1,4 @@
-use crate::{config::config, constants::{HERO_ENTITY_ID, TILE_SIZE}, game_engine::{entity::Entity, world::World}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{config::config, constants::TILE_SIZE, game_engine::{entity::Entity, world::World}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 
@@ -12,7 +12,7 @@ impl Entity {
         }
         if self.is_rigid {
             if would_collide(&frame, &self.direction, &world) {
-                if self.id == HERO_ENTITY_ID && world.is_hero_on_slippery_surface() {
+                if self.is_player() && world.frame_is_slippery_surface(&self.hittable_frame()) {
                     self.current_speed = 0.0;
                 }
                 return
@@ -45,7 +45,7 @@ impl Entity {
 }
 
 fn can_step_over_hero(entity: &Entity) -> bool {
-    entity.id == HERO_ENTITY_ID || entity.melee_attacks_hero()
+    entity.is_player() || entity.melee_attacks_hero()
 }
 
 fn updated_offset(offset: &Vector2d, direction: &Direction, speed: f32, time_since_last_update: f32) -> Vector2d {
@@ -88,6 +88,6 @@ pub fn would_collide_with_hero(frame: &IntRect, direction: &Direction, world: &W
     let (col_offset, row_offset) = direction.as_col_row_offset();
     let y = frame.y + frame.h - 1 + row_offset;
     let x = frame.x + col_offset;
-    let hero = world.cached_hero_props.hittable_frame;
+    let hero = world.players[0].props.hittable_frame;
     hero.x == x && hero.y == y 
 }

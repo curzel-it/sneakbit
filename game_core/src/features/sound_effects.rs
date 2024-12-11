@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common_macros::hash_set;
 
-use crate::{constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_explosive, is_key, is_monster, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{AddToInventoryReason, EngineStateUpdate, SpecialEffect}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_hero_on_slippery_surface, menus::toasts::{Toast, ToastMode}};
+use crate::{cached_players_positions, constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_explosive, is_key, is_monster, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{AddToInventoryReason, EngineStateUpdate, SpecialEffect}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_player_by_index_on_slippery_surface, menus::toasts::{Toast, ToastMode}, utils::rect::IntPoint};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[repr(C)]
@@ -27,7 +27,7 @@ pub enum SoundEffect {
 pub struct SoundEffectsManager {
     pub current_sound_effects: HashSet<SoundEffect>,
     next_sound_effects: HashSet<SoundEffect>,
-    last_hero_position: (i32, i32),
+    last_players_positions: Vec<IntPoint>,
     last_world: u32,
 }
 
@@ -36,7 +36,7 @@ impl SoundEffectsManager {
         Self {
             current_sound_effects: hash_set![],
             next_sound_effects: hash_set![],
-            last_hero_position: (0, 0),
+            last_players_positions: vec![],
             last_world: 0,
         }
     }
@@ -49,6 +49,7 @@ impl SoundEffectsManager {
         if self.did_fire_but_no_ammo(keyboard) {
             self.prepare(SoundEffect::NoAmmo);
         }
+        self.check_hero_movement();
         self.confirm_next_batch();
     }
 
@@ -72,7 +73,6 @@ impl SoundEffectsManager {
         match update {
             EngineStateUpdate::EntityKilled(_, species_id) => self.check_entity_death(*species_id),
             EngineStateUpdate::BulletBounced => self.prepare(SoundEffect::BulletBounced),
-            EngineStateUpdate::CenterCamera(x, y, _) => self.check_hero_movement(*x, *y),
             EngineStateUpdate::Teleport(destination) => self.check_teleportation(destination.world),
             EngineStateUpdate::RemoveFromInventory(species_id) => self.check_bullet_fired(*species_id),
             EngineStateUpdate::AddToInventory(species_id, reason) => self.handle_item_collection(*species_id, reason),
@@ -96,7 +96,7 @@ impl SoundEffectsManager {
 
     fn handle_game_over(&mut self) {
         self.last_world = 0;
-        self.last_hero_position = (0, 0);
+        self.last_players_positions.clear();
         self.prepare(SoundEffect::GameOver)
     }
 
@@ -138,7 +138,7 @@ impl SoundEffectsManager {
             self.prepare(SoundEffect::WorldChange);
         }
         self.last_world = destination;
-        self.last_hero_position = (0, 0);
+        self.last_players_positions.clear();
     }
 
     fn confirm_next_batch(&mut self) {
@@ -146,17 +146,23 @@ impl SoundEffectsManager {
         self.next_sound_effects.clear();
     }
 
-    fn check_hero_movement(&mut self, x: i32, y: i32) {
-        if self.last_hero_position != (0, 0) && (self.last_hero_position.0 != x || self.last_hero_position.1 != y) {
-            if !is_hero_on_slippery_surface() {
-                self.prepare(SoundEffect::StepTaken);
+    fn check_hero_movement(&mut self) {
+        let current_positions = cached_players_positions();
+
+        if self.last_players_positions.len() == current_positions.len() {
+            for index in 0..self.last_players_positions.len() {
+                if self.last_players_positions[index] != current_positions[index] {
+                    if !is_player_by_index_on_slippery_surface(index) {
+                        self.prepare(SoundEffect::StepTaken);
+                    }
+                }
             }
         }
-        self.last_hero_position = (x, y);
+        self.last_players_positions = current_positions;
     }
 
     fn did_fire_but_no_ammo(&self, keyboard: &KeyboardEventsProvider) -> bool { 
-        keyboard.has_ranged_attack_key_been_pressed && !self.next_sound_effects.contains(&SoundEffect::BulletFired)
+        keyboard.has_ranged_attack_key_been_pressed_by_anyone() && !self.next_sound_effects.contains(&SoundEffect::BulletFired)
     }
 }
 

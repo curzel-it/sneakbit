@@ -7,7 +7,7 @@ use entities::known_species::{SPECIES_CLAYMORE_ITEM, SPECIES_KUNAI};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
 use game_engine::{engine::GameEngine, storage::inventory_count};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
-use utils::{rect::IntRect, vector::Vector2d};
+use utils::{rect::{IntPoint, IntRect}, vector::Vector2d};
 
 pub mod config;
 pub mod constants;
@@ -78,6 +78,7 @@ pub extern "C" fn update_game(time_since_last_update: f32) {
 
 #[no_mangle]
 pub extern "C" fn update_keyboard(
+    player: usize,
     up_pressed: bool,
     right_pressed: bool,
     down_pressed: bool,
@@ -96,6 +97,7 @@ pub extern "C" fn update_keyboard(
     time_since_last_update: f32
 ) {
     engine_mut().keyboard.update(
+        player,
         up_pressed, right_pressed, down_pressed, left_pressed, 
         up_down, right_down, down_down, left_down, 
         escape_pressed, menu_pressed, confirm_pressed, 
@@ -312,7 +314,14 @@ pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
 
 #[no_mangle]
 pub extern "C" fn current_hero_hp() -> f32 {
-    engine().world.cached_hero_props.hp
+    engine().world.players[0].props.hp
+}
+
+pub fn cached_players_positions() -> Vec<IntPoint> {
+    engine().world.players
+        .iter()
+        .map(|p| p.props.hittable_frame.origin())
+        .collect()
 }
 
 #[no_mangle]
@@ -391,6 +400,14 @@ pub fn set_links_handler(handler: Box<dyn LinksHandler>) {
     engine_mut().links_handler = handler;
 }
 
-pub fn is_hero_on_slippery_surface() -> bool {
-    engine().world.is_hero_on_slippery_surface()
+pub fn is_any_hero_on_a_slippery_surface() -> bool {
+    engine().world.is_any_hero_on_a_slippery_surface()
+}
+
+pub fn is_player_by_index_on_slippery_surface(index: usize) -> bool {
+    engine().world.is_player_by_index_on_slippery_surface(index)
+}
+
+pub fn number_of_players() -> usize {
+    engine().number_of_players
 }

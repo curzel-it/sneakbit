@@ -19,7 +19,8 @@ pub struct GameEngine {
     pub is_running: bool,
     pub wants_fullscreen: bool,
     pub sound_effects: SoundEffectsManager,
-    pub links_handler: Box<dyn LinksHandler>
+    pub links_handler: Box<dyn LinksHandler>,
+    pub number_of_players: usize
 }
 
 impl GameEngine {
@@ -41,7 +42,8 @@ impl GameEngine {
             basic_info_hud: BasicInfoHud::new(),
             wants_fullscreen: false,
             sound_effects: SoundEffectsManager::new(),
-            links_handler: Box::new(NoLinksHandler::new())
+            links_handler: Box::new(NoLinksHandler::new()),
+            number_of_players: 1
         }
     }
 
@@ -55,10 +57,10 @@ impl GameEngine {
         self.toast.update(time_since_last_update);
 
         if self.death_screen.is_open {
-            if self.keyboard.has_confirmation_been_pressed {
+            if self.keyboard.has_confirmation_been_pressed_by_anyone() {
                 self.death_screen.is_open = false;
                 self.previous_world = None;
-                self.world.cached_hero_props.direction = Direction::Unknown;
+                self.world.players[0].props.direction = Direction::Unknown;
                 self.teleport_to_previous();
                 did_resurrect = true;
             } else {
@@ -84,6 +86,7 @@ impl GameEngine {
             let updates = self.world.update(time_since_last_update, &camera_viewport, &self.keyboard);
             self.sound_effects.update(&self.keyboard, &updates);
             self.apply_state_updates(updates);
+            self.center_camera_onto_players();
         };
 
     } 
@@ -112,7 +115,7 @@ impl GameEngine {
         }
 
         if !is_game_paused {
-            let can_handle = self.menu.is_open() || self.keyboard.has_menu_been_pressed;
+            let can_handle = self.menu.is_open() || self.keyboard.has_menu_been_pressed_by_anyone();
             let keyboard = if can_handle { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
             let (pause, world_updates) = self.menu.update(&self.camera_viewport, keyboard, &self.mouse, time_since_last_update);
             is_game_paused = is_game_paused || pause;
@@ -165,20 +168,49 @@ impl GameEngine {
         sorted_updates.iter().for_each(|u| self.apply_state_update(u));
     }
 
+    fn center_camera_onto_players(&mut self) {
+        if self.number_of_players == 1 {
+            let p1 = self.world.players[0].props;
+            self.center_camera_at(p1.hittable_frame.x, p1.hittable_frame.y, &p1.offset);
+        } else {
+            let sum: (f32, f32) = self.world.players
+                .iter()
+                .take(self.number_of_players)
+                .map(|p| {
+                    let x = p.props.hittable_frame.x as f32;
+                    let y = p.props.hittable_frame.y as f32;
+                    let ox = p.props.offset.x / TILE_SIZE;
+                    let oy = p.props.offset.y / TILE_SIZE;
+                    (x + ox, y + oy)
+                })
+                .fold((0.0, 0.0), |acc, (x, y)| {
+                    (acc.0 + x, acc.1 + y)
+                });
+
+            let x = sum.0 / self.number_of_players as f32;                
+            let y = sum.1 / self.number_of_players as f32;
+            let fx = x.floor();
+            let fy = y.floor();
+
+            self.center_camera_at(
+                fx as i32, 
+                fy as i32, 
+                &Vector2d::new(
+                    (x - fx) * TILE_SIZE, 
+                    (y - fy) * TILE_SIZE
+                )
+            );
+        }
+    }
+
     fn log_update(&self, update: &EngineStateUpdate) {
-        match update {
-            EngineStateUpdate::CenterCamera(_, _, _) => {},
-            _ => println!("Engine update: {:#?}", update)
-        }     
+        println!("Engine update: {:#?}", update)
     }
 
     fn apply_state_update(&mut self, update: &EngineStateUpdate) {   
         self.log_update(update);
 
         match update {
-            EngineStateUpdate::CenterCamera(x, y, offset) => {
-                self.center_camera_at(*x, *y, offset)
-            }
             EngineStateUpdate::Teleport(destination) => {
                 self.teleport(destination)
             }
@@ -256,7 +288,7 @@ impl GameEngine {
         let mut new_world = self.world_by_id(destination.world);
         new_world.setup(
             self.previous_world(), 
-            &self.world.cached_hero_props.direction, 
+            &self.world.players[0].props.direction, 
             destination.x, 
             destination.y,
             destination.direction
@@ -265,7 +297,7 @@ impl GameEngine {
         new_world.update_no_input(0.001);
         new_world.update_no_input(0.001);
 
-        let hero_frame = new_world.cached_hero_props.frame;
+        let hero_frame = new_world.players[0].props.frame;
         if !self.world.ephemeral_state {
             self.previous_world = Some(self.world.clone());
         }
@@ -317,7 +349,7 @@ impl GameEngine {
     pub fn start_new_game(&mut self) {
         self.death_screen.is_open = false;
         self.previous_world = None;
-        self.world.cached_hero_props.direction = Direction::Unknown;        
+        self.world.players[0].props.direction = Direction::Unknown;        
         reset_all_stored_values();
         self.world = World::load(1000).unwrap();
         self.teleport_to_previous();

@@ -37,13 +37,13 @@ impl Entity {
         if self.is_dying || is_creative_mode() {
             return vec![]
         }
+        if world.players[0].props.is_invulnerable {
+            return vec![]
+        }
 
-        let hero_invulnerable = world.cached_hero_props.is_invulnerable;
-        let hero = world.cached_hero_props.hittable_frame;
-        let x = self.frame.x;
-        let y = self.frame.y + if self.frame.h > 1 { 1 } else { 0 };
-        
-        if x == hero.x && y == hero.y && !hero_invulnerable {
+        let frame = self.hittable_frame();     
+           
+        if world.is_any_hero_at(frame.x, frame.y) {
             let damage = self.dps * time_since_last_update;
             return vec![WorldStateUpdate::HandleHeroDamage(damage)];
         }
@@ -65,6 +65,7 @@ impl Entity {
                 self.sprite = next_sprite(self.sprite.original_frame.x);
                 self.hp = hp_for_sprite(self.sprite.original_frame.x);
                 self.dps = dps_for_sprite(self.sprite.original_frame.x);
+                self.current_speed *= 1.1;
                 return vec![WorldStateUpdate::RemoveEntity(hit)]
             }
         }

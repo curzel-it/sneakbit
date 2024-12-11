@@ -50,7 +50,7 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
             &mut d, 
             fps, 
             world.id,
-            &world.cached_hero_props
+            &world.players[0].props
         );
     }
 }

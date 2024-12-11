@@ -13,11 +13,11 @@ pub const PRESSURE_PLATE_SWITCH_COOLDOWN: f32 = 0.3;
 pub const HERO_RECOVERY_PS: f32 = 1.0;
 
 // Weapons
-pub const KUNAI_LIFESPAN: f32 = 3.0;
-pub const KUNAI_LAUNCHER_COOLDOWN: f32 = 0.1;
+pub const KUNAI_LIFESPAN: f32 = 1.2;
+pub const KUNAI_LAUNCHER_COOLDOWN: f32 = 0.15;
 pub const SWORD_SLASH_LIFESPAN: f32 = 0.25;
 pub const SWORD_SLASH_COOLDOWN: f32 = 0.2;
-pub const CLAYMORE_SLASH_LIFESPAN: f32 = 0.35;
+pub const CLAYMORE_SLASH_LIFESPAN: f32 = 0.3;
 pub const CLAYMORE_SLASH_COOLDOWN: f32 = 0.35;
 
 // Input
@@ -25,7 +25,10 @@ pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST: f32 = 0.4;
 pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS: f32 = 0.1;
 
 // Known entities
-pub const HERO_ENTITY_ID: u32 = 420;
+pub const PLAYER1_ENTITY_ID: u32 = 420;
+pub const PLAYER2_ENTITY_ID: u32 = 421;
+pub const PLAYER3_ENTITY_ID: u32 = 422;
+pub const PLAYER4_ENTITY_ID: u32 = 423;
 
 // Known locations
 pub const WORLD_ID_NONE: u32 = 1000;

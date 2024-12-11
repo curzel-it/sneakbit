@@ -1,11 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{HERO_ENTITY_ID, NO_PARENT, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{NO_PARENT, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{directions::MovementDirections, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}, world::World};
 
 #[derive(Debug, Copy, Clone)]
 pub struct EntityProps {
+    pub id: u32,
     pub direction: Direction,
     pub frame: IntRect,
     pub offset: Vector2d,
@@ -18,6 +19,7 @@ pub struct EntityProps {
 impl Default for EntityProps {
     fn default() -> Self {
         Self { 
+            id: 0,
             direction: Default::default(), 
             frame: IntRect::square_from_origin(1), 
             offset: Vector2d::zero(),
@@ -115,6 +117,9 @@ pub struct Entity {
     
     #[serde(skip)]
     pub sorting_key: u32,
+    
+    #[serde(skip)]
+    pub player_index: usize,
 }
 
 impl Entity {
@@ -270,6 +275,7 @@ impl Entity {
 
     pub fn props(&self) -> EntityProps {
         EntityProps {
+            id: self.id,
             frame: self.frame,
             direction: self.direction,
             offset: self.offset,
@@ -294,7 +300,7 @@ impl Entity {
         if let Some(dialogue) = self.next_dialogue(world) {
             self.is_in_interaction_range = true;
 
-            if world.has_confirmation_key_been_pressed {
+            if world.has_confirmation_key_been_pressed_by_anyone {
                 self.demands_attention = false;
                 set_value_for_key(&StorageKey::npc_interaction(self.id), 1);
 
@@ -353,7 +359,15 @@ impl Entity {
     }
 }
 
+pub fn is_player(entity_id: u32) -> bool {
+    matches!(entity_id, PLAYER1_ENTITY_ID | PLAYER2_ENTITY_ID | PLAYER3_ENTITY_ID | PLAYER4_ENTITY_ID)
+}
+
 impl Entity {
+    pub fn is_player(&self) -> bool {
+        matches!(self.entity_type, EntityType::Hero)
+    }
+
     pub fn is_equipment(&self) -> bool {
         matches!(self.entity_type, EntityType::Equipment | EntityType::Sword | EntityType::KunaiLauncher)
     }
@@ -365,7 +379,7 @@ impl Entity {
         if self.is_dying {
             return false
         }
-        if self.parent_id == HERO_ENTITY_ID {
+        if is_player(self.parent_id) {
             return false
         }
         if matches!(self.entity_type, EntityType::Bullet | EntityType::Bundle | EntityType::PickableObject) {

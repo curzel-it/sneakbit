@@ -138,6 +138,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
     auto time_since_last_update = static_cast<float>(timeSinceLastUpdate);
 
     update_keyboard(
+            0,
             up_pressed,
             right_pressed,
             down_pressed,

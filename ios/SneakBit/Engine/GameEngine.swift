@@ -208,6 +208,7 @@ class GameEngine {
     
     private func updateKeyboardState(timeSinceLastUpdate: Float) {
         update_keyboard(
+            0,
             keyPressed.contains(.up),
             keyPressed.contains(.right),
             keyPressed.contains(.down),
