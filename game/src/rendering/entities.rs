@@ -8,19 +8,22 @@ pub fn render_entities(
     camera_viewport: &IntRect, 
     camera_viewport_offset: &Vector2d
 ) {
+    let config = get_rendering_config();
+    let scale = config.rendering_scale;
+    
     for item in &get_renderables_vec() {
-        render_entity(d, item, camera_viewport, camera_viewport_offset);
+        render_entity(d, scale, item, camera_viewport, camera_viewport_offset);
     }
 }
 
 fn render_entity(
     d: &mut RaylibDrawHandle, 
+    scale: f32,
     item: &RenderableItem, 
     camera_viewport: &IntRect, 
     camera_viewport_offset: &Vector2d
 ) {
     let sprite_key = item.sprite_sheet_id;
-    let scale = get_rendering_config().rendering_scale;
     let tile_scale = TILE_SIZE * scale;
     
     if let Some(texture) = get_rendering_config().get_texture(sprite_key) {
