@@ -1,3961 +1,3961 @@
 [
-    {
-        "id": 1001,
-        "name": "Hero",
-        "entity_type": "Hero",
-        "z_index": 15,
-        "base_speed": 4.0,
-        "is_rigid": true,
-        "is_invulnerable": false,
-        "inventory_texture_offset": [
-            0,
-            0
-        ],
-        "sprite_frame": {
-            "x": 12,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Keyboard"
-    },
-    {
-        "id": 1002,
-        "name": "building.name.house",
-        "entity_type": "Building",
-        "is_invulnerable": true,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            1
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 1,
-            "w": 5,
-            "h": 4
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1003,
-        "name": "building.name.house",
-        "is_invulnerable": true,
-        "entity_type": "Building",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            3
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 6,
-            "w": 5,
-            "h": 4
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1004,
-        "name": "building.name.house",
-        "is_invulnerable": true,
-        "entity_type": "Building",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            5
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 11,
-            "w": 5,
-            "h": 4
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1005,
-        "name": "building.name.house_two_floors",
-        "is_invulnerable": true,
-        "entity_type": "Building",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            2
-        ],
-        "sprite_frame": {
-            "x": 5,
-            "y": 0,
-            "w": 5,
-            "h": 5
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1006,
-        "name": "building.name.house_two_floors",
-        "is_invulnerable": true,
-        "entity_type": "Building",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            4
-        ],
-        "sprite_frame": {
-            "x": 5,
-            "y": 5,
-            "w": 5,
-            "h": 5
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1007,
-        "name": "building.name.house_two_floors",
-        "is_invulnerable": true,
-        "entity_type": "Building",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            6
-        ],
-        "sprite_frame": {
-            "x": 5,
-            "y": 10,
-            "w": 5,
-            "h": 5
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1008,
-        "name": "building.name.broken_house",
-        "is_invulnerable": true,
-        "entity_type": "Building",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            10
-        ],
-        "sprite_frame": {
-            "x": 15,
-            "y": 5,
-            "w": 5,
-            "h": 4
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1009,
-        "name": "building.name.broken_house",
-        "is_invulnerable": true,
-        "entity_type": "Building",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            11
-        ],
-        "sprite_frame": {
-            "x": 20,
-            "y": 5,
-            "w": 5,
-            "h": 4
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 50010,
-        "name": "building.name.villa",
-        "is_invulnerable": true,
-        "entity_type": "Building",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            12
-        ],
-        "sprite_frame": {
-            "x": 25,
-            "y": 5,
-            "w": 5,
-            "h": 5
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 3005,
-        "name": "npc.name.old_man",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            2,
-            2
-        ],
-        "sprite_frame": {
-            "x": 4,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 3006,
-        "name": "npc.name.old_woman",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            2,
-            3
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 3007,
-        "name": "npc.name.wizard",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            2,
-            9
-        ],
-        "sprite_frame": {
-            "x": 32,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 3008,
-        "name": "npc.name.male.kid.red_hair.blue_suit.green_hat",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            2,
-            4
-        ],
-        "sprite_frame": {
-            "x": 16,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1010,
-        "name": "objects.name.stairs_up",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": -1,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            1
-        ],
-        "sprite_frame": {
-            "x": 1,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1011,
-        "name": "objects.name.stairs_down",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": -1,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            2
-        ],
-        "sprite_frame": {
-            "x": 2,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1012,
-        "name": "objects.name.seat_brown",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            3
-        ],
-        "sprite_frame": {
-            "x": 3,
-            "y": 0,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1013,
-        "name": "objects.name.seat_green",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            4
-        ],
-        "sprite_frame": {
-            "x": 3,
-            "y": 1,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1015,
-        "name": "objects.name.seat_orange",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            5
-        ],
-        "sprite_frame": {
-            "x": 3,
-            "y": 2,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1014,
-        "name": "objects.name.seat_pink",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            6
-        ],
-        "sprite_frame": {
-            "x": 3,
-            "y": 3,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1016,
-        "name": "objects.name.table",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            3,
-            7
-        ],
-        "sprite_frame": {
-            "x": 4,
-            "y": 0,
-            "w": 2,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1017,
-        "name": "objects.name.bed",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            3,
-            8
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 2,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 2000,
-        "name": "objects.name.key_yellow",
-        "is_invulnerable": true,
-        "entity_type": "PickableObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            5,
-            1
-        ],
-        "sprite_frame": {
-            "x": 30,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "Yellow"
-    },
-    {
-        "id": 2001,
-        "name": "objects.name.key_red",
-        "is_invulnerable": true,
-        "entity_type": "PickableObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            5,
-            2
-        ],
-        "sprite_frame": {
-            "x": 30,
-            "y": 2,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "Red"
-    },
-    {
-        "id": 2002,
-        "name": "objects.name.key_green",
-        "is_invulnerable": true,
-        "entity_type": "PickableObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            5,
-            3
-        ],
-        "sprite_frame": {
-            "x": 30,
-            "y": 4,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "Green"
-    },
-    {
-        "id": 2003,
-        "name": "objects.name.key_blue",
-        "is_invulnerable": true,
-        "entity_type": "PickableObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            5,
-            4
-        ],
-        "sprite_frame": {
-            "x": 30,
-            "y": 6,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "Blue"
-    },
-    {
-        "id": 2004,
-        "name": "objects.name.key_silver",
-        "is_invulnerable": true,
-        "entity_type": "PickableObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            5,
-            5
-        ],
-        "sprite_frame": {
-            "x": 30,
-            "y": 8,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "Silver"
-    },
-    {
-        "id": 2005,
-        "name": "objects.name.key_white",
-        "is_invulnerable": true,
-        "entity_type": "PickableObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            25
-        ],
-        "sprite_frame": {
-            "x": 30,
-            "y": 10,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "Silver"
-    },
-    {
-        "id": 1019,
-        "name": "objects.name.teleporter",
-        "is_invulnerable": true,
-        "entity_type": "Teleporter",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            6,
-            5
-        ],
-        "sprite_frame": {
-            "x": 7,
-            "y": 5,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1030,
-        "name": "objects.name.boulder",
-        "is_invulnerable": true,
-        "entity_type": "PushableObject",
-        "z_index": 15,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            9
-        ],
-        "sprite_frame": {
-            "x": 1,
-            "y": 2,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1031,
-        "name": "objects.name.boulder",
-        "is_invulnerable": true,
-        "entity_type": "PushableObject",
-        "z_index": 15,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            7,
-            3
-        ],
-        "sprite_frame": {
-            "x": 2,
-            "y": 2,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1040,
-        "name": "objects.name.gate.yellow",
-        "is_invulnerable": true,
-        "entity_type": "Gate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            6
-        ],
-        "sprite_frame": {
-            "x": 6,
-            "y": 0,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Yellow"
-    },
-    {
-        "id": 1041,
-        "name": "objects.name.gate.red",
-        "is_invulnerable": true,
-        "entity_type": "Gate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            7
-        ],
-        "sprite_frame": {
-            "x": 6,
-            "y": 1,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Red"
-    },
-    {
-        "id": 1042,
-        "name": "objects.name.gate.green",
-        "is_invulnerable": true,
-        "entity_type": "Gate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            8
-        ],
-        "sprite_frame": {
-            "x": 6,
-            "y": 2,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Green"
-    },
-    {
-        "id": 1043,
-        "name": "objects.name.gate.blue",
-        "is_invulnerable": true,
-        "entity_type": "Gate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            9
-        ],
-        "sprite_frame": {
-            "x": 6,
-            "y": 3,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Blue"
-    },
-    {
-        "id": 1044,
-        "name": "objects.name.gate.silver",
-        "is_invulnerable": true,
-        "entity_type": "Gate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            10
-        ],
-        "sprite_frame": {
-            "x": 6,
-            "y": 4,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Silver"
-    },
-    {
-        "id": 1045,
-        "name": "objects.name.gate.white",
-        "is_invulnerable": true,
-        "entity_type": "Gate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            3,
-            22
-        ],
-        "sprite_frame": {
-            "x": 13,
-            "y": 4,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Silver"
-    },
-    {
-        "id": 1050,
-        "name": "objects.name.pressure_plate.yellow",
-        "is_invulnerable": true,
-        "entity_type": "PressurePlate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            5,
-            11
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 0,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Yellow"
-    },
-    {
-        "id": 1051,
-        "name": "objects.name.pressure_plate.red",
-        "is_invulnerable": true,
-        "entity_type": "PressurePlate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            5,
-            12
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 1,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Red"
-    },
-    {
-        "id": 1052,
-        "name": "objects.name.pressure_plate.green",
-        "is_invulnerable": true,
-        "entity_type": "PressurePlate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            5,
-            13
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 2,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Green"
-    },
-    {
-        "id": 1053,
-        "name": "objects.name.pressure_plate.blue",
-        "is_invulnerable": true,
-        "entity_type": "PressurePlate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            5,
-            14
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 3,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Blue"
-    },
-    {
-        "id": 1054,
-        "name": "objects.name.pressure_plate.silver",
-        "is_invulnerable": true,
-        "entity_type": "PressurePlate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            5,
-            15
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 4,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Silver"
-    },
-    {
-        "id": 1055,
-        "name": "objects.name.pressure_plate.white",
-        "is_invulnerable": true,
-        "entity_type": "PressurePlate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            24
-        ],
-        "sprite_frame": {
-            "x": 15,
-            "y": 4,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Silver"
-    },
-    {
-        "id": 1060,
-        "name": "objects.name.inverse_gate.yellow",
-        "is_invulnerable": true,
-        "entity_type": "InverseGate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            6
-        ],
-        "sprite_frame": {
-            "x": 6,
-            "y": 0,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Yellow"
-    },
-    {
-        "id": 1061,
-        "name": "objects.name.inverse_gate.red",
-        "is_invulnerable": true,
-        "entity_type": "InverseGate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            7
-        ],
-        "sprite_frame": {
-            "x": 6,
-            "y": 1,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Red"
-    },
-    {
-        "id": 1062,
-        "name": "objects.name.inverse_gate.green",
-        "is_invulnerable": true,
-        "entity_type": "InverseGate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            8
-        ],
-        "sprite_frame": {
-            "x": 6,
-            "y": 2,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Green"
-    },
-    {
-        "id": 1063,
-        "name": "objects.name.inverse_gate.blue",
-        "is_invulnerable": true,
-        "entity_type": "InverseGate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            9
-        ],
-        "sprite_frame": {
-            "x": 6,
-            "y": 3,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Blue"
-    },
-    {
-        "id": 1064,
-        "name": "objects.name.inverse_gate.silver",
-        "is_invulnerable": true,
-        "entity_type": "InverseGate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            10
-        ],
-        "sprite_frame": {
-            "x": 6,
-            "y": 4,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Silver"
-    },
-    {
-        "id": 1065,
-        "name": "objects.name.inverse_gate.white",
-        "is_invulnerable": true,
-        "entity_type": "InverseGate",
-        "z_index": 10,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            3,
-            23
-        ],
-        "sprite_frame": {
-            "x": 15,
-            "y": 4,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "Silver"
-    },
-    {
-        "id": 1070,
-        "name": "building.name.shop",
-        "is_invulnerable": true,
-        "entity_type": "Building",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            7
-        ],
-        "sprite_frame": {
-            "x": 10,
-            "y": 1,
-            "w": 5,
-            "h": 4
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1071,
-        "name": "building.name.shop",
-        "is_invulnerable": true,
-        "entity_type": "Building",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            8
-        ],
-        "sprite_frame": {
-            "x": 10,
-            "y": 6,
-            "w": 5,
-            "h": 4
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1072,
-        "name": "building.name.shop",
-        "is_invulnerable": true,
-        "entity_type": "Building",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            9
-        ],
-        "sprite_frame": {
-            "x": 10,
-            "y": 11,
-            "w": 5,
-            "h": 4
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 4001,
-        "name": "npc.name.slime",
-        "entity_type": "Npc",
-        "z_index": 15,
-        "base_speed": 0.5,
-        "is_invulnerable": false,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            2,
-            5
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 0,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Free"
-    },
-    {
-        "id": 4004,
-        "name": "npc.name.monster",
-        "entity_type": "CloseCombatMonster",
-        "z_index": 15,
-        "hp": 200,
-        "dps": 400.0,
-        "base_speed": 2.5,
-        "is_rigid": false,
-        "melee_attacks_hero": true,
-        "inventory_texture_offset": [
-            2,
-            8
-        ],
-        "sprite_frame": {
-            "x": 28,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "FindHero"
-    },
-    {
-        "id": 6001,
-        "name": "objects.name.book_red",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            11
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 5,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 6002,
-        "name": "objects.name.book_blue",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            12
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 6,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 6003,
-        "name": "objects.name.book_green",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            13
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 7,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 6004,
-        "name": "objects.name.book_purple",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            14
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 8,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 6005,
-        "name": "objects.name.book_black",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            3,
-            15
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 9,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 7000,
-        "name": "objects.name.kunai",
-        "entity_type": "Bullet",
-        "z_index": 99,
-        "dps": 1150,
-        "base_speed": 7.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            7,
-            1
-        ],
-        "sprite_frame": {
-            "x": 4,
-            "y": 0,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 7001,
-        "name": "objects.name.kunai.x10",
-        "entity_type": "Bundle",
-        "z_index": 14,
-        "base_speed": 5.0,
-        "is_rigid": false,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            7,
-            4
-        ],
-        "sprite_frame": {
-            "x": 1,
-            "y": 4,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None",
-        "bundle_contents": [
-            7000,
-            7000,
-            7000,
-            7000,
-            7000,
-            7000,
-            7000,
-            7000,
-            7000,
-            7000
-        ]
-    },
-    {
-        "id": 9000,
-        "name": "objects.name.rail.cart",
-        "entity_type": "RailObject",
-        "z_index": 5,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            6,
-            3
-        ],
-        "sprite_frame": {
-            "x": 2,
-            "y": 3,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None",
-        "is_consumable": true
-    },
-    {
-        "id": 10000,
-        "name": "objects.name.sign",
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            8,
-            1
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 4,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 10001,
-        "name": "objects.name.large_sign",
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            8,
-            2
-        ],
-        "sprite_frame": {
-            "x": 3,
-            "y": 4,
-            "w": 2,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 10002,
-        "name": "objects.name.scroll.brown",
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            8,
-            3
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 5,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 10003,
-        "name": "objects.name.scroll.red",
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            8,
-            4
-        ],
-        "sprite_frame": {
-            "x": 1,
-            "y": 5,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 10004,
-        "name": "objects.name.scroll.blue",
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            8,
-            5
-        ],
-        "sprite_frame": {
-            "x": 2,
-            "y": 5,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 10005,
-        "name": "objects.name.scroll.yellow",
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            8,
-            6
-        ],
-        "sprite_frame": {
-            "x": 3,
-            "y": 5,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 10006,
-        "name": "objects.name.scroll.green",
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            8,
-            7
-        ],
-        "sprite_frame": {
-            "x": 4,
-            "y": 5,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 11000,
-        "name": "objects.name.magic_circle.summoning",
-        "entity_type": "StaticObject",
-        "z_index": -1,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            7,
-            5
-        ],
-        "sprite_frame": {
-            "x": 9,
-            "y": 0,
-            "w": 3,
-            "h": 3
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 6,
-        "lock_type": "None"
-    },
-    {
-        "id": 11005,
-        "name": "objects.name.magic_circle.summoning.evil",
-        "entity_type": "StaticObject",
-        "z_index": -1,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            7,
-            11
-        ],
-        "sprite_frame": {
-            "x": 9,
-            "y": 3,
-            "w": 3,
-            "h": 3
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 6,
-        "lock_type": "None"
-    },
-    {
-        "id": 11001,
-        "name": "objects.name.well",
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            8,
-            8
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 7,
-            "w": 2,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 11002,
-        "name": "objects.name.fountain",
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            7,
-            6
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 15,
-            "w": 2,
-            "h": 2
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 11003,
-        "name": "objects.name.torch",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            7,
-            7
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 17,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 5,
-        "lock_type": "None"
-    },
-    {
-        "id": 11004,
-        "name": "objects.name.magic_circle.blue",
-        "entity_type": "StaticObject",
-        "z_index": -1,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            7,
-            8
-        ],
-        "sprite_frame": {
-            "x": 9,
-            "y": 13,
-            "w": 3,
-            "h": 3
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 11006,
-        "name": "objects.name.magic_circle.small",
-        "entity_type": "StaticObject",
-        "z_index": -1,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            3,
-            17
-        ],
-        "sprite_frame": {
-            "x": 9,
-            "y": 6,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 50000,
-        "name": "objects.name.hint_consumable",
-        "is_invulnerable": true,
-        "is_consumable": true,
-        "entity_type": "Hint",
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            7,
-            9
-        ],
-        "sprite_frame": {
-            "x": 4,
-            "y": 2,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1
-    },
-    {
-        "id": 50001,
-        "name": "objects.name.hint_permanent",
-        "is_invulnerable": true,
-        "is_consumable": false,
-        "entity_type": "Hint",
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            7,
-            10
-        ],
-        "sprite_frame": {
-            "x": 4,
-            "y": 2,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1
-    },
-    {
-        "id": 60001,
-        "name": "building.name.demon_lord_castle",
-        "entity_type": "Building",
-        "is_invulnerable": true,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            4,
-            13
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 21,
-            "w": 8,
-            "h": 8
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 60002,
-        "name": "npc.name.demon_lord",
-        "entity_type": "Npc",
-        "z_index": -1,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": false,
-        "inventory_texture_offset": [
-            4,
-            14
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 0,
-            "w": 2,
-            "h": 3
-        },
-        "sprite_sheet_id": 1018,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 60003,
-        "name": "npc.name.goddess",
-        "entity_type": "Npc",
-        "z_index": -1,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": false,
-        "inventory_texture_offset": [
-            2,
-            11
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 0,
-            "w": 2,
-            "h": 3
-        },
-        "sprite_sheet_id": 1018,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1032,
-        "name": "objects.name.skull",
-        "is_invulnerable": true,
-        "entity_type": "PushableObject",
-        "z_index": 15,
-        "base_speed": 0.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            4,
-            15
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 7,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 4005,
-        "name": "npc.name.cat",
-        "is_invulnerable": false,
-        "entity_type": "Npc",
-        "z_index": 15,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            2,
-            10
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 0,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Free"
-    },
-    {
-        "id": 1033,
-        "name": "building.name.house",
-        "entity_type": "Building",
-        "is_invulnerable": true,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            12
-        ],
-        "sprite_frame": {
-            "x": 31,
-            "y": 7,
-            "w": 4,
-            "h": 3
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1034,
-        "name": "npc.name.ninja.black",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            2,
-            12
-        ],
-        "sprite_frame": {
-            "x": 36,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1035,
-        "name": "npc.name.ninja.blue",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            2,
-            13
-        ],
-        "sprite_frame": {
-            "x": 40,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1036,
-        "name": "npc.name.female.blue_hair",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            13
-        ],
-        "sprite_frame": {
-            "x": 52,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1037,
-        "name": "building.name.power_station",
-        "entity_type": "Building",
-        "is_invulnerable": true,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            15
-        ],
-        "sprite_frame": {
-            "x": 42,
-            "y": 1,
-            "w": 4,
-            "h": 3
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1038,
-        "name": "objects.name.barrel.purple",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            16
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 10,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1039,
-        "name": "objects.name.barrel.green",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            17
-        ],
-        "sprite_frame": {
-            "x": 1,
-            "y": 10,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1073,
-        "name": "objects.name.barrel.brown",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            18
-        ],
-        "sprite_frame": {
-            "x": 2,
-            "y": 10,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1074,
-        "name": "objects.name.barrel.wood",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            19
-        ],
-        "sprite_frame": {
-            "x": 3,
-            "y": 10,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1075,
-        "name": "objects.power.kidneys",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            20
-        ],
-        "sprite_frame": {
-            "x": 4,
-            "y": 11,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1076,
-        "name": "objects.power.tower.off",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            21
-        ],
-        "sprite_frame": {
-            "x": 5,
-            "y": 10,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1077,
-        "name": "objects.power.tower.on",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            22
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1078,
-        "name": "objects.name.boat.small",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            23
-        ],
-        "sprite_frame": {
-            "x": 9,
-            "y": 19,
-            "w": 2,
-            "h": 2
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1079,
-        "name": "objects.wind_turbine",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            24
-        ],
-        "sprite_frame": {
-            "x": 17,
-            "y": 16,
-            "w": 3,
-            "h": 5
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 6,
-        "lock_type": "None"
-    },
-    {
-        "id": 1080,
-        "name": "npc.name.punk",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            8,
-            12
-        ],
-        "sprite_frame": {
-            "x": 48,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1081,
-        "name": "npc.name.ethan",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            8,
-            13
-        ],
-        "sprite_frame": {
-            "x": 60,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1082,
-        "name": "npc.name.male.black.doctor",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            8,
-            14
-        ],
-        "sprite_frame": {
-            "x": 64,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1083,
-        "name": "objects.name.amanita",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            17
-        ],
-        "sprite_frame": {
-            "x": 9,
-            "y": 16,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 1084,
-        "name": "building.name.house",
-        "entity_type": "Building",
-        "is_invulnerable": true,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            18
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 16,
-            "w": 5,
-            "h": 4
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1085,
-        "name": "building.name.house",
-        "entity_type": "Building",
-        "is_invulnerable": true,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            19
-        ],
-        "sprite_frame": {
-            "x": 5,
-            "y": 15,
-            "w": 5,
-            "h": 5
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1086,
-        "name": "building.name.house",
-        "entity_type": "Building",
-        "is_invulnerable": true,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            20
-        ],
-        "sprite_frame": {
-            "x": 16,
-            "y": 12,
-            "w": 4,
-            "h": 3
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1087,
-        "name": "building.name.house",
-        "entity_type": "Building",
-        "is_invulnerable": true,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            21
-        ],
-        "sprite_frame": {
-            "x": 20,
-            "y": 12,
-            "w": 5,
-            "h": 3
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1088,
-        "name": "building.name.house",
-        "entity_type": "Building",
-        "is_invulnerable": true,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            22
-        ],
-        "sprite_frame": {
-            "x": 25,
-            "y": 11,
-            "w": 5,
-            "h": 4
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1089,
-        "name": "objects.waterfall",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            25
-        ],
-        "sprite_frame": {
-            "x": 9,
-            "y": 8,
-            "w": 3,
-            "h": 3
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 7,
-        "lock_type": "None"
-    },
-    {
-        "id": 1090,
-        "name": "objects.name.cabinet.sm.brown",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            11
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 12,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1091,
-        "name": "objects.name.cabinet.md.brown",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            12
-        ],
-        "sprite_frame": {
-            "x": 1,
-            "y": 12,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1092,
-        "name": "objects.name.cabinet.lg.brown",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            13
-        ],
-        "sprite_frame": {
-            "x": 2,
-            "y": 12,
-            "w": 2,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1093,
-        "name": "objects.name.cabinet.sm.beige",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            14
-        ],
-        "sprite_frame": {
-            "x": 4,
-            "y": 12,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1094,
-        "name": "objects.name.cabinet.md.beige",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            15
-        ],
-        "sprite_frame": {
-            "x": 5,
-            "y": 12,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1095,
-        "name": "objects.name.cabinet.lg.beige",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            16
-        ],
-        "sprite_frame": {
-            "x": 6,
-            "y": 12,
-            "w": 2,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1096,
-        "name": "objects.name.cabinet.sm.white",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            17
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 14,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1097,
-        "name": "objects.name.cabinet.md.white",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            18
-        ],
-        "sprite_frame": {
-            "x": 1,
-            "y": 14,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1098,
-        "name": "objects.name.cabinet.lg.white",
-        "entity_type": "StaticObject",
-        "is_invulnerable": false,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            6,
-            19
-        ],
-        "sprite_frame": {
-            "x": 2,
-            "y": 14,
-            "w": 2,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1099,
-        "name": "npc.name.ninja.red",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            8,
-            15
-        ],
-        "sprite_frame": {
-            "x": 68,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1100,
-        "name": "npc.name.silver",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            8,
-            16
-        ],
-        "sprite_frame": {
-            "x": 72,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1101,
-        "name": "npc.name.female.brown_hair",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            8,
-            17
-        ],
-        "sprite_frame": {
-            "x": 76,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1102,
-        "name": "npc.name.soldier.female.red",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            8,
-            18
-        ],
-        "sprite_frame": {
-            "x": 80,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1104,
-        "name": "npc.name.snail",
-        "entity_type": "Npc",
-        "z_index": 15,
-        "base_speed": 0.5,
-        "is_rigid": false,
-        "is_invulnerable": false,
-        "inventory_texture_offset": [
-            8,
-            20
-        ],
-        "sprite_frame": {
-            "x": 12,
-            "y": 0,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Free"
-    },
-    {
-        "id": 1105,
-        "name": "npc.name.piglet",
-        "entity_type": "Npc",
-        "z_index": 15,
-        "base_speed": 1.5,
-        "is_rigid": false,
-        "is_invulnerable": false,
-        "inventory_texture_offset": [
-            8,
-            21
-        ],
-        "sprite_frame": {
-            "x": 16,
-            "y": 0,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Free"
-    },
-    {
-        "id": 1106,
-        "name": "npc.name.old_man_mustache",
-        "entity_type": "Npc",
-        "z_index": 15,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            8,
-            22
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1107,
-        "name": "npc.name.generic",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            1
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1108,
-        "name": "npc.name.mr_bubblegum",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            2
-        ],
-        "sprite_frame": {
-            "x": 80,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 1109,
-        "name": "npc.name.swag_kid",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            3
-        ],
-        "sprite_frame": {
-            "x": 24,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1110,
-        "name": "npc.name.assassin_girl",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            21
-        ],
-        "sprite_frame": {
-            "x": 84,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1111,
-        "name": "npc.name.blonde_guy",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            4
-        ],
-        "sprite_frame": {
-            "x": 4,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1112,
-        "name": "npc.name.rasta_girl",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            5
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1113,
-        "name": "npc.name.swag_kid_2",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            6
-        ],
-        "sprite_frame": {
-            "x": 12,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1114,
-        "name": "npc.name.dbz1",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            7
-        ],
-        "sprite_frame": {
-            "x": 16,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1115,
-        "name": "npc.name.dbz2",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            8
-        ],
-        "sprite_frame": {
-            "x": 20,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1116,
-        "name": "npc.name.dbz3",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            9
-        ],
-        "sprite_frame": {
-            "x": 24,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1127,
-        "name": "npc.name.female.green_hair",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            10
-        ],
-        "sprite_frame": {
-            "x": 28,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1117,
-        "name": "npc.name.blue_mohawk",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            11
-        ],
-        "sprite_frame": {
-            "x": 32,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1118,
-        "name": "npc.name.generic.apron",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            12
-        ],
-        "sprite_frame": {
-            "x": 36,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1119,
-        "name": "npc.name.old_man_mustache.black",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            13
-        ],
-        "sprite_frame": {
-            "x": 40,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1120,
-        "name": "npc.name.male.black.blue_hair",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            14
-        ],
-        "sprite_frame": {
-            "x": 44,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1121,
-        "name": "npc.name.female.dark_blonde",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            15
-        ],
-        "sprite_frame": {
-            "x": 48,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1122,
-        "name": "npc.name.swag_kid_3",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            16
-        ],
-        "sprite_frame": {
-            "x": 52,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1123,
-        "name": "npc.name.purple_alien",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            17
-        ],
-        "sprite_frame": {
-            "x": 56,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1124,
-        "name": "npc.name.blonde.apron",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            18
-        ],
-        "sprite_frame": {
-            "x": 60,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1125,
-        "name": "npc.name.brown_mohawk",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            19
-        ],
-        "sprite_frame": {
-            "x": 64,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1126,
-        "name": "npc.name.purple_mohawk",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            20
-        ],
-        "sprite_frame": {
-            "x": 68,
-            "y": 19,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1128,
-        "name": "The end!",
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 0.0,
-        "is_rigid": true,
-        "is_invulnerable": true,
-        "inventory_texture_offset": [
-            8,
-            6
-        ],
-        "sprite_frame": {
-            "x": 3,
-            "y": 5,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1129,
-        "name": "building.name.igloo",
-        "entity_type": "Building",
-        "is_invulnerable": true,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            23
-        ],
-        "sprite_frame": {
-            "x": 31,
-            "y": 0,
-            "w": 5,
-            "h": 3
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1130,
-        "name": "building.name.igloo",
-        "entity_type": "Building",
-        "is_invulnerable": true,
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            24
-        ],
-        "sprite_frame": {
-            "x": 36,
-            "y": 0,
-            "w": 3,
-            "h": 3
-        },
-        "sprite_sheet_id": 1004,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1131,
-        "name": "npc.name.developer_messenger",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            10,
-            26
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 0,
-            "w": 2,
-            "h": 2
-        },
-        "sprite_sheet_id": 1016,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1132,
-        "name": "npc.name.old_man_swag_purple",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            23
-        ],
-        "sprite_frame": {
-            "x": 4,
-            "y": 38,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1133,
-        "name": "npc.name.old_man_swag_brown",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            24
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 38,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1134,
-        "name": "npc.name.elf_priestess",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            25
-        ],
-        "sprite_frame": {
-            "x": 12,
-            "y": 38,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1135,
-        "name": "npc.name.developer",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            10,
-            22
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 38,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1136,
-        "name": "objects.name.footsteps_trail",
-        "is_invulnerable": true,
-        "entity_type": "Trail",
-        "base_speed": 2.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            0
-        ],
-        "sprite_frame": {
-            "x": 20,
-            "y": 0,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 15,
-        "lock_type": "None"
-    },
-    {
-        "id": 1137,
-        "name": "npc.name.bearwolf",
-        "is_invulnerable": false,
-        "entity_type": "Npc",
-        "base_speed": 1.2,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            10,
-            27
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 0,
-            "w": 2,
-            "h": 2
-        },
-        "sprite_sheet_id": 1016,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Free"
-    },
-    {
-        "id": 1138,
-        "name": "npc.name.piglet_blue",
-        "entity_type": "Npc",
-        "z_index": 15,
-        "base_speed": 1.5,
-        "is_rigid": false,
-        "is_invulnerable": false,
-        "inventory_texture_offset": [
-            8,
-            19
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 10,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Free"
-    },
-    {
-        "id": 1139,
-        "name": "npc.name.slime_blue",
-        "entity_type": "Npc",
-        "z_index": 15,
-        "base_speed": 1.5,
-        "is_rigid": false,
-        "is_invulnerable": false,
-        "inventory_texture_offset": [
-            8,
-            23
-        ],
-        "sprite_frame": {
-            "x": 8,
-            "y": 10,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Free"
-    },
-    {
-        "id": 1140,
-        "name": "npc.name.cat_brown",
-        "entity_type": "Npc",
-        "z_index": 15,
-        "base_speed": 1.5,
-        "is_rigid": false,
-        "is_invulnerable": false,
-        "inventory_texture_offset": [
-            8,
-            24
-        ],
-        "sprite_frame": {
-            "x": 4,
-            "y": 10,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Free"
-    },
-    {
-        "id": 1141,
-        "name": "objects.name.camp_fire",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 14,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            8,
-            25
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 11,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 5,
-        "lock_type": "None"
-    },
-    {
-        "id": 1142,
-        "name": "npc.name.winter_apron",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            8,
-            26
-        ],
-        "sprite_frame": {
-            "x": 16,
-            "y": 38,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1143,
-        "name": "npc.name.winter_black_red",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            8,
-            27
-        ],
-        "sprite_frame": {
-            "x": 20,
-            "y": 38,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1144,
-        "name": "npc.name.soldier",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            7,
-            14
-        ],
-        "sprite_frame": {
-            "x": 56,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1009,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1145,
-        "name": "npc.name.tentacle",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            6,
-            20
-        ],
-        "sprite_frame": {
-            "x": 1,
-            "y": 0,
-            "w": 5,
-            "h": 3
-        },
-        "sprite_sheet_id": 1021,
-        "sprite_number_of_frames": 35,
-        "lock_type": "None"
-    },
-    {
-        "id": 1146,
-        "name": "npc.name.tentacle",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            6,
-            21
-        ],
-        "sprite_frame": {
-            "x": 1,
-            "y": 3,
-            "w": 6,
-            "h": 6
-        },
-        "sprite_sheet_id": 1021,
-        "sprite_number_of_frames": 18,
-        "lock_type": "None"
-    },
-    {
-        "id": 1147,
-        "name": "npc.name.lava_splash",
-        "is_invulnerable": true,
-        "entity_type": "Npc",
-        "base_speed": 2.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            6,
-            22
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 0,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 1148,
-        "name": "npc.name.small_monster",
-        "entity_type": "CloseCombatMonster",
-        "z_index": 15,
-        "base_speed": 3.0,
-        "dps": 300.0,
-        "hp": 80,
-        "is_rigid": false,
-        "melee_attacks_hero": true,
-        "inventory_texture_offset": [
-            3,
-            21
-        ],
-        "sprite_frame": {
-            "x": 12,
-            "y": 10,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "FindHero"
-    },
-    {
-        "id": 1149,
-        "name": "npc.name.cat",
-        "is_invulnerable": false,
-        "entity_type": "Npc",
-        "z_index": 15,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            6,
-            23
-        ],
-        "sprite_frame": {
-            "x": 16,
-            "y": 10,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Free"
-    },
-    {
-        "id": 1150,
-        "name": "npc.name.cat",
-        "is_invulnerable": false,
-        "entity_type": "Npc",
-        "z_index": 15,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            6,
-            24
-        ],
-        "sprite_frame": {
-            "x": 20,
-            "y": 10,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Free"
-    },
-    {
-        "id": 1151,
-        "name": "npc.name.cat",
-        "is_invulnerable": false,
-        "entity_type": "Npc",
-        "z_index": 15,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            6,
-            25
-        ],
-        "sprite_frame": {
-            "x": 24,
-            "y": 10,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None",
-        "movement_directions": "Free"
-    },
-    {
-        "id": 1152,
-        "name": "npc.name.gate_to_demon_lord",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": 15,
-        "base_speed": 1.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            5,
-            25
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 2,
-            "w": 2,
-            "h": 3
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1154,
-        "name": "objects.name.ar15.weapon",
-        "is_invulnerable": true,
-        "entity_type": "Equipment",
-        "z_index": 16,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            0
-        ],
-        "sprite_frame": {
-            "x": 17,
-            "y": 1,
-            "w": 4,
-            "h": 4
-        },
-        "sprite_sheet_id": 1022,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1155,
-        "name": "objects.name.terrain.flowers.red",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": -1,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            12
-        ],
-        "sprite_frame": {
-            "x": 35,
-            "y": 13,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1156,
-        "name": "objects.name.terrain.flowers.yellow",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": -1,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            13
-        ],
-        "sprite_frame": {
-            "x": 35,
-            "y": 14,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1157,
-        "name": "objects.name.terrain.flowers.purple",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": -1,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            15
-        ],
-        "sprite_frame": {
-            "x": 35,
-            "y": 15,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1157,
-        "name": "objects.name.terrain.flowers.blue",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "z_index": -1,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            14
-        ],
-        "sprite_frame": {
-            "x": 35,
-            "y": 16,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1012,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1158,
-        "name": "objects.name.sword.weapon",
-        "is_invulnerable": true,
-        "entity_type": "Sword",
-        "z_index": 16,
-        "base_speed": 2.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            0
-        ],
-        "sprite_frame": {
-            "x": 33,
-            "y": 1,
-            "w": 4,
-            "h": 4
-        },
-        "sprite_sheet_id": 1022,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1159,
-        "name": "objects.name.claymore.weapon",
-        "is_invulnerable": true,
-        "entity_type": "Sword",
-        "z_index": 16,
-        "base_speed": 3.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            0
-        ],
-        "sprite_frame": {
-            "x": 49,
-            "y": 1,
-            "w": 4,
-            "h": 4
-        },
-        "sprite_sheet_id": 1022,
-        "sprite_number_of_frames": 4,
-        "lock_type": "None"
-    },
-    {
-        "id": 1160,
-        "name": "objects.name.kunai_launcher.weapon",
-        "is_invulnerable": true,
-        "entity_type": "KunaiLauncher",
-        "z_index": 99,
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            0
-        ],
-        "sprite_frame": {
-            "x": 0,
-            "y": 0,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1000,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1161,
-        "name": "objects.name.slash",
-        "entity_type": "Bullet",
-        "dps": 280,
-        "z_index": 99,
-        "base_speed": 2.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            0
-        ],
-        "sprite_frame": {
-            "x": 28,
-            "y": 10,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1162,
-        "name": "objects.name.ar15.item",
-        "is_invulnerable": true,
-        "entity_type": "PickableObject",
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            11,
-            3
-        ],
-        "sprite_frame": {
-            "x": 17,
-            "y": 69,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1022,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 1163,
-        "name": "objects.name.sword.item",
-        "is_invulnerable": true,
-        "entity_type": "PickableObject",
-        "base_speed": 1.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            11,
-            2
-        ],
-        "sprite_frame": {
-            "x": 34,
-            "y": 69,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1022,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 1164,
-        "name": "objects.name.claymore.item",
-        "is_invulnerable": true,
-        "entity_type": "PickableObject",
-        "base_speed": 3.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            11,
-            1
-        ],
-        "sprite_frame": {
-            "x": 49,
-            "y": 69,
-            "w": 1,
-            "h": 2
-        },
-        "sprite_sheet_id": 1022,
-        "sprite_number_of_frames": 8,
-        "lock_type": "None"
-    },
-    {
-        "id": 1165,
-        "name": "objects.name.stonehenge",
-        "is_invulnerable": true,
-        "entity_type": "StaticObject",
-        "base_speed": 3.0,
-        "is_rigid": true,
-        "inventory_texture_offset": [
-            11,
-            4
-        ],
-        "sprite_frame": {
-            "x": 13,
-            "y": 5,
-            "w": 4,
-            "h": 3
-        },
-        "sprite_sheet_id": 1010,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    },
-    {
-        "id": 1166,
-        "name": "objects.name.slash.claymore",
-        "entity_type": "Bullet",
-        "dps": 430,
-        "z_index": 14,
-        "base_speed": 2.0,
-        "is_rigid": false,
-        "inventory_texture_offset": [
-            0,
-            0
-        ],
-        "sprite_frame": {
-            "x": 28,
-            "y": 10,
-            "w": 1,
-            "h": 1
-        },
-        "sprite_sheet_id": 1014,
-        "sprite_number_of_frames": 1,
-        "lock_type": "None"
-    }
+  {
+    "base_speed": 4.0,
+    "entity_type": "Hero",
+    "id": 1001,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "movement_directions": "Keyboard",
+    "name": "Hero",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 12,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009,
+    "z_index": 15
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1002,
+    "inventory_texture_offset": [
+      4,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 0,
+      "y": 1
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1003,
+    "inventory_texture_offset": [
+      4,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 0,
+      "y": 6
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1004,
+    "inventory_texture_offset": [
+      4,
+      5
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 0,
+      "y": 11
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1005,
+    "inventory_texture_offset": [
+      4,
+      2
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 5,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1006,
+    "inventory_texture_offset": [
+      4,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 5,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1007,
+    "inventory_texture_offset": [
+      4,
+      6
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house_two_floors",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 5,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1008,
+    "inventory_texture_offset": [
+      4,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 15,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1009,
+    "inventory_texture_offset": [
+      4,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.broken_house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 20,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 50010,
+    "inventory_texture_offset": [
+      4,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.villa",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 25,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 3005,
+    "inventory_texture_offset": [
+      2,
+      2
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.old_man",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 4,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 3006,
+    "inventory_texture_offset": [
+      2,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.old_woman",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 8,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 3007,
+    "inventory_texture_offset": [
+      2,
+      9
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.wizard",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 32,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 3008,
+    "inventory_texture_offset": [
+      2,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.male.kid.red_hair.blue_suit.green_hat",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 16,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 1010,
+    "inventory_texture_offset": [
+      3,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.stairs_up",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 1,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": -1
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 1011,
+    "inventory_texture_offset": [
+      3,
+      2
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.stairs_down",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 2,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": -1
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 1012,
+    "inventory_texture_offset": [
+      3,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.seat_brown",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 3,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 1013,
+    "inventory_texture_offset": [
+      3,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.seat_green",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 3,
+      "y": 1
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 1015,
+    "inventory_texture_offset": [
+      3,
+      5
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.seat_orange",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 3,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 1014,
+    "inventory_texture_offset": [
+      3,
+      6
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.seat_pink",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 3,
+      "y": 3
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 1016,
+    "inventory_texture_offset": [
+      3,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.table",
+    "sprite_frame": {
+      "h": 2,
+      "w": 2,
+      "x": 4,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 1017,
+    "inventory_texture_offset": [
+      3,
+      8
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.bed",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 0,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2000,
+    "inventory_texture_offset": [
+      5,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Yellow",
+    "name": "objects.name.key_yellow",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 30,
+      "y": 0
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2001,
+    "inventory_texture_offset": [
+      5,
+      2
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Red",
+    "name": "objects.name.key_red",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 30,
+      "y": 2
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2002,
+    "inventory_texture_offset": [
+      5,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Green",
+    "name": "objects.name.key_green",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 30,
+      "y": 4
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2003,
+    "inventory_texture_offset": [
+      5,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Blue",
+    "name": "objects.name.key_blue",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 30,
+      "y": 6
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2004,
+    "inventory_texture_offset": [
+      5,
+      5
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Silver",
+    "name": "objects.name.key_silver",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 30,
+      "y": 8
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2005,
+    "inventory_texture_offset": [
+      3,
+      25
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Silver",
+    "name": "objects.name.key_white",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 30,
+      "y": 10
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Teleporter",
+    "id": 1019,
+    "inventory_texture_offset": [
+      6,
+      5
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.teleporter",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 7,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PushableObject",
+    "id": 1030,
+    "inventory_texture_offset": [
+      3,
+      9
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.boulder",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 1,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 15
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PushableObject",
+    "id": 1031,
+    "inventory_texture_offset": [
+      7,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.boulder",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 2,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 15
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Gate",
+    "id": 1040,
+    "inventory_texture_offset": [
+      5,
+      6
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Yellow",
+    "name": "objects.name.gate.yellow",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 6,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Gate",
+    "id": 1041,
+    "inventory_texture_offset": [
+      5,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Red",
+    "name": "objects.name.gate.red",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 6,
+      "y": 1
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Gate",
+    "id": 1042,
+    "inventory_texture_offset": [
+      5,
+      8
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Green",
+    "name": "objects.name.gate.green",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 6,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Gate",
+    "id": 1043,
+    "inventory_texture_offset": [
+      5,
+      9
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Blue",
+    "name": "objects.name.gate.blue",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 6,
+      "y": 3
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Gate",
+    "id": 1044,
+    "inventory_texture_offset": [
+      5,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Silver",
+    "name": "objects.name.gate.silver",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 6,
+      "y": 4
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Gate",
+    "id": 1045,
+    "inventory_texture_offset": [
+      3,
+      22
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Silver",
+    "name": "objects.name.gate.white",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 13,
+      "y": 4
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PressurePlate",
+    "id": 1050,
+    "inventory_texture_offset": [
+      5,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Yellow",
+    "name": "objects.name.pressure_plate.yellow",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 8,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PressurePlate",
+    "id": 1051,
+    "inventory_texture_offset": [
+      5,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Red",
+    "name": "objects.name.pressure_plate.red",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 8,
+      "y": 1
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PressurePlate",
+    "id": 1052,
+    "inventory_texture_offset": [
+      5,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Green",
+    "name": "objects.name.pressure_plate.green",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 8,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PressurePlate",
+    "id": 1053,
+    "inventory_texture_offset": [
+      5,
+      14
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Blue",
+    "name": "objects.name.pressure_plate.blue",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 8,
+      "y": 3
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PressurePlate",
+    "id": 1054,
+    "inventory_texture_offset": [
+      5,
+      15
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Silver",
+    "name": "objects.name.pressure_plate.silver",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 8,
+      "y": 4
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PressurePlate",
+    "id": 1055,
+    "inventory_texture_offset": [
+      3,
+      24
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "Silver",
+    "name": "objects.name.pressure_plate.white",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 15,
+      "y": 4
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "InverseGate",
+    "id": 1060,
+    "inventory_texture_offset": [
+      6,
+      6
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Yellow",
+    "name": "objects.name.inverse_gate.yellow",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 6,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "InverseGate",
+    "id": 1061,
+    "inventory_texture_offset": [
+      6,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Red",
+    "name": "objects.name.inverse_gate.red",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 6,
+      "y": 1
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "InverseGate",
+    "id": 1062,
+    "inventory_texture_offset": [
+      6,
+      8
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Green",
+    "name": "objects.name.inverse_gate.green",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 6,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "InverseGate",
+    "id": 1063,
+    "inventory_texture_offset": [
+      6,
+      9
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Blue",
+    "name": "objects.name.inverse_gate.blue",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 6,
+      "y": 3
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "InverseGate",
+    "id": 1064,
+    "inventory_texture_offset": [
+      6,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Silver",
+    "name": "objects.name.inverse_gate.silver",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 6,
+      "y": 4
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "InverseGate",
+    "id": 1065,
+    "inventory_texture_offset": [
+      3,
+      23
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "Silver",
+    "name": "objects.name.inverse_gate.white",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 15,
+      "y": 4
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 10
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1070,
+    "inventory_texture_offset": [
+      4,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 10,
+      "y": 1
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1071,
+    "inventory_texture_offset": [
+      4,
+      8
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 10,
+      "y": 6
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1072,
+    "inventory_texture_offset": [
+      4,
+      9
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 10,
+      "y": 11
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 0.5,
+    "entity_type": "Npc",
+    "id": 4001,
+    "inventory_texture_offset": [
+      2,
+      5
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.slime",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
+  },
+  {
+    "base_speed": 2.5,
+    "dps": 400.0,
+    "entity_type": "CloseCombatMonster",
+    "hp": 200,
+    "id": 4004,
+    "inventory_texture_offset": [
+      2,
+      8
+    ],
+    "is_rigid": false,
+    "lock_type": "None",
+    "melee_attacks_hero": true,
+    "movement_directions": "FindHero",
+    "name": "npc.name.monster",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 28,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 6001,
+    "inventory_texture_offset": [
+      3,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.book_red",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 5
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 6002,
+    "inventory_texture_offset": [
+      3,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.book_blue",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 6
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 6003,
+    "inventory_texture_offset": [
+      3,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.book_green",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 7
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 6004,
+    "inventory_texture_offset": [
+      3,
+      14
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.book_purple",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 8
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 6005,
+    "inventory_texture_offset": [
+      3,
+      15
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.book_black",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 9
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 7.0,
+    "dps": 1150,
+    "entity_type": "Bullet",
+    "id": 7000,
+    "inventory_texture_offset": [
+      7,
+      1
+    ],
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.kunai",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 4,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 99
+  },
+  {
+    "base_speed": 5.0,
+    "bundle_contents": [
+      7000,
+      7000,
+      7000,
+      7000,
+      7000,
+      7000,
+      7000,
+      7000,
+      7000,
+      7000
+    ],
+    "entity_type": "Bundle",
+    "id": 7001,
+    "inventory_texture_offset": [
+      7,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.kunai.x10",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 1,
+      "y": 4
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "RailObject",
+    "id": 9000,
+    "inventory_texture_offset": [
+      6,
+      3
+    ],
+    "is_consumable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.rail.cart",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 2,
+      "y": 3
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 5
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 10000,
+    "inventory_texture_offset": [
+      8,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.sign",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 4
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 10001,
+    "inventory_texture_offset": [
+      8,
+      2
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.large_sign",
+    "sprite_frame": {
+      "h": 1,
+      "w": 2,
+      "x": 3,
+      "y": 4
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 10002,
+    "inventory_texture_offset": [
+      8,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.scroll.brown",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 0,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 10003,
+    "inventory_texture_offset": [
+      8,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.scroll.red",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 1,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 10004,
+    "inventory_texture_offset": [
+      8,
+      5
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.scroll.blue",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 2,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 10005,
+    "inventory_texture_offset": [
+      8,
+      6
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.scroll.yellow",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 3,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 10006,
+    "inventory_texture_offset": [
+      8,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.scroll.green",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 4,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 11000,
+    "inventory_texture_offset": [
+      7,
+      5
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.magic_circle.summoning",
+    "sprite_frame": {
+      "h": 3,
+      "w": 3,
+      "x": 9,
+      "y": 0
+    },
+    "sprite_number_of_frames": 6,
+    "sprite_sheet_id": 1012,
+    "z_index": -1
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 11005,
+    "inventory_texture_offset": [
+      7,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.magic_circle.summoning.evil",
+    "sprite_frame": {
+      "h": 3,
+      "w": 3,
+      "x": 9,
+      "y": 3
+    },
+    "sprite_number_of_frames": 6,
+    "sprite_sheet_id": 1012,
+    "z_index": -1
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 11001,
+    "inventory_texture_offset": [
+      8,
+      8
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.well",
+    "sprite_frame": {
+      "h": 2,
+      "w": 2,
+      "x": 0,
+      "y": 7
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 11002,
+    "inventory_texture_offset": [
+      7,
+      6
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.fountain",
+    "sprite_frame": {
+      "h": 2,
+      "w": 2,
+      "x": 0,
+      "y": 15
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 11003,
+    "inventory_texture_offset": [
+      7,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.torch",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 17
+    },
+    "sprite_number_of_frames": 5,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 11004,
+    "inventory_texture_offset": [
+      7,
+      8
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.magic_circle.blue",
+    "sprite_frame": {
+      "h": 3,
+      "w": 3,
+      "x": 9,
+      "y": 13
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": -1
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 11006,
+    "inventory_texture_offset": [
+      3,
+      17
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.magic_circle.small",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 9,
+      "y": 6
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": -1
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Hint",
+    "id": 50000,
+    "inventory_texture_offset": [
+      7,
+      9
+    ],
+    "is_consumable": true,
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "name": "objects.name.hint_consumable",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 4,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Hint",
+    "id": 50001,
+    "inventory_texture_offset": [
+      7,
+      10
+    ],
+    "is_consumable": false,
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "name": "objects.name.hint_permanent",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 4,
+      "y": 2
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 60001,
+    "inventory_texture_offset": [
+      4,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.demon_lord_castle",
+    "sprite_frame": {
+      "h": 8,
+      "w": 8,
+      "x": 0,
+      "y": 21
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Npc",
+    "id": 60002,
+    "inventory_texture_offset": [
+      4,
+      14
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.demon_lord",
+    "sprite_frame": {
+      "h": 3,
+      "w": 2,
+      "x": 0,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1018,
+    "z_index": -1
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Npc",
+    "id": 60003,
+    "inventory_texture_offset": [
+      2,
+      11
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.goddess",
+    "sprite_frame": {
+      "h": 3,
+      "w": 2,
+      "x": 8,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1018,
+    "z_index": -1
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PushableObject",
+    "id": 1032,
+    "inventory_texture_offset": [
+      4,
+      15
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.skull",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 8,
+      "y": 7
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "Npc",
+    "id": 4005,
+    "inventory_texture_offset": [
+      2,
+      10
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.cat",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 8,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1033,
+    "inventory_texture_offset": [
+      7,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 31,
+      "y": 7
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1034,
+    "inventory_texture_offset": [
+      2,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.ninja.black",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 36,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1035,
+    "inventory_texture_offset": [
+      2,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.ninja.blue",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 40,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1036,
+    "inventory_texture_offset": [
+      7,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.female.blue_hair",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 52,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1037,
+    "inventory_texture_offset": [
+      7,
+      15
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.power_station",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 42,
+      "y": 1
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1038,
+    "inventory_texture_offset": [
+      7,
+      16
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.barrel.purple",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 0,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1039,
+    "inventory_texture_offset": [
+      7,
+      17
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.barrel.green",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 1,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1073,
+    "inventory_texture_offset": [
+      7,
+      18
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.barrel.brown",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 2,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1074,
+    "inventory_texture_offset": [
+      7,
+      19
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.barrel.wood",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 3,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1075,
+    "inventory_texture_offset": [
+      7,
+      20
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.power.kidneys",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 4,
+      "y": 11
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1076,
+    "inventory_texture_offset": [
+      7,
+      21
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.power.tower.off",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 5,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1077,
+    "inventory_texture_offset": [
+      7,
+      22
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.power.tower.on",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 0,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1078,
+    "inventory_texture_offset": [
+      7,
+      23
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.boat.small",
+    "sprite_frame": {
+      "h": 2,
+      "w": 2,
+      "x": 9,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1079,
+    "inventory_texture_offset": [
+      7,
+      24
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.wind_turbine",
+    "sprite_frame": {
+      "h": 5,
+      "w": 3,
+      "x": 17,
+      "y": 16
+    },
+    "sprite_number_of_frames": 6,
+    "sprite_sheet_id": 1012
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1080,
+    "inventory_texture_offset": [
+      8,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.punk",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 48,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1081,
+    "inventory_texture_offset": [
+      8,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.ethan",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 60,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1082,
+    "inventory_texture_offset": [
+      8,
+      14
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.male.black.doctor",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 64,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "StaticObject",
+    "id": 1083,
+    "inventory_texture_offset": [
+      5,
+      17
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.amanita",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 9,
+      "y": 16
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1084,
+    "inventory_texture_offset": [
+      5,
+      18
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 0,
+      "y": 16
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1085,
+    "inventory_texture_offset": [
+      5,
+      19
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 5,
+      "w": 5,
+      "x": 5,
+      "y": 15
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1086,
+    "inventory_texture_offset": [
+      5,
+      20
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 16,
+      "y": 12
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1087,
+    "inventory_texture_offset": [
+      5,
+      21
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 3,
+      "w": 5,
+      "x": 20,
+      "y": 12
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1088,
+    "inventory_texture_offset": [
+      5,
+      22
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.house",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 25,
+      "y": 11
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "StaticObject",
+    "id": 1089,
+    "inventory_texture_offset": [
+      7,
+      25
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.waterfall",
+    "sprite_frame": {
+      "h": 3,
+      "w": 3,
+      "x": 9,
+      "y": 8
+    },
+    "sprite_number_of_frames": 7,
+    "sprite_sheet_id": 1012
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1090,
+    "inventory_texture_offset": [
+      6,
+      11
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.cabinet.sm.brown",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 12
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1091,
+    "inventory_texture_offset": [
+      6,
+      12
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.cabinet.md.brown",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 1,
+      "y": 12
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1092,
+    "inventory_texture_offset": [
+      6,
+      13
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.cabinet.lg.brown",
+    "sprite_frame": {
+      "h": 2,
+      "w": 2,
+      "x": 2,
+      "y": 12
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1093,
+    "inventory_texture_offset": [
+      6,
+      14
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.cabinet.sm.beige",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 4,
+      "y": 12
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1094,
+    "inventory_texture_offset": [
+      6,
+      15
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.cabinet.md.beige",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 5,
+      "y": 12
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1095,
+    "inventory_texture_offset": [
+      6,
+      16
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.cabinet.lg.beige",
+    "sprite_frame": {
+      "h": 2,
+      "w": 2,
+      "x": 6,
+      "y": 12
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1096,
+    "inventory_texture_offset": [
+      6,
+      17
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.cabinet.sm.white",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 14
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1097,
+    "inventory_texture_offset": [
+      6,
+      18
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.cabinet.md.white",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 1,
+      "y": 14
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1098,
+    "inventory_texture_offset": [
+      6,
+      19
+    ],
+    "is_invulnerable": false,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.cabinet.lg.white",
+    "sprite_frame": {
+      "h": 2,
+      "w": 2,
+      "x": 2,
+      "y": 14
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1099,
+    "inventory_texture_offset": [
+      8,
+      15
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.ninja.red",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 68,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1100,
+    "inventory_texture_offset": [
+      8,
+      16
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.silver",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 72,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1101,
+    "inventory_texture_offset": [
+      8,
+      17
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.female.brown_hair",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 76,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1102,
+    "inventory_texture_offset": [
+      8,
+      18
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.soldier.female.red",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 80,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 0.5,
+    "entity_type": "Npc",
+    "id": 1104,
+    "inventory_texture_offset": [
+      8,
+      20
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.snail",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 12,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.5,
+    "entity_type": "Npc",
+    "id": 1105,
+    "inventory_texture_offset": [
+      8,
+      21
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.piglet",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 16,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1106,
+    "inventory_texture_offset": [
+      8,
+      22
+    ],
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.old_man_mustache",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 0,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009,
+    "z_index": 15
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1107,
+    "inventory_texture_offset": [
+      10,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.generic",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 0,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1108,
+    "inventory_texture_offset": [
+      10,
+      2
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.mr_bubblegum",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 80,
+      "y": 19
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1109,
+    "inventory_texture_offset": [
+      10,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.swag_kid",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 24,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1110,
+    "inventory_texture_offset": [
+      10,
+      21
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.assassin_girl",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 84,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1111,
+    "inventory_texture_offset": [
+      10,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.blonde_guy",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 4,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1112,
+    "inventory_texture_offset": [
+      10,
+      5
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.rasta_girl",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 8,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1113,
+    "inventory_texture_offset": [
+      10,
+      6
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.swag_kid_2",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 12,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1114,
+    "inventory_texture_offset": [
+      10,
+      7
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.dbz1",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 16,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1115,
+    "inventory_texture_offset": [
+      10,
+      8
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.dbz2",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 20,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1116,
+    "inventory_texture_offset": [
+      10,
+      9
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.dbz3",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 24,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1127,
+    "inventory_texture_offset": [
+      10,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.female.green_hair",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 28,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1117,
+    "inventory_texture_offset": [
+      10,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.blue_mohawk",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 32,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1118,
+    "inventory_texture_offset": [
+      10,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.generic.apron",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 36,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1119,
+    "inventory_texture_offset": [
+      10,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.old_man_mustache.black",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 40,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1120,
+    "inventory_texture_offset": [
+      10,
+      14
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.male.black.blue_hair",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 44,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1121,
+    "inventory_texture_offset": [
+      10,
+      15
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.female.dark_blonde",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 48,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1122,
+    "inventory_texture_offset": [
+      10,
+      16
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.swag_kid_3",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 52,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1123,
+    "inventory_texture_offset": [
+      10,
+      17
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.purple_alien",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 56,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1124,
+    "inventory_texture_offset": [
+      10,
+      18
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.blonde.apron",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 60,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1125,
+    "inventory_texture_offset": [
+      10,
+      19
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.brown_mohawk",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 64,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1126,
+    "inventory_texture_offset": [
+      10,
+      20
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.purple_mohawk",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 68,
+      "y": 19
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "StaticObject",
+    "id": 1128,
+    "inventory_texture_offset": [
+      8,
+      6
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "The end!",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 3,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1129,
+    "inventory_texture_offset": [
+      5,
+      23
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.igloo",
+    "sprite_frame": {
+      "h": 3,
+      "w": 5,
+      "x": 31,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1130,
+    "inventory_texture_offset": [
+      5,
+      24
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.igloo",
+    "sprite_frame": {
+      "h": 3,
+      "w": 3,
+      "x": 36,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1131,
+    "inventory_texture_offset": [
+      10,
+      26
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "npc.name.developer_messenger",
+    "sprite_frame": {
+      "h": 2,
+      "w": 2,
+      "x": 0,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1016
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1132,
+    "inventory_texture_offset": [
+      10,
+      23
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.old_man_swag_purple",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 4,
+      "y": 38
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1133,
+    "inventory_texture_offset": [
+      10,
+      24
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.old_man_swag_brown",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 8,
+      "y": 38
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1134,
+    "inventory_texture_offset": [
+      10,
+      25
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.elf_priestess",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 12,
+      "y": 38
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1135,
+    "inventory_texture_offset": [
+      10,
+      22
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.developer",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 0,
+      "y": 38
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Trail",
+    "id": 1136,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.footsteps_trail",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 20,
+      "y": 0
+    },
+    "sprite_number_of_frames": 15,
+    "sprite_sheet_id": 1014
+  },
+  {
+    "base_speed": 1.2,
+    "entity_type": "Npc",
+    "id": 1137,
+    "inventory_texture_offset": [
+      10,
+      27
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.bearwolf",
+    "sprite_frame": {
+      "h": 2,
+      "w": 2,
+      "x": 8,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1016
+  },
+  {
+    "base_speed": 1.5,
+    "entity_type": "Npc",
+    "id": 1138,
+    "inventory_texture_offset": [
+      8,
+      19
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.piglet_blue",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 10
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.5,
+    "entity_type": "Npc",
+    "id": 1139,
+    "inventory_texture_offset": [
+      8,
+      23
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.slime_blue",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 8,
+      "y": 10
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.5,
+    "entity_type": "Npc",
+    "id": 1140,
+    "inventory_texture_offset": [
+      8,
+      24
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.cat_brown",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 4,
+      "y": 10
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1141,
+    "inventory_texture_offset": [
+      8,
+      25
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.camp_fire",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 11
+    },
+    "sprite_number_of_frames": 5,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1142,
+    "inventory_texture_offset": [
+      8,
+      26
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.winter_apron",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 16,
+      "y": 38
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1143,
+    "inventory_texture_offset": [
+      8,
+      27
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.winter_black_red",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 20,
+      "y": 38
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1144,
+    "inventory_texture_offset": [
+      7,
+      14
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.soldier",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 56,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1009
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1145,
+    "inventory_texture_offset": [
+      6,
+      20
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "npc.name.tentacle",
+    "sprite_frame": {
+      "h": 3,
+      "w": 5,
+      "x": 1,
+      "y": 0
+    },
+    "sprite_number_of_frames": 35,
+    "sprite_sheet_id": 1021
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1146,
+    "inventory_texture_offset": [
+      6,
+      21
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "npc.name.tentacle",
+    "sprite_frame": {
+      "h": 6,
+      "w": 6,
+      "x": 1,
+      "y": 3
+    },
+    "sprite_number_of_frames": 18,
+    "sprite_sheet_id": 1021
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Npc",
+    "id": 1147,
+    "inventory_texture_offset": [
+      6,
+      22
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "npc.name.lava_splash",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 0,
+      "y": 0
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012
+  },
+  {
+    "base_speed": 3.0,
+    "dps": 300.0,
+    "entity_type": "CloseCombatMonster",
+    "hp": 80,
+    "id": 1148,
+    "inventory_texture_offset": [
+      3,
+      21
+    ],
+    "is_rigid": false,
+    "lock_type": "None",
+    "melee_attacks_hero": true,
+    "movement_directions": "FindHero",
+    "name": "npc.name.small_monster",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 12,
+      "y": 10
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "Npc",
+    "id": 1149,
+    "inventory_texture_offset": [
+      6,
+      23
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.cat",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 16,
+      "y": 10
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "Npc",
+    "id": 1150,
+    "inventory_texture_offset": [
+      6,
+      24
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.cat",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 20,
+      "y": 10
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "Npc",
+    "id": 1151,
+    "inventory_texture_offset": [
+      6,
+      25
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.cat",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 24,
+      "y": 10
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1152,
+    "inventory_texture_offset": [
+      5,
+      25
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "npc.name.gate_to_demon_lord",
+    "sprite_frame": {
+      "h": 3,
+      "w": 2,
+      "x": 0,
+      "y": 2
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "Equipment",
+    "id": 1154,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.ar15.weapon",
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 17,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "z_index": 16
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1155,
+    "inventory_texture_offset": [
+      0,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.terrain.flowers.red",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 35,
+      "y": 13
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": -1
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1156,
+    "inventory_texture_offset": [
+      0,
+      13
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.terrain.flowers.yellow",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 35,
+      "y": 14
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": -1
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1157,
+    "inventory_texture_offset": [
+      0,
+      15
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.terrain.flowers.purple",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 35,
+      "y": 15
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": -1
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "StaticObject",
+    "id": 1157,
+    "inventory_texture_offset": [
+      0,
+      14
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.terrain.flowers.blue",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 35,
+      "y": 16
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": -1
+  },
+  {
+    "base_speed": 2.0,
+    "entity_type": "Sword",
+    "id": 1158,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.sword.weapon",
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 33,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "z_index": 16
+  },
+  {
+    "base_speed": 3.0,
+    "entity_type": "Sword",
+    "id": 1159,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.claymore.weapon",
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 49,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "z_index": 16
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "KunaiLauncher",
+    "id": 1160,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.kunai_launcher.weapon",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1000,
+    "z_index": 99
+  },
+  {
+    "base_speed": 2.0,
+    "dps": 280,
+    "entity_type": "Bullet",
+    "id": 1161,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.slash",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 28,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1014,
+    "z_index": 99
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "PickableObject",
+    "id": 1162,
+    "inventory_texture_offset": [
+      11,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.ar15.item",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 17,
+      "y": 69
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1022
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "PickableObject",
+    "id": 1163,
+    "inventory_texture_offset": [
+      11,
+      2
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.sword.item",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 34,
+      "y": 69
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1022
+  },
+  {
+    "base_speed": 3.0,
+    "entity_type": "PickableObject",
+    "id": 1164,
+    "inventory_texture_offset": [
+      11,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.claymore.item",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 49,
+      "y": 69
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1022
+  },
+  {
+    "base_speed": 3.0,
+    "entity_type": "StaticObject",
+    "id": 1165,
+    "inventory_texture_offset": [
+      11,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "objects.name.stonehenge",
+    "sprite_frame": {
+      "h": 3,
+      "w": 4,
+      "x": 13,
+      "y": 5
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010
+  },
+  {
+    "base_speed": 2.0,
+    "dps": 430,
+    "entity_type": "Bullet",
+    "id": 1166,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.slash.claymore",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 28,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1014,
+    "z_index": 14
+  }
 ]

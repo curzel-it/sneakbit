@@ -212,6 +212,22 @@ Thanks for playing!
 
 "game.menu.new_game_are_you_sure" = "You'll be starting from ZERO.\nAre you sure?"
 
+"game.menu.number_of_players" = "Number of Players"
+
+"game.menu.number_of_players.1" = "Single Player"
+
+"game.menu.number_of_players.2" = "Two Players"
+
+"game.menu.number_of_players.3" = "3 Players"
+
+"game.menu.number_of_players.4" = "4 Players"
+
+"game.menu.number_of_players.subtitle" = """
+Single player supports both keyboard and conrtoller.
+Multiplayer requires one controller per player.
+When in multiplayer, player 1 can use both controller and keyboard.
+"""
+
 "game.menu.resume" = "Resume"
 
 "game.menu.save" = "Save Game"
@@ -314,9 +330,7 @@ In this reckoning, not strength nor skill will prevail, but the unyielding spiri
 Beware, for the hand that defeats darkness may yet obscure the light, and the cycle of the eternal struggle will begin anew.
 """
 
-"lore.011.hero_profecy.part_4" = """
-This gate shall only open for the heroes who gathered the six keys from the dungeons.
-"""
+"lore.011.hero_profecy.part_4" = "This gate shall only open for the heroes who gathered the six keys from the dungeons."
 
 "lore.012.hunted_pub" = """
 Don't enter the pub, it's hunted...
@@ -1287,9 +1301,3 @@ Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
 
 "you" = "You"
 
-"game.menu.number_of_players" = "Number of Players" 
-"game.menu.number_of_players.subtitle" = "Controller is required for player 2, 3 and 4" 
-"game.menu.number_of_players.1" = "Single Player" 
-"game.menu.number_of_players.2" = "Two Players" 
-"game.menu.number_of_players.3" = "3 Players" 
-"game.menu.number_of_players.4" = "4 Players" 
