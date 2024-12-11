@@ -342,7 +342,7 @@ fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f3
         rl.is_key_down(KeyboardKey::KEY_PAGE_DOWN) || rl.is_gamepad_button_down(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || joystick_right, 
         rl.is_key_down(KeyboardKey::KEY_END) || rl.is_gamepad_button_down(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || joystick_down, 
         rl.is_key_down(KeyboardKey::KEY_DELETE) || rl.is_gamepad_button_down(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || joystick_left, 
-        rl.is_key_pressed(KeyboardKey::KEY_ESCAPE) || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
+        rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
         should_pause || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
         rl.is_key_pressed(KeyboardKey::KEY_INSERT) || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
         rl.is_key_pressed(KeyboardKey::KEY_RIGHT_CONTROL) || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_LEFT), 

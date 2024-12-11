@@ -18,15 +18,15 @@
 
 #define HERO_RECOVERY_PS 1.0
 
-#define KUNAI_LIFESPAN 3.0
+#define KUNAI_LIFESPAN 1.2
 
-#define KUNAI_LAUNCHER_COOLDOWN 0.1
+#define KUNAI_LAUNCHER_COOLDOWN 0.15
 
 #define SWORD_SLASH_LIFESPAN 0.25
 
 #define SWORD_SLASH_COOLDOWN 0.2
 
-#define CLAYMORE_SLASH_LIFESPAN 0.35
+#define CLAYMORE_SLASH_LIFESPAN 0.3
 
 #define CLAYMORE_SLASH_COOLDOWN 0.35
 
@@ -34,7 +34,13 @@
 
 #define KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS 0.1
 
-#define HERO_ENTITY_ID 420
+#define PLAYER1_ENTITY_ID 420
+
+#define PLAYER2_ENTITY_ID 421
+
+#define PLAYER3_ENTITY_ID 422
+
+#define PLAYER4_ENTITY_ID 423
 
 #define WORLD_ID_NONE 1000
 
@@ -256,7 +262,8 @@ void window_size_changed(float width,
 
 void update_game(float time_since_last_update);
 
-void update_keyboard(bool up_pressed,
+void update_keyboard(uintptr_t player,
+                     bool up_pressed,
                      bool right_pressed,
                      bool down_pressed,
                      bool left_pressed,
