@@ -304,7 +304,7 @@ fn handle_mouse_updates(rl: &mut RaylibHandle, rendering_scale: f32) {
     );
 }
 
-fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f32) -> bool {
+fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f32) {
     let current_char = get_char_pressed(&mut context.rl);
 
     let rl = &context.rl;
@@ -408,7 +408,7 @@ fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f3
             context.rl.show_cursor();
         }
     }
-    has_controller_now
+    context.using_controller = has_controller_now;
 }
 
 fn current_joystick_directions(rl: &RaylibHandle) -> (bool, bool, bool, bool) {
