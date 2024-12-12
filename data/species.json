@@ -1288,7 +1288,7 @@
   },
   {
     "base_speed": 7.0,
-    "dps": 1150,
+    "dps": 1500,
     "entity_type": "Bullet",
     "id": 7000,
     "inventory_texture_offset": [
@@ -3656,28 +3656,6 @@
   },
   {
     "base_speed": 1.0,
-    "entity_type": "Equipment",
-    "id": 1154,
-    "inventory_texture_offset": [
-      0,
-      0
-    ],
-    "is_invulnerable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.ar15.weapon",
-    "sprite_frame": {
-      "h": 4,
-      "w": 4,
-      "x": 17,
-      "y": 1
-    },
-    "sprite_number_of_frames": 4,
-    "sprite_sheet_id": 1022,
-    "z_index": 16
-  },
-  {
-    "base_speed": 1.0,
     "entity_type": "StaticObject",
     "id": 1155,
     "inventory_texture_offset": [
@@ -3765,9 +3743,9 @@
     "z_index": -1
   },
   {
-    "base_speed": 2.0,
+    "base_speed": 3.0,
     "entity_type": "Sword",
-    "id": 1158,
+    "id": 1159,
     "inventory_texture_offset": [
       0,
       0
@@ -3779,29 +3757,7 @@
     "sprite_frame": {
       "h": 4,
       "w": 4,
-      "x": 33,
-      "y": 1
-    },
-    "sprite_number_of_frames": 4,
-    "sprite_sheet_id": 1022,
-    "z_index": 16
-  },
-  {
-    "base_speed": 3.0,
-    "entity_type": "Sword",
-    "id": 1159,
-    "inventory_texture_offset": [
-      0,
-      0
-    ],
-    "is_invulnerable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.claymore.weapon",
-    "sprite_frame": {
-      "h": 4,
-      "w": 4,
-      "x": 49,
+      "x": 1,
       "y": 1
     },
     "sprite_number_of_frames": 4,
@@ -3854,6 +3810,28 @@
   },
   {
     "base_speed": 1.0,
+    "entity_type": "Equipment",
+    "id": 1154,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.ar15.weapon",
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 17,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "z_index": 16
+  },
+  {
+    "base_speed": 1.0,
     "entity_type": "PickableObject",
     "id": 1162,
     "inventory_texture_offset": [
@@ -3868,28 +3846,7 @@
       "h": 2,
       "w": 1,
       "x": 17,
-      "y": 69
-    },
-    "sprite_number_of_frames": 8,
-    "sprite_sheet_id": 1022
-  },
-  {
-    "base_speed": 1.0,
-    "entity_type": "PickableObject",
-    "id": 1163,
-    "inventory_texture_offset": [
-      11,
-      2
-    ],
-    "is_invulnerable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.sword.item",
-    "sprite_frame": {
-      "h": 2,
-      "w": 1,
-      "x": 34,
-      "y": 69
+      "y": 53
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1022
@@ -3905,12 +3862,12 @@
     "is_invulnerable": true,
     "is_rigid": false,
     "lock_type": "None",
-    "name": "objects.name.claymore.item",
+    "name": "objects.name.sword.item",
     "sprite_frame": {
       "h": 2,
       "w": 1,
-      "x": 49,
-      "y": 69
+      "x": 1,
+      "y": 53
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1022
@@ -3938,7 +3895,7 @@
   },
   {
     "base_speed": 2.0,
-    "dps": 430,
+    "dps": 480,
     "entity_type": "Bullet",
     "id": 1166,
     "inventory_texture_offset": [
@@ -3947,7 +3904,7 @@
     ],
     "is_rigid": false,
     "lock_type": "None",
-    "name": "objects.name.slash.claymore",
+    "name": "objects.name.sword.bullet",
     "sprite_frame": {
       "h": 1,
       "w": 1,
@@ -3957,5 +3914,48 @@
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1014,
     "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "Equipment",
+    "id": 1167,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.cannon.weapon",
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 33,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "z_index": 16
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "PickableObject",
+    "id": 1168,
+    "inventory_texture_offset": [
+      11,
+      5
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.cannon.item",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 33,
+      "y": 53
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1022
   }
 ]

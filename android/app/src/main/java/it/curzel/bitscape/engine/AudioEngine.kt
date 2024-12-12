@@ -43,8 +43,7 @@ class AudioEngine(
         SoundEffect.GameOver to R.raw.sfx_sounds_negative1,
         SoundEffect.PlayerResurrected to R.raw.sfx_sounds_powerup1,
         SoundEffect.NoAmmo to R.raw.sfx_wpn_noammo3,
-        SoundEffect.SwordSlash to R.raw.sfx_wpn_sword3,
-        SoundEffect.ClaymoreSlash to R.raw.sfx_wpn_sword2
+        SoundEffect.SwordSlash to R.raw.sfx_wpn_sword2
     )
 
     private val soundPool: SoundPool
@@ -224,8 +223,7 @@ private enum class SoundEffect {
     WorldChange,
     StepTaken,
     HintReceived,
-    SwordSlash,
-    ClaymoreSlash;
+    SwordSlash;
 
     companion object {
         fun fromInt(value: Int): SoundEffect? {
@@ -244,7 +242,6 @@ private enum class SoundEffect {
                 12 -> StepTaken
                 13 -> HintReceived
                 14 -> SwordSlash
-                15 -> ClaymoreSlash
                 else -> null
             }
         }

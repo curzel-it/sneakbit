@@ -723,10 +723,6 @@ fueling life and wonder in Duskhaven.
 
 "objects.name.camp_fire" = "Campfire"
 
-"objects.name.claymore.item" = "Sword"
-
-"objects.name.claymore.weapon" = "Sword"
-
 "objects.name.deep_hole" = "Deep Hole"
 
 "objects.name.footsteps_trail" = "Footsteps Trail"
@@ -811,10 +807,6 @@ fueling life and wonder in Duskhaven.
 
 "objects.name.skull" = "Skull"
 
-"objects.name.slash" = "Slash!"
-
-"objects.name.slash.claymore" = "Slash!"
-
 "objects.name.slope.bottom_left.dark_rock" = "Slope"
 
 "objects.name.slope.bottom_left.grass" = "Slope"
@@ -885,9 +877,11 @@ fueling life and wonder in Duskhaven.
 
 "objects.name.stonehenge" = "Ancient Ruins"
 
-"objects.name.sword.item" = "Short Sword"
+"objects.name.sword.bullet" = "Slash!"
 
-"objects.name.sword.weapon" = "Short Sword"
+"objects.name.sword.item" = "Sword"
+
+"objects.name.sword.weapon" = "Sword"
 
 "objects.name.table" = "Table"
 

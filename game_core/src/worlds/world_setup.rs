@@ -1,4 +1,4 @@
-use crate::{constants::{BUILD_NUMBER, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::{known_species::{SPECIES_CLAYMORE, SPECIES_HERO, SPECIES_KUNAI, SPECIES_KUNAI_LAUNCHER, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, number_of_players, utils::directions::Direction};
+use crate::{constants::{BUILD_NUMBER, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::{known_species::{SPECIES_SWORD, SPECIES_HERO, SPECIES_KUNAI, SPECIES_KUNAI_LAUNCHER, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, number_of_players, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
@@ -107,12 +107,12 @@ impl World {
             kunai_launcher.frame.y = self.players[0].props.frame.y;
             self.add_entity(kunai_launcher);
 
-            let mut claymore = species_by_id(SPECIES_CLAYMORE).make_entity();
-            claymore.parent_id = id;
-            claymore.player_index = index;
-            claymore.frame.x = self.players[0].props.frame.x;
-            claymore.frame.y = self.players[0].props.frame.y;
-            self.add_entity(claymore);
+            let mut sword = species_by_id(SPECIES_SWORD).make_entity();
+            sword.parent_id = id;
+            sword.player_index = index;
+            sword.frame.x = self.players[0].props.frame.x;
+            sword.frame.y = self.players[0].props.frame.y;
+            self.add_entity(sword);
         }
     }
 

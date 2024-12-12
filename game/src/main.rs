@@ -166,6 +166,7 @@ fn update_target_refresh_rate(rl: &mut RaylibHandle) {
     let monitor = get_current_monitor();
     let monitor_refresh_rate = get_monitor_refresh_rate(monitor);
     rl.set_target_fps(monitor_refresh_rate as u32);
+    println!("Updated target fps to {}", monitor_refresh_rate);
 }
 
 fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {    
@@ -176,6 +177,7 @@ fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {
         .size(width, height)
         .resizable()
         .title("SneakBit")
+        .vsync()
         .build();        
     
     let font = rl.load_font(&thread, &regular_font_path()).unwrap();
@@ -566,8 +568,7 @@ fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitErro
             (AppSound::Effect(SoundEffect::GameOver), "sfx_sounds_negative1.mp3"),
             (AppSound::Effect(SoundEffect::PlayerResurrected), "sfx_sounds_powerup1.mp3"), 
             (AppSound::Effect(SoundEffect::NoAmmo), "sfx_wpn_noammo3.mp3"),
-            (AppSound::Effect(SoundEffect::SwordSlash), "sfx_wpn_sword3.mp3"),
-            (AppSound::Effect(SoundEffect::ClaymoreSlash), "sfx_wpn_sword2.mp3"),
+            (AppSound::Effect(SoundEffect::SwordSlash), "sfx_wpn_sword2.mp3"),
             track_track_pair("pol_brave_worm_short.mp3"),
             track_track_pair("pol_cactus_land_short.mp3"),
             track_track_pair("pol_chubby_cat_short.mp3"),

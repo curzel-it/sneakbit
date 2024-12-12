@@ -27,8 +27,7 @@ class AudioEngine: Loggable {
         SoundEffect_WorldChange: "sfx_movement_dooropen1",
         SoundEffect_StepTaken: "sfx_movement_footsteps1a",
         SoundEffect_HintReceived: "sfx_sound_neutral5",
-        SoundEffect_SwordSlash: "sfx_wpn_sword3.mp3",
-        SoundEffect_ClaymoreSlash: "sfx_wpn_sword2.mp3"
+        SoundEffect_SwordSlash: "sfx_wpn_sword2.mp3"
     ]
     
     init() {

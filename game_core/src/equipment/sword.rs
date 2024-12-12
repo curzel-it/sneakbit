@@ -1,4 +1,4 @@
-use crate::{constants::{CLAYMORE_SLASH_COOLDOWN, CLAYMORE_SLASH_LIFESPAN, SWORD_SLASH_COOLDOWN, SWORD_SLASH_LIFESPAN}, entities::{bullets::make_player_bullet, known_species::{SPECIES_CLAYMORE, SPECIES_CLAYMORE_SLASH, SPECIES_SWORD_SLASH}, species::SpeciesId}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
+use crate::{constants::{SWORD_SLASH_COOLDOWN, SWORD_SLASH_LIFESPAN}, entities::{bullets::make_player_bullet, known_species::{SPECIES_SWORD, SPECIES_SWORD_SLASH}, species::SpeciesId}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
 
 use super::equipment::is_equipped;
 
@@ -68,11 +68,11 @@ struct SlashConfig {
 
 fn slash_config_by_sword_type(sword_species_id: SpeciesId) -> SlashConfig {
     match sword_species_id {
-        SPECIES_CLAYMORE => SlashConfig { 
-            cooldown: CLAYMORE_SLASH_COOLDOWN, 
-            species: SPECIES_CLAYMORE_SLASH, 
-            lifespan: CLAYMORE_SLASH_LIFESPAN,
-            effect: SpecialEffect::ClaymoreSlash
+        SPECIES_SWORD => SlashConfig { 
+            cooldown: SWORD_SLASH_COOLDOWN, 
+            species: SPECIES_SWORD_SLASH, 
+            lifespan: SWORD_SLASH_LIFESPAN,
+            effect: SpecialEffect::SwordSlash
         },
         _ => SlashConfig { 
             cooldown: SWORD_SLASH_COOLDOWN, 

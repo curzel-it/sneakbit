@@ -20,8 +20,7 @@ pub enum SoundEffect {
     WorldChange = 11,
     StepTaken = 12,
     HintReceived = 13,
-    SwordSlash = 14,
-    ClaymoreSlash = 15,
+    SwordSlash = 14
 }
 
 pub struct SoundEffectsManager {
@@ -90,7 +89,6 @@ impl SoundEffectsManager {
     fn handle_special_effect(&mut self, effect: &SpecialEffect) {
         match effect {
             SpecialEffect::SwordSlash => self.prepare(SoundEffect::SwordSlash),
-            SpecialEffect::ClaymoreSlash => self.prepare(SoundEffect::ClaymoreSlash),
         }
     }
 

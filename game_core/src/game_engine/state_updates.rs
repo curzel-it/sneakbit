@@ -47,8 +47,7 @@ pub enum EngineStateUpdate {
 
 #[derive(Debug, Clone)]
 pub enum SpecialEffect {
-    SwordSlash,
-    ClaymoreSlash
+    SwordSlash
 }
 
 #[derive(Debug, Clone)]

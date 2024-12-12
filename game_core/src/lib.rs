@@ -3,7 +3,7 @@
 use std::{collections::HashSet, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
-use entities::known_species::{SPECIES_CLAYMORE_ITEM, SPECIES_KUNAI};
+use entities::known_species::{SPECIES_SWORD_ITEM, SPECIES_KUNAI};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
 use game_engine::{engine::GameEngine, storage::inventory_count};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
@@ -326,7 +326,7 @@ pub fn cached_players_positions() -> Vec<IntPoint> {
 
 #[no_mangle]
 pub extern "C" fn is_sword_equipped() -> bool {
-    inventory_count(&SPECIES_CLAYMORE_ITEM) > 0
+    inventory_count(&SPECIES_SWORD_ITEM) > 0
 }
 
 #[no_mangle]
