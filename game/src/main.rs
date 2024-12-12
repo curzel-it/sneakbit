@@ -308,7 +308,6 @@ fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f3
     let current_char = get_char_pressed(&mut context.rl);
 
     let rl = &context.rl;
-    let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl);
     let previous_keyboard_state = &engine().keyboard;
 
     let has_controller_now = rl.is_gamepad_available(0);
@@ -316,6 +315,7 @@ fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f3
     let lost_focus = !rl.is_window_focused();
     let should_pause = controller_availability_changed || lost_focus;
 
+    let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl, 0);
     update_keyboard(
         0,
         rl.is_key_pressed(KeyboardKey::KEY_W) || rl.is_key_pressed(KeyboardKey::KEY_UP) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!previous_keyboard_state.is_direction_up_down(0) && joystick_up), 
@@ -336,6 +336,7 @@ fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f3
         time_since_last_update
     );
 
+    let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl, 1);
     update_keyboard(
         1,
         rl.is_key_pressed(KeyboardKey::KEY_HOME) || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!previous_keyboard_state.is_direction_up_down(1) && joystick_up), 
@@ -357,6 +358,7 @@ fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f3
     );
 
     if rl.is_gamepad_available(2) {
+        let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl, 2);
         update_keyboard(
             2,
             rl.is_gamepad_button_pressed(2, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!previous_keyboard_state.is_direction_up_down(2) && joystick_up), 
@@ -379,6 +381,7 @@ fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f3
     }
 
     if rl.is_gamepad_available(3) {
+        let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl, 3);
         update_keyboard(
             3,
             rl.is_gamepad_button_pressed(3, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!previous_keyboard_state.is_direction_up_down(3) && joystick_up), 
@@ -411,9 +414,9 @@ fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f3
     context.using_controller = has_controller_now;
 }
 
-fn current_joystick_directions(rl: &RaylibHandle) -> (bool, bool, bool, bool) {
-    let left_x = rl.get_gamepad_axis_movement(0, GamepadAxis::GAMEPAD_AXIS_LEFT_X);
-    let left_y = rl.get_gamepad_axis_movement(0, GamepadAxis::GAMEPAD_AXIS_LEFT_Y);
+fn current_joystick_directions(rl: &RaylibHandle, gamepad: i32) -> (bool, bool, bool, bool) {
+    let left_x = rl.get_gamepad_axis_movement(gamepad, GamepadAxis::GAMEPAD_AXIS_LEFT_X);
+    let left_y = rl.get_gamepad_axis_movement(gamepad, GamepadAxis::GAMEPAD_AXIS_LEFT_Y);
     
     let threshold = 0.5;
     

@@ -184,6 +184,26 @@ Grazie per aver giocato!
 
 "entity.menu.use" = "Usa"
 
+"game.menu.controls" = "Controls"
+
+"game.menu.controls.explained" = """
+== Keyboard ==
+Movement:     WASD or Arrows
+Throw Knife:  F or J
+Swing Sword:  R or Q
+Confirm:      E, K or SPACE
+Menu:         X or ENTER
+Back:         ESCAPE
+.
+== Controller ==
+Movement:     Left Joystick
+Throw Knife:  Right Side / Down
+Swing Sword:  Right Side / Left
+Confirm:      Right Side / Right
+Menu:         Middle / Left
+Back:         Middle / Right
+"""
+
 "game.menu.disable_music" = "Disablita Musica"
 
 "game.menu.disable_sound_effects" = "Disablita Effetti Sonori"
@@ -1299,22 +1319,3 @@ Hai un aura potentissima!
 
 "you" = "Tu"
 
-"game.menu.controls" = "Controls"
-
-"game.menu.controls.explained" = """
-== Keyboard ==
-Movement:     WASD or Arrows
-Throw Knife:  F or J
-Swing Sword:  R or Q
-Confirm:      E, K or SPACE
-Menu:         X or ENTER
-Back:         ESCAPE
-. 
-== Controller ==
-Movement:     Left Joystick
-Throw Knife:  Right Side / Down
-Swing Sword:  Right Side / Left
-Confirm:      Right Side / Right
-Menu:         Middle / Left
-Back:         Middle / Right
-"""
