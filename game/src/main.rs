@@ -563,7 +563,7 @@ fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitErro
             (AppSound::Effect(SoundEffect::SmallExplosion), "sfx_exp_short_hard8.mp3"),
             (AppSound::Effect(SoundEffect::WorldChange), "sfx_movement_dooropen1.mp3"),
             (AppSound::Effect(SoundEffect::StepTaken), "sfx_movement_footsteps1a.mp3"),
-            (AppSound::Effect(SoundEffect::BulletFired), "sfx_movement_jump12_landing.mp3"),
+            (AppSound::Effect(SoundEffect::KnifeThrown), "sfx_movement_jump12_landing.mp3"),
             (AppSound::Effect(SoundEffect::BulletBounced), "sfx_movement_jump20.mp3"),
             (AppSound::Effect(SoundEffect::HintReceived), "sfx_sound_neutral5.mp3"),
             (AppSound::Effect(SoundEffect::KeyCollected), "sfx_sounds_fanfare3.mp3"),
@@ -572,6 +572,8 @@ fn load_sounds(rl: &mut Result<raylib::prelude::RaylibAudio, RaylibAudioInitErro
             (AppSound::Effect(SoundEffect::PlayerResurrected), "sfx_sounds_powerup1.mp3"), 
             (AppSound::Effect(SoundEffect::NoAmmo), "sfx_wpn_noammo3.mp3"),
             (AppSound::Effect(SoundEffect::SwordSlash), "sfx_wpn_sword2.mp3"),
+            (AppSound::Effect(SoundEffect::GunShot), "sfx_wpn_machinegun_loop1.mp3"),
+            (AppSound::Effect(SoundEffect::LoudGunShot), "sfx_weapon_shotgun3.mp3"),
             track_track_pair("pol_brave_worm_short.mp3"),
             track_track_pair("pol_cactus_land_short.mp3"),
             track_track_pair("pol_chubby_cat_short.mp3"),
@@ -613,7 +615,9 @@ fn volume_for_sound_effect(sound: &AppSound) -> f32 {
     match sound {
         AppSound::Effect(effect) => match effect {
             SoundEffect::StepTaken => 0.1,
-            SoundEffect::BulletFired => 0.3,
+            SoundEffect::KnifeThrown => 0.3,
+            SoundEffect::GunShot => 0.8,
+            SoundEffect::LoudGunShot => 1.0,
             SoundEffect::BulletBounced => 0.2,
             SoundEffect::WorldChange => 0.7,
             SoundEffect::AmmoCollected => 0.6,

@@ -62,7 +62,7 @@ pub struct Species {
     pub usage_special_effect: Option<SpecialEffect>,
 
     #[serde(default)]
-    pub inventory_requirement: Option<u32>,
+    pub inventory_requirement: Option<u32>
 }
 
 #[derive(Default, Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
@@ -85,7 +85,7 @@ pub enum EntityType {
     Trail,
     Equipment,
     Sword,
-    KunaiLauncher,
+    Gun,
     CloseCombatMonster
 }
 
@@ -134,7 +134,7 @@ impl Species {
             hp: self.hp,
             dps: self.dps,
             sorting_key: 0,
-            player_index: 0
+            player_index: 0,
         }
     }
 

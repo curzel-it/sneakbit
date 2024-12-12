@@ -26,7 +26,7 @@ impl Entity {
         self.action_cooldown_remaining -= time_since_last_update;
 
         if self.action_cooldown_remaining > 0.0 {
-            self.sprite.frame.y = slash_sprite_y_for_direction(&self.direction);
+            self.play_equipment_usage_animation();
             return vec![]
         }
         if world.players[self.player_index].has_close_attack_key_been_pressed {
@@ -36,7 +36,7 @@ impl Entity {
 
             self.action_cooldown_remaining = species.cooldown_after_use;
             self.sprite.reset();
-            self.sprite.frame.y = slash_sprite_y_for_direction(&self.direction);            
+            self.play_equipment_usage_animation();
 
             let mut updates: Vec<WorldStateUpdate> = offsets.into_iter()
                 .map(|(dx, dy)| {
@@ -59,17 +59,6 @@ impl Entity {
 
         vec![]
     } 
-}
-
-fn slash_sprite_y_for_direction(direction: &Direction) -> i32 {
-    match direction {
-        Direction::Up => 37,
-        Direction::Down => 45,
-        Direction::Right => 41,
-        Direction::Left => 49,
-        Direction::Unknown => 37,
-        Direction::Still => 37,
-    }
 }
 
 fn bullet_offsets(direction: Direction) -> Vec<(i32, i32)> {

@@ -3,7 +3,7 @@
 use std::{collections::HashSet, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
-use entities::known_species::{SPECIES_KUNAI, SPECIES_SWORD_ITEM};
+use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI, SPECIES_SWORD_ITEM};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
 use game_engine::{engine::GameEngine, storage::inventory_count};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
@@ -310,6 +310,16 @@ pub extern "C" fn select_current_menu_option_at_index(index: u32) {
 #[no_mangle]
 pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
     inventory_count(&SPECIES_KUNAI) as i32
+}
+
+#[no_mangle]
+pub extern "C" fn number_of_rem223_in_inventory() -> i32 {
+    inventory_count(&SPECIES_AR15_BULLET) as i32
+}
+
+#[no_mangle]
+pub extern "C" fn number_of_cannonball_in_inventory() -> i32 {
+    inventory_count(&SPECIES_CANNON_BULLET) as i32
 }
 
 #[no_mangle]

@@ -422,6 +422,7 @@ impl World {
             if let Some(bullet) = entities.iter_mut().find(|e| e.id == bullet_id) {
                 if is_player(bullet.parent_id) {
                     bullet.direction = bullet.direction.opposite();
+                    bullet.update_sprite_for_current_state();
                     let (dx, dy) = bullet.direction.as_col_row_offset();
                     bullet.frame.x += dx;
                     bullet.frame.y += dy;
@@ -585,7 +586,7 @@ impl World {
         if self.is_any_hero_at(target.x, target.y) {
             return true
         }
-        if hero.is_around_and_pointed_at(target, &hero_direction) {
+        if target.is_around_and_pointed_at(&hero.origin(), &hero_direction) {
             return true 
         }
         if self.hits(hero.x, hero.y - 1) && hero.x == target.x && hero.y.saturating_sub(3) == target.y && matches!(hero_direction, Direction::Up) {

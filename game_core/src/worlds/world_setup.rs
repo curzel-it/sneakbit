@@ -99,7 +99,12 @@ impl World {
     }
 
     fn spawn_equipment(&mut self) {
-        let items = vec![SPECIES_KUNAI_LAUNCHER, SPECIES_SWORD];
+        let items = vec![
+            SPECIES_KUNAI_LAUNCHER, 
+            SPECIES_SWORD, 
+            // SPECIES_CANNON, 
+            // SPECIES_AR15
+        ];
 
         for (index, &id) in self.hero_entity_ids().iter().enumerate() {
             for item_id in &items {

@@ -49,7 +49,11 @@ pub enum EngineStateUpdate {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SpecialEffect {
-    SwordSlash
+    NoAmmo,
+    KnifeThrown,
+    SwordSlash,
+    GunShot,
+    LoudGunShot
 }
 
 #[derive(Debug, Clone)]

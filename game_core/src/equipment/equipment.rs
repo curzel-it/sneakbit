@@ -29,6 +29,17 @@ impl Entity {
         self.offset.y = hero.offset.y - 1.0 * TILE_SIZE;
         self.update_sorting_key();
     }
+
+    pub fn play_equipment_usage_animation(&mut self) {
+        self.sprite.frame.y = match self.direction {
+            Direction::Up => 37,
+            Direction::Down => 45,
+            Direction::Right => 41,
+            Direction::Left => 49,
+            Direction::Unknown => 37,
+            Direction::Still => 37,
+        }
+    }
 }
 
 pub fn is_equipped(species_id: u32) -> bool {

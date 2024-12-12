@@ -119,7 +119,7 @@ pub struct Entity {
     pub sorting_key: u32,
     
     #[serde(skip)]
-    pub player_index: usize,
+    pub player_index: usize
 }
 
 impl Entity {
@@ -179,7 +179,7 @@ impl Entity {
             EntityType::Trail => self.update_trail(),
             EntityType::Equipment => self.update_equipment(world, time_since_last_update),
             EntityType::Sword => self.update_sword(world, time_since_last_update),
-            EntityType::KunaiLauncher => self.update_kunai_launcher(world, time_since_last_update),
+            EntityType::Gun => self.update_gun(world, time_since_last_update),
         };        
         self.sprite.update(time_since_last_update); 
         let mut more_updates = self.check_remaining_lifespan(time_since_last_update);
@@ -212,7 +212,7 @@ impl Entity {
             EntityType::Trail => self.setup_generic(),
             EntityType::Equipment => self.setup_equipment(),
             EntityType::Sword => self.setup_sword(),
-            EntityType::KunaiLauncher => self.setup_kunai_launcher(),
+            EntityType::Gun => self.setup_gun(),
         }
     }
 
@@ -369,7 +369,7 @@ impl Entity {
     }
 
     pub fn is_equipment(&self) -> bool {
-        matches!(self.entity_type, EntityType::Equipment | EntityType::Sword | EntityType::KunaiLauncher)
+        matches!(self.entity_type, EntityType::Equipment | EntityType::Sword | EntityType::Gun)
     }
 
     pub fn can_be_hit_by_bullet(&self) -> bool {
