@@ -28,11 +28,20 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
                 &world.constructions_tiles.tiles
             );
         } else {
-            render_tile_map(
+            let success = render_tile_map(
                 &mut d, 
                 &camera_viewport, 
                 &camera_viewport_offset
             );
+            if !success {
+                render_tiles(
+                    &mut d, 
+                    &camera_viewport, 
+                    &camera_viewport_offset,
+                    &world.biome_tiles.tiles,
+                    &world.constructions_tiles.tiles
+                );
+            }
         }
         render_night(&mut d, screen_width, screen_height);
         render_entities(&mut d, &camera_viewport, &camera_viewport_offset);
