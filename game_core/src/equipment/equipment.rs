@@ -1,4 +1,4 @@
-use crate::{constants::TILE_SIZE, entities::known_species::{SPECIES_KUNAI_LAUNCHER, SPECIES_SWORD, SPECIES_SWORD_ITEM}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::inventory_count, world::World}, utils::directions::Direction};
+use crate::{constants::TILE_SIZE, entities::species::species_by_id, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::inventory_count, world::World}, utils::directions::Direction};
 
 impl Entity {
     pub fn setup_equipment(&mut self) {
@@ -32,9 +32,9 @@ impl Entity {
 }
 
 pub fn is_equipped(species_id: u32) -> bool {
-    match species_id {
-        SPECIES_KUNAI_LAUNCHER => true,
-        SPECIES_SWORD => inventory_count(&SPECIES_SWORD_ITEM) > 0,
-        _ => false
-    }        
+    if let Some(requirement) = species_by_id(species_id).inventory_requirement {
+        inventory_count(&requirement) > 0
+    } else {
+        true
+    } 
 }

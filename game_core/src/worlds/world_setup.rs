@@ -1,4 +1,4 @@
-use crate::{constants::{BUILD_NUMBER, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::{known_species::{SPECIES_SWORD, SPECIES_HERO, SPECIES_KUNAI, SPECIES_KUNAI_LAUNCHER, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, number_of_players, utils::directions::Direction};
+use crate::{constants::{BUILD_NUMBER, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::{known_species::{SPECIES_HERO, SPECIES_KUNAI, SPECIES_KUNAI_LAUNCHER, SPECIES_MR_MUGS, SPECIES_SWORD}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, number_of_players, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
@@ -99,20 +99,17 @@ impl World {
     }
 
     fn spawn_equipment(&mut self) {
-        for (index, &id) in self.hero_entity_ids().iter().enumerate() {
-            let mut kunai_launcher = species_by_id(SPECIES_KUNAI_LAUNCHER).make_entity();
-            kunai_launcher.parent_id = id;
-            kunai_launcher.player_index = index;
-            kunai_launcher.frame.x = self.players[0].props.frame.x;
-            kunai_launcher.frame.y = self.players[0].props.frame.y;
-            self.add_entity(kunai_launcher);
+        let items = vec![SPECIES_KUNAI_LAUNCHER, SPECIES_SWORD];
 
-            let mut sword = species_by_id(SPECIES_SWORD).make_entity();
-            sword.parent_id = id;
-            sword.player_index = index;
-            sword.frame.x = self.players[0].props.frame.x;
-            sword.frame.y = self.players[0].props.frame.y;
-            self.add_entity(sword);
+        for (index, &id) in self.hero_entity_ids().iter().enumerate() {
+            for item_id in &items {
+                let mut item = species_by_id(*item_id).make_entity();
+                item.parent_id = id;
+                item.player_index = index;
+                item.frame.x = self.players[0].props.frame.x;
+                item.frame.y = self.players[0].props.frame.y;
+                self.add_entity(item);
+            }
         }
     }
 

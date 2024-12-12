@@ -1,4 +1,4 @@
-use crate::{constants::{SWORD_SLASH_COOLDOWN, SWORD_SLASH_LIFESPAN}, entities::{bullets::make_player_bullet, known_species::{SPECIES_SWORD, SPECIES_SWORD_SLASH}, species::SpeciesId}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
+use crate::{entities::{bullets::make_player_bullet, species::species_by_id}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
 
 use super::equipment::is_equipped;
 
@@ -24,23 +24,23 @@ impl Entity {
 
     fn slash(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
         self.action_cooldown_remaining -= time_since_last_update;
-        
+
         if self.action_cooldown_remaining > 0.0 {
             self.sprite.frame.y = slash_sprite_y_for_direction(&self.direction);
             return vec![]
         }
         if world.players[self.player_index].has_close_attack_key_been_pressed {
             let hero = world.players[self.player_index].props;
-            let config = slash_config_by_sword_type(self.species_id);
+            let species = species_by_id(self.species_id);
             let offsets = bullet_offsets(world.players[self.player_index].props.direction);
 
-            self.action_cooldown_remaining = config.cooldown;
+            self.action_cooldown_remaining = species.cooldown_after_use;
             self.sprite.reset();
             self.sprite.frame.y = slash_sprite_y_for_direction(&self.direction);            
 
             let mut updates: Vec<WorldStateUpdate> = offsets.into_iter()
                 .map(|(dx, dy)| {
-                    let mut bullet = make_player_bullet(self.parent_id, world, config.species, config.lifespan);
+                    let mut bullet = make_player_bullet(self.parent_id, world, &species);
                     bullet.offset = Vector2d::zero();
                     bullet.frame = hero.hittable_frame.offset_by((dx, dy)); 
                     bullet.direction = hero.direction;
@@ -49,7 +49,9 @@ impl Entity {
                 })
                 .collect();
 
-            updates.push(WorldStateUpdate::EngineUpdate(EngineStateUpdate::SpecialEffect(config.effect)));
+            if let Some(effect) = species.usage_special_effect {
+                updates.push(WorldStateUpdate::EngineUpdate(EngineStateUpdate::SpecialEffect(effect)));
+            }
 
             return updates
         }
@@ -57,30 +59,6 @@ impl Entity {
 
         vec![]
     } 
-}
-
-struct SlashConfig {
-    cooldown: f32,
-    species: SpeciesId,
-    lifespan: f32,
-    effect: SpecialEffect
-}
-
-fn slash_config_by_sword_type(sword_species_id: SpeciesId) -> SlashConfig {
-    match sword_species_id {
-        SPECIES_SWORD => SlashConfig { 
-            cooldown: SWORD_SLASH_COOLDOWN, 
-            species: SPECIES_SWORD_SLASH, 
-            lifespan: SWORD_SLASH_LIFESPAN,
-            effect: SpecialEffect::SwordSlash
-        },
-        _ => SlashConfig { 
-            cooldown: SWORD_SLASH_COOLDOWN, 
-            species: SPECIES_SWORD_SLASH, 
-            lifespan: SWORD_SLASH_LIFESPAN,
-            effect: SpecialEffect::SwordSlash
-        }
-    }
 }
 
 fn slash_sprite_y_for_direction(direction: &Direction) -> i32 {

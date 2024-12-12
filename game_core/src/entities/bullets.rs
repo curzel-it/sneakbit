@@ -1,6 +1,6 @@
 use crate::{constants::TILE_SIZE, game_engine::{entity::{is_player, Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{pickable_object::object_pick_up_sequence, species::species_by_id};
+use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species}};
 
 pub type BulletId = EntityId;
 pub type Damage = f32;
@@ -102,16 +102,16 @@ fn make_bullet_ex(
     bullet
 }
 
-pub fn make_player_bullet(parent_id: u32, world: &World, species: u32, lifespan: f32) -> Entity {
+pub fn make_player_bullet(parent_id: u32, world: &World, weapon_species: &Species) -> Entity {
     let index = world.player_index_by_entity_id(parent_id);
     let player = world.players[index].props;
 
     make_bullet_ex(
-        species,
+        weapon_species.bullet_species_id,
         parent_id,
         &player.hittable_frame,
         &player.offset,
         player.direction,
-        lifespan
+        weapon_species.bullet_lifespan
     )
 }

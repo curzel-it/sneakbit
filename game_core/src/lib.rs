@@ -3,7 +3,7 @@
 use std::{collections::HashSet, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
-use entities::known_species::{SPECIES_SWORD_ITEM, SPECIES_KUNAI};
+use entities::known_species::{SPECIES_KUNAI, SPECIES_SWORD_ITEM};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
 use game_engine::{engine::GameEngine, storage::inventory_count};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};

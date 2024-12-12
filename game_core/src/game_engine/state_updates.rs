@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 use crate::{entities::{bullets::{BulletId, Damage}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast};
 
 use super::{entity::{Entity, EntityId, EntityProps}, locks::LockType};
@@ -45,7 +47,7 @@ pub enum EngineStateUpdate {
     ExternalLink(String)
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SpecialEffect {
     SwordSlash
 }

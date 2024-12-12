@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 use std::fs::File;
 use std::io::Read;
 
-use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, game_engine::{directions::MovementDirections, entity::Entity, locks::LockType}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::IntRect, vector::Vector2d}};
+use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, game_engine::{directions::MovementDirections, entity::Entity, locks::LockType, state_updates::SpecialEffect}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::IntRect, vector::Vector2d}};
 
 pub type SpeciesId = u32;
 
@@ -48,6 +48,21 @@ pub struct Species {
 
     #[serde(default="zero")]
     pub dps: f32,
+
+    #[serde(default="zero_u32")]
+    pub bullet_species_id: u32,
+
+    #[serde(default="one")]
+    pub bullet_lifespan: f32,
+
+    #[serde(default="zero")]
+    pub cooldown_after_use: f32,
+
+    #[serde(default)]
+    pub usage_special_effect: Option<SpecialEffect>,
+
+    #[serde(default)]
+    pub inventory_requirement: Option<u32>,
 }
 
 #[derive(Default, Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
@@ -204,6 +219,11 @@ pub const SPECIES_NONE: Species = Species {
     movement_directions: MovementDirections::None,
     hp: one_hundred(),
     dps: zero(),
+    bullet_species_id: 0,
+    bullet_lifespan: 0.0,
+    cooldown_after_use: 0.0,
+    usage_special_effect: None,
+    inventory_requirement: None,
 };
 
 pub fn species_by_id(species_id: u32) -> Species {
@@ -223,6 +243,10 @@ const fn zero() -> f32 {
 }
 
 const fn zero_i32() -> i32 {
+    0
+}
+
+const fn zero_u32() -> u32 {
     0
 }
 
