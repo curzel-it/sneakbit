@@ -39,6 +39,7 @@ pub enum GameMenuItem {
     NumberOfPlayers,
     Credits,
     LanguageSettings,
+    Controls,
 }
 
 impl MenuItem for GameMenuItem {
@@ -54,6 +55,7 @@ impl MenuItem for GameMenuItem {
             GameMenuItem::NumberOfPlayers => "game.menu.number_of_players".localized(),
             GameMenuItem::Credits => "credits".localized(),
             GameMenuItem::LanguageSettings => "game.menu.language".localized(),
+            GameMenuItem::Controls => "game.menu.controls".localized(),
             
             GameMenuItem::ToggleSoundEffects => if are_sound_effects_enabled() {
                 "game.menu.disable_sound_effects"
@@ -145,6 +147,7 @@ impl GameMenu {
                 GameMenuItem::ToggleMusic,
                 GameMenuItem::ToggleSoundEffects,
                 GameMenuItem::NewGame,
+                GameMenuItem::Controls,
                 GameMenuItem::NumberOfPlayers,
                 GameMenuItem::LanguageSettings,
                 GameMenuItem::Credits,
@@ -251,6 +254,10 @@ impl GameMenu {
                 self.state = MenuState::ShowingCredits;
                 self.credits_menu.show();
                 vec![]
+            }
+            GameMenuItem::Controls => {
+                self.close();
+                vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::DisplayLongText("game.menu.controls".localized(), "game.menu.controls.explained".localized()))]
             }
             GameMenuItem::Exit => {
                 self.close();
