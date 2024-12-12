@@ -182,8 +182,7 @@ impl Entity {
             EntityType::Gun => self.update_gun(world, time_since_last_update),
         };        
         self.sprite.update(time_since_last_update); 
-        let mut more_updates = self.check_remaining_lifespan(time_since_last_update);
-        updates.append(&mut more_updates);
+        updates.append(&mut self.check_remaining_lifespan(time_since_last_update));
         updates
     }
 

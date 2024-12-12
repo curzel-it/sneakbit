@@ -787,7 +787,7 @@ impl World {
 
 impl Entity {
     fn has_weight(&self) -> bool {
-        !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate | EntityType::Equipment | EntityType::Sword)
+        !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate | EntityType::Equipment | EntityType::Sword | EntityType::Gun)
     }
 }
 
