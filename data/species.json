@@ -1306,7 +1306,9 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1014,
-    "z_index": 99
+    "z_index": 99,
+    "supports_bullet_boomerang": true,
+    "supports_bullet_catching": true
   },
   {
     "base_speed": 5.0,
@@ -3857,6 +3859,7 @@
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1014,
+    "supports_bullet_boomerang": true,
     "z_index": 14
   },
   {

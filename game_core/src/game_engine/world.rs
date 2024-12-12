@@ -2,7 +2,7 @@ use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}
 
 use common_macros::hash_set;
 use serde::{Deserialize, Serialize};
-use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{bullets::{BulletHit, BulletId}, known_species::SPECIES_HERO, species::{species_by_id, EntityType}}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
@@ -335,8 +335,8 @@ impl World {
             WorldStateUpdate::HandleBulletCatched(bullet_id) => {
                 self.handle_bullet_catched(bullet_id)
             }
-            WorldStateUpdate::HandleHits(bullet_id, target_ids, damage) => {
-                return self.handle_hits(bullet_id, target_ids, damage)
+            WorldStateUpdate::HandleHits(hit) => {
+                return self.handle_hits(&hit)
             }
             WorldStateUpdate::HandleHeroDamage(damage) => {
                 return self.handle_hero_damage(damage)
@@ -382,7 +382,7 @@ impl World {
     }
 
     fn handle_target_hit(&self, damage: f32, target: &mut Entity) -> bool {
-        target.hp -= damage;
+        target.hp -= damage * damage_multiplier(target.parent_id);
         
         if target.hp <= 0.0 {
             self.kill_with_animation(target);
@@ -392,17 +392,17 @@ impl World {
         }
     }
 
-    fn handle_hits(&mut self, bullet_id: EntityId, target_ids: Vec<EntityId>, damage: f32) -> Vec<EngineStateUpdate> {
+    fn handle_hits(&mut self, hit: &BulletHit) -> Vec<EngineStateUpdate> {
         let mut updates: Vec<EngineStateUpdate> = vec![];
         let mut bullet_expended = false;
         let mut entities = self.entities.borrow_mut();
 
         let targets = entities.iter_mut().filter(|e| {
-            target_ids.contains(&e.id) && e.can_be_hit_by_bullet()
+            hit.target_ids.contains(&e.id) && e.can_be_hit_by_bullet()
         });
 
         for target in targets {
-            let did_kill = self.handle_target_hit(damage, target);
+            let did_kill = self.handle_target_hit(hit.damage, target);
             bullet_expended = bullet_expended || did_kill;
             if did_kill {
                 updates.push(EngineStateUpdate::EntityKilled(target.id, target.species_id));
@@ -410,14 +410,27 @@ impl World {
         }
         drop(entities);
 
-        if bullet_expended && bullet_id != 0 && !has_piercing_bullet_skill() {
-            updates.append(&mut self.handle_bullet_stopped(bullet_id));
+        if bullet_expended && hit.bullet_id != 0 {
+            updates.append(&mut self.handle_bullet_stopped_from_hit(hit.bullet_id, hit.supports_bullet_boomerang));
         } 
         updates
     }
 
-    fn handle_bullet_stopped(&mut self, bullet_id: u32) -> Vec<EngineStateUpdate> {
-        if has_boomerang_skill() {
+    fn handle_bullet_stopped(&mut self, bullet_id: BulletId) -> Vec<EngineStateUpdate> {
+        let supports_bullet_boomerang = if let Some(index) = self.index_for_entity(bullet_id) {
+            if let Some(entity) = self.entities.borrow().get(index) {
+                species_by_id(entity.species_id).supports_bullet_boomerang
+            } else {
+                false
+            }
+        } else {
+            false
+        };
+        self.handle_bullet_stopped_from_hit(bullet_id, supports_bullet_boomerang)
+    }
+
+    fn handle_bullet_stopped_from_hit(&mut self, bullet_id: u32, supports_bullet_boomerang: bool) -> Vec<EngineStateUpdate> {
+        if has_boomerang_skill() && supports_bullet_boomerang {
             let mut entities = self.entities.borrow_mut();
             if let Some(bullet) = entities.iter_mut().find(|e| e.id == bullet_id) {
                 if is_player(bullet.parent_id) {
@@ -861,5 +874,13 @@ impl PlayerProps {
         self.has_ranged_attack_key_been_pressed = keyboard.has_ranged_attack_key_been_pressed(self.index);
         self.has_close_attack_key_been_pressed = keyboard.has_close_attack_key_been_pressed(self.index);
         self.has_confirmation_key_been_pressed = keyboard.has_confirmation_been_pressed(self.index);
+    }
+}
+
+fn damage_multiplier(parent_id: u32) -> f32 {
+    if is_player(parent_id) && has_piercing_bullet_skill() {
+        2.0
+    } else {
+        1.0
     }
 }

@@ -62,7 +62,13 @@ pub struct Species {
     pub usage_special_effect: Option<SpecialEffect>,
 
     #[serde(default)]
-    pub inventory_requirement: Option<u32>
+    pub inventory_requirement: Option<u32>,
+
+    #[serde(default)]
+    pub supports_bullet_boomerang: bool,
+
+    #[serde(default)]
+    pub supports_bullet_catching: bool
 }
 
 #[derive(Default, Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
@@ -224,6 +230,8 @@ pub const SPECIES_NONE: Species = Species {
     cooldown_after_use: 0.0,
     usage_special_effect: None,
     inventory_requirement: None,
+    supports_bullet_boomerang: false,
+    supports_bullet_catching: false,
 };
 
 pub fn species_by_id(species_id: u32) -> Species {

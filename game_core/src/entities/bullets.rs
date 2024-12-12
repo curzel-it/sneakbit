@@ -5,6 +5,15 @@ use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, S
 pub type BulletId = EntityId;
 pub type Damage = f32;
 
+#[derive(Debug, Clone)]
+pub struct BulletHit {
+    pub bullet_id: BulletId,
+    pub supports_catching: bool,
+    pub supports_bullet_boomerang: bool,
+    pub target_ids: Vec<EntityId>,
+    pub damage: f32
+}
+
 impl Entity {
     pub fn setup_bullet(&mut self) {
         // ...
@@ -45,8 +54,19 @@ impl Entity {
             .collect();
 
         let damage = self.dps * time_since_last_update;
+        let species = species_by_id(self.species_id);
 
-        vec![WorldStateUpdate::HandleHits(self.id, valid_hits, damage)]
+        vec![
+            WorldStateUpdate::HandleHits(
+                BulletHit { 
+                    bullet_id: self.id, 
+                    supports_catching: species.supports_bullet_catching, 
+                    supports_bullet_boomerang: species.supports_bullet_boomerang, 
+                    target_ids: valid_hits, 
+                    damage: damage 
+                }
+            )
+        ]
     }
 
     fn check_stoppers(&self, world: &World) -> Vec<WorldStateUpdate> {
