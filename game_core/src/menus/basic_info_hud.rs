@@ -48,7 +48,7 @@ impl BasicInfoHud {
     }
 
     fn ammo_count_ui(&self, count: i32, sprite_y: i32, sprite_x: i32) -> View {
-        if self.number_of_kunais > 0 {
+        if count > 0 {
             let image = texture!(
                 SPRITE_SHEET_INVENTORY, 
                 IntRect::new(sprite_x, sprite_y, 1, 1), 
