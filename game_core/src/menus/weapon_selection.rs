@@ -37,7 +37,7 @@ impl WeaponsGrid {
                         let current_index = self.weapons
                             .iter()
                             .enumerate()
-                            .find(|(_, weapon)| is_equipped(weapon.id))
+                            .find(|(_, weapon)| is_equipped(weapon))
                             .map(|(index, _)| index);
                         
                         if let Some(current_index) = current_index {
@@ -102,7 +102,7 @@ impl WeaponsGrid {
 
     fn handle_confirmation_input(&mut self, selected_index: usize) {
         if let Some(selected_weapon) = self.weapons.get(selected_index) {
-            set_equipped(selected_weapon.id);
+            set_equipped(selected_weapon);
             self.state = WeaponsGridState::Closed;
         }
     }

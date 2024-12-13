@@ -1,7 +1,7 @@
 use std::{collections::{HashMap, HashSet}, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
 use lazy_static::lazy_static;
 
-use crate::{config::config, entities::species::{species_by_id, SpeciesId}};
+use crate::{config::config, entities::species::{species_by_id, SpeciesId, SPECIES_BY_INVENTORY_REQUIREMENT}, equipment::equipment::set_equipped};
 
 use super::{entity::EntityId, locks::LockType, world::World};
 
@@ -48,8 +48,12 @@ impl StorageKey {
         "language".to_owned()
     }
 
-    pub fn currently_equipped_weapon() -> String {
-        "currently_equipped_weapon".to_owned()
+    pub fn currently_equipped_gun() -> String {
+        "currently_equipped_gun".to_owned()
+    }
+
+    pub fn currently_equipped_sword() -> String {
+        "currently_equipped_sword".to_owned()
     }
 
     fn dialogue_answer(dialogue: &str) -> String {
@@ -236,12 +240,18 @@ fn decrease_value(key: &str) {
     set_value_for_key(key, next_value);
 }
 
-pub fn increment_inventory_count(species_id: &SpeciesId) {
-    let species = species_by_id(*species_id);
+pub fn increment_inventory_count(species_id: SpeciesId) {
+    let species = species_by_id(species_id);
+
     if !species.bundle_contents.is_empty() {
-        species.bundle_contents.iter().for_each(increment_inventory_count);
+        species.bundle_contents.into_iter().for_each(increment_inventory_count);
     } else {
-        increment_value(&StorageKey::species_inventory_count(species_id));
+        increment_value(&StorageKey::species_inventory_count(&species.id));
+
+        if let Some(weapon_id) = SPECIES_BY_INVENTORY_REQUIREMENT.get(&species.id) {
+            let weapon_species = species_by_id(*weapon_id);
+            set_equipped(&weapon_species);
+        }
     }
 }
 

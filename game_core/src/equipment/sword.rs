@@ -1,4 +1,4 @@
-use crate::{entities::{bullets::make_player_bullet, species::species_by_id}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
+use crate::{entities::bullets::make_player_bullet, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
 
 use super::equipment::is_equipped;
 
@@ -11,7 +11,7 @@ impl Entity {
     pub fn update_sword(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {   
         let mut updates: Vec<WorldStateUpdate> = vec![];
 
-        self.is_equipped = is_equipped(self.species_id);
+        self.is_equipped = is_equipped(&self.species);
         self.update_equipment_position(world);
         
         if self.is_equipped {
@@ -31,16 +31,15 @@ impl Entity {
         }
         if world.players[self.player_index].has_close_attack_key_been_pressed {
             let hero = world.players[self.player_index].props;
-            let species = species_by_id(self.species_id);
             let offsets = bullet_offsets(world.players[self.player_index].props.direction);
 
-            self.action_cooldown_remaining = species.cooldown_after_use;
+            self.action_cooldown_remaining = self.species.cooldown_after_use;
             self.sprite.reset();
             self.play_equipment_usage_animation();
 
             let mut updates: Vec<WorldStateUpdate> = offsets.into_iter()
                 .map(|(dx, dy)| {
-                    let mut bullet = make_player_bullet(self.parent_id, world, &species);
+                    let mut bullet = make_player_bullet(self.parent_id, world, &self.species);
                     bullet.offset = Vector2d::zero();
                     bullet.frame = hero.hittable_frame.offset_by((dx, dy)); 
                     bullet.direction = hero.direction;
@@ -49,7 +48,7 @@ impl Entity {
                 })
                 .collect();
 
-            if let Some(effect) = species.usage_special_effect {
+            if let Some(effect) = self.species.usage_special_effect.clone() {
                 updates.push(WorldStateUpdate::EngineUpdate(EngineStateUpdate::SpecialEffect(effect)));
             }
 

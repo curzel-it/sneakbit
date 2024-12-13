@@ -454,7 +454,7 @@ impl World {
             self.remove_entity_by_id(bullet_id);
 
             if let Some(species_id) = species_id {
-                increment_inventory_count(&species_id);
+                increment_inventory_count(species_id);
             }
         }
     }

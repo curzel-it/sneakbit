@@ -1,4 +1,4 @@
-use crate::{entities::{bullets::make_player_bullet, known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, storage::{decrease_inventory_count, has_species_in_inventory}, world::World}};
+use crate::{entities::{bullets::make_player_bullet, known_species::SPECIES_KUNAI_LAUNCHER}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, storage::{decrease_inventory_count, has_species_in_inventory}, world::World}};
 
 use super::equipment::is_equipped;
 
@@ -13,7 +13,7 @@ impl Entity {
         } else {
             let mut updates: Vec<WorldStateUpdate> = vec![];
 
-            self.is_equipped = is_equipped(self.species_id);
+            self.is_equipped = is_equipped(&self.species);
             self.update_equipment_position(world);
             
             if self.is_equipped {
@@ -36,22 +36,21 @@ impl Entity {
         }
         if world.players[self.player_index].has_ranged_attack_key_been_pressed {            
             let hero = world.players[self.player_index].props;
-            let species = species_by_id(self.species_id);
 
-            if has_species_in_inventory(&species.bullet_species_id) {               
-                decrease_inventory_count(&species.bullet_species_id);
+            if has_species_in_inventory(&self.species.bullet_species_id) {               
+                decrease_inventory_count(&self.species.bullet_species_id);
 
-                self.action_cooldown_remaining = species.cooldown_after_use;
+                self.action_cooldown_remaining = self.species.cooldown_after_use;
                 self.sprite.reset();
                 self.play_equipment_usage_animation();
 
-                let mut bullet = make_player_bullet(self.parent_id, world, &species);
+                let mut bullet = make_player_bullet(self.parent_id, world, &self.species);
                 bullet.direction = hero.direction;
                 bullet.current_speed = bullet.current_speed + hero.speed;
 
                 let mut updates = vec![WorldStateUpdate::AddEntity(Box::new(bullet))];
 
-                if let Some(effect) = species.usage_special_effect {
+                if let Some(effect) = self.species.usage_special_effect.clone() {
                     updates.push(WorldStateUpdate::EngineUpdate(EngineStateUpdate::SpecialEffect(effect)));
                 }
 

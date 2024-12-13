@@ -1,8 +1,8 @@
-use crate::{constants::TILE_SIZE, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, inventory_count, set_value_for_key, StorageKey}, world::World}, utils::directions::Direction};
+use crate::{constants::TILE_SIZE, entities::species::{species_by_id, EntityType, Species}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, inventory_count, set_value_for_key, StorageKey}, world::World}, utils::directions::Direction};
 
 impl Entity {
     pub fn setup_equipment(&mut self) {
-        self.is_equipped = is_equipped(self.species_id);
+        self.is_equipped = is_equipped(&self.species);
         self.update_sprite_for_current_state();
     }
 
@@ -42,8 +42,12 @@ impl Entity {
     }
 }
 
-pub fn is_equipped(species_id: u32) -> bool {
-    species_id == get_value_for_global_key(&StorageKey::currently_equipped_weapon()).unwrap_or(SPECIES_KUNAI_LAUNCHER)
+pub fn is_equipped(species: &Species) -> bool {
+    if let Some(selected) = get_value_for_global_key(&equipment_key_for_species(species)) {
+        selected == species.id
+    } else {
+        can_be_equipped(species.id)
+    }
 }
 
 pub fn can_be_equipped(species_id: u32) -> bool {
@@ -54,6 +58,14 @@ pub fn can_be_equipped(species_id: u32) -> bool {
     } 
 }
 
-pub fn set_equipped(species_id: u32) {
-    set_value_for_key(&StorageKey::currently_equipped_weapon(), species_id);
+pub fn set_equipped(species: &Species) {
+    set_value_for_key(&equipment_key_for_species(species), species.id)
+}
+
+fn equipment_key_for_species(species: &Species) -> String {
+    match species.entity_type {
+        EntityType::Gun => StorageKey::currently_equipped_gun(),
+        EntityType::Sword => StorageKey::currently_equipped_sword(),
+        _ => "".to_owned()
+    }    
 }

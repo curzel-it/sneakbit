@@ -54,14 +54,13 @@ impl Entity {
             .collect();
 
         let damage = self.dps * time_since_last_update;
-        let species = species_by_id(self.species_id);
 
         vec![
             WorldStateUpdate::HandleHits(
                 BulletHit { 
                     bullet_id: self.id, 
-                    supports_catching: species.supports_bullet_catching, 
-                    supports_bullet_boomerang: species.supports_bullet_boomerang, 
+                    supports_catching: self.species.supports_bullet_catching, 
+                    supports_bullet_boomerang: self.species.supports_bullet_boomerang, 
                     target_ids: valid_hits, 
                     damage: damage 
                 }

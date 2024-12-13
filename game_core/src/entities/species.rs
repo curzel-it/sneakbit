@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use lazy_static::lazy_static;
-use std::fs::File;
+use std::{collections::HashMap, fs::File};
 use std::io::Read;
 
 use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, game_engine::{directions::MovementDirections, entity::Entity, locks::LockType, state_updates::SpecialEffect}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::IntRect, vector::Vector2d}};
@@ -95,6 +95,12 @@ pub enum EntityType {
     CloseCombatMonster
 }
 
+impl Default for Species {
+    fn default() -> Self {
+        SPECIES_NONE
+    }
+}
+
 impl Species {
     pub fn localized_name(&self) -> String {
         self.name.localized()
@@ -141,6 +147,7 @@ impl Species {
             dps: self.dps,
             sorting_key: 0,
             player_index: 0,
+            species: self.clone(),
         }
     }
 
@@ -202,6 +209,21 @@ lazy_static! {
         let mut data = String::new();
         file.read_to_string(&mut data).expect("Could not read species.json");
         serde_json::from_str(&data).expect("Error parsing species.json")
+    };
+}
+
+lazy_static! {
+    pub static ref SPECIES_BY_INVENTORY_REQUIREMENT: HashMap<u32, u32> = {
+        ALL_SPECIES
+            .iter()
+            .filter_map(|s| {
+                if let Some(inventory_requirement) = s.inventory_requirement {
+                    Some((inventory_requirement, s.id))
+                } else {
+                    None
+                }
+            })
+            .collect()
     };
 }
 
