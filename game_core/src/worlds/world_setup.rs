@@ -1,4 +1,4 @@
-use crate::{constants::{BUILD_NUMBER, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::{known_species::{SPECIES_HERO, SPECIES_KUNAI, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, number_of_players, utils::directions::Direction};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, game_engine::world::{World, WorldType}, number_of_players, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
@@ -15,29 +15,10 @@ impl World {
         self.spawn_hero(source, hero_direction, original_x, original_y, direction);
         self.spawn_other_players();
         self.spawn_equipment();
-        self.spawn_changelog_man_if_needed();
     }    
 
     fn setup_entities(&mut self) {
         self.entities.borrow_mut().iter_mut().for_each(|e| e.setup());
-    }
-
-    fn spawn_changelog_man_if_needed(&mut self) {
-        if is_first_visit_after_update() && self.allows_for_changelog_display() {
-            set_update_handled();
-            clear_previous_changelog_dialogues();
-
-            let hero = self.players[0].props;
-            let mut mugs = species_by_id(SPECIES_MR_MUGS).make_entity();
-            mugs.direction = Direction::Down;
-            mugs.demands_attention = true;
-            mugs.frame = hero.frame
-                .offset_by(hero.direction.as_col_row_offset())
-                .offset_by(hero.direction.as_col_row_offset());
-            mugs.dialogues = vec![Dialogue::new("changelog", "always", 0, Some(SPECIES_KUNAI))];
-            mugs.after_dialogue = AfterDialogueBehavior::FlyAwayEast;
-            self.add_entity(mugs);
-        }
     }
 
     fn spawn_hero(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
@@ -210,27 +191,4 @@ impl World {
         let actual_y = original_y.min(self.bounds.y + self.bounds.h - 1).max(self.bounds.y - 1);
         (actual_x, actual_y)
     }
-
-    fn allows_for_changelog_display(&self) -> bool {
-        !matches!(self.id, 1000 | 1001) && matches!(self.world_type, WorldType::Exterior)
-    }
-}
-    
-fn is_first_visit_after_update() -> bool {
-    if let Some(last_build) = get_value_for_global_key(&StorageKey::build_number()) {
-        last_build != BUILD_NUMBER
-    } else {
-        true
-    }    
-}
-
-fn set_update_handled() {
-    set_value_for_key(&StorageKey::build_number(), BUILD_NUMBER);
-}
-
-fn clear_previous_changelog_dialogues() {
-    set_value_for_key("dialogue.answer.changelog", 0);
-    set_value_for_key("dialogue.answer.changelog.mobile", 0);
-    set_value_for_key("dialogue.reward.changelog", 0);
-    set_value_for_key("dialogue.reward.changelog.mobile", 0);
 }

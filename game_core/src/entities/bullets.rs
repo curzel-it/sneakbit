@@ -53,6 +53,10 @@ impl Entity {
             .filter(|id| self.is_valid_hit_target(*id) && !is_player(*id))
             .collect();
 
+        if valid_hits.is_empty() {
+            return vec![]
+        }
+
         let damage = self.dps * time_since_last_update;
 
         vec![
