@@ -180,8 +180,9 @@ fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {
         .vsync()
         .build();        
     
-    let font = rl.load_font(&thread, &regular_font_path()).unwrap();
-    let font_bold = rl.load_font(&thread, &bold_font_path()).unwrap();                     
+    let characters = latin_characters();    
+    let font = rl.load_font_ex(&thread, &regular_font_path(), 8, Some(&characters)).unwrap();
+    let font_bold = rl.load_font_ex(&thread, &bold_font_path(), 8, Some(&characters)).unwrap();
     
     update_target_refresh_rate(&mut rl);
     rl.set_window_min_size(360, 240);
@@ -627,4 +628,36 @@ impl LinksHandler for MyLinkHandler {
     fn open(&self, link: &str) {
         let _ = open::that(link);
     }
+}
+
+fn latin_characters() -> String {
+    // Collect characters from the Latin Unicode blocks
+    let mut latin_chars = String::new();
+
+    // Basic Latin (U+0020 to U+007F)
+    for c in 0x0020..=0x007F {
+        latin_chars.push(char::from_u32(c).unwrap());
+    }
+
+    // Latin-1 Supplement (U+00A0 to U+00FF)
+    for c in 0x00A0..=0x00FF {
+        latin_chars.push(char::from_u32(c).unwrap());
+    }
+
+    // Latin Extended-A (U+0100 to U+017F)
+    for c in 0x0100..=0x017F {
+        latin_chars.push(char::from_u32(c).unwrap());
+    }
+
+    // Latin Extended-B (U+0180 to U+024F)
+    for c in 0x0180..=0x024F {
+        latin_chars.push(char::from_u32(c).unwrap());
+    }
+
+    // Latin Extended Additional (U+1E00 to U+1EFF)
+    for c in 0x1E00..=0x1EFF {
+        latin_chars.push(char::from_u32(c).unwrap());
+    }
+
+    latin_chars
 }

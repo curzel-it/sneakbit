@@ -1,4 +1,11 @@
-"1001.entrance" = "Benvenuto al Villaggio di Evergrove!"
+"1001.entrance" = """
+Benvenuto al Villaggio di Evergrove!
+--
+Ovest: Sentiero Verdant
+Nord: Aridreach
+Nord-Ovest: Sentiero Shadowveil
+Sud-Ovest: Paludi di Murkmire
+"""
 
 "1002.entrance" = """
 Benvenuto al Sentiero Verdant
@@ -54,7 +61,7 @@ Ovest: Vetta di Levek
 Est: Paludi di Murkmire
 """
 
-"1012.entrance" = "Benvenuto a Vintoria!"
+"1012.entrance" = "Benvenuti a Vintoria!"
 
 "1013.entrance" = "Grimsun Basin"
 
@@ -298,8 +305,6 @@ E poi, cosa diavolo ci fai a casa mia!?
 Centrale Cascata di Vintoria
 Sfruttando la forza della cascata per alimentare la valle con mana vitale
 """
-
-"lore.007.vintoria_entrance" = "Benvenuti nella Valle di Vintoria!"
 
 "lore.008.mount_ignis" = """
 Attenzione

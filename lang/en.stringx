@@ -1,4 +1,11 @@
-"1001.entrance" = "Welcome to Evergrove Village!"
+"1001.entrance" = """
+Welcome to Evergrove Village!
+--
+West: Verdant Way
+North: Aridreach
+North-West: Shadowveil Path
+South-West: Murkmire Swamps
+"""
 
 "1002.entrance" = """
 Welcome to the Verdant Way
@@ -298,8 +305,6 @@ Also, what the hell are you doing in my house!?
 Vintoria’s Cascade Station
 Harnessing the might of the waterfall to power the valley with life-giving mana
 """
-
-"lore.007.vintoria_entrance" = "Welcome to Vintoria Valley!"
 
 "lore.008.mount_ignis" = """
 Warning
