@@ -1,6 +1,6 @@
 use crate::{entities::{bullets::make_player_bullet, known_species::SPECIES_KUNAI_LAUNCHER}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
 
-use super::equipment::is_equipped;
+use super::equipment_basics::is_equipped;
 
 impl Entity {
     pub fn setup_gun(&mut self) {
@@ -44,7 +44,6 @@ impl Entity {
 
                 let mut bullet = make_player_bullet(self.parent_id, world, &self.species);
                 bullet.direction = hero.direction;
-                bullet.current_speed = bullet.current_speed + hero.speed;
 
                 let mut updates = vec![
                     WorldStateUpdate::EngineUpdate(EngineStateUpdate::RemoveFromInventory(self.player_index, self.species.bullet_species_id)),

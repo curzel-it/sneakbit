@@ -143,11 +143,9 @@ impl SoundEffectsManager {
         let current_positions = cached_players_positions();
 
         if self.last_players_positions.len() == current_positions.len() {
-            for index in 0..self.last_players_positions.len() {
-                if self.last_players_positions[index] != current_positions[index] {
-                    if !is_player_by_index_on_slippery_surface(index) {
-                        self.prepare(SoundEffect::StepTaken);
-                    }
+            for (index, &current_position) in current_positions.iter().enumerate().take(self.last_players_positions.len()) {
+                if self.last_players_positions[index] != current_position && !is_player_by_index_on_slippery_surface(index) {
+                    self.prepare(SoundEffect::StepTaken);
                 }
             }
         }

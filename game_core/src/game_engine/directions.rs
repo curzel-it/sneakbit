@@ -38,8 +38,8 @@ impl Entity {
         if self.offset.x != 0.0 || self.offset.y != 0.0 {
             return
         }
-        if self.is_obstacle_in_direction(&world, self.direction) {
-            self.pick_next_direction(&world);
+        if self.is_obstacle_in_direction(world, self.direction) {
+            self.pick_next_direction(world);
         }
     }
 
@@ -49,8 +49,8 @@ impl Entity {
         }
         if self.is_hero_in_line_of_sight(world) {
             self.change_direction_towards_hero(world);
-        } else if self.is_obstacle_in_direction(&world, self.direction) {
-            self.pick_next_direction(&world);
+        } else if self.is_obstacle_in_direction(world, self.direction) {
+            self.pick_next_direction(world);
         }
     }
 

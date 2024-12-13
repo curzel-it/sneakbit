@@ -1,6 +1,6 @@
 use crate::{game_engine::engine::GameEngine, text, ui::components::{Spacing, Typography, COLOR_DEBUG_INFO_BACKGROUND}, vstack, zstack};
 
-use super::{components::{empty_view, NonColor, View, WithAlpha, COLOR_DEATH_SCREEN_BACKGROUND, COLOR_LOADING_SCREEN_BACKGROUND, COLOR_MENU_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}};
+use super::{components::{empty_view, NonColor, View, WithAlpha, COLOR_DEATH_SCREEN_BACKGROUND, COLOR_LOADING_SCREEN_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}};
 
 impl GameEngine {
     pub fn hud_ui(&self, width: i32, height: i32, show_debug_info: bool, fps: u32) -> Layout {

@@ -351,7 +351,6 @@ impl GameEngine {
         }
         if self.menu.is_open() {
             self.menu.select_option_at_index(index);
-            return
         }
     }
 

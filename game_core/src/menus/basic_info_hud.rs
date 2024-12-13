@@ -7,7 +7,7 @@ pub struct BasicInfoHud {
 impl BasicInfoHud {
     pub fn new() -> Self {
         Self {
-            players: (0..MAX_PLAYERS).map(|index| PlayerHud::new(index)).collect()
+            players: (0..MAX_PLAYERS).map(PlayerHud::new).collect()
         }
     }
 

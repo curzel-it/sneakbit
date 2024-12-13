@@ -1,7 +1,7 @@
 use std::{collections::{HashMap, HashSet}, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
 use lazy_static::lazy_static;
 
-use crate::{config::config, entities::species::{species_by_id, SpeciesId}, equipment::equipment::set_equipped};
+use crate::{config::config, entities::species::{species_by_id, SpeciesId}, equipment::equipment_basics::set_equipped};
 
 use super::{entity::EntityId, locks::LockType, world::World};
 

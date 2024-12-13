@@ -234,8 +234,7 @@ impl World {
             let hero_updates = hero.update(self, time_since_last_update);
             _ = hero;
             drop(entities);
-            let hero_engine_updates = self.apply_state_updates(hero_updates);
-            hero_engine_updates
+            self.apply_state_updates(hero_updates)
         } else {
             vec![]
         }
@@ -652,10 +651,9 @@ impl World {
     }
 
     pub fn hits(&self, x: i32, y: i32) -> bool {
-        if x < 0 || y < 0 { false }
-        else if y >= self.bounds.h { false }
-        else if x >= self.bounds.w { false }
-        else { 
+        if x < 0 || y < 0 || y >= self.bounds.h || x >= self.bounds.w { 
+            false 
+        } else { 
             let x = x as usize;
             let y = y as usize;
             self.hitmap.hits(x, y) || self.tiles_hitmap.hits(x, y) 
@@ -680,10 +678,11 @@ impl World {
     }
 
     pub fn has_weight(&self, x: i32, y: i32) -> bool {
-        if x < 0 || y < 0 { false }
-        else if y >= self.bounds.h { false }
-        else if x >= self.bounds.w { false }
-        else { self.weights_map.hits(x as usize, y as usize) }
+        if x < 0 || y < 0 || y >= self.bounds.h || x >= self.bounds.w { 
+            false 
+        } else { 
+            self.weights_map.hits(x as usize, y as usize) 
+        }
     }
 
     pub fn is_creep(&self, id: u32) -> bool {

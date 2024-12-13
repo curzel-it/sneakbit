@@ -253,19 +253,11 @@ impl Biome {
     }
 
     fn is_dark_grass(&self) -> bool {
-        match self {
-            Biome::DarkGrass => true,
-            _ => false
-        }
+        matches!(self, Biome::DarkGrass)
     }
 
     fn is_liquid(&self) -> bool {
-        match self {
-            Biome::Water => true,
-            Biome::DarkWater => true,
-            Biome::Lava => true,
-            _ => false
-        }
+        matches!(self, Biome::Water | Biome::DarkWater | Biome::Lava)
     }
 }
 
@@ -304,11 +296,11 @@ impl TileSet<BiomeTile> {
 
 impl Biome {
     pub fn from_char(c: char) -> Self {
-        CHAR_TO_BIOME.get(&c).unwrap_or(&Biome::Nothing).clone()
+        *CHAR_TO_BIOME.get(&c).unwrap_or(&Biome::Nothing)
     }
 
     pub fn to_char(self) -> char {
-        BIOME_TO_CHAR.get(&self).unwrap_or(&'0').clone()
+        *BIOME_TO_CHAR.get(&self).unwrap_or(&'0')
     }
 }
 

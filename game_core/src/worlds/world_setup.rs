@@ -158,7 +158,7 @@ impl World {
             let nx = x + i * ox;
             let ny = y + i * oy + y_fix;
     
-            if ny == y && nx == x || ny == y+1 && nx == x {
+            if (ny == y || ny == y+1) && nx == x {
                 continue;
             }
             if self.hits(nx, ny) {

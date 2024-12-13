@@ -1,6 +1,6 @@
 use crate::{entities::bullets::make_player_bullet, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
 
-use super::equipment::is_equipped;
+use super::equipment_basics::is_equipped;
 
 
 impl Entity {
@@ -43,7 +43,7 @@ impl Entity {
                     bullet.offset = Vector2d::zero();
                     bullet.frame = hero.hittable_frame.offset_by((dx, dy)); 
                     bullet.direction = hero.direction;
-                    bullet.current_speed = bullet.current_speed + hero.speed;
+                    bullet.current_speed += hero.speed;
                     WorldStateUpdate::AddEntity(Box::new(bullet))
                 })
                 .collect();

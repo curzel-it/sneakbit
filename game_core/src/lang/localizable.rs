@@ -29,7 +29,7 @@ impl LocalizableText for String {
                 return mobile_text
             }
         }
-        return self.try_localize().unwrap_or(self.clone())
+        self.try_localize().unwrap_or(self.clone())
     }
 }
 

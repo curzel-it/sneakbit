@@ -51,7 +51,7 @@ impl Entity {
 
         let valid_hits: Vec<u32> = vec![previous_hits, current_hits]
             .into_iter()
-            .flat_map(|id| id)
+            .flatten()
             .filter(|id| self.is_valid_hit_target(*id) && !is_player(*id))
             .collect();
 
@@ -68,7 +68,7 @@ impl Entity {
                     supports_catching: self.species.supports_bullet_catching, 
                     supports_bullet_boomerang: self.species.supports_bullet_boomerang, 
                     target_ids: valid_hits, 
-                    damage: damage 
+                    damage 
                 }
             )
         ]

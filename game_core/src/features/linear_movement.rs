@@ -11,7 +11,7 @@ impl Entity {
             return
         }
         if self.is_rigid {
-            if would_collide(&frame, &self.direction, &world) {
+            if would_collide(&frame, &self.direction, world) {
                 if self.is_player() && world.frame_is_slippery_surface(&self.hittable_frame()) {
                     self.current_speed = 0.0;
                 }

@@ -38,7 +38,7 @@ impl Entity {
     }
 
     fn key(&self) -> String {
-        if self.dialogues.len() < 1 {
+        if self.dialogues.is_empty() {
             "".to_owned()
         } else {
             self.dialogues[0].text.clone()
