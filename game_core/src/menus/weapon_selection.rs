@@ -1,4 +1,4 @@
-use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_WEAPONS}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{EntityType, Species}}, equipment::equipment::{is_equipped, available_weapons, set_equipped}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, storage::inventory_count}, lang::localizable::LocalizableText, text, texture, ui::{components::{empty_view, GridSpacing, Spacing, Typography, View, COLOR_BLACK, COLOR_YELLOW}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_WEAPONS}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{EntityType, Species}}, equipment::equipment::{available_weapons, is_equipped, set_equipped}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, storage::inventory_count}, lang::localizable::LocalizableText, text, texture, ui::{components::{empty_view, GridSpacing, Spacing, Typography, View, COLOR_MENU_BACKGROUND, COLOR_TEXT_HIGHLIGHTED}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 use super::menu::MENU_BORDERS_TEXTURES;
 
@@ -117,7 +117,7 @@ impl WeaponsGrid {
             WeaponsGridState::SelectingWeapon(selected_index) => {
                 scaffold(
                     true,
-                    COLOR_BLACK,
+                    COLOR_MENU_BACKGROUND,
                     Some(MENU_BORDERS_TEXTURES),
                     self.regular_ui(*selected_index),
                 )
@@ -170,7 +170,7 @@ impl WeaponsGrid {
         if index == selected_index {
             zstack!(
                 Spacing::XS,
-                COLOR_YELLOW,
+                COLOR_TEXT_HIGHLIGHTED,
                 self.weapon_icon(weapon, true)
             )
         } else {

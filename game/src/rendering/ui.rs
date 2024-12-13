@@ -1,7 +1,7 @@
 use std::sync::Once;
 
 use nohash_hasher::IntMap;
-use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View}, layouts::{AnchorPoint, Layout}}, utils::{rect::IntRect, vector::Vector2d}};
+use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View, COLOR_TEXT, COLOR_TEXT_HIGHLIGHTED}, layouts::{AnchorPoint, Layout}}, utils::{rect::IntRect, vector::Vector2d}};
 use raylib::prelude::*;
 
 pub struct RenderingConfig {
@@ -46,10 +46,10 @@ pub fn is_rendering_config_initialized() -> bool {
 }
 
 impl RenderingConfig {
-    fn text_color(&self, style: &Typography) -> &Color {
+    fn text_color(&self, style: &Typography) -> Color {
         match style {
-            Typography::Selected => &Color::YELLOW,
-            _ => &Color::WHITE
+            Typography::Selected => as_rcolor(&COLOR_TEXT_HIGHLIGHTED),
+            _ => as_rcolor(&COLOR_TEXT)
         }
     }
 

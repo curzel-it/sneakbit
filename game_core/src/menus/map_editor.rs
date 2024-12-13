@@ -1,5 +1,5 @@
 
-use crate::{constants::{SPRITE_SHEET_INVENTORY, TILE_SIZE}, entities::species::{EntityType, Species, ALL_SPECIES}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::WorldStateUpdate}, lang::localizable::LocalizableText, maps::{biome_tiles::Biome, constructions_tiles::Construction}, prefabs::all::new_building, spacing, text, texture, ui::{components::{with_fixed_position, GridSpacing, NonColor, Spacing, Typography, View, COLOR_BLACK, COLOR_BLACK_50, COLOR_RED_60, COLOR_YELLOW}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use crate::{constants::{SPRITE_SHEET_INVENTORY, TILE_SIZE}, entities::species::{EntityType, Species, ALL_SPECIES}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::WorldStateUpdate}, lang::localizable::LocalizableText, maps::{biome_tiles::Biome, constructions_tiles::Construction}, prefabs::all::new_building, spacing, text, texture, ui::{components::{with_fixed_position, GridSpacing, NonColor, Spacing, Typography, View, COLOR_GENERAL_HIGHLIGHT, COLOR_MENU_BACKGROUND, COLOR_MENU_HINT_BACKGROUND, COLOR_TEXT_HIGHLIGHTED}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 use super::menu::MENU_BORDERS_TEXTURES;
 
@@ -330,7 +330,7 @@ impl Stockable {
         if index == selected_index {
             zstack!(
                 Spacing::XS,
-                COLOR_YELLOW,
+                COLOR_TEXT_HIGHLIGHTED,
                 texture!(
                     SPRITE_SHEET_INVENTORY,
                     self.texture_source_rect(),
@@ -459,8 +459,8 @@ impl MapEditor {
 
     fn background_color(&self) -> NonColor {
         match self.state {
-            MapEditorState::PlacingItem(_, _, _) => COLOR_BLACK_50,
-            MapEditorState::SelectingItem(_) => COLOR_BLACK,
+            MapEditorState::PlacingItem(_, _, _) => COLOR_MENU_HINT_BACKGROUND,
+            MapEditorState::SelectingItem(_) => COLOR_MENU_BACKGROUND,
         }
     }
 
@@ -475,7 +475,7 @@ impl MapEditor {
                 ),
                 zstack!(
                     Spacing::Zero,
-                    COLOR_RED_60,
+                    COLOR_GENERAL_HIGHLIGHT,
                     spacing!(Spacing::Custom(TILE_SIZE * frame.w as f32))
                 )
             )

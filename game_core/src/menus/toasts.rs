@@ -1,7 +1,6 @@
 use std::{collections::VecDeque, ffi::c_char};
 
-
-use crate::{constants::SPRITE_SHEET_MENU, features::animated_sprite::AnimatedSprite, hstack, spacing, string_to_c_char, text, texture, ui::{components::{empty_view, BordersTextures, NonColor, NonColorC, Spacing, TextureInfo, Typography, View, COLOR_BLACK, COLOR_TRANSPARENT}, scaffold::scaffold}, utils::{animator::Animator, rect::IntRect}, vstack};
+use crate::{constants::SPRITE_SHEET_MENU, features::animated_sprite::AnimatedSprite, hstack, spacing, string_to_c_char, text, texture, ui::{components::{empty_view, BordersTextures, NonColor, NonColorC, Spacing, TextureInfo, Typography, View, WithAlpha, COLOR_TOAST_BACKGROUND, COLOR_TRANSPARENT}, scaffold::scaffold}, utils::{animator::Animator, rect::IntRect}, vstack};
 
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]
@@ -191,12 +190,12 @@ impl ToastDisplay {
     fn background_color(&self) -> NonColor {
         if self.animator.current_value < 0.05 {
             let alpha = 1.0 - (0.05 - self.animator.current_value) * 20.0;            
-            (0, 0, 0, (255.0 * alpha) as u8)
+            COLOR_TOAST_BACKGROUND.with_alpha(alpha)
         } else if self.animator.current_value < 0.95 {
-            COLOR_BLACK
+            COLOR_TOAST_BACKGROUND
         } else {
             let alpha = (1.0 - self.animator.current_value) * 20.0;
-            (0, 0, 0, (255.0 * alpha) as u8)
+            COLOR_TOAST_BACKGROUND.with_alpha(alpha)
         }        
     }
 }

@@ -1,6 +1,6 @@
-use crate::{game_engine::engine::GameEngine, text, ui::components::{Spacing, Typography, COLOR_BLACK_30}, vstack, zstack};
+use crate::{game_engine::engine::GameEngine, text, ui::components::{Spacing, Typography, COLOR_DEBUG_INFO_BACKGROUND}, vstack, zstack};
 
-use super::{components::{empty_view, NonColor, View, COLOR_BLACK_70, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}};
+use super::{components::{empty_view, NonColor, View, WithAlpha, COLOR_DEATH_SCREEN_BACKGROUND, COLOR_MENU_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}};
 
 impl GameEngine {
     pub fn hud_ui(&self, width: i32, height: i32, show_debug_info: bool, fps: u32) -> Layout {
@@ -27,11 +27,10 @@ impl GameEngine {
         let progress = self.loading_screen.progress();
         if progress > 0.0 && progress < 1.0 {
             let alpha = if progress <= 0.5 { progress * 3.0 } else { 1.0 - (progress - 0.5) * 2.0 };
-            let alpha_int = (alpha * 255.0) as u8;
-            return (0, 0, 0, alpha_int)
+            return COLOR_MENU_BACKGROUND.with_alpha(alpha)
         }
         if self.death_screen.is_open {
-            return COLOR_BLACK_70
+            return COLOR_DEATH_SCREEN_BACKGROUND
         }
         COLOR_TRANSPARENT
     }
@@ -41,7 +40,7 @@ impl GameEngine {
             let hero = self.world.players[0].props;
             zstack!(
                 Spacing::MD,
-                COLOR_BLACK_30,
+                COLOR_DEBUG_INFO_BACKGROUND,
                 vstack!(
                     Spacing::MD,
                     text!(Typography::Regular, format!("Fps: {}", fps)),
