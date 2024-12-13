@@ -29,7 +29,7 @@ private struct MenuOptionButton: ButtonStyle {
             Spacer(minLength: 0)
         }
         .typography(.menuOption)
-        .foregroundColor(Color.yellow)
+        .foregroundColor(Color.highlightedText)
         .frame(maxWidth: 400)
         .frame(height: 40)
         .background(Color.clear)

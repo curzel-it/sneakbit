@@ -43,7 +43,7 @@ private extension RuntimeEvent {
                 name: "game_over",
                 params: [
                     "current_world": current_world_id(),
-                    "ammo_count": number_of_kunai_in_inventory()
+                    "ammo_count": number_of_kunai_in_inventory(0)
                 ]
             )
         case .worldTransition(let source, let destination):

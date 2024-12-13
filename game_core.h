@@ -18,6 +18,8 @@
 
 #define HERO_RECOVERY_PS 1.0
 
+#define MAX_PLAYERS 4
+
 #define KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST 0.4
 
 #define KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS 0.1
@@ -304,15 +306,15 @@ bool shows_death_screen(void);
 
 void select_current_menu_option_at_index(uint32_t index);
 
-int32_t number_of_kunai_in_inventory(void);
+int32_t number_of_kunai_in_inventory(uintptr_t player);
 
-int32_t number_of_rem223_in_inventory(void);
+int32_t number_of_rem223_in_inventory(uintptr_t player);
 
-int32_t number_of_cannonball_in_inventory(void);
+int32_t number_of_cannonball_in_inventory(uintptr_t player);
 
-float current_hero_hp(void);
+float player_current_hp(uintptr_t player);
 
-bool is_sword_equipped(void);
+bool is_sword_equipped(uintptr_t player);
 
 bool is_day(void);
 

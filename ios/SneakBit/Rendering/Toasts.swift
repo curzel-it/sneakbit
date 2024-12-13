@@ -77,7 +77,7 @@ private class ToastViewModel: ObservableObject {
         text = string(from: toast.text) ?? "..."
         isVisible = opacity > 0.05
         position = toast.mode.rawValue == 0 ? .trailingTop : .leadingTop
-        borderColor = toast.mode.rawValue == 0 ? .cyan : .yellow
+        borderColor = toast.mode.rawValue == 0 ? .cyan : .highlightedText
         
         if let cgImage = spritesProvider.cgImage(for: toast.image.sprite_sheet_id, textureRect: toast.image.texture_frame) {
             image = Image(decorative: cgImage, scale: 1)

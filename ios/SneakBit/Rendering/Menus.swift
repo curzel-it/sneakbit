@@ -80,7 +80,7 @@ private class MenuViewModel: ObservableObject {
     @Published var opacity: CGFloat = 0
     
     let borderColor: Color = .gray
-    let backgroundColor: Color = .black
+    let backgroundColor: Color = .menuBackground
     
     private var disposables = Set<AnyCancellable>()
     
