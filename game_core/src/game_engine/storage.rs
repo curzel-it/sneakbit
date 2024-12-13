@@ -1,9 +1,12 @@
 use std::{collections::{HashMap, HashSet}, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
 use lazy_static::lazy_static;
 
-use crate::{config::config, entities::species::{species_by_id, SpeciesId}, equipment::equipment_basics::set_equipped};
+use crate::{config::config, constants::MAX_PLAYERS, entities::species::{species_by_id, SpeciesId}, equipment::equipment_basics::set_equipped};
 
 use super::{entity::EntityId, locks::LockType, world::World};
+
+const INVENTORY_AMOUNT: &str = "inventory.amount";
+const PLAYER: &str = "player";
 
 pub struct StorageKey {}
 
@@ -49,11 +52,11 @@ impl StorageKey {
     }
 
     pub fn currently_equipped_gun(player: usize) -> String {
-        format!("player.{}.currently_equipped_gun", player)
+        format!("{}.{}.currently_equipped_gun", PLAYER, player)
     }
 
     pub fn currently_equipped_sword(player: usize) -> String {
-        format!("player.{}.currently_equipped_sword", player)
+        format!("{}.{}.currently_equipped_sword", PLAYER, player)
     }
 
     fn dialogue_answer(dialogue: &str) -> String {
@@ -65,7 +68,7 @@ impl StorageKey {
     }
 
     pub fn species_inventory_count(species_id: &SpeciesId, player: usize) -> String {
-        format!("player.{}.inventory.amount.{}", player, species_id)
+        format!("{}.{}.{}.{}", PLAYER, player, INVENTORY_AMOUNT, species_id)
     }
 }
 
@@ -145,6 +148,16 @@ pub fn get_value_for_key(key: &str, world: &World) -> Option<u32> {
 pub fn get_value_for_global_key(key: &str) -> Option<u32> {
     if key == StorageKey::always() {
         return Some(1);
+    }
+    if key.contains(INVENTORY_AMOUNT) && !key.contains(PLAYER) {
+        for player_index in 0..MAX_PLAYERS {
+            let fixed_key = &key.replace(INVENTORY_AMOUNT, &format!("{}.{}.{}", PLAYER, player_index, INVENTORY_AMOUNT));
+            
+            if let Some(value) = get_value_for_global_key(fixed_key) {
+                return Some(value)
+            }
+        }
+        return None
     }
     if key.contains(",") {
         let keys = key.split_terminator(",");

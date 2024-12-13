@@ -355,21 +355,21 @@
       "dialogues": [
         {
           "expected_value": 1,
-          "key": "dialogue.response.lore.024.stonehenge_second_entrance_found",
+          "key": "dialogue.answer.lore.025.stonehenge_second_entrance_found",
           "reward": null,
-          "text": "lore.024.stonehenge_second_entrance_found"
+          "text": "lore.025.stonehenge_second_entrance_found"
         },
         {
           "expected_value": 1,
           "key": "inventory.amount.2005",
           "reward": null,
-          "text": "lore.024.stonehenge_second_entrance_found"
+          "text": "lore.025.stonehenge_second_entrance_found"
         },
         {
           "expected_value": 0,
           "key": "always",
           "reward": null,
-          "text": "lore.024.stonehenge"
+          "text": "lore.025.stonehenge"
         }
       ],
       "direction": "Down",
