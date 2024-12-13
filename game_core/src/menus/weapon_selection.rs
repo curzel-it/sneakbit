@@ -33,7 +33,7 @@ impl WeaponsGrid {
         }
         match self.state {
             WeaponsGridState::Closed => {
-                if let Some(player) = keyboard.index_of_any_player_who_is_pressing_confirm() {
+                if let Some(player) = keyboard.index_of_any_player_who_is_pressing_weapon_selection() {
                     self.player = player;
                     self.weapons = available_weapons(self.player);
 

@@ -54,8 +54,9 @@ pub fn available_weapons(player: usize) -> Vec<Species> {
     let mut all_ids: Vec<u32> = vec![SPECIES_KUNAI_LAUNCHER];
     let owned_ids = ALL_SPECIES
         .iter()
-        .filter_map(|s| s.associated_weapon)
-        .filter(|species_id| has_species_in_inventory(species_id, player));
+        .filter(|s| s.associated_weapon.is_some())
+        .filter(|s| has_species_in_inventory(&s.id, player))
+        .filter_map(|s| s.associated_weapon);
 
     all_ids.extend(owned_ids);
     all_ids.iter().map(|species_id| species_by_id(*species_id)).collect()

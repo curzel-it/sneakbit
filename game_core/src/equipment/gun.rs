@@ -1,4 +1,4 @@
-use crate::{entities::{bullets::make_player_bullet, known_species::SPECIES_KUNAI_LAUNCHER}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, storage::{decrease_inventory_count, has_species_in_inventory}, world::World}};
+use crate::{entities::{bullets::make_player_bullet, known_species::SPECIES_KUNAI_LAUNCHER}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
 
 use super::equipment::is_equipped;
 
@@ -38,8 +38,6 @@ impl Entity {
             let hero = world.players[self.player_index].props;
 
             if has_species_in_inventory(&self.species.bullet_species_id, self.player_index) {               
-                decrease_inventory_count(&self.species.bullet_species_id, self.player_index);
-
                 self.action_cooldown_remaining = self.species.cooldown_after_use;
                 self.sprite.reset();
                 self.play_equipment_usage_animation();
@@ -48,7 +46,10 @@ impl Entity {
                 bullet.direction = hero.direction;
                 bullet.current_speed = bullet.current_speed + hero.speed;
 
-                let mut updates = vec![WorldStateUpdate::AddEntity(Box::new(bullet))];
+                let mut updates = vec![
+                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::RemoveFromInventory(self.player_index, self.species.bullet_species_id)),
+                    WorldStateUpdate::AddEntity(Box::new(bullet))
+                ];
 
                 if let Some(effect) = self.species.usage_special_effect.clone() {
                     updates.push(WorldStateUpdate::EngineUpdate(EngineStateUpdate::SpecialEffect(effect)));

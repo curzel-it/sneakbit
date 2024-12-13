@@ -1,4 +1,4 @@
-use game_core::{camera_viewport, camera_viewport_offset, can_render_frame, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, engine, game_engine::entity::EntityProps, is_limited_visibility, is_night, text, ui::components::{Spacing, Typography}, vstack};
+use game_core::{camera_viewport, camera_viewport_offset, can_render_frame, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, engine, is_limited_visibility, is_night};
 use raylib::prelude::*;
 
 use super::{entities::render_entities, tile_map::render_tile_map, tiles::render_tiles, ui::{get_rendering_config, render_layout}};

@@ -1,4 +1,4 @@
-use crate::{game_engine::engine::GameEngine, text, ui::components::{Spacing, Typography}, vstack, zstack};
+use crate::{game_engine::engine::GameEngine, text, ui::components::{Spacing, Typography, COLOR_BLACK_30}, vstack, zstack};
 
 use super::{components::{empty_view, NonColor, View, COLOR_BLACK_70, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}};
 
@@ -16,7 +16,7 @@ impl GameEngine {
                 (AnchorPoint::BottomCenter, self.weapons_selection.ui()),
                 (AnchorPoint::TopRight, self.toast.regular_toast_ui()),
                 (AnchorPoint::TopLeft, self.toast.hint_toast_ui()),
-                // (AnchorPoint::BottomLeft, self.debug_info(show_debug_info, fps)),
+                (AnchorPoint::BottomLeft, self.debug_info(show_debug_info, fps)),
                 (AnchorPoint::Center, self.death_screen.ui()),
                 (AnchorPoint::Center, self.loading_screen.ui())
             ]
@@ -41,7 +41,7 @@ impl GameEngine {
             let hero = self.world.players[0].props;
             zstack!(
                 Spacing::MD,
-                COLOR_TRANSPARENT,
+                COLOR_BLACK_30,
                 vstack!(
                     Spacing::MD,
                     text!(Typography::Regular, format!("Fps: {}", fps)),

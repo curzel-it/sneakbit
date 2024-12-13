@@ -230,7 +230,7 @@ impl GameEngine {
                 self.exit()
             }
             EngineStateUpdate::AddToInventory(player, species_id, _) => {
-                increment_inventory_count(*species_id, *player)
+                increment_inventory_count(*species_id, *player);
             }
             EngineStateUpdate::RemoveFromInventory(player, species_id) => {
                 decrease_inventory_count(species_id, *player);

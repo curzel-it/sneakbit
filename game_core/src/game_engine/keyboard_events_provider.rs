@@ -42,6 +42,15 @@ impl KeyboardEventsProvider {
         None
     }
 
+    pub fn index_of_any_player_who_is_pressing_weapon_selection(&self) -> Option<usize> {
+        for index in 0..MAX_PLAYERS {
+            if self.players[index].has_weapon_selection_been_pressed {
+                return Some(index)
+            }
+        }
+        None
+    }    
+
     pub fn has_confirmation_been_pressed_by_anyone(&self) -> bool {
         for player in &self.players {
             if player.has_confirmation_been_pressed {
