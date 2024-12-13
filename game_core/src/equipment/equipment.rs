@@ -1,4 +1,4 @@
-use crate::{constants::TILE_SIZE, entities::species::{species_by_id, EntityType, Species}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, inventory_count, set_value_for_key, StorageKey}, world::World}, utils::directions::Direction};
+use crate::{constants::TILE_SIZE, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{species_by_id, EntityType, Species, ALL_SPECIES}}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, has_species_in_inventory, set_value_for_key, StorageKey}, world::World}, utils::directions::Direction};
 
 impl Entity {
     pub fn setup_equipment(&mut self) {
@@ -46,16 +46,19 @@ pub fn is_equipped(species: &Species) -> bool {
     if let Some(selected) = get_value_for_global_key(&equipment_key_for_species(species)) {
         selected == species.id
     } else {
-        can_be_equipped(species.id)
+        matches!(species.id, SPECIES_KUNAI_LAUNCHER)
     }
 }
 
-pub fn can_be_equipped(species_id: u32) -> bool {
-    if let Some(requirement) = species_by_id(species_id).inventory_requirement {
-        inventory_count(&requirement) > 0
-    } else {
-        true
-    } 
+pub fn available_weapons() -> Vec<Species> {
+    let mut all_ids: Vec<u32> = vec![SPECIES_KUNAI_LAUNCHER];
+    let owned_ids = ALL_SPECIES
+        .iter()
+        .filter_map(|s| s.associated_weapon)
+        .filter(|species_id| has_species_in_inventory(species_id));
+
+    all_ids.extend(owned_ids);
+    all_ids.iter().map(|species_id| species_by_id(*species_id)).collect()
 }
 
 pub fn set_equipped(species: &Species) {

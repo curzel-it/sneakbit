@@ -3,9 +3,9 @@
 use std::{collections::HashSet, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
 
 use config::initialize_config_paths;
-use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI, SPECIES_SWORD_ITEM};
+use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
-use game_engine::{engine::GameEngine, storage::inventory_count};
+use game_engine::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::{IntPoint, IntRect}, vector::Vector2d};
 
@@ -338,7 +338,7 @@ pub fn cached_players_positions() -> Vec<IntPoint> {
 
 #[no_mangle]
 pub extern "C" fn is_sword_equipped() -> bool {
-    inventory_count(&SPECIES_SWORD_ITEM) > 0
+    get_value_for_global_key(&StorageKey::currently_equipped_sword()).unwrap_or(0) != 0
 }
 
 #[no_mangle]

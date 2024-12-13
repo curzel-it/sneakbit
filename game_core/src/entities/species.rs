@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use lazy_static::lazy_static;
-use std::{collections::HashMap, fs::File};
+use std::fs::File;
 use std::io::Read;
 
 use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, game_engine::{directions::MovementDirections, entity::Entity, locks::LockType, state_updates::SpecialEffect}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::IntRect, vector::Vector2d}};
@@ -62,7 +62,7 @@ pub struct Species {
     pub usage_special_effect: Option<SpecialEffect>,
 
     #[serde(default)]
-    pub inventory_requirement: Option<u32>,
+    pub associated_weapon: Option<u32>,
 
     #[serde(default)]
     pub supports_bullet_boomerang: bool,
@@ -213,17 +213,15 @@ lazy_static! {
 }
 
 lazy_static! {
-    pub static ref SPECIES_BY_INVENTORY_REQUIREMENT: HashMap<u32, u32> = {
-        ALL_SPECIES
-            .iter()
-            .filter_map(|s| {
-                if let Some(inventory_requirement) = s.inventory_requirement {
-                    Some((inventory_requirement, s.id))
-                } else {
-                    None
-                }
-            })
-            .collect()
+    pub static ref ALL_EQUIPMENT_IDS: Vec<u32> = {
+        ALL_SPECIES.iter().filter_map(|s| {
+            if matches!(s.entity_type, EntityType::Gun | EntityType::Sword) {
+                Some(s.id)
+            } else {
+                None
+            }       
+        })
+        .collect()
     };
 }
 
@@ -251,7 +249,7 @@ pub const SPECIES_NONE: Species = Species {
     bullet_lifespan: 0.0,
     cooldown_after_use: 0.0,
     usage_special_effect: None,
-    inventory_requirement: None,
+    associated_weapon: None,
     supports_bullet_boomerang: false,
     supports_bullet_catching: false,
 };

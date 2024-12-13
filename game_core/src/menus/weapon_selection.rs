@@ -1,4 +1,4 @@
-use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_WEAPONS}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{EntityType, Species, ALL_SPECIES}}, equipment::equipment::{can_be_equipped, is_equipped, set_equipped}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, storage::inventory_count}, lang::localizable::LocalizableText, text, texture, ui::{components::{empty_view, GridSpacing, Spacing, Typography, View, COLOR_BLACK, COLOR_YELLOW}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_WEAPONS}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{EntityType, Species}}, equipment::equipment::{is_equipped, available_weapons, set_equipped}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, storage::inventory_count}, lang::localizable::LocalizableText, text, texture, ui::{components::{empty_view, GridSpacing, Spacing, Typography, View, COLOR_BLACK, COLOR_YELLOW}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 use super::menu::MENU_BORDERS_TEXTURES;
 
@@ -193,13 +193,4 @@ impl WeaponsGrid {
         let size = if is_selected { 2.0 } else { 1.5 };
         texture!(sprite_sheet, texture_rect, Vector2d::new(size, size))
     }
-}
-
-fn available_weapons() -> Vec<Species> {
-    ALL_SPECIES
-        .iter()
-        .filter(|s| matches!(s.entity_type, EntityType::Gun | EntityType::Sword))
-        .filter(|s| can_be_equipped(s.id))
-        .cloned()
-        .collect()
 }

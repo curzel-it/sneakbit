@@ -3798,7 +3798,6 @@
     "cooldown_after_use": 0.35,
     "entity_type": "Sword",
     "id": 1159,
-    "inventory_requirement": 1164,
     "inventory_texture_offset": [
       11,
       1
@@ -3822,6 +3821,7 @@
     "base_speed": 3.0,
     "entity_type": "PickableObject",
     "id": 1164,
+    "associated_weapon": 1159,
     "inventory_texture_offset": [
       11,
       1
@@ -3868,7 +3868,6 @@
     "cooldown_after_use": 0.005,
     "entity_type": "Gun",
     "id": 1154,
-    "inventory_requirement": 1162,
     "inventory_texture_offset": [
       11,
       3
@@ -3892,6 +3891,7 @@
     "base_speed": 1.0,
     "entity_type": "PickableObject",
     "id": 1162,
+    "associated_weapon": 1154,
     "inventory_texture_offset": [
       11,
       3
@@ -3938,7 +3938,6 @@
     "cooldown_after_use": 0.5,
     "entity_type": "Gun",
     "id": 1167,
-    "inventory_requirement": 1168,
     "inventory_texture_offset": [
         11,
         5
@@ -3962,6 +3961,7 @@
     "base_speed": 1.0,
     "entity_type": "PickableObject",
     "id": 1168,
+    "associated_weapon": 1167,
     "inventory_texture_offset": [
       11,
       5

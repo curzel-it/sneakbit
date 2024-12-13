@@ -1,4 +1,4 @@
-use crate::{constants::{BUILD_NUMBER, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::{known_species::{SPECIES_HERO, SPECIES_KUNAI, SPECIES_KUNAI_LAUNCHER, SPECIES_MR_MUGS, SPECIES_SWORD}, species::{make_entity_by_species, species_by_id}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, number_of_players, utils::directions::Direction};
+use crate::{constants::{BUILD_NUMBER, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::{known_species::{SPECIES_HERO, SPECIES_KUNAI, SPECIES_MR_MUGS}, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, features::dialogues::{AfterDialogueBehavior, Dialogue}, game_engine::{storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::{World, WorldType}}, number_of_players, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
@@ -99,15 +99,8 @@ impl World {
     }
 
     fn spawn_equipment(&mut self) {
-        let items = vec![
-            SPECIES_KUNAI_LAUNCHER, 
-            SPECIES_SWORD, 
-            // SPECIES_CANNON, 
-            // SPECIES_AR15
-        ];
-
         for (index, &id) in self.hero_entity_ids().iter().enumerate() {
-            for item_id in &items {
+            for item_id in ALL_EQUIPMENT_IDS.iter() {
                 let mut item = species_by_id(*item_id).make_entity();
                 item.parent_id = id;
                 item.player_index = index;

@@ -1,7 +1,7 @@
 use std::{collections::{HashMap, HashSet}, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
 use lazy_static::lazy_static;
 
-use crate::{config::config, entities::species::{species_by_id, SpeciesId, SPECIES_BY_INVENTORY_REQUIREMENT}, equipment::equipment::set_equipped};
+use crate::{config::config, entities::species::{species_by_id, SpeciesId}, equipment::equipment::set_equipped};
 
 use super::{entity::EntityId, locks::LockType, world::World};
 
@@ -64,7 +64,7 @@ impl StorageKey {
         format!("dialogue.reward.{}", dialogue)
     }
 
-    fn species_inventory_count(species_id: &SpeciesId) -> String {
+    pub fn species_inventory_count(species_id: &SpeciesId) -> String {
         format!("inventory.amount.{}", species_id)
     }
 }
@@ -248,8 +248,8 @@ pub fn increment_inventory_count(species_id: SpeciesId) {
     } else {
         increment_value(&StorageKey::species_inventory_count(&species.id));
 
-        if let Some(weapon_id) = SPECIES_BY_INVENTORY_REQUIREMENT.get(&species.id) {
-            let weapon_species = species_by_id(*weapon_id);
+        if let Some(weapon_id) = species.associated_weapon {
+            let weapon_species = species_by_id(weapon_id);
             set_equipped(&weapon_species);
         }
     }

@@ -50,6 +50,7 @@ impl GameEngine {
     }
 
     pub fn start(&mut self) {
+        self.run_migrations();
         self.menu.setup();
         self.teleport_to_previous();
     }
