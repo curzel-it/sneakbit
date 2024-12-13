@@ -13,7 +13,7 @@ impl Entity {
         } else {
             let mut updates: Vec<WorldStateUpdate> = vec![];
 
-            self.is_equipped = is_equipped(&self.species);
+            self.is_equipped = is_equipped(&self.species, self.player_index);
             self.update_equipment_position(world);
             
             if self.is_equipped {
@@ -37,8 +37,8 @@ impl Entity {
         if world.players[self.player_index].has_ranged_attack_key_been_pressed {            
             let hero = world.players[self.player_index].props;
 
-            if has_species_in_inventory(&self.species.bullet_species_id) {               
-                decrease_inventory_count(&self.species.bullet_species_id);
+            if has_species_in_inventory(&self.species.bullet_species_id, self.player_index) {               
+                decrease_inventory_count(&self.species.bullet_species_id, self.player_index);
 
                 self.action_cooldown_remaining = self.species.cooldown_after_use;
                 self.sprite.reset();

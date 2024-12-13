@@ -56,6 +56,7 @@ impl RenderingConfig {
     fn font(&self, style: &Typography) -> &Font {
         match style {
             Typography::Title => &self.font_bold,
+            Typography::SmallTitle => &self.font_bold,
             Typography::Selected => &self.font_bold,
             Typography::Regular => &self.font,
             Typography::Caption => &self.font,
@@ -69,6 +70,7 @@ impl RenderingConfig {
     pub fn scaled_font_size(&self, style: &Typography) -> f32 {
         self.font_rendering_scale * match style {
             Typography::Title => 12.0,
+            Typography::SmallTitle => 8.0,
             Typography::Selected => 8.0,
             Typography::Regular => 8.0,
             Typography::Caption => 6.0,
@@ -118,6 +120,10 @@ fn calculate_position(layout: &Layout, anchor: &AnchorPoint, view: &View, config
         ),
         AnchorPoint::BottomCenter => (
             layout.frame.x as f32 + layout.frame.w as f32 / 2.0 - size.x / 2.0, 
+            layout.frame.y as f32 + layout.frame.h as f32 - size.y
+        ),
+        AnchorPoint::BottomLeft => (
+            0.0, 
             layout.frame.y as f32 + layout.frame.h as f32 - size.y
         ),
     };

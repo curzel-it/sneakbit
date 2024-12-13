@@ -1,4 +1,4 @@
-use game_core::{camera_viewport, camera_viewport_offset, can_render_frame, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, engine, game_engine::entity::EntityProps, is_limited_visibility, is_night};
+use game_core::{camera_viewport, camera_viewport_offset, can_render_frame, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, engine, game_engine::entity::EntityProps, is_limited_visibility, is_night, text, ui::components::{Spacing, Typography}, vstack};
 use raylib::prelude::*;
 
 use super::{entities::render_entities, tile_map::render_tile_map, tiles::render_tiles, ui::{get_rendering_config, render_layout}};
@@ -50,25 +50,11 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
 
     let hud = engine.hud_ui(
         config.canvas_size.x as i32, 
-        config.canvas_size.y as i32
+        config.canvas_size.y as i32,
+        config.show_debug_info,
+        fps
     );
     render_layout(&hud, &mut d);
-    
-    if config.show_debug_info {
-        draw_debug_info(
-            &mut d, 
-            fps, 
-            world.id,
-            &world.players[0].props
-        );
-    }
-}
-
-fn draw_debug_info(d: &mut RaylibDrawHandle, fps: u32, world_id: u32, hero: &EntityProps) {
-    d.draw_text(&format!("FPS: {}", fps), 10, 10, 20, Color::RED);
-    d.draw_text(&format!("x {}, y {}", hero.hittable_frame.x, hero.hittable_frame.y), 10, 40, 20, Color::RED);
-    d.draw_text(&format!("World {}", world_id), 10, 70, 20, Color::RED);
-    d.draw_text(&format!("HP {}", hero.hp), 10, 130, 20, Color::RED);
 }
 
 fn render_night(d: &mut RaylibDrawHandle, screen_width: i32, screen_height: i32) {

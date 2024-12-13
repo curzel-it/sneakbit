@@ -302,7 +302,7 @@ impl Entity {
         if let Some(dialogue) = self.next_dialogue(world) {
             self.is_in_interaction_range = true;
 
-            if world.has_confirmation_key_been_pressed_by_anyone {
+            if let Some(player) = world.index_of_any_player_who_is_pressing_confirm() {
                 self.demands_attention = false;
                 set_value_for_key(&StorageKey::npc_interaction(self.id), 1);
 
@@ -311,7 +311,7 @@ impl Entity {
                         EngineStateUpdate::DisplayLongText(format!("{}:", self.name.clone()), dialogue.localized_text())
                     )
                 ];
-                let reward = dialogue.handle_reward();
+                let reward = dialogue.handle_reward(player);
                 let vanishing = self.handle_after_dialogue();
                 let updates = vec![show_dialogue, reward, vanishing].into_iter().flatten().collect();
                 return Some(updates)

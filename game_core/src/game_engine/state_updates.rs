@@ -4,6 +4,8 @@ use crate::{entities::{bullets::{BulletHit, BulletId, Damage}, species::SpeciesI
 
 use super::{entity::{Entity, EntityId, EntityProps}, locks::LockType};
 
+pub type PlayerIndex = usize;
+
 #[derive(Debug, Clone)]
 pub enum WorldStateUpdate {
     AddEntity(Box<Entity>),
@@ -33,8 +35,8 @@ pub enum EngineStateUpdate {
     Teleport(Destination),
     SaveGame,
     Exit,
-    AddToInventory(SpeciesId, AddToInventoryReason),
-    RemoveFromInventory(SpeciesId),
+    AddToInventory(PlayerIndex, SpeciesId, AddToInventoryReason),
+    RemoveFromInventory(PlayerIndex, SpeciesId),
     Toast(Toast),
     Confirmation(String, String, Vec<WorldStateUpdate>),
     DisplayLongText(String, String),

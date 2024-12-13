@@ -450,11 +450,15 @@ impl World {
 
     fn handle_bullet_catched(&mut self, bullet_id: u32) {
         if has_bullet_catcher_skill() {
-            let species_id = self.entities.borrow().iter().find(|e| e.id == bullet_id).map(|e| e.species_id);
-            self.remove_entity_by_id(bullet_id);
+            let entities = self.entities.borrow();
 
-            if let Some(species_id) = species_id {
-                increment_inventory_count(species_id);
+            if let Some(bullet) = entities.iter().find(|e| e.id == bullet_id) {
+                let species_id = bullet.species_id;
+                let player = bullet.player_index;
+                _ = bullet;
+                drop(entities);
+                self.remove_entity_by_id(bullet_id);
+                increment_inventory_count(species_id, player);
             }
         }
     }
@@ -606,6 +610,15 @@ impl World {
             return true
         }
         false
+    }
+
+    pub fn index_of_player_at(&self, x: i32, y: i32) -> Option<usize> {
+        for p in &self.players {
+            if p.props.hittable_frame.x == x && p.props.hittable_frame.y == y {
+                return Some(p.index)
+            }
+        }
+        None
     }
 
     pub fn is_any_hero_at(&self, x: i32, y: i32) -> bool {
@@ -795,6 +808,15 @@ impl World {
                 }
             }
         }
+    }
+
+    pub fn index_of_any_player_who_is_pressing_confirm(&self) -> Option<usize> {
+        for player in &self.players {
+            if player.has_confirmation_key_been_pressed {
+                return Some(player.index)
+            }
+        }
+        None
     }
 }
 

@@ -48,12 +48,12 @@ impl StorageKey {
         "language".to_owned()
     }
 
-    pub fn currently_equipped_gun() -> String {
-        "currently_equipped_gun".to_owned()
+    pub fn currently_equipped_gun(player: usize) -> String {
+        format!("currently_equipped_gun.player.{}", player)
     }
 
-    pub fn currently_equipped_sword() -> String {
-        "currently_equipped_sword".to_owned()
+    pub fn currently_equipped_sword(player: usize) -> String {
+        format!("currently_equipped_sword.player.{}", player)
     }
 
     fn dialogue_answer(dialogue: &str) -> String {
@@ -64,8 +64,8 @@ impl StorageKey {
         format!("dialogue.reward.{}", dialogue)
     }
 
-    pub fn species_inventory_count(species_id: &SpeciesId) -> String {
-        format!("inventory.amount.{}", species_id)
+    pub fn species_inventory_count(species_id: &SpeciesId, player: usize) -> String {
+        format!("inventory.amount.player.{}.{}", player, species_id)
     }
 }
 
@@ -240,31 +240,33 @@ fn decrease_value(key: &str) {
     set_value_for_key(key, next_value);
 }
 
-pub fn increment_inventory_count(species_id: SpeciesId) {
+pub fn increment_inventory_count(species_id: SpeciesId, player: usize) {
     let species = species_by_id(species_id);
 
     if !species.bundle_contents.is_empty() {
-        species.bundle_contents.into_iter().for_each(increment_inventory_count);
+        species.bundle_contents
+            .into_iter()
+            .for_each(|species_id| increment_inventory_count(species_id, player));
     } else {
-        increment_value(&StorageKey::species_inventory_count(&species.id));
+        increment_value(&StorageKey::species_inventory_count(&species.id, player));
 
         if let Some(weapon_id) = species.associated_weapon {
             let weapon_species = species_by_id(weapon_id);
-            set_equipped(&weapon_species);
+            set_equipped(&weapon_species, player);
         }
     }
 }
 
-pub fn decrease_inventory_count(species_id: &SpeciesId) {
-    decrease_value(&StorageKey::species_inventory_count(species_id));
+pub fn decrease_inventory_count(species_id: &SpeciesId, player: usize) {
+    decrease_value(&StorageKey::species_inventory_count(species_id, player));
 }
 
-pub fn inventory_count(species_id: &SpeciesId) -> u32 {
-    get_value_for_global_key(&StorageKey::species_inventory_count(species_id)).unwrap_or_default()
+pub fn inventory_count(species_id: &SpeciesId, player: usize) -> u32 {
+    get_value_for_global_key(&StorageKey::species_inventory_count(species_id, player)).unwrap_or_default()
 }
 
-pub fn has_species_in_inventory(species_id: &SpeciesId) -> bool {
-    inventory_count(species_id) > 0
+pub fn has_species_in_inventory(species_id: &SpeciesId, player: usize) -> bool {
+    inventory_count(species_id, player) > 0
 }
 
 pub fn reset_all_stored_values() {

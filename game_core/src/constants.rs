@@ -11,6 +11,7 @@ pub const UNLIMITED_LIFESPAN: f32 = -420.0;
 pub const NO_PARENT: u32 = 0;
 pub const PRESSURE_PLATE_SWITCH_COOLDOWN: f32 = 0.3;
 pub const HERO_RECOVERY_PS: f32 = 1.0;
+pub const MAX_PLAYERS: usize = 4;
 
 // Input
 pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST: f32 = 0.4;

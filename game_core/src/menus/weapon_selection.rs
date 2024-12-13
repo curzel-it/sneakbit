@@ -6,6 +6,7 @@ use super::menu::MENU_BORDERS_TEXTURES;
 pub struct WeaponsGrid {
     weapons: Vec<Species>,
     state: WeaponsGridState,
+    player: usize,
     columns: usize
 }
 
@@ -20,24 +21,27 @@ impl WeaponsGrid {
         Self {
             weapons: vec![],
             state: WeaponsGridState::Closed,
+            player: 0,
             columns: 5
         }
     }
 
     pub fn update(&mut self, keyboard: &KeyboardEventsProvider, _: f32) -> bool {
-        if keyboard.has_back_been_pressed_by_anyone() {
+        if keyboard.has_back_been_pressed(self.player) {
             self.state = WeaponsGridState::Closed;
             return false
         }
         match self.state {
             WeaponsGridState::Closed => {
-                if keyboard.has_weapon_selection_been_pressed_by_anyone() {
-                    self.weapons = available_weapons();
+                if let Some(player) = keyboard.index_of_any_player_who_is_pressing_confirm() {
+                    self.player = player;
+                    self.weapons = available_weapons(self.player);
+
                     if self.weapons.len() > 1 {
                         let current_index = self.weapons
                             .iter()
                             .enumerate()
-                            .find(|(_, weapon)| is_equipped(weapon))
+                            .find(|(_, weapon)| is_equipped(weapon, self.player))
                             .map(|(index, _)| index);
                         
                         if let Some(current_index) = current_index {
@@ -102,7 +106,7 @@ impl WeaponsGrid {
 
     fn handle_confirmation_input(&mut self, selected_index: usize) {
         if let Some(selected_weapon) = self.weapons.get(selected_index) {
-            set_equipped(selected_weapon);
+            set_equipped(selected_weapon, self.player);
             self.state = WeaponsGridState::Closed;
         }
     }
@@ -137,7 +141,7 @@ impl WeaponsGrid {
 
         let weapon_info = if let Some(weapon) = selected_weapon {
             let ammo_text = if matches!(weapon.entity_type, EntityType::Gun) {
-                let ammo = inventory_count(&weapon.bullet_species_id);
+                let ammo = inventory_count(&weapon.bullet_species_id, self.player);
                 let text = format!("{}: {}", "weapons_selection.ammo".localized(), ammo);
                 text!(Typography::Regular, text)
             } else {

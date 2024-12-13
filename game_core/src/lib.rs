@@ -310,23 +310,23 @@ pub extern "C" fn select_current_menu_option_at_index(index: u32) {
 }
 
 #[no_mangle]
-pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
-    inventory_count(&SPECIES_KUNAI) as i32
+pub extern "C" fn number_of_kunai_in_inventory(player: usize) -> i32 {
+    inventory_count(&SPECIES_KUNAI, player) as i32
 }
 
 #[no_mangle]
-pub extern "C" fn number_of_rem223_in_inventory() -> i32 {
-    inventory_count(&SPECIES_AR15_BULLET) as i32
+pub extern "C" fn number_of_rem223_in_inventory(player: usize) -> i32 {
+    inventory_count(&SPECIES_AR15_BULLET, player) as i32
 }
 
 #[no_mangle]
-pub extern "C" fn number_of_cannonball_in_inventory() -> i32 {
-    inventory_count(&SPECIES_CANNON_BULLET) as i32
+pub extern "C" fn number_of_cannonball_in_inventory(player: usize) -> i32 {
+    inventory_count(&SPECIES_CANNON_BULLET, player) as i32
 }
 
 #[no_mangle]
-pub extern "C" fn current_hero_hp() -> f32 {
-    engine().world.players[0].props.hp
+pub extern "C" fn player_current_hp(player: usize) -> f32 {
+    engine().world.players[player].props.hp
 }
 
 pub fn cached_players_positions() -> Vec<IntPoint> {
@@ -337,8 +337,8 @@ pub fn cached_players_positions() -> Vec<IntPoint> {
 }
 
 #[no_mangle]
-pub extern "C" fn is_sword_equipped() -> bool {
-    get_value_for_global_key(&StorageKey::currently_equipped_sword()).unwrap_or(0) != 0
+pub extern "C" fn is_sword_equipped(player: usize) -> bool {
+    get_value_for_global_key(&StorageKey::currently_equipped_sword(player)).unwrap_or(0) != 0
 }
 
 #[no_mangle]

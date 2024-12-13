@@ -1,6 +1,6 @@
 use lazy_static::lazy_static;
 
-use crate::{constants::{KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS, KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST}, utils::directions::Direction};
+use crate::{constants::{KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS, KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST, MAX_PLAYERS}, utils::directions::Direction};
 
 lazy_static! {
     pub static ref NO_KEYBOARD_EVENTS: KeyboardEventsProvider = KeyboardEventsProvider::new();
@@ -31,6 +31,15 @@ impl KeyboardEventsProvider {
             }
         }
         false
+    }
+
+    pub fn index_of_any_player_who_is_pressing_confirm(&self) -> Option<usize> {
+        for index in 0..MAX_PLAYERS {
+            if self.players[index].has_confirmation_been_pressed {
+                return Some(index)
+            }
+        }
+        None
     }
 
     pub fn has_confirmation_been_pressed_by_anyone(&self) -> bool {
@@ -67,6 +76,10 @@ impl KeyboardEventsProvider {
             }
         }
         false
+    }
+
+    pub fn has_back_been_pressed(&self, player: usize) -> bool {
+        self.players[player].has_back_been_pressed
     }
 
     pub fn has_menu_been_pressed_by_anyone(&self) -> bool {

@@ -16,20 +16,20 @@ impl GameEngine {
 }
 
 const LAST_VERSION_WITHOUT_BUILD_NUMBER_INIT: u32 = 34;
-const FIRST_VERSION_WITH_EQUIPMENT_SLOTS: u32 = 35;
 
 const SPECIES_SWORD_ITEM: u32 = 1164;
 
 fn run_migrations_from(latest_build: u32) {
-    // Since version 35 players can equip one sword and one gun
-    // Previous versions only had two "harcoded" weapons
-    // Set them as equipped and GG
-    if latest_build < FIRST_VERSION_WITH_EQUIPMENT_SLOTS {
-        set_value_for_key(&StorageKey::currently_equipped_gun(), SPECIES_KUNAI_LAUNCHER);
+    // Changelo:
+    // - Each player has its own inventory
+    // - Each player has a equipment slots for a sword and a gun
+    // - Kunai launcher is the default gun
+    if latest_build < 35 {
+        set_value_for_key(&StorageKey::currently_equipped_gun(0), SPECIES_KUNAI_LAUNCHER);
 
-        if get_value_for_global_key(&StorageKey::species_inventory_count(&SPECIES_SWORD_ITEM)).unwrap_or_default() > 0 {
-            set_value_for_key(&StorageKey::currently_equipped_sword(), SPECIES_SWORD);
-            set_value_for_key(&StorageKey::species_inventory_count(&SPECIES_SWORD_ITEM), 1);
+        if get_value_for_global_key("inventory.amount.1164").unwrap_or_default() > 0 {
+            set_value_for_key(&StorageKey::currently_equipped_sword(0), SPECIES_SWORD);
+            set_value_for_key(&StorageKey::species_inventory_count(&SPECIES_SWORD_ITEM, 0), 1);
         }
     }
 }

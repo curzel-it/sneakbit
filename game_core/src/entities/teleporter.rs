@@ -11,7 +11,7 @@ impl Entity {
 
         if self.should_teleport(world) {
             if !is_creative_mode() && self.lock_type != LockType::None {
-                if has_species_in_inventory(&self.lock_type.key_species_id()) {
+                if has_species_in_inventory(&self.lock_type.key_species_id(), 0) {
                     vec![self.show_unlock_confirmation()]
                 } else {
                     vec![self.show_locked_message()]
@@ -87,7 +87,7 @@ impl Entity {
                     ),
                     WorldStateUpdate::EngineUpdate(
                         EngineStateUpdate::RemoveFromInventory(
-                            self.lock_type.key_species_id()
+                            0, self.lock_type.key_species_id()
                         )
                     )
                 ]

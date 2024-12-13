@@ -2,7 +2,7 @@ use image::{DynamicImage, GenericImageView, ImageBuffer, RgbImage, RgbaImage, im
 use std::{io::BufWriter, path::Path, fs::{self, File}, error::Error};
 use regex::Regex;
 
-use game_core::{config::initialize_config_paths, constants::TILE_SIZE, game_engine::world::World, initialize_game, lang::localizable::LANG_EN, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::{SpriteTile, TileSet}}};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, TILE_SIZE}, game_engine::world::World, initialize_game, lang::localizable::LANG_EN, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::{SpriteTile, TileSet}}};
 
 pub fn generate_tile_map_image_from_json(
     world_id: u32,
@@ -152,7 +152,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         let json_metadata = fs::metadata(&json_file_path)?;
         let json_mtime = json_metadata.modified()?;
 
-        for variant in 0..4 {
+        for variant in 0..BIOME_NUMBER_OF_FRAMES {
             let output_image_filename = format!("{}-{}.png", world_id, variant);
             let output_image_path = assets_dir.join(&output_image_filename);
 

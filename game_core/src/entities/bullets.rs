@@ -27,8 +27,10 @@ impl Entity {
             return vec![WorldStateUpdate::RemoveEntity(self.id)]
         }
 
-        if self.current_speed == 0.0 && !is_creative_mode() && world.is_any_hero_at(self.frame.x, self.frame.y) {   
-            return object_pick_up_sequence(self);
+        if self.current_speed == 0.0 && !is_creative_mode() {   
+            if let Some(player) = world.index_of_player_at(self.frame.x, self.frame.y) {
+                return object_pick_up_sequence(player, self);
+            }            
         }
 
         if self.current_speed == 0.0 || matches!(self.direction, Direction::Unknown) {
@@ -129,12 +131,14 @@ pub fn make_player_bullet(parent_id: u32, world: &World, weapon_species: &Specie
     let index = world.player_index_by_entity_id(parent_id);
     let player = world.players[index].props;
 
-    make_bullet_ex(
+    let mut bullet = make_bullet_ex(
         weapon_species.bullet_species_id,
         parent_id,
         &player.hittable_frame,
         &player.offset,
         player.direction,
         weapon_species.bullet_lifespan
-    )
+    );
+    bullet.player_index = index;
+    bullet
 }

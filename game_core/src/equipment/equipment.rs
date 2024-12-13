@@ -2,7 +2,7 @@ use crate::{constants::TILE_SIZE, entities::{known_species::SPECIES_KUNAI_LAUNCH
 
 impl Entity {
     pub fn setup_equipment(&mut self) {
-        self.is_equipped = is_equipped(&self.species);
+        self.is_equipped = is_equipped(&self.species, self.player_index);
         self.update_sprite_for_current_state();
     }
 
@@ -42,33 +42,33 @@ impl Entity {
     }
 }
 
-pub fn is_equipped(species: &Species) -> bool {
-    if let Some(selected) = get_value_for_global_key(&equipment_key_for_species(species)) {
+pub fn is_equipped(species: &Species, player: usize) -> bool {
+    if let Some(selected) = get_value_for_global_key(&equipment_key_for_species(species, player)) {
         selected == species.id
     } else {
         matches!(species.id, SPECIES_KUNAI_LAUNCHER)
     }
 }
 
-pub fn available_weapons() -> Vec<Species> {
+pub fn available_weapons(player: usize) -> Vec<Species> {
     let mut all_ids: Vec<u32> = vec![SPECIES_KUNAI_LAUNCHER];
     let owned_ids = ALL_SPECIES
         .iter()
         .filter_map(|s| s.associated_weapon)
-        .filter(|species_id| has_species_in_inventory(species_id));
+        .filter(|species_id| has_species_in_inventory(species_id, player));
 
     all_ids.extend(owned_ids);
     all_ids.iter().map(|species_id| species_by_id(*species_id)).collect()
 }
 
-pub fn set_equipped(species: &Species) {
-    set_value_for_key(&equipment_key_for_species(species), species.id)
+pub fn set_equipped(species: &Species, player: usize) {
+    set_value_for_key(&equipment_key_for_species(species, player), species.id)
 }
 
-fn equipment_key_for_species(species: &Species) -> String {
+fn equipment_key_for_species(species: &Species, player: usize) -> String {
     match species.entity_type {
-        EntityType::Gun => StorageKey::currently_equipped_gun(),
-        EntityType::Sword => StorageKey::currently_equipped_sword(),
+        EntityType::Gun => StorageKey::currently_equipped_gun(player),
+        EntityType::Sword => StorageKey::currently_equipped_sword(player),
         _ => "".to_owned()
     }    
 }

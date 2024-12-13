@@ -97,10 +97,9 @@ impl GameEngine {
     fn update_menus(&mut self, time_since_last_update: f32) -> bool {
         let mut is_game_paused = false;
 
-        self.basic_info_hud.update();
+        self.basic_info_hud.update(self.number_of_players);
 
         if !is_game_paused {            
-            // if self.keyboard.
             let keyboard = if self.weapons_selection.is_open_or_needs_be(&self.keyboard) { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
             let is_picking_weapon = self.weapons_selection.update(keyboard, time_since_last_update);
             is_game_paused = is_game_paused || is_picking_weapon;
@@ -230,11 +229,11 @@ impl GameEngine {
             EngineStateUpdate::Exit => {
                 self.exit()
             }
-            EngineStateUpdate::AddToInventory(species_id, _) => {
-                increment_inventory_count(*species_id)
+            EngineStateUpdate::AddToInventory(player, species_id, _) => {
+                increment_inventory_count(*species_id, *player)
             }
-            EngineStateUpdate::RemoveFromInventory(species_id) => {
-                decrease_inventory_count(species_id);
+            EngineStateUpdate::RemoveFromInventory(player, species_id) => {
+                decrease_inventory_count(species_id, *player);
             }
             EngineStateUpdate::ResumeGame => {
                 self.menu.close()

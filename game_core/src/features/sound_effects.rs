@@ -71,7 +71,7 @@ impl SoundEffectsManager {
             EngineStateUpdate::EntityKilled(_, species_id) => self.check_entity_death(*species_id),
             EngineStateUpdate::BulletBounced => self.prepare(SoundEffect::BulletBounced),
             EngineStateUpdate::Teleport(destination) => self.check_teleportation(destination.world),
-            EngineStateUpdate::AddToInventory(species_id, reason) => self.handle_item_collection(*species_id, reason),
+            EngineStateUpdate::AddToInventory(_, species_id, reason) => self.handle_item_collection(*species_id, reason),
             EngineStateUpdate::Toast(toast) => self.check_hint_received(toast),
             EngineStateUpdate::DeathScreen => self.handle_game_over(),
             EngineStateUpdate::SpecialEffect(effect) => self.handle_special_effect(effect),

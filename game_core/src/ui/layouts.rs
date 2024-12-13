@@ -8,6 +8,7 @@ pub enum AnchorPoint {
     TopLeft,
     TopRight,
     BottomCenter,
+    BottomLeft
 }
 
 pub struct Layout {

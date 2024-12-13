@@ -11,7 +11,7 @@ impl Entity {
     pub fn update_sword(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {   
         let mut updates: Vec<WorldStateUpdate> = vec![];
 
-        self.is_equipped = is_equipped(&self.species);
+        self.is_equipped = is_equipped(&self.species, self.player_index);
         self.update_equipment_position(world);
         
         if self.is_equipped {
