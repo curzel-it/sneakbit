@@ -49,11 +49,11 @@ impl StorageKey {
     }
 
     pub fn currently_equipped_gun(player: usize) -> String {
-        format!("currently_equipped_gun.player.{}", player)
+        format!("player.{}.currently_equipped_gun", player)
     }
 
     pub fn currently_equipped_sword(player: usize) -> String {
-        format!("currently_equipped_sword.player.{}", player)
+        format!("player.{}.currently_equipped_sword", player)
     }
 
     fn dialogue_answer(dialogue: &str) -> String {
@@ -65,7 +65,7 @@ impl StorageKey {
     }
 
     pub fn species_inventory_count(species_id: &SpeciesId, player: usize) -> String {
-        format!("inventory.amount.player.{}.{}", player, species_id)
+        format!("player.{}.inventory.amount.{}", player, species_id)
     }
 }
 
@@ -273,6 +273,20 @@ pub fn reset_all_stored_values() {
     {
         let mut storage = KEY_VALUE_STORAGE.write().unwrap();
         storage.clear();
+    }
+    let storage = KEY_VALUE_STORAGE.read().unwrap().clone();
+    let tx = &SAVE_THREAD.0;
+    tx.send(storage).expect("Failed to send data to save thread");
+}
+
+pub fn get_stored_values_snapshot() -> HashMap<String, u32> {
+    KEY_VALUE_STORAGE.read().unwrap().clone()
+}
+
+pub fn replace_all_stored_values(new: HashMap<String, u32>) {
+    {
+        let mut storage = KEY_VALUE_STORAGE.write().unwrap();
+        storage.clone_from(&new);
     }
     let storage = KEY_VALUE_STORAGE.read().unwrap().clone();
     let tx = &SAVE_THREAD.0;
