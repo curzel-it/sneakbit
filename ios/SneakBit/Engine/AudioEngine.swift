@@ -16,7 +16,7 @@ class AudioEngine: Loggable {
     private let soundEffectFilenames = [
         SoundEffect_AmmoCollected: "sfx_sounds_interaction22",
         SoundEffect_KeyCollected: "sfx_sounds_fanfare3",
-        SoundEffect_BulletFired: "sfx_movement_jump12_landing",
+        SoundEffect_KnifeThrown: "sfx_movement_jump12_landing",
         SoundEffect_BulletBounced: "sfx_movement_jump20",
         SoundEffect_DeathOfMonster: "sfx_deathscream_human11",
         SoundEffect_DeathOfNonMonster: "sfx_deathscream_android7",
@@ -27,7 +27,9 @@ class AudioEngine: Loggable {
         SoundEffect_WorldChange: "sfx_movement_dooropen1",
         SoundEffect_StepTaken: "sfx_movement_footsteps1a",
         SoundEffect_HintReceived: "sfx_sound_neutral5",
-        SoundEffect_SwordSlash: "sfx_wpn_sword2.mp3"
+        SoundEffect_SwordSlash: "sfx_wpn_sword2.mp3",
+        SoundEffect_GunShot: "sfx_wpn_machinegun_loop1.mp3",
+        SoundEffect_LoudGunShot: "sfx_weapon_shotgun3.mp3"
     ]
     
     init() {
@@ -138,7 +140,10 @@ class AudioEngine: Loggable {
         switch effect {
         case SoundEffect_StepTaken: 0.01
         case SoundEffect_BulletBounced: 0.2
-        case SoundEffect_BulletFired: 0.3
+        case SoundEffect_KnifeThrown: 0.3
+        case SoundEffect_GunShot: 0.8
+        case SoundEffect_LoudGunShot: 1.0
+        case SoundEffect_SwordSlash: 0.6
         case SoundEffect_WorldChange, SoundEffect_AmmoCollected: 0.6
         default: 0.8
         }

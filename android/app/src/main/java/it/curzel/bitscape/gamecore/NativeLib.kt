@@ -37,8 +37,6 @@ class NativeLib {
         confirmPressed: Boolean,
         closeAttackPressed: Boolean,
         rangedAttackPressed: Boolean,
-        backspacePressed: Boolean,
-        currentChar: Int,
         timeSinceLastUpdate: Float
     )
     external fun updateGame(timeSinceLastUpdate: Float)

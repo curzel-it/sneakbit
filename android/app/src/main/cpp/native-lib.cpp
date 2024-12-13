@@ -116,8 +116,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
         jboolean confirmPressed,
         jboolean closeAttackPressed,
         jboolean rangedAttackPressed,
-        jboolean backspacePressed,
-        jint currentChar,
         jfloat timeSinceLastUpdate
 ) {
     auto up_pressed = static_cast<bool>(upPressed);
@@ -133,8 +131,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
     auto confirm_pressed = static_cast<bool>(confirmPressed);
     auto close_attack_pressed = static_cast<bool>(closeAttackPressed);
     auto ranged_attack_pressed = static_cast<bool>(rangedAttackPressed);
-    auto backspace_pressed = static_cast<bool>(backspacePressed);
-    auto current_char = static_cast<uint32_t>(currentChar);
     auto time_since_last_update = static_cast<float>(timeSinceLastUpdate);
 
     update_keyboard(
@@ -152,8 +148,9 @@ Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
             confirm_pressed,
             close_attack_pressed,
             ranged_attack_pressed,
-            backspace_pressed,
-            current_char,
+            false,
+            false,
+            0,
             time_since_last_update
     );
 }

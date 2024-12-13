@@ -223,6 +223,7 @@ class GameEngine {
             keyPressed.contains(.closeRangeAttack),
             keyPressed.contains(.rangedAttack),
             keyPressed.contains(.backspace),
+            false,
             currentChar,
             timeSinceLastUpdate
         )

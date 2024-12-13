@@ -284,8 +284,6 @@ class GameEngine(
             keyPressed.contains(EmulatedKey.CONFIRM),
             keyPressed.contains(EmulatedKey.CLOSE_RANGE_ATTACK),
             keyPressed.contains(EmulatedKey.RANGED_ATTACK),
-            keyPressed.contains(EmulatedKey.BACKSPACE),
-            currentChar,
             deltaTime
         )
     }
