@@ -5,7 +5,7 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, SPRITE_SHEET_TENTACLES, SPRITE_SHEET_WEAPONS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::storage::{bool_for_global_key, StorageKey}, initialize_game, is_creative_mode, is_game_running, lang::localizable::LANG_EN, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, SPRITE_SHEET_TENTACLES, SPRITE_SHEET_WEAPONS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_creative_mode, is_game_running, lang::localizable::LANG_EN, number_of_players, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
 use nohash_hasher::IntMap;
 use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
@@ -305,104 +305,13 @@ fn handle_mouse_updates(rl: &mut RaylibHandle, rendering_scale: f32) {
 }
 
 fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f32) {
-    let current_char = get_char_pressed(&mut context.rl);
-
-    let rl = &context.rl;
     let previous_keyboard_state = &engine().keyboard;
+    let number_of_players = number_of_players();
 
-    let has_controller_now = rl.is_gamepad_available(0);
+    let has_controller_now = context.rl.is_gamepad_available(0);
     let controller_availability_changed = context.total_run_time > 0.5 && (context.using_controller != has_controller_now);  
-    let lost_focus = !rl.is_window_focused();
+    let lost_focus = !context.rl.is_window_focused();
     let should_pause = controller_availability_changed || lost_focus;
-
-    let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl, 0);
-    update_keyboard(
-        0,
-        rl.is_key_pressed(KeyboardKey::KEY_W) || rl.is_key_pressed(KeyboardKey::KEY_UP) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!previous_keyboard_state.is_direction_up_down(0) && joystick_up), 
-        rl.is_key_pressed(KeyboardKey::KEY_D) || rl.is_key_pressed(KeyboardKey::KEY_RIGHT) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || (!previous_keyboard_state.is_direction_right_down(0) && joystick_right), 
-        rl.is_key_pressed(KeyboardKey::KEY_S) || rl.is_key_pressed(KeyboardKey::KEY_DOWN) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || (!previous_keyboard_state.is_direction_down_down(0) && joystick_down), 
-        rl.is_key_pressed(KeyboardKey::KEY_A) || rl.is_key_pressed(KeyboardKey::KEY_LEFT) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || (!previous_keyboard_state.is_direction_left_down(0) && joystick_left), 
-        rl.is_key_down(KeyboardKey::KEY_W) || rl.is_key_down(KeyboardKey::KEY_UP) || rl.is_gamepad_button_down(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || joystick_up, 
-        rl.is_key_down(KeyboardKey::KEY_D) || rl.is_key_down(KeyboardKey::KEY_RIGHT) || rl.is_gamepad_button_down(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || joystick_right, 
-        rl.is_key_down(KeyboardKey::KEY_S) || rl.is_key_down(KeyboardKey::KEY_DOWN) || rl.is_gamepad_button_down(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || joystick_down, 
-        rl.is_key_down(KeyboardKey::KEY_A) || rl.is_key_down(KeyboardKey::KEY_LEFT) || rl.is_gamepad_button_down(0, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || joystick_left, 
-        rl.is_key_pressed(KeyboardKey::KEY_ESCAPE) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
-        should_pause || rl.is_key_pressed(KeyboardKey::KEY_X) || rl.is_key_pressed(KeyboardKey::KEY_ENTER) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
-        rl.is_key_pressed(KeyboardKey::KEY_E) || rl.is_key_pressed(KeyboardKey::KEY_K) || rl.is_key_pressed(KeyboardKey::KEY_SPACE) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
-        rl.is_key_pressed(KeyboardKey::KEY_R) || rl.is_key_pressed(KeyboardKey::KEY_Q) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_LEFT), 
-        rl.is_key_pressed(KeyboardKey::KEY_F) || rl.is_key_pressed(KeyboardKey::KEY_J) || rl.is_gamepad_button_pressed(0, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
-        rl.is_key_pressed(KeyboardKey::KEY_BACKSPACE), 
-        current_char,
-        time_since_last_update
-    );
-
-    let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl, 1);
-    update_keyboard(
-        1,
-        rl.is_key_pressed(KeyboardKey::KEY_HOME) || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!previous_keyboard_state.is_direction_up_down(1) && joystick_up), 
-        rl.is_key_pressed(KeyboardKey::KEY_PAGE_DOWN) || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || (!previous_keyboard_state.is_direction_right_down(1) && joystick_right), 
-        rl.is_key_pressed(KeyboardKey::KEY_END) || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || (!previous_keyboard_state.is_direction_down_down(1) && joystick_down), 
-        rl.is_key_pressed(KeyboardKey::KEY_DELETE) || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || (!previous_keyboard_state.is_direction_left_down(1) && joystick_left), 
-        rl.is_key_down(KeyboardKey::KEY_HOME) || rl.is_gamepad_button_down(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || joystick_up, 
-        rl.is_key_down(KeyboardKey::KEY_PAGE_DOWN) || rl.is_gamepad_button_down(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || joystick_right, 
-        rl.is_key_down(KeyboardKey::KEY_END) || rl.is_gamepad_button_down(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || joystick_down, 
-        rl.is_key_down(KeyboardKey::KEY_DELETE) || rl.is_gamepad_button_down(1, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || joystick_left, 
-        rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
-        should_pause || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
-        rl.is_key_pressed(KeyboardKey::KEY_INSERT) || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
-        rl.is_key_pressed(KeyboardKey::KEY_RIGHT_CONTROL) || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_LEFT), 
-        rl.is_key_pressed(KeyboardKey::KEY_RIGHT_SHIFT) || rl.is_gamepad_button_pressed(1, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
-        rl.is_key_pressed(KeyboardKey::KEY_BACKSPACE), 
-        current_char,
-        time_since_last_update
-    );
-
-    if rl.is_gamepad_available(2) {
-        let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl, 2);
-        update_keyboard(
-            2,
-            rl.is_gamepad_button_pressed(2, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!previous_keyboard_state.is_direction_up_down(2) && joystick_up), 
-            rl.is_gamepad_button_pressed(2, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || (!previous_keyboard_state.is_direction_right_down(2) && joystick_right), 
-            rl.is_gamepad_button_pressed(2, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || (!previous_keyboard_state.is_direction_down_down(2) && joystick_down), 
-            rl.is_gamepad_button_pressed(2, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || (!previous_keyboard_state.is_direction_left_down(2) && joystick_left), 
-            rl.is_gamepad_button_down(2, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || joystick_up, 
-            rl.is_gamepad_button_down(2, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || joystick_right, 
-            rl.is_gamepad_button_down(2, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || joystick_down, 
-            rl.is_gamepad_button_down(2, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || joystick_left, 
-            rl.is_gamepad_button_pressed(2, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
-            rl.is_gamepad_button_pressed(2, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
-            rl.is_gamepad_button_pressed(2, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
-            rl.is_gamepad_button_pressed(2, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_LEFT), 
-            rl.is_gamepad_button_pressed(2, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
-            false, 
-            current_char,
-            time_since_last_update
-        );
-    }
-
-    if rl.is_gamepad_available(3) {
-        let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl, 3);
-        update_keyboard(
-            3,
-            rl.is_gamepad_button_pressed(3, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!previous_keyboard_state.is_direction_up_down(3) && joystick_up), 
-            rl.is_gamepad_button_pressed(3, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || (!previous_keyboard_state.is_direction_right_down(3) && joystick_right), 
-            rl.is_gamepad_button_pressed(3, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || (!previous_keyboard_state.is_direction_down_down(3) && joystick_down), 
-            rl.is_gamepad_button_pressed(3, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || (!previous_keyboard_state.is_direction_left_down(3) && joystick_left), 
-            rl.is_gamepad_button_down(3, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || joystick_up, 
-            rl.is_gamepad_button_down(3, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || joystick_right, 
-            rl.is_gamepad_button_down(3, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || joystick_down, 
-            rl.is_gamepad_button_down(3, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || joystick_left, 
-            rl.is_gamepad_button_pressed(3, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
-            rl.is_gamepad_button_pressed(3, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
-            rl.is_gamepad_button_pressed(3, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
-            rl.is_gamepad_button_pressed(3, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_LEFT), 
-            rl.is_gamepad_button_pressed(3, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
-            false, 
-            current_char,
-            time_since_last_update
-        );
-    }
-    _ = rl;
 
     if controller_availability_changed {        
         if has_controller_now {
@@ -412,6 +321,84 @@ fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f3
         }
     }
     context.using_controller = has_controller_now;
+
+    update_keyboard_for_primary_player(&mut context.rl, should_pause, previous_keyboard_state, time_since_last_update);
+
+    if number_of_players > 1 {
+        update_keyboard_for_secondary_player(&mut context.rl, previous_keyboard_state, time_since_last_update, 1, 1);
+    }
+    if number_of_players > 2 {
+        update_keyboard_for_secondary_player(&mut context.rl, previous_keyboard_state, time_since_last_update, 2, 2);
+    }
+    if number_of_players > 3 {
+        update_keyboard_for_secondary_player(&mut context.rl, previous_keyboard_state, time_since_last_update, 3, 3);
+    }
+}
+
+fn update_keyboard_for_primary_player(rl: &mut RaylibHandle, should_pause: bool, previous_keyboard_state: &KeyboardEventsProvider, time_since_last_update: f32) {
+    let player: usize = 0;
+    let gamepad: i32 = 0;
+
+    let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl, 0);
+
+    let was_up_down = previous_keyboard_state.is_direction_up_down(player);
+    let was_right_down = previous_keyboard_state.is_direction_right_down(player);
+    let was_down_down = previous_keyboard_state.is_direction_down_down(player);
+    let was_left_down = previous_keyboard_state.is_direction_left_down(player);
+
+    update_keyboard(
+        0,
+        rl.is_key_pressed(KeyboardKey::KEY_W) || rl.is_key_pressed(KeyboardKey::KEY_UP) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!was_up_down && joystick_up), 
+        rl.is_key_pressed(KeyboardKey::KEY_D) || rl.is_key_pressed(KeyboardKey::KEY_RIGHT) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || (!was_right_down && joystick_right), 
+        rl.is_key_pressed(KeyboardKey::KEY_S) || rl.is_key_pressed(KeyboardKey::KEY_DOWN) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || (!was_down_down && joystick_down), 
+        rl.is_key_pressed(KeyboardKey::KEY_A) || rl.is_key_pressed(KeyboardKey::KEY_LEFT) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || (!was_left_down && joystick_left), 
+        rl.is_key_down(KeyboardKey::KEY_W) || rl.is_key_down(KeyboardKey::KEY_UP) || rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || joystick_up, 
+        rl.is_key_down(KeyboardKey::KEY_D) || rl.is_key_down(KeyboardKey::KEY_RIGHT) || rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || joystick_right, 
+        rl.is_key_down(KeyboardKey::KEY_S) || rl.is_key_down(KeyboardKey::KEY_DOWN) || rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || joystick_down, 
+        rl.is_key_down(KeyboardKey::KEY_A) || rl.is_key_down(KeyboardKey::KEY_LEFT) || rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || joystick_left, 
+        rl.is_key_pressed(KeyboardKey::KEY_ESCAPE) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
+        should_pause || rl.is_key_pressed(KeyboardKey::KEY_X) || rl.is_key_pressed(KeyboardKey::KEY_ENTER) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
+        rl.is_key_pressed(KeyboardKey::KEY_E) || rl.is_key_pressed(KeyboardKey::KEY_K) || rl.is_key_pressed(KeyboardKey::KEY_SPACE) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
+        rl.is_key_pressed(KeyboardKey::KEY_R) || rl.is_key_pressed(KeyboardKey::KEY_Q) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_LEFT), 
+        rl.is_key_pressed(KeyboardKey::KEY_F) || rl.is_key_pressed(KeyboardKey::KEY_J) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
+        rl.is_key_pressed(KeyboardKey::KEY_TAB) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_UP),
+        rl.is_key_pressed(KeyboardKey::KEY_BACKSPACE), 
+        get_char_pressed(rl),
+        time_since_last_update
+    );
+}
+
+fn update_keyboard_for_secondary_player(rl: &mut RaylibHandle, previous_keyboard_state: &KeyboardEventsProvider, time_since_last_update: f32, player: usize, gamepad: i32) {
+    if !rl.is_gamepad_available(gamepad) {
+        return
+    }
+    let (joystick_up, joystick_right, joystick_down, joystick_left) = current_joystick_directions(rl, gamepad);
+
+    let was_up_down = previous_keyboard_state.is_direction_up_down(player);
+    let was_right_down = previous_keyboard_state.is_direction_right_down(player);
+    let was_down_down = previous_keyboard_state.is_direction_down_down(player);
+    let was_left_down = previous_keyboard_state.is_direction_left_down(player);
+
+    update_keyboard(
+        player,
+        rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || (!was_up_down && joystick_up), 
+        rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || (!was_right_down && joystick_right), 
+        rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || (!was_down_down && joystick_down), 
+        rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || (!was_left_down && joystick_left), 
+        rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_UP) || joystick_up, 
+        rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || joystick_right, 
+        rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || joystick_down, 
+        rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || joystick_left, 
+        rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
+        rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
+        rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
+        rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_LEFT), 
+        rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
+        rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_UP),
+        false,
+        0,
+        time_since_last_update
+    );
 }
 
 fn current_joystick_directions(rl: &RaylibHandle, gamepad: i32) -> (bool, bool, bool, bool) {

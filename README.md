@@ -93,7 +93,7 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 Notes about lore, quests and characters can be found [here](https://github.com/curzel-it/sneakbit/blob/main/docs/game_design_document.md).
 
 ## Controls
-### Player 1 
+### Single Player
 | Action | Keyboard | Gamepad | Mobile |
 |--|--|--|--|
 | UP | `Arrow Up` or `W` | `Left Side / Up` or `Left Joystick` | Drag gesture |
@@ -102,31 +102,19 @@ Notes about lore, quests and characters can be found [here](https://github.com/c
 | LEFT | `Arrow Left` or `A` | `Left Side / Left` or `Left Joystick` | Drag gesture |
 | RANGED ATTACK | `F` or `J` | `Right Side / Down` | Dedicated button |
 | CLOSE ATTACK | `R` or `Q` | `Right Side / Left` | Dedicated button |
+| WEAPON SELECTION | `TAB` | `Right Side / Up` | Dedicated button |
 | CONFIRM | `E` or `K` or `SPACE` | `Right Side / Right` | Dedicated button |
 | MENU | `X` or `ENTER` | `Middle Buttons / Left` | Top-right button |
 | BACK | `ESCAPE` | `Middle Buttons / Right` | n/a |
 
-### Player 2
-| Action | Keyboard | Gamepad | Mobile |
-|--|--|--|--|
-| UP | `Home` | `Left Side / Up` or `Left Joystick` | n/a |
-| RIGHT | `Page Down` | `Left Side / Right` or `Left Joystick` | n/a |
-| DOWN | `End` | `Left Side / Down` or `Left Joystick` | n/a |
-| LEFT | `Delete` | `Left Side / Left` or `Left Joystick` | n/a |
-| RANGED ATTACK | `Right Shift` | `Right Side / Down` | n/a |
-| CLOSE ATTACK | `Right Control` | `Right Side / Left` | n/a |
-| CONFIRM | `Insert` | `Right Side / Right` | n/a |
-| MENU | n/a | `Middle Buttons / Left` | n/a |
-| BACK | n/a | `Middle Buttons / Right` | n/a |
-
-### Player 3 and 4
-Gamepad only
+### Multiplayer
+* Local co-op available only on PC
+* Requires using one controller per player
+* Player one can still use the keyboard (but still requires a controller)
 
 #### Notes:
-* Local co-op available only on PC and is still in development.
 * Keyboard and Gamepad are only supported on PC
 * On mobile "dedicated buttons" show up only when applicable, for example, the "fire" button only shows up if you have ammo.
 * Controller is only supported on desktop
 * Connecting or disconnecting a controller automatically pauses the game
-* Mouse is only required for "creative mode"
 * Cursor is automatically hidden when connecting a controller and when entering fullscreen

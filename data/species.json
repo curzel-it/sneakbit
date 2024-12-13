@@ -1306,9 +1306,9 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1014,
-    "z_index": 99,
     "supports_bullet_boomerang": true,
-    "supports_bullet_catching": true
+    "supports_bullet_catching": true,
+    "z_index": 99
   },
   {
     "base_speed": 5.0,
@@ -3773,8 +3773,8 @@
     "entity_type": "Gun",
     "id": 1160,
     "inventory_texture_offset": [
-      0,
-      0
+      7,
+      1
     ],
     "is_invulnerable": true,
     "is_rigid": false,
@@ -3800,8 +3800,8 @@
     "id": 1159,
     "inventory_requirement": 1164,
     "inventory_texture_offset": [
-      0,
-      0
+      11,
+      1
     ],
     "is_invulnerable": true,
     "is_rigid": false,
@@ -3864,12 +3864,14 @@
   },
   {
     "base_speed": 1.0,
+    "bullet_species_id": 1169,
+    "cooldown_after_use": 0.005,
     "entity_type": "Gun",
     "id": 1154,
     "inventory_requirement": 1162,
     "inventory_texture_offset": [
-      0,
-      0
+      11,
+      3
     ],
     "is_invulnerable": true,
     "is_rigid": false,
@@ -3883,10 +3885,8 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1022,
-    "z_index": 16,
-    "bullet_species_id": 1169,
-    "cooldown_after_use": 0.005,
-    "usage_special_effect": "GunShot"
+    "usage_special_effect": "GunShot",
+    "z_index": 16
   },
   {
     "base_speed": 1.0,
@@ -3933,18 +3933,20 @@
   },
   {
     "base_speed": 1.0,
+    "bullet_lifespan": 2.0,
+    "bullet_species_id": 1170,
+    "cooldown_after_use": 0.5,
     "entity_type": "Gun",
     "id": 1167,
     "inventory_requirement": 1168,
     "inventory_texture_offset": [
-      0,
-      0
-    ],
+        11,
+        5
+      ],
     "is_invulnerable": true,
     "is_rigid": false,
     "lock_type": "None",
     "name": "objects.name.cannon.weapon",
-    "bullet_lifespan": 2.0,
     "sprite_frame": {
       "h": 4,
       "w": 4,
@@ -3953,10 +3955,8 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1022,
-    "z_index": 16,
-    "bullet_species_id": 1170,
-    "cooldown_after_use": 0.5,
-    "usage_special_effect": "LoudGunShot"
+    "usage_special_effect": "LoudGunShot",
+    "z_index": 16
   },
   {
     "base_speed": 1.0,

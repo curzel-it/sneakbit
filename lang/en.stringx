@@ -743,6 +743,12 @@ fueling life and wonder in Duskhaven.
 
 "objects.name.camp_fire" = "Campfire"
 
+"objects.name.cannon.bullet" = "Cannonball"
+
+"objects.name.cannon.item" = "Cannon"
+
+"objects.name.cannon.weapon" = "Cannon"
+
 "objects.name.deep_hole" = "Deep Hole"
 
 "objects.name.footsteps_trail" = "Footsteps Trail"

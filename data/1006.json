@@ -1259,14 +1259,14 @@
       "direction": "Down",
       "display_conditions": [
         {
-            "key": "dialogue.answer.quest.sword.a_thing_of_beauty",
-            "expected_value": 1,
-            "visible": false
+          "expected_value": 1,
+          "key": "dialogue.answer.quest.sword.a_thing_of_beauty",
+          "visible": false
         },
         {
-            "key": "always",
-            "expected_value": 0,
-            "visible": true
+          "expected_value": 0,
+          "key": "always",
+          "visible": true
         }
       ],
       "frame": {

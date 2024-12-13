@@ -92,6 +92,7 @@ pub extern "C" fn update_keyboard(
     confirm_pressed: bool,
     close_attack_pressed: bool,
     ranged_attack_pressed: bool,
+    weapon_selection_pressed: bool,
     backspace_pressed: bool,
     current_char: u32,
     time_since_last_update: f32
@@ -102,6 +103,7 @@ pub extern "C" fn update_keyboard(
         up_down, right_down, down_down, left_down, 
         escape_pressed, menu_pressed, confirm_pressed, 
         close_attack_pressed, ranged_attack_pressed, 
+        weapon_selection_pressed,
         backspace_pressed, 
         if current_char == 0 { None } else { char::from_u32(current_char) }, 
         time_since_last_update

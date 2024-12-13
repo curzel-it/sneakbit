@@ -743,6 +743,12 @@ alimentando la vita e il fascino di Duskhaven.
 
 "objects.name.camp_fire" = "Falò"
 
+"objects.name.cannon.bullet" = "Palla di Cannone"
+
+"objects.name.cannon.item" = "Cannone"
+
+"objects.name.cannon.weapon" = "Cannone"
+
 "objects.name.deep_hole" = "Fossa Profonda"
 
 "objects.name.footsteps_trail" = "Impronte"
