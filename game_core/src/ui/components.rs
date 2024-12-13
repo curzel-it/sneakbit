@@ -7,6 +7,7 @@ pub const COLOR_TEXT: NonColor = (255, 255, 255, 245);
 pub const COLOR_TEXT_HIGHLIGHTED: NonColor = (255, 200, 0, 255);
 pub const COLOR_GENERAL_HIGHLIGHT: NonColor = (255, 0, 0, 153);
 pub const COLOR_DEBUG_INFO_BACKGROUND: NonColor = (0, 0, 0, 85);
+pub const COLOR_LOADING_SCREEN_BACKGROUND: NonColor = (0, 0, 0, 255);
 pub const COLOR_DEATH_SCREEN_BACKGROUND: NonColor = (0, 0, 0, 178);
 pub const COLOR_MENU_BACKGROUND: NonColor = (42, 47, 78, 255);
 pub const COLOR_MENU_HINT_BACKGROUND: NonColor = (26, 25, 50, 128);
