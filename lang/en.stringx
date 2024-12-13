@@ -1316,6 +1316,10 @@ Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
 
 "text_input.hint" = "ENTER to confirm, ESC to cancel"
 
+"weapons_selection.ammo" = "Ammo"
+
+"weapons_selection.title" = "Weapons"
+
 "yes" = "Yes"
 
 "you" = "You"

@@ -48,6 +48,10 @@ impl StorageKey {
         "language".to_owned()
     }
 
+    pub fn currently_equipped_weapon() -> String {
+        "currently_equipped_weapon".to_owned()
+    }
+
     fn dialogue_answer(dialogue: &str) -> String {
         format!("dialogue.answer.{}", dialogue)
     }

@@ -1320,6 +1320,10 @@ Hai un aura potentissima!
 
 "text_input.hint" = "ENTER per confermare, ESC per annullare"
 
+"weapons_selection.ammo" = "Colpi Disponibili"
+
+"weapons_selection.title" = "Armi"
+
 "yes" = "Yes"
 
 "you" = "Tu"

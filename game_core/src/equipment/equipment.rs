@@ -1,4 +1,4 @@
-use crate::{constants::TILE_SIZE, entities::species::species_by_id, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::inventory_count, world::World}, utils::directions::Direction};
+use crate::{constants::TILE_SIZE, entities::species::species_by_id, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, inventory_count, set_value_for_key, StorageKey}, world::World}, utils::directions::Direction};
 
 impl Entity {
     pub fn setup_equipment(&mut self) {
@@ -43,9 +43,17 @@ impl Entity {
 }
 
 pub fn is_equipped(species_id: u32) -> bool {
+    species_id == get_value_for_global_key(&StorageKey::currently_equipped_weapon()).unwrap_or_default()
+}
+
+pub fn can_be_equipped(species_id: u32) -> bool {
     if let Some(requirement) = species_by_id(species_id).inventory_requirement {
         inventory_count(&requirement) > 0
     } else {
         true
     } 
+}
+
+pub fn set_equipped(species_id: u32) {
+    set_value_for_key(&StorageKey::currently_equipped_weapon(), species_id);
 }

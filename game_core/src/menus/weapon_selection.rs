@@ -1,4 +1,6 @@
-use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_WEAPONS}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{EntityType, Species, ALL_SPECIES}}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, storage::inventory_count}, lang::localizable::LocalizableText, text, texture, ui::{components::{empty_view, GridSpacing, Spacing, Typography, View, COLOR_BLACK, COLOR_YELLOW}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use std::io::Cursor;
+
+use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_WEAPONS}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{EntityType, Species, ALL_SPECIES}}, equipment::equipment::{can_be_equipped, is_equipped, set_equipped}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, storage::inventory_count}, lang::localizable::LocalizableText, text, texture, ui::{components::{empty_view, GridSpacing, Spacing, Typography, View, COLOR_BLACK, COLOR_YELLOW}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 use super::menu::MENU_BORDERS_TEXTURES;
 
@@ -18,18 +20,10 @@ enum WeaponsGridState {
 impl WeaponsGrid {
     pub fn new() -> Self {
         Self {
-            weapons: Self::all_weapons(),
+            weapons: vec![],
             state: WeaponsGridState::Closed,
             columns: 5
         }
-    }
-
-    fn all_weapons() -> Vec<Species> {
-        ALL_SPECIES
-            .iter()
-            .filter(|s| matches!(s.entity_type, EntityType::Gun))
-            .cloned()
-            .collect()
     }
 
     pub fn update(&mut self, keyboard: &KeyboardEventsProvider, _: f32) -> bool {
@@ -40,7 +34,20 @@ impl WeaponsGrid {
         match self.state {
             WeaponsGridState::Closed => {
                 if keyboard.has_weapon_selection_been_pressed_by_anyone() {
-                    self.state = WeaponsGridState::SelectingWeapon(0)
+                    self.weapons = available_weapons();
+                    if self.weapons.len() > 1 {
+                        let current_index = self.weapons
+                            .iter()
+                            .enumerate()
+                            .find(|(_, weapon)| is_equipped(weapon.id))
+                            .map(|(index, _)| index);
+                        
+                        if let Some(current_index) = current_index {
+                            self.state = WeaponsGridState::SelectingWeapon(current_index)
+                        } else {
+                            self.state = WeaponsGridState::SelectingWeapon(0)
+                        }                        
+                    }
                 }
             }
             WeaponsGridState::SelectingWeapon(selected_index) => {
@@ -88,6 +95,18 @@ impl WeaponsGrid {
         }
 
         self.state = WeaponsGridState::SelectingWeapon(new_index);
+
+        if keyboard.has_confirmation_been_pressed_by_anyone() {
+            self.handle_confirmation_input(new_index);
+            self.state = WeaponsGridState::Closed;
+        }
+    }
+
+    fn handle_confirmation_input(&mut self, selected_index: usize) {
+        if let Some(selected_weapon) = self.weapons.get(selected_index) {
+            set_equipped(selected_weapon.id);
+            self.state = WeaponsGridState::Closed;
+        }
     }
 
     pub fn ui(&self) -> View {
@@ -119,14 +138,17 @@ impl WeaponsGrid {
         };
 
         let weapon_info = if let Some(weapon) = selected_weapon {
-            let ammo = inventory_count(&weapon.bullet_species_id);
+            let ammo_text = if matches!(weapon.entity_type, EntityType::Gun) {
+                let ammo = inventory_count(&weapon.bullet_species_id);
+                let text = format!("{}: {}", "weapons_selection.ammo".localized(), ammo);
+                text!(Typography::Regular, text)
+            } else {
+                text!(Typography::Regular, "--".localized())
+            };            
             vstack!(
                 Spacing::MD,
                 text!(Typography::Title, weapon.name.localized()),
-                text!(
-                    Typography::Regular,
-                    format!("Ammo: {}", ammo)
-                )
+                ammo_text
             )
         } else {
             empty_view()
@@ -135,7 +157,7 @@ impl WeaponsGrid {
         View::VStack {
             spacing: Spacing::LG,
             children: vec![
-                text!(Typography::Title, "Weapons".to_string()),
+                text!(Typography::Title, "weapons_selection.title".localized()),
                 weapons_grid,
                 weapon_info,
             ],
@@ -173,4 +195,13 @@ impl WeaponsGrid {
         let size = if is_selected { 2.0 } else { 1.5 };
         texture!(sprite_sheet, texture_rect, Vector2d::new(size, size))
     }
+}
+
+fn available_weapons() -> Vec<Species> {
+    ALL_SPECIES
+        .iter()
+        .filter(|s| matches!(s.entity_type, EntityType::Gun | EntityType::Sword))
+        .filter(|s| can_be_equipped(s.id))
+        .cloned()
+        .collect()
 }
