@@ -1229,6 +1229,56 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1110
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": true,
+      "destination": null,
+      "dialogues": [
+        {
+          "expected_value": 1,
+          "key": "dialogue.answer.quest.sword.thats_my_sword",
+          "text": "quest.sword.a_thing_of_beauty"
+        },
+        {
+          "expected_value": 1,
+          "key": "dialogue.answer.quest.sword.did_you_find_my_sword,item_collected.13775019",
+          "text": "quest.sword.a_thing_of_beauty"
+        },
+        {
+          "expected_value": 1,
+          "key": "item_collected.13775019",
+          "text": "quest.sword.thats_my_sword"
+        },
+        {
+          "expected_value": 0,
+          "key": "always",
+          "text": "quest.sword.did_you_find_my_sword"
+        }
+      ],
+      "direction": "Down",
+      "display_conditions": [
+        {
+            "key": "dialogue.answer.quest.sword.a_thing_of_beauty",
+            "expected_value": 1,
+            "visible": false
+        },
+        {
+            "key": "always",
+            "expected_value": 0,
+            "visible": true
+        }
+      ],
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 86,
+        "y": 43
+      },
+      "id": 13782356,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1113
     }
   ],
   "ephemeral_state": true,

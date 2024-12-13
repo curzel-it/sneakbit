@@ -387,7 +387,7 @@
     },
     {
       "after_dialogue": "Nothing",
-      "demands_attention": false,
+      "demands_attention": true,
       "destination": null,
       "dialogues": [
         {
@@ -412,7 +412,18 @@
         }
       ],
       "direction": "Down",
-      "display_conditions": [],
+      "display_conditions": [
+        {
+            "key": "dialogue.answer.quest.sword.a_thing_of_beauty",
+            "expected_value": 1,
+            "visible": false
+        },
+        {
+            "key": "always",
+            "expected_value": 0,
+            "visible": true
+        }
+      ],
       "frame": {
         "h": 2,
         "w": 1,
