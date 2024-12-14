@@ -314,7 +314,7 @@ int32_t number_of_cannonball_in_inventory(uintptr_t player);
 
 float player_current_hp(uintptr_t player);
 
-bool is_sword_equipped(uintptr_t player);
+bool is_melee_equipped(uintptr_t player);
 
 bool is_day(void);
 

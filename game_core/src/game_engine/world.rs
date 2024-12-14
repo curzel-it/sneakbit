@@ -2,9 +2,9 @@ use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}
 
 use common_macros::hash_set;
 use serde::{Deserialize, Serialize};
-use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{bullets::{BulletHit, BulletId}, known_species::SPECIES_HERO, species::{species_by_id, EntityType}}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{bullets::{BulletHit, BulletId}, known_species::{SPECIES_HERO, SPECIES_KUNAI}, species::{species_by_id, EntityType}}, equipment::basics::available_weapons, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_bullet_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
+use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 #[derive(Clone)]
 pub struct World {
@@ -357,7 +357,19 @@ impl World {
 
     fn handle_hero_damage(&mut self, damage: f32) -> Vec<EngineStateUpdate> {
         if let Some(hero) = self.entities.borrow_mut().get_mut(0) {
-            hero.hp -= damage;
+            let mut damage_reductions: Vec<f32> = available_weapons(hero.player_index)
+                .iter()
+                .map(|s| s.received_damage_reduction)   
+                .collect();
+            
+            damage_reductions.sort_by(|a, b| b.partial_cmp(a).unwrap_or(std::cmp::Ordering::Equal));     
+
+            let actual_damage = damage_reductions
+                .iter()
+                .fold(damage, |current_damage, discount| current_damage * (1.0 - discount))
+                .max(0.0);
+
+            hero.hp -= actual_damage;
             if hero.hp <= 0.0 {
                 return vec![EngineStateUpdate::DeathScreen]
             }
@@ -380,8 +392,8 @@ impl World {
         self.mark_as_collected_if_needed(target.id, target.parent_id);
     }
 
-    fn handle_target_hit(&self, damage: f32, target: &mut Entity) -> bool {
-        target.hp -= damage * damage_multiplier(target.parent_id);
+    fn handle_target_hit(&self, damage: f32, bullet_species_id: u32, target: &mut Entity) -> bool {
+        target.hp -= damage * damage_multiplier(target.parent_id, bullet_species_id);
         
         if target.hp <= 0.0 {
             self.kill_with_animation(target);
@@ -401,7 +413,7 @@ impl World {
         });
 
         for target in targets {
-            let did_kill = self.handle_target_hit(hit.damage, target);
+            let did_kill = self.handle_target_hit(hit.damage, hit.bullet_species_id, target);
             bullet_expended = bullet_expended || did_kill;
             if did_kill {
                 updates.push(EngineStateUpdate::EntityKilled(target.id, target.species_id));
@@ -821,7 +833,7 @@ impl World {
 
 impl Entity {
     fn has_weight(&self) -> bool {
-        !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate | EntityType::Equipment | EntityType::Sword | EntityType::Gun)
+        !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate | EntityType::WeaponMelee | EntityType::WeaponRanged)
     }
 }
 
@@ -898,8 +910,8 @@ impl PlayerProps {
     }
 }
 
-fn damage_multiplier(parent_id: u32) -> f32 {
-    if is_player(parent_id) && has_piercing_bullet_skill() {
+fn damage_multiplier(parent_id: u32, bullet_species_id: u32) -> f32 {
+    if is_player(parent_id) && matches!(bullet_species_id, SPECIES_KUNAI) && has_piercing_knife_skill() {
         2.0
     } else {
         1.0

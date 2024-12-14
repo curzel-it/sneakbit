@@ -3,10 +3,10 @@
 > This document contains game spoilers, lots of AI generated slope and it's garbage in general.
 
 ## Overview
-SneakBit game concept combines adventure and action elements, allowing players to explore a world populated by demons and to engage in combat with unique mechanics. The player can throw kunai (small knives) to defeat or weaken demonic creatures encountered throughout various landscapes, immersing the player in a journey with elements of both strategy and action wrapped in a gameboy-like pixel art aesthetics.
+The game combines adventure and action elements, allowing players to explore a world populated by demons and to engage in combat with unique mechanics. The player can throw kunai (small knives) to defeat or weaken demonic creatures encountered throughout various landscapes, immersing the player in a journey with elements of both strategy and action wrapped in a gameboy-like pixel art aesthetics.
 Local co-op is also available on PC.
 
-### Tiling System
+## Tiling System
 The game operates on a grid-based tile system.
 There are two types of tiles:
 * Biomes, which act as a background (water, grass, lava, rocky pavement, parquet, ...)
@@ -15,21 +15,55 @@ There are two types of tiles:
 Both kinds of tiles can represent an obstacle, the player cannot walk on water, lava and over fences for example, but can walk over grass.
 To mimic the effect of density, different construction tiles have different properties, for example some can reflect bullets (walls) while others don't.
 
-### Combat System
-At the moment, the only available weapons are throwing knifes and a sword.
-#### Kunai
-Knifes can be found on the ground here and there, the player can pick them up by just walking by.
-When pressing FIRE a knife is throw in the direction the player is currently looking at.
-The bullet goes perfectly straight until stopped or it expires (3 seconds).
+Tiles are pre-rendered and distributed along with the game.
 
-#### Swords
-Works by creating several invisible bullets around the character that travel for a short time in the direction the character is looking at.
+## Combat System
+* Monsters only attack melee for now
+* Players can equip one melee and one ranged weapon.
+* Skills can influence both weapons and bullets.
+* Damage reduction is applied after damage multipliers.
+
+### Ranged Weapons
+Ranged weapons use ammunitions that can be found in-game.
+
+The bullet goes straight towards the direction the player is currently looking at until stopped or it expires.
+
+Bullets inflict a damage per second, so the faster bullets are less effective.
+
+|Weapon|Ammo|Dps|Speed|Lifespan|Cooldown|
+|--|--|--|--|--|--|
+|Kunai Launcher|Kunai|1500|7.0|1.4|0.15|
+|AR15|223 Rem|500|10.0|2.0|0.005|
+|Cannon|Cannonball|5000|8.0|2.0|0.5|
+
+### Melee Weapons
+Melee weapons don't require ammunition, but the underlying mechanisms makes them fire invisible, slow and short-lived bullets, usually in a wider area than ranged weapons.
+
+This category includes shields and all equipment that doesn't deal damage.
+
+|Weapon|Dps|Speed|Lifespan|Cooldown|
+|--|--|--|--|--|
+|Sword|480|2.0|0.3|0.35|
+|Shield|-20%|0.0|0.0|0.0|
+
+### Monsters
+There is a single kind of monster, but they can fuse to level up.
+
+|Name|Dps|Hp|Speed|
+|--|--|--|--|
+|Blackberry|400|200|2.5|
+|Blueberry|500|600|2.75|
+|Strawberry|600|1300|3.02|
+|Gooseberry|700|2000|3.33|
+
 
 ### Skills
-The player can complete optional quests to gain special combat skills:
-1. Bouncing Knife, which makes knifes bounce off walls, enemies, etc
-1. Knife Catcher, which allows the player to put back in the inventory a knife that comes back at him
-1. Piercing Knife, which allows knifes to kill immortal enemies and makes them stop bouncing off enemies (while still bouncing off walls)
+The player can complete optional quests to gain special combat skills.
+|Name|Effect|
+|--|--|
+|Bouncing Knife|Makes kunai bounce off walls, enemies, etc|
+|Knife Catcher|Allows the player to put back in the inventory kunai that come back at him|
+|Piercing Knife|Doubles damage dealt by kunais|
 
 All skills are passive, stackable and perpetual.
 
@@ -90,11 +124,6 @@ An assassin girl who plays a pivotal role in the story’s conflict, adding intr
 
 #### Captain 'Ironside' Thorne
 A steadfast male soldier who leads the defense against the increasing demon incursions.
-
-### Fauna
-A single kind of monster, which is just a black blob with a teeth-filled mouth for now.
-
-There's also several household animals, but they don't serve any purpose aside from decoration.
 
 ## Quests
 The objective of the game is to defeat the Demon Lord, which by necessity leads the player to go through all dungeons in search of special keys.
@@ -225,6 +254,18 @@ Vintoria is a mountain village, home to the best wineries in the continent.
 The river than once carved the valley has been redirected to an hydroelectric power plant.
 The basement of the power plant is embedded in the mountain and is built on multiple levels.
 
-### Flora and Fauna
-#### Manafren trees
+#### Peak Levek (1020)
+TODO
+
+## Flora and Fauna
+
+### Animals
+There's several household animals, but they don't serve any purpose aside from decoration.
+
+### Monsters
+A single kind of monster, which is just a black blob with a teeth-filled mouth for now.
+
+TODO: Add info on other monsters/transformations
+
+### Manafren trees
 The Manafern Trees, native to the twilight land of Duskhaven, are renowned for their mystical energy properties, marked by vibrant purple leaves that absorb ethereal particles from the soil and air. Through a unique, photosynthesis-like process, the Manaferns convert these particles into pure mana, illuminating the region and powering its ecosystem. However, a darker truth lies beneath their allure: a centuries-old pact with the Demon Lord has embedded fragments of his essence within the trees, making each pulse of mana a subtle extension of his influence. Though they enrich life in Duskhaven, the Manaferns also inch the world closer to his dominion, veiling a sinister force within their radiant glow.

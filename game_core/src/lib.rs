@@ -337,8 +337,8 @@ pub fn cached_players_positions() -> Vec<IntPoint> {
 }
 
 #[no_mangle]
-pub extern "C" fn is_sword_equipped(player: usize) -> bool {
-    get_value_for_global_key(&StorageKey::currently_equipped_sword(player)).unwrap_or(0) != 0
+pub extern "C" fn is_melee_equipped(player: usize) -> bool {
+    get_value_for_global_key(&StorageKey::currently_equipped_melee_weapon(player)).unwrap_or(0) != 0
 }
 
 #[no_mangle]

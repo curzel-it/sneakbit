@@ -1,7 +1,7 @@
 use std::{collections::{HashMap, HashSet}, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
 use lazy_static::lazy_static;
 
-use crate::{config::config, constants::MAX_PLAYERS, entities::species::{species_by_id, SpeciesId}, equipment::equipment_basics::set_equipped};
+use crate::{config::config, constants::MAX_PLAYERS, entities::species::{species_by_id, SpeciesId}, equipment::basics::set_equipped};
 
 use super::{entity::EntityId, locks::LockType, world::World};
 
@@ -51,12 +51,12 @@ impl StorageKey {
         "language".to_owned()
     }
 
-    pub fn currently_equipped_gun(player: usize) -> String {
-        format!("{}.{}.currently_equipped_gun", PLAYER, player)
+    pub fn currently_equipped_ranged_weapon(player: usize) -> String {
+        format!("{}.{}.currently_equipped_ranged_weapon", PLAYER, player)
     }
 
-    pub fn currently_equipped_sword(player: usize) -> String {
-        format!("{}.{}.currently_equipped_sword", PLAYER, player)
+    pub fn currently_equipped_melee_weapon(player: usize) -> String {
+        format!("{}.{}.currently_equipped_melee_weapon", PLAYER, player)
     }
 
     fn dialogue_answer(dialogue: &str) -> String {
@@ -221,7 +221,7 @@ pub fn has_bullet_catcher_skill() -> bool {
     get_value_for_global_key("dialogue.answer.quest.ninja_skills.blue_ninja.gain_knife_catcher_skill").is_some_and(|i| i == 1)
 }
 
-pub fn has_piercing_bullet_skill() -> bool {
+pub fn has_piercing_knife_skill() -> bool {
     get_value_for_global_key("dialogue.answer.quest.ninja_skills.red_ninja.gain_piercing_knife_skill").is_some_and(|i| i == 1)
 }
 

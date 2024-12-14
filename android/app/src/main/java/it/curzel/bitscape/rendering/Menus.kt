@@ -121,7 +121,6 @@ private fun MenuContent(
             .clip(RoundedCornerShape(8.dp))
             .background(MenuBackground)
             .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
-            .shadow(4.dp, RoundedCornerShape(8.dp))
             .clickable(enabled = false) {}
     ) {
         Column(

@@ -73,7 +73,7 @@ class GameEngine {
         menus.send(current_menu())
         kunai.send(number_of_kunai_in_inventory(0))
         heroHp.send(player_current_hp(0))
-        isSwordEquipped.send(is_sword_equipped(0))
+        isSwordEquipped.send(is_melee_equipped(0))
         isInteractionAvailable.send(is_interaction_available())
         showsDeathScreen.send(isDead)
         currentBiomeVariant = Int(current_biome_tiles_variant())

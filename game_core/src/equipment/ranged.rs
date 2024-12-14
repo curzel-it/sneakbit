@@ -1,31 +1,31 @@
-use crate::{entities::{bullets::make_player_bullet, known_species::SPECIES_KUNAI_LAUNCHER}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
+use crate::{entities::bullets::make_player_bullet, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
 
-use super::equipment_basics::is_equipped;
+use super::basics::is_equipped;
 
 impl Entity {
-    pub fn setup_gun(&mut self) {
+    pub fn setup_ranged(&mut self) {
         self.setup_equipment();
     }
 
-    pub fn update_gun(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {           
-        if matches!(self.id, SPECIES_KUNAI_LAUNCHER) {
-            self.fire(world, time_since_last_update)
-        } else {
-            let mut updates: Vec<WorldStateUpdate> = vec![];
+    pub fn update_ranged(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {           
+        // if matches!(self.id, SPECIES_KUNAI_LAUNCHER) {
+        //     self.attack_ranged(world, time_since_last_update)
+        // } else {
+        let mut updates: Vec<WorldStateUpdate> = vec![];
 
-            self.is_equipped = is_equipped(&self.species, self.player_index);
-            self.update_equipment_position(world);
-            
-            if self.is_equipped {
-                updates.extend(self.fire(world, time_since_last_update));
-                updates
-            } else {
-                vec![]
-            }
+        self.is_equipped = is_equipped(&self.species, self.player_index);
+        self.update_equipment_position(world);
+        
+        if self.is_equipped {
+            updates.extend(self.attack_ranged(world, time_since_last_update));
+            updates
+        } else {
+            vec![]
         }
+        // }
     }
 
-    fn fire(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
+    fn attack_ranged(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
         let mut updates: Vec<WorldStateUpdate> = vec![];
 
         self.action_cooldown_remaining -= time_since_last_update;

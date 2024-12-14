@@ -68,7 +68,13 @@ pub struct Species {
     pub supports_bullet_boomerang: bool,
 
     #[serde(default)]
-    pub supports_bullet_catching: bool
+    pub supports_bullet_catching: bool,
+
+    #[serde(default="zero")]
+    pub received_damage_reduction: f32,
+
+    #[serde(default)]
+    pub always_in_front_of_hero_when_equipped: bool,
 }
 
 #[derive(Default, Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
@@ -89,9 +95,8 @@ pub enum EntityType {
     RailObject,
     Hint,
     Trail,
-    Equipment,
-    Sword,
-    Gun,
+    WeaponMelee,
+    WeaponRanged,
     CloseCombatMonster
 }
 
@@ -215,7 +220,7 @@ lazy_static! {
 lazy_static! {
     pub static ref ALL_EQUIPMENT_IDS: Vec<u32> = {
         ALL_SPECIES.iter().filter_map(|s| {
-            if matches!(s.entity_type, EntityType::Gun | EntityType::Sword) {
+            if matches!(s.entity_type, EntityType::WeaponMelee | EntityType::WeaponRanged) {
                 Some(s.id)
             } else {
                 None
@@ -252,6 +257,8 @@ pub const SPECIES_NONE: Species = Species {
     associated_weapon: None,
     supports_bullet_boomerang: false,
     supports_bullet_catching: false,
+    received_damage_reduction: 0.0,
+    always_in_front_of_hero_when_equipped: false
 };
 
 pub fn species_by_id(species_id: u32) -> Species {

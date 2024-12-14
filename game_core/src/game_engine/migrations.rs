@@ -41,11 +41,11 @@ fn run_migrations_from(latest_build: u32) {
             })
             .collect();
 
-        updated_values.insert(StorageKey::currently_equipped_gun(0), SPECIES_KUNAI_LAUNCHER);
+        updated_values.insert(StorageKey::currently_equipped_ranged_weapon(0), SPECIES_KUNAI_LAUNCHER);
 
         if let Some(&value) = updated_values.get(&StorageKey::species_inventory_count(&1164, 0)) {
             if value > 0 {
-                updated_values.insert(StorageKey::currently_equipped_sword(0), SPECIES_SWORD);
+                updated_values.insert(StorageKey::currently_equipped_melee_weapon(0), SPECIES_SWORD);
                 updated_values.insert(StorageKey::species_inventory_count(&SPECIES_SWORD_ITEM, 0), 1);
             }
         }

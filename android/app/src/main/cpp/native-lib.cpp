@@ -599,7 +599,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_currentSoundTrack(JNIEnv *env, jobjec
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_isSwordEquipped(JNIEnv *env, jobject thiz) {
-    return is_sword_equipped(0);
+    return is_melee_equipped(0);
 }
 
 extern "C"

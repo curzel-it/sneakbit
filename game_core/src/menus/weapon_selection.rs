@@ -1,4 +1,4 @@
-use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_WEAPONS}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{EntityType, Species}}, equipment::equipment_basics::{available_weapons, is_equipped, set_equipped}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, storage::inventory_count}, lang::localizable::LocalizableText, text, texture, ui::{components::{empty_view, GridSpacing, Spacing, Typography, View, COLOR_MENU_BACKGROUND, COLOR_TEXT_HIGHLIGHTED}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_WEAPONS}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{EntityType, Species}}, equipment::basics::{available_weapons, is_equipped, set_equipped}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, storage::inventory_count}, lang::localizable::LocalizableText, text, texture, ui::{components::{empty_view, GridSpacing, Spacing, Typography, View, COLOR_MENU_BACKGROUND, COLOR_TEXT_HIGHLIGHTED}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 use super::menu::MENU_BORDERS_TEXTURES;
 
@@ -140,7 +140,7 @@ impl WeaponsGrid {
         };
 
         let weapon_info = if let Some(weapon) = selected_weapon {
-            let ammo_text = if matches!(weapon.entity_type, EntityType::Gun) {
+            let ammo_text = if matches!(weapon.entity_type, EntityType::WeaponRanged) {
                 let ammo = inventory_count(&weapon.bullet_species_id, self.player);
                 let text = format!("{}: {}", "weapons_selection.ammo".localized(), ammo);
                 text!(Typography::Regular, text)

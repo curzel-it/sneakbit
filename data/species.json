@@ -3770,7 +3770,7 @@
     "bullet_lifespan": 1.4,
     "bullet_species_id": 7000,
     "cooldown_after_use": 0.15,
-    "entity_type": "Gun",
+    "entity_type": "WeaponRanged",
     "id": 1160,
     "inventory_texture_offset": [
       7,
@@ -3796,7 +3796,7 @@
     "bullet_lifespan": 0.3,
     "bullet_species_id": 1166,
     "cooldown_after_use": 0.35,
-    "entity_type": "Sword",
+    "entity_type": "WeaponMelee",
     "id": 1159,
     "inventory_texture_offset": [
       11,
@@ -3865,8 +3865,9 @@
   {
     "base_speed": 1.0,
     "bullet_species_id": 1169,
+    "bullet_lifespan": 2.0,
     "cooldown_after_use": 0.005,
-    "entity_type": "Gun",
+    "entity_type": "WeaponRanged",
     "id": 1154,
     "inventory_texture_offset": [
       11,
@@ -3911,7 +3912,7 @@
   },
   {
     "base_speed": 10.0,
-    "dps": 1200,
+    "dps": 500,
     "entity_type": "Bullet",
     "id": 1169,
     "inventory_texture_offset": [
@@ -3936,7 +3937,7 @@
     "bullet_lifespan": 2.0,
     "bullet_species_id": 1170,
     "cooldown_after_use": 0.5,
-    "entity_type": "Gun",
+    "entity_type": "WeaponRanged",
     "id": 1167,
     "inventory_texture_offset": [
         11,
@@ -4000,5 +4001,51 @@
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1014,
     "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "WeaponMelee",
+    "id": 1171,
+    "inventory_texture_offset": [
+        11,
+        10
+      ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.shield.weapon",
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 49,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "z_index": 16,
+    "received_damage_reduction": 0.5,
+    "always_in_front_of_hero_when_equipped": true
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "PickableObject",
+    "id": 1172,
+    "associated_weapon": 1171,
+    "inventory_texture_offset": [
+      11,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.shield.item",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 49,
+      "y": 53
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1022
   }
 ]

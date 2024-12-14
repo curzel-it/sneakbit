@@ -1,3 +1,3 @@
-pub mod equipment_basics;
-pub mod gun;
-pub mod sword;
+pub mod basics;
+pub mod ranged;
+pub mod melee;

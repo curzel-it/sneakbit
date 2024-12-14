@@ -1,6 +1,6 @@
 use crate::{constants::TILE_SIZE, game_engine::{entity::{is_player, Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species}};
+use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species, SpeciesId}};
 
 pub type BulletId = EntityId;
 pub type Damage = f32;
@@ -10,6 +10,7 @@ pub struct BulletHit {
     pub bullet_id: BulletId,
     pub supports_catching: bool,
     pub supports_bullet_boomerang: bool,
+    pub bullet_species_id: SpeciesId,
     pub target_ids: Vec<EntityId>,
     pub damage: f32
 }
@@ -68,6 +69,7 @@ impl Entity {
                     supports_catching: self.species.supports_bullet_catching, 
                     supports_bullet_boomerang: self.species.supports_bullet_boomerang, 
                     target_ids: valid_hits, 
+                    bullet_species_id: self.species_id,
                     damage 
                 }
             )

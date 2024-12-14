@@ -180,9 +180,8 @@ impl Entity {
             EntityType::RailObject => self.update_rail(world, time_since_last_update),
             EntityType::Hint => self.update_hint(world, time_since_last_update),
             EntityType::Trail => self.update_trail(),
-            EntityType::Equipment => self.update_equipment(world, time_since_last_update),
-            EntityType::Sword => self.update_sword(world, time_since_last_update),
-            EntityType::Gun => self.update_gun(world, time_since_last_update),
+            EntityType::WeaponMelee => self.update_melee(world, time_since_last_update),
+            EntityType::WeaponRanged => self.update_ranged(world, time_since_last_update),
         };        
         self.sprite.update(time_since_last_update); 
         updates.append(&mut self.check_remaining_lifespan(time_since_last_update));
@@ -212,9 +211,8 @@ impl Entity {
             EntityType::RailObject => self.setup_rail(),
             EntityType::Hint => self.setup_hint(),
             EntityType::Trail => self.setup_generic(),
-            EntityType::Equipment => self.setup_equipment(),
-            EntityType::Sword => self.setup_sword(),
-            EntityType::Gun => self.setup_gun(),
+            EntityType::WeaponMelee => self.setup_melee(),
+            EntityType::WeaponRanged => self.setup_ranged(),
         }
     }
 
@@ -371,7 +369,7 @@ impl Entity {
     }
 
     pub fn is_equipment(&self) -> bool {
-        matches!(self.entity_type, EntityType::Equipment | EntityType::Sword | EntityType::Gun)
+        matches!(self.entity_type, EntityType::WeaponMelee | EntityType::WeaponRanged)
     }
 
     pub fn can_be_hit_by_bullet(&self) -> bool {

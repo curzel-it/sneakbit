@@ -1,28 +1,31 @@
 use crate::{entities::bullets::make_player_bullet, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
 
-use super::equipment_basics::is_equipped;
+use super::basics::is_equipped;
 
 
 impl Entity {
-    pub fn setup_sword(&mut self) {
+    pub fn setup_melee(&mut self) {
         self.setup_equipment();
     }
 
-    pub fn update_sword(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {   
+    pub fn update_melee(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {   
         let mut updates: Vec<WorldStateUpdate> = vec![];
 
         self.is_equipped = is_equipped(&self.species, self.player_index);
         self.update_equipment_position(world);
         
         if self.is_equipped {
-            updates.extend(self.slash(world, time_since_last_update));
+            updates.extend(self.attack_melee(world, time_since_last_update));
             updates
         } else {
             vec![]
         }
     }
 
-    fn slash(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
+    fn attack_melee(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
+        if self.species.bullet_species_id == 0 { 
+            return vec![] 
+        }
         self.action_cooldown_remaining -= time_since_last_update;
 
         if self.action_cooldown_remaining > 0.0 {
@@ -51,7 +54,6 @@ impl Entity {
             if let Some(effect) = self.species.usage_special_effect.clone() {
                 updates.push(WorldStateUpdate::EngineUpdate(EngineStateUpdate::SpecialEffect(effect)));
             }
-
             return updates
         }
         self.update_sprite_for_current_state();

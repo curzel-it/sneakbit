@@ -12,16 +12,24 @@ impl Entity {
         vec![]
     }
 
+    fn z_index_for_state(&self) -> i32 {
+        let is_being_used = self.action_cooldown_remaining > 0.0;
+        if self.species.always_in_front_of_hero_when_equipped {
+            16
+        } else {
+            match (self.direction, is_being_used) {
+                (Direction::Left, false) => 14,
+                (Direction::Right, false) => 14,
+                (Direction::Down, false) => 14,
+                _ => 16
+            }
+        }
+    }
+
     pub fn update_equipment_position(&mut self, world: &World) {   
         let hero = world.players[self.player_index].props;
-        let is_being_used = self.action_cooldown_remaining > 0.0;
         self.direction = hero.direction;
-        self.z_index = match (hero.direction, is_being_used) {
-            (Direction::Left, false) => 14,
-            (Direction::Right, false) => 14,
-            (Direction::Down, false)  => 14,
-            _ => 16
-        };
+        self.z_index = self.z_index_for_state();
         self.current_speed = hero.speed;
         self.frame.x = hero.frame.x;
         self.frame.y = hero.frame.y;
@@ -68,8 +76,8 @@ pub fn set_equipped(species: &Species, player: usize) {
 
 fn equipment_key_for_species(species: &Species, player: usize) -> String {
     match species.entity_type {
-        EntityType::Gun => StorageKey::currently_equipped_gun(player),
-        EntityType::Sword => StorageKey::currently_equipped_sword(player),
+        EntityType::WeaponRanged => StorageKey::currently_equipped_ranged_weapon(player),
+        EntityType::WeaponMelee => StorageKey::currently_equipped_melee_weapon(player),
         _ => "".to_owned()
     }    
 }

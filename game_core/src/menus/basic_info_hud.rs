@@ -52,7 +52,7 @@ impl PlayerHud {
     }    
 
     fn update(&mut self) {
-        let weapon_id = get_value_for_global_key(&StorageKey::currently_equipped_gun(self.player)).unwrap_or(SPECIES_KUNAI_LAUNCHER);
+        let weapon_id = get_value_for_global_key(&StorageKey::currently_equipped_ranged_weapon(self.player)).unwrap_or(SPECIES_KUNAI_LAUNCHER);
         let weapon = species_by_id(weapon_id);
         let ammo = species_by_id(weapon.bullet_species_id);
         self.ammo_count = inventory_count(&ammo.id, self.player);
