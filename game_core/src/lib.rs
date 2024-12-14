@@ -52,6 +52,10 @@ pub fn is_creative_mode() -> bool {
     matches!(&engine().game_mode, GameMode::Creative)
 }
 
+pub fn current_game_mode() -> GameMode {
+    engine().game_mode
+}
+
 #[no_mangle]
 pub extern "C" fn is_game_running() -> bool {
     engine().is_running

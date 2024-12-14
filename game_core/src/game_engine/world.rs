@@ -2,7 +2,7 @@ use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}
 
 use common_macros::hash_set;
 use serde::{Deserialize, Serialize};
-use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_HERO, SPECIES_KUNAI}, species::{species_by_id, EntityType}}, equipment::basics::{available_weapons, is_equipped}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_HERO, SPECIES_KUNAI}, species::{species_by_id, EntityType}}, equipment::basics::{available_weapons, is_equipped}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
@@ -379,17 +379,24 @@ impl World {
         let mut bullet_expended = false;
         let mut entities = self.entities.borrow_mut();
 
+        let shooter_is_player = is_player(hits.bullet_parent_id);
+        let pvp_allowed = current_game_mode().allows_pvp();
+
         let targets = entities.iter_mut().filter(|e| {
             hits.target_ids.contains(&e.id) && e.can_be_hit_by_bullet()
         });
 
         for target in targets {
             let did_kill = if target.is_player() {
-                let player_died = self.handle_hero_damage(target, hits.damage);
-                if player_died {
-                    updates.push(EngineStateUpdate::PlayerDied(target.player_index));
+                if !shooter_is_player || pvp_allowed {
+                    let player_died = self.handle_hero_damage(target, hits.damage);
+                    if player_died {
+                        updates.push(EngineStateUpdate::PlayerDied(target.player_index));
+                    }
+                    false
+                } else {
+                    false
                 }
-                false
             } else {
                 self.handle_target_hit(hits.damage, hits.bullet_species_id, target)
             };

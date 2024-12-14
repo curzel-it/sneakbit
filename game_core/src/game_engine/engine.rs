@@ -26,11 +26,18 @@ pub struct GameEngine {
     pub dead_players: Vec<usize>
 }
 
+#[derive(Clone, Copy)]
 #[repr(C)]
 pub enum GameMode {
     Story = 0,
     Creative = 1,
     Pvp = 2
+}
+
+impl GameMode {
+    pub fn allows_pvp(&self) -> bool {
+        matches!(self, GameMode::Pvp)
+    }
 }
 
 impl GameEngine {

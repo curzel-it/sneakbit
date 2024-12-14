@@ -1,4 +1,4 @@
-use crate::{constants::{PLAYER1_INDEX, TILE_SIZE}, game_engine::{entity::{is_player, Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{PLAYER1_INDEX, TILE_SIZE}, game_engine::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species, SpeciesId}};
 
@@ -50,11 +50,11 @@ impl Entity {
         let (previous_x, previous_y) = self.previous_position();
         let previous_hits = world.entity_ids(previous_x, previous_y);
         let current_hits = world.entity_ids(self.frame.x, self.frame.y);
-
+        
         let valid_hits: Vec<u32> = vec![previous_hits, current_hits]
             .into_iter()
             .flatten()
-            .filter(|id| self.is_valid_hit_target(*id) && !is_player(*id))
+            .filter(|id| self.is_valid_hit_target(*id))
             .collect();
 
         if valid_hits.is_empty() {
