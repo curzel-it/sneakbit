@@ -261,6 +261,8 @@ Quando in multiplayer, il player uno può usare sia la tastera che il controller
 
 "game.menu.save_and_exit" = "Salva ed Esci"
 
+"game.menu.settings" = "Impostazioni"
+
 "game.menu.status" = "Stato"
 
 "game.menu.title" = "Menu di Gioco"

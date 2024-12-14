@@ -436,3 +436,12 @@ pub fn number_of_players() -> usize {
 pub fn update_number_of_players(count: usize) {
     engine_mut().update_number_of_players(count)
 }
+
+pub fn toggle_pvp() {
+    let next = match current_game_mode() {
+        GameMode::Story => GameMode::Pvp,
+        GameMode::Creative => GameMode::Creative,
+        GameMode::Pvp => GameMode::Story,
+    };
+    engine_mut().game_mode = next;
+}

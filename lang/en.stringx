@@ -261,6 +261,8 @@ When in multiplayer, player 1 can use both controller and keyboard.
 
 "game.menu.save_and_exit" = "Save & Exit"
 
+"game.menu.settings" = "Settings"
+
 "game.menu.status" = "Status"
 
 "game.menu.title" = "Game Menu"

@@ -76,6 +76,10 @@ impl<Item: MenuItem> Menu<Item> {
 
     pub fn clear_selection(&mut self) {
         self.selected_index = 0;
+        self.clear_confirmation();
+    }
+
+    pub fn clear_confirmation(&mut self) {
         self.selection_has_been_confirmed = false;
     }
 
