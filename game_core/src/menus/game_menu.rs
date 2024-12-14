@@ -38,7 +38,6 @@ pub enum GameMenuItem {
     SaveAndExit,
     GameSettings, 
     NumberOfPlayers,
-    Credits,
     Controls,
 }
 
@@ -47,6 +46,7 @@ pub enum GameSettingsItem {
     ToggleSoundEffects,
     ToggleMusic,
     LanguageSettings,
+    Credits, 
     Back,
 }
 
@@ -61,7 +61,6 @@ impl MenuItem for GameMenuItem {
             GameMenuItem::SaveAndExit => "game.menu.save_and_exit".localized(),
             GameMenuItem::ToggleFullScreen => "game.menu.toggle_fullscreen".localized(),
             GameMenuItem::NumberOfPlayers => "game.menu.number_of_players".localized(),
-            GameMenuItem::Credits => "credits".localized(),
             GameMenuItem::Controls => "game.menu.controls".localized(),
             GameMenuItem::GameSettings => "game.menu.settings".localized(),
         }
@@ -86,6 +85,7 @@ impl MenuItem for GameSettingsItem {
                 }
             }
             GameSettingsItem::LanguageSettings => "game.menu.language".localized(),
+            GameSettingsItem::Credits => "credits".localized(),
             GameSettingsItem::Back => "menu_back".localized(),
         }
     }
@@ -101,9 +101,8 @@ impl GameMenu {
                 GameMenuItem::NewGame,
                 GameMenuItem::Save,
                 GameMenuItem::MapEditor,
-                GameMenuItem::GameSettings,
+                GameMenuItem::GameSettings, 
                 GameMenuItem::NumberOfPlayers,
-                GameMenuItem::Credits,
                 GameMenuItem::Controls,
                 GameMenuItem::Exit,
             ],
@@ -115,6 +114,7 @@ impl GameMenu {
                 GameSettingsItem::ToggleSoundEffects,
                 GameSettingsItem::ToggleMusic,
                 GameSettingsItem::LanguageSettings,
+                GameSettingsItem::Credits, 
                 GameSettingsItem::Back, 
             ],
         );
@@ -188,7 +188,6 @@ impl GameMenu {
                 GameMenuItem::GameSettings,
                 GameMenuItem::NumberOfPlayers,
                 GameMenuItem::Controls,
-                GameMenuItem::Credits,
                 GameMenuItem::Exit,
             ]
         }
@@ -278,11 +277,6 @@ impl GameMenu {
                 self.state = MenuState::SelectingNumberOfPlayers;
                 vec![]
             }
-            GameMenuItem::Credits => {
-                self.credits_menu.show();
-                self.state = MenuState::ShowingCredits;
-                vec![]
-            }
             GameMenuItem::NewGame => {
                 self.new_game_confirmation.show(
                     &"game.menu.new_game".localized(),
@@ -344,7 +338,7 @@ impl GameMenu {
         if !is_open {
             self.credits_menu.clear_selection();
             self.credits_menu.close();
-            self.state = MenuState::Open;
+            self.state = MenuState::ShowingSettings; 
         }
         updates
     }
@@ -469,12 +463,13 @@ impl GameMenu {
         keyboard: &KeyboardEventsProvider,
         time_since_last_update: f32,
     ) -> Vec<WorldStateUpdate> {
-        let (is_open, updates) = self.settings_menu.update(keyboard, time_since_last_update);
+        let (is_open, mut updates) = self.settings_menu.update(keyboard, time_since_last_update);
 
         if self.settings_menu.selection_has_been_confirmed {
+            let selected_item = self.settings_menu.selected_item();
             self.settings_menu.clear_confirmation();
 
-            match self.settings_menu.selected_item() {
+            match selected_item {
                 GameSettingsItem::ToggleSoundEffects => {
                     toggle_sound_effects();
                 }
@@ -484,6 +479,10 @@ impl GameMenu {
                 GameSettingsItem::LanguageSettings => {
                     self.languages_menu.show();
                     self.state = MenuState::ShowingLanguageSettings;
+                }
+                GameSettingsItem::Credits => {
+                    self.credits_menu.show();
+                    self.state = MenuState::ShowingCredits;
                 }
                 GameSettingsItem::Back => {
                     self.settings_menu.close();
@@ -510,7 +509,7 @@ impl GameMenu {
             MenuState::ShowingLanguageSettings => self.languages_menu.ui(),
             MenuState::MapEditor | MenuState::PlaceItem => self.map_editor.ui(camera_viewport),
             MenuState::SelectingNumberOfPlayers => self.number_of_players_menu.ui(),
-            MenuState::ShowingSettings => self.settings_menu.ui(), // Render Settings submenu
+            MenuState::ShowingSettings => self.settings_menu.ui(), 
         }
     }
 
