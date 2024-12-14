@@ -1,4 +1,6 @@
-use crate::{constants::TILE_SIZE, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{species_by_id, EntityType, Species, ALL_SPECIES}}, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, has_species_in_inventory, set_value_for_key, StorageKey}, world::World}, utils::directions::Direction};
+use serde::{Deserialize, Serialize};
+
+use crate::{constants::TILE_SIZE, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{species_by_id, EntityType, Species, ALL_SPECIES}}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, has_species_in_inventory, set_value_for_key, StorageKey}, world::World}, utils::directions::Direction};
 
 impl Entity {
     pub fn setup_equipment(&mut self) {
@@ -47,6 +49,28 @@ impl Entity {
             Direction::Unknown => 37,
             Direction::Still => 37,
         }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum EquipmentUsageSoundEffect {
+    NoAmmo,
+    SwordSlash,
+    GunShot,
+    LoudGunShot,
+    KnifeThrown,
+}
+
+impl EquipmentUsageSoundEffect {
+    pub fn as_world_state_update(&self, player: usize) -> WorldStateUpdate {
+        let engine_update = match self {
+            EquipmentUsageSoundEffect::NoAmmo => EngineStateUpdate::NoAmmo(player),
+            EquipmentUsageSoundEffect::SwordSlash => EngineStateUpdate::SwordSlash(player),
+            EquipmentUsageSoundEffect::GunShot => EngineStateUpdate::GunShot(player),
+            EquipmentUsageSoundEffect::LoudGunShot => EngineStateUpdate::LoudGunShot(player),
+            EquipmentUsageSoundEffect::KnifeThrown => EngineStateUpdate::KnifeThrown(player),
+        };
+        WorldStateUpdate::EngineUpdate(engine_update)
     }
 }
 

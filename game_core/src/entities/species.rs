@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 use std::fs::File;
 use std::io::Read;
 
-use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, game_engine::{directions::MovementDirections, entity::Entity, locks::LockType, state_updates::SpecialEffect}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::IntRect, vector::Vector2d}};
+use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, equipment::basics::EquipmentUsageSoundEffect, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, game_engine::{directions::MovementDirections, entity::Entity, locks::LockType}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::IntRect, vector::Vector2d}};
 
 pub type SpeciesId = u32;
 
@@ -59,7 +59,7 @@ pub struct Species {
     pub cooldown_after_use: f32,
 
     #[serde(default)]
-    pub usage_special_effect: Option<SpecialEffect>,
+    pub equipment_usage_sound_effect: Option<EquipmentUsageSoundEffect>,
 
     #[serde(default)]
     pub associated_weapon: Option<u32>,
@@ -253,7 +253,7 @@ pub const SPECIES_NONE: Species = Species {
     bullet_species_id: 0,
     bullet_lifespan: 0.0,
     cooldown_after_use: 0.0,
-    usage_special_effect: None,
+    equipment_usage_sound_effect: None,
     associated_weapon: None,
     supports_bullet_boomerang: false,
     supports_bullet_catching: false,

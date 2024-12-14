@@ -1,5 +1,3 @@
-use serde::{Deserialize, Serialize};
-
 use crate::{entities::{bullets::{BulletHits, BulletId}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast};
 
 use super::{entity::{Entity, EntityId, EntityProps}, locks::LockType};
@@ -39,22 +37,17 @@ pub enum EngineStateUpdate {
     Toast(Toast),
     Confirmation(String, String, Vec<WorldStateUpdate>),
     DisplayLongText(String, String),
-    DeathScreen,
     ResumeGame,
     ToggleFullScreen,
     NewGame,
     BulletBounced,
-    SpecialEffect(SpecialEffect),
-    ExternalLink(String)
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum SpecialEffect {
-    NoAmmo,
-    KnifeThrown,
-    SwordSlash,
-    GunShot,
-    LoudGunShot
+    ExternalLink(String),
+    PlayerDied(PlayerIndex),
+    NoAmmo(PlayerIndex),
+    KnifeThrown(PlayerIndex),
+    SwordSlash(PlayerIndex),
+    GunShot(PlayerIndex),
+    LoudGunShot(PlayerIndex),
 }
 
 #[derive(Debug, Clone)]

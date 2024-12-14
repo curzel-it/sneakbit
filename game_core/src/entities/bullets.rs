@@ -1,4 +1,4 @@
-use crate::{constants::TILE_SIZE, game_engine::{entity::{is_player, Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{PLAYER1_INDEX, TILE_SIZE}, game_engine::{entity::{is_player, Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species, SpeciesId}};
 
@@ -132,7 +132,7 @@ fn make_bullet_ex(
 }
 
 pub fn make_player_bullet(parent_id: u32, world: &World, weapon_species: &Species) -> Entity {
-    let index = world.player_index_by_entity_id(parent_id);
+    let index = world.player_index_by_entity_id(parent_id).unwrap_or(PLAYER1_INDEX);
     let player = world.players[index].props;
 
     let mut bullet = make_bullet_ex(

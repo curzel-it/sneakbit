@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}, weapon_selection::WeaponsGrid}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, PLAYER1_INDEX, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}, weapon_selection::WeaponsGrid}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
 
@@ -22,7 +22,8 @@ pub struct GameEngine {
     pub sound_effects: SoundEffectsManager,
     pub links_handler: Box<dyn LinksHandler>,
     pub number_of_players: usize,
-    pub game_mode: GameMode
+    pub game_mode: GameMode,
+    pub dead_players: Vec<usize>
 }
 
 #[repr(C)]
@@ -54,7 +55,8 @@ impl GameEngine {
             links_handler: Box::new(NoLinksHandler::new()),
             number_of_players: 1,
             weapons_selection: WeaponsGrid::new(),
-            game_mode
+            game_mode,
+            dead_players: vec![]
         }
     }
 
@@ -187,19 +189,22 @@ impl GameEngine {
     }
 
     fn center_camera_onto_players(&mut self) {
-        if self.number_of_players == 1 {
+        if (self.number_of_players - self.dead_players.len()) <= 1 {
             let p1 = self.world.players[0].props;
             self.center_camera_at(p1.hittable_frame.x, p1.hittable_frame.y, &p1.offset);
         } else {
             let sum: (f32, f32) = self.world.players
                 .iter()
-                .take(self.number_of_players)
-                .map(|p| {
-                    let x = p.props.hittable_frame.x as f32;
-                    let y = p.props.hittable_frame.y as f32;
-                    let ox = p.props.offset.x / TILE_SIZE;
-                    let oy = p.props.offset.y / TILE_SIZE;
-                    (x + ox, y + oy)
+                .filter_map(|p| {
+                    if self.dead_players.contains(&p.index) {
+                        None
+                    } else {
+                        let x = p.props.hittable_frame.x as f32;
+                        let y = p.props.hittable_frame.y as f32;
+                        let ox = p.props.offset.x / TILE_SIZE;
+                        let oy = p.props.offset.y / TILE_SIZE;
+                        Some((x + ox, y + oy))
+                    }
                 })
                 .fold((0.0, 0.0), |acc, (x, y)| {
                     (acc.0 + x, acc.1 + y)
@@ -256,8 +261,11 @@ impl GameEngine {
             EngineStateUpdate::DisplayLongText(title, text) => {
                 self.long_text_display.show(title, text)
             }
-            EngineStateUpdate::DeathScreen => {
-                self.death_screen.show()
+            EngineStateUpdate::PlayerDied(player_index) => {
+                self.dead_players.push(*player_index);
+                if *player_index == PLAYER1_INDEX {
+                    self.death_screen.show()
+                }
             }
             EngineStateUpdate::ToggleFullScreen => {
                 self.wants_fullscreen = !self.wants_fullscreen
@@ -293,6 +301,7 @@ impl GameEngine {
     }
 
     fn teleport(&mut self, destination: &Destination) {
+        self.dead_players.clear();
         self.loading_screen.animate_world_transition();
 
         if is_creative_mode() {

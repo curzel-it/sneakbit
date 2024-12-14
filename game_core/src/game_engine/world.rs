@@ -152,7 +152,10 @@ impl World {
     }
 
     pub fn remove_entity_by_id(&mut self, id: u32) {        
-        if !is_player(id) {
+        if id != PLAYER1_ENTITY_ID {
+            if let Some(player_index) = self.player_index_by_entity_id(id) {
+                self.players[player_index].props.is_invulnerable = true;
+            }
             if let Some(index) = self.index_for_entity(id) {
                 self.remove_entity_at_index(index);
             }
@@ -189,17 +192,20 @@ impl World {
     }
 
     pub fn direction_based_on_current_keys_for_player_by_entity_id(&self, entity_id: u32) -> Direction {
-        let index = self.player_index_by_entity_id(entity_id);
-        self.players[index].direction_based_on_current_keys
+        if let Some(index) = self.player_index_by_entity_id(entity_id) {
+            self.players[index].direction_based_on_current_keys
+        } else {
+            Direction::Unknown
+        }        
     } 
 
-    pub fn player_index_by_entity_id(&self, entity_id: u32) -> usize {
+    pub fn player_index_by_entity_id(&self, entity_id: u32) -> Option<usize> {
         match entity_id {
-            PLAYER1_ENTITY_ID => 0,
-            PLAYER2_ENTITY_ID => 1,
-            PLAYER3_ENTITY_ID => 2,
-            PLAYER4_ENTITY_ID => 3,
-            _ => 0
+            PLAYER1_ENTITY_ID => Some(0),
+            PLAYER2_ENTITY_ID => Some(1),
+            PLAYER3_ENTITY_ID => Some(2),
+            PLAYER4_ENTITY_ID => Some(3),
+            _ => None
         }
     }
 
@@ -301,8 +307,9 @@ impl World {
                 self.toggle_demand_attention(id)
             }
             WorldStateUpdate::CacheHeroProps(props) => { 
-                let index = self.player_index_by_entity_id(props.id);
-                self.players[index].props = *props;                
+                if let Some(index) = self.player_index_by_entity_id(props.id) {
+                    self.players[index].props = *props;                
+                }                
             }
             WorldStateUpdate::ChangeLock(entity_id, lock_type) => {
                 self.change_lock(entity_id, lock_type)
@@ -358,7 +365,7 @@ impl World {
         target.is_rigid = false;
         target.is_dying = true;
         target.remaining_lifespan = 10.0 / ANIMATIONS_FPS;                
-        target.frame = IntRect::new(target.frame.x, target.frame.y, 1, 1).offset_y(if target.frame.h > 1 { 1 } else { 0 });
+        target.frame = target.hittable_frame(); 
         target.sprite = AnimatedSprite::new(
             SPRITE_SHEET_ANIMATED_OBJECTS, 
             IntRect::new(0, 10, 1, 1), 
@@ -380,11 +387,7 @@ impl World {
             let did_kill = if target.is_player() {
                 let player_died = self.handle_hero_damage(target, hits.damage);
                 if player_died {
-                    // updates.push(EngineStateUpdate::SpecialEffect(SpecialEffect::PlayerDeath))
-
-                    if target.player_index == PLAYER1_INDEX {
-                        updates.push(EngineStateUpdate::DeathScreen)
-                    }
+                    updates.push(EngineStateUpdate::PlayerDied(target.player_index));
                 }
                 false
             } else {
@@ -423,7 +426,13 @@ impl World {
             .max(0.0);
 
         hero.hp -= actual_damage;
-        hero.hp <= 0.0
+        
+        if hero.hp <= 0.0 {
+            self.kill_with_animation(hero);
+            true
+        } else {
+            false
+        }
     }
 
     fn handle_target_hit(&self, damage: f32, bullet_species_id: u32, target: &mut Entity) -> bool {

@@ -71,6 +71,9 @@ impl Entity {
 
     fn is_hero_in_line_of_sight(&self, world: &World) -> bool {
         for player in &world.players {
+            if player.props.is_invulnerable {
+                continue
+            }
             let hero = &player.props.hittable_frame;        
             let npc = &self.hittable_frame();
 
@@ -99,6 +102,9 @@ impl Entity {
 
     fn change_direction_towards_hero(&mut self, world: &World) {
         for player in &world.players {
+            if player.props.is_invulnerable {
+                continue
+            }
             let hero = &player.props.hittable_frame; 
             let npc = &self.hittable_frame();
 

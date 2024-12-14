@@ -15,7 +15,8 @@ impl BasicInfoHud {
         self.players.iter_mut().take(number_of_players).for_each(|p| p.update());
     }
 
-    pub fn ui(&self, number_of_players: usize) -> View {
+    pub fn ui(&self, number_of_players: usize, dead_players: &[usize]) -> View {
+
         let include_header = number_of_players > 1;
         let max_hp_to_show = 60.0;
         
@@ -26,8 +27,13 @@ impl BasicInfoHud {
                 spacing: Spacing::SM, 
                 children: self.players
                     .iter()
-                    .take(number_of_players)
-                    .map(|p| p.ui(include_header, max_hp_to_show))
+                    .filter_map(|p| {
+                        if dead_players.contains(&p.player) || p.player >= number_of_players {
+                            None
+                        } else {
+                            Some(p.ui(include_header, max_hp_to_show))
+                        }
+                    })
                     .collect()
             }
         )

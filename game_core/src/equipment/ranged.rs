@@ -1,6 +1,6 @@
-use crate::{entities::bullets::make_player_bullet, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, SpecialEffect, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
+use crate::{entities::bullets::make_player_bullet, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
 
-use super::basics::is_equipped;
+use super::basics::{is_equipped, EquipmentUsageSoundEffect};
 
 impl Entity {
     pub fn setup_ranged(&mut self) {
@@ -8,9 +8,6 @@ impl Entity {
     }
 
     pub fn update_ranged(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {           
-        // if matches!(self.id, SPECIES_KUNAI_LAUNCHER) {
-        //     self.attack_ranged(world, time_since_last_update)
-        // } else {
         let mut updates: Vec<WorldStateUpdate> = vec![];
 
         self.is_equipped = is_equipped(&self.species, self.player_index);
@@ -22,7 +19,6 @@ impl Entity {
         } else {
             vec![]
         }
-        // }
     }
 
     fn attack_ranged(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
@@ -50,13 +46,13 @@ impl Entity {
                     WorldStateUpdate::AddEntity(Box::new(bullet))
                 ];
 
-                if let Some(effect) = self.species.usage_special_effect.clone() {
-                    updates.push(WorldStateUpdate::EngineUpdate(EngineStateUpdate::SpecialEffect(effect)));
+                if let Some(effect) = self.species.equipment_usage_sound_effect.clone() {
+                    updates.push(effect.as_world_state_update(self.player_index));
                 }
 
                 return updates
             } else {
-                updates.push(WorldStateUpdate::EngineUpdate(EngineStateUpdate::SpecialEffect(SpecialEffect::NoAmmo)))
+                updates.push(EquipmentUsageSoundEffect::NoAmmo.as_world_state_update(self.player_index));
             }
         }
 

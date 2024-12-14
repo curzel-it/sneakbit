@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common_macros::hash_set;
 
-use crate::{cached_players_positions, constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_explosive, is_key, is_monster, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{AddToInventoryReason, EngineStateUpdate, SpecialEffect}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_player_by_index_on_slippery_surface, menus::toasts::{Toast, ToastMode}, utils::rect::IntPoint};
+use crate::{cached_players_positions, constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_explosive, is_key, is_monster, is_pickable}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::{AddToInventoryReason, EngineStateUpdate}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_player_by_index_on_slippery_surface, menus::toasts::{Toast, ToastMode}, utils::rect::IntPoint};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[repr(C)]
@@ -73,24 +73,18 @@ impl SoundEffectsManager {
             EngineStateUpdate::Teleport(destination) => self.check_teleportation(destination.world),
             EngineStateUpdate::AddToInventory(_, species_id, reason) => self.handle_item_collection(*species_id, reason),
             EngineStateUpdate::Toast(toast) => self.check_hint_received(toast),
-            EngineStateUpdate::DeathScreen => self.handle_game_over(),
-            EngineStateUpdate::SpecialEffect(effect) => self.handle_special_effect(effect),
+            EngineStateUpdate::PlayerDied(_) => self.handle_game_over(),
+            EngineStateUpdate::NoAmmo(_) => self.prepare(SoundEffect::NoAmmo),
+            EngineStateUpdate::SwordSlash(_) => self.prepare(SoundEffect::SwordSlash),
+            EngineStateUpdate::GunShot(_) => self.prepare(SoundEffect::GunShot),
+            EngineStateUpdate::LoudGunShot(_) => self.prepare(SoundEffect::LoudGunShot),
+            EngineStateUpdate::KnifeThrown(_) => self.prepare(SoundEffect::KnifeThrown),
             _ => {}
         }
     }
 
     fn prepare(&mut self, sound_effect: SoundEffect) {
         self.next_sound_effects.insert(sound_effect);
-    }
-
-    fn handle_special_effect(&mut self, effect: &SpecialEffect) {
-        match effect {
-            SpecialEffect::NoAmmo => self.prepare(SoundEffect::NoAmmo),
-            SpecialEffect::SwordSlash => self.prepare(SoundEffect::SwordSlash),
-            SpecialEffect::GunShot => self.prepare(SoundEffect::GunShot),
-            SpecialEffect::LoudGunShot => self.prepare(SoundEffect::LoudGunShot),
-            SpecialEffect::KnifeThrown => self.prepare(SoundEffect::KnifeThrown),
-        }
     }
 
     fn handle_game_over(&mut self) {
