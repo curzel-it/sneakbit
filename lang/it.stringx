@@ -1243,7 +1243,8 @@ Maledetto quel tizio.
 
 "quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
 Questo lavoro richiede che io stia lontano da casa per lunghi periodi di tempo...
-I miei figli hanno tutti la tua età...
+I miei figli hanno tutti circa la tua età...
+Chissà se stanno bene
 """
 
 "quest.sword.a_thing_of_beauty" = "Ah, la mia vecchia spada... Non taglia più niente, ma è stupenda vero?"

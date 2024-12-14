@@ -5,7 +5,7 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, SPRITE_SHEET_TENTACLES, SPRITE_SHEET_WEAPONS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_creative_mode, is_game_running, lang::localizable::LANG_EN, number_of_players, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, SPRITE_SHEET_TENTACLES, SPRITE_SHEET_WEAPONS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::{engine::GameMode, keyboard_events_provider::KeyboardEventsProvider, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_creative_mode, is_game_running, lang::localizable::LANG_EN, number_of_players, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
 use nohash_hasher::IntMap;
 use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
@@ -51,7 +51,7 @@ fn main() {
         using_controller: false
     };
 
-    initialize_game(creative_mode);    
+    initialize_game(if creative_mode { GameMode::Creative } else { GameMode::Story });    
     set_links_handler(Box::new(MyLinkHandler {}));
         
     if bool_for_global_key(&StorageKey::fullscreen()) {

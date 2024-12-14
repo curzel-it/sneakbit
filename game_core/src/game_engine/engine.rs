@@ -21,11 +21,19 @@ pub struct GameEngine {
     pub wants_fullscreen: bool,
     pub sound_effects: SoundEffectsManager,
     pub links_handler: Box<dyn LinksHandler>,
-    pub number_of_players: usize
+    pub number_of_players: usize,
+    pub game_mode: GameMode
+}
+
+#[repr(C)]
+pub enum GameMode {
+    Story = 0,
+    Creative = 1,
+    Pvp = 2
 }
 
 impl GameEngine {
-    pub fn new() -> Self {
+    pub fn new(game_mode: GameMode) -> Self {
         Self {
             menu: GameMenu::new(),
             world: World::load_or_create(WORLD_ID_NONE),
@@ -45,7 +53,8 @@ impl GameEngine {
             sound_effects: SoundEffectsManager::new(),
             links_handler: Box::new(NoLinksHandler::new()),
             number_of_players: 1,
-            weapons_selection: WeaponsGrid::new()
+            weapons_selection: WeaponsGrid::new(),
+            game_mode
         }
     }
 
@@ -373,11 +382,13 @@ impl GameEngine {
 
 #[cfg(test)]
 mod tests {    
+    use crate::game_engine::engine::GameMode;
+
     use super::GameEngine;
 
     #[test]
     fn can_launch_game_headless() {
-        let mut engine = GameEngine::new();
+        let mut engine = GameEngine::new(GameMode::Story);
         engine.start();
         assert_ne!(engine.world.bounds.w, 10);
         assert_ne!(engine.world.bounds.h, 10);

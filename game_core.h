@@ -146,6 +146,12 @@
 
 #define SPECIES_BARREL_WOOD 1074
 
+typedef enum GameMode {
+  GameMode_Story = 0,
+  GameMode_Creative = 1,
+  GameMode_Pvp = 2,
+} GameMode;
+
 typedef enum SoundEffect {
   SoundEffect_AmmoCollected = 1,
   SoundEffect_KeyCollected = 2,
@@ -225,9 +231,7 @@ typedef struct MenuDescriptorC {
 
 
 
-void initialize_game(bool creative_mode);
-
-bool is_creative_mode(void);
+void initialize_game(enum GameMode mode);
 
 bool is_game_running(void);
 
