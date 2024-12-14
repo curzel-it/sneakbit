@@ -44,7 +44,7 @@ pub fn is_pickable(species_id: u32) -> bool {
 }
 
 pub fn is_ammo(species_id: u32) -> bool {
-    matches!(species_id, SPECIES_KUNAI | SPECIES_KUNAI_BUNDLE)
+    matches!(species_by_id(species_id).entity_type, EntityType::Bullet)
 }
 
 pub fn is_key(species_id: u32) -> bool {

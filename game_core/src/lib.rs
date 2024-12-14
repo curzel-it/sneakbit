@@ -1,6 +1,7 @@
 #![allow(clippy::new_without_default, clippy::not_unsafe_ptr_arg_deref)]
 
-use std::{collections::HashSet, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
+use std::{collections::HashSet, ffi::{CStr, CString}, path::PathBuf, ptr};
+use std::os::raw::c_char;
 
 use config::initialize_config_paths;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
@@ -245,7 +246,16 @@ pub extern "C" fn camera_viewport_offset() -> Vector2d {
 }
 
 fn to_string(value: *const c_char) -> String {
-    unsafe { CStr::from_ptr(value) }.to_str().unwrap().to_owned()
+    if value.is_null() {
+        return String::new();
+    }
+
+    unsafe {
+        CStr::from_ptr(value)
+            .to_str()
+            .unwrap_or_default()
+            .to_owned()
+    }
 }
 
 fn to_path(value: *const c_char) -> PathBuf {
