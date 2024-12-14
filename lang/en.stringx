@@ -834,6 +834,10 @@ fueling life and wonder in Duskhaven.
 
 "objects.name.seat_pink" = "Pink Seat"
 
+"objects.name.shield.item" = "Shield"
+
+"objects.name.shield.weapon" = "Shield"
+
 "objects.name.sign" = "Sign"
 
 "objects.name.skull" = "Skull"
@@ -1329,5 +1333,3 @@ Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
 
 "you" = "You"
 
-"objects.name.shield.item" = "Shield"
-"objects.name.shield.weapon" = "Shield"

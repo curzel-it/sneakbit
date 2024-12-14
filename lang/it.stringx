@@ -834,6 +834,10 @@ alimentando la vita e il fascino di Duskhaven.
 
 "objects.name.seat_pink" = "Sedia Rosa"
 
+"objects.name.shield.item" = "Scudo"
+
+"objects.name.shield.weapon" = "Scudo"
+
 "objects.name.sign" = "Segnale"
 
 "objects.name.skull" = "Teschio"
@@ -1333,6 +1337,3 @@ Hai un aura potentissima!
 
 "you" = "Tu"
 
-
-"objects.name.shield.item" = "Scudo"
-"objects.name.shield.weapon" = "Scudo"
