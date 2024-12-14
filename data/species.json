@@ -3912,7 +3912,7 @@
   },
   {
     "base_speed": 10.0,
-    "dps": 500,
+    "dps": 600,
     "entity_type": "Bullet",
     "id": 1169,
     "inventory_texture_offset": [

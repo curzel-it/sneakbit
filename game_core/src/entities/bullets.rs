@@ -6,13 +6,14 @@ pub type BulletId = EntityId;
 pub type Damage = f32;
 
 #[derive(Debug, Clone)]
-pub struct BulletHit {
+pub struct BulletHits {
     pub bullet_id: BulletId,
-    pub supports_catching: bool,
-    pub supports_bullet_boomerang: bool,
     pub bullet_species_id: SpeciesId,
+    pub bullet_parent_id: EntityId,
     pub target_ids: Vec<EntityId>,
-    pub damage: f32
+    pub damage: f32,
+    pub supports_catching: bool,
+    pub supports_bullet_boomerang: bool
 }
 
 impl Entity {
@@ -64,12 +65,13 @@ impl Entity {
 
         vec![
             WorldStateUpdate::HandleHits(
-                BulletHit { 
+                BulletHits { 
                     bullet_id: self.id, 
+                    bullet_species_id: self.species_id,
+                    bullet_parent_id: self.parent_id,
+                    target_ids: valid_hits, 
                     supports_catching: self.species.supports_bullet_catching, 
                     supports_bullet_boomerang: self.species.supports_bullet_boomerang, 
-                    target_ids: valid_hits, 
-                    bullet_species_id: self.species_id,
                     damage 
                 }
             )

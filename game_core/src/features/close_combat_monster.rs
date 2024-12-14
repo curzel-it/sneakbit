@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, entities::{known_species::is_monster, species::EntityType}, features::animated_sprite::AnimatedSprite, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::rect::IntRect};
+use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, entities::{bullets::BulletHits, known_species::is_monster, species::EntityType}, features::animated_sprite::AnimatedSprite, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::rect::IntRect};
 
 impl Entity {
     pub fn setup_close_combat_creep(&mut self) {
@@ -42,10 +42,20 @@ impl Entity {
         }
 
         let frame = self.hittable_frame();     
+        let players_being_hit = world.entity_ids_of_all_players_at(frame.x, frame.y);
            
-        if world.is_any_hero_at(frame.x, frame.y) {
+        if !players_being_hit.is_empty() {
             let damage = self.dps * time_since_last_update;
-            return vec![WorldStateUpdate::HandleHeroDamage(damage)];
+            let hits = BulletHits {
+                bullet_id: self.id,
+                bullet_species_id: self.species_id,
+                bullet_parent_id: self.id,
+                target_ids: players_being_hit,
+                damage,
+                supports_catching: false,
+                supports_bullet_boomerang: false,
+            };
+            return vec![WorldStateUpdate::HandleHits(hits)];
         }
         vec![]
     }

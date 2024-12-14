@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{entities::{bullets::{BulletHit, BulletId, Damage}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast};
+use crate::{entities::{bullets::{BulletHits, BulletId}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast};
 
 use super::{entity::{Entity, EntityId, EntityProps}, locks::LockType};
 
@@ -22,8 +22,7 @@ pub enum WorldStateUpdate {
     StopHeroMovement,
     ConstructionTileChange(usize, usize, Construction),
     EngineUpdate(EngineStateUpdate),
-    HandleHits(BulletHit),
-    HandleHeroDamage(Damage),
+    HandleHits(BulletHits),
     HandleBulletCatched(BulletId),
     HandleBulletStopped(BulletId),
     SetPressurePlateState(LockType, bool)

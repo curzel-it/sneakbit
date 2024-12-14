@@ -700,6 +700,8 @@ fueling life and wonder in Duskhaven.
 
 "objects.name.amanita" = "Amanita Mushroom"
 
+"objects.name.ar15.bullet" = ".223 Rem"
+
 "objects.name.ar15.item" = "AR 15"
 
 "objects.name.ar15.weapon" = "AR 15"

@@ -33,7 +33,7 @@ Bullets inflict a damage per second, so the faster bullets are less effective.
 |Weapon|Ammo|Dps|Speed|Lifespan|Cooldown|
 |--|--|--|--|--|--|
 |Kunai Launcher|Kunai|1500|7.0|1.4|0.15|
-|AR15|223 Rem|500|10.0|2.0|0.005|
+|AR15|.223 Rem|600|10.0|2.0|0.005|
 |Cannon|Cannonball|5000|8.0|2.0|0.5|
 
 ### Melee Weapons
