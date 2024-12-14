@@ -3,6 +3,7 @@ import shutil
 import sys
 
 def build_project():
+    os.system("python3 scripts/compile_sprites.py")
     os.system("mkdir -p game/assets")
     os.system("cp docs/game_icon.ico game/assets/game_icon.ico")
     os.system("cargo build --release")

@@ -9,7 +9,7 @@ use crate::{cached_players_positions, constants::WORLD_ID_NONE, entities::known_
 pub enum SoundEffect { 
     AmmoCollected = 1,
     KeyCollected = 2,
-    BulletFired = 3,
+    KnifeThrown = 3,
     BulletBounced = 4,
     DeathOfMonster = 5,
     DeathOfNonMonster = 6,
@@ -21,7 +21,8 @@ pub enum SoundEffect {
     StepTaken = 12,
     HintReceived = 13,
     SwordSlash = 14,
-    ClaymoreSlash = 15,
+    GunShot = 15,
+    LoudGunShot = 16
 }
 
 pub struct SoundEffectsManager {
@@ -43,12 +44,8 @@ impl SoundEffectsManager {
 }
 
 impl SoundEffectsManager {
-    pub fn update(&mut self, keyboard: &KeyboardEventsProvider, updates: &[EngineStateUpdate]) {
+    pub fn update(&mut self, _: &KeyboardEventsProvider, updates: &[EngineStateUpdate]) {
         self.check_sounds_for_state_updates(updates);
-
-        if self.did_fire_but_no_ammo(keyboard) {
-            self.prepare(SoundEffect::NoAmmo);
-        }
         self.check_hero_movement();
         self.confirm_next_batch();
     }
@@ -74,8 +71,7 @@ impl SoundEffectsManager {
             EngineStateUpdate::EntityKilled(_, species_id) => self.check_entity_death(*species_id),
             EngineStateUpdate::BulletBounced => self.prepare(SoundEffect::BulletBounced),
             EngineStateUpdate::Teleport(destination) => self.check_teleportation(destination.world),
-            EngineStateUpdate::RemoveFromInventory(species_id) => self.check_bullet_fired(*species_id),
-            EngineStateUpdate::AddToInventory(species_id, reason) => self.handle_item_collection(*species_id, reason),
+            EngineStateUpdate::AddToInventory(_, species_id, reason) => self.handle_item_collection(*species_id, reason),
             EngineStateUpdate::Toast(toast) => self.check_hint_received(toast),
             EngineStateUpdate::DeathScreen => self.handle_game_over(),
             EngineStateUpdate::SpecialEffect(effect) => self.handle_special_effect(effect),
@@ -89,8 +85,11 @@ impl SoundEffectsManager {
 
     fn handle_special_effect(&mut self, effect: &SpecialEffect) {
         match effect {
+            SpecialEffect::NoAmmo => self.prepare(SoundEffect::NoAmmo),
             SpecialEffect::SwordSlash => self.prepare(SoundEffect::SwordSlash),
-            SpecialEffect::ClaymoreSlash => self.prepare(SoundEffect::ClaymoreSlash),
+            SpecialEffect::GunShot => self.prepare(SoundEffect::GunShot),
+            SpecialEffect::LoudGunShot => self.prepare(SoundEffect::LoudGunShot),
+            SpecialEffect::KnifeThrown => self.prepare(SoundEffect::KnifeThrown),
         }
     }
 
@@ -98,12 +97,6 @@ impl SoundEffectsManager {
         self.last_world = 0;
         self.last_players_positions.clear();
         self.prepare(SoundEffect::GameOver)
-    }
-
-    fn check_bullet_fired(&mut self, species_id: u32) {
-        if is_ammo(species_id) {
-            self.prepare(SoundEffect::BulletFired);
-        }
     }
 
     fn handle_item_collection(&mut self, species_id: u32, reason: &AddToInventoryReason) {
@@ -150,19 +143,13 @@ impl SoundEffectsManager {
         let current_positions = cached_players_positions();
 
         if self.last_players_positions.len() == current_positions.len() {
-            for index in 0..self.last_players_positions.len() {
-                if self.last_players_positions[index] != current_positions[index] {
-                    if !is_player_by_index_on_slippery_surface(index) {
-                        self.prepare(SoundEffect::StepTaken);
-                    }
+            for (index, &current_position) in current_positions.iter().enumerate().take(self.last_players_positions.len()) {
+                if self.last_players_positions[index] != current_position && !is_player_by_index_on_slippery_surface(index) {
+                    self.prepare(SoundEffect::StepTaken);
                 }
             }
         }
         self.last_players_positions = current_positions;
-    }
-
-    fn did_fire_but_no_ammo(&self, keyboard: &KeyboardEventsProvider) -> bool { 
-        keyboard.has_ranged_attack_key_been_pressed_by_anyone() && !self.next_sound_effects.contains(&SoundEffect::BulletFired)
     }
 }
 

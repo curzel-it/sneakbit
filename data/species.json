@@ -1288,7 +1288,7 @@
   },
   {
     "base_speed": 7.0,
-    "dps": 1150,
+    "dps": 1500,
     "entity_type": "Bullet",
     "id": 7000,
     "inventory_texture_offset": [
@@ -1306,6 +1306,8 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1014,
+    "supports_bullet_boomerang": true,
+    "supports_bullet_catching": true,
     "z_index": 99
   },
   {
@@ -3656,28 +3658,6 @@
   },
   {
     "base_speed": 1.0,
-    "entity_type": "Equipment",
-    "id": 1154,
-    "inventory_texture_offset": [
-      0,
-      0
-    ],
-    "is_invulnerable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.ar15.weapon",
-    "sprite_frame": {
-      "h": 4,
-      "w": 4,
-      "x": 17,
-      "y": 1
-    },
-    "sprite_number_of_frames": 4,
-    "sprite_sheet_id": 1022,
-    "z_index": 16
-  },
-  {
-    "base_speed": 1.0,
     "entity_type": "StaticObject",
     "id": 1155,
     "inventory_texture_offset": [
@@ -3765,157 +3745,6 @@
     "z_index": -1
   },
   {
-    "base_speed": 2.0,
-    "entity_type": "Sword",
-    "id": 1158,
-    "inventory_texture_offset": [
-      0,
-      0
-    ],
-    "is_invulnerable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.sword.weapon",
-    "sprite_frame": {
-      "h": 4,
-      "w": 4,
-      "x": 33,
-      "y": 1
-    },
-    "sprite_number_of_frames": 4,
-    "sprite_sheet_id": 1022,
-    "z_index": 16
-  },
-  {
-    "base_speed": 3.0,
-    "entity_type": "Sword",
-    "id": 1159,
-    "inventory_texture_offset": [
-      0,
-      0
-    ],
-    "is_invulnerable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.claymore.weapon",
-    "sprite_frame": {
-      "h": 4,
-      "w": 4,
-      "x": 49,
-      "y": 1
-    },
-    "sprite_number_of_frames": 4,
-    "sprite_sheet_id": 1022,
-    "z_index": 16
-  },
-  {
-    "base_speed": 1.0,
-    "entity_type": "KunaiLauncher",
-    "id": 1160,
-    "inventory_texture_offset": [
-      0,
-      0
-    ],
-    "is_invulnerable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.kunai_launcher.weapon",
-    "sprite_frame": {
-      "h": 1,
-      "w": 1,
-      "x": 0,
-      "y": 0
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1000,
-    "z_index": 99
-  },
-  {
-    "base_speed": 2.0,
-    "dps": 280,
-    "entity_type": "Bullet",
-    "id": 1161,
-    "inventory_texture_offset": [
-      0,
-      0
-    ],
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.slash",
-    "sprite_frame": {
-      "h": 1,
-      "w": 1,
-      "x": 28,
-      "y": 10
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1014,
-    "z_index": 99
-  },
-  {
-    "base_speed": 1.0,
-    "entity_type": "PickableObject",
-    "id": 1162,
-    "inventory_texture_offset": [
-      11,
-      3
-    ],
-    "is_invulnerable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.ar15.item",
-    "sprite_frame": {
-      "h": 2,
-      "w": 1,
-      "x": 17,
-      "y": 69
-    },
-    "sprite_number_of_frames": 8,
-    "sprite_sheet_id": 1022
-  },
-  {
-    "base_speed": 1.0,
-    "entity_type": "PickableObject",
-    "id": 1163,
-    "inventory_texture_offset": [
-      11,
-      2
-    ],
-    "is_invulnerable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.sword.item",
-    "sprite_frame": {
-      "h": 2,
-      "w": 1,
-      "x": 34,
-      "y": 69
-    },
-    "sprite_number_of_frames": 8,
-    "sprite_sheet_id": 1022
-  },
-  {
-    "base_speed": 3.0,
-    "entity_type": "PickableObject",
-    "id": 1164,
-    "inventory_texture_offset": [
-      11,
-      1
-    ],
-    "is_invulnerable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.claymore.item",
-    "sprite_frame": {
-      "h": 2,
-      "w": 1,
-      "x": 49,
-      "y": 69
-    },
-    "sprite_number_of_frames": 8,
-    "sprite_sheet_id": 1022
-  },
-  {
     "base_speed": 3.0,
     "entity_type": "StaticObject",
     "id": 1165,
@@ -3937,8 +3766,82 @@
     "sprite_sheet_id": 1010
   },
   {
+    "base_speed": 1.0,
+    "bullet_lifespan": 1.4,
+    "bullet_species_id": 7000,
+    "cooldown_after_use": 0.15,
+    "entity_type": "WeaponRanged",
+    "id": 1160,
+    "inventory_texture_offset": [
+      7,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.kunai_launcher.weapon",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1000,
+    "usage_special_effect": "KnifeThrown",
+    "z_index": 16
+  },
+  {
+    "base_speed": 3.0,
+    "bullet_lifespan": 0.3,
+    "bullet_species_id": 1166,
+    "cooldown_after_use": 0.35,
+    "entity_type": "WeaponMelee",
+    "id": 1159,
+    "inventory_texture_offset": [
+      11,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.sword.weapon",
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 1,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "usage_special_effect": "SwordSlash",
+    "z_index": 16
+  },
+  {
+    "associated_weapon": 1159,
+    "base_speed": 3.0,
+    "entity_type": "PickableObject",
+    "id": 1164,
+    "inventory_texture_offset": [
+      11,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.sword.item",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 1,
+      "y": 53
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1022
+  },
+  {
     "base_speed": 2.0,
-    "dps": 430,
+    "dps": 480,
     "entity_type": "Bullet",
     "id": 1166,
     "inventory_texture_offset": [
@@ -3947,7 +3850,7 @@
     ],
     "is_rigid": false,
     "lock_type": "None",
-    "name": "objects.name.slash.claymore",
+    "name": "objects.name.sword.bullet",
     "sprite_frame": {
       "h": 1,
       "w": 1,
@@ -3956,6 +3859,441 @@
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1014,
+    "supports_bullet_boomerang": true,
+    "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "bullet_lifespan": 2.0,
+    "bullet_species_id": 1169,
+    "cooldown_after_use": 0.005,
+    "entity_type": "WeaponRanged",
+    "id": 1154,
+    "inventory_texture_offset": [
+      11,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.ar15.weapon",
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 17,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "usage_special_effect": "GunShot",
+    "z_index": 16
+  },
+  {
+    "associated_weapon": 1154,
+    "base_speed": 1.0,
+    "entity_type": "PickableObject",
+    "id": 1162,
+    "inventory_texture_offset": [
+      11,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.ar15.item",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 17,
+      "y": 53
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1022
+  },
+  {
+    "base_speed": 10.0,
+    "dps": 500,
+    "entity_type": "Bullet",
+    "id": 1169,
+    "inventory_texture_offset": [
+      11,
+      6
+    ],
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.ar15.bullet",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 20
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1014,
+    "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "bullet_lifespan": 2.0,
+    "bullet_species_id": 1170,
+    "cooldown_after_use": 0.5,
+    "entity_type": "WeaponRanged",
+    "id": 1167,
+    "inventory_texture_offset": [
+      11,
+      5
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.cannon.weapon",
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 33,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "usage_special_effect": "LoudGunShot",
+    "z_index": 16
+  },
+  {
+    "associated_weapon": 1167,
+    "base_speed": 1.0,
+    "entity_type": "PickableObject",
+    "id": 1168,
+    "inventory_texture_offset": [
+      11,
+      5
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.cannon.item",
+    "sprite_frame": {
+      "h": 2,
+      "w": 2,
+      "x": 33,
+      "y": 53
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022
+  },
+  {
+    "base_speed": 8.0,
+    "dps": 5000,
+    "entity_type": "Bullet",
+    "id": 1170,
+    "inventory_texture_offset": [
+      11,
+      7
+    ],
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.cannon.bullet",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 4,
+      "y": 20
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1014,
+    "z_index": 14
+  },
+  {
+    "always_in_front_of_hero_when_equipped": true,
+    "base_speed": 1.0,
+    "entity_type": "WeaponMelee",
+    "id": 1171,
+    "inventory_texture_offset": [
+      11,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.shield.weapon",
+    "received_damage_reduction": 0.5,
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 49,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "z_index": 16
+  },
+  {
+    "associated_weapon": 1171,
+    "base_speed": 1.0,
+    "entity_type": "PickableObject",
+    "id": 1172,
+    "inventory_texture_offset": [
+      11,
+      10
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.shield.item",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 49,
+      "y": 53
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1022
+  },
+  {
+    "base_speed": 5.0,
+    "bundle_contents": [
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169
+    ],
+    "entity_type": "Bundle",
+    "id": 1173,
+    "inventory_texture_offset": [
+      11,
+      11
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.ar15.bullet.x100",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 8,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 5.0,
+    "bundle_contents": [
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170
+    ],
+    "entity_type": "Bundle",
+    "id": 1174,
+    "inventory_texture_offset": [
+      11,
+      12
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.cannon.bullet.x100",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 9,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
     "z_index": 14
   }
 ]

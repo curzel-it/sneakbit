@@ -59,7 +59,7 @@ fn always() -> String {
 }
 
 impl Dialogue {
-    pub fn handle_reward(&self) -> Vec<WorldStateUpdate> {
+    pub fn handle_reward(&self, player: usize) -> Vec<WorldStateUpdate> {
         set_dialogue_read(&self.text);       
 
         if let Some(reward) = self.reward {
@@ -79,7 +79,7 @@ impl Dialogue {
                             )
                         )
                     ),
-                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::AddToInventory(reward, AddToInventoryReason::Reward)),
+                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::AddToInventory(player, reward, AddToInventoryReason::Reward)),
                     WorldStateUpdate::EngineUpdate(EngineStateUpdate::SaveGame)
                 ]
             }

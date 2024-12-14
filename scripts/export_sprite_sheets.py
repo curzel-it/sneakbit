@@ -48,9 +48,11 @@ def export_weapons(file_path, destination_folder):
         aseprite_path, 
         "-b", 
         file_path, 
-        "--layer", "Slashes", 
         "--layer", "Weapons", 
+        "--ignore-layer", "Numbers", 
+        "--ignore-layer", "Grid", 
         "--ignore-layer", "Reference", 
+        "--ignore-layer", "Constrast", 
         "--save-as",
         output_path
     ]

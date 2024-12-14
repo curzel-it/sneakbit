@@ -3,10 +3,10 @@
 > This document contains game spoilers, lots of AI generated slope and it's garbage in general.
 
 ## Overview
-SneakBit game concept combines adventure and action elements, allowing players to explore a world populated by demons and to engage in combat with unique mechanics. The player can throw kunai (small knives) to defeat or weaken demonic creatures encountered throughout various landscapes, immersing the player in a journey with elements of both strategy and action wrapped in a gameboy-like pixel art aesthetics.
+The game combines adventure and action elements, allowing players to explore a world populated by demons and to engage in combat with unique mechanics. The player can throw kunai (small knives) to defeat or weaken demonic creatures encountered throughout various landscapes, immersing the player in a journey with elements of both strategy and action wrapped in a gameboy-like pixel art aesthetics.
 Local co-op is also available on PC.
 
-### Tiling System
+## Tiling System
 The game operates on a grid-based tile system.
 There are two types of tiles:
 * Biomes, which act as a background (water, grass, lava, rocky pavement, parquet, ...)
@@ -15,21 +15,55 @@ There are two types of tiles:
 Both kinds of tiles can represent an obstacle, the player cannot walk on water, lava and over fences for example, but can walk over grass.
 To mimic the effect of density, different construction tiles have different properties, for example some can reflect bullets (walls) while others don't.
 
-### Combat System
-At the moment, the only available weapons are throwing knifes and a sword.
-#### Kunai
-Knifes can be found on the ground here and there, the player can pick them up by just walking by.
-When pressing FIRE a knife is throw in the direction the player is currently looking at.
-The bullet goes perfectly straight until stopped or it expires (3 seconds).
+Tiles are pre-rendered and distributed along with the game.
 
-#### Swords
-Works by creating several invisible bullets around the character that travel for a short time in the direction the character is looking at.
+## Combat System
+* Monsters only attack melee for now
+* Players can equip one melee and one ranged weapon.
+* Skills can influence both weapons and bullets.
+* Damage reduction is applied after damage multipliers.
+
+### Ranged Weapons
+Ranged weapons use ammunitions that can be found in-game.
+
+The bullet goes straight towards the direction the player is currently looking at until stopped or it expires.
+
+Bullets inflict a damage per second, so the faster bullets are less effective.
+
+|Weapon|Ammo|Dps|Speed|Lifespan|Cooldown|
+|--|--|--|--|--|--|
+|Kunai Launcher|Kunai|1500|7.0|1.4|0.15|
+|AR15|223 Rem|500|10.0|2.0|0.005|
+|Cannon|Cannonball|5000|8.0|2.0|0.5|
+
+### Melee Weapons
+Melee weapons don't require ammunition, but the underlying mechanisms makes them fire invisible, slow and short-lived bullets, usually in a wider area than ranged weapons.
+
+This category includes shields and all equipment that doesn't deal damage.
+
+|Weapon|Dps|Speed|Lifespan|Cooldown|
+|--|--|--|--|--|
+|Sword|480|2.0|0.3|0.35|
+|Shield|-20%|0.0|0.0|0.0|
+
+### Monsters
+There is a single kind of monster, but they can fuse to level up.
+
+|Name|Dps|Hp|Speed|
+|--|--|--|--|
+|Blackberry|400|200|2.5|
+|Blueberry|500|600|2.75|
+|Strawberry|600|1300|3.02|
+|Gooseberry|700|2000|3.33|
+
 
 ### Skills
-The player can complete optional quests to gain special combat skills:
-1. Bouncing Knife, which makes knifes bounce off walls, enemies, etc
-1. Knife Catcher, which allows the player to put back in the inventory a knife that comes back at him
-1. Piercing Knife, which allows knifes to kill immortal enemies and makes them stop bouncing off enemies (while still bouncing off walls)
+The player can complete optional quests to gain special combat skills.
+|Name|Effect|
+|--|--|
+|Bouncing Knife|Makes kunai bounce off walls, enemies, etc|
+|Knife Catcher|Allows the player to put back in the inventory kunai that come back at him|
+|Piercing Knife|Doubles damage dealt by kunais|
 
 All skills are passive, stackable and perpetual.
 
@@ -90,11 +124,6 @@ An assassin girl who plays a pivotal role in the story’s conflict, adding intr
 
 #### Captain 'Ironside' Thorne
 A steadfast male soldier who leads the defense against the increasing demon incursions.
-
-### Fauna
-A single kind of monster, which is just a black blob with a teeth-filled mouth for now.
-
-There's also several household animals, but they don't serve any purpose aside from decoration.
 
 ## Quests
 The objective of the game is to defeat the Demon Lord, which by necessity leads the player to go through all dungeons in search of special keys.
@@ -167,64 +196,81 @@ Reward: 10x Kunai
 
 Reward: Thugs are gone and the passage to Maritide Have via Thermoria's dock
 
-## Lore
-### Locations
+## Locations
 ![World Map](world_map.png)
 
-#### Evergrove Village (1001)
+### Evergrove Village (1001)
 The small village near the spawn location of the MC.
 
-#### Verdant Way (1002)
+### Verdant Way (1002)
 A network of paths in the forest near Evergrove that connect various locations:
 * Evergrove Village
 * Murkmire Swamps
 * Aridreach
 * Shadowveil Path
 
-#### Shadowveil Path (1010)
+### Shadowveil Path (1010)
 A network of paths in a dark near Verdant Way that connects:
 * Verdant Way
 * Demon Maze
 * Vintoria
 
-#### Aridreach (1003)
+### Aridreach (1003)
 A city built on top of a mountain in the middle of what is now Grimsun desert.
 The once lush environment has left way to a vast expanse of sand, on which the largest solar farm of the continent is built.
 The city also acts as the passage way to Grimsun Basin, a hot, deathly pile of sand and narrow passages between rocky mountinas.
 
-#### Murkmire Swamps (1018)
+### Murkmire Swamps (1018)
 Murkmire Swamp is a vast, foreboding wetland that stretches from the internal lands of the continent all the way to the South coast.
 The network of paths in the swamps connect:
 * Verdant Way
 * Duskhaven
 * Thermoria
 
-#### Demon Maze (1017)
+### Demon Maze (1017)
 A dark, misterious maze full of monsters. 
 Legend says the throne of the Demon Lord is at the center of the maze.
 
-#### Thermoria (1006)
+### Thermoria (1006)
 A group of interconnected islands off the cost of Verdant Way.
 A still active volcano, Mount Ignis, is now at the core of a geothermal power plant.
 A vast dungeon is accessible from underneath the geothermal plant.
 
-#### Maritide Haven (1008)
+### Maritide Haven (1008)
 Originally a large island, a terrific incident in the underground mine cause the town to collapse under the sea.
 Lots of time has passed since then, the landscape now looks like a small arcipelago.
 Due to the unique conditions that created the islands and the amount of underground cavities, a series of whirpools surrounds the area.
 The remote location is now only accessible from Thermoria using a particular naval route.
 
-#### Duskhaven (1011)
+### Duskhaven (1011)
 Duskhaven is a small touristic village, the only place where Manafren trees still grow.
 The trees are essetial to the town not just as a popular turist attraction, but also as a source of mana.
 An ancient underground power plant converts the mana into electricity.
 In order to study the trees, there are frequent visits by scientists and researchers from all over the world.
 
-#### Vintoria (1012)
+### Vintoria (1012)
 Vintoria is a mountain village, home to the best wineries in the continent.
 The river than once carved the valley has been redirected to an hydroelectric power plant.
 The basement of the power plant is embedded in the mountain and is built on multiple levels.
 
-### Flora and Fauna
-#### Manafren trees
-The Manafern Trees, native to the twilight land of Duskhaven, are renowned for their mystical energy properties, marked by vibrant purple leaves that absorb ethereal particles from the soil and air. Through a unique, photosynthesis-like process, the Manaferns convert these particles into pure mana, illuminating the region and powering its ecosystem. However, a darker truth lies beneath their allure: a centuries-old pact with the Demon Lord has embedded fragments of his essence within the trees, making each pulse of mana a subtle extension of his influence. Though they enrich life in Duskhaven, the Manaferns also inch the world closer to his dominion, veiling a sinister force within their radiant glow.
+### Peak Levek (1020)
+Peak Levek is the tallest mountain in the game in the continent, well above the freezing point.
+At the foot of the mountain, there has always been a small community of woodcutters, but since ancient ruins were discovered, many of the archaeologists involved in the exploration have decided to move there.
+
+## Flora and Fauna
+
+### Animals
+There's several household animals, but they don't serve any purpose aside from decoration.
+
+### The eyeless monsters
+The first and most common kind of monster, usually seen in his black variant.<br>
+The attack on sight and deal damage with their teeth-filled mouth.<br>
+When two ore more monsters run into each other, one of the two will absorbe the other, triggering a trasformation into a more fearsome version of the creature.
+
+<img src="monsters_showcase.gif" alt="Monsters from the game" style="height: 64px; width: auto; image-rendering: pixelated;">
+
+See *Combat System* for more info.
+
+### Manafren trees
+The Manafern Trees, native to the twilight land of Duskhaven, are renowned for their mystical energy properties, marked by vibrant purple leaves that absorb ethereal particles from the soil and air.<br>
+Through a unique, photosynthesis-like process, the Manaferns convert these particles into pure mana, illuminating the region and powering its ecosystem. 

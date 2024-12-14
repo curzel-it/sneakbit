@@ -116,8 +116,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
         jboolean confirmPressed,
         jboolean closeAttackPressed,
         jboolean rangedAttackPressed,
-        jboolean backspacePressed,
-        jint currentChar,
         jfloat timeSinceLastUpdate
 ) {
     auto up_pressed = static_cast<bool>(upPressed);
@@ -133,8 +131,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
     auto confirm_pressed = static_cast<bool>(confirmPressed);
     auto close_attack_pressed = static_cast<bool>(closeAttackPressed);
     auto ranged_attack_pressed = static_cast<bool>(rangedAttackPressed);
-    auto backspace_pressed = static_cast<bool>(backspacePressed);
-    auto current_char = static_cast<uint32_t>(currentChar);
     auto time_since_last_update = static_cast<float>(timeSinceLastUpdate);
 
     update_keyboard(
@@ -152,8 +148,9 @@ Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
             confirm_pressed,
             close_attack_pressed,
             ranged_attack_pressed,
-            backspace_pressed,
-            current_char,
+            false,
+            false,
+            0,
             time_since_last_update
     );
 }
@@ -297,7 +294,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, job
 extern "C"
 JNIEXPORT jint JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_numberOfKunaiInInventory(JNIEnv *env, jobject thiz) {
-    return number_of_kunai_in_inventory();
+    return number_of_kunai_in_inventory(0);
 }
 
 extern "C"
@@ -602,11 +599,11 @@ Java_it_curzel_bitscape_gamecore_NativeLib_currentSoundTrack(JNIEnv *env, jobjec
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_isSwordEquipped(JNIEnv *env, jobject thiz) {
-    return is_sword_equipped();
+    return is_melee_equipped(0);
 }
 
 extern "C"
 JNIEXPORT jfloat JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_currentHeroHp(JNIEnv *env, jobject thiz) {
-    return current_hero_hp();
+    return player_current_hp(0);
 }

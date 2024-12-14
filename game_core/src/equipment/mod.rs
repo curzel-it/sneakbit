@@ -1,3 +1,3 @@
-pub mod equipment;
-pub mod kunai_launcher;
-pub mod sword;
+pub mod basics;
+pub mod ranged;
+pub mod melee;

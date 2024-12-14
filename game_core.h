@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define BUILD_NUMBER 34
+#define BUILD_NUMBER 35
 
 #define ANIMATIONS_FPS 10.0
 
@@ -18,17 +18,7 @@
 
 #define HERO_RECOVERY_PS 1.0
 
-#define KUNAI_LIFESPAN 1.2
-
-#define KUNAI_LAUNCHER_COOLDOWN 0.15
-
-#define SWORD_SLASH_LIFESPAN 0.25
-
-#define SWORD_SLASH_COOLDOWN 0.2
-
-#define CLAYMORE_SLASH_LIFESPAN 0.3
-
-#define CLAYMORE_SLASH_COOLDOWN 0.35
+#define MAX_PLAYERS 4
 
 #define KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST 0.4
 
@@ -86,13 +76,7 @@
 
 #define SPRITE_SHEET_HUMANOIDS_1X1 1014
 
-#define SPRITE_SHEET_AVATARS 1015
-
 #define SPRITE_SHEET_HUMANOIDS_2X2 1016
-
-#define SPRITE_SHEET_FARM_PLANTS 1017
-
-#define SPRITE_SHEET_HUMANOIDS_2X3 1018
 
 #define SPRITE_SHEET_CAVE_DARKNESS 1019
 
@@ -144,21 +128,15 @@
 
 #define SPECIES_KUNAI_LAUNCHER 1160
 
-#define SPECIES_SWORD 1158
-
-#define SPECIES_SWORD_ITEM 1163
-
-#define SPECIES_SWORD_SLASH 1161
-
-#define SPECIES_CLAYMORE 1159
-
-#define SPECIES_CLAYMORE_ITEM 1164
-
-#define SPECIES_CLAYMORE_SLASH 1166
+#define SPECIES_SWORD 1159
 
 #define SPECIES_AR15 1154
 
-#define SPECIES_AR15_ITEM 1162
+#define SPECIES_AR15_BULLET 1169
+
+#define SPECIES_CANNON 1167
+
+#define SPECIES_CANNON_BULLET 1170
 
 #define SPECIES_BARREL_PURPLE 1038
 
@@ -171,7 +149,7 @@
 typedef enum SoundEffect {
   SoundEffect_AmmoCollected = 1,
   SoundEffect_KeyCollected = 2,
-  SoundEffect_BulletFired = 3,
+  SoundEffect_KnifeThrown = 3,
   SoundEffect_BulletBounced = 4,
   SoundEffect_DeathOfMonster = 5,
   SoundEffect_DeathOfNonMonster = 6,
@@ -183,7 +161,8 @@ typedef enum SoundEffect {
   SoundEffect_StepTaken = 12,
   SoundEffect_HintReceived = 13,
   SoundEffect_SwordSlash = 14,
-  SoundEffect_ClaymoreSlash = 15,
+  SoundEffect_GunShot = 15,
+  SoundEffect_LoudGunShot = 16,
 } SoundEffect;
 
 typedef enum ToastMode {
@@ -276,6 +255,7 @@ void update_keyboard(uintptr_t player,
                      bool confirm_pressed,
                      bool close_attack_pressed,
                      bool ranged_attack_pressed,
+                     bool weapon_selection_pressed,
                      bool backspace_pressed,
                      uint32_t current_char,
                      float time_since_last_update);
@@ -326,11 +306,15 @@ bool shows_death_screen(void);
 
 void select_current_menu_option_at_index(uint32_t index);
 
-int32_t number_of_kunai_in_inventory(void);
+int32_t number_of_kunai_in_inventory(uintptr_t player);
 
-float current_hero_hp(void);
+int32_t number_of_rem223_in_inventory(uintptr_t player);
 
-bool is_sword_equipped(void);
+int32_t number_of_cannonball_in_inventory(uintptr_t player);
+
+float player_current_hp(uintptr_t player);
+
+bool is_melee_equipped(uintptr_t player);
 
 bool is_day(void);
 

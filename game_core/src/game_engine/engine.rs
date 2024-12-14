@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}, weapon_selection::WeaponsGrid}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
 
@@ -6,6 +6,7 @@ pub struct GameEngine {
     pub menu: GameMenu,
     pub world: World,
     pub previous_world: Option<World>,
+    pub weapons_selection: WeaponsGrid,
     pub loading_screen: LoadingScreen,
     pub long_text_display: LongTextDisplay,
     pub confirmation_dialog: ConfirmationDialog,
@@ -43,11 +44,13 @@ impl GameEngine {
             wants_fullscreen: false,
             sound_effects: SoundEffectsManager::new(),
             links_handler: Box::new(NoLinksHandler::new()),
-            number_of_players: 1
+            number_of_players: 1,
+            weapons_selection: WeaponsGrid::new()
         }
     }
 
     pub fn start(&mut self) {
+        self.run_migrations();
         self.menu.setup();
         self.teleport_to_previous();
     }
@@ -94,7 +97,13 @@ impl GameEngine {
     fn update_menus(&mut self, time_since_last_update: f32) -> bool {
         let mut is_game_paused = false;
 
-        self.basic_info_hud.update();
+        self.basic_info_hud.update(self.number_of_players);
+
+        if !is_game_paused {            
+            let keyboard = if self.weapons_selection.is_open_or_needs_be(&self.keyboard) { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
+            let is_picking_weapon = self.weapons_selection.update(keyboard, time_since_last_update);
+            is_game_paused = is_game_paused || is_picking_weapon;
+        }
 
         if !is_game_paused {
             let keyboard = if self.long_text_display.is_open { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
@@ -220,11 +229,11 @@ impl GameEngine {
             EngineStateUpdate::Exit => {
                 self.exit()
             }
-            EngineStateUpdate::AddToInventory(species_id, _) => {
-                increment_inventory_count(species_id)
+            EngineStateUpdate::AddToInventory(player, species_id, _) => {
+                increment_inventory_count(*species_id, *player);
             }
-            EngineStateUpdate::RemoveFromInventory(species_id) => {
-                decrease_inventory_count(species_id);
+            EngineStateUpdate::RemoveFromInventory(player, species_id) => {
+                decrease_inventory_count(species_id, *player);
             }
             EngineStateUpdate::ResumeGame => {
                 self.menu.close()
@@ -342,7 +351,6 @@ impl GameEngine {
         }
         if self.menu.is_open() {
             self.menu.select_option_at_index(index);
-            return
         }
     }
 

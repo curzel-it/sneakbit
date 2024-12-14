@@ -1,6 +1,6 @@
 use lazy_static::lazy_static;
 
-use crate::{constants::{KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS, KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST}, utils::directions::Direction};
+use crate::{constants::{KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS, KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST, MAX_PLAYERS}, utils::directions::Direction};
 
 lazy_static! {
     pub static ref NO_KEYBOARD_EVENTS: KeyboardEventsProvider = KeyboardEventsProvider::new();
@@ -32,6 +32,24 @@ impl KeyboardEventsProvider {
         }
         false
     }
+
+    pub fn index_of_any_player_who_is_pressing_confirm(&self) -> Option<usize> {
+        for index in 0..MAX_PLAYERS {
+            if self.players[index].has_confirmation_been_pressed {
+                return Some(index)
+            }
+        }
+        None
+    }
+
+    pub fn index_of_any_player_who_is_pressing_weapon_selection(&self) -> Option<usize> {
+        for index in 0..MAX_PLAYERS {
+            if self.players[index].has_weapon_selection_been_pressed {
+                return Some(index)
+            }
+        }
+        None
+    }    
 
     pub fn has_confirmation_been_pressed_by_anyone(&self) -> bool {
         for player in &self.players {
@@ -67,6 +85,10 @@ impl KeyboardEventsProvider {
             }
         }
         false
+    }
+
+    pub fn has_back_been_pressed(&self, player: usize) -> bool {
+        self.players[player].has_back_been_pressed
     }
 
     pub fn has_menu_been_pressed_by_anyone(&self) -> bool {
@@ -183,6 +205,19 @@ impl KeyboardEventsProvider {
     pub fn has_confirmation_been_pressed(&self, player: usize) -> bool {
         self.players[player].has_confirmation_been_pressed
     }
+    
+    pub fn has_weapon_selection_been_pressed(&self, player: usize) -> bool {
+        self.players[player].has_weapon_selection_been_pressed
+    }
+    
+    pub fn has_weapon_selection_been_pressed_by_anyone(&self) -> bool {
+        for player in &self.players {
+            if player.has_weapon_selection_been_pressed {
+                return true
+            }
+        }
+        false
+    }
 
     #[allow(clippy::too_many_arguments)]
     pub fn update(
@@ -201,6 +236,7 @@ impl KeyboardEventsProvider {
         confirm_pressed: bool,
         close_attack_pressed: bool,
         ranged_attack_pressed: bool,
+        weapon_selection_pressed: bool,
         backspace_pressed: bool,
         current_char: Option<char>,
         time_since_last_update: f32
@@ -219,6 +255,7 @@ impl KeyboardEventsProvider {
             confirm_pressed,
             close_attack_pressed,
             ranged_attack_pressed,
+            weapon_selection_pressed,
             backspace_pressed,
             current_char,
             time_since_last_update
@@ -232,6 +269,7 @@ struct PlayerKeyboardEventsProvider {
     has_confirmation_been_pressed: bool,
     has_close_attack_key_been_pressed: bool,
     has_ranged_attack_key_been_pressed: bool,
+    has_weapon_selection_been_pressed: bool,
     has_backspace_been_pressed: bool,
 
     direction_up: HoldableKey,
@@ -251,6 +289,7 @@ impl PlayerKeyboardEventsProvider {
             has_close_attack_key_been_pressed: false,
             has_ranged_attack_key_been_pressed: false,
             has_confirmation_been_pressed: false,
+            has_weapon_selection_been_pressed: false,
             has_backspace_been_pressed: false,
             direction_up: HoldableKey::new(),
             direction_right: HoldableKey::new(),
@@ -347,6 +386,7 @@ impl PlayerKeyboardEventsProvider {
         confirm_pressed: bool,
         close_attack_pressed: bool,
         ranged_attack_pressed: bool,
+        weapon_selection_pressed: bool,
         backspace_pressed: bool,
         current_char: Option<char>,
         time_since_last_update: f32
@@ -363,6 +403,7 @@ impl PlayerKeyboardEventsProvider {
         self.has_confirmation_been_pressed = confirm_pressed;
         self.has_close_attack_key_been_pressed = close_attack_pressed;
         self.has_ranged_attack_key_been_pressed = ranged_attack_pressed;
+        self.has_weapon_selection_been_pressed = weapon_selection_pressed;
         self.has_backspace_been_pressed = backspace_pressed;
     
         self.direction_up.update(up_pressed, up_down, time_since_last_update);

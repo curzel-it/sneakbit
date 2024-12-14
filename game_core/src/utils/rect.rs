@@ -91,20 +91,33 @@ impl IntRect {
         Vector2d::new(self.w as f32, self.h as f32)
     }
 
-    pub fn is_around_and_pointed_at(&self, other: &IntRect, direction: &Direction) -> bool {
-        if self.x == other.x && self.y == other.y {
-            return true
+    pub fn is_around_and_pointed_at(&self, point: &IntPoint, direction: &Direction) -> bool {
+        if self.contains_or_touches_tile(point.x, point.y) {
+            return true;
         }
 
-        let is_just_above_other = self.y == other.y || self.y == other.y.saturating_sub(1);
-
         match direction {
-            Direction::Up => self.y == other.y + other.h && self.x >= other.x && self.x < other.x + other.w,
-            Direction::Right => self.x == other.x.saturating_sub(1) && self.y > other.y && self.y < other.y + other.h,
-            Direction::Down => is_just_above_other && self.x >= other.x && self.x < other.x + other.w,
-            Direction::Left => self.x == other.x + other.w && self.y > other.y && self.y < other.y + other.h,
-            Direction::Unknown => false,
-            Direction::Still => false,
+            Direction::Down => {
+                point.y == self.y - 1
+                    && point.x >= self.x
+                    && point.x < self.x + self.w
+            }
+            Direction::Up => {
+                point.y == self.y + self.h
+                    && point.x >= self.x
+                    && point.x < self.x + self.w
+            }
+            Direction::Left => {
+                point.x == self.x + self.w
+                    && point.y >= self.y
+                    && point.y < self.y + self.h
+            }
+            Direction::Right => {
+                point.x == self.x - 1
+                    && point.y >= self.y
+                    && point.y < self.y + self.h
+            }
+            _ => false
         }
     }
     

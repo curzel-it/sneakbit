@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{NO_PARENT, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{NO_PARENT, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType, Species}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}}, game_engine::storage::{set_value_for_key, StorageKey}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{directions::MovementDirections, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}, world::World};
 
@@ -120,6 +120,9 @@ pub struct Entity {
     
     #[serde(skip)]
     pub player_index: usize,
+    
+    #[serde(skip)]
+    pub species: Species
 }
 
 impl Entity {
@@ -177,13 +180,11 @@ impl Entity {
             EntityType::RailObject => self.update_rail(world, time_since_last_update),
             EntityType::Hint => self.update_hint(world, time_since_last_update),
             EntityType::Trail => self.update_trail(),
-            EntityType::Equipment => self.update_equipment(world, time_since_last_update),
-            EntityType::Sword => self.update_sword(world, time_since_last_update),
-            EntityType::KunaiLauncher => self.update_kunai_launcher(world, time_since_last_update),
+            EntityType::WeaponMelee => self.update_melee(world, time_since_last_update),
+            EntityType::WeaponRanged => self.update_ranged(world, time_since_last_update),
         };        
         self.sprite.update(time_since_last_update); 
-        let mut more_updates = self.check_remaining_lifespan(time_since_last_update);
-        updates.append(&mut more_updates);
+        updates.append(&mut self.check_remaining_lifespan(time_since_last_update));
         updates
     }
 
@@ -210,9 +211,8 @@ impl Entity {
             EntityType::RailObject => self.setup_rail(),
             EntityType::Hint => self.setup_hint(),
             EntityType::Trail => self.setup_generic(),
-            EntityType::Equipment => self.setup_equipment(),
-            EntityType::Sword => self.setup_sword(),
-            EntityType::KunaiLauncher => self.setup_kunai_launcher(),
+            EntityType::WeaponMelee => self.setup_melee(),
+            EntityType::WeaponRanged => self.setup_ranged(),
         }
     }
 
@@ -247,7 +247,7 @@ impl Entity {
     }
 
     pub fn reset_speed(&mut self) {        
-        self.current_speed = self.speed_multiplier * species_by_id(self.species_id).base_speed;
+        self.current_speed = self.speed_multiplier * self.species.base_speed;
     }    
     
     pub fn next_dialogue(&self, world: &World) -> Option<Dialogue> {
@@ -300,7 +300,7 @@ impl Entity {
         if let Some(dialogue) = self.next_dialogue(world) {
             self.is_in_interaction_range = true;
 
-            if world.has_confirmation_key_been_pressed_by_anyone {
+            if let Some(player) = world.index_of_any_player_who_is_pressing_confirm() {
                 self.demands_attention = false;
                 set_value_for_key(&StorageKey::npc_interaction(self.id), 1);
 
@@ -309,7 +309,7 @@ impl Entity {
                         EngineStateUpdate::DisplayLongText(format!("{}:", self.name.clone()), dialogue.localized_text())
                     )
                 ];
-                let reward = dialogue.handle_reward();
+                let reward = dialogue.handle_reward(player);
                 let vanishing = self.handle_after_dialogue();
                 let updates = vec![show_dialogue, reward, vanishing].into_iter().flatten().collect();
                 return Some(updates)
@@ -369,7 +369,7 @@ impl Entity {
     }
 
     pub fn is_equipment(&self) -> bool {
-        matches!(self.entity_type, EntityType::Equipment | EntityType::Sword | EntityType::KunaiLauncher)
+        matches!(self.entity_type, EntityType::WeaponMelee | EntityType::WeaponRanged)
     }
 
     pub fn can_be_hit_by_bullet(&self) -> bool {

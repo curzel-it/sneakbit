@@ -1,10 +1,14 @@
 <img src="docs/logo_text.png" alt="Logo" style="width: 324px; height: auto; image-rendering: pixelated;">
 <br>
-Got bored, started sperimenting a bit with Rust, ended up with a game!
+Started the project with the objective to learn Rust, ended up with an actual game!
 
 Like the game or have cool ideas? Join the [Discord](https://discord.gg/MCdEgXKSH5)!
 
 ## Play it now!
+Please consider buying the game to support the project 🙏
+
+Available now on [Steam](https://store.steampowered.com/app/3360860/SneakBit) for Windows and macOS, support for Linux coming soon!
+
 <div style="display: flex; gap: 10px; justify-content: left; margin: 20px 0;">
     <a href="https://store.steampowered.com/app/3360860/SneakBit/">
         <img src="docs/steam_badge.webp" alt="Steam" style="width: 200px; height: auto;">
@@ -16,10 +20,6 @@ Like the game or have cool ideas? Join the [Discord](https://discord.gg/MCdEgXKS
         <img src="docs/playstore_badge.webp" alt="Play Store" style="width: 200px; height: auto;">
     </a>
 </div>
-
-Please consider buying the game to support the project 🙏
-
-Available now on [Steam](https://store.steampowered.com/app/3360860/SneakBit) for Windows and macOS, support for Linux coming soon!
 
 ## Features
 * Adventure-action gameplay with kunai and sword combat
@@ -81,7 +81,6 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 * Font by [HarvettFox96](https://dl.dafont.com/dl/?f=pixel_operator)
 
 ## TODO:
-- Some defense ability
 - Some wide-area ability
 - More Quests
 - More Lore
@@ -93,7 +92,7 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 Notes about lore, quests and characters can be found [here](https://github.com/curzel-it/sneakbit/blob/main/docs/game_design_document.md).
 
 ## Controls
-### Player 1 
+### Single Player
 | Action | Keyboard | Gamepad | Mobile |
 |--|--|--|--|
 | UP | `Arrow Up` or `W` | `Left Side / Up` or `Left Joystick` | Drag gesture |
@@ -102,31 +101,19 @@ Notes about lore, quests and characters can be found [here](https://github.com/c
 | LEFT | `Arrow Left` or `A` | `Left Side / Left` or `Left Joystick` | Drag gesture |
 | RANGED ATTACK | `F` or `J` | `Right Side / Down` | Dedicated button |
 | CLOSE ATTACK | `R` or `Q` | `Right Side / Left` | Dedicated button |
+| WEAPON SELECTION | `TAB` | `Right Side / Up` | Dedicated button |
 | CONFIRM | `E` or `K` or `SPACE` | `Right Side / Right` | Dedicated button |
 | MENU | `X` or `ENTER` | `Middle Buttons / Left` | Top-right button |
 | BACK | `ESCAPE` | `Middle Buttons / Right` | n/a |
 
-### Player 2
-| Action | Keyboard | Gamepad | Mobile |
-|--|--|--|--|
-| UP | `Home` | `Left Side / Up` or `Left Joystick` | n/a |
-| RIGHT | `Page Down` | `Left Side / Right` or `Left Joystick` | n/a |
-| DOWN | `End` | `Left Side / Down` or `Left Joystick` | n/a |
-| LEFT | `Delete` | `Left Side / Left` or `Left Joystick` | n/a |
-| RANGED ATTACK | `Right Shift` | `Right Side / Down` | n/a |
-| CLOSE ATTACK | `Right Control` | `Right Side / Left` | n/a |
-| CONFIRM | `Insert` | `Right Side / Right` | n/a |
-| MENU | n/a | `Middle Buttons / Left` | n/a |
-| BACK | n/a | `Middle Buttons / Right` | n/a |
-
-### Player 3 and 4
-Gamepad only
+### Multiplayer
+* Local co-op available only on PC
+* Requires using one controller per player
+* Player one can still use the keyboard (but still requires a controller)
 
 #### Notes:
-* Local co-op available only on PC and is still in development.
 * Keyboard and Gamepad are only supported on PC
 * On mobile "dedicated buttons" show up only when applicable, for example, the "fire" button only shows up if you have ammo.
 * Controller is only supported on desktop
 * Connecting or disconnecting a controller automatically pauses the game
-* Mouse is only required for "creative mode"
 * Cursor is automatically hidden when connecting a controller and when entering fullscreen

@@ -24,17 +24,11 @@ pub const SPECIES_FOOTSTEPS: u32 = 1136;
 
 pub const SPECIES_KUNAI: u32 = 7000;
 pub const SPECIES_KUNAI_LAUNCHER: u32 = 1160;
-
-pub const SPECIES_SWORD: u32 = 1158;
-pub const SPECIES_SWORD_ITEM: u32 = 1163;
-pub const SPECIES_SWORD_SLASH: u32 = 1161;
-
-pub const SPECIES_CLAYMORE: u32 = 1159;
-pub const SPECIES_CLAYMORE_ITEM: u32 = 1164;
-pub const SPECIES_CLAYMORE_SLASH: u32 = 1166;
-
+pub const SPECIES_SWORD: u32 = 1159;
 pub const SPECIES_AR15: u32 = 1154;
-pub const SPECIES_AR15_ITEM: u32 = 1162;
+pub const SPECIES_AR15_BULLET: u32 = 1169;
+pub const SPECIES_CANNON: u32 = 1167;
+pub const SPECIES_CANNON_BULLET: u32 = 1170;
 
 pub const SPECIES_BARREL_PURPLE: u32 = 1038;
 pub const SPECIES_BARREL_GREEN: u32 = 1039;
@@ -50,7 +44,7 @@ pub fn is_pickable(species_id: u32) -> bool {
 }
 
 pub fn is_ammo(species_id: u32) -> bool {
-    matches!(species_id, SPECIES_KUNAI | SPECIES_KUNAI_BUNDLE)
+    matches!(species_by_id(species_id).entity_type, EntityType::Bullet)
 }
 
 pub fn is_key(species_id: u32) -> bool {

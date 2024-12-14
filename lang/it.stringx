@@ -1,4 +1,11 @@
-"1001.entrance" = "Benvenuto al Villaggio di Evergrove!"
+"1001.entrance" = """
+Benvenuto al Villaggio di Evergrove!
+--
+Ovest: Sentiero Verdant
+Nord: Aridreach
+Nord-Ovest: Sentiero Shadowveil
+Sud-Ovest: Paludi di Murkmire
+"""
 
 "1002.entrance" = """
 Benvenuto al Sentiero Verdant
@@ -54,7 +61,7 @@ Ovest: Vetta di Levek
 Est: Paludi di Murkmire
 """
 
-"1012.entrance" = "Benvenuto a Vintoria!"
+"1012.entrance" = "Benvenuti a Vintoria!"
 
 "1013.entrance" = "Grimsun Basin"
 
@@ -184,6 +191,26 @@ Grazie per aver giocato!
 
 "entity.menu.use" = "Usa"
 
+"game.menu.controls" = "Controls"
+
+"game.menu.controls.explained" = """
+== Keyboard ==
+Movement:     WASD or Arrows
+Throw Knife:  F or J
+Swing Sword:  R or Q
+Confirm:      E, K or SPACE
+Menu:         X or ENTER
+Back:         ESCAPE
+.
+== Controller ==
+Movement:     Left Joystick
+Throw Knife:  Right Side / Down
+Swing Sword:  Right Side / Left
+Confirm:      Right Side / Right
+Menu:         Middle / Left
+Back:         Middle / Right
+"""
+
 "game.menu.disable_music" = "Disablita Musica"
 
 "game.menu.disable_sound_effects" = "Disablita Effetti Sonori"
@@ -192,7 +219,7 @@ Grazie per aver giocato!
 
 "game.menu.enable_sound_effects" = "Ablita Effetti Sonori"
 
-"game.menu.exit" = "Esci"
+"game.menu.exit" = "Chiudi il gioco"
 
 "game.menu.inventory" = "Inventario"
 
@@ -278,8 +305,6 @@ E poi, cosa diavolo ci fai a casa mia!?
 Centrale Cascata di Vintoria
 Sfruttando la forza della cascata per alimentare la valle con mana vitale
 """
-
-"lore.007.vintoria_entrance" = "Benvenuti nella Valle di Vintoria!"
 
 "lore.008.mount_ignis" = """
 Attenzione
@@ -723,9 +748,11 @@ alimentando la vita e il fascino di Duskhaven.
 
 "objects.name.camp_fire" = "Falò"
 
-"objects.name.claymore.item" = "Spada"
+"objects.name.cannon.bullet" = "Palla di Cannone"
 
-"objects.name.claymore.weapon" = "Spada"
+"objects.name.cannon.item" = "Cannone"
+
+"objects.name.cannon.weapon" = "Cannone"
 
 "objects.name.deep_hole" = "Fossa Profonda"
 
@@ -807,13 +834,13 @@ alimentando la vita e il fascino di Duskhaven.
 
 "objects.name.seat_pink" = "Sedia Rosa"
 
+"objects.name.shield.item" = "Scudo"
+
+"objects.name.shield.weapon" = "Scudo"
+
 "objects.name.sign" = "Segnale"
 
 "objects.name.skull" = "Teschio"
-
-"objects.name.slash" = "Slash!"
-
-"objects.name.slash.claymore" = "Slash!"
 
 "objects.name.slope.bottom_left.dark_rock" = "Pendenza"
 
@@ -885,9 +912,11 @@ alimentando la vita e il fascino di Duskhaven.
 
 "objects.name.stonehenge" = "Antiche Rovine"
 
-"objects.name.sword.item" = "Spada Corta"
+"objects.name.sword.bullet" = "Slash!"
 
-"objects.name.sword.weapon" = "Spada Corta"
+"objects.name.sword.item" = "Spada"
+
+"objects.name.sword.weapon" = "Spada"
 
 "objects.name.table" = "Tavolo"
 
@@ -1201,9 +1230,8 @@ L'ingresso sembra essere da qualche parte a Sud-Est dell'area.
 """
 
 "quest.ninja_skills.red_ninja.about_piercing_knife_skill" = """
-Te l'ho detto... Barili, mostri, Signori dei Demoni, ...
+Vedrai... Barili, mostri, Signori dei Demoni, ...
 Non importa.
-I tuoi pugnali ora possono attraversare qualsasi cosa respiri.
 """
 
 "quest.ninja_skills.red_ninja.gain_piercing_knife_skill" = """
@@ -1300,6 +1328,10 @@ Hai un aura potentissima!
 "telepoter.locked.permanent" = "Questa porta è bloccata."
 
 "text_input.hint" = "ENTER per confermare, ESC per annullare"
+
+"weapons_selection.ammo" = "Colpi Disponibili"
+
+"weapons_selection.title" = "Armi"
 
 "yes" = "Yes"
 

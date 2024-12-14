@@ -1,5 +1,5 @@
 
-use crate::{constants::SPRITE_SHEET_MENU, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::WorldStateUpdate}, lang::localizable::LocalizableText, ui::{components::{empty_view, BordersTextures, TextureInfo, View}, scaffold::scaffold}, utils::rect::IntRect};
+use crate::{constants::SPRITE_SHEET_MENU, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::WorldStateUpdate}, lang::localizable::LocalizableText, ui::{components::{empty_view, BordersTextures, TextureInfo, View, WithAlpha, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::rect::IntRect};
 
 use super::menu::{Menu, MenuItem, MenuUpdate};
 
@@ -88,7 +88,7 @@ impl ConfirmationDialog {
         if self.menu.is_open {       
             scaffold(
                 true, 
-                (0, 0, 0, (255.0 * self.menu.animator.current_value) as u8), 
+                COLOR_MENU_BACKGROUND.with_alpha(self.menu.animator.current_value), 
                 Some(ALERT_BORDERS_TEXTURES),
                 self.menu.menu_contents()
             )

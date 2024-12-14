@@ -1,6 +1,6 @@
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use crate::{constants::{ANIMATIONS_FPS, SPRITE_SHEET_BLANK, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, UNLIMITED_LIFESPAN}, game_engine::entity::Entity, utils::{directions::Direction, rect::IntRect, timed_content_provider::TimedContentProvider}};
+use crate::{constants::{ANIMATIONS_FPS, SPRITE_SHEET_BLANK, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2}, game_engine::entity::Entity, utils::{directions::Direction, rect::IntRect, timed_content_provider::TimedContentProvider}};
 
 #[derive(Debug, Clone)]
 pub struct AnimatedSprite {
@@ -46,7 +46,7 @@ impl AnimatedSprite {
 
 impl Entity {
     pub fn update_sprite_for_current_state(&mut self) {
-        if self.remaining_lifespan == UNLIMITED_LIFESPAN || self.remaining_lifespan > 1.0 {
+        if !self.is_dying { 
             if self.demands_attention {
                 self.sprite.frame.y = self.sprite.original_frame.y + self.sprite.frame.h * 8
             } else {

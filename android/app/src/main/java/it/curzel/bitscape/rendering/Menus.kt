@@ -25,6 +25,7 @@ import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.ui.theme.DSTypography
+import it.curzel.bitscape.ui.theme.MenuBackground
 import kotlinx.coroutines.launch
 
 data class MenuConfig(
@@ -118,9 +119,8 @@ private fun MenuContent(
             .fillMaxWidth()
             .heightIn(max = screenHeight * 0.8f)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.Black)
+            .background(MenuBackground)
             .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
-            .shadow(4.dp, RoundedCornerShape(8.dp))
             .clickable(enabled = false) {}
     ) {
         Column(
@@ -203,3 +203,4 @@ class MenuViewModel(private val gameEngine: GameEngine) : ViewModel() {
         gameEngine.onMenuItemSelection(index)
     }
 }
+

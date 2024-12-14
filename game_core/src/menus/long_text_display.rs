@@ -2,7 +2,7 @@
 use crate::constants::{MENU_CLOSE_TIME, MENU_OPEN_TIME};
 use crate::lang::localizable::LocalizableText;
 use crate::spacing;
-use crate::ui::components::empty_view;
+use crate::ui::components::{empty_view, WithAlpha, COLOR_MENU_BACKGROUND};
 use crate::ui::scaffold::scaffold;
 use crate::utils::strings::wrap_text;
 use crate::{game_engine::keyboard_events_provider::KeyboardEventsProvider, text, ui::components::{Spacing, Typography, View}, utils::animator::Animator, vstack};
@@ -81,7 +81,7 @@ impl LongTextDisplay {
         if self.is_open {
             scaffold(
                 self.uses_backdrop,
-                (0, 0, 0, (255.0 * self.animator.current_value) as u8), 
+                COLOR_MENU_BACKGROUND.with_alpha(self.animator.current_value),
                 Some(MENU_BORDERS_TEXTURES),
                 self.text_ui()
             )

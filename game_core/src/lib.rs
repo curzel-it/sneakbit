@@ -1,11 +1,12 @@
 #![allow(clippy::new_without_default, clippy::not_unsafe_ptr_arg_deref)]
 
-use std::{collections::HashSet, ffi::{c_char, CStr, CString}, path::PathBuf, ptr};
+use std::{collections::HashSet, ffi::{CStr, CString}, path::PathBuf, ptr};
+use std::os::raw::c_char;
 
 use config::initialize_config_paths;
-use entities::known_species::{SPECIES_CLAYMORE_ITEM, SPECIES_KUNAI};
+use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
-use game_engine::{engine::GameEngine, storage::inventory_count};
+use game_engine::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::{IntPoint, IntRect}, vector::Vector2d};
 
@@ -92,6 +93,7 @@ pub extern "C" fn update_keyboard(
     confirm_pressed: bool,
     close_attack_pressed: bool,
     ranged_attack_pressed: bool,
+    weapon_selection_pressed: bool,
     backspace_pressed: bool,
     current_char: u32,
     time_since_last_update: f32
@@ -102,6 +104,7 @@ pub extern "C" fn update_keyboard(
         up_down, right_down, down_down, left_down, 
         escape_pressed, menu_pressed, confirm_pressed, 
         close_attack_pressed, ranged_attack_pressed, 
+        weapon_selection_pressed,
         backspace_pressed, 
         if current_char == 0 { None } else { char::from_u32(current_char) }, 
         time_since_last_update
@@ -243,7 +246,16 @@ pub extern "C" fn camera_viewport_offset() -> Vector2d {
 }
 
 fn to_string(value: *const c_char) -> String {
-    unsafe { CStr::from_ptr(value) }.to_str().unwrap().to_owned()
+    if value.is_null() {
+        return String::new();
+    }
+
+    unsafe {
+        CStr::from_ptr(value)
+            .to_str()
+            .unwrap_or_default()
+            .to_owned()
+    }
 }
 
 fn to_path(value: *const c_char) -> PathBuf {
@@ -308,13 +320,23 @@ pub extern "C" fn select_current_menu_option_at_index(index: u32) {
 }
 
 #[no_mangle]
-pub extern "C" fn number_of_kunai_in_inventory() -> i32 {
-    inventory_count(&SPECIES_KUNAI) as i32
+pub extern "C" fn number_of_kunai_in_inventory(player: usize) -> i32 {
+    inventory_count(&SPECIES_KUNAI, player) as i32
 }
 
 #[no_mangle]
-pub extern "C" fn current_hero_hp() -> f32 {
-    engine().world.players[0].props.hp
+pub extern "C" fn number_of_rem223_in_inventory(player: usize) -> i32 {
+    inventory_count(&SPECIES_AR15_BULLET, player) as i32
+}
+
+#[no_mangle]
+pub extern "C" fn number_of_cannonball_in_inventory(player: usize) -> i32 {
+    inventory_count(&SPECIES_CANNON_BULLET, player) as i32
+}
+
+#[no_mangle]
+pub extern "C" fn player_current_hp(player: usize) -> f32 {
+    engine().world.players[player].props.hp
 }
 
 pub fn cached_players_positions() -> Vec<IntPoint> {
@@ -325,8 +347,8 @@ pub fn cached_players_positions() -> Vec<IntPoint> {
 }
 
 #[no_mangle]
-pub extern "C" fn is_sword_equipped() -> bool {
-    inventory_count(&SPECIES_CLAYMORE_ITEM) > 0
+pub extern "C" fn is_melee_equipped(player: usize) -> bool {
+    get_value_for_global_key(&StorageKey::currently_equipped_melee_weapon(player)).unwrap_or(0) != 0
 }
 
 #[no_mangle]

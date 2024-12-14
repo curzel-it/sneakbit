@@ -9,6 +9,10 @@ for filename in os.listdir("data"):
     contents = json.loads(f.read())
     f.close()
 
-    f = open(path, "w")
-    f.write(json.dumps(contents, indent=2, sort_keys=True))
-    f.close()
+    updated = json.dumps(contents, indent=2, sort_keys=True)
+    
+    # Avoids invalidating map sprites
+    if contents != updated:
+        f = open(path, "w")
+        f.write(updated)
+        f.close()

@@ -1,37 +1,96 @@
-use crate::{constants::SPRITE_SHEET_INVENTORY, current_hero_hp, number_of_kunai_in_inventory, shows_death_screen, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use crate::{constants::{MAX_PLAYERS, SPRITE_SHEET_INVENTORY}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, game_engine::storage::{get_value_for_global_key, inventory_count, StorageKey}, hstack, player_current_hp, shows_death_screen, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 pub struct BasicInfoHud {
-    number_of_kunais: i32,
-    hp: f32
+    players: Vec<PlayerHud>
 }
 
 impl BasicInfoHud {
     pub fn new() -> Self {
+        Self {
+            players: (0..MAX_PLAYERS).map(PlayerHud::new).collect()
+        }
+    }
+
+    pub fn update(&mut self, number_of_players: usize) {
+        self.players.iter_mut().take(number_of_players).for_each(|p| p.update());
+    }
+
+    pub fn ui(&self, number_of_players: usize) -> View {
+        let include_header = number_of_players > 1;
+        let max_hp_to_show = 60.0;
+        
+        zstack!(
+            Spacing::SM,
+            COLOR_TRANSPARENT,
+            View::VStack { 
+                spacing: Spacing::SM, 
+                children: self.players
+                    .iter()
+                    .take(number_of_players)
+                    .map(|p| p.ui(include_header, max_hp_to_show))
+                    .collect()
+            }
+        )
+    }
+}
+
+struct PlayerHud {
+    player: usize,
+    ammo_texture_rect: IntRect,
+    ammo_count: u32,
+    hp: f32
+}
+
+impl PlayerHud {
+    fn new(player: usize) -> Self {
         Self { 
-            number_of_kunais: 0,
+            player,
+            ammo_texture_rect: IntRect::square_from_origin(1),
+            ammo_count: 0,
             hp: 0.0
         }
     }    
 
-    pub fn update(&mut self) {
-        self.number_of_kunais = number_of_kunai_in_inventory();
-        self.hp = current_hero_hp();
+    fn update(&mut self) {
+        let weapon_id = get_value_for_global_key(&StorageKey::currently_equipped_ranged_weapon(self.player)).unwrap_or(SPECIES_KUNAI_LAUNCHER);
+        let weapon = species_by_id(weapon_id);
+        let ammo = species_by_id(weapon.bullet_species_id);
+        self.ammo_count = inventory_count(&ammo.id, self.player);
+        self.ammo_texture_rect = ammo.inventory_sprite_frame();
+        self.hp = player_current_hp(self.player);
     }
 
-    pub fn ui(&self) -> View {
-        vstack!(
-            Spacing::Zero,
-            self.ammo_ui(),
-            self.hp_ui()
-        )
+    fn ui(&self, include_header: bool, max_hp_to_show: f32) -> View {
+        if self.hp <= 0.00001 {
+            empty_view()
+        } else {
+            hstack!(
+                Spacing::LG,
+                self.header_ui(include_header),
+                self.ammo_count_ui(),
+                self.hp_ui(max_hp_to_show)
+            )
+        }
     }
 
-    fn hp_ui(&self) -> View {
-        if self.hp < 60.0 && !shows_death_screen() {
+    fn header_ui(&self, include_header: bool) -> View {
+        if include_header {
+            vstack!(
+                Spacing::Zero,
+                spacing!(Spacing::SM),
+                text!(Typography::SmallTitle, format!("P{}", self.player + 1))
+            )
+        } else {
+            empty_view()
+        }
+    }
+
+    fn hp_ui(&self, max_hp_to_show: f32) -> View {
+        if self.hp < max_hp_to_show && !shows_death_screen() {
             let typography = if self.hp < 30.0 { Typography::Selected } else { Typography::Regular };
-            zstack!(
-                Spacing::MD,
-                COLOR_TRANSPARENT,
+            vstack!(
+                Spacing::Zero,
+                spacing!(Spacing::SM),
                 text!(typography, format!("HP {:0.1}%", self.hp))
             )
         } else {
@@ -39,22 +98,19 @@ impl BasicInfoHud {
         }
     }
 
-    fn ammo_ui(&self) -> View {
-        if self.number_of_kunais > 0 {
-            let image = texture!(SPRITE_SHEET_INVENTORY, IntRect::new(1, 7, 1, 1), Vector2d::new(1.5, 1.5));
-
-            zstack!(
-                Spacing::MD,
-                COLOR_TRANSPARENT,
-                image,
-                vstack!(
-                    Spacing::Zero,
-                    spacing!(Spacing::XL),
-                    text!(Typography::Regular, format!("x{}", self.number_of_kunais))
-                )
-            )
-        } else {
-            empty_view()
-        }
+    fn ammo_count_ui(&self) -> View {
+        hstack!(
+            Spacing::Zero,
+            texture!(
+                SPRITE_SHEET_INVENTORY, 
+                self.ammo_texture_rect, 
+                Vector2d::new(1.0, 1.0)
+            ),
+            vstack!(
+                Spacing::Zero,
+                spacing!(Spacing::SM),
+                text!(Typography::Regular, format!("x{}", self.ammo_count))
+            )                
+        )
     }
 } 

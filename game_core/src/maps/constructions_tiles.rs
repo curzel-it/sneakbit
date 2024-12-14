@@ -249,11 +249,11 @@ impl TileSet<ConstructionTile> {
 
 impl Construction {
     pub fn from_char(c: char) -> Self {
-        CHAR_TO_CONSTRUCTION.get(&c).unwrap_or(&Construction::Nothing).clone()
+        *CHAR_TO_CONSTRUCTION.get(&c).unwrap_or(&Construction::Nothing)
     }
 
     pub fn to_char(self) -> char {
-        CONSTRUCTION_TO_CHAR.get(&self).unwrap_or(&'0').clone()
+        *CONSTRUCTION_TO_CHAR.get(&self).unwrap_or(&'0')
     }
 }
 

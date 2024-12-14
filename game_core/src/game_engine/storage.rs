@@ -1,9 +1,12 @@
 use std::{collections::{HashMap, HashSet}, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
 use lazy_static::lazy_static;
 
-use crate::{config::config, entities::species::{species_by_id, SpeciesId}};
+use crate::{config::config, constants::MAX_PLAYERS, entities::species::{species_by_id, SpeciesId}, equipment::basics::set_equipped};
 
 use super::{entity::EntityId, locks::LockType, world::World};
+
+const INVENTORY_AMOUNT: &str = "inventory.amount";
+const PLAYER: &str = "player";
 
 pub struct StorageKey {}
 
@@ -48,6 +51,14 @@ impl StorageKey {
         "language".to_owned()
     }
 
+    pub fn currently_equipped_ranged_weapon(player: usize) -> String {
+        format!("{}.{}.currently_equipped_ranged_weapon", PLAYER, player)
+    }
+
+    pub fn currently_equipped_melee_weapon(player: usize) -> String {
+        format!("{}.{}.currently_equipped_melee_weapon", PLAYER, player)
+    }
+
     fn dialogue_answer(dialogue: &str) -> String {
         format!("dialogue.answer.{}", dialogue)
     }
@@ -56,8 +67,8 @@ impl StorageKey {
         format!("dialogue.reward.{}", dialogue)
     }
 
-    fn species_inventory_count(species_id: &SpeciesId) -> String {
-        format!("inventory.amount.{}", species_id)
+    pub fn species_inventory_count(species_id: &SpeciesId, player: usize) -> String {
+        format!("{}.{}.{}.{}", PLAYER, player, INVENTORY_AMOUNT, species_id)
     }
 }
 
@@ -138,6 +149,16 @@ pub fn get_value_for_global_key(key: &str) -> Option<u32> {
     if key == StorageKey::always() {
         return Some(1);
     }
+    if key.contains(INVENTORY_AMOUNT) && !key.contains(PLAYER) {
+        for player_index in 0..MAX_PLAYERS {
+            let fixed_key = &key.replace(INVENTORY_AMOUNT, &format!("{}.{}.{}", PLAYER, player_index, INVENTORY_AMOUNT));
+            
+            if let Some(value) = get_value_for_global_key(fixed_key) {
+                return Some(value)
+            }
+        }
+        return None
+    }
     if key.contains(",") {
         let keys = key.split_terminator(",");
         let values: HashSet<Option<u32>> = keys.map(get_value_for_global_key).collect();
@@ -200,7 +221,7 @@ pub fn has_bullet_catcher_skill() -> bool {
     get_value_for_global_key("dialogue.answer.quest.ninja_skills.blue_ninja.gain_knife_catcher_skill").is_some_and(|i| i == 1)
 }
 
-pub fn has_piercing_bullet_skill() -> bool {
+pub fn has_piercing_knife_skill() -> bool {
     get_value_for_global_key("dialogue.answer.quest.ninja_skills.red_ninja.gain_piercing_knife_skill").is_some_and(|i| i == 1)
 }
 
@@ -232,31 +253,53 @@ fn decrease_value(key: &str) {
     set_value_for_key(key, next_value);
 }
 
-pub fn increment_inventory_count(species_id: &SpeciesId) {
-    let species = species_by_id(*species_id);
+pub fn increment_inventory_count(species_id: SpeciesId, player: usize) {
+    let species = species_by_id(species_id);
+
     if !species.bundle_contents.is_empty() {
-        species.bundle_contents.iter().for_each(increment_inventory_count);
+        species.bundle_contents
+            .into_iter()
+            .for_each(|species_id| increment_inventory_count(species_id, player));
     } else {
-        increment_value(&StorageKey::species_inventory_count(species_id));
+        increment_value(&StorageKey::species_inventory_count(&species.id, player));
+
+        if let Some(weapon_id) = species.associated_weapon {
+            let weapon_species = species_by_id(weapon_id);
+            set_equipped(&weapon_species, player);
+        }
     }
 }
 
-pub fn decrease_inventory_count(species_id: &SpeciesId) {
-    decrease_value(&StorageKey::species_inventory_count(species_id));
+pub fn decrease_inventory_count(species_id: &SpeciesId, player: usize) {
+    decrease_value(&StorageKey::species_inventory_count(species_id, player));
 }
 
-pub fn inventory_count(species_id: &SpeciesId) -> u32 {
-    get_value_for_global_key(&StorageKey::species_inventory_count(species_id)).unwrap_or_default()
+pub fn inventory_count(species_id: &SpeciesId, player: usize) -> u32 {
+    get_value_for_global_key(&StorageKey::species_inventory_count(species_id, player)).unwrap_or_default()
 }
 
-pub fn has_species_in_inventory(species_id: &SpeciesId) -> bool {
-    inventory_count(species_id) > 0
+pub fn has_species_in_inventory(species_id: &SpeciesId, player: usize) -> bool {
+    inventory_count(species_id, player) > 0
 }
 
 pub fn reset_all_stored_values() {
     {
         let mut storage = KEY_VALUE_STORAGE.write().unwrap();
         storage.clear();
+    }
+    let storage = KEY_VALUE_STORAGE.read().unwrap().clone();
+    let tx = &SAVE_THREAD.0;
+    tx.send(storage).expect("Failed to send data to save thread");
+}
+
+pub fn get_stored_values_snapshot() -> HashMap<String, u32> {
+    KEY_VALUE_STORAGE.read().unwrap().clone()
+}
+
+pub fn replace_all_stored_values(new: HashMap<String, u32>) {
+    {
+        let mut storage = KEY_VALUE_STORAGE.write().unwrap();
+        storage.clone_from(&new);
     }
     let storage = KEY_VALUE_STORAGE.read().unwrap().clone();
     let tx = &SAVE_THREAD.0;

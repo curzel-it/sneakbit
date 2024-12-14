@@ -124,7 +124,7 @@
       "QQQQQQQQk000B0Bkk8888888j0k000000N000000000000jN00000kN0000000000008888888888888",
       "QQQQQQQ0fdQQBBBkk8888888fge0000000N0N000NN0000jNN0cgge00000000008088888888888888",
       "QQQQQ0QQQk0Q000kk888888888000000N0NNNNN0NN0000j0N0k00000000000008088888888888888",
-      "QQQQQQQQ0k00800kk888888888000000NNNNNNN00N00N0fgg0e00000000000008888888888888888",
+      "QQQQQQQQ0k00800kk888888888000000NNNNNNN00N00N0fggge00000000000008888888888888888",
       "QQQQQQQ0Qk08800kk8888888880000000NNNNNNN0000NN0000000000000000088888888888888888",
       "QQQQQQQQQfd080cek88888888800000N00NNNNNNNN000000000NN000000000888888888888888888",
       "QQQQ0QQQBBk880kce88888888000000N0N0NNN0NNN0000000000N000008888800888888888888888",
@@ -173,7 +173,6 @@
   "entities": [
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Right",
@@ -222,7 +221,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -246,7 +244,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -270,7 +267,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -289,7 +285,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -308,7 +303,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -327,7 +321,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -346,7 +339,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -372,7 +364,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -391,7 +382,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -417,7 +407,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -436,7 +425,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -455,7 +443,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -474,7 +461,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -493,7 +479,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -512,7 +497,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -531,7 +515,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -550,7 +533,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -569,7 +551,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -588,7 +569,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -607,7 +587,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -626,7 +605,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -645,7 +623,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -664,7 +641,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -683,7 +659,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -702,7 +677,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -721,7 +695,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -740,7 +713,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -759,7 +731,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -778,7 +749,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -797,7 +767,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -821,7 +790,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -840,7 +808,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -859,7 +826,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -878,7 +844,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -897,7 +862,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -916,7 +880,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -935,7 +898,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -954,7 +916,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -998,7 +959,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1042,7 +1002,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1061,7 +1020,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1080,7 +1038,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1099,7 +1056,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1118,7 +1074,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1137,7 +1092,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1156,7 +1110,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1175,7 +1128,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1194,7 +1146,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1213,7 +1164,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1232,7 +1182,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1251,7 +1200,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1270,7 +1218,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1289,7 +1236,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1308,7 +1254,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1317,7 +1262,7 @@
       "frame": {
         "h": 1,
         "w": 1,
-        "x": 20,
+        "x": 24,
         "y": 18
       },
       "id": 11022214,
@@ -1327,7 +1272,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1371,7 +1315,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -1421,7 +1364,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1440,7 +1382,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1459,7 +1400,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1478,7 +1418,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1497,7 +1436,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1516,7 +1454,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1535,7 +1472,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -1559,7 +1495,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1578,7 +1513,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1597,7 +1531,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1616,7 +1549,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1635,7 +1567,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1654,7 +1585,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1673,7 +1603,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1692,7 +1621,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1711,7 +1639,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1730,7 +1657,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1749,7 +1675,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1768,7 +1693,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1787,7 +1711,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Left",
@@ -1811,7 +1734,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -1862,7 +1784,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1881,7 +1802,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1900,7 +1820,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1919,7 +1838,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -1943,7 +1861,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1962,7 +1879,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1981,7 +1897,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -2000,7 +1915,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -2019,7 +1933,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Right",
@@ -2043,7 +1956,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -2096,7 +2008,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -2115,7 +2026,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Left",
@@ -2139,7 +2049,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],

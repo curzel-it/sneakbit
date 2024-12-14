@@ -1,6 +1,10 @@
-use crate::{entities::{bullets::{BulletId, Damage}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast};
+use serde::{Deserialize, Serialize};
+
+use crate::{entities::{bullets::{BulletHit, BulletId, Damage}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast};
 
 use super::{entity::{Entity, EntityId, EntityProps}, locks::LockType};
+
+pub type PlayerIndex = usize;
 
 #[derive(Debug, Clone)]
 pub enum WorldStateUpdate {
@@ -18,7 +22,7 @@ pub enum WorldStateUpdate {
     StopHeroMovement,
     ConstructionTileChange(usize, usize, Construction),
     EngineUpdate(EngineStateUpdate),
-    HandleHits(BulletId, Vec<EntityId>, Damage),
+    HandleHits(BulletHit),
     HandleHeroDamage(Damage),
     HandleBulletCatched(BulletId),
     HandleBulletStopped(BulletId),
@@ -31,8 +35,8 @@ pub enum EngineStateUpdate {
     Teleport(Destination),
     SaveGame,
     Exit,
-    AddToInventory(SpeciesId, AddToInventoryReason),
-    RemoveFromInventory(SpeciesId),
+    AddToInventory(PlayerIndex, SpeciesId, AddToInventoryReason),
+    RemoveFromInventory(PlayerIndex, SpeciesId),
     Toast(Toast),
     Confirmation(String, String, Vec<WorldStateUpdate>),
     DisplayLongText(String, String),
@@ -45,10 +49,13 @@ pub enum EngineStateUpdate {
     ExternalLink(String)
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SpecialEffect {
+    NoAmmo,
+    KnifeThrown,
     SwordSlash,
-    ClaymoreSlash
+    GunShot,
+    LoudGunShot
 }
 
 #[derive(Debug, Clone)]

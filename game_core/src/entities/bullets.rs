@@ -1,9 +1,19 @@
 use crate::{constants::TILE_SIZE, game_engine::{entity::{is_player, Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{pickable_object::object_pick_up_sequence, species::species_by_id};
+use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species, SpeciesId}};
 
 pub type BulletId = EntityId;
 pub type Damage = f32;
+
+#[derive(Debug, Clone)]
+pub struct BulletHit {
+    pub bullet_id: BulletId,
+    pub supports_catching: bool,
+    pub supports_bullet_boomerang: bool,
+    pub bullet_species_id: SpeciesId,
+    pub target_ids: Vec<EntityId>,
+    pub damage: f32
+}
 
 impl Entity {
     pub fn setup_bullet(&mut self) {
@@ -18,8 +28,10 @@ impl Entity {
             return vec![WorldStateUpdate::RemoveEntity(self.id)]
         }
 
-        if self.current_speed == 0.0 && !is_creative_mode() && world.is_any_hero_at(self.frame.x, self.frame.y) {   
-            return object_pick_up_sequence(self);
+        if self.current_speed == 0.0 && !is_creative_mode() {   
+            if let Some(player) = world.index_of_player_at(self.frame.x, self.frame.y) {
+                return object_pick_up_sequence(player, self);
+            }            
         }
 
         if self.current_speed == 0.0 || matches!(self.direction, Direction::Unknown) {
@@ -40,13 +52,28 @@ impl Entity {
 
         let valid_hits: Vec<u32> = vec![previous_hits, current_hits]
             .into_iter()
-            .flat_map(|id| id)
+            .flatten()
             .filter(|id| self.is_valid_hit_target(*id) && !is_player(*id))
             .collect();
 
+        if valid_hits.is_empty() {
+            return vec![]
+        }
+
         let damage = self.dps * time_since_last_update;
 
-        vec![WorldStateUpdate::HandleHits(self.id, valid_hits, damage)]
+        vec![
+            WorldStateUpdate::HandleHits(
+                BulletHit { 
+                    bullet_id: self.id, 
+                    supports_catching: self.species.supports_bullet_catching, 
+                    supports_bullet_boomerang: self.species.supports_bullet_boomerang, 
+                    target_ids: valid_hits, 
+                    bullet_species_id: self.species_id,
+                    damage 
+                }
+            )
+        ]
     }
 
     fn check_stoppers(&self, world: &World) -> Vec<WorldStateUpdate> {
@@ -102,16 +129,18 @@ fn make_bullet_ex(
     bullet
 }
 
-pub fn make_player_bullet(parent_id: u32, world: &World, species: u32, lifespan: f32) -> Entity {
+pub fn make_player_bullet(parent_id: u32, world: &World, weapon_species: &Species) -> Entity {
     let index = world.player_index_by_entity_id(parent_id);
     let player = world.players[index].props;
 
-    make_bullet_ex(
-        species,
+    let mut bullet = make_bullet_ex(
+        weapon_species.bullet_species_id,
         parent_id,
         &player.hittable_frame,
         &player.offset,
         player.direction,
-        lifespan
-    )
+        weapon_species.bullet_lifespan
+    );
+    bullet.player_index = index;
+    bullet
 }

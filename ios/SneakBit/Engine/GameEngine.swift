@@ -71,9 +71,9 @@ class GameEngine {
         update_game(deltaTime)
         toast.send(current_toast())
         menus.send(current_menu())
-        kunai.send(number_of_kunai_in_inventory())
-        heroHp.send(current_hero_hp())
-        isSwordEquipped.send(is_sword_equipped())
+        kunai.send(number_of_kunai_in_inventory(0))
+        heroHp.send(player_current_hp(0))
+        isSwordEquipped.send(is_melee_equipped(0))
         isInteractionAvailable.send(is_interaction_available())
         showsDeathScreen.send(isDead)
         currentBiomeVariant = Int(current_biome_tiles_variant())
@@ -223,6 +223,7 @@ class GameEngine {
             keyPressed.contains(.closeRangeAttack),
             keyPressed.contains(.rangedAttack),
             keyPressed.contains(.backspace),
+            false,
             currentChar,
             timeSinceLastUpdate
         )

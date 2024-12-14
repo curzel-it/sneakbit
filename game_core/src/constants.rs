@@ -1,6 +1,6 @@
 use crate::utils::rect::IntRect;
 
-pub const BUILD_NUMBER: u32 = 34;
+pub const BUILD_NUMBER: u32 = 35;
 
 // Fps
 pub const ANIMATIONS_FPS: f32 = 10.0;
@@ -11,14 +11,7 @@ pub const UNLIMITED_LIFESPAN: f32 = -420.0;
 pub const NO_PARENT: u32 = 0;
 pub const PRESSURE_PLATE_SWITCH_COOLDOWN: f32 = 0.3;
 pub const HERO_RECOVERY_PS: f32 = 1.0;
-
-// Weapons
-pub const KUNAI_LIFESPAN: f32 = 1.2;
-pub const KUNAI_LAUNCHER_COOLDOWN: f32 = 0.15;
-pub const SWORD_SLASH_LIFESPAN: f32 = 0.25;
-pub const SWORD_SLASH_COOLDOWN: f32 = 0.2;
-pub const CLAYMORE_SLASH_LIFESPAN: f32 = 0.3;
-pub const CLAYMORE_SLASH_COOLDOWN: f32 = 0.35;
+pub const MAX_PLAYERS: usize = 4;
 
 // Input
 pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST: f32 = 0.4;

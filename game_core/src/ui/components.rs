@@ -3,15 +3,30 @@ use crate::utils::{rect::IntRect, vector::Vector2d};
 pub type NonColor = (u8, u8, u8, u8);
 
 pub const COLOR_TRANSPARENT: NonColor = (0, 0, 0, 0);
-pub const COLOR_BLACK: NonColor = (0, 0, 0, 255);
-pub const COLOR_BLACK_50: NonColor = (0, 0, 0, 128);
-pub const COLOR_BLACK_70: NonColor = (0, 0, 0, 178);
-pub const COLOR_YELLOW: NonColor = (255, 255, 0, 255);
-pub const COLOR_RED_60: NonColor = (255, 0, 0, 153);
+pub const COLOR_TEXT: NonColor = (255, 255, 255, 245);
+pub const COLOR_TEXT_HIGHLIGHTED: NonColor = (255, 200, 0, 255);
+pub const COLOR_GENERAL_HIGHLIGHT: NonColor = (255, 0, 0, 153);
+pub const COLOR_DEBUG_INFO_BACKGROUND: NonColor = (0, 0, 0, 85);
+pub const COLOR_LOADING_SCREEN_BACKGROUND: NonColor = (0, 0, 0, 255);
+pub const COLOR_DEATH_SCREEN_BACKGROUND: NonColor = (0, 0, 0, 178);
+pub const COLOR_MENU_BACKGROUND: NonColor = (42, 47, 78, 255);
+pub const COLOR_MENU_HINT_BACKGROUND: NonColor = (26, 25, 50, 128);
+pub const COLOR_TOAST_BACKGROUND: NonColor =  (0, 0, 0, 255);
+
+pub trait WithAlpha {
+    fn with_alpha(&self, alpha: f32) -> NonColor;
+}
+
+impl WithAlpha for NonColor {
+    fn with_alpha(&self, alpha: f32) -> NonColor {
+        (self.0, self.1, self.2, (255.0 * alpha) as u8)
+    }
+}
 
 #[derive(Copy, Clone, Debug)]
 pub enum Typography {
     Title,
+    SmallTitle,
     Regular,
     Selected,
     Caption,
@@ -24,6 +39,8 @@ pub enum Spacing {
     MD,
     LG,
     XL,
+    InverseSM, 
+    InverseMD, 
     Custom(f32),
     TextLine(Typography),
 }
@@ -176,6 +193,8 @@ impl Spacing {
             Spacing::MD => 8.0,
             Spacing::LG => 12.0,
             Spacing::XL => 20.0,
+            Spacing::InverseSM => -4.0,
+            Spacing::InverseMD => -8.0,
             Spacing::Custom(value) => *value,
             Spacing::TextLine(_) => 4.0,
         }

@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 use std::fs::File;
 use std::io::Read;
 
-use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, game_engine::{directions::MovementDirections, entity::Entity, locks::LockType}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::IntRect, vector::Vector2d}};
+use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, game_engine::{directions::MovementDirections, entity::Entity, locks::LockType, state_updates::SpecialEffect}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::IntRect, vector::Vector2d}};
 
 pub type SpeciesId = u32;
 
@@ -48,6 +48,33 @@ pub struct Species {
 
     #[serde(default="zero")]
     pub dps: f32,
+
+    #[serde(default="zero_u32")]
+    pub bullet_species_id: u32,
+
+    #[serde(default="one")]
+    pub bullet_lifespan: f32,
+
+    #[serde(default="zero")]
+    pub cooldown_after_use: f32,
+
+    #[serde(default)]
+    pub usage_special_effect: Option<SpecialEffect>,
+
+    #[serde(default)]
+    pub associated_weapon: Option<u32>,
+
+    #[serde(default)]
+    pub supports_bullet_boomerang: bool,
+
+    #[serde(default)]
+    pub supports_bullet_catching: bool,
+
+    #[serde(default="zero")]
+    pub received_damage_reduction: f32,
+
+    #[serde(default)]
+    pub always_in_front_of_hero_when_equipped: bool,
 }
 
 #[derive(Default, Debug, Copy, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
@@ -68,10 +95,15 @@ pub enum EntityType {
     RailObject,
     Hint,
     Trail,
-    Equipment,
-    Sword,
-    KunaiLauncher,
+    WeaponMelee,
+    WeaponRanged,
     CloseCombatMonster
+}
+
+impl Default for Species {
+    fn default() -> Self {
+        SPECIES_NONE
+    }
 }
 
 impl Species {
@@ -119,7 +151,8 @@ impl Species {
             hp: self.hp,
             dps: self.dps,
             sorting_key: 0,
-            player_index: 0
+            player_index: 0,
+            species: self.clone(),
         }
     }
 
@@ -184,6 +217,19 @@ lazy_static! {
     };
 }
 
+lazy_static! {
+    pub static ref ALL_EQUIPMENT_IDS: Vec<u32> = {
+        ALL_SPECIES.iter().filter_map(|s| {
+            if matches!(s.entity_type, EntityType::WeaponMelee | EntityType::WeaponRanged) {
+                Some(s.id)
+            } else {
+                None
+            }       
+        })
+        .collect()
+    };
+}
+
 pub const SPECIES_NONE: Species = Species {
     id: 0,
     name: String::new(),
@@ -204,6 +250,15 @@ pub const SPECIES_NONE: Species = Species {
     movement_directions: MovementDirections::None,
     hp: one_hundred(),
     dps: zero(),
+    bullet_species_id: 0,
+    bullet_lifespan: 0.0,
+    cooldown_after_use: 0.0,
+    usage_special_effect: None,
+    associated_weapon: None,
+    supports_bullet_boomerang: false,
+    supports_bullet_catching: false,
+    received_damage_reduction: 0.0,
+    always_in_front_of_hero_when_equipped: false
 };
 
 pub fn species_by_id(species_id: u32) -> Species {
@@ -223,6 +278,10 @@ const fn zero() -> f32 {
 }
 
 const fn zero_i32() -> i32 {
+    0
+}
+
+const fn zero_u32() -> u32 {
     0
 }
 

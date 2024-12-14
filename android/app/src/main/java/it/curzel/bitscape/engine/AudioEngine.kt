@@ -24,9 +24,12 @@ class AudioEngine(
     private val volumeMap: Map<SoundEffect, Float> = mapOf(
         SoundEffect.StepTaken to 0.01f,
         SoundEffect.BulletBounced to 0.2f,
-        SoundEffect.BulletFired to 0.3f,
+        SoundEffect.KnifeThrown to 0.3f,
         SoundEffect.WorldChange to 0.6f,
         SoundEffect.AmmoCollected to 0.6f,
+        SoundEffect.GunShot to 0.8f,
+        SoundEffect.LoudGunShot to 1.0f,
+        SoundEffect.SwordSlash to 0.8f,
     )
 
     private val soundEffectFilenames: Map<SoundEffect, Int> = mapOf(
@@ -35,7 +38,7 @@ class AudioEngine(
         SoundEffect.SmallExplosion to R.raw.sfx_exp_short_hard8,
         SoundEffect.WorldChange to R.raw.sfx_movement_dooropen1,
         SoundEffect.StepTaken to R.raw.sfx_movement_footsteps1a,
-        SoundEffect.BulletFired to R.raw.sfx_movement_jump12_landing,
+        SoundEffect.KnifeThrown to R.raw.sfx_movement_jump12_landing,
         SoundEffect.BulletBounced to R.raw.sfx_movement_jump20,
         SoundEffect.HintReceived to R.raw.sfx_sound_neutral5,
         SoundEffect.KeyCollected to R.raw.sfx_sounds_fanfare3,
@@ -43,8 +46,9 @@ class AudioEngine(
         SoundEffect.GameOver to R.raw.sfx_sounds_negative1,
         SoundEffect.PlayerResurrected to R.raw.sfx_sounds_powerup1,
         SoundEffect.NoAmmo to R.raw.sfx_wpn_noammo3,
-        SoundEffect.SwordSlash to R.raw.sfx_wpn_sword3,
-        SoundEffect.ClaymoreSlash to R.raw.sfx_wpn_sword2
+        SoundEffect.SwordSlash to R.raw.sfx_wpn_sword2,
+        SoundEffect.GunShot to R.raw.sfx_wpn_machinegun_loop1,
+        SoundEffect.LoudGunShot to R.raw.sfx_weapon_shotgun3
     )
 
     private val soundPool: SoundPool
@@ -213,7 +217,7 @@ class AudioEngine(
 private enum class SoundEffect {
     AmmoCollected,
     KeyCollected,
-    BulletFired,
+    KnifeThrown,
     BulletBounced,
     DeathOfMonster,
     DeathOfNonMonster,
@@ -225,14 +229,15 @@ private enum class SoundEffect {
     StepTaken,
     HintReceived,
     SwordSlash,
-    ClaymoreSlash;
+    GunShot,
+    LoudGunShot;
 
     companion object {
         fun fromInt(value: Int): SoundEffect? {
             return when (value) {
                 1 -> AmmoCollected
                 2 -> KeyCollected
-                3 -> BulletFired
+                3 -> KnifeThrown
                 4 -> BulletBounced
                 5 -> DeathOfMonster
                 6 -> DeathOfNonMonster
@@ -244,7 +249,8 @@ private enum class SoundEffect {
                 12 -> StepTaken
                 13 -> HintReceived
                 14 -> SwordSlash
-                15 -> ClaymoreSlash
+                15 -> GunShot
+                16 -> LoudGunShot
                 else -> null
             }
         }

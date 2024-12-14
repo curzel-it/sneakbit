@@ -29,7 +29,7 @@ impl LocalizableText for String {
                 return mobile_text
             }
         }
-        return self.try_localize().unwrap_or(self.clone())
+        self.try_localize().unwrap_or(self.clone())
     }
 }
 
@@ -128,17 +128,6 @@ fn parse_strings_content(content: &str) -> HashMap<String, String> {
 
 fn cleaned(original: String) -> String {
     original
-        .replace("à", "a`")
-        .replace("é", "e`")
-        .replace("è", "e`")
-        .replace("ì", "i`")
-        .replace("ò", "o`")
-        .replace("ù", "u`")
-        .replace("À", "A`")
-        .replace("È", "E`")
-        .replace("Ì", "I`")
-        .replace("Ò", "O`")
-        .replace("Ù", "U`")
         .replace("…", "...")
         .replace("’", "'")
         .replace("—", "-")        
