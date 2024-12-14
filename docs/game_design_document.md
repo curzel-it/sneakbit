@@ -196,76 +196,81 @@ Reward: 10x Kunai
 
 Reward: Thugs are gone and the passage to Maritide Have via Thermoria's dock
 
-## Lore
-### Locations
+## Locations
 ![World Map](world_map.png)
 
-#### Evergrove Village (1001)
+### Evergrove Village (1001)
 The small village near the spawn location of the MC.
 
-#### Verdant Way (1002)
+### Verdant Way (1002)
 A network of paths in the forest near Evergrove that connect various locations:
 * Evergrove Village
 * Murkmire Swamps
 * Aridreach
 * Shadowveil Path
 
-#### Shadowveil Path (1010)
+### Shadowveil Path (1010)
 A network of paths in a dark near Verdant Way that connects:
 * Verdant Way
 * Demon Maze
 * Vintoria
 
-#### Aridreach (1003)
+### Aridreach (1003)
 A city built on top of a mountain in the middle of what is now Grimsun desert.
 The once lush environment has left way to a vast expanse of sand, on which the largest solar farm of the continent is built.
 The city also acts as the passage way to Grimsun Basin, a hot, deathly pile of sand and narrow passages between rocky mountinas.
 
-#### Murkmire Swamps (1018)
+### Murkmire Swamps (1018)
 Murkmire Swamp is a vast, foreboding wetland that stretches from the internal lands of the continent all the way to the South coast.
 The network of paths in the swamps connect:
 * Verdant Way
 * Duskhaven
 * Thermoria
 
-#### Demon Maze (1017)
+### Demon Maze (1017)
 A dark, misterious maze full of monsters. 
 Legend says the throne of the Demon Lord is at the center of the maze.
 
-#### Thermoria (1006)
+### Thermoria (1006)
 A group of interconnected islands off the cost of Verdant Way.
 A still active volcano, Mount Ignis, is now at the core of a geothermal power plant.
 A vast dungeon is accessible from underneath the geothermal plant.
 
-#### Maritide Haven (1008)
+### Maritide Haven (1008)
 Originally a large island, a terrific incident in the underground mine cause the town to collapse under the sea.
 Lots of time has passed since then, the landscape now looks like a small arcipelago.
 Due to the unique conditions that created the islands and the amount of underground cavities, a series of whirpools surrounds the area.
 The remote location is now only accessible from Thermoria using a particular naval route.
 
-#### Duskhaven (1011)
+### Duskhaven (1011)
 Duskhaven is a small touristic village, the only place where Manafren trees still grow.
 The trees are essetial to the town not just as a popular turist attraction, but also as a source of mana.
 An ancient underground power plant converts the mana into electricity.
 In order to study the trees, there are frequent visits by scientists and researchers from all over the world.
 
-#### Vintoria (1012)
+### Vintoria (1012)
 Vintoria is a mountain village, home to the best wineries in the continent.
 The river than once carved the valley has been redirected to an hydroelectric power plant.
 The basement of the power plant is embedded in the mountain and is built on multiple levels.
 
-#### Peak Levek (1020)
-TODO
+### Peak Levek (1020)
+Peak Levek is the tallest mountain in the game in the continent, well above the freezing point.
+At the foot of the mountain, there has always been a small community of woodcutters, but since ancient ruins were discovered, many of the archaeologists involved in the exploration have decided to move there.
 
 ## Flora and Fauna
 
 ### Animals
 There's several household animals, but they don't serve any purpose aside from decoration.
 
-### Monsters
-A single kind of monster, which is just a black blob with a teeth-filled mouth for now.
+### The eyeless monsters
+The first and most common kind of monster, usually seen in his black variant.<br>
+The attack on sight and deal damage with their teeth-filled mouth.<br>
+When two ore more monsters run into each other, one of the two will absorbe the other, triggering a trasformation into a more fearsome version of the creature.
 
-TODO: Add info on other monsters/transformations
+<img src="monsters_showcase.gif" alt="Monsters from the game" style="height: 64px; width: auto; image-rendering: pixelated;">
+
+See *Combat System* for more info.
 
 ### Manafren trees
-The Manafern Trees, native to the twilight land of Duskhaven, are renowned for their mystical energy properties, marked by vibrant purple leaves that absorb ethereal particles from the soil and air. Through a unique, photosynthesis-like process, the Manaferns convert these particles into pure mana, illuminating the region and powering its ecosystem. However, a darker truth lies beneath their allure: a centuries-old pact with the Demon Lord has embedded fragments of his essence within the trees, making each pulse of mana a subtle extension of his influence. Though they enrich life in Duskhaven, the Manaferns also inch the world closer to his dominion, veiling a sinister force within their radiant glow.
+The Manafern Trees, native to the twilight land of Duskhaven, are renowned for their mystical energy properties, marked by vibrant purple leaves that absorb ethereal particles from the soil and air.<br>
+Through a unique, photosynthesis-like process, the Manaferns convert these particles into pure mana, illuminating the region and powering its ecosystem. 
