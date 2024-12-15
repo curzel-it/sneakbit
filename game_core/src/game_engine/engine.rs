@@ -300,9 +300,7 @@ impl GameEngine {
             EngineStateUpdate::PlayerDied(player_index) => {
                 self.dead_players.push(*player_index);
                 self.update_current_turn_for_death_of_player(*player_index);
-                if *player_index == PLAYER1_INDEX {
-                    self.death_screen.show()
-                }
+                self.handle_win_lose()
             }
             EngineStateUpdate::ToggleFullScreen => {
                 self.wants_fullscreen = !self.wants_fullscreen
@@ -475,6 +473,27 @@ impl GameEngine {
                     self.update_current_turn(TURN_DURATION * 2.0);
                 }
             },
+        }
+    }
+
+    fn handle_win_lose(&mut self) {
+        match self.game_mode {
+            GameMode::RealTimeCoOp => {
+                if self.dead_players.contains(&PLAYER1_INDEX) {
+                    self.death_screen.show_hero_died()
+                }
+            },
+            GameMode::TurnBasedPvp => {
+                if self.dead_players.len() == self.number_of_players - 1 {
+                    let winner = (0..self.number_of_players).find(|&i| !self.dead_players.contains(&i));
+                    if let Some(winner) = winner {
+                        self.death_screen.show_match_winner(winner)
+                    } else {
+                        self.death_screen.show_match_unknown_result()
+                    }
+                }
+            },
+            GameMode::Creative => {},
         }
     }
 }

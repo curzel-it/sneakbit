@@ -148,9 +148,15 @@ Devo andare ora, alla prossima!
 
 "credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style"
 
+"death_screen.player_won" = "Vince il giocatore %PLAYER_NAME%!"
+
+"death_screen.start_new_match" = "Conferma per ricominciare"
+
 "death_screen.subtitle" = "Premi CONFERMA per riprovare"
 
 "death_screen.title" = "Sei morto."
+
+"death_screen.unknown_result" = "Chi ha vinto!? Ero distratto..."
 
 "dialogue.reward_received" = "Hai ricevuto `%s`!"
 

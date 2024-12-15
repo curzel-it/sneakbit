@@ -122,7 +122,10 @@ pub struct Entity {
     pub player_index: usize,
     
     #[serde(skip)]
-    pub species: Species
+    pub species: Species,
+    
+    #[serde(skip)]
+    pub reset_offset_on_next_direction_change: bool
 }
 
 impl Entity {

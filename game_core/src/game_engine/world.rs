@@ -191,12 +191,8 @@ impl World {
             .map(|(index, _)| index)
     }
 
-    pub fn direction_based_on_current_keys_for_player_by_entity_id(&self, entity_id: u32) -> Direction {
-        if let Some(index) = self.player_index_by_entity_id(entity_id) {
-            self.players[index].direction_based_on_current_keys
-        } else {
-            Direction::Unknown
-        }        
+    pub fn direction_based_on_current_keys_for_player_by_index(&self, index: usize) -> Direction {
+        self.players[index].direction_based_on_current_keys
     } 
 
     pub fn player_index_by_entity_id(&self, entity_id: u32) -> Option<usize> {
