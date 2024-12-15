@@ -40,7 +40,7 @@ impl BasicInfoHud {
                         }
                         if match turn {
                             GameTurn::RealTime => true,
-                            GameTurn::Player(current_player_index) => p.player == *current_player_index,
+                            GameTurn::Player(current_player_index, _) => p.player == *current_player_index,
                         } {
                             Some(p.ui(include_header, max_hp_to_show))
                         } else {

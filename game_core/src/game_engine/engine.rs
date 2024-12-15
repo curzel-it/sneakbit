@@ -1,6 +1,6 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, PLAYER1_INDEX, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}, weapon_selection::WeaponsGrid}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, PLAYER1_INDEX, TILE_SIZE, TURN_DURATION, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}, weapon_selection::WeaponsGrid}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
+use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, PlayerIndex, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
 
 pub struct GameEngine {
     pub menu: GameMenu,
@@ -48,7 +48,7 @@ impl GameMode {
         match self {
             GameMode::RealTimeCoOp => GameTurn::RealTime,
             GameMode::Creative => GameTurn::RealTime,
-            GameMode::TurnBasedPvp => GameTurn::Player(PLAYER1_INDEX),
+            GameMode::TurnBasedPvp => GameTurn::Player(PLAYER1_INDEX, TURN_DURATION),
         }
     }
 }
@@ -56,7 +56,7 @@ impl GameMode {
 #[derive(Clone, Copy)]
 pub enum GameTurn {
     RealTime,
-    Player(usize)
+    Player(PlayerIndex, f32)
 }
 
 impl GameEngine {
@@ -119,6 +119,8 @@ impl GameEngine {
             }
             return;
         }
+
+        self.update_current_turn(time_since_last_update);
 
         let camera_viewport = self.camera_viewport;
         let is_game_paused = self.update_menus(time_since_last_update);
@@ -218,7 +220,7 @@ impl GameEngine {
     fn center_camera_onto_players(&mut self) {
         let current_player_index = match self.turn {
             GameTurn::RealTime => PLAYER1_INDEX,
-            GameTurn::Player(current_player_index) => current_player_index,
+            GameTurn::Player(current_player_index, _) => current_player_index,
         };
 
         if (self.number_of_players - self.dead_players.len()) <= 1 || self.game_mode.is_turn_based() {
@@ -428,16 +430,24 @@ impl GameEngine {
         self.teleport_to_previous();
     }
     
-    pub fn load_next_turn(&mut self) {
+    pub fn update_current_turn(&mut self, time_since_last_update: f32) {
+        if self.number_of_players == 1 {
+            return 
+        }
         self.turn = match self.turn {
             GameTurn::RealTime => GameTurn::RealTime,
-            GameTurn::Player(current_player_index) => {
-                let next_player = current_player_index + 1;
-                
-                if next_player < self.number_of_players {
-                    GameTurn::Player(next_player)
+            GameTurn::Player(current_player_index, time_left) => {
+                let new_time_left = time_left - time_since_last_update;
+
+                if new_time_left <= 0.0 {
+                    let next_player = if current_player_index == self.number_of_players - 1 {
+                        PLAYER1_INDEX
+                    } else { 
+                        current_player_index + 1 
+                    };                    
+                    GameTurn::Player(next_player, TURN_DURATION)
                 } else {
-                    GameTurn::Player(0)
+                    GameTurn::Player(current_player_index, new_time_left)
                 }
             }
         }

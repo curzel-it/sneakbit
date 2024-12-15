@@ -1,7 +1,7 @@
 use std::sync::Once;
 
 use nohash_hasher::IntMap;
-use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View, COLOR_TEXT, COLOR_TEXT_HIGHLIGHTED}, layouts::{AnchorPoint, Layout}}, utils::{rect::IntRect, vector::Vector2d}};
+use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View, COLOR_TEXT, COLOR_TEXT_HIGHLIGHTED, COLOR_TURN_COUNTDOWN}, layouts::{AnchorPoint, Layout}}, utils::{rect::IntRect, vector::Vector2d}};
 use raylib::prelude::*;
 
 pub struct RenderingConfig {
@@ -49,12 +49,14 @@ impl RenderingConfig {
     fn text_color(&self, style: &Typography) -> Color {
         match style {
             Typography::Selected => as_rcolor(&COLOR_TEXT_HIGHLIGHTED),
+            Typography::Countdown => as_rcolor(&COLOR_TURN_COUNTDOWN),
             _ => as_rcolor(&COLOR_TEXT)
         }
     }
 
     fn font(&self, style: &Typography) -> &Font {
         match style {
+            Typography::Countdown => &self.font_bold,
             Typography::Title => &self.font_bold,
             Typography::SmallTitle => &self.font_bold,
             Typography::Selected => &self.font_bold,
@@ -69,6 +71,7 @@ impl RenderingConfig {
 
     pub fn scaled_font_size(&self, style: &Typography) -> f32 {
         self.font_rendering_scale * match style {
+            Typography::Countdown => 16.0,
             Typography::Title => 12.0,
             Typography::SmallTitle => 8.0,
             Typography::Selected => 8.0,
@@ -124,6 +127,10 @@ fn calculate_position(layout: &Layout, anchor: &AnchorPoint, view: &View, config
         ),
         AnchorPoint::BottomLeft => (
             0.0, 
+            layout.frame.y as f32 + layout.frame.h as f32 - size.y
+        ),
+        AnchorPoint::BottomRight => (
+            layout.frame.x as f32 + layout.frame.w as f32 - size.x, 
             layout.frame.y as f32 + layout.frame.h as f32 - size.y
         ),
     };
