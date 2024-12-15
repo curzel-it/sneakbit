@@ -514,7 +514,7 @@ impl GameMenu {
 }
 
 fn player_options() -> Vec<String> {
-    let pvp = if matches!(current_game_mode(), GameMode::Pvp) {
+    let pvp = if matches!(current_game_mode(), GameMode::TurnBasedPvp) {
         "game.menu.disable_pvp"
     } else {
         "game.menu.enable_pvp"

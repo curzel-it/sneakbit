@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define BUILD_NUMBER 35
+#define BUILD_NUMBER 36
 
 #define ANIMATIONS_FPS 10.0
 
@@ -155,9 +155,9 @@
 #define SPECIES_BARREL_WOOD 1074
 
 typedef enum GameMode {
-  GameMode_Story = 0,
+  GameMode_RealTimeCoOp = 0,
   GameMode_Creative = 1,
-  GameMode_Pvp = 2,
+  GameMode_TurnBasedPvp = 2,
 } GameMode;
 
 typedef enum SoundEffect {

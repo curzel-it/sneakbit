@@ -23,21 +23,40 @@ pub struct GameEngine {
     pub links_handler: Box<dyn LinksHandler>,
     pub number_of_players: usize,
     pub game_mode: GameMode,
-    pub dead_players: Vec<usize>
+    pub dead_players: Vec<usize>,
+    pub turn: GameTurn
 }
 
 #[derive(Clone, Copy)]
 #[repr(C)]
 pub enum GameMode {
-    Story = 0,
+    RealTimeCoOp = 0,
     Creative = 1,
-    Pvp = 2
+    TurnBasedPvp = 2
 }
 
 impl GameMode {
     pub fn allows_pvp(&self) -> bool {
-        matches!(self, GameMode::Pvp)
+        matches!(self, GameMode::TurnBasedPvp)
     }
+
+    pub fn is_turn_based(&self) -> bool {
+        matches!(self, GameMode::TurnBasedPvp)   
+    }
+
+    fn first_turn(&self) -> GameTurn {
+        match self {
+            GameMode::RealTimeCoOp => GameTurn::RealTime,
+            GameMode::Creative => GameTurn::RealTime,
+            GameMode::TurnBasedPvp => GameTurn::Player(PLAYER1_INDEX),
+        }
+    }
+}
+
+#[derive(Clone, Copy)]
+pub enum GameTurn {
+    RealTime,
+    Player(usize)
 }
 
 impl GameEngine {
@@ -63,7 +82,8 @@ impl GameEngine {
             number_of_players: 1,
             weapons_selection: WeaponsGrid::new(),
             game_mode,
-            dead_players: vec![]
+            dead_players: vec![],
+            turn: GameTurn::RealTime,
         }
     }
 
@@ -196,22 +216,29 @@ impl GameEngine {
     }
 
     fn center_camera_onto_players(&mut self) {
-        if (self.number_of_players - self.dead_players.len()) <= 1 {
-            let p1 = self.world.players[0].props;
-            self.center_camera_at(p1.hittable_frame.x, p1.hittable_frame.y, &p1.offset);
+        let current_player_index = match self.turn {
+            GameTurn::RealTime => PLAYER1_INDEX,
+            GameTurn::Player(current_player_index) => current_player_index,
+        };
+
+        if (self.number_of_players - self.dead_players.len()) <= 1 || self.game_mode.is_turn_based() {
+            let p = self.world.players[current_player_index].props;
+            self.center_camera_at(p.hittable_frame.x, p.hittable_frame.y, &p.offset);
         } else {
             let sum: (f32, f32) = self.world.players
                 .iter()
                 .filter_map(|p| {
                     if self.dead_players.contains(&p.index) {
-                        None
-                    } else {
-                        let x = p.props.hittable_frame.x as f32;
-                        let y = p.props.hittable_frame.y as f32;
-                        let ox = p.props.offset.x / TILE_SIZE;
-                        let oy = p.props.offset.y / TILE_SIZE;
-                        Some((x + ox, y + oy))
+                        return None
                     }
+                    if p.index >= self.number_of_players {
+                        return None
+                    }
+                    let x = p.props.hittable_frame.x as f32;
+                    let y = p.props.hittable_frame.y as f32;
+                    let ox = p.props.offset.x / TILE_SIZE;
+                    let oy = p.props.offset.y / TILE_SIZE;
+                    Some((x + ox, y + oy))
                 })
                 .fold((0.0, 0.0), |acc, (x, y)| {
                     (acc.0 + x, acc.1 + y)
@@ -391,6 +418,7 @@ impl GameEngine {
 
     pub fn update_game_mode(&mut self, game_mode: GameMode) {
         self.game_mode = game_mode;
+        self.turn = game_mode.first_turn();
         self.update_number_of_players(self.number_of_players);
     }
 
@@ -398,6 +426,21 @@ impl GameEngine {
         self.dead_players.clear();
         self.number_of_players = count;
         self.teleport_to_previous();
+    }
+    
+    pub fn load_next_turn(&mut self) {
+        self.turn = match self.turn {
+            GameTurn::RealTime => GameTurn::RealTime,
+            GameTurn::Player(current_player_index) => {
+                let next_player = current_player_index + 1;
+                
+                if next_player < self.number_of_players {
+                    GameTurn::Player(next_player)
+                } else {
+                    GameTurn::Player(0)
+                }
+            }
+        }
     }
 }
 
@@ -409,7 +452,7 @@ mod tests {
 
     #[test]
     fn can_launch_game_headless() {
-        let mut engine = GameEngine::new(GameMode::Story);
+        let mut engine = GameEngine::new(GameMode::RealTimeCoOp);
         engine.start();
         assert_ne!(engine.world.bounds.w, 10);
         assert_ne!(engine.world.bounds.h, 10);

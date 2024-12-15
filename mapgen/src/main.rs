@@ -119,7 +119,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         Path::new("data/save.json").to_path_buf(),
         Path::new("lang").to_path_buf()
     );
-    initialize_game(GameMode::Story);
+    initialize_game(GameMode::RealTimeCoOp);
 
     let data_dir = Path::new("data");
     let assets_dir = Path::new("assets");

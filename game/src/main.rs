@@ -55,7 +55,7 @@ fn main() {
         last_pvp: false,
     };
 
-    initialize_game(if creative_mode { GameMode::Creative } else { GameMode::Story });    
+    initialize_game(if creative_mode { GameMode::Creative } else { GameMode::RealTimeCoOp });    
     set_links_handler(Box::new(MyLinkHandler {}));
         
     if bool_for_global_key(&StorageKey::fullscreen()) {

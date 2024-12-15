@@ -22,11 +22,11 @@ impl World {
 
     fn spawn_players(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
         match current_game_mode() {
-            GameMode::Creative | GameMode::Story => {
+            GameMode::Creative | GameMode::RealTimeCoOp => {
                 self.spawn_hero_at_last_known_location(source, hero_direction, original_x, original_y, direction);
                 self.spawn_coop_players_around_hero();
             }
-            GameMode::Pvp => {
+            GameMode::TurnBasedPvp => {
                 self.spawn_players_at_map_corners();
             }
         }
@@ -37,10 +37,20 @@ impl World {
         let num_players = number_of_players();
         let half_w = self.bounds.w / 2;
         let half_h = self.bounds.h / 2;
-    
+                
+        let mut default_position = (0, 0);
+        for x in self.bounds.x..self.bounds.x + half_w {
+            for y in self.bounds.y..self.bounds.y + half_h {
+                if !self.hits(x, y) {
+                    default_position = (x, y);
+                    break
+                }
+            }
+        }
+
         for (i, &id) in player_ids.iter().enumerate().take(num_players) {
             let pos = match i {
-                0 => { // Top Left: left to right, top to bottom
+                0 => {
                     let mut pos = None;
                     'top_left: for x in self.bounds.x..self.bounds.x + half_w {
                         for y in self.bounds.y..self.bounds.y + half_h {
@@ -52,7 +62,7 @@ impl World {
                     }
                     pos
                 },
-                1 => { // Top Right: right to left, top to bottom
+                1 => { 
                     let mut pos = None;
                     let x_range: Vec<_> = (self.bounds.x + half_w..self.bounds.x + self.bounds.w).collect();
                     'top_right: for x in x_range.into_iter().rev() {
@@ -65,7 +75,7 @@ impl World {
                     }
                     pos
                 },
-                2 => { // Bottom Right: right to left, bottom to top
+                2 => {
                     let mut pos = None;
                     let x_range: Vec<_> = (self.bounds.x + half_w..self.bounds.x + self.bounds.w).collect();
                     let y_range: Vec<_> = (self.bounds.y + half_h..self.bounds.y + self.bounds.h).collect();
@@ -79,7 +89,7 @@ impl World {
                     }
                     pos
                 },
-                3 => { // Bottom Left: left to right, bottom to top
+                3 => { 
                     let mut pos = None;
                     'bottom_left: for x in self.bounds.x..self.bounds.x + half_w {
                         let y_range: Vec<_> = (self.bounds.y + half_h..self.bounds.y + self.bounds.h).collect();
@@ -95,19 +105,16 @@ impl World {
                 _ => None,
             };
     
-            if let Some((x, y)) = pos {
-                let mut entity = make_entity_by_species(SPECIES_HERO);
-                entity.frame.x = x;
-                entity.frame.y = y;
-                entity.direction = Direction::Down; // Default direction
-                entity.id = id;
-                entity.immobilize_for_seconds(0.2);
-                self.players[i].props = entity.props();
-                self.insert_entity(entity, i);
-            } else {
-                // Optionally handle the case where no spawn position is found
-                println!("No available spawn position found for player {}", i + 1);
-            }
+            let (x, y) = pos.unwrap_or(default_position);
+            let mut entity = make_entity_by_species(SPECIES_HERO);
+            entity.frame.x = x;
+            entity.frame.y = y - 1;
+            entity.direction = Direction::Down; 
+            entity.id = id;
+            entity.setup_hero_with_player_index(i);
+            entity.immobilize_for_seconds(0.2);
+            self.players[i].props = entity.props();
+            self.insert_entity(entity, i);
         }
     }    
 

@@ -439,9 +439,9 @@ pub fn update_number_of_players(count: usize) {
 
 pub fn toggle_pvp() {
     let next = match current_game_mode() {
-        GameMode::Story => GameMode::Pvp,
+        GameMode::RealTimeCoOp => GameMode::TurnBasedPvp,
         GameMode::Creative => GameMode::Creative,
-        GameMode::Pvp => GameMode::Story,
+        GameMode::TurnBasedPvp => GameMode::RealTimeCoOp,
     };
     engine_mut().update_game_mode(next);
 }

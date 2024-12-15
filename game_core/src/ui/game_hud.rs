@@ -9,7 +9,7 @@ impl GameEngine {
             height, 
             self.hud_background_color(),
             vec![
-                (AnchorPoint::TopLeft, self.basic_info_hud.ui(self.number_of_players, &self.dead_players)),
+                (AnchorPoint::TopLeft, self.basic_info_hud_ui()),
                 (AnchorPoint::BottomCenter, self.menu.ui(&self.camera_viewport)),
                 (AnchorPoint::BottomCenter, self.confirmation_dialog.ui()),
                 (AnchorPoint::BottomCenter, self.long_text_display.ui()),
@@ -20,6 +20,14 @@ impl GameEngine {
                 (AnchorPoint::Center, self.death_screen.ui()),
                 (AnchorPoint::Center, self.loading_screen.ui())
             ]
+        )
+    }
+
+    fn basic_info_hud_ui(&self) -> View {
+        self.basic_info_hud.ui(
+            &self.turn, 
+            self.number_of_players, 
+            &self.dead_players
         )
     }
     

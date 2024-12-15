@@ -57,7 +57,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_initializeConfig(
 extern "C"
 JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_initializeGame(JNIEnv *env, jobject thiz) {
-    initialize_game(GameMode_Story);
+    initialize_game(GameMode_RealTimeCoOp);
 }
 
 extern "C"

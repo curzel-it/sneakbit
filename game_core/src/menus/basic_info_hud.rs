@@ -1,4 +1,4 @@
-use crate::{constants::{MAX_PLAYERS, SPRITE_SHEET_INVENTORY}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, game_engine::storage::{get_value_for_global_key, inventory_count, StorageKey}, hstack, player_current_hp, shows_death_screen, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use crate::{constants::{MAX_PLAYERS, SPRITE_SHEET_INVENTORY}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, game_engine::{engine::GameTurn, storage::{get_value_for_global_key, inventory_count, StorageKey}}, hstack, player_current_hp, shows_death_screen, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 pub struct BasicInfoHud {
     players: Vec<PlayerHud>
@@ -15,8 +15,12 @@ impl BasicInfoHud {
         self.players.iter_mut().take(number_of_players).for_each(|p| p.update());
     }
 
-    pub fn ui(&self, number_of_players: usize, dead_players: &[usize]) -> View {
-
+    pub fn ui(
+        &self, 
+        turn: &GameTurn,
+        number_of_players: usize, 
+        dead_players: &[usize]
+    ) -> View {
         let include_header = number_of_players > 1;
         let max_hp_to_show = 60.0;
         
@@ -28,10 +32,19 @@ impl BasicInfoHud {
                 children: self.players
                     .iter()
                     .filter_map(|p| {
-                        if dead_players.contains(&p.player) || p.player >= number_of_players {
-                            None
-                        } else {
+                        if dead_players.contains(&p.player) {
+                            return None
+                        }
+                        if p.player >= number_of_players {
+                            return None
+                        }
+                        if match turn {
+                            GameTurn::RealTime => true,
+                            GameTurn::Player(current_player_index) => p.player == *current_player_index,
+                        } {
                             Some(p.ui(include_header, max_hp_to_show))
+                        } else {
+                            None
                         }
                     })
                     .collect()
