@@ -593,6 +593,8 @@ alimentando la vita e il fascino di Duskhaven.
 
 "no" = "No"
 
+"notification.player.died" = "Il giocatore %PLAYER_NAME% è andato!"
+
 "npc.menu.play_dialog" = "Avvia dialogo"
 
 "npc.menu.remove" = "Rimuovi"

@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, PLAYER1_INDEX, TILE_SIZE, TURN_DURATION, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}, weapon_selection::WeaponsGrid}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, PLAYER1_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, TURN_DURATION, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, PlayerIndex, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
 
@@ -299,6 +299,7 @@ impl GameEngine {
             }
             EngineStateUpdate::PlayerDied(player_index) => {
                 self.dead_players.push(*player_index);
+                self.update_current_turn_for_death_of_player(*player_index);
                 if *player_index == PLAYER1_INDEX {
                     self.death_screen.show()
                 }
@@ -450,6 +451,30 @@ impl GameEngine {
                     GameTurn::Player(current_player_index, new_time_left)
                 }
             }
+        }
+    }
+    
+    pub fn update_current_turn_for_death_of_player(&mut self, dead_player_index: usize) {
+        match self.turn {
+            GameTurn::RealTime => {},
+            GameTurn::Player(current_player_index, _) => {
+                if current_player_index == dead_player_index {
+                    self.toast.show(
+                        &Toast::new_with_image(
+                            ToastMode::LongHint,
+                            "notification.player.died"
+                                .localized()
+                                .replace("%PLAYER_NAME%", &format!("{}", dead_player_index + 1)),
+                            ToastImage::new(
+                                IntRect::new(9, 17, 1, 1), 
+                                SPRITE_SHEET_ANIMATED_OBJECTS, 
+                                4
+                            )
+                        )
+                    );
+                    self.update_current_turn(TURN_DURATION * 2.0);
+                }
+            },
         }
     }
 }

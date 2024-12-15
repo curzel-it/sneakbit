@@ -1,4 +1,4 @@
-use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_STATIC_OBJECTS}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::Toast};
+use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_STATIC_OBJECTS}, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, set_value_for_key, StorageKey}, world::World}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastMode}};
 
 impl Entity {
     pub fn setup_hint(&mut self) {
@@ -31,9 +31,11 @@ impl Entity {
     }
 
     fn toast(&self) -> WorldStateUpdate {
-        let hint = self.key().localized();
         WorldStateUpdate::EngineUpdate(EngineStateUpdate::Toast(            
-            Toast::hint(hint)
+            Toast::new(
+                ToastMode::Hint,
+                self.key().localized()
+            )
         ))
     }
 

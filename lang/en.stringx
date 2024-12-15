@@ -593,6 +593,8 @@ fueling life and wonder in Duskhaven.
 
 "no" = "No"
 
+"notification.player.died" = "Player %PLAYER_NAME% is gone"
+
 "npc.menu.play_dialog" = "Play dialog"
 
 "npc.menu.remove" = "Remove"
