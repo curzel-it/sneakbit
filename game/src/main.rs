@@ -5,7 +5,7 @@ mod rendering;
 use std::{collections::HashMap, env, path::PathBuf};
 
 use common_macros::hash_map;
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, SPRITE_SHEET_TENTACLES, SPRITE_SHEET_WEAPONS, TILE_SIZE}, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::{engine::GameMode, keyboard_events_provider::KeyboardEventsProvider, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_creative_mode, is_game_running, lang::localizable::LANG_EN, number_of_players, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_BUILDINGS, SPRITE_SHEET_CAVE_DARKNESS, SPRITE_SHEET_CONSTRUCTION_TILES, SPRITE_SHEET_DEMON_LORD_DEFEAT, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_INVENTORY, SPRITE_SHEET_MENU, SPRITE_SHEET_STATIC_OBJECTS, SPRITE_SHEET_TENTACLES, SPRITE_SHEET_WEAPONS, TILE_SIZE}, current_game_mode, current_sound_effects, current_soundtrack_string, current_world_id, engine, engine_set_wants_fullscreen, features::{links::LinksHandler, sound_effects::{are_sound_effects_enabled, is_music_enabled, SoundEffect}}, game_engine::{engine::GameMode, keyboard_events_provider::KeyboardEventsProvider, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_creative_mode, is_game_running, lang::localizable::LANG_EN, number_of_players, set_links_handler, stop_game, ui::components::Typography, update_game, update_keyboard, update_mouse, utils::vector::Vector2d, window_size_changed};
 use nohash_hasher::IntMap;
 use raylib::prelude::*;
 use rendering::{ui::{get_rendering_config, get_rendering_config_mut, init_rendering_config, is_rendering_config_initialized, RenderingConfig}, worlds::render_frame};
@@ -18,7 +18,9 @@ struct GameContext {
     latest_world: u32,
     is_fullscreen: bool,
     total_run_time: f32,
-    using_controller: bool
+    using_controller: bool,
+    last_number_of_players: usize,
+    last_pvp: bool
 }
 
 fn main() {
@@ -48,7 +50,9 @@ fn main() {
         latest_world: 0,
         is_fullscreen: false,
         total_run_time: 0.0,
-        using_controller: false
+        using_controller: false,
+        last_number_of_players: 1,
+        last_pvp: false,
     };
 
     initialize_game(if creative_mode { GameMode::Creative } else { GameMode::Story });    
@@ -163,22 +167,32 @@ fn update_sound_track(context: &mut SoundContext) {
 }
 
 fn update_target_refresh_rate(rl: &mut RaylibHandle) {
-    let monitor = get_current_monitor();
-    let monitor_refresh_rate = get_monitor_refresh_rate(monitor);
-    rl.set_target_fps(monitor_refresh_rate as u32);
-    println!("Updated target fps to {}", monitor_refresh_rate);
+    if !is_debug_build() {
+        let monitor = get_current_monitor();
+        let monitor_refresh_rate = get_monitor_refresh_rate(monitor);
+        rl.set_target_fps(monitor_refresh_rate as u32);
+        println!("Updated target fps to {}", monitor_refresh_rate);
+    }
 }
 
 fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {    
     let width = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.w as f32) as i32;
     let height = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.h as f32) as i32;
 
-    let (mut rl, thread) = raylib::init()
-        .size(width, height)
-        .resizable()
-        .title("SneakBit")
-        .vsync()
-        .build();        
+    let (mut rl, thread) = if is_debug_build() { 
+        raylib::init()
+            .size(width, height)
+            .resizable()
+            .title("SneakBit (Debug)")
+            .build()
+    } else { 
+        raylib::init()
+            .size(width, height)
+            .resizable()
+            .title("SneakBit")
+            .vsync()
+            .build()
+    };        
     
     let characters = latin_characters();    
     let font = rl.load_font_ex(&thread, &regular_font_path(), 8, Some(&characters)).unwrap();
@@ -206,42 +220,51 @@ fn start_rl_audio() -> Result<raylib::prelude::RaylibAudio, RaylibAudioInitError
 }
 
 fn handle_window_size_changed(context: &mut GameContext) {
-    if context.needs_window_init || context.rl.is_window_resized() {
-        context.needs_window_init = false;
+    let current_is_pvp = current_game_mode().allows_pvp();
+    let current_number_of_players = number_of_players();
+    let pvp_changed = context.last_pvp != current_is_pvp;
+    let number_of_players_changed = context.last_number_of_players != current_number_of_players;
+    let requires_update = pvp_changed || number_of_players_changed || context.needs_window_init || context.rl.is_window_resized();
 
-        if !is_rendering_config_initialized() {
-            return
-        }
-        let window_scale = context.rl.get_window_scale_dpi().x;
-        let real_width = context.rl.get_render_width() as f32;
-        let real_height = context.rl.get_render_height() as f32;
-        let width = real_width / window_scale;
-        let height = real_height / window_scale;
-
-        println!("Window size changed to {}x{} @ {}", width, height, window_scale);
-        let (scale, font_scale) = rendering_scale_for_screen_width(width);
-        
-        println!("Updated rendering scale to {}", scale);
-        println!("Updated font scale to {}", scale);
-        
-        let config = get_rendering_config_mut();
-        config.rendering_scale = scale;
-        config.font_rendering_scale = font_scale;
-
-        if context.rl.is_window_fullscreen() {
-            config.canvas_size.x = real_width;
-            config.canvas_size.y = real_height;
-        } else {
-            config.canvas_size.x = width;
-            config.canvas_size.y = height;
-        }
-
-        let font_size = config.scaled_font_size(&Typography::Regular);
-        let line_spacing = config.font_lines_spacing(&Typography::Regular);
-        window_size_changed(width, height, scale, font_size, line_spacing);
-
-        update_target_refresh_rate(&mut context.rl);
+    if !is_rendering_config_initialized() {
+        return
     }
+    if !requires_update {
+        return 
+    }
+    context.needs_window_init = false;
+    context.last_number_of_players = current_number_of_players;
+    context.last_pvp = current_is_pvp;
+
+    let window_scale = context.rl.get_window_scale_dpi().x;
+    let real_width = context.rl.get_render_width() as f32;
+    let real_height = context.rl.get_render_height() as f32;
+    let width = real_width / window_scale;
+    let height = real_height / window_scale;
+    let font_scale = font_scale_for_window_width(width);
+    let scale = rendering_scale_for_screen_width(width);
+
+    println!("Context changed: Window {}x{} @ {}; Players: {}; Pvp: {}", width, height, window_scale, context.last_number_of_players, context.last_pvp);    
+    println!("Updated rendering scale to {}", scale);
+    println!("Updated font scale to {}", scale);
+    
+    let config = get_rendering_config_mut();
+    config.rendering_scale = scale;
+    config.font_rendering_scale = font_scale;
+
+    if context.rl.is_window_fullscreen() {
+        config.canvas_size.x = real_width;
+        config.canvas_size.y = real_height;
+    } else {
+        config.canvas_size.x = width;
+        config.canvas_size.y = height;
+    }
+
+    let font_size = config.scaled_font_size(&Typography::Regular);
+    let line_spacing = config.font_lines_spacing(&Typography::Regular);
+    window_size_changed(width, height, scale, font_size, line_spacing);
+
+    update_target_refresh_rate(&mut context.rl);
 }
 
 fn load_textures(rl: &mut RaylibHandle, thread: &RaylibThread) -> IntMap<u32, Texture2D> {    
@@ -444,17 +467,29 @@ fn get_char_pressed(rl: &mut RaylibHandle) -> u32 {
     }
 }
 
-fn rendering_scale_for_screen_width(width: f32) -> (f32, f32) {
+fn rendering_scale_for_screen_width(width: f32) -> f32 {
     if is_creative_mode() {
-        (2.0, 2.0)
+        2.0
     } else if width < 500.0 {
-        (1.0, 1.0)
+        1.0
     } else if width < 1400.0 {
-        (2.0, 2.0)
+        2.0
     } else if width < 2000.0 {
-        (3.0, 3.0)
+        3.0
     } else {
-        (4.0, 4.0)
+        4.0
+    }
+}
+
+fn font_scale_for_window_width(width: f32) -> f32 {
+    if width < 500.0 {
+        1.0
+    } else if width < 1400.0 {
+        2.0
+    } else if width < 2000.0 {
+        3.0
+    } else {
+        4.0
     }
 }
 

@@ -443,5 +443,5 @@ pub fn toggle_pvp() {
         GameMode::Creative => GameMode::Creative,
         GameMode::Pvp => GameMode::Story,
     };
-    engine_mut().game_mode = next;
+    engine_mut().update_game_mode(next);
 }

@@ -389,8 +389,13 @@ impl GameEngine {
         reset_all_stored_values();
     }
 
+    pub fn update_game_mode(&mut self, game_mode: GameMode) {
+        self.game_mode = game_mode;
+        self.update_number_of_players(self.number_of_players);
+    }
+
     pub fn update_number_of_players(&mut self, count: usize) {
-        if count == self.number_of_players { return }
+        self.dead_players.clear();
         self.number_of_players = count;
         self.teleport_to_previous();
     }

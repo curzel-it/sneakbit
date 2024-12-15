@@ -1,4 +1,4 @@
-use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, game_engine::world::{World, WorldType}, number_of_players, utils::directions::Direction};
+use crate::{constants::TILE_SIZE, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, game_engine::{engine::GameMode, world::{World, WorldType}}, number_of_players, utils::directions::Direction};
 
 impl World {
     pub fn setup(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
@@ -12,8 +12,7 @@ impl World {
         self.update_tiles_hitmap();
         self.update_hitmaps();
         self.setup_entities();
-        self.spawn_hero(source, hero_direction, original_x, original_y, direction);
-        self.spawn_other_players();
+        self.spawn_players(source, hero_direction, original_x, original_y, direction);
         self.spawn_equipment();
     }    
 
@@ -21,7 +20,98 @@ impl World {
         self.entities.borrow_mut().iter_mut().for_each(|e| e.setup());
     }
 
-    fn spawn_hero(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
+    fn spawn_players(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
+        match current_game_mode() {
+            GameMode::Creative | GameMode::Story => {
+                self.spawn_hero_at_last_known_location(source, hero_direction, original_x, original_y, direction);
+                self.spawn_coop_players_around_hero();
+            }
+            GameMode::Pvp => {
+                self.spawn_players_at_map_corners();
+            }
+        }
+    }
+
+    fn spawn_players_at_map_corners(&mut self) {
+        let player_ids = self.player_entity_ids();
+        let num_players = number_of_players();
+        let half_w = self.bounds.w / 2;
+        let half_h = self.bounds.h / 2;
+    
+        for (i, &id) in player_ids.iter().enumerate().take(num_players) {
+            let pos = match i {
+                0 => { // Top Left: left to right, top to bottom
+                    let mut pos = None;
+                    'top_left: for x in self.bounds.x..self.bounds.x + half_w {
+                        for y in self.bounds.y..self.bounds.y + half_h {
+                            if !self.hits(x, y) {
+                                pos = Some((x, y));
+                                break 'top_left;
+                            }
+                        }
+                    }
+                    pos
+                },
+                1 => { // Top Right: right to left, top to bottom
+                    let mut pos = None;
+                    let x_range: Vec<_> = (self.bounds.x + half_w..self.bounds.x + self.bounds.w).collect();
+                    'top_right: for x in x_range.into_iter().rev() {
+                        for y in self.bounds.y..self.bounds.y + half_h {
+                            if !self.hits(x, y) {
+                                pos = Some((x, y));
+                                break 'top_right;
+                            }
+                        }
+                    }
+                    pos
+                },
+                2 => { // Bottom Right: right to left, bottom to top
+                    let mut pos = None;
+                    let x_range: Vec<_> = (self.bounds.x + half_w..self.bounds.x + self.bounds.w).collect();
+                    let y_range: Vec<_> = (self.bounds.y + half_h..self.bounds.y + self.bounds.h).collect();
+                    'bottom_right: for x in x_range.into_iter().rev() {
+                        for y in y_range.clone().into_iter().rev() {
+                            if !self.hits(x, y) {
+                                pos = Some((x, y));
+                                break 'bottom_right;
+                            }
+                        }
+                    }
+                    pos
+                },
+                3 => { // Bottom Left: left to right, bottom to top
+                    let mut pos = None;
+                    'bottom_left: for x in self.bounds.x..self.bounds.x + half_w {
+                        let y_range: Vec<_> = (self.bounds.y + half_h..self.bounds.y + self.bounds.h).collect();
+                        for y in y_range.into_iter().rev() {
+                            if !self.hits(x, y) {
+                                pos = Some((x, y));
+                                break 'bottom_left;
+                            }
+                        }
+                    }
+                    pos
+                },
+                _ => None,
+            };
+    
+            if let Some((x, y)) = pos {
+                let mut entity = make_entity_by_species(SPECIES_HERO);
+                entity.frame.x = x;
+                entity.frame.y = y;
+                entity.direction = Direction::Down; // Default direction
+                entity.id = id;
+                entity.immobilize_for_seconds(0.2);
+                self.players[i].props = entity.props();
+                self.insert_entity(entity, i);
+            } else {
+                // Optionally handle the case where no spawn position is found
+                println!("No available spawn position found for player {}", i + 1);
+            }
+        }
+    }    
+
+    fn spawn_hero_at_last_known_location(&mut self, source: u32, hero_direction: &Direction, original_x: i32, original_y: i32, direction: Direction) {
         let (x, y) = self.destination_x_y(source, original_x, original_y);
         let mut entity = make_entity_by_species(SPECIES_HERO);
         
@@ -53,20 +143,10 @@ impl World {
         self.insert_entity(entity, 0);
     }
 
-    fn hero_entity_ids(&self) -> Vec<u32> {
-        match number_of_players() {
-            1 => vec![PLAYER1_ENTITY_ID],
-            2 => vec![PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID],
-            3 => vec![PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID],
-            4 => vec![PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID],
-            _ => vec![PLAYER1_ENTITY_ID]
-        }
-    }
-
-    fn spawn_other_players(&mut self) {
+    fn spawn_coop_players_around_hero(&mut self) {
         let offset = TILE_SIZE / 3.0;
 
-        for (index, &id) in self.hero_entity_ids().iter().enumerate().skip(1) {
+        for (index, &id) in self.player_entity_ids().iter().enumerate().skip(1) {
             let mut entity = make_entity_by_species(SPECIES_HERO);
             entity.frame = self.players[0].props.frame;
             entity.direction = self.players[0].props.direction;
@@ -75,18 +155,19 @@ impl World {
             entity.id = id;
             entity.setup_hero_with_player_index(index);
             entity.immobilize_for_seconds(0.2);
+            self.players[index].props = entity.props();
             self.insert_entity(entity, index);
         }
     }
 
     fn spawn_equipment(&mut self) {
-        for (index, &id) in self.hero_entity_ids().iter().enumerate() {
+        for (index, &id) in self.player_entity_ids().iter().enumerate() {
             for item_id in ALL_EQUIPMENT_IDS.iter() {
                 let mut item = species_by_id(*item_id).make_entity();
                 item.parent_id = id;
                 item.player_index = index;
-                item.frame.x = self.players[0].props.frame.x;
-                item.frame.y = self.players[0].props.frame.y;
+                item.frame.x = self.players[index].props.frame.x;
+                item.frame.y = self.players[index].props.frame.y;
                 self.add_entity(item);
             }
         }

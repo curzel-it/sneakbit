@@ -2,9 +2,9 @@ use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}
 
 use common_macros::hash_set;
 use serde::{Deserialize, Serialize};
-use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_HERO, SPECIES_KUNAI}, species::{species_by_id, EntityType}}, equipment::basics::{available_weapons, is_equipped}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_HERO, SPECIES_KUNAI}, species::{species_by_id, EntityType}}, equipment::basics::{available_weapons, is_equipped}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, game_engine::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{entity::{Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
+use super::{entity::{is_player_index, Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 #[derive(Clone)]
 pub struct World {
@@ -224,7 +224,6 @@ impl World {
         self.biome_tiles.update(time_since_last_update);
 
         let mut engine_updates: Vec<EngineStateUpdate> = vec![];
-        engine_updates.extend(self.update_hero(time_since_last_update));
         engine_updates.extend(self.update_entities(time_since_last_update));
         engine_updates.extend(self.update_cutscenes(time_since_last_update));
 
@@ -233,25 +232,11 @@ impl World {
         engine_updates
     }
 
-    fn update_hero(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> { 
-        let mut entities = self.entities.borrow_mut();
-
-        if let Some(hero) = entities.get_mut(0) {
-            let hero_updates = hero.update(self, time_since_last_update);
-            _ = hero;
-            drop(entities);
-            self.apply_state_updates(hero_updates)
-        } else {
-            vec![]
-        }
-    }
-
     fn update_entities(&mut self, time_since_last_update: f32) -> Vec<EngineStateUpdate> { 
         let mut entities = self.entities.borrow_mut();
         let mut updates: Vec<WorldStateUpdate> = vec![];
 
         for &(index, _) in &self.visible_entities {
-            if index == 0 { continue }
             if let Some(entity) = entities.get_mut(index) {
                 let entity_updates = entity.update(self, time_since_last_update);
                 updates.extend(entity_updates);
@@ -790,7 +775,7 @@ impl World {
         let entities = self.entities.borrow();
 
         for (index, entity) in entities.iter().enumerate() {
-            let is_visible = index == 0 || {
+            let is_visible = is_player_index(index) || {
                 let frame = entity.frame;
                 let frame_y = frame.y;
                 let frame_x = frame.x;
@@ -882,6 +867,26 @@ impl World {
             }
         }
         None
+    }
+
+    pub fn player_entity_ids(&self) -> Vec<u32> {
+        match number_of_players() {
+            1 => vec![PLAYER1_ENTITY_ID],
+            2 => vec![PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID],
+            3 => vec![PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID],
+            4 => vec![PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID],
+            _ => vec![PLAYER1_ENTITY_ID]
+        }
+    }
+
+    pub fn player_entity_indeces(&self) -> Vec<usize> {
+        match number_of_players() {
+            1 => vec![PLAYER1_INDEX],
+            2 => vec![PLAYER1_INDEX, PLAYER2_INDEX],
+            3 => vec![PLAYER1_INDEX, PLAYER2_INDEX, PLAYER3_INDEX],
+            4 => vec![PLAYER1_INDEX, PLAYER2_INDEX, PLAYER3_INDEX, PLAYER4_INDEX],
+            _ => vec![PLAYER1_INDEX]
+        }
     }
 }
 
