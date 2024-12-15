@@ -5,6 +5,7 @@ pub type NonColor = (u8, u8, u8, u8);
 pub const COLOR_TRANSPARENT: NonColor = (0, 0, 0, 0);
 pub const COLOR_TEXT: NonColor = (255, 255, 255, 245);
 pub const COLOR_TURN_COUNTDOWN: NonColor = (245, 160, 0, 255);
+pub const COLOR_TEXT_SHADOW: NonColor = (0, 0, 0, 200);
 pub const COLOR_TEXT_HIGHLIGHTED: NonColor = (255, 200, 0, 255);
 pub const COLOR_GENERAL_HIGHLIGHT: NonColor = (255, 0, 0, 153);
 pub const COLOR_DEBUG_INFO_BACKGROUND: NonColor = (0, 0, 0, 85);
@@ -27,8 +28,9 @@ impl WithAlpha for NonColor {
 #[derive(Copy, Clone, Debug)]
 pub enum Typography {
     Countdown,
+    PlayerHudText,
     Title,
-    SmallTitle,
+    PlayerHudSmallTitle,
     Regular,
     Selected,
     Caption,

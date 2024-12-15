@@ -1,7 +1,7 @@
 use std::sync::Once;
 
 use nohash_hasher::IntMap;
-use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View, COLOR_TEXT, COLOR_TEXT_HIGHLIGHTED, COLOR_TURN_COUNTDOWN}, layouts::{AnchorPoint, Layout}}, utils::{rect::IntRect, vector::Vector2d}};
+use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View, COLOR_TEXT, COLOR_TEXT_HIGHLIGHTED, COLOR_TEXT_SHADOW, COLOR_TURN_COUNTDOWN}, layouts::{AnchorPoint, Layout}}, utils::{rect::IntRect, vector::Vector2d}};
 use raylib::prelude::*;
 
 pub struct RenderingConfig {
@@ -54,13 +54,23 @@ impl RenderingConfig {
         }
     }
 
+    fn text_shadow(&self, style: &Typography) -> Option<(f32, f32, Color)> {
+        match style {
+            Typography::Countdown => Some((2.0, 2.0, as_rcolor(&COLOR_TEXT_SHADOW))),
+            Typography::PlayerHudText | Typography::PlayerHudSmallTitle => {
+                Some((1.0, 1.0, as_rcolor(&COLOR_TEXT_SHADOW)))
+            },
+            _ => None
+        }
+    }
+
     fn font(&self, style: &Typography) -> &Font {
         match style {
             Typography::Countdown => &self.font_bold,
             Typography::Title => &self.font_bold,
-            Typography::SmallTitle => &self.font_bold,
+            Typography::PlayerHudSmallTitle => &self.font_bold,
             Typography::Selected => &self.font_bold,
-            Typography::Regular => &self.font,
+            Typography::Regular | Typography::PlayerHudText => &self.font,
             Typography::Caption => &self.font,
         }
     }
@@ -73,9 +83,9 @@ impl RenderingConfig {
         self.font_rendering_scale * match style {
             Typography::Countdown => 16.0,
             Typography::Title => 12.0,
-            Typography::SmallTitle => 8.0,
+            Typography::PlayerHudSmallTitle => 8.0,
             Typography::Selected => 8.0,
-            Typography::Regular => 8.0,
+            Typography::Regular | Typography::PlayerHudText => 8.0,
             Typography::Caption => 6.0,
         }
     }
@@ -148,6 +158,10 @@ fn spacing_value(spacing: &Spacing, config: &RenderingConfig) -> f32 {
 
 fn vector_as_rv(vector: &Vector2d) -> raylib::math::Vector2 {
     raylib::math::Vector2::new(vector.x, vector.y)
+} 
+
+fn vector_as_rv_offset(vector: &Vector2d, dx: f32, dy: f32) -> raylib::math::Vector2 {
+    raylib::math::Vector2::new(vector.x + dx, vector.y + dy)
 } 
 
 fn accounts_for_stack_size(view: &View) -> bool {
@@ -335,6 +349,10 @@ fn render_text(
         let font_size = config.scaled_font_size(style);
         let font_spacing = config.scaled_font_spacing(style);
         let color = config.text_color(style);
+
+        if let Some((dx, dy, shadow_color)) = config.text_shadow(style) {
+            d.draw_text_ex(font, text, vector_as_rv_offset(position, dx, dy), font_size, font_spacing, shadow_color);
+        }        
         d.draw_text_ex(font, text, vector_as_rv(position), font_size, font_spacing, color);
     } else {
         let stack = multiline_text_to_vstack(style, text);
