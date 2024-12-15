@@ -148,9 +148,15 @@ I have to go now, see you around!
 
 "credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style"
 
+"death_screen.player_won" = "Player %PLAYER_NAME% won!"
+
+"death_screen.start_new_match" = "Confirm to start a new match"
+
 "death_screen.subtitle" = "Press CONFIRM to try again"
 
 "death_screen.title" = "You're dead."
+
+"death_screen.unknown_result" = "Who won!? I was distracted..."
 
 "dialogue.reward_received" = "You received `%s`!"
 
@@ -213,9 +219,13 @@ Back:         Middle / Right
 
 "game.menu.disable_music" = "Disable Music"
 
+"game.menu.disable_pvp" = "Disable Pvp"
+
 "game.menu.disable_sound_effects" = "Disable Sound Effects"
 
 "game.menu.enable_music" = "Enable Music"
+
+"game.menu.enable_pvp" = "Enable Pvp"
 
 "game.menu.enable_sound_effects" = "Enable Sound Effects"
 
@@ -243,16 +253,23 @@ Back:         Middle / Right
 
 "game.menu.number_of_players.1" = "Single Player"
 
+"game.menu.number_of_players.1.selected" = "(Selected) Single Player"
+
 "game.menu.number_of_players.2" = "2 Players"
+
+"game.menu.number_of_players.2.selected" = "(Selected) 2 Players"
 
 "game.menu.number_of_players.3" = "3 Players"
 
+"game.menu.number_of_players.3.selected" = "(Selected) 3 Players"
+
 "game.menu.number_of_players.4" = "4 Players"
+
+"game.menu.number_of_players.4.selected" = "(Selected) 4 Players"
 
 "game.menu.number_of_players.subtitle" = """
 Single player supports both keyboard and conrtoller.
 Multiplayer requires one controller per player.
-When in multiplayer, player 1 can use both controller and keyboard.
 """
 
 "game.menu.resume" = "Resume"
@@ -260,6 +277,8 @@ When in multiplayer, player 1 can use both controller and keyboard.
 "game.menu.save" = "Save Game"
 
 "game.menu.save_and_exit" = "Save & Exit"
+
+"game.menu.settings" = "Settings"
 
 "game.menu.status" = "Status"
 
@@ -580,6 +599,8 @@ fueling life and wonder in Duskhaven.
 
 "no" = "No"
 
+"notification.player.died" = "Player %PLAYER_NAME% is gone"
+
 "npc.menu.play_dialog" = "Play dialog"
 
 "npc.menu.remove" = "Remove"
@@ -699,6 +720,8 @@ fueling life and wonder in Duskhaven.
 "npc.name.wizard" = "Mogarth the Sage"
 
 "objects.name.amanita" = "Amanita Mushroom"
+
+"objects.name.ar15.bullet" = ".223 Rem"
 
 "objects.name.ar15.item" = "AR 15"
 
@@ -1244,6 +1267,7 @@ Curse that guy.
 "quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
 This job requires me to stay away from home for long periods of time...
 My children are all about your age...
+I wonder if they are doing well...
 """
 
 "quest.sword.a_thing_of_beauty" = "My old sword, a thing of beauty isn't it?"

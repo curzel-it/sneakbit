@@ -1,4 +1,4 @@
-use crate::{entities::bullets::make_player_bullet, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, world::World}, utils::{directions::Direction, vector::Vector2d}};
+use crate::{entities::bullets::make_player_bullet, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::{directions::Direction, vector::Vector2d}};
 
 use super::basics::is_equipped;
 
@@ -51,8 +51,8 @@ impl Entity {
                 })
                 .collect();
 
-            if let Some(effect) = self.species.usage_special_effect.clone() {
-                updates.push(WorldStateUpdate::EngineUpdate(EngineStateUpdate::SpecialEffect(effect)));
+            if let Some(effect) = self.species.equipment_usage_sound_effect.clone() {
+                updates.push(effect.as_world_state_update(self.player_index));
             }
             return updates
         }

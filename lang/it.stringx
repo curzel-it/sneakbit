@@ -148,9 +148,15 @@ Devo andare ora, alla prossima!
 
 "credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style"
 
+"death_screen.player_won" = "Vince il giocatore %PLAYER_NAME%!"
+
+"death_screen.start_new_match" = "Conferma per ricominciare"
+
 "death_screen.subtitle" = "Premi CONFERMA per riprovare"
 
 "death_screen.title" = "Sei morto."
+
+"death_screen.unknown_result" = "Chi ha vinto!? Ero distratto..."
 
 "dialogue.reward_received" = "Hai ricevuto `%s`!"
 
@@ -213,9 +219,13 @@ Back:         Middle / Right
 
 "game.menu.disable_music" = "Disablita Musica"
 
+"game.menu.disable_pvp" = "Disabilita Pvp"
+
 "game.menu.disable_sound_effects" = "Disablita Effetti Sonori"
 
 "game.menu.enable_music" = "Ablita Musica"
+
+"game.menu.enable_pvp" = "Abilita Pvp"
 
 "game.menu.enable_sound_effects" = "Ablita Effetti Sonori"
 
@@ -243,16 +253,23 @@ Back:         Middle / Right
 
 "game.menu.number_of_players.1" = "Single Player"
 
+"game.menu.number_of_players.1.selected" = "(Selezionato) Single Player"
+
 "game.menu.number_of_players.2" = "2 Giocatori"
+
+"game.menu.number_of_players.2.selected" = "(Selezionato) 2 Giocatori"
 
 "game.menu.number_of_players.3" = "3 Giocatori"
 
+"game.menu.number_of_players.3.selected" = "(Selezionato) 3 Giocatori"
+
 "game.menu.number_of_players.4" = "4 Giocatori"
+
+"game.menu.number_of_players.4.selected" = "(Selezionato) 4 Giocatori"
 
 "game.menu.number_of_players.subtitle" = """
 In single player puoi usare sia la tastiera che il controller.
 Per il multiplayer è richiesto un controller per giocatore.
-Quando in multiplayer, il player uno può usare sia la tastera che il controller.
 """
 
 "game.menu.resume" = "Riprendi"
@@ -260,6 +277,8 @@ Quando in multiplayer, il player uno può usare sia la tastera che il controller
 "game.menu.save" = "Salva Gioco"
 
 "game.menu.save_and_exit" = "Salva ed Esci"
+
+"game.menu.settings" = "Impostazioni"
 
 "game.menu.status" = "Stato"
 
@@ -580,6 +599,8 @@ alimentando la vita e il fascino di Duskhaven.
 
 "no" = "No"
 
+"notification.player.died" = "Il giocatore %PLAYER_NAME% è andato!"
+
 "npc.menu.play_dialog" = "Avvia dialogo"
 
 "npc.menu.remove" = "Rimuovi"
@@ -699,6 +720,8 @@ alimentando la vita e il fascino di Duskhaven.
 "npc.name.wizard" = "Mogarth il Saggio"
 
 "objects.name.amanita" = "Fungo Amanita"
+
+"objects.name.ar15.bullet" = ".223 Rem"
 
 "objects.name.ar15.item" = "AR 15"
 
@@ -1243,7 +1266,8 @@ Maledetto quel tizio.
 
 "quest.ninja_skills.red_ninja.please_check_on_my_kids" = """
 Questo lavoro richiede che io stia lontano da casa per lunghi periodi di tempo...
-I miei figli hanno tutti la tua età...
+I miei figli hanno tutti circa la tua età...
+Chissà se stanno bene
 """
 
 "quest.sword.a_thing_of_beauty" = "Ah, la mia vecchia spada... Non taglia più niente, ma è stupenda vero?"

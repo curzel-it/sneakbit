@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define BUILD_NUMBER 35
+#define BUILD_NUMBER 36
 
 #define ANIMATIONS_FPS 10.0
 
@@ -24,11 +24,19 @@
 
 #define KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS 0.1
 
+#define PLAYER1_INDEX 0
+
 #define PLAYER1_ENTITY_ID 420
+
+#define PLAYER2_INDEX 1
 
 #define PLAYER2_ENTITY_ID 421
 
+#define PLAYER3_INDEX 2
+
 #define PLAYER3_ENTITY_ID 422
+
+#define PLAYER4_INDEX 3
 
 #define PLAYER4_ENTITY_ID 423
 
@@ -146,6 +154,12 @@
 
 #define SPECIES_BARREL_WOOD 1074
 
+typedef enum GameMode {
+  GameMode_RealTimeCoOp = 0,
+  GameMode_Creative = 1,
+  GameMode_TurnBasedPvp = 2,
+} GameMode;
+
 typedef enum SoundEffect {
   SoundEffect_AmmoCollected = 1,
   SoundEffect_KeyCollected = 2,
@@ -225,9 +239,7 @@ typedef struct MenuDescriptorC {
 
 
 
-void initialize_game(bool creative_mode);
-
-bool is_creative_mode(void);
+void initialize_game(enum GameMode mode);
 
 bool is_game_running(void);
 

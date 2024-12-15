@@ -1,4 +1,4 @@
-use crate::{constants::{MAX_PLAYERS, SPRITE_SHEET_INVENTORY}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, game_engine::storage::{get_value_for_global_key, inventory_count, StorageKey}, hstack, player_current_hp, shows_death_screen, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use crate::{constants::{MAX_PLAYERS, SPRITE_SHEET_INVENTORY}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, game_engine::{engine::GameTurn, storage::{get_value_for_global_key, inventory_count, StorageKey}}, hstack, player_current_hp, shows_death_screen, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 pub struct BasicInfoHud {
     players: Vec<PlayerHud>
@@ -15,7 +15,12 @@ impl BasicInfoHud {
         self.players.iter_mut().take(number_of_players).for_each(|p| p.update());
     }
 
-    pub fn ui(&self, number_of_players: usize) -> View {
+    pub fn ui(
+        &self, 
+        turn: &GameTurn,
+        number_of_players: usize, 
+        dead_players: &[usize]
+    ) -> View {
         let include_header = number_of_players > 1;
         let max_hp_to_show = 60.0;
         
@@ -26,8 +31,22 @@ impl BasicInfoHud {
                 spacing: Spacing::SM, 
                 children: self.players
                     .iter()
-                    .take(number_of_players)
-                    .map(|p| p.ui(include_header, max_hp_to_show))
+                    .filter_map(|p| {
+                        if dead_players.contains(&p.player) {
+                            return None
+                        }
+                        if p.player >= number_of_players {
+                            return None
+                        }
+                        if match turn {
+                            GameTurn::RealTime => true,
+                            GameTurn::Player(current_player_index, _) => p.player == *current_player_index,
+                        } {
+                            Some(p.ui(include_header, max_hp_to_show))
+                        } else {
+                            None
+                        }
+                    })
                     .collect()
             }
         )
@@ -78,7 +97,7 @@ impl PlayerHud {
             vstack!(
                 Spacing::Zero,
                 spacing!(Spacing::SM),
-                text!(Typography::SmallTitle, format!("P{}", self.player + 1))
+                text!(Typography::PlayerHudSmallTitle, format!("P{}", self.player + 1))
             )
         } else {
             empty_view()
@@ -87,7 +106,7 @@ impl PlayerHud {
 
     fn hp_ui(&self, max_hp_to_show: f32) -> View {
         if self.hp < max_hp_to_show && !shows_death_screen() {
-            let typography = if self.hp < 30.0 { Typography::Selected } else { Typography::Regular };
+            let typography = if self.hp < 30.0 { Typography::PlayerHudHighlight } else { Typography::PlayerHudText };
             vstack!(
                 Spacing::Zero,
                 spacing!(Spacing::SM),
@@ -109,7 +128,7 @@ impl PlayerHud {
             vstack!(
                 Spacing::Zero,
                 spacing!(Spacing::SM),
-                text!(Typography::Regular, format!("x{}", self.ammo_count))
+                text!(Typography::PlayerHudText, format!("x{}", self.ammo_count))
             )                
         )
     }

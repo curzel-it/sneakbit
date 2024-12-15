@@ -59,7 +59,7 @@ class GameEngine {
             saveJson(),
             langFolder()
         )
-        initialize_game(false)
+        initialize_game(GameMode_RealTimeCoOp)
     }
     
     func update(deltaTime: Float) {

@@ -6,7 +6,8 @@ use crate::{constants::SPRITE_SHEET_MENU, features::animated_sprite::AnimatedSpr
 #[repr(C)]
 pub enum ToastMode {
     Regular = 0,
-    Hint
+    Hint,
+    LongHint
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -48,7 +49,7 @@ impl ToastDisplay {
             if self.text == toast.text {
                 return
             }
-            if matches!(toast.mode, ToastMode::Hint) {
+            if matches!(toast.mode, ToastMode::Hint | ToastMode::LongHint) {
                 self.show_now(toast.clone());
                 return
             }
@@ -63,7 +64,10 @@ impl ToastDisplay {
 
     pub fn update(&mut self, time_since_last_update: f32) {
         self.animator.update(time_since_last_update);
-        if let Some(sprite) = self.sprite.as_mut() { sprite.update(time_since_last_update) }
+        
+        if let Some(sprite) = self.sprite.as_mut() { 
+            sprite.update(time_since_last_update) 
+        }
 
         if !self.animator.is_active && !self.queue.is_empty() {
             if let Some(toast) = self.queue.pop_front() {
@@ -86,9 +90,20 @@ impl ToastDisplay {
     }
 }
 
+impl Toast {    
+    pub fn new(mode: ToastMode, text: String) -> Self {
+        Self { text, mode, image: None }
+    }
+
+    pub fn new_with_image(mode: ToastMode, text: String, image: ToastImage) -> Self {
+        Self { text, mode, image: Some(image) }
+    }
+}
+
 impl ToastMode {
     fn duration(&self) -> f32 {
         match self {
+            ToastMode::LongHint => 2.5,
             ToastMode::Hint => 1.8,
             ToastMode::Regular => 1.0
         }
@@ -109,27 +124,9 @@ impl ToastImage {
     }
 }
 
-impl Toast {
-    pub fn regular(text: String) -> Self {
-        Toast { text, mode: ToastMode::Regular, image: None }
-    }
-    
-    pub fn regular_with_image(text: String, image: ToastImage) -> Self {
-        Toast { text, mode: ToastMode::Regular, image: Some(image) }
-    }
-    
-    pub fn hint(text: String) -> Self {
-        Toast { text, mode: ToastMode::Hint, image: None }
-    }
-    
-    pub fn hint_with_image(text: String, image: ToastImage) -> Self {
-        Toast { text, mode: ToastMode::Hint, image: Some(image) }
-    }
-}
-
 impl ToastDisplay {
     pub fn hint_toast_ui(&self) -> View { 
-        if matches!(self.mode, ToastMode::Hint) {       
+        if matches!(self.mode, ToastMode::Hint | ToastMode::LongHint) {       
             self.ui()
         } else {
             empty_view()
@@ -180,10 +177,9 @@ impl ToastDisplay {
     }
 
     fn border_texture(&self) -> BordersTextures {
-        if matches!(self.mode, ToastMode::Hint) {
-            TOAST_HINT_BORDERS_TEXTURES
-        } else {
-            TOAST_BORDERS_TEXTURES
+        match self.mode { 
+            ToastMode::Hint | ToastMode::LongHint => TOAST_HINT_BORDERS_TEXTURES,
+            ToastMode::Regular => TOAST_BORDERS_TEXTURES
         }
     }
 

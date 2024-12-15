@@ -12,7 +12,7 @@ class NativeLib {
         keyValueStoragePath: String?,
         localizedStringsPath: String?
     )
-    external fun initializeGame(creativeMode: Boolean)
+    external fun initializeGame()
     external fun currentWorldId(): Int
     external fun currentWorldWidth(): Int
     external fun currentWorldHeight(): Int

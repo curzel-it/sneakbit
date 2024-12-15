@@ -3788,7 +3788,7 @@
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1000,
-    "usage_special_effect": "KnifeThrown",
+    "equipment_usage_sound_effect": "KnifeThrown",
     "z_index": 16
   },
   {
@@ -3814,7 +3814,7 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1022,
-    "usage_special_effect": "SwordSlash",
+    "equipment_usage_sound_effect": "SwordSlash",
     "z_index": 16
   },
   {
@@ -3859,7 +3859,7 @@
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1014,
-    "supports_bullet_boomerang": true,
+    "supports_bullet_boomerang": false,
     "z_index": 14
   },
   {
@@ -3885,7 +3885,7 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1022,
-    "usage_special_effect": "GunShot",
+    "equipment_usage_sound_effect": "GunShot",
     "z_index": 16
   },
   {
@@ -3912,7 +3912,7 @@
   },
   {
     "base_speed": 10.0,
-    "dps": 500,
+    "dps": 600,
     "entity_type": "Bullet",
     "id": 1169,
     "inventory_texture_offset": [
@@ -3955,7 +3955,7 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1022,
-    "usage_special_effect": "LoudGunShot",
+    "equipment_usage_sound_effect": "LoudGunShot",
     "z_index": 16
   },
   {

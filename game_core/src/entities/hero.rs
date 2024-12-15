@@ -1,4 +1,4 @@
-use crate::{constants::HERO_RECOVERY_PS, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, is_creative_mode};
+use crate::{constants::HERO_RECOVERY_PS, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::directions::Direction};
 
 use super::trails::leave_footsteps;
 
@@ -33,7 +33,8 @@ impl Entity {
 
     pub fn setup_hero_with_player_index(&mut self, player_index: usize) {
         self.player_index = player_index;
-
+        self.direction = Direction::Down;
+        self.reset_offset_on_next_direction_change = true;
 
         let (x, y) = match player_index {
             1 => (36, 38),

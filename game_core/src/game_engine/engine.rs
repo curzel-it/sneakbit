@@ -1,6 +1,6 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay}, weapon_selection::WeaponsGrid}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, PLAYER1_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, TURN_DURATION, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
-use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
+use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, PlayerIndex, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}, world::World};
 
 pub struct GameEngine {
     pub menu: GameMenu,
@@ -21,11 +21,46 @@ pub struct GameEngine {
     pub wants_fullscreen: bool,
     pub sound_effects: SoundEffectsManager,
     pub links_handler: Box<dyn LinksHandler>,
-    pub number_of_players: usize
+    pub number_of_players: usize,
+    pub game_mode: GameMode,
+    pub dead_players: Vec<usize>,
+    pub turn: GameTurn
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub enum GameMode {
+    RealTimeCoOp = 0,
+    Creative = 1,
+    TurnBasedPvp = 2
+}
+
+impl GameMode {
+    pub fn allows_pvp(&self) -> bool {
+        matches!(self, GameMode::TurnBasedPvp)
+    }
+
+    pub fn is_turn_based(&self) -> bool {
+        matches!(self, GameMode::TurnBasedPvp)   
+    }
+
+    fn first_turn(&self) -> GameTurn {
+        match self {
+            GameMode::RealTimeCoOp => GameTurn::RealTime,
+            GameMode::Creative => GameTurn::RealTime,
+            GameMode::TurnBasedPvp => GameTurn::Player(PLAYER1_INDEX, TURN_DURATION),
+        }
+    }
+}
+
+#[derive(Clone, Copy)]
+pub enum GameTurn {
+    RealTime,
+    Player(PlayerIndex, f32)
 }
 
 impl GameEngine {
-    pub fn new() -> Self {
+    pub fn new(game_mode: GameMode) -> Self {
         Self {
             menu: GameMenu::new(),
             world: World::load_or_create(WORLD_ID_NONE),
@@ -45,7 +80,10 @@ impl GameEngine {
             sound_effects: SoundEffectsManager::new(),
             links_handler: Box::new(NoLinksHandler::new()),
             number_of_players: 1,
-            weapons_selection: WeaponsGrid::new()
+            weapons_selection: WeaponsGrid::new(),
+            game_mode,
+            dead_players: vec![],
+            turn: GameTurn::RealTime,
         }
     }
 
@@ -81,6 +119,8 @@ impl GameEngine {
             }
             return;
         }
+
+        self.update_current_turn(time_since_last_update);
 
         let camera_viewport = self.camera_viewport;
         let is_game_paused = self.update_menus(time_since_last_update);
@@ -178,19 +218,29 @@ impl GameEngine {
     }
 
     fn center_camera_onto_players(&mut self) {
-        if self.number_of_players == 1 {
-            let p1 = self.world.players[0].props;
-            self.center_camera_at(p1.hittable_frame.x, p1.hittable_frame.y, &p1.offset);
+        let current_player_index = match self.turn {
+            GameTurn::RealTime => PLAYER1_INDEX,
+            GameTurn::Player(current_player_index, _) => current_player_index,
+        };
+
+        if (self.number_of_players - self.dead_players.len()) <= 1 || self.game_mode.is_turn_based() {
+            let p = self.world.players[current_player_index].props;
+            self.center_camera_at(p.hittable_frame.x, p.hittable_frame.y, &p.offset);
         } else {
             let sum: (f32, f32) = self.world.players
                 .iter()
-                .take(self.number_of_players)
-                .map(|p| {
+                .filter_map(|p| {
+                    if self.dead_players.contains(&p.index) {
+                        return None
+                    }
+                    if p.index >= self.number_of_players {
+                        return None
+                    }
                     let x = p.props.hittable_frame.x as f32;
                     let y = p.props.hittable_frame.y as f32;
                     let ox = p.props.offset.x / TILE_SIZE;
                     let oy = p.props.offset.y / TILE_SIZE;
-                    (x + ox, y + oy)
+                    Some((x + ox, y + oy))
                 })
                 .fold((0.0, 0.0), |acc, (x, y)| {
                     (acc.0 + x, acc.1 + y)
@@ -247,8 +297,10 @@ impl GameEngine {
             EngineStateUpdate::DisplayLongText(title, text) => {
                 self.long_text_display.show(title, text)
             }
-            EngineStateUpdate::DeathScreen => {
-                self.death_screen.show()
+            EngineStateUpdate::PlayerDied(player_index) => {
+                self.dead_players.push(*player_index);
+                self.update_current_turn_for_death_of_player(*player_index);
+                self.handle_win_lose()
             }
             EngineStateUpdate::ToggleFullScreen => {
                 self.wants_fullscreen = !self.wants_fullscreen
@@ -284,6 +336,7 @@ impl GameEngine {
     }
 
     fn teleport(&mut self, destination: &Destination) {
+        self.dead_players.clear();
         self.loading_screen.animate_world_transition();
 
         if is_creative_mode() {
@@ -364,20 +417,96 @@ impl GameEngine {
         reset_all_stored_values();
     }
 
+    pub fn update_game_mode(&mut self, game_mode: GameMode) {
+        self.game_mode = game_mode;
+        self.turn = game_mode.first_turn();
+        self.update_number_of_players(self.number_of_players);
+    }
+
     pub fn update_number_of_players(&mut self, count: usize) {
-        if count == self.number_of_players { return }
+        self.dead_players.clear();
         self.number_of_players = count;
         self.teleport_to_previous();
+    }
+    
+    pub fn update_current_turn(&mut self, time_since_last_update: f32) {
+        if self.number_of_players == 1 {
+            return 
+        }
+        self.turn = match self.turn {
+            GameTurn::RealTime => GameTurn::RealTime,
+            GameTurn::Player(current_player_index, time_left) => {
+                let new_time_left = time_left - time_since_last_update;
+
+                if new_time_left <= 0.0 {
+                    let next_player = if current_player_index == self.number_of_players - 1 {
+                        PLAYER1_INDEX
+                    } else { 
+                        current_player_index + 1 
+                    };                    
+                    GameTurn::Player(next_player, TURN_DURATION)
+                } else {
+                    GameTurn::Player(current_player_index, new_time_left)
+                }
+            }
+        }
+    }
+    
+    pub fn update_current_turn_for_death_of_player(&mut self, dead_player_index: usize) {
+        match self.turn {
+            GameTurn::RealTime => {},
+            GameTurn::Player(current_player_index, _) => {
+                if current_player_index == dead_player_index {
+                    self.toast.show(
+                        &Toast::new_with_image(
+                            ToastMode::LongHint,
+                            "notification.player.died"
+                                .localized()
+                                .replace("%PLAYER_NAME%", &format!("{}", dead_player_index + 1)),
+                            ToastImage::new(
+                                IntRect::new(9, 17, 1, 1), 
+                                SPRITE_SHEET_ANIMATED_OBJECTS, 
+                                4
+                            )
+                        )
+                    );
+                    self.update_current_turn(TURN_DURATION * 2.0);
+                }
+            },
+        }
+    }
+
+    fn handle_win_lose(&mut self) {
+        match self.game_mode {
+            GameMode::RealTimeCoOp => {
+                if self.dead_players.contains(&PLAYER1_INDEX) {
+                    self.death_screen.show_hero_died()
+                }
+            },
+            GameMode::TurnBasedPvp => {
+                if self.dead_players.len() == self.number_of_players - 1 {
+                    let winner = (0..self.number_of_players).find(|&i| !self.dead_players.contains(&i));
+                    if let Some(winner) = winner {
+                        self.death_screen.show_match_winner(winner)
+                    } else {
+                        self.death_screen.show_match_unknown_result()
+                    }
+                }
+            },
+            GameMode::Creative => {},
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {    
+    use crate::game_engine::engine::GameMode;
+
     use super::GameEngine;
 
     #[test]
     fn can_launch_game_headless() {
-        let mut engine = GameEngine::new();
+        let mut engine = GameEngine::new(GameMode::RealTimeCoOp);
         engine.start();
         assert_ne!(engine.world.bounds.w, 10);
         assert_ne!(engine.world.bounds.h, 10);

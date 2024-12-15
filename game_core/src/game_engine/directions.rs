@@ -24,11 +24,13 @@ impl MovementDirections {
 
 impl Entity {
     pub fn update_direction(&mut self, world: &World) {
+
         match self.movement_directions {
             MovementDirections::None => {},
-            MovementDirections::Keyboard => self.update_direction_for_current_keys(
-                world.direction_based_on_current_keys_for_player_by_entity_id(self.id)
-            ),
+            MovementDirections::Keyboard => {
+                let new_direction = world.direction_based_on_current_keys_for_player_by_index(self.player_index);
+                self.update_direction_for_current_keys(new_direction);
+            },
             MovementDirections::Free => self.move_around_free(world),
             MovementDirections::FindHero => self.search_for_hero(world),
         }
@@ -71,6 +73,9 @@ impl Entity {
 
     fn is_hero_in_line_of_sight(&self, world: &World) -> bool {
         for player in &world.players {
+            if player.props.is_invulnerable {
+                continue
+            }
             let hero = &player.props.hittable_frame;        
             let npc = &self.hittable_frame();
 
@@ -99,6 +104,9 @@ impl Entity {
 
     fn change_direction_towards_hero(&mut self, world: &World) {
         for player in &world.players {
+            if player.props.is_invulnerable {
+                continue
+            }
             let hero = &player.props.hittable_frame; 
             let npc = &self.hittable_frame();
 

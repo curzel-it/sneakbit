@@ -86,7 +86,7 @@ class GameEngine(
             keyValueStoragePath = storagePath(),
             localizedStringsPath = langPath
         )
-        nativeLib.initializeGame(false)
+        nativeLib.initializeGame()
     }
 
     fun update(deltaTime: Float) {

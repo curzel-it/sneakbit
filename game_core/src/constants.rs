@@ -1,9 +1,9 @@
 use crate::utils::rect::IntRect;
 
-pub const BUILD_NUMBER: u32 = 35;
+pub const BUILD_NUMBER: u32 = 37;
 
-// Fps
-pub const ANIMATIONS_FPS: f32 = 10.0;
+// Feature Flags
+pub const PVP_AVAILABLE: bool = false;
 
 // Default Props
 pub const INITIAL_CAMERA_VIEWPORT: IntRect = IntRect::new(0, 0, 60, 40);
@@ -12,21 +12,27 @@ pub const NO_PARENT: u32 = 0;
 pub const PRESSURE_PLATE_SWITCH_COOLDOWN: f32 = 0.3;
 pub const HERO_RECOVERY_PS: f32 = 1.0;
 pub const MAX_PLAYERS: usize = 4;
+pub const TURN_DURATION: f32 = 20.0;
 
 // Input
 pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST: f32 = 0.4;
 pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS: f32 = 0.1;
 
 // Known entities
+pub const PLAYER1_INDEX: usize = 0;
 pub const PLAYER1_ENTITY_ID: u32 = 420;
+pub const PLAYER2_INDEX: usize = 1;
 pub const PLAYER2_ENTITY_ID: u32 = 421;
+pub const PLAYER3_INDEX: usize = 2;
 pub const PLAYER3_ENTITY_ID: u32 = 422;
+pub const PLAYER4_INDEX: usize = 3;
 pub const PLAYER4_ENTITY_ID: u32 = 423;
 
 // Known locations
 pub const WORLD_ID_NONE: u32 = 1000;
 
 // Animations
+pub const ANIMATIONS_FPS: f32 = 10.0;
 pub const WORLD_TRANSITION_TIME: f32 = 0.3;
 pub const MENU_CLOSE_TIME: f32 = 0.2;
 pub const MENU_OPEN_TIME: f32 = 0.1;

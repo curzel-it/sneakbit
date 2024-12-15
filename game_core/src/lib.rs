@@ -6,7 +6,7 @@ use std::os::raw::c_char;
 use config::initialize_config_paths;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
-use game_engine::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
+use game_engine::{engine::{GameEngine, GameMode}, storage::{get_value_for_global_key, inventory_count, StorageKey}};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use utils::{rect::{IntPoint, IntRect}, vector::Vector2d};
 
@@ -25,7 +25,6 @@ pub mod utils;
 pub mod worlds;
 
 static mut ENGINE: *mut GameEngine = std::ptr::null_mut();
-static mut CREATIVE_MODE: *mut bool = std::ptr::null_mut();
 
 pub fn engine() -> &'static GameEngine {
     unsafe {
@@ -40,21 +39,21 @@ fn engine_mut() -> &'static mut GameEngine {
 }
 
 #[no_mangle]
-pub extern "C" fn initialize_game(creative_mode: bool) {
+pub extern "C" fn initialize_game(mode: GameMode) {
     unsafe {
-        let boxed = Box::new(GameEngine::new());
+        let boxed = Box::new(GameEngine::new(mode));
         ENGINE = Box::into_raw(boxed);      
-        CREATIVE_MODE = Box::into_raw(Box::new(creative_mode));
     }
     let engine = engine_mut();
     engine.start();
 }
 
-#[no_mangle]
-pub extern "C" fn is_creative_mode() -> bool {
-    unsafe {
-        *CREATIVE_MODE
-    }
+pub fn is_creative_mode() -> bool {
+    matches!(&engine().game_mode, GameMode::Creative)
+}
+
+pub fn current_game_mode() -> GameMode {
+    engine().game_mode
 }
 
 #[no_mangle]
@@ -436,4 +435,13 @@ pub fn number_of_players() -> usize {
 
 pub fn update_number_of_players(count: usize) {
     engine_mut().update_number_of_players(count)
+}
+
+pub fn toggle_pvp() {
+    let next = match current_game_mode() {
+        GameMode::RealTimeCoOp => GameMode::TurnBasedPvp,
+        GameMode::Creative => GameMode::Creative,
+        GameMode::TurnBasedPvp => GameMode::RealTimeCoOp,
+    };
+    engine_mut().update_game_mode(next);
 }

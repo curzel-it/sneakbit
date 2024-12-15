@@ -9,7 +9,7 @@ impl GameEngine {
             height, 
             self.hud_background_color(),
             vec![
-                (AnchorPoint::TopLeft, self.basic_info_hud.ui(self.number_of_players)),
+                (AnchorPoint::TopLeft, self.basic_info_hud_ui()),
                 (AnchorPoint::BottomCenter, self.menu.ui(&self.camera_viewport)),
                 (AnchorPoint::BottomCenter, self.confirmation_dialog.ui()),
                 (AnchorPoint::BottomCenter, self.long_text_display.ui()),
@@ -17,9 +17,35 @@ impl GameEngine {
                 (AnchorPoint::TopRight, self.toast.regular_toast_ui()),
                 (AnchorPoint::TopLeft, self.toast.hint_toast_ui()),
                 (AnchorPoint::BottomLeft, self.debug_info(show_debug_info, fps)),
+                (AnchorPoint::BottomRight, self.turn_time_left_ui()),
                 (AnchorPoint::Center, self.death_screen.ui()),
                 (AnchorPoint::Center, self.loading_screen.ui())
             ]
+        )
+    }
+
+    fn turn_time_left_ui(&self) -> View {
+        if self.number_of_players == 1 {
+            return empty_view()
+        }
+        match self.turn {
+            crate::game_engine::engine::GameTurn::RealTime => empty_view(),
+            crate::game_engine::engine::GameTurn::Player(_, time_left) => {
+                let text = format!("{:0.1}\"", time_left);
+                zstack!(
+                    Spacing::MD,
+                    COLOR_TRANSPARENT,
+                    text!(Typography::Countdown, text)
+                )                
+            },
+        }        
+    }
+
+    fn basic_info_hud_ui(&self) -> View {
+        self.basic_info_hud.ui(
+            &self.turn, 
+            self.number_of_players, 
+            &self.dead_players
         )
     }
     
@@ -46,7 +72,7 @@ impl GameEngine {
                     text!(Typography::Regular, format!("Fps: {}", fps)),
                     text!(Typography::Regular, format!("x {} y {}", hero.hittable_frame.x, hero.hittable_frame.y)),
                     text!(Typography::Regular, format!("World Id: {}", self.world.id)),
-                    text!(Typography::Regular, format!("Hp: {}", hero.hp))
+                    text!(Typography::Regular, format!("Hp: {:0.1}%", hero.hp))
                 )
             )
         } else {

@@ -1,4 +1,4 @@
-use crate::{constants::TILE_SIZE, game_engine::{entity::{is_player, Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{PLAYER1_INDEX, TILE_SIZE}, game_engine::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 
 use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species, SpeciesId}};
 
@@ -6,13 +6,14 @@ pub type BulletId = EntityId;
 pub type Damage = f32;
 
 #[derive(Debug, Clone)]
-pub struct BulletHit {
+pub struct BulletHits {
     pub bullet_id: BulletId,
-    pub supports_catching: bool,
-    pub supports_bullet_boomerang: bool,
     pub bullet_species_id: SpeciesId,
+    pub bullet_parent_id: EntityId,
     pub target_ids: Vec<EntityId>,
-    pub damage: f32
+    pub damage: f32,
+    pub supports_catching: bool,
+    pub supports_bullet_boomerang: bool
 }
 
 impl Entity {
@@ -49,11 +50,11 @@ impl Entity {
         let (previous_x, previous_y) = self.previous_position();
         let previous_hits = world.entity_ids(previous_x, previous_y);
         let current_hits = world.entity_ids(self.frame.x, self.frame.y);
-
+        
         let valid_hits: Vec<u32> = vec![previous_hits, current_hits]
             .into_iter()
             .flatten()
-            .filter(|id| self.is_valid_hit_target(*id) && !is_player(*id))
+            .filter(|id| self.is_valid_hit_target(*id))
             .collect();
 
         if valid_hits.is_empty() {
@@ -64,12 +65,13 @@ impl Entity {
 
         vec![
             WorldStateUpdate::HandleHits(
-                BulletHit { 
+                BulletHits { 
                     bullet_id: self.id, 
+                    bullet_species_id: self.species_id,
+                    bullet_parent_id: self.parent_id,
+                    target_ids: valid_hits, 
                     supports_catching: self.species.supports_bullet_catching, 
                     supports_bullet_boomerang: self.species.supports_bullet_boomerang, 
-                    target_ids: valid_hits, 
-                    bullet_species_id: self.species_id,
                     damage 
                 }
             )
@@ -130,7 +132,7 @@ fn make_bullet_ex(
 }
 
 pub fn make_player_bullet(parent_id: u32, world: &World, weapon_species: &Species) -> Entity {
-    let index = world.player_index_by_entity_id(parent_id);
+    let index = world.player_index_by_entity_id(parent_id).unwrap_or(PLAYER1_INDEX);
     let player = world.players[index].props;
 
     let mut bullet = make_bullet_ex(
