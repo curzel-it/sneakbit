@@ -264,7 +264,6 @@ Back:         Middle / Right
 "game.menu.number_of_players.subtitle" = """
 Single player supports both keyboard and conrtoller.
 Multiplayer requires one controller per player.
-When in multiplayer, player 1 can use both controller and keyboard.
 """
 
 "game.menu.resume" = "Resume"
