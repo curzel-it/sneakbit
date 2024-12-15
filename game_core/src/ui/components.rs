@@ -29,6 +29,7 @@ impl WithAlpha for NonColor {
 pub enum Typography {
     Countdown,
     PlayerHudText,
+    PlayerHudHighlight,
     Title,
     PlayerHudSmallTitle,
     Regular,

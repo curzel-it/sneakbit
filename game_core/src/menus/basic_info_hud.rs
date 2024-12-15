@@ -106,7 +106,7 @@ impl PlayerHud {
 
     fn hp_ui(&self, max_hp_to_show: f32) -> View {
         if self.hp < max_hp_to_show && !shows_death_screen() {
-            let typography = if self.hp < 30.0 { Typography::Selected } else { Typography::PlayerHudText };
+            let typography = if self.hp < 30.0 { Typography::PlayerHudHighlight } else { Typography::PlayerHudText };
             vstack!(
                 Spacing::Zero,
                 spacing!(Spacing::SM),

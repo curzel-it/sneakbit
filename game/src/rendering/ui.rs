@@ -48,7 +48,7 @@ pub fn is_rendering_config_initialized() -> bool {
 impl RenderingConfig {
     fn text_color(&self, style: &Typography) -> Color {
         match style {
-            Typography::Selected => as_rcolor(&COLOR_TEXT_HIGHLIGHTED),
+            Typography::Selected | Typography::PlayerHudHighlight => as_rcolor(&COLOR_TEXT_HIGHLIGHTED),
             Typography::Countdown => as_rcolor(&COLOR_TURN_COUNTDOWN),
             _ => as_rcolor(&COLOR_TEXT)
         }
@@ -57,7 +57,7 @@ impl RenderingConfig {
     fn text_shadow(&self, style: &Typography) -> Option<(f32, f32, Color)> {
         match style {
             Typography::Countdown => Some((2.0, 2.0, as_rcolor(&COLOR_TEXT_SHADOW))),
-            Typography::PlayerHudText | Typography::PlayerHudSmallTitle => {
+            Typography::PlayerHudText | Typography::PlayerHudSmallTitle | Typography::PlayerHudHighlight => {
                 Some((1.0, 1.0, as_rcolor(&COLOR_TEXT_SHADOW)))
             },
             _ => None
@@ -69,7 +69,7 @@ impl RenderingConfig {
             Typography::Countdown => &self.font_bold,
             Typography::Title => &self.font_bold,
             Typography::PlayerHudSmallTitle => &self.font_bold,
-            Typography::Selected => &self.font_bold,
+            Typography::Selected | Typography::PlayerHudHighlight => &self.font_bold,
             Typography::Regular | Typography::PlayerHudText => &self.font,
             Typography::Caption => &self.font,
         }
@@ -84,7 +84,7 @@ impl RenderingConfig {
             Typography::Countdown => 16.0,
             Typography::Title => 12.0,
             Typography::PlayerHudSmallTitle => 8.0,
-            Typography::Selected => 8.0,
+            Typography::Selected | Typography::PlayerHudHighlight => 8.0,
             Typography::Regular | Typography::PlayerHudText => 8.0,
             Typography::Caption => 6.0,
         }
