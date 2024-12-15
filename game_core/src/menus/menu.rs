@@ -40,7 +40,7 @@ impl<Item: MenuItem> Menu<Item> {
             items,
             animator: Animator::new(),
             uses_backdrop: true,
-            visible_item_count: 5,
+            visible_item_count: 6,
             scroll_offset: 0, 
         }
     }

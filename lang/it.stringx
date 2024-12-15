@@ -213,9 +213,13 @@ Back:         Middle / Right
 
 "game.menu.disable_music" = "Disablita Musica"
 
+"game.menu.disable_pvp" = "Disabilita Pvp"
+
 "game.menu.disable_sound_effects" = "Disablita Effetti Sonori"
 
 "game.menu.enable_music" = "Ablita Musica"
+
+"game.menu.enable_pvp" = "Abilita Pvp"
 
 "game.menu.enable_sound_effects" = "Ablita Effetti Sonori"
 
@@ -243,16 +247,23 @@ Back:         Middle / Right
 
 "game.menu.number_of_players.1" = "Single Player"
 
+"game.menu.number_of_players.1.selected" = "(Selezionato) Single Player"
+
 "game.menu.number_of_players.2" = "2 Giocatori"
+
+"game.menu.number_of_players.2.selected" = "(Selezionato) 2 Giocatori"
 
 "game.menu.number_of_players.3" = "3 Giocatori"
 
+"game.menu.number_of_players.3.selected" = "(Selezionato) 3 Giocatori"
+
 "game.menu.number_of_players.4" = "4 Giocatori"
+
+"game.menu.number_of_players.4.selected" = "(Selezionato) 4 Giocatori"
 
 "game.menu.number_of_players.subtitle" = """
 In single player puoi usare sia la tastiera che il controller.
 Per il multiplayer è richiesto un controller per giocatore.
-Quando in multiplayer, il player uno può usare sia la tastera che il controller.
 """
 
 "game.menu.resume" = "Riprendi"

@@ -213,9 +213,13 @@ Back:         Middle / Right
 
 "game.menu.disable_music" = "Disable Music"
 
+"game.menu.disable_pvp" = "Disable Pvp"
+
 "game.menu.disable_sound_effects" = "Disable Sound Effects"
 
 "game.menu.enable_music" = "Enable Music"
+
+"game.menu.enable_pvp" = "Enable Pvp"
 
 "game.menu.enable_sound_effects" = "Enable Sound Effects"
 
@@ -243,11 +247,19 @@ Back:         Middle / Right
 
 "game.menu.number_of_players.1" = "Single Player"
 
+"game.menu.number_of_players.1.selected" = "(Selected) Single Player"
+
 "game.menu.number_of_players.2" = "2 Players"
+
+"game.menu.number_of_players.2.selected" = "(Selected) 2 Players"
 
 "game.menu.number_of_players.3" = "3 Players"
 
+"game.menu.number_of_players.3.selected" = "(Selected) 3 Players"
+
 "game.menu.number_of_players.4" = "4 Players"
+
+"game.menu.number_of_players.4.selected" = "(Selected) 4 Players"
 
 "game.menu.number_of_players.subtitle" = """
 Single player supports both keyboard and conrtoller.

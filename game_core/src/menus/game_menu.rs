@@ -1,4 +1,4 @@
-use crate::{constants::WORLD_ID_NONE, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, lang::localizable::LocalizableText, spacing, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
+use crate::{constants::{MAX_PLAYERS, WORLD_ID_NONE}, current_game_mode, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{engine::GameMode, keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, lang::localizable::LocalizableText, number_of_players, spacing, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
 
 use super::{confirmation::ConfirmationDialog, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
@@ -142,13 +142,7 @@ impl GameMenu {
 
         let mut number_of_players_menu = Menu::new(
             "game.menu.number_of_players".localized(),
-            vec![
-                "game.menu.number_of_players.1".localized(),
-                "game.menu.number_of_players.2".localized(),
-                "game.menu.number_of_players.3".localized(),
-                "game.menu.number_of_players.4".localized(),
-                "menu_back".localized(),
-            ],
+            vec![],
         );
         number_of_players_menu.text = Some("game.menu.number_of_players.subtitle".localized());
 
@@ -170,6 +164,8 @@ impl GameMenu {
         self.settings_menu.title = "game.menu.settings".localized();
         self.languages_menu.title = "game.menu.language".localized();
         self.credits_menu.title = "credits".localized();
+        self.number_of_players_menu.title = "game.menu.number_of_players".localized();
+        self.number_of_players_menu.items = player_options();
 
         self.menu.items = if is_creative_mode() {
             vec![
@@ -319,18 +315,10 @@ impl GameMenu {
 
         if self.credits_menu.selection_has_been_confirmed {
             match self.credits_menu.selected_index {
-                0 => {
-                    updates.push(visit(&"credits.developer.link".localized()));
-                }
-                1 => {
-                    updates.push(visit(&"credits.open_source.link".localized()));
-                }
-                2 => {
-                    updates.push(visit(&"credits.music.link".localized()));
-                }
-                3 => {
-                    updates.push(visit(&"credits.sound_effects.link".localized()));
-                }
+                0 => updates.push(visit(&"credits.developer.link".localized())),
+                1 => updates.push(visit(&"credits.open_source.link".localized())),
+                2 => updates.push(visit(&"credits.music.link".localized())),
+                3 => updates.push(visit(&"credits.sound_effects.link".localized())),
                 _ => {}
             }
             is_open = false;
@@ -372,13 +360,20 @@ impl GameMenu {
         self.number_of_players_menu.update(keyboard, time_since_last_update);
 
         if self.number_of_players_menu.selection_has_been_confirmed {
-            update_number_of_players(self.number_of_players_menu.selected_index + 1);
-            self.number_of_players_menu.clear_selection();
-            self.number_of_players_menu.close();
-            self.menu.clear_selection();
-            self.menu.close();
-            self.setup();
-            self.state = MenuState::Closed;
+            let index = self.number_of_players_menu.selected_index;
+
+            if index == 0 {
+                toggle_pvp()
+            } else if index == self.number_of_players_menu.items.len() - 1 {
+                self.number_of_players_menu.clear_selection();
+                self.number_of_players_menu.close();
+                self.menu.clear_selection();
+                self.state = MenuState::Open;
+            } else {
+                update_number_of_players(self.number_of_players_menu.selected_index)
+            }
+            self.number_of_players_menu.clear_confirmation();
+            self.number_of_players_menu.items = player_options();
         }
         vec![]
     }
@@ -463,7 +458,7 @@ impl GameMenu {
         keyboard: &KeyboardEventsProvider,
         time_since_last_update: f32,
     ) -> Vec<WorldStateUpdate> {
-        let (is_open, mut updates) = self.settings_menu.update(keyboard, time_since_last_update);
+        let (is_open, updates) = self.settings_menu.update(keyboard, time_since_last_update);
 
         if self.settings_menu.selection_has_been_confirmed {
             let selected_item = self.settings_menu.selected_item();
@@ -516,4 +511,25 @@ impl GameMenu {
     pub fn select_option_at_index(&mut self, index: usize) {
         self.menu.selected_index = index;
     }
+}
+
+fn player_options() -> Vec<String> {
+    let pvp = if matches!(current_game_mode(), GameMode::Pvp) {
+        "game.menu.disable_pvp"
+    } else {
+        "game.menu.enable_pvp"
+    };
+    let number_of_players = number_of_players();
+
+    let mut options: Vec<String> = (1..=MAX_PLAYERS)
+        .into_iter()
+        .map(|n| {
+            let selected = if number_of_players == n { ".selected" } else { "" };
+            format!("game.menu.number_of_players.{}{}", n, selected).localized()
+        })
+        .collect();
+
+    options.insert(0, pvp.localized());
+    options.push("menu_back".localized());
+    options
 }
