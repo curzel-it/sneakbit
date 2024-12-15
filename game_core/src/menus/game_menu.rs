@@ -1,4 +1,4 @@
-use crate::{constants::{MAX_PLAYERS, WORLD_ID_NONE}, current_game_mode, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{engine::GameMode, keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, lang::localizable::LocalizableText, number_of_players, spacing, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
+use crate::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{engine::GameMode, keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, lang::localizable::LocalizableText, number_of_players, spacing, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
 
 use super::{confirmation::ConfirmationDialog, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
@@ -362,7 +362,7 @@ impl GameMenu {
         if self.number_of_players_menu.selection_has_been_confirmed {
             let index = self.number_of_players_menu.selected_index;
 
-            if index == 0 {
+            if index == 0 && PVP_AVAILABLE {
                 toggle_pvp()
             } else if index == self.number_of_players_menu.items.len() - 1 {
                 self.number_of_players_menu.clear_selection();
@@ -370,7 +370,11 @@ impl GameMenu {
                 self.menu.clear_selection();
                 self.state = MenuState::Open;
             } else {
-                update_number_of_players(self.number_of_players_menu.selected_index)
+                if PVP_AVAILABLE {
+                    update_number_of_players(self.number_of_players_menu.selected_index)
+                } else {
+                    update_number_of_players(self.number_of_players_menu.selected_index + 1)
+                }                
             }
             self.number_of_players_menu.clear_confirmation();
             self.number_of_players_menu.items = player_options();
@@ -529,7 +533,9 @@ fn player_options() -> Vec<String> {
         })
         .collect();
 
-    options.insert(0, pvp.localized());
+    if PVP_AVAILABLE {
+        options.insert(0, pvp.localized());
+    }
     options.push("menu_back".localized());
     options
 }

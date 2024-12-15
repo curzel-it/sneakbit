@@ -2,8 +2,8 @@ use crate::utils::rect::IntRect;
 
 pub const BUILD_NUMBER: u32 = 37;
 
-// Fps
-pub const ANIMATIONS_FPS: f32 = 10.0;
+// Feature Flags
+pub const PVP_AVAILABLE: bool = false;
 
 // Default Props
 pub const INITIAL_CAMERA_VIEWPORT: IntRect = IntRect::new(0, 0, 60, 40);
@@ -32,6 +32,7 @@ pub const PLAYER4_ENTITY_ID: u32 = 423;
 pub const WORLD_ID_NONE: u32 = 1000;
 
 // Animations
+pub const ANIMATIONS_FPS: f32 = 10.0;
 pub const WORLD_TRANSITION_TIME: f32 = 0.3;
 pub const MENU_CLOSE_TIME: f32 = 0.2;
 pub const MENU_OPEN_TIME: f32 = 0.1;
