@@ -150,9 +150,9 @@ I have to go now, see you around!
 
 "death_screen.player_won" = "Player %PLAYER_NAME% won!"
 
-"death_screen.start_new_match" = "Confirm to start a new match"
+"death_screen.start_new_match" = "Press E to start a new match"
 
-"death_screen.subtitle" = "Press CONFIRM to try again"
+"death_screen.subtitle" = "Press E to try again"
 
 "death_screen.title" = "You're dead."
 
@@ -589,9 +589,9 @@ Their unique purple leaves harness the essence of twilight,
 fueling life and wonder in Duskhaven.
 """
 
-"map_editor.placement" = "CONFIRM to place, ESC to cancel"
+"map_editor.placement" = "E to place, ESC to cancel"
 
-"map_editor.subtitle" = "Press CONFIRM to select something"
+"map_editor.subtitle" = "Press E to select something"
 
 "map_editor.title" = "Map Editor"
 
