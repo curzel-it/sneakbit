@@ -59,3 +59,19 @@ pub enum AddToInventoryReason {
 pub fn visit(link: &str) -> WorldStateUpdate {
     WorldStateUpdate::EngineUpdate(EngineStateUpdate::ExternalLink(link.to_owned()))
 }
+
+impl WorldStateUpdate {
+    pub fn log(&self) {
+        match self {
+            WorldStateUpdate::EngineUpdate(_) => {},
+            WorldStateUpdate::CacheHeroProps(_) => {},
+            _ => println!("World update: {:#?}", self)
+        }   
+    }
+}
+
+impl EngineStateUpdate {
+    pub fn log(&self) {
+        println!("Engine update: {:#?}", self)
+    }
+}

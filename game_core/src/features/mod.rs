@@ -1,5 +1,6 @@
 pub mod animated_sprite;
 pub mod autoremove;
+pub mod camera;
 pub mod close_combat_monster;
 pub mod cutscenes;
 pub mod death_screen;

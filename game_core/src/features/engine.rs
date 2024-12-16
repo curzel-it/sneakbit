@@ -1,6 +1,6 @@
-use crate::{input::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider}, constants::{INITIAL_CAMERA_VIEWPORT, PLAYER1_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
-use super::{state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
+use super::{camera::camera_center, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
 pub struct GameEngine {
     pub menu: GameMenu,
@@ -188,56 +188,18 @@ impl GameEngine {
     }
 
     fn center_camera_onto_players(&mut self) {
-        let current_player_index = match self.turn {
-            GameTurn::RealTime => PLAYER1_INDEX,
-            GameTurn::Player(current_player_index, _) => current_player_index,
-        };
-
-        if (self.number_of_players - self.dead_players.len()) <= 1 || self.game_mode.is_turn_based() {
-            let p = self.world.players[current_player_index].props;
-            self.center_camera_at(p.hittable_frame.x, p.hittable_frame.y, &p.offset);
-        } else {
-            let sum: (f32, f32) = self.world.players
-                .iter()
-                .filter_map(|p| {
-                    if self.dead_players.contains(&p.index) {
-                        return None
-                    }
-                    if p.index >= self.number_of_players {
-                        return None
-                    }
-                    let x = p.props.hittable_frame.x as f32;
-                    let y = p.props.hittable_frame.y as f32;
-                    let ox = p.props.offset.x / TILE_SIZE;
-                    let oy = p.props.offset.y / TILE_SIZE;
-                    Some((x + ox, y + oy))
-                })
-                .fold((0.0, 0.0), |acc, (x, y)| {
-                    (acc.0 + x, acc.1 + y)
-                });
-
-            let x = sum.0 / self.number_of_players as f32;                
-            let y = sum.1 / self.number_of_players as f32;
-            let fx = x.floor();
-            let fy = y.floor();
-
-            self.center_camera_at(
-                fx as i32, 
-                fy as i32, 
-                &Vector2d::new(
-                    (x - fx) * TILE_SIZE, 
-                    (y - fy) * TILE_SIZE
-                )
-            );
-        }
-    }
-
-    fn log_update(&self, update: &EngineStateUpdate) {
-        println!("Engine update: {:#?}", update)
+        let (x, y, offset) = camera_center(
+            self.game_mode,
+            &self.turn,
+            self.number_of_players,
+            &self.world.players,
+            &self.dead_players
+        );
+        self.center_camera_at(x, y, &offset);
     }
 
     fn apply_state_update(&mut self, update: &EngineStateUpdate) {   
-        self.log_update(update);
+        update.log();
 
         match update {
             EngineStateUpdate::Teleport(destination) => {

@@ -180,16 +180,6 @@ impl World {
         self.players[index].direction_based_on_current_keys
     } 
 
-    pub fn player_index_by_entity_id(&self, entity_id: u32) -> Option<usize> {
-        match entity_id {
-            PLAYER1_ENTITY_ID => Some(0),
-            PLAYER2_ENTITY_ID => Some(1),
-            PLAYER3_ENTITY_ID => Some(2),
-            PLAYER4_ENTITY_ID => Some(3),
-            _ => None
-        }
-    }
-
     pub fn update(
         &mut self, 
         time_since_last_update: f32,
@@ -245,16 +235,8 @@ impl World {
         updates.into_iter().flat_map(|u| self.apply_state_update(u)).collect()
     }
 
-    fn log_update(&self, update: &WorldStateUpdate) {
-        match update {
-            WorldStateUpdate::EngineUpdate(_) => {},
-            WorldStateUpdate::CacheHeroProps(_) => {},
-            _ => println!("World update: {:#?}", update)
-        }        
-    }
-
     fn apply_state_update(&mut self, update: WorldStateUpdate) -> Vec<EngineStateUpdate> {
-        self.log_update(&update);
+        update.log();
 
         match update {
             WorldStateUpdate::AddEntity(entity) => { 
@@ -743,6 +725,16 @@ impl World {
             }
         }
         None
+    }
+
+    pub fn player_index_by_entity_id(&self, entity_id: u32) -> Option<usize> {
+        match entity_id {
+            PLAYER1_ENTITY_ID => Some(0),
+            PLAYER2_ENTITY_ID => Some(1),
+            PLAYER3_ENTITY_ID => Some(2),
+            PLAYER4_ENTITY_ID => Some(3),
+            _ => None
+        }
     }
 
     pub fn player_entity_ids(&self) -> Vec<u32> {
