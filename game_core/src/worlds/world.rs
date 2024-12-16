@@ -1,8 +1,8 @@
-use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
+use std::{cell::RefCell, cmp::Ordering, collections::HashSet};
 
 use common_macros::hash_set;
-use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_HERO, SPECIES_KUNAI}, species::{species_by_id, EntityType}}, equipment::basics::{available_weapons, is_equipped}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
-use crate::features::{entity::{is_player_index, Entity, EntityId, EntityProps}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
+use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_HERO, SPECIES_KUNAI}, species::{species_by_id, EntityType}}, equipment::basics::{available_weapons, is_equipped}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, entity::is_player, light_conditions::LightConditions}, hitmaps::hitmaps::{EntityIdsMap, Hitmap}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::features::{entity::{is_player_index, Entity, EntityProps}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
 
@@ -23,7 +23,7 @@ pub struct World {
     pub is_any_arrow_key_down: bool,
     pub hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
-    pub weights_map: Hitmap,
+    pub weightmap: Hitmap,
     pub idsmap: EntityIdsMap,
     pub world_type: WorldType,
     pub pressure_plate_down_red: bool,
@@ -39,14 +39,6 @@ pub struct World {
 
 const WORLD_SIZE_COLUMNS: usize = 30;
 const WORLD_SIZE_ROWS: usize = 30;
-
-#[derive(Clone)]
-pub struct Hitmap {
-    bits: Vec<bool>,
-    width: usize,
-}
-
-pub type EntityIdsMap = Vec<(i32, i32, EntityId)>;
 
 impl World {
     pub fn new(id: u32) -> Self {
@@ -64,7 +56,7 @@ impl World {
             is_any_arrow_key_down: false,
             hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
-            weights_map: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
+            weightmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
             idsmap: vec![],
             world_type: WorldType::HouseInterior,
             pressure_plate_down_red: false,
@@ -690,41 +682,6 @@ impl World {
         self.update(time_since_last_update, &viewport, keyboard)
     }
 
-    pub fn hits(&self, x: i32, y: i32) -> bool {
-        if x < 0 || y < 0 || y >= self.bounds.h || x >= self.bounds.w { 
-            false 
-        } else { 
-            let x = x as usize;
-            let y = y as usize;
-            self.hitmap.hits(x, y) || self.tiles_hitmap.hits(x, y) 
-        }
-    }
-
-    pub fn hits_or_out_of_bounds(&self, x: i32, y: i32) -> bool {
-        x < 0 || y < 0 || self.hits(x, y)
-    }
-
-    pub fn entity_ids(&self, x: i32, y: i32) -> Vec<u32> {
-        self.idsmap
-            .iter()
-            .filter_map(|&(ex, ey, id)| {
-                if ex == x && ey == y {
-                    Some(id)
-                } else {
-                    None
-                }
-            })
-            .collect()
-    }
-
-    pub fn has_weight(&self, x: i32, y: i32) -> bool {
-        if x < 0 || y < 0 || y >= self.bounds.h || x >= self.bounds.w { 
-            false 
-        } else { 
-            self.weights_map.hits(x as usize, y as usize) 
-        }
-    }
-
     pub fn is_creep(&self, id: u32) -> bool {
         self.melee_attackers.contains(&id)
     }
@@ -779,76 +736,6 @@ impl World {
         }
     }
 
-    pub fn update_hitmaps(&mut self) {
-        self.hitmap.clear();
-        self.weights_map.clear();
-        self.idsmap.clear();
-        
-        let entities = self.entities.borrow();
-        let height = self.bounds.h as usize;
-        let width = self.bounds.w as usize;
-
-        for &(index, id) in &self.visible_entities {
-            let entity = &entities[index];
-            let is_rigid = entity.is_rigid && !is_player(id);
-            let has_weight = entity.has_weight();
-
-            if !is_rigid && !has_weight {
-                continue;
-            }
-
-            let hittable_frame = entity.hittable_frame();
-
-            let col_start = hittable_frame.x.max(0) as usize;
-            let col_end = ((hittable_frame.x + hittable_frame.w) as usize).min(width);
-            let row_start = hittable_frame.y.max(0) as usize;
-            let row_end = ((hittable_frame.y + hittable_frame.h) as usize).min(height);
-
-            for y in row_start..row_end {
-                for x in col_start..col_end {
-                    if is_rigid {
-                        self.hitmap.set(x, y, true);
-                    }
-                    if has_weight {
-                        self.weights_map.set(x, y, true);
-                    }
-                    self.idsmap.push((x as i32, y as i32, id));
-                }
-            }
-        }
-        
-    }
-
-    #[allow(clippy::needless_range_loop)] 
-    pub fn update_tiles_hitmap(&mut self) {    
-        self.weights_map = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
-        self.tiles_hitmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
-        self.hitmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
-
-        if is_creative_mode() || self.biome_tiles.tiles.is_empty() {
-            return;
-        }
-
-        let min_row = self.bounds.y as usize;
-        let max_row = ((self.bounds.y + self.bounds.h) as usize).min(self.biome_tiles.tiles.len());
-        let min_col = self.bounds.x as usize;
-        let max_col = ((self.bounds.x + self.bounds.w) as usize).min(self.biome_tiles.tiles[0].len());
-
-        for row in min_row..max_row {
-            for col in min_col..max_col {
-                if !self.tiles_hitmap.hits(col, row) {
-                    let biome = &self.biome_tiles.tiles[row][col];
-                    let constructions = &self.constructions_tiles.tiles[row][col];
-                    let is_obstacle = (biome.is_obstacle() || constructions.is_obstacle()) && !constructions.is_bridge();
-
-                    if is_obstacle {
-                        self.tiles_hitmap.set(col, row, true);
-                    }
-                }
-            }
-        }
-    }
-
     pub fn index_of_any_player_who_is_pressing_confirm(&self) -> Option<usize> {
         for player in &self.players {
             if player.has_confirmation_key_been_pressed {
@@ -876,52 +763,6 @@ impl World {
             4 => vec![PLAYER1_INDEX, PLAYER2_INDEX, PLAYER3_INDEX, PLAYER4_INDEX],
             _ => vec![PLAYER1_INDEX]
         }
-    }
-}
-
-impl Entity {
-    fn has_weight(&self) -> bool {
-        !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate | EntityType::WeaponMelee | EntityType::WeaponRanged)
-    }
-}
-
-impl Hitmap {
-    fn new(width: usize, height: usize) -> Self {
-        Hitmap {
-            bits: vec![false; width * height],
-            width,
-        }
-    }
-
-    fn clear(&mut self) {
-        self.bits = vec![false; self.bits.len()];
-    }
-
-    fn get_index(&self, x: usize, y: usize) -> usize {
-        y * self.width + x
-    }
-
-    fn hits(&self, x: usize, y: usize) -> bool {
-        let index = self.get_index(x, y);
-        self.bits[index]
-    }
-
-    fn set(&mut self, x: usize, y: usize, value: bool) {
-        let index = self.get_index(x, y);
-        self.bits[index] = value;
-    }
-}
-
-impl Debug for Hitmap {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for y in 0..(self.bits.len() / self.width) {
-            for x in 0..self.width {
-                let bit = if self.hits(x, y) { '1' } else { '0' };
-                write!(f, "{}", bit)?;
-            }
-            writeln!(f)?; 
-        }
-        Ok(())
     }
 }
 
