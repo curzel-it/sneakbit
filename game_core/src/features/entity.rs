@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{NO_PARENT, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType, Species}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{ANIMATIONS_FPS, NO_PARENT, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType, Species}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
 use super::{directions::MovementDirections, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}};
 
@@ -353,5 +353,19 @@ impl Entity {
             return false
         }
         true
+    }
+
+    pub fn play_death_animation(&mut self) {
+        self.direction = Direction::Unknown;
+        self.current_speed = 0.0;
+        self.is_rigid = false;
+        self.is_dying = true;
+        self.remaining_lifespan = 10.0 / ANIMATIONS_FPS;                
+        self.frame = self.hittable_frame(); 
+        self.sprite = AnimatedSprite::new(
+            SPRITE_SHEET_ANIMATED_OBJECTS, 
+            IntRect::new(0, 10, 1, 1), 
+            5
+        );
     }
 }

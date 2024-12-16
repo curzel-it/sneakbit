@@ -1,7 +1,7 @@
 use std::{cell::RefCell, cmp::Ordering, collections::HashSet};
 
 use common_macros::hash_set;
-use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, hitmaps::hitmaps::{EntityIdsMap, Hitmap}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, hitmaps::hitmaps::{EntityIdsMap, Hitmap}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 use crate::features::{entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
@@ -119,7 +119,7 @@ impl World {
         }
     }
 
-    fn mark_as_collected_if_needed(&self, entity_id: u32, parent_id: u32) {
+    pub fn mark_as_collected_if_needed(&self, entity_id: u32, parent_id: u32) {
         if !self.ephemeral_state && !is_player(entity_id) && !is_player(parent_id) {
             set_value_for_key(&StorageKey::item_collected(entity_id), 1);
         }
@@ -260,21 +260,6 @@ impl World {
         vec![]
     }
 
-    pub fn kill_with_animation(&self, target: &mut Entity) {
-        target.direction = Direction::Unknown;
-        target.current_speed = 0.0;
-        target.is_rigid = false;
-        target.is_dying = true;
-        target.remaining_lifespan = 10.0 / ANIMATIONS_FPS;                
-        target.frame = target.hittable_frame(); 
-        target.sprite = AnimatedSprite::new(
-            SPRITE_SHEET_ANIMATED_OBJECTS, 
-            IntRect::new(0, 10, 1, 1), 
-            5
-        );
-        self.mark_as_collected_if_needed(target.id, target.parent_id);
-    }
-
     fn stop_hero_movement(&mut self) {
         self.entities
             .borrow_mut()
@@ -373,52 +358,6 @@ impl World {
         }
         if self.hits(hero.x, hero.y - 1) && hero.x == target.x && hero.y.saturating_sub(3) == target.y && matches!(hero_direction, Direction::Up) {
             return true
-        }
-        false
-    }
-
-    pub fn index_of_player_at(&self, x: i32, y: i32) -> Option<usize> {
-        for p in &self.players {
-            if p.props.hittable_frame.x == x && p.props.hittable_frame.y == y {
-                return Some(p.index)
-            }
-        }
-        None
-    }
-    
-    pub fn entity_ids_of_all_players_at(&self, x: i32, y: i32) -> Vec<u32> { 
-        self.index_of_all_players_at(x, y)
-            .into_iter()
-            .filter_map(|i| self.player_entity_id_by_index(i)) 
-            .collect()
-    }
-
-    fn player_entity_id_by_index(&self, index: usize) -> Option<u32> {
-        match index {
-            PLAYER1_INDEX => Some(PLAYER1_ENTITY_ID),
-            PLAYER2_INDEX => Some(PLAYER2_ENTITY_ID),
-            PLAYER3_INDEX => Some(PLAYER3_ENTITY_ID),
-            PLAYER4_INDEX => Some(PLAYER4_ENTITY_ID),
-            _ => None
-        }
-    }
-
-    fn index_of_all_players_at(&self, x: i32, y: i32) -> Vec<usize> {
-        self.players.iter().filter_map(|p| {
-            if p.props.hittable_frame.x == x && p.props.hittable_frame.y == y {
-                Some(p.index)
-            } else {
-                None
-            }
-        })
-        .collect()
-    }
-
-    pub fn is_any_hero_at(&self, x: i32, y: i32) -> bool {
-        for p in &self.players {
-            if p.props.hittable_frame.x == x && p.props.hittable_frame.y == y {
-                return true
-            }
         }
         false
     }

@@ -41,7 +41,6 @@ impl World {
         updates
     }
 
-
     pub fn handle_bullet_stopped(&mut self, bullet_id: BulletId) -> Vec<EngineStateUpdate> {
         let supports_bullet_boomerang = if let Some(index) = self.index_for_entity(bullet_id) {
             if let Some(entity) = self.entities.borrow().get(index) {
@@ -92,7 +91,7 @@ impl World {
         hero.hp -= actual_damage;
         
         if hero.hp <= 0.0 {
-            self.kill_with_animation(hero);
+            hero.play_death_animation();
             true
         } else {
             false
@@ -103,7 +102,8 @@ impl World {
         target.hp -= damage * damage_multiplier(target.parent_id, bullet_species_id);
         
         if target.hp <= 0.0 {
-            self.kill_with_animation(target);
+            target.play_death_animation();
+            self.mark_as_collected_if_needed(target.id, target.parent_id);
             true
         } else {
             false
