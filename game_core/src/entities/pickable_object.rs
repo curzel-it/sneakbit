@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_INVENTORY, entities::species::species_by_id, game_engine::{entity::Entity, state_updates::{AddToInventoryReason, EngineStateUpdate, WorldStateUpdate}, world::World}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastImage, ToastMode}};
+use crate::{constants::SPRITE_SHEET_INVENTORY, entities::species::species_by_id, features::{entity::Entity, state_updates::{AddToInventoryReason, EngineStateUpdate, WorldStateUpdate}}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastImage, ToastMode}, worlds::world::World};
 
 impl Entity {
     pub fn update_pickable_object(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {              

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{game_engine::{entity::Entity, world::World}, utils::directions::Direction};
+use crate::{features::entity::Entity, utils::directions::Direction, worlds::world::World};
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub enum MovementDirections {
@@ -28,7 +28,7 @@ impl Entity {
         match self.movement_directions {
             MovementDirections::None => {},
             MovementDirections::Keyboard => {
-                let new_direction = world.direction_based_on_current_keys_for_player_by_index(self.player_index);
+                let new_direction = world.players[self.player_index].direction_based_on_current_keys;
                 self.update_direction_for_current_keys(new_direction);
             },
             MovementDirections::Free => self.move_around_free(world),

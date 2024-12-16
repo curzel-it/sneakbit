@@ -1,4 +1,4 @@
-use crate::{game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, maps::constructions_tiles::Construction, utils::directions::Direction};
+use crate::{features::{entity::Entity, state_updates::WorldStateUpdate}, maps::constructions_tiles::Construction, utils::directions::Direction, worlds::world::World};
 
 
 impl Entity {

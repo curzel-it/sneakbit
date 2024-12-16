@@ -1,4 +1,4 @@
-use crate::{constants::STEP_COMMITMENT_THRESHOLD, game_engine::entity::Entity, utils::{directions::Direction, vector::Vector2d}};
+use crate::{constants::STEP_COMMITMENT_THRESHOLD, features::entity::Entity, utils::{directions::Direction, vector::Vector2d}};
 
 impl Entity {
     pub fn update_direction_for_current_keys(&mut self, new_direction: Direction) {

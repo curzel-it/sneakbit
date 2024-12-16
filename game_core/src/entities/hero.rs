@@ -1,4 +1,4 @@
-use crate::{constants::HERO_RECOVERY_PS, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, is_creative_mode, utils::directions::Direction};
+use crate::{constants::HERO_RECOVERY_PS, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::directions::Direction, worlds::world::World};
 
 use super::trails::leave_footsteps;
 

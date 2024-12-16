@@ -1,6 +1,6 @@
 use crate::{entities::{bullets::{BulletHits, BulletId}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast};
 
-use super::{entity::{Entity, EntityId, EntityProps}, locks::LockType};
+use super::{entity::{Entity, EntityId}, entity_props::EntityProps, locks::LockType};
 
 pub type PlayerIndex = usize;
 
@@ -9,11 +9,6 @@ pub enum WorldStateUpdate {
     AddEntity(Box<Entity>),
     RemoveEntity(EntityId),
     RemoveEntityAtCoordinates(usize, usize),
-    RenameEntity(EntityId, String),
-    ToggleDemandAttention(EntityId),
-    UpdateDestinationWorld(EntityId, u32),
-    UpdateDestinationX(EntityId, i32),
-    UpdateDestinationY(EntityId, i32),
     CacheHeroProps(Box<EntityProps>),
     ChangeLock(EntityId, LockType),
     BiomeTileChange(usize, usize, Biome),
@@ -58,4 +53,20 @@ pub enum AddToInventoryReason {
 
 pub fn visit(link: &str) -> WorldStateUpdate {
     WorldStateUpdate::EngineUpdate(EngineStateUpdate::ExternalLink(link.to_owned()))
+}
+
+impl WorldStateUpdate {
+    pub fn log(&self) {
+        match self {
+            WorldStateUpdate::EngineUpdate(_) => {},
+            WorldStateUpdate::CacheHeroProps(_) => {},
+            _ => println!("World update: {:#?}", self)
+        }   
+    }
+}
+
+impl EngineStateUpdate {
+    pub fn log(&self) {
+        println!("Engine update: {:#?}", self)
+    }
 }

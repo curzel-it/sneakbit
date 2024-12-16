@@ -1,4 +1,4 @@
-use crate::{entities::bullets::make_player_bullet, game_engine::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory, world::World}};
+use crate::{entities::bullets::make_player_bullet, features::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory}, worlds::world::World};
 
 use super::basics::{is_equipped, EquipmentUsageSoundEffect};
 

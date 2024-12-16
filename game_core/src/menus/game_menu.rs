@@ -1,4 +1,4 @@
-use crate::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, features::sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, game_engine::{engine::GameMode, keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, lang::localizable::LocalizableText, number_of_players, spacing, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
+use crate::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, spacing, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
 
 use super::{confirmation::ConfirmationDialog, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
@@ -369,12 +369,10 @@ impl GameMenu {
                 self.number_of_players_menu.close();
                 self.menu.clear_selection();
                 self.state = MenuState::Open;
+            } else if PVP_AVAILABLE {
+                update_number_of_players(self.number_of_players_menu.selected_index)
             } else {
-                if PVP_AVAILABLE {
-                    update_number_of_players(self.number_of_players_menu.selected_index)
-                } else {
-                    update_number_of_players(self.number_of_players_menu.selected_index + 1)
-                }                
+                update_number_of_players(self.number_of_players_menu.selected_index + 1)
             }
             self.number_of_players_menu.clear_confirmation();
             self.number_of_players_menu.items = player_options();
@@ -526,7 +524,6 @@ fn player_options() -> Vec<String> {
     let number_of_players = number_of_players();
 
     let mut options: Vec<String> = (1..=MAX_PLAYERS)
-        .into_iter()
         .map(|n| {
             let selected = if number_of_players == n { ".selected" } else { "" };
             format!("game.menu.number_of_players.{}{}", n, selected).localized()

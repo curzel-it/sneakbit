@@ -1,4 +1,4 @@
-use crate::{entities::bullets::make_player_bullet, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, utils::{directions::Direction, vector::Vector2d}};
+use crate::{entities::bullets::make_player_bullet, features::{entity::Entity, state_updates::WorldStateUpdate}, utils::{directions::Direction, vector::Vector2d}, worlds::world::World};
 
 use super::basics::is_equipped;
 

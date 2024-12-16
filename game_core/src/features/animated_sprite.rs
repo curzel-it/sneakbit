@@ -1,6 +1,6 @@
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use crate::{constants::{ANIMATIONS_FPS, SPRITE_SHEET_BLANK, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2}, game_engine::entity::Entity, utils::{directions::Direction, rect::IntRect, timed_content_provider::TimedContentProvider}};
+use crate::{constants::{ANIMATIONS_FPS, SPRITE_SHEET_BLANK, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2}, features::entity::Entity, utils::{directions::Direction, rect::IntRect, timed_content_provider::TimedContentProvider}};
 
 #[derive(Debug, Clone)]
 pub struct AnimatedSprite {

@@ -4,7 +4,7 @@ use std::path::Path;
 use lazy_static::lazy_static;
 
 use crate::config::config;
-use crate::game_engine::storage::{get_value_for_global_key, StorageKey};
+use crate::features::storage::{get_value_for_global_key, StorageKey};
 
 pub trait LocalizableText {
     fn try_localize(&self) -> Option<String>;

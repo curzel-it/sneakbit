@@ -1,4 +1,4 @@
-use crate::{game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}, is_creative_mode};
+use crate::{features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, worlds::world::World};
 
 impl Entity {
     pub fn setup_gate(&mut self) {

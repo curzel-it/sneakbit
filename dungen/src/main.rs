@@ -3,7 +3,7 @@ use rand::Rng;
 use std::fs::File;
 use std::io::Write;
 
-use game_core::{game_engine::world::{World, WorldType}, maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile, tiles::TileSet}};
+use game_core::{maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile, tiles::TileSet}, worlds::{world::World, world_type::WorldType}};
 
 /*
 Dungeon 

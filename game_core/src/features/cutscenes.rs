@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::SPRITE_SHEET_BLANK, game_engine::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, set_value_for_key}}, utils::{rect::IntRect, vector::Vector2d}, RenderableItem};
+use crate::{constants::SPRITE_SHEET_BLANK, features::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, set_value_for_key}}, utils::{rect::IntRect, vector::Vector2d}, RenderableItem};
 
 use super::animated_sprite::AnimatedSprite;
 

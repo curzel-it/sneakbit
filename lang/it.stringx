@@ -150,9 +150,9 @@ Devo andare ora, alla prossima!
 
 "death_screen.player_won" = "Vince il giocatore %PLAYER_NAME%!"
 
-"death_screen.start_new_match" = "Conferma per ricominciare"
+"death_screen.start_new_match" = "Premi E per ricominciare"
 
-"death_screen.subtitle" = "Premi CONFERMA per riprovare"
+"death_screen.subtitle" = "Premi E per riprovare"
 
 "death_screen.title" = "Sei morto."
 
@@ -197,7 +197,7 @@ Grazie per aver giocato!
 
 "entity.menu.use" = "Usa"
 
-"game.menu.controls" = "Controls"
+"game.menu.controls" = "Controlli"
 
 "game.menu.controls.explained" = """
 == Keyboard ==
@@ -589,9 +589,9 @@ Le loro uniche foglie viola catturano l'essenza del crepuscolo,
 alimentando la vita e il fascino di Duskhaven.
 """
 
-"map_editor.placement" = "CONFERMA per posizionare, ESC per annullare"
+"map_editor.placement" = "E per posizionare, ESC per annullare"
 
-"map_editor.subtitle" = "Premi CONFERMA per selezionare qualcosa"
+"map_editor.subtitle" = "Premi E per selezionare qualcosa"
 
 "map_editor.title" = "Editor Mappa"
 

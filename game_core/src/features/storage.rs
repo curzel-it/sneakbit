@@ -1,9 +1,9 @@
 use std::{collections::{HashMap, HashSet}, fs::File, io::{BufReader, Write}, sync::{mpsc::{self, Sender}, RwLock}, thread};
 use lazy_static::lazy_static;
 
-use crate::{config::config, constants::MAX_PLAYERS, entities::species::{species_by_id, SpeciesId}, equipment::basics::set_equipped};
+use crate::{config::config, constants::MAX_PLAYERS, entities::species::{species_by_id, SpeciesId}, equipment::basics::set_equipped, worlds::world::World};
 
-use super::{entity::EntityId, locks::LockType, world::World};
+use super::{entity::EntityId, locks::LockType};
 
 const INVENTORY_AMOUNT: &str = "inventory.amount";
 const PLAYER: &str = "player";
