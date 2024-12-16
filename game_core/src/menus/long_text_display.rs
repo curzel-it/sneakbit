@@ -5,7 +5,8 @@ use crate::spacing;
 use crate::ui::components::{empty_view, WithAlpha, COLOR_MENU_BACKGROUND};
 use crate::ui::scaffold::scaffold;
 use crate::utils::strings::wrap_text;
-use crate::{features::keyboard_events_provider::KeyboardEventsProvider, text, ui::components::{Spacing, Typography, View}, utils::animator::Animator, vstack};
+use crate::input::keyboard_events_provider::KeyboardEventsProvider;
+use crate::{text, ui::components::{Spacing, Typography, View}, utils::animator::Animator, vstack};
 
 use super::menu::{Menu, MenuDescriptorC, MenuItem, MENU_BORDERS_TEXTURES};
 
