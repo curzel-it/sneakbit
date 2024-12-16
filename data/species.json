@@ -3771,6 +3771,7 @@
     "bullet_species_id": 7000,
     "cooldown_after_use": 0.15,
     "entity_type": "WeaponRanged",
+    "equipment_usage_sound_effect": "KnifeThrown",
     "id": 1160,
     "inventory_texture_offset": [
       7,
@@ -3788,7 +3789,6 @@
     },
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1000,
-    "equipment_usage_sound_effect": "KnifeThrown",
     "z_index": 16
   },
   {
@@ -3797,6 +3797,7 @@
     "bullet_species_id": 1166,
     "cooldown_after_use": 0.35,
     "entity_type": "WeaponMelee",
+    "equipment_usage_sound_effect": "SwordSlash",
     "id": 1159,
     "inventory_texture_offset": [
       11,
@@ -3814,7 +3815,6 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1022,
-    "equipment_usage_sound_effect": "SwordSlash",
     "z_index": 16
   },
   {
@@ -3868,6 +3868,7 @@
     "bullet_species_id": 1169,
     "cooldown_after_use": 0.005,
     "entity_type": "WeaponRanged",
+    "equipment_usage_sound_effect": "GunShot",
     "id": 1154,
     "inventory_texture_offset": [
       11,
@@ -3885,7 +3886,6 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1022,
-    "equipment_usage_sound_effect": "GunShot",
     "z_index": 16
   },
   {
@@ -3938,6 +3938,7 @@
     "bullet_species_id": 1170,
     "cooldown_after_use": 0.5,
     "entity_type": "WeaponRanged",
+    "equipment_usage_sound_effect": "LoudGunShot",
     "id": 1167,
     "inventory_texture_offset": [
       11,
@@ -3955,7 +3956,6 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1022,
-    "equipment_usage_sound_effect": "LoudGunShot",
     "z_index": 16
   },
   {
