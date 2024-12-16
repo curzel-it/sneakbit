@@ -4,7 +4,7 @@ use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializ
 use serde_json::Error;
 use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, light_conditions::LightConditions}, features::entity::Entity, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::ConstructionTile, tiles::TileSet}, utils::rect::IntRect};
 
-use super::world::{World, WorldType};
+use super::{world::World, world_type::WorldType};
 
 impl World {
     pub fn load(id: u32) -> Option<Self> {

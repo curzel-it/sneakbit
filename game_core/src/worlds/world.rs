@@ -1,9 +1,10 @@
 use std::{cell::RefCell, cmp::Ordering, collections::HashSet, fmt::{self, Debug}};
 
 use common_macros::hash_set;
-use serde::{Deserialize, Serialize};
 use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_HERO, SPECIES_KUNAI}, species::{species_by_id, EntityType}}, equipment::basics::{available_weapons, is_equipped}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, light_conditions::LightConditions}, features::entity::is_player, is_creative_mode, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 use crate::features::{entity::{is_player_index, Entity, EntityId, EntityProps}, keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
+
+use super::world_type::WorldType;
 
 #[derive(Clone)]
 pub struct World {
@@ -46,13 +47,6 @@ pub struct Hitmap {
 }
 
 pub type EntityIdsMap = Vec<(i32, i32, EntityId)>;
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub enum WorldType {
-    HouseInterior,
-    Dungeon,
-    Exterior
-}
 
 impl World {
     pub fn new(id: u32) -> Self {
