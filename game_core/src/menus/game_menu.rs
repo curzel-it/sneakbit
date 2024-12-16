@@ -369,12 +369,10 @@ impl GameMenu {
                 self.number_of_players_menu.close();
                 self.menu.clear_selection();
                 self.state = MenuState::Open;
+            } else if PVP_AVAILABLE {
+                update_number_of_players(self.number_of_players_menu.selected_index)
             } else {
-                if PVP_AVAILABLE {
-                    update_number_of_players(self.number_of_players_menu.selected_index)
-                } else {
-                    update_number_of_players(self.number_of_players_menu.selected_index + 1)
-                }                
+                update_number_of_players(self.number_of_players_menu.selected_index + 1)
             }
             self.number_of_players_menu.clear_confirmation();
             self.number_of_players_menu.items = player_options();
@@ -526,7 +524,6 @@ fn player_options() -> Vec<String> {
     let number_of_players = number_of_players();
 
     let mut options: Vec<String> = (1..=MAX_PLAYERS)
-        .into_iter()
         .map(|n| {
             let selected = if number_of_players == n { ".selected" } else { "" };
             format!("game.menu.number_of_players.{}{}", n, selected).localized()
