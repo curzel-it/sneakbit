@@ -2,7 +2,7 @@ use image::{DynamicImage, GenericImageView, ImageBuffer, RgbImage, RgbaImage, im
 use std::{io::BufWriter, path::Path, fs::{self, File}, error::Error};
 use regex::Regex;
 
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, TILE_SIZE}, features::engine::GameMode, initialize_game, lang::localizable::LANG_EN, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::{SpriteTile, TileSet}}, worlds::world::World};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, TILE_SIZE}, initialize_game, lang::localizable::LANG_EN, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::{SpriteTile, TileSet}}, multiplayer::modes::GameMode, worlds::world::World};
 
 pub fn generate_tile_map_image_from_json(
     world_id: u32,

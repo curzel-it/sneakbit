@@ -1,4 +1,4 @@
-use crate::{constants::TILE_SIZE, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, features::{engine::GameMode}, number_of_players, utils::directions::Direction};
+use crate::{constants::TILE_SIZE, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, multiplayer::modes::GameMode, number_of_players, utils::directions::Direction};
 
 use super::{world::World, world_type::WorldType};
 

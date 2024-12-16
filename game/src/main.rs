@@ -6,7 +6,7 @@ mod rendering;
 use std::env;
 
 use features::{audio::{play_audio, AudioManager}, inputs::{handle_keyboard_updates, handle_mouse_updates}, links::MyLinkHandler, paths::local_path};
-use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_soundtrack_string, current_world_id, engine_set_wants_fullscreen, features::sound_effects::is_music_enabled, features::{engine::GameMode, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_game_running, lang::localizable::LANG_EN, set_links_handler, stop_game, update_game};
+use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_soundtrack_string, current_world_id, engine_set_wants_fullscreen, features::{sound_effects::is_music_enabled, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_game_running, lang::localizable::LANG_EN, multiplayer::modes::GameMode, set_links_handler, stop_game, update_game};
 use raylib::prelude::*;
 use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, render_frame_with_context, start_rl}};
 use sys_locale::get_locale;

@@ -6,8 +6,9 @@ use std::os::raw::c_char;
 use config::initialize_config_paths;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
-use features::{engine::{GameEngine, GameMode}, storage::{get_value_for_global_key, inventory_count, StorageKey}};
+use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
+use multiplayer::modes::GameMode;
 use utils::{rect::{IntPoint, IntRect}, vector::Vector2d};
 
 pub mod config;
@@ -18,6 +19,7 @@ pub mod features;
 pub mod lang;
 pub mod maps;
 pub mod menus;
+pub mod multiplayer;
 pub mod prefabs;
 pub mod ui;
 pub mod utils;

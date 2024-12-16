@@ -1,6 +1,6 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, PLAYER1_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, TURN_DURATION, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, PLAYER1_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
-use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, PlayerIndex, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
+use super::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
 pub struct GameEngine {
     pub menu: GameMenu,
@@ -24,39 +24,8 @@ pub struct GameEngine {
     pub number_of_players: usize,
     pub game_mode: GameMode,
     pub dead_players: Vec<usize>,
-    pub turn: GameTurn
-}
-
-#[derive(Clone, Copy)]
-#[repr(C)]
-pub enum GameMode {
-    RealTimeCoOp = 0,
-    Creative = 1,
-    TurnBasedPvp = 2
-}
-
-impl GameMode {
-    pub fn allows_pvp(&self) -> bool {
-        matches!(self, GameMode::TurnBasedPvp)
-    }
-
-    pub fn is_turn_based(&self) -> bool {
-        matches!(self, GameMode::TurnBasedPvp)   
-    }
-
-    fn first_turn(&self) -> GameTurn {
-        match self {
-            GameMode::RealTimeCoOp => GameTurn::RealTime,
-            GameMode::Creative => GameTurn::RealTime,
-            GameMode::TurnBasedPvp => GameTurn::Player(PLAYER1_INDEX, TURN_DURATION),
-        }
-    }
-}
-
-#[derive(Clone, Copy)]
-pub enum GameTurn {
-    RealTime,
-    Player(PlayerIndex, f32)
+    pub turn: GameTurn,
+    turns_use_case: TurnsUseCase
 }
 
 impl GameEngine {
@@ -84,6 +53,7 @@ impl GameEngine {
             game_mode,
             dead_players: vec![],
             turn: GameTurn::RealTime,
+            turns_use_case: TurnsUseCase {}
         }
     }
 
@@ -420,7 +390,7 @@ impl GameEngine {
 
     pub fn update_game_mode(&mut self, game_mode: GameMode) {
         self.game_mode = game_mode;
-        self.turn = game_mode.first_turn();
+        self.turn = self.turns_use_case.first_turn(game_mode);
         self.update_number_of_players(self.number_of_players);
     }
 
@@ -431,70 +401,46 @@ impl GameEngine {
     }
     
     pub fn update_current_turn(&mut self, time_since_last_update: f32) {
-        if self.number_of_players == 1 {
-            return 
-        }
-        self.turn = match self.turn {
-            GameTurn::RealTime => GameTurn::RealTime,
-            GameTurn::Player(current_player_index, time_left) => {
-                let new_time_left = time_left - time_since_last_update;
-
-                if new_time_left <= 0.0 {
-                    let next_player = if current_player_index == self.number_of_players - 1 {
-                        PLAYER1_INDEX
-                    } else { 
-                        current_player_index + 1 
-                    };                    
-                    GameTurn::Player(next_player, TURN_DURATION)
-                } else {
-                    GameTurn::Player(current_player_index, new_time_left)
-                }
-            }
-        }
+        self.turn = self.turns_use_case.updated_turn(&self.turn, self.number_of_players, time_since_last_update);
     }
     
     pub fn update_current_turn_for_death_of_player(&mut self, dead_player_index: usize) {
-        match self.turn {
-            GameTurn::RealTime => {},
-            GameTurn::Player(current_player_index, _) => {
-                if current_player_index == dead_player_index {
-                    self.toast.show(
-                        &Toast::new_with_image(
-                            ToastMode::LongHint,
-                            "notification.player.died"
-                                .localized()
-                                .replace("%PLAYER_NAME%", &format!("{}", dead_player_index + 1)),
-                            ToastImage::new(
-                                IntRect::new(9, 17, 1, 1), 
-                                SPRITE_SHEET_ANIMATED_OBJECTS, 
-                                4
-                            )
+        if let GameTurn::Player(current_player_index, _) = self.turn {
+            if current_player_index == dead_player_index {
+                self.toast.show(
+                    &Toast::new_with_image(
+                        ToastMode::LongHint,
+                        "notification.player.died"
+                            .localized()
+                            .replace("%PLAYER_NAME%", &format!("{}", dead_player_index + 1)),
+                        ToastImage::new(
+                            IntRect::new(9, 17, 1, 1), 
+                            SPRITE_SHEET_ANIMATED_OBJECTS, 
+                            4
                         )
-                    );
-                    self.update_current_turn(TURN_DURATION * 2.0);
-                }
-            },
+                    )
+                );
+            }
+        }
+        if let TurnResultAfterPlayerDeath::NextTurn(next) = self.turns_use_case.updated_turn_for_death_of_player(&self.turn, self.number_of_players, dead_player_index) {
+            self.turn = next;
         }
     }
 
     fn handle_win_lose(&mut self) {
-        match self.game_mode {
-            GameMode::RealTimeCoOp => {
-                if self.dead_players.contains(&PLAYER1_INDEX) {
-                    self.death_screen.show_hero_died()
-                }
-            },
-            GameMode::TurnBasedPvp => {
-                if self.dead_players.len() == self.number_of_players - 1 {
-                    let winner = (0..self.number_of_players).find(|&i| !self.dead_players.contains(&i));
-                    if let Some(winner) = winner {
-                        self.death_screen.show_match_winner(winner)
-                    } else {
-                        self.death_screen.show_match_unknown_result()
-                    }
-                }
-            },
-            GameMode::Creative => {},
+        let result = self.turns_use_case.handle_win_lose(self.game_mode, self.number_of_players, &self.dead_players);
+        
+        match result{
+            MatchResult::Winner(winner_index) => {
+                self.death_screen.show_match_winner(winner_index)
+            }
+            MatchResult::UnknownWinner => {
+                self.death_screen.show_match_unknown_result()
+            }
+            MatchResult::GameOver => {
+                self.death_screen.show_hero_died()
+            }
+            MatchResult::NothingChanged => {}
         }
     }
 }
