@@ -3,7 +3,7 @@ use crate::utils::rect::IntRect;
 pub const BUILD_NUMBER: u32 = 37;
 
 // Feature Flags
-pub const PVP_AVAILABLE: bool = true;
+pub const PVP_AVAILABLE: bool = false;
 
 // Default Props
 pub const INITIAL_CAMERA_VIEWPORT: IntRect = IntRect::new(0, 0, 60, 40);
