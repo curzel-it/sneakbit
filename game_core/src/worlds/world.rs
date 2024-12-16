@@ -1,8 +1,8 @@
 use std::{cell::RefCell, cmp::Ordering, collections::HashSet};
 
 use common_macros::hash_set;
-use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_HERO, SPECIES_KUNAI}, species::{species_by_id, EntityType}}, equipment::basics::{available_weapons, is_equipped}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, entity::is_player, light_conditions::LightConditions}, hitmaps::hitmaps::{EntityIdsMap, Hitmap}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
-use crate::features::{entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
+use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, hitmaps::hitmaps::{EntityIdsMap, Hitmap}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::features::{entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
 
@@ -108,34 +108,6 @@ impl World {
         true
     }
 
-    pub fn remove_players(&mut self) {
-        if let Some(index) = self.index_for_entity(PLAYER1_ENTITY_ID) {
-            self.remove_entity_at_index(index);
-        }
-        if let Some(index) = self.index_for_entity(PLAYER2_ENTITY_ID) {
-            self.remove_entity_at_index(index);
-        }
-        if let Some(index) = self.index_for_entity(PLAYER3_ENTITY_ID) {
-            self.remove_entity_at_index(index);
-        }
-        if let Some(index) = self.index_for_entity(PLAYER4_ENTITY_ID) {
-            self.remove_entity_at_index(index);
-        }
-    }
-
-    pub fn remove_all_equipment(&mut self) {
-        let equipment_ids: Vec<u32> = self.entities.borrow().iter().filter_map(|e| {
-            if e.is_equipment() {
-                Some(e.id)
-            } else {
-                None
-            }
-        })
-        .collect();
-    
-        equipment_ids.into_iter().for_each(|id| self.remove_entity_by_id(id));
-    }
-
     pub fn remove_entity_by_id(&mut self, id: u32) {        
         if id != PLAYER1_ENTITY_ID {
             if let Some(player_index) = self.player_index_by_entity_id(id) {
@@ -153,7 +125,7 @@ impl World {
         }
     }
 
-    fn remove_entity_at_index(&mut self, index: usize) {
+    pub fn remove_entity_at_index(&mut self, index: usize) {
         let entities = self.entities.borrow();
         let entity = &entities[index];
 
@@ -169,16 +141,12 @@ impl World {
         self.entities.borrow_mut().swap_remove(index);
     }
 
-    fn index_for_entity(&self, id: u32) -> Option<usize> {
+    pub fn index_for_entity(&self, id: u32) -> Option<usize> {
         self.entities.borrow().iter()
             .enumerate()
             .find(|(_, entity)|{ entity.id == id })
             .map(|(index, _)| index)
     }
-
-    pub fn direction_based_on_current_keys_for_player_by_index(&self, index: usize) -> Direction {
-        self.players[index].direction_based_on_current_keys
-    } 
 
     pub fn update(
         &mut self, 
@@ -248,12 +216,6 @@ impl World {
             WorldStateUpdate::RemoveEntityAtCoordinates(row, col) => {
                 self.remove_entities_by_coords(row, col)
             }
-            WorldStateUpdate::RenameEntity(id, new_name) => {
-                self.rename_entity(id, new_name)
-            }
-            WorldStateUpdate::ToggleDemandAttention(id) => {
-                self.toggle_demand_attention(id)
-            }
             WorldStateUpdate::CacheHeroProps(props) => { 
                 if let Some(index) = self.player_index_by_entity_id(props.id) {
                     self.players[index].props = *props;                
@@ -273,15 +235,6 @@ impl World {
             }
             WorldStateUpdate::EngineUpdate(update) => {
                 return vec![update]
-            }
-            WorldStateUpdate::UpdateDestinationWorld(entity_id, world) => {
-                self.change_destination_world(entity_id, world)
-            }
-            WorldStateUpdate::UpdateDestinationX(entity_id, x) => {
-                self.change_destination_x(entity_id, x)
-            }
-            WorldStateUpdate::UpdateDestinationY(entity_id, y) => {
-                self.change_destination_y(entity_id, y)
             }
             WorldStateUpdate::HandleBulletStopped(bullet_id) => {
                 return self.handle_bullet_stopped(bullet_id)
@@ -307,7 +260,7 @@ impl World {
         vec![]
     }
 
-    fn kill_with_animation(&self, target: &mut Entity) {
+    pub fn kill_with_animation(&self, target: &mut Entity) {
         target.direction = Direction::Unknown;
         target.current_speed = 0.0;
         target.is_rigid = false;
@@ -322,132 +275,6 @@ impl World {
         self.mark_as_collected_if_needed(target.id, target.parent_id);
     }
 
-    fn handle_hits(&mut self, hits: &BulletHits) -> Vec<EngineStateUpdate> {
-        let mut updates: Vec<EngineStateUpdate> = vec![];
-        let mut bullet_expended = false;
-        let mut entities = self.entities.borrow_mut();
-
-        let shooter_is_player = is_player(hits.bullet_parent_id);
-        let pvp_allowed = current_game_mode().allows_pvp();
-
-        let targets = entities.iter_mut().filter(|e| {
-            hits.target_ids.contains(&e.id) && e.can_be_hit_by_bullet()
-        });
-
-        for target in targets {
-            let did_kill = if target.is_player() {
-                if !shooter_is_player || pvp_allowed {
-                    let player_died = self.handle_hero_damage(target, hits.damage);
-                    if player_died {
-                        updates.push(EngineStateUpdate::PlayerDied(target.player_index));
-                    }
-                    false
-                } else {
-                    false
-                }
-            } else {
-                self.handle_target_hit(hits.damage, hits.bullet_species_id, target)
-            };
-            bullet_expended = bullet_expended || did_kill;
-            if did_kill {
-                updates.push(EngineStateUpdate::EntityKilled(target.id, target.species_id));
-            }
-        }
-        drop(entities);
-
-        if bullet_expended && hits.bullet_id != 0 {
-            updates.append(&mut self.handle_bullet_stopped_from_hit(hits.bullet_id, hits.supports_bullet_boomerang));
-        } 
-        updates
-    }
-
-    fn handle_hero_damage(&self, hero: &mut Entity, damage: f32) -> bool {
-        let mut damage_reductions: Vec<f32> = available_weapons(hero.player_index)
-            .iter()
-            .filter_map(|s| 
-                if is_equipped(s, hero.player_index) {
-                    Some(s.received_damage_reduction)
-                } else {
-                    None
-                }
-            )   
-            .collect();
-        
-        damage_reductions.sort_by(|a, b| b.partial_cmp(a).unwrap_or(std::cmp::Ordering::Equal));     
-
-        let actual_damage = damage_reductions
-            .iter()
-            .fold(damage, |current_damage, discount| current_damage * (1.0 - discount))
-            .max(0.0);
-
-        hero.hp -= actual_damage;
-        
-        if hero.hp <= 0.0 {
-            self.kill_with_animation(hero);
-            true
-        } else {
-            false
-        }
-    }
-
-    fn handle_target_hit(&self, damage: f32, bullet_species_id: u32, target: &mut Entity) -> bool {
-        target.hp -= damage * damage_multiplier(target.parent_id, bullet_species_id);
-        
-        if target.hp <= 0.0 {
-            self.kill_with_animation(target);
-            true
-        } else {
-            false
-        }
-    }
-
-    fn handle_bullet_stopped(&mut self, bullet_id: BulletId) -> Vec<EngineStateUpdate> {
-        let supports_bullet_boomerang = if let Some(index) = self.index_for_entity(bullet_id) {
-            if let Some(entity) = self.entities.borrow().get(index) {
-                species_by_id(entity.species_id).supports_bullet_boomerang
-            } else {
-                false
-            }
-        } else {
-            false
-        };
-        self.handle_bullet_stopped_from_hit(bullet_id, supports_bullet_boomerang)
-    }
-
-    fn handle_bullet_stopped_from_hit(&mut self, bullet_id: u32, supports_bullet_boomerang: bool) -> Vec<EngineStateUpdate> {
-        if has_boomerang_skill() && supports_bullet_boomerang {
-            let mut entities = self.entities.borrow_mut();
-            if let Some(bullet) = entities.iter_mut().find(|e| e.id == bullet_id) {
-                if is_player(bullet.parent_id) {
-                    bullet.direction = bullet.direction.opposite();
-                    bullet.update_sprite_for_current_state();
-                    let (dx, dy) = bullet.direction.as_col_row_offset();
-                    bullet.frame.x += dx;
-                    bullet.frame.y += dy;
-                    return vec![EngineStateUpdate::BulletBounced]
-                }
-            }
-            drop(entities);
-        }
-        self.remove_entity_by_id(bullet_id);
-        vec![]
-    }
-
-    fn handle_bullet_catched(&mut self, bullet_id: u32) {
-        if has_bullet_catcher_skill() {
-            let entities = self.entities.borrow();
-
-            if let Some(bullet) = entities.iter().find(|e| e.id == bullet_id) {
-                let species_id = bullet.species_id;
-                let player = bullet.player_index;
-                _ = bullet;
-                drop(entities);
-                self.remove_entity_by_id(bullet_id);
-                increment_inventory_count(species_id, player);
-            }
-        }
-    }
-
     fn stop_hero_movement(&mut self) {
         self.entities
             .borrow_mut()
@@ -459,58 +286,11 @@ impl World {
             });
     }
 
-    fn toggle_demand_attention(&mut self, id: u32) {
-        let mut entities = self.entities.borrow_mut();
-        if let Some(entity) = entities.iter_mut().find(|e| e.id == id) {
-            entity.demands_attention = !entity.demands_attention
-        }
-    }
-
-    fn rename_entity(&mut self, id: u32, name: String) {
-        let mut entities = self.entities.borrow_mut();
-        if let Some(entity) = entities.iter_mut().find(|e| e.id == id) {
-            entity.name = name;
-        }
-    }
-
     fn change_lock(&mut self, id: u32, lock_type: LockType) {
         let mut entities = self.entities.borrow_mut();
         if let Some(entity) = entities.iter_mut().find(|e| e.id == id) {
             entity.lock_type = lock_type;
             save_lock_override(&entity.id, &lock_type);
-        }
-    }
-
-    fn change_destination_world(&mut self, id: u32, world: u32) {
-        let mut entities = self.entities.borrow_mut();
-        if let Some(entity) = entities.iter_mut().find(|e| e.id == id) {
-            if let Some(destination) = entity.destination.as_mut() {
-                destination.world = world;
-            } else {
-                entity.destination = Some(Destination::new(world, 0, 0));
-            }
-        }
-    }
-
-    fn change_destination_x(&mut self, id: u32, x: i32) {
-        let mut entities = self.entities.borrow_mut();
-        if let Some(entity) = entities.iter_mut().find(|e| e.id == id) {
-            if let Some(destination) = entity.destination.as_mut() {
-                destination.x = x;
-            } else {
-                entity.destination = Some(Destination::new(0, x, 0));
-            }
-        }
-    }
-
-    fn change_destination_y(&mut self, id: u32, y: i32) {
-        let mut entities = self.entities.borrow_mut();
-        if let Some(entity) = entities.iter_mut().find(|e| e.id == id) {
-            if let Some(destination) = entity.destination.as_mut() {
-                destination.y = y;
-            } else {
-                entity.destination = Some(Destination::new(0, 0, y));
-            }
         }
     }
 
@@ -755,13 +535,5 @@ impl World {
             4 => vec![PLAYER1_INDEX, PLAYER2_INDEX, PLAYER3_INDEX, PLAYER4_INDEX],
             _ => vec![PLAYER1_INDEX]
         }
-    }
-}
-
-fn damage_multiplier(parent_id: u32, bullet_species_id: u32) -> f32 {
-    if is_player(parent_id) && matches!(bullet_species_id, SPECIES_KUNAI) && has_piercing_knife_skill() {
-        2.0
-    } else {
-        1.0
     }
 }

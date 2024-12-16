@@ -1,4 +1,4 @@
-use crate::{constants::TILE_SIZE, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, multiplayer::modes::GameMode, number_of_players, utils::directions::Direction};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, multiplayer::modes::GameMode, number_of_players, utils::directions::Direction};
 
 use super::{world::World, world_type::WorldType};
 
@@ -280,5 +280,33 @@ impl World {
         let actual_x = original_x.min(self.bounds.x + self.bounds.w - 1).max(self.bounds.x - 1);
         let actual_y = original_y.min(self.bounds.y + self.bounds.h - 1).max(self.bounds.y - 1);
         (actual_x, actual_y)
+    }
+    
+    fn remove_players(&mut self) {
+        if let Some(index) = self.index_for_entity(PLAYER1_ENTITY_ID) {
+            self.remove_entity_at_index(index);
+        }
+        if let Some(index) = self.index_for_entity(PLAYER2_ENTITY_ID) {
+            self.remove_entity_at_index(index);
+        }
+        if let Some(index) = self.index_for_entity(PLAYER3_ENTITY_ID) {
+            self.remove_entity_at_index(index);
+        }
+        if let Some(index) = self.index_for_entity(PLAYER4_ENTITY_ID) {
+            self.remove_entity_at_index(index);
+        }
+    }
+
+    fn remove_all_equipment(&mut self) {
+        let equipment_ids: Vec<u32> = self.entities.borrow().iter().filter_map(|e| {
+            if e.is_equipment() {
+                Some(e.id)
+            } else {
+                None
+            }
+        })
+        .collect();
+    
+        equipment_ids.into_iter().for_each(|id| self.remove_entity_by_id(id));
     }
 }

@@ -10,6 +10,7 @@ pub mod directions;
 pub mod entity;
 pub mod entity_props;
 pub mod engine;
+pub mod hits_handling_use_case;
 pub mod light_conditions;
 pub mod linear_movement;
 pub mod links;
