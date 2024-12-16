@@ -1,6 +1,6 @@
 use crate::{entities::{bullets::{BulletHits, BulletId}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast};
 
-use super::{entity::{Entity, EntityId, EntityProps}, locks::LockType};
+use super::{entity::{Entity, EntityId}, entity_props::EntityProps, locks::LockType};
 
 pub type PlayerIndex = usize;
 

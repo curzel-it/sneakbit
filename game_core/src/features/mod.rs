@@ -7,6 +7,7 @@ pub mod destination;
 pub mod dialogues;
 pub mod directions;
 pub mod entity;
+pub mod entity_props;
 pub mod engine;
 pub mod light_conditions;
 pub mod linear_movement;
