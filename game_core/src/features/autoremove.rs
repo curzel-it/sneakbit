@@ -1,4 +1,4 @@
-use crate::{constants::UNLIMITED_LIFESPAN, game_engine::{entity::Entity, state_updates::WorldStateUpdate}};
+use crate::{constants::UNLIMITED_LIFESPAN, features::{entity::Entity, state_updates::WorldStateUpdate}};
 
 
 impl Entity {

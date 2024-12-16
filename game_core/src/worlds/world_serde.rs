@@ -2,7 +2,9 @@ use std::{fs::File, io::{BufReader, Write}};
 
 use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Error;
-use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, light_conditions::LightConditions}, game_engine::{entity::Entity, world::{World, WorldType}}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::ConstructionTile, tiles::TileSet}, utils::rect::IntRect};
+use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, light_conditions::LightConditions}, features::entity::Entity, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::ConstructionTile, tiles::TileSet}, utils::rect::IntRect};
+
+use super::world::{World, WorldType};
 
 impl World {
     pub fn load(id: u32) -> Option<Self> {

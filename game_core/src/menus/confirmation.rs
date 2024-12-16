@@ -1,5 +1,5 @@
 
-use crate::{constants::SPRITE_SHEET_MENU, game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::WorldStateUpdate}, lang::localizable::LocalizableText, ui::{components::{empty_view, BordersTextures, TextureInfo, View, WithAlpha, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::rect::IntRect};
+use crate::{constants::SPRITE_SHEET_MENU, features::{keyboard_events_provider::KeyboardEventsProvider, state_updates::WorldStateUpdate}, lang::localizable::LocalizableText, ui::{components::{empty_view, BordersTextures, TextureInfo, View, WithAlpha, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::rect::IntRect};
 
 use super::menu::{Menu, MenuItem, MenuUpdate};
 

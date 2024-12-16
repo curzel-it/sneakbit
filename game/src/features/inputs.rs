@@ -1,4 +1,4 @@
-use game_core::{engine, game_engine::keyboard_events_provider::KeyboardEventsProvider, number_of_players, update_keyboard, update_mouse};
+use game_core::{engine, features::keyboard_events_provider::KeyboardEventsProvider, number_of_players, update_keyboard, update_mouse};
 use raylib::prelude::*;
 
 use crate::GameContext;

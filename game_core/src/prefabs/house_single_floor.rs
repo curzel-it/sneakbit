@@ -1,4 +1,4 @@
-use crate::{constants::{HOUSE_INTERIOR_COLUMNS, HOUSE_INTERIOR_ROWS}, entities::{known_species::{SPECIES_SEAT_GREEN, SPECIES_TABLE, SPECIES_TELEPORTER}, species::{make_entity_by_species, Species}}, features::destination::Destination, game_engine::{entity::Entity, world::{World, WorldType}}, maps::{biome_tiles::Biome, constructions_tiles::Construction}, utils::{ids::get_next_id, rect::IntRect}};
+use crate::{constants::{HOUSE_INTERIOR_COLUMNS, HOUSE_INTERIOR_ROWS}, entities::{known_species::{SPECIES_SEAT_GREEN, SPECIES_TABLE, SPECIES_TELEPORTER}, species::{make_entity_by_species, Species}}, features::{destination::Destination, entity::Entity}, maps::{biome_tiles::Biome, constructions_tiles::Construction}, utils::{ids::get_next_id, rect::IntRect}, worlds::world::{World, WorldType}};
 
 pub fn new_house_single_floor(species: &Species, source_world_id: u32, x: i32, y: i32) -> Vec<Entity> {
     let mut building = species.make_entity();

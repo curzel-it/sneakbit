@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{game_engine::{entity::Entity, world::World}, utils::directions::Direction};
+use crate::{features::entity::Entity, utils::directions::Direction, worlds::world::World};
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub enum MovementDirections {

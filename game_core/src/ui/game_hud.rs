@@ -1,4 +1,4 @@
-use crate::{game_engine::engine::GameEngine, text, ui::components::{Spacing, Typography, COLOR_DEBUG_INFO_BACKGROUND}, vstack, zstack};
+use crate::{features::engine::GameEngine, text, ui::components::{Spacing, Typography, COLOR_DEBUG_INFO_BACKGROUND}, vstack, zstack};
 
 use super::{components::{empty_view, NonColor, View, WithAlpha, COLOR_DEATH_SCREEN_BACKGROUND, COLOR_LOADING_SCREEN_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}};
 
@@ -29,8 +29,8 @@ impl GameEngine {
             return empty_view()
         }
         match self.turn {
-            crate::game_engine::engine::GameTurn::RealTime => empty_view(),
-            crate::game_engine::engine::GameTurn::Player(_, time_left) => {
+            crate::features::engine::GameTurn::RealTime => empty_view(),
+            crate::features::engine::GameTurn::Player(_, time_left) => {
                 let text = format!("{:0.1}\"", time_left);
                 zstack!(
                     Spacing::MD,

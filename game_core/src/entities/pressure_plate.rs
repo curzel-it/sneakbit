@@ -1,4 +1,4 @@
-use crate::{constants::PRESSURE_PLATE_SWITCH_COOLDOWN, game_engine::{entity::Entity, state_updates::WorldStateUpdate, world::World}};
+use crate::{constants::PRESSURE_PLATE_SWITCH_COOLDOWN, features::{entity::Entity, state_updates::WorldStateUpdate}, worlds::world::World};
 
 impl Entity {
     pub fn setup_pressure_plate(&mut self) {

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::SPRITE_SHEET_INVENTORY, entities::species::{species_by_id, SpeciesId}, game_engine::{state_updates::{AddToInventoryReason, EngineStateUpdate, WorldStateUpdate}, storage::{has_dialogue_reward_been_collected, set_dialogue_read, set_dialogue_reward_collected}}, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastImage, ToastMode}};
+use crate::{constants::SPRITE_SHEET_INVENTORY, entities::species::{species_by_id, SpeciesId}, features::{state_updates::{AddToInventoryReason, EngineStateUpdate, WorldStateUpdate}, storage::{has_dialogue_reward_been_collected, set_dialogue_read, set_dialogue_reward_collected}}, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastImage, ToastMode}};
 
 pub type EntityDialogues = Vec<Dialogue>;
 

@@ -1,4 +1,4 @@
-use crate::{config::config, constants::TILE_SIZE, game_engine::{entity::Entity, world::World}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{config::config, constants::TILE_SIZE, features::entity::Entity, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 

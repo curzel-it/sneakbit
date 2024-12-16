@@ -6,7 +6,7 @@ use crate::constants::{MENU_CLOSE_TIME, MENU_OPEN_TIME, SPRITE_SHEET_MENU};
 use crate::ui::components::{empty_view, BordersTextures, TextureInfo, WithAlpha, COLOR_MENU_BACKGROUND};
 use crate::ui::scaffold::scaffold;
 use crate::utils::rect::IntRect;
-use crate::{game_engine::{keyboard_events_provider::KeyboardEventsProvider, state_updates::WorldStateUpdate}, text, ui::components::{Spacing, Typography, View}, utils::animator::Animator, vstack};
+use crate::{features::{keyboard_events_provider::KeyboardEventsProvider, state_updates::WorldStateUpdate}, text, ui::components::{Spacing, Typography, View}, utils::animator::Animator, vstack};
 
 pub struct Menu<Item: MenuItem> {
     pub title: String,
