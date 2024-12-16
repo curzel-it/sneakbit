@@ -1,7 +1,7 @@
 use std::{cell::RefCell, cmp::Ordering, collections::HashSet};
 
 use common_macros::hash_set;
-use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_HERO, SPECIES_KUNAI}, species::{species_by_id, EntityType}}, equipment::basics::{available_weapons, is_equipped}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, entity::is_player, entity_props::EntityProps, light_conditions::LightConditions}, hitmaps::hitmaps::{EntityIdsMap, Hitmap}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{ANIMATIONS_FPS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS}, current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_HERO, SPECIES_KUNAI}, species::{species_by_id, EntityType}}, equipment::basics::{available_weapons, is_equipped}, features::{animated_sprite::AnimatedSprite, cutscenes::CutScene, destination::Destination, entity::is_player, light_conditions::LightConditions}, hitmaps::hitmaps::{EntityIdsMap, Hitmap}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 use crate::features::{entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count, lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
@@ -51,7 +51,7 @@ impl World {
             entities: RefCell::new(vec![]),
             visible_entities: vec![],
             ephemeral_state: false,
-            players: vec![PlayerProps::new(0), PlayerProps::new(1), PlayerProps::new(2), PlayerProps::new(3)],
+            players: empty_props_for_all_players(),
             has_confirmation_key_been_pressed_by_anyone: false,
             is_any_arrow_key_down: false,
             hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
@@ -763,39 +763,6 @@ impl World {
             4 => vec![PLAYER1_INDEX, PLAYER2_INDEX, PLAYER3_INDEX, PLAYER4_INDEX],
             _ => vec![PLAYER1_INDEX]
         }
-    }
-}
-
-#[derive(Clone, Default, Debug)]
-pub struct PlayerProps {
-    pub index: usize,
-    pub direction_based_on_current_keys: Direction,
-    pub is_any_arrow_key_down: bool,
-    pub has_ranged_attack_key_been_pressed: bool,
-    pub has_close_attack_key_been_pressed: bool,
-    pub has_confirmation_key_been_pressed: bool,
-    pub props: EntityProps
-}
-
-impl PlayerProps {
-    fn new(index: usize) -> Self {
-        Self {
-            index,
-            direction_based_on_current_keys: Direction::Unknown,
-            is_any_arrow_key_down: false,
-            has_ranged_attack_key_been_pressed: false,
-            has_close_attack_key_been_pressed: false,
-            has_confirmation_key_been_pressed: false,
-            props: EntityProps::default()
-        }
-    }
-
-    fn update(&mut self, keyboard: &KeyboardEventsProvider) {
-        self.direction_based_on_current_keys = keyboard.direction_based_on_current_keys(self.index, self.props.direction);
-        self.is_any_arrow_key_down = keyboard.is_any_arrow_key_down(self.index);
-        self.has_ranged_attack_key_been_pressed = keyboard.has_ranged_attack_key_been_pressed(self.index);
-        self.has_close_attack_key_been_pressed = keyboard.has_close_attack_key_been_pressed(self.index);
-        self.has_confirmation_key_been_pressed = keyboard.has_confirmation_been_pressed(self.index);
     }
 }
 
