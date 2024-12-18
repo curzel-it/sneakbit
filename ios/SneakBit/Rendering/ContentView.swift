@@ -12,6 +12,7 @@ struct ContentView: View {
             LoadingScreen()
             DeathScreen()
             ToastView()
+            LaunchScreenView()
         }
         .ignoresSafeArea()
         .typography(.text)

@@ -17,6 +17,7 @@ class GameEngine {
     let showsDeathScreen = CurrentValueSubject<Bool, Never>(false)
     let heroHp = CurrentValueSubject<Float32, Never>(100)
     let isSwordEquipped = CurrentValueSubject<Bool, Never>(false)
+    let idPendingFirstLoad = CurrentValueSubject<Bool, Never>(true)
     
     var size: CGSize = .zero
     var fps: Double = 0.0
@@ -269,5 +270,9 @@ class GameEngine {
         canRender = !mode.isVisible
         isBusy = mode.isVisible
         loadingScreenConfig.send(mode)
+        
+        if mode == .none {
+            idPendingFirstLoad.send(false)
+        }
     }
 }
