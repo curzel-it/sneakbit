@@ -28,7 +28,6 @@ struct MenuView: View {
                                 .padding(2)
                         }
                     }
-                    .shadow(radius: 4)
                     .padding()
                     .padding(.top, viewModel.safeAreaInsets.top)
                     .padding(.trailing, viewModel.safeAreaInsets.right)
