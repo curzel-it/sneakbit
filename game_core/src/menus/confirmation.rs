@@ -49,7 +49,7 @@ impl ConfirmationDialog {
     }
 
     pub fn update(&mut self, keyboard: &KeyboardEventsProvider, time_since_last_update: f32) -> MenuUpdate {
-        self.menu.update(keyboard, time_since_last_update);
+        self.menu.update(keyboard);
 
         if self.menu.selection_has_been_confirmed {
             let selection = self.menu.selected_item();
@@ -88,7 +88,7 @@ impl ConfirmationDialog {
         if self.menu.is_open {       
             scaffold(
                 true, 
-                COLOR_MENU_BACKGROUND.with_alpha(self.menu.animator.current_value), 
+                COLOR_MENU_BACKGROUND, 
                 Some(ALERT_BORDERS_TEXTURES),
                 self.menu.menu_contents()
             )

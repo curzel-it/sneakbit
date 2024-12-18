@@ -7,9 +7,9 @@ mod rendering;
 use std::env;
 
 use features::{audio::{play_audio, AudioManager}, inputs::{handle_keyboard_updates, handle_mouse_updates}, links::MyLinkHandler, paths::local_path};
-use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_soundtrack_string, current_world_id, engine_set_wants_fullscreen, features::{sound_effects::is_music_enabled, state_updates::AppState, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_game_running, lang::localizable::LANG_EN, multiplayer::modes::GameMode, set_links_handler, stop_game, update_game};
+use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_keyboard_sate, current_soundtrack_string, current_text_string, current_title_string, current_world_id, engine_set_wants_fullscreen, features::{sound_effects::is_music_enabled, state_updates::AppState, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_game_running, lang::localizable::LANG_EN, menus::long_text_display::LongTextDisplay, multiplayer::modes::GameMode, set_links_handler, stop_game, update_game};
 use raylib::prelude::*;
-use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, render_frame_with_context, start_rl}};
+use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, start_rl}, worlds::render_frame};
 use sys_locale::get_locale;
 
 struct GameContext {
@@ -24,7 +24,8 @@ struct GameContext {
     last_pvp: bool,
     audio_manager: AudioManager, 
 
-    state: AppState
+    state: AppState,
+    long_text_display: LongTextDisplay,
 }
 
 fn main() {
@@ -55,6 +56,7 @@ fn main() {
         last_pvp: false,
         audio_manager,
         state: AppState::Gaming,
+        long_text_display: LongTextDisplay::new(50, 9),
     };
 
     let initial_game_mode = if creative_mode {
@@ -78,15 +80,38 @@ fn main() {
         handle_game_closed(&mut context);
         handle_keyboard_updates(&mut context, time_since_last_update);
         handle_mouse_updates(&mut context.rl, get_rendering_config().rendering_scale);
-        let new_state = update_game(time_since_last_update);
-        handle_world_changed(&mut context);
-        render_frame_with_context(&mut context);
-        play_audio(&context);
 
-        if context.state != new_state {
-            context.state = new_state
-        }
+        let new_state = match context.state {
+            AppState::Gaming => {
+                update_game(time_since_last_update)
+            },
+            AppState::DisplayText => {
+                context.long_text_display.update(current_keyboard_sate())
+            },
+        };
+        handle_state_changed(&mut context, new_state);
+        handle_world_changed(&mut context);
+        render_frame(&mut context);
+        play_audio(&context);
     }
+}
+
+fn handle_state_changed(context: &mut GameContext, new_state: AppState) {
+    if context.state == new_state {
+        return
+    }
+
+    println!("Application State changed from {:#?} to {:#?}", context.state, new_state);
+    match new_state {
+        AppState::Gaming => {},
+        AppState::DisplayText => {
+            context.long_text_display.show(
+                current_title_string(),
+                current_text_string()
+            );
+        },
+    }
+    context.state = new_state;
 }
 
 fn handle_world_changed(context: &mut GameContext) {

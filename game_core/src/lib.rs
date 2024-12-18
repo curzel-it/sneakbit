@@ -7,6 +7,7 @@ use config::initialize_config_paths;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect, state_updates::AppState};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
+use input::keyboard_events_provider::KeyboardEventsProvider;
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use multiplayer::modes::GameMode;
 use utils::{rect::{IntPoint, IntRect}, vector::Vector2d};
@@ -70,8 +71,8 @@ pub extern "C" fn stop_game() {
 }
 
 #[no_mangle]
-pub extern "C" fn window_size_changed(width: f32, height: f32, scale: f32, font_size: f32, line_spacing: f32) {
-    engine_mut().window_size_changed(width, height, scale, font_size, line_spacing)
+pub extern "C" fn window_size_changed(width: f32, height: f32, scale: f32) {
+    engine_mut().window_size_changed(width, height, scale)
 }
 
 #[no_mangle]
@@ -278,9 +279,6 @@ pub extern "C" fn current_toast() -> ToastDescriptorC {
 pub extern "C" fn current_menu() -> MenuDescriptorC {
     let engine = engine();
 
-    if engine.long_text_display.is_open {
-        return engine.long_text_display.descriptor_c()
-    }
     if engine.confirmation_dialog.is_open() {
         return engine.confirmation_dialog.menu.descriptor_c()
     }
@@ -346,6 +344,10 @@ pub fn cached_players_positions() -> Vec<IntPoint> {
         .iter()
         .map(|p| p.props.hittable_frame.origin())
         .collect()
+}
+
+pub fn cached_player_position(player: usize) -> IntPoint {
+    engine().world.players[player].props.hittable_frame.origin()
 }
 
 #[no_mangle]
@@ -447,4 +449,26 @@ pub fn toggle_pvp() {
         GameMode::TurnBasedPvp => GameMode::RealTimeCoOp,
     };
     engine_mut().update_game_mode(next);
+}
+
+pub fn current_title_string() -> &'static str {
+    &engine().current_title
+}
+
+#[no_mangle]
+pub extern "C" fn current_title() -> *const c_char {
+    string_to_c_char(current_title_string().to_owned())
+}
+
+pub fn current_text_string() -> &'static str {
+    &engine().current_text
+}
+
+#[no_mangle]
+pub extern "C" fn current_text() -> *const c_char {
+    string_to_c_char(current_text_string().to_owned())
+}
+
+pub fn current_keyboard_sate() -> &'static KeyboardEventsProvider {
+    &engine().keyboard
 }

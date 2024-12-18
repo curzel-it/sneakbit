@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
 use super::{camera::camera_center, state_updates::{AppState, EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
@@ -8,7 +8,6 @@ pub struct GameEngine {
     pub previous_world: Option<World>,
     pub weapons_selection: WeaponsGrid,
     pub loading_screen: LoadingScreen,
-    pub long_text_display: LongTextDisplay,
     pub confirmation_dialog: ConfirmationDialog,
     pub death_screen: DeathScreen,
     pub toast: ToastDisplay,
@@ -25,7 +24,9 @@ pub struct GameEngine {
     pub game_mode: GameMode,
     pub dead_players: Vec<usize>,
     pub turn: GameTurn,
-    turns_use_case: TurnsUseCase
+    turns_use_case: TurnsUseCase,
+    pub current_title: String,
+    pub current_text: String,
 }
 
 impl GameEngine {
@@ -35,7 +36,6 @@ impl GameEngine {
             world: World::load_or_create(WORLD_ID_NONE),
             previous_world: None,
             loading_screen: LoadingScreen::new(),
-            long_text_display: LongTextDisplay::new(50, 9),
             confirmation_dialog: ConfirmationDialog::new(),
             death_screen: DeathScreen::new(),
             toast: ToastDisplay::new(),
@@ -53,7 +53,9 @@ impl GameEngine {
             game_mode,
             dead_players: vec![],
             turn: GameTurn::RealTime,
-            turns_use_case: TurnsUseCase {}
+            turns_use_case: TurnsUseCase {},
+            current_title: "".to_owned(),
+            current_text: "".to_owned(),
         }
     }
 
@@ -98,8 +100,8 @@ impl GameEngine {
         if !is_game_paused {
             let updates = self.world.update(time_since_last_update, &camera_viewport, &self.keyboard);
             self.sound_effects.update(&self.keyboard, &updates);
-            self.apply_state_updates(updates);
             self.center_camera_onto_players();
+            return self.apply_state_updates(updates)
         };
         AppState::Gaming
     } 
@@ -115,11 +117,11 @@ impl GameEngine {
             is_game_paused = is_game_paused || is_picking_weapon;
         }
 
-        if !is_game_paused {
+        /* if !is_game_paused {
             let keyboard = if self.long_text_display.is_open { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
             let is_reading = self.long_text_display.update(keyboard, time_since_last_update);
             is_game_paused = is_game_paused || is_reading;
-        }
+        } */
 
         if !is_game_paused {
             let keyboard = if self.confirmation_dialog.is_open() { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
@@ -155,22 +157,12 @@ impl GameEngine {
         self.teleport(&destination);
     }
 
-    pub fn window_size_changed(
-        &mut self, 
-        width: f32, 
-        height: f32, 
-        scale: f32, 
-        font_size: f32, 
-        line_spacing: f32
-    ) {
+    pub fn window_size_changed(&mut self, width: f32, height: f32, scale: f32) {
         self.camera_viewport.w = (width / (scale * TILE_SIZE)) as i32;
         self.camera_viewport.h = (height / (scale * TILE_SIZE)) as i32;
-        self.long_text_display.max_line_length = (width / font_size).floor() as usize;
-        self.long_text_display.visible_line_count = (0.4 * height / (line_spacing + font_size)).floor() as usize;
-        self.menu.menu.visible_item_count = self.long_text_display.visible_line_count - 3;
     }
 
-    fn apply_state_updates(&mut self, updates: Vec<EngineStateUpdate>) {
+    fn apply_state_updates(&mut self, updates: Vec<EngineStateUpdate>) -> AppState {
         let mut sorted_updates = updates.clone();
 
         sorted_updates.sort_by(|a, b| {
@@ -184,7 +176,12 @@ impl GameEngine {
             }
         });
         
-        sorted_updates.iter().for_each(|u| self.apply_state_update(u));
+        let new_states: Vec<AppState> = sorted_updates
+            .iter()
+            .flat_map(|u| self.apply_state_update(u))
+            .collect();
+
+        new_states.first().cloned().unwrap_or_default()
     }
 
     fn center_camera_onto_players(&mut self) {
@@ -198,7 +195,7 @@ impl GameEngine {
         self.center_camera_at(x, y, &offset);
     }
 
-    fn apply_state_update(&mut self, update: &EngineStateUpdate) {   
+    fn apply_state_update(&mut self, update: &EngineStateUpdate) -> Option<AppState> {   
         update.log();
 
         match update {
@@ -227,7 +224,9 @@ impl GameEngine {
                 self.ask_for_confirmation(title, text, on_confirm)
             }
             EngineStateUpdate::DisplayLongText(title, text) => {
-                self.long_text_display.show(title, text)
+                self.current_title = title.clone();
+                self.current_text = text.clone();
+                return Some(AppState::DisplayText)
             }
             EngineStateUpdate::PlayerDied(player_index) => {
                 self.dead_players.push(*player_index);
@@ -246,6 +245,7 @@ impl GameEngine {
             }
             _ => {}
         }
+        None
     }
     
     fn ask_for_confirmation(&mut self, title: &str, text: &str, on_confirm: &[WorldStateUpdate]) {

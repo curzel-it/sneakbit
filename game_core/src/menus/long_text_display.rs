@@ -1,12 +1,12 @@
 
-use crate::constants::{MENU_CLOSE_TIME, MENU_OPEN_TIME};
+use crate::features::state_updates::AppState;
 use crate::lang::localizable::LocalizableText;
 use crate::spacing;
-use crate::ui::components::{empty_view, WithAlpha, COLOR_MENU_BACKGROUND};
+use crate::ui::components::{empty_view, COLOR_MENU_BACKGROUND};
 use crate::ui::scaffold::scaffold;
 use crate::utils::strings::wrap_text;
 use crate::input::keyboard_events_provider::KeyboardEventsProvider;
-use crate::{text, ui::components::{Spacing, Typography, View}, utils::animator::Animator, vstack};
+use crate::{text, ui::components::{Spacing, Typography, View}, vstack};
 
 use super::menu::{Menu, MenuDescriptorC, MenuItem, MENU_BORDERS_TEXTURES};
 
@@ -16,10 +16,8 @@ pub struct LongTextDisplay {
     pub is_open: bool,
     pub visible_line_count: usize,
     pub scroll_offset: usize,
-    pub animator: Animator,
     pub uses_backdrop: bool,
     pub max_line_length: usize,
-    pub time_since_last_closed: f32,
     pub lines: Vec<String>,
 }
 
@@ -31,37 +29,25 @@ impl LongTextDisplay {
             is_open: false,
             visible_line_count,
             scroll_offset: 0,
-            animator: Animator::new(),
             uses_backdrop: true,
             max_line_length,
             lines: vec![],
-            time_since_last_closed: 0.0
         }
     }
 
     pub fn show(&mut self, title: &str, text: &str) {
-        if self.time_since_last_closed < 0.5 {
-            return;
-        }
-
         self.title = title.to_owned();
         self.text = text.to_owned();
         self.scroll_offset = 0;
         self.lines = wrap_text(&self.text, self.max_line_length);
         self.is_open = true;
-        self.animator.animate(0.0, 1.0, MENU_OPEN_TIME);
     }
 
     pub fn close(&mut self) {
-        self.time_since_last_closed = 0.0;
         self.is_open = false;
-        self.animator.animate(1.0, 0.0, MENU_CLOSE_TIME);
     }
 
-    pub fn update(&mut self, keyboard: &KeyboardEventsProvider, time_since_last_update: f32) -> bool {
-        self.time_since_last_closed += time_since_last_update;
-        self.animator.update(time_since_last_update);
-
+    pub fn update(&mut self, keyboard: &KeyboardEventsProvider) -> AppState {
         if self.is_open {
             if keyboard.has_back_been_pressed_by_anyone()|| keyboard.has_confirmation_been_pressed_by_anyone() {
                 self.close();
@@ -75,14 +61,18 @@ impl LongTextDisplay {
                 self.scroll_offset += 1;
             }
         }
-        self.is_open
+        if self.is_open {
+            AppState::DisplayText
+        } else {
+            AppState::Gaming
+        }
     }
 
     pub fn ui(&self) -> View {
         if self.is_open {
             scaffold(
                 self.uses_backdrop,
-                COLOR_MENU_BACKGROUND.with_alpha(self.animator.current_value),
+                COLOR_MENU_BACKGROUND,
                 Some(MENU_BORDERS_TEXTURES),
                 self.text_ui()
             )

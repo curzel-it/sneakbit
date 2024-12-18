@@ -3,7 +3,7 @@ use raylib::prelude::*;
 
 use crate::{features::font_helpers::{bold_font_path, latin_characters, regular_font_path}, is_debug_build, rendering::ui::{get_rendering_config_mut, is_rendering_config_initialized}, GameContext};
 
-use super::{textures::load_textures, ui::{init_rendering_config, RenderingConfig}, worlds::render_frame};
+use super::{textures::load_textures, ui::{init_rendering_config, RenderingConfig}};
 
 pub fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {    
     let width = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.w as f32) as i32;
@@ -43,10 +43,6 @@ pub fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {
     });
 
     (rl, thread)
-}
-
-pub fn render_frame_with_context(context: &mut GameContext) {
-    render_frame(&mut context.rl, &context.rl_thread);
 }
 
 pub fn handle_window_updates(context: &mut GameContext) {
@@ -128,11 +124,13 @@ fn handle_window_size_changed(context: &mut GameContext) {
         config.canvas_size.x = width;
         config.canvas_size.y = height;
     }
-
+    
     let font_size = config.scaled_font_size(&Typography::Regular);
     let line_spacing = config.font_lines_spacing(&Typography::Regular);
-    window_size_changed(width, height, scale, font_size, line_spacing);
-
+    context.long_text_display.max_line_length = (width / font_size).floor() as usize;
+    context.long_text_display.visible_line_count = (0.4 * height / (line_spacing + font_size)).floor() as usize;
+    
+    window_size_changed(width, height, scale);
     update_target_refresh_rate(&mut context.rl);
 }
 

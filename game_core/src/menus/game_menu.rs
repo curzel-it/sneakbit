@@ -311,7 +311,7 @@ impl GameMenu {
         keyboard: &KeyboardEventsProvider,
         time_since_last_update: f32,
     ) -> Vec<WorldStateUpdate> {
-        let (mut is_open, mut updates) = self.credits_menu.update(keyboard, time_since_last_update);
+        let (mut is_open, mut updates) = self.credits_menu.update(keyboard);
 
         if self.credits_menu.selection_has_been_confirmed {
             match self.credits_menu.selected_index {
@@ -357,7 +357,7 @@ impl GameMenu {
             self.state = MenuState::Open;
             return vec![];
         }
-        self.number_of_players_menu.update(keyboard, time_since_last_update);
+        self.number_of_players_menu.update(keyboard);
 
         if self.number_of_players_menu.selection_has_been_confirmed {
             let index = self.number_of_players_menu.selected_index;
@@ -389,7 +389,7 @@ impl GameMenu {
             self.state = MenuState::Open;
             return vec![];
         }
-        self.languages_menu.update(keyboard, time_since_last_update);
+        self.languages_menu.update(keyboard);
 
         if self.languages_menu.selection_has_been_confirmed {
             set_value_for_key(&StorageKey::language(), self.languages_menu.selected_index as u32);
@@ -416,7 +416,7 @@ impl GameMenu {
         keyboard: &KeyboardEventsProvider,
         time_since_last_update: f32,
     ) -> Vec<WorldStateUpdate> {
-        let (is_open, updates) = self.menu.update(keyboard, time_since_last_update);
+        let (is_open, updates) = self.menu.update(keyboard);
 
         if !is_open {
             self.menu.clear_selection();
@@ -460,7 +460,7 @@ impl GameMenu {
         keyboard: &KeyboardEventsProvider,
         time_since_last_update: f32,
     ) -> Vec<WorldStateUpdate> {
-        let (is_open, updates) = self.settings_menu.update(keyboard, time_since_last_update);
+        let (is_open, updates) = self.settings_menu.update(keyboard);
 
         if self.settings_menu.selection_has_been_confirmed {
             let selected_item = self.settings_menu.selected_item();

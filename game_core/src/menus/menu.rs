@@ -2,11 +2,11 @@
 use std::ffi::{c_char, CString};
 use std::ptr::null;
 
-use crate::constants::{MENU_CLOSE_TIME, MENU_OPEN_TIME, SPRITE_SHEET_MENU};
-use crate::ui::components::{empty_view, BordersTextures, TextureInfo, WithAlpha, COLOR_MENU_BACKGROUND};
+use crate::constants::SPRITE_SHEET_MENU;
+use crate::ui::components::{empty_view, BordersTextures, TextureInfo, COLOR_MENU_BACKGROUND};
 use crate::ui::scaffold::scaffold;
 use crate::utils::rect::IntRect;
-use crate::{input::keyboard_events_provider::KeyboardEventsProvider, features::state_updates::WorldStateUpdate, text, ui::components::{Spacing, Typography, View}, utils::animator::Animator, vstack};
+use crate::{input::keyboard_events_provider::KeyboardEventsProvider, features::state_updates::WorldStateUpdate, text, ui::components::{Spacing, Typography, View}, vstack};
 
 pub struct Menu<Item: MenuItem> {
     pub title: String,
@@ -16,7 +16,6 @@ pub struct Menu<Item: MenuItem> {
     pub selected_index: usize,
     pub selection_has_been_confirmed: bool,
     pub items: Vec<Item>,
-    pub animator: Animator,
     pub uses_backdrop: bool,
     pub visible_item_count: usize,
     pub scroll_offset: usize, 
@@ -38,7 +37,6 @@ impl<Item: MenuItem> Menu<Item> {
             selected_index: 0,
             selection_has_been_confirmed: false,
             items,
-            animator: Animator::new(),
             uses_backdrop: true,
             visible_item_count: 6,
             scroll_offset: 0, 
@@ -55,19 +53,11 @@ impl<Item: MenuItem> Menu<Item> {
 
     pub fn show(&mut self) {
         self.is_open = true;
-        self.animator.animate(0.0, 1.0, MENU_OPEN_TIME)
-    }
-
-    pub fn show_no_animation(&mut self) {
-        self.is_open = true;
-        self.animator.current_value = 1.0;
-        self.animator.is_active = false;
     }
 
     pub fn close(&mut self) {
         self.scroll_offset = 0;
         self.is_open = false;
-        self.animator.animate(1.0, 0.0, MENU_CLOSE_TIME)
     }
 
     pub fn selected_item(&self) -> Item {
@@ -83,9 +73,7 @@ impl<Item: MenuItem> Menu<Item> {
         self.selection_has_been_confirmed = false;
     }
 
-    pub fn update(&mut self, keyboard: &KeyboardEventsProvider, time_since_last_update: f32) -> MenuUpdate {
-        self.animator.update(time_since_last_update);
-
+    pub fn update(&mut self, keyboard: &KeyboardEventsProvider) -> MenuUpdate {
         if self.is_open {
             return (true, self.do_update(keyboard))
         }
@@ -147,7 +135,7 @@ impl<Item: MenuItem> Menu<Item> {
     fn menu_ui(&self) -> View {
         scaffold(
             self.uses_backdrop, 
-            COLOR_MENU_BACKGROUND.with_alpha(self.animator.current_value), 
+            COLOR_MENU_BACKGROUND, 
             Some(MENU_BORDERS_TEXTURES),
             self.menu_contents()
         )

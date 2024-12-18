@@ -45,10 +45,12 @@ pub enum EngineStateUpdate {
     LoudGunShot(PlayerIndex),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 #[repr(C)]
 pub enum AppState {
-    Gaming = 0
+    #[default]
+    Gaming = 0,
+    DisplayText = 1
 }
 
 #[derive(Debug, Clone)]
