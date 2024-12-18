@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, entities::{bullets::BulletHits, known_species::is_monster, species::EntityType}, features::{animated_sprite::AnimatedSprite, entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::rect::IntRect, worlds::world::World};
+use crate::{constants::{SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_MONSTERS}, entities::{bullets::BulletHits, known_species::is_monster, species::EntityType}, features::{animated_sprite::AnimatedSprite, entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::rect::IntRect, worlds::world::World};
 
 impl Entity {
     pub fn setup_close_combat_creep(&mut self) {
@@ -85,13 +85,14 @@ impl Entity {
 
 fn next_sprite(current_sprite_x: i32) -> AnimatedSprite {
     let (x, y) = match current_sprite_x {
-        28 => (44, 0),
-        44 => (24, 38),
-        24 => (32, 38),
-        _ => (28, 0)
+        1 => (5, 1),
+        5 => (9, 1),
+        9 => (13, 1),
+        13 => (13, 1),
+        _ => (13, 1)
     };
     AnimatedSprite::new(
-        SPRITE_SHEET_HUMANOIDS_1X2, 
+        SPRITE_SHEET_MONSTERS, 
         IntRect::new(x, y, 1, 2), 
         4
     )
@@ -99,20 +100,20 @@ fn next_sprite(current_sprite_x: i32) -> AnimatedSprite {
 
 fn hp_for_sprite(current_sprite_x: i32) -> f32 {
     match current_sprite_x {
-        28 => 200.0,
-        44 => 600.0,
-        24 => 1300.0,
-        32 => 2000.0,
+        1 => 200.0,
+        5 => 600.0,
+        9 => 1300.0,
+        13 => 2000.0,
         _ => 200.0
     }
 }
 
 fn dps_for_sprite(current_sprite_x: i32) -> f32 {
     match current_sprite_x {
-        28 => 400.0,
-        44 => 500.0,
-        24 => 600.0,
-        32 => 700.0,
+        1 => 400.0,
+        5 => 500.0,
+        9 => 600.0,
+        13 => 700.0,
         _ => 400.0
     }
 }
