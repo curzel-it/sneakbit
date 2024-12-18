@@ -446,7 +446,7 @@
       "id": 10754429,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 4005
+      "species_id": 1175
     },
     {
       "after_dialogue": "Nothing",
@@ -838,7 +838,7 @@
       "id": 11190733,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 4005
+      "species_id": 1175
     },
     {
       "after_dialogue": "Nothing",

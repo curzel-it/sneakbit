@@ -1804,29 +1804,6 @@
     "z_index": 15
   },
   {
-    "base_speed": 1.0,
-    "entity_type": "Npc",
-    "id": 4005,
-    "inventory_texture_offset": [
-      2,
-      10
-    ],
-    "is_invulnerable": false,
-    "is_rigid": false,
-    "lock_type": "None",
-    "movement_directions": "Free",
-    "name": "npc.name.cat",
-    "sprite_frame": {
-      "h": 1,
-      "w": 1,
-      "x": 8,
-      "y": 0
-    },
-    "sprite_number_of_frames": 4,
-    "sprite_sheet_id": 1014,
-    "z_index": 15
-  },
-  {
     "base_speed": 2.0,
     "entity_type": "Building",
     "id": 1033,
@@ -4295,5 +4272,28 @@
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1010,
     "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "entity_type": "Npc",
+    "id": 1175,
+    "inventory_texture_offset": [
+      2,
+      10
+    ],
+    "is_invulnerable": false,
+    "is_rigid": false,
+    "lock_type": "None",
+    "movement_directions": "Free",
+    "name": "npc.name.cat",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 8,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1014,
+    "z_index": 15
   }
 ]

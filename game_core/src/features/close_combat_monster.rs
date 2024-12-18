@@ -1,4 +1,4 @@
-use crate::{constants::{SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_MONSTERS}, entities::{bullets::BulletHits, known_species::is_monster, species::EntityType}, features::{animated_sprite::AnimatedSprite, entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::rect::IntRect, worlds::world::World};
+use crate::{constants::SPRITE_SHEET_MONSTERS, entities::{bullets::BulletHits, known_species::is_monster, species::EntityType}, features::{animated_sprite::AnimatedSprite, entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::rect::IntRect, worlds::world::World};
 
 impl Entity {
     pub fn setup_close_combat_creep(&mut self) {
