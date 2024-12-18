@@ -5,7 +5,7 @@ use std::os::raw::c_char;
 
 use config::initialize_config_paths;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
-use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
+use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect, state_updates::AppState};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
 use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
 use multiplayer::modes::GameMode;
@@ -75,7 +75,7 @@ pub extern "C" fn window_size_changed(width: f32, height: f32, scale: f32, font_
 }
 
 #[no_mangle]
-pub extern "C" fn update_game(time_since_last_update: f32) {
+pub extern "C" fn update_game(time_since_last_update: f32) -> AppState {
     engine_mut().update(time_since_last_update)
 }
 

@@ -164,6 +164,10 @@
 
 #define SPECIES_BARREL_WOOD 1074
 
+typedef enum AppState {
+  AppState_Gaming = 0,
+} AppState;
+
 typedef enum GameMode {
   GameMode_RealTimeCoOp = 0,
   GameMode_Creative = 1,
@@ -262,7 +266,7 @@ void window_size_changed(float width,
                          float font_size,
                          float line_spacing);
 
-void update_game(float time_since_last_update);
+enum AppState update_game(float time_since_last_update);
 
 void update_keyboard(uintptr_t player,
                      bool up_pressed,

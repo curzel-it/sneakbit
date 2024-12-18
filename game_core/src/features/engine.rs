@@ -1,6 +1,6 @@
 use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, long_text_display::LongTextDisplay, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
-use super::{camera::camera_center, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
+use super::{camera::camera_center, state_updates::{AppState, EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
 pub struct GameEngine {
     pub menu: GameMenu,
@@ -63,7 +63,7 @@ impl GameEngine {
         self.teleport_to_previous();
     }
 
-    pub fn update(&mut self, time_since_last_update: f32) {     
+    pub fn update(&mut self, time_since_last_update: f32) -> AppState {     
         let mut did_resurrect = false;   
         self.toast.update(time_since_last_update);
 
@@ -76,7 +76,7 @@ impl GameEngine {
                 did_resurrect = true;
             } else {
                 self.sound_effects.clear();
-                return;
+                return AppState::Gaming;
             }
         }
 
@@ -87,7 +87,7 @@ impl GameEngine {
             if did_resurrect {
                 self.sound_effects.handle_resurrection();
             }
-            return;
+            return AppState::Gaming;
         }
 
         self.update_current_turn(time_since_last_update);
@@ -101,7 +101,7 @@ impl GameEngine {
             self.apply_state_updates(updates);
             self.center_camera_onto_players();
         };
-
+        AppState::Gaming
     } 
 
     fn update_menus(&mut self, time_since_last_update: f32) -> bool {

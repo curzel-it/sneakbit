@@ -45,6 +45,12 @@ pub enum EngineStateUpdate {
     LoudGunShot(PlayerIndex),
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[repr(C)]
+pub enum AppState {
+    Gaming = 0
+}
+
 #[derive(Debug, Clone)]
 pub enum AddToInventoryReason {
     PickedUp,
