@@ -5,7 +5,7 @@ Started the project with the objective to learn Rust, ended up with an actual ga
 Like the game or have cool ideas? Join the [Discord](https://discord.gg/MCdEgXKSH5)!
 
 ## Play it now!
-Please consider buying the game to support the project 🙏
+Please consider buying the game on Steam to support the project 🙏
 
 Available now on [Steam](https://store.steampowered.com/app/3360860/SneakBit) for Windows and macOS, support for Linux coming soon!
 
@@ -23,11 +23,11 @@ Available now on [Steam](https://store.steampowered.com/app/3360860/SneakBit) fo
 
 ## Features
 * Adventure-action gameplay with kunai and sword combat
-* Grid-based tiling system with biomes and constructions
+* Grid-based dual-layer tiling system
 * Unlockable combat skills
 * Nostalgic Gameboy-like pixel art aesthetics
 * Local co-op multiplayer mode for PC
-* Coming soon! Linux / Steam Deck support
+* Coming soon! Linux & SteamOS support
 
 ## Build from source
 ### macOS, Linux

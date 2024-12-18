@@ -4,21 +4,20 @@ Keeping track of what makes pixel art look best
 
 ## Videos in 9:16 (Shorts)
 Game config:
-- Window size 450x800
-- Rendering Scale 2x
-- Font Scale 1.5x
+- Full screen on 1440x2560
+- Rendering Scale 5x
+- Font Scale 4x
+- Music off
 
 OBS config:
-- Full resolution
+- Screen recording on full resolution
 - No interpolation
 - MP4 H264 Hardware Accelerated
 - Video bitrate 25000kbps
-- Audio bitrate 320kbps (sounds a bit off)
+- Audio bitrate 320kbps
+- macOS Audio Capture "Application"
 
 DaVinci:
-- Zoom 1.240
-- Position X 589.0
-- Position Y -87.000
-- Super Scale Off
-- Scaling Resize Filter Nearest Neighbor
-- Resolution 1350x2400
+- Resolution 1440x2560
+- Saturation 60
+- Music volume -4.7

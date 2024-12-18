@@ -2,31 +2,31 @@ use std::collections::HashMap;
 
 use crate::{constants::BUILD_NUMBER, entities::known_species::{SPECIES_KUNAI_LAUNCHER, SPECIES_SWORD}};
 
-use super::{engine::GameEngine, storage::{get_stored_values_snapshot, get_value_for_global_key, replace_all_stored_values, set_value_for_key, StorageKey}};
+use super::{engine::GameEngine, state_updates::EngineStateUpdate, storage::{get_stored_values_snapshot, get_value_for_global_key, replace_all_stored_values, set_value_for_key, StorageKey}};
 
 impl GameEngine {
-    pub fn run_migrations(&self) {
-        if let Some(latest_build) = get_value_for_global_key(&StorageKey::build_number()) {
+    pub fn run_migrations(&self) -> Vec<EngineStateUpdate> {
+        let latest_build = get_value_for_global_key(&StorageKey::build_number());
+        set_value_for_key(&StorageKey::build_number(), BUILD_NUMBER);
+
+        if let Some(latest_build) = latest_build {
             run_migrations_from(latest_build)
         } else {
-            set_value_for_key(&StorageKey::build_number(), LAST_VERSION_WITHOUT_BUILD_NUMBER_INIT);
-            run_migrations_from(LAST_VERSION_WITHOUT_BUILD_NUMBER_INIT)
+            vec![]
         }
-
-        set_value_for_key(&StorageKey::build_number(), BUILD_NUMBER);
     }
 }
 
-const LAST_VERSION_WITHOUT_BUILD_NUMBER_INIT: u32 = 34;
+const FIRST_VERSION_WITH_PER_PLAYER_INVENTORY: u32 = 35;
 
 const SPECIES_SWORD_ITEM: u32 = 1164;
 
-fn run_migrations_from(latest_build: u32) {
+fn run_migrations_from(latest_build: u32) -> Vec<EngineStateUpdate> {
     // Changelog:
     // - Each player has its own inventory
     // - Each player has equipment slots for one sword and one gun
     // - Kunai launcher is the default gun
-    if latest_build < 35 {
+    if latest_build < FIRST_VERSION_WITH_PER_PLAYER_INVENTORY {
         let values = get_stored_values_snapshot();
         
         let mut updated_values: HashMap<String, u32> = values
@@ -52,4 +52,5 @@ fn run_migrations_from(latest_build: u32) {
 
         replace_all_stored_values(updated_values);
     }
+    vec![]
 }
