@@ -1,4 +1,4 @@
-use crate::{constants::{PLAYER1_INDEX, TILE_SIZE}, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{PLAYER1_INDEX, TILE_SIZE}, entities::known_species::is_building, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
 use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species, SpeciesId}};
 
@@ -54,7 +54,13 @@ impl Entity {
         let valid_hits: Vec<u32> = vec![previous_hits, current_hits]
             .into_iter()
             .flatten()
-            .filter(|id| self.is_valid_hit_target(*id))
+            .filter_map(|(entity_id, _)| {
+                if self.is_valid_hit_target(entity_id) {
+                    Some(entity_id)
+                } else {
+                    None
+                }
+            })
             .collect();
 
         if valid_hits.is_empty() {
@@ -88,17 +94,20 @@ impl Entity {
         let biome = &world.biome_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
         let hits = world.entity_ids(self.frame.x, self.frame.y);
 
-        if construction.tile_type.stops_bullets() || biome.tile_type.stops_bullets() || world.contains_building(&hits) {
+        if construction.tile_type.stops_bullets() || biome.tile_type.stops_bullets() {
             return vec![WorldStateUpdate::HandleBulletStopped(self.id)]
         }
-        if hits.contains(&self.parent_id) {
+        if hits.iter().any(|(_, species_id)| is_building(*species_id)) {
+            return vec![WorldStateUpdate::HandleBulletStopped(self.id)]
+        }
+        if hits.iter().any(|(entity_id, _)| *entity_id == self.parent_id) {
             return vec![WorldStateUpdate::HandleBulletCatched(self.id)]
         }
         vec![]
     }
 
-    pub fn is_valid_hit_target(&self, hit: u32) -> bool {
-        hit != 0 && hit != self.id && hit != self.parent_id 
+    pub fn is_valid_hit_target(&self, entity_id: u32) -> bool {
+        entity_id != 0 && entity_id != self.id && entity_id != self.parent_id 
     }
 
     fn previous_position(&self) -> (i32, i32) {

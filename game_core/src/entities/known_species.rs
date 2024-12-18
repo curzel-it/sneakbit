@@ -15,12 +15,14 @@ pub const SPECIES_KEY_BLUE: u32 = 2003;
 pub const SPECIES_KEY_SILVER: u32 = 2004;
 pub const SPECIES_KUNAI_BUNDLE: u32 = 7001;
 pub const SPECIES_TELEPORTER: u32 = 1019;
-pub const SPECIES_ZOMBIE: u32 = 4002;
-pub const SPECIES_GHOST: u32 = 4003;
-pub const SPECIES_MONSTER: u32 = 4004;
-pub const SPECIES_SMALL_MONSTER: u32 = 1148;
 pub const SPECIES_MR_MUGS: u32 = 1131;
 pub const SPECIES_FOOTSTEPS: u32 = 1136;
+
+pub const SPECIES_MONSTER_SMALL: u32 = 4003;
+pub const SPECIES_MONSTER: u32 = 4004;
+pub const SPECIES_MONSTER_BLUEBERRY: u32 = 4005;
+pub const SPECIES_MONSTER_STRAWBERRY: u32 = 4006;
+pub const SPECIES_MONSTER_GOOSEBERRY: u32 = 4007;
 
 pub const SPECIES_KUNAI: u32 = 7000;
 pub const SPECIES_KUNAI_LAUNCHER: u32 = 1160;
@@ -52,5 +54,9 @@ pub fn is_key(species_id: u32) -> bool {
 }
 
 pub fn is_monster(species_id: u32) -> bool {
-    matches!(species_id, SPECIES_MONSTER | SPECIES_SMALL_MONSTER)
+    matches!(species_id, SPECIES_MONSTER_SMALL | SPECIES_MONSTER | SPECIES_MONSTER_BLUEBERRY | SPECIES_MONSTER_STRAWBERRY | SPECIES_MONSTER_GOOSEBERRY)
+}
+
+pub fn is_building(species_id: u32) -> bool {
+    matches!(species_by_id(species_id).entity_type, EntityType::Building)
 }

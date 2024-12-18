@@ -6,9 +6,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define BUILD_NUMBER 36
+#define BUILD_NUMBER 37
 
-#define ANIMATIONS_FPS 10.0
+#define PVP_AVAILABLE false
 
 #define UNLIMITED_LIFESPAN -420.0
 
@@ -19,6 +19,8 @@
 #define HERO_RECOVERY_PS 1.0
 
 #define MAX_PLAYERS 4
+
+#define TURN_DURATION 20.0
 
 #define KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST 0.4
 
@@ -41,6 +43,8 @@
 #define PLAYER4_ENTITY_ID 423
 
 #define WORLD_ID_NONE 1000
+
+#define ANIMATIONS_FPS 10.0
 
 #define WORLD_TRANSITION_TIME 0.3
 
@@ -94,6 +98,10 @@
 
 #define SPRITE_SHEET_WEAPONS 1022
 
+#define SPRITE_SHEET_MONSTERS 1023
+
+#define SPRITE_SHEET_HEROES 1024
+
 #define SPECIES_HERO 1001
 
 #define SPECIES_NPC_SHOP_CLERK 3008
@@ -120,17 +128,19 @@
 
 #define SPECIES_TELEPORTER 1019
 
-#define SPECIES_ZOMBIE 4002
-
-#define SPECIES_GHOST 4003
-
-#define SPECIES_MONSTER 4004
-
-#define SPECIES_SMALL_MONSTER 1148
-
 #define SPECIES_MR_MUGS 1131
 
 #define SPECIES_FOOTSTEPS 1136
+
+#define SPECIES_MONSTER_SMALL 4003
+
+#define SPECIES_MONSTER 4004
+
+#define SPECIES_MONSTER_BLUEBERRY 4005
+
+#define SPECIES_MONSTER_STRAWBERRY 4006
+
+#define SPECIES_MONSTER_GOOSEBERRY 4007
 
 #define SPECIES_KUNAI 7000
 
@@ -182,6 +192,7 @@ typedef enum SoundEffect {
 typedef enum ToastMode {
   ToastMode_Regular = 0,
   ToastMode_Hint,
+  ToastMode_LongHint,
 } ToastMode;
 
 typedef struct BordersTextures BordersTextures;

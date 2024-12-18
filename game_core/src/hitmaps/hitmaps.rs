@@ -1,6 +1,6 @@
 use std::fmt::{self, Debug};
 
-use crate::{entities::species::EntityType, features::entity::{is_player, Entity, EntityId}, is_creative_mode, worlds::world::World};
+use crate::{entities::species::{EntityType, SpeciesId}, features::entity::{is_player, Entity, EntityId}, is_creative_mode, worlds::world::World};
 
 #[derive(Clone)]
 pub struct Hitmap {
@@ -8,7 +8,7 @@ pub struct Hitmap {
     width: usize,
 }
 
-pub type EntityIdsMap = Vec<(i32, i32, EntityId)>;
+pub type EntityIdsMap = Vec<(i32, i32, EntityId, SpeciesId)>;
 
 impl World {
     pub fn hits(&self, x: i32, y: i32) -> bool {
@@ -25,12 +25,12 @@ impl World {
         x < 0 || y < 0 || self.hits(x, y)
     }
 
-    pub fn entity_ids(&self, x: i32, y: i32) -> Vec<u32> {
+    pub fn entity_ids(&self, x: i32, y: i32) -> Vec<(EntityId, SpeciesId)> {
         self.idsmap
             .iter()
-            .filter_map(|&(ex, ey, id)| {
+            .filter_map(|&(ex, ey, id, species_id)| {
                 if ex == x && ey == y {
-                    Some(id)
+                    Some((id, species_id))
                 } else {
                     None
                 }
@@ -81,7 +81,7 @@ impl World {
                     if has_weight {
                         self.weightmap.set(x, y, true);
                     }
-                    self.idsmap.push((x as i32, y as i32, id));
+                    self.idsmap.push((x as i32, y as i32, id, entity.species_id));
                 }
             }
         }

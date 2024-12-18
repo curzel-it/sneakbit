@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_MONSTERS, entities::{bullets::BulletHits, known_species::is_monster, species::EntityType}, features::{animated_sprite::AnimatedSprite, entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::rect::IntRect, worlds::world::World};
+use crate::{entities::{bullets::BulletHits, known_species::{is_monster, SPECIES_MONSTER, SPECIES_MONSTER_BLUEBERRY, SPECIES_MONSTER_GOOSEBERRY, SPECIES_MONSTER_SMALL, SPECIES_MONSTER_STRAWBERRY}, species::{species_by_id, EntityType}}, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, worlds::world::World};
 
 impl Entity {
     pub fn setup_close_combat_creep(&mut self) {
@@ -70,12 +70,12 @@ impl Entity {
 
         let hits = world.entity_ids(self.frame.x, self.frame.y);
 
-        for hit in hits {        
-            if self.is_valid_hit_target(hit) && world.is_creep(hit) {
-                self.sprite = next_sprite(self.sprite.original_frame.x);
-                self.hp = hp_for_sprite(self.sprite.original_frame.x);
-                self.dps = dps_for_sprite(self.sprite.original_frame.x);
-                self.current_speed *= 1.1;
+        for (hit, species_id) in hits {        
+            if self.is_valid_hit_target(hit) && is_monster(species_id) && species_id <= self.species_id {
+                let next_species = species_by_id(next_species_id(self.species_id));
+                self.species_id = next_species.id;
+                self.species = next_species.clone();
+                next_species.reload_props(self);
                 return vec![WorldStateUpdate::RemoveEntity(hit)]
             }
         }
@@ -83,37 +83,13 @@ impl Entity {
     }
 }
 
-fn next_sprite(current_sprite_x: i32) -> AnimatedSprite {
-    let (x, y) = match current_sprite_x {
-        1 => (5, 1),
-        5 => (9, 1),
-        9 => (13, 1),
-        13 => (13, 1),
-        _ => (13, 1)
-    };
-    AnimatedSprite::new(
-        SPRITE_SHEET_MONSTERS, 
-        IntRect::new(x, y, 1, 2), 
-        4
-    )
-}
-
-fn hp_for_sprite(current_sprite_x: i32) -> f32 {
-    match current_sprite_x {
-        1 => 200.0,
-        5 => 600.0,
-        9 => 1300.0,
-        13 => 2000.0,
-        _ => 200.0
+fn next_species_id(current_species_id: u32) -> u32 {
+    match current_species_id {
+        SPECIES_MONSTER_SMALL => SPECIES_MONSTER_BLUEBERRY,
+        SPECIES_MONSTER => SPECIES_MONSTER_BLUEBERRY,
+        SPECIES_MONSTER_BLUEBERRY => SPECIES_MONSTER_STRAWBERRY,
+        SPECIES_MONSTER_STRAWBERRY => SPECIES_MONSTER_GOOSEBERRY,
+        _ => SPECIES_MONSTER_GOOSEBERRY,
     }
 }
-
-fn dps_for_sprite(current_sprite_x: i32) -> f32 {
-    match current_sprite_x {
-        1 => 400.0,
-        5 => 500.0,
-        9 => 600.0,
-        13 => 700.0,
-        _ => 400.0
-    }
-}
+    
