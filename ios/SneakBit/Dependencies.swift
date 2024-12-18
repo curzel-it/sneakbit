@@ -23,7 +23,9 @@ struct Dependencies {
                     UInt32(SPRITE_SHEET_HUMANOIDS_2X2): "humanoids_2x2",
                     UInt32(SPRITE_SHEET_CAVE_DARKNESS): "cave_darkness",
                     UInt32(SPRITE_SHEET_TENTACLES): "tentacles",
-                    UInt32(SPRITE_SHEET_WEAPONS): "weapons"
+                    UInt32(SPRITE_SHEET_WEAPONS): "weapons",
+                    UInt32(SPRITE_SHEET_MONSTERS): "monsters",
+                    UInt32(SPRITE_SHEET_HEROES): "heroes"
                 ]
             )
         }

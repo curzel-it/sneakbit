@@ -120,7 +120,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             NativeLib.SPRITE_SHEET_FARM_PLANTS to "farm_plants",
             NativeLib.SPRITE_SHEET_CAVE_DARKNESS to "cave_darkness",
             NativeLib.SPRITE_SHEET_TENTACLES to "tentacles",
-            NativeLib.SPRITE_SHEET_WEAPONS to "weapons"
+            NativeLib.SPRITE_SHEET_WEAPONS to "weapons",
+            NativeLib.SPRITE_SHEET_MONSTERS to "monsters",
+            NativeLib.SPRITE_SHEET_HEROES to "heroes"
         )
     )
 }

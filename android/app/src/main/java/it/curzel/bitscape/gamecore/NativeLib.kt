@@ -79,6 +79,8 @@ class NativeLib {
         const val SPRITE_SHEET_CAVE_DARKNESS: UInt = 1019u
         const val SPRITE_SHEET_TENTACLES: UInt = 1021u
         const val SPRITE_SHEET_WEAPONS: UInt = 1022u
+        const val SPRITE_SHEET_MONSTERS: UInt = 1023u
+        const val SPRITE_SHEET_HEROES: UInt = 1024u
 
         init {
             System.loadLibrary("game_core")
