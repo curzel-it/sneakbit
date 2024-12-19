@@ -6,7 +6,6 @@ use game_core::{utils::rect::IntRect, ui::scaffold::scaffold, ui::components::{e
 pub struct Menu<Item: MenuItem> {
     pub title: String,
     pub text: Option<String>,
-    pub original_text: Option<String>,
     pub is_open: bool,
     pub selected_index: usize,
     pub selection_has_been_confirmed: bool,
@@ -25,7 +24,6 @@ impl<Item: MenuItem> Menu<Item> {
         Self {
             title,
             text: None,
-            original_text: None,
             is_open: false,
             selected_index: 0,
             selection_has_been_confirmed: false,
@@ -233,9 +231,6 @@ impl<Item: MenuItem> Menu<Item> {
     }
 
     fn actual_text(&self) -> String {
-        if let Some(original_text) = self.original_text.clone() {
-            return original_text
-        }
         if let Some(text) = self.text.clone() {
             return text
         }

@@ -300,10 +300,10 @@ impl GameMenu {
 
         if self.credits_menu.selection_has_been_confirmed {
             match self.credits_menu.selected_index {
-                0 => { open::that("credits.developer.link".localized()); },
-                1 => { open::that("credits.open_source.link".localized()); },
-                2 => { open::that("credits.music.link".localized()); },
-                3 => { open::that("credits.sound_effects.link".localized()); },
+                0 => { _ = open::that("credits.developer.link".localized()); },
+                1 => { _ = open::that("credits.open_source.link".localized()); },
+                2 => { _ = open::that("credits.music.link".localized()); },
+                3 => { _ = open::that("credits.sound_effects.link".localized()); },
                 _ => {}
             }
             is_open = false;
