@@ -466,6 +466,6 @@ pub extern "C" fn current_text() -> *const c_char {
     string_to_c_char(current_text_string().to_owned())
 }
 
-pub fn current_keyboard_sate() -> &'static KeyboardEventsProvider {
+pub fn current_keyboard_state() -> &'static KeyboardEventsProvider {
     &engine().keyboard
 }

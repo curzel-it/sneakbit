@@ -7,7 +7,8 @@ mod rendering;
 use std::env;
 
 use features::{audio::{play_audio, AudioManager}, inputs::{handle_keyboard_updates, handle_mouse_updates}, links::MyLinkHandler, paths::local_path};
-use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_keyboard_sate, current_soundtrack_string, current_text_string, current_title_string, current_world_id, engine_set_wants_fullscreen, features::{sound_effects::is_music_enabled, state_updates::AppState, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_game_running, lang::localizable::LANG_EN, menus::long_text_display::LongTextDisplay, multiplayer::modes::GameMode, set_links_handler, stop_game, update_game};
+use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_keyboard_state, current_soundtrack_string, current_text_string, current_title_string, current_world_id, engine_set_wants_fullscreen, features::{sound_effects::is_music_enabled, state_updates::AppState, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_game_running, lang::localizable::LANG_EN, menus::long_text_display::LongTextDisplay, multiplayer::modes::GameMode, set_links_handler, stop_game, update_game};
+use gameui::weapon_selection::WeaponsGrid;
 use raylib::prelude::*;
 use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, start_rl}, worlds::render_frame};
 use sys_locale::get_locale;
@@ -26,6 +27,7 @@ struct GameContext {
 
     state: AppState,
     long_text_display: LongTextDisplay,
+    weapons_selection: WeaponsGrid,
 }
 
 fn main() {
@@ -57,6 +59,7 @@ fn main() {
         audio_manager,
         state: AppState::Gaming,
         long_text_display: LongTextDisplay::new(50, 9),
+        weapons_selection: WeaponsGrid::new(),
     };
 
     let initial_game_mode = if creative_mode {
@@ -76,6 +79,8 @@ fn main() {
         let time_since_last_update = context.rl.get_frame_time().min(0.5);
         context.total_run_time += time_since_last_update;
 
+        let keyboard = current_keyboard_state();
+
         handle_window_updates(&mut context);
         handle_game_closed(&mut context);
         handle_keyboard_updates(&mut context, time_since_last_update);
@@ -83,10 +88,27 @@ fn main() {
 
         let new_state = match context.state {
             AppState::Gaming => {
-                update_game(time_since_last_update)
+                let next_state = update_game(time_since_last_update);
+
+                if keyboard.has_weapon_selection_been_pressed_by_anyone() {
+                    AppState::InGameWeaponSelection
+                } else {
+                    next_state
+                }
             },
+            AppState::InGameWeaponSelection => {
+                // TODO: Avoid moving hero along with the menu
+                context.weapons_selection.update(keyboard);
+                update_game(time_since_last_update);
+                
+                if context.weapons_selection.is_open() {
+                    AppState::InGameWeaponSelection
+                } else {
+                    AppState::Gaming
+                }
+            }
             AppState::DisplayText => {
-                context.long_text_display.update(current_keyboard_sate())
+                context.long_text_display.update(keyboard)
             },
         };
         handle_state_changed(&mut context, new_state);
@@ -100,18 +122,30 @@ fn handle_state_changed(context: &mut GameContext, new_state: AppState) {
     if context.state == new_state {
         return
     }
+    let mut confirm_state_change = true;
 
-    println!("Application State changed from {:#?} to {:#?}", context.state, new_state);
     match new_state {
         AppState::Gaming => {},
+        AppState::InGameWeaponSelection => {
+            let player = current_keyboard_state().index_of_any_player_who_is_pressing_weapon_selection();
+            let confirmed = context.weapons_selection.show(player);
+
+            if !confirmed {
+                confirm_state_change = false;
+            }
+        },
         AppState::DisplayText => {
             context.long_text_display.show(
                 current_title_string(),
                 current_text_string()
             );
-        },
+        }
     }
-    context.state = new_state;
+
+    if confirm_state_change {
+        println!("Application State changed from {:#?} to {:#?}", context.state, new_state);
+        context.state = new_state;
+    }
 }
 
 fn handle_world_changed(context: &mut GameContext) {

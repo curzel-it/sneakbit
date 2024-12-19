@@ -10,6 +10,7 @@ pub fn hud_ui(context: &GameContext, width: i32, height: i32, show_debug_info: b
         vec![
             (AnchorPoint::BottomCenter, context.long_text_display.ui()),
             (AnchorPoint::BottomLeft, debug_info(show_debug_info, fps)),
+            (AnchorPoint::BottomCenter, context.weapons_selection.ui()),
         ]
     )
 }

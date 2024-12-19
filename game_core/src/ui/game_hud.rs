@@ -13,7 +13,7 @@ impl GameEngine {
                 (AnchorPoint::BottomCenter, self.menu.ui(&self.camera_viewport)),
                 // FEATURE REMOVED (AnchorPoint::BottomCenter, self.confirmation_dialog.ui()),
                 // (AnchorPoint::BottomCenter, self.long_text_display.ui()),
-                (AnchorPoint::BottomCenter, self.weapons_selection.ui()),
+                // (AnchorPoint::BottomCenter, self.weapons_selection.ui()),
                 (AnchorPoint::TopRight, self.toast.regular_toast_ui()),
                 (AnchorPoint::TopLeft, self.toast.hint_toast_ui()),
                 (AnchorPoint::BottomLeft, self.debug_info(show_debug_info, fps)),

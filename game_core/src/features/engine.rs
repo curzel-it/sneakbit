@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, game_menu::GameMenu, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, game_menu::GameMenu, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
 use super::{camera::camera_center, state_updates::{AppState, EngineStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
@@ -6,7 +6,6 @@ pub struct GameEngine {
     pub menu: GameMenu,
     pub world: World,
     pub previous_world: Option<World>,
-    pub weapons_selection: WeaponsGrid,
     pub loading_screen: LoadingScreen,
     pub death_screen: DeathScreen,
     pub toast: ToastDisplay,
@@ -47,7 +46,6 @@ impl GameEngine {
             sound_effects: SoundEffectsManager::new(),
             links_handler: Box::new(NoLinksHandler::new()),
             number_of_players: 1,
-            weapons_selection: WeaponsGrid::new(),
             game_mode,
             dead_players: vec![],
             turn: GameTurn::RealTime,
@@ -93,7 +91,7 @@ impl GameEngine {
         self.update_current_turn(time_since_last_update);
 
         let camera_viewport = self.camera_viewport;
-        let is_game_paused = self.update_menus(time_since_last_update);
+        let is_game_paused = self.update_menus();
 
         if !is_game_paused {
             let updates = self.world.update(time_since_last_update, &camera_viewport, &self.keyboard);
@@ -104,22 +102,10 @@ impl GameEngine {
         AppState::Gaming
     } 
 
-    fn update_menus(&mut self, time_since_last_update: f32) -> bool {
+    fn update_menus(&mut self) -> bool {
         let mut is_game_paused = false;
 
         self.basic_info_hud.update(self.number_of_players);
-
-        if !is_game_paused {            
-            let keyboard = if self.weapons_selection.is_open_or_needs_be(&self.keyboard) { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
-            let is_picking_weapon = self.weapons_selection.update(keyboard, time_since_last_update);
-            is_game_paused = is_game_paused || is_picking_weapon;
-        }
-
-        /* if !is_game_paused {
-            let keyboard = if self.long_text_display.is_open { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
-            let is_reading = self.long_text_display.update(keyboard, time_since_last_update);
-            is_game_paused = is_game_paused || is_reading;
-        } */
 
         if !is_game_paused {
             let can_handle = self.menu.is_open() || self.keyboard.has_menu_been_pressed_by_anyone();
