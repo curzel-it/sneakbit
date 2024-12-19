@@ -211,8 +211,7 @@ impl GameMenu {
         &mut self,
         camera_vieport: &IntRect,
         keyboard: &KeyboardEventsProvider,
-        mouse: &MouseEventsProvider,
-        time_since_last_update: f32,
+        mouse: &MouseEventsProvider
     ) -> MenuUpdate {
         if self.is_open() && self.menu.selection_has_been_confirmed {
             let updates = self.handle_selection();
@@ -221,22 +220,22 @@ impl GameMenu {
 
         let updates = match self.state {
             MenuState::Closed => self.update_from_close(keyboard),
-            MenuState::Open => self.update_from_open(keyboard, time_since_last_update),
+            MenuState::Open => self.update_from_open(keyboard),
             MenuState::MapEditor => {
                 self.update_from_map_editor(camera_vieport, keyboard, mouse)
             }
             MenuState::PlaceItem => self.update_from_place_item(camera_vieport, keyboard, mouse),
             MenuState::NewGameConfirmation => {
-                self.update_from_new_game(keyboard, time_since_last_update)
+                self.update_from_new_game(keyboard)
             }
             MenuState::ShowingLanguageSettings => {
-                self.update_from_language(keyboard, time_since_last_update)
+                self.update_from_language(keyboard)
             }
-            MenuState::ShowingCredits => self.update_from_credits(keyboard, time_since_last_update),
+            MenuState::ShowingCredits => self.update_from_credits(keyboard),
             MenuState::SelectingNumberOfPlayers => {
-                self.update_from_number_of_players(keyboard, time_since_last_update)
+                self.update_from_number_of_players(keyboard)
             }
-            MenuState::ShowingSettings => self.update_from_settings(keyboard, time_since_last_update),
+            MenuState::ShowingSettings => self.update_from_settings(keyboard),
         };
         (self.is_open(), updates)
     }
@@ -306,11 +305,7 @@ impl GameMenu {
         }
     }
 
-    fn update_from_credits(
-        &mut self,
-        keyboard: &KeyboardEventsProvider,
-        time_since_last_update: f32,
-    ) -> Vec<WorldStateUpdate> {
+    fn update_from_credits(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
         let (mut is_open, mut updates) = self.credits_menu.update(keyboard);
 
         if self.credits_menu.selection_has_been_confirmed {
@@ -331,16 +326,12 @@ impl GameMenu {
         updates
     }
 
-    fn update_from_new_game(
-        &mut self,
-        keyboard: &KeyboardEventsProvider,
-        time_since_last_update: f32,
-    ) -> Vec<WorldStateUpdate> {
+    fn update_from_new_game(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
         if keyboard.has_back_been_pressed_by_anyone() {
             self.state = MenuState::Open;
             return vec![];
         }
-        let (is_open, updates) = self.new_game_confirmation.update(keyboard, time_since_last_update);
+        let (is_open, updates) = self.new_game_confirmation.update(keyboard);
 
         if !is_open {
             self.state = MenuState::Open;
@@ -348,11 +339,7 @@ impl GameMenu {
         updates
     }
 
-    fn update_from_number_of_players(
-        &mut self,
-        keyboard: &KeyboardEventsProvider,
-        time_since_last_update: f32,
-    ) -> Vec<WorldStateUpdate> {
+    fn update_from_number_of_players(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
         if keyboard.has_back_been_pressed_by_anyone() {
             self.state = MenuState::Open;
             return vec![];
@@ -380,11 +367,7 @@ impl GameMenu {
         vec![]
     }
 
-    fn update_from_language(
-        &mut self,
-        keyboard: &KeyboardEventsProvider,
-        time_since_last_update: f32,
-    ) -> Vec<WorldStateUpdate> {
+    fn update_from_language(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
         if keyboard.has_back_been_pressed_by_anyone() {
             self.state = MenuState::Open;
             return vec![];
@@ -411,11 +394,7 @@ impl GameMenu {
         vec![]
     }
 
-    fn update_from_open(
-        &mut self,
-        keyboard: &KeyboardEventsProvider,
-        time_since_last_update: f32,
-    ) -> Vec<WorldStateUpdate> {
+    fn update_from_open(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
         let (is_open, updates) = self.menu.update(keyboard);
 
         if !is_open {
@@ -455,11 +434,7 @@ impl GameMenu {
         self.map_editor.update(camera_vieport, keyboard, mouse)
     }
 
-    fn update_from_settings(
-        &mut self,
-        keyboard: &KeyboardEventsProvider,
-        time_since_last_update: f32,
-    ) -> Vec<WorldStateUpdate> {
+    fn update_from_settings(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
         let (is_open, updates) = self.settings_menu.update(keyboard);
 
         if self.settings_menu.selection_has_been_confirmed {

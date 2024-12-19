@@ -1,4 +1,4 @@
-use crate::{features::{destination::Destination, entity::Entity, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::has_species_in_inventory}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastMode}, utils::directions::Direction, worlds::world::World};
+use crate::{features::{destination::Destination, entity::Entity, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastMode}, utils::directions::Direction, worlds::world::World};
 
 impl Entity {
     pub fn setup_teleporter(&mut self) {
@@ -11,11 +11,7 @@ impl Entity {
 
         if self.should_teleport(world) {
             if !is_creative_mode() && self.lock_type != LockType::None {
-                if has_species_in_inventory(&self.lock_type.key_species_id(), 0) {
-                    vec![self.show_unlock_confirmation()]
-                } else {
-                    vec![self.show_locked_message()]
-                }                
+                vec![self.show_locked_message()]
             } else if let Some(destination) = self.destination.clone() {
                 vec![self.engine_update_push_world(destination)]
             } else {
@@ -61,39 +57,8 @@ impl Entity {
             EngineStateUpdate::Toast(
                 Toast::new(
                     ToastMode::Regular,
-                    self.locked_message()
+                    "teleporter.locked".localized()
                 )
-            )
-        )
-    }
-
-    fn locked_message(&self) -> String {
-        if matches!(self.lock_type, LockType::Permanent) {
-            "telepoter.locked.permanent".localized()
-        } else {
-            let name = self.lock_type.localized_name().to_uppercase();
-            "teleporter.locked".localized().replace("%s", &name)
-        }
-    } 
-
-    fn show_unlock_confirmation(&self) -> WorldStateUpdate {
-        let name = self.lock_type.localized_name().to_uppercase();
-        
-        WorldStateUpdate::EngineUpdate(
-            EngineStateUpdate::Confirmation(
-                "teleporter.unlock.title".localized(),
-                "teleporter.unlock.message".localized().replace("%s", &name),
-                vec![
-                    WorldStateUpdate::ChangeLock(self.id, LockType::None),
-                    WorldStateUpdate::EngineUpdate(
-                        EngineStateUpdate::SaveGame
-                    ),
-                    WorldStateUpdate::EngineUpdate(
-                        EngineStateUpdate::RemoveFromInventory(
-                            0, self.lock_type.key_species_id()
-                        )
-                    )
-                ]
             )
         )
     }

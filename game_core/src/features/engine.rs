@@ -1,6 +1,6 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, confirmation::ConfirmationDialog, game_menu::GameMenu, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, game_menu::GameMenu, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, weapon_selection::WeaponsGrid}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
-use super::{camera::camera_center, state_updates::{AppState, EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
+use super::{camera::camera_center, state_updates::{AppState, EngineStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
 pub struct GameEngine {
     pub menu: GameMenu,
@@ -8,7 +8,6 @@ pub struct GameEngine {
     pub previous_world: Option<World>,
     pub weapons_selection: WeaponsGrid,
     pub loading_screen: LoadingScreen,
-    pub confirmation_dialog: ConfirmationDialog,
     pub death_screen: DeathScreen,
     pub toast: ToastDisplay,
     pub basic_info_hud: BasicInfoHud,
@@ -36,7 +35,6 @@ impl GameEngine {
             world: World::load_or_create(WORLD_ID_NONE),
             previous_world: None,
             loading_screen: LoadingScreen::new(),
-            confirmation_dialog: ConfirmationDialog::new(),
             death_screen: DeathScreen::new(),
             toast: ToastDisplay::new(),
             keyboard: KeyboardEventsProvider::new(),
@@ -124,21 +122,9 @@ impl GameEngine {
         } */
 
         if !is_game_paused {
-            let keyboard = if self.confirmation_dialog.is_open() { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
-            let (pause, world_updates) = self.confirmation_dialog.update(keyboard, time_since_last_update);
-            is_game_paused = is_game_paused || pause;
-            
-            if !world_updates.is_empty() {
-                let engine_updates = self.world.apply_state_updates(world_updates);
-                self.apply_state_updates(engine_updates);
-                self.world.update(0.01, &self.camera_viewport, &NO_KEYBOARD_EVENTS);
-            }
-        }
-
-        if !is_game_paused {
             let can_handle = self.menu.is_open() || self.keyboard.has_menu_been_pressed_by_anyone();
             let keyboard = if can_handle { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
-            let (pause, world_updates) = self.menu.update(&self.camera_viewport, keyboard, &self.mouse, time_since_last_update);
+            let (pause, world_updates) = self.menu.update(&self.camera_viewport, keyboard, &self.mouse);
             is_game_paused = is_game_paused || pause;
 
             if !world_updates.is_empty() {
@@ -220,9 +206,6 @@ impl GameEngine {
             EngineStateUpdate::Toast(toast) => {
                 self.show_toast(toast)
             }
-            EngineStateUpdate::Confirmation(title, text, on_confirm) => {
-                self.ask_for_confirmation(title, text, on_confirm)
-            }
             EngineStateUpdate::DisplayLongText(title, text) => {
                 self.current_title = title.clone();
                 self.current_text = text.clone();
@@ -246,10 +229,6 @@ impl GameEngine {
             _ => {}
         }
         None
-    }
-    
-    fn ask_for_confirmation(&mut self, title: &str, text: &str, on_confirm: &[WorldStateUpdate]) {
-        self.confirmation_dialog.show(title, text, on_confirm)
     }
 
     fn show_toast(&mut self, toast: &Toast) {
@@ -331,10 +310,6 @@ impl GameEngine {
     }
 
     pub fn select_current_menu_option_at_index(&mut self, index: usize) {
-        if self.confirmation_dialog.is_open() {
-            self.confirmation_dialog.select_option_at_index(index);
-            return
-        }
         if self.menu.is_open() {
             self.menu.select_option_at_index(index);
         }

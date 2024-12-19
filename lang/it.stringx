@@ -1341,15 +1341,13 @@ Digli di mandarci dei *soldi veri*, tipo crypto, e ce ne andremo in un baleno.
 Hai un aura potentissima!
 """
 
-"teleporter.locked" = "Hai bisogno di una chiave %s per aprire questa porta."
-
 "teleporter.name" = "Teletrasporto"
 
 "teleporter.unlock.message" = "Perderai una chiave %s."
 
 "teleporter.unlock.title" = "Sbloccare la porta?"
 
-"telepoter.locked.permanent" = "Questa porta è bloccata."
+"teleporter.locked" = "Questa porta è bloccata."
 
 "text_input.hint" = "ENTER per confermare, ESC per annullare"
 

@@ -1,5 +1,5 @@
 
-use crate::{constants::SPRITE_SHEET_MENU, input::keyboard_events_provider::KeyboardEventsProvider, features::state_updates::WorldStateUpdate, lang::localizable::LocalizableText, ui::{components::{empty_view, BordersTextures, TextureInfo, View, WithAlpha, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::rect::IntRect};
+use crate::{constants::SPRITE_SHEET_MENU, input::keyboard_events_provider::KeyboardEventsProvider, features::state_updates::WorldStateUpdate, lang::localizable::LocalizableText, ui::{components::{empty_view, BordersTextures, TextureInfo, View, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::rect::IntRect};
 
 use super::menu::{Menu, MenuItem, MenuUpdate};
 
@@ -48,7 +48,7 @@ impl ConfirmationDialog {
         self.menu.show();
     }
 
-    pub fn update(&mut self, keyboard: &KeyboardEventsProvider, time_since_last_update: f32) -> MenuUpdate {
+    pub fn update(&mut self, keyboard: &KeyboardEventsProvider) -> MenuUpdate {
         self.menu.update(keyboard);
 
         if self.menu.selection_has_been_confirmed {

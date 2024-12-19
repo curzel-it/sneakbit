@@ -11,7 +11,7 @@ impl GameEngine {
             vec![
                 (AnchorPoint::TopLeft, self.basic_info_hud_ui()),
                 (AnchorPoint::BottomCenter, self.menu.ui(&self.camera_viewport)),
-                (AnchorPoint::BottomCenter, self.confirmation_dialog.ui()),
+                // FEATURE REMOVED (AnchorPoint::BottomCenter, self.confirmation_dialog.ui()),
                 // (AnchorPoint::BottomCenter, self.long_text_display.ui()),
                 (AnchorPoint::BottomCenter, self.weapons_selection.ui()),
                 (AnchorPoint::TopRight, self.toast.regular_toast_ui()),

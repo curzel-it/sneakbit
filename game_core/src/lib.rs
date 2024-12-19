@@ -279,9 +279,6 @@ pub extern "C" fn current_toast() -> ToastDescriptorC {
 pub extern "C" fn current_menu() -> MenuDescriptorC {
     let engine = engine();
 
-    if engine.confirmation_dialog.is_open() {
-        return engine.confirmation_dialog.menu.descriptor_c()
-    }
     if engine.menu.is_open() {
         return engine.menu.menu.descriptor_c()
     }

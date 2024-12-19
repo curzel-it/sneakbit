@@ -1337,15 +1337,13 @@ Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
 
 "references.dbz.piccolo" = "I am The Namek who has long since forgotten his name"
 
-"teleporter.locked" = "You need a %s key to open this door."
-
 "teleporter.name" = "Teleporter"
 
 "teleporter.unlock.message" = "You will lose one %s key."
 
 "teleporter.unlock.title" = "Unlock the door?"
 
-"telepoter.locked.permanent" = "This door is locked."
+"teleporter.locked" = "This door is locked."
 
 "text_input.hint" = "ENTER to confirm, ESC to cancel"
 
