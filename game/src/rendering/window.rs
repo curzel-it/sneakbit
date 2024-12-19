@@ -102,8 +102,11 @@ fn handle_window_size_changed(context: &mut GameContext) {
     context.last_pvp = current_is_pvp;
 
     let window_scale = context.rl.get_window_scale_dpi().x;
-    let real_width = context.rl.get_render_width() as f32;
-    let real_height = context.rl.get_render_height() as f32;
+    // let real_width = context.rl.get_render_width() as f32;
+    // let real_height = context.rl.get_render_height() as f32;
+    let real_width = unsafe { raylib::ffi::GetRenderWidth() } as f32;
+    let real_height = unsafe { raylib::ffi::GetRenderHeight() } as f32;
+
     let width = real_width / window_scale;
     let height = real_height / window_scale;
     let font_scale = font_scale_for_window_width(width);

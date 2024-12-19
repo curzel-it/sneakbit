@@ -197,14 +197,7 @@ class GameEngine(
     fun setupChanged(windowSize: Size) {
         renderingScale = renderingScaleUseCase.current()
         size = windowSize
-
-        nativeLib.windowSizeChanged(
-            size.width.toFloat(),
-            size.height.toFloat(),
-            renderingScale,
-            12f,
-            8f
-        )
+        nativeLib.windowSizeChanged(size.width.toFloat(), size.height.toFloat(), renderingScale)
         worldWidth = nativeLib.currentWorldWidth()
         worldHeight = nativeLib.currentWorldHeight()
         updateTileMapImages(currentWorldId)

@@ -16,13 +16,7 @@ class NativeLib {
     external fun currentWorldId(): Int
     external fun currentWorldWidth(): Int
     external fun currentWorldHeight(): Int
-    external fun windowSizeChanged(
-        width: Float,
-        height: Float,
-        renderingScale: Float,
-        fontSize: Float,
-        lineSpacing: Float
-    )
+    external fun windowSizeChanged(width: Float, height: Float, renderingScale: Float)
     external fun updateKeyboard(
         upPressed: Boolean,
         rightPressed: Boolean,

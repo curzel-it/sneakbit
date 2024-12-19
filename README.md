@@ -52,7 +52,19 @@ cargo build --package game --release --target x86_64-pc-windows-gnu
 ### iOS and Android
 The engine is the same, the rendering is a simple set of custom views for the game itself, menus and such
 
-The `game_core` create is compiled via `cargo-lipo` and `cargo-ndk`.
+The `game_core` create is compiled via `cargo-lipo` and `cargo-ndk`, bindings are generated using `cbindgen`.
+```bash
+cargo install cargo-lipo
+cargo install cargo-ndk # Requires getting the Android NDK
+cargo install cbindgen
+
+rustup target add x86_64-apple-ios
+rustup target add aarch64-apple-ios
+rustup target add armv7-linux-androideabi
+rustup target add aarch64-linux-android
+rustup target add i686-linux-android
+rustup target add x86_64-linux-android
+```
 
 The `build_all.sh` script will build `game_core`, compile all resources and copy them to the correct folders for both mobile projects.
 ```bash

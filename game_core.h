@@ -166,6 +166,7 @@
 
 typedef enum AppState {
   AppState_Gaming = 0,
+  AppState_DisplayText = 1,
 } AppState;
 
 typedef enum GameMode {
@@ -260,11 +261,7 @@ bool is_game_running(void);
 
 void stop_game(void);
 
-void window_size_changed(float width,
-                         float height,
-                         float scale,
-                         float font_size,
-                         float line_spacing);
+void window_size_changed(float width, float height, float scale);
 
 enum AppState update_game(float time_since_last_update);
 
@@ -358,5 +355,9 @@ enum SoundEffect *get_current_sound_effects(uintptr_t *length);
 void free_sound_effects(enum SoundEffect *ptr, uintptr_t length);
 
 const char *current_soundtrack(void);
+
+const char *current_title(void);
+
+const char *current_text(void);
 
 #endif  /* GAME_CORE_H */

@@ -85,16 +85,12 @@ Java_it_curzel_bitscape_gamecore_NativeLib_windowSizeChanged(
         jobject thiz,
         jfloat _width,
         jfloat _height,
-        jfloat renderingScale,
-        jfloat fontSize,
-        jfloat lineSpacing
+        jfloat renderingScale
 ) {
     auto width = static_cast<float>(_width);
     auto height = static_cast<float>(_height);
     auto rendering_scale = static_cast<float>(renderingScale);
-    auto font_size = static_cast<float>(fontSize);
-    auto line_spacing = static_cast<float>(lineSpacing);
-    window_size_changed(width, height, rendering_scale, font_size, line_spacing);
+    window_size_changed(width, height, rendering_scale);
 }
 extern "C"
 JNIEXPORT void JNICALL
