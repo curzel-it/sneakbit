@@ -54,11 +54,11 @@ fn main() {
         update_death_screen(&mut context, keyboard);
         
         if !context.is_game_paused() {
-            update_game(time_since_last_update)
-        }
+            update_game(time_since_last_update);
+            play_audio(&context);
+        } 
         handle_world_changed(&mut context);
         render_frame(&mut context);
-        play_audio(&context);
     }
 }
 
