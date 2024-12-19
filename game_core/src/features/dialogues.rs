@@ -80,8 +80,7 @@ impl Dialogue {
                             )
                         )
                     ),
-                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::AddToInventory(player, reward, AddToInventoryReason::Reward)),
-                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::SaveGame)
+                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::AddToInventory(player, reward, AddToInventoryReason::Reward))                    
                 ]
             }
         }

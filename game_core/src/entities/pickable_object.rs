@@ -23,7 +23,6 @@ pub fn object_pick_up_sequence(player: usize, entity: &Entity) -> Vec<WorldState
             )
         ),
         WorldStateUpdate::RemoveEntity(entity.id),
-        WorldStateUpdate::EngineUpdate(EngineStateUpdate::SaveGame),
         WorldStateUpdate::EngineUpdate(
             EngineStateUpdate::Toast(
                 Toast::new_with_image(

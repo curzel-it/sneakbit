@@ -25,7 +25,6 @@ pub enum WorldStateUpdate {
 pub enum EngineStateUpdate {
     EntityKilled(EntityId, SpeciesId),
     Teleport(Destination),
-    SaveGame,
     AddToInventory(PlayerIndex, SpeciesId, AddToInventoryReason),
     RemoveFromInventory(PlayerIndex, SpeciesId),
     Toast(Toast),

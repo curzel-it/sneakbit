@@ -155,9 +155,6 @@ impl GameEngine {
             EngineStateUpdate::Teleport(destination) => {
                 self.teleport(destination)
             }
-            EngineStateUpdate::SaveGame => {
-                self.save()
-            }
             EngineStateUpdate::AddToInventory(player, species_id, _) => {
                 increment_inventory_count(*species_id, *player);
             }
@@ -193,7 +190,7 @@ impl GameEngine {
         self.toast.show(toast);
     }
 
-    fn save(&self) {
+    pub fn save(&self) {
         if is_creative_mode() {
             set_value_for_key(&StorageKey::latest_world(), self.world.id);     
             self.world.save();
