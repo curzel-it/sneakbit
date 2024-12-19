@@ -36,7 +36,7 @@ impl PlayerProps {
 }
 
 pub fn empty_props_for_all_players() -> Vec<PlayerProps> {
-    (0..MAX_PLAYERS).map(|index| PlayerProps::new(index)).collect()
+    (0..MAX_PLAYERS).map(PlayerProps::new).collect()
 }
 
 impl World {

@@ -29,7 +29,7 @@ impl TurnsUseCase {
     
     pub fn updated_turn(&self, current_turn: &GameTurn, number_of_players: usize, time_since_last_update: f32) -> GameTurn {
         if number_of_players == 1 {
-            return current_turn.clone()
+            return *current_turn
         }
         match current_turn {
             GameTurn::RealTime => GameTurn::RealTime,
