@@ -64,7 +64,7 @@ impl TurnsUseCase {
         }
     }
 
-    pub fn handle_win_lose(&self, game_mode: GameMode, number_of_players: usize, dead_players: &Vec<usize>) -> MatchResult {
+    pub fn handle_win_lose(&self, game_mode: GameMode, number_of_players: usize, dead_players: &[usize]) -> MatchResult {
         match game_mode {
             GameMode::RealTimeCoOp => {
                 if dead_players.contains(&PLAYER1_INDEX) {
