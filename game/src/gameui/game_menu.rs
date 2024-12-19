@@ -297,11 +297,12 @@ impl GameMenu {
                 vec![]
             }
             GameMenuItem::Controls => {
-                self.close();
-                vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::DisplayLongText(
-                    "game.menu.controls".localized(),
-                    "game.menu.controls.explained".localized(),
-                ))]
+                self.long_text_display.show(
+                &"game.menu.controls".localized(),
+                &"game.menu.controls.explained".localized()
+                );
+                self.state = MenuState::ShowingControls;
+                vec![]
             }
             GameMenuItem::Exit => {
                 println!("Got exit request!");
