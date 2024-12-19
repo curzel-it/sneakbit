@@ -1,5 +1,20 @@
 
-use game_core::{utils::rect::IntRect, ui::scaffold::scaffold, ui::components::{empty_view, BordersTextures, TextureInfo, COLOR_MENU_BACKGROUND}, constants::SPRITE_SHEET_MENU, input::keyboard_events_provider::KeyboardEventsProvider, text, ui::components::{Spacing, Typography, View}, vstack};
+use game_core::{constants::SPRITE_SHEET_MENU, current_camera_viewport, current_world_id, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, text, ui::{components::{empty_view, BordersTextures, Spacing, TextureInfo, Typography, View, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::rect::IntRect, vstack};
+
+use crate::GameContext;
+
+pub fn update_game_menu(context: &mut GameContext, keyboard: &KeyboardEventsProvider, mouse: &MouseEventsProvider) {
+    if context.menu.is_open() {
+        let viewport = current_camera_viewport();
+        context.menu.update(viewport, keyboard, mouse);
+    } else {
+        if keyboard.has_menu_been_pressed_by_anyone() {   
+            let world_id = current_world_id();
+            context.menu.setup(world_id);         
+            context.menu.show();
+        }
+    }    
+}
 
 pub struct Menu<Item: MenuItem> {
     pub title: String,

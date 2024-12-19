@@ -229,17 +229,17 @@ typedef struct NonColorC {
   uint8_t alpha;
 } NonColorC;
 
-typedef struct ToastImageDescriptorC {
+typedef struct CToastImage {
   uint32_t sprite_sheet_id;
   struct IntRect texture_frame;
-} ToastImageDescriptorC;
+} CToastImage;
 
-typedef struct ToastDescriptorC {
+typedef struct CToast {
   struct NonColorC background_color;
   const char *text;
   enum ToastMode mode;
-  struct ToastImageDescriptorC image;
-} ToastDescriptorC;
+  struct CToastImage image;
+} CToast;
 
 typedef struct MenuDescriptorItemC {
   const char *title;
@@ -318,7 +318,7 @@ struct Vector2d camera_viewport_offset(void);
 
 uint32_t current_world_id(void);
 
-struct ToastDescriptorC current_toast(void);
+struct CToast current_toast(void);
 
 struct MenuDescriptorC current_menu(void);
 

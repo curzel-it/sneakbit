@@ -2,6 +2,10 @@ use game_core::{cached_player_position, current_camera_viewport, current_world_i
 
 use crate::GameContext;
 
+pub fn update_game_hud(context: &mut GameContext) {
+    context.basic_info_hud.update();
+}
+
 pub fn hud_ui(context: &GameContext, width: i32, height: i32, show_debug_info: bool, fps: u32) -> Layout {
     Layout::new(
         width, 
@@ -10,10 +14,10 @@ pub fn hud_ui(context: &GameContext, width: i32, height: i32, show_debug_info: b
         vec![
             (AnchorPoint::TopLeft, context.basic_info_hud.ui()),
             (AnchorPoint::BottomCenter, context.menu.ui(current_camera_viewport())),
-            (AnchorPoint::BottomCenter, context.long_text_display.ui()),
+            (AnchorPoint::BottomCenter, context.messages.ui()),
             (AnchorPoint::BottomCenter, context.weapons_selection.ui()),
-            // (AnchorPoint::TopRight, self.toast.regular_toast_ui()),
-            // (AnchorPoint::TopLeft, self.toast.hint_toast_ui()),
+            (AnchorPoint::TopRight, context.toast.regular_toast_ui()),
+            (AnchorPoint::TopLeft, context.toast.hint_toast_ui()),
             (AnchorPoint::BottomLeft, debug_info(show_debug_info, fps)),
             (AnchorPoint::BottomRight, turn_time_left_ui()),
             // (AnchorPoint::Center, self.death_screen.ui()),

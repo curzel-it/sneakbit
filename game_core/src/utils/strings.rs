@@ -1,3 +1,6 @@
+use std::ffi::{CStr, CString};
+use std::os::raw::c_char;
+
 pub fn wrap_text(input: &str, max_length: usize) -> Vec<String> {
     input
         .split_terminator("\n")
@@ -26,4 +29,30 @@ fn wrap_line(input: &str, max_length: usize) -> Vec<String> {
         .filter(|s| !s.is_empty())
         .map(|s| s.to_owned())
         .collect()
+}
+
+
+pub fn c_char_ptr_to_string(value: *const c_char) -> String {
+    if value.is_null() {
+        return String::new();
+    }
+
+    unsafe {
+        CStr::from_ptr(value)
+            .to_str()
+            .unwrap_or_default()
+            .to_owned()
+    }
+}
+
+pub fn string_to_c_char(s: String) -> *const c_char {
+    let c_string = CString::new(s).expect("Failed to convert String to CString");
+    let raw_ptr = c_string.into_raw();
+    raw_ptr as *const c_char
+}
+
+pub fn str_to_c_char(s: &str) -> *const c_char {
+    let c_string = CString::new(s).expect("Failed to convert String to CString");
+    let raw_ptr = c_string.into_raw();
+    raw_ptr as *const c_char
 }

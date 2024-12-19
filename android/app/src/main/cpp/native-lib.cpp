@@ -294,7 +294,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_numberOfKunaiInInventory(JNIEnv *env,
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_toastConfig(JNIEnv *env, jobject thiz) {
-    ToastDescriptorC toastDescriptor = current_toast();
+    CToast toastDescriptor = current_toast();
 
     jclass toastConfigClass = env->FindClass("it/curzel/bitscape/rendering/ToastConfig");
     if (toastConfigClass == nullptr) {

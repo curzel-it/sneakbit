@@ -1,6 +1,19 @@
 use game_core::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_WEAPONS}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{EntityType, Species}}, equipment::basics::{available_weapons, is_equipped, set_equipped}, features::storage::inventory_count, input::keyboard_events_provider::KeyboardEventsProvider, lang::localizable::LocalizableText, text, texture, ui::{components::{empty_view, GridSpacing, Spacing, Typography, View, COLOR_MENU_BACKGROUND, COLOR_TEXT_HIGHLIGHTED}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
+use crate::GameContext;
+
 use super::menu::MENU_BORDERS_TEXTURES;
+
+pub fn update_weapons_selection(context: &mut GameContext, keyboard: &KeyboardEventsProvider) {
+    if context.weapons_selection.is_open() {
+        context.weapons_selection.update(keyboard);
+    } else {
+        if let Some(player) = keyboard.index_of_any_player_who_is_pressing_weapon_selection() {
+            context.weapons_selection.show(player);    
+        }
+    }
+    
+}
 
 #[derive(Debug)]
 pub struct WeaponsGrid {
@@ -26,7 +39,7 @@ impl WeaponsGrid {
         }
     }
 
-    pub fn update(&mut self, keyboard: &KeyboardEventsProvider) {
+    fn update(&mut self, keyboard: &KeyboardEventsProvider) {
         if keyboard.has_back_been_pressed(self.player) {
             self.state = WeaponsGridState::Closed
         } else {
@@ -39,33 +52,27 @@ impl WeaponsGrid {
         }
     }
 
-    pub fn show(&mut self, player: Option<usize>) -> bool {
-        if let Some(player) = player {
-            self.player = player;
-            self.weapons = available_weapons(self.player);
+    fn show(&mut self, player: usize) {
+        self.player = player;
+        self.weapons = available_weapons(self.player);
 
-            if self.weapons.len() > 1 {
-                let current_index = self.weapons
-                    .iter()
-                    .enumerate()
-                    .find(|(_, weapon)| is_equipped(weapon, self.player))
-                    .map(|(index, _)| index);
-                
-                if let Some(current_index) = current_index {
-                    self.state = WeaponsGridState::SelectingWeapon(current_index)
-                } else {
-                    self.state = WeaponsGridState::SelectingWeapon(0)
-                }        
-                true                
-            } else {
-                false
-            }
-        } else {
-            false
+        if self.weapons.len() <= 1 {
+            return
         }
+        let current_index = self.weapons
+            .iter()
+            .enumerate()
+            .find(|(_, weapon)| is_equipped(weapon, self.player))
+            .map(|(index, _)| index);
+        
+        if let Some(current_index) = current_index {
+            self.state = WeaponsGridState::SelectingWeapon(current_index)
+        } else {
+            self.state = WeaponsGridState::SelectingWeapon(0)
+        }      
     } 
 
-    pub fn is_open(&self) -> bool {
+    fn is_open(&self) -> bool {
         !matches!(self.state, WeaponsGridState::Closed)
     }
 

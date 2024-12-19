@@ -71,7 +71,7 @@ private class ToastViewModel: ObservableObject {
             .store(in: &disposables)
     }
     
-    private func load(toast: ToastDescriptorC) {
+    private func load(toast: CToast) {
         backgroundColor = toast.background_color.asSolidColor()
         opacity = toast.background_color.opacity()
         text = string(from: toast.text) ?? "..."

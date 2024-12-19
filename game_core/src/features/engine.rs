@@ -1,13 +1,12 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, features::toasts::{Toast, ToastImage, ToastMode}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
-use super::{camera::camera_center, state_updates::{AppState, EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
+use super::{camera::camera_center, messages::DisplayableMessage, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
 pub struct GameEngine {
     pub world: World,
     pub previous_world: Option<World>,
     pub loading_screen: LoadingScreen,
     pub death_screen: DeathScreen,
-    pub toast: ToastDisplay,
     pub keyboard: KeyboardEventsProvider,
     pub mouse: MouseEventsProvider,
     pub camera_viewport: IntRect,
@@ -20,8 +19,8 @@ pub struct GameEngine {
     pub dead_players: Vec<usize>,
     pub turn: GameTurn,
     turns_use_case: TurnsUseCase,
-    pub current_title: String,
-    pub current_text: String,
+    pub message: Option<DisplayableMessage>,
+    pub toast: Option<Toast>,
 }
 
 impl GameEngine {
@@ -31,7 +30,6 @@ impl GameEngine {
             previous_world: None,
             loading_screen: LoadingScreen::new(),
             death_screen: DeathScreen::new(),
-            toast: ToastDisplay::new(),
             keyboard: KeyboardEventsProvider::new(),
             mouse: MouseEventsProvider::new(),
             camera_viewport: INITIAL_CAMERA_VIEWPORT,
@@ -44,8 +42,8 @@ impl GameEngine {
             dead_players: vec![],
             turn: GameTurn::RealTime,
             turns_use_case: TurnsUseCase {},
-            current_title: "".to_owned(),
-            current_text: "".to_owned(),
+            message: None,
+            toast: None
         }
     }
 
@@ -54,9 +52,9 @@ impl GameEngine {
         self.teleport_to_previous();
     }
 
-    pub fn update(&mut self, time_since_last_update: f32) -> AppState {     
+    pub fn update(&mut self, time_since_last_update: f32) {     
+        self.clear_messages();
         let mut did_resurrect = false;   
-        self.toast.update(time_since_last_update);
 
         if self.death_screen.is_open {
             if self.keyboard.has_confirmation_been_pressed_by_anyone() {
@@ -67,7 +65,6 @@ impl GameEngine {
                 did_resurrect = true;
             } else {
                 self.sound_effects.clear();
-                return AppState::Gaming;
             }
         }
 
@@ -78,7 +75,6 @@ impl GameEngine {
             if did_resurrect {
                 self.sound_effects.handle_resurrection();
             }
-            return AppState::Gaming;
         }
 
         self.update_current_turn(time_since_last_update);
@@ -86,7 +82,7 @@ impl GameEngine {
         let updates = self.world.update(time_since_last_update, &self.camera_viewport, &self.keyboard);
         self.sound_effects.update(&self.keyboard, &updates);
         self.center_camera_onto_players();
-        return self.apply_state_updates(updates);
+        self.apply_state_updates(updates);
     } 
 
     fn teleport_to_previous(&mut self) {
@@ -99,8 +95,13 @@ impl GameEngine {
         self.camera_viewport.w = (width / (scale * TILE_SIZE)) as i32;
         self.camera_viewport.h = (height / (scale * TILE_SIZE)) as i32;
     }
+    
+    fn clear_messages(&mut self) {
+        self.message = None;
+        self.toast = None;
+    }
 
-    fn apply_state_updates(&mut self, updates: Vec<EngineStateUpdate>) -> AppState {
+    fn apply_state_updates(&mut self, updates: Vec<EngineStateUpdate>) {
         let mut sorted_updates = updates.clone();
 
         sorted_updates.sort_by(|a, b| {
@@ -114,12 +115,9 @@ impl GameEngine {
             }
         });
         
-        let new_states: Vec<AppState> = sorted_updates
-            .iter()
-            .flat_map(|u| self.apply_state_update(u))
-            .collect();
-
-        new_states.first().cloned().unwrap_or_default()
+        sorted_updates.iter().for_each(|u| {
+            self.apply_state_update(u)
+        });
     }
 
     fn center_camera_onto_players(&mut self) {
@@ -138,7 +136,7 @@ impl GameEngine {
         self.apply_state_updates(updates);
     }
 
-    fn apply_state_update(&mut self, update: &EngineStateUpdate) -> Option<AppState> {   
+    fn apply_state_update(&mut self, update: &EngineStateUpdate) {   
         update.log();
 
         match update {
@@ -152,12 +150,10 @@ impl GameEngine {
                 decrease_inventory_count(species_id, *player);
             }
             EngineStateUpdate::Toast(toast) => {
-                self.show_toast(toast)
+                self.toast = Some(toast.clone());
             }
-            EngineStateUpdate::DisplayLongText(title, text) => {
-                self.current_title = title.clone();
-                self.current_text = text.clone();
-                return Some(AppState::DisplayText)
+            EngineStateUpdate::Message(message) => {
+                self.message = Some(message.clone());
             }
             EngineStateUpdate::PlayerDied(player_index) => {
                 self.dead_players.push(*player_index);
@@ -166,11 +162,6 @@ impl GameEngine {
             }
             _ => {}
         }
-        None
-    }
-
-    fn show_toast(&mut self, toast: &Toast) {
-        self.toast.show(toast);
     }
 
     pub fn save(&self) {
@@ -270,8 +261,8 @@ impl GameEngine {
     pub fn update_current_turn_for_death_of_player(&mut self, dead_player_index: usize) {
         if let GameTurn::Player(current_player_index, _) = self.turn {
             if current_player_index == dead_player_index {
-                self.toast.show(
-                    &Toast::new_with_image(
+                self.toast = Some(
+                    Toast::new_with_image(
                         ToastMode::LongHint,
                         "notification.player.died"
                             .localized()

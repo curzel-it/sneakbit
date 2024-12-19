@@ -9,7 +9,7 @@ class GameEngine {
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
     @Inject private var tileMapsStorage: TileMapsStorage
     
-    let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
+    let toast = CurrentValueSubject<CToast?, Never>(nil)
     let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
     let kunai = CurrentValueSubject<Int32, Never>(0)
     let isInteractionAvailable = CurrentValueSubject<Bool, Never>(false)

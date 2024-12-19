@@ -1,6 +1,6 @@
 use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, engine, engine_set_wants_fullscreen, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, spacing, start_new_game, stop_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
 
-use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, long_text_display::LongTextDisplay, map_editor::MapEditor, menu::{Menu, MenuItem}};
+use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, messages::MessagesDisplay, map_editor::MapEditor, menu::{Menu, MenuItem}};
 
 pub struct GameMenu {
     pub current_world_id: u32,
@@ -9,7 +9,7 @@ pub struct GameMenu {
     settings_menu: Menu<GameSettingsItem>,
     map_editor: MapEditor,
     new_game_confirmation: ConfirmationDialog,
-    pub long_text_display: LongTextDisplay,
+    pub messages: MessagesDisplay,
     credits_menu: Menu<String>,
     languages_menu: Menu<String>,
     number_of_players_menu: Menu<String>,
@@ -156,7 +156,7 @@ impl GameMenu {
             credits_menu,
             languages_menu,
             number_of_players_menu,
-            long_text_display: LongTextDisplay::new(80, 5)
+            messages: MessagesDisplay::new(80, 5)
         }
     }
 
@@ -281,7 +281,7 @@ impl GameMenu {
                 self.state = MenuState::NewGameConfirmation;
             }
             GameMenuItem::Controls => {
-                self.long_text_display.show(
+                self.messages.show(
                 &"game.menu.controls".localized(),
                 &"game.menu.controls.explained".localized()
                 );
@@ -319,8 +319,8 @@ impl GameMenu {
         if keyboard.has_back_been_pressed_by_anyone() {
             self.state = MenuState::Open;
         } else {
-            let still_reading = self.long_text_display.update(keyboard);
-            if !still_reading {
+            self.messages.update(keyboard);
+            if !self.messages.is_open() {
                 self.state = MenuState::Open;
             }
         }
@@ -479,7 +479,7 @@ impl GameMenu {
             MenuState::MapEditor | MenuState::PlaceItem => self.map_editor.ui(camera_viewport),
             MenuState::SelectingNumberOfPlayers => self.number_of_players_menu.ui(),
             MenuState::ShowingSettings => self.settings_menu.ui(),
-            MenuState::ShowingControls => self.long_text_display.ui(), 
+            MenuState::ShowingControls => self.messages.ui(), 
         }
     }
 }

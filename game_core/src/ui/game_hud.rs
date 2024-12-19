@@ -9,8 +9,8 @@ impl GameEngine {
             height, 
             self.hud_background_color(),
             vec![
-                (AnchorPoint::TopRight, self.toast.regular_toast_ui()),
-                (AnchorPoint::TopLeft, self.toast.hint_toast_ui()),
+                // (AnchorPoint::TopRight, self.toast.regular_toast_ui()),
+                // (AnchorPoint::TopLeft, self.toast.hint_toast_ui()),
                 (AnchorPoint::Center, self.death_screen.ui()),
                 (AnchorPoint::Center, self.loading_screen.ui())
             ]

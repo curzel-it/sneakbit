@@ -1,16 +1,17 @@
 #![allow(clippy::new_without_default, clippy::not_unsafe_ptr_arg_deref)]
 
-use std::{collections::HashSet, ffi::{CStr, CString}, path::PathBuf, ptr};
+use std::{collections::HashSet, ffi::CString, path::PathBuf, ptr};
 use std::os::raw::c_char;
 
 use config::initialize_config_paths;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
-use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::{AppState, WorldStateUpdate}};
+use features::messages::{CDisplayableMessage, DisplayableMessage, DisplayableMessageCRepr};
+use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::{WorldStateUpdate}, toasts::ToastCRepr};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
 use input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider};
-use menus::toasts::ToastDescriptorC;
+use features::toasts::{Toast, CToast};
 use multiplayer::{modes::GameMode, turns::GameTurn};
-use utils::{rect::{IntPoint, IntRect}, vector::Vector2d};
+use utils::{rect::{IntPoint, IntRect}, strings::{c_char_ptr_to_string, string_to_c_char}, vector::Vector2d};
 
 pub mod config;
 pub mod constants;
@@ -20,7 +21,6 @@ pub mod features;
 pub mod lang;
 pub mod input;
 pub mod maps;
-pub mod menus;
 pub mod multiplayer;
 pub mod prefabs;
 pub mod ui;
@@ -60,6 +60,16 @@ pub fn current_game_mode() -> GameMode {
 }
 
 #[no_mangle]
+pub extern "C" fn free_c_char_ptr(ptr: *const c_char) {
+    unsafe {
+        if ptr.is_null() {
+            return;
+        }
+        _ = CString::from_raw(ptr as *mut c_char);
+    }
+}
+
+#[no_mangle]
 pub extern "C" fn is_game_running() -> bool {
     engine().is_running
 }
@@ -75,7 +85,7 @@ pub extern "C" fn window_size_changed(width: f32, height: f32, scale: f32) {
 }
 
 #[no_mangle]
-pub extern "C" fn update_game(time_since_last_update: f32) -> AppState {
+pub extern "C" fn update_game(time_since_last_update: f32) {
     engine_mut().update(time_since_last_update)
 }
 
@@ -206,7 +216,7 @@ pub extern "C" fn initialize_config(
     initialize_config_paths(
         is_mobile,
         base_entity_speed,
-        to_string(current_lang),
+        c_char_ptr_to_string(current_lang),
         to_path(levels_path),
         to_path(species_path),
         to_path(key_value_storage_path),
@@ -245,47 +255,13 @@ pub extern "C" fn camera_viewport_offset() -> Vector2d {
     engine().camera_viewport_offset
 }
 
-fn to_string(value: *const c_char) -> String {
-    if value.is_null() {
-        return String::new();
-    }
-
-    unsafe {
-        CStr::from_ptr(value)
-            .to_str()
-            .unwrap_or_default()
-            .to_owned()
-    }
-}
-
 fn to_path(value: *const c_char) -> PathBuf {
-    PathBuf::from(to_string(value))
+    PathBuf::from(c_char_ptr_to_string(value))
 }
 
 #[no_mangle]
 pub extern "C" fn current_world_id() -> u32 {
     engine().world.id
-}
-
-#[no_mangle]
-pub extern "C" fn current_toast() -> ToastDescriptorC {
-    engine().toast.descriptor_c()
-}
-
-pub fn string_to_c_char(s: String) -> *const c_char {
-    let c_string = CString::new(s).expect("Failed to convert String to CString");
-    let raw_ptr = c_string.into_raw();
-    raw_ptr as *const c_char
-}
-
-#[no_mangle]
-pub extern "C" fn free_c_char_ptr(ptr: *const c_char) {
-    unsafe {
-        if ptr.is_null() {
-            return;
-        }
-        _ = CString::from_raw(ptr as *mut c_char);
-    }
 }
 
 #[no_mangle]
@@ -444,24 +420,6 @@ pub fn toggle_pvp() {
     engine_mut().update_game_mode(next);
 }
 
-pub fn current_title_string() -> &'static str {
-    &engine().current_title
-}
-
-#[no_mangle]
-pub extern "C" fn current_title() -> *const c_char {
-    string_to_c_char(current_title_string().to_owned())
-}
-
-pub fn current_text_string() -> &'static str {
-    &engine().current_text
-}
-
-#[no_mangle]
-pub extern "C" fn current_text() -> *const c_char {
-    string_to_c_char(current_text_string().to_owned())
-}
-
 pub fn current_keyboard_state() -> &'static KeyboardEventsProvider {
     &engine().keyboard
 }
@@ -487,4 +445,23 @@ pub fn time_left_for_current_turn() -> f32 {
         multiplayer::turns::GameTurn::RealTime => 0.0,
         multiplayer::turns::GameTurn::Player(_, time_left) => time_left
     }
+}
+
+pub fn next_message() -> &'static Option<DisplayableMessage> {
+    &engine().message
+}
+
+#[no_mangle]
+pub extern "C" fn next_message_c() -> CDisplayableMessage {
+    engine().message.c_repr()
+}
+
+#[no_mangle]
+pub extern "C" fn next_toast() -> &'static Option<Toast> {
+    &engine().toast
+}
+
+#[no_mangle]
+pub extern "C" fn next_toast_c() -> CToast {
+    engine().toast.c_repr()
 }

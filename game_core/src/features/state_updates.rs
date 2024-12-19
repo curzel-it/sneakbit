@@ -1,6 +1,6 @@
-use crate::{entities::{bullets::{BulletHits, BulletId}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast};
+use crate::{entities::{bullets::{BulletHits, BulletId}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}};
 
-use super::{entity::{Entity, EntityId}, entity_props::EntityProps, locks::LockType};
+use super::{entity::{Entity, EntityId}, entity_props::EntityProps, locks::LockType, messages::DisplayableMessage, toasts::Toast};
 
 pub type PlayerIndex = usize;
 
@@ -28,7 +28,7 @@ pub enum EngineStateUpdate {
     AddToInventory(PlayerIndex, SpeciesId, AddToInventoryReason),
     RemoveFromInventory(PlayerIndex, SpeciesId),
     Toast(Toast),
-    DisplayLongText(String, String),
+    Message(DisplayableMessage),
     BulletBounced,
     PlayerDied(PlayerIndex),
     NoAmmo(PlayerIndex),
@@ -36,16 +36,6 @@ pub enum EngineStateUpdate {
     SwordSlash(PlayerIndex),
     GunShot(PlayerIndex),
     LoudGunShot(PlayerIndex),
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
-#[repr(C)]
-pub enum AppState {
-    #[default]
-    Gaming = 0,
-    InGameWeaponSelection,
-    DisplayText,
-    Menu,
 }
 
 #[derive(Debug, Clone)]

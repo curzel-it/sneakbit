@@ -6,31 +6,13 @@ mod rendering;
 
 use std::env;
 
-use features::{audio::{play_audio, AudioManager}, inputs::{handle_keyboard_updates, handle_mouse_updates}, paths::local_path};
-use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_camera_viewport, current_keyboard_state, current_mouse_state, current_soundtrack_string, current_text_string, current_title_string, current_world_id, features::{sound_effects::is_music_enabled, state_updates::AppState}, initialize_game, is_game_running, lang::localizable::LANG_EN, multiplayer::modes::GameMode, stop_game, update_game};
-use gameui::{basic_info_hud::BasicInfoHud, game_menu::GameMenu, long_text_display::LongTextDisplay, weapon_selection::WeaponsGrid};
+use features::{audio::{play_audio, AudioManager}, context::GameContext, inputs::{handle_keyboard_updates, handle_mouse_updates}, paths::local_path};
+use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_camera_viewport, current_keyboard_state, current_mouse_state, current_soundtrack_string, current_world_id, features::sound_effects::is_music_enabled, initialize_game, is_game_running, lang::localizable::LANG_EN, multiplayer::modes::GameMode, stop_game, update_game};
+use gameui::{basic_info_hud::BasicInfoHud, game_hud::update_game_hud, game_menu::GameMenu, menu::update_game_menu, messages::{update_messages, MessagesDisplay}, toasts::{update_toasts, ToastDisplay}, weapon_selection::{update_weapons_selection, WeaponsGrid}};
 use raylib::prelude::*;
 use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, load_last_fullscreen_settings, start_rl}, worlds::render_frame};
 use sys_locale::get_locale;
 
-struct GameContext {
-    rl: RaylibHandle,
-    rl_thread: RaylibThread,
-    needs_window_init: bool,
-    latest_world: u32,
-    is_fullscreen: bool,
-    total_run_time: f32,
-    using_controller: bool,
-    last_number_of_players: usize,
-    last_pvp: bool,
-    audio_manager: AudioManager, 
-
-    state: AppState,
-    long_text_display: LongTextDisplay,
-    weapons_selection: WeaponsGrid,
-    menu: GameMenu,
-    basic_info_hud: BasicInfoHud,
-}
 
 fn main() {
     initialize_config_paths(
@@ -44,27 +26,7 @@ fn main() {
     );
 
     let creative_mode = env::args().any(|arg| arg == "creative");
-    let (rl, rl_thread) = start_rl(creative_mode);
-
-    let audio_manager = AudioManager::new();
-
-    let mut context = GameContext {
-        rl,
-        rl_thread,
-        needs_window_init: true,
-        latest_world: 0,
-        is_fullscreen: false,
-        total_run_time: 0.0,
-        using_controller: false,
-        last_number_of_players: 1,
-        last_pvp: false,
-        audio_manager,
-        state: AppState::Gaming,
-        long_text_display: LongTextDisplay::new(50, 9),
-        weapons_selection: WeaponsGrid::new(),
-        menu: GameMenu::new(),
-        basic_info_hud: BasicInfoHud::new(),
-    };
+    let mut context = start_rl(creative_mode);
 
     let initial_game_mode = if creative_mode {
         GameMode::Creative
@@ -86,83 +48,18 @@ fn main() {
         handle_game_closed(&mut context);
         handle_keyboard_updates(&mut context, time_since_last_update);
         handle_mouse_updates(&mut context.rl, get_rendering_config().rendering_scale);
-
-        let new_state = match context.state {
-            AppState::Gaming => {
-                context.basic_info_hud.update();
-                let next_state = update_game(time_since_last_update);
-
-                if keyboard.has_weapon_selection_been_pressed_by_anyone() {
-                    AppState::InGameWeaponSelection
-                } else if keyboard.has_menu_been_pressed_by_anyone() {
-                    AppState::Menu
-                } else {
-                    next_state
-                }
-            },
-            AppState::InGameWeaponSelection => {
-                context.weapons_selection.update(keyboard);
-                update_game(time_since_last_update);
-                
-                if context.weapons_selection.is_open() {
-                    AppState::InGameWeaponSelection
-                } else {
-                    AppState::Gaming
-                }
-            }
-            AppState::DisplayText => {
-                if context.long_text_display.update(keyboard) {
-                    AppState::DisplayText
-                } else {
-                    AppState::Gaming
-                }
-            },
-            AppState::Menu => {
-                if context.menu.update(current_camera_viewport(), keyboard, mouse) {
-                    AppState::Menu
-                } else {
-                    AppState::Gaming
-                }
-            }
-        };
-        handle_state_changed(&mut context, new_state);
+        update_toasts(&mut context, time_since_last_update);
+        update_game_hud(&mut context);
+        update_weapons_selection(&mut context, keyboard);
+        update_messages(&mut context, keyboard);
+        update_game_menu(&mut context, keyboard, mouse);
+        
+        if !context.is_game_paused() {
+            update_game(time_since_last_update)
+        }
         handle_world_changed(&mut context);
         render_frame(&mut context);
         play_audio(&context);
-    }
-}
-
-fn handle_state_changed(context: &mut GameContext, new_state: AppState) {
-    if context.state == new_state {
-        return
-    }
-    let mut confirm_state_change = true;
-
-    match new_state {
-        AppState::Gaming => {},
-        AppState::InGameWeaponSelection => {
-            let player = current_keyboard_state().index_of_any_player_who_is_pressing_weapon_selection();
-            let confirmed = context.weapons_selection.show(player);
-
-            if !confirmed {
-                confirm_state_change = false;
-            }
-        },
-        AppState::DisplayText => {
-            context.long_text_display.show(
-                current_title_string(),
-                current_text_string()
-            );
-        },
-        AppState::Menu => {
-            context.menu.setup(current_world_id());
-            context.menu.show();
-        }
-    }
-
-    if confirm_state_change {
-        println!("Application State changed from {:#?} to {:#?}", context.state, new_state);
-        context.state = new_state;
     }
 }
 

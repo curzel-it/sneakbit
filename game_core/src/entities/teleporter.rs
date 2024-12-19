@@ -1,4 +1,4 @@
-use crate::{features::{destination::Destination, entity::Entity, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastMode}, utils::directions::Direction, worlds::world::World};
+use crate::{features::{destination::Destination, entity::Entity, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, toasts::{Toast, ToastMode}}, is_creative_mode, lang::localizable::LocalizableText, utils::directions::Direction, worlds::world::World};
 
 impl Entity {
     pub fn setup_teleporter(&mut self) {

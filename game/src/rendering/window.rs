@@ -5,11 +5,11 @@ use crate::{features::font_helpers::{bold_font_path, latin_characters, regular_f
 
 use super::{textures::load_textures, ui::{init_rendering_config, RenderingConfig}};
 
-pub fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {    
+pub fn start_rl(creative_mode: bool) -> GameContext {    
     let width = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.w as f32) as i32;
     let height = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.h as f32) as i32;
 
-    let (mut rl, thread) = if is_debug_build() { 
+    let (mut rl, rl_thread) = if is_debug_build() { 
         raylib::init()
             .size(width, height)
             .resizable()
@@ -25,8 +25,8 @@ pub fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {
     };        
     
     let characters = latin_characters();    
-    let font = rl.load_font_ex(&thread, &regular_font_path(), 8, Some(&characters)).unwrap();
-    let font_bold = rl.load_font_ex(&thread, &bold_font_path(), 8, Some(&characters)).unwrap();
+    let font = rl.load_font_ex(&rl_thread, &regular_font_path(), 8, Some(&characters)).unwrap();
+    let font_bold = rl.load_font_ex(&rl_thread, &bold_font_path(), 8, Some(&characters)).unwrap();
     
     update_target_refresh_rate(&mut rl);
     rl.set_window_min_size(360, 240);
@@ -34,7 +34,7 @@ pub fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {
     init_rendering_config(RenderingConfig {
         font,
         font_bold,
-        textures: load_textures(&mut rl, &thread),
+        textures: load_textures(&mut rl, &rl_thread),
         rendering_scale: 2.0,
         font_rendering_scale: 2.0,
         canvas_size: Vector2d::new(1.0, 1.0),
@@ -42,7 +42,7 @@ pub fn start_rl(creative_mode: bool) -> (RaylibHandle, RaylibThread) {
         render_using_individual_tiles: creative_mode
     });
 
-    (rl, thread)
+    GameContext::new(rl, rl_thread)
 }
 
 pub fn handle_window_updates(context: &mut GameContext) {
@@ -131,10 +131,10 @@ fn handle_window_size_changed(context: &mut GameContext) {
     let max_line_length = (width / font_size).floor() as usize;
     let visible_line_count = (0.4 * height / (line_spacing + font_size)).floor() as usize;
 
-    context.long_text_display.max_line_length = max_line_length;
-    context.long_text_display.visible_line_count = visible_line_count;
-    context.menu.long_text_display.max_line_length = max_line_length;
-    context.menu.long_text_display.visible_line_count = visible_line_count;
+    context.messages.max_line_length = max_line_length;
+    context.messages.visible_line_count = visible_line_count;
+    context.menu.messages.max_line_length = max_line_length;
+    context.menu.messages.visible_line_count = visible_line_count;
     
     window_size_changed(width, height, scale);
     update_target_refresh_rate(&mut context.rl);
