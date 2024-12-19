@@ -25,8 +25,8 @@ pub struct AudioManager {
 }
 
 pub fn play_audio(context: &GameContext) {
-    play_sound_effects(&context);
-    play_music(&context);
+    play_sound_effects(context);
+    play_music(context);
 }
 
 impl AudioManager {
@@ -171,7 +171,7 @@ fn audio_path_for_filename(filename: &str) -> PathBuf {
     path
 }
 
-fn stop_music<'a>(sound_library: &mut HashMap<AppSound, Sound<'a>>) {
+fn stop_music(sound_library: &mut HashMap<AppSound, Sound<'_>>) {
     let keys: Vec<AppSound> = sound_library.keys().cloned().collect();
     for key in keys {
         if let AppSound::Track(_) = key {
