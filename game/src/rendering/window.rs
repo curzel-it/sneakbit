@@ -1,4 +1,4 @@
-use game_core::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE}, current_game_mode, engine, is_creative_mode, number_of_players, ui::components::Typography, utils::vector::Vector2d, window_size_changed};
+use game_core::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE}, current_game_mode, engine, engine_set_wants_fullscreen, features::storage::{bool_for_global_key, StorageKey}, is_creative_mode, number_of_players, ui::components::Typography, utils::vector::Vector2d, window_size_changed};
 use raylib::prelude::*;
 
 use crate::{features::font_helpers::{bold_font_path, latin_characters, regular_font_path}, is_debug_build, rendering::ui::{get_rendering_config_mut, is_rendering_config_initialized}, GameContext};
@@ -102,8 +102,6 @@ fn handle_window_size_changed(context: &mut GameContext) {
     context.last_pvp = current_is_pvp;
 
     let window_scale = context.rl.get_window_scale_dpi().x;
-    // let real_width = context.rl.get_render_width() as f32;
-    // let real_height = context.rl.get_render_height() as f32;
     let real_width = unsafe { raylib::ffi::GetRenderWidth() } as f32;
     let real_height = unsafe { raylib::ffi::GetRenderHeight() } as f32;
 
@@ -129,9 +127,14 @@ fn handle_window_size_changed(context: &mut GameContext) {
     }
     
     let font_size = config.scaled_font_size(&Typography::Regular);
-    let line_spacing = config.font_lines_spacing(&Typography::Regular);
-    context.long_text_display.max_line_length = (width / font_size).floor() as usize;
-    context.long_text_display.visible_line_count = (0.4 * height / (line_spacing + font_size)).floor() as usize;
+    let line_spacing = config.font_lines_spacing(&Typography::Regular);    
+    let max_line_length = (width / font_size).floor() as usize;
+    let visible_line_count = (0.4 * height / (line_spacing + font_size)).floor() as usize;
+
+    context.long_text_display.max_line_length = max_line_length;
+    context.long_text_display.visible_line_count = visible_line_count;
+    context.menu.long_text_display.max_line_length = max_line_length;
+    context.menu.long_text_display.visible_line_count = visible_line_count;
     
     window_size_changed(width, height, scale);
     update_target_refresh_rate(&mut context.rl);
@@ -161,4 +164,9 @@ fn font_scale_for_window_width(width: f32) -> f32 {
     } else {
         4.0
     }
+}
+
+pub fn load_last_fullscreen_settings() {
+    let was_fullscreen = bool_for_global_key(&StorageKey::fullscreen());
+    engine_set_wants_fullscreen(was_fullscreen);
 }

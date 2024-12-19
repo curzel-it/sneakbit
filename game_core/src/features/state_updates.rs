@@ -29,7 +29,6 @@ pub enum EngineStateUpdate {
     RemoveFromInventory(PlayerIndex, SpeciesId),
     Toast(Toast),
     DisplayLongText(String, String),
-    ToggleFullScreen,
     BulletBounced,
     ExternalLink(String),
     PlayerDied(PlayerIndex),

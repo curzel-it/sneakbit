@@ -7,10 +7,10 @@ mod rendering;
 use std::env;
 
 use features::{audio::{play_audio, AudioManager}, inputs::{handle_keyboard_updates, handle_mouse_updates}, links::MyLinkHandler, paths::local_path};
-use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_camera_viewport, current_keyboard_state, current_mouse_state, current_soundtrack_string, current_text_string, current_title_string, current_world_id, engine_set_wants_fullscreen, features::{sound_effects::is_music_enabled, state_updates::AppState, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_game_running, lang::localizable::LANG_EN, multiplayer::modes::GameMode, set_links_handler, stop_game, update_game};
+use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_camera_viewport, current_keyboard_state, current_mouse_state, current_soundtrack_string, current_text_string, current_title_string, current_world_id, features::{sound_effects::is_music_enabled, state_updates::AppState}, initialize_game, is_game_running, lang::localizable::LANG_EN, multiplayer::modes::GameMode, set_links_handler, stop_game, update_game};
 use gameui::{game_menu::GameMenu, long_text_display::LongTextDisplay, weapon_selection::WeaponsGrid};
 use raylib::prelude::*;
-use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, start_rl}, worlds::render_frame};
+use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, load_last_fullscreen_settings, start_rl}, worlds::render_frame};
 use sys_locale::get_locale;
 
 struct GameContext {
@@ -72,10 +72,7 @@ fn main() {
 
     initialize_game(initial_game_mode);
     set_links_handler(Box::new(MyLinkHandler {}));
-
-    if bool_for_global_key(&StorageKey::fullscreen()) {
-        engine_set_wants_fullscreen();
-    }
+    load_last_fullscreen_settings();
 
     while is_game_running() {
         let time_since_last_update = context.rl.get_frame_time().min(0.5);
@@ -102,7 +99,6 @@ fn main() {
                 }
             },
             AppState::InGameWeaponSelection => {
-                // TODO: Avoid moving hero along with the menu
                 context.weapons_selection.update(keyboard);
                 update_game(time_since_last_update);
                 
@@ -113,7 +109,11 @@ fn main() {
                 }
             }
             AppState::DisplayText => {
-                context.long_text_display.update(keyboard)
+                if context.long_text_display.update(keyboard) {
+                    AppState::DisplayText
+                } else {
+                    AppState::Gaming
+                }
             },
             AppState::Menu => {
                 let (menu_open, updates) = context.menu.update(current_camera_viewport(), keyboard, mouse);

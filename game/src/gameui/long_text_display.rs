@@ -40,7 +40,7 @@ impl LongTextDisplay {
         self.is_open = false;
     }
 
-    pub fn update(&mut self, keyboard: &KeyboardEventsProvider) -> AppState {
+    pub fn update(&mut self, keyboard: &KeyboardEventsProvider) -> bool {
         if self.is_open {
             if keyboard.has_back_been_pressed_by_anyone()|| keyboard.has_confirmation_been_pressed_by_anyone() {
                 self.close();
@@ -54,11 +54,7 @@ impl LongTextDisplay {
                 self.scroll_offset += 1;
             }
         }
-        if self.is_open {
-            AppState::DisplayText
-        } else {
-            AppState::Gaming
-        }
+        self.is_open
     }
 
     pub fn ui(&self) -> View {

@@ -1,6 +1,6 @@
-use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, engine, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, is_game_running, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, spacing, start_new_game, stop_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
+use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, engine, engine_set_wants_fullscreen, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, is_game_running, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, spacing, start_new_game, stop_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
 
-use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
+use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, long_text_display::LongTextDisplay, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
 pub struct GameMenu {
     pub current_world_id: u32,
@@ -9,6 +9,7 @@ pub struct GameMenu {
     settings_menu: Menu<GameSettingsItem>,
     map_editor: MapEditor,
     new_game_confirmation: ConfirmationDialog,
+    pub long_text_display: LongTextDisplay,
     credits_menu: Menu<String>,
     languages_menu: Menu<String>,
     number_of_players_menu: Menu<String>,
@@ -23,6 +24,7 @@ enum MenuState {
     NewGameConfirmation,
     ShowingLanguageSettings,
     ShowingCredits,
+    ShowingControls,
     SelectingNumberOfPlayers,
     ShowingSettings, 
 }
@@ -154,6 +156,7 @@ impl GameMenu {
             credits_menu,
             languages_menu,
             number_of_players_menu,
+            long_text_display: LongTextDisplay::new(80, 5)
         }
     }
 
@@ -240,6 +243,7 @@ impl GameMenu {
                 self.update_from_number_of_players(keyboard)
             }
             MenuState::ShowingSettings => self.update_from_settings(keyboard),
+            MenuState::ShowingControls => self.update_from_controls(keyboard),
         };
         (self.is_open(), updates)
     }
@@ -255,7 +259,14 @@ impl GameMenu {
             }
             GameMenuItem::ToggleFullScreen => {
                 self.close();
-                vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::ToggleFullScreen)]
+                if engine().wants_fullscreen {
+                    engine_set_wants_fullscreen(false);
+                    set_value_for_key(&StorageKey::fullscreen(), 0);
+                } else {
+                    engine_set_wants_fullscreen(true);
+                    set_value_for_key(&StorageKey::fullscreen(), 1);
+                }
+                vec![]
             }
             GameMenuItem::Save => {
                 self.close();
@@ -320,6 +331,18 @@ impl GameMenu {
             self.state = MenuState::ShowingSettings; 
         }
         updates
+    }
+
+    fn update_from_controls(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
+        if keyboard.has_back_been_pressed_by_anyone() {
+            self.state = MenuState::Open;
+            return vec![];
+        }
+        let still_reading = self.long_text_display.update(keyboard);
+        if !still_reading {
+            self.state = MenuState::Open;
+        }
+        vec![]
     }
 
     fn update_from_new_game(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
@@ -478,7 +501,8 @@ impl GameMenu {
             MenuState::ShowingLanguageSettings => self.languages_menu.ui(),
             MenuState::MapEditor | MenuState::PlaceItem => self.map_editor.ui(camera_viewport),
             MenuState::SelectingNumberOfPlayers => self.number_of_players_menu.ui(),
-            MenuState::ShowingSettings => self.settings_menu.ui(), 
+            MenuState::ShowingSettings => self.settings_menu.ui(),
+            MenuState::ShowingControls => self.long_text_display.ui(), 
         }
     }
 

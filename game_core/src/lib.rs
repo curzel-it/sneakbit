@@ -364,8 +364,8 @@ pub extern "C" fn start_new_game() {
     engine_mut().start_new_game();    
 }
 
-pub fn engine_set_wants_fullscreen() {
-    engine_mut().wants_fullscreen = true;
+pub fn engine_set_wants_fullscreen(enabled: bool) {
+    engine_mut().wants_fullscreen = enabled;
 }
 
 pub fn current_sound_effects() -> HashSet<SoundEffect> {

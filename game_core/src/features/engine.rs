@@ -174,10 +174,6 @@ impl GameEngine {
                 self.update_current_turn_for_death_of_player(*player_index);
                 self.handle_win_lose()
             }
-            EngineStateUpdate::ToggleFullScreen => {
-                self.wants_fullscreen = !self.wants_fullscreen;
-                set_value_for_key(&StorageKey::fullscreen(), if self.wants_fullscreen { 1 } else { 0 });
-            }
             EngineStateUpdate::ExternalLink(link) => {
                 self.links_handler.open(link);
             }
