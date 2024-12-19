@@ -1,7 +1,7 @@
 
 use game_core::{lang::localizable::LocalizableText, spacing, ui::components::{empty_view, COLOR_MENU_BACKGROUND}, ui::scaffold::scaffold, utils::strings::wrap_text, input::keyboard_events_provider::KeyboardEventsProvider, text, ui::components::{Spacing, Typography, View}, vstack};
 
-use super::menu::{Menu, MenuDescriptorC, MenuItem, MENU_BORDERS_TEXTURES};
+use super::menu::{MenuItem, MENU_BORDERS_TEXTURES};
 
 pub struct LongTextDisplay {
     pub title: String,
@@ -112,15 +112,6 @@ impl LongTextDisplay {
                 children
             }
         )
-    }
-}
-
-impl LongTextDisplay {
-    pub fn descriptor_c(&self) -> MenuDescriptorC {
-        let mut menu = Menu::new(self.title.clone(), vec!["ok_action".localized()]);
-        menu.text = Some(self.text.clone());
-        menu.is_open = self.is_open;
-        menu.descriptor_c()
     }
 }
 

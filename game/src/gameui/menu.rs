@@ -1,6 +1,4 @@
 
-use std::{ffi::{c_char, CString}, ptr::null};
-
 use game_core::{utils::rect::IntRect, ui::scaffold::scaffold, ui::components::{empty_view, BordersTextures, TextureInfo, COLOR_MENU_BACKGROUND}, constants::SPRITE_SHEET_MENU, input::keyboard_events_provider::KeyboardEventsProvider, text, ui::components::{Spacing, Typography, View}, vstack};
 
 pub struct Menu<Item: MenuItem> {
@@ -32,14 +30,6 @@ impl<Item: MenuItem> Menu<Item> {
             visible_item_count: 6,
             scroll_offset: 0, 
         }
-    }
-
-    pub fn empty() -> Self {
-        Self::empty_with_title("".to_string())
-    }
-
-    pub fn empty_with_title(title: String) -> Self {
-        Self::new(title, vec![])
     }
 
     pub fn show(&mut self) {
@@ -166,74 +156,5 @@ impl<Item: MenuItem> Menu<Item> {
                 children
             }
         )
-    }
-}
-
-#[repr(C)]
-pub struct MenuDescriptorC {
-    pub is_visible: bool,
-    pub title: *const c_char,
-    pub text: *const c_char,
-    pub options: *const MenuDescriptorItemC,
-    pub options_count: u32
-}
-
-#[repr(C)]
-pub struct MenuDescriptorItemC {
-    pub title: *const c_char,
-}
-
-impl MenuDescriptorC {
-    pub fn empty() -> Self {
-        Self {
-            is_visible: false,
-            title: null(),
-            text: null(),
-            options: null(),
-            options_count: 0
-        }
-    }
-}
-
-impl<Item: MenuItem> Menu<Item> {
-    pub fn descriptor_c(&self) -> MenuDescriptorC {
-        let c_title = CString::new(self.title.clone())
-            .expect("Failed to convert title to CString");
-        let leaked_title = c_title.into_raw();
-
-        let c_text = CString::new(self.actual_text())
-            .expect("Failed to convert text to CString");
-        let leaked_text = c_text.into_raw();
-
-        let mut c_options = Vec::with_capacity(self.items.len());
-        for item in &self.items {
-            let c_item_title = CString::new(item.title())
-                .expect("Failed to convert option title to CString");
-            let leaked_item_title = c_item_title.into_raw();
-
-            let c_item = MenuDescriptorItemC {
-                title: leaked_item_title,
-            };
-            c_options.push(c_item);
-        }
-
-        let options_ptr = c_options.as_ptr();
-        let options_len = c_options.len();
-        std::mem::forget(c_options); 
-        
-        MenuDescriptorC {
-            is_visible: true,
-            title: leaked_title,
-            text: leaked_text,
-            options: options_ptr,
-            options_count: options_len as u32,
-        }
-    }
-
-    fn actual_text(&self) -> String {
-        if let Some(text) = self.text.clone() {
-            return text
-        }
-        "".to_owned()
     }
 }

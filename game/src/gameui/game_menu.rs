@@ -482,10 +482,6 @@ impl GameMenu {
             MenuState::ShowingControls => self.long_text_display.ui(), 
         }
     }
-
-    pub fn select_option_at_index(&mut self, index: usize) {
-        self.menu.selected_index = index;
-    }
 }
 
 fn player_options() -> Vec<String> {

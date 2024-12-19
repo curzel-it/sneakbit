@@ -32,10 +32,6 @@ impl ConfirmationDialog {
         }
     }
 
-    pub fn is_open(&self) -> bool {
-        self.menu.is_open
-    }
-
     pub fn show(&mut self, title: &str, text: &str) {
         if self.menu.title == title {
             return 
@@ -57,10 +53,6 @@ impl ConfirmationDialog {
         } else {
             None
         }
-    }
-
-    pub fn select_option_at_index(&mut self, index: usize) {
-        self.menu.selected_index = index;
     }
 }
 
