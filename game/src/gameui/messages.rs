@@ -1,5 +1,5 @@
 
-use game_core::{input::keyboard_events_provider::{self, KeyboardEventsProvider}, lang::localizable::LocalizableText, next_message, spacing, text, ui::{components::{empty_view, Spacing, Typography, View, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::strings::wrap_text, vstack};
+use game_core::{input::keyboard_events_provider::{KeyboardEventsProvider}, lang::localizable::LocalizableText, next_message, spacing, text, ui::{components::{empty_view, Spacing, Typography, View, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::strings::wrap_text, vstack};
 
 use crate::GameContext;
 
@@ -8,10 +8,8 @@ use super::menu::{MenuItem, MENU_BORDERS_TEXTURES};
 pub fn update_messages(context: &mut GameContext, keyboard: &KeyboardEventsProvider) {
     if context.messages.is_open {
         context.messages.update(keyboard)
-    } else {
-        if let Some(message) = next_message() {
-            context.messages.show(&message.title, &message.text);
-        }
+    } else if let Some(message) = next_message() {
+        context.messages.show(&message.title, &message.text);
     }        
 }
 

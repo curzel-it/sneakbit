@@ -7,10 +7,8 @@ use super::menu::MENU_BORDERS_TEXTURES;
 pub fn update_weapons_selection(context: &mut GameContext, keyboard: &KeyboardEventsProvider) {
     if context.weapons_selection.is_open() {
         context.weapons_selection.update(keyboard);
-    } else {
-        if let Some(player) = keyboard.index_of_any_player_who_is_pressing_weapon_selection() {
-            context.weapons_selection.show(player);    
-        }
+    } else if let Some(player) = keyboard.index_of_any_player_who_is_pressing_weapon_selection() {
+        context.weapons_selection.show(player);    
     }
     
 }

@@ -7,12 +7,10 @@ pub fn update_game_menu(context: &mut GameContext, keyboard: &KeyboardEventsProv
     if context.menu.is_open() {
         let viewport = current_camera_viewport();
         context.menu.update(viewport, keyboard, mouse);
-    } else {
-        if keyboard.has_menu_been_pressed_by_anyone() {   
-            let world_id = current_world_id();
-            context.menu.setup(world_id);         
-            context.menu.show();
-        }
+    } else if keyboard.has_menu_been_pressed_by_anyone() {   
+        let world_id = current_world_id();
+        context.menu.setup(world_id);         
+        context.menu.show();
     }    
 }
 
