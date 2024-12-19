@@ -158,9 +158,6 @@ impl GameEngine {
             EngineStateUpdate::SaveGame => {
                 self.save()
             }
-            EngineStateUpdate::Exit => {
-                self.exit()
-            }
             EngineStateUpdate::AddToInventory(player, species_id, _) => {
                 increment_inventory_count(*species_id, *player);
             }
@@ -194,11 +191,6 @@ impl GameEngine {
 
     fn show_toast(&mut self, toast: &Toast) {
         self.toast.show(toast);
-    }
-
-    fn exit(&mut self) {
-        println!("Got exit request!");
-        self.is_running = false;
     }
 
     fn save(&self) {

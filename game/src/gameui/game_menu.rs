@@ -1,4 +1,4 @@
-use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, spacing, start_new_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
+use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, is_game_running, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, spacing, start_new_game, stop_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
 
 use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
@@ -35,7 +35,6 @@ pub enum GameMenuItem {
     Save,
     MapEditor,
     Exit,
-    SaveAndExit,
     GameSettings, 
     NumberOfPlayers,
     Controls,
@@ -58,7 +57,6 @@ impl MenuItem for GameMenuItem {
             GameMenuItem::NewGame => "game.menu.new_game".localized(),
             GameMenuItem::MapEditor => "game.menu.map_editor".localized(),
             GameMenuItem::Exit => "game.menu.exit".localized(),
-            GameMenuItem::SaveAndExit => "game.menu.save_and_exit".localized(),
             GameMenuItem::ToggleFullScreen => "game.menu.toggle_fullscreen".localized(),
             GameMenuItem::NumberOfPlayers => "game.menu.number_of_players".localized(),
             GameMenuItem::Controls => "game.menu.controls".localized(),
@@ -175,7 +173,7 @@ impl GameMenu {
                 GameMenuItem::ToggleFullScreen,
                 GameMenuItem::MapEditor,
                 GameMenuItem::GameSettings, 
-                GameMenuItem::SaveAndExit,
+                GameMenuItem::Exit,
             ]
         } else {
             vec![
@@ -294,15 +292,10 @@ impl GameMenu {
                 ))]
             }
             GameMenuItem::Exit => {
+                println!("Got exit request!");
                 self.close();
-                vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::Exit)]
-            }
-            GameMenuItem::SaveAndExit => {
-                self.close();
-                vec![
-                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::SaveGame),
-                    WorldStateUpdate::EngineUpdate(EngineStateUpdate::Exit),
-                ]
+                stop_game();
+                vec![]
             }
         }
     }
