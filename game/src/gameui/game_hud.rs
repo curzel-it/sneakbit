@@ -1,4 +1,4 @@
-use game_core::{cached_player_position, current_camera_viewport, current_world_id, is_turn_based_game_mode, number_of_players, player_current_hp, text, time_left_for_current_turn, ui::{components::{empty_view, Spacing, Typography, View, COLOR_DEBUG_INFO_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}}, vstack, zstack};
+use game_core::{cached_player_position, current_camera_viewport, current_world_id, is_turn_based_game_mode, number_of_players, player_current_hp, text, time_left_for_current_turn, ui::{components::{empty_view, NonColor, Spacing, Typography, View, COLOR_DEATH_SCREEN_BACKGROUND, COLOR_DEBUG_INFO_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}}, vstack, zstack};
 
 use crate::GameContext;
 
@@ -7,12 +7,14 @@ pub fn update_game_hud(context: &mut GameContext) {
 }
 
 pub fn hud_ui(context: &GameContext, width: i32, height: i32, show_debug_info: bool, fps: u32) -> Layout {
+    let is_dead = context.is_dead();
+
     Layout::new(
         width, 
         height, 
-        COLOR_TRANSPARENT, // self.hud_background_color(),
+        hud_background_color(context),
         vec![
-            (AnchorPoint::TopLeft, context.basic_info_hud.ui()),
+            (AnchorPoint::TopLeft, context.basic_info_hud.ui(is_dead)),
             (AnchorPoint::BottomCenter, context.menu.ui(current_camera_viewport())),
             (AnchorPoint::BottomCenter, context.messages.ui()),
             (AnchorPoint::BottomCenter, context.weapons_selection.ui()),
@@ -20,10 +22,23 @@ pub fn hud_ui(context: &GameContext, width: i32, height: i32, show_debug_info: b
             (AnchorPoint::TopLeft, context.toast.hint_toast_ui()),
             (AnchorPoint::BottomLeft, debug_info(show_debug_info, fps)),
             (AnchorPoint::BottomRight, turn_time_left_ui()),
+            (AnchorPoint::Center, context.death_screen.ui())
             // (AnchorPoint::Center, self.death_screen.ui()),
             // (AnchorPoint::Center, self.loading_screen.ui())
         ]
     )
+}
+    
+fn hud_background_color(context: &GameContext) -> NonColor {
+    /*let progress = self.loading_screen.progress();
+    if progress > 0.0 && progress < 1.0 {
+        let alpha = if progress <= 0.5 { progress * 3.0 } else { 1.0 - (progress - 0.5) * 2.0 };
+        return COLOR_LOADING_SCREEN_BACKGROUND.with_alpha(alpha)
+    }*/
+    if context.death_screen.is_open() {
+        return COLOR_DEATH_SCREEN_BACKGROUND
+    }
+    COLOR_TRANSPARENT
 }
     
 fn debug_info(show_debug_info: bool, fps: u32) -> View {

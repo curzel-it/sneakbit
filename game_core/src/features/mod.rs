@@ -3,7 +3,6 @@ pub mod autoremove;
 pub mod camera;
 pub mod close_combat_monster;
 pub mod cutscenes;
-pub mod death_screen;
 pub mod destination;
 pub mod dialogues;
 pub mod directions;

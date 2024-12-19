@@ -49,6 +49,8 @@ impl WorldStateUpdate {
         match self {
             WorldStateUpdate::EngineUpdate(_) => {},
             WorldStateUpdate::CacheHeroProps(_) => {},
+            WorldStateUpdate::HandleHits(_) => {}
+            WorldStateUpdate::RemoveEntity(_) => {},
             _ => println!("World update: {:#?}", self)
         }   
     }

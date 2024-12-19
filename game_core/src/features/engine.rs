@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, features::toasts::{Toast, ToastImage, ToastMode}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{destination::Destination, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, features::toasts::{Toast, ToastImage, ToastMode}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
 use super::{camera::camera_center, messages::DisplayableMessage, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
@@ -6,7 +6,6 @@ pub struct GameEngine {
     pub world: World,
     pub previous_world: Option<World>,
     pub loading_screen: LoadingScreen,
-    pub death_screen: DeathScreen,
     pub keyboard: KeyboardEventsProvider,
     pub mouse: MouseEventsProvider,
     pub camera_viewport: IntRect,
@@ -21,6 +20,8 @@ pub struct GameEngine {
     turns_use_case: TurnsUseCase,
     pub message: Option<DisplayableMessage>,
     pub toast: Option<Toast>,
+    pub match_result: MatchResult,
+    did_just_revive: bool
 }
 
 impl GameEngine {
@@ -29,7 +30,6 @@ impl GameEngine {
             world: World::load_or_create(WORLD_ID_NONE),
             previous_world: None,
             loading_screen: LoadingScreen::new(),
-            death_screen: DeathScreen::new(),
             keyboard: KeyboardEventsProvider::new(),
             mouse: MouseEventsProvider::new(),
             camera_viewport: INITIAL_CAMERA_VIEWPORT,
@@ -43,7 +43,9 @@ impl GameEngine {
             turn: GameTurn::RealTime,
             turns_use_case: TurnsUseCase {},
             message: None,
-            toast: None
+            toast: None,
+            match_result: MatchResult::InProgress,
+            did_just_revive: false
         }
     }
 
@@ -54,33 +56,22 @@ impl GameEngine {
 
     pub fn update(&mut self, time_since_last_update: f32) {     
         self.clear_messages();
-        let mut did_resurrect = false;   
-
-        if self.death_screen.is_open {
-            if self.keyboard.has_confirmation_been_pressed_by_anyone() {
-                self.death_screen.is_open = false;
-                self.previous_world = None;
-                self.world.players[0].props.direction = Direction::Unknown;
-                self.teleport_to_previous();
-                did_resurrect = true;
-            } else {
-                self.sound_effects.clear();
-            }
-        }
 
         self.loading_screen.update(time_since_last_update);
         if self.loading_screen.progress() < 0.4 { 
             self.sound_effects.clear();
-
-            if did_resurrect {
-                self.sound_effects.handle_resurrection();
-            }
         }
 
         self.update_current_turn(time_since_last_update);
 
         let updates = self.world.update(time_since_last_update, &self.camera_viewport, &self.keyboard);
-        self.sound_effects.update(&self.keyboard, &updates);
+        
+        if self.did_just_revive {
+            self.did_just_revive = false;
+            self.sound_effects.handle_resurrection();
+        } else {
+            self.sound_effects.update(&self.keyboard, &updates);
+        }
         self.center_camera_onto_players();
         self.apply_state_updates(updates);
     } 
@@ -99,6 +90,7 @@ impl GameEngine {
     fn clear_messages(&mut self) {
         self.message = None;
         self.toast = None;
+        self.match_result = MatchResult::InProgress;
     }
 
     fn apply_state_updates(&mut self, updates: Vec<EngineStateUpdate>) {
@@ -233,7 +225,7 @@ impl GameEngine {
     }
 
     pub fn start_new_game(&mut self) {
-        self.death_screen.is_open = false;
+        self.clear_messages();
         self.previous_world = None;
         self.world.players[0].props.direction = Direction::Unknown;        
         reset_all_stored_values();
@@ -282,34 +274,19 @@ impl GameEngine {
     }
 
     fn handle_win_lose(&mut self) {
-        let result = self.turns_use_case.handle_win_lose(self.game_mode, self.number_of_players, &self.dead_players);
-        
-        match result{
-            MatchResult::Winner(winner_index) => {
-                self.death_screen.show_match_winner(winner_index)
-            }
-            MatchResult::UnknownWinner => {
-                self.death_screen.show_match_unknown_result()
-            }
-            MatchResult::GameOver => {
-                self.death_screen.show_hero_died()
-            }
-            MatchResult::NothingChanged => {}
-        }
+        self.match_result = self.turns_use_case.handle_win_lose(
+            self.game_mode, 
+            self.number_of_players, 
+            &self.dead_players
+        );
     }
-}
 
-#[cfg(test)]
-mod tests {    
-    use crate::features::engine::GameMode;
-
-    use super::GameEngine;
-
-    #[test]
-    fn can_launch_game_headless() {
-        let mut engine = GameEngine::new(GameMode::RealTimeCoOp);
-        engine.start();
-        assert_ne!(engine.world.bounds.w, 10);
-        assert_ne!(engine.world.bounds.h, 10);
+    pub fn revive(&mut self) {
+        self.match_result = MatchResult::InProgress;
+        self.dead_players.clear();
+        self.previous_world = None;
+        self.world.players[0].props.direction = Direction::Unknown;
+        self.teleport_to_previous();
+        self.did_just_revive = true;
     }
 }

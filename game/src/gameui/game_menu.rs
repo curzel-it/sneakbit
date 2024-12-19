@@ -1,8 +1,21 @@
 use std::process;
 
-use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, save_game, set_wants_fullscreen, spacing, start_new_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect, wants_fullscreen};
+use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_camera_viewport, current_game_mode, current_world_id, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, save_game, set_wants_fullscreen, spacing, start_new_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect, wants_fullscreen};
+
+use crate::features::context::GameContext;
 
 use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, messages::MessagesDisplay, map_editor::MapEditor, menu::{Menu, MenuItem}};
+
+pub fn update_game_menu(context: &mut GameContext, keyboard: &KeyboardEventsProvider, mouse: &MouseEventsProvider) {
+    if context.menu.is_open() {
+        let viewport = current_camera_viewport();
+        context.menu.update(viewport, keyboard, mouse);
+    } else if keyboard.has_menu_been_pressed_by_anyone() && !context.is_dead() {   
+        let world_id = current_world_id();
+        context.menu.setup(world_id);         
+        context.menu.show();
+    }    
+}
 
 pub struct GameMenu {
     pub current_world_id: u32,

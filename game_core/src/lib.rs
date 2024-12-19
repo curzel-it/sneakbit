@@ -12,6 +12,7 @@ use input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provi
 use features::toasts::{Toast, CToast};
 use maps::biome_tiles::BiomeTile;
 use maps::construction_tiles::ConstructionTile;
+use multiplayer::turns_use_case::{CMatchResult, MatchResult};
 use multiplayer::{modes::GameMode, turns::GameTurn};
 use ui::layouts::Layout;
 use utils::{rect::{IntPoint, IntRect}, strings::{c_char_ptr_to_string, string_to_c_char}, vector::Vector2d};
@@ -253,11 +254,6 @@ pub extern "C" fn current_loading_screen_progress() -> f32 {
 }
 
 #[no_mangle]
-pub extern "C" fn shows_death_screen() -> bool {
-    engine().death_screen.is_open
-}
-
-#[no_mangle]
 pub extern "C" fn number_of_kunai_in_inventory(player: usize) -> i32 {
     inventory_count(&SPECIES_KUNAI, player) as i32
 }
@@ -467,4 +463,18 @@ pub extern "C" fn next_toast_c() -> CToast {
 
 pub fn hud_ui(width: i32, height: i32) -> Layout {
     engine().hud_ui(width, height)
+}
+
+pub fn match_result() -> &'static MatchResult {
+    &engine().match_result
+}
+
+#[no_mangle]
+pub extern "C" fn match_result_c() -> CMatchResult {
+    engine().match_result.c_repr()
+}
+
+#[no_mangle]
+pub extern "C" fn revive() {
+    engine_mut().revive()
 }

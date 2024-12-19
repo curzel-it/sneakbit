@@ -1,4 +1,4 @@
-use game_core::{constants::{MAX_PLAYERS, SPRITE_SHEET_INVENTORY}, currently_active_players, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, features::storage::{get_value_for_global_key, inventory_count, StorageKey}, hstack, player_current_hp, shows_death_screen, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use game_core::{constants::{MAX_PLAYERS, SPRITE_SHEET_INVENTORY}, currently_active_players, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, features::storage::{get_value_for_global_key, inventory_count, StorageKey}, hstack, player_current_hp, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 pub struct BasicInfoHud {
     players: Vec<PlayerHud>
@@ -15,10 +15,10 @@ impl BasicInfoHud {
         self.players.iter_mut().for_each(|p| p.update());
     }
 
-    pub fn ui(&self) -> View {
+    pub fn ui(&self, is_dead: bool) -> View {
         let active_players = currently_active_players();        
         let include_header = active_players.len() > 1;
-        let max_hp_to_show = 60.0;
+        let max_hp_to_show = if is_dead { -99.0 } else { 60.0 };
         
         zstack!(
             Spacing::SM,
@@ -92,7 +92,7 @@ impl PlayerHud {
     }
 
     fn hp_ui(&self, max_hp_to_show: f32) -> View {
-        if self.hp < max_hp_to_show && !shows_death_screen() {
+        if self.hp < max_hp_to_show {
             let typography = if self.hp < 30.0 { Typography::PlayerHudHighlight } else { Typography::PlayerHudText };
             vstack!(
                 Spacing::Zero,

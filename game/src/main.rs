@@ -6,12 +6,11 @@ mod rendering;
 
 use std::{env, process};
 
-use features::{audio::play_audio, context::GameContext, inputs::{handle_keyboard_updates, handle_mouse_updates}, paths::local_path};
+use features::{audio::play_audio, context::GameContext, death_screen::update_death_screen, inputs::{handle_keyboard_updates, handle_mouse_updates}, paths::local_path};
 use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_keyboard_state, current_mouse_state, current_soundtrack_string, current_world_id, features::sound_effects::is_music_enabled, initialize_game, lang::localizable::LANG_EN, multiplayer::modes::GameMode, update_game};
-use gameui::{game_hud::update_game_hud, menu::update_game_menu, messages::update_messages, toasts::update_toasts, weapon_selection::update_weapons_selection};
+use gameui::{game_hud::update_game_hud, game_menu::update_game_menu, messages::update_messages, toasts::update_toasts, weapon_selection::update_weapons_selection};
 use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, load_last_fullscreen_settings, start_rl}, worlds::render_frame};
 use sys_locale::get_locale;
-
 
 fn main() {
     initialize_config_paths(
@@ -52,6 +51,7 @@ fn main() {
         update_weapons_selection(&mut context, keyboard);
         update_messages(&mut context, keyboard);
         update_game_menu(&mut context, keyboard, mouse);
+        update_death_screen(&mut context, keyboard);
         
         if !context.is_game_paused() {
             update_game(time_since_last_update)
