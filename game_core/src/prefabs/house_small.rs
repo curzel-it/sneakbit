@@ -1,4 +1,4 @@
-use crate::{constants::{HOUSE_INTERIOR_COLUMNS, HOUSE_INTERIOR_ROWS}, entities::{known_species::{SPECIES_SEAT_GREEN, SPECIES_TABLE, SPECIES_TELEPORTER}, species::{make_entity_by_species, Species}}, features::{destination::Destination, entity::Entity}, maps::{biome_tiles::Biome, constructions_tiles::Construction}, utils::{ids::get_next_id, rect::IntRect}, worlds::{world::World, world_type::WorldType}};
+use crate::{constants::{HOUSE_INTERIOR_COLUMNS, HOUSE_INTERIOR_ROWS}, entities::{known_species::{SPECIES_SEAT_GREEN, SPECIES_TABLE, SPECIES_TELEPORTER}, species::{make_entity_by_species, Species}}, features::{destination::Destination, entity::Entity}, maps::{biome_tiles::Biome, construction_tiles::Construction}, utils::{ids::get_next_id, rect::IntRect}, worlds::{world::World, world_type::WorldType}};
 
 pub fn new_small_house(species: &Species, source_world_id: u32, x: i32, y: i32) -> Vec<Entity> {
     let mut building = species.make_entity();
@@ -33,12 +33,12 @@ pub fn new_small_house(species: &Species, source_world_id: u32, x: i32, y: i32) 
     for row in [0, 1, HOUSE_INTERIOR_ROWS + 2] {
         for col in 0..(HOUSE_INTERIOR_COLUMNS + 1) {
             if row != HOUSE_INTERIOR_ROWS + 2 || (col != door_back1.frame.x as usize && col != door_back2.frame.x as usize) {
-                first_floor.constructions_tiles.update_tile(row, col, Construction::LightWall);
+                first_floor.construction_tiles.update_tile(row, col, Construction::LightWall);
             }
         }
     }
     for row in 0..(HOUSE_INTERIOR_ROWS + 3) {
-        first_floor.constructions_tiles.update_tile(row, 0, Construction::LightWall);
+        first_floor.construction_tiles.update_tile(row, 0, Construction::LightWall);
     }
 
     let mut table = make_entity_by_species(SPECIES_TABLE);

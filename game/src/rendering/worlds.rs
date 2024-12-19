@@ -1,4 +1,4 @@
-use game_core::{camera_viewport, camera_viewport_offset, can_render_frame, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, engine, is_limited_visibility, is_night};
+use game_core::{camera_viewport, camera_viewport_offset, can_render_frame, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, current_world_biome_tiles, current_world_construction_tiles, is_limited_visibility, is_night};
 use raylib::prelude::*;
 
 use crate::{gameui::game_hud::hud_ui, GameContext};
@@ -6,8 +6,8 @@ use crate::{gameui::game_hud::hud_ui, GameContext};
 use super::{entities::render_entities, tile_map::render_tile_map, tiles::render_tiles, ui::{get_rendering_config, render_layout}};
 
 pub fn render_frame(context: &mut GameContext) {
-    let engine = engine();
-    let world = &engine.world;
+    // let engine = engine();
+    // let world = &engine.world;
 
     let config = get_rendering_config();
     let fps = context.rl.get_fps();
@@ -34,8 +34,8 @@ pub fn render_frame(context: &mut GameContext) {
                 &mut d, 
                 &camera_viewport, 
                 &camera_viewport_offset,
-                &world.biome_tiles.tiles,
-                &world.constructions_tiles.tiles
+                &current_world_biome_tiles(),
+                &current_world_construction_tiles()
             );
         } else {
             let success = render_tile_map(
@@ -48,8 +48,8 @@ pub fn render_frame(context: &mut GameContext) {
                     &mut d, 
                     &camera_viewport, 
                     &camera_viewport_offset,
-                    &world.biome_tiles.tiles,
-                    &world.constructions_tiles.tiles
+                    &current_world_biome_tiles(),
+                    &current_world_construction_tiles()
                 );
             }
         }
@@ -58,7 +58,7 @@ pub fn render_frame(context: &mut GameContext) {
         render_limited_visibility(&mut d, screen_width, screen_height);
     }
 
-    let legacy_hud = engine.hud_ui(
+    let legacy_hud = game_core::hud_ui(
         config.canvas_size.x as i32, 
         config.canvas_size.y as i32
     );

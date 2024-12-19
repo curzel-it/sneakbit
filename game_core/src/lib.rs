@@ -1,16 +1,19 @@
 #![allow(clippy::new_without_default, clippy::not_unsafe_ptr_arg_deref)]
 
-use std::{collections::HashSet, ffi::CString, path::PathBuf, ptr};
+use std::{collections::HashSet, path::PathBuf, ptr};
 use std::os::raw::c_char;
 
 use config::initialize_config_paths;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
 use features::messages::{CDisplayableMessage, DisplayableMessage, DisplayableMessageCRepr};
-use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::{WorldStateUpdate}, toasts::ToastCRepr};
+use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::WorldStateUpdate, toasts::ToastCRepr};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
 use input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider};
 use features::toasts::{Toast, CToast};
+use maps::biome_tiles::BiomeTile;
+use maps::construction_tiles::ConstructionTile;
 use multiplayer::{modes::GameMode, turns::GameTurn};
+use ui::layouts::Layout;
 use utils::{rect::{IntPoint, IntRect}, strings::{c_char_ptr_to_string, string_to_c_char}, vector::Vector2d};
 
 pub mod config;
@@ -29,7 +32,7 @@ pub mod worlds;
 
 static mut ENGINE: *mut GameEngine = std::ptr::null_mut();
 
-pub fn engine() -> &'static GameEngine {
+fn engine() -> &'static GameEngine {
     unsafe {
         &*ENGINE
     }
@@ -57,26 +60,6 @@ pub fn is_creative_mode() -> bool {
 
 pub fn current_game_mode() -> GameMode {
     engine().game_mode
-}
-
-#[no_mangle]
-pub extern "C" fn free_c_char_ptr(ptr: *const c_char) {
-    unsafe {
-        if ptr.is_null() {
-            return;
-        }
-        _ = CString::from_raw(ptr as *mut c_char);
-    }
-}
-
-#[no_mangle]
-pub extern "C" fn is_game_running() -> bool {
-    engine().is_running
-}
-
-#[no_mangle]
-pub extern "C" fn stop_game() {
-    engine_mut().is_running = false
 }
 
 #[no_mangle]
@@ -337,12 +320,28 @@ pub extern "C" fn start_new_game() {
     engine_mut().start_new_game();    
 }
 
-pub fn engine_set_wants_fullscreen(enabled: bool) {
+pub fn wants_fullscreen() -> bool {
+    engine().wants_fullscreen
+}
+
+pub fn set_wants_fullscreen(enabled: bool) {
     engine_mut().wants_fullscreen = enabled;
+}
+
+pub fn save_game() {
+    engine().save();
 }
 
 pub fn current_sound_effects() -> HashSet<SoundEffect> {
     engine().sound_effects.current_sound_effects.clone()
+}
+
+pub fn current_world_biome_tiles() -> &'static Vec<Vec<BiomeTile>> {
+    &engine().world.biome_tiles.tiles
+}
+
+pub fn current_world_construction_tiles() -> &'static Vec<Vec<ConstructionTile>> {
+    &engine().world.construction_tiles.tiles
 }
 
 #[no_mangle]
@@ -464,4 +463,8 @@ pub extern "C" fn next_toast() -> &'static Option<Toast> {
 #[no_mangle]
 pub extern "C" fn next_toast_c() -> CToast {
     engine().toast.c_repr()
+}
+
+pub fn hud_ui(width: i32, height: i32) -> Layout {
+    engine().hud_ui(width, height)
 }

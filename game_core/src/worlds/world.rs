@@ -1,6 +1,6 @@
 use std::{cell::RefCell, cmp::Ordering};
 
-use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 use crate::features::{hitmaps::{EntityIdsMap, Hitmap}, entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
@@ -11,7 +11,7 @@ pub struct World {
     pub revision: u32,
     pub bounds: IntRect,
     pub biome_tiles: TileSet<BiomeTile>,
-    pub constructions_tiles: TileSet<ConstructionTile>,
+    pub construction_tiles: TileSet<ConstructionTile>,
     pub entities: RefCell<Vec<Entity>>,    
     pub visible_entities: Vec<(usize, u32)>,
     pub ephemeral_state: bool,
@@ -44,7 +44,7 @@ impl World {
             revision: 0,
             bounds: IntRect::from_origin(WORLD_SIZE_COLUMNS as i32, WORLD_SIZE_ROWS as i32),
             biome_tiles: TileSet::empty(),
-            constructions_tiles: TileSet::empty(),
+            construction_tiles: TileSet::empty(),
             entities: RefCell::new(vec![]),
             visible_entities: vec![],
             ephemeral_state: false,
@@ -266,7 +266,7 @@ impl World {
     }
 
     fn update_construction_tile(&mut self, row: usize, col: usize, new_construction: Construction) {
-        self.constructions_tiles.update_tile(row, col, new_construction);
+        self.construction_tiles.update_tile(row, col, new_construction);
         self.update_tiles_hitmap();
     }  
     

@@ -1,4 +1,6 @@
-use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, engine, engine_set_wants_fullscreen, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, spacing, start_new_game, stop_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
+use std::process;
+
+use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, save_game, set_wants_fullscreen, spacing, start_new_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect, wants_fullscreen};
 
 use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, messages::MessagesDisplay, map_editor::MapEditor, menu::{Menu, MenuItem}};
 
@@ -249,17 +251,17 @@ impl GameMenu {
             }
             GameMenuItem::ToggleFullScreen => {
                 self.close();
-                if engine().wants_fullscreen {
-                    engine_set_wants_fullscreen(false);
+                if wants_fullscreen() {
+                    set_wants_fullscreen(false);
                     set_value_for_key(&StorageKey::fullscreen(), 0);
                 } else {
-                    engine_set_wants_fullscreen(true);
+                    set_wants_fullscreen(true);
                     set_value_for_key(&StorageKey::fullscreen(), 1);
                 }
             }
             GameMenuItem::Save => {
                 self.close();
-                engine().save();
+                save_game();
             }
             GameMenuItem::MapEditor => {
                 self.state = MenuState::MapEditor;
@@ -290,7 +292,7 @@ impl GameMenu {
             GameMenuItem::Exit => {
                 println!("Got exit request!");
                 self.close();
-                stop_game();
+                process::exit(0);   
             }
         }
     }

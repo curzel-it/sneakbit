@@ -2,7 +2,7 @@ use image::{DynamicImage, GenericImageView, ImageBuffer, RgbImage, RgbaImage, im
 use std::{error::Error, fs::{self, File}, io::BufWriter, path::Path, sync::mpsc::{self, Receiver, Sender}, thread};
 use regex::Regex;
 
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, TILE_SIZE}, initialize_game, lang::localizable::LANG_EN, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::{SpriteTile, TileSet}}, multiplayer::modes::GameMode, worlds::world::World};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, TILE_SIZE}, initialize_game, lang::localizable::LANG_EN, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::{SpriteTile, TileSet}}, multiplayer::modes::GameMode, worlds::world::World};
 
 struct Job {
     world_id: u32,
@@ -26,7 +26,7 @@ pub fn generate_tile_map_image_from_json(
 
     generate_tile_map_image(
         &world.biome_tiles,
-        &world.constructions_tiles,
+        &world.construction_tiles,
         variant,
         sprite_sheet_biome_tiles_path,
         sprite_sheet_construction_tiles_path,

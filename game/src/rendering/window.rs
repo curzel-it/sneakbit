@@ -1,4 +1,4 @@
-use game_core::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE}, current_game_mode, engine, engine_set_wants_fullscreen, features::storage::{bool_for_global_key, StorageKey}, is_creative_mode, number_of_players, ui::components::Typography, utils::vector::Vector2d, window_size_changed};
+use game_core::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE}, current_game_mode, features::storage::{bool_for_global_key, StorageKey}, is_creative_mode, number_of_players, set_wants_fullscreen, ui::components::Typography, utils::vector::Vector2d, wants_fullscreen, window_size_changed};
 use raylib::prelude::*;
 
 use crate::{features::font_helpers::{bold_font_path, latin_characters, regular_font_path}, is_debug_build, rendering::ui::{get_rendering_config_mut, is_rendering_config_initialized}, GameContext};
@@ -51,7 +51,7 @@ pub fn handle_window_updates(context: &mut GameContext) {
 }
 
 fn handle_fullscreen_changed(context: &mut GameContext) {
-    let wants_fullscreen = engine().wants_fullscreen;
+    let wants_fullscreen = wants_fullscreen();
     if wants_fullscreen != context.is_fullscreen {
         context.is_fullscreen = wants_fullscreen;
         context.needs_window_init = true;
@@ -168,5 +168,5 @@ fn font_scale_for_window_width(width: f32) -> f32 {
 
 pub fn load_last_fullscreen_settings() {
     let was_fullscreen = bool_for_global_key(&StorageKey::fullscreen());
-    engine_set_wants_fullscreen(was_fullscreen);
+    set_wants_fullscreen(was_fullscreen);
 }

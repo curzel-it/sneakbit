@@ -86,11 +86,11 @@ impl Entity {
 
     fn check_stoppers(&self, world: &World) -> Vec<WorldStateUpdate> {
         if self.frame.x < 0 { return vec![] }
-        if self.frame.x as usize >= world.constructions_tiles.tiles[0].len() { return vec![] }
+        if self.frame.x as usize >= world.construction_tiles.tiles[0].len() { return vec![] }
         if self.frame.y < 0 { return vec![] }
-        if self.frame.y as usize >= world.constructions_tiles.tiles.len() { return vec![] }
+        if self.frame.y as usize >= world.construction_tiles.tiles.len() { return vec![] }
         
-        let construction = &world.constructions_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
+        let construction = &world.construction_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
         let biome = &world.biome_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
         let hits = world.entity_ids(self.frame.x, self.frame.y);
 

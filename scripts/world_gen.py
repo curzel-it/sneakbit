@@ -153,7 +153,7 @@ world_data = {
         "tiles": tile_strings,
         "sheet_id": 1002
     },
-    "constructions_tiles": {
+    "construction_tiles": {
         "tiles": ["0" * WIDTH] * HEIGHT,
         "sheet_id": 1003
     },

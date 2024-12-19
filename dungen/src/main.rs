@@ -3,7 +3,7 @@ use rand::Rng;
 use std::fs::File;
 use std::io::Write;
 
-use game_core::{maps::{biome_tiles::BiomeTile, constructions_tiles::ConstructionTile, tiles::TileSet}, worlds::{world::World, world_type::WorldType}};
+use game_core::{maps::{biome_tiles::BiomeTile, construction_tiles::ConstructionTile, tiles::TileSet}, worlds::{world::World, world_type::WorldType}};
 
 /*
 Dungeon 
@@ -451,7 +451,7 @@ fn main() {
     // Assemble world data
     let mut world = World::new(args.world_id);
     world.biome_tiles = biome_tileset;
-    world.constructions_tiles = construction_tileset;
+    world.construction_tiles = construction_tileset;
     world.world_type = if args.padding == 0 { WorldType::Dungeon } else { WorldType::Exterior };
     world.ephemeral_state = true;
 

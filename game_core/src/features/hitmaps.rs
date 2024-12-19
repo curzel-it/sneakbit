@@ -106,7 +106,7 @@ impl World {
             for col in min_col..max_col {
                 if !self.tiles_hitmap.hits(col, row) {
                     let biome = &self.biome_tiles.tiles[row][col];
-                    let constructions = &self.constructions_tiles.tiles[row][col];
+                    let constructions = &self.construction_tiles.tiles[row][col];
                     let is_obstacle = (biome.is_obstacle() || constructions.is_obstacle()) && !constructions.is_bridge();
 
                     if is_obstacle {
