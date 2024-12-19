@@ -60,9 +60,7 @@ pub fn render_frame(context: &mut GameContext) {
 
     let legacy_hud = engine.hud_ui(
         config.canvas_size.x as i32, 
-        config.canvas_size.y as i32,
-        config.show_debug_info,
-        fps
+        config.canvas_size.y as i32
     );
     render_layout(&legacy_hud, &mut d);
 

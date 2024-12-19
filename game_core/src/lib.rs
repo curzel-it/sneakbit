@@ -459,3 +459,14 @@ pub fn current_camera_viewport() -> &'static IntRect {
 pub fn apply_world_state_updates(updates: Vec<WorldStateUpdate>) {
     engine_mut().apply_world_state_updates(updates)
 }
+
+pub fn is_turn_based_game_mode() -> bool {
+    engine().game_mode.is_turn_based()
+}
+
+pub fn time_left_for_current_turn() -> f32 {
+    match engine().turn {
+        multiplayer::turns::GameTurn::RealTime => 0.0,
+        multiplayer::turns::GameTurn::Player(_, time_left) => time_left
+    }
+}
