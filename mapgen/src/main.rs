@@ -1,8 +1,16 @@
 use image::{DynamicImage, GenericImageView, ImageBuffer, RgbImage, RgbaImage, imageops::overlay};
-use std::{io::BufWriter, path::Path, fs::{self, File}, error::Error};
+use std::{error::Error, fs::{self, File}, io::BufWriter, path::Path, sync::mpsc::{self, Receiver, Sender}, thread};
 use regex::Regex;
 
 use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, TILE_SIZE}, initialize_game, lang::localizable::LANG_EN, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::{SpriteTile, TileSet}}, multiplayer::modes::GameMode, worlds::world::World};
+
+struct Job {
+    world_id: u32,
+    variant: i32,
+    sprite_sheet_biome_tiles_path: String,
+    sprite_sheet_construction_tiles_path: String,
+    output_image_path: String,
+}
 
 pub fn generate_tile_map_image_from_json(
     world_id: u32,
@@ -110,6 +118,7 @@ pub fn generate_tile_map_image(
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    // Initialize configurations and game
     initialize_config_paths(
         false,
         TILE_SIZE * 1.8,
@@ -131,7 +140,67 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     entries.sort_by_key(|entry| entry.file_name());
 
-    for entry in entries {
+    // Define the number of threads
+    let num_threads = 4;
+
+    // Create channels for each thread
+    let mut senders: Vec<Sender<Option<Job>>> = Vec::with_capacity(num_threads);
+    let mut handles = Vec::with_capacity(num_threads);
+
+    for i in 0..num_threads {
+        let (tx, rx): (Sender<Option<Job>>, Receiver<Option<Job>>) = mpsc::channel();
+        senders.push(tx);
+
+        // Spawn a worker thread
+        let handle = thread::spawn(move || {
+            while let Ok(job_opt) = rx.recv() {
+                match job_opt {
+                    Some(job) => {
+                        println!(
+                            "[Thread {}] Processing world_id: {}, variant: {}",
+                            i, job.world_id, job.variant
+                        );
+                        if let Err(e) = generate_tile_map_image_from_json(
+                            job.world_id,
+                            job.variant,
+                            &job.sprite_sheet_biome_tiles_path,
+                            &job.sprite_sheet_construction_tiles_path,
+                            &job.output_image_path,
+                        ) {
+                            eprintln!(
+                                "[Thread {}] Error generating image '{}': {}",
+                                i, job.output_image_path, e
+                            );
+                        } else {
+                            println!(
+                                "[Thread {}] Tile map image saved to '{}'",
+                                i, job.output_image_path
+                            );
+                        }
+                    }
+                    None => {
+                        // Termination signal received
+                        println!("[Thread {}] Terminating.", i);
+                        break;
+                    }
+                }
+            }
+        });
+        handles.push(handle);
+    }
+
+    // Prepare sprite sheet paths once
+    let sprite_sheet_biome_tiles_path = assets_dir.join("tiles_biome.png").to_string_lossy().to_string();
+    let sprite_sheet_construction_tiles_path = assets_dir.join("tiles_constructions.png").to_string_lossy().to_string();
+
+    // Verify sprite sheets exist
+    if !Path::new(&sprite_sheet_biome_tiles_path).exists() || !Path::new(&sprite_sheet_construction_tiles_path).exists() {
+        eprintln!("!..Sprite sheets not found in 'assets' directory.");
+        return Ok(());
+    }
+
+    // Assign files to threads in round-robin fashion
+    for (index, entry) in entries.iter().enumerate() {
         let path = entry.path();
         println!("> Checking: {:#?}", path);
         let filename = path.file_name().unwrap().to_str().unwrap();
@@ -171,26 +240,32 @@ fn main() -> Result<(), Box<dyn Error>> {
 
             println!("...Generating image for '{}', variant {}", world_id, variant);
 
-            let sprite_sheet_biome_tiles_path = assets_dir.join("tiles_biome.png");
-            let sprite_sheet_construction_tiles_path = assets_dir.join("tiles_constructions.png");
-
-            if !sprite_sheet_biome_tiles_path.exists() || !sprite_sheet_construction_tiles_path.exists() {
-                eprintln!("!..Sprite sheets not found in 'assets' directory.");
-                continue;
-            }
-
-            if let Err(e) = generate_tile_map_image_from_json(
-                world_id_u32,
+            // Create a Job instance
+            let job = Job {
+                world_id: world_id_u32,
                 variant,
-                &sprite_sheet_biome_tiles_path.to_string_lossy(),
-                &sprite_sheet_construction_tiles_path.to_string_lossy(),
-                &output_image_path.to_string_lossy(),
-            ) {
-                eprintln!("!..Error generating image '{}': {}", output_image_filename, e);
-            } else {
-                println!("!..Tile map image saved to '{}'", output_image_filename);
+                sprite_sheet_biome_tiles_path: sprite_sheet_biome_tiles_path.clone(),
+                sprite_sheet_construction_tiles_path: sprite_sheet_construction_tiles_path.clone(),
+                output_image_path: output_image_path.to_string_lossy().to_string(),
+            };
+
+            // Assign the job to a thread in round-robin fashion
+            let thread_index = index % num_threads;
+            if let Some(sender) = senders.get(thread_index) {
+                sender.send(Some(job)).expect("Failed to send job to thread");
             }
         }
     }
+
+    // After all jobs are sent, send termination signals
+    for sender in &senders {
+        sender.send(None).expect("Failed to send termination signal");
+    }
+
+    // Wait for all threads to finish
+    for handle in handles {
+        handle.join().expect("Thread panicked");
+    }
+
     Ok(())
 }
