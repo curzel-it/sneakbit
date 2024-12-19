@@ -14,7 +14,6 @@ pub mod hits_handling_use_case;
 pub mod light_conditions;
 pub mod linear_movement;
 pub mod links;
-pub mod loading_screen;
 pub mod locks;
 pub mod messages;
 pub mod migrations;

@@ -6,7 +6,7 @@ mod rendering;
 
 use std::{env, process};
 
-use features::{audio::play_audio, context::GameContext, death_screen::update_death_screen, inputs::{handle_keyboard_updates, handle_mouse_updates}, paths::local_path};
+use features::{audio::play_audio, context::GameContext, death_screen::update_death_screen, inputs::{handle_keyboard_updates, handle_mouse_updates}, loading_screen::update_loading_screen, paths::local_path};
 use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_keyboard_state, current_mouse_state, current_soundtrack_string, current_world_id, features::sound_effects::is_music_enabled, initialize_game, lang::localizable::LANG_EN, multiplayer::modes::GameMode, update_game};
 use gameui::{game_hud::update_game_hud, game_menu::update_game_menu, messages::update_messages, toasts::update_toasts, weapon_selection::update_weapons_selection};
 use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, load_last_fullscreen_settings, start_rl}, worlds::render_frame};
@@ -52,12 +52,13 @@ fn main() {
         update_messages(&mut context, keyboard);
         update_game_menu(&mut context, keyboard, mouse);
         update_death_screen(&mut context, keyboard);
+        update_loading_screen(&mut context, time_since_last_update);
         
         if !context.is_game_paused() {
             update_game(time_since_last_update);
-            play_audio(&context);
         } 
-        handle_world_changed(&mut context);
+        play_audio(&mut context);
+        handle_world_changed(&mut context);        
         render_frame(&mut context);
     }
 }
@@ -66,6 +67,7 @@ fn handle_world_changed(context: &mut GameContext) {
     let current_world = current_world_id();
     if context.latest_world != current_world {
         context.latest_world = current_world;
+        context.loading_screen.animate_world_transition();
         load_tile_map_textures(&mut context.rl, &context.rl_thread, current_world);
 
         if is_music_enabled() {

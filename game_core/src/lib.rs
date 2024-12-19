@@ -14,7 +14,6 @@ use maps::biome_tiles::BiomeTile;
 use maps::construction_tiles::ConstructionTile;
 use multiplayer::turns_use_case::{CMatchResult, MatchResult};
 use multiplayer::{modes::GameMode, turns::GameTurn};
-use ui::layouts::Layout;
 use utils::{rect::{IntPoint, IntRect}, strings::{c_char_ptr_to_string, string_to_c_char}, vector::Vector2d};
 
 pub mod config;
@@ -209,12 +208,6 @@ pub extern "C" fn initialize_config(
 }
 
 #[no_mangle]
-pub extern "C" fn can_render_frame() -> bool {
-    let engine = engine();
-    !engine.loading_screen.is_in_progress() || engine.loading_screen.progress() > 0.4
-}
-
-#[no_mangle]
 pub extern "C" fn current_biome_tiles_variant() -> i32 {
     engine().world.biome_tiles.current_variant()
 }
@@ -246,11 +239,6 @@ fn to_path(value: *const c_char) -> PathBuf {
 #[no_mangle]
 pub extern "C" fn current_world_id() -> u32 {
     engine().world.id
-}
-
-#[no_mangle]
-pub extern "C" fn current_loading_screen_progress() -> f32 {
-    engine().loading_screen.progress()
 }
 
 #[no_mangle]
@@ -459,10 +447,6 @@ pub extern "C" fn next_toast() -> &'static Option<Toast> {
 #[no_mangle]
 pub extern "C" fn next_toast_c() -> CToast {
     engine().toast.c_repr()
-}
-
-pub fn hud_ui(width: i32, height: i32) -> Layout {
-    engine().hud_ui(width, height)
 }
 
 pub fn match_result() -> &'static MatchResult {

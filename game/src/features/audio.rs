@@ -24,9 +24,13 @@ pub struct AudioManager {
     sender: Sender<AudioCommand>,
 }
 
-pub fn play_audio(context: &GameContext) {
-    play_sound_effects(context);
-    play_music(context);
+pub fn play_audio(context: &mut GameContext) {
+    if context.can_render_frame() {
+        if !context.is_game_paused() {
+            play_sound_effects(context);
+        }
+        play_music(context);
+    }
 }
 
 impl AudioManager {
@@ -197,13 +201,11 @@ fn play_sound_effects(context: &GameContext) {
     }
 }
 
-fn play_music(context: &GameContext) {
+fn play_music(context: &mut GameContext) {
     if is_music_enabled() {
-        if let Some(track_name) = current_soundtrack_string() {
-            if !track_name.is_empty() {
-                context.audio_manager.play_music(track_name.clone());
-            }
-        }
+        let track_name = current_soundtrack_string().unwrap_or(context.last_sound_track.clone());
+        context.last_sound_track = track_name.clone();
+        context.audio_manager.play_music(track_name);
     } else {
         context.audio_manager.stop_music();
     }

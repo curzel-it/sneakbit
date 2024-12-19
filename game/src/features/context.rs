@@ -1,4 +1,4 @@
-use super::{audio::AudioManager, death_screen::DeathScreen};
+use super::{audio::AudioManager, death_screen::DeathScreen, loading_screen::LoadingScreen};
 use crate::gameui::{basic_info_hud::BasicInfoHud, game_menu::GameMenu, messages::MessagesDisplay, toasts::ToastDisplay, weapon_selection::WeaponsGrid};
 use raylib::prelude::*;
 
@@ -19,6 +19,8 @@ pub struct GameContext {
     pub basic_info_hud: BasicInfoHud,
     pub toast: ToastDisplay,
     pub death_screen: DeathScreen,
+    pub loading_screen: LoadingScreen,
+    pub last_sound_track: String,
 }
 
 impl GameContext {
@@ -31,6 +33,7 @@ impl GameContext {
             is_fullscreen: false,
             total_run_time: 0.0,
             using_controller: false,
+            last_sound_track: "".to_owned(),
             last_number_of_players: 1,
             last_pvp: false,
             audio_manager: AudioManager::new(),
@@ -40,6 +43,7 @@ impl GameContext {
             basic_info_hud: BasicInfoHud::new(),
             toast: ToastDisplay::new(),            
             death_screen: DeathScreen::new(),
+            loading_screen: LoadingScreen::new(),
         }
     }
 
@@ -49,5 +53,9 @@ impl GameContext {
 
     pub fn is_dead(&self) -> bool {
         self.death_screen.is_open()
+    }
+
+    pub fn can_render_frame(&self) -> bool {
+        !self.loading_screen.is_in_progress() || self.loading_screen.progress() > 0.4
     }
 }

@@ -1,4 +1,4 @@
-use game_core::{cached_player_position, current_camera_viewport, current_world_id, is_turn_based_game_mode, number_of_players, player_current_hp, text, time_left_for_current_turn, ui::{components::{empty_view, NonColor, Spacing, Typography, View, COLOR_DEATH_SCREEN_BACKGROUND, COLOR_DEBUG_INFO_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}}, vstack, zstack};
+use game_core::{cached_player_position, current_camera_viewport, current_world_id, is_turn_based_game_mode, number_of_players, player_current_hp, text, time_left_for_current_turn, ui::{components::{empty_view, NonColor, Spacing, Typography, View, WithAlpha, COLOR_DEATH_SCREEN_BACKGROUND, COLOR_DEBUG_INFO_BACKGROUND, COLOR_LOADING_SCREEN_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}}, vstack, zstack};
 
 use crate::GameContext;
 
@@ -22,19 +22,18 @@ pub fn hud_ui(context: &GameContext, width: i32, height: i32, show_debug_info: b
             (AnchorPoint::TopLeft, context.toast.hint_toast_ui()),
             (AnchorPoint::BottomLeft, debug_info(show_debug_info, fps)),
             (AnchorPoint::BottomRight, turn_time_left_ui()),
-            (AnchorPoint::Center, context.death_screen.ui())
-            // (AnchorPoint::Center, self.death_screen.ui()),
-            // (AnchorPoint::Center, self.loading_screen.ui())
+            (AnchorPoint::Center, context.death_screen.ui()),
+            (AnchorPoint::Center, context.loading_screen.ui())
         ]
     )
 }
     
 fn hud_background_color(context: &GameContext) -> NonColor {
-    /*let progress = self.loading_screen.progress();
+    let progress = context.loading_screen.progress();
     if progress > 0.0 && progress < 1.0 {
         let alpha = if progress <= 0.5 { progress * 3.0 } else { 1.0 - (progress - 0.5) * 2.0 };
         return COLOR_LOADING_SCREEN_BACKGROUND.with_alpha(alpha)
-    }*/
+    }
     if context.death_screen.is_open() {
         return COLOR_DEATH_SCREEN_BACKGROUND
     }
