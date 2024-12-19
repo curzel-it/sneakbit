@@ -7,7 +7,7 @@ struct ContentView: View {
             GameViewRepresentable()
             HpView()
             ControllerEmulatorView()
-            MenuView()
+            MessagesView()
             OptionsView()
             LoadingScreen()
             DeathScreen()

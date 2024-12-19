@@ -25,12 +25,12 @@ struct ToastView: View {
                         .foregroundStyle(viewModel.borderColor)
                     
                     RoundedRectangle(cornerRadius: 3)
-                        .foregroundStyle(viewModel.backgroundColor)
+                        .foregroundStyle(Color.toastBackground)
                         .padding(2)
                 }
             }
             .shadow(radius: 4)
-            .opacity(viewModel.opacity)
+            .opacity(viewModel.isVisible ? 1 : 0)
             .positioned(viewModel.position)
             .padding()
             .padding(.top, viewModel.safeAreaInsets.top)
@@ -49,9 +49,7 @@ private class ToastViewModel: ObservableObject {
         engine.safeAreaInsets
     }
     
-    @Published var backgroundColor: Color = .black
     @Published var borderColor: Color = .black
-    @Published var opacity: CGFloat = 0
     @Published var text: String = ""
     @Published var image: Image? = nil
     @Published var isVisible: Bool = false
@@ -64,25 +62,35 @@ private class ToastViewModel: ObservableObject {
     }
     
     private func bind() {
-        engine.toast
+        engine.toasts
             .compactMap { $0 }
+            .filter { $0.is_valid }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.load(toast: $0) }
             .store(in: &disposables)
     }
     
     private func load(toast: CToast) {
-        backgroundColor = toast.background_color.asSolidColor()
-        opacity = toast.background_color.opacity()
         text = string(from: toast.text) ?? "..."
-        isVisible = opacity > 0.05
         position = toast.mode.rawValue == 0 ? .trailingTop : .leadingTop
         borderColor = toast.mode.rawValue == 0 ? .cyan : .highlightedText
+        isVisible = true
+        hide(delay: TimeInterval(toast.duration))
         
-        if let cgImage = spritesProvider.cgImage(for: toast.image.sprite_sheet_id, textureRect: toast.image.texture_frame) {
+        let cgImage = spritesProvider.cgImage(for: toast.image.sprite_sheet_id, textureRect: toast.image.texture_frame)
+        
+        if let cgImage {
             image = Image(decorative: cgImage, scale: 1)
         } else {
             image = nil
+        }
+    }
+    
+    private func hide(delay: TimeInterval) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            withAnimation {
+                self?.isVisible = false
+            }
         }
     }
 }

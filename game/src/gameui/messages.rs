@@ -1,5 +1,5 @@
 
-use game_core::{input::keyboard_events_provider::{KeyboardEventsProvider}, lang::localizable::LocalizableText, next_message, spacing, text, ui::{components::{empty_view, Spacing, Typography, View, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::strings::wrap_text, vstack};
+use game_core::{input::keyboard_events_provider::KeyboardEventsProvider, lang::localizable::LocalizableText, next_message, spacing, text, ui::{components::{empty_view, Spacing, Typography, View, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::strings::wrap_text, vstack};
 
 use crate::GameContext;
 

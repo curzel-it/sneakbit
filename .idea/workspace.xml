@@ -5,8 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="849cd1d8-5b41-4973-a96c-fd3f1ed33031" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/ios/SneakBit/Resources/Assets.xcassets/ToastBackgroundColor.colorset/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game/src/gameui/messages.rs" beforeDir="false" afterPath="$PROJECT_DIR$/game/src/gameui/messages.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game_core.h" beforeDir="false" afterPath="$PROJECT_DIR$/game_core.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_core/src/ui/components.rs" beforeDir="false" afterPath="$PROJECT_DIR$/game_core/src/ui/components.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SneakBit/Engine/GameEngine.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/SneakBit/Engine/GameEngine.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SneakBit/GameCore/RustColors.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SneakBit/Rendering/ContentView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/SneakBit/Rendering/ContentView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SneakBit/Rendering/DeathScreen.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/SneakBit/Rendering/DeathScreen.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SneakBit/Rendering/HpView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/SneakBit/Rendering/HpView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SneakBit/Rendering/Menus.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/SneakBit/Rendering/Messages.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SneakBit/Rendering/Toasts.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/SneakBit/Rendering/Toasts.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SneakBit/Resources/en.lproj/Localizable.strings" beforeDir="false" afterPath="$PROJECT_DIR$/ios/SneakBit/Resources/en.lproj/Localizable.strings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/SneakBit/Resources/it.lproj/Localizable.strings" beforeDir="false" afterPath="$PROJECT_DIR$/ios/SneakBit/Resources/it.lproj/Localizable.strings" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,9 +30,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2qB6R6I8pZt7z9CxxDwDOlEGd8I" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -34,8 +45,9 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "weapons",
-    "kotlin-language-version-configured": "true"
+    "git-widget-placeholder": "decouple-ui-from-engine",
+    "kotlin-language-version-configured": "true",
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

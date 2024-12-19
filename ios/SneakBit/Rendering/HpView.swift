@@ -50,7 +50,9 @@ private class HpViewModel: ObservableObject {
     }
     
     private func update(hp: Float32, gameOver: Bool) {
-        if hp < 60 && !gameOver {
+        let maxHpToShow: Float32 = gameOver ? -99.0 : 60.0
+        
+        if hp < maxHpToShow {
             isVisible = true
             text = String(format: "HP %0.1f%%", hp)
             textColor = hp < 30 ? .red : .white

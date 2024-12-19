@@ -9,8 +9,8 @@ class GameEngine {
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
     @Inject private var tileMapsStorage: TileMapsStorage
     
-    let toast = CurrentValueSubject<CToast?, Never>(nil)
-    let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
+    let toasts = CurrentValueSubject<CToast?, Never>(nil)
+    let messages = CurrentValueSubject<CDisplayableMessage?, Never>(nil)
     let kunai = CurrentValueSubject<Int32, Never>(0)
     let isInteractionAvailable = CurrentValueSubject<Bool, Never>(false)
     let loadingScreenConfig = CurrentValueSubject<LoadingScreenConfig, Never>(.none)
@@ -66,12 +66,13 @@ class GameEngine {
     func update(deltaTime: Float) {
         guard !isBusy else { return }
         let wasDead = showsDeathScreen.value
-        let isDead = shows_death_screen()
+        let matchResult = match_result_c()
+        let isDead = matchResult.game_over
         
         updateKeyboardState(timeSinceLastUpdate: deltaTime)
         update_game(deltaTime)
-        toast.send(current_toast())
-        menus.send(current_menu())
+        toasts.send(next_toast_c())
+        messages.send(next_message_c())
         kunai.send(number_of_kunai_in_inventory(0))
         heroHp.send(player_current_hp(0))
         isSwordEquipped.send(is_melee_equipped(0))
@@ -124,19 +125,10 @@ class GameEngine {
     }
 
     func setupChanged(safeArea: UIEdgeInsets?, windowSize: CGSize, screenScale: CGFloat?) {
-        if let safeArea {
-            safeAreaInsets = safeArea
-        }
+        safeArea.let { safeAreaInsets = $0 }
         renderingScale = renderingScaleUseCase.calculate(windowSize: windowSize, screenScale: screenScale)
         size = windowSize
-        
-        window_size_changed(
-            Float(size.width),
-            Float(size.height),
-            Float(renderingScale),
-            12,
-            8
-        )
+        window_size_changed(Float(size.width), Float(size.height), Float(renderingScale))
         worldHeight = Int(current_world_height())
         worldWidth = Int(current_world_width())
     }
@@ -225,7 +217,6 @@ class GameEngine {
             keyPressed.contains(.rangedAttack),
             keyPressed.contains(.backspace),
             false,
-            currentChar,
             timeSinceLastUpdate
         )
     }
@@ -249,11 +240,6 @@ class GameEngine {
             frameCount = 0
             lastFpsUpdate = now
         }
-    }
-    
-    func onMenuItemSelection(index: Int) {
-        select_current_menu_option_at_index(UInt32(index))
-        setKeyDown(.confirm)
     }
     
     private func setLoading(_ mode: LoadingScreenConfig) {

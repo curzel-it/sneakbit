@@ -3,8 +3,8 @@ import Foundation
 import SwiftUI
 import Schwifty
 
-struct MenuView: View {
-    @StateObject private var viewModel = MenuViewModel()
+struct MessagesView: View {
+    @StateObject private var viewModel = MessagesViewModel()
     
     var body: some View {
         if viewModel.isVisible {
@@ -15,7 +15,7 @@ struct MenuView: View {
                     .foregroundStyle(Color.black.opacity(0.4))
                     .onTapGesture { viewModel.cancel() }
                 
-                MenuContents()
+                MessagesContents()
                     .padding()
                     .frame(maxWidth: 600)
                     .background {
@@ -40,8 +40,8 @@ struct MenuView: View {
     }
 }
 
-private struct MenuContents: View {
-    @EnvironmentObject private var viewModel: MenuViewModel
+private struct MessagesContents: View {
+    @EnvironmentObject private var viewModel: MessagesViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -65,7 +65,7 @@ private struct MenuContents: View {
     }
 }
 
-private class MenuViewModel: ObservableObject {
+private class MessagesViewModel: ObservableObject {
     @Inject private var engine: GameEngine
     
     var safeAreaInsets: UIEdgeInsets {
@@ -88,11 +88,11 @@ private class MenuViewModel: ObservableObject {
     }
     
     private func bind() {
-        engine.menus
+        engine.messages
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] menuState in
-                if let menuState, menuState.is_visible {
-                    self?.load(menu: menuState)
+            .sink { [weak self] message in
+                if let message, message.is_valid {
+                    self?.load(message)
                 } else {
                     self?.hide()
                 }
@@ -100,16 +100,12 @@ private class MenuViewModel: ObservableObject {
             .store(in: &disposables)
     }
     
-    private func load(menu: MenuDescriptorC) {
-        let buffer = UnsafeBufferPointer(start: menu.options, count: Int(menu.options_count))
-        let items = Array(buffer)
-        let newOptions = items.map { string(from: $0.title) ?? "???" }
-        let newText = string(from: menu.text)
-        
+    private func load(_ message: CDisplayableMessage) {
+        engine.pause()
         withAnimation {
-            options = newOptions
-            text = newText
-            title = string(from: menu.title)
+            options = ["ok_action".localized()]
+            title = string(from: message.title)
+            text = string(from: message.text)
             isVisible = true
         }
     }
@@ -127,7 +123,7 @@ private class MenuViewModel: ObservableObject {
     }
     
     func selectOption(at index: Int) {
-        engine.onMenuItemSelection(index: index)
+        engine.resume()
         hide()
     }
 }

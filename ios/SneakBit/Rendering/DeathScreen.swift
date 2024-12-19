@@ -49,15 +49,23 @@ private class DeathScreenViewModel: ObservableObject {
     private func bind() {
         engine.showsDeathScreen
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isVisible in
-                withAnimation {
-                    self?.isVisible = isVisible
-                }
+            .sink { [weak self] visible in
+                self?.handle(visible)
             }
             .store(in: &disposables)
     }
     
     func tryAgain() {
-        engine.setKeyDown(.confirm)
+        revive()
+        engine.resume()
+    }
+    
+    private func handle(_ visible: Bool) {
+        if isVisible {
+            engine.pause()
+        }
+        withAnimation {
+            isVisible = visible
+        }
     }
 }
