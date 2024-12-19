@@ -1,7 +1,7 @@
 use std::{cell::RefCell, cmp::Ordering};
 
-use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, hitmaps::hitmaps::{EntityIdsMap, Hitmap}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
-use crate::features::{entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::features::{hitmaps::{EntityIdsMap, Hitmap}, entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
 

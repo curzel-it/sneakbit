@@ -18,7 +18,6 @@ pub mod entities;
 pub mod equipment;
 pub mod features;
 pub mod lang;
-pub mod hitmaps;
 pub mod input;
 pub mod maps;
 pub mod menus;
