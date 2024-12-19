@@ -1,6 +1,6 @@
 use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
-use super::{camera::camera_center, state_updates::{AppState, EngineStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
+use super::{camera::camera_center, state_updates::{AppState, EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
 pub struct GameEngine {
     pub world: World,
@@ -146,6 +146,11 @@ impl GameEngine {
             &self.dead_players
         );
         self.center_camera_at(x, y, &offset);
+    }
+    
+    pub fn apply_world_state_updates(&mut self, world_updates: Vec<WorldStateUpdate>) {
+        let updates = self.world.apply_state_updates(world_updates);
+        self.apply_state_updates(updates);
     }
 
     fn apply_state_update(&mut self, update: &EngineStateUpdate) -> Option<AppState> {   

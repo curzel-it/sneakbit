@@ -5,7 +5,7 @@ use std::os::raw::c_char;
 
 use config::initialize_config_paths;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
-use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect, state_updates::AppState};
+use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect, state_updates::{AppState, WorldStateUpdate}};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
 use input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider};
 use menus::toasts::ToastDescriptorC;
@@ -461,4 +461,8 @@ pub fn current_mouse_state() -> &'static MouseEventsProvider {
 
 pub fn current_camera_viewport() -> &'static IntRect {
     &engine().camera_viewport
+}
+
+pub fn apply_world_state_updates(updates: Vec<WorldStateUpdate>) {
+    engine_mut().apply_world_state_updates(updates)
 }

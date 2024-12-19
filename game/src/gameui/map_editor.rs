@@ -1,4 +1,4 @@
-use game_core::{entities::species::ALL_SPECIES, constants::{SPRITE_SHEET_INVENTORY, TILE_SIZE}, entities::species::{EntityType, Species}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, features::state_updates::WorldStateUpdate, lang::localizable::LocalizableText, maps::{biome_tiles::Biome, constructions_tiles::Construction}, prefabs::all::new_building, spacing, text, texture, ui::{components::{with_fixed_position, GridSpacing, NonColor, Spacing, Typography, View, COLOR_GENERAL_HIGHLIGHT, COLOR_MENU_BACKGROUND, COLOR_MENU_HINT_BACKGROUND, COLOR_TEXT_HIGHLIGHTED}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use game_core::{apply_world_state_updates, constants::{SPRITE_SHEET_INVENTORY, TILE_SIZE}, entities::species::{EntityType, Species, ALL_SPECIES}, features::state_updates::WorldStateUpdate, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, lang::localizable::LocalizableText, maps::{biome_tiles::Biome, constructions_tiles::Construction}, prefabs::all::new_building, spacing, text, texture, ui::{components::{with_fixed_position, GridSpacing, NonColor, Spacing, Typography, View, COLOR_GENERAL_HIGHLIGHT, COLOR_MENU_BACKGROUND, COLOR_MENU_HINT_BACKGROUND, COLOR_TEXT_HIGHLIGHTED}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 use super::menu::MENU_BORDERS_TEXTURES;
 
@@ -39,28 +39,21 @@ impl MapEditor {
         camera_viewport: &IntRect,    
         keyboard: &KeyboardEventsProvider,
         mouse: &MouseEventsProvider,
-    ) -> Vec<WorldStateUpdate> {
+    ) {
         self.camera_viewport = *camera_viewport;
 
         match self.state.clone() {
             MapEditorState::SelectingItem(selected_index) => {
                 self.update_item_selection(selected_index, keyboard)
             }
-            MapEditorState::PlacingItem(selected_index, item, frame) => self.update_item_placement(
-                selected_index,
-                item,
-                frame,
-                keyboard,
-                mouse,
-            ),
-        }
+            MapEditorState::PlacingItem(selected_index, item, frame) => {
+                let updates = self.update_item_placement(selected_index, item, frame, keyboard, mouse);
+                apply_world_state_updates(updates);
+            },
+        };
     }
 
-    fn update_item_selection(
-        &mut self,
-        selected_index: usize,
-        keyboard: &KeyboardEventsProvider,
-    ) -> Vec<WorldStateUpdate> {
+    fn update_item_selection(&mut self, selected_index: usize, keyboard: &KeyboardEventsProvider) {
         if keyboard.is_direction_up_pressed_by_anyone() {
             if selected_index >= self.columns {
                 self.state = MapEditorState::SelectingItem(selected_index - self.columns);
@@ -93,7 +86,6 @@ impl MapEditor {
                 indicator_frame,
             )
         }
-        vec![]
     }
 
     fn initial_selection_frame(&self, item: &Stockable) -> IntRect {

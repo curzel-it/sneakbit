@@ -116,9 +116,7 @@ fn main() {
                 }
             },
             AppState::Menu => {
-                let (menu_open, updates) = context.menu.update(current_camera_viewport(), keyboard, mouse);
-                // TODO apply updates?
-                if menu_open {
+                if context.menu.update(current_camera_viewport(), keyboard, mouse) {
                     AppState::Menu
                 } else {
                     AppState::Gaming

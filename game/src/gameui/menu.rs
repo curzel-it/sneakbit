@@ -20,8 +20,6 @@ pub trait MenuItem: Clone {
     fn title(&self) -> String;
 }
 
-pub type MenuUpdate = (bool, Vec<WorldStateUpdate>);
-
 impl<Item: MenuItem> Menu<Item> {
     pub fn new(title: String, items: Vec<Item>) -> Self {
         Self {
@@ -68,18 +66,10 @@ impl<Item: MenuItem> Menu<Item> {
         self.selection_has_been_confirmed = false;
     }
 
-    pub fn update(&mut self, keyboard: &KeyboardEventsProvider) -> MenuUpdate {
-        if self.is_open {
-            return (true, self.do_update(keyboard))
-        }
-        (false, vec![])
-    }
-}
-
-impl<Item: MenuItem> Menu<Item> {
-    fn do_update(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
-        if keyboard.has_back_been_pressed_by_anyone(){
+    pub fn update(&mut self, keyboard: &KeyboardEventsProvider) -> bool {
+        if keyboard.has_back_been_pressed_by_anyone() {
             self.close();
+            return false
         }
     
         let max_index = self.items.len() - 1;
@@ -90,20 +80,16 @@ impl<Item: MenuItem> Menu<Item> {
             if self.selected_index < self.scroll_offset {
                 self.scroll_offset -= 1;
             }
-        }
-    
-        if keyboard.is_direction_down_pressed_by_anyone() && self.selected_index < max_index {
+        } else if keyboard.is_direction_down_pressed_by_anyone() && self.selected_index < max_index {
             self.selected_index += 1;
 
             if self.selected_index >= self.scroll_offset + self.visible_item_count {
                 self.scroll_offset += 1;
             }
-        }
-    
-        if keyboard.has_confirmation_been_pressed_by_anyone() {
+        } else if keyboard.has_confirmation_been_pressed_by_anyone() {
             self.selection_has_been_confirmed = true;
         }    
-        vec![]
+        self.is_open
     }
 }
 
