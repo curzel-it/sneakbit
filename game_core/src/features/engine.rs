@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
 use super::{camera::camera_center, state_updates::{AppState, EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
@@ -16,7 +16,6 @@ pub struct GameEngine {
     pub is_running: bool,
     pub wants_fullscreen: bool,
     pub sound_effects: SoundEffectsManager,
-    pub links_handler: Box<dyn LinksHandler>,
     pub number_of_players: usize,
     pub game_mode: GameMode,
     pub dead_players: Vec<usize>,
@@ -42,7 +41,6 @@ impl GameEngine {
             basic_info_hud: BasicInfoHud::new(),
             wants_fullscreen: false,
             sound_effects: SoundEffectsManager::new(),
-            links_handler: Box::new(NoLinksHandler::new()),
             number_of_players: 1,
             game_mode,
             dead_players: vec![],
@@ -178,9 +176,6 @@ impl GameEngine {
                 self.dead_players.push(*player_index);
                 self.update_current_turn_for_death_of_player(*player_index);
                 self.handle_win_lose()
-            }
-            EngineStateUpdate::ExternalLink(link) => {
-                self.links_handler.open(link);
             }
             _ => {}
         }

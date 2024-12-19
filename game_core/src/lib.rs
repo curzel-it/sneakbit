@@ -5,7 +5,7 @@ use std::os::raw::c_char;
 
 use config::initialize_config_paths;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
-use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect, state_updates::{AppState, WorldStateUpdate}};
+use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::{AppState, WorldStateUpdate}};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
 use input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider};
 use menus::toasts::ToastDescriptorC;
@@ -399,10 +399,6 @@ pub fn current_soundtrack_string() -> Option<String> {
 #[no_mangle]
 pub extern "C" fn current_soundtrack() -> *const c_char {
     string_to_c_char(current_soundtrack_string().unwrap_or_default())
-}
-
-pub fn set_links_handler(handler: Box<dyn LinksHandler>) {
-    engine_mut().links_handler = handler;
 }
 
 pub fn is_any_hero_on_a_slippery_surface() -> bool {

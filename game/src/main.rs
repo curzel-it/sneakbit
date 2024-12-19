@@ -6,8 +6,8 @@ mod rendering;
 
 use std::env;
 
-use features::{audio::{play_audio, AudioManager}, inputs::{handle_keyboard_updates, handle_mouse_updates}, links::MyLinkHandler, paths::local_path};
-use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_camera_viewport, current_keyboard_state, current_mouse_state, current_soundtrack_string, current_text_string, current_title_string, current_world_id, features::{sound_effects::is_music_enabled, state_updates::AppState}, initialize_game, is_game_running, lang::localizable::LANG_EN, multiplayer::modes::GameMode, set_links_handler, stop_game, update_game};
+use features::{audio::{play_audio, AudioManager}, inputs::{handle_keyboard_updates, handle_mouse_updates}, paths::local_path};
+use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_camera_viewport, current_keyboard_state, current_mouse_state, current_soundtrack_string, current_text_string, current_title_string, current_world_id, features::{sound_effects::is_music_enabled, state_updates::AppState}, initialize_game, is_game_running, lang::localizable::LANG_EN, multiplayer::modes::GameMode, stop_game, update_game};
 use gameui::{game_menu::GameMenu, long_text_display::LongTextDisplay, weapon_selection::WeaponsGrid};
 use raylib::prelude::*;
 use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, load_last_fullscreen_settings, start_rl}, worlds::render_frame};
@@ -71,7 +71,6 @@ fn main() {
     };
 
     initialize_game(initial_game_mode);
-    set_links_handler(Box::new(MyLinkHandler {}));
     load_last_fullscreen_settings();
 
     while is_game_running() {

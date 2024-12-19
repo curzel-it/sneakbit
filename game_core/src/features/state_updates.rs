@@ -30,7 +30,6 @@ pub enum EngineStateUpdate {
     Toast(Toast),
     DisplayLongText(String, String),
     BulletBounced,
-    ExternalLink(String),
     PlayerDied(PlayerIndex),
     NoAmmo(PlayerIndex),
     KnifeThrown(PlayerIndex),
@@ -53,10 +52,6 @@ pub enum AppState {
 pub enum AddToInventoryReason {
     PickedUp,
     Reward
-}
-
-pub fn visit(link: &str) -> WorldStateUpdate {
-    WorldStateUpdate::EngineUpdate(EngineStateUpdate::ExternalLink(link.to_owned()))
 }
 
 impl WorldStateUpdate {
