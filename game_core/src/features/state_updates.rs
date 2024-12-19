@@ -43,9 +43,9 @@ pub enum EngineStateUpdate {
 pub enum AppState {
     #[default]
     Gaming = 0,
-    DisplayText = 1,
-    InGameWeaponSelection = 2,
-    Menu = 3
+    InGameWeaponSelection,
+    DisplayText,
+    Menu,
 }
 
 #[derive(Debug, Clone)]

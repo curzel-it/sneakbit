@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastDisplay, ToastImage, ToastMode}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
 use super::{camera::camera_center, state_updates::{AppState, EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
@@ -8,7 +8,6 @@ pub struct GameEngine {
     pub loading_screen: LoadingScreen,
     pub death_screen: DeathScreen,
     pub toast: ToastDisplay,
-    pub basic_info_hud: BasicInfoHud,
     pub keyboard: KeyboardEventsProvider,
     pub mouse: MouseEventsProvider,
     pub camera_viewport: IntRect,
@@ -38,7 +37,6 @@ impl GameEngine {
             camera_viewport: INITIAL_CAMERA_VIEWPORT,
             camera_viewport_offset: Vector2d::zero(),
             is_running: true,
-            basic_info_hud: BasicInfoHud::new(),
             wants_fullscreen: false,
             sound_effects: SoundEffectsManager::new(),
             number_of_players: 1,
@@ -85,22 +83,11 @@ impl GameEngine {
 
         self.update_current_turn(time_since_last_update);
 
-        let camera_viewport = self.camera_viewport;
-        let is_game_paused = self.update_menus();
-
-        if !is_game_paused {
-            let updates = self.world.update(time_since_last_update, &camera_viewport, &self.keyboard);
-            self.sound_effects.update(&self.keyboard, &updates);
-            self.center_camera_onto_players();
-            return self.apply_state_updates(updates)
-        };
-        AppState::Gaming
+        let updates = self.world.update(time_since_last_update, &self.camera_viewport, &self.keyboard);
+        self.sound_effects.update(&self.keyboard, &updates);
+        self.center_camera_onto_players();
+        return self.apply_state_updates(updates);
     } 
-
-    fn update_menus(&mut self) -> bool {
-        self.basic_info_hud.update(self.number_of_players);
-        false
-    }
 
     fn teleport_to_previous(&mut self) {
         let world_id = get_value_for_global_key(&StorageKey::latest_world()).unwrap_or(1001);

@@ -9,7 +9,7 @@ use features::{light_conditions::LightConditions, sound_effects::SoundEffect, st
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
 use input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider};
 use menus::toasts::ToastDescriptorC;
-use multiplayer::modes::GameMode;
+use multiplayer::{modes::GameMode, turns::GameTurn};
 use utils::{rect::{IntPoint, IntRect}, vector::Vector2d};
 
 pub mod config;
@@ -413,8 +413,26 @@ pub fn number_of_players() -> usize {
     engine().number_of_players
 }
 
+pub fn indeces_of_dead_players() -> &'static Vec<usize> {
+    &engine().dead_players
+}
+
 pub fn update_number_of_players(count: usize) {
     engine_mut().update_number_of_players(count)
+}
+
+pub fn currently_active_players() -> Vec<usize> {
+    let engine = engine();
+    match engine.turn {
+        GameTurn::RealTime => {
+            (0..engine.number_of_players)
+                .filter(|index| !engine.dead_players.contains(index))
+                .collect()
+        },
+        GameTurn::Player(current_player_index, _) => {
+            vec![current_player_index]
+        }
+    }
 }
 
 pub fn toggle_pvp() {

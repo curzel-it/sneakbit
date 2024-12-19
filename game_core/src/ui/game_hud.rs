@@ -1,6 +1,6 @@
 use crate::features::engine::GameEngine;
 
-use super::{components::{NonColor, View, WithAlpha, COLOR_DEATH_SCREEN_BACKGROUND, COLOR_LOADING_SCREEN_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}};
+use super::{components::{NonColor, WithAlpha, COLOR_DEATH_SCREEN_BACKGROUND, COLOR_LOADING_SCREEN_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}};
 
 impl GameEngine {
     pub fn hud_ui(&self, width: i32, height: i32) -> Layout {
@@ -9,26 +9,11 @@ impl GameEngine {
             height, 
             self.hud_background_color(),
             vec![
-                (AnchorPoint::TopLeft, self.basic_info_hud_ui()),
-                // (AnchorPoint::BottomCenter, self.menu.ui(&self.camera_viewport)),
-                // FEATURE REMOVED (AnchorPoint::BottomCenter, self.confirmation_dialog.ui()),
-                // (AnchorPoint::BottomCenter, self.long_text_display.ui()),
-                // (AnchorPoint::BottomCenter, self.weapons_selection.ui()),
                 (AnchorPoint::TopRight, self.toast.regular_toast_ui()),
                 (AnchorPoint::TopLeft, self.toast.hint_toast_ui()),
-                // (AnchorPoint::BottomLeft, self.debug_info(show_debug_info, fps)),
-                // (AnchorPoint::BottomRight, self.turn_time_left_ui()),
                 (AnchorPoint::Center, self.death_screen.ui()),
                 (AnchorPoint::Center, self.loading_screen.ui())
             ]
-        )
-    }
-
-    fn basic_info_hud_ui(&self) -> View {
-        self.basic_info_hud.ui(
-            &self.turn, 
-            self.number_of_players, 
-            &self.dead_players
         )
     }
     
