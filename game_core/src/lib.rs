@@ -97,7 +97,6 @@ pub extern "C" fn update_keyboard(
     ranged_attack_pressed: bool,
     weapon_selection_pressed: bool,
     backspace_pressed: bool,
-    current_char: u32,
     time_since_last_update: f32
 ) {
     engine_mut().keyboard.update(
@@ -108,7 +107,6 @@ pub extern "C" fn update_keyboard(
         close_attack_pressed, ranged_attack_pressed, 
         weapon_selection_pressed,
         backspace_pressed, 
-        if current_char == 0 { None } else { char::from_u32(current_char) }, 
         time_since_last_update
     );
 }

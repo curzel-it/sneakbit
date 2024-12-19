@@ -74,7 +74,6 @@ fn update_keyboard_for_primary_player(rl: &mut RaylibHandle, should_pause: bool,
         rl.is_key_pressed(KeyboardKey::KEY_F) || rl.is_key_pressed(KeyboardKey::KEY_J) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
         rl.is_key_pressed(KeyboardKey::KEY_TAB) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_UP),
         rl.is_key_pressed(KeyboardKey::KEY_BACKSPACE), 
-        get_char_pressed(rl),
         time_since_last_update
     );
 }
@@ -107,7 +106,6 @@ fn update_keyboard_for_secondary_player(rl: &mut RaylibHandle, previous_keyboard
         rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_DOWN), 
         rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_UP),
         false,
-        0,
         time_since_last_update
     );
 }
@@ -143,13 +141,4 @@ fn current_joystick_directions(rl: &RaylibHandle, gamepad: i32) -> (bool, bool, 
     };
 
     (joystick_up, joystick_right, joystick_down, joystick_left)
-}
-
-fn get_char_pressed(rl: &mut RaylibHandle) -> u32 {
-    let character = rl.get_char_pressed();
-    if let Some(character) = character { 
-        character as u32
-    } else {
-        0
-    }
 }
