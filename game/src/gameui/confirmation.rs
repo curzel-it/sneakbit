@@ -1,11 +1,10 @@
 
-use crate::{constants::SPRITE_SHEET_MENU, input::keyboard_events_provider::KeyboardEventsProvider, features::state_updates::WorldStateUpdate, lang::localizable::LocalizableText, ui::{components::{empty_view, BordersTextures, TextureInfo, View, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::rect::IntRect};
+use game_core::{constants::SPRITE_SHEET_MENU, input::keyboard_events_provider::KeyboardEventsProvider, lang::localizable::LocalizableText, ui::{components::{empty_view, BordersTextures, TextureInfo, View, COLOR_MENU_BACKGROUND}, scaffold::scaffold}, utils::rect::IntRect};
 
-use super::menu::{Menu, MenuItem, MenuUpdate};
+use super::menu::{Menu, MenuItem};
 
 pub struct ConfirmationDialog {
     pub menu: Menu<ConfirmationOption>,
-    pub on_confirm: Vec<WorldStateUpdate>
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -26,7 +25,6 @@ impl MenuItem for ConfirmationOption {
 impl ConfirmationDialog {
     pub fn new() -> Self {
         Self {
-            on_confirm: vec![],
             menu: Menu::new(
                 "".to_string(), 
                 vec![ConfirmationOption::YesConfirm, ConfirmationOption::NoCancel]
@@ -38,33 +36,27 @@ impl ConfirmationDialog {
         self.menu.is_open
     }
 
-    pub fn show(&mut self, title: &str, text: &str, on_confirm: &[WorldStateUpdate]) {
+    pub fn show(&mut self, title: &str, text: &str) {
         if self.menu.title == title {
             return 
         }
-        self.on_confirm = on_confirm.to_owned();
         self.menu.title = title.to_string();
         self.menu.text = Some(text.to_string());
         self.menu.show();
     }
 
-    pub fn update(&mut self, keyboard: &KeyboardEventsProvider) -> MenuUpdate {
+    pub fn update(&mut self, keyboard: &KeyboardEventsProvider) -> Option<ConfirmationOption> {
         self.menu.update(keyboard);
 
         if self.menu.selection_has_been_confirmed {
             let selection = self.menu.selected_item();
-
             self.menu.title = "".to_owned();
             self.menu.clear_selection();
             self.menu.close();
-
-            if matches!(selection, ConfirmationOption::YesConfirm) {
-                return (false, self.on_confirm.clone())
-            } else {
-                return (false, vec![])
-            }
+            Some(selection)
+        } else {
+            None
         }
-        (self.menu.is_open, vec![])
     }
 
     pub fn select_option_at_index(&mut self, index: usize) {

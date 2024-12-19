@@ -1,12 +1,7 @@
 
-use std::ffi::{c_char, CString};
-use std::ptr::null;
+use std::{ffi::{c_char, CString}, ptr::null};
 
-use crate::constants::SPRITE_SHEET_MENU;
-use crate::ui::components::{empty_view, BordersTextures, TextureInfo, COLOR_MENU_BACKGROUND};
-use crate::ui::scaffold::scaffold;
-use crate::utils::rect::IntRect;
-use crate::{input::keyboard_events_provider::KeyboardEventsProvider, features::state_updates::WorldStateUpdate, text, ui::components::{Spacing, Typography, View}, vstack};
+use game_core::{utils::rect::IntRect, ui::scaffold::scaffold, ui::components::{empty_view, BordersTextures, TextureInfo, COLOR_MENU_BACKGROUND}, constants::SPRITE_SHEET_MENU, input::keyboard_events_provider::KeyboardEventsProvider, features::state_updates::WorldStateUpdate, text, ui::components::{Spacing, Typography, View}, vstack};
 
 pub struct Menu<Item: MenuItem> {
     pub title: String,

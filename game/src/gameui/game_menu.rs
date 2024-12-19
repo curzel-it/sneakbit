@@ -1,6 +1,6 @@
-use crate::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, spacing, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
+use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, spacing, start_new_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
 
-use super::{confirmation::ConfirmationDialog, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
+use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
 pub struct GameMenu {
     pub current_world_id: u32,
@@ -225,7 +225,7 @@ impl GameMenu {
         }
 
         let updates = match self.state {
-            MenuState::Closed => self.update_from_close(keyboard),
+            MenuState::Closed => vec![],
             MenuState::Open => self.update_from_open(keyboard),
             MenuState::MapEditor => {
                 self.update_from_map_editor(camera_vieport, keyboard, mouse)
@@ -281,11 +281,7 @@ impl GameMenu {
             GameMenuItem::NewGame => {
                 self.new_game_confirmation.show(
                     &"game.menu.new_game".localized(),
-                    &"game.menu.new_game_are_you_sure".localized(),
-                    &[
-                        WorldStateUpdate::EngineUpdate(EngineStateUpdate::NewGame),
-                        WorldStateUpdate::EngineUpdate(EngineStateUpdate::ResumeGame),
-                    ],
+                    &"game.menu.new_game_are_you_sure".localized()
                 );
                 self.state = MenuState::NewGameConfirmation;
                 vec![]
@@ -337,12 +333,21 @@ impl GameMenu {
             self.state = MenuState::Open;
             return vec![];
         }
-        let (is_open, updates) = self.new_game_confirmation.update(keyboard);
+        if let Some(new_game_confirm) = self.new_game_confirmation.update(keyboard) {
+            self.new_game_confirmation.menu.clear_selection();
+            self.new_game_confirmation.menu.clear_confirmation();
+            self.menu.clear_selection();
 
-        if !is_open {
-            self.state = MenuState::Open;
+            if matches!(new_game_confirm, ConfirmationOption::YesConfirm) { 
+                start_new_game();
+                self.menu.close();
+                self.state = MenuState::Closed;
+            } else {
+                self.state = MenuState::Open;
+            }
+            return vec![]
         }
-        updates
+        vec![]
     }
 
     fn update_from_number_of_players(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
@@ -389,10 +394,6 @@ impl GameMenu {
             self.setup(self.current_world_id);
             self.state = MenuState::Closed;
         }
-        vec![]
-    }
-
-    fn update_from_close(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
         vec![]
     }
 

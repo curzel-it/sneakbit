@@ -184,9 +184,6 @@ impl GameEngine {
                 self.wants_fullscreen = !self.wants_fullscreen;
                 set_value_for_key(&StorageKey::fullscreen(), if self.wants_fullscreen { 1 } else { 0 });
             }
-            EngineStateUpdate::NewGame => {
-                self.start_new_game()
-            }
             EngineStateUpdate::ExternalLink(link) => {
                 self.links_handler.open(link);
             }
