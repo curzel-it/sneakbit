@@ -1,4 +1,4 @@
-use game_core::{cached_player_position, current_world_id, player_current_hp, text, ui::{components::{empty_view, Spacing, Typography, View, COLOR_DEBUG_INFO_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}}, vstack, zstack};
+use game_core::{cached_player_position, current_camera_viewport, current_world_id, player_current_hp, text, ui::{components::{empty_view, Spacing, Typography, View, COLOR_DEBUG_INFO_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}}, vstack, zstack};
 
 use crate::GameContext;
 
@@ -8,9 +8,10 @@ pub fn hud_ui(context: &GameContext, width: i32, height: i32, show_debug_info: b
         height, 
         COLOR_TRANSPARENT, // self.hud_background_color(),
         vec![
+            (AnchorPoint::BottomCenter, context.menu.ui(current_camera_viewport())),
             (AnchorPoint::BottomCenter, context.long_text_display.ui()),
-            (AnchorPoint::BottomLeft, debug_info(show_debug_info, fps)),
             (AnchorPoint::BottomCenter, context.weapons_selection.ui()),
+            (AnchorPoint::BottomLeft, debug_info(show_debug_info, fps)),
         ]
     )
 }

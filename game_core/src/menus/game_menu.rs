@@ -1,4 +1,4 @@
-use crate::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, spacing, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
+use crate::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_game_mode, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, state_updates::{visit, EngineStateUpdate, WorldStateUpdate}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, spacing, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect};
 
 use super::{confirmation::ConfirmationDialog, map_editor::MapEditor, menu::{Menu, MenuItem, MenuUpdate}};
 
@@ -159,7 +159,8 @@ impl GameMenu {
         }
     }
 
-    pub fn setup(&mut self) {
+    pub fn setup(&mut self, world_id: u32) {
+        self.current_world_id = world_id;
         self.menu.title = "game.menu.title".localized();
         self.settings_menu.title = "game.menu.settings".localized();
         self.languages_menu.title = "game.menu.language".localized();
@@ -191,6 +192,11 @@ impl GameMenu {
 
     pub fn is_open(&self) -> bool {
         !matches!(self.state, MenuState::Closed)
+    }
+
+    pub fn show(&mut self) {
+        self.state = MenuState::Open;
+        self.menu.show();
     }
 
     pub fn close(&mut self) {
@@ -380,17 +386,13 @@ impl GameMenu {
             self.languages_menu.close();
             self.menu.clear_selection();
             self.menu.close();
-            self.setup();
+            self.setup(self.current_world_id);
             self.state = MenuState::Closed;
         }
         vec![]
     }
 
     fn update_from_close(&mut self, keyboard: &KeyboardEventsProvider) -> Vec<WorldStateUpdate> {
-        if keyboard.has_menu_been_pressed_by_anyone() {
-            self.state = MenuState::Open;
-            self.menu.show();
-        }
         vec![]
     }
 

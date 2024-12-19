@@ -1,9 +1,8 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, game_menu::GameMenu, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{death_screen::DeathScreen, destination::Destination, links::{LinksHandler, NoLinksHandler}, loading_screen::LoadingScreen, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, menus::{basic_info_hud::BasicInfoHud, toasts::{Toast, ToastDisplay, ToastImage, ToastMode}}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
 use super::{camera::camera_center, state_updates::{AppState, EngineStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
 pub struct GameEngine {
-    pub menu: GameMenu,
     pub world: World,
     pub previous_world: Option<World>,
     pub loading_screen: LoadingScreen,
@@ -30,7 +29,6 @@ pub struct GameEngine {
 impl GameEngine {
     pub fn new(game_mode: GameMode) -> Self {
         Self {
-            menu: GameMenu::new(),
             world: World::load_or_create(WORLD_ID_NONE),
             previous_world: None,
             loading_screen: LoadingScreen::new(),
@@ -57,7 +55,6 @@ impl GameEngine {
 
     pub fn start(&mut self) {
         self.run_migrations();
-        self.menu.setup();
         self.teleport_to_previous();
     }
 
@@ -103,24 +100,8 @@ impl GameEngine {
     } 
 
     fn update_menus(&mut self) -> bool {
-        let mut is_game_paused = false;
-
         self.basic_info_hud.update(self.number_of_players);
-
-        if !is_game_paused {
-            let can_handle = self.menu.is_open() || self.keyboard.has_menu_been_pressed_by_anyone();
-            let keyboard = if can_handle { &self.keyboard } else { &NO_KEYBOARD_EVENTS };
-            let (pause, world_updates) = self.menu.update(&self.camera_viewport, keyboard, &self.mouse);
-            is_game_paused = is_game_paused || pause;
-
-            if !world_updates.is_empty() {
-                let engine_updates = self.world.apply_state_updates(world_updates);
-                self.apply_state_updates(engine_updates);
-                self.world.update(0.01, &self.camera_viewport, &NO_KEYBOARD_EVENTS);
-            }
-        }
-        
-        is_game_paused
+        false
     }
 
     fn teleport_to_previous(&mut self) {
@@ -185,9 +166,6 @@ impl GameEngine {
             }
             EngineStateUpdate::RemoveFromInventory(player, species_id) => {
                 decrease_inventory_count(species_id, *player);
-            }
-            EngineStateUpdate::ResumeGame => {
-                self.menu.close()
             }
             EngineStateUpdate::Toast(toast) => {
                 self.show_toast(toast)
@@ -265,7 +243,6 @@ impl GameEngine {
         self.world.spawn_point = (hero_frame.x, hero_frame.y);
         self.center_camera_at(hero_frame.x, hero_frame.y, &Vector2d::zero());
 
-        self.menu.current_world_id = self.world.id;
         self.keyboard.on_world_changed();
         self.mouse.on_world_changed();
 
@@ -293,12 +270,6 @@ impl GameEngine {
     fn center_camera_at(&mut self, x: i32, y: i32, offset: &Vector2d) {
         self.camera_viewport.center_at(&Vector2d::new(x as f32, y as f32));
         self.camera_viewport_offset = *offset;
-    }
-
-    pub fn select_current_menu_option_at_index(&mut self, index: usize) {
-        if self.menu.is_open() {
-            self.menu.select_option_at_index(index);
-        }
     }
 
     pub fn start_new_game(&mut self) {

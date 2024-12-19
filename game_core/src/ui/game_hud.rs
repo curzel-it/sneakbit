@@ -10,7 +10,7 @@ impl GameEngine {
             self.hud_background_color(),
             vec![
                 (AnchorPoint::TopLeft, self.basic_info_hud_ui()),
-                (AnchorPoint::BottomCenter, self.menu.ui(&self.camera_viewport)),
+                // (AnchorPoint::BottomCenter, self.menu.ui(&self.camera_viewport)),
                 // FEATURE REMOVED (AnchorPoint::BottomCenter, self.confirmation_dialog.ui()),
                 // (AnchorPoint::BottomCenter, self.long_text_display.ui()),
                 // (AnchorPoint::BottomCenter, self.weapons_selection.ui()),

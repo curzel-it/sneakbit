@@ -7,8 +7,8 @@ use config::initialize_config_paths;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
 use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect, state_updates::AppState};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
-use input::keyboard_events_provider::KeyboardEventsProvider;
-use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
+use input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider};
+use menus::toasts::ToastDescriptorC;
 use multiplayer::modes::GameMode;
 use utils::{rect::{IntPoint, IntRect}, vector::Vector2d};
 
@@ -275,16 +275,6 @@ pub extern "C" fn current_toast() -> ToastDescriptorC {
     engine().toast.descriptor_c()
 }
 
-#[no_mangle]
-pub extern "C" fn current_menu() -> MenuDescriptorC {
-    let engine = engine();
-
-    if engine.menu.is_open() {
-        return engine.menu.menu.descriptor_c()
-    }
-    MenuDescriptorC::empty()
-}
-
 pub fn string_to_c_char(s: String) -> *const c_char {
     let c_string = CString::new(s).expect("Failed to convert String to CString");
     let raw_ptr = c_string.into_raw();
@@ -309,11 +299,6 @@ pub extern "C" fn current_loading_screen_progress() -> f32 {
 #[no_mangle]
 pub extern "C" fn shows_death_screen() -> bool {
     engine().death_screen.is_open
-}
-
-#[no_mangle]
-pub extern "C" fn select_current_menu_option_at_index(index: u32) {
-    engine_mut().select_current_menu_option_at_index(index as usize)
 }
 
 #[no_mangle]
@@ -468,4 +453,12 @@ pub extern "C" fn current_text() -> *const c_char {
 
 pub fn current_keyboard_state() -> &'static KeyboardEventsProvider {
     &engine().keyboard
+}
+
+pub fn current_mouse_state() -> &'static MouseEventsProvider {
+    &engine().mouse
+}
+
+pub fn current_camera_viewport() -> &'static IntRect {
+    &engine().camera_viewport
 }

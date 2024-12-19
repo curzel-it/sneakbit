@@ -26,13 +26,13 @@ pub enum EngineStateUpdate {
     EntityKilled(EntityId, SpeciesId),
     Teleport(Destination),
     SaveGame,
+    ResumeGame,
     Exit,
     AddToInventory(PlayerIndex, SpeciesId, AddToInventoryReason),
     RemoveFromInventory(PlayerIndex, SpeciesId),
     Toast(Toast),
     Confirmation(String, String, Vec<WorldStateUpdate>),
     DisplayLongText(String, String),
-    ResumeGame,
     ToggleFullScreen,
     NewGame,
     BulletBounced,
@@ -51,7 +51,8 @@ pub enum AppState {
     #[default]
     Gaming = 0,
     DisplayText = 1,
-    InGameWeaponSelection = 2
+    InGameWeaponSelection = 2,
+    Menu = 3
 }
 
 #[derive(Debug, Clone)]

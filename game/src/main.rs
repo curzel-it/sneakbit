@@ -7,7 +7,7 @@ mod rendering;
 use std::env;
 
 use features::{audio::{play_audio, AudioManager}, inputs::{handle_keyboard_updates, handle_mouse_updates}, links::MyLinkHandler, paths::local_path};
-use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_keyboard_state, current_soundtrack_string, current_text_string, current_title_string, current_world_id, engine_set_wants_fullscreen, features::{sound_effects::is_music_enabled, state_updates::AppState, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_game_running, lang::localizable::LANG_EN, menus::long_text_display::LongTextDisplay, multiplayer::modes::GameMode, set_links_handler, stop_game, update_game};
+use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_camera_viewport, current_keyboard_state, current_mouse_state, current_soundtrack_string, current_text_string, current_title_string, current_world_id, engine_set_wants_fullscreen, features::{sound_effects::is_music_enabled, state_updates::AppState, storage::{bool_for_global_key, StorageKey}}, initialize_game, is_game_running, lang::localizable::LANG_EN, menus::{game_menu::GameMenu, long_text_display::LongTextDisplay}, multiplayer::modes::GameMode, set_links_handler, stop_game, update_game};
 use gameui::weapon_selection::WeaponsGrid;
 use raylib::prelude::*;
 use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, start_rl}, worlds::render_frame};
@@ -28,6 +28,7 @@ struct GameContext {
     state: AppState,
     long_text_display: LongTextDisplay,
     weapons_selection: WeaponsGrid,
+    menu: GameMenu,
 }
 
 fn main() {
@@ -60,6 +61,7 @@ fn main() {
         state: AppState::Gaming,
         long_text_display: LongTextDisplay::new(50, 9),
         weapons_selection: WeaponsGrid::new(),
+        menu: GameMenu::new(),
     };
 
     let initial_game_mode = if creative_mode {
@@ -80,6 +82,7 @@ fn main() {
         context.total_run_time += time_since_last_update;
 
         let keyboard = current_keyboard_state();
+        let mouse = current_mouse_state();
 
         handle_window_updates(&mut context);
         handle_game_closed(&mut context);
@@ -92,6 +95,8 @@ fn main() {
 
                 if keyboard.has_weapon_selection_been_pressed_by_anyone() {
                     AppState::InGameWeaponSelection
+                } else if keyboard.has_menu_been_pressed_by_anyone() {
+                    AppState::Menu
                 } else {
                     next_state
                 }
@@ -110,6 +115,15 @@ fn main() {
             AppState::DisplayText => {
                 context.long_text_display.update(keyboard)
             },
+            AppState::Menu => {
+                let (menu_open, updates) = context.menu.update(current_camera_viewport(), keyboard, mouse);
+                // TODO apply updates?
+                if menu_open {
+                    AppState::Menu
+                } else {
+                    AppState::Gaming
+                }
+            }
         };
         handle_state_changed(&mut context, new_state);
         handle_world_changed(&mut context);
@@ -139,6 +153,10 @@ fn handle_state_changed(context: &mut GameContext, new_state: AppState) {
                 current_title_string(),
                 current_text_string()
             );
+        },
+        AppState::Menu => {
+            context.menu.setup(current_world_id());
+            context.menu.show();
         }
     }
 
