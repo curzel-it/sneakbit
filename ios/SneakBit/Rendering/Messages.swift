@@ -88,10 +88,10 @@ private class MessagesViewModel: ObservableObject {
     }
     
     private func bind() {
-        engine.messages
-            .receive(on: DispatchQueue.main)
+        engine.gameState()
+            .map { $0.messages }
             .sink { [weak self] message in
-                if let message, message.is_valid {
+                if message.is_valid {
                     self?.load(message)
                 } else {
                     self?.hide()
@@ -101,7 +101,7 @@ private class MessagesViewModel: ObservableObject {
     }
     
     private func load(_ message: CDisplayableMessage) {
-        engine.pause()
+        engine.pauseGame()
         withAnimation {
             options = ["ok_action".localized()]
             title = string(from: message.title)
@@ -123,7 +123,7 @@ private class MessagesViewModel: ObservableObject {
     }
     
     func selectOption(at index: Int) {
-        engine.resume()
+        engine.resumeGame()
         hide()
     }
 }

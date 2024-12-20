@@ -44,10 +44,10 @@ protocol Loggable {
 
 extension Loggable {
     func log(_ content: String) {
-        Logger.debug("[\(type(of: self))] \(content)")
+        Logger.debug("\(type(of: self))", content)
     }
     
     func logError(_ content: String) {
-        Logger.error("[\(type(of: self))] \(content)")
+        Logger.error("\(type(of: self))", content)
     }
 }

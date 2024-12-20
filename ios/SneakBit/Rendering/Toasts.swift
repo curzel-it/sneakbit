@@ -62,8 +62,8 @@ private class ToastViewModel: ObservableObject {
     }
     
     private func bind() {
-        engine.toasts
-            .compactMap { $0 }
+        engine.gameState()
+            .map { $0.toasts }
             .filter { $0.is_valid }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.load(toast: $0) }

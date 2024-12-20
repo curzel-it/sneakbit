@@ -47,8 +47,9 @@ private class DeathScreenViewModel: ObservableObject {
     }
     
     private func bind() {
-        engine.showsDeathScreen
-            .receive(on: DispatchQueue.main)
+        engine.gameState()
+            .map { $0.isGameOver() }
+            .removeDuplicates()
             .sink { [weak self] visible in
                 self?.handle(visible)
             }
@@ -57,13 +58,10 @@ private class DeathScreenViewModel: ObservableObject {
     
     func tryAgain() {
         revive()
-        engine.resume()
+        engine.resumeGame()
     }
     
     private func handle(_ visible: Bool) {
-        if isVisible {
-            engine.pause()
-        }
         withAnimation {
             isVisible = visible
         }

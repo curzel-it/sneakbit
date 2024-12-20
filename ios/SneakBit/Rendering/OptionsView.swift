@@ -196,7 +196,7 @@ class OptionsViewModel: ObservableObject {
         withAnimation {
             isVisible = true
         }
-        engine.pause()
+        engine.pauseGame()
     }
     
     func resumeGame() {
@@ -205,7 +205,7 @@ class OptionsViewModel: ObservableObject {
         }
         isBeingShown = false
         makeButtonSemiTransparent()
-        engine.resume()
+        engine.resumeGame()
     }
     
     func askForNewGame() {
@@ -221,7 +221,7 @@ class OptionsViewModel: ObservableObject {
         }
         isBeingShown = false
         engine.startNewGame()
-        engine.resume()
+        engine.resumeGame()
     }
     
     func cancelNewGame() {

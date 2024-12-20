@@ -36,17 +36,14 @@ private class HpViewModel: ObservableObject {
     }
     
     private func bind() {
-        Publishers.CombineLatest(
-            engine.heroHp.removeDuplicates(),
-            engine.showsDeathScreen.removeDuplicates()
-        )
-        .receive(on: DispatchQueue.main)
-        .sink { [weak self] (hp, gameOver) in
-            withAnimation {
-                self?.update(hp: hp, gameOver: gameOver)
+        engine.gameState()
+            .map { state in (state.heroHp, state.isGameOver()) }
+            .sink { [weak self] (hp, gameOver) in
+                withAnimation {
+                    self?.update(hp: hp, gameOver: gameOver)
+                }
             }
-        }
-        .store(in: &disposables)
+            .store(in: &disposables)
     }
     
     private func update(hp: Float32, gameOver: Bool) {

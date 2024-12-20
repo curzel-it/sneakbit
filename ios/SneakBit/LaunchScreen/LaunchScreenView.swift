@@ -30,16 +30,16 @@ private class LaunchScreenViewModel: ObservableObject {
     }
     
     private func bind() {
-        engine.idPendingFirstLoad
-            .removeDuplicates()
+        engine.isLoading
+            .first { !$0 }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.apply(visible: $0) }
+            .sink { [weak self] _ in self?.hide() }
             .store(in: &disposables)
     }
     
-    private func apply(visible: Bool) {
+    private func hide() {
         withAnimation {
-            isVisible = visible
+            isVisible = false
         }
     }
 }

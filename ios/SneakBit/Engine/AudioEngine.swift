@@ -40,7 +40,7 @@ class AudioEngine: Loggable {
         }
     }
     
-    func update() {
+    func updateSoundEffects() {
         guard soundEffectsEnabled else { return }
         
         fetchSoundEffects { soundEffects in
