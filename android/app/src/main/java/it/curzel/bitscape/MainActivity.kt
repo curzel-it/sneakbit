@@ -123,7 +123,8 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             NativeLib.SPRITE_SHEET_TENTACLES to "tentacles",
             NativeLib.SPRITE_SHEET_WEAPONS to "weapons",
             NativeLib.SPRITE_SHEET_MONSTERS to "monsters",
-            NativeLib.SPRITE_SHEET_HEROES to "heroes"
+            NativeLib.SPRITE_SHEET_HEROES to "heroes",
+            NativeLib.SPRITE_SHEET_DEMON_LORD_DEFEAT to "demon_lord_defeat"
         )
     )
 }

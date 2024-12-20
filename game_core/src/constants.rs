@@ -1,6 +1,6 @@
 use crate::utils::rect::IntRect;
 
-pub const BUILD_NUMBER: u32 = 37;
+pub const BUILD_NUMBER: u32 = 40;
 
 // Feature Flags
 pub const PVP_AVAILABLE: bool = false;

@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define BUILD_NUMBER 37
+#define BUILD_NUMBER 40
 
 #define PVP_AVAILABLE false
 
