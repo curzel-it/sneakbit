@@ -55,18 +55,17 @@ impl MessagesDisplay {
     }
 
     pub fn update(&mut self, keyboard: &KeyboardEventsProvider) {
-        if self.is_open {
-            if keyboard.has_back_been_pressed_by_anyone()|| keyboard.has_confirmation_been_pressed_by_anyone() {
-                self.close();
-            }
-            let max_offset = self.lines.len().saturating_sub(self.visible_line_count);
+        if keyboard.has_back_been_pressed_by_anyone()|| keyboard.has_confirmation_been_pressed_by_anyone() {
+            self.close();
+            return
+        }
+        let max_offset = self.lines.len().saturating_sub(self.visible_line_count);
 
-            if keyboard.is_direction_up_pressed_by_anyone() && self.scroll_offset > 0 {
-                self.scroll_offset -= 1;
-            }
-            if keyboard.is_direction_down_pressed_by_anyone() && self.scroll_offset < max_offset {
-                self.scroll_offset += 1;
-            }
+        if keyboard.is_direction_up_pressed_by_anyone() && self.scroll_offset > 0 {
+            self.scroll_offset -= 1;
+        }
+        if keyboard.is_direction_down_pressed_by_anyone() && self.scroll_offset < max_offset {
+            self.scroll_offset += 1;
         }
     }
 

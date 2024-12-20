@@ -41,6 +41,7 @@ fn main() {
 
         let keyboard = current_keyboard_state();
         let mouse = current_mouse_state();
+        let is_game_paused = context.is_game_paused();
 
         handle_window_updates(&mut context);
         handle_game_closed(&mut context);
@@ -54,7 +55,7 @@ fn main() {
         update_death_screen(&mut context, keyboard);
         update_loading_screen(&mut context, time_since_last_update);
         
-        if !context.is_game_paused() {
+        if !is_game_paused {
             update_game(time_since_last_update);
         } 
         play_audio(&mut context);
