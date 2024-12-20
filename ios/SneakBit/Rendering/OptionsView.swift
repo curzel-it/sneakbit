@@ -41,44 +41,105 @@ private struct OptionsContent: View {
     @EnvironmentObject var viewModel: OptionsViewModel
     
     var body: some View {
-        ZStack {
-            VStack(spacing: 60) {
+        ScrollView {
+            VStack(spacing: .zero) {
                 Text("game_menu_title".localized())
                     .typography(.largeTitle)
                     .foregroundStyle(Color.white)
+                    .padding(.top, 100)
+                    .padding(.bottom, 80)
                 
                 Text("game_menu_resume".localized())
                     .onTapGesture {
                         viewModel.resumeGame()
                     }
+                    .padding(.bottom, 50)
                 
                 Text(viewModel.toggleSoundEffectsTitle)
                     .onTapGesture {
                         viewModel.toggleSoundEffects()
                     }
+                    .padding(.bottom, 50)
                 
                 Text(viewModel.toggleMusicTitle)
                     .onTapGesture {
                         viewModel.toggleMusic()
                     }
+                    .padding(.bottom, 50)
                 
                 Text("credits".localized())
                     .onTapGesture {
                         viewModel.openCredits()
                     }
+                    .padding(.bottom, 50)
+                
+                Text("new_game".localized())
+                    .foregroundStyle(Color.red)
+                    .onTapGesture {
+                        viewModel.askForNewGame()
+                    }
+                    .padding(.bottom, 80)
+                
+                LinksView()
+                    .padding(.bottom, 50)
             }
-            .positioned(.middle)
-            
-            Text("new_game".localized())
-                .foregroundStyle(Color.red)
-                .onTapGesture {
-                    viewModel.askForNewGame()
-                }
-                .positioned(.bottom)
-                .padding(.bottom, viewModel.safeAreaInsets.bottom + 20)
         }
         .typography(.title)
         .foregroundStyle(Color.white.opacity(0.8))
+    }
+}
+
+private struct LinksView: View {
+    var body: some View {
+        HStack {
+            Spacer()
+            ShareButton()
+            Spacer()
+            SocialIcon(name: "twitter", link: "https://x.com/@HiddenMugs")
+            Spacer()
+            SocialIcon(name: "youtube", link: "https://www.youtube.com/@HiddenMugs")
+            Spacer()
+            SocialIcon(name: "discord", link: "https://discord.gg/8ghfcMvs")
+            Spacer()
+        }
+        .frame(maxWidth: 400)
+        .positioned(.horizontalCenter)
+    }
+}
+
+private struct SocialIcon: View {
+    let name: String
+    let link: String
+    
+    var body: some View {
+        Image(name)
+            .resizable()
+            .frame(width: 40, height: 40)
+            .clipShape(Circle())
+            .onTapGesture { URL.visit(urlString: link) }
+    }
+}
+
+private struct ShareButton: View {
+    var body: some View {
+        Image("share")
+            .resizable()
+            .frame(width: 40, height: 40)
+            .clipShape(Circle())
+            .onTapGesture {
+                shareLinks()
+            }
+    }
+
+    private func shareLinks() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+        guard let rootViewController = windowScene.windows.first?.rootViewController else { return }
+        
+        let activityViewController = UIActivityViewController(
+            activityItems: ["share.text".localized()],
+            applicationActivities: nil
+        )
+        rootViewController.present(activityViewController, animated: true, completion: nil)
     }
 }
 

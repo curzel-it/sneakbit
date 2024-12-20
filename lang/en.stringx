@@ -165,8 +165,11 @@ I have to go now, see you around!
 "empty_dialogue" = "What do you want?"
 
 "end_game_credits" = """
-This was my first game, I hope you liked it.
-Thanks for playing!
+This was my first game, I hope you liked it!
+But don't worry, the journey doesn't necessarily end here!
+New content is coming with every update.
+Stay in touch via X, Discord or YouTube (links in the game menu).
+Thanks for playing SneakBit!
 """
 
 "entity.menu.change_destination_world" = "Change Destination World"

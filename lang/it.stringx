@@ -165,8 +165,11 @@ Devo andare ora, alla prossima!
 "empty_dialogue" = "Cosa vuoi?"
 
 "end_game_credits" = """
-Questo era il mio primo videogame, spero ti sia piaciuto.
-Grazie per aver giocato!
+Questo è il primo videogame che sviluppo, spero ti sia piaciuto!
+Non preoccuparti, l'avventura non è necessariamente finita qui!
+Nuovi contenuti arrivano con ogni aggiornamento.
+Seguimi su X, Discord o YouTube (link nel menu).
+Grazie per aver giocato a SneakBit!
 """
 
 "entity.menu.change_destination_world" = "Cambia Destinazione Mondo"
