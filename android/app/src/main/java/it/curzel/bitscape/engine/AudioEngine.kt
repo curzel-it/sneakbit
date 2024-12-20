@@ -52,7 +52,7 @@ class AudioEngine(
     )
 
     private val soundPool: SoundPool
-    private var currentSoundTrackResId: Int? = null
+    private var latestSoundTrackResId: Int? = null
     private var currentSoundTrackSoundId: Int? = null
     private var currentSoundTrackStreamId: Int? = null
     private var soundEffectsEnabled: Boolean = false
@@ -94,6 +94,7 @@ class AudioEngine(
 
     fun toggleMusic() {
         currentSoundTrackStreamId?.let { soundPool.stop(it) }
+        currentSoundTrackStreamId = null
         musicEnabled = !musicEnabled
         preferences.edit().putBoolean(MUSIC_ENABLED, musicEnabled).apply()
         updateSoundTrack()
@@ -113,16 +114,18 @@ class AudioEngine(
         if (!musicEnabled) {
             return
         }
-        val resId = soundTrackResourceIdFromFileName(nativeLib.currentSoundTrack()) ?: return
 
-        if (currentSoundTrackResId != resId) {
-            currentSoundTrackResId = resId
-            currentSoundTrackStreamId?.let { soundPool.stop(it) }
-            currentSoundTrackStreamId = null
-
-            val soundId = soundPool.load(context, resId, 1)
-            currentSoundTrackSoundId = soundId
+        val resId = soundTrackResourceIdFromFileName(nativeLib.currentSoundTrack()) ?: latestSoundTrackResId ?: return
+        if (latestSoundTrackResId == resId && currentSoundTrackStreamId != null) {
+            return
         }
+
+        latestSoundTrackResId = resId
+        currentSoundTrackStreamId?.let { soundPool.stop(it) }
+        currentSoundTrackStreamId = null
+
+        val soundId = soundPool.load(context, resId, 1)
+        currentSoundTrackSoundId = soundId
     }
 
     private fun setupSoundLoadingListener() {
@@ -133,7 +136,7 @@ class AudioEngine(
         }
     }
 
-    private fun soundTrackResourceIdFromFileName(filename: String): Int? {
+    private fun soundTrackResourceIdFromFileName(filename: String?): Int? {
         return when (filename) {
             "pol_the_dojo_short.mp3" -> R.raw.pol_the_dojo_short
             "pol_brave_worm_short.mp3" -> R.raw.pol_brave_worm_short
