@@ -29,3 +29,23 @@ extension IntRect: Hashable, Equatable {
 extension Vector2d {
     static let zero = Vector2d(x: 0, y: 0)
 }
+
+extension CDisplayableMessage: Equatable {
+    public static func == (lhs: CDisplayableMessage, rhs: CDisplayableMessage) -> Bool {
+        if lhs.is_valid && rhs.is_valid {
+            string(from: lhs.text) == string(from: rhs.text)
+        } else {
+            lhs.is_valid == rhs.is_valid
+        }
+    }
+}
+
+extension CToast: Equatable {
+    public static func == (lhs: CToast, rhs: CToast) -> Bool {
+        if lhs.is_valid && rhs.is_valid {
+            string(from: lhs.text) == string(from: rhs.text)
+        } else {
+            lhs.is_valid == rhs.is_valid
+        }
+    }
+}

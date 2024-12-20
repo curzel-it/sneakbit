@@ -14,6 +14,6 @@ struct GameState {
     }
     
     func shouldPauseGame() -> Bool {
-        isGameOver()
+        isGameOver() || messages.is_valid
     }
 }

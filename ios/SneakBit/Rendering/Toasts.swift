@@ -65,6 +65,7 @@ private class ToastViewModel: ObservableObject {
         engine.gameState()
             .map { $0.toasts }
             .filter { $0.is_valid }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.load(toast: $0) }
             .store(in: &disposables)

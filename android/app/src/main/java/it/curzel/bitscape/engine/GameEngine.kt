@@ -83,10 +83,8 @@ class GameEngine(
     fun update(deltaTime: Float) {
         updateKeyboardState(deltaTime)
 
-        if (fetchGameState().shouldPauseGame()) {
-            pauseGame()
-        }
-        if (!isGamePaused) {
+        val wasPaused = isGamePaused
+        if (!wasPaused) {
             nativeLib.updateGame(deltaTime)
         }
         fetchRenderingInfo()
@@ -94,9 +92,15 @@ class GameEngine(
         updateFpsCounter()
         flushKeyboard()
 
-        if (!isGamePaused) {
+        if (!wasPaused) {
             audioEngine.updateSoundEffects()
         }
+
+        val nextState = fetchGameState()
+        if (nextState.shouldPauseGame()) {
+            pauseGame()
+        }
+        _gameState.value = nextState
     }
 
     fun pauseGame() {
@@ -217,7 +221,7 @@ class GameEngine(
     }
 
     private fun fetchGameState(): GameState {
-        val value = GameState(
+        return GameState(
             toasts = nativeLib.nextToast(),
             messages = nativeLib.nextMessage(),
             kunai = nativeLib.numberOfKunaiInInventory(),
@@ -226,8 +230,6 @@ class GameEngine(
             heroHp = nativeLib.playerCurrentHp(),
             isSwordEquipped = nativeLib.isSwordEquipped()
         )
-        _gameState.value = value
-        return value
     }
 
     private fun ensureJsonFileExists(file: File) {

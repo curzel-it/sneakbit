@@ -65,20 +65,25 @@ class GameEngine {
     func update(deltaTime: Float) {
         updateKeyboardState(timeSinceLastUpdate: deltaTime)
         
-        if fetchGameState().shouldPauseGame() {
-            pauseGame()
-        }
-        if !isGamePaused {
+        let wasPaused = isGamePaused
+        if !wasPaused {
             update_game(deltaTime)
         }
+        
         fetchRenderingInfo()
         handleWorldChanged()
         updateFpsCounter()
         flushKeyboard()
         
-        if !isGamePaused {
+        if !wasPaused {
             audioEngine.updateSoundEffects()
         }
+        
+        let newState = fetchGameState()
+        if newState.shouldPauseGame() {
+            pauseGame()
+        }
+        state.send(newState)
     }
     
     private func handleWorldChanged() {
@@ -225,7 +230,7 @@ class GameEngine {
     }
     
     private func fetchGameState() -> GameState{
-        let value = GameState(
+        GameState(
             toasts: next_toast_c(),
             messages: next_message_c(),
             kunai: number_of_kunai_in_inventory(0),
@@ -234,8 +239,6 @@ class GameEngine {
             heroHp: player_current_hp(0),
             isSwordEquipped: is_melee_equipped(0)
         )
-        state.send(value)
-        return value
     }
     
     private func fetchRenderingInfo() {

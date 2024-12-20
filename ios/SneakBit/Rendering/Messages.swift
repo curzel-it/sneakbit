@@ -55,12 +55,10 @@ private struct MessagesContents: View {
                     .multilineTextAlignment(.leading)
                     .typography(.text)
             }
-            ForEach(viewModel.options.indices, id: \.self) { index in
-                Button(viewModel.options[index]) {
-                    viewModel.selectOption(at: index)
-                }
-                .buttonStyle(.menuOption)
+            Button("ok_action".localized()) {
+                viewModel.onConfirm()
             }
+            .buttonStyle(.menuOption)
         }
     }
 }
@@ -74,9 +72,7 @@ private class MessagesViewModel: ObservableObject {
     
     @Published var title: String? = nil
     @Published var text: String? = nil
-    @Published var options: [String] = []
     @Published var isVisible: Bool = false
-    @Published var opacity: CGFloat = 0
     
     let borderColor: Color = .gray
     let backgroundColor: Color = .menuBackground
@@ -90,6 +86,7 @@ private class MessagesViewModel: ObservableObject {
     private func bind() {
         engine.gameState()
             .map { $0.messages }
+            .removeDuplicates()
             .sink { [weak self] message in
                 if message.is_valid {
                     self?.load(message)
@@ -102,17 +99,16 @@ private class MessagesViewModel: ObservableObject {
     
     private func load(_ message: CDisplayableMessage) {
         engine.pauseGame()
+        title = string(from: message.title)
+        text = string(from: message.text)
+        
         withAnimation {
-            options = ["ok_action".localized()]
-            title = string(from: message.title)
-            text = string(from: message.text)
             isVisible = true
         }
     }
     
     private func hide() {
         withAnimation {
-            options = []
             isVisible = false
         }
     }
@@ -122,7 +118,7 @@ private class MessagesViewModel: ObservableObject {
         hide()
     }
     
-    func selectOption(at index: Int) {
+    func onConfirm() {
         engine.resumeGame()
         hide()
     }

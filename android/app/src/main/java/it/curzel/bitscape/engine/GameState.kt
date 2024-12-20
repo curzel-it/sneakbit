@@ -18,6 +18,6 @@ data class GameState(
     }
 
     fun shouldPauseGame(): Boolean {
-        return isGameOver()
+        return isGameOver() || messages != null
     }
 }
