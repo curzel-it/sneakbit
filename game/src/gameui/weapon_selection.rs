@@ -88,7 +88,7 @@ impl WeaponsGrid {
             if new_index >= self.columns {
                 new_index -= self.columns;
             } else {
-                new_index = (new_index + total_weapons) - self.columns;
+                new_index = (new_index + total_weapons).saturating_sub(self.columns);
             }
         }
         if keyboard.is_direction_down_pressed_by_anyone() {
