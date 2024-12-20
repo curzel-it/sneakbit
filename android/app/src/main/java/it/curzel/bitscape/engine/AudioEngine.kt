@@ -99,9 +99,9 @@ class AudioEngine(
         updateSoundTrack()
     }
 
-    fun update() {
-        scope.launch {
-            if (soundEffectsEnabled) {
+    fun updateSoundEffects() {
+        if (soundEffectsEnabled) {
+            scope.launch {
                 nativeLib.currentSoundEffects()
                     .mapNotNull { SoundEffect.fromInt(it) }
                     .forEach { playSound(it) }

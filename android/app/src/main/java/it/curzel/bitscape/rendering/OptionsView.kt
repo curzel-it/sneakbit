@@ -351,12 +351,12 @@ private class OptionsScreenViewModel(
     fun showMenu() {
         if (_isVisible.value) return
         _isVisible.value = true
-        gameEngine.pause()
+        gameEngine.pauseGame()
     }
 
     fun resumeGame() {
         _isVisible.value = false
-        gameEngine.resume()
+        gameEngine.resumeGame()
         makeButtonSemiTransparent()
     }
 
@@ -378,7 +378,7 @@ private class OptionsScreenViewModel(
         _isVisible.value = false
         _showNewGameAlert.value = false
         gameEngine.startNewGame()
-        gameEngine.resume()
+        gameEngine.resumeGame()
     }
 
     fun cancelNewGame() {

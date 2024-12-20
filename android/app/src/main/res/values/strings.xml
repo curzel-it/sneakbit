@@ -24,4 +24,5 @@
     <string name="credits.sound_effects">"Sound Effects by SubspaceAudio"</string>
     <string name="credits.sound_effects.link">"https://opengameart.org/content/512-sound-effects-8-bit-style"</string>
     <string name="menu_back">"Go Back"</string>
+    <string name="ok_action">"Ok"</string>
 </resources>

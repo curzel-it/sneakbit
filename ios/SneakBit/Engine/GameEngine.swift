@@ -82,7 +82,8 @@ class GameEngine {
     }
     
     private func handleWorldChanged() {
-        guard current_world_id() != currentWorldId else { return }
+        let newWorld = current_world_id()
+        guard newWorld != currentWorldId else { return }
         isLoading.send(true)
         canRender = false
         DispatchQueue.main.asyncAfter(deadline: .now() + WORLD_TRANSITION_TIME) {
@@ -91,7 +92,7 @@ class GameEngine {
         }
         
         broker.send(.worldTransition(source: currentWorldId, destination: current_world_id()))
-        currentWorldId = current_world_id()
+        currentWorldId = newWorld
         isNight = is_night()
         isLimitedVisibility = is_limited_visibility()
         keyDown.removeAll()

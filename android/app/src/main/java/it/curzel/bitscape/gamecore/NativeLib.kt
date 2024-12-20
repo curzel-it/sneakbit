@@ -1,8 +1,5 @@
 package it.curzel.bitscape.gamecore
 
-import it.curzel.bitscape.rendering.MenuConfig
-import it.curzel.bitscape.rendering.ToastConfig
-
 class NativeLib {
     external fun initializeConfig(
         baseEntitySpeed: Float,
@@ -34,15 +31,11 @@ class NativeLib {
         timeSinceLastUpdate: Float
     )
     external fun updateGame(timeSinceLastUpdate: Float)
-    external fun showsDeathScreen(): Boolean
     external fun currentBiomeTilesVariant(): Int
     external fun cameraViewport(): IntArray
     external fun cameraViewportOffset(): FloatArray
     external fun fetchRenderableItems(): List<RenderableItem>
     external fun numberOfKunaiInInventory(): Int
-    external fun toastConfig(): ToastConfig
-    external fun menuConfig(): MenuConfig
-    external fun selectCurrentMenuOptionAtIndex(index: Int)
     external fun isNight(): Boolean
     external fun isLimitedVisibility(): Boolean
     external fun isInteractionAvailable(): Boolean
@@ -50,7 +43,11 @@ class NativeLib {
     external fun currentSoundEffects(): List<Int>
     external fun currentSoundTrack(): String
     external fun isSwordEquipped(): Boolean
-    external fun currentHeroHp(): Float
+    external fun playerCurrentHp(): Float
+    external fun nextMessage(): DisplayableMessage?
+    external fun nextToast(): DisplayableToast?
+    external fun matchResult(): MatchResult
+    external fun revive()
 
     companion object {
         const val TILE_SIZE: Int = 16
@@ -82,22 +79,3 @@ class NativeLib {
         }
     }
 }
-
-data class IntRect(
-    val x: Int,
-    val y: Int,
-    val w: Int,
-    val h: Int
-)
-
-data class Vector2d(
-    val x: Float,
-    val y: Float
-)
-
-data class RenderableItem(
-    val spriteSheetId: UInt,
-    val textureRect: IntRect,
-    val offset: Vector2d,
-    val frame: IntRect
-)

@@ -54,48 +54,24 @@ fun LoadingScreen(
 ) {
     val viewModel: LoadingScreenViewModel = remember { LoadingScreenViewModel(gameEngine) }
     val isVisible by viewModel.isVisible
-    val text by viewModel.text
-    val showsActivityIndicator by viewModel.showsActivityIndicator
-
-    LoadingScreen(isVisible, text, showsActivityIndicator, modifier)
+    LoadingScreen(isVisible, modifier)
 }
 
 @Composable
 private fun LoadingScreen(
     isVisible: Boolean,
-    text: String,
-    showsActivityIndicator: Boolean,
     modifier: Modifier = Modifier
 ) {
     AnimatedVisibility(
-    visible = isVisible,
-    enter = fadeIn(),
-    exit = fadeOut(),
-    modifier = modifier
-        .fillMaxSize()
-        .background(Color.Black.copy(alpha = 0.7f))
-) {
+        visible = isVisible,
+        enter = fadeIn(),
+        exit = fadeOut(),
+        modifier = modifier.fillMaxSize()
+    ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = modifier
-                .fillMaxSize()
-                .background(Color.Black)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = text,
-                    color = Color.White,
-                    style = DSTypography.title
-                )
-
-                if (showsActivityIndicator) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    CircularProgressIndicator(color = Color.White)
-                }
-            }
-        }
+            modifier = modifier.fillMaxSize().background(Color.Black)
+        ) {}
     }
 }
 
@@ -103,25 +79,17 @@ class LoadingScreenViewModel(private val gameEngine: GameEngine) : ViewModel() {
     private val _isVisible = mutableStateOf(false)
     val isVisible: State<Boolean> = _isVisible
 
-    private val _text = mutableStateOf("")
-    val text: State<String> = _text
-
-    private val _showsActivityIndicator = mutableStateOf(false)
-    val showsActivityIndicator: State<Boolean> = _showsActivityIndicator
-
     init {
         viewModelScope.launch {
-            gameEngine.loadingScreenConfig().collect { config ->
-                applyConfig(config)
+            gameEngine.isLoading.collect { isLoading ->
+                apply(isLoading)
             }
         }
     }
 
-    private fun applyConfig(config: LoadingScreenConfig) {
+    private fun apply(isLoading: Boolean) {
         viewModelScope.launch {
-            _isVisible.value = config.isVisible
-            _text.value = config.message
-            _showsActivityIndicator.value = config.showsActivityIndicator
+            _isVisible.value = isLoading
         }
     }
 }
@@ -129,5 +97,5 @@ class LoadingScreenViewModel(private val gameEngine: GameEngine) : ViewModel() {
 @Preview(showBackground = true)
 @Composable
 fun LoadingScreenPreview() {
-    LoadingScreen(true, "Example", true, Modifier)
+    LoadingScreen(true, Modifier)
 }

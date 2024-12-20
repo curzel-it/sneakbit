@@ -11,4 +11,5 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val MenuBackground = Color(0xFF2A2F4E)
+val ToastBackground = Color(0xFF050505)
 val HighlightedText = Color(0xFFFFA214)
