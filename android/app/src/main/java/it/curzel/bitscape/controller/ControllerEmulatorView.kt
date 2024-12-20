@@ -220,11 +220,8 @@ class ControllerEmulatorViewModel(
 
     init {
         updateCurrentOffset()
-
         viewModelScope.launch {
-            observeKunaiCount()
-            observeSwordEquipped()
-            observeInteractionAvailable()
+            observeGameState()
         }
     }
 
@@ -274,28 +271,14 @@ class ControllerEmulatorViewModel(
         setConfirmButtonPosition()
     }
 
-    private suspend fun observeKunaiCount() {
+    private suspend fun observeGameState() {
         engine.gameState
-            .mapNotNull { it?.kunai }
-            .collect { count ->
-                _isRangedAttackVisible.value = count > 0
-                _attackLabel.value = "x$count"
-            }
-    }
-
-    private suspend fun observeSwordEquipped() {
-        engine.gameState
-            .mapNotNull { it?.isSwordEquipped }
-            .collect { isEquipped ->
-                _isCloseRangeAttackVisible.value = isEquipped
-            }
-    }
-
-    private suspend fun observeInteractionAvailable() {
-        engine.gameState
-            .mapNotNull { it?.isInteractionAvailable }
-            .collect { available ->
-                _isConfirmVisible.value = available
+            .mapNotNull { it }
+            .collect {
+                _isRangedAttackVisible.value = it.kunai > 0
+                _attackLabel.value = "x${it.kunai}"
+                _isCloseRangeAttackVisible.value = it.isSwordEquipped
+                _isConfirmVisible.value = it.isInteractionAvailable
             }
     }
 }
