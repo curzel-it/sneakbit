@@ -71,6 +71,7 @@ class GameEngine {
         if !isGamePaused {
             update_game(deltaTime)
         }
+        fetchRenderingInfo()
         handleWorldChanged()
         updateFpsCounter()
         flushKeyboard()
@@ -232,10 +233,13 @@ class GameEngine {
             heroHp: player_current_hp(0),
             isSwordEquipped: is_melee_equipped(0)
         )
+        state.send(value)
+        return value
+    }
+    
+    private func fetchRenderingInfo() {
         currentBiomeVariant = Int(current_biome_tiles_variant())
         cameraViewport = camera_viewport()
         cameraViewportOffset = camera_viewport_offset()
-        state.send(value)
-        return value
     }
 }
