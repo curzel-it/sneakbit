@@ -15,14 +15,19 @@
     <string name="game_menu_enable_music">"Enable Music"</string>
     <string name="game_menu_disable_music">"Disable Music"</string>
     <string name="credits">"Credits"</string>
-    <string name="credits.developer">"Game by HiddenMugs"</string>
-    <string name="credits.developer.link">"https://www.youtube.com/@HiddenMugs"</string>
-    <string name="credits.open_source">"The project is Open Source"</string>
-    <string name="credits.open_source.link">"https://github.com/curzel-it/sneakbit/"</string>
-    <string name="credits.music">"Music by Filippo Vicarelli"</string>
-    <string name="credits.music.link">"https://www.filippovicarelli.com/8bit-game-background-music"</string>
-    <string name="credits.sound_effects">"Sound Effects by SubspaceAudio"</string>
-    <string name="credits.sound_effects.link">"https://opengameart.org/content/512-sound-effects-8-bit-style"</string>
+    <string name="credits_and_links">"Link &amp; Credits"</string>
+    <string name="credits_youtube">"YouTube"</string>
+    <string name="credits_youtube_link">"https://www.youtube.com/@HiddenMugs"</string>
+    <string name="credits_discord">"Discord"</string>
+    <string name="credits_discord_link">"https://discord.gg/8ghfcMvs"</string>
+    <string name="credits_twitter">"X / Twitter"</string>
+    <string name="credits_twitter_link">"https://x.com/@HiddenMugs"</string>
+    <string name="credits_open_source">"This project is Open Source"</string>
+    <string name="credits_open_source_link">"https://github.com/curzel-it/sneakbit/"</string>
+    <string name="credits_music">"Music by Filippo Vicarelli"</string>
+    <string name="credits_music_link">"https://www.filippovicarelli.com/8bit-game-background-music"</string>
+    <string name="credits_sound_effects">"Sound Effects by SubspaceAudio"</string>
+    <string name="credits_sound_effects_link">"https://opengameart.org/content/512-sound-effects-8-bit-style"</string>
     <string name="menu_back">"Go Back"</string>
     <string name="ok_action">"Ok"</string>
     <string name="share_text">"Check out SneakBit!\n\nApp Store (iOS)\nhttps://apps.apple.com/app/sneakbit/id6737452377\n\nPlay Store (Android)\nhttps://play.google.com/store/apps/details?id=it.curzel.bitscape\n\nSteam (Windows &amp; macOS)\nhttps://store.steampowered.com/app/3360860/SneakBit"</string>

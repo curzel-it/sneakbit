@@ -12,9 +12,14 @@
 "game_menu_enable_music" = "Abilita Musica";
 "game_menu_disable_music" = "Disabilita Musica";
 "credits" = "Crediti";
-"credits.developer" = "Game by Federico Curzel";
-"credits.developer.link" = "https://www.youtube.com/@HiddenMugs";
-"credits.open_source" = "The project is Open Source";
+"credits_and_links" = "Links & Credits";
+"credits.youtube" = "YouTube";
+"credits.youtube.link" = "https://www.youtube.com/@HiddenMugs";
+"credits.discord" = "Discord";
+"credits.discord.link" = "https://discord.gg/8ghfcMvs";
+"credits.twitter" = "X / Twitter";
+"credits.twitter.link" = "https://x.com/@HiddenMugs";
+"credits.open_source" = "Questo progetto è Open Source";
 "credits.open_source.link" = "https://github.com/curzel-it/sneakbit/";
 "credits.music" = "Music by Filippo Vicarelli";
 "credits.music.link" = "https://www.filippovicarelli.com/8bit-game-background-music";

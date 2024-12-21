@@ -130,23 +130,33 @@ Devo andare ora, alla prossima!
 
 "confirmation.confirm" = "Ok"
 
-"credits" = "Crediti"
+"credits" = "Credits"
 
-"credits.developer" = "Game by Federico Curzel"
+"credits.discord" = "Discord"
 
-"credits.developer.link" = "https://www.youtube.com/@HiddenMugs"
+"credits.discord.link" = "https://discord.gg/8ghfcMvs"
 
 "credits.music" = "Music by Filippo Vicarelli"
 
 "credits.music.link" = "https://www.filippovicarelli.com/8bit-game-background-music"
 
-"credits.open_source" = "The project is Open Source"
+"credits.open_source" = "GitHub"
 
 "credits.open_source.link" = "https://github.com/curzel-it/sneakbit/"
 
 "credits.sound_effects" = "Sound Effects by SubspaceAudio"
 
 "credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style"
+
+"credits.twitter" = "X / Twitter"
+
+"credits.twitter.link" = "https://x.com/@HiddenMugs"
+
+"credits.youtube" = "YouTube"
+
+"credits.youtube.link" = "https://www.youtube.com/@HiddenMugs"
+
+"credits_and_links" = "Credits & Links"
 
 "death_screen.player_won" = "Vince il giocatore %PLAYER_NAME%!"
 
@@ -1348,13 +1358,13 @@ Digli di mandarci dei *soldi veri*, tipo crypto, e ce ne andremo in un baleno.
 Hai un aura potentissima!
 """
 
+"teleporter.locked" = "Questa porta è bloccata."
+
 "teleporter.name" = "Teletrasporto"
 
 "teleporter.unlock.message" = "Perderai una chiave %s."
 
 "teleporter.unlock.title" = "Sbloccare la porta?"
-
-"teleporter.locked" = "Questa porta è bloccata."
 
 "text_input.hint" = "ENTER per confermare, ESC per annullare"
 

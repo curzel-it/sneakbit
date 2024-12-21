@@ -132,21 +132,31 @@ I have to go now, see you around!
 
 "credits" = "Credits"
 
-"credits.developer" = "Game by Federico Curzel"
+"credits.discord" = "Discord"
 
-"credits.developer.link" = "https://www.youtube.com/@HiddenMugs"
+"credits.discord.link" = "https://discord.gg/8ghfcMvs"
 
 "credits.music" = "Music by Filippo Vicarelli"
 
 "credits.music.link" = "https://www.filippovicarelli.com/8bit-game-background-music"
 
-"credits.open_source" = "The project is Open Source"
+"credits.open_source" = "GitHub"
 
 "credits.open_source.link" = "https://github.com/curzel-it/sneakbit/"
 
 "credits.sound_effects" = "Sound Effects by SubspaceAudio"
 
 "credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style"
+
+"credits.twitter" = "X / Twitter"
+
+"credits.twitter.link" = "https://x.com/@HiddenMugs"
+
+"credits.youtube" = "YouTube"
+
+"credits.youtube.link" = "https://www.youtube.com/@HiddenMugs"
+
+"credits_and_links" = "Credits & Links"
 
 "death_screen.player_won" = "Player %PLAYER_NAME% won!"
 
@@ -1344,13 +1354,13 @@ Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
 
 "references.dbz.piccolo" = "I am The Namek who has long since forgotten his name"
 
+"teleporter.locked" = "This door is locked."
+
 "teleporter.name" = "Teleporter"
 
 "teleporter.unlock.message" = "You will lose one %s key."
 
 "teleporter.unlock.title" = "Unlock the door?"
-
-"teleporter.locked" = "This door is locked."
 
 "text_input.hint" = "ENTER to confirm, ESC to cancel"
 
@@ -1361,3 +1371,4 @@ Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
 "yes" = "Yes"
 
 "you" = "You"
+

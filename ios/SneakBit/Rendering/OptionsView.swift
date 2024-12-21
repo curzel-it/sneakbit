@@ -151,7 +151,6 @@ private struct CreditsView: View {
             Text("credits".localized())
                 .typography(.largeTitle)
             
-            CreditsItem(key: "developer")
             CreditsItem(key: "open_source")
             CreditsItem(key: "music")
             CreditsItem(key: "sound_effects")

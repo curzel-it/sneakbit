@@ -1,20 +1,17 @@
 use std::process;
-
 use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_camera_viewport, current_game_mode, current_world_id, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, save_game, set_wants_fullscreen, spacing, start_new_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect, wants_fullscreen};
-
 use crate::features::context::GameContext;
-
 use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, messages::MessagesDisplay, map_editor::MapEditor, menu::{Menu, MenuItem}};
 
 pub fn update_game_menu(context: &mut GameContext, keyboard: &KeyboardEventsProvider, mouse: &MouseEventsProvider) {
     if context.menu.is_open() {
         let viewport = current_camera_viewport();
         context.menu.update(viewport, keyboard, mouse);
-    } else if keyboard.has_menu_been_pressed_by_anyone() && !context.is_dead() {   
+    } else if keyboard.has_menu_been_pressed_by_anyone() && !context.is_dead() {
         let world_id = current_world_id();
-        context.menu.setup(world_id);         
+        context.menu.setup(world_id);
         context.menu.show();
-    }    
+    }
 }
 
 pub struct GameMenu {
@@ -41,7 +38,7 @@ enum MenuState {
     ShowingCredits,
     ShowingControls,
     SelectingNumberOfPlayers,
-    ShowingSettings, 
+    ShowingSettings,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -52,9 +49,8 @@ pub enum GameMenuItem {
     Save,
     MapEditor,
     Exit,
-    GameSettings, 
+    GameSettings,
     NumberOfPlayers,
-    Controls,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -62,7 +58,8 @@ pub enum GameSettingsItem {
     ToggleSoundEffects,
     ToggleMusic,
     LanguageSettings,
-    Credits, 
+    Credits,
+    Controls, 
     Back,
 }
 
@@ -76,7 +73,6 @@ impl MenuItem for GameMenuItem {
             GameMenuItem::Exit => "game.menu.exit".localized(),
             GameMenuItem::ToggleFullScreen => "game.menu.toggle_fullscreen".localized(),
             GameMenuItem::NumberOfPlayers => "game.menu.number_of_players".localized(),
-            GameMenuItem::Controls => "game.menu.controls".localized(),
             GameMenuItem::GameSettings => "game.menu.settings".localized(),
         }
     }
@@ -100,7 +96,8 @@ impl MenuItem for GameSettingsItem {
                 }
             }
             GameSettingsItem::LanguageSettings => "game.menu.language".localized(),
-            GameSettingsItem::Credits => "credits".localized(),
+            GameSettingsItem::Credits => "credits_and_links".localized(),
+            GameSettingsItem::Controls => "game.menu.controls".localized(), 
             GameSettingsItem::Back => "menu_back".localized(),
         }
     }
@@ -116,9 +113,8 @@ impl GameMenu {
                 GameMenuItem::NewGame,
                 GameMenuItem::Save,
                 GameMenuItem::MapEditor,
-                GameMenuItem::GameSettings, 
+                GameMenuItem::GameSettings,
                 GameMenuItem::NumberOfPlayers,
-                GameMenuItem::Controls,
                 GameMenuItem::Exit,
             ],
         );
@@ -129,15 +125,18 @@ impl GameMenu {
                 GameSettingsItem::ToggleSoundEffects,
                 GameSettingsItem::ToggleMusic,
                 GameSettingsItem::LanguageSettings,
-                GameSettingsItem::Credits, 
-                GameSettingsItem::Back, 
+                GameSettingsItem::Credits,
+                GameSettingsItem::Controls, 
+                GameSettingsItem::Back,
             ],
         );
 
         let credits_menu = Menu::new(
-            "credits".localized(),
+            "credits_and_links".localized(),
             vec![
-                "credits.developer".localized(),
+                "credits.youtube".localized(),
+                "credits.discord".localized(),
+                "credits.twitter".localized(),
                 "credits.open_source".localized(),
                 "credits.music".localized(),
                 "credits.sound_effects".localized(),
@@ -171,7 +170,7 @@ impl GameMenu {
             credits_menu,
             languages_menu,
             number_of_players_menu,
-            messages: MessagesDisplay::new(80, 5)
+            messages: MessagesDisplay::new(80, 5),
         }
     }
 
@@ -180,7 +179,7 @@ impl GameMenu {
         self.menu.title = "game.menu.title".localized();
         self.settings_menu.title = "game.menu.settings".localized();
         self.languages_menu.title = "game.menu.language".localized();
-        self.credits_menu.title = "credits".localized();
+        self.credits_menu.title = "credits_and_links".localized();
         self.number_of_players_menu.title = "game.menu.number_of_players".localized();
         self.number_of_players_menu.items = player_options();
 
@@ -190,7 +189,7 @@ impl GameMenu {
                 GameMenuItem::Resume,
                 GameMenuItem::ToggleFullScreen,
                 GameMenuItem::MapEditor,
-                GameMenuItem::GameSettings, 
+                GameMenuItem::GameSettings,
                 GameMenuItem::Exit,
             ]
         } else {
@@ -200,7 +199,6 @@ impl GameMenu {
                 GameMenuItem::NewGame,
                 GameMenuItem::GameSettings,
                 GameMenuItem::NumberOfPlayers,
-                GameMenuItem::Controls,
                 GameMenuItem::Exit,
             ]
         }
@@ -231,18 +229,18 @@ impl GameMenu {
 
     pub fn update(
         &mut self,
-        camera_vieport: &IntRect,
+        camera_viewport: &IntRect,
         keyboard: &KeyboardEventsProvider,
-        mouse: &MouseEventsProvider
+        mouse: &MouseEventsProvider,
     ) -> bool {
         if self.is_open() && self.menu.selection_has_been_confirmed {
             self.handle_selection();
         } else {
             match self.state {
-                MenuState::Closed => {},
+                MenuState::Closed => {}
                 MenuState::Open => self.update_from_open(keyboard),
-                MenuState::MapEditor => self.update_from_map_editor(camera_vieport, keyboard, mouse),
-                MenuState::PlaceItem => self.update_from_place_item(camera_vieport, keyboard, mouse),
+                MenuState::MapEditor => self.update_from_map_editor(camera_viewport, keyboard, mouse),
+                MenuState::PlaceItem => self.update_from_place_item(camera_viewport, keyboard, mouse),
                 MenuState::NewGameConfirmation => self.update_from_new_game(keyboard),
                 MenuState::ShowingLanguageSettings => self.update_from_language(keyboard),
                 MenuState::ShowingCredits => self.update_from_credits(keyboard),
@@ -291,21 +289,14 @@ impl GameMenu {
             GameMenuItem::NewGame => {
                 self.new_game_confirmation.show(
                     &"game.menu.new_game".localized(),
-                    &"game.menu.new_game_are_you_sure".localized()
+                    &"game.menu.new_game_are_you_sure".localized(),
                 );
                 self.state = MenuState::NewGameConfirmation;
-            }
-            GameMenuItem::Controls => {
-                self.messages.show(
-                &"game.menu.controls".localized(),
-                &"game.menu.controls.explained".localized()
-                );
-                self.state = MenuState::ShowingControls;
             }
             GameMenuItem::Exit => {
                 println!("Got exit request!");
                 self.close();
-                process::exit(0);   
+                process::exit(0);
             }
         }
     }
@@ -315,10 +306,12 @@ impl GameMenu {
 
         if self.credits_menu.selection_has_been_confirmed {
             match self.credits_menu.selected_index {
-                0 => { _ = open::that("credits.developer.link".localized()); },
-                1 => { _ = open::that("credits.open_source.link".localized()); },
-                2 => { _ = open::that("credits.music.link".localized()); },
-                3 => { _ = open::that("credits.sound_effects.link".localized()); },
+                0 => { _ = open::that("credits.youtube.link".localized()); }
+                1 => { _ = open::that("credits.discord.link".localized()); }
+                2 => { _ = open::that("credits.twitter.link".localized()); }
+                3 => { _ = open::that("credits.open_source.link".localized()); }
+                4 => { _ = open::that("credits.music.link".localized()); }
+                5 => { _ = open::that("credits.sound_effects.link".localized()); }
                 _ => {}
             }
             is_open = false;
@@ -326,17 +319,17 @@ impl GameMenu {
         if !is_open {
             self.credits_menu.clear_selection();
             self.credits_menu.close();
-            self.state = MenuState::ShowingSettings; 
+            self.state = MenuState::ShowingSettings;
         }
     }
 
     fn update_from_controls(&mut self, keyboard: &KeyboardEventsProvider) {
         if keyboard.has_back_been_pressed_by_anyone() {
-            self.state = MenuState::Open;
+            self.state = MenuState::ShowingSettings;
         } else {
             self.messages.update(keyboard);
             if !self.messages.is_open() {
-                self.state = MenuState::Open;
+                self.state = MenuState::ShowingSettings;
             }
         }
     }
@@ -349,7 +342,7 @@ impl GameMenu {
             self.new_game_confirmation.menu.clear_confirmation();
             self.menu.clear_selection();
 
-            if matches!(new_game_confirm, ConfirmationOption::YesConfirm) { 
+            if matches!(new_game_confirm, ConfirmationOption::YesConfirm) {
                 start_new_game();
                 self.menu.close();
                 self.state = MenuState::Closed;
@@ -362,7 +355,7 @@ impl GameMenu {
     fn update_from_number_of_players(&mut self, keyboard: &KeyboardEventsProvider) {
         if keyboard.has_back_been_pressed_by_anyone() {
             self.state = MenuState::Open;
-            return
+            return;
         }
         self.number_of_players_menu.update(keyboard);
 
@@ -370,7 +363,7 @@ impl GameMenu {
             let index = self.number_of_players_menu.selected_index;
 
             if index == 0 && PVP_AVAILABLE {
-                toggle_pvp()
+                toggle_pvp();
             } else if index == self.number_of_players_menu.items.len() - 1 {
                 self.number_of_players_menu.clear_selection();
                 self.number_of_players_menu.close();
@@ -390,7 +383,7 @@ impl GameMenu {
         if keyboard.has_back_been_pressed_by_anyone() {
             self.menu.clear_confirmation();
             self.state = MenuState::ShowingSettings;
-            return
+            return;
         }
         self.languages_menu.update(keyboard);
 
@@ -404,7 +397,7 @@ impl GameMenu {
                 self.state = MenuState::ShowingSettings;
             } else {
                 set_value_for_key(&StorageKey::language(), selected_index as u32);
-                self.menu.clear_selection();            
+                self.menu.clear_selection();
                 self.menu.close();
                 self.setup(self.current_world_id);
                 self.state = MenuState::Closed;
@@ -422,14 +415,14 @@ impl GameMenu {
 
     fn update_from_map_editor(
         &mut self,
-        camera_vieport: &IntRect,
+        camera_viewport: &IntRect,
         keyboard: &KeyboardEventsProvider,
         mouse: &MouseEventsProvider,
     ) {
         if keyboard.has_back_been_pressed_by_anyone() {
             self.state = MenuState::Open;
         }
-        self.map_editor.update(camera_vieport, keyboard, mouse);
+        self.map_editor.update(camera_viewport, keyboard, mouse);
 
         if self.map_editor.is_placing_item() {
             self.state = MenuState::PlaceItem;
@@ -438,14 +431,14 @@ impl GameMenu {
 
     fn update_from_place_item(
         &mut self,
-        camera_vieport: &IntRect,
+        camera_viewport: &IntRect,
         keyboard: &KeyboardEventsProvider,
         mouse: &MouseEventsProvider,
     ) {
         if keyboard.has_back_been_pressed_by_anyone() {
             self.state = MenuState::MapEditor;
         }
-        self.map_editor.update(camera_vieport, keyboard, mouse)
+        self.map_editor.update(camera_viewport, keyboard, mouse)
     }
 
     fn update_from_settings(&mut self, keyboard: &KeyboardEventsProvider) {
@@ -469,6 +462,13 @@ impl GameMenu {
                 GameSettingsItem::Credits => {
                     self.credits_menu.show();
                     self.state = MenuState::ShowingCredits;
+                }
+                GameSettingsItem::Controls => {
+                    self.messages.show(
+                        &"game.menu.controls".localized(),
+                        &"game.menu.controls.explained".localized(),
+                    );
+                    self.state = MenuState::ShowingControls;
                 }
                 GameSettingsItem::Back => {
                     self.settings_menu.close();
@@ -494,7 +494,7 @@ impl GameMenu {
             MenuState::MapEditor | MenuState::PlaceItem => self.map_editor.ui(camera_viewport),
             MenuState::SelectingNumberOfPlayers => self.number_of_players_menu.ui(),
             MenuState::ShowingSettings => self.settings_menu.ui(),
-            MenuState::ShowingControls => self.messages.ui(), 
+            MenuState::ShowingControls => self.messages.ui(),
         }
     }
 }

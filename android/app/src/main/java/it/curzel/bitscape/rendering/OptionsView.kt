@@ -371,11 +371,6 @@ private fun CreditsView(
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(id = R.string.credits_developer),
-            style = DSTypography.text,
-            modifier = Modifier.clickable { visitUrl(R.string.credits_developer_link) }
-        )
-        Text(
             text = stringResource(id = R.string.credits_open_source),
             style = DSTypography.text,
             modifier = Modifier.clickable { visitUrl(R.string.credits_open_source_link) }
