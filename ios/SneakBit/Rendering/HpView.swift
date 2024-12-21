@@ -36,21 +36,20 @@ private class HpViewModel: ObservableObject {
     }
     
     private func bind() {
-        Publishers.CombineLatest(
-            engine.heroHp.removeDuplicates(),
-            engine.showsDeathScreen.removeDuplicates()
-        )
-        .receive(on: DispatchQueue.main)
-        .sink { [weak self] (hp, gameOver) in
-            withAnimation {
-                self?.update(hp: hp, gameOver: gameOver)
+        engine.gameState()
+            .map { state in (state.heroHp, state.isGameOver()) }
+            .sink { [weak self] (hp, gameOver) in
+                withAnimation {
+                    self?.update(hp: hp, gameOver: gameOver)
+                }
             }
-        }
-        .store(in: &disposables)
+            .store(in: &disposables)
     }
     
     private func update(hp: Float32, gameOver: Bool) {
-        if hp < 60 && !gameOver {
+        let maxHpToShow: Float32 = gameOver ? -99.0 : 60.0
+        
+        if hp < maxHpToShow {
             isVisible = true
             text = String(format: "HP %0.1f%%", hp)
             textColor = hp < 30 ? .red : .white

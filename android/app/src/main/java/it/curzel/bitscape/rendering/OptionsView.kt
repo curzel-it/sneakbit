@@ -15,10 +15,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
@@ -180,54 +188,129 @@ private fun OptionsContent(
     askForNewGame: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(40.dp),
+    Box(
         modifier = modifier
+            .fillMaxSize()
+            .padding(vertical = 20.dp)
     ) {
-        Text(
-            text = stringResource(id = R.string.game_menu_title),
-            style = DSTypography.largeTitle,
-            color = Color.White,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = stringResource(id = R.string.game_menu_resume),
-            style = DSTypography.gameMenuOption,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp),
             modifier = Modifier
-                .clickable { resumeGame() }
-                .padding(vertical = 8.dp)
-        )
-        Text(
-            text = stringResource(id = toggleSoundEffectsTitle),
-            style = DSTypography.gameMenuOption,
-            modifier = Modifier
-                .clickable { toggleSoundEffects() }
-                .padding(vertical = 8.dp)
-        )
-        Text(
-            text = stringResource(id = toggleMusicTitle),
-            style = DSTypography.gameMenuOption,
-            modifier = Modifier
-                .clickable { toggleMusic() }
-                .padding(vertical = 8.dp)
-        )
-        Text(
-            text = stringResource(id = R.string.credits),
-            style = DSTypography.gameMenuOption,
-            modifier = Modifier
-                .clickable { openCredits() }
-                .padding(vertical = 8.dp)
-        )
-        Text(
-            text = stringResource(id = R.string.new_game),
-            style = DSTypography.gameMenuOption,
-            color = Color.Red,
-            modifier = Modifier
-                .clickable { askForNewGame() }
-                .padding(vertical = 8.dp)
-        )
+                .wrapContentHeight()
+                .align(Alignment.Center)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Text(
+                text = stringResource(id = R.string.game_menu_title),
+                style = DSTypography.largeTitle,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
+            )
+            Text(
+                text = stringResource(id = R.string.game_menu_resume),
+                style = DSTypography.gameMenuOption,
+                modifier = Modifier
+                    .clickable { resumeGame() }
+                    .padding(vertical = 8.dp)
+            )
+            Text(
+                text = stringResource(id = toggleSoundEffectsTitle),
+                style = DSTypography.gameMenuOption,
+                modifier = Modifier
+                    .clickable { toggleSoundEffects() }
+                    .padding(vertical = 8.dp)
+            )
+            Text(
+                text = stringResource(id = toggleMusicTitle),
+                style = DSTypography.gameMenuOption,
+                modifier = Modifier
+                    .clickable { toggleMusic() }
+                    .padding(vertical = 8.dp)
+            )
+            Text(
+                text = stringResource(id = R.string.credits),
+                style = DSTypography.gameMenuOption,
+                modifier = Modifier
+                    .clickable { openCredits() }
+                    .padding(vertical = 8.dp)
+            )
+            Text(
+                text = stringResource(id = R.string.new_game),
+                style = DSTypography.gameMenuOption,
+                color = Color.Red,
+                modifier = Modifier
+                    .clickable { askForNewGame() }
+                    .padding(vertical = 24.dp)
+            )
+            LinksSection(modifier = Modifier.padding(top = 40.dp))
+        }
     }
+}
+
+@Composable
+private fun LinksSection(modifier: Modifier = Modifier) {
+    Row(modifier = modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.weight(1.0f))
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            SocialIcon(
+                drawableRes = R.drawable.twitter,
+                link = "https://x.com/@HiddenMugs"
+            )
+            SocialIcon(
+                drawableRes = R.drawable.youtube,
+                link = "https://www.youtube.com/@HiddenMugs"
+            )
+            SocialIcon(
+                drawableRes = R.drawable.discord,
+                link = "https://discord.gg/8ghfcMvs"
+            )
+            ShareButton()
+        }
+        Spacer(modifier = Modifier.weight(1.0f))
+    }
+}
+
+@Composable
+private fun SocialIcon(drawableRes: Int, link: String) {
+    val context = LocalContext.current
+    Image(
+        bitmap = ImageBitmap.imageResource(drawableRes),
+        contentDescription = null,
+        modifier = Modifier
+            .size(40.dp)
+            .clip(CircleShape)
+            .clickable {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+            }
+    )
+}
+
+@Composable
+private fun ShareButton() {
+    val context = LocalContext.current
+    Image(
+        bitmap = ImageBitmap.imageResource(R.drawable.share),
+        contentDescription = null,
+        modifier = Modifier
+            .size(40.dp)
+            .clip(CircleShape)
+            .clickable {
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_text))
+                }
+                val chooser = Intent.createChooser(shareIntent, null)
+                context.startActivity(chooser)
+            }
+    )
 }
 
 @Composable
@@ -351,12 +434,12 @@ private class OptionsScreenViewModel(
     fun showMenu() {
         if (_isVisible.value) return
         _isVisible.value = true
-        gameEngine.pause()
+        gameEngine.pauseGame()
     }
 
     fun resumeGame() {
         _isVisible.value = false
-        gameEngine.resume()
+        gameEngine.resumeGame()
         makeButtonSemiTransparent()
     }
 
@@ -378,7 +461,7 @@ private class OptionsScreenViewModel(
         _isVisible.value = false
         _showNewGameAlert.value = false
         gameEngine.startNewGame()
-        gameEngine.resume()
+        gameEngine.resumeGame()
     }
 
     fun cancelNewGame() {
@@ -450,6 +533,21 @@ fun OptionsScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 fun OptionsContentPreview() {
+    OptionsContent(
+        toggleSoundEffectsTitle = R.string.game_menu_disable_sound_effects,
+        toggleSoundEffects = {},
+        toggleMusicTitle = R.string.game_menu_disable_music,
+        toggleMusic = {},
+        resumeGame = {},
+        openCredits = {},
+        askForNewGame = {},
+        modifier = Modifier.background(Color.Black)
+    )
+}
+
+@Preview(showBackground = true, widthDp = 600, heightDp = 500)
+@Composable
+fun OptionsContentPreviewLandscape() {
     OptionsContent(
         toggleSoundEffectsTitle = R.string.game_menu_disable_sound_effects,
         toggleSoundEffects = {},

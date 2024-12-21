@@ -1,4 +1,4 @@
-use crate::{features::{entity::Entity, state_updates::WorldStateUpdate}, maps::constructions_tiles::Construction, utils::directions::Direction, worlds::world::World};
+use crate::{features::{entity::Entity, state_updates::WorldStateUpdate}, maps::construction_tiles::Construction, utils::directions::Direction, worlds::world::World};
 
 
 impl Entity {
@@ -52,11 +52,11 @@ impl Entity {
 }
 
 fn is_rail(world: &World, x: i32, y: i32) -> bool {
-    if y < 0 || y >= world.constructions_tiles.tiles.len() as i32 {
+    if y < 0 || y >= world.construction_tiles.tiles.len() as i32 {
         return false
     }
-    if x < 0 || x >= world.constructions_tiles.tiles[0].len() as i32 {
+    if x < 0 || x >= world.construction_tiles.tiles[0].len() as i32 {
         return false
     }
-    matches!(world.constructions_tiles.tiles[y as usize][x as usize].tile_type, Construction::Rail)
+    matches!(world.construction_tiles.tiles[y as usize][x as usize].tile_type, Construction::Rail)
 }

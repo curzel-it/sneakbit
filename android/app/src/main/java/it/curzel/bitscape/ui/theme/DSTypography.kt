@@ -11,7 +11,7 @@ import it.curzel.bitscape.R
 object DSTypography {
     val largeTitle = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Bold, fontSize = 24.sp, lineHeight = 36.sp)
     val title = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Bold, fontSize = 16.sp, lineHeight = 24.sp)
-    val text = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Normal, fontSize = 14.sp, lineHeight = 24.sp)
+    val text = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Normal, fontSize = 12.sp, lineHeight = 22.sp)
     val caption = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Normal, fontSize = 11.sp, lineHeight = 16.sp)
     val buttonCaption = TextStyle(fontFamily = PixelOperator8, fontWeight = FontWeight.Bold, fontSize = 14.sp, lineHeight = 16.sp)
 

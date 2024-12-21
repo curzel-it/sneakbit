@@ -37,6 +37,15 @@ def steam_upload_script():
                     "recursive" "1"
                 }
             }
+            "3360863"
+            {
+                "FileMapping"
+                {
+                    "LocalPath" "linux/*"
+                    "DepotPath" "."
+                    "recursive" "1"
+                }
+            }            
         }
     }
     """

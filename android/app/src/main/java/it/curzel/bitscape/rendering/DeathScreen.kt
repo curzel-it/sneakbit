@@ -21,11 +21,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.R
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.ui.theme.DSTypography
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
 
 @Composable
 fun DeathScreen(
@@ -86,10 +91,25 @@ fun DeathScreen(
 }
 
 class DeathScreenViewModel(private val gameEngine: GameEngine) : ViewModel() {
-    val isVisible: StateFlow<Boolean> = gameEngine.showsDeathScreen()
+    private val _isVisible = MutableStateFlow(false)
+    val isVisible: StateFlow<Boolean> = _isVisible.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            observeGameOver()
+        }
+    }
+
+    private suspend fun observeGameOver() {
+        gameEngine.gameState
+            .mapNotNull { it?.isGameOver() }
+            .collect { isGameOver ->
+                _isVisible.value = isGameOver
+            }
+    }
 
     fun tryAgain() {
-        gameEngine.setKeyDown(EmulatedKey.CONFIRM)
+        gameEngine.revive()
     }
 }
 

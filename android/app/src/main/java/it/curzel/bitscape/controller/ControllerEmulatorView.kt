@@ -43,6 +43,7 @@ import it.curzel.bitscape.ui.theme.DSTypography
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -219,9 +220,9 @@ class ControllerEmulatorViewModel(
 
     init {
         updateCurrentOffset()
-        observeKunaiCount()
-        observeSwordEquipped()
-        observeInteractionAvailable()
+        viewModelScope.launch {
+            observeGameState()
+        }
     }
 
     fun onOrientationChanged(isLandscape: Boolean) {
@@ -270,32 +271,15 @@ class ControllerEmulatorViewModel(
         setConfirmButtonPosition()
     }
 
-    private fun observeKunaiCount() {
-        viewModelScope.launch {
-            engine.numberOfKunai()
-                .collect { count ->
-                    _isRangedAttackVisible.value = count > 0
-                    _attackLabel.value = "x$count"
-                }
-        }
-    }
-
-    private fun observeSwordEquipped() {
-        viewModelScope.launch {
-            engine.isSwordEquipped()
-                .collect { isEquipped ->
-                    _isCloseRangeAttackVisible.value = isEquipped
-                }
-        }
-    }
-
-    private fun observeInteractionAvailable() {
-        viewModelScope.launch {
-            engine.isInteractionEnabled()
-                .collect { available ->
-                    _isConfirmVisible.value = available
-                }
-        }
+    private suspend fun observeGameState() {
+        engine.gameState
+            .mapNotNull { it }
+            .collect {
+                _isRangedAttackVisible.value = it.kunai > 0
+                _attackLabel.value = "x${it.kunai}"
+                _isCloseRangeAttackVisible.value = it.isSwordEquipped
+                _isConfirmVisible.value = it.isInteractionAvailable
+            }
     }
 }
 

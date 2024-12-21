@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.2"
+agp = "8.7.3"
 coreSplashscreen = "1.0.1"
 firebaseBom = "33.6.0"
 firebaseBomVersion = "33.6.0"

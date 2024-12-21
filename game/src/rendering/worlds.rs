@@ -1,31 +1,38 @@
-use game_core::{camera_viewport, camera_viewport_offset, can_render_frame, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, engine, is_limited_visibility, is_night};
+use game_core::{camera_viewport, camera_viewport_offset, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, current_world_biome_tiles, current_world_construction_tiles, is_limited_visibility, is_night};
 use raylib::prelude::*;
+
+use crate::{gameui::game_hud::hud_ui, GameContext};
 
 use super::{entities::render_entities, tile_map::render_tile_map, tiles::render_tiles, ui::{get_rendering_config, render_layout}};
 
-pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
-    let engine = engine();
-    let world = &engine.world;
-
+pub fn render_frame(context: &mut GameContext) {
     let config = get_rendering_config();
-    let fps = rl.get_fps();
+    let fps = context.rl.get_fps();
     let screen_width = config.canvas_size.x as i32;
     let screen_height = config.canvas_size.y as i32;
-
-    let mut d = rl.begin_drawing(thread);
+    let can_render_frame = context.can_render_frame();
+    let hud = hud_ui(
+        context,
+        config.canvas_size.x as i32, 
+        config.canvas_size.y as i32,
+        config.show_debug_info,
+        fps
+    );
+    
+    let mut d = context.rl.begin_drawing(&context.rl_thread);
     d.clear_background(Color::BLACK);
     
-    if can_render_frame() {
-        let camera_viewport = camera_viewport();
-        let camera_viewport_offset = camera_viewport_offset();
+    let camera_viewport = camera_viewport();
+    let camera_viewport_offset = camera_viewport_offset();
 
+    if can_render_frame {
         if config.render_using_individual_tiles {
             render_tiles(
                 &mut d, 
                 &camera_viewport, 
                 &camera_viewport_offset,
-                &world.biome_tiles.tiles,
-                &world.constructions_tiles.tiles
+                &current_world_biome_tiles(),
+                &current_world_construction_tiles()
             );
         } else {
             let success = render_tile_map(
@@ -38,23 +45,16 @@ pub fn render_frame(rl: &mut RaylibHandle, thread: &RaylibThread) {
                     &mut d, 
                     &camera_viewport, 
                     &camera_viewport_offset,
-                    &world.biome_tiles.tiles,
-                    &world.constructions_tiles.tiles
+                    &current_world_biome_tiles(),
+                    &current_world_construction_tiles()
                 );
             }
         }
         render_night(&mut d, screen_width, screen_height);
         render_entities(&mut d, &camera_viewport, &camera_viewport_offset);
         render_limited_visibility(&mut d, screen_width, screen_height);
+        render_layout(&hud, &mut d);
     }
-
-    let hud = engine.hud_ui(
-        config.canvas_size.x as i32, 
-        config.canvas_size.y as i32,
-        config.show_debug_info,
-        fps
-    );
-    render_layout(&hud, &mut d);
 }
 
 fn render_night(d: &mut RaylibDrawHandle, screen_width: i32, screen_height: i32) {

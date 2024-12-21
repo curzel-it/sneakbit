@@ -1,4 +1,4 @@
-use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_STATIC_OBJECTS}, features::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, set_value_for_key, StorageKey}}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastMode}, worlds::world::World};
+use crate::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_STATIC_OBJECTS}, features::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, set_value_for_key, StorageKey}, toasts::{Toast, ToastMode}}, is_creative_mode, lang::localizable::LocalizableText, worlds::world::World};
 
 impl Entity {
     pub fn setup_hint(&mut self) {
@@ -25,18 +25,22 @@ impl Entity {
         if self.is_consumable && self.has_been_read() || self.dialogues.is_empty() {
             vec![]
         } else {
-            self.set_read();
-            vec![self.toast()]
-        }        
-    }
+            let text = self.key().localized();
 
-    fn toast(&self) -> WorldStateUpdate {
-        WorldStateUpdate::EngineUpdate(EngineStateUpdate::Toast(            
-            Toast::new(
-                ToastMode::Hint,
-                self.key().localized()
-            )
-        ))
+            if !text.is_empty() {
+                self.set_read();
+
+                vec![
+                    WorldStateUpdate::EngineUpdate(
+                        EngineStateUpdate::Toast(            
+                            Toast::new(ToastMode::Hint, text)
+                        )
+                    )
+                ]
+            } else {
+                vec![]
+            }
+        }
     }
 
     fn key(&self) -> String {

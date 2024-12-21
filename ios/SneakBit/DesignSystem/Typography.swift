@@ -21,14 +21,14 @@ struct AppFont {
         self.size = size
         self.weight = weight
         self.font = .custom(name, size: size).weight(weight)
-        self.lineSpacing = size / 2
+        self.lineSpacing = size / 2 + 1
     }
 }
 
 extension AppFont {
     static let largeTitle = AppFont(name: "PixelOperator8-Bold", size: 24, weight: .bold)
     static let title = AppFont(name: "PixelOperator8-Bold", size: 17, weight: .bold)
-    static let text = AppFont(name: "PixelOperator8", size: 14, weight: .regular)
+    static let text = AppFont(name: "PixelOperator8", size: 12, weight: .regular)
     static let menuOption = AppFont(name: "PixelOperator8", size: 16, weight: .bold)
     static let caption = AppFont(name: "PixelOperator8", size: 11, weight: .regular)
     static let buttonCaption = AppFont(name: "PixelOperator8", size: 14, weight: .bold)

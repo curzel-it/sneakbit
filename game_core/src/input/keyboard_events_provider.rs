@@ -168,10 +168,6 @@ impl KeyboardEventsProvider {
         self.players[player].direction_left.is_down
     }
 
-    pub fn currently_pressed_character(&self) -> Option<char> {
-        self.players[0].currently_pressed_character
-    }
-
     pub fn has_backspace_been_pressed(&self) -> bool {
         self.players[0].has_backspace_been_pressed
     }
@@ -238,7 +234,6 @@ impl KeyboardEventsProvider {
         ranged_attack_pressed: bool,
         weapon_selection_pressed: bool,
         backspace_pressed: bool,
-        current_char: Option<char>,
         time_since_last_update: f32
     ) {
         self.players[player].update(
@@ -257,7 +252,6 @@ impl KeyboardEventsProvider {
             ranged_attack_pressed,
             weapon_selection_pressed,
             backspace_pressed,
-            current_char,
             time_since_last_update
         )
     }
@@ -278,7 +272,6 @@ struct PlayerKeyboardEventsProvider {
     direction_left: HoldableKey,
 
     discard_direction_events_until_next_arrow_key_is_pressed: bool,
-    currently_pressed_character: Option<char>,
 }
 
 impl PlayerKeyboardEventsProvider {
@@ -296,7 +289,6 @@ impl PlayerKeyboardEventsProvider {
             direction_down: HoldableKey::new(),
             direction_left: HoldableKey::new(),
             discard_direction_events_until_next_arrow_key_is_pressed: false,
-            currently_pressed_character: None,
         }
     }
 
@@ -388,7 +380,6 @@ impl PlayerKeyboardEventsProvider {
         ranged_attack_pressed: bool,
         weapon_selection_pressed: bool,
         backspace_pressed: bool,
-        current_char: Option<char>,
         time_since_last_update: f32
     ) {
         self.discard_direction_events_until_next_arrow_key_is_pressed = 
@@ -410,7 +401,5 @@ impl PlayerKeyboardEventsProvider {
         self.direction_right.update(right_pressed, right_down, time_since_last_update);
         self.direction_down.update(down_pressed, down_down, time_since_last_update);
         self.direction_left.update(left_pressed, left_down, time_since_last_update);
-    
-        self.currently_pressed_character = current_char;
     }
 }

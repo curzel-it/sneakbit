@@ -84,7 +84,7 @@
       "5555555555555333333355553333333333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
     ]
   },
-  "constructions_tiles": {
+  "construction_tiles": {
     "sheet_id": 1003,
     "tiles": [
       "QQQQQQQQQQQQQQQQQQQQQQQQQQQQ00kQQQQQQQQQQQQQQQkQQQQ888QQQ00QQ0Q0cggggeQQQQQQQQQQ",
@@ -177,7 +177,7 @@
       "destination": {
         "direction": "Right",
         "world": 1018,
-        "x": 10,
+        "x": 11,
         "y": 24
       },
       "dialogues": [],
@@ -673,7 +673,7 @@
       "id": 11022166,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 4005
+      "species_id": 1175
     },
     {
       "after_dialogue": "Nothing",
@@ -691,7 +691,7 @@
       "id": 11022168,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 4005
+      "species_id": 1175
     },
     {
       "after_dialogue": "Nothing",

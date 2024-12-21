@@ -23,7 +23,10 @@ struct Dependencies {
                     UInt32(SPRITE_SHEET_HUMANOIDS_2X2): "humanoids_2x2",
                     UInt32(SPRITE_SHEET_CAVE_DARKNESS): "cave_darkness",
                     UInt32(SPRITE_SHEET_TENTACLES): "tentacles",
-                    UInt32(SPRITE_SHEET_WEAPONS): "weapons"
+                    UInt32(SPRITE_SHEET_WEAPONS): "weapons",
+                    UInt32(SPRITE_SHEET_MONSTERS): "monsters",
+                    UInt32(SPRITE_SHEET_HEROES): "heroes",
+                    UInt32(SPRITE_SHEET_DEMON_LORD_DEFEAT): "demon_lord_defeat"
                 ]
             )
         }
@@ -42,10 +45,10 @@ protocol Loggable {
 
 extension Loggable {
     func log(_ content: String) {
-        Logger.debug("[\(type(of: self))] \(content)")
+        Logger.debug("\(type(of: self))", content)
     }
     
     func logError(_ content: String) {
-        Logger.error("[\(type(of: self))] \(content)")
+        Logger.error("\(type(of: self))", content)
     }
 }

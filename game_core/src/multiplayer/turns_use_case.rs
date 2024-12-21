@@ -8,14 +8,14 @@ pub struct TurnsUseCase {
 
 pub enum TurnResultAfterPlayerDeath {
     NextTurn(GameTurn),
-    NothingChanged
+    InProgress
 }
 
 pub enum MatchResult {
     Winner(PlayerIndex),
     UnknownWinner,
     GameOver,
-    NothingChanged
+    InProgress
 }
 
 impl TurnsUseCase {
@@ -29,7 +29,7 @@ impl TurnsUseCase {
     
     pub fn updated_turn(&self, current_turn: &GameTurn, number_of_players: usize, time_since_last_update: f32) -> GameTurn {
         if number_of_players == 1 {
-            return current_turn.clone()
+            return *current_turn
         }
         match current_turn {
             GameTurn::RealTime => GameTurn::RealTime,
@@ -52,25 +52,25 @@ impl TurnsUseCase {
     
     pub fn updated_turn_for_death_of_player(&self, current_turn: &GameTurn, number_of_players: usize, dead_player_index: usize) -> TurnResultAfterPlayerDeath {
         match current_turn {
-            GameTurn::RealTime => TurnResultAfterPlayerDeath::NothingChanged,
+            GameTurn::RealTime => TurnResultAfterPlayerDeath::InProgress,
             GameTurn::Player(current_player_index, _) => {
                 if *current_player_index == dead_player_index {
                     let next = self.updated_turn(current_turn, number_of_players, TURN_DURATION * 2.0);
                     TurnResultAfterPlayerDeath::NextTurn(next)
                 } else {
-                    TurnResultAfterPlayerDeath::NothingChanged
+                    TurnResultAfterPlayerDeath::InProgress
                 }
             },
         }
     }
 
-    pub fn handle_win_lose(&self, game_mode: GameMode, number_of_players: usize, dead_players: &Vec<usize>) -> MatchResult {
+    pub fn handle_win_lose(&self, game_mode: GameMode, number_of_players: usize, dead_players: &[usize]) -> MatchResult {
         match game_mode {
             GameMode::RealTimeCoOp => {
                 if dead_players.contains(&PLAYER1_INDEX) {
                     MatchResult::GameOver
                 } else {
-                    MatchResult::NothingChanged
+                    MatchResult::InProgress
                 }
             },
             GameMode::TurnBasedPvp => {
@@ -82,10 +82,32 @@ impl TurnsUseCase {
                         MatchResult::UnknownWinner
                     }
                 } else {
-                    MatchResult::NothingChanged
+                    MatchResult::InProgress
                 }
             },
-            GameMode::Creative => MatchResult::NothingChanged,
+            GameMode::Creative => MatchResult::InProgress,
+        }
+    }
+}
+
+#[repr(C)]
+pub struct CMatchResult {
+    pub winner: usize,
+    pub unknown_winner: bool,
+    pub game_over: bool,
+    pub in_progress: bool
+}
+
+impl MatchResult {
+    pub fn c_repr(&self) -> CMatchResult {
+        CMatchResult {
+            winner: match self {
+                MatchResult::Winner(index) => *index,
+                _ => 0
+            },
+            unknown_winner: matches!(self, MatchResult::UnknownWinner),
+            game_over: matches!(self, MatchResult::GameOver),
+            in_progress: matches!(self, MatchResult::InProgress),
         }
     }
 }

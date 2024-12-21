@@ -1,6 +1,6 @@
-use crate::{entities::{bullets::{BulletHits, BulletId}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, constructions_tiles::Construction}, menus::toasts::Toast};
+use crate::{entities::{bullets::{BulletHits, BulletId}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, construction_tiles::Construction}};
 
-use super::{entity::{Entity, EntityId}, entity_props::EntityProps, locks::LockType};
+use super::{entity::{Entity, EntityId}, entity_props::EntityProps, locks::LockType, messages::DisplayableMessage, toasts::Toast};
 
 pub type PlayerIndex = usize;
 
@@ -25,18 +25,11 @@ pub enum WorldStateUpdate {
 pub enum EngineStateUpdate {
     EntityKilled(EntityId, SpeciesId),
     Teleport(Destination),
-    SaveGame,
-    Exit,
     AddToInventory(PlayerIndex, SpeciesId, AddToInventoryReason),
     RemoveFromInventory(PlayerIndex, SpeciesId),
     Toast(Toast),
-    Confirmation(String, String, Vec<WorldStateUpdate>),
-    DisplayLongText(String, String),
-    ResumeGame,
-    ToggleFullScreen,
-    NewGame,
+    Message(DisplayableMessage),
     BulletBounced,
-    ExternalLink(String),
     PlayerDied(PlayerIndex),
     NoAmmo(PlayerIndex),
     KnifeThrown(PlayerIndex),
@@ -51,15 +44,13 @@ pub enum AddToInventoryReason {
     Reward
 }
 
-pub fn visit(link: &str) -> WorldStateUpdate {
-    WorldStateUpdate::EngineUpdate(EngineStateUpdate::ExternalLink(link.to_owned()))
-}
-
 impl WorldStateUpdate {
     pub fn log(&self) {
         match self {
             WorldStateUpdate::EngineUpdate(_) => {},
             WorldStateUpdate::CacheHeroProps(_) => {},
+            WorldStateUpdate::HandleHits(_) => {}
+            WorldStateUpdate::RemoveEntity(_) => {},
             _ => println!("World update: {:#?}", self)
         }   
     }

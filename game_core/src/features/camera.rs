@@ -4,8 +4,8 @@ pub fn camera_center(
     game_mode: GameMode, 
     turn: &GameTurn, 
     number_of_players: usize, 
-    players: &Vec<PlayerProps>, 
-    dead_players: &Vec<usize>
+    players: &[PlayerProps], 
+    dead_players: &[usize]
 ) -> (i32, i32, Vector2d) {
     let current_player_index = match turn {
         GameTurn::RealTime => PLAYER1_INDEX,

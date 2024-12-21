@@ -3,24 +3,18 @@ package it.curzel.bitscape.engine
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.RectF
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.util.Size
+import it.curzel.bitscape.analytics.RuntimeEventsBroker
 import it.curzel.bitscape.AssetUtils
 import it.curzel.bitscape.analytics.RuntimeEvent
-import it.curzel.bitscape.analytics.RuntimeEventsBroker
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
 import it.curzel.bitscape.gamecore.Vector2d
-import it.curzel.bitscape.rendering.LoadingScreenConfig
-import it.curzel.bitscape.rendering.MenuConfig
-import it.curzel.bitscape.rendering.ToastConfig
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,46 +27,43 @@ class GameEngine(
     private val context: Context,
     private val nativeLib: NativeLib,
     private val audioEngine: AudioEngine,
-    private val broker: RuntimeEventsBroker
+    private val broker: RuntimeEventsBroker,
+    private val scope: CoroutineScope
 ) {
-    private val renderingScaleUseCase = RenderingScaleUseCase(context)
-    private val tileMapsStorage = TileMapsStorage(context)
+    private val _gameState = MutableStateFlow<GameState?>(null)
+    val gameState: StateFlow<GameState?> = _gameState.asStateFlow()
 
-    private val _loadingScreenConfig = MutableStateFlow(LoadingScreenConfig.none)
-    private val _showsDeathScreen = MutableStateFlow(false)
-    private val _heroHp = MutableStateFlow(100.0f)
-    private val _isSwordEquipped = MutableStateFlow(false)
-    private val _numberOfKunai = MutableStateFlow(0)
-    private val _toastConfig = MutableStateFlow(ToastConfig.none)
-    private val _menuConfig = MutableStateFlow(MenuConfig.none)
-    private var _isNight = false
-    private var _isLimitedVisibility = false
-    private var _isInteractionEnabled = MutableStateFlow(false)
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     var size = Size(0, 0)
     var fps = 0.0
 
+    private var isGamePaused = false
     private var currentWorldId = 0u
     private var lastFpsUpdate = System.currentTimeMillis()
     private var frameCount = 0
-
-    private val tileSize = NativeLib.TILE_SIZE.toFloat()
 
     var renderingScale = 1f
     var cameraViewport = IntRect(0, 0, 0, 0)
     var cameraViewportOffset = Vector2d(0.0f, 0.0f)
     var canRender = true
 
+    private var isLimitedVisibility: Boolean = false
+    private var isNight: Boolean = false
+
     private val keyPressed = mutableSetOf<EmulatedKey>()
     private val keyDown = mutableSetOf<EmulatedKey>()
-    private var currentChar: Int = 0
 
     private var worldHeight = 0
     private var worldWidth = 0
-    private var isBusy = false
 
     private var tileMapImages = emptyList<Bitmap>()
     private var currentBiomeVariant = 0
+
+    private val renderingScaleUseCase = RenderingScaleUseCase(context)
+    private val tileMapsStorage = TileMapsStorage(context)
+    private val tileSize = NativeLib.TILE_SIZE.toFloat()
 
     init {
         val dataPath = AssetUtils.extractAssetFolder(context, "data", "data")
@@ -90,103 +81,39 @@ class GameEngine(
     }
 
     fun update(deltaTime: Float) {
-        if (isBusy) return
-        val wasDead = _showsDeathScreen.value
-        val isDead = nativeLib.showsDeathScreen()
-
         updateKeyboardState(deltaTime)
-        nativeLib.updateGame(deltaTime)
-        _menuConfig.value = nativeLib.menuConfig()
-        _toastConfig.value = nativeLib.toastConfig()
-        _isSwordEquipped.value = nativeLib.isSwordEquipped()
-        _heroHp.value = nativeLib.currentHeroHp()
-        _numberOfKunai.value = nativeLib.numberOfKunaiInInventory()
-        _showsDeathScreen.value = isDead
-        _isInteractionEnabled.value = nativeLib.isInteractionAvailable()
-        currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
-        cameraViewport = nativeLib.cameraViewport().toRect()
-        cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
 
-        if (isDead && !wasDead) {
-            broker.send(RuntimeEvent.GameOver)
+        val wasPaused = isGamePaused
+        if (!wasPaused) {
+            nativeLib.updateGame(deltaTime)
         }
-
-        val freshWorldId = nativeLib.currentWorldId().toUInt()
-        if (freshWorldId != currentWorldId) {
-            broker.send(RuntimeEvent.WorldTransition(currentWorldId, freshWorldId))
-            currentWorldId = freshWorldId
-            _isNight = nativeLib.isNight()
-            _isLimitedVisibility = nativeLib.isLimitedVisibility()
-            keyDown.clear()
-            keyPressed.clear()
-            updateTileMapImages(freshWorldId)
-            audioEngine.updateSoundTrack()
-        }
-
+        fetchRenderingInfo()
+        handleWorldChanged()
         updateFpsCounter()
         flushKeyboard()
-        audioEngine.update()
+
+        if (!wasPaused) {
+            audioEngine.updateSoundEffects()
+        }
+
+        val nextState = fetchGameState()
+        if (nextState.shouldPauseGame()) {
+            pauseGame()
+        }
+        _gameState.value = nextState
     }
 
-    fun pause() {
-        isBusy = true
+    fun pauseGame() {
+        isGamePaused = true
     }
 
-    fun resume() {
-        isBusy = false
-    }
-
-    private fun currentLang(): String {
-        return Locale.getDefault().language
-            .lowercase()
-            .replace("-", "_")
-            .split("_")
-            .firstOrNull() ?: "en"
-    }
-
-    fun numberOfKunai(): StateFlow<Int> {
-        return _numberOfKunai.asStateFlow()
-    }
-
-    fun showsDeathScreen(): StateFlow<Boolean> {
-        return _showsDeathScreen.asStateFlow()
-    }
-
-    fun heroHp(): StateFlow<Float> {
-        return _heroHp.asStateFlow()
-    }
-
-    fun isSwordEquipped(): StateFlow<Boolean> {
-        return _isSwordEquipped.asStateFlow()
-    }
-
-    fun loadingScreenConfig(): StateFlow<LoadingScreenConfig> {
-        return _loadingScreenConfig.asStateFlow()
-    }
-
-    fun toastConfig(): StateFlow<ToastConfig> {
-        return _toastConfig.asStateFlow()
-    }
-
-    fun menuConfig(): StateFlow<MenuConfig> {
-        return _menuConfig.asStateFlow()
-    }
-
-    fun isNight(): Boolean {
-        return _isNight
-    }
-
-    fun isLimitedVisibility(): Boolean {
-        return _isLimitedVisibility
-    }
-
-    fun isInteractionEnabled(): StateFlow<Boolean> {
-        return _isInteractionEnabled.asStateFlow()
+    fun resumeGame() {
+        isGamePaused = false
     }
 
     fun startNewGame() {
+        resumeGame()
         broker.send(RuntimeEvent.NewGame)
-        _showsDeathScreen.value = false
         nativeLib.startNewGame()
     }
 
@@ -197,17 +124,10 @@ class GameEngine(
     fun setupChanged(windowSize: Size) {
         renderingScale = renderingScaleUseCase.current()
         size = windowSize
-
-        nativeLib.windowSizeChanged(
-            size.width.toFloat(),
-            size.height.toFloat(),
-            renderingScale,
-            12f,
-            8f
-        )
+        nativeLib.windowSizeChanged(size.width.toFloat(), size.height.toFloat(), renderingScale)
         worldWidth = nativeLib.currentWorldWidth()
         worldHeight = nativeLib.currentWorldHeight()
-        updateTileMapImages(currentWorldId)
+        updateTileMapImages()
     }
 
     fun renderingFrame(entity: RenderableItem): RectF {
@@ -216,30 +136,6 @@ class GameEngine(
 
     fun tileMapImage(): Bitmap? {
         return tileMapImages.getOrNull(currentBiomeVariant) ?: tileMapImages.firstOrNull()
-    }
-
-    private fun renderingFrame(frame: IntRect, offset: Vector2d = Vector2d(0.0f, 0.0f)): RectF {
-        val actualCol = (frame.x - cameraViewport.x).toFloat()
-        val actualOffsetX = offset.x - cameraViewportOffset.x
-        val actualRow = (frame.y - cameraViewport.y).toFloat()
-        val actualOffsetY = offset.y - cameraViewportOffset.y
-
-        val x = (actualCol * tileSize + actualOffsetX) * renderingScale
-        val y = (actualRow * tileSize + actualOffsetY) * renderingScale
-
-        return RectF(
-            x, y,
-            x + (frame.w * tileSize) * renderingScale,
-            y + (frame.h * tileSize) * renderingScale
-        )
-    }
-
-    fun setDidType(char: Char) {
-        currentChar = char.code.toInt()
-    }
-
-    fun setDidTypeNothing() {
-        currentChar = 0
     }
 
     fun setKeyDown(key: EmulatedKey) {
@@ -268,33 +164,22 @@ class GameEngine(
     }
 
     private fun updateKeyboardState(deltaTime: Float) {
-        // logKeyboardState()
-
         nativeLib.updateKeyboard(
-            keyPressed.contains(EmulatedKey.UP),
-            keyPressed.contains(EmulatedKey.RIGHT),
-            keyPressed.contains(EmulatedKey.DOWN),
-            keyPressed.contains(EmulatedKey.LEFT),
-            keyDown.contains(EmulatedKey.UP),
-            keyDown.contains(EmulatedKey.RIGHT),
-            keyDown.contains(EmulatedKey.DOWN),
-            keyDown.contains(EmulatedKey.LEFT),
-            keyPressed.contains(EmulatedKey.ESCAPE),
-            keyPressed.contains(EmulatedKey.MENU),
-            keyPressed.contains(EmulatedKey.CONFIRM),
-            keyPressed.contains(EmulatedKey.CLOSE_RANGE_ATTACK),
-            keyPressed.contains(EmulatedKey.RANGED_ATTACK),
-            deltaTime
+            upPressed = keyPressed.contains(EmulatedKey.UP),
+            rightPressed = keyPressed.contains(EmulatedKey.RIGHT),
+            downPressed = keyPressed.contains(EmulatedKey.DOWN),
+            leftPressed = keyPressed.contains(EmulatedKey.LEFT),
+            upDown = keyDown.contains(EmulatedKey.UP),
+            rightDown = keyDown.contains(EmulatedKey.RIGHT),
+            downDown = keyDown.contains(EmulatedKey.DOWN),
+            leftDown = keyDown.contains(EmulatedKey.LEFT),
+            escapePressed = keyPressed.contains(EmulatedKey.ESCAPE),
+            menuPressed = keyPressed.contains(EmulatedKey.MENU),
+            confirmPressed = keyPressed.contains(EmulatedKey.CONFIRM),
+            closeAttackPressed = keyPressed.contains(EmulatedKey.CLOSE_RANGE_ATTACK),
+            rangedAttackPressed = keyPressed.contains(EmulatedKey.RANGED_ATTACK),
+            timeSinceLastUpdate = deltaTime
         )
-    }
-
-    private fun updateTileMapImages(worldId: UInt) {
-        setLoading(LoadingScreenConfig.worldTransition)
-
-        CoroutineScope(Dispatchers.IO + Job()).launch {
-            tileMapImages = tileMapsStorage.images(worldId)
-            setLoading(LoadingScreenConfig.none)
-        }
     }
 
     private fun updateFpsCounter() {
@@ -309,54 +194,114 @@ class GameEngine(
         }
     }
 
-    fun onMenuItemSelection(index: Int) {
-        nativeLib.selectCurrentMenuOptionAtIndex(index)
-        setKeyDown(EmulatedKey.CONFIRM)
+    private fun handleWorldChanged() {
+        val newWorld = nativeLib.currentWorldId().toUInt()
+        if (newWorld == currentWorldId) { return }
+        _isLoading.value = true
+        canRender = false
+
+        scope.launch {
+            delay(300)
+            canRender = true
+            _isLoading.value = false
+        }
+
+        broker.send(RuntimeEvent.WorldTransition(currentWorldId, newWorld))
+        currentWorldId = newWorld
+        isNight = nativeLib.isNight()
+        isLimitedVisibility = nativeLib.isLimitedVisibility()
+        keyDown.clear()
+        keyPressed.clear()
+        updateTileMapImages()
+        audioEngine.updateSoundTrack()
     }
 
-    private fun setLoading(mode: LoadingScreenConfig) {
-        if (mode.isVisible) {
-            setLoadingNow(mode)
+    private fun updateTileMapImages() {
+        tileMapImages = tileMapsStorage.images(currentWorldId)
+    }
+
+    private fun fetchGameState(): GameState {
+        return GameState(
+            toasts = nativeLib.nextToast(),
+            messages = nativeLib.nextMessage(),
+            kunai = nativeLib.numberOfKunaiInInventory(),
+            isInteractionAvailable = nativeLib.isInteractionAvailable(),
+            matchResult = nativeLib.matchResult(),
+            heroHp = nativeLib.playerCurrentHp(),
+            isSwordEquipped = nativeLib.isSwordEquipped()
+        )
+    }
+
+    private fun ensureJsonFileExists(file: File) {
+        if (!file.exists()) {
+            try {
+                file.parentFile?.mkdirs()
+                file.createNewFile()
+                file.writeText("{}")
+                Log.d("GameEngine", "Created new file: ${file.absolutePath}")
+            } catch (e: IOException) {
+                Log.e("GameEngine", "Failed to create file: ${file.absolutePath}", e)
+            }
         } else {
-            Handler(Looper.getMainLooper()).postDelayed({
-                setLoadingNow(mode)
-            }, 100)
+            Log.d("GameEngine", "File already exists: ${file.absolutePath}")
         }
     }
 
-    private fun setLoadingNow(mode: LoadingScreenConfig) {
-        canRender = !mode.isVisible
-        isBusy = mode.isVisible
-        _loadingScreenConfig.value = mode
+    private fun currentLang(): String {
+        return Locale.getDefault().language
+            .lowercase()
+            .replace("-", "_")
+            .split("_")
+            .firstOrNull() ?: "en"
     }
 
     private fun storagePath(): String {
         val fileName = "save.json"
         val file = File(context.filesDir, fileName)
-        ensureFileExists(file, "{}")
+        ensureJsonFileExists(file)
         return file.absolutePath
     }
 
-    private fun ensureFileExists(file: File, defaultContents: String) {
-        if (!file.exists()) {
-            try {
-                file.parentFile?.mkdirs()
-                file.createNewFile()
-                file.writeText(defaultContents)
-                Log.d("MainActivity", "Created new file: ${file.absolutePath}")
-            } catch (e: IOException) {
-                Log.e("MainActivity", "Failed to create file: ${file.absolutePath}", e)
-            }
-        } else {
-            Log.d("MainActivity", "File already exists: ${file.absolutePath}")
-        }
+    private fun renderingFrame(frame: IntRect, offset: Vector2d = Vector2d(0.0f, 0.0f)): RectF {
+        val actualCol = (frame.x - cameraViewport.x).toFloat()
+        val actualOffsetX = offset.x - cameraViewportOffset.x
+        val actualRow = (frame.y - cameraViewport.y).toFloat()
+        val actualOffsetY = offset.y - cameraViewportOffset.y
+
+        val x = (actualCol * tileSize + actualOffsetX) * renderingScale
+        val y = (actualRow * tileSize + actualOffsetY) * renderingScale
+
+        return RectF(
+            x, y,
+            x + (frame.w * tileSize) * renderingScale,
+            y + (frame.h * tileSize) * renderingScale
+        )
     }
-}
 
-private fun IntArray.toRect(): IntRect {
-    return IntRect(this[0], this[1], this[2], this[3])
-}
+    fun isLimitedVisibility(): Boolean {
+        return isLimitedVisibility
+    }
 
-private fun FloatArray.toVector2d(): Vector2d {
-    return Vector2d(this[0], this[1])
+    fun isNight(): Boolean {
+        return isNight
+    }
+
+    private fun fetchRenderingInfo() {
+        currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
+        cameraViewport = nativeLib.cameraViewport().toRect()
+        cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
+    }
+
+    private fun IntArray.toRect(): IntRect {
+        return IntRect(this[0], this[1], this[2], this[3])
+    }
+
+    private fun FloatArray.toVector2d(): Vector2d {
+        return Vector2d(this[0], this[1])
+    }
+
+    fun revive() {
+        nativeLib.revive()
+        resumeGame()
+    }
 }

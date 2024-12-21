@@ -1,8 +1,7 @@
-use std::{cell::RefCell, cmp::Ordering, collections::HashSet};
+use std::{cell::RefCell, cmp::Ordering};
 
-use common_macros::hash_set;
-use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, hitmaps::hitmaps::{EntityIdsMap, Hitmap}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
-use crate::features::{entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::features::{hitmaps::{EntityIdsMap, Hitmap}, entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
 
@@ -12,11 +11,9 @@ pub struct World {
     pub revision: u32,
     pub bounds: IntRect,
     pub biome_tiles: TileSet<BiomeTile>,
-    pub constructions_tiles: TileSet<ConstructionTile>,
+    pub construction_tiles: TileSet<ConstructionTile>,
     pub entities: RefCell<Vec<Entity>>,    
     pub visible_entities: Vec<(usize, u32)>,
-    melee_attackers: HashSet<u32>,
-    buildings: HashSet<u32>,
     pub ephemeral_state: bool,
     pub players: Vec<PlayerProps>,
     pub has_confirmation_key_been_pressed_by_anyone: bool,
@@ -47,7 +44,7 @@ impl World {
             revision: 0,
             bounds: IntRect::from_origin(WORLD_SIZE_COLUMNS as i32, WORLD_SIZE_ROWS as i32),
             biome_tiles: TileSet::empty(),
-            constructions_tiles: TileSet::empty(),
+            construction_tiles: TileSet::empty(),
             entities: RefCell::new(vec![]),
             visible_entities: vec![],
             ephemeral_state: false,
@@ -64,8 +61,6 @@ impl World {
             pressure_plate_down_blue: false,
             pressure_plate_down_silver: false,
             pressure_plate_down_yellow: false,
-            melee_attackers: hash_set![],
-            buildings: hash_set![],
             light_conditions: LightConditions::Day,
             cutscenes: vec![],
             spawn_point: (0, 0),
@@ -99,12 +94,6 @@ impl World {
         if let Some(lock_type) = lock_override(&id) {
             entities[index].lock_type = lock_type;
         }
-        if entities[index].melee_attacks_hero() {
-            self.melee_attackers.insert(id);
-        }
-        if matches!(entities[index].entity_type, EntityType::Building) {
-            self.buildings.insert(id);
-        }
         true
     }
 
@@ -128,16 +117,8 @@ impl World {
     pub fn remove_entity_at_index(&mut self, index: usize) {
         let entities = self.entities.borrow();
         let entity = &entities[index];
-
-        if entity.melee_attacks_hero() {
-            self.melee_attackers.remove(&entity.id);
-        }
-        if matches!(entity.entity_type, EntityType::Building) {
-            self.buildings.remove(&entity.id);
-        }
         self.mark_as_collected_if_needed(entity.id, entity.parent_id);
         drop(entities);
-
         self.entities.borrow_mut().swap_remove(index);
     }
 
@@ -285,7 +266,7 @@ impl World {
     }
 
     fn update_construction_tile(&mut self, row: usize, col: usize, new_construction: Construction) {
-        self.constructions_tiles.update_tile(row, col, new_construction);
+        self.construction_tiles.update_tile(row, col, new_construction);
         self.update_tiles_hitmap();
     }  
     
@@ -381,18 +362,6 @@ impl World {
         let keyboard = &NO_KEYBOARD_EVENTS;
         let viewport = self.bounds;
         self.update(time_since_last_update, &viewport, keyboard)
-    }
-
-    pub fn is_creep(&self, id: u32) -> bool {
-        self.melee_attackers.contains(&id)
-    }
-
-    pub fn is_building(&self, id: &u32) -> bool {
-        self.buildings.contains(id)
-    }
-
-    pub fn contains_building(&self, ids: &[u32]) -> bool {
-        ids.iter().any(|id| self.is_building(id))
     }
 
     pub fn is_pressure_plate_down(&self, lock_type: &LockType) -> bool {

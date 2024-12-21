@@ -1,5 +1,8 @@
 package it.curzel.bitscape.rendering
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,39 +38,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.R
 import it.curzel.bitscape.engine.GameEngine
+import it.curzel.bitscape.gamecore.DisplayableToast
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.ui.theme.DSTypography
+import it.curzel.bitscape.ui.theme.ToastBackground
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
-
-data class ToastConfig(
-    val backgroundColorArgb: Long,
-    val opacity: Float,
-    val text: String,
-    val isHint: Boolean,
-    val spriteSheetId: Int?,
-    val textureFrame: IntRect?
-) {
-    companion object {
-        val none = ToastConfig(
-            backgroundColorArgb = 0x00000000,
-            opacity = 0.0f,
-            text = "",
-            isHint = false,
-            spriteSheetId = NativeLib.SPRITE_SHEET_BLANK.toInt(),
-            textureFrame = IntRect(0, 0, 1, 1)
-        )
-
-        val demo = ToastConfig(
-            backgroundColorArgb = 0xFF000000,
-            opacity = 1.0f,
-            text = "Hello world!",
-            isHint = true,
-            spriteSheetId = NativeLib.SPRITE_SHEET_INVENTORY.toInt(),
-            textureFrame = IntRect(3, 3, 1, 1)
-        )
-    }
-}
 
 @Composable
 fun ToastView(
@@ -82,7 +61,6 @@ fun ToastView(
     val text by viewModel.text
     val borderColor by viewModel.borderColor
     val backgroundColor by viewModel.backgroundColor
-    val opacity by viewModel.opacity
     val image by viewModel.image
 
     ToastView(
@@ -91,7 +69,6 @@ fun ToastView(
         text = text,
         borderColor = borderColor,
         backgroundColor = backgroundColor,
-        opacity = opacity,
         image = image,
     )
 }
@@ -103,10 +80,14 @@ private fun ToastView(
     text: String,
     borderColor: Color,
     backgroundColor: Color,
-    opacity: Float,
     image: ImageBitmap?
 ) {
-    if (isVisible) {
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = fadeIn(),
+        exit = fadeOut(),
+        modifier = Modifier.fillMaxSize()
+    ) {
         Box(
             contentAlignment = alignment,
             modifier = Modifier.fillMaxSize()
@@ -122,7 +103,6 @@ private fun ToastView(
                     .background(backgroundColor)
                     .border(2.dp, borderColor, RoundedCornerShape(4.dp))
                     .shadow(6.dp, RoundedCornerShape(4.dp))
-                    .alpha(opacity)
             ) {
                 image?.let { imageBitmap ->
                     Image(
@@ -153,15 +133,11 @@ class ToastViewModel(
     private val gameEngine: GameEngine,
     private val spritesProvider: SpritesProvider
 ) : ViewModel() {
-
     private val _backgroundColor = mutableStateOf(Color.Black)
     val backgroundColor: State<Color> = _backgroundColor
 
     private val _borderColor = mutableStateOf(Color.Black)
     val borderColor: State<Color> = _borderColor
-
-    private val _opacity = mutableFloatStateOf(0f)
-    val opacity: State<Float> = _opacity
 
     private val _text = mutableStateOf("")
     val text: State<String> = _text
@@ -177,26 +153,30 @@ class ToastViewModel(
 
     init {
         viewModelScope.launch {
-            gameEngine.toastConfig().collect { toast ->
-                loadToast(toast)
-            }
+            gameEngine.gameState
+                .mapNotNull { it?.toasts }
+                .collect { toast ->
+                    apply(toast)
+                }
         }
     }
 
-    private fun loadToast(toast: ToastConfig) {
-        _backgroundColor.value = Color(toast.backgroundColorArgb).copy(alpha = 1.0f)
-        _opacity.floatValue = toast.opacity
+    private fun apply(toast: DisplayableToast) {
+        _backgroundColor.value = ToastBackground
         _text.value = toast.text.ifEmpty { "..." }
-        _isVisible.value = _opacity.floatValue > 0.05f
-        _alignment.value = if (toast.isHint) Alignment.TopStart else Alignment.TopEnd
-        _borderColor.value = if (toast.isHint) Color.Yellow else Color.Cyan
+        _isVisible.value = true
+        _alignment.value = if (toast.isHint()) Alignment.TopStart else Alignment.TopEnd
+        _borderColor.value = if (toast.isHint()) Color.Yellow else Color.Cyan
 
-        toast.spriteSheetId?.let { spriteSheetId ->
-            toast.textureFrame?.let { textureRect ->
-                val bitmap = spritesProvider.bitmapFor(spriteSheetId.toUInt(), textureRect)
-                _image.value = bitmap?.asImageBitmap()
-            }
-        } ?: run {
+        viewModelScope.launch {
+            delay((1000 * toast.duration * 1.5).toLong())
+            _isVisible.value = false
+        }
+
+        if (toast.image != null) {
+            val bitmap = spritesProvider.bitmapFor(toast.image.spriteSheetId, toast.image.textureFrame)
+            _image.value = bitmap?.asImageBitmap()
+        } else {
             _image.value = null
         }
     }
@@ -211,7 +191,6 @@ fun ToastsViewPreview() {
         text = "Hello World!",
         borderColor = Color.Red,
         backgroundColor = Color.Black,
-        opacity = 1.0f,
         image = ImageBitmap.imageResource(R.drawable.confirm_button_up),
     )
 }

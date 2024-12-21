@@ -21,3 +21,6 @@
 "credits.sound_effects" = "Sound Effects by SubspaceAudio";
 "credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style";
 "menu_back" = "Back";
+"ok_action" = "Ok";
+
+"share.text" = "Check out SneakBit!\n\nApp Store (iOS)\nhttps://apps.apple.com/app/sneakbit/id6737452377\n\nPlay Store (Android)\nhttps://play.google.com/store/apps/details?id=it.curzel.bitscape\n\nSteam (Windows & macOS)\nhttps://store.steampowered.com/app/3360860/SneakBit";

@@ -2,7 +2,7 @@ use std::{fs::File, io::{BufReader, Write}};
 
 use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Error;
-use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, light_conditions::LightConditions}, features::entity::Entity, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::ConstructionTile, tiles::TileSet}, utils::rect::IntRect};
+use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, light_conditions::LightConditions}, features::entity::Entity, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::ConstructionTile, tiles::TileSet}, utils::rect::IntRect};
 
 use super::{world::World, world_type::WorldType};
 
@@ -110,7 +110,7 @@ impl World {
         } else {
             tiles
         };
-        self.constructions_tiles = tiles;     
+        self.construction_tiles = tiles;     
     }
 }
 
@@ -126,7 +126,7 @@ struct WorldData {
     biome_tiles: TileSet<BiomeTile>,
 
     #[serde(default)]
-    constructions_tiles: TileSet<ConstructionTile>,
+    construction_tiles: TileSet<ConstructionTile>,
 
     #[serde(default)]
     entities: Vec<Entity>,
@@ -159,7 +159,7 @@ impl Serialize for World {
         state.serialize_field("revision", &self.revision)?;
         state.serialize_field("ephemeral_state", &self.ephemeral_state)?;
         state.serialize_field("biome_tiles", &self.biome_tiles)?;
-        state.serialize_field("constructions_tiles", &self.constructions_tiles)?;
+        state.serialize_field("construction_tiles", &self.construction_tiles)?;
         state.serialize_field("entities", &entities)?;
         state.serialize_field("light_conditions", &self.light_conditions)?;
         state.serialize_field("cutscenes", &self.cutscenes)?;
@@ -182,7 +182,7 @@ impl<'de> Deserialize<'de> for World {
         world.soundtrack = data.soundtrack;
         data.entities.into_iter().for_each(|e| _ = world.add_entity(e));        
         world.load_biome_tiles(data.biome_tiles);
-        world.load_construction_tiles(data.constructions_tiles);
+        world.load_construction_tiles(data.construction_tiles);
         Ok(world)
     }
 }

@@ -1,4 +1,4 @@
-use crate::{constants::{HOUSE_INTERIOR_COLUMNS, HOUSE_INTERIOR_ROWS}, entities::{known_species::{SPECIES_NPC_SHOP_CLERK, SPECIES_SEAT_GREEN, SPECIES_TABLE, SPECIES_TELEPORTER}, species::{make_entity_by_species, species_by_id, Species}}, features::{destination::Destination, entity::Entity}, maps::{biome_tiles::Biome, constructions_tiles::Construction}, utils::{ids::get_next_id, rect::IntRect}, worlds::{world::World, world_type::WorldType}};
+use crate::{constants::{HOUSE_INTERIOR_COLUMNS, HOUSE_INTERIOR_ROWS}, entities::{known_species::{SPECIES_NPC_SHOP_CLERK, SPECIES_SEAT_GREEN, SPECIES_TABLE, SPECIES_TELEPORTER}, species::{make_entity_by_species, species_by_id, Species}}, features::{destination::Destination, entity::Entity}, maps::{biome_tiles::Biome, construction_tiles::Construction}, utils::{ids::get_next_id, rect::IntRect}, worlds::{world::World, world_type::WorldType}};
 
 pub fn new_shop(species: &Species, source_world_id: u32, x: i32, y: i32) -> Vec<Entity> {
     let mut building = species.make_entity();
@@ -33,34 +33,34 @@ pub fn new_shop(species: &Species, source_world_id: u32, x: i32, y: i32) -> Vec<
     for row in [0, 1, HOUSE_INTERIOR_ROWS + 2] {
         for col in 0..(HOUSE_INTERIOR_COLUMNS + 1) {
             if row != HOUSE_INTERIOR_ROWS + 2 || (col != door_back1.frame.x as usize && col != door_back2.frame.x as usize) {
-                first_floor.constructions_tiles.update_tile(row, col, Construction::LightWall);
+                first_floor.construction_tiles.update_tile(row, col, Construction::LightWall);
             }
         }
     }
     for row in 0..(HOUSE_INTERIOR_ROWS + 3) {
-        first_floor.constructions_tiles.update_tile(row, 0, Construction::LightWall);
+        first_floor.construction_tiles.update_tile(row, 0, Construction::LightWall);
     }
 
-    first_floor.constructions_tiles.update_tile(3, 5, Construction::Counter);
-    first_floor.constructions_tiles.update_tile(2, 5, Construction::Counter);
-    first_floor.constructions_tiles.update_tile(3, 6, Construction::Counter);
-    first_floor.constructions_tiles.update_tile(3, 7, Construction::Counter);
-    first_floor.constructions_tiles.update_tile(3, 8, Construction::Counter);
-    first_floor.constructions_tiles.update_tile(2, 8, Construction::Counter);
+    first_floor.construction_tiles.update_tile(3, 5, Construction::Counter);
+    first_floor.construction_tiles.update_tile(2, 5, Construction::Counter);
+    first_floor.construction_tiles.update_tile(3, 6, Construction::Counter);
+    first_floor.construction_tiles.update_tile(3, 7, Construction::Counter);
+    first_floor.construction_tiles.update_tile(3, 8, Construction::Counter);
+    first_floor.construction_tiles.update_tile(2, 8, Construction::Counter);
 
-    first_floor.constructions_tiles.update_tile(1, 1, Construction::Library);
-    first_floor.constructions_tiles.update_tile(1, 2, Construction::Library);
-    first_floor.constructions_tiles.update_tile(1, 3, Construction::Library);
-    first_floor.constructions_tiles.update_tile(1, 4, Construction::Library);    
-    first_floor.constructions_tiles.update_tile(2, 1, Construction::Library);
-    first_floor.constructions_tiles.update_tile(2, 2, Construction::Library);
-    first_floor.constructions_tiles.update_tile(2, 3, Construction::Library);
-    first_floor.constructions_tiles.update_tile(2, 4, Construction::Library);
+    first_floor.construction_tiles.update_tile(1, 1, Construction::Library);
+    first_floor.construction_tiles.update_tile(1, 2, Construction::Library);
+    first_floor.construction_tiles.update_tile(1, 3, Construction::Library);
+    first_floor.construction_tiles.update_tile(1, 4, Construction::Library);    
+    first_floor.construction_tiles.update_tile(2, 1, Construction::Library);
+    first_floor.construction_tiles.update_tile(2, 2, Construction::Library);
+    first_floor.construction_tiles.update_tile(2, 3, Construction::Library);
+    first_floor.construction_tiles.update_tile(2, 4, Construction::Library);
 
-    first_floor.constructions_tiles.update_tile(1, 9, Construction::Library);
-    first_floor.constructions_tiles.update_tile(1, 10, Construction::Library);
-    first_floor.constructions_tiles.update_tile(2, 9, Construction::Library);
-    first_floor.constructions_tiles.update_tile(2, 10, Construction::Library);
+    first_floor.construction_tiles.update_tile(1, 9, Construction::Library);
+    first_floor.construction_tiles.update_tile(1, 10, Construction::Library);
+    first_floor.construction_tiles.update_tile(2, 9, Construction::Library);
+    first_floor.construction_tiles.update_tile(2, 10, Construction::Library);
 
     let mut clerk = species_by_id(SPECIES_NPC_SHOP_CLERK).make_entity();
     clerk.frame.x = 6;

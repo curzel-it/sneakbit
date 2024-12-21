@@ -7,11 +7,12 @@ struct ContentView: View {
             GameViewRepresentable()
             HpView()
             ControllerEmulatorView()
-            MenuView()
+            MessagesView()
             OptionsView()
             LoadingScreen()
             DeathScreen()
             ToastView()
+            LaunchScreenView()
         }
         .ignoresSafeArea()
         .typography(.text)

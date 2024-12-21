@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_INVENTORY, entities::species::species_by_id, features::{entity::Entity, state_updates::{AddToInventoryReason, EngineStateUpdate, WorldStateUpdate}}, is_creative_mode, lang::localizable::LocalizableText, menus::toasts::{Toast, ToastImage, ToastMode}, worlds::world::World};
+use crate::{constants::SPRITE_SHEET_INVENTORY, entities::species::species_by_id, features::{entity::Entity, state_updates::{AddToInventoryReason, EngineStateUpdate, WorldStateUpdate}}, is_creative_mode, lang::localizable::LocalizableText, features::toasts::{Toast, ToastImage, ToastMode}, worlds::world::World};
 
 impl Entity {
     pub fn update_pickable_object(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {              
@@ -23,7 +23,6 @@ pub fn object_pick_up_sequence(player: usize, entity: &Entity) -> Vec<WorldState
             )
         ),
         WorldStateUpdate::RemoveEntity(entity.id),
-        WorldStateUpdate::EngineUpdate(EngineStateUpdate::SaveGame),
         WorldStateUpdate::EngineUpdate(
             EngineStateUpdate::Toast(
                 Toast::new_with_image(

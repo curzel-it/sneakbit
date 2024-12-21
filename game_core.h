@@ -6,9 +6,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define BUILD_NUMBER 36
+#define BUILD_NUMBER 40
 
-#define ANIMATIONS_FPS 10.0
+#define PVP_AVAILABLE false
 
 #define UNLIMITED_LIFESPAN -420.0
 
@@ -19,6 +19,8 @@
 #define HERO_RECOVERY_PS 1.0
 
 #define MAX_PLAYERS 4
+
+#define TURN_DURATION 20.0
 
 #define KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST 0.4
 
@@ -41,6 +43,8 @@
 #define PLAYER4_ENTITY_ID 423
 
 #define WORLD_ID_NONE 1000
+
+#define ANIMATIONS_FPS 10.0
 
 #define WORLD_TRANSITION_TIME 0.3
 
@@ -94,6 +98,10 @@
 
 #define SPRITE_SHEET_WEAPONS 1022
 
+#define SPRITE_SHEET_MONSTERS 1023
+
+#define SPRITE_SHEET_HEROES 1024
+
 #define SPECIES_HERO 1001
 
 #define SPECIES_NPC_SHOP_CLERK 3008
@@ -120,17 +128,19 @@
 
 #define SPECIES_TELEPORTER 1019
 
-#define SPECIES_ZOMBIE 4002
-
-#define SPECIES_GHOST 4003
-
-#define SPECIES_MONSTER 4004
-
-#define SPECIES_SMALL_MONSTER 1148
-
 #define SPECIES_MR_MUGS 1131
 
 #define SPECIES_FOOTSTEPS 1136
+
+#define SPECIES_MONSTER_SMALL 4003
+
+#define SPECIES_MONSTER 4004
+
+#define SPECIES_MONSTER_BLUEBERRY 4005
+
+#define SPECIES_MONSTER_STRAWBERRY 4006
+
+#define SPECIES_MONSTER_GOOSEBERRY 4007
 
 #define SPECIES_KUNAI 7000
 
@@ -182,9 +192,10 @@ typedef enum SoundEffect {
 typedef enum ToastMode {
   ToastMode_Regular = 0,
   ToastMode_Hint,
+  ToastMode_LongHint,
 } ToastMode;
 
-typedef struct BordersTextures BordersTextures;
+typedef struct Option_Toast Option_Toast;
 
 typedef struct IntRect {
   int32_t x;
@@ -206,50 +217,36 @@ typedef struct RenderableItem {
   uint32_t sorting_key;
 } RenderableItem;
 
-typedef struct NonColorC {
-  uint8_t red;
-  uint8_t green;
-  uint8_t blue;
-  uint8_t alpha;
-} NonColorC;
+typedef struct CDisplayableMessage {
+  bool is_valid;
+  const char *title;
+  const char *text;
+} CDisplayableMessage;
 
-typedef struct ToastImageDescriptorC {
+typedef struct CToastImage {
+  bool is_valid;
   uint32_t sprite_sheet_id;
   struct IntRect texture_frame;
-} ToastImageDescriptorC;
+} CToastImage;
 
-typedef struct ToastDescriptorC {
-  struct NonColorC background_color;
+typedef struct CToast {
+  bool is_valid;
   const char *text;
   enum ToastMode mode;
-  struct ToastImageDescriptorC image;
-} ToastDescriptorC;
+  float duration;
+  struct CToastImage image;
+} CToast;
 
-typedef struct MenuDescriptorItemC {
-  const char *title;
-} MenuDescriptorItemC;
-
-typedef struct MenuDescriptorC {
-  bool is_visible;
-  const char *title;
-  const char *text;
-  const struct MenuDescriptorItemC *options;
-  uint32_t options_count;
-} MenuDescriptorC;
-
-
+typedef struct CMatchResult {
+  uintptr_t winner;
+  bool unknown_winner;
+  bool game_over;
+  bool in_progress;
+} CMatchResult;
 
 void initialize_game(enum GameMode mode);
 
-bool is_game_running(void);
-
-void stop_game(void);
-
-void window_size_changed(float width,
-                         float height,
-                         float scale,
-                         float font_size,
-                         float line_spacing);
+void window_size_changed(float width, float height, float scale);
 
 void update_game(float time_since_last_update);
 
@@ -269,7 +266,6 @@ void update_keyboard(uintptr_t player,
                      bool ranged_attack_pressed,
                      bool weapon_selection_pressed,
                      bool backspace_pressed,
-                     uint32_t current_char,
                      float time_since_last_update);
 
 void update_mouse(bool mouse_left_down,
@@ -292,8 +288,6 @@ void initialize_config(bool is_mobile,
                        const char *key_value_storage_path,
                        const char *localized_strings_path);
 
-bool can_render_frame(void);
-
 int32_t current_biome_tiles_variant(void);
 
 int32_t current_world_width(void);
@@ -305,18 +299,6 @@ struct IntRect camera_viewport(void);
 struct Vector2d camera_viewport_offset(void);
 
 uint32_t current_world_id(void);
-
-struct ToastDescriptorC current_toast(void);
-
-struct MenuDescriptorC current_menu(void);
-
-void free_c_char_ptr(const char *ptr);
-
-float current_loading_screen_progress(void);
-
-bool shows_death_screen(void);
-
-void select_current_menu_option_at_index(uint32_t index);
 
 int32_t number_of_kunai_in_inventory(uintptr_t player);
 
@@ -343,5 +325,15 @@ enum SoundEffect *get_current_sound_effects(uintptr_t *length);
 void free_sound_effects(enum SoundEffect *ptr, uintptr_t length);
 
 const char *current_soundtrack(void);
+
+struct CDisplayableMessage next_message_c(void);
+
+const struct Option_Toast *next_toast(void);
+
+struct CToast next_toast_c(void);
+
+struct CMatchResult match_result_c(void);
+
+void revive(void);
 
 #endif  /* GAME_CORE_H */

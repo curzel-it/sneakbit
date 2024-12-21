@@ -1,5 +1,6 @@
 package it.curzel.bitscape.rendering
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.Text
@@ -18,7 +19,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.ui.theme.DSTypography
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 @Composable
@@ -76,18 +77,21 @@ class HpViewModel(private val gameEngine: GameEngine) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            gameEngine.showsDeathScreen()
-                .combine(gameEngine.heroHp()) { gameOver, hp -> Pair(gameOver, hp)}
-                .collect { (gameOver, hp) ->
-                    handle(gameOver, hp)
+            gameEngine.gameState
+                .filterNotNull()
+                .collect { gameState ->
+                    handle(gameState.isGameOver(), gameState.heroHp)
                 }
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun handle(gameOver: Boolean, hp: Float) {
-        if (hp < 60 && !gameOver) {
+        val maxHpToShow = if (gameOver) { -99.0f } else { 60.0f }
+
+        if (hp < maxHpToShow) {
             _isVisible.value = true
-            _text.value = "HP ${String.format("%+.1f", hp)}%"
+            _text.value = "HP ${String.format("%.1f", hp)}%"
 
             if (hp < 30.0) {
                 _textColor.value = Color.Red

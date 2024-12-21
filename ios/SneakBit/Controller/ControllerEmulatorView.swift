@@ -102,6 +102,7 @@ private class ControllerEmulatorViewModel: ObservableObject {
     init() {
         reloadSettings()
         bindNumberOfKunais()
+        bindMelee()
         bindInteractionAvailable()
     }
     
@@ -149,9 +150,8 @@ private class ControllerEmulatorViewModel: ObservableObject {
     }
     
     private func bindNumberOfKunais() {
-        engine.kunai
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
+        engine.gameState()
+            .map { $0.kunai }
             .sink { [weak self] count in
                 withAnimation {
                     self?.isRangedAttackVisible = count > 0
@@ -159,10 +159,11 @@ private class ControllerEmulatorViewModel: ObservableObject {
                 }
             }
             .store(in: &disposables)
-        
-        engine.isSwordEquipped
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
+    }
+    
+    private func bindMelee() {
+        engine.gameState()
+            .map { $0.isSwordEquipped }
             .sink { [weak self] equipped in
                 withAnimation {
                     self?.isCloseAttackVisible = equipped
@@ -172,9 +173,8 @@ private class ControllerEmulatorViewModel: ObservableObject {
     }
     
     private func bindInteractionAvailable() {
-        engine.isInteractionAvailable
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
+        engine.gameState()
+            .map { $0.isInteractionAvailable }
             .sink { [weak self] available in
                 withAnimation {
                     self?.isConfirmVisible = available

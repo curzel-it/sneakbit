@@ -1,4 +1,4 @@
-use game_core::{constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, TILE_SIZE}, current_biome_tiles_variant, current_world_height, current_world_width, maps::{biome_tiles::{Biome, BiomeTile}, constructions_tiles::{Construction, ConstructionTile}, tiles::SpriteTile}, utils::{rect::IntRect, vector::Vector2d}};
+use game_core::{constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, TILE_SIZE}, current_biome_tiles_variant, current_world_height, current_world_width, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::SpriteTile}, utils::{rect::IntRect, vector::Vector2d}};
 use raylib::prelude::*;
 
 use super::ui::get_rendering_config;
@@ -8,7 +8,7 @@ pub fn render_tiles(
     camera_viewport: &IntRect, 
     camera_viewport_offset: &Vector2d,
     biome_tiles: &[Vec<BiomeTile>],
-    constructions_tiles: &[Vec<ConstructionTile>]
+    construction_tiles: &[Vec<ConstructionTile>]
 ) {
     let variant = current_biome_tiles_variant();
     let world_width = current_world_width();
@@ -47,7 +47,7 @@ pub fn render_tiles(
                 let col_usize = col as usize;
 
                 let biome_tile = &biome_tiles[row_usize][col_usize];
-                let construction_tile = &constructions_tiles[row_usize][col_usize];
+                let construction_tile = &construction_tiles[row_usize][col_usize];
 
                 if !matches!(biome_tile.tile_type, Biome::Nothing) {
                     let source = biome_tile.texture_source_rect(variant);

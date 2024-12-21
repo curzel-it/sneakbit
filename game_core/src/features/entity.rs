@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{constants::{ANIMATIONS_FPS, NO_PARENT, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType, Species}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
-use super::{directions::MovementDirections, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}};
+use super::{directions::MovementDirections, locks::LockType, messages::DisplayableMessage, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}};
 
 pub type EntityId = u32;
 
@@ -269,7 +269,9 @@ impl Entity {
 
                 let show_dialogue = vec![
                     WorldStateUpdate::EngineUpdate(
-                        EngineStateUpdate::DisplayLongText(format!("{}:", self.name.clone()), dialogue.localized_text())
+                        EngineStateUpdate::Message(
+                            DisplayableMessage::new(format!("{}:", self.name.clone()), dialogue.localized_text())
+                        )
                     )
                 ];
                 let reward = dialogue.handle_reward(player);

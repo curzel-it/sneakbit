@@ -84,7 +84,7 @@
       "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA"
     ]
   },
-  "constructions_tiles": {
+  "construction_tiles": {
     "sheet_id": 1003,
     "tiles": [
       "888888888888888888888888k0j088888888888888888888888888888888",
@@ -1217,7 +1217,7 @@
       "id": 12924784,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1148
+      "species_id": 4003
     }
   ],
   "ephemeral_state": true,

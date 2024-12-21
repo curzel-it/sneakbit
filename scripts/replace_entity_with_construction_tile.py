@@ -57,11 +57,11 @@ for filename in os.listdir("data"):
         x = entity["frame"]["x"]
         y = entity["frame"]["y"]
         species = entity["species_id"]
-        row = data["constructions_tiles"]["tiles"][y]
+        row = data["construction_tiles"]["tiles"][y]
         row = list(row)
         print(row, x)
         row[x] = replacement_map[species]
-        data["constructions_tiles"]["tiles"][y] = "".join(row)
+        data["construction_tiles"]["tiles"][y] = "".join(row)
 
     f = open(f"data/{filename}", "w")
     f.write(json.dumps(data, sort_keys=True, indent=2))

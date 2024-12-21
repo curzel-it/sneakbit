@@ -54,7 +54,7 @@
       "KKKKKKKKKKKKKKKKKKKKKKKKK11111111111111111111111711111111KKKKKKKKKKKKK"
     ]
   },
-  "constructions_tiles": {
+  "construction_tiles": {
     "sheet_id": 1003,
     "tiles": [
       "JJJJJJJJJJJJJJJJJJJJJJJJJJ00J0JJ0rBq00JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ",
@@ -1191,7 +1191,7 @@
       "id": 11767600,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 4005
+      "species_id": 1175
     },
     {
       "after_dialogue": "Nothing",
@@ -1209,7 +1209,7 @@
       "id": 11767601,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 4005
+      "species_id": 1175
     },
     {
       "after_dialogue": "Nothing",
@@ -1227,7 +1227,7 @@
       "id": 11767602,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 4005
+      "species_id": 1175
     },
     {
       "after_dialogue": "Nothing",

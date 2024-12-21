@@ -13,7 +13,7 @@ pub const COLOR_LOADING_SCREEN_BACKGROUND: NonColor = (0, 0, 0, 255);
 pub const COLOR_DEATH_SCREEN_BACKGROUND: NonColor = (0, 0, 0, 178);
 pub const COLOR_MENU_BACKGROUND: NonColor = (42, 47, 78, 255);
 pub const COLOR_MENU_HINT_BACKGROUND: NonColor = (26, 25, 50, 128);
-pub const COLOR_TOAST_BACKGROUND: NonColor =  (0, 0, 0, 255);
+pub const COLOR_TOAST_BACKGROUND: NonColor =  (5, 5, 5, 255);
 
 pub trait WithAlpha {
     fn with_alpha(&self, alpha: f32) -> NonColor;

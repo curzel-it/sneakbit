@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.analytics.AnalyticsService
 import it.curzel.bitscape.analytics.RuntimeEvent
 import it.curzel.bitscape.analytics.RuntimeEventsBroker
@@ -27,7 +28,7 @@ import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.rendering.GameViewComposable
 import it.curzel.bitscape.rendering.HpView
 import it.curzel.bitscape.rendering.LoadingScreen
-import it.curzel.bitscape.rendering.MenuView
+import it.curzel.bitscape.rendering.MessageView
 import it.curzel.bitscape.rendering.OptionsScreen
 import it.curzel.bitscape.rendering.SpritesProvider
 import it.curzel.bitscape.rendering.ToastView
@@ -64,7 +65,7 @@ class MainActivity : ComponentActivity() {
                             HpView(engine)
                             ControllerEmulatorView(engine, controllerSettingsStorage)
                         }
-                        MenuView(engine)
+                        MessageView(engine)
                         OptionsScreen(engine, audioEngine)
                         LoadingScreen(engine)
                         DeathScreen(engine)
@@ -99,7 +100,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
     val nativeLib: NativeLib = NativeLib()
     val broker: RuntimeEventsBroker = RuntimeEventsBroker()
     val audioEngine = AudioEngine(application, nativeLib)
-    val engine = GameEngine(application, nativeLib, audioEngine, broker)
+    val engine = GameEngine(application, nativeLib, audioEngine, broker, viewModelScope)
     val analytics: AnalyticsService = AnalyticsService(broker, nativeLib, application)
 
     val spritesProvider = SpritesProvider(
@@ -120,7 +121,10 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             NativeLib.SPRITE_SHEET_FARM_PLANTS to "farm_plants",
             NativeLib.SPRITE_SHEET_CAVE_DARKNESS to "cave_darkness",
             NativeLib.SPRITE_SHEET_TENTACLES to "tentacles",
-            NativeLib.SPRITE_SHEET_WEAPONS to "weapons"
+            NativeLib.SPRITE_SHEET_WEAPONS to "weapons",
+            NativeLib.SPRITE_SHEET_MONSTERS to "monsters",
+            NativeLib.SPRITE_SHEET_HEROES to "heroes",
+            NativeLib.SPRITE_SHEET_DEMON_LORD_DEFEAT to "demon_lord_defeat"
         )
     )
 }

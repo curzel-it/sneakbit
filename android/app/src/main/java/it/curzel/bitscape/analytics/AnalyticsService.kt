@@ -12,7 +12,6 @@ class AnalyticsService(
     private val nativeLib: NativeLib,
     context: Context
 ) {
-
     private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var job: Job? = null

@@ -9,14 +9,8 @@ class GameEngine {
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
     @Inject private var tileMapsStorage: TileMapsStorage
     
-    let toast = CurrentValueSubject<ToastDescriptorC?, Never>(nil)
-    let menus = CurrentValueSubject<MenuDescriptorC?, Never>(nil)
-    let kunai = CurrentValueSubject<Int32, Never>(0)
-    let isInteractionAvailable = CurrentValueSubject<Bool, Never>(false)
-    let loadingScreenConfig = CurrentValueSubject<LoadingScreenConfig, Never>(.none)
-    let showsDeathScreen = CurrentValueSubject<Bool, Never>(false)
-    let heroHp = CurrentValueSubject<Float32, Never>(100)
-    let isSwordEquipped = CurrentValueSubject<Bool, Never>(false)
+    private let state = CurrentValueSubject<GameState?, Never>(nil)
+    let isLoading = CurrentValueSubject<Bool, Never>(true)
     
     var size: CGSize = .zero
     var fps: Double = 0.0
@@ -40,11 +34,10 @@ class GameEngine {
         
     private var keyPressed = Set<EmulatedKey>()
     private var keyDown = Set<EmulatedKey>()
-    private var currentChar: UInt32 = 0
     
     private var worldHeight: Int = 0
     private var worldWidth: Int = 0
-    private var isBusy: Bool = false
+    private var isGamePaused: Bool = false
     
     private(set) var tileMapImages: [UIImage] = []
     private var currentBiomeVariant: Int = 0
@@ -62,56 +55,69 @@ class GameEngine {
         initialize_game(GameMode_RealTimeCoOp)
     }
     
+    func gameState() -> AnyPublisher<GameState, Never> {
+        state
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+    
     func update(deltaTime: Float) {
-        guard !isBusy else { return }
-        let wasDead = showsDeathScreen.value
-        let isDead = shows_death_screen()
-        
         updateKeyboardState(timeSinceLastUpdate: deltaTime)
-        update_game(deltaTime)
-        toast.send(current_toast())
-        menus.send(current_menu())
-        kunai.send(number_of_kunai_in_inventory(0))
-        heroHp.send(player_current_hp(0))
-        isSwordEquipped.send(is_melee_equipped(0))
-        isInteractionAvailable.send(is_interaction_available())
-        showsDeathScreen.send(isDead)
-        currentBiomeVariant = Int(current_biome_tiles_variant())
-        cameraViewport = camera_viewport()
-        cameraViewportOffset = camera_viewport_offset()
         
-        if isDead && !wasDead {
-            broker.send(.gameOver)
+        let wasPaused = isGamePaused
+        if !wasPaused {
+            update_game(deltaTime)
         }
         
-        if current_world_id() != currentWorldId {
-            broker.send(.worldTransition(source: currentWorldId, destination: current_world_id()))
-            currentWorldId = current_world_id()
-            isNight = is_night()
-            isLimitedVisibility = is_limited_visibility()
-            keyDown.removeAll()
-            keyPressed.removeAll()
-            updateTileMapImages()
-            audioEngine.updateSoundTrack()
-        }
-        
+        fetchRenderingInfo()
+        handleWorldChanged()
         updateFpsCounter()
         flushKeyboard()
-        audioEngine.update()
+        
+        if !wasPaused {
+            audioEngine.updateSoundEffects()
+        }
+        
+        let newState = fetchGameState()
+        if newState.shouldPauseGame() {
+            pauseGame()
+        }
+        state.send(newState)
+    }
+    
+    private func handleWorldChanged() {
+        let newWorld = current_world_id()
+        guard newWorld != currentWorldId else { return }
+        isLoading.send(true)
+        canRender = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + WORLD_TRANSITION_TIME) {
+            self.canRender = true
+            self.isLoading.send(false)
+        }
+        
+        broker.send(.worldTransition(source: currentWorldId, destination: current_world_id()))
+        currentWorldId = newWorld
+        isNight = is_night()
+        isLimitedVisibility = is_limited_visibility()
+        keyDown.removeAll()
+        keyPressed.removeAll()
+        updateTileMapImages()
+        audioEngine.updateSoundTrack()
     }
     
     func startNewGame() {
-        showsDeathScreen.send(false)
+        resumeGame()
         broker.send(.newGame)
         start_new_game()
     }
     
-    func pause() {
-        isBusy = true
+    func pauseGame() {
+        isGamePaused = true
     }
     
-    func resume() {
-        isBusy = false
+    func resumeGame() {
+        isGamePaused = false
     }
     
     func renderEntities(_ render: @escaping (RenderableItem) -> Void) {
@@ -123,19 +129,10 @@ class GameEngine {
     }
 
     func setupChanged(safeArea: UIEdgeInsets?, windowSize: CGSize, screenScale: CGFloat?) {
-        if let safeArea {
-            safeAreaInsets = safeArea
-        }
+        safeArea.let { safeAreaInsets = $0 }
         renderingScale = renderingScaleUseCase.calculate(windowSize: windowSize, screenScale: screenScale)
         size = windowSize
-        
-        window_size_changed(
-            Float(size.width),
-            Float(size.height),
-            Float(renderingScale),
-            12,
-            8
-        )
+        window_size_changed(Float(size.width), Float(size.height), Float(renderingScale))
         worldHeight = Int(current_world_height())
         worldWidth = Int(current_world_width())
     }
@@ -165,18 +162,6 @@ class GameEngine {
             width: CGFloat(frame.w) * tileSize * renderingScale,
             height: CGFloat(frame.h) * tileSize * renderingScale
         )
-    }
-    
-    func setDidType(char: Character) {
-        if let scalar = char.unicodeScalars.first, char.unicodeScalars.count == 1 {
-            currentChar = scalar.value
-        } else {
-            setDidTypeNothing()
-        }
-    }
-    
-    func setDidTypeNothing() {
-        currentChar = 0
     }
     
     func setKeyDown(_ key: EmulatedKey) {
@@ -224,18 +209,12 @@ class GameEngine {
             keyPressed.contains(.rangedAttack),
             keyPressed.contains(.backspace),
             false,
-            currentChar,
             timeSinceLastUpdate
         )
     }
     
     private func updateTileMapImages() {
-        setLoading(.worldTransition)
-        
-        DispatchQueue.global().async {
-            self.tileMapImages = self.tileMapsStorage.images(forWorld: self.currentWorldId)
-            self.setLoading(.none)
-        }
+        tileMapImages = tileMapsStorage.images(forWorld: currentWorldId)
     }
     
     private func updateFpsCounter() {
@@ -250,24 +229,21 @@ class GameEngine {
         }
     }
     
-    func onMenuItemSelection(index: Int) {
-        select_current_menu_option_at_index(UInt32(index))
-        setKeyDown(.confirm)
+    private func fetchGameState() -> GameState{
+        GameState(
+            toasts: next_toast_c(),
+            messages: next_message_c(),
+            kunai: number_of_kunai_in_inventory(0),
+            isInteractionAvailable: is_interaction_available(),
+            matchResult: match_result_c(),
+            heroHp: player_current_hp(0),
+            isSwordEquipped: is_melee_equipped(0)
+        )
     }
     
-    private func setLoading(_ mode: LoadingScreenConfig) {
-        if mode.isVisible {
-            setLoadingNow(mode)
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.setLoadingNow(mode)
-            }
-        }
-    }
-    
-    private func setLoadingNow(_ mode: LoadingScreenConfig) {
-        canRender = !mode.isVisible
-        isBusy = mode.isVisible
-        loadingScreenConfig.send(mode)
+    private func fetchRenderingInfo() {
+        currentBiomeVariant = Int(current_biome_tiles_variant())
+        cameraViewport = camera_viewport()
+        cameraViewportOffset = camera_viewport_offset()
     }
 }

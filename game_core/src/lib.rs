@@ -1,15 +1,20 @@
 #![allow(clippy::new_without_default, clippy::not_unsafe_ptr_arg_deref)]
 
-use std::{collections::HashSet, ffi::{CStr, CString}, path::PathBuf, ptr};
+use std::{collections::HashSet, path::PathBuf, ptr};
 use std::os::raw::c_char;
 
 use config::initialize_config_paths;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
-use features::{light_conditions::LightConditions, links::LinksHandler, sound_effects::SoundEffect};
+use features::messages::{CDisplayableMessage, DisplayableMessage, DisplayableMessageCRepr};
+use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::WorldStateUpdate, toasts::ToastCRepr};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
-use menus::{menu::MenuDescriptorC, toasts::ToastDescriptorC};
-use multiplayer::modes::GameMode;
-use utils::{rect::{IntPoint, IntRect}, vector::Vector2d};
+use input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider};
+use features::toasts::{Toast, CToast};
+use maps::biome_tiles::BiomeTile;
+use maps::construction_tiles::ConstructionTile;
+use multiplayer::turns_use_case::{CMatchResult, MatchResult};
+use multiplayer::{modes::GameMode, turns::GameTurn};
+use utils::{rect::{IntPoint, IntRect}, strings::{c_char_ptr_to_string, string_to_c_char}, vector::Vector2d};
 
 pub mod config;
 pub mod constants;
@@ -17,10 +22,8 @@ pub mod entities;
 pub mod equipment;
 pub mod features;
 pub mod lang;
-pub mod hitmaps;
 pub mod input;
 pub mod maps;
-pub mod menus;
 pub mod multiplayer;
 pub mod prefabs;
 pub mod ui;
@@ -29,7 +32,7 @@ pub mod worlds;
 
 static mut ENGINE: *mut GameEngine = std::ptr::null_mut();
 
-pub fn engine() -> &'static GameEngine {
+fn engine() -> &'static GameEngine {
     unsafe {
         &*ENGINE
     }
@@ -60,18 +63,8 @@ pub fn current_game_mode() -> GameMode {
 }
 
 #[no_mangle]
-pub extern "C" fn is_game_running() -> bool {
-    engine().is_running
-}
-
-#[no_mangle]
-pub extern "C" fn stop_game() {
-    engine_mut().is_running = false
-}
-
-#[no_mangle]
-pub extern "C" fn window_size_changed(width: f32, height: f32, scale: f32, font_size: f32, line_spacing: f32) {
-    engine_mut().window_size_changed(width, height, scale, font_size, line_spacing)
+pub extern "C" fn window_size_changed(width: f32, height: f32, scale: f32) {
+    engine_mut().window_size_changed(width, height, scale)
 }
 
 #[no_mangle]
@@ -97,7 +90,6 @@ pub extern "C" fn update_keyboard(
     ranged_attack_pressed: bool,
     weapon_selection_pressed: bool,
     backspace_pressed: bool,
-    current_char: u32,
     time_since_last_update: f32
 ) {
     engine_mut().keyboard.update(
@@ -108,7 +100,6 @@ pub extern "C" fn update_keyboard(
         close_attack_pressed, ranged_attack_pressed, 
         weapon_selection_pressed,
         backspace_pressed, 
-        if current_char == 0 { None } else { char::from_u32(current_char) }, 
         time_since_last_update
     );
 }
@@ -208,18 +199,12 @@ pub extern "C" fn initialize_config(
     initialize_config_paths(
         is_mobile,
         base_entity_speed,
-        to_string(current_lang),
+        c_char_ptr_to_string(current_lang),
         to_path(levels_path),
         to_path(species_path),
         to_path(key_value_storage_path),
         to_path(localized_strings_path),
     );
-}
-
-#[no_mangle]
-pub extern "C" fn can_render_frame() -> bool {
-    let engine = engine();
-    !engine.loading_screen.is_in_progress() || engine.loading_screen.progress() > 0.4
 }
 
 #[no_mangle]
@@ -247,78 +232,13 @@ pub extern "C" fn camera_viewport_offset() -> Vector2d {
     engine().camera_viewport_offset
 }
 
-fn to_string(value: *const c_char) -> String {
-    if value.is_null() {
-        return String::new();
-    }
-
-    unsafe {
-        CStr::from_ptr(value)
-            .to_str()
-            .unwrap_or_default()
-            .to_owned()
-    }
-}
-
 fn to_path(value: *const c_char) -> PathBuf {
-    PathBuf::from(to_string(value))
+    PathBuf::from(c_char_ptr_to_string(value))
 }
 
 #[no_mangle]
 pub extern "C" fn current_world_id() -> u32 {
     engine().world.id
-}
-
-#[no_mangle]
-pub extern "C" fn current_toast() -> ToastDescriptorC {
-    engine().toast.descriptor_c()
-}
-
-#[no_mangle]
-pub extern "C" fn current_menu() -> MenuDescriptorC {
-    let engine = engine();
-
-    if engine.long_text_display.is_open {
-        return engine.long_text_display.descriptor_c()
-    }
-    if engine.confirmation_dialog.is_open() {
-        return engine.confirmation_dialog.menu.descriptor_c()
-    }
-    if engine.menu.is_open() {
-        return engine.menu.menu.descriptor_c()
-    }
-    MenuDescriptorC::empty()
-}
-
-pub fn string_to_c_char(s: String) -> *const c_char {
-    let c_string = CString::new(s).expect("Failed to convert String to CString");
-    let raw_ptr = c_string.into_raw();
-    raw_ptr as *const c_char
-}
-
-#[no_mangle]
-pub extern "C" fn free_c_char_ptr(ptr: *const c_char) {
-    unsafe {
-        if ptr.is_null() {
-            return;
-        }
-        _ = CString::from_raw(ptr as *mut c_char);
-    }
-}
-
-#[no_mangle]
-pub extern "C" fn current_loading_screen_progress() -> f32 {
-    engine().loading_screen.progress()
-}
-
-#[no_mangle]
-pub extern "C" fn shows_death_screen() -> bool {
-    engine().death_screen.is_open
-}
-
-#[no_mangle]
-pub extern "C" fn select_current_menu_option_at_index(index: u32) {
-    engine_mut().select_current_menu_option_at_index(index as usize)
 }
 
 #[no_mangle]
@@ -346,6 +266,10 @@ pub fn cached_players_positions() -> Vec<IntPoint> {
         .iter()
         .map(|p| p.props.hittable_frame.origin())
         .collect()
+}
+
+pub fn cached_player_position(player: usize) -> IntPoint {
+    engine().world.players[player].props.hittable_frame.origin()
 }
 
 #[no_mangle]
@@ -380,12 +304,28 @@ pub extern "C" fn start_new_game() {
     engine_mut().start_new_game();    
 }
 
-pub fn engine_set_wants_fullscreen() {
-    engine_mut().wants_fullscreen = true;
+pub fn wants_fullscreen() -> bool {
+    engine().wants_fullscreen
+}
+
+pub fn set_wants_fullscreen(enabled: bool) {
+    engine_mut().wants_fullscreen = enabled;
+}
+
+pub fn save_game() {
+    engine().save();
 }
 
 pub fn current_sound_effects() -> HashSet<SoundEffect> {
     engine().sound_effects.current_sound_effects.clone()
+}
+
+pub fn current_world_biome_tiles() -> &'static Vec<Vec<BiomeTile>> {
+    &engine().world.biome_tiles.tiles
+}
+
+pub fn current_world_construction_tiles() -> &'static Vec<Vec<ConstructionTile>> {
+    &engine().world.construction_tiles.tiles
 }
 
 #[no_mangle]
@@ -420,10 +360,6 @@ pub extern "C" fn current_soundtrack() -> *const c_char {
     string_to_c_char(current_soundtrack_string().unwrap_or_default())
 }
 
-pub fn set_links_handler(handler: Box<dyn LinksHandler>) {
-    engine_mut().links_handler = handler;
-}
-
 pub fn is_any_hero_on_a_slippery_surface() -> bool {
     engine().world.is_any_hero_on_a_slippery_surface()
 }
@@ -436,8 +372,26 @@ pub fn number_of_players() -> usize {
     engine().number_of_players
 }
 
+pub fn indeces_of_dead_players() -> &'static Vec<usize> {
+    &engine().dead_players
+}
+
 pub fn update_number_of_players(count: usize) {
     engine_mut().update_number_of_players(count)
+}
+
+pub fn currently_active_players() -> Vec<usize> {
+    let engine = engine();
+    match engine.turn {
+        GameTurn::RealTime => {
+            (0..engine.number_of_players)
+                .filter(|index| !engine.dead_players.contains(index))
+                .collect()
+        },
+        GameTurn::Player(current_player_index, _) => {
+            vec![current_player_index]
+        }
+    }
 }
 
 pub fn toggle_pvp() {
@@ -447,4 +401,64 @@ pub fn toggle_pvp() {
         GameMode::TurnBasedPvp => GameMode::RealTimeCoOp,
     };
     engine_mut().update_game_mode(next);
+}
+
+pub fn current_keyboard_state() -> &'static KeyboardEventsProvider {
+    &engine().keyboard
+}
+
+pub fn current_mouse_state() -> &'static MouseEventsProvider {
+    &engine().mouse
+}
+
+pub fn current_camera_viewport() -> &'static IntRect {
+    &engine().camera_viewport
+}
+
+pub fn apply_world_state_updates(updates: Vec<WorldStateUpdate>) {
+    engine_mut().apply_world_state_updates(updates)
+}
+
+pub fn is_turn_based_game_mode() -> bool {
+    engine().game_mode.is_turn_based()
+}
+
+pub fn time_left_for_current_turn() -> f32 {
+    match engine().turn {
+        multiplayer::turns::GameTurn::RealTime => 0.0,
+        multiplayer::turns::GameTurn::Player(_, time_left) => time_left
+    }
+}
+
+pub fn next_message() -> &'static Option<DisplayableMessage> {
+    &engine().message
+}
+
+#[no_mangle]
+pub extern "C" fn next_message_c() -> CDisplayableMessage {
+    engine().message.c_repr()
+}
+
+#[no_mangle]
+pub extern "C" fn next_toast() -> &'static Option<Toast> {
+    &engine().toast
+}
+
+#[no_mangle]
+pub extern "C" fn next_toast_c() -> CToast {
+    engine().toast.c_repr()
+}
+
+pub fn match_result() -> &'static MatchResult {
+    &engine().match_result
+}
+
+#[no_mangle]
+pub extern "C" fn match_result_c() -> CMatchResult {
+    engine().match_result.c_repr()
+}
+
+#[no_mangle]
+pub extern "C" fn revive() {
+    engine_mut().revive()
 }

@@ -7,7 +7,6 @@ func string(from pointer: UnsafePointer<CChar>?) -> String? {
     return String(cString: pointer)
 }
 
-
 func strings(from pointer: UnsafePointer<UnsafePointer<CChar>?>?, count: Int) -> [String] {
     guard let pointer else { return [] }
     

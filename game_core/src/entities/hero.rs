@@ -37,10 +37,10 @@ impl Entity {
         self.reset_offset_on_next_direction_change = true;
 
         let (x, y) = match player_index {
-            1 => (36, 38),
-            2 => (40, 38),
-            3 => (44, 38),
-            _ => (12, 0),
+            1 => (5, 1),
+            2 => (9, 1),
+            3 => (13, 1),
+            _ => (1, 1),
         };
         println!("Player #{}, sprite x {} y {}", self.player_index, x, y);
         self.sprite.original_frame.x = x;

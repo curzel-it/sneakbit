@@ -1,6 +1,6 @@
 use crate::utils::rect::IntRect;
 
-pub const BUILD_NUMBER: u32 = 37;
+pub const BUILD_NUMBER: u32 = 40;
 
 // Feature Flags
 pub const PVP_AVAILABLE: bool = false;
@@ -65,3 +65,5 @@ pub const SPRITE_SHEET_CAVE_DARKNESS: u32 = 1019;
 pub const SPRITE_SHEET_DEMON_LORD_DEFEAT: u32 = 1020;
 pub const SPRITE_SHEET_TENTACLES: u32 = 1021;
 pub const SPRITE_SHEET_WEAPONS: u32 = 1022;
+pub const SPRITE_SHEET_MONSTERS: u32 = 1023;
+pub const SPRITE_SHEET_HEROES: u32 = 1024;

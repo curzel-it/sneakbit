@@ -16,5 +16,9 @@ func fetchSoundEffects(_ callback: @escaping ([SoundEffect]) -> Void) {
 }
 
 func currentSoundTrack() -> String? {
-    string(from: current_soundtrack())?.components(separatedBy: ".").first
+    if let name = string(from: current_soundtrack())?.components(separatedBy: ".").first, name != "" {
+        name
+    } else {
+        nil
+    }
 }
