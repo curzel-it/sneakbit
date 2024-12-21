@@ -1,6 +1,7 @@
 import os
 import shutil
 import sys
+import platform
 
 def build_project():
     os.system("python3 scripts/compile_sprites.py")
@@ -31,25 +32,35 @@ def copy_executable(source_executable, dest_executable):
     shutil.copy2(source_executable, dest_executable)
     print(f"Copied executable to '{dest_executable}'.")
 
+def available_platforms():
+    macos = {
+        "executable_source": os.path.join("target", "release", "game"),
+        "executable_dest": "SneakBit" 
+    }
+    linux = {
+        "executable_source": os.path.join("target", "release", "game"),
+        "executable_dest": "SneakBit" 
+    }
+    windows = {
+        "executable_source": os.path.join("target", "x86_64-pc-windows-gnu", "release", "game.exe"),
+        "executable_dest": "SneakBit.exe" 
+    }
+    
+    current_system = platform.system().lower()
+    
+    if current_system == 'darwin': return {"macOS": macos, "windows": windows}
+    elif current_system == 'windows': return {"windows": windows}
+    elif current_system == 'linux': return {"linux": linux}
+    else: raise ValueError(f"Unknown platform: {current_system}")
+
 def main():
     build_project()
-
-    platforms = {
-        "macOS": {
-            "executable_source": os.path.join("target", "release", "game"),
-            "executable_dest": "SneakBit" 
-        },
-        "windows": {
-            "executable_source": os.path.join("target", "x86_64-pc-windows-gnu", "release", "game.exe"),
-            "executable_dest": "SneakBit.exe" 
-        }
-    }
 
     directories_to_copy = ["assets", "audio", "data", "lang", "fonts"]
 
     os.system("rm -rf __release")
 
-    for platform_name, paths in platforms.items():
+    for platform_name, paths in available_platforms().items():
         platform_dir = os.path.join(f"__release", platform_name)        
         os.makedirs(platform_dir, exist_ok=True)
         print(f"Created directory '{platform_dir}'.")

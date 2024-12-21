@@ -22,7 +22,7 @@ Available now on [Steam](https://store.steampowered.com/app/3360860/SneakBit) fo
 </div>
 
 ## Features
-* Adventure-action gameplay with kunai and sword combat
+* Adventure-action gameplay with close and long range combat
 * Grid-based dual-layer tiling system
 * Unlockable combat skills
 * Nostalgic Gameboy-like pixel art aesthetics
