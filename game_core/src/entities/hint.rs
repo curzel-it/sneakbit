@@ -25,18 +25,22 @@ impl Entity {
         if self.is_consumable && self.has_been_read() || self.dialogues.is_empty() {
             vec![]
         } else {
-            self.set_read();
-            vec![self.toast()]
-        }        
-    }
+            let text = self.key().localized();
 
-    fn toast(&self) -> WorldStateUpdate {
-        WorldStateUpdate::EngineUpdate(EngineStateUpdate::Toast(            
-            Toast::new(
-                ToastMode::Hint,
-                self.key().localized()
-            )
-        ))
+            if !text.is_empty() {
+                self.set_read();
+
+                vec![
+                    WorldStateUpdate::EngineUpdate(
+                        EngineStateUpdate::Toast(            
+                            Toast::new(ToastMode::Hint, text)
+                        )
+                    )
+                ]
+            } else {
+                vec![]
+            }
+        }
     }
 
     fn key(&self) -> String {

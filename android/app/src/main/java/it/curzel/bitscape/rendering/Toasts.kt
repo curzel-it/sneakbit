@@ -169,7 +169,7 @@ class ToastViewModel(
         _borderColor.value = if (toast.isHint()) Color.Yellow else Color.Cyan
 
         viewModelScope.launch {
-            delay((1000 * toast.duration).toLong())
+            delay((1000 * toast.duration * 1.5).toLong())
             _isVisible.value = false
         }
 

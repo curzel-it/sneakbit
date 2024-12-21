@@ -303,7 +303,11 @@ Also, what the hell are you doing in my house!?
 
 "hint.004.swing_sword" = "Swing the sword by pressing R or Q"
 
-"hint.004.swing_sword.mobile" = "Swing the sword using the dedicated button"
+"hint.004.swing_sword.mobile" = ""
+
+"hint.005.move_controls" = ""
+
+"hint.005.move_controls.mobile" = "You can hold the knife button to move it to another position"
 
 "inventory.subtitle" = "Stuff in your backpack"
 
@@ -1357,4 +1361,3 @@ Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
 "yes" = "Yes"
 
 "you" = "You"
-

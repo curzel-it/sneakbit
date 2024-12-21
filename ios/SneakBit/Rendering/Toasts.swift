@@ -76,7 +76,7 @@ private class ToastViewModel: ObservableObject {
         position = toast.mode.rawValue == 0 ? .trailingTop : .leadingTop
         borderColor = toast.mode.rawValue == 0 ? .cyan : .highlightedText
         isVisible = true
-        hide(delay: TimeInterval(toast.duration))
+        hide(delay: TimeInterval(toast.duration * 1.5))
         
         let cgImage = spritesProvider.cgImage(for: toast.image.sprite_sheet_id, textureRect: toast.image.texture_frame)
         

@@ -38,8 +38,8 @@ impl Toast {
 impl ToastMode {
     pub fn duration(&self) -> f32 {
         match self {
-            ToastMode::LongHint => 2.5,
-            ToastMode::Hint => 1.8,
+            ToastMode::LongHint => 3.0,
+            ToastMode::Hint => 2.0,
             ToastMode::Regular => 1.0
         }
     }

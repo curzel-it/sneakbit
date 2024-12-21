@@ -1873,6 +1873,31 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1157
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [
+        {
+          "expected_value": 1,
+          "key": "always",
+          "reward": null,
+          "text": "hint.005.move_controls"
+        }
+      ],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1,
+        "w": 1,
+        "x": 69,
+        "y": 34
+      },
+      "id": 14739582,
+      "is_consumable": true,
+      "lock_type": "None",
+      "species_id": 50000
     }
   ],
   "ephemeral_state": false,

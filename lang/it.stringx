@@ -293,7 +293,7 @@ Per il multiplayer è richiesto un controller per giocatore.
 
 "hint.002.throw_knife" = "Lancia i coltelli premendo F o J"
 
-"hint.002.throw_knife.mobile" = "Attacca premendo il bottone con l'icona del coltello"
+"hint.002.throw_knife.mobile" = "Attacca premendo il bottone con l'icona con il pugnale"
 
 "hint.003.not_all_places_have_loot" = """
 Cosa?
@@ -304,6 +304,10 @@ E poi, cosa diavolo ci fai a casa mia!?
 "hint.004.swing_sword" = "Dopo averla raccolta, usa la spada con i tasti R o Q"
 
 "hint.004.swing_sword.mobile" = ""
+
+"hint.005.move_controls" = ""
+
+"hint.005.move_controls.mobile" = "Puoi tenere premuto il pulsante pugnale per spostarlo in un'altra posizione"
 
 "inventory.subtitle" = "Oggetti nello zaino"
 
