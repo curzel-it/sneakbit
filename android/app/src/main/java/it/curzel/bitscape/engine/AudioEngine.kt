@@ -3,6 +3,7 @@ package it.curzel.bitscape.engine
 import android.content.Context
 import android.content.SharedPreferences
 import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.media.SoundPool
 import android.util.Log
 import it.curzel.bitscape.R
@@ -52,9 +53,8 @@ class AudioEngine(
     )
 
     private val soundPool: SoundPool
+    private var mediaPlayer: MediaPlayer? = null
     private var latestSoundTrackResId: Int? = null
-    private var currentSoundTrackSoundId: Int? = null
-    private var currentSoundTrackStreamId: Int? = null
     private var soundEffectsEnabled: Boolean = false
     private var musicEnabled: Boolean = false
     private val preferences: SharedPreferences = context.getSharedPreferences("AudioSettings", Context.MODE_PRIVATE)
@@ -63,7 +63,7 @@ class AudioEngine(
     init {
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
-            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
             .build()
 
         soundPool = SoundPool.Builder()
@@ -72,9 +72,7 @@ class AudioEngine(
             .build()
 
         loadSettings()
-        setupSoundLoadingListener()
-
-        CoroutineScope(Dispatchers.IO + Job()).launch {
+        scope.launch {
             loadSounds()
         }
     }
@@ -93,11 +91,17 @@ class AudioEngine(
     }
 
     fun toggleMusic() {
-        currentSoundTrackStreamId?.let { soundPool.stop(it) }
-        currentSoundTrackStreamId = null
         musicEnabled = !musicEnabled
         preferences.edit().putBoolean(MUSIC_ENABLED, musicEnabled).apply()
-        updateSoundTrack()
+
+        if (musicEnabled) {
+            updateSoundTrack()
+        } else {
+            mediaPlayer?.stop()
+            mediaPlayer?.release()
+            mediaPlayer = null
+            latestSoundTrackResId = null
+        }
     }
 
     fun updateSoundEffects() {
@@ -115,24 +119,28 @@ class AudioEngine(
             return
         }
 
-        val resId = soundTrackResourceIdFromFileName(nativeLib.currentSoundTrack()) ?: latestSoundTrackResId ?: return
-        if (latestSoundTrackResId == resId && currentSoundTrackStreamId != null) {
+        val filename = nativeLib.currentSoundTrack()
+        val resId = soundTrackResourceIdFromFileName(filename) ?: return
+        if (latestSoundTrackResId == resId && mediaPlayer != null) {
             return
         }
 
         latestSoundTrackResId = resId
-        currentSoundTrackStreamId?.let { soundPool.stop(it) }
-        currentSoundTrackStreamId = null
+        mediaPlayer?.stop()
+        mediaPlayer?.release()
 
-        val soundId = soundPool.load(context, resId, 1)
-        currentSoundTrackSoundId = soundId
-    }
-
-    private fun setupSoundLoadingListener() {
-        soundPool.setOnLoadCompleteListener { soundPool, loadedSoundId, status ->
-            if (status == 0 && loadedSoundId == currentSoundTrackSoundId) {
-                currentSoundTrackStreamId = soundPool.play(loadedSoundId, soundTrackVolume, soundTrackVolume, 1, -1, 1f)
+        mediaPlayer = MediaPlayer.create(context, resId).apply {
+            setVolume(soundTrackVolume, soundTrackVolume)
+            isLooping = true
+            start()
+            setOnErrorListener { mp, what, extra ->
+                Log.e(TAG, "MediaPlayer error: what=$what, extra=$extra")
+                true
             }
+        }
+
+        if (mediaPlayer == null) {
+            Log.e(TAG, "Failed to create MediaPlayer for resId: $resId")
         }
     }
 
@@ -170,6 +178,8 @@ class AudioEngine(
     }
 
     private fun playSound(effect: SoundEffect) {
+        if (!soundEffectsEnabled) return
+
         val soundId = soundMap[effect]
         if (soundId == null) {
             Log.e(TAG, "No sound loaded for effect: ${effect.name}")
@@ -186,29 +196,21 @@ class AudioEngine(
     }
 
     fun pauseMusic() {
-        currentSoundTrackStreamId?.let {
-            soundPool.pause(it)
-            Log.d(TAG, "Music paused")
-        }
+        mediaPlayer?.pause()
+        Log.d(TAG, "Music paused")
     }
 
     fun resumeMusic() {
-        if (musicEnabled && currentSoundTrackSoundId != null) {
-            currentSoundTrackStreamId = soundPool.play(
-                currentSoundTrackSoundId!!,
-                soundTrackVolume,
-                soundTrackVolume,
-                1,
-                -1,
-                1f
-            )
+        if (musicEnabled && mediaPlayer != null) {
+            mediaPlayer?.start()
             Log.d(TAG, "Music resumed")
         }
     }
 
     fun release() {
         soundPool.release()
-        Log.d(TAG, "SoundPool released")
+        mediaPlayer?.release()
+        Log.d(TAG, "AudioEngine released")
     }
 
     companion object {

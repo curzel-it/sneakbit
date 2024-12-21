@@ -53,7 +53,7 @@ class AudioEngine: Loggable {
     func updateSoundTrack() {
         guard musicEnabled else { return }
         
-        let next = currentSoundTrack() ?? currentSoundTrackFileName        
+        let next = currentSoundTrack() ?? currentSoundTrackFileName
         if next == currentSoundTrackFileName && (soundTrackPlayer?.isPlaying ?? false) {
             return
         }
