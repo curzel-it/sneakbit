@@ -1165,7 +1165,7 @@
     "lock_type": "None",
     "melee_attacks_hero": true,
     "movement_directions": "FindHero",
-    "name": "npc.name.monster.small",
+    "name": "npc.name.monster.chokeberry",
     "sprite_frame": {
       "h": 1,
       "w": 1,
@@ -1190,7 +1190,7 @@
     "lock_type": "None",
     "melee_attacks_hero": true,
     "movement_directions": "FindHero",
-    "name": "npc.name.monster",
+    "name": "npc.name.monster.blackberry",
     "sprite_frame": {
       "h": 2,
       "w": 1,
@@ -1240,7 +1240,7 @@
     "lock_type": "None",
     "melee_attacks_hero": true,
     "movement_directions": "FindHero",
-    "name": "npc.name.monster.blueberry",
+    "name": "npc.name.monster.strawberry",
     "sprite_frame": {
       "h": 2,
       "w": 1,
@@ -1265,7 +1265,7 @@
     "lock_type": "None",
     "melee_attacks_hero": true,
     "movement_directions": "FindHero",
-    "name": "npc.name.monster.blueberry",
+    "name": "npc.name.monster.gooseberry",
     "sprite_frame": {
       "h": 2,
       "w": 1,
@@ -4460,7 +4460,7 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
-    "z_index": 14
+    "z_index": 99
   },
   {
     "base_speed": 3.0,
@@ -4532,5 +4532,54 @@
     "sprite_sheet_id": 1022,
     "supports_bullet_boomerang": false,
     "z_index": 14
+  },
+  {
+    "base_speed": 1.0,
+    "bullet_lifespan": 2.0,
+    "bullet_species_id": 1169,
+    "cooldown_after_use": 0.005,
+    "entity_type": "WeaponRanged",
+    "equipment_usage_sound_effect": "GunShot",
+    "id": 1182,
+    "inventory_texture_offset": [
+      12,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.darkar15.weapon",
+    "ranged_dps_multiplier": 2.5,
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 65,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "z_index": 16
+  },
+  {
+    "associated_weapon": 1182,
+    "base_speed": 1.0,
+    "entity_type": "PickableObject",
+    "id": 1183,
+    "inventory_texture_offset": [
+      12,
+      3
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.darkar15.item",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 65,
+      "y": 53
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1022
   }
 ]

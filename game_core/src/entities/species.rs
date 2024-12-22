@@ -187,7 +187,6 @@ impl Species {
         entity.z_index = self.z_index;
         entity.movement_directions = self.movement_directions;
         entity.hp = self.hp;
-        entity.dps = self.dps;
 
         if entity.parent_id == NO_PARENT {
             entity.current_speed = initial_speed;

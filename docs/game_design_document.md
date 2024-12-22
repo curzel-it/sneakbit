@@ -26,36 +26,50 @@ Tiles are pre-rendered and distributed along with the game.
 ### Ranged Weapons
 Ranged weapons use ammunitions that can be found in-game.
 
-The bullet goes straight towards the direction the player is currently looking at until stopped or it expires.
+Combat skills, bullets and weapons have different properties that are combined to calculate the damage.
 
-Bullets inflict a damage per second, so the faster bullets are less effective.
+#### Bullets
+Bullets travel straight and inflict a damage per second, so the faster bullets are less effective.
 
-|Weapon|Ammo|Dps|Speed|Lifespan|Cooldown|
-|--|--|--|--|--|--|
-|Kunai Launcher|Kunai|1500|7.0|1.4|0.15|
-|AR15|.223 Rem|600|10.0|2.0|0.005|
-|Cannon|Cannonball|5000|8.0|2.0|0.5|
+|Ammo|Dps|Speed|Lifespan|
+|--|--|--|--|
+|Kunai|1500|7.0|1.4|
+|.223 Rem|600|10.0|2.0|
+|Cannonball|5000|8.0|2.0|
+
+#### Weapons
+|Weapon|Ammo|Dps Multiplier|Cooldown|
+|--|--|--|--|
+|Kunai Launcher|Kunai|1.0|0.15|
+|AR15|.223 Rem|1.0|0.005|
+|Dark AR|.223 Rem|2.5|0.005|
+|Cannon|Cannonball|1.0|8.0|0.5|
+
 
 ### Melee Weapons
 Melee weapons don't require ammunition, but the underlying mechanisms makes them fire invisible, slow and short-lived bullets, usually in a wider area than ranged weapons.
 
-This category includes shields and all equipment that doesn't deal damage.
-
+#### Weapons
 |Weapon|Dps|Speed|Lifespan|Cooldown|
 |--|--|--|--|--|
 |Sword|480|2.0|0.3|0.35|
 |Dark Blade|600|2.0|0.3|0.35|
-|Shield|-20%|0.0|0.0|0.0|
+
+#### Shields
+|Weapon|Received Damage Reduction|
+|--|--|
+|Shield|20%|
 
 ### Monsters
 There is a single kind of monster, but they can fuse to level up.
 
 |Name|Dps|Hp|Speed|
 |--|--|--|--|
+|Chokeberry|300|80|3.0|
 |Blackberry|400|200|2.5|
 |Blueberry|500|600|2.75|
-|Strawberry|600|1300|3.02|
-|Gooseberry|700|2000|3.33|
+|Strawberry|600|1300|3.05|
+|Gooseberry|700|2000|3.4|
 
 
 ### Skills
