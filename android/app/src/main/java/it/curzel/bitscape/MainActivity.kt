@@ -89,11 +89,6 @@ class MainActivity : ComponentActivity() {
         gameViewModel.audioEngine.pauseMusic()
         gameViewModel.broker.send(RuntimeEvent.DidEnterBackground)
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        gameViewModel.audioEngine.release()
-    }
 }
 
 class GameViewModel(application: Application) : AndroidViewModel(application) {
@@ -127,4 +122,9 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
             NativeLib.SPRITE_SHEET_DEMON_LORD_DEFEAT to "demon_lord_defeat"
         )
     )
+
+    override fun onCleared() {
+        super.onCleared()
+        audioEngine.release()
+    }
 }

@@ -68,10 +68,10 @@ class ControllerSettingsStorage(
         val height = max(screenWidth, screenHeight)
 
         val portraitX = width - keyEmulatorViewSize * 1.0f - 20.dp
-        val portraitY = height - keyEmulatorViewSize - 90.dp
+        val portraitY = height - keyEmulatorViewSize * 2.0f - 90.dp
 
-        val landscapeX = height - keyEmulatorViewSize - 70.dp
-        val landscapeY = width - keyEmulatorViewSize - 70.dp
+        val landscapeX = height - keyEmulatorViewSize * 1.0f - 70.dp
+        val landscapeY = width - keyEmulatorViewSize * 2.0f - 70.dp
 
         store(portraitX.value * density.density, ControllerOffsetAxis.X, ControllerOrientation.PORTRAIT)
         store(portraitY.value * density.density, ControllerOffsetAxis.Y, ControllerOrientation.PORTRAIT)
