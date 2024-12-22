@@ -35,6 +35,9 @@ cargo run --package dungen worldid --pavement 4 --empty 2 --wall 0 --padding-pav
 
 Sandy Valley
 cargo run --package dungen worldid --pavement 4 --wall 0 --padding 10 --min-room-size 5  --max-room-size 12 --width 100 --height 50
+
+Simmetry 
+cargo run --package dungen worldid --pavement 1 --wall 8 --padding 10 --min-room-size 3 --max-room-size 6 --width 70 --height 70 --symmetry
 */
 
 #[derive(Parser, Debug)]
@@ -94,6 +97,10 @@ struct Args {
     /// Cell type to use in padding for wall
     #[clap(long)]
     padding_wall: Option<String>,
+
+    /// Enable quadrant symmetry (default: false)
+    #[clap(long)]
+    symmetry: bool,
 }
 
 struct Room {
@@ -117,14 +124,26 @@ fn create_room(dungeon_map: &mut Vec<Vec<char>>, room: &Room, pavement: char) {
     }
 }
 
-fn create_h_tunnel(dungeon_map: &mut Vec<Vec<char>>, x1: usize, x2: usize, y: usize, pavement: char) {
+fn create_h_tunnel(
+    dungeon_map: &mut Vec<Vec<char>>,
+    x1: usize,
+    x2: usize,
+    y: usize,
+    pavement: char,
+) {
     let (start, end) = if x1 <= x2 { (x1, x2) } else { (x2, x1) };
     for x in start..=end {
         dungeon_map[y][x] = pavement;
     }
 }
 
-fn create_v_tunnel(dungeon_map: &mut Vec<Vec<char>>, y1: usize, y2: usize, x: usize, pavement: char) {
+fn create_v_tunnel(
+    dungeon_map: &mut Vec<Vec<char>>,
+    y1: usize,
+    y2: usize,
+    x: usize,
+    pavement: char,
+) {
     let (start, end) = if y1 <= y2 { (y1, y2) } else { (y2, y1) };
     for y in start..=end {
         dungeon_map[y][x] = pavement;
@@ -282,14 +301,36 @@ fn cleanup_walls(
     new_dungeon_map
 }
 
+// Helper function to flip the map horizontally
+fn flip_horizontal(map: &Vec<Vec<char>>) -> Vec<Vec<char>> {
+    map.iter()
+        .map(|row| row.iter().rev().cloned().collect())
+        .collect()
+}
+
+// Helper function to flip the map vertically
+fn flip_vertical(map: &Vec<Vec<char>>) -> Vec<Vec<char>> {
+    let mut new_map = map.clone();
+    new_map.reverse();
+    new_map
+}
+
 fn main() {
     let args = Args::parse();
+
+    // Ensure width and height are even when symmetry is enabled
+    if args.symmetry {
+        if args.width % 2 != 0 || args.height % 2 != 0 {
+            eprintln!("When using symmetry, both width and height must be even numbers.");
+            std::process::exit(1);
+        }
+    }
 
     let dungeon_pavement = args.pavement.chars().next().unwrap_or('B');
     let dungeon_wall = args.wall.chars().next().unwrap_or('H');
     let dungeon_empty = args.empty.chars().next().unwrap_or('0');
     let dungeon_no_wall = args.no_wall.chars().next().unwrap_or('0');
-    
+
     let padding_pavement = args
         .padding_pavement
         .as_deref()
@@ -306,34 +347,85 @@ fn main() {
         .next()
         .unwrap_or(dungeon_wall);
 
-    let mut dungeon_map = vec![vec![dungeon_wall; args.width]; args.height];
+    // Initialize the full dungeon map with walls
+    let mut full_dungeon_map = vec![vec![dungeon_wall; args.width]; args.height];
+
+    // Define the top-left quadrant dimensions
+    let half_width = args.width / 2;
+    let half_height = args.height / 2;
+
+    // Initialize the top-left quadrant map with walls
+    let mut top_left_map = vec![vec![dungeon_wall; half_width]; half_height];
 
     let mut rooms = Vec::new();
     let mut rng = rand::thread_rng();
 
-    split_space(
-        1,
-        1,
-        args.width - 2,
-        args.height - 2,
-        &mut rooms,
-        &mut rng,
-        args.min_room_size,
-        args.max_room_size,
-        &mut dungeon_map,
-        dungeon_pavement,
-    );
+    if args.symmetry {
+        // Generate only the top-left quadrant
+        split_space(
+            0,
+            0,
+            half_width,
+            half_height,
+            &mut rooms,
+            &mut rng,
+            args.min_room_size,
+            args.max_room_size,
+            &mut top_left_map,
+            dungeon_pavement,
+        );
 
-    connect_rooms(&rooms, &mut dungeon_map, dungeon_pavement, &mut rng);
+        connect_rooms(&rooms, &mut top_left_map, dungeon_pavement, &mut rng);
 
-    dungeon_map = cleanup_walls(
-        &dungeon_map,
-        args.width,
-        args.height,
-        dungeon_pavement,
-        dungeon_wall,
-        dungeon_empty,
-    );
+        top_left_map = cleanup_walls(
+            &top_left_map,
+            half_width,
+            half_height,
+            dungeon_pavement,
+            dungeon_wall,
+            dungeon_empty,
+        );
+
+        // Create other quadrants by mirroring
+        let top_right_map = flip_horizontal(&top_left_map);
+        let bottom_left_map = flip_vertical(&top_left_map);
+        let bottom_right_map = flip_horizontal(&bottom_left_map);
+
+        // Assemble the full dungeon map
+        for y in 0..half_height {
+            for x in 0..half_width {
+                full_dungeon_map[y][x] = top_left_map[y][x];
+                full_dungeon_map[y][x + half_width] = top_right_map[y][x];
+                full_dungeon_map[y + half_height][x] = bottom_left_map[y][x];
+                full_dungeon_map[y + half_height][x + half_width] = bottom_right_map[y][x];
+            }
+        }
+    } else {
+        // Generate the entire map without symmetry
+        split_space(
+            1,
+            1,
+            args.width - 2,
+            args.height - 2,
+            &mut rooms,
+            &mut rng,
+            args.min_room_size,
+            args.max_room_size,
+            &mut full_dungeon_map,
+            dungeon_pavement,
+        );
+
+        connect_rooms(&rooms, &mut full_dungeon_map, dungeon_pavement, &mut rng);
+
+        full_dungeon_map = cleanup_walls(
+            &full_dungeon_map,
+            args.width,
+            args.height,
+            dungeon_pavement,
+            dungeon_wall,
+            dungeon_empty,
+        );
+    }
 
     // Generate biome_tiles and construction_tiles
     let mut biome_tiles = vec![vec![dungeon_empty; args.width]; args.height];
@@ -341,13 +433,13 @@ fn main() {
 
     for y in 0..args.height {
         for x in 0..args.width {
-            if dungeon_map[y][x] == dungeon_pavement {
+            if full_dungeon_map[y][x] == dungeon_pavement {
                 biome_tiles[y][x] = dungeon_pavement;
             } else {
                 biome_tiles[y][x] = dungeon_empty;
             }
 
-            if dungeon_map[y][x] == dungeon_wall {
+            if full_dungeon_map[y][x] == dungeon_wall {
                 construction_tiles[y][x] = dungeon_wall;
             } else {
                 construction_tiles[y][x] = dungeon_no_wall;
@@ -468,5 +560,8 @@ fn main() {
     );
     if args.fill {
         println!("Fill parameter was used: DOUNGEON_EMPTY biome tiles have been filled with DOUNGEON_WALL in construction tiles.");
+    }
+    if args.symmetry {
+        println!("Symmetry parameter was used: Dungeon is quadrant-symmetrical.");
     }
 }
