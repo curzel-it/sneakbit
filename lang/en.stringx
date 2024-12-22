@@ -232,13 +232,13 @@ Back:         Middle / Right
 
 "game.menu.disable_music" = "Disable Music"
 
-"game.menu.disable_pvp" = "Disable Pvp"
+"game.menu.disable_pvp" = "Switch to Story Mode"
 
 "game.menu.disable_sound_effects" = "Disable Sound Effects"
 
 "game.menu.enable_music" = "Enable Music"
 
-"game.menu.enable_pvp" = "Enable Pvp"
+"game.menu.enable_pvp" = "Switch to Pvp"
 
 "game.menu.enable_sound_effects" = "Enable Sound Effects"
 

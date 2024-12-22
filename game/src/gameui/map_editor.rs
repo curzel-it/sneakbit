@@ -161,14 +161,7 @@ impl MapEditor {
 
         match item {
             Stockable::BiomeTile(biome) => vec![WorldStateUpdate::BiomeTileChange(row, col, biome)],
-            Stockable::ConstructionTile(construction) => match construction {
-                Construction::Nothing => vec![
-                    WorldStateUpdate::BiomeTileChange(row, col, Biome::Nothing),
-                    WorldStateUpdate::ConstructionTileChange(row, col, Construction::Nothing),
-                    WorldStateUpdate::RemoveEntityAtCoordinates(row, col),
-                ],
-                _ => vec![WorldStateUpdate::ConstructionTileChange(row, col, construction)],
-            },
+            Stockable::ConstructionTile(construction) => vec![WorldStateUpdate::ConstructionTileChange(row, col, construction)],
             Stockable::Entity(species) => match species.entity_type {
                 EntityType::Building => self.place_building(frame, &species),
                 EntityType::Npc => self.place_convertible(frame.offset_y(-1), &species),

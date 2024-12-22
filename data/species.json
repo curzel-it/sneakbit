@@ -4370,5 +4370,73 @@
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1014,
     "z_index": 15
+  },
+  {
+    "base_speed": 5.0,
+    "bundle_contents": [
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169,
+      1169
+    ],
+    "entity_type": "Bundle",
+    "id": 1176,
+    "inventory_texture_offset": [
+      11,
+      8
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.ar15.bullet.x10",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 6,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
+  },
+  {
+    "base_speed": 5.0,
+    "bundle_contents": [
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170,
+      1170
+    ],
+    "entity_type": "Bundle",
+    "id": 1177,
+    "inventory_texture_offset": [
+      11,
+      9
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.ar15.bullet.x10",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 7,
+      "y": 10
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1010,
+    "z_index": 14
   }
 ]
