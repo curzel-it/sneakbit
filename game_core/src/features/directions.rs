@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{features::entity::Entity, utils::directions::Direction, worlds::world::World};
+use crate::{currently_active_players, features::entity::Entity, utils::{directions::Direction, rect::IntRect}, worlds::world::World};
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub enum MovementDirections {
@@ -49,8 +49,8 @@ impl Entity {
         if self.offset.x != 0.0 || self.offset.y != 0.0 {
             return
         }
-        if self.is_hero_in_line_of_sight(world) {
-            self.change_direction_towards_hero(world);
+        if let Some(target) = self.is_any_active_vulnerable_player_in_line_of_sight(world) {
+            self.change_direction_towards_target(&target);
         } else if self.is_obstacle_in_direction(world, self.direction) {
             self.pick_next_direction(world);
         }
@@ -71,12 +71,14 @@ impl Entity {
         }
     }
 
-    fn is_hero_in_line_of_sight(&self, world: &World) -> bool {
-        for player in &world.players {
+    fn is_any_active_vulnerable_player_in_line_of_sight(&self, world: &World) -> Option<IntRect> {
+        for player_index in currently_active_players() {
+            let player = &world.players[player_index];
+            
             if player.props.is_invulnerable {
                 continue
             }
-            let hero = &player.props.hittable_frame;        
+            let hero = player.props.hittable_frame;        
             let npc = &self.hittable_frame();
 
             if npc.x == hero.x {
@@ -84,44 +86,38 @@ impl Entity {
                 let max_y = npc.y.max(hero.y);
                 for y in (min_y + 1)..max_y {
                     if world.hits(npc.x, y) {
-                        return false;
+                        return None
                     }
                 }
-                return true
+                return Some(hero)
             } else if npc.y == hero.y {
                 let min_x = npc.x.min(hero.x);
                 let max_x = npc.x.max(hero.x);
                 for x in (min_x + 1)..max_x {
                     if world.hits(x, npc.y) {
-                        return false;
+                        return None
                     }
                 }
-                return true
+                return Some(hero)
             }
         }
-        false
+        None
     }
 
-    fn change_direction_towards_hero(&mut self, world: &World) {
-        for player in &world.players {
-            if player.props.is_invulnerable {
-                continue
-            }
-            let hero = &player.props.hittable_frame; 
-            let npc = &self.hittable_frame();
+    fn change_direction_towards_target(&mut self, target: &IntRect) {
+        let npc = &self.hittable_frame();
 
-            if hero.x == npc.x {
-                if hero.y < npc.y {
-                    self.direction = Direction::Up;
-                } else {
-                    self.direction = Direction::Down
-                }
-            } else if hero.y == npc.y {
-                if hero.x > npc.x {
-                    self.direction = Direction::Right;
-                } else {
-                    self.direction = Direction::Left
-                }
+        if target.x == npc.x {
+            if target.y < npc.y {
+                self.direction = Direction::Up;
+            } else {
+                self.direction = Direction::Down
+            }
+        } else if target.y == npc.y {
+            if target.x > npc.x {
+                self.direction = Direction::Right;
+            } else {
+                self.direction = Direction::Left
             }
         }
     }

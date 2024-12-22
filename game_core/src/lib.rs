@@ -388,8 +388,8 @@ pub fn currently_active_players() -> Vec<usize> {
                 .filter(|index| !engine.dead_players.contains(index))
                 .collect()
         },
-        GameTurn::Player(current_player_index, _) => {
-            vec![current_player_index]
+        GameTurn::Player(turn_info) => {
+            vec![turn_info.player_index]
         }
     }
 }
@@ -430,7 +430,7 @@ pub fn is_turn_based_game_mode() -> bool {
 pub fn time_left_for_current_turn() -> f32 {
     match engine().turn {
         multiplayer::turns::GameTurn::RealTime => 0.0,
-        multiplayer::turns::GameTurn::Player(_, time_left) => time_left
+        multiplayer::turns::GameTurn::Player(turn_info) => turn_info.time_remaining
     }
 }
 

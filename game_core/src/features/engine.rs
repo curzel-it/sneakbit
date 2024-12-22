@@ -144,6 +144,9 @@ impl GameEngine {
                 self.update_current_turn_for_death_of_player(*player_index);
                 self.handle_win_lose()
             }
+            EngineStateUpdate::GunShot(_) | EngineStateUpdate::LoudGunShot(_) => {
+                self.turn = self.turns_use_case.update_turn_ranged_attack(&self.turn)
+            }
             _ => {}
         }
     }
@@ -242,8 +245,8 @@ impl GameEngine {
     }
     
     pub fn update_current_turn_for_death_of_player(&mut self, dead_player_index: usize) {
-        if let GameTurn::Player(current_player_index, _) = self.turn {
-            if current_player_index == dead_player_index {
+        if let GameTurn::Player(turn_info) = self.turn {
+            if turn_info.player_index == dead_player_index {
                 self.toast = Some(
                     Toast::new_with_image(
                         ToastMode::LongHint,

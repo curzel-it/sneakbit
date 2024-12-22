@@ -1,6 +1,6 @@
 use crate::{constants::{PLAYER1_INDEX, TURN_DURATION}, features::state_updates::PlayerIndex};
 
-use super::{modes::GameMode, turns::GameTurn};
+use super::{modes::GameMode, turns::{GameTurn, PlayerTurnInfo}};
 
 pub struct TurnsUseCase {
     // ...
@@ -23,7 +23,7 @@ impl TurnsUseCase {
         match game_mode {
             GameMode::RealTimeCoOp => GameTurn::RealTime,
             GameMode::Creative => GameTurn::RealTime,
-            GameMode::TurnBasedPvp => GameTurn::Player(PLAYER1_INDEX, TURN_DURATION),
+            GameMode::TurnBasedPvp => GameTurn::Player(PlayerTurnInfo::new(PLAYER1_INDEX)),
         }
     }
     
@@ -33,28 +33,37 @@ impl TurnsUseCase {
         }
         match current_turn {
             GameTurn::RealTime => GameTurn::RealTime,
-            GameTurn::Player(current_player_index, time_left) => {
-                let new_time_left = time_left - time_since_last_update;
+            GameTurn::Player(turn_info) => {
+                let new_time_left = turn_info.time_remaining - time_since_last_update;
 
                 if new_time_left <= 0.0 {
-                    let next_player = if *current_player_index == number_of_players - 1 {
+                    let next_player = if turn_info.player_index == number_of_players - 1 {
                         PLAYER1_INDEX
                     } else { 
-                        current_player_index + 1 
+                        turn_info.player_index + 1 
                     };                    
-                    GameTurn::Player(next_player, TURN_DURATION)
+                    GameTurn::Player(PlayerTurnInfo::new(next_player))
                 } else {
-                    GameTurn::Player(*current_player_index, new_time_left)
+                    GameTurn::Player(turn_info.with_new_time_left(new_time_left))
                 }
             }
+        }
+    }
+
+    pub fn update_turn_ranged_attack(&self, current_turn: &GameTurn) -> GameTurn {
+        match current_turn {
+            GameTurn::RealTime => GameTurn::RealTime,
+            GameTurn::Player(turn_info) => {
+                GameTurn::Player(turn_info.with_reduced_due_to_ranged_weapon_usage())
+            },
         }
     }
     
     pub fn updated_turn_for_death_of_player(&self, current_turn: &GameTurn, number_of_players: usize, dead_player_index: usize) -> TurnResultAfterPlayerDeath {
         match current_turn {
             GameTurn::RealTime => TurnResultAfterPlayerDeath::InProgress,
-            GameTurn::Player(current_player_index, _) => {
-                if *current_player_index == dead_player_index {
+            GameTurn::Player(turn_info) => {
+                if turn_info.player_index == dead_player_index {
                     let next = self.updated_turn(current_turn, number_of_players, TURN_DURATION * 2.0);
                     TurnResultAfterPlayerDeath::NextTurn(next)
                 } else {
@@ -74,7 +83,7 @@ impl TurnsUseCase {
                 }
             },
             GameMode::TurnBasedPvp => {
-                if dead_players.len() == number_of_players - 1 {
+                if dead_players.len() >= number_of_players - 1 {
                     let winner = (0..number_of_players).find(|&i| !dead_players.contains(&i));
                     if let Some(winner) = winner {
                         MatchResult::Winner(winner)

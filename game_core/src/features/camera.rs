@@ -9,7 +9,7 @@ pub fn camera_center(
 ) -> (i32, i32, Vector2d) {
     let current_player_index = match turn {
         GameTurn::RealTime => PLAYER1_INDEX,
-        GameTurn::Player(current_player_index, _) => *current_player_index,
+        GameTurn::Player(turn_info) => turn_info.player_index,
     };
 
     if (number_of_players - dead_players.len()) <= 1 || game_mode.is_turn_based() {
