@@ -1,4 +1,4 @@
-use crate::{current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::SPECIES_KUNAI, species::species_by_id}, equipment::basics::{available_weapons, is_equipped}, features::entity::is_player, worlds::world::World};
+use crate::{current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_DAMAGE_INDICATOR, SPECIES_KUNAI}, species::species_by_id}, equipment::basics::{available_weapons, is_equipped}, features::entity::is_player, utils::{rect::IntRect, vector::Vector2d}, worlds::world::World};
 use crate::features::{entity::Entity, state_updates::EngineStateUpdate, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count}};
 
 impl World {
@@ -14,26 +14,41 @@ impl World {
             hits.target_ids.contains(&e.id) && e.can_be_hit_by_bullet()
         });
 
+        let mut damage_indicator_positions: Vec<(IntRect, Vector2d)> = vec![];
+
         for target in targets {
-            let did_kill = if target.is_player() {
+            let (did_kill, did_damage) = if target.is_player() {
                 if !shooter_is_player || pvp_allowed {
                     let player_died = self.handle_hero_damage(target, hits.damage);
                     if player_died {
                         updates.push(EngineStateUpdate::PlayerDied(target.player_index));
                     }
-                    false
+                    (false, false)
                 } else {
-                    false
+                    (false, false)
                 }
             } else {
-                self.handle_target_hit(hits.damage, hits.bullet_species_id, target)
+                let did_kill = self.handle_target_hit(hits.damage, hits.bullet_species_id, target);
+                (did_kill, !did_kill)
             };
             bullet_expended = bullet_expended || did_kill;
             if did_kill {
                 updates.push(EngineStateUpdate::EntityKilled(target.id, target.species_id));
             }
+            if did_damage {
+                damage_indicator_positions.push((target.hittable_frame(), target.offset))
+            }
         }
         drop(entities);
+
+        for (frame, offset) in damage_indicator_positions {
+            let mut damage_indicator = species_by_id(SPECIES_DAMAGE_INDICATOR).make_entity();            
+            damage_indicator.frame = frame;
+            damage_indicator.offset = offset;
+            damage_indicator.remaining_lifespan = 0.2;
+            damage_indicator.parent_id = hits.bullet_id;
+            self.add_entity(damage_indicator);
+        }
 
         if bullet_expended && hits.bullet_id != 0 {
             updates.append(&mut self.handle_bullet_stopped_from_hit(hits.bullet_id, hits.supports_bullet_boomerang));

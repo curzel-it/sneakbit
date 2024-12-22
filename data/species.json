@@ -4438,5 +4438,28 @@
     "sprite_number_of_frames": 1,
     "sprite_sheet_id": 1010,
     "z_index": 14
+  },
+  {
+    "base_speed": 5.0,
+    "bundle_contents": [],
+    "entity_type": "StaticObject",
+    "id": 1178,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.damage.indicator",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 18
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
   }
 ]
