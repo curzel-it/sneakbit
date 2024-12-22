@@ -1,4 +1,4 @@
-use game_core::{constants::{MAX_PLAYERS, SPRITE_SHEET_INVENTORY}, currently_active_players, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, features::storage::{get_value_for_global_key, inventory_count, StorageKey}, hstack, player_current_hp, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use game_core::{constants::{MAX_PLAYERS, SPRITE_SHEET_INVENTORY}, currently_active_players, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, features::storage::{get_value_for_global_key, inventory_count, StorageKey}, hstack, multiplayer::modes::GameMode, player_current_hp, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
 
 pub struct BasicInfoHud {
     players: Vec<PlayerHud>
@@ -15,11 +15,12 @@ impl BasicInfoHud {
         self.players.iter_mut().for_each(|p| p.update());
     }
 
-    pub fn ui(&self, is_dead: bool) -> View {
+    pub fn ui(&self, is_dead: bool, game_mode: &GameMode) -> View {
         let active_players = currently_active_players();        
         let include_header = active_players.len() > 1;
         let max_hp_to_show = if is_dead { -99.0 } else { 60.0 };
-        
+        let max_hp = game_mode.player_hp();
+
         zstack!(
             Spacing::SM,
             COLOR_TRANSPARENT,
@@ -29,7 +30,7 @@ impl BasicInfoHud {
                     .iter()
                     .filter_map(|p| {
                         if active_players.contains(&p.player) {
-                            Some(p.ui(include_header, max_hp_to_show))
+                            Some(p.ui(include_header, max_hp_to_show, max_hp))
                         } else {
                             None
                         }
@@ -66,7 +67,7 @@ impl PlayerHud {
         self.hp = player_current_hp(self.player);
     }
 
-    fn ui(&self, include_header: bool, max_hp_to_show: f32) -> View {
+    fn ui(&self, include_header: bool, max_hp_to_show: f32, max_hp: f32) -> View {
         if self.hp <= 0.00001 {
             empty_view()
         } else {
@@ -74,7 +75,7 @@ impl PlayerHud {
                 Spacing::LG,
                 self.header_ui(include_header),
                 self.ammo_count_ui(),
-                self.hp_ui(max_hp_to_show)
+                self.hp_ui(max_hp_to_show, max_hp)
             )
         }
     }
@@ -91,13 +92,16 @@ impl PlayerHud {
         }
     }
 
-    fn hp_ui(&self, max_hp_to_show: f32) -> View {
-        if self.hp < max_hp_to_show {
-            let typography = if self.hp < 30.0 { Typography::PlayerHudHighlight } else { Typography::PlayerHudText };
+    fn hp_ui(&self, max_hp_to_show: f32, max_hp: f32) -> View {
+        let hp_percent = 100.0 * self.hp / max_hp;
+        
+        if hp_percent < max_hp_to_show {
+            let typography = if hp_percent < 30.0 { Typography::PlayerHudHighlight } else { Typography::PlayerHudText };
+
             vstack!(
                 Spacing::Zero,
                 spacing!(Spacing::SM),
-                text!(typography, format!("HP {:0.1}%", self.hp))
+                text!(typography, format!("HP {:0.1}%", hp_percent))
             )
         } else {
             empty_view()

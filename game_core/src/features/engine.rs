@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{destination::Destination, sound_effects::SoundEffectsManager}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, features::toasts::{Toast, ToastImage, ToastMode}, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{destination::Destination, sound_effects::SoundEffectsManager, toasts::{Toast, ToastImage, ToastMode}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
 use super::{camera::camera_center, messages::DisplayableMessage, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
@@ -54,12 +54,6 @@ impl GameEngine {
 
     pub fn update(&mut self, time_since_last_update: f32) {     
         self.clear_messages();
-/*
-        self.loading_screen.update(time_since_last_update);
-        if self.loading_screen.progress() < 0.4 { 
-            self.sound_effects.clear();
-        } */
-
         self.update_current_turn(time_since_last_update);
 
         let updates = self.world.update(time_since_last_update, &self.camera_viewport, &self.keyboard);

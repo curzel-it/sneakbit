@@ -401,6 +401,10 @@ pub fn toggle_pvp() {
         GameMode::TurnBasedPvp => GameMode::RealTimeCoOp,
     };
     engine_mut().update_game_mode(next);
+
+    if number_of_players() == 1 {
+        update_number_of_players(2);
+    }
 }
 
 pub fn current_keyboard_state() -> &'static KeyboardEventsProvider {

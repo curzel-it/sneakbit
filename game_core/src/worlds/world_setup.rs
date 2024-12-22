@@ -22,6 +22,16 @@ impl World {
         self.setup_entities();
         self.spawn_players(source, hero_direction, original_x, original_y, direction);
         self.spawn_equipment();
+        self.fix_players_hp();
+    }
+
+    fn fix_players_hp(&mut self) {
+        let hp = current_game_mode().player_hp();
+        let mut entities = self.entities.borrow_mut();
+        
+        for index in self.player_entity_indeces() {
+            entities[index].hp = hp;
+        }
     }
 
     fn setup_entities(&mut self) {
