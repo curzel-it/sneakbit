@@ -44,6 +44,7 @@ This category includes shields and all equipment that doesn't deal damage.
 |Weapon|Dps|Speed|Lifespan|Cooldown|
 |--|--|--|--|--|
 |Sword|480|2.0|0.3|0.35|
+|Dark Blade|600|2.0|0.3|0.35|
 |Shield|-20%|0.0|0.0|0.0|
 
 ### Monsters

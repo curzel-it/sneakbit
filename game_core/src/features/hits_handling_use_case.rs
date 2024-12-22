@@ -1,4 +1,4 @@
-use crate::{current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{SPECIES_DAMAGE_INDICATOR, SPECIES_KUNAI}, species::species_by_id}, equipment::basics::{available_weapons, is_equipped}, features::entity::is_player, utils::{rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{is_monster, SPECIES_DAMAGE_INDICATOR, SPECIES_KUNAI}, species::species_by_id}, equipment::basics::{available_weapons, is_equipped}, features::entity::is_player, utils::{rect::IntRect, vector::Vector2d}, worlds::world::World};
 use crate::features::{entity::Entity, state_updates::EngineStateUpdate, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count}};
 
 impl World {
@@ -17,7 +17,7 @@ impl World {
         let mut damage_indicator_positions: Vec<(IntRect, Vector2d)> = vec![];
 
         for target in targets {
-            let (did_kill, did_damage) = if target.is_player() {
+            let (did_kill, show_damage_indicator) = if target.is_player() {
                 if !shooter_is_player || pvp_allowed {
                     let player_died = self.handle_hero_damage(target, hits.damage);
                     if player_died {
@@ -29,13 +29,13 @@ impl World {
                 }
             } else {
                 let did_kill = self.handle_target_hit(hits.damage, hits.bullet_species_id, target);
-                (did_kill, !did_kill)
+                (did_kill, !did_kill && is_monster(target.species_id))
             };
             bullet_expended = bullet_expended || did_kill;
             if did_kill {
                 updates.push(EngineStateUpdate::EntityKilled(target.id, target.species_id));
             }
-            if did_damage {
+            if show_damage_indicator {
                 damage_indicator_positions.push((target.hittable_frame(), target.offset))
             }
         }

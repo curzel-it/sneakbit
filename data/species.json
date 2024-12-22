@@ -4461,5 +4461,76 @@
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
     "z_index": 14
+  },
+  {
+    "base_speed": 3.0,
+    "bullet_lifespan": 0.3,
+    "bullet_species_id": 1181,
+    "cooldown_after_use": 0.35,
+    "entity_type": "WeaponMelee",
+    "equipment_usage_sound_effect": "SwordSlash",
+    "id": 1179,
+    "inventory_texture_offset": [
+      12,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.darkblade.weapon",
+    "sprite_frame": {
+      "h": 4,
+      "w": 4,
+      "x": 81,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1022,
+    "z_index": 16
+  },
+  {
+    "associated_weapon": 1179,
+    "base_speed": 3.0,
+    "entity_type": "PickableObject",
+    "id": 1180,
+    "inventory_texture_offset": [
+      12,
+      1
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.darkblade.item",
+    "sprite_frame": {
+      "h": 2,
+      "w": 1,
+      "x": 81,
+      "y": 53
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1022
+  },
+  {
+    "base_speed": 2.0,
+    "dps": 600,
+    "entity_type": "Bullet",
+    "id": 1181,
+    "inventory_texture_offset": [
+      0,
+      0
+    ],
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.darkblade.bullet",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 81,
+      "y": 61
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1022,
+    "supports_bullet_boomerang": false,
+    "z_index": 14
   }
 ]

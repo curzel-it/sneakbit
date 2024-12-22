@@ -73,6 +73,12 @@ pub struct Species {
     #[serde(default="zero")]
     pub received_damage_reduction: f32,
 
+    #[serde(default="one")]
+    pub ranged_dps_multiplier: f32,
+
+    #[serde(default="one")]
+    pub melee_dps_multiplier: f32,    
+
     #[serde(default)]
     pub always_in_front_of_hero_when_equipped: bool,
 }
@@ -259,7 +265,9 @@ pub const SPECIES_NONE: Species = Species {
     supports_bullet_boomerang: false,
     supports_bullet_catching: false,
     received_damage_reduction: 0.0,
-    always_in_front_of_hero_when_equipped: false
+    always_in_front_of_hero_when_equipped: false,
+    ranged_dps_multiplier: 1.0,
+    melee_dps_multiplier: 1.0,
 };
 
 pub fn species_by_id(species_id: u32) -> Species {

@@ -39,6 +39,7 @@ impl Entity {
                 self.play_equipment_usage_animation();
 
                 let mut bullet = make_player_bullet(self.parent_id, world, &self.species);
+                bullet.dps *= self.species.ranged_dps_multiplier;
                 bullet.direction = hero.direction;
 
                 let mut updates = vec![
@@ -49,7 +50,6 @@ impl Entity {
                 if let Some(effect) = self.species.equipment_usage_sound_effect.clone() {
                     updates.push(effect.as_world_state_update(self.player_index));
                 }
-
                 return updates
             } else {
                 updates.push(EquipmentUsageSoundEffect::NoAmmo.as_world_state_update(self.player_index));

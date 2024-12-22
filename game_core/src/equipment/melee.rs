@@ -44,6 +44,7 @@ impl Entity {
                 .map(|(dx, dy)| {
                     let mut bullet = make_player_bullet(self.parent_id, world, &self.species);
                     bullet.offset = Vector2d::zero();
+                    bullet.dps *= self.species.melee_dps_multiplier;
                     bullet.frame = hero.hittable_frame.offset_by((dx, dy)); 
                     bullet.direction = hero.direction;
                     bullet.current_speed += hero.speed;
