@@ -1158,8 +1158,8 @@
     "hp": 80,
     "id": 4003,
     "inventory_texture_offset": [
-      3,
-      21
+      11,
+      13
     ],
     "is_rigid": false,
     "lock_type": "None",
@@ -1270,6 +1270,31 @@
       "h": 2,
       "w": 1,
       "x": 13,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1023,
+    "z_index": 15
+  },
+  {
+    "base_speed": 1.4,
+    "dps": 900.0,
+    "entity_type": "CloseCombatMonster",
+    "hp": 3600,
+    "id": 4008,
+    "inventory_texture_offset": [
+      11,
+      18
+    ],
+    "is_rigid": false,
+    "lock_type": "None",
+    "melee_attacks_hero": true,
+    "movement_directions": "FindHero",
+    "name": "npc.name.monster.grapevine",
+    "sprite_frame": {
+      "h": 3,
+      "w": 2,
+      "x": 17,
       "y": 1
     },
     "sprite_number_of_frames": 4,
