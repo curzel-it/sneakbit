@@ -30,5 +30,7 @@
     <string name="credits_sound_effects_link">"https://opengameart.org/content/512-sound-effects-8-bit-style"</string>
     <string name="menu_back">"Go Back"</string>
     <string name="ok_action">"Ok"</string>
+    <string name="maybe_later">"Maybe Later"</string>
     <string name="share_text">"Check out SneakBit!\n\nApp Store (iOS)\nhttps://apps.apple.com/app/sneakbit/id6737452377\n\nPlay Store (Android)\nhttps://play.google.com/store/apps/details?id=it.curzel.bitscape\n\nSteam (Windows &amp; macOS)\nhttps://store.steampowered.com/app/3360860/SneakBit"</string>
+    <string name="leave_a_review_in_game">"Hey, com'è?\nSe il gioco ti piace, che ne dici di lasciare una recensione?\nNon costa nulla, ma per me è molto importante!\nGrazie :D"</string>
 </resources>

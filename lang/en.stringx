@@ -319,6 +319,15 @@ Also, what the hell are you doing in my house!?
 
 "hint.005.move_controls.mobile" = "You can hold the knife button to move it to another position"
 
+"hint.006.leave_a_review" = """
+Hey, what's up?
+If you like the game, do you mind leaving a review?
+It really helps a lot, thanks! 
+:D
+"""
+
+"hint.006.leave_a_review.mobile" = "leaveareview"
+
 "inventory.subtitle" = "Stuff in your backpack"
 
 "inventory.title" = "Inventory"

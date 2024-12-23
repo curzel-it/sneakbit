@@ -30,5 +30,7 @@
     <string name="credits_sound_effects_link">"https://opengameart.org/content/512-sound-effects-8-bit-style"</string>
     <string name="menu_back">"Indietro"</string>
     <string name="ok_action">"Ok"</string>
+    <string name="maybe_later">"Magari dopo"</string>
     <string name="share_text">"Check out SneakBit!\n\nApp Store (iOS)\nhttps://apps.apple.com/app/sneakbit/id6737452377\n\nPlay Store (Android)\nhttps://play.google.com/store/apps/details?id=it.curzel.bitscape\n\nSteam (Windows &amp; macOS)\nhttps://store.steampowered.com/app/3360860/SneakBit"</string>
+    <string name="leave_a_review_in_game">"Hey, what's up?\nIf you like the game, do you mind leaving a review?\nIt really helps a lot, thanks! \n:D"</string>
 </resources>

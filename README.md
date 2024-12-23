@@ -93,10 +93,10 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 * Font by [HarvettFox96](https://dl.dafont.com/dl/?f=pixel_operator)
 
 ## TODO:
-- Some wide-area ability
-- More Quests
-- More Lore
-- More Game!
+- Finish writing "Consipiracy Theorist" quest
+- Finish writing "Assassin Guild" quest
+- Fast travel
+- PvP arena
 
 ## Game Design Document
 > Warning: Spoilers!

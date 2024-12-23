@@ -213,7 +213,6 @@
   "entities": [
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -232,7 +231,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Up",
@@ -256,7 +254,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Up",
@@ -280,7 +277,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -299,7 +295,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -318,7 +313,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -337,7 +331,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -356,7 +349,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -375,7 +367,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -394,7 +385,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -413,7 +403,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -432,7 +421,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -451,7 +439,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -470,7 +457,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -489,7 +475,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -513,7 +498,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -532,7 +516,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -551,7 +534,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -570,7 +552,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -614,17 +595,16 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
-      "direction": "Left",
+      "direction": "Down",
       "display_conditions": [],
       "frame": {
         "h": 1,
         "w": 1,
-        "x": 25,
-        "y": 39
+        "x": 24,
+        "y": 40
       },
       "id": 10909152,
       "is_consumable": true,
@@ -633,7 +613,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -657,17 +636,16 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
-      "direction": "Down",
+      "direction": "Up",
       "display_conditions": [],
       "frame": {
         "h": 1,
         "w": 1,
-        "x": 60,
-        "y": 51
+        "x": 65,
+        "y": 53
       },
       "id": 10909151,
       "is_consumable": true,
@@ -676,7 +654,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -685,7 +662,7 @@
       "frame": {
         "h": 1,
         "w": 1,
-        "x": 36,
+        "x": 34,
         "y": 27
       },
       "id": 10909153,
@@ -695,7 +672,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -714,7 +690,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -733,7 +708,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -757,7 +731,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -781,7 +754,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -800,7 +772,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -819,7 +790,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -838,7 +808,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -862,7 +831,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -888,7 +856,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -914,7 +881,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -940,7 +906,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -966,7 +931,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -992,7 +956,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1011,7 +974,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1030,7 +992,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1046,6 +1007,41 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1104
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": true,
+      "destination": null,
+      "dialogues": [
+        {
+          "expected_value": 1,
+          "key": "always",
+          "text": "hint.006.leave_a_review"
+        }
+      ],
+      "direction": "Down",
+      "display_conditions": [
+        {
+          "expected_value": 1,
+          "key": "dialogue.answer.hint.006.leave_a_review",
+          "visible": false
+        },
+        {
+          "expected_value": 1,
+          "key": "always",
+          "visible": true
+        }
+      ],
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 57,
+        "y": 49
+      },
+      "id": 14964151,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1135
     }
   ],
   "ephemeral_state": true,

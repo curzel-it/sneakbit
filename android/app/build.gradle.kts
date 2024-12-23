@@ -85,4 +85,5 @@ dependencies {
     implementation(platform(libs.google.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
+    implementation(libs.review.ktx)
 }

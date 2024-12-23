@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import SwiftUI
 import Schwifty
+import StoreKit
 
 struct MessagesView: View {
     @StateObject private var viewModel = MessagesViewModel()
@@ -55,10 +56,25 @@ private struct MessagesContents: View {
                     .multilineTextAlignment(.leading)
                     .typography(.text)
             }
-            Button("ok_action".localized()) {
-                viewModel.onConfirm()
+            
+            if viewModel.showLinkToStore {
+                Button("ok_action".localized()) {
+                    viewModel.openStoreLink()
+                }
+                .buttonStyle(.menuOption)
             }
-            .buttonStyle(.menuOption)
+            if viewModel.showMaybeLater {
+                Button("maybe_later_action".localized()) {
+                    viewModel.onConfirm()
+                }
+                .buttonStyle(.menuOption)
+            }
+            if viewModel.showOk {
+                Button("ok_action".localized()) {
+                    viewModel.onConfirm()
+                }
+                .buttonStyle(.menuOption)
+            }
         }
     }
 }
@@ -73,6 +89,9 @@ private class MessagesViewModel: ObservableObject {
     @Published var title: String? = nil
     @Published var text: String? = nil
     @Published var isVisible: Bool = false
+    @Published var showLinkToStore: Bool = false
+    @Published var showMaybeLater: Bool = false
+    @Published var showOk: Bool = false
     
     let borderColor: Color = .gray
     let backgroundColor: Color = .menuBackground
@@ -100,7 +119,20 @@ private class MessagesViewModel: ObservableObject {
     private func load(_ message: CDisplayableMessage) {
         engine.pauseGame()
         title = string(from: message.title)
-        text = string(from: message.text)
+        
+        let newText = string(from: message.text)
+        
+        if newText == "leaveareview" {
+            text = "leave_a_review_in_game".localized()
+            showLinkToStore = true
+            showMaybeLater = true
+            showOk = false
+        } else {
+            text = newText
+            showLinkToStore = false
+            showMaybeLater = false
+            showOk = true
+        }
         
         withAnimation {
             isVisible = true
@@ -110,6 +142,9 @@ private class MessagesViewModel: ObservableObject {
     private func hide() {
         withAnimation {
             isVisible = false
+            showLinkToStore = false
+            showMaybeLater = false
+            showOk = true
         }
     }
     
@@ -121,5 +156,17 @@ private class MessagesViewModel: ObservableObject {
     func onConfirm() {
         engine.resumeGame()
         hide()
+    }
+    
+    func openStoreLink() {
+        onConfirm()
+        
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            SKStoreReviewController.requestReview(in: scene)
+        } else if let scene = UIApplication.shared.windows.first?.windowScene {
+            SKStoreReviewController.requestReview(in: scene)
+        } else {
+            URL(string: "https://apps.apple.com/app/sneakbit/id6737452377")?.visit()
+        }
     }
 }

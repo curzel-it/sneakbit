@@ -27,5 +27,8 @@
 "credits.sound_effects.link" = "https://opengameart.org/content/512-sound-effects-8-bit-style";
 "menu_back" = "Back";
 "ok_action" = "Ok";
+"maybe_later_action" = "Maybe Later";
 
 "share.text" = "Check out SneakBit!\n\nApp Store (iOS)\nhttps://apps.apple.com/app/sneakbit/id6737452377\n\nPlay Store (Android)\nhttps://play.google.com/store/apps/details?id=it.curzel.bitscape\n\nSteam (Windows & macOS)\nhttps://store.steampowered.com/app/3360860/SneakBit";
+
+"leave_a_review_in_game" = "Hey, what's up?\nIf you like the game, do you mind leaving a review?\nIt really helps a lot, thanks! \n:D";

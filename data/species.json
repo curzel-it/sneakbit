@@ -1278,6 +1278,9 @@
   },
   {
     "base_speed": 1.4,
+    "bullet_lifespan": -420.0,
+    "bullet_species_id": 4009,
+    "cooldown_after_use": 1.0,
     "dps": 600.0,
     "entity_type": "CloseCombatMonster",
     "hp": 4800,
@@ -1299,13 +1302,12 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1023,
-    "z_index": 15,
-    "cooldown_after_use": 1.0,
-    "bullet_species_id": 4009,
-    "bullet_lifespan": -420.0
+    "z_index": 15
   },
   {
     "base_speed": 3.0,
+    "bullet_lifespan": -420.0,
+    "bullet_species_id": 0,
     "dps": 300.0,
     "entity_type": "CloseCombatMonster",
     "hp": 80,
@@ -1327,9 +1329,7 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1023,
-    "z_index": 15,
-    "bullet_species_id": 0,
-    "bullet_lifespan": -420.0
+    "z_index": 15
   },
   {
     "base_speed": 1.0,
