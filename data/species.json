@@ -1278,9 +1278,9 @@
   },
   {
     "base_speed": 1.4,
-    "dps": 900.0,
+    "dps": 600.0,
     "entity_type": "CloseCombatMonster",
-    "hp": 3600,
+    "hp": 4800,
     "id": 4008,
     "inventory_texture_offset": [
       11,

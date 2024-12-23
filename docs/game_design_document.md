@@ -70,7 +70,7 @@ There is a single kind of monster, but they can fuse to level up.
 |Blueberry|500|600|2.75|
 |Strawberry|600|1300|3.05|
 |Gooseberry|700|2000|3.4|
-|Grapevine|900|3600|1.4|
+|Grapevine|600|4800|1.4|
 
 ### Skills
 The player can complete optional quests to gain special combat skills.

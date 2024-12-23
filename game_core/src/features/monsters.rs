@@ -45,7 +45,6 @@ impl Entity {
         if world.players[0].props.is_invulnerable {
             return vec![]
         }
-
         let frame = self.hittable_frame();     
         let players_being_hit = world.entity_ids_of_all_players_at(frame.x, frame.y);
            
@@ -108,7 +107,8 @@ impl Entity {
                 return vec![];
             }
 
-            self.action_cooldown_remaining = self.species.cooldown_after_use;
+            let random = if world.number_of_entities % 2 == 0 { 0.8 } else { 1.2 };
+            self.action_cooldown_remaining = self.species.cooldown_after_use * random;
 
             let minion = make_bullet_ex(
                 self.species.bullet_species_id, 

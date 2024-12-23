@@ -32,6 +32,7 @@ pub struct World {
     pub light_conditions: LightConditions,
     pub soundtrack: Option<String>,
     pub cutscenes: Vec<CutScene>,
+    pub number_of_entities: usize
 }
 
 const WORLD_SIZE_COLUMNS: usize = 30;
@@ -64,7 +65,8 @@ impl World {
             light_conditions: LightConditions::Day,
             cutscenes: vec![],
             spawn_point: (0, 0),
-            soundtrack: None
+            soundtrack: None, 
+            number_of_entities: 0
         }
     }
 
@@ -88,12 +90,12 @@ impl World {
 
         let mut entities = self.entities.borrow_mut();        
         entities.insert(index, entity);
-
         entities[index].setup();
 
         if let Some(lock_type) = lock_override(&id) {
             entities[index].lock_type = lock_type;
         }
+        self.number_of_entities = entities.len();
         true
     }
 
