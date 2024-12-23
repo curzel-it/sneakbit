@@ -168,8 +168,8 @@ impl Entity {
         if self.parent_id == NO_PARENT {  
             self.remaining_lifespan = UNLIMITED_LIFESPAN;
         }
-        self.update_sorting_key();
         species_by_id(self.species_id).reload_props(self);
+        self.update_sorting_key();
         
         match self.entity_type {
             EntityType::Hero => self.setup_hero(),

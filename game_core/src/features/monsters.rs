@@ -92,15 +92,11 @@ impl Entity {
         if self.species_id != 4008 {
             return vec![]
         }
-        self.species = species_by_id(self.species_id);
         if self.species.bullet_species_id == 0 {
-            println!("No bullet_species_id");
             return vec![]
         }
         self.action_cooldown_remaining -= time_since_last_update;
-
         if self.action_cooldown_remaining > 0.0 {
-            println!("Still in cooldown for another {}s", self.action_cooldown_remaining);
             return vec![]
         }
 
@@ -109,7 +105,6 @@ impl Entity {
             let distance = boss_frame.center().dumb_distance_to(&hero_frame.center());
 
             if distance < 3.5 {
-                println!("Player is too close, {}", distance);
                 return vec![];
             }
 
@@ -125,7 +120,6 @@ impl Entity {
             );
             vec![WorldStateUpdate::AddEntity(Box::new(minion))]
         } else {
-            println!("No visible players");
             vec![]
         }
     }
