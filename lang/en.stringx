@@ -678,7 +678,15 @@ fueling life and wonder in Duskhaven.
 
 "npc.name.male.kid.red_hair.blue_suit.green_hat" = "Villager"
 
-"npc.name.monster" = "Monster"
+"npc.name.monster.blackberry" = "Blackberry Monster"
+
+"npc.name.monster.blueberry" = "Blueberry Monster"
+
+"npc.name.monster.chokeberry" = "Chokeberry Monster"
+
+"npc.name.monster.gooseberry" = "Gooseberry Monster"
+
+"npc.name.monster.strawberry" = "Strawberry Monster"
 
 "npc.name.mr_bubblegum" = "Mr Bubblegum"
 
@@ -793,6 +801,16 @@ fueling life and wonder in Duskhaven.
 "objects.name.cannon.item" = "Cannon"
 
 "objects.name.cannon.weapon" = "Cannon"
+
+"objects.name.darkar15.item" = "High-End AR 15"
+
+"objects.name.darkar15.weapon" = "High-End AR 15"
+
+"objects.name.darkblade.bullet" = "Slash!"
+
+"objects.name.darkblade.item" = "Dark Blade"
+
+"objects.name.darkblade.weapon" = "Dark Blade"
 
 "objects.name.deep_hole" = "Deep Hole"
 
