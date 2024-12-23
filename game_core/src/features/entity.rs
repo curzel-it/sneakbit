@@ -143,7 +143,7 @@ impl Entity {
         let mut updates = match self.entity_type {
             EntityType::Hero => self.update_hero(world, time_since_last_update),
             EntityType::Npc => self.update_npc(world, time_since_last_update),
-            EntityType::CloseCombatMonster => self.update_close_combat_creep(world, time_since_last_update),
+            EntityType::CloseCombatMonster => self.update_monster(world, time_since_last_update),
             EntityType::Building => self.update_building(world, time_since_last_update),
             EntityType::StaticObject => self.update_static(world, time_since_last_update),
             EntityType::PickableObject | EntityType::Bundle => self.update_pickable_object(world, time_since_last_update),
@@ -174,7 +174,7 @@ impl Entity {
         match self.entity_type {
             EntityType::Hero => self.setup_hero(),
             EntityType::Npc => self.setup_npc(),
-            EntityType::CloseCombatMonster => self.setup_close_combat_creep(),
+            EntityType::CloseCombatMonster => self.setup_monster(),
             EntityType::Building => self.setup_generic(),
             EntityType::StaticObject => self.setup_generic(),
             EntityType::PickableObject | EntityType::Bundle => self.setup_generic(),

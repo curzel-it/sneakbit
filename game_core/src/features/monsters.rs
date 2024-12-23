@@ -1,11 +1,11 @@
 use crate::{entities::{bullets::BulletHits, known_species::{is_monster, SPECIES_MONSTER, SPECIES_MONSTER_BLUEBERRY, SPECIES_MONSTER_GOOSEBERRY, SPECIES_MONSTER_SMALL, SPECIES_MONSTER_STRAWBERRY}, species::{species_by_id, EntityType}}, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, worlds::world::World};
 
 impl Entity {
-    pub fn setup_close_combat_creep(&mut self) {
+    pub fn setup_monster(&mut self) {
         self.update_sprite_for_current_state();
     }
 
-    pub fn update_close_combat_creep(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> { 
+    pub fn update_monster(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> { 
         self.update_sprite_for_current_state();
         
         if !is_creative_mode() {
