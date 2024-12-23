@@ -190,6 +190,7 @@ impl Species {
 
         if entity.parent_id == NO_PARENT {
             entity.current_speed = initial_speed;
+            entity.dps = self.dps;
         }
     }
 
