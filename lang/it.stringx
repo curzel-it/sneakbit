@@ -678,15 +678,17 @@ alimentando la vita e il fascino di Duskhaven.
 
 "npc.name.male.kid.red_hair.blue_suit.green_hat" = "Abitante"
 
-"npc.name.monster.blackberry" = "Mostro di Mora"
+"npc.name.monster.blackberry" = "Mostro Mora"
 
-"npc.name.monster.blueberry" = "Mostro di Mirtillo"
+"npc.name.monster.blueberry" = "Mostro Mirtillo"
 
-"npc.name.monster.chokeberry" = "Mostro di Aronia"
+"npc.name.monster.chokeberry" = "Mostro Aronia"
 
-"npc.name.monster.gooseberry" = "Mostro di Uva Spina"
+"npc.name.monster.gooseberry" = "Mostro Uva Spina"
 
-"npc.name.monster.strawberry" = "Mostro di Fragola"
+"npc.name.monster.grapevine" = "Mostro Uva"
+
+"npc.name.monster.strawberry" = "Mostro Fragola"
 
 "npc.name.mr_bubblegum" = "Mr Bubblegum"
 

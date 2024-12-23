@@ -116,7 +116,7 @@ impl Entity {
     } 
 }
 
-fn make_bullet_ex(
+pub fn make_bullet_ex(
     species: u32, 
     parent_id: u32, 
     starting_frame: &IntRect, 

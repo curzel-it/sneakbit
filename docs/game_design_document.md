@@ -45,7 +45,6 @@ Bullets travel straight and inflict a damage per second, so the faster bullets a
 |Dark AR|.223 Rem|2.5|0.005|
 |Cannon|Cannonball|1.0|8.0|0.5|
 
-
 ### Melee Weapons
 Melee weapons don't require ammunition, but the underlying mechanisms makes them fire invisible, slow and short-lived bullets, usually in a wider area than ranged weapons.
 
@@ -65,12 +64,13 @@ There is a single kind of monster, but they can fuse to level up.
 
 |Name|Dps|Hp|Speed|
 |--|--|--|--|
+|Grapeberry|300|80|3.0|
 |Chokeberry|300|80|3.0|
 |Blackberry|400|200|2.5|
 |Blueberry|500|600|2.75|
 |Strawberry|600|1300|3.05|
 |Gooseberry|700|2000|3.4|
-
+|Grapevine|600|4800|1.4|
 
 ### Skills
 The player can complete optional quests to gain special combat skills.

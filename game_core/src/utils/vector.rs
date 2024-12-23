@@ -21,6 +21,10 @@ impl Vector2d {
     pub fn scaled(&self, value: f32) -> Self {
         Self::new(self.x * value, self.y * value)
     }
+    
+    pub fn dumb_distance_to(&self, other: &Vector2d) -> f32 {
+        (self.x - other.x).abs() + (self.y - other.y).abs()
+    }
 }
 
 impl Add for Vector2d {

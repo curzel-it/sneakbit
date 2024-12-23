@@ -1,7 +1,7 @@
 pub mod animated_sprite;
 pub mod autoremove;
 pub mod camera;
-pub mod close_combat_monster;
+pub mod monsters;
 pub mod cutscenes;
 pub mod destination;
 pub mod dialogues;
