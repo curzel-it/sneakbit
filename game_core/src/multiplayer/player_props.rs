@@ -1,4 +1,4 @@
-use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, features::entity_props::EntityProps, input::keyboard_events_provider::KeyboardEventsProvider, utils::directions::Direction, worlds::world::World};
+use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, features::entity_props::EntityProps, input::keyboard_events_provider::KeyboardEventsProvider, utils::{directions::Direction, rect::IntRect}, worlds::world::World};
 
 #[derive(Clone, Default, Debug)]
 pub struct PlayerProps {
@@ -40,9 +40,18 @@ pub fn empty_props_for_all_players() -> Vec<PlayerProps> {
 }
 
 impl World {
-    pub fn index_of_player_at(&self, x: i32, y: i32) -> Option<usize> {
+    pub fn first_index_of_player_at(&self, x: i32, y: i32) -> Option<usize> {
         for p in &self.players {
             if p.props.hittable_frame.x == x && p.props.hittable_frame.y == y {
+                return Some(p.index)
+            }
+        }
+        None
+    }
+
+    pub fn first_index_of_player_in(&self, area: &IntRect) -> Option<usize> {
+        for p in &self.players {
+            if area.contains_or_touches_tile(p.props.hittable_frame.x, p.props.hittable_frame.y) {
                 return Some(p.index)
             }
         }

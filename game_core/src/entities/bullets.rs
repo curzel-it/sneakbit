@@ -30,7 +30,7 @@ impl Entity {
         }
 
         if self.current_speed == 0.0 && !is_creative_mode() {   
-            if let Some(player) = world.index_of_player_at(self.frame.x, self.frame.y) {
+            if let Some(player) = world.first_index_of_player_at(self.frame.x, self.frame.y) {
                 return object_pick_up_sequence(player, self);
             }            
         }

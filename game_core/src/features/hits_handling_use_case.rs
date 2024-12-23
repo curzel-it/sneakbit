@@ -46,7 +46,7 @@ impl World {
             damage_indicator.frame = frame;
             damage_indicator.offset = offset;
             damage_indicator.remaining_lifespan = 0.2;
-            damage_indicator.parent_id = hits.bullet_id;
+            damage_indicator.parent_id = hits.bullet_parent_id;
             self.add_entity(damage_indicator);
         }
 

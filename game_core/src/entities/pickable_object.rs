@@ -5,7 +5,7 @@ impl Entity {
         if is_creative_mode() {
             return vec![]
         }        
-        if let Some(player) = world.index_of_player_at(self.frame.x, self.frame.y) {
+        if let Some(player) = world.first_index_of_player_in(&self.frame) {
             object_pick_up_sequence(player, self)
         } else {
             vec![]
