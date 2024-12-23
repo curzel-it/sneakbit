@@ -70,7 +70,7 @@ impl Entity {
         }
     }
 
-    fn is_any_active_vulnerable_player_in_line_of_sight(&self, world: &World) -> Option<IntRect> {
+    pub fn is_any_active_vulnerable_player_in_line_of_sight(&self, world: &World) -> Option<IntRect> {
         for &player_index in currently_active_players().iter() {
             let player = &world.players[player_index];
 

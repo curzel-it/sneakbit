@@ -237,7 +237,7 @@ lazy_static! {
     };
 }
 
-pub const SPECIES_NONE: Species = Species {
+const SPECIES_NONE: Species = Species {
     id: 0,
     name: String::new(),
     entity_type: EntityType::Npc,

@@ -1,4 +1,4 @@
-use crate::{entities::{bullets::BulletHits, known_species::{is_monster, SPECIES_MONSTER, SPECIES_MONSTER_BLUEBERRY, SPECIES_MONSTER_GOOSEBERRY, SPECIES_MONSTER_SMALL, SPECIES_MONSTER_STRAWBERRY}, species::{species_by_id, EntityType}}, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, worlds::world::World};
+use crate::{entities::{bullets::{make_bullet_ex, BulletHits}, known_species::{is_monster, SPECIES_MONSTER, SPECIES_MONSTER_BLUEBERRY, SPECIES_MONSTER_GOOSEBERRY, SPECIES_MONSTER_SMALL, SPECIES_MONSTER_STRAWBERRY}, species::{species_by_id, EntityType}}, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::rect::IntRect, worlds::world::World};
 
 impl Entity {
     pub fn setup_monster(&mut self) {
@@ -14,12 +14,17 @@ impl Entity {
             
             let updates = self.handle_melee_attack(world, time_since_last_update);                
             if !updates.is_empty() {
-                return updates
+                return updates;
             }
 
             let updates = self.fuse_with_other_creeps_if_possible(world);
             if !updates.is_empty() {
-                return updates
+                return updates;
+            }
+
+            let updates = self.spawn_minions_if_needed(world, time_since_last_update);
+            if !updates.is_empty() {
+                return updates;
             }
         }
         vec![]
@@ -67,29 +72,71 @@ impl Entity {
         if self.is_dying {
             return vec![]
         }
+        if let Some(next_species_id) = next_species_id(self.species_id) {
+            let hits = world.entity_ids(self.frame.x, self.frame.y);
 
-        let hits = world.entity_ids(self.frame.x, self.frame.y);
-
-        for (hit, species_id) in hits {        
-            if self.is_valid_hit_target(hit) && is_monster(species_id) && species_id <= self.species_id {
-                let next_species = species_by_id(next_species_id(self.species_id));
-                self.species_id = next_species.id;
-                self.species = next_species.clone();
-                next_species.reload_props(self);
-                return vec![WorldStateUpdate::RemoveEntity(hit)]
+            for (hit, species_id) in hits {        
+                if self.is_valid_hit_target(hit) && is_monster(species_id) && species_id <= self.species_id {
+                    let next_species = species_by_id(next_species_id);
+                    self.species_id = next_species.id;
+                    self.species = next_species.clone();
+                    next_species.reload_props(self);
+                    return vec![WorldStateUpdate::RemoveEntity(hit)]
+                }
             }
         }
         vec![]
     }
-}
 
-fn next_species_id(current_species_id: u32) -> u32 {
-    match current_species_id {
-        SPECIES_MONSTER_SMALL => SPECIES_MONSTER_BLUEBERRY,
-        SPECIES_MONSTER => SPECIES_MONSTER_BLUEBERRY,
-        SPECIES_MONSTER_BLUEBERRY => SPECIES_MONSTER_STRAWBERRY,
-        SPECIES_MONSTER_STRAWBERRY => SPECIES_MONSTER_GOOSEBERRY,
-        _ => SPECIES_MONSTER_GOOSEBERRY,
+    fn spawn_minions_if_needed(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
+        if self.species_id != 4008 {
+            return vec![]
+        }
+        self.species = species_by_id(self.species_id);
+        if self.species.bullet_species_id == 0 {
+            println!("No bullet_species_id");
+            return vec![]
+        }
+        self.action_cooldown_remaining -= time_since_last_update;
+
+        if self.action_cooldown_remaining > 0.0 {
+            println!("Still in cooldown for another {}s", self.action_cooldown_remaining);
+            return vec![]
+        }
+
+        if let Some(hero_frame) = self.is_any_active_vulnerable_player_in_line_of_sight(world) {
+            let boss_frame = self.hittable_frame();
+            let distance = boss_frame.center().dumb_distance_to(&hero_frame.center());
+
+            if distance < 3.5 {
+                println!("Player is too close, {}", distance);
+                return vec![];
+            }
+
+            self.action_cooldown_remaining = self.species.cooldown_after_use;
+
+            let minion = make_bullet_ex(
+                self.species.bullet_species_id, 
+                self.id, 
+                &IntRect::square_from_origin(1).centered_at(&self.frame.center()), 
+                &self.offset, 
+                self.direction, 
+                self.species.bullet_lifespan
+            );
+            vec![WorldStateUpdate::AddEntity(Box::new(minion))]
+        } else {
+            println!("No visible players");
+            vec![]
+        }
     }
 }
-    
+
+fn next_species_id(current_species_id: u32) -> Option<u32> {
+    match current_species_id {
+        SPECIES_MONSTER_SMALL => Some(SPECIES_MONSTER_BLUEBERRY),
+        SPECIES_MONSTER => Some(SPECIES_MONSTER_BLUEBERRY),
+        SPECIES_MONSTER_BLUEBERRY => Some(SPECIES_MONSTER_STRAWBERRY),
+        SPECIES_MONSTER_STRAWBERRY => Some(SPECIES_MONSTER_GOOSEBERRY),
+        _ => None,
+    }
+}

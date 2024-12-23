@@ -1320,10 +1320,10 @@
     "movement_directions": "FindHero",
     "name": "npc.name.monster.grapeberry",
     "sprite_frame": {
-      "h": 3,
-      "w": 2,
-      "x": 17,
-      "y": 1
+      "h": 1,
+      "w": 1,
+      "x": 5,
+      "y": 19
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1023,
