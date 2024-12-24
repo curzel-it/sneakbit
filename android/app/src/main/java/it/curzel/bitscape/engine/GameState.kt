@@ -19,6 +19,6 @@ data class GameState(
     }
 
     fun shouldPauseGame(): Boolean {
-        return isGameOver() || messages != null
+        return isGameOver() || messages != null || hasRequestedFastTravel
     }
 }

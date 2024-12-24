@@ -168,7 +168,6 @@ class FastTravelMenuViewModel(private val gameEngine: GameEngine) : ViewModel() 
     private fun hideMenu() {
         _isVisible.value = false
         _options.value = emptyList()
-        gameEngine.resumeGame()
     }
 
     fun closeMenu() {

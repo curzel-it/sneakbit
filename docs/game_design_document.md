@@ -228,6 +228,8 @@ Reward: Thugs are gone and the passage to Maritide Have via Thermoria's dock
 ## Locations
 ![World Map](world_map.png)
 
+After visiting any 4 cities fast travel is unlocked and will be available as a portal in all major cities.
+
 ### Evergrove Village (1001)
 The small village near the spawn location of the MC.
 
