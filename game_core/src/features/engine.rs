@@ -316,5 +316,6 @@ impl GameEngine {
     pub fn handle_pvp_arena(&mut self, number_of_players: usize) {        
         self.update_game_mode(GameMode::TurnBasedPvp);
         self.update_number_of_players(number_of_players);
+        self.teleport(&Destination::nearest(1301));
     }
 }

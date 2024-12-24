@@ -55,10 +55,10 @@
       "35555333333AAAA3333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
       "35333333333AAAA33333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
       "5533333333AAAAAA3333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "5333333333333AAA3333AAAAAAAAAAAAABAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "53333333333333AA3333AAAAAAAAAAAAABAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "53333333333333AA333333333AAAAAAAABBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "33555533333A33AA333333333333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "5333333333333AAA3333AAAAAAAAAAAAABAAAAABAAAAAAAAAAAAAAAAAABBBAAAAAAAAAAAAAAAAAAA",
+      "53333333333333AA3333AAAAAAAAAAAAABAAAAABAAAAAAAAAAAAAAAAABBBBBAAAAAAAAAAAAAAAAAA",
+      "53333333333333AA333333333AAAAAAAABBBBBBBBBBBBBBBBBAAAAAAABBBBBAAAAAAAAAAAAAAAAAA",
+      "33555533333A33AA333333333333333AAAAAAAAAAAAAAAAAAAAAAAAAAABBBAAAAAAAAAAAAAAAAAAA",
       "5555555333333AA33333333333333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
       "55555555555533333333333333333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
       "66666666666533333333333333333333AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -703,8 +703,8 @@
       "frame": {
         "h": 1,
         "w": 1,
-        "x": 8,
-        "y": 29
+        "x": 12,
+        "y": 32
       },
       "id": 11022216,
       "is_consumable": true,
@@ -716,13 +716,13 @@
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
-      "direction": "Right",
+      "direction": "Up",
       "display_conditions": [],
       "frame": {
         "h": 1,
         "w": 1,
         "x": 46,
-        "y": 79
+        "y": 78
       },
       "id": 11022217,
       "is_consumable": true,
@@ -1275,13 +1275,13 @@
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
-      "direction": "Down",
+      "direction": "Up",
       "display_conditions": [],
       "frame": {
         "h": 1,
         "w": 1,
-        "x": 14,
-        "y": 71
+        "x": 16,
+        "y": 69
       },
       "id": 11022215,
       "is_consumable": true,
@@ -2089,7 +2089,18 @@
       "destination": null,
       "dialogues": [],
       "direction": "Down",
-      "display_conditions": [],
+      "display_conditions": [
+        {
+          "expected_value": 1,
+          "key": "is_mobile",
+          "visible": false
+        },
+        {
+          "expected_value": 1,
+          "key": "always",
+          "visible": true
+        }
+      ],
       "frame": {
         "h": 4,
         "w": 5,
