@@ -608,8 +608,73 @@ Java_it_curzel_bitscape_gamecore_NativeLib_matchResult(JNIEnv *env, jobject thiz
 
     return matchResultObject;
 }
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_revive(JNIEnv *env, jobject thiz) {
     revive();
 }
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_hasRequestedFastTravel(JNIEnv *env, jobject thiz) {
+    return did_request_fast_travel();
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_fastTravelOptions(JNIEnv *env, jobject thiz) {
+    uintptr_t length = 0;
+    // Call the C function to get the destinations
+    FastTravelDestination *destinations = available_fast_travel_destinations_from_current_world_c(
+            &length);
+
+    if (destinations == nullptr || length == 0) {
+        // Return an empty jintArray
+        return env->NewIntArray(0);
+    }
+
+    // Create a jintArray to hold the destinations
+    jintArray result = env->NewIntArray(length);
+    if (result == nullptr) {
+        // Out of memory error thrown
+        return nullptr;
+    }
+
+    // Temporary buffer to hold the destination values
+    jint temp[length];
+    for (uintptr_t i = 0; i < length; ++i) {
+        temp[i] = static_cast<jint>(destinations[i]);
+    }
+
+    // Set the jintArray elements
+    env->SetIntArrayRegion(result, 0, length, temp);
+
+    return result;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_cancelFastTravel(JNIEnv *env, jobject thiz) {
+    cancel_fast_travel();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_handleFastTravel(JNIEnv *env, jobject thiz,
+                                                            jint destination) {
+    auto dest = static_cast<FastTravelDestination>(destination);
+
+    switch(dest) {
+        case FastTravelDestination_Evergrove:
+        case FastTravelDestination_Aridreach:
+        case FastTravelDestination_Duskhaven:
+        case FastTravelDestination_PeakLevel:
+        case FastTravelDestination_Maritide:
+        case FastTravelDestination_Thermoria:
+        case FastTravelDestination_Vintoria:
+            handle_fast_travel(dest);
+            break;
+        default:
+            break;
+    }}

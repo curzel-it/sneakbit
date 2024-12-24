@@ -57,7 +57,22 @@ impl FastTravelDestination {
 }
 
 pub fn is_fast_travel_available() -> bool {
-    true 
+    vec![
+        FastTravelDestination::Evergrove,
+        FastTravelDestination::Aridreach,
+        FastTravelDestination::Duskhaven,
+        FastTravelDestination::PeakLevel,
+        FastTravelDestination::Maritide,
+        FastTravelDestination::Thermoria,
+        FastTravelDestination::Vintoria,
+    ]
+    .iter()
+    .filter(|destination| {
+        let world_id = destination.world_id();
+        let key = StorageKey::did_visit(world_id);
+        bool_for_global_key(&key)
+    })
+    .count() >= 5    
 }
 
 pub fn available_fast_travel_destinations_from_current_world() -> Vec<FastTravelDestination> {

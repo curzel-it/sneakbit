@@ -48,6 +48,10 @@ class NativeLib {
     external fun nextToast(): DisplayableToast?
     external fun matchResult(): MatchResult
     external fun revive()
+    external fun hasRequestedFastTravel(): Boolean
+    external fun fastTravelOptions(): IntArray
+    external fun cancelFastTravel()
+    external fun handleFastTravel(destination: Int)
 
     companion object {
         const val TILE_SIZE: Int = 16

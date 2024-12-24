@@ -1,4 +1,4 @@
-package it.curzel.bitscape.rendering
+package it.curzel.bitscape.gameui
 
 import android.app.Activity
 import android.content.Context

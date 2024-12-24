@@ -149,6 +149,20 @@ class GameEngine(
         keyDown.remove(key)
     }
 
+    fun fastTravelOptions(): IntArray {
+        return nativeLib.fastTravelOptions()
+    }
+
+    fun cancelFastTravel() {
+        nativeLib.cancelFastTravel()
+        resumeGame()
+    }
+
+    fun handleFastTravel(destination: Int) {
+        nativeLib.handleFastTravel(destination)
+        resumeGame()
+    }
+
     private fun flushKeyboard() {
         keyPressed.clear()
         keyDown.removeAll(
@@ -228,7 +242,8 @@ class GameEngine(
             isInteractionAvailable = nativeLib.isInteractionAvailable(),
             matchResult = nativeLib.matchResult(),
             heroHp = nativeLib.playerCurrentHp(),
-            isSwordEquipped = nativeLib.isSwordEquipped()
+            isSwordEquipped = nativeLib.isSwordEquipped(),
+            hasRequestedFastTravel = nativeLib.hasRequestedFastTravel()
         )
     }
 
