@@ -1072,15 +1072,14 @@ alimentando la vita e il fascino di Duskhaven.
 "picked_up_item" = "Raccolto `%s`!"
 
 "pvp_arena.menu.text" = """
-Siamo ancora in beta!
-Rilascio così posso organizzare un torneo a capodanno LOL
 * Tutti i giocatori useranno questo PC
 * Un controller per giocatore (obbligatorio)
 * Combattimento a turni
+* Una sola mappa per ora
 Buon anno!
 """
 
-"pvp_arena.menu.title" = "PvP Arena"
+"pvp_arena.menu.title" = "PvP Arena (Beta)"
 
 "quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
 Quindi l'hai visto, vero? Gli hai parlato? Oh, lo sapevo!

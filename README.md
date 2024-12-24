@@ -28,6 +28,7 @@ Available now on [Steam](https://store.steampowered.com/app/3360860/SneakBit) fo
 * Nostalgic Gameboy-like pixel art aesthetics
 * Local co-op multiplayer mode for PC
 * Unlockable Fast travel
+* Turn-based Pvp 
 * Coming soon! Linux & SteamOS support
 
 ## Build from source

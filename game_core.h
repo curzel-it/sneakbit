@@ -8,8 +8,6 @@
 
 #define BUILD_NUMBER 40
 
-#define PVP_AVAILABLE false
-
 #define UNLIMITED_LIFESPAN -420.0
 
 #define NO_PARENT 0
@@ -359,5 +357,13 @@ void handle_fast_travel(enum FastTravelDestination destination);
 enum FastTravelDestination *available_fast_travel_destinations_from_current_world_c(uintptr_t *length);
 
 void free_fast_travel_destinations(enum FastTravelDestination *ptr, uintptr_t length);
+
+bool did_request_pvp_arena(void);
+
+void cancel_pvp_arena_request(void);
+
+void exit_pvp_arena(void);
+
+void handle_pvp_arena(uintptr_t number_of_players);
 
 #endif  /* GAME_CORE_H */
