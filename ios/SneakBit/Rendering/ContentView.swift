@@ -8,6 +8,7 @@ struct ContentView: View {
             HpView()
             ControllerEmulatorView()
             MessagesView()
+            FastTravelMenu()
             OptionsView()
             LoadingScreen()
             DeathScreen()

@@ -12,12 +12,13 @@ data class GameState(
     val matchResult: MatchResult,
     val heroHp: Float,
     val isSwordEquipped: Boolean,
+    val hasRequestedFastTravel: Boolean
 ) {
     fun isGameOver(): Boolean {
         return matchResult.gameOver
     }
 
     fun shouldPauseGame(): Boolean {
-        return isGameOver() || messages != null
+        return isGameOver() || messages != null || hasRequestedFastTravel
     }
 }

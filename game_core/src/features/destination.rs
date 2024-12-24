@@ -17,8 +17,12 @@ pub struct Destination {
 }
 
 impl Destination {
+    pub fn new_ex(world: u32, x: i32, y: i32, direction: Direction) -> Self {
+        Self { world, x, y, direction }
+    }
+
     pub fn new(world: u32, x: i32, y: i32) -> Self {
-        Self { world, x, y, direction: Direction::Unknown }
+        Self::new_ex(world, x, y, Direction::Unknown)
     }
 
     pub fn nearest(world: u32) -> Self {

@@ -27,6 +27,7 @@ Available now on [Steam](https://store.steampowered.com/app/3360860/SneakBit) fo
 * Unlockable combat skills
 * Nostalgic Gameboy-like pixel art aesthetics
 * Local co-op multiplayer mode for PC
+* Unlockable Fast travel
 * Coming soon! Linux & SteamOS support
 
 ## Build from source
@@ -95,7 +96,6 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 ## TODO:
 - Finish writing "Consipiracy Theorist" quest
 - Finish writing "Assassin Guild" quest
-- Fast travel
 - PvP arena
 
 ## Game Design Document

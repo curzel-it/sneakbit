@@ -213,7 +213,6 @@
   "entities": [
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -232,7 +231,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -281,7 +279,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -300,7 +297,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -324,7 +320,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -343,7 +338,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -367,7 +361,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -386,7 +379,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -410,7 +402,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -429,7 +420,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -453,7 +443,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -497,7 +486,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -516,7 +504,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -535,7 +522,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -554,7 +540,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -573,7 +558,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -592,7 +576,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -616,7 +599,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Up",
@@ -640,7 +622,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -659,7 +640,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -678,7 +658,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -697,7 +676,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -716,7 +694,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -735,7 +712,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -797,7 +773,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -816,7 +791,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -835,7 +809,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -854,7 +827,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -873,7 +845,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -892,7 +863,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -911,7 +881,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -930,7 +899,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -949,7 +917,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -968,7 +935,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -987,7 +953,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1006,7 +971,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Up",
@@ -1030,7 +994,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Up",
@@ -1054,7 +1017,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Up",
@@ -1103,7 +1065,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1133,7 +1094,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -1159,7 +1119,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -1189,7 +1148,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [
@@ -1238,21 +1196,25 @@
         {
           "expected_value": 1,
           "key": "dialogue.answer.quest.sword.thats_my_sword",
+          "reward": null,
           "text": "quest.sword.a_thing_of_beauty"
         },
         {
           "expected_value": 1,
           "key": "dialogue.answer.quest.sword.did_you_find_my_sword,item_collected.13775019",
+          "reward": null,
           "text": "quest.sword.a_thing_of_beauty"
         },
         {
           "expected_value": 1,
           "key": "item_collected.13775019",
+          "reward": null,
           "text": "quest.sword.thats_my_sword"
         },
         {
           "expected_value": 0,
           "key": "always",
+          "reward": null,
           "text": "quest.sword.did_you_find_my_sword"
         }
       ],
@@ -1279,6 +1241,24 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1113
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 3,
+        "x": 54,
+        "y": 45
+      },
+      "id": 14997466,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1185
     }
   ],
   "ephemeral_state": true,

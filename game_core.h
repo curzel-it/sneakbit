@@ -168,6 +168,16 @@
 
 #define SPECIES_BARREL_WOOD 1074
 
+typedef enum FastTravelDestination {
+  FastTravelDestination_Evergrove = 1001,
+  FastTravelDestination_Aridreach = 1003,
+  FastTravelDestination_Duskhaven = 1011,
+  FastTravelDestination_PeakLevel = 1020,
+  FastTravelDestination_Maritide = 1008,
+  FastTravelDestination_Thermoria = 1006,
+  FastTravelDestination_Vintoria = 1012,
+} FastTravelDestination;
+
 typedef enum GameMode {
   GameMode_RealTimeCoOp = 0,
   GameMode_Creative = 1,
@@ -339,5 +349,15 @@ struct CToast next_toast_c(void);
 struct CMatchResult match_result_c(void);
 
 void revive(void);
+
+bool did_request_fast_travel(void);
+
+void cancel_fast_travel(void);
+
+void handle_fast_travel(enum FastTravelDestination destination);
+
+enum FastTravelDestination *available_fast_travel_destinations_from_current_world_c(uintptr_t *length);
+
+void free_fast_travel_destinations(enum FastTravelDestination *ptr, uintptr_t length);
 
 #endif  /* GAME_CORE_H */

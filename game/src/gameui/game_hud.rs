@@ -19,6 +19,7 @@ pub fn hud_ui(context: &GameContext, width: i32, height: i32, show_debug_info: b
             (AnchorPoint::BottomCenter, context.menu.ui(current_camera_viewport())),
             (AnchorPoint::BottomCenter, context.messages.ui()),
             (AnchorPoint::BottomCenter, context.weapons_selection.ui()),
+            (AnchorPoint::BottomCenter, context.fast_travel_menu.ui()),
             (AnchorPoint::TopRight, context.toast.regular_toast_ui()),
             (AnchorPoint::TopLeft, context.toast.hint_toast_ui()),
             (AnchorPoint::BottomLeft, debug_info(show_debug_info, fps)),

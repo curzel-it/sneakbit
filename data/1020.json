@@ -393,21 +393,25 @@
         {
           "expected_value": 1,
           "key": "dialogue.answer.quest.sword.thats_my_sword",
+          "reward": null,
           "text": "quest.sword.a_thing_of_beauty"
         },
         {
           "expected_value": 1,
           "key": "dialogue.answer.quest.sword.did_you_find_my_sword,item_collected.13775019",
+          "reward": null,
           "text": "quest.sword.a_thing_of_beauty"
         },
         {
           "expected_value": 1,
           "key": "item_collected.13775019",
+          "reward": null,
           "text": "quest.sword.thats_my_sword"
         },
         {
           "expected_value": 0,
           "key": "always",
+          "reward": null,
           "text": "quest.sword.did_you_find_my_sword"
         }
       ],
@@ -1087,6 +1091,24 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1165
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 3,
+        "x": 48,
+        "y": 23
+      },
+      "id": 14997630,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1185
     }
   ],
   "ephemeral_state": true,

@@ -1,4 +1,4 @@
-package it.curzel.bitscape.rendering
+package it.curzel.bitscape.gameui
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box

@@ -1,4 +1,4 @@
-package it.curzel.bitscape.rendering
+package it.curzel.bitscape.gameui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -18,12 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -39,12 +37,10 @@ import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.R
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.gamecore.DisplayableToast
-import it.curzel.bitscape.gamecore.IntRect
-import it.curzel.bitscape.gamecore.NativeLib
+import it.curzel.bitscape.rendering.SpritesProvider
 import it.curzel.bitscape.ui.theme.DSTypography
 import it.curzel.bitscape.ui.theme.ToastBackground
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 

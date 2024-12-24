@@ -4636,5 +4636,26 @@
     },
     "sprite_number_of_frames": 8,
     "sprite_sheet_id": 1022
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "FastTravelLink",
+    "id": 1185,
+    "inventory_texture_offset": [
+      6,
+      2
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.fast_travel_link",
+    "sprite_frame": {
+      "h": 2,
+      "w": 3,
+      "x": 44,
+      "y": 0
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
   }
 ]

@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{destination::Destination, sound_effects::SoundEffectsManager, toasts::{Toast, ToastImage, ToastMode}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, entities::fast_travel::FastTravelDestination, features::{destination::Destination, sound_effects::SoundEffectsManager, toasts::{Toast, ToastImage, ToastMode}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
 use super::{camera::camera_center, messages::DisplayableMessage, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
@@ -20,7 +20,8 @@ pub struct GameEngine {
     pub message: Option<DisplayableMessage>,
     pub toast: Option<Toast>,
     pub match_result: MatchResult,
-    did_just_revive: bool
+    did_just_revive: bool,
+    pub fast_travel_requested: bool
 }
 
 impl GameEngine {
@@ -43,7 +44,8 @@ impl GameEngine {
             message: None,
             toast: None,
             match_result: MatchResult::InProgress,
-            did_just_revive: false
+            did_just_revive: false,
+            fast_travel_requested: false
         }
     }
 
@@ -80,6 +82,7 @@ impl GameEngine {
     }
     
     fn clear_messages(&mut self) {
+        self.fast_travel_requested = false;
         self.message = None;
         self.toast = None;
         self.match_result = MatchResult::InProgress;
@@ -147,6 +150,9 @@ impl GameEngine {
             EngineStateUpdate::GunShot(_) | EngineStateUpdate::LoudGunShot(_) => {
                 self.turn = self.turns_use_case.update_turn_ranged_attack(&self.turn)
             }
+            EngineStateUpdate::FastTravel => {
+                self.fast_travel_requested = true
+            }
             _ => {}
         }
     }
@@ -159,6 +165,8 @@ impl GameEngine {
     }
 
     fn teleport(&mut self, destination: &Destination) {
+        set_value_for_key(&StorageKey::did_visit(destination.world), 1);
+
         self.dead_players.clear();
 
         if is_creative_mode() {
@@ -282,5 +290,16 @@ impl GameEngine {
         self.world.players[0].props.direction = Direction::Unknown;
         self.teleport_to_previous();
         self.did_just_revive = true;
+    }
+
+    pub fn cancel_fast_travel(&mut self) {
+        self.fast_travel_requested = false;
+    }
+
+    pub fn handle_fast_travel(&mut self, destination: FastTravelDestination) {
+        if let Some(dest) = destination.to_teleporter_destination() {
+            self.clear_messages();
+            self.teleport(&dest);
+        }
     }
 }

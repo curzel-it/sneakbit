@@ -1,5 +1,6 @@
 pub mod buildings;
 pub mod bullets;
+pub mod fast_travel;
 pub mod gates;
 pub mod hero;
 pub mod hint;

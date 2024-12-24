@@ -210,6 +210,10 @@ Thanks for playing SneakBit!
 
 "entity.menu.use" = "Use"
 
+"fast_travel.menu.text" = "Places you can travel to:"
+
+"fast_travel.menu.title" = "Fast Travel"
+
 "game.menu.controls" = "Controls"
 
 "game.menu.controls.explained" = """
@@ -322,7 +326,7 @@ Also, what the hell are you doing in my house!?
 "hint.006.leave_a_review" = """
 Hey, what's up?
 If you like the game, do you mind leaving a review?
-It really helps a lot, thanks! 
+It really helps a lot, thanks!
 :D
 """
 
@@ -331,6 +335,50 @@ It really helps a lot, thanks!
 "inventory.subtitle" = "Stuff in your backpack"
 
 "inventory.title" = "Inventory"
+
+"location.name.1001" = "Evergrove"
+
+"location.name.1002" = "Verdant Way"
+
+"location.name.1003" = "Aridreach"
+
+"location.name.1004" = "Duskhaven Dungeons - 1st Floor"
+
+"location.name.1005" = "Duskhaven Dungeons - 2nd Floor"
+
+"location.name.1006" = "Thermoria"
+
+"location.name.1007" = "Mount Ignis Underground"
+
+"location.name.1008" = "Maritide Haven"
+
+"location.name.1009" = "Maritide Haven Mines"
+
+"location.name.1010" = "Shadowveil Path"
+
+"location.name.1011" = "Duskhaven"
+
+"location.name.1012" = "Vintoria"
+
+"location.name.1013" = "Grimsun Basin"
+
+"location.name.1014" = "Vintoria Power Plant - 1st Floor"
+
+"location.name.1015" = "Vintoria Power Plant - 2nd Floor"
+
+"location.name.1016" = "Vintoria Power Plant - 3rd Floor"
+
+"location.name.1017" = "Demon Lord Maze"
+
+"location.name.1018" = "Murkmire Swamps"
+
+"location.name.1019" = "Vintoria Maze"
+
+"location.name.1020" = "Peak Levek"
+
+"location.name.1021" = "Peak Levek Underground"
+
+"location.name.1022" = "Duskhaven Maze"
 
 "lock.name.blue" = "Blue"
 

@@ -73,7 +73,31 @@
   "entities": [
     {
       "after_dialogue": "Nothing",
-      "contents": null,
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [
+        {
+          "expected_value": 0,
+          "key": "always",
+          "reward": null,
+          "text": "lore.023.lumberjack"
+        }
+      ],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 9,
+        "y": 4
+      },
+      "id": 13009693,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1119
+    },
+    {
+      "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -97,7 +121,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": {
         "direction": "Unknown",
@@ -121,7 +144,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -140,7 +162,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -159,7 +180,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -178,7 +198,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -197,7 +216,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -216,7 +234,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -235,7 +252,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -254,7 +270,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -273,7 +288,6 @@
     },
     {
       "after_dialogue": "Nothing",
-      "contents": null,
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
@@ -289,32 +303,6 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1015
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [
-        {
-          "expected_value": 0,
-          "key": "always",
-          "reward": null,
-          "text": "lore.023.lumberjack"
-        }
-      ],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 9,
-        "y": 4
-      },
-      "id": 13009693,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 1119
     }
   ],
   "ephemeral_state": false,

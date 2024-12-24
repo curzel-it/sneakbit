@@ -70,6 +70,10 @@ impl StorageKey {
     pub fn species_inventory_count(species_id: &SpeciesId, player: usize) -> String {
         format!("{}.{}.{}.{}", PLAYER, player, INVENTORY_AMOUNT, species_id)
     }
+
+    pub fn did_visit(world_id: u32) -> String {
+        format!("world.visited.{}", world_id)
+    }
 }
 
 fn load_stored_values() -> HashMap<String, u32> {

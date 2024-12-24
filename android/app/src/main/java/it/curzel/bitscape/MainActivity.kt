@@ -1,7 +1,7 @@
 package it.curzel.bitscape
 
 import ControllerEmulatorView
-import DeathScreen
+import it.curzel.bitscape.gameui.DeathScreen
 import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -25,13 +25,14 @@ import it.curzel.bitscape.controller.ControllerSettingsStorage
 import it.curzel.bitscape.engine.AudioEngine
 import it.curzel.bitscape.engine.GameEngine
 import it.curzel.bitscape.gamecore.NativeLib
+import it.curzel.bitscape.gameui.FastTravelScreen
 import it.curzel.bitscape.rendering.GameViewComposable
-import it.curzel.bitscape.rendering.HpView
-import it.curzel.bitscape.rendering.LoadingScreen
-import it.curzel.bitscape.rendering.MessageView
-import it.curzel.bitscape.rendering.OptionsScreen
+import it.curzel.bitscape.gameui.HpView
+import it.curzel.bitscape.gameui.LoadingScreen
+import it.curzel.bitscape.gameui.MessageView
+import it.curzel.bitscape.gameui.OptionsScreen
 import it.curzel.bitscape.rendering.SpritesProvider
-import it.curzel.bitscape.rendering.ToastView
+import it.curzel.bitscape.gameui.ToastView
 import it.curzel.bitscape.ui.theme.SneakBitTheme
 
 class MainActivity : ComponentActivity() {
@@ -66,6 +67,7 @@ class MainActivity : ComponentActivity() {
                             ControllerEmulatorView(engine, controllerSettingsStorage)
                         }
                         MessageView(engine)
+                        FastTravelScreen(engine)
                         OptionsScreen(engine, audioEngine)
                         LoadingScreen(engine)
                         DeathScreen(engine)
