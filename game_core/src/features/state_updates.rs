@@ -37,6 +37,7 @@ pub enum EngineStateUpdate {
     GunShot(PlayerIndex),
     LoudGunShot(PlayerIndex),
     FastTravel,
+    PvpArena
 }
 
 #[derive(Debug, Clone)]

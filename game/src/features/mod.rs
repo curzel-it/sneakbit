@@ -6,3 +6,4 @@ pub mod font_helpers;
 pub mod inputs;
 pub mod loading_screen;
 pub mod paths;
+pub mod pvp_arena;

@@ -4,8 +4,8 @@ use std::{collections::HashSet, path::PathBuf, ptr};
 use std::os::raw::c_char;
 
 use config::initialize_config_paths;
-use entities::fast_travel::{available_fast_travel_destinations_from_current_world, FastTravelDestination};
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
+use features::fast_travel::{available_fast_travel_destinations_from_current_world, FastTravelDestination};
 use features::messages::{CDisplayableMessage, DisplayableMessage, DisplayableMessageCRepr};
 use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::WorldStateUpdate, toasts::ToastCRepr};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
@@ -504,4 +504,19 @@ pub extern "C" fn free_fast_travel_destinations(ptr: *mut FastTravelDestination,
             let _ = Vec::from_raw_parts(ptr, length, length);
         }
     }
+}
+
+#[no_mangle]
+pub extern "C" fn did_request_pvp_arena() -> bool {
+    engine().pvp_arena_requested
+}
+
+#[no_mangle]
+pub extern "C" fn cancel_pvp_arena() {
+    engine_mut().cancel_pvp_arena()
+}
+
+#[no_mangle]
+pub extern "C" fn handle_pvp_arena(number_of_players: usize) {
+    engine_mut().handle_pvp_arena(number_of_players)
 }

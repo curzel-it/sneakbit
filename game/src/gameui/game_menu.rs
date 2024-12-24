@@ -1,5 +1,5 @@
 use std::process;
-use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_camera_viewport, current_game_mode, current_world_id, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, save_game, set_wants_fullscreen, spacing, start_new_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect, wants_fullscreen};
+use game_core::{constants::{MAX_PLAYERS, WORLD_ID_NONE}, current_camera_viewport, current_world_id, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, number_of_players, save_game, set_wants_fullscreen, spacing, start_new_game, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect, wants_fullscreen};
 use crate::features::context::GameContext;
 use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, messages::MessagesDisplay, map_editor::MapEditor, menu::{Menu, MenuItem}};
 
@@ -362,15 +362,11 @@ impl GameMenu {
         if self.number_of_players_menu.selection_has_been_confirmed {
             let index = self.number_of_players_menu.selected_index;
 
-            if index == 0 && PVP_AVAILABLE {
-                toggle_pvp();
-            } else if index == self.number_of_players_menu.items.len() - 1 {
+            if index == self.number_of_players_menu.items.len() - 1 {
                 self.number_of_players_menu.clear_selection();
                 self.number_of_players_menu.close();
                 self.menu.clear_selection();
                 self.state = MenuState::Open;
-            } else if PVP_AVAILABLE {
-                update_number_of_players(self.number_of_players_menu.selected_index)
             } else {
                 update_number_of_players(self.number_of_players_menu.selected_index + 1)
             }
@@ -500,11 +496,6 @@ impl GameMenu {
 }
 
 fn player_options() -> Vec<String> {
-    let pvp = if matches!(current_game_mode(), GameMode::TurnBasedPvp) {
-        "game.menu.disable_pvp"
-    } else {
-        "game.menu.enable_pvp"
-    };
     let number_of_players = number_of_players();
 
     let mut options: Vec<String> = (1..=MAX_PLAYERS)
@@ -513,10 +504,6 @@ fn player_options() -> Vec<String> {
             format!("game.menu.number_of_players.{}{}", n, selected).localized()
         })
         .collect();
-
-    if PVP_AVAILABLE {
-        options.insert(0, pvp.localized());
-    }
     options.push("menu_back".localized());
     options
 }

@@ -1,4 +1,4 @@
-use game_core::{cancel_fast_travel, did_request_fast_travel, entities::fast_travel::{available_fast_travel_destinations_from_current_world, FastTravelDestination}, handle_fast_travel, input::keyboard_events_provider::KeyboardEventsProvider, lang::localizable::LocalizableText, ui::components::View};
+use game_core::{cancel_fast_travel, did_request_fast_travel, features::fast_travel::{available_fast_travel_destinations_from_current_world, FastTravelDestination}, handle_fast_travel, input::keyboard_events_provider::KeyboardEventsProvider, lang::localizable::LocalizableText, ui::components::View};
 use crate::gameui::menu::Menu;
 use super::context::GameContext;
 

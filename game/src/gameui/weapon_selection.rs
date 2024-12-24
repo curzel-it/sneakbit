@@ -11,8 +11,7 @@ pub fn update_weapons_selection(context: &mut GameContext, keyboard: &KeyboardEv
         if let Some(player) = keyboard.index_of_any_player_who_is_pressing_weapon_selection() {
             context.weapons_selection.show(player);    
         }
-    }
-    
+    }    
 }
 
 #[derive(Debug)]
