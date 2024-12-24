@@ -395,17 +395,8 @@ pub fn currently_active_players() -> Vec<usize> {
     }
 }
 
-pub fn toggle_pvp() {
-    let next = match current_game_mode() {
-        GameMode::RealTimeCoOp => GameMode::TurnBasedPvp,
-        GameMode::Creative => GameMode::Creative,
-        GameMode::TurnBasedPvp => GameMode::RealTimeCoOp,
-    };
-    engine_mut().update_game_mode(next);
-
-    if number_of_players() == 1 {
-        update_number_of_players(2);
-    }
+pub fn update_game_mode(game_mode: GameMode) {
+    engine_mut().update_game_mode(game_mode);
 }
 
 pub fn current_keyboard_state() -> &'static KeyboardEventsProvider {
@@ -426,6 +417,10 @@ pub fn apply_world_state_updates(updates: Vec<WorldStateUpdate>) {
 
 pub fn is_turn_based_game_mode() -> bool {
     engine().game_mode.is_turn_based()
+}
+
+pub fn is_pvp() -> bool {
+    engine().game_mode.allows_pvp()
 }
 
 pub fn time_left_for_current_turn() -> f32 {
@@ -512,8 +507,13 @@ pub extern "C" fn did_request_pvp_arena() -> bool {
 }
 
 #[no_mangle]
-pub extern "C" fn cancel_pvp_arena() {
-    engine_mut().cancel_pvp_arena()
+pub extern "C" fn cancel_pvp_arena_request() {
+    engine_mut().cancel_pvp_arena_request()
+}
+
+#[no_mangle]
+pub extern "C" fn exit_pvp_arena() {
+    engine_mut().exit_pvp_arena()
 }
 
 #[no_mangle]

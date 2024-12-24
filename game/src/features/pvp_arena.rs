@@ -1,4 +1,4 @@
-use game_core::{cancel_pvp_arena, constants::MAX_PLAYERS, did_request_pvp_arena, handle_pvp_arena, input::keyboard_events_provider::KeyboardEventsProvider, lang::localizable::LocalizableText, ui::components::View};
+use game_core::{cancel_pvp_arena_request, constants::MAX_PLAYERS, did_request_pvp_arena, handle_pvp_arena, input::keyboard_events_provider::KeyboardEventsProvider, lang::localizable::LocalizableText, ui::components::View};
 use crate::gameui::menu::Menu;
 use super::context::GameContext;
 
@@ -33,7 +33,7 @@ impl PvpArenaMenu {
     }
 
     fn close(&mut self) {
-        cancel_pvp_arena();
+        cancel_pvp_arena_request();
         self.menu.clear_confirmation();
         self.menu.clear_selection();
         self.menu.close();

@@ -74,8 +74,13 @@ impl GameEngine {
 
     fn teleport_to_previous(&mut self) {
         let world_id = get_value_for_global_key(&StorageKey::latest_world()).unwrap_or(1001);
-        let destination = Destination::new(world_id, self.world.spawn_point.0, self.world.spawn_point.1);
-        self.teleport(&destination);
+        
+        if world_id == 1301 && !self.game_mode.allows_pvp() {
+            self.exit_pvp_arena();
+        } else {        
+            let destination = Destination::new(world_id, self.world.spawn_point.0, self.world.spawn_point.1);
+            self.teleport(&destination);
+        }
     }
 
     pub fn window_size_changed(&mut self, width: f32, height: f32, scale: f32) {
@@ -309,13 +314,25 @@ impl GameEngine {
         }
     }
 
-    pub fn cancel_pvp_arena(&mut self) {
+    pub fn cancel_pvp_arena_request(&mut self) {
         self.pvp_arena_requested = false;
     }
 
-    pub fn handle_pvp_arena(&mut self, number_of_players: usize) {        
-        self.update_game_mode(GameMode::TurnBasedPvp);
-        self.update_number_of_players(number_of_players);
+    pub fn exit_pvp_arena(&mut self) {
+        self.pvp_arena_requested = false;
+        self.game_mode = GameMode::RealTimeCoOp;
+        self.turn = self.turns_use_case.first_turn(self.game_mode);
+        self.dead_players.clear();
+        self.number_of_players = 1;
+        self.teleport(&Destination::new(1011, 59, 57));
+    }
+
+    pub fn handle_pvp_arena(&mut self, number_of_players: usize) {   
+        self.pvp_arena_requested = false;     
+        self.game_mode = GameMode::TurnBasedPvp;
+        self.turn = self.turns_use_case.first_turn(self.game_mode);
+        self.dead_players.clear();
+        self.number_of_players = number_of_players;
         self.teleport(&Destination::nearest(1301));
     }
 }

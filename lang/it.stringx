@@ -248,6 +248,10 @@ Back:         Middle / Right
 
 "game.menu.exit" = "Chiudi il gioco"
 
+"game.menu.exit_pvp" = "Esci dalla PvP"
+
+"game.menu.exit_pvp_are_you_sure" = "Sicuro?\nSe confermi ritornerai a Duskhaven"
+
 "game.menu.inventory" = "Inventario"
 
 "game.menu.key_bindings" = "Assegnazione Tasti"
