@@ -72,7 +72,7 @@ pub fn is_fast_travel_available() -> bool {
         let key = StorageKey::did_visit(world_id);
         bool_for_global_key(&key)
     })
-    .count() >= 5    
+    .count() >= 4    
 }
 
 pub fn available_fast_travel_destinations_from_current_world() -> Vec<FastTravelDestination> {
