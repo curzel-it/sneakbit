@@ -56,7 +56,7 @@ impl WeaponsGrid {
         self.player = player;
         self.weapons = available_weapons(self.player);
 
-        if self.weapons.len() <= 1 {
+        if !self.has_enough_weapons_to_select_from() {
             return
         }
         let current_index = self.weapons
@@ -71,6 +71,12 @@ impl WeaponsGrid {
             self.state = WeaponsGridState::SelectingWeapon(0)
         }      
     } 
+
+    fn has_enough_weapons_to_select_from(&self) -> bool {
+        let melee_count = self.weapons.iter().filter(|w| matches!(w.entity_type, EntityType::WeaponMelee)).count();
+        let ranged_count = self.weapons.iter().filter(|w| matches!(w.entity_type, EntityType::WeaponRanged)).count();
+        return melee_count >= 2 || ranged_count >= 2
+    }
 
     fn is_open(&self) -> bool {
         !matches!(self.state, WeaponsGridState::Closed)

@@ -103,7 +103,8 @@ pub enum EntityType {
     Trail,
     WeaponMelee,
     WeaponRanged,
-    CloseCombatMonster
+    CloseCombatMonster,
+    FastTravelLink
 }
 
 impl Default for Species {

@@ -1325,6 +1325,24 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1127
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 3,
+        "x": 30,
+        "y": 12
+      },
+      "id": 14997386,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1185
     }
   ],
   "ephemeral_state": true,

@@ -1,4 +1,4 @@
-use super::{audio::AudioManager, death_screen::DeathScreen, loading_screen::LoadingScreen};
+use super::{audio::AudioManager, death_screen::DeathScreen, fast_travel::FastTravelMenu, loading_screen::LoadingScreen};
 use crate::gameui::{basic_info_hud::BasicInfoHud, game_menu::GameMenu, messages::MessagesDisplay, toasts::ToastDisplay, weapon_selection::WeaponsGrid};
 use raylib::prelude::*;
 
@@ -21,6 +21,7 @@ pub struct GameContext {
     pub death_screen: DeathScreen,
     pub loading_screen: LoadingScreen,
     pub last_sound_track: String,
+    pub fast_travel_menu: FastTravelMenu
 }
 
 impl GameContext {
@@ -44,11 +45,12 @@ impl GameContext {
             toast: ToastDisplay::new(),            
             death_screen: DeathScreen::new(),
             loading_screen: LoadingScreen::new(),
+            fast_travel_menu: FastTravelMenu::new()
         }
     }
 
     pub fn is_game_paused(&self) -> bool {
-        self.menu.is_open() || self.messages.is_open() || self.is_dead()
+        self.fast_travel_menu.is_open() || self.menu.is_open() || self.messages.is_open() || self.is_dead()
     }
 
     pub fn is_dead(&self) -> bool {

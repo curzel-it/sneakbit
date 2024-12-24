@@ -4,6 +4,7 @@ use std::{collections::HashSet, path::PathBuf, ptr};
 use std::os::raw::c_char;
 
 use config::initialize_config_paths;
+use entities::fast_travel::FastTravelDestination;
 use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
 use features::messages::{CDisplayableMessage, DisplayableMessage, DisplayableMessageCRepr};
 use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::WorldStateUpdate, toasts::ToastCRepr};
@@ -465,4 +466,19 @@ pub extern "C" fn match_result_c() -> CMatchResult {
 #[no_mangle]
 pub extern "C" fn revive() {
     engine_mut().revive()
+}
+
+#[no_mangle]
+pub extern "C" fn did_request_fast_travel() -> bool {
+    engine().fast_travel_requested
+}
+
+#[no_mangle]
+pub extern "C" fn cancel_fast_travel() {
+    engine_mut().cancel_fast_travel()
+}
+
+#[no_mangle]
+pub extern "C" fn handle_fast_travel(destination: FastTravelDestination) {
+    engine_mut().handle_fast_travel(destination)
 }

@@ -698,13 +698,13 @@
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
-      "direction": "Up",
+      "direction": "Left",
       "display_conditions": [],
       "frame": {
         "h": 1,
         "w": 1,
-        "x": 14,
-        "y": 35
+        "x": 13,
+        "y": 31
       },
       "id": 11022216,
       "is_consumable": true,
@@ -716,13 +716,13 @@
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
-      "direction": "Down",
+      "direction": "Up",
       "display_conditions": [],
       "frame": {
         "h": 1,
         "w": 1,
-        "x": 49,
-        "y": 73
+        "x": 46,
+        "y": 79
       },
       "id": 11022217,
       "is_consumable": true,
@@ -1280,8 +1280,8 @@
       "frame": {
         "h": 1,
         "w": 1,
-        "x": 16,
-        "y": 68
+        "x": 15,
+        "y": 69
       },
       "id": 11022215,
       "is_consumable": true,
@@ -2064,6 +2064,24 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1011
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 3,
+        "x": 49,
+        "y": 42
+      },
+      "id": 14997451,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1185
     }
   ],
   "ephemeral_state": true,

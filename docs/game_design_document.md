@@ -6,6 +6,20 @@
 The game combines adventure and action elements, allowing players to explore a world populated by demons and to engage in combat with unique mechanics. The player can throw kunai (small knives) to defeat or weaken demonic creatures encountered throughout various landscapes, immersing the player in a journey with elements of both strategy and action wrapped in a gameboy-like pixel art aesthetics.
 Local co-op is also available on PC.
 
+## Game Modes
+### Single Player
+Default one, with story etc.
+
+### Co-Op
+Multiple players on a single machine, Steam Remote Play, etc.
+
+Story can still progress, all players can move at the same time, with some action being limited to the main player.
+
+### Turn-based Pvp
+Multiple players on a single machine, Steam Remote Play, etc.
+
+Not finished yet, but will work on dedicated maps.
+
 ## Tiling System
 The game operates on a grid-based tile system.
 There are two types of tiles:
