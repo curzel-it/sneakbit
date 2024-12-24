@@ -237,7 +237,8 @@ class GameEngine {
             isInteractionAvailable: is_interaction_available(),
             matchResult: match_result_c(),
             heroHp: player_current_hp(0),
-            isSwordEquipped: is_melee_equipped(0)
+            isSwordEquipped: is_melee_equipped(0),
+            hasRequestedFastTravel: did_request_fast_travel()
         )
     }
     

@@ -19,26 +19,18 @@ impl Entity {
 #[derive(Clone)]
 #[repr(C)]
 pub enum FastTravelDestination {
-    Evergrove,
-    Aridreach,
-    Duskhaven,
-    PeakLevel,
-    Maritide,
-    Thermoria,
-    Vintoria
+    Evergrove = 1001,
+    Aridreach = 1003,
+    Duskhaven = 1011,
+    PeakLevel = 1020,
+    Maritide = 1008,
+    Thermoria = 1006,
+    Vintoria = 1012
 }
 
 impl FastTravelDestination {
     pub fn world_id(&self) -> u32 {
-        match self {
-            FastTravelDestination::Evergrove => 1001,
-            FastTravelDestination::Aridreach => 1004,
-            FastTravelDestination::Thermoria => 1006,
-            FastTravelDestination::Maritide => 1008,
-            FastTravelDestination::Duskhaven => 1011,
-            FastTravelDestination::Vintoria => 1012,
-            FastTravelDestination::PeakLevel => 1020,
-        }
+        self.clone() as u32
     }
 
     pub fn to_teleporter_destination(&self) -> Option<Destination> {
@@ -65,22 +57,7 @@ impl FastTravelDestination {
 }
 
 pub fn is_fast_travel_available() -> bool {
-    vec![
-        FastTravelDestination::Evergrove,
-        FastTravelDestination::Aridreach,
-        FastTravelDestination::Duskhaven,
-        FastTravelDestination::PeakLevel,
-        FastTravelDestination::Maritide,
-        FastTravelDestination::Thermoria,
-        FastTravelDestination::Vintoria,
-    ]
-    .iter()
-    .filter(|destination| {
-        let world_id = destination.world_id();
-        let key = StorageKey::did_visit(world_id);
-        bool_for_global_key(&key)
-    })
-    .count() >= 5    
+    true 
 }
 
 pub fn available_fast_travel_destinations_from_current_world() -> Vec<FastTravelDestination> {
