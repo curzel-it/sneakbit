@@ -10,6 +10,7 @@ struct GameState {
     let isSwordEquipped: Bool
     let hasRequestedFastTravel: Bool
     let hasRequestedPvpArena: Bool
+    let currentPlayerIndex: UInt
     
     func isGameOver() -> Bool {
         matchResult.game_over

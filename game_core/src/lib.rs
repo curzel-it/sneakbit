@@ -521,3 +521,11 @@ pub extern "C" fn exit_pvp_arena() {
 pub extern "C" fn handle_pvp_arena(number_of_players: usize) {
     engine_mut().handle_pvp_arena(number_of_players)
 }
+
+#[no_mangle]
+pub extern "C" fn current_player_index() -> usize {
+    match engine().turn {
+        GameTurn::RealTime => 0,
+        GameTurn::Player(player_turn_info) => player_turn_info.player_index
+    }
+}

@@ -368,4 +368,6 @@ void exit_pvp_arena(void);
 
 void handle_pvp_arena(uintptr_t number_of_players);
 
+uintptr_t current_player_index(void);
+
 #endif  /* GAME_CORE_H */

@@ -9,7 +9,13 @@ class GameEngine {
     @Inject private var renderingScaleUseCase: RenderingScaleUseCase
     @Inject private var tileMapsStorage: TileMapsStorage
     
-    private let state = CurrentValueSubject<GameState?, Never>(nil)
+    private var currentState: GameState? = nil {
+        didSet {
+            _state.send(currentState)
+        }
+    }
+    
+    private let _state = CurrentValueSubject<GameState?, Never>(nil)
     let isLoading = CurrentValueSubject<Bool, Never>(true)
     
     var size: CGSize = .zero
@@ -17,6 +23,10 @@ class GameEngine {
     
     var isLandscape: Bool {
         cameraViewport.w >= cameraViewport.h
+    }
+    
+    var currentPlayerIndex: UInt {
+        currentState?.currentPlayerIndex ?? 0
     }
     
     private var currentWorldId: UInt32 = 0
@@ -56,7 +66,7 @@ class GameEngine {
     }
     
     func gameState() -> AnyPublisher<GameState, Never> {
-        state
+        _state
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
@@ -83,7 +93,7 @@ class GameEngine {
         if newState.shouldPauseGame() {
             pauseGame()
         }
-        state.send(newState)
+        currentState = newState
     }
     
     private func handleWorldChanged() {
@@ -192,25 +202,40 @@ class GameEngine {
     }
     
     private func updateKeyboardState(timeSinceLastUpdate: Float) {
-        update_keyboard(
-            0,
-            keyPressed.contains(.up),
-            keyPressed.contains(.right),
-            keyPressed.contains(.down),
-            keyPressed.contains(.left),
-            keyDown.contains(.up),
-            keyDown.contains(.right),
-            keyDown.contains(.down),
-            keyDown.contains(.left),
-            keyPressed.contains(.escape),
-            keyPressed.contains(.menu),
-            keyPressed.contains(.confirm),
-            keyPressed.contains(.closeRangeAttack),
-            keyPressed.contains(.rangedAttack),
-            keyPressed.contains(.backspace),
-            false,
-            timeSinceLastUpdate
-        )
+        for playerIndex in 0..<MAX_PLAYERS {
+            if playerIndex == currentPlayerIndex {
+                update_keyboard(
+                    UInt(playerIndex),
+                    keyPressed.contains(.up),
+                    keyPressed.contains(.right),
+                    keyPressed.contains(.down),
+                    keyPressed.contains(.left),
+                    keyDown.contains(.up),
+                    keyDown.contains(.right),
+                    keyDown.contains(.down),
+                    keyDown.contains(.left),
+                    keyPressed.contains(.escape),
+                    keyPressed.contains(.menu),
+                    keyPressed.contains(.confirm),
+                    keyPressed.contains(.closeRangeAttack),
+                    keyPressed.contains(.rangedAttack),
+                    keyPressed.contains(.backspace),
+                    false,
+                    timeSinceLastUpdate
+                )
+            } else {
+                update_keyboard(
+                    UInt(playerIndex),
+                    false, false, false, false,
+                    false, false, false, false,
+                    false, false, false,
+                    false, false,
+                    false,
+                    false,
+                    timeSinceLastUpdate
+                )
+            }
+        }
     }
     
     private func updateTileMapImages() {
@@ -233,13 +258,14 @@ class GameEngine {
         GameState(
             toasts: next_toast_c(),
             messages: next_message_c(),
-            kunai: number_of_kunai_in_inventory(0),
+            kunai: number_of_kunai_in_inventory(currentPlayerIndex),
             isInteractionAvailable: is_interaction_available(),
             matchResult: match_result_c(),
-            heroHp: player_current_hp(0),
-            isSwordEquipped: is_melee_equipped(0),
+            heroHp: player_current_hp(currentPlayerIndex),
+            isSwordEquipped: is_melee_equipped(currentPlayerIndex),
             hasRequestedFastTravel: did_request_fast_travel(),
-            hasRequestedPvpArena: did_request_pvp_arena()
+            hasRequestedPvpArena: did_request_pvp_arena(),
+            currentPlayerIndex: current_player_index()
         )
     }
     
