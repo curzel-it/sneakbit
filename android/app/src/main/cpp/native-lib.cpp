@@ -677,4 +677,35 @@ Java_it_curzel_bitscape_gamecore_NativeLib_handleFastTravel(JNIEnv *env, jobject
             break;
         default:
             break;
-    }}
+    }
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_hasRequestedPvpArena(JNIEnv *env, jobject thiz) {
+    return did_request_pvp_arena();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_handlePvpArena(JNIEnv *env, jobject thiz, jint number_of_players) {
+    handle_pvp_arena(number_of_players);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_cancelPvpArenaRequest(JNIEnv *env, jobject thiz) {
+    cancel_pvp_arena_request();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_exitPvpArena(JNIEnv *env, jobject thiz) {
+    exit_pvp_arena();
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_isPvp(JNIEnv *env, jobject thiz) {
+    return is_pvp();
+}

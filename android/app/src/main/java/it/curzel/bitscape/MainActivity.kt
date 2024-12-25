@@ -31,6 +31,7 @@ import it.curzel.bitscape.gameui.HpView
 import it.curzel.bitscape.gameui.LoadingScreen
 import it.curzel.bitscape.gameui.MessageView
 import it.curzel.bitscape.gameui.OptionsScreen
+import it.curzel.bitscape.gameui.PvpArenaScreen
 import it.curzel.bitscape.rendering.SpritesProvider
 import it.curzel.bitscape.gameui.ToastView
 import it.curzel.bitscape.ui.theme.SneakBitTheme
@@ -68,6 +69,7 @@ class MainActivity : ComponentActivity() {
                         }
                         MessageView(engine)
                         FastTravelScreen(engine)
+                        PvpArenaScreen(engine)
                         OptionsScreen(engine, audioEngine)
                         LoadingScreen(engine)
                         DeathScreen(engine)

@@ -9,12 +9,13 @@ struct GameState {
     let heroHp: Float32
     let isSwordEquipped: Bool
     let hasRequestedFastTravel: Bool
+    let hasRequestedPvpArena: Bool
     
     func isGameOver() -> Bool {
         matchResult.game_over
     }
     
     func shouldPauseGame() -> Bool {
-        isGameOver() || messages.is_valid || hasRequestedFastTravel
+        isGameOver() || messages.is_valid || hasRequestedFastTravel || hasRequestedPvpArena
     }
 }

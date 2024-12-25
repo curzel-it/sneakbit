@@ -238,7 +238,8 @@ class GameEngine {
             matchResult: match_result_c(),
             heroHp: player_current_hp(0),
             isSwordEquipped: is_melee_equipped(0),
-            hasRequestedFastTravel: did_request_fast_travel()
+            hasRequestedFastTravel: did_request_fast_travel(),
+            hasRequestedPvpArena: did_request_pvp_arena()
         )
     }
     

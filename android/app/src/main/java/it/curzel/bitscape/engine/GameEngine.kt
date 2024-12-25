@@ -163,6 +163,21 @@ class GameEngine(
         resumeGame()
     }
 
+    fun exitPvp() {
+        nativeLib.exitPvpArena()
+        resumeGame()
+    }
+
+    fun cancelPvpArena() {
+        nativeLib.cancelPvpArenaRequest()
+        resumeGame()
+    }
+
+    fun handlePvpArena(numberOfPlayers: Int) {
+        nativeLib.handlePvpArena(numberOfPlayers)
+        resumeGame()
+    }
+
     private fun flushKeyboard() {
         keyPressed.clear()
         keyDown.removeAll(
@@ -243,7 +258,8 @@ class GameEngine(
             matchResult = nativeLib.matchResult(),
             heroHp = nativeLib.playerCurrentHp(),
             isSwordEquipped = nativeLib.isSwordEquipped(),
-            hasRequestedFastTravel = nativeLib.hasRequestedFastTravel()
+            hasRequestedFastTravel = nativeLib.hasRequestedFastTravel(),
+            hasRequestedPvpArena = nativeLib.hasRequestedPvpArena()
         )
     }
 
@@ -318,5 +334,9 @@ class GameEngine(
     fun revive() {
         nativeLib.revive()
         resumeGame()
+    }
+
+    fun isPvp(): Boolean {
+        return nativeLib.isPvp()
     }
 }

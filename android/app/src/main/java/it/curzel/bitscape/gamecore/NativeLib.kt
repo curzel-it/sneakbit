@@ -52,6 +52,11 @@ class NativeLib {
     external fun fastTravelOptions(): IntArray
     external fun cancelFastTravel()
     external fun handleFastTravel(destination: Int)
+    external fun hasRequestedPvpArena(): Boolean
+    external fun handlePvpArena(numberOfPlayers: Int)
+    external fun cancelPvpArenaRequest()
+    external fun exitPvpArena()
+    external fun isPvp(): Boolean
 
     companion object {
         const val TILE_SIZE: Int = 16

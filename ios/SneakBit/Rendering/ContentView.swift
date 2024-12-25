@@ -9,6 +9,7 @@ struct ContentView: View {
             ControllerEmulatorView()
             MessagesView()
             FastTravelMenu()
+            PvpArenaMenu()
             OptionsView()
             LoadingScreen()
             DeathScreen()

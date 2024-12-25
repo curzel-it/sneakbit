@@ -419,7 +419,8 @@ pub fn is_turn_based_game_mode() -> bool {
     engine().game_mode.is_turn_based()
 }
 
-pub fn is_pvp() -> bool {
+#[no_mangle]
+pub extern "C" fn is_pvp() -> bool {
     engine().game_mode.allows_pvp()
 }
 

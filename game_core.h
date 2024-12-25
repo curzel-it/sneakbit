@@ -338,6 +338,8 @@ void free_sound_effects(enum SoundEffect *ptr, uintptr_t length);
 
 const char *current_soundtrack(void);
 
+bool is_pvp(void);
+
 struct CDisplayableMessage next_message_c(void);
 
 const struct Option_Toast *next_toast(void);
