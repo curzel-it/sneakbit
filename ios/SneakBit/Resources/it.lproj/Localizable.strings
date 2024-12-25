@@ -70,3 +70,5 @@
 "game_menu_exit_pvp" = "Esci dalla PvP";
 "game_menu_exit_pvp_are_you_sure" = "Sicuro?\nTornerai a Duskhaven";
 "game_menu_confirm_exit_pvp" = "Sì, sicuro";
+
+"prep_for_next_turn" = "Giocatore %PLAYER_NAME% pronto fra %TIME%...";

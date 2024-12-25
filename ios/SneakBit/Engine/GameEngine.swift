@@ -202,6 +202,10 @@ class GameEngine {
     }
     
     private func updateKeyboardState(timeSinceLastUpdate: Float) {
+        guard !is_turn_prep() else {
+            return
+        }
+        
         for playerIndex in 0..<MAX_PLAYERS {
             if playerIndex == currentPlayerIndex {
                 update_keyboard(

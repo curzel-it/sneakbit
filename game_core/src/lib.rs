@@ -534,7 +534,10 @@ pub extern "C" fn game_state() -> GameState {
         ranged_ammo: ammo_in_inventory_for_weapon(ranged_equipped, player),
         has_requested_fast_travel: did_request_fast_travel(),
         has_requested_pvp_arena: did_request_pvp_arena(),
-        current_player_index: player
+        current_player_index: player,
+        is_pvp: is_pvp(),
+        is_turn_prep: is_turn_prep(),
+        turn_time_left: time_left_for_current_turn()
     }
 }
 
@@ -550,5 +553,8 @@ pub struct GameState {
     pub ranged_ammo: u32,
     pub has_requested_fast_travel: bool,
     pub has_requested_pvp_arena: bool,
-    pub current_player_index: usize
+    pub current_player_index: usize,
+    pub is_pvp: bool,
+    pub is_turn_prep: bool,
+    pub turn_time_left: f32
 }

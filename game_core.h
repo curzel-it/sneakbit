@@ -22,6 +22,8 @@
 
 #define TURN_DURATION_AFTER_RANGED_WEAPON_USAGE 3.0
 
+#define TURN_PREP_DURATION 3.0
+
 #define KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST 0.4
 
 #define KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS 0.1
@@ -270,6 +272,9 @@ typedef struct GameState {
   bool has_requested_fast_travel;
   bool has_requested_pvp_arena;
   uintptr_t current_player_index;
+  bool is_pvp;
+  bool is_turn_prep;
+  float turn_time_left;
 } GameState;
 
 void initialize_game(enum GameMode mode);
@@ -351,6 +356,8 @@ void free_sound_effects(enum SoundEffect *ptr, uintptr_t length);
 const char *current_soundtrack(void);
 
 bool is_pvp(void);
+
+bool is_turn_prep(void);
 
 const struct Option_Toast *next_toast(void);
 

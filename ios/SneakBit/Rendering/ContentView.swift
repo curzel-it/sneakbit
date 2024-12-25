@@ -10,6 +10,7 @@ struct ContentView: View {
             MessagesView()
             FastTravelMenu()
             PvpArenaMenu()
+            TurnInfoView()
             OptionsView()
             LoadingScreen()
             DeathScreen()
