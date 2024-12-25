@@ -385,6 +385,9 @@ pub fn currently_active_players() -> Vec<usize> {
         GameTurn::Player(turn_info) => {
             vec![turn_info.player_index]
         }
+        GameTurn::PlayerPrep(turn_info) => {
+            vec![turn_info.player_index]
+        },
     }
 }
 
@@ -417,9 +420,15 @@ pub extern "C" fn is_pvp() -> bool {
     engine().game_mode.allows_pvp()
 }
 
+#[no_mangle]
+pub extern "C" fn is_turn_prep() -> bool {
+    matches!(engine().turn, GameTurn::PlayerPrep(_))
+}
+
 pub fn time_left_for_current_turn() -> f32 {
     match engine().turn {
         multiplayer::turns::GameTurn::RealTime => 0.0,
+        multiplayer::turns::GameTurn::PlayerPrep(turn_info) => turn_info.time_remaining,
         multiplayer::turns::GameTurn::Player(turn_info) => turn_info.time_remaining
     }
 }
@@ -504,6 +513,7 @@ pub extern "C" fn handle_pvp_arena(number_of_players: usize) {
 pub extern "C" fn current_player_index() -> usize {
     match engine().turn {
         GameTurn::RealTime => 0,
+        GameTurn::PlayerPrep(player_turn_info) => player_turn_info.player_index,
         GameTurn::Player(player_turn_info) => player_turn_info.player_index
     }
 }

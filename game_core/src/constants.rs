@@ -11,6 +11,7 @@ pub const HERO_RECOVERY_PS: f32 = 1.0;
 pub const MAX_PLAYERS: usize = 4;
 pub const TURN_DURATION: f32 = 10.0;
 pub const TURN_DURATION_AFTER_RANGED_WEAPON_USAGE: f32 = 3.0;
+pub const TURN_PREP_DURATION: f32 = 3.0;
 
 // Input
 pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST: f32 = 0.4;
