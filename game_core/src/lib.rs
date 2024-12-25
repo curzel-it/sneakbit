@@ -4,7 +4,8 @@ use std::{collections::HashSet, path::PathBuf, ptr};
 use std::os::raw::c_char;
 
 use config::initialize_config_paths;
-use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
+use entities::known_species::SPECIES_KUNAI_LAUNCHER;
+use entities::species::species_by_id;
 use features::fast_travel::{available_fast_travel_destinations_from_current_world, FastTravelDestination};
 use features::messages::{CDisplayableMessage, DisplayableMessage, DisplayableMessageCRepr};
 use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::WorldStateUpdate, toasts::ToastCRepr};
@@ -243,18 +244,9 @@ pub extern "C" fn current_world_id() -> u32 {
 }
 
 #[no_mangle]
-pub extern "C" fn number_of_kunai_in_inventory(player: usize) -> i32 {
-    inventory_count(&SPECIES_KUNAI, player) as i32
-}
-
-#[no_mangle]
-pub extern "C" fn number_of_rem223_in_inventory(player: usize) -> i32 {
-    inventory_count(&SPECIES_AR15_BULLET, player) as i32
-}
-
-#[no_mangle]
-pub extern "C" fn number_of_cannonball_in_inventory(player: usize) -> i32 {
-    inventory_count(&SPECIES_CANNON_BULLET, player) as i32
+pub extern "C" fn ammo_in_inventory_for_weapon(weapon_species_id: u32, player: usize) -> u32 {
+    let bulled_species_id = species_by_id(weapon_species_id).bullet_species_id;
+    inventory_count(&bulled_species_id, player)
 }
 
 #[no_mangle]
@@ -274,8 +266,14 @@ pub fn cached_player_position(player: usize) -> IntPoint {
 }
 
 #[no_mangle]
-pub extern "C" fn is_melee_equipped(player: usize) -> bool {
-    get_value_for_global_key(&StorageKey::currently_equipped_melee_weapon(player)).unwrap_or(0) != 0
+pub extern "C" fn melee_equipped_weapon_id(player: usize) -> u32 {
+    get_value_for_global_key(&StorageKey::currently_equipped_melee_weapon(player)).unwrap_or(0)
+}
+
+#[no_mangle]
+pub extern "C" fn ranged_equipped_weapon_id(player: usize) -> u32 {
+    let key = &StorageKey::currently_equipped_ranged_weapon(player);
+    get_value_for_global_key(key).unwrap_or(SPECIES_KUNAI_LAUNCHER)
 }
 
 #[no_mangle]
@@ -293,11 +291,6 @@ pub extern "C" fn is_limited_visibility() -> bool {
     if is_creative_mode() { return false }
     let world = &engine().world;
     matches!(world.light_conditions, LightConditions::CantSeeShit)
-}
-
-#[no_mangle]
-pub extern "C" fn is_interaction_available() -> bool {
-    engine().world.entities.borrow().iter().any(|e| e.is_in_interaction_range)
 }
 
 #[no_mangle]
@@ -436,27 +429,12 @@ pub fn next_message() -> &'static Option<DisplayableMessage> {
 }
 
 #[no_mangle]
-pub extern "C" fn next_message_c() -> CDisplayableMessage {
-    engine().message.c_repr()
-}
-
-#[no_mangle]
 pub extern "C" fn next_toast() -> &'static Option<Toast> {
     &engine().toast
 }
 
-#[no_mangle]
-pub extern "C" fn next_toast_c() -> CToast {
-    engine().toast.c_repr()
-}
-
 pub fn match_result() -> &'static MatchResult {
     &engine().match_result
-}
-
-#[no_mangle]
-pub extern "C" fn match_result_c() -> CMatchResult {
-    engine().match_result.c_repr()
 }
 
 #[no_mangle]
@@ -528,4 +506,39 @@ pub extern "C" fn current_player_index() -> usize {
         GameTurn::RealTime => 0,
         GameTurn::Player(player_turn_info) => player_turn_info.player_index
     }
+}
+
+#[no_mangle]
+pub extern "C" fn game_state() -> GameState {
+    let player = current_player_index();
+    let ranged_equipped = ranged_equipped_weapon_id(player);
+
+    GameState {
+        toasts: engine().toast.c_repr(),
+        messages: engine().message.c_repr(),
+        is_interaction_available: engine().world.entities.borrow().iter().any(|e| e.is_in_interaction_range),
+        match_result: engine().match_result.c_repr(),
+        hp: player_current_hp(player),
+        melee_equipped: melee_equipped_weapon_id(player),
+        ranged_equipped,
+        ranged_ammo: ammo_in_inventory_for_weapon(ranged_equipped, player),
+        has_requested_fast_travel: did_request_fast_travel(),
+        has_requested_pvp_arena: did_request_pvp_arena(),
+        current_player_index: player
+    }
+}
+
+#[repr(C)]
+pub struct GameState {
+    pub toasts: CToast,
+    pub messages: CDisplayableMessage,
+    pub is_interaction_available: bool,
+    pub match_result: CMatchResult,
+    pub hp: f32,
+    pub melee_equipped: u32,
+    pub ranged_equipped: u32,
+    pub ranged_ammo: u32,
+    pub has_requested_fast_travel: bool,
+    pub has_requested_pvp_arena: bool,
+    pub current_player_index: usize
 }

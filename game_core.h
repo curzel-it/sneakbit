@@ -150,6 +150,8 @@
 
 #define SPECIES_AR15 1154
 
+#define SPECIES_DARKAR15 1182
+
 #define SPECIES_AR15_BULLET 1169
 
 #define SPECIES_CANNON 1167
@@ -229,12 +231,6 @@ typedef struct RenderableItem {
   uint32_t sorting_key;
 } RenderableItem;
 
-typedef struct CDisplayableMessage {
-  bool is_valid;
-  const char *title;
-  const char *text;
-} CDisplayableMessage;
-
 typedef struct CToastImage {
   bool is_valid;
   uint32_t sprite_sheet_id;
@@ -249,12 +245,32 @@ typedef struct CToast {
   struct CToastImage image;
 } CToast;
 
+typedef struct CDisplayableMessage {
+  bool is_valid;
+  const char *title;
+  const char *text;
+} CDisplayableMessage;
+
 typedef struct CMatchResult {
   uintptr_t winner;
   bool unknown_winner;
   bool game_over;
   bool in_progress;
 } CMatchResult;
+
+typedef struct GameState {
+  struct CToast toasts;
+  struct CDisplayableMessage messages;
+  bool is_interaction_available;
+  struct CMatchResult match_result;
+  float hp;
+  uint32_t melee_equipped;
+  uint32_t ranged_equipped;
+  uint32_t ranged_ammo;
+  bool has_requested_fast_travel;
+  bool has_requested_pvp_arena;
+  uintptr_t current_player_index;
+} GameState;
 
 void initialize_game(enum GameMode mode);
 
@@ -312,23 +328,19 @@ struct Vector2d camera_viewport_offset(void);
 
 uint32_t current_world_id(void);
 
-int32_t number_of_kunai_in_inventory(uintptr_t player);
-
-int32_t number_of_rem223_in_inventory(uintptr_t player);
-
-int32_t number_of_cannonball_in_inventory(uintptr_t player);
+uint32_t ammo_in_inventory_for_weapon(uint32_t weapon_species_id, uintptr_t player);
 
 float player_current_hp(uintptr_t player);
 
-bool is_melee_equipped(uintptr_t player);
+uint32_t melee_equipped_weapon_id(uintptr_t player);
+
+uint32_t ranged_equipped_weapon_id(uintptr_t player);
 
 bool is_day(void);
 
 bool is_night(void);
 
 bool is_limited_visibility(void);
-
-bool is_interaction_available(void);
 
 void start_new_game(void);
 
@@ -340,13 +352,7 @@ const char *current_soundtrack(void);
 
 bool is_pvp(void);
 
-struct CDisplayableMessage next_message_c(void);
-
 const struct Option_Toast *next_toast(void);
-
-struct CToast next_toast_c(void);
-
-struct CMatchResult match_result_c(void);
 
 void revive(void);
 
@@ -369,5 +375,7 @@ void exit_pvp_arena(void);
 void handle_pvp_arena(uintptr_t number_of_players);
 
 uintptr_t current_player_index(void);
+
+struct GameState game_state(void);
 
 #endif  /* GAME_CORE_H */

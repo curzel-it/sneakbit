@@ -80,7 +80,7 @@ class HpViewModel(private val gameEngine: GameEngine) : ViewModel() {
             gameEngine.gameState
                 .filterNotNull()
                 .collect { gameState ->
-                    handle(gameState.isGameOver(), gameState.heroHp)
+                    handle(gameState.isGameOver(), gameState.hp)
                 }
         }
     }

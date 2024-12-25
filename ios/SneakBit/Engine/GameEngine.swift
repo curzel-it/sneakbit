@@ -26,7 +26,7 @@ class GameEngine {
     }
     
     var currentPlayerIndex: UInt {
-        currentState?.currentPlayerIndex ?? 0
+        currentState?.current_player_index ?? 0
     }
     
     private var currentWorldId: UInt32 = 0
@@ -89,7 +89,7 @@ class GameEngine {
             audioEngine.updateSoundEffects()
         }
         
-        let newState = fetchGameState()
+        let newState = game_state()
         if newState.shouldPauseGame() {
             pauseGame()
         }
@@ -252,23 +252,6 @@ class GameEngine {
             frameCount = 0
             lastFpsUpdate = now
         }
-    }
-    
-    private func fetchGameState() -> GameState {
-        let currentPlayerIndex = current_player_index()
-        
-        return GameState(
-            toasts: next_toast_c(),
-            messages: next_message_c(),
-            kunai: number_of_kunai_in_inventory(currentPlayerIndex),
-            isInteractionAvailable: is_interaction_available(),
-            matchResult: match_result_c(),
-            heroHp: player_current_hp(currentPlayerIndex),
-            isSwordEquipped: is_melee_equipped(currentPlayerIndex),
-            hasRequestedFastTravel: did_request_fast_travel(),
-            hasRequestedPvpArena: did_request_pvp_arena(),
-            currentPlayerIndex: currentPlayerIndex
-        )
     }
     
     private func fetchRenderingInfo() {

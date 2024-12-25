@@ -9,6 +9,7 @@ import it.curzel.bitscape.analytics.RuntimeEventsBroker
 import it.curzel.bitscape.AssetUtils
 import it.curzel.bitscape.analytics.RuntimeEvent
 import it.curzel.bitscape.controller.EmulatedKey
+import it.curzel.bitscape.gamecore.GameState
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
@@ -96,7 +97,7 @@ class GameEngine(
             audioEngine.updateSoundEffects()
         }
 
-        val nextState = fetchGameState()
+        val nextState = nativeLib.gameState()
         if (nextState.shouldPauseGame()) {
             pauseGame()
         }
@@ -274,23 +275,6 @@ class GameEngine(
 
     private fun updateTileMapImages() {
         tileMapImages = tileMapsStorage.images(currentWorldId)
-    }
-
-    private fun fetchGameState(): GameState {
-        val currentPlayerIndex = nativeLib.currentPlayerIndex()
-        
-        return GameState(
-            toasts = nativeLib.nextToast(),
-            messages = nativeLib.nextMessage(),
-            kunai = nativeLib.numberOfKunaiInInventory(currentPlayerIndex),
-            isInteractionAvailable = nativeLib.isInteractionAvailable(),
-            matchResult = nativeLib.matchResult(),
-            heroHp = nativeLib.playerCurrentHp(currentPlayerIndex),
-            isSwordEquipped = nativeLib.isSwordEquipped(currentPlayerIndex),
-            hasRequestedFastTravel = nativeLib.hasRequestedFastTravel(),
-            hasRequestedPvpArena = nativeLib.hasRequestedPvpArena(),
-            currentPlayerIndex
-        )
     }
 
     private fun ensureJsonFileExists(file: File) {

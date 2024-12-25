@@ -36,18 +36,13 @@ class NativeLib {
     external fun cameraViewport(): IntArray
     external fun cameraViewportOffset(): FloatArray
     external fun fetchRenderableItems(): List<RenderableItem>
-    external fun numberOfKunaiInInventory(player: Int): Int
+    external fun gameState(): GameState
     external fun isNight(): Boolean
     external fun isLimitedVisibility(): Boolean
-    external fun isInteractionAvailable(): Boolean
     external fun startNewGame()
     external fun currentSoundEffects(): List<Int>
     external fun currentSoundTrack(): String
-    external fun isSwordEquipped(player: Int): Boolean
     external fun playerCurrentHp(player: Int): Float
-    external fun nextMessage(): DisplayableMessage?
-    external fun nextToast(): DisplayableToast?
-    external fun matchResult(): MatchResult
     external fun revive()
     external fun hasRequestedFastTravel(): Boolean
     external fun fastTravelOptions(): IntArray
@@ -58,12 +53,16 @@ class NativeLib {
     external fun cancelPvpArenaRequest()
     external fun exitPvpArena()
     external fun isPvp(): Boolean
-    external fun currentPlayerIndex(): Int
+    external fun ammoCountForWeapon(weaponSpeciesId: Int, player: Int): Int
 
     companion object {
         const val MAX_PLAYERS: Int = 4
         const val TILE_SIZE: Int = 16
         const val BIOME_NUMBER_OF_FRAMES: Int = 4
+
+        const val SPECIES_KUNAI_LAUNCHER: Int = 1160
+        const val SPECIES_AR15: Int = 1154
+        const val SPECIES_CANNON: Int = 1167
 
         const val SPRITE_SHEET_BLANK: UInt = 1000u
         const val SPRITE_SHEET_INVENTORY: UInt = 1001u

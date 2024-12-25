@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import it.curzel.bitscape.R
 
 val keyEmulatorViewPadding = 15.dp
 val keyEmulatorViewSize = 90.dp
@@ -23,11 +24,17 @@ val keyEmulatorViewSize = 90.dp
 @Composable
 fun KeyEmulatorView(
     key: EmulatedKey,
+    imageUp: Int? = null,
+    imageDown: Int? = null,
     onKeyDown: (EmulatedKey) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isBeingPressed by remember { mutableStateOf(false) }
-    val resourceId = if (isBeingPressed) key.imageKeyDown else key.imageKeyUp
+    val isBeingPressed by remember { mutableStateOf(false) }
+    val resourceId = if (isBeingPressed) {
+        imageDown ?: key.imageKeyDown
+    } else {
+        imageUp ?: key.imageKeyUp
+    }
 
     Image(
         bitmap = ImageBitmap.imageResource(resourceId),
@@ -46,5 +53,5 @@ fun KeyEmulatorView(
 @Preview(showBackground = true)
 @Composable
 fun KeyEmulatorViewPreview() {
-    KeyEmulatorView(EmulatedKey.CONFIRM, {})
+    KeyEmulatorView(EmulatedKey.CONFIRM, onKeyDown = {})
 }

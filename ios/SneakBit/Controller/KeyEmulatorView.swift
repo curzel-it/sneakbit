@@ -8,23 +8,25 @@ struct KeyEmulatorView: View {
     static let padding: CGFloat = 15
     
     let key: EmulatedKey
+    let image: String?
     
     @State private var isBeingPressed = false
     
     private let onKeyDown: (EmulatedKey) -> Void
     
-    init(key: EmulatedKey) {
+    init(key: EmulatedKey, image: String? = nil) {
         @Inject var engine: GameEngine
-        self.init(key: key, onKeyDown: engine.setKeyDown)
+        self.init(key: key, image: image, onKeyDown: engine.setKeyDown)
     }
     
-    init(key: EmulatedKey, onKeyDown: @escaping (EmulatedKey) -> Void) {
+    init(key: EmulatedKey, image: String? = nil, onKeyDown: @escaping (EmulatedKey) -> Void) {
         self.key = key
+        self.image = image
         self.onKeyDown = onKeyDown
     }
     
     var body: some View {
-        Image("\(key.imageName)_button_\(isBeingPressed ? "down" : "up")")
+        Image("\(image ?? key.imageName)_button_\(isBeingPressed ? "down" : "up")")
             .interpolation(.none)
             .resizable()
             .aspectRatio(contentMode: .fit)

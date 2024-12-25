@@ -92,7 +92,7 @@ class PvpArenaMenuViewModel: ObservableObject {
     
     private func bind() {
         engine.gameState()
-            .map { $0.hasRequestedPvpArena }
+            .map { $0.has_requested_pvp_arena }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] visible in
