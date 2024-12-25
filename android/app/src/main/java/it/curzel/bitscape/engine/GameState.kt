@@ -13,7 +13,8 @@ data class GameState(
     val heroHp: Float,
     val isSwordEquipped: Boolean,
     val hasRequestedFastTravel: Boolean,
-    val hasRequestedPvpArena: Boolean
+    val hasRequestedPvpArena: Boolean,
+    val currentPlayerIndex: Int
 ) {
     fun isGameOver(): Boolean {
         return matchResult.gameOver

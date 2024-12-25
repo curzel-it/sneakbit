@@ -53,7 +53,7 @@ private fun RuntimeEvent.toAnalyticsEvent(nativeLib: NativeLib): AnalyticsEvent?
         is RuntimeEvent.GameOver -> {
             val params = Bundle().apply {
                 putInt("current_world", nativeLib.currentWorldId())
-                putInt("ammo_count", nativeLib.numberOfKunaiInInventory())
+                putInt("ammo_count", nativeLib.numberOfKunaiInInventory(nativeLib.currentPlayerIndex()))
             }
             AnalyticsEvent(name = "game_over", params = params)
         }

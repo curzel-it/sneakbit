@@ -254,8 +254,10 @@ class GameEngine {
         }
     }
     
-    private func fetchGameState() -> GameState{
-        GameState(
+    private func fetchGameState() -> GameState {
+        let currentPlayerIndex = current_player_index()
+        
+        return GameState(
             toasts: next_toast_c(),
             messages: next_message_c(),
             kunai: number_of_kunai_in_inventory(currentPlayerIndex),
@@ -265,7 +267,7 @@ class GameEngine {
             isSwordEquipped: is_melee_equipped(currentPlayerIndex),
             hasRequestedFastTravel: did_request_fast_travel(),
             hasRequestedPvpArena: did_request_pvp_arena(),
-            currentPlayerIndex: current_player_index()
+            currentPlayerIndex: currentPlayerIndex
         )
     }
     

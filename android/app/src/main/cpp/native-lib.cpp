@@ -102,6 +102,7 @@ JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
         JNIEnv *env,
         jobject thiz,
+        jint player,
         jboolean upPressed,
         jboolean rightPressed,
         jboolean downPressed,
@@ -117,39 +118,24 @@ Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
         jboolean rangedAttackPressed,
         jfloat timeSinceLastUpdate
 ) {
-    auto up_pressed = static_cast<bool>(upPressed);
-    auto right_pressed = static_cast<bool>(rightPressed);
-    auto down_pressed = static_cast<bool>(downPressed);
-    auto left_pressed = static_cast<bool>(leftPressed);
-    auto up_down = static_cast<bool>(upDown);
-    auto right_down = static_cast<bool>(rightDown);
-    auto down_down = static_cast<bool>(downDown);
-    auto left_down = static_cast<bool>(leftDown);
-    auto escape_pressed = static_cast<bool>(escapePressed);
-    auto menu_pressed = static_cast<bool>(menuPressed);
-    auto confirm_pressed = static_cast<bool>(confirmPressed);
-    auto close_attack_pressed = static_cast<bool>(closeAttackPressed);
-    auto ranged_attack_pressed = static_cast<bool>(rangedAttackPressed);
-    auto time_since_last_update = static_cast<float>(timeSinceLastUpdate);
-
     update_keyboard(
-            0,
-            up_pressed,
-            right_pressed,
-            down_pressed,
-            left_pressed,
-            up_down,
-            right_down,
-            down_down,
-            left_down,
-            escape_pressed,
-            menu_pressed,
-            confirm_pressed,
-            close_attack_pressed,
-            ranged_attack_pressed,
-            false,
-            false,
-            time_since_last_update
+        player,
+        upPressed,
+        rightPressed,
+        downPressed,
+        leftPressed,
+        upDown,
+        rightDown,
+        downDown,
+        leftDown,
+        escapePressed,
+        menuPressed,
+        confirmPressed,
+        closeAttackPressed,
+        rangedAttackPressed,
+        false,
+        false,
+        timeSinceLastUpdate
     );
 }
 
@@ -285,8 +271,8 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, job
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_numberOfKunaiInInventory(JNIEnv *env, jobject thiz) {
-    return number_of_kunai_in_inventory(0);
+Java_it_curzel_bitscape_gamecore_NativeLib_numberOfKunaiInInventory(JNIEnv *env, jobject thiz, jint player) {
+    return number_of_kunai_in_inventory(player);
 }
 
 extern "C"
@@ -436,14 +422,14 @@ Java_it_curzel_bitscape_gamecore_NativeLib_currentSoundTrack(JNIEnv *env, jobjec
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_isSwordEquipped(JNIEnv *env, jobject thiz) {
-    return is_melee_equipped(0);
+Java_it_curzel_bitscape_gamecore_NativeLib_isSwordEquipped(JNIEnv *env, jobject thiz, jint player) {
+    return is_melee_equipped(player);
 }
 
 extern "C"
 JNIEXPORT jfloat JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_playerCurrentHp(JNIEnv *env, jobject thiz) {
-    return player_current_hp(0);
+Java_it_curzel_bitscape_gamecore_NativeLib_playerCurrentHp(JNIEnv *env, jobject thiz, jint player) {
+    return player_current_hp(player);
 }
 extern "C"
 JNIEXPORT jobject JNICALL
@@ -622,7 +608,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_hasRequestedFastTravel(JNIEnv *env, j
 }
 
 extern "C"
-JNIEXPORT jobject JNICALL
+JNIEXPORT jintArray JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_fastTravelOptions(JNIEnv *env, jobject thiz) {
     uintptr_t length = 0;
     // Call the C function to get the destinations
@@ -708,4 +694,10 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_isPvp(JNIEnv *env, jobject thiz) {
     return is_pvp();
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_currentPlayerIndex(JNIEnv *env, jobject thiz) {
+    return current_player_index();
 }

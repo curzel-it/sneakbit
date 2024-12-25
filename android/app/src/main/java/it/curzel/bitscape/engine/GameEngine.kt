@@ -178,6 +178,10 @@ class GameEngine(
         resumeGame()
     }
 
+    private fun currentPlayerIndex(): Int {
+        return gameState.value?.currentPlayerIndex ?: 0
+    }
+
     private fun flushKeyboard() {
         keyPressed.clear()
         keyDown.removeAll(
@@ -193,22 +197,45 @@ class GameEngine(
     }
 
     private fun updateKeyboardState(deltaTime: Float) {
-        nativeLib.updateKeyboard(
-            upPressed = keyPressed.contains(EmulatedKey.UP),
-            rightPressed = keyPressed.contains(EmulatedKey.RIGHT),
-            downPressed = keyPressed.contains(EmulatedKey.DOWN),
-            leftPressed = keyPressed.contains(EmulatedKey.LEFT),
-            upDown = keyDown.contains(EmulatedKey.UP),
-            rightDown = keyDown.contains(EmulatedKey.RIGHT),
-            downDown = keyDown.contains(EmulatedKey.DOWN),
-            leftDown = keyDown.contains(EmulatedKey.LEFT),
-            escapePressed = keyPressed.contains(EmulatedKey.ESCAPE),
-            menuPressed = keyPressed.contains(EmulatedKey.MENU),
-            confirmPressed = keyPressed.contains(EmulatedKey.CONFIRM),
-            closeAttackPressed = keyPressed.contains(EmulatedKey.CLOSE_RANGE_ATTACK),
-            rangedAttackPressed = keyPressed.contains(EmulatedKey.RANGED_ATTACK),
-            timeSinceLastUpdate = deltaTime
-        )
+        (0..<NativeLib.MAX_PLAYERS).forEach { playerIndex ->
+            if (playerIndex == currentPlayerIndex()) {
+                nativeLib.updateKeyboard(
+                    player = playerIndex,
+                    upPressed = keyPressed.contains(EmulatedKey.UP),
+                    rightPressed = keyPressed.contains(EmulatedKey.RIGHT),
+                    downPressed = keyPressed.contains(EmulatedKey.DOWN),
+                    leftPressed = keyPressed.contains(EmulatedKey.LEFT),
+                    upDown = keyDown.contains(EmulatedKey.UP),
+                    rightDown = keyDown.contains(EmulatedKey.RIGHT),
+                    downDown = keyDown.contains(EmulatedKey.DOWN),
+                    leftDown = keyDown.contains(EmulatedKey.LEFT),
+                    escapePressed = keyPressed.contains(EmulatedKey.ESCAPE),
+                    menuPressed = keyPressed.contains(EmulatedKey.MENU),
+                    confirmPressed = keyPressed.contains(EmulatedKey.CONFIRM),
+                    closeAttackPressed = keyPressed.contains(EmulatedKey.CLOSE_RANGE_ATTACK),
+                    rangedAttackPressed = keyPressed.contains(EmulatedKey.RANGED_ATTACK),
+                    timeSinceLastUpdate = deltaTime
+                )
+            } else {
+                nativeLib.updateKeyboard(
+                    player = playerIndex,
+                    upPressed = false,
+                    rightPressed = false,
+                    downPressed = false,
+                    leftPressed = false,
+                    upDown = false,
+                    rightDown = false,
+                    downDown = false,
+                    leftDown = false,
+                    escapePressed = false,
+                    menuPressed = false,
+                    confirmPressed = false,
+                    closeAttackPressed = false,
+                    rangedAttackPressed = false,
+                    timeSinceLastUpdate = deltaTime
+                )
+            }
+        }
     }
 
     private fun updateFpsCounter() {
@@ -250,16 +277,19 @@ class GameEngine(
     }
 
     private fun fetchGameState(): GameState {
+        val currentPlayerIndex = nativeLib.currentPlayerIndex()
+        
         return GameState(
             toasts = nativeLib.nextToast(),
             messages = nativeLib.nextMessage(),
-            kunai = nativeLib.numberOfKunaiInInventory(),
+            kunai = nativeLib.numberOfKunaiInInventory(currentPlayerIndex),
             isInteractionAvailable = nativeLib.isInteractionAvailable(),
             matchResult = nativeLib.matchResult(),
-            heroHp = nativeLib.playerCurrentHp(),
-            isSwordEquipped = nativeLib.isSwordEquipped(),
+            heroHp = nativeLib.playerCurrentHp(currentPlayerIndex),
+            isSwordEquipped = nativeLib.isSwordEquipped(currentPlayerIndex),
             hasRequestedFastTravel = nativeLib.hasRequestedFastTravel(),
-            hasRequestedPvpArena = nativeLib.hasRequestedPvpArena()
+            hasRequestedPvpArena = nativeLib.hasRequestedPvpArena(),
+            currentPlayerIndex
         )
     }
 

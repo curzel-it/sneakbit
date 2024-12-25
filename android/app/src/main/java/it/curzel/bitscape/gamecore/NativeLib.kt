@@ -15,6 +15,7 @@ class NativeLib {
     external fun currentWorldHeight(): Int
     external fun windowSizeChanged(width: Float, height: Float, renderingScale: Float)
     external fun updateKeyboard(
+        player: Int,
         upPressed: Boolean,
         rightPressed: Boolean,
         downPressed: Boolean,
@@ -35,15 +36,15 @@ class NativeLib {
     external fun cameraViewport(): IntArray
     external fun cameraViewportOffset(): FloatArray
     external fun fetchRenderableItems(): List<RenderableItem>
-    external fun numberOfKunaiInInventory(): Int
+    external fun numberOfKunaiInInventory(player: Int): Int
     external fun isNight(): Boolean
     external fun isLimitedVisibility(): Boolean
     external fun isInteractionAvailable(): Boolean
     external fun startNewGame()
     external fun currentSoundEffects(): List<Int>
     external fun currentSoundTrack(): String
-    external fun isSwordEquipped(): Boolean
-    external fun playerCurrentHp(): Float
+    external fun isSwordEquipped(player: Int): Boolean
+    external fun playerCurrentHp(player: Int): Float
     external fun nextMessage(): DisplayableMessage?
     external fun nextToast(): DisplayableToast?
     external fun matchResult(): MatchResult
@@ -57,8 +58,10 @@ class NativeLib {
     external fun cancelPvpArenaRequest()
     external fun exitPvpArena()
     external fun isPvp(): Boolean
+    external fun currentPlayerIndex(): Int
 
     companion object {
+        const val MAX_PLAYERS: Int = 4
         const val TILE_SIZE: Int = 16
         const val BIOME_NUMBER_OF_FRAMES: Int = 4
 
