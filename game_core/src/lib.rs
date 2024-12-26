@@ -4,8 +4,9 @@ use std::{collections::HashSet, path::PathBuf, ptr};
 use std::os::raw::c_char;
 
 use config::initialize_config_paths;
-use entities::fast_travel::{available_fast_travel_destinations_from_current_world, FastTravelDestination};
-use entities::known_species::{SPECIES_AR15_BULLET, SPECIES_CANNON_BULLET, SPECIES_KUNAI};
+use entities::known_species::SPECIES_KUNAI_LAUNCHER;
+use entities::species::species_by_id;
+use features::fast_travel::{available_fast_travel_destinations_from_current_world, FastTravelDestination};
 use features::messages::{CDisplayableMessage, DisplayableMessage, DisplayableMessageCRepr};
 use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::WorldStateUpdate, toasts::ToastCRepr};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
@@ -243,18 +244,9 @@ pub extern "C" fn current_world_id() -> u32 {
 }
 
 #[no_mangle]
-pub extern "C" fn number_of_kunai_in_inventory(player: usize) -> i32 {
-    inventory_count(&SPECIES_KUNAI, player) as i32
-}
-
-#[no_mangle]
-pub extern "C" fn number_of_rem223_in_inventory(player: usize) -> i32 {
-    inventory_count(&SPECIES_AR15_BULLET, player) as i32
-}
-
-#[no_mangle]
-pub extern "C" fn number_of_cannonball_in_inventory(player: usize) -> i32 {
-    inventory_count(&SPECIES_CANNON_BULLET, player) as i32
+pub extern "C" fn ammo_in_inventory_for_weapon(weapon_species_id: u32, player: usize) -> u32 {
+    let bulled_species_id = species_by_id(weapon_species_id).bullet_species_id;
+    inventory_count(&bulled_species_id, player)
 }
 
 #[no_mangle]
@@ -274,8 +266,14 @@ pub fn cached_player_position(player: usize) -> IntPoint {
 }
 
 #[no_mangle]
-pub extern "C" fn is_melee_equipped(player: usize) -> bool {
-    get_value_for_global_key(&StorageKey::currently_equipped_melee_weapon(player)).unwrap_or(0) != 0
+pub extern "C" fn melee_equipped_weapon_id(player: usize) -> u32 {
+    get_value_for_global_key(&StorageKey::currently_equipped_melee_weapon(player)).unwrap_or(0)
+}
+
+#[no_mangle]
+pub extern "C" fn ranged_equipped_weapon_id(player: usize) -> u32 {
+    let key = &StorageKey::currently_equipped_ranged_weapon(player);
+    get_value_for_global_key(key).unwrap_or(SPECIES_KUNAI_LAUNCHER)
 }
 
 #[no_mangle]
@@ -293,11 +291,6 @@ pub extern "C" fn is_limited_visibility() -> bool {
     if is_creative_mode() { return false }
     let world = &engine().world;
     matches!(world.light_conditions, LightConditions::CantSeeShit)
-}
-
-#[no_mangle]
-pub extern "C" fn is_interaction_available() -> bool {
-    engine().world.entities.borrow().iter().any(|e| e.is_in_interaction_range)
 }
 
 #[no_mangle]
@@ -389,23 +382,13 @@ pub fn currently_active_players() -> Vec<usize> {
                 .filter(|index| !engine.dead_players.contains(index))
                 .collect()
         },
-        GameTurn::Player(turn_info) => {
-            vec![turn_info.player_index]
-        }
+        GameTurn::Player(turn_info) => vec![turn_info.player_index],
+        GameTurn::PlayerPrep(_) => vec![]
     }
 }
 
-pub fn toggle_pvp() {
-    let next = match current_game_mode() {
-        GameMode::RealTimeCoOp => GameMode::TurnBasedPvp,
-        GameMode::Creative => GameMode::Creative,
-        GameMode::TurnBasedPvp => GameMode::RealTimeCoOp,
-    };
-    engine_mut().update_game_mode(next);
-
-    if number_of_players() == 1 {
-        update_number_of_players(2);
-    }
+pub fn update_game_mode(game_mode: GameMode) {
+    engine_mut().update_game_mode(game_mode);
 }
 
 pub fn current_keyboard_state() -> &'static KeyboardEventsProvider {
@@ -428,9 +411,20 @@ pub fn is_turn_based_game_mode() -> bool {
     engine().game_mode.is_turn_based()
 }
 
+#[no_mangle]
+pub extern "C" fn is_pvp() -> bool {
+    engine().game_mode.allows_pvp()
+}
+
+#[no_mangle]
+pub extern "C" fn is_turn_prep() -> bool {
+    matches!(engine().turn, GameTurn::PlayerPrep(_))
+}
+
 pub fn time_left_for_current_turn() -> f32 {
     match engine().turn {
         multiplayer::turns::GameTurn::RealTime => 0.0,
+        multiplayer::turns::GameTurn::PlayerPrep(turn_info) => turn_info.time_remaining,
         multiplayer::turns::GameTurn::Player(turn_info) => turn_info.time_remaining
     }
 }
@@ -440,27 +434,12 @@ pub fn next_message() -> &'static Option<DisplayableMessage> {
 }
 
 #[no_mangle]
-pub extern "C" fn next_message_c() -> CDisplayableMessage {
-    engine().message.c_repr()
-}
-
-#[no_mangle]
 pub extern "C" fn next_toast() -> &'static Option<Toast> {
     &engine().toast
 }
 
-#[no_mangle]
-pub extern "C" fn next_toast_c() -> CToast {
-    engine().toast.c_repr()
-}
-
 pub fn match_result() -> &'static MatchResult {
     &engine().match_result
-}
-
-#[no_mangle]
-pub extern "C" fn match_result_c() -> CMatchResult {
-    engine().match_result.c_repr()
 }
 
 #[no_mangle]
@@ -504,4 +483,74 @@ pub extern "C" fn free_fast_travel_destinations(ptr: *mut FastTravelDestination,
             let _ = Vec::from_raw_parts(ptr, length, length);
         }
     }
+}
+
+#[no_mangle]
+pub extern "C" fn did_request_pvp_arena() -> bool {
+    engine().pvp_arena_requested
+}
+
+#[no_mangle]
+pub extern "C" fn cancel_pvp_arena_request() {
+    engine_mut().cancel_pvp_arena_request()
+}
+
+#[no_mangle]
+pub extern "C" fn exit_pvp_arena() {
+    engine_mut().exit_pvp_arena()
+}
+
+#[no_mangle]
+pub extern "C" fn handle_pvp_arena(number_of_players: usize) {
+    engine_mut().handle_pvp_arena(number_of_players)
+}
+
+#[no_mangle]
+pub extern "C" fn current_player_index() -> usize {
+    match engine().turn {
+        GameTurn::RealTime => 0,
+        GameTurn::PlayerPrep(player_turn_info) => player_turn_info.player_index,
+        GameTurn::Player(player_turn_info) => player_turn_info.player_index
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn game_state() -> GameState {
+    let player = current_player_index();
+    let ranged_equipped = ranged_equipped_weapon_id(player);
+
+    GameState {
+        toasts: engine().toast.c_repr(),
+        messages: engine().message.c_repr(),
+        is_interaction_available: engine().world.entities.borrow().iter().any(|e| e.is_in_interaction_range),
+        match_result: engine().match_result.c_repr(),
+        hp: player_current_hp(player),
+        melee_equipped: melee_equipped_weapon_id(player),
+        ranged_equipped,
+        ranged_ammo: ammo_in_inventory_for_weapon(ranged_equipped, player),
+        has_requested_fast_travel: did_request_fast_travel(),
+        has_requested_pvp_arena: did_request_pvp_arena(),
+        current_player_index: player,
+        is_pvp: is_pvp(),
+        is_turn_prep: is_turn_prep(),
+        turn_time_left: time_left_for_current_turn()
+    }
+}
+
+#[repr(C)]
+pub struct GameState {
+    pub toasts: CToast,
+    pub messages: CDisplayableMessage,
+    pub is_interaction_available: bool,
+    pub match_result: CMatchResult,
+    pub hp: f32,
+    pub melee_equipped: u32,
+    pub ranged_equipped: u32,
+    pub ranged_ammo: u32,
+    pub has_requested_fast_travel: bool,
+    pub has_requested_pvp_arena: bool,
+    pub current_player_index: usize,
+    pub is_pvp: bool,
+    pub is_turn_prep: bool,
+    pub turn_time_left: f32
 }

@@ -56,5 +56,19 @@
 "location.name.1021" = "Peak Levek Underground";
 "location.name.1022" = "Duskhaven Maze";
 
-"fast_travel.menu.text" = "Posti in cui puoi andare:";
-"fast_travel.menu.title" = "Fast Travel";
+"fast_travel_menu_text" = "Posti in cui puoi andare:";
+"fast_travel_menu_title" = "Fast Travel";
+
+"pvp_arena_menu_title" = "Pvp Arena (Beta)";
+"pvp_arena_menu_text" = "Tutti i giocatori useranno questo dispositivo in un combattimento a turni.";
+
+"number_of_players_1" = "Single Player";
+"number_of_players_2" = "2 Giocatori";
+"number_of_players_3" = "3 Giocatori";
+"number_of_players_4" = "4 Giocatori";
+
+"game_menu_exit_pvp" = "Esci dalla PvP";
+"game_menu_exit_pvp_are_you_sure" = "Sicuro?\nTornerai a Duskhaven";
+"game_menu_confirm_exit_pvp" = "Sì, sicuro";
+
+"prep_for_next_turn" = "Giocatore %PLAYER_NAME% pronto fra %TIME%...";

@@ -14,6 +14,8 @@ struct OptionsView: View {
                 
                 if viewModel.showNewGameAlert {
                     NewGameView()
+                } else if viewModel.showExitPvpAlert {
+                    ExitPvpView()
                 } else if viewModel.showCredits {
                     CreditsView()
                 } else {
@@ -66,6 +68,14 @@ private struct OptionsContent: View {
                         viewModel.toggleMusic()
                     }
                     .padding(.bottom, 50)
+                
+                if viewModel.canDisablePvp {
+                    Text("game_menu_exit_pvp".localized())
+                        .onTapGesture {
+                            viewModel.askToExitPvp()
+                        }
+                        .padding(.bottom, 50)
+                }
                 
                 Text("credits".localized())
                     .onTapGesture {
@@ -186,23 +196,57 @@ private struct NewGameView: View {
     @EnvironmentObject var viewModel: OptionsViewModel
     
     var body: some View {
+        ConfirmationView(
+            title: "new_game_confirmation_title".localized(),
+            message: "new_game_confirmation_message".localized(),
+            confirmTitle: "new_game_confirm".localized(),
+            onConfirm: viewModel.confirmNewGame,
+            onCancel: viewModel.cancelNewGame
+        )
+    }
+}
+
+private struct ExitPvpView: View {
+    @EnvironmentObject var viewModel: OptionsViewModel
+    
+    var body: some View {
+        ConfirmationView(
+            title: "game_menu_exit_pvp".localized(),
+            message: "game_menu_exit_pvp_are_you_sure".localized(),
+            confirmTitle: "game_menu_confirm_exit_pvp".localized(),
+            onConfirm: viewModel.confirmExitPvp,
+            onCancel: viewModel.cancelExitPvp
+        )
+    }
+}
+
+private struct ConfirmationView: View {
+    @EnvironmentObject var viewModel: OptionsViewModel
+    
+    let title: String
+    let message: String
+    let confirmTitle: String
+    let onConfirm: () -> Void
+    let onCancel: () -> Void
+    
+    var body: some View {
         VStack(spacing: 50) {
-            Text("new_game_confirmation_title".localized())
+            Text(title.localized())
                 .typography(.largeTitle)
             
-            Text("new_game_confirmation_message".localized())
+            Text(message.localized())
                 .textAlign(.center)
                 .typography(.text)
             
-            Text("new_game_confirm".localized())
+            Text(confirmTitle.localized())
                 .foregroundStyle(Color.red)
                 .onTapGesture {
-                    viewModel.confirmNewGame()
+                    onConfirm()
                 }
             
-            Text("new_game_cancel".localized())
+            Text("menu_back".localized())
                 .onTapGesture {
-                    viewModel.cancelNewGame()
+                    onCancel()
                 }
         }
         .typography(.title)
@@ -221,6 +265,8 @@ class OptionsViewModel: ObservableObject {
     @Published var toggleSoundEffectsTitle: String = "..."
     @Published var toggleMusicTitle: String = "..."
     @Published var showCredits: Bool = false
+    @Published var showExitPvpAlert: Bool = false
+    @Published var canDisablePvp: Bool = false
     
     private var isBeingShown = false
     
@@ -255,6 +301,7 @@ class OptionsViewModel: ObservableObject {
         
         withAnimation {
             isVisible = true
+            canDisablePvp = is_pvp()
         }
         engine.pauseGame()
     }
@@ -287,6 +334,28 @@ class OptionsViewModel: ObservableObject {
     func cancelNewGame() {
         withAnimation {
             showNewGameAlert = false
+        }
+    }
+    
+    func askToExitPvp() {
+        withAnimation {
+            showExitPvpAlert = true
+        }
+    }
+    
+    func confirmExitPvp() {
+        withAnimation {
+            isVisible = false
+            showExitPvpAlert = false
+        }
+        isBeingShown = false
+        exit_pvp_arena()
+        engine.resumeGame()
+    }
+    
+    func cancelExitPvp() {
+        withAnimation {
+            showExitPvpAlert = false
         }
     }
     

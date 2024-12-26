@@ -9,6 +9,7 @@ pub fn camera_center(
 ) -> (i32, i32, Vector2d) {
     let current_player_index = match turn {
         GameTurn::RealTime => PLAYER1_INDEX,
+        GameTurn::PlayerPrep(turn_info) => turn_info.player_index,
         GameTurn::Player(turn_info) => turn_info.player_index,
     };
 

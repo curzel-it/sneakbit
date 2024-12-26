@@ -28,6 +28,7 @@ pub const SPECIES_KUNAI: u32 = 7000;
 pub const SPECIES_KUNAI_LAUNCHER: u32 = 1160;
 pub const SPECIES_SWORD: u32 = 1159;
 pub const SPECIES_AR15: u32 = 1154;
+pub const SPECIES_DARKAR15: u32 = 1182;
 pub const SPECIES_AR15_BULLET: u32 = 1169;
 pub const SPECIES_CANNON: u32 = 1167;
 pub const SPECIES_CANNON_BULLET: u32 = 1170;

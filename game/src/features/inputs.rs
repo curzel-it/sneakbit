@@ -1,4 +1,4 @@
-use game_core::{current_keyboard_state, input::keyboard_events_provider::KeyboardEventsProvider, number_of_players, update_keyboard, update_mouse};
+use game_core::{current_keyboard_state, input::keyboard_events_provider::KeyboardEventsProvider, is_turn_prep, number_of_players, update_keyboard, update_mouse};
 use raylib::prelude::*;
 
 use crate::GameContext;
@@ -16,6 +16,9 @@ pub fn handle_mouse_updates(rl: &mut RaylibHandle, rendering_scale: f32) {
 }
 
 pub fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update: f32) {
+    if is_turn_prep() {
+        return
+    }
     let previous_keyboard_state = current_keyboard_state();
     let number_of_players = number_of_players();
 

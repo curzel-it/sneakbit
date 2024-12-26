@@ -18,7 +18,9 @@ Story can still progress, all players can move at the same time, with some actio
 ### Turn-based Pvp
 Multiple players on a single machine, Steam Remote Play, etc.
 
-Not finished yet, but will work on dedicated maps.
+The feature is accessible from the arena in Duskhaven.
+
+Still a work in progress, a single map is available.
 
 ## Tiling System
 The game operates on a grid-based tile system.

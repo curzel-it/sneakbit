@@ -1,4 +1,4 @@
-use game_core::{cached_player_position, current_camera_viewport, current_game_mode, current_world_id, is_turn_based_game_mode, number_of_players, player_current_hp, text, time_left_for_current_turn, ui::{components::{empty_view, NonColor, Spacing, Typography, View, WithAlpha, COLOR_DEATH_SCREEN_BACKGROUND, COLOR_DEBUG_INFO_BACKGROUND, COLOR_LOADING_SCREEN_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}}, vstack, zstack};
+use game_core::{cached_player_position, current_camera_viewport, current_game_mode, current_player_index, current_world_id, is_turn_based_game_mode, is_turn_prep, lang::localizable::LocalizableText, number_of_players, player_current_hp, text, time_left_for_current_turn, ui::{components::{empty_view, NonColor, Spacing, Typography, View, WithAlpha, COLOR_DEATH_SCREEN_BACKGROUND, COLOR_DEBUG_INFO_BACKGROUND, COLOR_LOADING_SCREEN_BACKGROUND, COLOR_TRANSPARENT}, layouts::{AnchorPoint, Layout}}, vstack, zstack};
 
 use crate::GameContext;
 
@@ -20,12 +20,14 @@ pub fn hud_ui(context: &GameContext, width: i32, height: i32, show_debug_info: b
             (AnchorPoint::BottomCenter, context.messages.ui()),
             (AnchorPoint::BottomCenter, context.weapons_selection.ui()),
             (AnchorPoint::BottomCenter, context.fast_travel_menu.ui()),
+            (AnchorPoint::BottomCenter, context.pvp_arena_menu.ui()),
             (AnchorPoint::TopRight, context.toast.regular_toast_ui()),
             (AnchorPoint::TopLeft, context.toast.hint_toast_ui()),
             (AnchorPoint::BottomLeft, debug_info(show_debug_info, fps)),
             (AnchorPoint::BottomRight, turn_time_left_ui()),
             (AnchorPoint::Center, context.death_screen.ui()),
-            (AnchorPoint::Center, context.loading_screen.ui())
+            (AnchorPoint::Center, context.loading_screen.ui()),
+            (AnchorPoint::Center, turn_prep_time_left_ui())
         ]
     )
 }
@@ -64,7 +66,7 @@ fn debug_info(show_debug_info: bool, fps: u32) -> View {
 }
 
 fn turn_time_left_ui() -> View {
-    if number_of_players() != 1 && is_turn_based_game_mode() {        
+    if number_of_players() != 1 && is_turn_based_game_mode() && !is_turn_prep() {
         let time_left = time_left_for_current_turn();
         let text = format!("{:0.1}\"", time_left);
 
@@ -73,6 +75,22 @@ fn turn_time_left_ui() -> View {
             COLOR_TRANSPARENT,
             text!(Typography::Countdown, text)
         )
+    } else {
+        empty_view()
+    }     
+}
+
+fn turn_prep_time_left_ui() -> View {
+    if number_of_players() != 1 && is_turn_based_game_mode() && is_turn_prep() {  
+        let player_name = format!("{}", current_player_index() + 1);
+        let time_left = format!("{}", time_left_for_current_turn().ceil());
+        
+        let text = "prep_for_next_turn"
+            .localized()
+            .replace("%PLAYER_NAME%", &player_name)
+            .replace("%TIME%", &time_left);
+
+        text!(Typography::PlayerHudSmallTitle, text)
     } else {
         empty_view()
     }     

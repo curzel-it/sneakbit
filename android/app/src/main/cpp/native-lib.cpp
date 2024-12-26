@@ -4,10 +4,17 @@ extern "C" {
 #include "game_core.h"
 }
 
-jstring createJString(JNIEnv* env, const char* str) {
-    if (str == nullptr) return nullptr;
-    return env->NewStringUTF(str);
+static jstring toJavaString(JNIEnv *env, const char *cStr) {
+    if (cStr == nullptr) {
+        return nullptr;
+    }
+    return env->NewStringUTF(cStr);
 }
+
+// Forward declarations for helper functions
+jobject createDisplayableToast(JNIEnv *env, const struct CToast &toast);
+jobject createDisplayableMessage(JNIEnv *env, const struct CDisplayableMessage &message);
+jobject createMatchResult(JNIEnv *env, const struct CMatchResult &matchResult);
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -102,6 +109,7 @@ JNIEXPORT void JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
         JNIEnv *env,
         jobject thiz,
+        jint player,
         jboolean upPressed,
         jboolean rightPressed,
         jboolean downPressed,
@@ -117,39 +125,24 @@ Java_it_curzel_bitscape_gamecore_NativeLib_updateKeyboard(
         jboolean rangedAttackPressed,
         jfloat timeSinceLastUpdate
 ) {
-    auto up_pressed = static_cast<bool>(upPressed);
-    auto right_pressed = static_cast<bool>(rightPressed);
-    auto down_pressed = static_cast<bool>(downPressed);
-    auto left_pressed = static_cast<bool>(leftPressed);
-    auto up_down = static_cast<bool>(upDown);
-    auto right_down = static_cast<bool>(rightDown);
-    auto down_down = static_cast<bool>(downDown);
-    auto left_down = static_cast<bool>(leftDown);
-    auto escape_pressed = static_cast<bool>(escapePressed);
-    auto menu_pressed = static_cast<bool>(menuPressed);
-    auto confirm_pressed = static_cast<bool>(confirmPressed);
-    auto close_attack_pressed = static_cast<bool>(closeAttackPressed);
-    auto ranged_attack_pressed = static_cast<bool>(rangedAttackPressed);
-    auto time_since_last_update = static_cast<float>(timeSinceLastUpdate);
-
     update_keyboard(
-            0,
-            up_pressed,
-            right_pressed,
-            down_pressed,
-            left_pressed,
-            up_down,
-            right_down,
-            down_down,
-            left_down,
-            escape_pressed,
-            menu_pressed,
-            confirm_pressed,
-            close_attack_pressed,
-            ranged_attack_pressed,
-            false,
-            false,
-            time_since_last_update
+        player,
+        upPressed,
+        rightPressed,
+        downPressed,
+        leftPressed,
+        upDown,
+        rightDown,
+        downDown,
+        leftDown,
+        escapePressed,
+        menuPressed,
+        confirmPressed,
+        closeAttackPressed,
+        rangedAttackPressed,
+        false,
+        false,
+        timeSinceLastUpdate
     );
 }
 
@@ -284,12 +277,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, job
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_numberOfKunaiInInventory(JNIEnv *env, jobject thiz) {
-    return number_of_kunai_in_inventory(0);
-}
-
-extern "C"
 JNIEXPORT jboolean JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_isNight(JNIEnv *env, jobject thiz) {
     return is_night();
@@ -299,12 +286,6 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_isLimitedVisibility(JNIEnv *env, jobject thiz) {
     return is_limited_visibility();
-}
-
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_isInteractionAvailable(JNIEnv *env, jobject thiz) {
-    return is_interaction_available();
 }
 
 extern "C"
@@ -435,178 +416,9 @@ Java_it_curzel_bitscape_gamecore_NativeLib_currentSoundTrack(JNIEnv *env, jobjec
 }
 
 extern "C"
-JNIEXPORT jboolean JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_isSwordEquipped(JNIEnv *env, jobject thiz) {
-    return is_melee_equipped(0);
-}
-
-extern "C"
 JNIEXPORT jfloat JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_playerCurrentHp(JNIEnv *env, jobject thiz) {
-    return player_current_hp(0);
-}
-extern "C"
-JNIEXPORT jobject JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_nextMessage(JNIEnv *env, jobject thiz) {
-    CDisplayableMessage msg = next_message_c();
-
-    if (!msg.is_valid) {
-        return nullptr;
-    }
-
-    // Find the DisplayableMessage class
-    jclass displayableMessageClass = env->FindClass("it/curzel/bitscape/gamecore/DisplayableMessage");
-    if (displayableMessageClass == nullptr) {
-        return nullptr;
-    }
-
-    // Get the constructor method ID
-    jmethodID constructor = env->GetMethodID(displayableMessageClass, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
-    if (constructor == nullptr) {
-        return nullptr;
-    }
-
-    // Create Java Strings for title and text
-    jstring title = createJString(env, msg.title);
-    jstring text = createJString(env, msg.text);
-
-    // Create the DisplayableMessage object
-    jobject displayableMessage = env->NewObject(displayableMessageClass, constructor, title, text);
-
-    // Clean up local references
-    env->DeleteLocalRef(title);
-    env->DeleteLocalRef(text);
-    env->DeleteLocalRef(displayableMessageClass);
-
-    return displayableMessage;
-}
-
-extern "C"
-JNIEXPORT jobject JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_nextToast(JNIEnv *env, jobject thiz) {
-    CToast toast = next_toast_c();
-
-    if (!toast.is_valid) {
-        return nullptr;
-    }
-
-    // Find the Toast class
-    jclass toastClass = env->FindClass("it/curzel/bitscape/gamecore/DisplayableToast");
-    if (toastClass == nullptr) {
-        return nullptr;
-    }
-
-    // Get the Toast constructor
-    jmethodID toastConstructor = env->GetMethodID(toastClass, "<init>", "(Ljava/lang/String;Lit/curzel/bitscape/gamecore/DisplayableToast$Mode;FLit/curzel/bitscape/gamecore/DisplayableToast$Image;)V");
-    if (toastConstructor == nullptr) {
-        return nullptr;
-    }
-
-    // Create Java String for text
-    jstring text = createJString(env, toast.text);
-
-    // Map ToastMode enum
-    jclass toastModeClass = env->FindClass("it/curzel/bitscape/gamecore/DisplayableToast$Mode");
-    if (toastModeClass == nullptr) {
-        return nullptr;
-    }
-
-    // Assume ToastMode has a static method fromInt(int) to map the enum
-    jmethodID fromIntMethod = env->GetStaticMethodID(toastModeClass, "fromInt", "(I)Lit/curzel/bitscape/gamecore/DisplayableToast$Mode;");
-    if (fromIntMethod == nullptr) {
-        return nullptr;
-    }
-
-    jobject toastMode = env->CallStaticObjectMethod(toastModeClass, fromIntMethod, (jint)toast.mode);
-
-    // Handle ToastImage
-    jobject toastImage = nullptr;
-    if (toast.image.is_valid) {
-        // Find the ToastImage class
-        jclass toastImageClass = env->FindClass("it/curzel/bitscape/gamecore/DisplayableToast$Image");
-        if (toastImageClass == nullptr) {
-            return nullptr;
-        }
-
-        // Get the ToastImage constructor
-        jmethodID toastImageConstructor = env->GetMethodID(toastImageClass, "<init>", "(ILit/curzel/bitscape/gamecore/IntRect;)V");
-        if (toastImageConstructor == nullptr) {
-            return nullptr;
-        }
-
-        // Find the IntRect class
-        jclass intRectClass = env->FindClass("it/curzel/bitscape/gamecore/IntRect");
-        if (intRectClass == nullptr) {
-            return nullptr;
-        }
-
-        // Get the IntRect constructor
-        jmethodID intRectConstructor = env->GetMethodID(intRectClass, "<init>", "(IIII)V");
-        if (intRectConstructor == nullptr) {
-            return nullptr;
-        }
-
-        // Create IntRect object
-        jobject textureFrame = env->NewObject(intRectClass, intRectConstructor,
-                                              toast.image.texture_frame.x,
-                                              toast.image.texture_frame.y,
-                                              toast.image.texture_frame.w,
-                                              toast.image.texture_frame.h);
-
-        // Create ToastImage object
-        toastImage = env->NewObject(toastImageClass, toastImageConstructor,
-                                    (jint)toast.image.sprite_sheet_id,
-                                    textureFrame);
-
-        // Clean up local references
-        env->DeleteLocalRef(intRectClass);
-        env->DeleteLocalRef(textureFrame);
-        env->DeleteLocalRef(toastImageClass);
-    }
-
-    // Create the Toast object
-    jobject toastObject = env->NewObject(toastClass, toastConstructor, text, toastMode, (jfloat)toast.duration, toastImage);
-
-    // Clean up local references
-    env->DeleteLocalRef(text);
-    env->DeleteLocalRef(toastModeClass);
-    env->DeleteLocalRef(toastMode);
-    if (toastImage != nullptr) {
-        env->DeleteLocalRef(toastImage);
-    }
-    env->DeleteLocalRef(toastClass);
-
-    return toastObject;
-}
-
-extern "C"
-JNIEXPORT jobject JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_matchResult(JNIEnv *env, jobject thiz) {
-    CMatchResult result = match_result_c();
-
-    // Find the MatchResult class
-    jclass matchResultClass = env->FindClass("it/curzel/bitscape/gamecore/MatchResult");
-    if (matchResultClass == nullptr) {
-        return nullptr;
-    }
-
-    // Get the MatchResult constructor
-    jmethodID constructor = env->GetMethodID(matchResultClass, "<init>", "(IZZZ)V");
-    if (constructor == nullptr) {
-        return nullptr;
-    }
-
-    // Create the MatchResult object
-    jobject matchResultObject = env->NewObject(matchResultClass, constructor,
-                                               (jint)result.winner,
-                                               (jboolean)result.unknown_winner,
-                                               (jboolean)result.game_over,
-                                               (jboolean)result.in_progress);
-
-    // Clean up local references
-    env->DeleteLocalRef(matchResultClass);
-
-    return matchResultObject;
+Java_it_curzel_bitscape_gamecore_NativeLib_playerCurrentHp(JNIEnv *env, jobject thiz, jint player) {
+    return player_current_hp(player);
 }
 
 extern "C"
@@ -622,7 +434,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_hasRequestedFastTravel(JNIEnv *env, j
 }
 
 extern "C"
-JNIEXPORT jobject JNICALL
+JNIEXPORT jintArray JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_fastTravelOptions(JNIEnv *env, jobject thiz) {
     uintptr_t length = 0;
     // Call the C function to get the destinations
@@ -677,4 +489,275 @@ Java_it_curzel_bitscape_gamecore_NativeLib_handleFastTravel(JNIEnv *env, jobject
             break;
         default:
             break;
-    }}
+    }
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_hasRequestedPvpArena(JNIEnv *env, jobject thiz) {
+    return did_request_pvp_arena();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_handlePvpArena(JNIEnv *env, jobject thiz, jint number_of_players) {
+    handle_pvp_arena(number_of_players);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_cancelPvpArenaRequest(JNIEnv *env, jobject thiz) {
+    cancel_pvp_arena_request();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_exitPvpArena(JNIEnv *env, jobject thiz) {
+    exit_pvp_arena();
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_isPvp(JNIEnv *env, jobject thiz) {
+    return is_pvp();
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_gameState(JNIEnv *env, jobject thiz) {
+    // 1. Call your native C function to get the current GameState struct
+    struct GameState cState = game_state();
+
+    // 2. Convert the C struct fields into the corresponding Java objects
+
+    // 2a. Convert CToast -> DisplayableToast? (null if is_valid == false)
+    jobject jToast = nullptr;
+    if (cState.toasts.is_valid) {
+        jToast = createDisplayableToast(env, cState.toasts);
+    }
+
+    // 2b. Convert CDisplayableMessage -> DisplayableMessage? (null if is_valid == false)
+    jobject jMessage = nullptr;
+    if (cState.messages.is_valid) {
+        jMessage = createDisplayableMessage(env, cState.messages);
+    }
+
+    // 2c. Convert CMatchResult -> MatchResult
+    jobject jMatchResult = createMatchResult(env, cState.match_result);
+
+    // 3. Look up the Kotlin GameState class and its constructor
+    //    Signature must match the order and types in GameState(...) exactly.
+    jclass gameStateClass = env->FindClass("it/curzel/bitscape/gamecore/GameState");
+    if (!gameStateClass) {
+        return nullptr; // class not found -- handle error as appropriate
+    }
+
+    jmethodID gameStateCtor = env->GetMethodID(
+            gameStateClass,
+            "<init>",
+            "(Lit/curzel/bitscape/gamecore/DisplayableToast;"
+            "Lit/curzel/bitscape/gamecore/DisplayableMessage;"
+            "III"   // ammo, rangedEquipped, meleeEquipped
+            "Z"     // isInteractionAvailable
+            "Lit/curzel/bitscape/gamecore/MatchResult;"
+            "F"     // hp
+            "Z"     // hasRequestedFastTravel
+            "Z"     // hasRequestedPvpArena
+            "I"     // currentPlayerIndex
+            "Z"     // isPvp
+            "Z"     // isTurnPrep
+            "F"     // turnTimeLeft
+            ")V"
+    );
+    if (!gameStateCtor) {
+        return nullptr; // constructor not found -- handle error
+    }
+
+    // 4. Create the actual GameState object by calling its constructor
+    jobject jGameState = env->NewObject(
+            gameStateClass,
+            gameStateCtor,
+            jToast,                            // toasts: DisplayableToast?
+            jMessage,                          // messages: DisplayableMessage?
+            static_cast<jint>(cState.ranged_ammo),           // ammo
+            static_cast<jint>(cState.ranged_equipped),       // rangedEquipped
+            static_cast<jint>(cState.melee_equipped),        // meleeEquipped
+            static_cast<jboolean>(cState.is_interaction_available), // isInteractionAvailable
+            jMatchResult,                      // matchResult
+            static_cast<jfloat>(cState.hp),    // hp
+            static_cast<jboolean>(cState.has_requested_fast_travel), // hasRequestedFastTravel
+            static_cast<jboolean>(cState.has_requested_pvp_arena),   // hasRequestedPvpArena
+            static_cast<jint>(cState.current_player_index),  // currentPlayerIndex
+            static_cast<jint>(cState.is_pvp),
+            static_cast<jint>(cState.is_turn_prep),
+            static_cast<jfloat>(cState.turn_time_left)
+    );
+
+    // Return the newly created GameState object to Kotlin
+    return jGameState;
+}
+
+/**
+ * Helper function to create a DisplayableToast object from a CToast struct.
+ */
+jobject createDisplayableToast(JNIEnv *env, const struct CToast &toast) {
+    // 1. Find DisplayableToast class
+    jclass toastClass = env->FindClass("it/curzel/bitscape/gamecore/DisplayableToast");
+    if (!toastClass) return nullptr;
+
+    // 2. Find its nested classes/constructors
+    //    data class DisplayableToast(
+    //        val text: String,
+    //        val mode: Mode,
+    //        val duration: Float,
+    //        val image: Image?
+    //    )
+    jmethodID toastCtor = env->GetMethodID(
+            toastClass,
+            "<init>",
+            "(Ljava/lang/String;"
+            "Lit/curzel/bitscape/gamecore/DisplayableToast$Mode;"
+            "FLit/curzel/bitscape/gamecore/DisplayableToast$Image;)V"
+    );
+    if (!toastCtor) return nullptr;
+
+    // 2a. Convert text -> jstring
+    jstring jText = toJavaString(env, toast.text);
+
+    // 2b. Convert mode -> Mode enum
+    //     You have an enum ToastMode in C and a Mode in Kotlin. Suppose your C enum values
+    //     match: 0=Regular, 1=Hint, 2=LongHint. If they differ, map accordingly.
+    jclass modeClass = env->FindClass("it/curzel/bitscape/gamecore/DisplayableToast$Mode");
+    if (!modeClass) return nullptr;
+
+    // The companion object has `fun fromInt(type: Int)`, but we can also directly get the enum constant.
+    // For example, we can do: Mode.values()[toast.mode] if it matches the ordinal.
+    // Let’s call the static method fromInt(...) for maximum clarity:
+    jmethodID fromIntMethod = env->GetStaticMethodID(
+            modeClass,
+            "fromInt",
+            "(I)Lit/curzel/bitscape/gamecore/DisplayableToast$Mode;"
+    );
+    if (!fromIntMethod) return nullptr;
+
+    // Suppose your C enum `ToastMode` can be directly cast to int:
+    jint modeValue = static_cast<jint>(toast.mode);
+    jobject jMode = env->CallStaticObjectMethod(modeClass, fromIntMethod, modeValue);
+
+    // 2c. Convert duration -> jfloat
+    jfloat jDuration = static_cast<jfloat>(toast.duration);
+
+    // 2d. Convert image -> DisplayableToast.Image? (null if is_valid == false)
+    jobject jImage = nullptr;
+    if (toast.image.is_valid) {
+        // build the Image object
+        jclass imageClass = env->FindClass("it/curzel/bitscape/gamecore/DisplayableToast$Image");
+        if (imageClass) {
+            jmethodID imageCtor = env->GetMethodID(
+                    imageClass,
+                    "<init>",
+                    "(ILit/curzel/bitscape/gamecore/IntRect;)V"  // (spriteSheetId: UInt, textureFrame: IntRect)
+            );
+            if (imageCtor) {
+                // sprite_sheet_id -> int
+                jint spriteSheetId = static_cast<jint>(toast.image.sprite_sheet_id);
+
+                // create IntRect for texture_frame
+                jclass intRectClass = env->FindClass("it/curzel/bitscape/gamecore/IntRect");
+                jmethodID intRectCtor = env->GetMethodID(intRectClass, "<init>", "(IIII)V");
+                // (x, y, w, h)
+                jobject textureFrameObj = env->NewObject(
+                        intRectClass,
+                        intRectCtor,
+                        static_cast<jint>(toast.image.texture_frame.x),
+                        static_cast<jint>(toast.image.texture_frame.y),
+                        static_cast<jint>(toast.image.texture_frame.w),
+                        static_cast<jint>(toast.image.texture_frame.h)
+                );
+
+                jImage = env->NewObject(imageClass, imageCtor, spriteSheetId, textureFrameObj);
+            }
+        }
+    }
+
+    // 3. Finally, create the DisplayableToast object
+    jobject displayableToastObj = env->NewObject(
+            toastClass,
+            toastCtor,
+            jText,
+            jMode,
+            jDuration,
+            jImage
+    );
+    return displayableToastObj;
+}
+
+/**
+ * Helper function to create a DisplayableMessage object from CDisplayableMessage struct.
+ */
+jobject createDisplayableMessage(JNIEnv *env, const struct CDisplayableMessage &message) {
+    jclass messageClass = env->FindClass("it/curzel/bitscape/gamecore/DisplayableMessage");
+    if (!messageClass) return nullptr;
+
+    jmethodID messageCtor = env->GetMethodID(
+            messageClass, "<init>",
+            "(Ljava/lang/String;Ljava/lang/String;)V"
+    );
+    if (!messageCtor) return nullptr;
+
+    jstring jTitle = toJavaString(env, message.title);
+    jstring jText = toJavaString(env, message.text);
+
+    jobject jDisplayableMessage = env->NewObject(
+            messageClass,
+            messageCtor,
+            jTitle,
+            jText
+    );
+    return jDisplayableMessage;
+}
+
+/**
+ * Helper function to create a MatchResult object from CMatchResult struct.
+ */
+jobject createMatchResult(JNIEnv *env, const struct CMatchResult &matchResult) {
+    jclass matchResultClass = env->FindClass("it/curzel/bitscape/gamecore/MatchResult");
+    if (!matchResultClass) return nullptr;
+
+    jmethodID ctor = env->GetMethodID(
+            matchResultClass, "<init>",
+            "(IZZZ)V" // (winner: UInt, unknownWinner: Boolean, gameOver: Boolean, inProgress: Boolean)
+    );
+    if (!ctor) return nullptr;
+
+    // Cast fields to the proper JNI types
+    jint winner = static_cast<jint>(matchResult.winner);
+    auto jUnknown = static_cast<jboolean>(matchResult.unknown_winner);
+    auto jGameOver = static_cast<jboolean>(matchResult.game_over);
+    auto jInProgress = static_cast<jboolean>(matchResult.in_progress);
+
+    // Create a new MatchResult
+    jobject jMatchResult = env->NewObject(
+            matchResultClass, ctor,
+            winner,
+            jUnknown,
+            jGameOver,
+            jInProgress
+    );
+
+    return jMatchResult;
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_ammoCountForWeapon(JNIEnv *env, jobject thiz,
+                                                              jint weapon_species_id, jint player) {
+    auto count = ammo_in_inventory_for_weapon(weapon_species_id, player);
+    return static_cast<jint>(count);
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_isTurnPrep(JNIEnv *env, jobject thiz) {
+    return is_turn_prep();
+}

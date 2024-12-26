@@ -37,7 +37,7 @@ private class HpViewModel: ObservableObject {
     
     private func bind() {
         engine.gameState()
-            .map { state in (state.heroHp, state.isGameOver()) }
+            .map { state in (state.hp, state.isGameOver()) }
             .sink { [weak self] (hp, gameOver) in
                 withAnimation {
                     self?.update(hp: hp, gameOver: gameOver)

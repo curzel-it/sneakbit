@@ -248,6 +248,10 @@ Back:         Middle / Right
 
 "game.menu.exit" = "Close Game"
 
+"game.menu.exit_pvp" = "Exit PvP"
+
+"game.menu.exit_pvp_are_you_sure" = "Are you sure?\nConfirm to go back to Duskhaven"
+
 "game.menu.inventory" = "Inventory"
 
 "game.menu.key_bindings" = "Key Bindings"
@@ -1066,6 +1070,18 @@ fueling life and wonder in Duskhaven.
 "ok_action" = ">> Ok"
 
 "picked_up_item" = "Picked up `%s`!"
+
+"prep_for_next_turn" = "Player %PLAYER_NAME%'s turn in %TIME%..."
+
+"pvp_arena.menu.text" = """
+* All players will be using this computer
+* One controller per player required
+* Turn-based combat
+* Only one map for now
+Happy new year!
+"""
+
+"pvp_arena.menu.title" = "PvP Arena (Beta)"
 
 "quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
 So you saw him, didn’t you? You talked to him? Oh, I knew it!

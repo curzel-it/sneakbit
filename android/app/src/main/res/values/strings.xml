@@ -35,4 +35,15 @@
     <string name="leave_a_review_in_game">"Hey, com'è?\nSe il gioco ti piace, che ne dici di lasciare una recensione?\nNon costa nulla, ma per me è molto importante!\nGrazie :D"</string>
     <string name="fast_travel_menu_text">"Places you can travel to:"</string>
     <string name="fast_travel_menu_title">"Fast Travel"</string>
+    <string name="pvp_arena_menu_title">"Pvp Arena (Beta)"</string>
+    <string name="pvp_arena_menu_text">"All players will use this device in turn-based combat"</string>
+    <string name="number_of_players_1">"Single Player"</string>
+    <string name="number_of_players_2">"2 Players"</string>
+    <string name="number_of_players_3">"3 Players"</string>
+    <string name="number_of_players_4">"4 Players"</string>
+    <string name="number_of_players_unknown">"???"</string>
+    <string name="game_menu_exit_pvp">"Exit PvP"</string>
+    <string name="game_menu_exit_pvp_are_you_sure">"Are you sure?\nConfirm to go back to Duskhaven"</string>
+    <string name="game_menu_confirm_exit_pvp">"Stop match"</string>
+    <string name="prep_for_next_turn">"Player %PLAYER_NAME%'s turn in %TIME%..."</string>
 </resources>

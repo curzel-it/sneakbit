@@ -1,6 +1,4 @@
-use crate::{current_world_id, features::{destination::Destination, entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, StorageKey}}, worlds::world::World};
-
-use super::{species::EntityType, teleporter::is_player_entering_tile};
+use crate::{current_world_id, entities::{species::EntityType, teleporter::is_player_entering_tile}, features::{destination::Destination, entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, StorageKey}}, worlds::world::World};
 
 impl Entity {
     pub fn setup_fast_travel(&mut self) {

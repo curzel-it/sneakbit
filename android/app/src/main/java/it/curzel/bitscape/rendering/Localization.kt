@@ -1,6 +1,18 @@
 package it.curzel.bitscape.rendering
 
+import it.curzel.bitscape.R
+
 object Localization {
+    fun numberOfPlayers(numberOfPlayers: Int): Int {
+        return when (numberOfPlayers) {
+            1 -> R.string.number_of_players_1
+            2 -> R.string.number_of_players_2
+            3 -> R.string.number_of_players_3
+            4 -> R.string.number_of_players_4
+            else -> R.string.number_of_players_unknown
+        }
+    }
+
     fun locationName(worldId: Int): String {
         return when (worldId) {
             1001 -> "Evergrove"

@@ -15,6 +15,10 @@ impl StorageKey {
         "always".to_owned()
     }
 
+    pub fn is_mobile() -> String {
+        "is_mobile".to_string()
+    }
+
     pub fn previous_world() -> String {
         "previous_world".to_owned()
     }
@@ -152,6 +156,9 @@ pub fn get_value_for_key(key: &str, world: &World) -> Option<u32> {
 pub fn get_value_for_global_key(key: &str) -> Option<u32> {
     if key == StorageKey::always() {
         return Some(1);
+    }
+    if key == StorageKey::is_mobile() {
+        return if config().is_mobile { Some(1) } else { Some(0) };
     }
     if key.contains(INVENTORY_AMOUNT) && !key.contains(PLAYER) {
         for player_index in 0..MAX_PLAYERS {

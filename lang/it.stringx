@@ -248,6 +248,10 @@ Back:         Middle / Right
 
 "game.menu.exit" = "Chiudi il gioco"
 
+"game.menu.exit_pvp" = "Esci dalla PvP"
+
+"game.menu.exit_pvp_are_you_sure" = "Sicuro?\nSe confermi ritornerai a Duskhaven"
+
 "game.menu.inventory" = "Inventario"
 
 "game.menu.key_bindings" = "Assegnazione Tasti"
@@ -1066,6 +1070,18 @@ alimentando la vita e il fascino di Duskhaven.
 "ok_action" = ">> Ok"
 
 "picked_up_item" = "Raccolto `%s`!"
+
+"prep_for_next_turn" = "Giocatore %PLAYER_NAME% pronto fra %TIME%..."
+
+"pvp_arena.menu.text" = """
+* Tutti i giocatori useranno questo PC
+* Un controller per giocatore (obbligatorio)
+* Combattimento a turni
+* Una sola mappa per ora
+Buon anno!
+"""
+
+"pvp_arena.menu.title" = "PvP Arena (Beta)"
 
 "quest.crazy_conspiracy.girl.black_ninja_i_knew_it" = """
 Quindi l'hai visto, vero? Gli hai parlato? Oh, lo sapevo!

@@ -104,7 +104,8 @@ pub enum EntityType {
     WeaponMelee,
     WeaponRanged,
     CloseCombatMonster,
-    FastTravelLink
+    FastTravelLink,
+    PvpArenaLink
 }
 
 impl Default for Species {

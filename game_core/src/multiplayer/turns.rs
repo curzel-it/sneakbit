@@ -1,8 +1,9 @@
-use crate::constants::{TURN_DURATION, TURN_DURATION_AFTER_RANGED_WEAPON_USAGE};
+use crate::constants::{TURN_DURATION, TURN_DURATION_AFTER_RANGED_WEAPON_USAGE, TURN_PREP_DURATION};
 
 #[derive(Clone, Copy)]
 pub enum GameTurn {
     RealTime,
+    PlayerPrep(PlayerTurnInfo),
     Player(PlayerTurnInfo)
 }
 
@@ -18,6 +19,14 @@ impl PlayerTurnInfo {
         Self {
             player_index,
             time_remaining: TURN_DURATION,
+            did_reduce_due_to_ranged_weapon_usage: false,
+        }
+    }
+
+    pub fn new_prep(player_index: usize) -> Self {
+        Self {
+            player_index,
+            time_remaining: TURN_PREP_DURATION,
             did_reduce_due_to_ranged_weapon_usage: false,
         }
     }

@@ -4652,10 +4652,31 @@
     "sprite_frame": {
       "h": 2,
       "w": 3,
-      "x": 44,
-      "y": 0
+      "x": 35,
+      "y": 5
     },
-    "sprite_number_of_frames": 1,
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PvpArenaLink",
+    "id": 1186,
+    "inventory_texture_offset": [
+      6,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.pvp_arena",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 31,
+      "y": 10
+    },
+    "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1004
   }
 ]

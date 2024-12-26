@@ -66,8 +66,10 @@ fun OptionsScreen(
     val toggleMusicTitle by viewModel.toggleMusicTitle.collectAsState()
     val isVisible by viewModel.isVisible.collectAsState()
     val showNewGameAlert by viewModel.showNewGameAlert.collectAsState()
+    val showExitPvpAlert by viewModel.showExitPvpAlert.collectAsState()
     val showCredits by viewModel.showCredits.collectAsState()
     val menuButtonOpacity by viewModel.menuButtonOpacity.collectAsState()
+    val canExitPvp by viewModel.canExitPvp.collectAsState()
 
     val animatedAlpha by animateFloatAsState(
         targetValue = menuButtonOpacity,
@@ -77,6 +79,7 @@ fun OptionsScreen(
     OptionsScreen(
         isVisible = isVisible,
         showNewGameAlert = showNewGameAlert,
+        showExitPvpAlert = showExitPvpAlert,
         showCredits = showCredits,
         menuButtonOpacity = animatedAlpha,
         resumeGame = { viewModel.resumeGame() },
@@ -88,8 +91,12 @@ fun OptionsScreen(
         closeCredits = { viewModel.closeCredits() },
         toggleMusic = { viewModel.toggleMusic() },
         askForNewGame = { viewModel.askForNewGame() },
+        askForExitPvp = { viewModel.askForExitPvp() },
+        canExitPvp = canExitPvp,
         confirmNewGame = { viewModel.confirmNewGame() },
         cancelNewGame = { viewModel.cancelNewGame() },
+        confirmExitPvp = { viewModel.confirmExitPvp() },
+        cancelExitPvp = { viewModel.cancelExitPvp() },
         showMenu = { viewModel.showMenu() },
         modifier = modifier
     )
@@ -103,6 +110,7 @@ private fun OptionsScreen(
     toggleMusic: () -> Unit,
     isVisible: Boolean,
     showNewGameAlert: Boolean,
+    showExitPvpAlert: Boolean,
     showCredits: Boolean,
     menuButtonOpacity: Float,
     visitUrl: (Int) -> Unit,
@@ -110,8 +118,12 @@ private fun OptionsScreen(
     closeCredits: () -> Unit,
     resumeGame: () -> Unit,
     askForNewGame: () -> Unit,
+    askForExitPvp: () -> Unit,
+    canExitPvp: Boolean,
     confirmNewGame: () -> Unit,
     cancelNewGame: () -> Unit,
+    confirmExitPvp: () -> Unit,
+    cancelExitPvp: () -> Unit,
     showMenu: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -134,6 +146,11 @@ private fun OptionsScreen(
                             confirmNewGame = confirmNewGame,
                             cancelNewGame = cancelNewGame
                         )
+                    } else if (showExitPvpAlert) {
+                        ExitPvpAlert(
+                            confirmExitPvp = confirmExitPvp,
+                            cancelExitPvp = cancelExitPvp
+                        )
                     } else if (showCredits) {
                         CreditsView(
                             visitUrl = visitUrl,
@@ -147,7 +164,9 @@ private fun OptionsScreen(
                             toggleSoundEffects = toggleSoundEffects,
                             resumeGame = resumeGame,
                             openCredits = openCredits,
-                            askForNewGame = askForNewGame
+                            askForNewGame = askForNewGame,
+                            askForExitPvp = askForExitPvp,
+                            canExitPvp = canExitPvp
                         )
                     }
                 }
@@ -182,6 +201,8 @@ private fun OptionsContent(
     toggleSoundEffectsTitle: Int,
     toggleSoundEffects: () -> Unit,
     resumeGame: () -> Unit,
+    canExitPvp: Boolean,
+    askForExitPvp: () -> Unit,
     askForNewGame: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -226,6 +247,15 @@ private fun OptionsContent(
                     .clickable { toggleMusic() }
                     .padding(vertical = 8.dp)
             )
+            if (canExitPvp) {
+                Text(
+                    text = stringResource(id = R.string.game_menu_exit_pvp),
+                    style = DSTypography.gameMenuOption,
+                    modifier = Modifier
+                        .clickable { askForExitPvp() }
+                        .padding(vertical = 24.dp)
+                )
+            }
             Text(
                 text = stringResource(id = R.string.credits),
                 style = DSTypography.gameMenuOption,
@@ -316,36 +346,69 @@ private fun NewGameAlert(
     cancelNewGame: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    ConfirmAlert(
+        title = stringResource(id = R.string.new_game_confirmation_title),
+        text = stringResource(id = R.string.new_game_confirmation_message),
+        confirmText = stringResource(id = R.string.new_game_confirm),
+        confirm = confirmNewGame,
+        cancel = cancelNewGame,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun ExitPvpAlert(
+    confirmExitPvp: () -> Unit,
+    cancelExitPvp: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ConfirmAlert(
+        title = stringResource(id = R.string.game_menu_exit_pvp),
+        text = stringResource(id = R.string.game_menu_exit_pvp_are_you_sure),
+        confirmText = stringResource(id = R.string.game_menu_confirm_exit_pvp),
+        confirm = confirmExitPvp,
+        cancel = cancelExitPvp,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun ConfirmAlert(
+    title: String,
+    text: String,
+    confirmText: String,
+    confirm: () -> Unit,
+    cancel: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(50.dp),
         modifier = modifier
     ) {
         Text(
-            text = stringResource(id = R.string.new_game_confirmation_title),
+            text = title,
             style = DSTypography.largeTitle,
             color = Color.White,
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(id = R.string.new_game_confirmation_message),
+            text = text,
             style = DSTypography.text,
             color = Color.White,
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(id = R.string.new_game_confirm),
+            text = confirmText,
             style = DSTypography.menuOption,
             color = Color.Red,
-            modifier = Modifier
-                .clickable { confirmNewGame() }
+            modifier = Modifier.clickable { confirm() }
         )
         Text(
-            text = stringResource(id = R.string.new_game_cancel),
+            text = stringResource(id = R.string.menu_back),
             style = DSTypography.menuOption,
             color = Color.White,
-            modifier = Modifier
-                .clickable { cancelNewGame() }
+            modifier = Modifier.clickable { cancel() }
         )
     }
 }
@@ -406,6 +469,12 @@ private class OptionsScreenViewModel(
     private val _showNewGameAlert = MutableStateFlow(false)
     val showNewGameAlert: StateFlow<Boolean> = _showNewGameAlert
 
+    private val _showExitPvpAlert = MutableStateFlow(false)
+    val showExitPvpAlert: StateFlow<Boolean> = _showExitPvpAlert
+
+    private val _canExitPvp = MutableStateFlow(false)
+    val canExitPvp: StateFlow<Boolean> = _canExitPvp
+
     private val _showCredits = MutableStateFlow(false)
     val showCredits: StateFlow<Boolean> = _showCredits
 
@@ -426,6 +495,7 @@ private class OptionsScreenViewModel(
     fun showMenu() {
         if (_isVisible.value) return
         _isVisible.value = true
+        _canExitPvp.value = gameEngine.isPvp()
         gameEngine.pauseGame()
     }
 
@@ -458,6 +528,20 @@ private class OptionsScreenViewModel(
 
     fun cancelNewGame() {
         _showNewGameAlert.value = false
+    }
+
+    fun askForExitPvp() {
+        _showExitPvpAlert.value = true
+    }
+
+    fun confirmExitPvp() {
+        _isVisible.value = false
+        _showNewGameAlert.value = false
+        gameEngine.exitPvp()
+    }
+
+    fun cancelExitPvp() {
+        _showExitPvpAlert.value = false
     }
 
     fun openCredits() {
@@ -508,6 +592,7 @@ fun OptionsScreenPreview() {
         toggleMusic = {},
         isVisible = false,
         showNewGameAlert = false,
+        showExitPvpAlert = false,
         showCredits = false,
         menuButtonOpacity = 1.0f,
         resumeGame = {},
@@ -516,6 +601,10 @@ fun OptionsScreenPreview() {
         cancelNewGame = {},
         openCredits = {},
         closeCredits = {},
+        confirmExitPvp = {},
+        cancelExitPvp = {},
+        canExitPvp = true,
+        askForExitPvp = {},
         visitUrl = {},
         showMenu = {},
         modifier = Modifier.background(Color.Black)
@@ -533,6 +622,8 @@ fun OptionsContentPreview() {
         resumeGame = {},
         openCredits = {},
         askForNewGame = {},
+        canExitPvp = true,
+        askForExitPvp = {},
         modifier = Modifier.background(Color.Black)
     )
 }
@@ -548,6 +639,8 @@ fun OptionsContentPreviewLandscape() {
         resumeGame = {},
         openCredits = {},
         askForNewGame = {},
+        canExitPvp = true,
+        askForExitPvp = {},
         modifier = Modifier.background(Color.Black)
     )
 }

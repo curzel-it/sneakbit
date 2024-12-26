@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{ANIMATIONS_FPS, NO_PARENT, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::{fast_travel::is_fast_travel_available, species::{species_by_id, EntityType, Species}}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{ANIMATIONS_FPS, NO_PARENT, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType, Species}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
 
-use super::{directions::MovementDirections, locks::LockType, messages::DisplayableMessage, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}};
+use super::{directions::MovementDirections, fast_travel::is_fast_travel_available, locks::LockType, messages::DisplayableMessage, pvp_arena::is_pvp_arena_available, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}};
 
 pub type EntityId = u32;
 
@@ -159,6 +159,7 @@ impl Entity {
             EntityType::WeaponMelee => self.update_melee(world, time_since_last_update),
             EntityType::WeaponRanged => self.update_ranged(world, time_since_last_update),
             EntityType::FastTravelLink => self.update_fast_travel(world),
+            EntityType::PvpArenaLink => self.update_pvp_arena(world),
         };        
         self.sprite.update(time_since_last_update); 
         updates.append(&mut self.check_remaining_lifespan(time_since_last_update));
@@ -191,6 +192,7 @@ impl Entity {
             EntityType::WeaponMelee => self.setup_melee(),
             EntityType::WeaponRanged => self.setup_ranged(),
             EntityType::FastTravelLink => self.setup_fast_travel(),
+            EntityType::PvpArenaLink => self.setup_pvp_arena(),
         }
     }
 
@@ -203,6 +205,9 @@ impl Entity {
         }
         if self.is_fast_travel_link() {
             return is_fast_travel_available()
+        }
+        if self.is_pvp_arena_link() {
+            return is_pvp_arena_available()
         }
         if bool_for_global_key(&StorageKey::item_collected(self.id)) {
             return false

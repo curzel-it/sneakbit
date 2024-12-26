@@ -91,7 +91,7 @@ class FastTravelMenuViewModel: ObservableObject {
     
     private func bind() {
         engine.gameState()
-            .map { $0.hasRequestedFastTravel }
+            .map { $0.has_requested_fast_travel }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] visible in

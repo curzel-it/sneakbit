@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import it.curzel.bitscape.R
 import it.curzel.bitscape.controller.ControllerOffsetAxis
 import it.curzel.bitscape.controller.ControllerOrientation
 import it.curzel.bitscape.controller.ControllerSettingsStorage
@@ -39,6 +40,7 @@ import it.curzel.bitscape.controller.KeyEmulatorView
 import it.curzel.bitscape.controller.keyEmulatorViewPadding
 import it.curzel.bitscape.controller.keyEmulatorViewSize
 import it.curzel.bitscape.engine.GameEngine
+import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.ui.theme.DSTypography
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -73,11 +75,15 @@ fun ControllerEmulatorView(
     val attackLabel by viewModel.attackLabel.collectAsState()
     val currentOffset by viewModel.currentOffset.collectAsState()
     val confirmOnRight by viewModel.confirmOnRight.collectAsState()
+    val rangedAttackImageUp by viewModel.rangedAttackImageUp.collectAsState()
+    val rangedAttackImageDown by viewModel.rangedAttackImageDown.collectAsState()
 
     ControllerEmulatorView(
         isConfirmVisible = isConfirmVisible,
         isCloseRangeAttackVisible = isCloseRangeAttackVisible,
         isRangedAttackVisible = isRangedAttackVisible,
+        rangedAttackImageUp = rangedAttackImageUp,
+        rangedAttackImageDown = rangedAttackImageDown,
         attackLabel = attackLabel,
         currentOffset = currentOffset,
         confirmOnRight = confirmOnRight,
@@ -94,6 +100,8 @@ private fun ControllerEmulatorView(
     isConfirmVisible: Boolean,
     isCloseRangeAttackVisible: Boolean,
     isRangedAttackVisible: Boolean,
+    rangedAttackImageUp: Int?,
+    rangedAttackImageDown: Int?,
     attackLabel: String,
     currentOffset: Offset,
     confirmOnRight: Boolean,
@@ -152,6 +160,8 @@ private fun ControllerEmulatorView(
                     Box {
                         KeyEmulatorView(
                             key = EmulatedKey.RANGED_ATTACK,
+                            imageUp = rangedAttackImageUp,
+                            imageDown = rangedAttackImageDown,
                             onKeyDown = { setKeyDown(it) })
                         Text(
                             text = attackLabel,
@@ -206,6 +216,12 @@ class ControllerEmulatorViewModel(
 
     private val _currentOffset = MutableStateFlow(Offset.Zero)
     val currentOffset: StateFlow<Offset> = _currentOffset.asStateFlow()
+
+    private val _rangedAttackImageUp = MutableStateFlow(R.drawable.kunai_button_up)
+    val rangedAttackImageUp: StateFlow<Int> = _rangedAttackImageUp.asStateFlow()
+
+    private val _rangedAttackImageDown = MutableStateFlow(R.drawable.kunai_button_down)
+    val rangedAttackImageDown: StateFlow<Int> = _rangedAttackImageDown.asStateFlow()
 
     private var savedOffsetPortrait = Offset(
         x = settingsStorage.offset(axis = ControllerOffsetAxis.X, orientation = ControllerOrientation.PORTRAIT),
@@ -275,10 +291,25 @@ class ControllerEmulatorViewModel(
         engine.gameState
             .mapNotNull { it }
             .collect {
-                _isRangedAttackVisible.value = it.kunai > 0
-                _attackLabel.value = "x${it.kunai}"
-                _isCloseRangeAttackVisible.value = it.isSwordEquipped
+                _isRangedAttackVisible.value = it.ammo > 0
+                _attackLabel.value = "x${it.ammo}"
+                _isCloseRangeAttackVisible.value = it.meleeEquipped != 0
                 _isConfirmVisible.value = it.isInteractionAvailable
+
+                when (it.rangedEquipped) {
+                    NativeLib.SPECIES_AR15 -> {
+                        _rangedAttackImageUp.value = R.drawable.rem223_button_up
+                        _rangedAttackImageDown.value = R.drawable.rem223_button_down
+                    }
+                    NativeLib.SPECIES_CANNON -> {
+                        _rangedAttackImageUp.value = R.drawable.cannonball_button_up
+                        _rangedAttackImageDown.value = R.drawable.cannonball_button_down
+                    }
+                    else -> {
+                        _rangedAttackImageUp.value = R.drawable.kunai_button_up
+                        _rangedAttackImageDown.value = R.drawable.kunai_button_down
+                    }
+                }
             }
     }
 }
@@ -290,6 +321,8 @@ fun ControllerEmulatorViewPreview() {
         isConfirmVisible = true,
         isCloseRangeAttackVisible = true,
         isRangedAttackVisible = true,
+        rangedAttackImageUp = R.drawable.kunai_button_up,
+        rangedAttackImageDown = R.drawable.kunai_button_down,
         attackLabel = "x99",
         currentOffset = Offset.Zero,
         confirmOnRight = true,
@@ -308,6 +341,8 @@ fun ControllerEmulatorViewOnlyAttackPreview() {
         isConfirmVisible = false,
         isCloseRangeAttackVisible = true,
         isRangedAttackVisible = true,
+        rangedAttackImageUp = R.drawable.kunai_button_up,
+        rangedAttackImageDown = R.drawable.kunai_button_down,
         attackLabel = "x99",
         currentOffset = Offset.Zero,
         confirmOnRight = true,
@@ -326,6 +361,8 @@ fun ControllerEmulatorViewOnlyConfirmPreview() {
         isConfirmVisible = true,
         isCloseRangeAttackVisible = false,
         isRangedAttackVisible = false,
+        rangedAttackImageUp = R.drawable.kunai_button_up,
+        rangedAttackImageDown = R.drawable.kunai_button_down,
         attackLabel = "",
         currentOffset = Offset.Zero,
         confirmOnRight = true,

@@ -19,7 +19,7 @@ struct ControllerEmulatorView: View {
                     }
                     VStack(spacing: 8) {
                         if viewModel.isRangedAttackVisible {
-                            KeyEmulatorView(key: .rangedAttack)
+                            KeyEmulatorView(key: .rangedAttack, image: viewModel.rangedAttackImagePrefix)
                                 .overlay(
                                     Text(viewModel.attackLabel)
                                         .positioned(.bottom)
@@ -80,6 +80,7 @@ private class ControllerEmulatorViewModel: ObservableObject {
     @Published var isConfirmVisible: Bool = false
     @Published var isRangedAttackVisible: Bool = false
     @Published var isCloseAttackVisible: Bool = false
+    @Published var rangedAttackImagePrefix: String = ""
     @Published var attackLabel: String = ""
     
     var safeAreaInsets: UIEdgeInsets {
@@ -101,7 +102,7 @@ private class ControllerEmulatorViewModel: ObservableObject {
     
     init() {
         reloadSettings()
-        bindNumberOfKunais()
+        bindAmmo()
         bindMelee()
         bindInteractionAvailable()
     }
@@ -149,21 +150,35 @@ private class ControllerEmulatorViewModel: ObservableObject {
         }
     }
     
-    private func bindNumberOfKunais() {
+    private func bindAmmo() {
         engine.gameState()
-            .map { $0.kunai }
-            .sink { [weak self] count in
+            .map { (Int32($0.ranged_equipped), Int32($0.ranged_ammo)) }
+            .sink { [weak self] weaponId, ammoCount in
                 withAnimation {
-                    self?.isRangedAttackVisible = count > 0
-                    self?.attackLabel = "x\(count)"
+                    self?.handle(weaponId, ammoCount)
                 }
             }
             .store(in: &disposables)
     }
     
+    private func handle(_ weaponId: Int32, _ ammoCount: Int32) {
+        isRangedAttackVisible = ammoCount > 0 && weaponId != 0
+        attackLabel = "x\(ammoCount)"
+        rangedAttackImagePrefix = buttonImagePrefix(for: weaponId)
+    }
+    
+    private func buttonImagePrefix(for weaponId: Int32) -> String {
+        switch weaponId {
+        case SPECIES_KUNAI_LAUNCHER: "kunai"
+        case SPECIES_AR15, SPECIES_DARKAR15: "rem223"
+        case SPECIES_CANNON: "cannonball"
+        default: "kunai"
+        }
+    }
+    
     private func bindMelee() {
         engine.gameState()
-            .map { $0.isSwordEquipped }
+            .map { $0.melee_equipped != 0 }
             .sink { [weak self] equipped in
                 withAnimation {
                     self?.isCloseAttackVisible = equipped
@@ -174,7 +189,7 @@ private class ControllerEmulatorViewModel: ObservableObject {
     
     private func bindInteractionAvailable() {
         engine.gameState()
-            .map { $0.isInteractionAvailable }
+            .map { $0.is_interaction_available }
             .sink { [weak self] available in
                 withAnimation {
                     self?.isConfirmVisible = available

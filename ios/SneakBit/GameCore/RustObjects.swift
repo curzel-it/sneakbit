@@ -49,3 +49,13 @@ extension CToast: Equatable {
         }
     }
 }
+
+extension GameState {
+    func isGameOver() -> Bool {
+        match_result.game_over
+    }
+    
+    func shouldPauseGame() -> Bool {
+        isGameOver() || messages.is_valid || has_requested_fast_travel || has_requested_pvp_arena
+    }
+}

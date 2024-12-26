@@ -9,6 +9,7 @@ import it.curzel.bitscape.analytics.RuntimeEventsBroker
 import it.curzel.bitscape.AssetUtils
 import it.curzel.bitscape.analytics.RuntimeEvent
 import it.curzel.bitscape.controller.EmulatedKey
+import it.curzel.bitscape.gamecore.GameState
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
@@ -96,7 +97,7 @@ class GameEngine(
             audioEngine.updateSoundEffects()
         }
 
-        val nextState = fetchGameState()
+        val nextState = nativeLib.gameState()
         if (nextState.shouldPauseGame()) {
             pauseGame()
         }
@@ -163,6 +164,25 @@ class GameEngine(
         resumeGame()
     }
 
+    fun exitPvp() {
+        nativeLib.exitPvpArena()
+        resumeGame()
+    }
+
+    fun cancelPvpArena() {
+        nativeLib.cancelPvpArenaRequest()
+        resumeGame()
+    }
+
+    fun handlePvpArena(numberOfPlayers: Int) {
+        nativeLib.handlePvpArena(numberOfPlayers)
+        resumeGame()
+    }
+
+    private fun currentPlayerIndex(): Int {
+        return gameState.value?.currentPlayerIndex ?: 0
+    }
+
     private fun flushKeyboard() {
         keyPressed.clear()
         keyDown.removeAll(
@@ -178,22 +198,49 @@ class GameEngine(
     }
 
     private fun updateKeyboardState(deltaTime: Float) {
-        nativeLib.updateKeyboard(
-            upPressed = keyPressed.contains(EmulatedKey.UP),
-            rightPressed = keyPressed.contains(EmulatedKey.RIGHT),
-            downPressed = keyPressed.contains(EmulatedKey.DOWN),
-            leftPressed = keyPressed.contains(EmulatedKey.LEFT),
-            upDown = keyDown.contains(EmulatedKey.UP),
-            rightDown = keyDown.contains(EmulatedKey.RIGHT),
-            downDown = keyDown.contains(EmulatedKey.DOWN),
-            leftDown = keyDown.contains(EmulatedKey.LEFT),
-            escapePressed = keyPressed.contains(EmulatedKey.ESCAPE),
-            menuPressed = keyPressed.contains(EmulatedKey.MENU),
-            confirmPressed = keyPressed.contains(EmulatedKey.CONFIRM),
-            closeAttackPressed = keyPressed.contains(EmulatedKey.CLOSE_RANGE_ATTACK),
-            rangedAttackPressed = keyPressed.contains(EmulatedKey.RANGED_ATTACK),
-            timeSinceLastUpdate = deltaTime
-        )
+        if (nativeLib.isTurnPrep()) {
+            return
+        }
+
+        (0..<NativeLib.MAX_PLAYERS).forEach { playerIndex ->
+            if (playerIndex == currentPlayerIndex()) {
+                nativeLib.updateKeyboard(
+                    player = playerIndex,
+                    upPressed = keyPressed.contains(EmulatedKey.UP),
+                    rightPressed = keyPressed.contains(EmulatedKey.RIGHT),
+                    downPressed = keyPressed.contains(EmulatedKey.DOWN),
+                    leftPressed = keyPressed.contains(EmulatedKey.LEFT),
+                    upDown = keyDown.contains(EmulatedKey.UP),
+                    rightDown = keyDown.contains(EmulatedKey.RIGHT),
+                    downDown = keyDown.contains(EmulatedKey.DOWN),
+                    leftDown = keyDown.contains(EmulatedKey.LEFT),
+                    escapePressed = keyPressed.contains(EmulatedKey.ESCAPE),
+                    menuPressed = keyPressed.contains(EmulatedKey.MENU),
+                    confirmPressed = keyPressed.contains(EmulatedKey.CONFIRM),
+                    closeAttackPressed = keyPressed.contains(EmulatedKey.CLOSE_RANGE_ATTACK),
+                    rangedAttackPressed = keyPressed.contains(EmulatedKey.RANGED_ATTACK),
+                    timeSinceLastUpdate = deltaTime
+                )
+            } else {
+                nativeLib.updateKeyboard(
+                    player = playerIndex,
+                    upPressed = false,
+                    rightPressed = false,
+                    downPressed = false,
+                    leftPressed = false,
+                    upDown = false,
+                    rightDown = false,
+                    downDown = false,
+                    leftDown = false,
+                    escapePressed = false,
+                    menuPressed = false,
+                    confirmPressed = false,
+                    closeAttackPressed = false,
+                    rangedAttackPressed = false,
+                    timeSinceLastUpdate = deltaTime
+                )
+            }
+        }
     }
 
     private fun updateFpsCounter() {
@@ -232,19 +279,6 @@ class GameEngine(
 
     private fun updateTileMapImages() {
         tileMapImages = tileMapsStorage.images(currentWorldId)
-    }
-
-    private fun fetchGameState(): GameState {
-        return GameState(
-            toasts = nativeLib.nextToast(),
-            messages = nativeLib.nextMessage(),
-            kunai = nativeLib.numberOfKunaiInInventory(),
-            isInteractionAvailable = nativeLib.isInteractionAvailable(),
-            matchResult = nativeLib.matchResult(),
-            heroHp = nativeLib.playerCurrentHp(),
-            isSwordEquipped = nativeLib.isSwordEquipped(),
-            hasRequestedFastTravel = nativeLib.hasRequestedFastTravel()
-        )
     }
 
     private fun ensureJsonFileExists(file: File) {
@@ -318,5 +352,9 @@ class GameEngine(
     fun revive() {
         nativeLib.revive()
         resumeGame()
+    }
+
+    fun isPvp(): Boolean {
+        return nativeLib.isPvp()
     }
 }

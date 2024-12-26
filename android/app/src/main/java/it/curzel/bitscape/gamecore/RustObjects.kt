@@ -1,5 +1,30 @@
 package it.curzel.bitscape.gamecore
 
+data class GameState(
+    val toasts: DisplayableToast?,
+    val messages: DisplayableMessage?,
+    val ammo: Int,
+    val rangedEquipped: Int,
+    val meleeEquipped: Int,
+    val isInteractionAvailable: Boolean,
+    val matchResult: MatchResult,
+    val hp: Float,
+    val hasRequestedFastTravel: Boolean,
+    val hasRequestedPvpArena: Boolean,
+    val currentPlayerIndex: Int,
+    val isPvp: Boolean,
+    val isTurnPrep: Boolean,
+    val turnTimeLeft: Float,
+) {
+    fun isGameOver(): Boolean {
+        return matchResult.gameOver
+    }
+
+    fun shouldPauseGame(): Boolean {
+        return isGameOver() || messages != null || hasRequestedFastTravel || hasRequestedPvpArena
+    }
+}
+
 data class IntRect(
     val x: Int,
     val y: Int,

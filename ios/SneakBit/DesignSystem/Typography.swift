@@ -31,5 +31,5 @@ extension AppFont {
     static let text = AppFont(name: "PixelOperator8", size: 12, weight: .regular)
     static let menuOption = AppFont(name: "PixelOperator8", size: 16, weight: .bold)
     static let caption = AppFont(name: "PixelOperator8", size: 11, weight: .regular)
-    static let buttonCaption = AppFont(name: "PixelOperator8", size: 14, weight: .bold)
+    static let buttonCaption = AppFont(name: "PixelOperator8", size: 12 , weight: .bold)
 }

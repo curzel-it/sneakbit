@@ -1,9 +1,13 @@
 use std::process;
-use game_core::{constants::{MAX_PLAYERS, PVP_AVAILABLE, WORLD_ID_NONE}, current_camera_viewport, current_game_mode, current_world_id, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::modes::GameMode, number_of_players, save_game, set_wants_fullscreen, spacing, start_new_game, toggle_pvp, ui::components::{Spacing, View}, update_number_of_players, utils::rect::IntRect, wants_fullscreen};
+use game_core::{constants::{MAX_PLAYERS, WORLD_ID_NONE}, current_camera_viewport, current_world_id, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, is_pvp, lang::localizable::LocalizableText, number_of_players, save_game, set_wants_fullscreen, spacing, start_new_game, ui::components::{Spacing, View}, exit_pvp_arena, update_number_of_players, utils::rect::IntRect, wants_fullscreen};
 use crate::features::context::GameContext;
 use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, messages::MessagesDisplay, map_editor::MapEditor, menu::{Menu, MenuItem}};
 
-pub fn update_game_menu(context: &mut GameContext, keyboard: &KeyboardEventsProvider, mouse: &MouseEventsProvider) {
+pub fn update_game_menu(
+    context: &mut GameContext,
+    keyboard: &KeyboardEventsProvider,
+    mouse: &MouseEventsProvider,
+) {
     if context.menu.is_open() {
         let viewport = current_camera_viewport();
         context.menu.update(viewport, keyboard, mouse);
@@ -21,6 +25,7 @@ pub struct GameMenu {
     settings_menu: Menu<GameSettingsItem>,
     map_editor: MapEditor,
     new_game_confirmation: ConfirmationDialog,
+    exit_pvp_confirmation: ConfirmationDialog,
     pub messages: MessagesDisplay,
     credits_menu: Menu<String>,
     languages_menu: Menu<String>,
@@ -34,11 +39,12 @@ enum MenuState {
     MapEditor,
     PlaceItem,
     NewGameConfirmation,
+    ExitPvpConfirmation, 
     ShowingLanguageSettings,
     ShowingCredits,
-    ShowingControls,
     SelectingNumberOfPlayers,
     ShowingSettings,
+    ShowingControls,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -49,6 +55,7 @@ pub enum GameMenuItem {
     Save,
     MapEditor,
     Exit,
+    ExitPvp,
     GameSettings,
     NumberOfPlayers,
 }
@@ -74,6 +81,7 @@ impl MenuItem for GameMenuItem {
             GameMenuItem::ToggleFullScreen => "game.menu.toggle_fullscreen".localized(),
             GameMenuItem::NumberOfPlayers => "game.menu.number_of_players".localized(),
             GameMenuItem::GameSettings => "game.menu.settings".localized(),
+            GameMenuItem::ExitPvp => "game.menu.exit_pvp".localized(),
         }
     }
 }
@@ -110,9 +118,8 @@ impl GameMenu {
             vec![
                 GameMenuItem::Resume,
                 GameMenuItem::ToggleFullScreen,
+                GameMenuItem::ExitPvp,
                 GameMenuItem::NewGame,
-                GameMenuItem::Save,
-                GameMenuItem::MapEditor,
                 GameMenuItem::GameSettings,
                 GameMenuItem::NumberOfPlayers,
                 GameMenuItem::Exit,
@@ -167,6 +174,7 @@ impl GameMenu {
             settings_menu,
             map_editor: MapEditor::new(),
             new_game_confirmation: ConfirmationDialog::new(),
+            exit_pvp_confirmation: ConfirmationDialog::new(), 
             credits_menu,
             languages_menu,
             number_of_players_menu,
@@ -183,24 +191,28 @@ impl GameMenu {
         self.number_of_players_menu.title = "game.menu.number_of_players".localized();
         self.number_of_players_menu.items = player_options();
 
-        self.menu.items = if is_creative_mode() {
-            vec![
+        if is_creative_mode() {
+            self.menu.items = vec![
                 GameMenuItem::Save,
                 GameMenuItem::Resume,
                 GameMenuItem::ToggleFullScreen,
                 GameMenuItem::MapEditor,
                 GameMenuItem::GameSettings,
                 GameMenuItem::Exit,
-            ]
+            ];
         } else {
-            vec![
+            let mut items = vec![
                 GameMenuItem::Resume,
                 GameMenuItem::ToggleFullScreen,
                 GameMenuItem::NewGame,
                 GameMenuItem::GameSettings,
                 GameMenuItem::NumberOfPlayers,
                 GameMenuItem::Exit,
-            ]
+            ];
+            if is_pvp() {
+                items.insert(2, GameMenuItem::ExitPvp);
+            }
+            self.menu.items = items;
         }
     }
 
@@ -242,6 +254,7 @@ impl GameMenu {
                 MenuState::MapEditor => self.update_from_map_editor(camera_viewport, keyboard, mouse),
                 MenuState::PlaceItem => self.update_from_place_item(camera_viewport, keyboard, mouse),
                 MenuState::NewGameConfirmation => self.update_from_new_game(keyboard),
+                MenuState::ExitPvpConfirmation => self.update_from_exit_pvp(keyboard),
                 MenuState::ShowingLanguageSettings => self.update_from_language(keyboard),
                 MenuState::ShowingCredits => self.update_from_credits(keyboard),
                 MenuState::SelectingNumberOfPlayers => self.update_from_number_of_players(keyboard),
@@ -292,6 +305,13 @@ impl GameMenu {
                     &"game.menu.new_game_are_you_sure".localized(),
                 );
                 self.state = MenuState::NewGameConfirmation;
+            }
+            GameMenuItem::ExitPvp => { 
+                self.exit_pvp_confirmation.show(
+                    &"game.menu.exit_pvp".localized(),
+                    &"game.menu.exit_pvp_are_you_sure".localized(),
+                );
+                self.state = MenuState::ExitPvpConfirmation;
             }
             GameMenuItem::Exit => {
                 println!("Got exit request!");
@@ -352,6 +372,24 @@ impl GameMenu {
         }
     }
 
+    fn update_from_exit_pvp(&mut self, keyboard: &KeyboardEventsProvider) { 
+        if keyboard.has_back_been_pressed_by_anyone() {
+            self.state = MenuState::Open;
+        } else if let Some(exit_pvp_confirm) = self.exit_pvp_confirmation.update(keyboard) {
+            self.exit_pvp_confirmation.menu.clear_selection();
+            self.exit_pvp_confirmation.menu.clear_confirmation();
+            self.menu.clear_selection();
+
+            if matches!(exit_pvp_confirm, ConfirmationOption::YesConfirm) {
+                exit_pvp_arena();
+                self.menu.close();
+                self.state = MenuState::Closed;
+            } else {
+                self.state = MenuState::Open;
+            }
+        }
+    }
+
     fn update_from_number_of_players(&mut self, keyboard: &KeyboardEventsProvider) {
         if keyboard.has_back_been_pressed_by_anyone() {
             self.state = MenuState::Open;
@@ -362,15 +400,11 @@ impl GameMenu {
         if self.number_of_players_menu.selection_has_been_confirmed {
             let index = self.number_of_players_menu.selected_index;
 
-            if index == 0 && PVP_AVAILABLE {
-                toggle_pvp();
-            } else if index == self.number_of_players_menu.items.len() - 1 {
+            if index == self.number_of_players_menu.items.len() - 1 {
                 self.number_of_players_menu.clear_selection();
                 self.number_of_players_menu.close();
                 self.menu.clear_selection();
                 self.state = MenuState::Open;
-            } else if PVP_AVAILABLE {
-                update_number_of_players(self.number_of_players_menu.selected_index)
             } else {
                 update_number_of_players(self.number_of_players_menu.selected_index + 1)
             }
@@ -490,6 +524,7 @@ impl GameMenu {
             MenuState::Open => self.menu.ui(),
             MenuState::ShowingCredits => self.credits_menu.ui(),
             MenuState::NewGameConfirmation => self.new_game_confirmation.ui(),
+            MenuState::ExitPvpConfirmation => self.exit_pvp_confirmation.ui(),
             MenuState::ShowingLanguageSettings => self.languages_menu.ui(),
             MenuState::MapEditor | MenuState::PlaceItem => self.map_editor.ui(camera_viewport),
             MenuState::SelectingNumberOfPlayers => self.number_of_players_menu.ui(),
@@ -500,11 +535,6 @@ impl GameMenu {
 }
 
 fn player_options() -> Vec<String> {
-    let pvp = if matches!(current_game_mode(), GameMode::TurnBasedPvp) {
-        "game.menu.disable_pvp"
-    } else {
-        "game.menu.enable_pvp"
-    };
     let number_of_players = number_of_players();
 
     let mut options: Vec<String> = (1..=MAX_PLAYERS)
@@ -513,10 +543,6 @@ fn player_options() -> Vec<String> {
             format!("game.menu.number_of_players.{}{}", n, selected).localized()
         })
         .collect();
-
-    if PVP_AVAILABLE {
-        options.insert(0, pvp.localized());
-    }
     options.push("menu_back".localized());
     options
 }
