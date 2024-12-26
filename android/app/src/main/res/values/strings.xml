@@ -45,4 +45,5 @@
     <string name="game_menu_exit_pvp">"Exit PvP"</string>
     <string name="game_menu_exit_pvp_are_you_sure">"Are you sure?\nConfirm to go back to Duskhaven"</string>
     <string name="game_menu_confirm_exit_pvp">"Stop match"</string>
+    <string name="prep_for_next_turn">"Player %PLAYER_NAME%'s turn in %TIME%..."</string>
 </resources>

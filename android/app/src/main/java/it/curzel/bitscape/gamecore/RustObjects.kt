@@ -11,7 +11,10 @@ data class GameState(
     val hp: Float,
     val hasRequestedFastTravel: Boolean,
     val hasRequestedPvpArena: Boolean,
-    val currentPlayerIndex: Int
+    val currentPlayerIndex: Int,
+    val isPvp: Boolean,
+    val isTurnPrep: Boolean,
+    val turnTimeLeft: Float,
 ) {
     fun isGameOver(): Boolean {
         return matchResult.gameOver

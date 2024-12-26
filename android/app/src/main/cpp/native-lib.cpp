@@ -564,6 +564,9 @@ Java_it_curzel_bitscape_gamecore_NativeLib_gameState(JNIEnv *env, jobject thiz) 
             "Z"     // hasRequestedFastTravel
             "Z"     // hasRequestedPvpArena
             "I"     // currentPlayerIndex
+            "Z"     // isPvp
+            "Z"     // isTurnPrep
+            "F"     // turnTimeLeft
             ")V"
     );
     if (!gameStateCtor) {
@@ -584,7 +587,10 @@ Java_it_curzel_bitscape_gamecore_NativeLib_gameState(JNIEnv *env, jobject thiz) 
             static_cast<jfloat>(cState.hp),    // hp
             static_cast<jboolean>(cState.has_requested_fast_travel), // hasRequestedFastTravel
             static_cast<jboolean>(cState.has_requested_pvp_arena),   // hasRequestedPvpArena
-            static_cast<jint>(cState.current_player_index)  // currentPlayerIndex
+            static_cast<jint>(cState.current_player_index),  // currentPlayerIndex
+            static_cast<jint>(cState.is_pvp),
+            static_cast<jint>(cState.is_turn_prep),
+            static_cast<jfloat>(cState.turn_time_left)
     );
 
     // Return the newly created GameState object to Kotlin
@@ -746,5 +752,12 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_ammoCountForWeapon(JNIEnv *env, jobject thiz,
                                                               jint weapon_species_id, jint player) {
-    return ammo_in_inventory_for_weapon(weapon_species_id, player);
+    auto count = ammo_in_inventory_for_weapon(weapon_species_id, player);
+    return static_cast<jint>(count);
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_isTurnPrep(JNIEnv *env, jobject thiz) {
+    return is_turn_prep();
 }

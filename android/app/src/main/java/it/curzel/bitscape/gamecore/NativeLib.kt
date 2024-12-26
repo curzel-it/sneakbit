@@ -53,6 +53,7 @@ class NativeLib {
     external fun cancelPvpArenaRequest()
     external fun exitPvpArena()
     external fun isPvp(): Boolean
+    external fun isTurnPrep(): Boolean
     external fun ammoCountForWeapon(weaponSpeciesId: Int, player: Int): Int
 
     companion object {

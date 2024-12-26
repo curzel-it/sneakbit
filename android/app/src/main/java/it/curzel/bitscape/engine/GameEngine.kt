@@ -198,6 +198,10 @@ class GameEngine(
     }
 
     private fun updateKeyboardState(deltaTime: Float) {
+        if (nativeLib.isTurnPrep()) {
+            return
+        }
+
         (0..<NativeLib.MAX_PLAYERS).forEach { playerIndex ->
             if (playerIndex == currentPlayerIndex()) {
                 nativeLib.updateKeyboard(
