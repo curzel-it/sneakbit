@@ -382,12 +382,8 @@ pub fn currently_active_players() -> Vec<usize> {
                 .filter(|index| !engine.dead_players.contains(index))
                 .collect()
         },
-        GameTurn::Player(turn_info) => {
-            vec![turn_info.player_index]
-        }
-        GameTurn::PlayerPrep(turn_info) => {
-            vec![turn_info.player_index]
-        },
+        GameTurn::Player(turn_info) => vec![turn_info.player_index],
+        GameTurn::PlayerPrep(_) => vec![]
     }
 }
 

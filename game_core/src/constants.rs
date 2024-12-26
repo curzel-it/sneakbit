@@ -9,8 +9,8 @@ pub const NO_PARENT: u32 = 0;
 pub const PRESSURE_PLATE_SWITCH_COOLDOWN: f32 = 0.3;
 pub const HERO_RECOVERY_PS: f32 = 1.0;
 pub const MAX_PLAYERS: usize = 4;
-pub const TURN_DURATION: f32 = 10.0;
-pub const TURN_DURATION_AFTER_RANGED_WEAPON_USAGE: f32 = 3.0;
+pub const TURN_DURATION: f32 = 12.0;
+pub const TURN_DURATION_AFTER_RANGED_WEAPON_USAGE: f32 = 4.0;
 pub const TURN_PREP_DURATION: f32 = 3.0;
 
 // Input

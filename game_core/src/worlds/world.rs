@@ -1,6 +1,6 @@
 use std::{cell::RefCell, cmp::Ordering};
 
-use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
+use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, current_player_index, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, is_turn_based_game_mode, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
 use crate::features::{hitmaps::{EntityIdsMap, Hitmap}, entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
@@ -137,10 +137,8 @@ impl World {
         viewport: &IntRect,
         keyboard: &KeyboardEventsProvider
     ) -> Vec<EngineStateUpdate> {
-        self.players[0].update(keyboard);
-        self.players[1].update(keyboard);
-        self.players[2].update(keyboard);
-        self.players[3].update(keyboard);
+        self.update_players(keyboard);
+
         self.has_confirmation_key_been_pressed_by_anyone = keyboard.has_confirmation_been_pressed_by_anyone();
         self.is_any_arrow_key_down = keyboard.is_any_arrow_key_down_for_anyone();
         self.biome_tiles.update(time_since_last_update);
@@ -444,6 +442,25 @@ impl World {
             3 => vec![PLAYER1_INDEX, PLAYER2_INDEX, PLAYER3_INDEX],
             4 => vec![PLAYER1_INDEX, PLAYER2_INDEX, PLAYER3_INDEX, PLAYER4_INDEX],
             _ => vec![PLAYER1_INDEX]
+        }
+    }
+
+    fn update_players(&mut self, keyboard: &KeyboardEventsProvider) {
+        if is_turn_based_game_mode() {
+            let current = current_player_index();
+
+            for index in 0..MAX_PLAYERS {
+                if index == current {
+                    self.players[index].update(keyboard);
+                } else {
+                    self.players[index].update(&NO_KEYBOARD_EVENTS);
+                }
+            }
+        } else {
+            self.players[0].update(keyboard);
+            self.players[1].update(keyboard);
+            self.players[2].update(keyboard);
+            self.players[3].update(keyboard);
         }
     }
 }

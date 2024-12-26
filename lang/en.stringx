@@ -1071,6 +1071,8 @@ fueling life and wonder in Duskhaven.
 
 "picked_up_item" = "Picked up `%s`!"
 
+"prep_for_next_turn" = "Player %PLAYER_NAME%'s turn in %TIME%..."
+
 "pvp_arena.menu.text" = """
 * All players will be using this computer
 * One controller per player required
@@ -1463,4 +1465,3 @@ Tell him to send us some *real money*, like crypto, and we'll be gone in giphy.
 
 "you" = "You"
 
-"prep_for_next_turn" = "Player %PLAYER_NAME%'s turn in %TIME%..."
