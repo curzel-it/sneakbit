@@ -95,9 +95,11 @@ Personally (but I have no idea what I'm doing and haven't used a windows machine
 * Font by [HarvettFox96](https://dl.dafont.com/dl/?f=pixel_operator)
 
 ## TODO:
-- Finish writing "Consipiracy Theorist" quest
-- Finish writing "Assassin Guild" quest
-- PvP arena
+* Finish writing "Consipiracy Theorist" quest
+* Finish writing "Assassin Guild" quest
+* Push notifications for updates and new content
+* Better hints for mobile players
+* Camera pan when turn changes in pvp
 
 ## Game Design Document
 > Warning: Spoilers!
