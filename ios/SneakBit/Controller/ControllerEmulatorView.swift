@@ -151,11 +151,16 @@ private class ControllerEmulatorViewModel: ObservableObject {
     }
     
     private func bindAmmo() {
-        engine.gameState()
-            .map { (Int32($0.ranged_equipped), Int32($0.ranged_ammo)) }
+        engine.weapons()
+            .compactMap { weapons in
+                return weapons.first { weapon in
+                    weapon.is_ranged && weapon.is_equipped
+                }
+            }
+            .map { ($0.weapon_species_id, $0.ammo_inventory_count) }
             .sink { [weak self] weaponId, ammoCount in
                 withAnimation {
-                    self?.handle(weaponId, ammoCount)
+                    self?.handle(Int32(weaponId), Int32(ammoCount))
                 }
             }
             .store(in: &disposables)
@@ -177,8 +182,12 @@ private class ControllerEmulatorViewModel: ObservableObject {
     }
     
     private func bindMelee() {
-        engine.gameState()
-            .map { $0.melee_equipped != 0 }
+        engine.weapons()
+            .map { weapons in
+                return weapons.contains { weapon in
+                    weapon.is_melee && weapon.is_equipped
+                }
+            }
             .sink { [weak self] equipped in
                 withAnimation {
                     self?.isCloseAttackVisible = equipped

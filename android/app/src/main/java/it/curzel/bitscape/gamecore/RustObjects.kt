@@ -3,9 +3,6 @@ package it.curzel.bitscape.gamecore
 data class GameState(
     val toasts: DisplayableToast?,
     val messages: DisplayableMessage?,
-    val ammo: Int,
-    val rangedEquipped: Int,
-    val meleeEquipped: Int,
     val isInteractionAvailable: Boolean,
     val matchResult: MatchResult,
     val hp: Float,
@@ -22,6 +19,34 @@ data class GameState(
 
     fun shouldPauseGame(): Boolean {
         return isGameOver() || messages != null || hasRequestedFastTravel || hasRequestedPvpArena
+    }
+}
+
+data class AmmoRecap(
+    val weaponName: String,
+    val weaponSpeciesId: Int,
+    val weaponSprite: IntRect,
+    val weaponInventorySprite: IntRect,
+    val bulletBpeciesId: Int,
+    val ammoInventoryCount: Int,
+    val isMelee: Boolean,
+    val isRanged: Boolean,
+    val isEquipped: Boolean,
+    val receivedDamageReduction: Float
+) {
+    companion object {
+        val empty: AmmoRecap = AmmoRecap(
+            weaponName = "",
+            weaponSpeciesId = 0,
+            weaponSprite = IntRect(0, 0, 0, 0),
+            weaponInventorySprite = IntRect(0, 0, 0, 0),
+            bulletBpeciesId = 0,
+            ammoInventoryCount = 0,
+            isMelee = false,
+            isRanged = false,
+            isEquipped = false,
+            receivedDamageReduction = 0.0f
+        )
     }
 }
 
@@ -49,19 +74,7 @@ data class MatchResult(
     val unknownWinner: Boolean,
     val gameOver: Boolean,
     val inProgress: Boolean
-) {
-    companion object {
-        @JvmStatic
-        fun fromNative(
-            winner: UInt,
-            unknownWinner: Boolean,
-            gameOver: Boolean,
-            inProgress: Boolean
-        ): MatchResult {
-            return MatchResult(winner, unknownWinner, gameOver, inProgress)
-        }
-    }
-}
+)
 
 data class DisplayableToast(
     val text: String,

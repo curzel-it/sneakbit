@@ -557,7 +557,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_gameState(JNIEnv *env, jobject thiz) 
             "<init>",
             "(Lit/curzel/bitscape/gamecore/DisplayableToast;"
             "Lit/curzel/bitscape/gamecore/DisplayableMessage;"
-            "III"   // ammo, rangedEquipped, meleeEquipped
             "Z"     // isInteractionAvailable
             "Lit/curzel/bitscape/gamecore/MatchResult;"
             "F"     // hp
@@ -579,14 +578,11 @@ Java_it_curzel_bitscape_gamecore_NativeLib_gameState(JNIEnv *env, jobject thiz) 
             gameStateCtor,
             jToast,                            // toasts: DisplayableToast?
             jMessage,                          // messages: DisplayableMessage?
-            static_cast<jint>(cState.ranged_ammo),           // ammo
-            static_cast<jint>(cState.ranged_equipped),       // rangedEquipped
-            static_cast<jint>(cState.melee_equipped),        // meleeEquipped
-            static_cast<jboolean>(cState.is_interaction_available), // isInteractionAvailable
+            static_cast<jint>(cState.is_interaction_available), // isInteractionAvailable
             jMatchResult,                      // matchResult
             static_cast<jfloat>(cState.hp),    // hp
-            static_cast<jboolean>(cState.has_requested_fast_travel), // hasRequestedFastTravel
-            static_cast<jboolean>(cState.has_requested_pvp_arena),   // hasRequestedPvpArena
+            static_cast<jint>(cState.has_requested_fast_travel), // hasRequestedFastTravel
+            static_cast<jint>(cState.has_requested_pvp_arena),   // hasRequestedPvpArena
             static_cast<jint>(cState.current_player_index),  // currentPlayerIndex
             static_cast<jint>(cState.is_pvp),
             static_cast<jint>(cState.is_turn_prep),
@@ -760,4 +756,147 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_isTurnPrep(JNIEnv *env, jobject thiz) {
     return is_turn_prep();
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_weapons(JNIEnv *env, jobject thiz, jint player) {
+    uintptr_t count = 0;
+    struct AmmoRecap *weapons = available_weapons_c(player, &count);
+
+    // Handle cases where no weapons are available
+    if (weapons == nullptr || count == 0) {
+        // Return an empty ArrayList
+        jclass arrayListClass = env->FindClass("java/util/ArrayList");
+        if (arrayListClass == nullptr) {
+            return nullptr; // Class not found
+        }
+        jmethodID arrayListCtor = env->GetMethodID(arrayListClass, "<init>", "()V");
+        if (arrayListCtor == nullptr) {
+            return nullptr; // Constructor not found
+        }
+        return env->NewObject(arrayListClass, arrayListCtor);
+    }
+
+    // Find necessary Java classes
+    jclass ammoRecapClass = env->FindClass("it/curzel/bitscape/gamecore/AmmoRecap");
+    if (ammoRecapClass == nullptr) {
+        return nullptr; // Class not found
+    }
+
+    jclass intRectClass = env->FindClass("it/curzel/bitscape/gamecore/IntRect");
+    if (intRectClass == nullptr) {
+        return nullptr; // Class not found
+    }
+
+    jclass arrayListClass = env->FindClass("java/util/ArrayList");
+    if (arrayListClass == nullptr) {
+        return nullptr; // Class not found
+    }
+
+    // Get constructors
+    jmethodID arrayListCtor = env->GetMethodID(arrayListClass, "<init>", "()V");
+    jmethodID arrayListAdd = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
+    if (arrayListCtor == nullptr || arrayListAdd == nullptr) {
+        return nullptr; // Methods not found
+    }
+
+    jmethodID intRectCtor = env->GetMethodID(intRectClass, "<init>", "(IIII)V");
+    if (intRectCtor == nullptr) {
+        return nullptr; // Constructor not found
+    }
+
+    // Define the AmmoRecap constructor signature
+    // (String, int, IntRect, IntRect, int, int, boolean, boolean, boolean, float)
+    jmethodID ammoRecapCtor = env->GetMethodID(
+            ammoRecapClass, "<init>",
+            "(Ljava/lang/String;I"
+            "Lit/curzel/bitscape/gamecore/IntRect;"
+            "Lit/curzel/bitscape/gamecore/IntRect;"
+            "IIZZZF)V"
+    );
+    if (ammoRecapCtor == nullptr) {
+        return nullptr; // Constructor not found
+    }
+
+    // Create an instance of ArrayList to hold AmmoRecap objects
+    jobject arrayListObj = env->NewObject(arrayListClass, arrayListCtor);
+    if (arrayListObj == nullptr) {
+        return nullptr; // Out of memory
+    }
+
+    // Iterate through the weapons and convert each to a Java AmmoRecap object
+    for (uintptr_t i = 0; i < count; ++i) {
+        struct AmmoRecap *current = &weapons[i];
+
+        // Create IntRect objects for weaponSprite and weaponInventorySprite
+        jobject weaponSprite = env->NewObject(intRectClass, intRectCtor,
+                                              current->weapon_sprite.x,
+                                              current->weapon_sprite.y,
+                                              current->weapon_sprite.w,
+                                              current->weapon_sprite.h
+        );
+        if (weaponSprite == nullptr) {
+            // Handle object creation failure
+            continue;
+        }
+
+        jobject weaponInventorySprite = env->NewObject(intRectClass, intRectCtor,
+                                                       current->weapon_inventory_sprite.x,
+                                                       current->weapon_inventory_sprite.y,
+                                                       current->weapon_inventory_sprite.w,
+                                                       current->weapon_inventory_sprite.h
+        );
+        if (weaponInventorySprite == nullptr) {
+            // Handle object creation failure
+            env->DeleteLocalRef(weaponSprite);
+            continue;
+        }
+
+        // Convert C string to Java String
+        jstring weaponName = toJavaString(env, current->weapon_name);
+
+        // Create the AmmoRecap Java object
+        jobject ammoRecapObj = env->NewObject(
+                ammoRecapClass,
+                ammoRecapCtor,
+                weaponName,
+                static_cast<jint>(current->weapon_species_id),
+                weaponSprite,
+                weaponInventorySprite,
+                static_cast<jint>(current->bullet_species_id),
+                static_cast<jint>(current->ammo_inventory_count),
+                static_cast<jboolean>(current->is_melee),
+                static_cast<jboolean>(current->is_ranged),
+                static_cast<jboolean>(current->is_equipped),
+                static_cast<jfloat>(current->received_damage_reduction)
+        );
+        if (ammoRecapObj == nullptr) {
+            // Handle object creation failure
+            env->DeleteLocalRef(weaponSprite);
+            env->DeleteLocalRef(weaponInventorySprite);
+            continue;
+        }
+
+        // Add the AmmoRecap object to the ArrayList
+        env->CallBooleanMethod(arrayListObj, arrayListAdd, ammoRecapObj);
+
+        // Check for exceptions during the add operation
+        if (env->ExceptionCheck()) {
+            env->ExceptionClear();
+            // Optionally handle the exception
+            break;
+        }
+
+        // Clean up local references to avoid memory leaks
+        env->DeleteLocalRef(weaponSprite);
+        env->DeleteLocalRef(weaponInventorySprite);
+        env->DeleteLocalRef(weaponName);
+        env->DeleteLocalRef(ammoRecapObj);
+    }
+
+    // Optionally, free the weapons array if it was dynamically allocated
+    // free(weapons); // Uncomment if necessary
+
+    return arrayListObj;
 }

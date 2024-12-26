@@ -1,4 +1,4 @@
-use game_core::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_WEAPONS}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{EntityType, Species}}, equipment::basics::{available_weapons, is_equipped, set_equipped}, features::storage::inventory_count, input::keyboard_events_provider::KeyboardEventsProvider, lang::localizable::LocalizableText, text, texture, ui::{components::{empty_view, GridSpacing, Spacing, Typography, View, COLOR_MENU_BACKGROUND, COLOR_TEXT_HIGHLIGHTED}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use game_core::{constants::{SPRITE_SHEET_INVENTORY, SPRITE_SHEET_WEAPONS}, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, equipment::basics::{available_weapons, set_equipped, AmmoRecap}, input::keyboard_events_provider::KeyboardEventsProvider, lang::localizable::LocalizableText, text, texture, ui::{components::{empty_view, GridSpacing, Spacing, Typography, View, COLOR_MENU_BACKGROUND, COLOR_TEXT_HIGHLIGHTED}, scaffold::scaffold}, utils::{strings::c_char_ptr_to_string, vector::Vector2d}, vstack, zstack};
 
 use crate::GameContext;
 
@@ -16,7 +16,7 @@ pub fn update_weapons_selection(context: &mut GameContext, keyboard: &KeyboardEv
 
 #[derive(Debug)]
 pub struct WeaponsGrid {
-    weapons: Vec<Species>,
+    weapons: Vec<AmmoRecap>,
     state: WeaponsGridState,
     player: usize,
     columns: usize
@@ -61,7 +61,7 @@ impl WeaponsGrid {
         let current_index = self.weapons
             .iter()
             .enumerate()
-            .find(|(_, weapon)| is_equipped(weapon, self.player))
+            .find(|(_, weapon)| weapon.is_equipped)
             .map(|(index, _)| index);
         
         if let Some(current_index) = current_index {
@@ -72,8 +72,8 @@ impl WeaponsGrid {
     } 
 
     fn has_enough_weapons_to_select_from(&self) -> bool {
-        let melee_count = self.weapons.iter().filter(|w| matches!(w.entity_type, EntityType::WeaponMelee)).count();
-        let ranged_count = self.weapons.iter().filter(|w| matches!(w.entity_type, EntityType::WeaponRanged)).count();
+        let melee_count = self.weapons.iter().filter(|w| w.is_melee).count();
+        let ranged_count = self.weapons.iter().filter(|w| !w.is_melee).count();
         return melee_count >= 2 || ranged_count >= 2
     }
 
@@ -119,8 +119,9 @@ impl WeaponsGrid {
     }
 
     fn handle_confirmation_input(&mut self, selected_index: usize) {
-        if let Some(selected_weapon) = self.weapons.get(selected_index) {
-            set_equipped(selected_weapon, self.player);
+        if let Some(weapon) = self.weapons.get(selected_index) {
+            let species = species_by_id(weapon.weapon_species_id);
+            set_equipped(&species, self.player);
             self.state = WeaponsGridState::Closed;
         }
     }
@@ -154,16 +155,15 @@ impl WeaponsGrid {
         };
 
         let weapon_info = if let Some(weapon) = selected_weapon {
-            let ammo_text = if matches!(weapon.entity_type, EntityType::WeaponRanged) {
-                let ammo = inventory_count(&weapon.bullet_species_id, self.player);
-                let text = format!("{}: {}", "weapons_selection.ammo".localized(), ammo);
+            let ammo_text = if weapon.is_ranged {
+                let text = format!("{}: {}", "weapons_selection.ammo".localized(), weapon.ammo_inventory_count);
                 text!(Typography::Regular, text)
             } else {
                 text!(Typography::Regular, "--".localized())
             };            
             vstack!(
                 Spacing::MD,
-                text!(Typography::Title, weapon.name.localized()),
+                text!(Typography::Title, c_char_ptr_to_string(weapon.weapon_name)),
                 ammo_text
             )
         } else {
@@ -180,7 +180,7 @@ impl WeaponsGrid {
         }
     }
 
-    fn weapon_ui(&self, index: usize, selected_index: usize, weapon: &Species) -> View {
+    fn weapon_ui(&self, index: usize, selected_index: usize, weapon: &AmmoRecap) -> View {
         if index == selected_index {
             zstack!(
                 Spacing::XS,
@@ -192,8 +192,8 @@ impl WeaponsGrid {
         }
     }
 
-    fn weapon_icon(&self, weapon: &Species, is_selected: bool) -> View {
-        let is_visible_in_game = !matches!(weapon.id, SPECIES_KUNAI_LAUNCHER);
+    fn weapon_icon(&self, weapon: &AmmoRecap, is_selected: bool) -> View {
+        let is_visible_in_game = !matches!(weapon.weapon_species_id, SPECIES_KUNAI_LAUNCHER);
         
         let sprite_sheet = if is_selected && is_visible_in_game { 
             SPRITE_SHEET_WEAPONS 
@@ -202,10 +202,9 @@ impl WeaponsGrid {
         };
         
         let texture_rect = if is_selected && is_visible_in_game {
-            IntRect::new(weapon.sprite_frame.x, 57, 2, 2)
+            weapon.weapon_sprite
         } else {
-            let (y, x) = weapon.inventory_texture_offset;
-            IntRect::new(x, y, 1, 1)
+            weapon.weapon_inventory_sprite
         };
 
         let size = if is_selected { 2.0 } else { 1.5 };

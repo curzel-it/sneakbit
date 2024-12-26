@@ -14,8 +14,15 @@ class GameEngine {
             _state.send(currentState)
         }
     }
-    
     private let _state = CurrentValueSubject<GameState?, Never>(nil)
+    
+    private var currentWeapons: [AmmoRecap] = [] {
+        didSet {
+            _weapons.send(currentWeapons)
+        }
+    }
+    private let _weapons = CurrentValueSubject<[AmmoRecap], Never>([])
+    
     let isLoading = CurrentValueSubject<Bool, Never>(true)
     
     var size: CGSize = .zero
@@ -72,6 +79,12 @@ class GameEngine {
             .eraseToAnyPublisher()
     }
     
+    func weapons() -> AnyPublisher<[AmmoRecap], Never> {
+        _weapons
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+    
     func update(deltaTime: Float) {
         updateKeyboardState(timeSinceLastUpdate: deltaTime)
         
@@ -94,6 +107,10 @@ class GameEngine {
             pauseGame()
         }
         currentState = newState
+        
+        fetchWeapons(player: newState.current_player_index) { [weak self] weapons in
+            self?._weapons.send(weapons)
+        }
     }
     
     private func handleWorldChanged() {

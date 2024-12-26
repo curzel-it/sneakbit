@@ -86,7 +86,6 @@ class TurnInfoViewModel(
         viewModelScope.launch {
             gameEngine.gameState
                 .filterNotNull()
-                .filter { it.isPvp }
                 .map { TurnInfo.fromGameState(it) }
                 .distinctUntilChanged()
                 .collect {
@@ -115,7 +114,7 @@ private data class TurnInfo(
     }
 
     fun prepText(prepTextFormat: String): String {
-        return if (isTurnPrep) {
+        return if (isPvp && isTurnPrep) {
             prepTextFormat
                 .replace("%PLAYER_NAME%", "${playerIndex + 1}")
                 .replace("%TIME%", "${ceil(turnTimeLeft).toInt()}")
@@ -126,10 +125,10 @@ private data class TurnInfo(
 
     @SuppressLint("DefaultLocale")
     fun countdownText(): String {
-        return if (isTurnPrep) {
-            ""
-        } else {
+        return if (isPvp && !isTurnPrep) {
             String.format("%.1f\"", turnTimeLeft)
+        } else {
+            ""
         }
     }
 }

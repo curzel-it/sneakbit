@@ -41,7 +41,6 @@ private class TurnInfoViewModel: ObservableObject {
     
     private func bind() {
         engine.gameState()
-            .filter { $0.is_pvp }
             .map { TurnInfo(from: $0) }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
@@ -69,7 +68,7 @@ private struct TurnInfo: Equatable {
     }
     
     func prepText() -> String {
-        if isTurnPrep {
+        if isPvp && isTurnPrep {
             "prep_for_next_turn"
                 .localized()
                 .replacingOccurrences(of: "%PLAYER_NAME%", with: "\(playerIndex + 1)")
@@ -80,10 +79,10 @@ private struct TurnInfo: Equatable {
     }
     
     func countdownText() -> String {
-        if isTurnPrep {
-            ""
-        } else {
+        if isPvp && !isTurnPrep {
             String(format: "%0.1f\"", turnTimeLeft)
+        } else {
+            ""
         }
     }
 }

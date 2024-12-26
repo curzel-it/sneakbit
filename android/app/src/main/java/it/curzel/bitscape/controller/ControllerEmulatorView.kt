@@ -40,11 +40,14 @@ import it.curzel.bitscape.controller.KeyEmulatorView
 import it.curzel.bitscape.controller.keyEmulatorViewPadding
 import it.curzel.bitscape.controller.keyEmulatorViewSize
 import it.curzel.bitscape.engine.GameEngine
+import it.curzel.bitscape.gamecore.AmmoRecap
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.ui.theme.DSTypography
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -236,8 +239,15 @@ class ControllerEmulatorViewModel(
 
     init {
         updateCurrentOffset()
+
         viewModelScope.launch {
-            observeGameState()
+            bindRangedWeapons()
+        }
+        viewModelScope.launch {
+            bindMeleeWeapons()
+        }
+        viewModelScope.launch {
+            bindInteractionAvailable()
         }
     }
 
@@ -287,16 +297,43 @@ class ControllerEmulatorViewModel(
         setConfirmButtonPosition()
     }
 
-    private suspend fun observeGameState() {
+    private suspend fun bindInteractionAvailable() {
         engine.gameState
-            .mapNotNull { it }
+            .map {
+                it?.isInteractionAvailable ?: false
+            }
+            .distinctUntilChanged()
             .collect {
-                _isRangedAttackVisible.value = it.ammo > 0
-                _attackLabel.value = "x${it.ammo}"
-                _isCloseRangeAttackVisible.value = it.meleeEquipped != 0
-                _isConfirmVisible.value = it.isInteractionAvailable
+                _isConfirmVisible.value = it
+            }
+    }
 
-                when (it.rangedEquipped) {
+    private suspend fun bindMeleeWeapons() {
+        engine.weapons
+            .mapNotNull { weapons ->
+                weapons.any {
+                    it.isMelee && it.isEquipped
+                }
+            }
+            .distinctUntilChanged()
+            .collect {
+                _isCloseRangeAttackVisible.value = it
+            }
+    }
+
+    private suspend fun bindRangedWeapons() {
+        engine.weapons
+            .map { weapons ->
+                weapons.firstOrNull {
+                    it.isRanged && it.isEquipped
+                } ?: AmmoRecap.empty
+            }
+            .distinctUntilChanged()
+            .collect {
+                _isRangedAttackVisible.value = it.ammoInventoryCount > 0
+                _attackLabel.value = "x${it.ammoInventoryCount}"
+
+                when (it.weaponSpeciesId) {
                     NativeLib.SPECIES_AR15 -> {
                         _rangedAttackImageUp.value = R.drawable.rem223_button_up
                         _rangedAttackImageDown.value = R.drawable.rem223_button_down

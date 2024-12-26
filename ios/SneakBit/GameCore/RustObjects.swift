@@ -59,3 +59,35 @@ extension GameState {
         isGameOver() || messages.is_valid || has_requested_fast_travel || has_requested_pvp_arena
     }
 }
+
+func fetchRenderableItems(_ callback: @escaping ([RenderableItem]) -> Void) {
+    var length: UInt = 0
+
+    guard let ptr = get_renderables(&length) else {
+        print("Failed to fetch renderables")
+        return
+    }
+
+    let buffer = UnsafeBufferPointer<RenderableItem>(start: ptr, count: Int(length))
+    let items = Array(buffer)
+
+    callback(items)
+    free_renderables(ptr, length)
+}
+
+func fetchWeapons(player: UInt, _ callback: @escaping ([AmmoRecap]) -> Void) {
+    var length: UInt = 0
+
+    guard let ptr = available_weapons_c(player, &length) else {
+        print("Failed to fetch weapons")
+        return
+    }
+
+    let buffer = UnsafeBufferPointer<AmmoRecap>(start: ptr, count: Int(length))
+    let items = Array(buffer)
+
+    callback(items)
+    free_weapons(ptr, length)
+}
+
+

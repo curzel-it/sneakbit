@@ -6,6 +6,7 @@ use std::os::raw::c_char;
 use config::initialize_config_paths;
 use entities::known_species::SPECIES_KUNAI_LAUNCHER;
 use entities::species::species_by_id;
+use equipment::basics::{available_weapons, AmmoRecap};
 use features::fast_travel::{available_fast_travel_destinations_from_current_world, FastTravelDestination};
 use features::messages::{CDisplayableMessage, DisplayableMessage, DisplayableMessageCRepr};
 use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::WorldStateUpdate, toasts::ToastCRepr};
@@ -516,18 +517,18 @@ pub extern "C" fn current_player_index() -> usize {
 
 #[no_mangle]
 pub extern "C" fn game_state() -> GameState {
+    let engine = engine();
     let player = current_player_index();
-    let ranged_equipped = ranged_equipped_weapon_id(player);
+    let is_interaction_available = engine.world.entities.borrow().iter().any(|e| e.is_in_interaction_range);
+
+    println!("is_interaction_available {}", is_interaction_available);
 
     GameState {
-        toasts: engine().toast.c_repr(),
-        messages: engine().message.c_repr(),
-        is_interaction_available: engine().world.entities.borrow().iter().any(|e| e.is_in_interaction_range),
-        match_result: engine().match_result.c_repr(),
+        toasts: engine.toast.c_repr(),
+        messages: engine.message.c_repr(),
+        is_interaction_available,
+        match_result: engine.match_result.c_repr(),
         hp: player_current_hp(player),
-        melee_equipped: melee_equipped_weapon_id(player),
-        ranged_equipped,
-        ranged_ammo: ammo_in_inventory_for_weapon(ranged_equipped, player),
         has_requested_fast_travel: did_request_fast_travel(),
         has_requested_pvp_arena: did_request_pvp_arena(),
         current_player_index: player,
@@ -544,13 +545,31 @@ pub struct GameState {
     pub is_interaction_available: bool,
     pub match_result: CMatchResult,
     pub hp: f32,
-    pub melee_equipped: u32,
-    pub ranged_equipped: u32,
-    pub ranged_ammo: u32,
     pub has_requested_fast_travel: bool,
     pub has_requested_pvp_arena: bool,
     pub current_player_index: usize,
     pub is_pvp: bool,
     pub is_turn_prep: bool,
     pub turn_time_left: f32
+}
+
+#[no_mangle]
+pub extern "C" fn available_weapons_c(player: usize, count: *mut usize) -> *mut AmmoRecap {
+    let items = available_weapons(player);
+    let len = items.len(); 
+    unsafe {
+        ptr::write(count, len);
+    }
+    let ptr = items.as_ptr() as *mut AmmoRecap;
+    std::mem::forget(items);
+    ptr
+}
+
+#[no_mangle]
+pub extern "C" fn free_weapons(ptr: *mut AmmoRecap, length: usize) {
+    if !ptr.is_null() {
+        unsafe {
+            let _ = Vec::from_raw_parts(ptr, length, length);
+        }
+    }
 }

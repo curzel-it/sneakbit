@@ -1,4 +1,4 @@
-use crate::{current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{is_monster, SPECIES_DAMAGE_INDICATOR, SPECIES_KUNAI}, species::species_by_id}, equipment::basics::{available_weapons, is_equipped}, features::entity::is_player, utils::{rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{is_monster, SPECIES_DAMAGE_INDICATOR, SPECIES_KUNAI}, species::species_by_id}, equipment::basics::available_weapons, features::entity::is_player, utils::{rect::IntRect, vector::Vector2d}, worlds::world::World};
 use crate::features::{entity::Entity, state_updates::EngineStateUpdate, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count}};
 
 impl World {
@@ -87,9 +87,9 @@ impl World {
     fn handle_hero_damage(&self, hero: &mut Entity, damage: f32) -> bool {
         let mut damage_reductions: Vec<f32> = available_weapons(hero.player_index)
             .iter()
-            .filter_map(|s| 
-                if is_equipped(s, hero.player_index) {
-                    Some(s.received_damage_reduction)
+            .filter_map(|weapon| 
+                if weapon.is_equipped {
+                    Some(weapon.received_damage_reduction)
                 } else {
                     None
                 }

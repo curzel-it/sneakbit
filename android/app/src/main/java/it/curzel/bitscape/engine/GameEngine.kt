@@ -9,6 +9,7 @@ import it.curzel.bitscape.analytics.RuntimeEventsBroker
 import it.curzel.bitscape.AssetUtils
 import it.curzel.bitscape.analytics.RuntimeEvent
 import it.curzel.bitscape.controller.EmulatedKey
+import it.curzel.bitscape.gamecore.AmmoRecap
 import it.curzel.bitscape.gamecore.GameState
 import it.curzel.bitscape.gamecore.IntRect
 import it.curzel.bitscape.gamecore.NativeLib
@@ -33,6 +34,9 @@ class GameEngine(
 ) {
     private val _gameState = MutableStateFlow<GameState?>(null)
     val gameState: StateFlow<GameState?> = _gameState.asStateFlow()
+
+    private val _weapons = MutableStateFlow<List<AmmoRecap>>(emptyList())
+    val weapons: StateFlow<List<AmmoRecap>> = _weapons.asStateFlow()
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -102,6 +106,7 @@ class GameEngine(
             pauseGame()
         }
         _gameState.value = nextState
+        _weapons.value = nativeLib.weapons(nextState.currentPlayerIndex)
     }
 
     fun pauseGame() {

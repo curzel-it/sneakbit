@@ -1,6 +1,8 @@
+use std::os::raw::c_char;
+
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::TILE_SIZE, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{species_by_id, EntityType, Species, ALL_SPECIES}}, features::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, has_species_in_inventory, set_value_for_key, StorageKey}}, utils::directions::Direction, worlds::world::World};
+use crate::{constants::TILE_SIZE, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{species_by_id, EntityType, Species, ALL_SPECIES}}, features::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, has_species_in_inventory, inventory_count, set_value_for_key, StorageKey}}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, strings::string_to_c_char}, worlds::world::World};
 
 impl Entity {
     pub fn setup_equipment(&mut self) {
@@ -82,7 +84,27 @@ pub fn is_equipped(species: &Species, player: usize) -> bool {
     }
 }
 
-pub fn available_weapons(player: usize) -> Vec<Species> {
+pub fn available_weapons(player: usize) -> Vec<AmmoRecap> {
+    available_weapons_species_ids(player)
+    .iter()
+    .map(|species| {
+        AmmoRecap {
+            weapon_name: string_to_c_char(species.name.localized()),
+            weapon_species_id: species.id,
+            weapon_sprite: IntRect::new(species.sprite_frame.x, 57, 2, 2),
+            weapon_inventory_sprite: species.inventory_sprite_frame(),
+            bullet_species_id: species.bullet_species_id,
+            ammo_inventory_count: inventory_count(&species.bullet_species_id, player),
+            is_melee: matches!(species.entity_type, EntityType::WeaponMelee),
+            is_ranged: matches!(species.entity_type, EntityType::WeaponRanged),
+            is_equipped: is_equipped(species, player),
+            received_damage_reduction: species.received_damage_reduction
+        }
+    })
+    .collect()
+}
+
+pub fn available_weapons_species_ids(player: usize) -> Vec<Species> {
     let mut all_ids: Vec<u32> = vec![SPECIES_KUNAI_LAUNCHER];
     let owned_ids = ALL_SPECIES
         .iter()
@@ -104,4 +126,19 @@ fn equipment_key_for_species(species: &Species, player: usize) -> String {
         EntityType::WeaponMelee => StorageKey::currently_equipped_melee_weapon(player),
         _ => "".to_owned()
     }    
+}
+
+#[derive(Debug)]
+#[repr(C)]
+pub struct AmmoRecap {
+    pub weapon_name: *const c_char,
+    pub weapon_species_id: u32,
+    pub weapon_sprite: IntRect,
+    pub weapon_inventory_sprite: IntRect,
+    pub bullet_species_id: u32,
+    pub ammo_inventory_count: u32,
+    pub is_melee: bool,
+    pub is_ranged: bool,
+    pub is_equipped: bool,
+    pub received_damage_reduction: f32
 }

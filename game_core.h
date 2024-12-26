@@ -266,9 +266,6 @@ typedef struct GameState {
   bool is_interaction_available;
   struct CMatchResult match_result;
   float hp;
-  uint32_t melee_equipped;
-  uint32_t ranged_equipped;
-  uint32_t ranged_ammo;
   bool has_requested_fast_travel;
   bool has_requested_pvp_arena;
   uintptr_t current_player_index;
@@ -276,6 +273,19 @@ typedef struct GameState {
   bool is_turn_prep;
   float turn_time_left;
 } GameState;
+
+typedef struct AmmoRecap {
+  const char *weapon_name;
+  uint32_t weapon_species_id;
+  struct IntRect weapon_sprite;
+  struct IntRect weapon_inventory_sprite;
+  uint32_t bullet_species_id;
+  uint32_t ammo_inventory_count;
+  bool is_melee;
+  bool is_ranged;
+  bool is_equipped;
+  float received_damage_reduction;
+} AmmoRecap;
 
 void initialize_game(enum GameMode mode);
 
@@ -384,5 +394,9 @@ void handle_pvp_arena(uintptr_t number_of_players);
 uintptr_t current_player_index(void);
 
 struct GameState game_state(void);
+
+struct AmmoRecap *available_weapons_c(uintptr_t player, uintptr_t *count);
+
+void free_weapons(struct AmmoRecap *ptr, uintptr_t length);
 
 #endif  /* GAME_CORE_H */
