@@ -289,8 +289,8 @@ impl World {
         let mut teleporters: Vec<&Entity> = entities.iter().filter(|t| matches!(t.entity_type, EntityType::Teleporter)).collect();
         
         teleporters.sort_by(|a, b| {
-            if let Some(dest_a) = a.destination.clone() {
-                if let Some(dest_b) = b.destination.clone() {
+            if let Some(dest_a) = &a.destination {
+                if let Some(dest_b) = &b.destination {
                     if dest_a.world < dest_b.world { return Ordering::Less }
                     if dest_a.world > dest_b.world { return Ordering::Greater }
                 }

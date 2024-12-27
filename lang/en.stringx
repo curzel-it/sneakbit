@@ -1183,9 +1183,9 @@ Or maybe we do and he just doesn't realize it yet.
 
 "quest.hero.wizard.prologue" = """
 You say "some kind of magic" brought you here? Interesting...
-Unfortunately, there is no much guidance an old geezer like me can give you, maybe if I were younger...
+Unfortunately, there isn't much guidance an old geezer like me can give you. Maybe if I were younger...
 I suggest you start your own journey to learn more about this world.
-The closest city is Aridreach, West from here, why don't you start from there?
+The closest city is Aridreach, west of here. Why don't you start there?
 If you're looking for directions, road signs can be useful.
 Now go, I shall see you soon!
 """

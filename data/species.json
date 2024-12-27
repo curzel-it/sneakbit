@@ -4678,5 +4678,26 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1004
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "Building",
+    "id": 1187,
+    "inventory_texture_offset": [
+      12,
+      4
+    ],
+    "is_invulnerable": true,
+    "is_rigid": false,
+    "lock_type": "None",
+    "name": "objects.name.arcade_link",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 31,
+      "y": 14
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1004
   }
 ]
