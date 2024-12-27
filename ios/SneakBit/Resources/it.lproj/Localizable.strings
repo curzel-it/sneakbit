@@ -72,3 +72,4 @@
 "game_menu_confirm_exit_pvp" = "Sì, sicuro";
 
 "prep_for_next_turn" = "Giocatore %PLAYER_NAME% pronto fra %TIME%...";
+"switch_weapon" = "Cambia armi";

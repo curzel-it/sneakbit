@@ -155,8 +155,9 @@ impl GameEngine {
                 self.update_current_turn_for_death_of_player(*player_index);
                 self.handle_win_lose()
             }
-            EngineStateUpdate::GunShot(_) | EngineStateUpdate::LoudGunShot(_) => {
-                self.turn = self.turns_use_case.update_turn_ranged_attack(&self.turn)
+            EngineStateUpdate::GunShot(_) | EngineStateUpdate::LoudGunShot(_) => {}
+            EngineStateUpdate::PlayerReceivedDamage(player_index) => {
+                self.turn = self.turns_use_case.update_turn_after_player_damage(&self.turn, player_index);
             }
             EngineStateUpdate::FastTravel => {
                 self.fast_travel_requested = true

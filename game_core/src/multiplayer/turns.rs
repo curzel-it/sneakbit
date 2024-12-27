@@ -1,4 +1,4 @@
-use crate::constants::{TURN_DURATION, TURN_DURATION_AFTER_RANGED_WEAPON_USAGE, TURN_PREP_DURATION};
+use crate::constants::{TURN_DURATION, TURN_DURATION_AFTER_ENEMY_PLAYER_DAMAGE, TURN_PREP_DURATION};
 
 #[derive(Clone, Copy)]
 pub enum GameTurn {
@@ -39,10 +39,10 @@ impl PlayerTurnInfo {
         }
     }
 
-    pub fn with_reduced_due_to_ranged_weapon_usage(&self) -> Self {
+    pub fn with_reduced_due_to_enemy_player_damage(&self) -> Self {
         Self {
             player_index: self.player_index,
-            time_remaining: self.time_remaining.min(TURN_DURATION_AFTER_RANGED_WEAPON_USAGE),
+            time_remaining: self.time_remaining.min(TURN_DURATION_AFTER_ENEMY_PLAYER_DAMAGE),
             did_reduce_due_to_ranged_weapon_usage: true
         }
     }

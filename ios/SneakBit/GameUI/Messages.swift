@@ -61,19 +61,19 @@ private struct MessagesContents: View {
                 Button("ok_action".localized()) {
                     viewModel.openStoreLink()
                 }
-                .buttonStyle(.menuOption)
+                .buttonStyle(.messageOption)
             }
             if viewModel.showMaybeLater {
                 Button("maybe_later_action".localized()) {
                     viewModel.onConfirm()
                 }
-                .buttonStyle(.menuOption)
+                .buttonStyle(.messageOption)
             }
             if viewModel.showOk {
                 Button("ok_action".localized()) {
                     viewModel.onConfirm()
                 }
-                .buttonStyle(.menuOption)
+                .buttonStyle(.messageOption)
             }
         }
     }

@@ -399,4 +399,6 @@ struct AmmoRecap *available_weapons_c(uintptr_t player, uintptr_t *count);
 
 void free_weapons(struct AmmoRecap *ptr, uintptr_t length);
 
+void set_weapon_equipped(uint32_t species_id, uintptr_t player);
+
 #endif  /* GAME_CORE_H */
