@@ -37,10 +37,10 @@ impl Entity {
         self.reset_offset_on_next_direction_change = true;
 
         let (x, y) = match player_index {
-            1 => (5, 1),
-            2 => (9, 1),
-            3 => (13, 1),
-            _ => (1, 1),
+            1 => (5.0, 1.0),
+            2 => (9.0, 1.0),
+            3 => (13.0, 1.0),
+            _ => (1.0, 1.0),
         };
         println!("Player #{}, sprite x {} y {}", self.player_index, x, y);
         self.sprite.original_frame.x = x;
@@ -57,7 +57,7 @@ impl Entity {
     fn leave_footsteps(&self, world: &World) -> Vec<WorldStateUpdate> {
         let previous = world.players[0].props.hittable_frame;
         let x = self.frame.x;
-        let y = self.frame.y + 1;
+        let y = self.frame.y + 1.0;
 
         if previous.x != x || previous.y != y {
             leave_footsteps(world, &self.direction, x, y)

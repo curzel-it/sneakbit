@@ -6,7 +6,7 @@ impl Entity {
     }
 
     pub fn update_pvp_arena(&mut self, world: &World) -> Vec<WorldStateUpdate> {   
-        if is_player_entering_tile(world, self.frame.x + 2, self.frame.y + 3) {
+        if is_player_entering_tile(world, self.frame.x + 2.0, self.frame.y + 3.0) {
             vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::PvpArena)]
         } else {
             vec![]

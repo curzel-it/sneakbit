@@ -25,7 +25,7 @@ impl Entity {
         if non_zero_offset {
             let is_around = match player_direction {
                 Direction::Up => player.y == self.frame.y + self.frame.h && player.x >= self.frame.x && player.x < self.frame.x + self.frame.w,
-                Direction::Right => player.x == self.frame.x - 1 && player.y >= self.frame.y && player.y < self.frame.y + self.frame.h,
+                Direction::Right => player.x == self.frame.x - 1.0 && player.y >= self.frame.y && player.y < self.frame.y + self.frame.h,
                 Direction::Down => player.y == self.frame.y && player.x >= self.frame.x && player.x < self.frame.x + self.frame.w,
                 Direction::Left => player.x == self.frame.x + self.frame.w && player.y >= self.frame.y && player.y < self.frame.y + self.frame.h,
                 Direction::Unknown => false,

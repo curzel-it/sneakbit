@@ -8,7 +8,7 @@ impl Entity {
 
     pub fn update_rail(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
         let is_on_rails = is_rail(world, self.frame.x, self.frame.y);
-        let offset_is_zero = self.offset.x.abs() <= 0.01 && self.offset.y.abs() <= 0.01;
+        let offset_is_zero = self.offset.is_zero();
         
         self.is_rigid = is_on_rails;
 
@@ -51,12 +51,6 @@ impl Entity {
     }
 }
 
-fn is_rail(world: &World, x: i32, y: i32) -> bool {
-    if y < 0 || y >= world.construction_tiles.tiles.len() as i32 {
-        return false
-    }
-    if x < 0 || x >= world.construction_tiles.tiles[0].len() as i32 {
-        return false
-    }
-    matches!(world.construction_tiles.tiles[y as usize][x as usize].tile_type, Construction::Rail)
+fn is_rail(world: &World, x: f32, y: f32) -> bool {
+    matches!(world.construction_at(x, y), Construction::Rail)
 }

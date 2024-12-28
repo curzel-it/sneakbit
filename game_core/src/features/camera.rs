@@ -6,7 +6,7 @@ pub fn camera_center(
     number_of_players: usize, 
     players: &[PlayerProps], 
     dead_players: &[usize]
-) -> (i32, i32, Vector2d) {
+) -> (f32, f32, Vector2d) {
     let current_player_index = match turn {
         GameTurn::RealTime => PLAYER1_INDEX,
         GameTurn::PlayerPrep(turn_info) => turn_info.player_index,
@@ -42,6 +42,6 @@ pub fn camera_center(
         let fy = y.floor();
         let offset = Vector2d::new((x - fx) * TILE_SIZE, (y - fy) * TILE_SIZE);
 
-        (fx as i32, fy as i32, offset)
+        (fx, fy, offset)
     }
 }

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::{rect::IntRect, vector::Vector2d};
+use super::{rect::FRect, vector::Vector2d};
 
 #[derive(Default, Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Direction {
@@ -19,14 +19,14 @@ impl Direction {
         Vector2d::new(col as f32, row as f32)
     }
 
-    pub fn as_col_row_offset(&self) -> (i32, i32) {
+    pub fn as_col_row_offset(&self) -> (f32, f32) {
         match self {
-            Direction::Still => (0, 0),
-            Direction::Up => (0, -1),
-            Direction::Right => (1, 0),
-            Direction::Down => (0, 1),
-            Direction::Left => (-1, 0),
-            Direction::Unknown => (0, 0),
+            Direction::Still => (0.0, 0.0),
+            Direction::Up => (0.0, -1.0),
+            Direction::Right => (1.0, 0.0),
+            Direction::Down => (0.0, 1.0),
+            Direction::Left => (-1.0, 0.0),
+            Direction::Unknown => (0.0, 0.0),
         }  
     }
 
@@ -75,7 +75,7 @@ impl Direction {
     }
 }
 
-pub fn direction_between_rects(source: &IntRect, other: &IntRect) -> Direction {
+pub fn direction_between_rects(source: &FRect, other: &FRect) -> Direction {
     if source.x > other.x { return Direction::Left }
     if source.x < other.x { return Direction::Right }
     if source.y > other.y { return Direction::Up }

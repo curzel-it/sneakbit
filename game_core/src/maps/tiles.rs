@@ -1,8 +1,8 @@
 
-use crate::{constants::{BIOME_NUMBER_OF_FRAMES, SPRITE_SHEET_BLANK, TILE_VARIATIONS_FPS}, utils::{rect::IntRect, timed_content_provider::TimedContentProvider}};
+use crate::{constants::{BIOME_NUMBER_OF_FRAMES, SPRITE_SHEET_BLANK, TILE_VARIATIONS_FPS}, utils::{rect::FRect, timed_content_provider::TimedContentProvider}};
 
 pub trait SpriteTile {
-    fn texture_source_rect(&self, variant: i32) -> IntRect;
+    fn texture_source_rect(&self, variant: i32) -> FRect;
 }
 
 #[derive(Default, Debug, Clone)]

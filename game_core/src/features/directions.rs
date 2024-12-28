@@ -1,6 +1,11 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{currently_active_players, features::entity::Entity, utils::{directions::Direction, rect::IntRect}, worlds::world::World};
+use crate::{
+    currently_active_players,
+    features::entity::Entity,
+    utils::{directions::Direction, rect::FRect},
+    worlds::world::World,
+};
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub enum MovementDirections {
@@ -70,7 +75,7 @@ impl Entity {
         }
     }
 
-    pub fn is_any_active_vulnerable_player_in_line_of_sight(&self, world: &World) -> Option<IntRect> {
+    pub fn is_any_active_vulnerable_player_in_line_of_sight(&self, world: &World) -> Option<FRect> {
         for &player_index in currently_active_players().iter() {
             let player = &world.players[player_index];
 
@@ -91,12 +96,18 @@ impl Entity {
                 let x_max = npc_x_range.end.min(hero_x_range.end);
 
                 let min_y = npc.y.min(hero.y);
-                let max_y = (npc.y + npc.h - 1).max(hero.y + hero.h - 1);
+                let max_y = (npc.y + npc.h - 1.0).max(hero.y + hero.h - 1.0);
 
                 let mut obstructed = false;
-                for x in x_min..x_max {
-                    for y in (min_y + 1)..max_y {
-                        if world.hits(x, y) {
+                // Convert floating ranges to integer ranges for grid-based collision
+                let x_min_int = x_min.floor() as i32;
+                let x_max_int = x_max.ceil() as i32;
+                let min_y_int = min_y.floor() as i32 + 1;
+                let max_y_int = max_y.ceil() as i32;
+
+                for x in x_min_int..x_max_int {
+                    for y in min_y_int..max_y_int {
+                        if world.hits(x as f32, y as f32) {
                             obstructed = true;
                             break;
                         }
@@ -116,12 +127,18 @@ impl Entity {
                 let y_max = npc_y_range.end.min(hero_y_range.end);
 
                 let min_x = npc.x.min(hero.x);
-                let max_x = (npc.x + npc.w - 1).max(hero.x + hero.w - 1);
+                let max_x = (npc.x + npc.w - 1.0).max(hero.x + hero.w - 1.0);
 
                 let mut obstructed = false;
-                for y in y_min..y_max {
-                    for x in (min_x + 1)..max_x {
-                        if world.hits(x, y) {
+                // Convert floating ranges to integer ranges for grid-based collision
+                let y_min_int = y_min.floor() as i32;
+                let y_max_int = y_max.ceil() as i32;
+                let min_x_int = min_x.floor() as i32 + 1;
+                let max_x_int = max_x.ceil() as i32;
+
+                for y in y_min_int..y_max_int {
+                    for x in min_x_int..max_x_int {
+                        if world.hits(x as f32, y as f32) {
                             obstructed = true;
                             break;
                         }
@@ -139,13 +156,13 @@ impl Entity {
         None
     }
 
-    fn change_direction_towards_target(&mut self, target: &IntRect) {
+    fn change_direction_towards_target(&mut self, target: &FRect) {
         let npc = self.hittable_frame();
 
-        let npc_center_x = npc.x + npc.w / 2;
-        let npc_center_y = npc.y + npc.h / 2;
-        let target_center_x = target.x + target.w / 2;
-        let target_center_y = target.y + target.h / 2;
+        let npc_center_x = npc.x + npc.w / 2.0;
+        let npc_center_y = npc.y + npc.h / 2.0;
+        let target_center_x = target.x + target.w / 2.0;
+        let target_center_y = target.y + target.h / 2.0;
 
         if target_center_x > npc_center_x {
             self.direction = Direction::Right;
@@ -162,12 +179,16 @@ impl Entity {
 
     fn is_obstacle_in_direction(&self, world: &World, direction: Direction) -> bool {
         let (dx, dy) = direction.as_col_row_offset();
-        let new_x = self.frame.x + dx;
-        let new_y = self.frame.y + dy;
+        let new_x = self.frame.x + dx as f32;
+        let new_y = self.frame.y + dy as f32;
 
-        for check_x in new_x..(new_x + self.frame.w) {
-            for check_y in new_y..(new_y + self.frame.h) {
-                if world.hits_or_out_of_bounds(check_x, check_y) {
+        // Assuming world.hits_or_out_of_bounds expects integer coordinates
+        let new_x_int = new_x.floor() as i32;
+        let new_y_int = new_y.floor() as i32;
+
+        for check_x in new_x_int..(new_x_int + self.frame.w as i32) {
+            for check_y in new_y_int..(new_y_int + self.frame.h as i32) {
+                if world.hits_or_out_of_bounds(check_x as f32, check_y as f32) {
                     return true;
                 }
             }
@@ -176,6 +197,7 @@ impl Entity {
     }
 }
 
-fn ranges_overlap(r1: &std::ops::Range<i32>, r2: &std::ops::Range<i32>) -> bool {
+// Updated ranges_overlap to work with f32 ranges
+fn ranges_overlap(r1: &std::ops::Range<f32>, r2: &std::ops::Range<f32>) -> bool {
     r1.start < r2.end && r2.start < r1.end
 }

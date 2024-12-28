@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use lazy_static::lazy_static;
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer, de::Deserializer};
-use crate::utils::rect::IntRect;
+use crate::utils::rect::FRect;
 use super::tiles::{SpriteTile, TileSet};
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
@@ -148,11 +148,11 @@ pub struct ConstructionTile {
     pub tile_right_type: Construction,
     pub tile_down_type: Construction,
     pub tile_left_type: Construction,
-    pub texture_source_rect: IntRect,
+    pub texture_source_rect: FRect,
 }
 
 impl SpriteTile for ConstructionTile {
-    fn texture_source_rect(&self, _: i32) -> IntRect {
+    fn texture_source_rect(&self, _: i32) -> FRect {
         self.texture_source_rect
     }
 }
@@ -210,8 +210,8 @@ impl ConstructionTile {
             (false, true, true, true) => 14,
             (true, true, true, true) => 15,
         };
-        self.texture_source_rect.x = x;
-        self.texture_source_rect.y = y;
+        self.texture_source_rect.x = x as f32;
+        self.texture_source_rect.y = y as f32;
     }
 }
 
@@ -265,7 +265,7 @@ impl ConstructionTile {
             tile_right_type: Construction::Nothing, 
             tile_down_type: Construction::Nothing, 
             tile_left_type: Construction::Nothing, 
-            texture_source_rect: IntRect::square_from_origin(1) 
+            texture_source_rect: FRect::square_from_origin(1.0) 
         };
         tile.setup_textures();
         tile

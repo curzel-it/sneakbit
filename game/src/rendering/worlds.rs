@@ -13,8 +13,8 @@ pub fn render_frame(context: &mut GameContext) {
     let can_render_frame = context.can_render_frame();
     let hud = hud_ui(
         context,
-        config.canvas_size.x as i32, 
-        config.canvas_size.y as i32,
+        config.canvas_size.x, 
+        config.canvas_size.y,
         config.show_debug_info,
         fps
     );

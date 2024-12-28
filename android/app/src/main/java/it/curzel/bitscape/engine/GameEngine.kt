@@ -11,7 +11,7 @@ import it.curzel.bitscape.analytics.RuntimeEvent
 import it.curzel.bitscape.controller.EmulatedKey
 import it.curzel.bitscape.gamecore.AmmoRecap
 import it.curzel.bitscape.gamecore.GameState
-import it.curzel.bitscape.gamecore.IntRect
+import it.curzel.bitscape.gamecore.FRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
 import it.curzel.bitscape.gamecore.Vector2d
@@ -41,7 +41,7 @@ class GameEngine(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    var size = Size(0, 0)
+    var size = Size(0.0, 0.0)
     var fps = 0.0
 
     private var isGamePaused = false
@@ -50,7 +50,7 @@ class GameEngine(
     private var frameCount = 0
 
     var renderingScale = 1f
-    var cameraViewport = IntRect(0, 0, 0, 0)
+    var cameraViewport = FRect(0.0, 0.0, 0.0, 0.0)
     var cameraViewportOffset = Vector2d(0.0f, 0.0f)
     var canRender = true
 
@@ -316,7 +316,7 @@ class GameEngine(
         return file.absolutePath
     }
 
-    private fun renderingFrame(frame: IntRect, offset: Vector2d = Vector2d(0.0f, 0.0f)): RectF {
+    private fun renderingFrame(frame: FRect, offset: Vector2d = Vector2d(0.0f, 0.0f)): RectF {
         val actualCol = (frame.x - cameraViewport.x).toFloat()
         val actualOffsetX = offset.x - cameraViewportOffset.x
         val actualRow = (frame.y - cameraViewport.y).toFloat()
@@ -346,8 +346,8 @@ class GameEngine(
         cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
     }
 
-    private fun IntArray.toRect(): IntRect {
-        return IntRect(this[0], this[1], this[2], this[3])
+    private fun IntArray.toRect(): FRect {
+        return FRect(this[0], this[1], this[2], this[3])
     }
 
     private fun FloatArray.toVector2d(): Vector2d {

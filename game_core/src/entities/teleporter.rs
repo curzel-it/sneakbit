@@ -2,7 +2,7 @@ use crate::{features::{destination::Destination, entity::Entity, locks::LockType
 
 impl Entity {
     pub fn setup_teleporter(&mut self) {
-        self.sprite.frame.y = if is_creative_mode() { 5 } else { 6 };
+        self.sprite.frame.y = if is_creative_mode() { 5.0 } else { 6.0 };
         self.is_rigid = false;
     }
 
@@ -23,23 +23,23 @@ impl Entity {
     }
 }
 
-pub fn is_player_entering_tile(world: &World, x: i32, y: i32) -> bool {
+pub fn is_player_entering_tile(world: &World, x: f32, y: f32) -> bool {
     if !(world.is_any_arrow_key_down || world.is_any_hero_on_a_slippery_surface()) { return false }
     if world.players[0].props.speed <= 0.0 { return false }
 
     let hero = world.players[0].props.hittable_frame;
     let hero_direction = world.players[0].props.direction;
 
-    if matches!(hero_direction, Direction::Up) && hero.x == x && hero.y == y + 1 {
+    if matches!(hero_direction, Direction::Up) && hero.x == x && hero.y == y + 1.0 {
         return true
     }
-    if matches!(hero_direction, Direction::Down) && hero.x == x && hero.y == y - 1 {
+    if matches!(hero_direction, Direction::Down) && hero.x == x && hero.y == y - 1.0 {
         return true
     }
-    if matches!(hero_direction, Direction::Right) && hero.x == x - 1 && hero.y == y {
+    if matches!(hero_direction, Direction::Right) && hero.x == x - 1.0 && hero.y == y {
         return true
     }
-    if matches!(hero_direction, Direction::Left) && hero.x == x + 1 && hero.y == y {
+    if matches!(hero_direction, Direction::Left) && hero.x == x + 1.0 && hero.y == y {
         return true
     }
     false

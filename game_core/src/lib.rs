@@ -17,7 +17,7 @@ use maps::biome_tiles::BiomeTile;
 use maps::construction_tiles::ConstructionTile;
 use multiplayer::turns_use_case::{CMatchResult, MatchResult};
 use multiplayer::{modes::GameMode, turns::GameTurn};
-use utils::{rect::{IntPoint, IntRect}, strings::{c_char_ptr_to_string, string_to_c_char}, vector::Vector2d};
+use utils::{rect::FRect, strings::{c_char_ptr_to_string, string_to_c_char}, vector::Vector2d};
 
 pub mod config;
 pub mod constants;
@@ -131,9 +131,9 @@ pub extern "C" fn update_mouse(
 #[repr(C)]
 pub struct RenderableItem {
     pub sprite_sheet_id: u32,
-    pub texture_rect: IntRect,
+    pub texture_rect: FRect,
     pub offset: Vector2d,
-    pub frame: IntRect,
+    pub frame: FRect,
     pub sorting_key: u32
 }
 
@@ -216,17 +216,17 @@ pub extern "C" fn current_biome_tiles_variant() -> i32 {
 }
 
 #[no_mangle]
-pub extern "C" fn current_world_width() -> i32 {
+pub extern "C" fn current_world_width() -> f32 {
     engine().world.bounds.w
 }
 
 #[no_mangle]
-pub extern "C" fn current_world_height() -> i32 {
+pub extern "C" fn current_world_height() -> f32 {
     engine().world.bounds.h
 }
 
 #[no_mangle]
-pub extern "C" fn camera_viewport() -> IntRect {
+pub extern "C" fn camera_viewport() -> FRect {
     engine().camera_viewport
 }
 
@@ -255,14 +255,14 @@ pub extern "C" fn player_current_hp(player: usize) -> f32 {
     engine().world.players[player].props.hp
 }
 
-pub fn cached_players_positions() -> Vec<IntPoint> {
+pub fn cached_players_positions() -> Vec<Vector2d> {
     engine().world.players
         .iter()
         .map(|p| p.props.hittable_frame.origin())
         .collect()
 }
 
-pub fn cached_player_position(player: usize) -> IntPoint {
+pub fn cached_player_position(player: usize) -> Vector2d {
     engine().world.players[player].props.hittable_frame.origin()
 }
 
@@ -400,7 +400,7 @@ pub fn current_mouse_state() -> &'static MouseEventsProvider {
     &engine().mouse
 }
 
-pub fn current_camera_viewport() -> &'static IntRect {
+pub fn current_camera_viewport() -> &'static FRect {
     &engine().camera_viewport
 }
 

@@ -1,18 +1,18 @@
-use game_core::{constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, TILE_SIZE}, current_biome_tiles_variant, current_world_height, current_world_width, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::SpriteTile}, utils::{rect::IntRect, vector::Vector2d}};
+use game_core::{constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, TILE_SIZE}, current_biome_tiles_variant, current_world_height, current_world_width, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::SpriteTile}, utils::{rect::FRect, vector::Vector2d}};
 use raylib::prelude::*;
 
 use super::ui::get_rendering_config;
 
 pub fn render_tiles(
     d: &mut RaylibDrawHandle, 
-    camera_viewport: &IntRect, 
+    camera_viewport: &FRect, 
     camera_viewport_offset: &Vector2d,
     biome_tiles: &[Vec<BiomeTile>],
     construction_tiles: &[Vec<ConstructionTile>]
 ) {
     let variant = current_biome_tiles_variant();
-    let world_width = current_world_width();
-    let world_height = current_world_height();
+    let world_width = current_world_width() as i32;
+    let world_height = current_world_height() as i32;
     
     let config = get_rendering_config();
     let texture_biome = config.get_texture(SPRITE_SHEET_BIOME_TILES).unwrap();
@@ -23,10 +23,10 @@ pub fn render_tiles(
     let camera_offset_x = (camera_viewport_offset.x * scale).ceil();
     let camera_offset_y = (camera_viewport_offset.y * scale).ceil();
 
-    let x_start = camera_viewport.x - 1;
-    let y_start = camera_viewport.y - 1;
-    let x_end = x_start + camera_viewport.w + 3;
-    let y_end = y_start + camera_viewport.h + 3;
+    let x_start = camera_viewport.x as i32 - 1;
+    let y_start = camera_viewport.y as i32 - 1;
+    let x_end = x_start + camera_viewport.w as i32 + 3;
+    let y_end = y_start + camera_viewport.h as i32 + 3;
 
     for col in x_start..x_end {
         for row in y_start..y_end {

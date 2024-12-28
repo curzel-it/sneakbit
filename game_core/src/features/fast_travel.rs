@@ -6,7 +6,7 @@ impl Entity {
     }
 
     pub fn update_fast_travel(&mut self, world: &World) -> Vec<WorldStateUpdate> {   
-        if is_player_entering_tile(world, self.frame.x + 1, self.frame.y + 1) {
+        if is_player_entering_tile(world, self.frame.x + 1.0, self.frame.y + 1.0) {
             vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::FastTravel)]
         } else {
             vec![]
@@ -41,7 +41,7 @@ impl FastTravelDestination {
             });
 
             if let Some(link) = link {
-                let x = link.frame.x + 1;
+                let x = link.frame.x + 1.0;
                 let y = link.frame.y + link.frame.h;
                 let destination = Destination::new(world_id, x, y);
                 Some(destination)

@@ -1,4 +1,4 @@
-use crate::{constants::{PLAYER1_INDEX, TILE_SIZE}, entities::known_species::is_building, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{PLAYER1_INDEX, TILE_SIZE}, entities::known_species::is_building, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
 
 use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species, SpeciesId}};
 
@@ -47,13 +47,9 @@ impl Entity {
     }
 
     fn check_hits(&self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
-        let (previous_x, previous_y) = self.previous_position();
-        let previous_hits = world.entity_ids(previous_x, previous_y);
-        let current_hits = world.entity_ids(self.frame.x, self.frame.y);
-        
-        let valid_hits: Vec<u32> = vec![previous_hits, current_hits]
+        let valid_hits: Vec<u32> = world
+            .entity_ids(self.frame.x, self.frame.y)
             .into_iter()
-            .flatten()
             .filter_map(|(entity_id, _)| {
                 if self.is_valid_hit_target(entity_id) {
                     Some(entity_id)
@@ -85,16 +81,11 @@ impl Entity {
     }
 
     fn check_stoppers(&self, world: &World) -> Vec<WorldStateUpdate> {
-        if self.frame.x < 0 { return vec![] }
-        if self.frame.x as usize >= world.construction_tiles.tiles[0].len() { return vec![] }
-        if self.frame.y < 0 { return vec![] }
-        if self.frame.y as usize >= world.construction_tiles.tiles.len() { return vec![] }
-        
-        let construction = &world.construction_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
-        let biome = &world.biome_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
+        let construction = &world.construction_at(self.frame.x, self.frame.y);
+        let biome = &world.biome_at(self.frame.x, self.frame.y);
         let hits = world.entity_ids(self.frame.x, self.frame.y);
 
-        if construction.tile_type.stops_bullets() || biome.tile_type.stops_bullets() {
+        if construction.stops_bullets() || biome.stops_bullets() {
             return vec![WorldStateUpdate::HandleBulletStopped(self.id)]
         }
         if hits.iter().any(|(_, species_id)| is_building(*species_id)) {
@@ -109,17 +100,12 @@ impl Entity {
     pub fn is_valid_hit_target(&self, entity_id: u32) -> bool {
         entity_id != 0 && entity_id != self.id && entity_id != self.parent_id 
     }
-
-    fn previous_position(&self) -> (i32, i32) {
-        let (ox, oy) = self.direction.as_col_row_offset();
-        (self.frame.x - ox, self.frame.y - oy)
-    } 
 }
 
 pub fn make_bullet_ex(
     species: u32, 
     parent_id: u32, 
-    starting_frame: &IntRect, 
+    starting_frame: &FRect, 
     starting_offset: &Vector2d, 
     direction: Direction, 
     lifespan: f32
@@ -129,10 +115,10 @@ pub fn make_bullet_ex(
     let (dx, dy) = direction.as_col_row_offset();
     bullet.frame = starting_frame.offset(dx, dy); 
     
-    if starting_offset.x > TILE_SIZE / 2.0 { bullet.frame.x += 1 }
-    if starting_offset.x < -TILE_SIZE / 2.0 { bullet.frame.x -= 1 }
-    if starting_offset.y > TILE_SIZE / 2.0 { bullet.frame.y += 1 }
-    if starting_offset.y < -TILE_SIZE / 2.0 { bullet.frame.y -= 1 }
+    if starting_offset.x > TILE_SIZE / 2.0 { bullet.frame.x += 1.0 }
+    if starting_offset.x < -TILE_SIZE / 2.0 { bullet.frame.x -= 1.0 }
+    if starting_offset.y > TILE_SIZE / 2.0 { bullet.frame.y += 1.0 }
+    if starting_offset.y < -TILE_SIZE / 2.0 { bullet.frame.y -= 1.0 }
     
     bullet.parent_id = parent_id;
     bullet.remaining_lifespan = lifespan;

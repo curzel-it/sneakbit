@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{ANIMATIONS_FPS, NO_PARENT, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType, Species}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{ANIMATIONS_FPS, NO_PARENT, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType, Species}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
 
 use super::{directions::MovementDirections, fast_travel::is_fast_travel_available, locks::LockType, messages::DisplayableMessage, pvp_arena::is_pvp_arena_available, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}};
 
@@ -9,7 +9,7 @@ pub type EntityId = u32;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Entity {
     pub id: EntityId,
-    pub frame: IntRect,  
+    pub frame: FRect,  
     pub species_id: u32,  
     pub direction: Direction,
     pub dialogues: EntityDialogues,
@@ -26,7 +26,7 @@ pub struct Entity {
     pub sprite: AnimatedSprite,
     
     #[serde(skip)]
-    pub original_sprite_frame: IntRect,
+    pub original_sprite_frame: FRect,
     
     #[serde(skip)]
     pub is_rigid: bool,
@@ -120,7 +120,7 @@ impl Entity {
         let accounting_y = if self.is_equipment() {
             self.frame.center().y.floor() as i32
         } else {
-            self.frame.y + self.frame.h
+            (self.frame.y + self.frame.h).floor() as i32
         };
 
         let a = accounting_y * 10_000;
@@ -224,7 +224,7 @@ impl Entity {
         self.sprite.sheet_id
     }
 
-    pub fn texture_source_rect(&self) -> IntRect {
+    pub fn texture_source_rect(&self) -> FRect {
         self.sprite.texture_source_rect()
     }
 
@@ -245,21 +245,21 @@ impl Entity {
         None
     }
 
-    pub fn hittable_frame(&self) -> IntRect {
-        let x_offset = 0;
-        let y_offset = if self.frame.h > 1 { 1 } else { 0 };
+    pub fn hittable_frame(&self) -> FRect {
+        let x_offset = 0.0;
+        let y_offset = if self.frame.h > 1.0 { 1.0 } else { 0.0 };
         let width = self.frame.w;
-        let height = if self.frame.h > 1 { self.frame.h - 1 } else { self.frame.h };
+        let height = if self.frame.h > 1.0 { self.frame.h - 1.0 } else { self.frame.h };
 
-        IntRect {
+        FRect {
             x: self.frame.x + x_offset,
             y: self.frame.y + y_offset,
-            w: width.max(1),
-            h: height.max(1),
+            w: width.max(1.0),
+            h: height.max(1.0),
         }
     }
 
-    pub fn is_at_the_edge_of_the_world(&self, bounds: &IntRect) -> bool {
+    pub fn is_at_the_edge_of_the_world(&self, bounds: &FRect) -> bool {
         if self.frame.x <= bounds.x { return true }
         if self.frame.y <= bounds.y { return true }
         if self.frame.x + self.frame.w >= bounds.x + bounds.w { return true }
@@ -376,7 +376,7 @@ impl Entity {
         self.frame = self.hittable_frame(); 
         self.sprite = AnimatedSprite::new(
             SPRITE_SHEET_ANIMATED_OBJECTS, 
-            IntRect::new(0, 10, 1, 1), 
+            FRect::new(0.0, 10.0, 1.0, 1.0), 
             5
         );
     }

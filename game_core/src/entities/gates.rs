@@ -13,7 +13,7 @@ impl Entity {
             self.sprite.frame.x = self.original_sprite_frame.x;
         } else {
             self.is_rigid = false;
-            self.sprite.frame.x = self.original_sprite_frame.x + 1;
+            self.sprite.frame.x = self.original_sprite_frame.x + 1.0;
         }
 
         vec![]
@@ -33,7 +33,7 @@ impl Entity {
             self.sprite.frame.x = self.original_sprite_frame.x;
         } else {
             self.is_rigid = false;
-            self.sprite.frame.x = self.original_sprite_frame.x + 1;
+            self.sprite.frame.x = self.original_sprite_frame.x + 1.0;
         }
 
         vec![]

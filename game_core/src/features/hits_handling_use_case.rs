@@ -1,4 +1,4 @@
-use crate::{current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{is_monster, SPECIES_DAMAGE_INDICATOR, SPECIES_KUNAI}, species::species_by_id}, equipment::basics::available_weapons, features::entity::is_player, utils::{rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{current_game_mode, entities::{bullets::{BulletHits, BulletId}, known_species::{is_monster, SPECIES_DAMAGE_INDICATOR, SPECIES_KUNAI}, species::species_by_id}, equipment::basics::available_weapons, features::entity::is_player, utils::{rect::FRect, vector::Vector2d}, worlds::world::World};
 use crate::features::{entity::Entity, state_updates::EngineStateUpdate, storage::{has_boomerang_skill, has_bullet_catcher_skill, has_piercing_knife_skill, increment_inventory_count}};
 
 impl World {
@@ -14,7 +14,7 @@ impl World {
             hits.target_ids.contains(&e.id) && e.can_be_hit_by_bullet()
         });
 
-        let mut damage_indicator_positions: Vec<(IntRect, Vector2d)> = vec![];
+        let mut damage_indicator_positions: Vec<(FRect, Vector2d)> = vec![];
 
         for target in targets {
             let (did_kill, show_damage_indicator) = if target.is_player() {

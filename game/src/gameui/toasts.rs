@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use game_core::{constants::SPRITE_SHEET_MENU, features::{animated_sprite::AnimatedSprite, toasts::{Toast, ToastMode}}, hstack, next_toast, spacing, text, texture, ui::{components::{empty_view, BordersTextures, NonColor, Spacing, TextureInfo, Typography, View, WithAlpha, COLOR_TOAST_BACKGROUND}, scaffold::scaffold}, utils::{animator::Animator, rect::IntRect}, vstack};
+use game_core::{constants::SPRITE_SHEET_MENU, features::{animated_sprite::AnimatedSprite, toasts::{Toast, ToastMode}}, hstack, next_toast, spacing, text, texture, ui::{components::{empty_view, BordersTextures, NonColor, Spacing, TextureInfo, Typography, View, WithAlpha, COLOR_TOAST_BACKGROUND}, scaffold::scaffold}, utils::{animator::Animator, rect::FRect}, vstack};
 
 use crate::GameContext;
 
@@ -112,7 +112,7 @@ impl ToastDisplay {
         if let Some(sprite) = &self.sprite {
             let image = texture!(sprite.sheet_id, sprite.frame, sprite.frame.size());
             
-            let text = if sprite.frame.h > 1 && self.text.contains("\n") {
+            let text = if sprite.frame.h > 1.0 && self.text.contains("\n") {
                 vstack!(Spacing::Zero, spacing!(Spacing::LG), text)
             } else {
                 vstack!(Spacing::Zero, spacing!(Spacing::SM), text)
@@ -149,23 +149,23 @@ impl ToastDisplay {
 }
 
 const TOAST_BORDERS_TEXTURES: BordersTextures = BordersTextures {
-    corner_top_left:     TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 3, y: 0, w: 1, h: 1 } },
-    corner_top_right:    TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 5, y: 0, w: 1, h: 1 } },
-    corner_bottom_right: TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 5, y: 2, w: 1, h: 1 } },
-    corner_bottom_left:  TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 3, y: 2, w: 1, h: 1 } },
-    side_top:            TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 4, y: 0, w: 1, h: 1 } },
-    side_right:          TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 5, y: 1, w: 1, h: 1 } },
-    side_bottom:         TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 4, y: 2, w: 1, h: 1 } },
-    side_left:           TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 3, y: 1, w: 1, h: 1 } },
+    corner_top_left:     TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 3.0, y: 0.0, w: 1.0, h: 1.0 } },
+    corner_top_right:    TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 5.0, y: 0.0, w: 1.0, h: 1.0 } },
+    corner_bottom_right: TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 5.0, y: 2.0, w: 1.0, h: 1.0 } },
+    corner_bottom_left:  TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 3.0, y: 2.0, w: 1.0, h: 1.0 } },
+    side_top:            TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 4.0, y: 0.0, w: 1.0, h: 1.0 } },
+    side_right:          TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 5.0, y: 1.0, w: 1.0, h: 1.0 } },
+    side_bottom:         TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 4.0, y: 2.0, w: 1.0, h: 1.0 } },
+    side_left:           TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 3.0, y: 1.0, w: 1.0, h: 1.0 } },
 };
 
 const TOAST_HINT_BORDERS_TEXTURES: BordersTextures = BordersTextures {
-    corner_top_left:     TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 6, y: 0, w: 1, h: 1 } },
-    corner_top_right:    TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 8, y: 0, w: 1, h: 1 } },
-    corner_bottom_right: TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 8, y: 2, w: 1, h: 1 } },
-    corner_bottom_left:  TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 6, y: 2, w: 1, h: 1 } },
-    side_top:            TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 7, y: 0, w: 1, h: 1 } },
-    side_right:          TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 8, y: 1, w: 1, h: 1 } },
-    side_bottom:         TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 7, y: 2, w: 1, h: 1 } },
-    side_left:           TextureInfo { key: SPRITE_SHEET_MENU, source_rect: IntRect { x: 6, y: 1, w: 1, h: 1 } },
+    corner_top_left:     TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 6.0, y: 0.0, w: 1.0, h: 1.0 } },
+    corner_top_right:    TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 8.0, y: 0.0, w: 1.0, h: 1.0 } },
+    corner_bottom_right: TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 8.0, y: 2.0, w: 1.0, h: 1.0 } },
+    corner_bottom_left:  TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 6.0, y: 2.0, w: 1.0, h: 1.0 } },
+    side_top:            TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 7.0, y: 0.0, w: 1.0, h: 1.0 } },
+    side_right:          TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 8.0, y: 1.0, w: 1.0, h: 1.0 } },
+    side_bottom:         TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 7.0, y: 2.0, w: 1.0, h: 1.0 } },
+    side_left:           TextureInfo { key: SPRITE_SHEET_MENU, source_rect: FRect { x: 6.0, y: 1.0, w: 1.0, h: 1.0 } },
 };

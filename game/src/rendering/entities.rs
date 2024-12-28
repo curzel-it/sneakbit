@@ -1,11 +1,11 @@
-use game_core::{constants::TILE_SIZE, get_renderables_vec, utils::{vector::Vector2d, rect::IntRect}, RenderableItem};
+use game_core::{constants::TILE_SIZE, get_renderables_vec, utils::{vector::Vector2d, rect::FRect}, RenderableItem};
 use raylib::prelude::*;
 
 use super::ui::get_rendering_config;
 
 pub fn render_entities(
     d: &mut RaylibDrawHandle, 
-    camera_viewport: &IntRect, 
+    camera_viewport: &FRect, 
     camera_viewport_offset: &Vector2d
 ) {
     let config = get_rendering_config();
@@ -20,7 +20,7 @@ fn render_entity(
     d: &mut RaylibDrawHandle, 
     scale: f32,
     item: &RenderableItem, 
-    camera_viewport: &IntRect, 
+    camera_viewport: &FRect, 
     camera_viewport_offset: &Vector2d
 ) {
     let sprite_key = item.sprite_sheet_id;

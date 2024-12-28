@@ -1,11 +1,11 @@
-use game_core::{constants::TILE_SIZE, current_biome_tiles_variant, current_world_id, utils::{rect::IntRect, vector::Vector2d}};
+use game_core::{constants::TILE_SIZE, current_biome_tiles_variant, current_world_id, utils::{rect::FRect, vector::Vector2d}};
 use raylib::prelude::*;
 
 use super::ui::get_rendering_config;
 
 pub fn render_tile_map(
     d: &mut RaylibDrawHandle,
-    camera_viewport: &IntRect,
+    camera_viewport: &FRect,
     camera_viewport_offset: &Vector2d
 ) -> bool {
     let config = get_rendering_config();

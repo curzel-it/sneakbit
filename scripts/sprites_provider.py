@@ -2,12 +2,12 @@ from PIL import Image
 import os
 from typing import Dict, Tuple, Optional
 from dataclasses import dataclass
-from tiles import IntRect, TILE_SIZE
+from tiles import FRect, TILE_SIZE
 
 @dataclass
 class RenderableItem:
     sprite_sheet_id: int  # Using int instead of UInt
-    texture_rect: IntRect
+    texture_rect: FRect
 
 class SpritesProvider:
     def __init__(self, assets_dir: str, sprite_sheet_file_names: Dict[int, str]):
@@ -17,10 +17,10 @@ class SpritesProvider:
         """
         self.assets_dir = assets_dir
         self.sprite_sheet_file_names = sprite_sheet_file_names
-        self.cache: Dict[Tuple[int, IntRect], Image.Image] = {}
+        self.cache: Dict[Tuple[int, FRect], Image.Image] = {}
         self.sprite_sheet_images: Dict[int, Image.Image] = {}
 
-    def bitmap_for(self, sprite_sheet_id: int, texture_rect: IntRect) -> Optional[Image.Image]:
+    def bitmap_for(self, sprite_sheet_id: int, texture_rect: FRect) -> Optional[Image.Image]:
         cache_key = (sprite_sheet_id, texture_rect)
 
         if cache_key in self.cache:

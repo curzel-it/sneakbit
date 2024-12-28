@@ -2,7 +2,7 @@ use std::{fs::File, io::{BufReader, Write}};
 
 use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Error;
-use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, light_conditions::LightConditions}, features::entity::Entity, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::ConstructionTile, tiles::TileSet}, utils::rect::IntRect};
+use crate::{config::config, constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES}, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, light_conditions::LightConditions}, features::entity::Entity, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::ConstructionTile, tiles::TileSet}, utils::rect::FRect};
 
 use super::{world::World, world_type::WorldType};
 
@@ -59,8 +59,8 @@ impl World {
 
         let biome_tile_set = TileSet::<BiomeTile>::with_tiles(
             SPRITE_SHEET_BIOME_TILES, 
-            (0..world.bounds.h).map(|_| {
-                (0..world.bounds.w).map(|_| {
+            (0..world.bounds.h as usize).map(|_| {
+                (0..world.bounds.w as usize).map(|_| {
                     let mut tile = BiomeTile::from_data('0');
                     tile.setup_neighbors(tile.tile_type, tile.tile_type, tile.tile_type, tile.tile_type);
                     tile
@@ -71,8 +71,8 @@ impl World {
 
         let construction_tile_set = TileSet::<ConstructionTile>::with_tiles(
             SPRITE_SHEET_CONSTRUCTION_TILES, 
-            (0..world.bounds.h).map(|_| {
-                (0..world.bounds.w).map(|_| {
+            (0..world.bounds.h as usize).map(|_| {
+                (0..world.bounds.w as usize).map(|_| {
                     let mut tile = ConstructionTile::from_data('0');
                     tile.setup_neighbors(tile.tile_type, tile.tile_type, tile.tile_type, tile.tile_type);
                     tile
@@ -96,7 +96,7 @@ impl World {
         } else {
             tiles
         };
-        self.bounds = IntRect::new(0, 0, tiles.tiles[0].len() as i32, tiles.tiles.len() as i32);
+        self.bounds = FRect::new(0.0, 0.0, tiles.tiles[0].len() as f32, tiles.tiles.len() as f32);
         self.biome_tiles = tiles;            
     }
 

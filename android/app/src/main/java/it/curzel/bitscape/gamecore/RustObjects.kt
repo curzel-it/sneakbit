@@ -25,8 +25,8 @@ data class GameState(
 data class AmmoRecap(
     val weaponName: String,
     val weaponSpeciesId: Int,
-    val weaponSprite: IntRect,
-    val weaponInventorySprite: IntRect,
+    val weaponSprite: FRect,
+    val weaponInventorySprite: FRect,
     val bulletName: String,
     val bulletSpeciesId: Int,
     val ammoInventoryCount: Int,
@@ -39,8 +39,8 @@ data class AmmoRecap(
         val empty: AmmoRecap = AmmoRecap(
             weaponName = "",
             weaponSpeciesId = 0,
-            weaponSprite = IntRect(0, 0, 0, 0),
-            weaponInventorySprite = IntRect(0, 0, 0, 0),
+            weaponSprite = FRect(0.0, 0.0, 0.0, 0.0),
+            weaponInventorySprite = FRect(0.0, 0.0, 0.0, 0.0),
             bulletName = "",
             bulletSpeciesId = 0,
             ammoInventoryCount = 0,
@@ -52,7 +52,7 @@ data class AmmoRecap(
     }
 }
 
-data class IntRect(
+data class FRect(
     val x: Int,
     val y: Int,
     val w: Int,
@@ -66,9 +66,9 @@ data class Vector2d(
 
 data class RenderableItem(
     val spriteSheetId: UInt,
-    val textureRect: IntRect,
+    val textureRect: FRect,
     val offset: Vector2d,
-    val frame: IntRect
+    val frame: FRect
 )
 
 data class MatchResult(
@@ -86,7 +86,7 @@ data class DisplayableToast(
 ) {
     data class Image(
         val spriteSheetId: UInt,
-        val textureFrame: IntRect
+        val textureFrame: FRect
     )
 
     enum class Mode(val value: Int) {

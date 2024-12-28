@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common_macros::hash_set;
 
-use crate::{cached_players_positions, constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_explosive, is_key, is_monster, is_pickable}, input::keyboard_events_provider::KeyboardEventsProvider, features::{state_updates::{AddToInventoryReason, EngineStateUpdate}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, is_player_by_index_on_slippery_surface, utils::rect::IntPoint};
+use crate::{cached_players_positions, constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_explosive, is_key, is_monster, is_pickable}, features::{state_updates::{AddToInventoryReason, EngineStateUpdate}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, input::keyboard_events_provider::KeyboardEventsProvider, is_player_by_index_on_slippery_surface, utils::vector::Vector2d};
 
 use super::toasts::{Toast, ToastMode};
 
@@ -30,7 +30,7 @@ pub enum SoundEffect {
 pub struct SoundEffectsManager {
     pub current_sound_effects: HashSet<SoundEffect>,
     next_sound_effects: HashSet<SoundEffect>,
-    last_players_positions: Vec<IntPoint>,
+    last_players_positions: Vec<Vector2d>,
     last_world: u32,
 }
 

@@ -1,4 +1,4 @@
-use game_core::{constants::{MAX_PLAYERS, SPRITE_SHEET_INVENTORY}, currently_active_players, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, features::storage::{get_value_for_global_key, inventory_count, StorageKey}, hstack, multiplayer::modes::GameMode, player_current_hp, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use game_core::{constants::{MAX_PLAYERS, SPRITE_SHEET_INVENTORY}, currently_active_players, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::species_by_id}, features::storage::{get_value_for_global_key, inventory_count, StorageKey}, hstack, multiplayer::modes::GameMode, player_current_hp, spacing, text, texture, ui::components::{empty_view, Spacing, Typography, View, COLOR_TRANSPARENT}, utils::{rect::FRect, vector::Vector2d}, vstack, zstack};
 
 pub struct BasicInfoHud {
     players: Vec<PlayerHud>
@@ -46,7 +46,7 @@ impl BasicInfoHud {
 
 struct PlayerHud {
     player: usize,
-    ammo_texture_rect: IntRect,
+    ammo_texture_rect: FRect,
     ammo_count: u32,
     hp: f32
 }
@@ -55,7 +55,7 @@ impl PlayerHud {
     fn new(player: usize) -> Self {
         Self { 
             player,
-            ammo_texture_rect: IntRect::square_from_origin(1),
+            ammo_texture_rect: FRect::square_from_origin(1.0),
             ammo_count: 0,
             hp: 0.0
         }

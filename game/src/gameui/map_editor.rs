@@ -1,4 +1,4 @@
-use game_core::{apply_world_state_updates, constants::{SPRITE_SHEET_INVENTORY, TILE_SIZE}, entities::species::{EntityType, Species, ALL_SPECIES}, features::state_updates::WorldStateUpdate, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, lang::localizable::LocalizableText, maps::{biome_tiles::Biome, construction_tiles::Construction}, prefabs::all::new_building, spacing, text, texture, ui::{components::{with_fixed_position, GridSpacing, NonColor, Spacing, Typography, View, COLOR_GENERAL_HIGHLIGHT, COLOR_MENU_BACKGROUND, COLOR_MENU_HINT_BACKGROUND, COLOR_TEXT_HIGHLIGHTED}, scaffold::scaffold}, utils::{rect::IntRect, vector::Vector2d}, vstack, zstack};
+use game_core::{apply_world_state_updates, constants::{SPRITE_SHEET_INVENTORY, TILE_SIZE}, entities::species::{EntityType, Species, ALL_SPECIES}, features::state_updates::WorldStateUpdate, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, lang::localizable::LocalizableText, maps::{biome_tiles::Biome, construction_tiles::Construction}, prefabs::all::new_building, spacing, text, texture, ui::{components::{with_fixed_position, GridSpacing, NonColor, Spacing, Typography, View, COLOR_GENERAL_HIGHLIGHT, COLOR_MENU_BACKGROUND, COLOR_MENU_HINT_BACKGROUND, COLOR_TEXT_HIGHLIGHTED}, scaffold::scaffold}, utils::{rect::FRect, vector::Vector2d}, vstack, zstack};
 
 use super::menu::MENU_BORDERS_TEXTURES;
 
@@ -9,13 +9,13 @@ pub struct MapEditor {
     pub current_world_id: u32,
     columns: usize,
     offset: usize,
-    camera_viewport: IntRect,
+    camera_viewport: FRect,
 }
 
 #[derive(Debug, Clone)]
 enum MapEditorState {
     SelectingItem(usize),
-    PlacingItem(usize, Stockable, IntRect),
+    PlacingItem(usize, Stockable, FRect),
 }
 
 impl MapEditor {
@@ -26,7 +26,7 @@ impl MapEditor {
             current_world_id: 0,
             columns: 20,
             offset: 0,
-            camera_viewport: IntRect::square_from_origin(10),
+            camera_viewport: FRect::square_from_origin(10.0),
         }
     }
 
@@ -36,7 +36,7 @@ impl MapEditor {
 
     pub fn update(
         &mut self,
-        camera_viewport: &IntRect,    
+        camera_viewport: &FRect,    
         keyboard: &KeyboardEventsProvider,
         mouse: &MouseEventsProvider,
     ) {
@@ -88,11 +88,11 @@ impl MapEditor {
         }
     }
 
-    fn initial_selection_frame(&self, item: &Stockable) -> IntRect {
+    fn initial_selection_frame(&self, item: &Stockable) -> FRect {
         let size = item.size();
-        IntRect::new(
-            self.camera_viewport.x + self.camera_viewport.w / 2,
-            self.camera_viewport.y + self.camera_viewport.h / 2,
+        FRect::new(
+            self.camera_viewport.x + self.camera_viewport.w / 2.0,
+            self.camera_viewport.y + self.camera_viewport.h / 2.0,
             size.0, 
             size.1
         )
@@ -102,7 +102,7 @@ impl MapEditor {
         &mut self,
         selected_index: usize,
         item: Stockable,
-        frame: IntRect,
+        frame: FRect,
         keyboard: &KeyboardEventsProvider,
         mouse: &MouseEventsProvider,
     ) -> Vec<WorldStateUpdate> {
@@ -129,32 +129,32 @@ impl MapEditor {
         vec![]
     }
 
-    fn updated_frame(&self, frame: &IntRect, mouse: &MouseEventsProvider, keyboard: &KeyboardEventsProvider) -> IntRect {
+    fn updated_frame(&self, frame: &FRect, mouse: &MouseEventsProvider, keyboard: &KeyboardEventsProvider) -> FRect {
         let mut updated_frame = *frame;
         
         if mouse.has_moved {
             let x = mouse.x + self.camera_viewport.x;
             let y = mouse.y  + self.camera_viewport.y;
-            updated_frame = IntRect::new(x, y, updated_frame.w, updated_frame.h);
+            updated_frame = FRect::new(x, y, updated_frame.w, updated_frame.h);
         } else {
             if keyboard.is_direction_up_pressed_by_anyone() {
-                updated_frame = updated_frame.offset_y(-1);
+                updated_frame = updated_frame.offset_y(-1.0);
             }
             if keyboard.is_direction_right_pressed_by_anyone() {
-                updated_frame = updated_frame.offset_x(1);
+                updated_frame = updated_frame.offset_x(1.0);
             }
             if keyboard.is_direction_down_pressed_by_anyone() {
-                updated_frame = updated_frame.offset_y(1);
+                updated_frame = updated_frame.offset_y(1.0);
             }
             if keyboard.is_direction_left_pressed_by_anyone() {
-                updated_frame = updated_frame.offset_x(-1);
+                updated_frame = updated_frame.offset_x(-1.0);
             }     
         }
         updated_frame   
     }
 
-    fn place_item(&mut self, item: Stockable, frame: IntRect) -> Vec<WorldStateUpdate> {
-        if frame.x < 0 || frame.y < 0 { return vec![] }
+    fn place_item(&mut self, item: Stockable, frame: FRect) -> Vec<WorldStateUpdate> {
+        if frame.x < 0.0 || frame.y < 0.0 { return vec![] }
 
         let row = frame.y as usize;
         let col = frame.x as usize;
@@ -164,17 +164,17 @@ impl MapEditor {
             Stockable::ConstructionTile(construction) => vec![WorldStateUpdate::ConstructionTileChange(row, col, construction)],
             Stockable::Entity(species) => match species.entity_type {
                 EntityType::Building => self.place_building(frame, &species),
-                EntityType::Npc => self.place_convertible(frame.offset_y(-1), &species),
+                EntityType::Npc => self.place_convertible(frame.offset_y(-1.0), &species),
                 _ => self.place_convertible(frame, &species),
             },
         }
     }
 
-    fn clear_tile(&mut self, frame: IntRect) -> Vec<WorldStateUpdate> {
+    fn clear_tile(&mut self, frame: FRect) -> Vec<WorldStateUpdate> {
         self.place_item(Stockable::ConstructionTile(Construction::Nothing), frame)
     }
 
-    fn place_convertible(&self, frame: IntRect, species: &Species) -> Vec<WorldStateUpdate> {
+    fn place_convertible(&self, frame: FRect, species: &Species) -> Vec<WorldStateUpdate> {
         let mut entity = species.make_entity();
         entity.frame.x = frame.x;
         entity.frame.y = frame.y;
@@ -182,7 +182,7 @@ impl MapEditor {
         vec![update]
     }
 
-    fn place_building(&self, frame: IntRect, species: &Species) -> Vec<WorldStateUpdate> {
+    fn place_building(&self, frame: FRect, species: &Species) -> Vec<WorldStateUpdate> {
         let x = frame.x;
         let y = frame.y;
 
@@ -210,15 +210,15 @@ enum Stockable {
 }
 
 impl Stockable {
-    pub fn size(&self) -> (i32, i32) {
+    pub fn size(&self) -> (f32, f32) {
         match self {
-            Stockable::BiomeTile(_) => (1, 1),
-            Stockable::ConstructionTile(_) => (1, 1),
+            Stockable::BiomeTile(_) => (1.0, 1.0),
+            Stockable::ConstructionTile(_) => (1.0, 1.0),
             Stockable::Entity(species) => (species.sprite_frame.w, species.sprite_frame.h)
         }
     }
 
-    fn texture_source_rect(&self) -> IntRect {
+    fn texture_source_rect(&self) -> FRect {
         let (y, x) = match self {
             Stockable::BiomeTile(biome) => match biome {
                 Biome::Nothing => (0, 0),
@@ -301,9 +301,14 @@ impl Stockable {
                 Construction::SlopeDarkRockLeft => (4, 22),
                 Construction::SlopeDarkRockRight => (4, 23),
             },
-            Stockable::Entity(species) => species.inventory_texture_offset,
+            Stockable::Entity(species) => {
+                (
+                    species.inventory_texture_offset.0 as i32,
+                    species.inventory_texture_offset.1 as i32
+                )
+            }
         };
-        IntRect::new(x, y, 1, 1)
+        FRect::new(x as f32, y as f32, 1.0, 1.0)
     }
 }
 
@@ -413,7 +418,7 @@ impl MapEditor {
         ];
         let mut species: Vec<Stockable> = ALL_SPECIES
             .iter()
-            .filter(|s| s.inventory_texture_offset != (0, 0))
+            .filter(|s| s.inventory_texture_offset != (0.0, 0.0))
             .filter(|s| !matches!(s.entity_type, EntityType::WeaponMelee | EntityType::WeaponRanged))
             .map(|s| Stockable::Entity(s.clone()))
             .collect();
@@ -423,7 +428,7 @@ impl MapEditor {
 }
 
 impl MapEditor {
-    pub fn ui(&self, camera_viewport: &IntRect) -> View {
+    pub fn ui(&self, camera_viewport: &FRect) -> View {
         scaffold(
             self.uses_backdrop(),
             self.background_color(),
@@ -448,7 +453,7 @@ impl MapEditor {
         }
     }
 
-    fn placement_ui(&self, camera_viewport: &IntRect, frame: &IntRect) -> View {
+    fn placement_ui(&self, camera_viewport: &FRect, frame: &FRect) -> View {
         vstack!(
             Spacing::MD,
             text!(Typography::Regular, "map_editor.placement".localized()),

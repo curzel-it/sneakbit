@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 use std::fs::File;
 use std::io::Read;
 
-use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, equipment::basics::EquipmentUsageSoundEffect, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, features::{directions::MovementDirections, entity::Entity, locks::LockType}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::IntRect, vector::Vector2d}};
+use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, equipment::basics::EquipmentUsageSoundEffect, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, features::{directions::MovementDirections, entity::Entity, locks::LockType}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::FRect, vector::Vector2d}};
 
 pub type SpeciesId = u32;
 
@@ -14,8 +14,8 @@ pub struct Species {
     pub entity_type: EntityType,
     pub base_speed: f32,
     pub is_rigid: bool,
-    pub inventory_texture_offset: (i32, i32),
-    pub sprite_frame: IntRect,
+    pub inventory_texture_offset: (f32, f32),
+    pub sprite_frame: FRect,
     pub sprite_sheet_id: u32,
     pub sprite_number_of_frames: i32,
     
@@ -169,8 +169,8 @@ impl Species {
         let sprite = self.make_sprite();      
         let initial_speed = self.movement_directions.initial_speed(self.base_speed);
 
-        entity.frame.w = (sprite.frame.w as f32 * self.scale) as i32;  
-        entity.frame.h = (sprite.frame.h as f32 * self.scale) as i32;  
+        entity.frame.w = sprite.frame.w * self.scale;  
+        entity.frame.h = sprite.frame.h * self.scale;  
         entity.original_sprite_frame = sprite.frame;
         entity.entity_type = self.entity_type;
         entity.is_rigid = self.is_rigid;
@@ -197,8 +197,8 @@ impl Species {
         }
     }
 
-    pub fn inventory_sprite_frame(&self) -> IntRect {
-        IntRect::new(self.inventory_texture_offset.1, self.inventory_texture_offset.0, 1, 1)
+    pub fn inventory_sprite_frame(&self) -> FRect {
+        FRect::new(self.inventory_texture_offset.1, self.inventory_texture_offset.0, 1.0, 1.0)
     }
 
     fn make_sprite(&self) -> AnimatedSprite {
@@ -248,8 +248,8 @@ const SPECIES_NONE: Species = Species {
     scale: 1.0,
     base_speed: 0.0,
     is_rigid: false,
-    inventory_texture_offset: (0, 0),
-    sprite_frame: IntRect::new(0, 0, 0, 0),
+    inventory_texture_offset: (0.0, 0.0),
+    sprite_frame: FRect::new(0.0, 0.0, 0.0, 0.0),
     sprite_sheet_id: SPRITE_SHEET_BIOME_TILES,
     sprite_number_of_frames: 1,
     lock_type: LockType::None,

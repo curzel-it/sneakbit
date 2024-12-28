@@ -1,4 +1,4 @@
-use crate::{config::config, constants::TILE_SIZE, features::entity::Entity, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{config::config, constants::TILE_SIZE, features::entity::Entity, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 
@@ -27,10 +27,8 @@ impl Entity {
         let tiles_y_f = updated_offset.y / TILE_SIZE;
         let tiles_x = if updated_offset.x > 0.0 { tiles_x_f.floor() } else { tiles_x_f.ceil() };
         let tiles_y = if updated_offset.y > 0.0 { tiles_y_f.floor() } else { tiles_y_f.ceil() };
-        let tiles_x_i = tiles_x as i32;
-        let tiles_y_i = tiles_y as i32;
         
-        self.frame = frame.offset(tiles_x_i, tiles_y_i);
+        self.frame = frame.offset(tiles_x, tiles_y);
 
         if tiles_x != 0.0 || tiles_y != 0.0 {
             self.offset = Vector2d::zero();
@@ -55,7 +53,7 @@ fn updated_offset(offset: &Vector2d, direction: &Direction, speed: f32, time_sin
         .scaled(config().base_entity_speed) + *offset
 }
 
-fn would_exit_bounds(frame: &IntRect, direction: &Direction, bounds: &IntRect) -> bool {
+fn would_exit_bounds(frame: &FRect, direction: &Direction, bounds: &FRect) -> bool {
     match direction {
         Direction::Up => frame.y <= bounds.y,
         Direction::Right => (frame.x + frame.w) >= (bounds.x + bounds.w),
@@ -66,27 +64,27 @@ fn would_exit_bounds(frame: &IntRect, direction: &Direction, bounds: &IntRect) -
     }
 }
 
-pub fn would_collide(frame: &IntRect, direction: &Direction, world: &World) -> bool {
+pub fn would_collide(frame: &FRect, direction: &Direction, world: &World) -> bool {
     let (col_offset, row_offset) = direction.as_col_row_offset();
-    let base_y = frame.y + frame.h - 1;
+    let base_y = frame.y + frame.h - 1.0;
     let base_x = frame.x;
     let x = base_x + col_offset;
     let y = base_y + row_offset;
     world.hits(x, y)
 }
 
-pub fn would_over_weight(frame: &IntRect, direction: &Direction, world: &World) -> bool {
+pub fn would_over_weight(frame: &FRect, direction: &Direction, world: &World) -> bool {
     let (col_offset, row_offset) = direction.as_col_row_offset();
-    let base_y = frame.y + frame.h - 1;
+    let base_y = frame.y + frame.h - 1.0;
     let base_x = frame.x;
     let x = base_x + col_offset;
     let y = base_y + row_offset;
     world.has_weight(x, y)
 }
 
-pub fn would_collide_with_hero(frame: &IntRect, direction: &Direction, world: &World) -> bool {
+pub fn would_collide_with_hero(frame: &FRect, direction: &Direction, world: &World) -> bool {
     let (col_offset, row_offset) = direction.as_col_row_offset();
-    let y = frame.y + frame.h - 1 + row_offset;
+    let y = frame.y + frame.h - 1.0 + row_offset;
     let x = frame.x + col_offset;
     let hero = world.players[0].props.hittable_frame;
     hero.x == x && hero.y == y 

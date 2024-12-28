@@ -42,7 +42,7 @@ class GameEngine {
     
     let tileSize = CGFloat(TILE_SIZE)
     private(set) var renderingScale: CGFloat = 1
-    private(set) var cameraViewport: IntRect = .zero
+    private(set) var cameraViewport: FRect = .zero
     private(set) var cameraViewportOffset: Vector2d = .zero
     private(set) var safeAreaInsets: UIEdgeInsets = .zero
     private(set) var canRender: Bool = true
@@ -176,7 +176,7 @@ class GameEngine {
         }
     }
     
-    private func renderingFrame(for frame: IntRect, offset: Vector2d = .zero) -> CGRect {
+    private func renderingFrame(for frame: FRect, offset: Vector2d = .zero) -> CGRect {
         let actualCol = CGFloat(frame.x - cameraViewport.x)
         let actualOffsetX = CGFloat(offset.x - cameraViewportOffset.x)
 

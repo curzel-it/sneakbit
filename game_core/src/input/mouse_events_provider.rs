@@ -5,8 +5,8 @@ pub struct MouseEventsProvider {
     pub is_right_down: bool,
     pub has_left_been_pressed: bool,
     pub has_right_been_pressed: bool,
-    pub x: i32,
-    pub y: i32,
+    pub x: f32,
+    pub y: f32,
     pub has_moved: bool,
 }
 
@@ -17,8 +17,8 @@ impl MouseEventsProvider {
             is_right_down: false,
             has_left_been_pressed: false,
             has_right_been_pressed: false,
-            x: 0, 
-            y: 0,
+            x: 0.0, 
+            y: 0.0,
             has_moved: false
         }
     }
@@ -39,8 +39,8 @@ impl MouseEventsProvider {
         self.has_left_been_pressed = mouse_left_pressed;
         self.has_right_been_pressed = mouse_right_pressed;
 
-        let new_x = (mouse_x / (rendering_scale * TILE_SIZE)) as i32;
-        let new_y = (mouse_y / (rendering_scale * TILE_SIZE)) as i32;
+        let new_x = mouse_x / (rendering_scale * TILE_SIZE);
+        let new_y = mouse_y / (rendering_scale * TILE_SIZE);
         
         self.has_moved = new_x != self.x || new_y != self.y;
         self.x = new_x;
