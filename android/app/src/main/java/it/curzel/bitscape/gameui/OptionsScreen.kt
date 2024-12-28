@@ -1,6 +1,7 @@
 package it.curzel.bitscape.gameui
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -34,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
@@ -54,6 +57,7 @@ fun OptionsScreen(
     spritesProvider: SpritesProvider,
     modifier: Modifier = Modifier
 ) {
+    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val context = LocalContext.current
     val viewModel = remember { OptionsScreenViewModel(gameEngine, audioEngine) }
 
@@ -87,7 +91,10 @@ fun OptionsScreen(
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize().padding(top = 80.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = if (isLandscape) 10.dp else 80.dp)
+                        .padding(bottom = if (isLandscape) 10.dp else 20.dp)
                 ) {
                     when {
                         showNewGameAlert -> {
@@ -146,7 +153,7 @@ fun OptionsScreen(
                     contentScale = ContentScale.FillBounds,
                     filterQuality = FilterQuality.None,
                     alpha = menuButtonOpacity,
-                    modifier = modifier
+                    modifier = Modifier
                         .size(90.dp)
                         .padding(keyEmulatorViewPadding)
                         .clickable { viewModel.showMenu() }
@@ -175,8 +182,8 @@ private fun OptionsContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp),
         modifier = modifier
-            .fillMaxSize()
-            .padding(vertical = 20.dp)
+            .fillMaxWidth()
+            .wrapContentHeight(Alignment.CenterVertically)
             .verticalScroll(rememberScrollState())
     ) {
         Text(
