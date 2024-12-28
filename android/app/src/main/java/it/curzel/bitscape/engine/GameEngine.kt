@@ -362,4 +362,8 @@ class GameEngine(
     fun isPvp(): Boolean {
         return nativeLib.isPvp()
     }
+
+    fun setWeaponEquippedForCurrentPlayer(weaponSpeciesId: Int) {
+        nativeLib.setWeaponEquipped(weaponSpeciesId, currentPlayerIndex())
+    }
 }

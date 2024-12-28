@@ -900,3 +900,11 @@ Java_it_curzel_bitscape_gamecore_NativeLib_weapons(JNIEnv *env, jobject thiz, ji
 
     return arrayListObj;
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_setWeaponEquipped(JNIEnv *env, jobject thiz,
+                                                             jint weapon_species_id,
+                                                             jint current_player_index) {
+    set_weapon_equipped(weapon_species_id, current_player_index);
+}

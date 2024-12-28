@@ -49,7 +49,7 @@ Bullets travel straight and inflict a damage per second, so the faster bullets a
 
 |Ammo|Dps|Speed|Lifespan|
 |--|--|--|--|
-|Kunai|1500|7.0|1.4|
+|Kunai|1600|7.0|1.4|
 |.223 Rem|600|10.0|2.0|
 |Cannonball|5000|8.0|2.0|
 

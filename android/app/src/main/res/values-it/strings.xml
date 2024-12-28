@@ -46,4 +46,5 @@
     <string name="game_menu_exit_pvp_are_you_sure">"Sicuro?\nTornerai a Duskhaven"</string>
     <string name="game_menu_confirm_exit_pvp">"Sì, sicuro"</string>
     <string name="prep_for_next_turn">"Giocatore %PLAYER_NAME% pronto fra %TIME%..."</string>
+    <string name="switch_weapon">Select Weapon</string>
 </resources>

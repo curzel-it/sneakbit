@@ -33,19 +33,22 @@ class OptionsViewModel: ObservableObject {
         Task { @MainActor in
             loadToggleSoundEffectsTitle()
             loadToggleMusicTitle()
-            
-            engine.weapons()
-                .removeDuplicates()
-                .sink { [weak self] weapons in
-                    self?.weapons = weapons
-                    self?.updateSwitchWeaponVisibility()
-                }
-                .store(in: &cancellables)
+            bindWeaponSelectionVisibility()
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
                 self?.makeButtonSemiTransparent()
             }
         }
+    }
+    
+    private func bindWeaponSelectionVisibility() {
+        engine.weapons()
+            .removeDuplicates()
+            .sink { [weak self] weapons in
+                self?.weapons = weapons
+                self?.updateSwitchWeaponVisibility()
+            }
+            .store(in: &cancellables)
     }
     
     // Determine if "Switch Weapon" should be visible
