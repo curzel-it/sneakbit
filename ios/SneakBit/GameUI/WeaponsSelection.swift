@@ -7,7 +7,7 @@ struct SwitchWeaponView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("select_weapon".localized())
+            Text("switch_weapon".localized())
                 .typography(.largeTitle)
                 .foregroundStyle(Color.white)
                 .padding(.top, 100)
@@ -22,51 +22,46 @@ struct SwitchWeaponView: View {
             }
             .frame(height: 200)
             
-            Button(action: {
-                print("Back button tapped")
+            Button("menu_back".localized()) {
                 viewModel.closeWeaponSelection()
-            }) {
-                Text("menu_back".localized())
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue.opacity(0.7))
-                    .cornerRadius(10)
             }
-            .padding(.horizontal, 50)
+            .buttonStyle(.menuOption)
             .padding(.top, 50)
         }
         .typography(.title)
         .foregroundStyle(Color.white)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black.opacity(0.7)) // Optional: Add a background to ensure visibility
     }
 }
 
 private struct WeaponCard: View {
     @EnvironmentObject var viewModel: OptionsViewModel
+        
     let weapon: AmmoRecap
     
     var body: some View {
         VStack {
-            // Placeholder for weapon image if available
-            // Uncomment and adjust if you have images matching weapon names
-            /*
-            Image(String(cString: weapon.weapon_name))
-                .resizable()
-                .frame(width: 100, height: 100)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-            */
+            @Inject var sprites: SpritesProvider
+            
+            let image = sprites.cgImage(
+                for: UInt32(SPRITE_SHEET_WEAPONS),
+                textureRect: weapon.weapon_sprite
+            )
+            
+            if let image {
+                Image(decorative: image, scale: 1.0)
+                    .pixelArt()
+                    .frame(width: 128, height: 128)
+            }
             
             Text(String(cString: weapon.weapon_name))
                 .foregroundColor(.white)
                 .padding()
-                .background(Color.gray.opacity(0.5))
-                .cornerRadius(10)
         }
-        .frame(width: 150, height: 150)
+        .padding()
+        .background(Color.gray.opacity(0.5))
+        .cornerRadius(10)
         .onTapGesture {
-            print("Weapon '\(String(cString: weapon.weapon_name))' selected")
             viewModel.selectWeapon(weapon)
         }
     }

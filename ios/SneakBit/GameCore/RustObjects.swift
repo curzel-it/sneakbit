@@ -90,4 +90,10 @@ func fetchWeapons(player: UInt, _ callback: @escaping ([AmmoRecap]) -> Void) {
     free_weapons(ptr, length)
 }
 
-
+extension AmmoRecap: Equatable {
+    public static func == (lhs: AmmoRecap, rhs: AmmoRecap) -> Bool {
+        lhs.weapon_species_id == rhs.weapon_species_id &&
+        lhs.ammo_inventory_count == rhs.ammo_inventory_count &&
+        lhs.is_equipped == rhs.is_equipped
+    }
+}

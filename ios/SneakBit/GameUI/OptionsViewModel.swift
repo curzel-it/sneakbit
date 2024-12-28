@@ -34,8 +34,8 @@ class OptionsViewModel: ObservableObject {
             loadToggleSoundEffectsTitle()
             loadToggleMusicTitle()
             
-            // Subscribe to weapons publisher
             engine.weapons()
+                .removeDuplicates()
                 .sink { [weak self] weapons in
                     self?.weapons = weapons
                     self?.updateSwitchWeaponVisibility()
@@ -65,6 +65,7 @@ class OptionsViewModel: ObservableObject {
     func selectWeapon(_ weapon: AmmoRecap) {
         set_weapon_equipped(weapon.weapon_species_id, engine.currentPlayerIndex)
         showSwitchWeapon = false
+        resumeGame()
     }
     
     func closeWeaponSelection() {

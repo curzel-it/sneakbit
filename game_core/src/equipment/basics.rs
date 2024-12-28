@@ -86,25 +86,28 @@ pub fn is_equipped(species: &Species, player: usize) -> bool {
 
 pub fn available_weapons(player: usize) -> Vec<AmmoRecap> {
     available_weapons_species_ids(player)
-    .iter()
-    .map(|species| {
-        AmmoRecap {
-            weapon_name: string_to_c_char(species.name.localized()),
-            weapon_species_id: species.id,
-            weapon_sprite: IntRect::new(species.sprite_frame.x, 57, 2, 2),
-            weapon_inventory_sprite: species.inventory_sprite_frame(),
-            bullet_species_id: species.bullet_species_id,
-            ammo_inventory_count: inventory_count(&species.bullet_species_id, player),
-            is_melee: matches!(species.entity_type, EntityType::WeaponMelee),
-            is_ranged: matches!(species.entity_type, EntityType::WeaponRanged),
-            is_equipped: is_equipped(species, player),
-            received_damage_reduction: species.received_damage_reduction
-        }
-    })
-    .collect()
+        .iter()
+        .map(|species| {
+            AmmoRecap {
+                weapon_name: string_to_c_char(species.name.localized()),
+                weapon_species_id: species.id,
+                weapon_sprite: IntRect::new(
+                    if matches!(species.id, SPECIES_KUNAI_LAUNCHER) { 5 } else { species.sprite_frame.x }, 
+                    57, 2, 2
+                ),
+                weapon_inventory_sprite: species.inventory_sprite_frame(),
+                bullet_species_id: species.bullet_species_id,
+                ammo_inventory_count: inventory_count(&species.bullet_species_id, player),
+                is_melee: matches!(species.entity_type, EntityType::WeaponMelee),
+                is_ranged: matches!(species.entity_type, EntityType::WeaponRanged),
+                is_equipped: is_equipped(species, player),
+                received_damage_reduction: species.received_damage_reduction
+            }
+        })
+        .collect()
 }
 
-pub fn available_weapons_species_ids(player: usize) -> Vec<Species> {
+fn available_weapons_species_ids(player: usize) -> Vec<Species> {
     let mut all_ids: Vec<u32> = vec![SPECIES_KUNAI_LAUNCHER];
     let owned_ids = ALL_SPECIES
         .iter()
