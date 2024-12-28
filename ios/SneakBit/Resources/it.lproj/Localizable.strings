@@ -1,5 +1,9 @@
-"death_screen.title" = "Sei morto";
-"death_screen.subtitle" = "Riprova";
+"death_screen_title" = "Sei morto";
+"death_screen_subtitle" = "Riprova";
+"death_screen_winner_title" = "Player %PLAYER_NAME% vince!";
+"death_screen_winner_subtitle" = "Rivincita";
+"death_screen_unknown_winner_title" = "Scusate, non ho visto chi ha vinto :P";
+"death_screen_unknown_winner_subtitle" = "Spareggio";
 "new_game" = "New Game";
 "new_game_confirmation_title" = "New Game";
 "new_game_confirmation_message" = "Ripartirai da ZERO.\nSei sicuro?";

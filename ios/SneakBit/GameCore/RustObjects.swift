@@ -52,7 +52,7 @@ extension CToast: Equatable {
 
 extension GameState {
     func isGameOver() -> Bool {
-        match_result.game_over
+        !match_result.in_progress
     }
     
     func shouldPauseGame() -> Bool {
@@ -95,5 +95,14 @@ extension AmmoRecap: Equatable {
         lhs.weapon_species_id == rhs.weapon_species_id &&
         lhs.ammo_inventory_count == rhs.ammo_inventory_count &&
         lhs.is_equipped == rhs.is_equipped
+    }
+}
+
+extension CMatchResult: Equatable {
+    public static func == (lhs: CMatchResult, rhs: CMatchResult) -> Bool {
+        lhs.game_over == rhs.game_over &&
+        lhs.in_progress == rhs.in_progress &&
+        lhs.unknown_winner == rhs.unknown_winner &&
+        lhs.winner == rhs.winner
     }
 }

@@ -14,11 +14,11 @@ struct DeathScreen: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
                 VStack(spacing: 100) {
-                    Text("death_screen.title".localized())
+                    Text(viewModel.title)
                         .typography(.largeTitle)
                         .foregroundStyle(Color.white)
                     
-                    Text("death_screen.subtitle".localized())
+                    Text(viewModel.message)
                         .typography(.title)
                         .foregroundStyle(Color.accentColor)
                         .onTapGesture {
@@ -35,6 +35,8 @@ private class DeathScreenViewModel: ObservableObject {
     @Inject private var engine: GameEngine
     
     @Published var isVisible: Bool = false
+    @Published var title: String = ""
+    @Published var message: String = ""
     
     var safeAreaInsets: UIEdgeInsets {
         engine.safeAreaInsets
@@ -48,10 +50,10 @@ private class DeathScreenViewModel: ObservableObject {
     
     private func bind() {
         engine.gameState()
-            .map { $0.isGameOver() }
+            .map { $0.match_result }
             .removeDuplicates()
-            .sink { [weak self] visible in
-                self?.handle(visible)
+            .sink { [weak self] result in
+                self?.handle(result)
             }
             .store(in: &disposables)
     }
@@ -61,9 +63,31 @@ private class DeathScreenViewModel: ObservableObject {
         engine.resumeGame()
     }
     
-    private func handle(_ visible: Bool) {
+    private func handle(_ result: CMatchResult) {
         withAnimation {
-            isVisible = visible
+            switch true {
+            case result.in_progress:
+                isVisible = false
+            
+            case result.game_over:
+                isVisible = true
+                title = "death_screen_title".localized()
+                message = "death_screen_subtitle".localized()
+            
+            case result.unknown_winner:
+                isVisible = true
+                title = "death_screen_unknown_winner_title".localized()
+                message = "death_screen_unknown_winner_subtitle".localized()
+            
+            default:
+                isVisible = true
+                title = "death_screen_winner_title"
+                    .localized()
+                    .replacingOccurrences(of: "%PLAYER_NAME%", with: "\(result.winner + 1)")
+                message = "death_screen_winner_subtitle"
+                    .localized()
+                    .replacingOccurrences(of: "%PLAYER_NAME%", with: "\(result.winner + 1)")
+            }
         }
     }
 }
