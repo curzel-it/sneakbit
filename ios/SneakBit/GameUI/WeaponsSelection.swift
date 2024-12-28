@@ -6,11 +6,12 @@ struct SwitchWeaponView: View {
     @EnvironmentObject var viewModel: OptionsViewModel
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack {
             Text("switch_weapon".localized())
                 .typography(.largeTitle)
                 .foregroundStyle(Color.white)
                 .padding(.top, 100)
+                .padding(.bottom, 30)
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 20) {
@@ -54,11 +55,21 @@ private struct WeaponCard: View {
                     .frame(width: 128, height: 128)
             }
             
-            Text(String(cString: weapon.weapon_name))
-                .foregroundColor(.white)
-                .padding()
+            if let name = string(from: weapon.weapon_name) {
+                Text(name)
+                    .typography(.title)
+                    .padding()
+            }
+            if weapon.is_melee {
+                Text("")
+            } else {
+                Text("\(string(from: weapon.bullet_name) ?? "") x \(weapon.ammo_inventory_count)")
+                    .typography(.text)
+                    .foregroundStyle(Color.white.opacity(0.8))
+            }
         }
         .padding()
+        .foregroundColor(.white)
         .background(Color.gray.opacity(0.5))
         .cornerRadius(10)
         .onTapGesture {

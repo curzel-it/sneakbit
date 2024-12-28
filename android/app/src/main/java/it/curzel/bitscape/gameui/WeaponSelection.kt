@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -43,6 +45,7 @@ fun WeaponSelectionView(
         verticalArrangement = Arrangement.spacedBy(20.dp),
         modifier = modifier
             .fillMaxSize()
+            .wrapContentHeight(Alignment.CenterVertically)
     ) {
         Text(
             text = stringResource(id = R.string.switch_weapon),
@@ -54,7 +57,6 @@ fun WeaponSelectionView(
             horizontalArrangement = Arrangement.spacedBy(20.dp),
             modifier = Modifier
                 .horizontalScroll(rememberScrollState())
-                .height(200.dp)
         ) {
             weapons.forEachIndexed { index, weapon ->
                 WeaponCard(
@@ -116,6 +118,21 @@ private fun WeaponCard(
                 style = DSTypography.title,
                 modifier = Modifier.padding(top = 12.dp)
             )
+            if (weapon.isMelee) {
+                Text(
+                    text = "",
+                    color = Color.White.copy(alpha = 0.8f),
+                    style = DSTypography.text,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            } else {
+                Text(
+                    text = "${weapon.bulletName} x ${weapon.ammoInventoryCount}",
+                    color = Color.White.copy(alpha = 0.8f),
+                    style = DSTypography.text,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
         }
     }
 }

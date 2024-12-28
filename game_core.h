@@ -280,6 +280,7 @@ typedef struct AmmoRecap {
   struct IntRect weapon_sprite;
   struct IntRect weapon_inventory_sprite;
   uint32_t bullet_species_id;
+  const char *bullet_name;
   uint32_t ammo_inventory_count;
   bool is_melee;
   bool is_ranged;
