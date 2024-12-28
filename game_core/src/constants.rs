@@ -1,6 +1,6 @@
 use crate::utils::rect::IntRect;
 
-pub const BUILD_NUMBER: u32 = 40;
+pub const BUILD_NUMBER: u32 = 70;
 
 // Default Props
 pub const INITIAL_CAMERA_VIEWPORT: IntRect = IntRect::new(0, 0, 60, 40);
