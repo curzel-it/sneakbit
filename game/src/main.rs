@@ -49,7 +49,7 @@ fn main() {
         handle_mouse_updates(&mut context.rl, get_rendering_config().rendering_scale);
         update_toasts(&mut context, time_since_last_update);
         update_game_hud(&mut context);
-        update_fast_travel(&mut context, &keyboard);
+        update_fast_travel(&mut context, keyboard);
         update_pvp_arena(&mut context, keyboard);
         update_weapons_selection(&mut context, keyboard);
         update_messages(&mut context, keyboard);
