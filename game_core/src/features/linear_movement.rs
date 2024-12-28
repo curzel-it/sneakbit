@@ -1,4 +1,4 @@
-use crate::{config::config, constants::TILE_SIZE, features::entity::Entity, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
+use crate::{config::config, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 
@@ -22,6 +22,13 @@ impl Entity {
             }
         }
         
+        let d = self.direction.as_vector();
+        let base_speed = config().base_entity_speed;
+        
+        self.frame.x += d.x * self.current_speed * base_speed * time_since_last_update;
+        self.frame.y += d.y * self.current_speed * base_speed * time_since_last_update;
+
+        /* 
         let updated_offset = updated_offset(&self.offset, &self.direction, self.current_speed, time_since_last_update);    
         let tiles_x_f = updated_offset.x / TILE_SIZE;
         let tiles_y_f = updated_offset.y / TILE_SIZE;
@@ -38,20 +45,20 @@ impl Entity {
                 updated_offset.x - tiles_x * TILE_SIZE,
                 updated_offset.y - tiles_y * TILE_SIZE
             );
-        }
-    }
+        }*/
+    } 
 }
 
 fn can_step_over_hero(entity: &Entity) -> bool {
     entity.is_player() || entity.melee_attacks_hero()
 }
-
+/*
 fn updated_offset(offset: &Vector2d, direction: &Direction, speed: f32, time_since_last_update: f32) -> Vector2d {
     direction.as_vector()
         .scaled(speed)
         .scaled(time_since_last_update)
         .scaled(config().base_entity_speed) + *offset
-}
+} */
 
 fn would_exit_bounds(frame: &FRect, direction: &Direction, bounds: &FRect) -> bool {
     match direction {

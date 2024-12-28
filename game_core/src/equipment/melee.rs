@@ -1,7 +1,6 @@
-use crate::{entities::bullets::make_player_bullet, features::{entity::Entity, state_updates::WorldStateUpdate}, utils::{directions::Direction, vector::Vector2d}, worlds::world::World};
+use crate::{entities::bullets::make_player_bullet, features::{entity::Entity, state_updates::WorldStateUpdate}, utils::directions::Direction, worlds::world::World};
 
 use super::basics::is_equipped;
-
 
 impl Entity {
     pub fn setup_melee(&mut self) {
@@ -43,7 +42,6 @@ impl Entity {
             let mut updates: Vec<WorldStateUpdate> = offsets.into_iter()
                 .map(|(dx, dy)| {
                     let mut bullet = make_player_bullet(self.parent_id, world, &self.species);
-                    bullet.offset = Vector2d::zero();
                     bullet.dps *= self.species.melee_dps_multiplier;
                     bullet.frame = hero.hittable_frame.offset_by((dx, dy)); 
                     bullet.direction = hero.direction;

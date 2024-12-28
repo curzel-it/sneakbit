@@ -1,9 +1,7 @@
-use serde::{Deserialize, Serialize};
 use lazy_static::lazy_static;
-use std::fs::File;
-use std::io::Read;
-
-use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, equipment::basics::EquipmentUsageSoundEffect, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, features::{directions::MovementDirections, entity::Entity, locks::LockType}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::FRect, vector::Vector2d}};
+use serde::{Deserialize, Serialize};
+use std::{fs::File, io::Read};
+use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, equipment::basics::EquipmentUsageSoundEffect, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior}, features::{directions::MovementDirections, entity::Entity, locks::LockType}, lang::localizable::LocalizableText, utils::{directions::Direction, ids::get_next_id, rect::FRect}};
 
 pub type SpeciesId = u32;
 
@@ -131,7 +129,6 @@ impl Species {
             frame: self.sprite_frame,  
             species_id: self.id,  
             entity_type: self.entity_type,
-            offset: Vector2d::zero(),
             direction: Direction::Down,
             current_speed: initial_speed,
             is_rigid: self.is_rigid,
@@ -179,7 +176,6 @@ impl Species {
             entity.sprite.reset();
         } else {
             entity.sprite = sprite;
-            entity.offset = Vector2d::zero();
         }
         entity.name = self.name.localized();
         entity.action_cooldown_remaining = 0.0;

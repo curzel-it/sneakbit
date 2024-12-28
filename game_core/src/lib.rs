@@ -132,7 +132,6 @@ pub extern "C" fn update_mouse(
 pub struct RenderableItem {
     pub sprite_sheet_id: u32,
     pub texture_rect: FRect,
-    pub offset: Vector2d,
     pub frame: FRect,
     pub sorting_key: u32
 }
@@ -150,7 +149,6 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
             RenderableItem {
                 sprite_sheet_id: e.sprite_sheet(),
                 texture_rect: e.texture_source_rect(),
-                offset: e.offset,
                 frame: e.frame,
                 sorting_key: e.sorting_key
             }
@@ -228,11 +226,6 @@ pub extern "C" fn current_world_height() -> f32 {
 #[no_mangle]
 pub extern "C" fn camera_viewport() -> FRect {
     engine().camera_viewport
-}
-
-#[no_mangle]
-pub extern "C" fn camera_viewport_offset() -> Vector2d {
-    engine().camera_viewport_offset
 }
 
 fn to_path(value: *const c_char) -> PathBuf {

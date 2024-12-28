@@ -19,10 +19,8 @@ impl Entity {
     fn update_pushable_with_player_props(&mut self, player_props: &EntityProps, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
         let player = player_props.hittable_frame;
         let player_direction = player_props.direction;       
-        let player_offset = player_props.offset;        
-        let non_zero_offset = player_offset.x != 0.0 || player_offset.y != 0.0;
         
-        if non_zero_offset {
+        if !player.origin().is_close_to_int() {
             let is_around = match player_direction {
                 Direction::Up => player.y == self.frame.y + self.frame.h && player.x >= self.frame.x && player.x < self.frame.x + self.frame.w,
                 Direction::Right => player.x == self.frame.x - 1.0 && player.y >= self.frame.y && player.y < self.frame.y + self.frame.h,

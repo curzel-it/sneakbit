@@ -8,7 +8,6 @@ pub struct GameEngine {
     pub keyboard: KeyboardEventsProvider,
     pub mouse: MouseEventsProvider,
     pub camera_viewport: FRect,
-    pub camera_viewport_offset: Vector2d,
     pub is_running: bool,
     pub wants_fullscreen: bool,
     pub sound_effects: SoundEffectsManager,
@@ -33,7 +32,6 @@ impl GameEngine {
             keyboard: KeyboardEventsProvider::new(),
             mouse: MouseEventsProvider::new(),
             camera_viewport: INITIAL_CAMERA_VIEWPORT,
-            camera_viewport_offset: Vector2d::zero(),
             is_running: true,
             wants_fullscreen: false,
             sound_effects: SoundEffectsManager::new(),
@@ -116,14 +114,14 @@ impl GameEngine {
     }
 
     fn center_camera_onto_players(&mut self) {
-        let (x, y, offset) = camera_center(
+        let (x, y) = camera_center(
             self.game_mode,
             &self.turn,
             self.number_of_players,
             &self.world.players,
             &self.dead_players
         );
-        self.center_camera_at(x, y, &offset);
+        self.center_camera_at(x, y);
     }
     
     pub fn apply_world_state_updates(&mut self, world_updates: Vec<WorldStateUpdate>) {
@@ -207,7 +205,7 @@ impl GameEngine {
         }
         self.world = new_world;
         self.world.spawn_point = (hero_frame.x, hero_frame.y);
-        self.center_camera_at(hero_frame.x, hero_frame.y, &Vector2d::zero());
+        self.center_camera_at(hero_frame.x, hero_frame.y);
 
         self.keyboard.on_world_changed();
         self.mouse.on_world_changed();
@@ -233,9 +231,8 @@ impl GameEngine {
         }
     }
 
-    fn center_camera_at(&mut self, x: f32, y: f32, offset: &Vector2d) {
+    fn center_camera_at(&mut self, x: f32, y: f32) {
         self.camera_viewport.center_at(&Vector2d::new(x as f32, y as f32));
-        self.camera_viewport_offset = *offset;
     }
 
     pub fn start_new_game(&mut self) {

@@ -242,10 +242,7 @@ impl World {
             .borrow_mut()
             .iter_mut()
             .filter(|e| e.is_player())
-            .for_each(|e| {            
-                e.offset = Vector2d::zero();
-                e.current_speed = 0.0;
-            });
+            .for_each(|e| e.current_speed = 0.0);
     }
 
     fn change_lock(&mut self, id: u32, lock_type: LockType) {

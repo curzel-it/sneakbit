@@ -1,18 +1,6 @@
 use std::f32::EPSILON;
 
-use crate::{
-    constants::{
-        PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE,
-    },
-    current_game_mode,
-    entities::{
-        known_species::SPECIES_HERO,
-        species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS},
-    },
-    multiplayer::modes::GameMode,
-    number_of_players,
-    utils::directions::Direction,
-};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, multiplayer::modes::GameMode, number_of_players, utils::directions::Direction};
 use super::{world::World, world_type::WorldType};
 
 impl World {
@@ -272,16 +260,10 @@ impl World {
 
         for (index, &id) in self.player_entity_ids().iter().enumerate().skip(1) {
             let mut entity = make_entity_by_species(SPECIES_HERO);
-            entity.frame = self.players[0].props.frame;
+            entity.frame = self.players[0].props.frame
+            .offset_x(if index == 1 { offset } else { 0.0 })
+            .offset_y(if index == 2 { offset } else if index == 3 { -offset } else { 0.0 });
             entity.direction = self.players[0].props.direction;
-            entity.offset.x = if index == 1 { offset } else { 0.0 };
-            entity.offset.y = if index == 2 {
-                offset
-            } else if index == 3 {
-                -offset
-            } else {
-                0.0
-            };
             entity.id = id;
             entity.setup_hero_with_player_index(index);
             entity.immobilize_for_seconds(0.2);

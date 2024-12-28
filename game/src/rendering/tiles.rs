@@ -1,4 +1,4 @@
-use game_core::{constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, TILE_SIZE}, current_biome_tiles_variant, current_world_height, current_world_width, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::SpriteTile}, utils::{rect::FRect, vector::Vector2d}};
+use game_core::{constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, TILE_SIZE}, current_biome_tiles_variant, current_world_height, current_world_width, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::SpriteTile}, utils::rect::FRect};
 use raylib::prelude::*;
 
 use super::ui::get_rendering_config;
@@ -6,7 +6,6 @@ use super::ui::get_rendering_config;
 pub fn render_tiles(
     d: &mut RaylibDrawHandle, 
     camera_viewport: &FRect, 
-    camera_viewport_offset: &Vector2d,
     biome_tiles: &[Vec<BiomeTile>],
     construction_tiles: &[Vec<ConstructionTile>]
 ) {
@@ -20,8 +19,6 @@ pub fn render_tiles(
     let scale = config.rendering_scale;
 
     let tile_scale = scale * TILE_SIZE;
-    let camera_offset_x = (camera_viewport_offset.x * scale).ceil();
-    let camera_offset_y = (camera_viewport_offset.y * scale).ceil();
 
     let x_start = camera_viewport.x as i32 - 1;
     let y_start = camera_viewport.y as i32 - 1;
@@ -34,8 +31,8 @@ pub fn render_tiles(
             let actual_col = col as f32 - camera_viewport.x as f32;
 
             let dest_rect = Rectangle {
-                x: actual_col * tile_scale - camera_offset_x,
-                y: actual_row * tile_scale - camera_offset_y,
+                x: actual_col * tile_scale,
+                y: actual_row * tile_scale,
                 width: tile_scale,
                 height: tile_scale,
             };

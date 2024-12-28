@@ -114,7 +114,6 @@ impl Entity {
                 self.species.bullet_species_id, 
                 self.id, 
                 &FRect::square_from_origin(1.0).centered_at(&self.frame.center()), 
-                &self.offset, 
                 self.direction, 
                 self.species.bullet_lifespan
             );

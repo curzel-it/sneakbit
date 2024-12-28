@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::SPRITE_SHEET_BLANK, features::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, set_value_for_key}}, utils::{rect::FRect, vector::Vector2d}, RenderableItem};
+use crate::{constants::SPRITE_SHEET_BLANK, features::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, set_value_for_key}}, utils::rect::FRect, RenderableItem};
 
 use super::animated_sprite::AnimatedSprite;
 
@@ -30,7 +30,6 @@ impl CutScene {
         RenderableItem {
             sprite_sheet_id: sprite.sheet_id,
             texture_rect: sprite.frame,
-            offset: Vector2d::zero(),
             frame: self.frame,
             sorting_key: 2_000_000_000
         }

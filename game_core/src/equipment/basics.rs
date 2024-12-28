@@ -2,7 +2,7 @@ use std::os::raw::c_char;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::TILE_SIZE, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{species_by_id, EntityType, Species, ALL_SPECIES}}, features::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, has_species_in_inventory, inventory_count, set_value_for_key, StorageKey}}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::FRect, strings::string_to_c_char}, worlds::world::World};
+use crate::{entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{species_by_id, EntityType, Species, ALL_SPECIES}}, features::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, has_species_in_inventory, inventory_count, set_value_for_key, StorageKey}}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::FRect, strings::string_to_c_char}, worlds::world::World};
 
 impl Entity {
     pub fn setup_equipment(&mut self) {
@@ -35,10 +35,8 @@ impl Entity {
         self.direction = hero.direction;
         self.z_index = self.z_index_for_state();
         self.current_speed = hero.speed;
-        self.frame.x = hero.frame.x;
-        self.frame.y = hero.frame.y;
-        self.offset.x = hero.offset.x - 1.5 * TILE_SIZE;
-        self.offset.y = hero.offset.y - 1.0 * TILE_SIZE;
+        self.frame.x = hero.frame.x - 1.5;
+        self.frame.y = hero.frame.y - 1.0;
         self.update_sorting_key();
     }
 

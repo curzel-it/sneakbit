@@ -1,4 +1,4 @@
-use crate::{constants::{PLAYER1_INDEX, TILE_SIZE}, entities::known_species::is_building, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::PLAYER1_INDEX, entities::known_species::is_building, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
 use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species, SpeciesId}};
 
@@ -106,7 +106,6 @@ pub fn make_bullet_ex(
     species: u32, 
     parent_id: u32, 
     starting_frame: &FRect, 
-    starting_offset: &Vector2d, 
     direction: Direction, 
     lifespan: f32
 ) -> Entity {
@@ -114,11 +113,6 @@ pub fn make_bullet_ex(
     bullet.direction = direction;
     let (dx, dy) = direction.as_col_row_offset();
     bullet.frame = starting_frame.offset(dx, dy); 
-    
-    if starting_offset.x > TILE_SIZE / 2.0 { bullet.frame.x += 1.0 }
-    if starting_offset.x < -TILE_SIZE / 2.0 { bullet.frame.x -= 1.0 }
-    if starting_offset.y > TILE_SIZE / 2.0 { bullet.frame.y += 1.0 }
-    if starting_offset.y < -TILE_SIZE / 2.0 { bullet.frame.y -= 1.0 }
     
     bullet.parent_id = parent_id;
     bullet.remaining_lifespan = lifespan;
@@ -134,7 +128,6 @@ pub fn make_player_bullet(parent_id: u32, world: &World, weapon_species: &Specie
         weapon_species.bullet_species_id,
         parent_id,
         &player.hittable_frame,
-        &player.offset,
         player.direction,
         weapon_species.bullet_lifespan
     );

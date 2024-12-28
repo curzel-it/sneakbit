@@ -30,6 +30,10 @@ impl Vector2d {
         Self::new(x as f32, y as f32)
     }
 
+    pub fn is_close_to_int(&self) -> bool {
+        (self.x - self.x.floor()).abs() < EPSILON && (self.y - self.y.floor()).abs() < EPSILON
+    }
+
     pub fn scaled(&self, value: f32) -> Self {
         Self::new(self.x * value, self.y * value)
     }

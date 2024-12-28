@@ -31,18 +31,15 @@ impl Entity {
     pub fn update_direction(&mut self, world: &World) {
         match self.movement_directions {
             MovementDirections::None => {}
-            MovementDirections::Keyboard => {
-                let new_direction = world.players[self.player_index].direction_based_on_current_keys;
-                self.update_direction_for_current_keys(new_direction);
-            }
+            MovementDirections::Keyboard => self.direction = world.players[self.player_index].direction_based_on_current_keys,
             MovementDirections::Free => self.move_around_free(world),
             MovementDirections::FindHero => self.search_for_hero(world),
         }
     }
 
     fn move_around_free(&mut self, world: &World) {
-        if self.offset.x != 0.0 || self.offset.y != 0.0 {
-            return;
+        if !self.frame.origin().is_close_to_int() {
+            return
         }
         if self.is_obstacle_in_direction(world, self.direction) {
             self.pick_next_direction(world);
@@ -50,8 +47,8 @@ impl Entity {
     }
 
     fn search_for_hero(&mut self, world: &World) {
-        if self.offset.x != 0.0 || self.offset.y != 0.0 {
-            return;
+        if !self.frame.origin().is_close_to_int() {
+            return
         }
         if let Some(target) = self.is_any_active_vulnerable_player_in_line_of_sight(world) {
             self.change_direction_towards_target(&target);

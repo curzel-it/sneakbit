@@ -183,23 +183,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_cameraViewport(JNIEnv *env, jobject t
 }
 
 extern "C"
-JNIEXPORT jfloatArray JNICALL
-Java_it_curzel_bitscape_gamecore_NativeLib_cameraViewportOffset(JNIEnv *env, jobject thiz) {
-    auto offset = camera_viewport_offset();
-    jfloatArray result = env->NewFloatArray(2);
-    if (result == nullptr) {
-        return nullptr;
-    }
-
-    jfloat temp[2];
-    temp[0] = offset.x;
-    temp[1] = offset.y;
-
-    env->SetFloatArrayRegion(result, 0, 2, temp);
-    return result;
-}
-
-extern "C"
 JNIEXPORT jobject JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, jobject thiz) {
     uintptr_t length;

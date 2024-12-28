@@ -1,4 +1,4 @@
-use game_core::{camera_viewport, camera_viewport_offset, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, current_world_biome_tiles, current_world_construction_tiles, is_limited_visibility, is_night};
+use game_core::{camera_viewport, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, current_world_biome_tiles, current_world_construction_tiles, is_limited_visibility, is_night};
 use raylib::prelude::*;
 
 use crate::{gameui::game_hud::hud_ui, GameContext};
@@ -23,35 +23,28 @@ pub fn render_frame(context: &mut GameContext) {
     d.clear_background(Color::BLACK);
     
     let camera_viewport = camera_viewport();
-    let camera_viewport_offset = camera_viewport_offset();
 
     if can_render_frame {
         if config.render_using_individual_tiles {
             render_tiles(
                 &mut d, 
                 &camera_viewport, 
-                &camera_viewport_offset,
                 current_world_biome_tiles(),
                 current_world_construction_tiles()
             );
         } else {
-            let success = render_tile_map(
-                &mut d, 
-                &camera_viewport, 
-                &camera_viewport_offset
-            );
+            let success = render_tile_map(&mut d, &camera_viewport);
             if !success {
                 render_tiles(
                     &mut d, 
                     &camera_viewport, 
-                    &camera_viewport_offset,
                     current_world_biome_tiles(),
                     current_world_construction_tiles()
                 );
             }
         }
         render_night(&mut d, screen_width, screen_height);
-        render_entities(&mut d, &camera_viewport, &camera_viewport_offset);
+        render_entities(&mut d, &camera_viewport);
         render_limited_visibility(&mut d, screen_width, screen_height);
         render_layout(&hud, &mut d);
     }
