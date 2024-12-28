@@ -3,6 +3,10 @@
     <string name="dots">...</string>
     <string name="death_screen_title">You\'re dead</string>
     <string name="death_screen_subtitle">Tap to try again</string>
+    <string name="death_screen_unknown_winner_title">"Sorry, I didn't see who won :P"</string>
+    <string name="death_screen_unknown_winner_subtitle">"Rematch"</string>
+    <string name="death_screen_winner_title">"Player %PLAYER_NAME% won!"</string>
+    <string name="death_screen_winner_subtitle">"Rematch"</string>
     <string name="new_game">"New Game"</string>
     <string name="new_game_confirmation_title">"New Game"</string>
     <string name="new_game_confirmation_message">"You will be starting from ZERO.\nAre you sure?"</string>

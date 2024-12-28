@@ -26,10 +26,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.curzel.bitscape.R
 import it.curzel.bitscape.engine.GameEngine
+import it.curzel.bitscape.gamecore.MatchResult
 import it.curzel.bitscape.ui.theme.DSTypography
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 
@@ -40,10 +42,16 @@ fun DeathScreen(
 ) {
     val viewModel = remember { DeathScreenViewModel(gameEngine) }
     val isVisible by viewModel.isVisible.collectAsState()
+    val title by viewModel.title.collectAsState()
+    val message by viewModel.message.collectAsState()
+    val winner by viewModel.winner.collectAsState()
 
     DeathScreen(
         isVisible = isVisible,
         tryAgain = { viewModel.tryAgain() },
+        title = title,
+        message = message,
+        winner = winner,
         modifier = modifier
     )
 }
@@ -52,6 +60,9 @@ fun DeathScreen(
 fun DeathScreen(
     isVisible: Boolean,
     tryAgain: () -> Unit,
+    title: Int,
+    message: Int,
+    winner: Int,
     modifier: Modifier = Modifier
 ) {
 
@@ -74,12 +85,12 @@ fun DeathScreen(
                 verticalArrangement = Arrangement.spacedBy(50.dp)
             ) {
                 Text(
-                    text = stringResource(id = R.string.death_screen_title),
+                    text = stringResource(id = title).replace("%PLAYER_NAME%", "${winner + 1}"),
                     style = DSTypography.largeTitle,
                     color = Color.White
                 )
                 Text(
-                    text = stringResource(id = R.string.death_screen_subtitle),
+                    text = stringResource(id = message).replace("%PLAYER_NAME%", "${winner + 1}"),
                     style = DSTypography.title,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
@@ -95,6 +106,15 @@ class DeathScreenViewModel(private val gameEngine: GameEngine) : ViewModel() {
     private val _isVisible = MutableStateFlow(false)
     val isVisible: StateFlow<Boolean> = _isVisible.asStateFlow()
 
+    private val _title = MutableStateFlow(R.string.dots)
+    val title: StateFlow<Int> = _title.asStateFlow()
+
+    private val _message = MutableStateFlow(R.string.dots)
+    val message: StateFlow<Int> = _message.asStateFlow()
+
+    private val _winner = MutableStateFlow(0)
+    val winner: StateFlow<Int> = _winner.asStateFlow()
+
     init {
         viewModelScope.launch {
             observeGameOver()
@@ -103,10 +123,35 @@ class DeathScreenViewModel(private val gameEngine: GameEngine) : ViewModel() {
 
     private suspend fun observeGameOver() {
         gameEngine.gameState
-            .mapNotNull { it?.isGameOver() }
-            .collect { isGameOver ->
-                _isVisible.value = isGameOver
+            .mapNotNull { it?.matchResult }
+            .distinctUntilChanged()
+            .collect { handle(it) }
+    }
+
+    private fun handle(result: MatchResult) {
+        when (true) {
+            result.inProgress -> {
+                _isVisible.value = false
+                _title.value = R.string.dots
+                _message.value = R.string.dots
             }
+            result.gameOver -> {
+                _isVisible.value = true
+                _title.value = R.string.death_screen_title
+                _message.value = R.string.death_screen_subtitle
+            }
+            result.unknownWinner -> {
+                _isVisible.value = true
+                _title.value = R.string.death_screen_unknown_winner_title
+                _message.value = R.string.death_screen_unknown_winner_subtitle
+            }
+            else -> {
+                _winner.value = result.winner.toInt()
+                _isVisible.value = true
+                _title.value = R.string.death_screen_winner_title
+                _message.value = R.string.death_screen_winner_subtitle
+            }
+        }
     }
 
     fun tryAgain() {
@@ -119,15 +164,21 @@ class DeathScreenViewModel(private val gameEngine: GameEngine) : ViewModel() {
 fun DeathScreenPreview() {
     DeathScreen(
         isVisible = true,
-        tryAgain = {}
+        tryAgain = {},
+        title = R.string.death_screen_title,
+        message = R.string.death_screen_subtitle,
+        winner = 0
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun DeathScreenNewGamePreview() {
+fun DeathScreenPlayer2WinsPreview() {
     DeathScreen(
         isVisible = true,
-        tryAgain = {}
+        tryAgain = {},
+        title = R.string.death_screen_winner_title,
+        message = R.string.death_screen_winner_subtitle,
+        winner = 1
     )
 }

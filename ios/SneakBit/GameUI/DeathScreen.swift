@@ -68,6 +68,8 @@ private class DeathScreenViewModel: ObservableObject {
             switch true {
             case result.in_progress:
                 isVisible = false
+                title = ""
+                message = ""
             
             case result.game_over:
                 isVisible = true

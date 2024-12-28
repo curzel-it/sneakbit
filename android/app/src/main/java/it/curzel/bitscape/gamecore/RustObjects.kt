@@ -14,7 +14,7 @@ data class GameState(
     val turnTimeLeft: Float,
 ) {
     fun isGameOver(): Boolean {
-        return matchResult.gameOver
+        return !matchResult.inProgress
     }
 
     fun shouldPauseGame(): Boolean {
