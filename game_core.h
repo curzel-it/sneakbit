@@ -18,9 +18,9 @@
 
 #define MAX_PLAYERS 4
 
-#define TURN_DURATION 12.0
+#define TURN_DURATION 10.0
 
-#define TURN_DURATION_AFTER_RANGED_WEAPON_USAGE 4.0
+#define TURN_DURATION_AFTER_ENEMY_PLAYER_DAMAGE 2.0
 
 #define TURN_PREP_DURATION 3.0
 
@@ -280,6 +280,7 @@ typedef struct AmmoRecap {
   struct IntRect weapon_sprite;
   struct IntRect weapon_inventory_sprite;
   uint32_t bullet_species_id;
+  const char *bullet_name;
   uint32_t ammo_inventory_count;
   bool is_melee;
   bool is_ranged;
@@ -398,5 +399,7 @@ struct GameState game_state(void);
 struct AmmoRecap *available_weapons_c(uintptr_t player, uintptr_t *count);
 
 void free_weapons(struct AmmoRecap *ptr, uintptr_t length);
+
+void set_weapon_equipped(uint32_t species_id, uintptr_t player);
 
 #endif  /* GAME_CORE_H */

@@ -22,6 +22,8 @@ impl World {
                     let player_died = self.handle_hero_damage(target, hits.damage);
                     if player_died {
                         updates.push(EngineStateUpdate::PlayerDied(target.player_index));
+                    } else {
+                        updates.push(EngineStateUpdate::PlayerReceivedDamage(target.player_index));
                     }
                     (false, false)
                 } else {

@@ -55,7 +55,7 @@ impl FastTravelDestination {
 }
 
 pub fn is_fast_travel_available() -> bool {
-    vec![
+    [
         FastTravelDestination::Evergrove,
         FastTravelDestination::Aridreach,
         FastTravelDestination::Duskhaven,
@@ -76,7 +76,7 @@ pub fn is_fast_travel_available() -> bool {
 pub fn available_fast_travel_destinations_from_current_world() -> Vec<FastTravelDestination> {
     let current_world = current_world_id();
 
-    vec![
+    [
         FastTravelDestination::Evergrove,
         FastTravelDestination::Aridreach,
         FastTravelDestination::Duskhaven,

@@ -813,6 +813,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_weapons(JNIEnv *env, jobject thiz, ji
             "(Ljava/lang/String;I"
             "Lit/curzel/bitscape/gamecore/IntRect;"
             "Lit/curzel/bitscape/gamecore/IntRect;"
+            "Ljava/lang/String;"
             "IIZZZF)V"
     );
     if (ammoRecapCtor == nullptr) {
@@ -855,6 +856,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_weapons(JNIEnv *env, jobject thiz, ji
 
         // Convert C string to Java String
         jstring weaponName = toJavaString(env, current->weapon_name);
+        jstring bulletName = toJavaString(env, current->bullet_name);
 
         // Create the AmmoRecap Java object
         jobject ammoRecapObj = env->NewObject(
@@ -864,6 +866,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_weapons(JNIEnv *env, jobject thiz, ji
                 static_cast<jint>(current->weapon_species_id),
                 weaponSprite,
                 weaponInventorySprite,
+                bulletName,
                 static_cast<jint>(current->bullet_species_id),
                 static_cast<jint>(current->ammo_inventory_count),
                 static_cast<jboolean>(current->is_melee),
@@ -899,4 +902,12 @@ Java_it_curzel_bitscape_gamecore_NativeLib_weapons(JNIEnv *env, jobject thiz, ji
     // free(weapons); // Uncomment if necessary
 
     return arrayListObj;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_it_curzel_bitscape_gamecore_NativeLib_setWeaponEquipped(JNIEnv *env, jobject thiz,
+                                                             jint weapon_species_id,
+                                                             jint current_player_index) {
+    set_weapon_equipped(weapon_species_id, current_player_index);
 }

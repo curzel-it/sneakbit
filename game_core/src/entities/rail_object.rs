@@ -8,7 +8,7 @@ impl Entity {
 
     pub fn update_rail(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
         let is_on_rails = is_rail(world, self.frame.x, self.frame.y);
-        let offset_is_zero = self.offset.x == 0.0 && self.offset.y == 0.0;
+        let offset_is_zero = self.offset.x.abs() <= 0.01 && self.offset.y.abs() <= 0.01;
         
         self.is_rigid = is_on_rails;
 

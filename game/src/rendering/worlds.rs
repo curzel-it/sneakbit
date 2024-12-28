@@ -31,8 +31,8 @@ pub fn render_frame(context: &mut GameContext) {
                 &mut d, 
                 &camera_viewport, 
                 &camera_viewport_offset,
-                &current_world_biome_tiles(),
-                &current_world_construction_tiles()
+                current_world_biome_tiles(),
+                current_world_construction_tiles()
             );
         } else {
             let success = render_tile_map(
@@ -45,8 +45,8 @@ pub fn render_frame(context: &mut GameContext) {
                     &mut d, 
                     &camera_viewport, 
                     &camera_viewport_offset,
-                    &current_world_biome_tiles(),
-                    &current_world_construction_tiles()
+                    current_world_biome_tiles(),
+                    current_world_construction_tiles()
                 );
             }
         }

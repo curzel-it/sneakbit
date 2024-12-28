@@ -74,7 +74,7 @@ impl WeaponsGrid {
     fn has_enough_weapons_to_select_from(&self) -> bool {
         let melee_count = self.weapons.iter().filter(|w| w.is_melee).count();
         let ranged_count = self.weapons.iter().filter(|w| !w.is_melee).count();
-        return melee_count >= 2 || ranged_count >= 2
+        melee_count >= 2 || ranged_count >= 2
     }
 
     fn is_open(&self) -> bool {

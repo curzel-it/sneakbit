@@ -1,7 +1,9 @@
 import SwiftUI
 
 enum CustomButtonStyle {
+    case messageOption
     case menuOption
+    case destructiveMenuOption
 }
 
 extension View {
@@ -15,12 +17,46 @@ private struct ButtonStyleMod: ViewModifier {
     
     func body(content: Content) -> some View {
         switch style {
+        case .messageOption: content.buttonStyle(MessageButton())
         case .menuOption: content.buttonStyle(MenuOptionButton())
+        case .destructiveMenuOption: content.buttonStyle(DestructiveMenuOptionButton())
         }
     }
 }
 
+private struct DestructiveMenuOptionButton: ButtonStyle {
+    @SwiftUI.Environment(\.isEnabled) private var isEnabled: Bool
+    
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .multilineTextAlignment(.center)
+            .typography(.optionsItem)
+            .foregroundColor(Color.red)
+            .frame(maxWidth: .infinity)
+            .frame(height: 40)
+            .background(Color.clear)
+            .contentShape(Rectangle())
+            .opacity(isEnabled || configuration.isPressed ? 1 : 0.6)
+    }
+}
+
 private struct MenuOptionButton: ButtonStyle {
+    @SwiftUI.Environment(\.isEnabled) private var isEnabled: Bool
+    
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .multilineTextAlignment(.center)
+            .typography(.optionsItem)
+            .foregroundColor(Color.white)
+            .frame(maxWidth: .infinity)
+            .frame(height: 40)
+            .background(Color.clear)
+            .contentShape(Rectangle())
+            .opacity(isEnabled || configuration.isPressed ? 1 : 0.6)
+    }
+}
+
+private struct MessageButton: ButtonStyle {
     @SwiftUI.Environment(\.isEnabled) private var isEnabled: Bool
     
     func makeBody(configuration: Self.Configuration) -> some View {

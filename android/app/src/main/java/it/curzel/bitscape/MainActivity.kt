@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
                         FastTravelScreen(engine)
                         PvpArenaScreen(engine)
                         TurnInfoView(engine)
-                        OptionsScreen(engine, audioEngine)
+                        OptionsScreen(engine, audioEngine, spritesProvider)
                         LoadingScreen(engine)
                         DeathScreen(engine)
                         Box(modifier = Modifier.padding(innerPadding)) {

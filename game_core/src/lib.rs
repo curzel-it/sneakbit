@@ -6,7 +6,7 @@ use std::os::raw::c_char;
 use config::initialize_config_paths;
 use entities::known_species::SPECIES_KUNAI_LAUNCHER;
 use entities::species::species_by_id;
-use equipment::basics::{available_weapons, AmmoRecap};
+use equipment::basics::{available_weapons, set_equipped, AmmoRecap};
 use features::fast_travel::{available_fast_travel_destinations_from_current_world, FastTravelDestination};
 use features::messages::{CDisplayableMessage, DisplayableMessage, DisplayableMessageCRepr};
 use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::WorldStateUpdate, toasts::ToastCRepr};
@@ -521,8 +521,6 @@ pub extern "C" fn game_state() -> GameState {
     let player = current_player_index();
     let is_interaction_available = engine.world.entities.borrow().iter().any(|e| e.is_in_interaction_range);
 
-    println!("is_interaction_available {}", is_interaction_available);
-
     GameState {
         toasts: engine.toast.c_repr(),
         messages: engine.message.c_repr(),
@@ -572,4 +570,10 @@ pub extern "C" fn free_weapons(ptr: *mut AmmoRecap, length: usize) {
             let _ = Vec::from_raw_parts(ptr, length, length);
         }
     }
+}
+
+#[no_mangle]
+pub extern "C" fn set_weapon_equipped(species_id: u32, player: usize) {
+    let species = species_by_id(species_id);
+    set_equipped(&species, player);
 }

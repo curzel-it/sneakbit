@@ -2089,18 +2089,7 @@
       "destination": null,
       "dialogues": [],
       "direction": "Down",
-      "display_conditions": [
-        {
-          "expected_value": 1,
-          "key": "is_mobile",
-          "visible": false
-        },
-        {
-          "expected_value": 1,
-          "key": "always",
-          "visible": true
-        }
-      ],
+      "display_conditions": [],
       "frame": {
         "h": 4,
         "w": 5,

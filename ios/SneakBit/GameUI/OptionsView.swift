@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import SwiftUI
 import Schwifty
@@ -18,8 +19,12 @@ struct OptionsView: View {
                     ExitPvpView()
                 } else if viewModel.showCredits {
                     CreditsView()
+                } else if viewModel.showSwitchWeapon {
+                    SwitchWeaponView()
+                        .environmentObject(viewModel)
                 } else {
                     OptionsContent()
+                        .environmentObject(viewModel)
                 }
             }
             .environmentObject(viewModel)
@@ -51,48 +56,57 @@ private struct OptionsContent: View {
                     .padding(.top, 100)
                     .padding(.bottom, 80)
                 
-                Text("game_menu_resume".localized())
-                    .onTapGesture {
-                        viewModel.resumeGame()
+                // Conditionally show "Switch Weapon" as the first option
+                if viewModel.canShowSwitchWeapon {
+                    Button("switch_weapon".localized()) {
+                        viewModel.showWeaponSelection()
                     }
-                    .padding(.bottom, 50)
-                
-                Text(viewModel.toggleSoundEffectsTitle)
-                    .onTapGesture {
-                        viewModel.toggleSoundEffects()
-                    }
-                    .padding(.bottom, 50)
-                
-                Text(viewModel.toggleMusicTitle)
-                    .onTapGesture {
-                        viewModel.toggleMusic()
-                    }
-                    .padding(.bottom, 50)
-                
-                if viewModel.canDisablePvp {
-                    Text("game_menu_exit_pvp".localized())
-                        .onTapGesture {
-                            viewModel.askToExitPvp()
-                        }
-                        .padding(.bottom, 50)
+                    .buttonStyle(.menuOption)
+                    .padding(.bottom, 20)
                 }
                 
-                Text("credits".localized())
-                    .onTapGesture {
-                        viewModel.openCredits()
-                    }
-                    .padding(.bottom, 50)
+                Button("game_menu_resume".localized()) {
+                    viewModel.resumeGame()
+                }
+                .buttonStyle(.menuOption)
+                .padding(.bottom, 20)
                 
-                Text("new_game".localized())
-                    .foregroundStyle(Color.red)
-                    .onTapGesture {
-                        viewModel.askForNewGame()
+                Button(viewModel.toggleSoundEffectsTitle) {
+                    viewModel.toggleSoundEffects()
+                }
+                .buttonStyle(.menuOption)
+                .padding(.bottom, 20)
+                
+                Button(viewModel.toggleMusicTitle) {
+                    viewModel.toggleMusic()
+                }
+                .buttonStyle(.menuOption)
+                .padding(.bottom, 20)
+                
+                if viewModel.canDisablePvp {
+                    Button("game_menu_exit_pvp".localized()) {
+                        viewModel.askToExitPvp()
                     }
-                    .padding(.bottom, 80)
+                    .buttonStyle(.menuOption)
+                    .padding(.bottom, 20)
+                }
+                
+                Button("credits".localized()) {
+                    viewModel.openCredits()
+                }
+                .buttonStyle(.menuOption)
+                .padding(.bottom, 50)
+                
+                Button("new_game".localized()) {
+                    viewModel.askForNewGame()
+                }
+                .buttonStyle(.destructiveMenuOption)
+                .padding(.bottom, 80)
                 
                 LinksView()
                     .padding(.bottom, 50)
             }
+            .padding(.horizontal, 20)
         }
         .typography(.title)
         .foregroundStyle(Color.white.opacity(0.8))
@@ -165,12 +179,11 @@ private struct CreditsView: View {
             CreditsItem(key: "music")
             CreditsItem(key: "sound_effects")
             
-            Text("menu_back".localized())
-                .textAlign(.center)
-                .onTapGesture {
-                    viewModel.closeCredits()
-                }
-                .padding(.top)
+            Button("menu_back".localized()) {
+                viewModel.closeCredits()
+            }
+            .buttonStyle(.menuOption)
+            .padding(.top)
         }
         .typography(.text)
         .foregroundStyle(Color.white)
@@ -238,158 +251,18 @@ private struct ConfirmationView: View {
                 .textAlign(.center)
                 .typography(.text)
             
-            Text(confirmTitle.localized())
-                .foregroundStyle(Color.red)
-                .onTapGesture {
-                    onConfirm()
-                }
+            Button(confirmTitle.localized()) {
+                onConfirm()
+            }
+            .buttonStyle(.destructiveMenuOption)
             
-            Text("menu_back".localized())
-                .onTapGesture {
-                    onCancel()
-                }
+            Button("menu_back".localized()) {
+                onCancel()
+            }
+            .buttonStyle(.menuOption)
         }
         .typography(.title)
         .foregroundStyle(Color.white)
         .positioned(.middle)
-    }
-}
-
-class OptionsViewModel: ObservableObject {
-    @Inject private var audio: AudioEngine
-    @Inject private var engine: GameEngine
-    
-    @Published var isVisible: Bool = false
-    @Published var showNewGameAlert: Bool = false
-    @Published var menuButtonOpacity: CGFloat = 1
-    @Published var toggleSoundEffectsTitle: String = "..."
-    @Published var toggleMusicTitle: String = "..."
-    @Published var showCredits: Bool = false
-    @Published var showExitPvpAlert: Bool = false
-    @Published var canDisablePvp: Bool = false
-    
-    private var isBeingShown = false
-    
-    var safeAreaInsets: UIEdgeInsets {
-        engine.safeAreaInsets
-    }
-    
-    init() {
-        Task { @MainActor in
-            loadToggleSoundEffectsTitle()
-            loadToggleMusicTitle()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-                self?.makeButtonSemiTransparent()
-            }
-        }
-    }
-    
-    func toggleSoundEffects() {
-        audio.toggleSoundEffects()
-        loadToggleSoundEffectsTitle()
-    }
-    
-    func toggleMusic() {
-        audio.toggleMusic()
-        loadToggleMusicTitle()
-    }
-    
-    func showMenu() {
-        guard !isBeingShown else { return }
-        isBeingShown = true
-        
-        withAnimation {
-            isVisible = true
-            canDisablePvp = is_pvp()
-        }
-        engine.pauseGame()
-    }
-    
-    func resumeGame() {
-        withAnimation {
-            isVisible = false
-        }
-        isBeingShown = false
-        makeButtonSemiTransparent()
-        engine.resumeGame()
-    }
-    
-    func askForNewGame() {
-        withAnimation {
-            showNewGameAlert = true
-        }
-    }
-    
-    func confirmNewGame() {
-        withAnimation {
-            isVisible = false
-            showNewGameAlert = false
-        }
-        isBeingShown = false
-        engine.startNewGame()
-        engine.resumeGame()
-    }
-    
-    func cancelNewGame() {
-        withAnimation {
-            showNewGameAlert = false
-        }
-    }
-    
-    func askToExitPvp() {
-        withAnimation {
-            showExitPvpAlert = true
-        }
-    }
-    
-    func confirmExitPvp() {
-        withAnimation {
-            isVisible = false
-            showExitPvpAlert = false
-        }
-        isBeingShown = false
-        exit_pvp_arena()
-        engine.resumeGame()
-    }
-    
-    func cancelExitPvp() {
-        withAnimation {
-            showExitPvpAlert = false
-        }
-    }
-    
-    func openCredits() {
-        withAnimation {
-            showCredits = true
-        }
-    }
-    
-    func closeCredits() {
-        withAnimation {
-            showCredits = false
-        }
-    }
-    
-    func visitUrl(key: String) {
-        if let url = URL(string: key.localized()) {
-            UIApplication.shared.open(url)
-        }
-    }
-    
-    private func loadToggleSoundEffectsTitle() {
-        let key = audio.soundEffectsEnabled ? "game_menu_disable_sound_effects" : "game_menu_enable_sound_effects"
-        toggleSoundEffectsTitle = key.localized()
-    }
-    
-    private func loadToggleMusicTitle() {
-        let key = audio.musicEnabled ? "game_menu_disable_music" : "game_menu_enable_music"
-        toggleMusicTitle = key.localized()
-    }
-    
-    private func makeButtonSemiTransparent() {
-        withAnimation(.easeInOut(duration: 1)) {
-            menuButtonOpacity = 0.2
-        }
     }
 }

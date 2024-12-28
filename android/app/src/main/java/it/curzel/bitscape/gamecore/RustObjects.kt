@@ -14,7 +14,7 @@ data class GameState(
     val turnTimeLeft: Float,
 ) {
     fun isGameOver(): Boolean {
-        return matchResult.gameOver
+        return !matchResult.inProgress
     }
 
     fun shouldPauseGame(): Boolean {
@@ -27,7 +27,8 @@ data class AmmoRecap(
     val weaponSpeciesId: Int,
     val weaponSprite: IntRect,
     val weaponInventorySprite: IntRect,
-    val bulletBpeciesId: Int,
+    val bulletName: String,
+    val bulletSpeciesId: Int,
     val ammoInventoryCount: Int,
     val isMelee: Boolean,
     val isRanged: Boolean,
@@ -40,7 +41,8 @@ data class AmmoRecap(
             weaponSpeciesId = 0,
             weaponSprite = IntRect(0, 0, 0, 0),
             weaponInventorySprite = IntRect(0, 0, 0, 0),
-            bulletBpeciesId = 0,
+            bulletName = "",
+            bulletSpeciesId = 0,
             ammoInventoryCount = 0,
             isMelee = false,
             isRanged = false,

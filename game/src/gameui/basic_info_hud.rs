@@ -18,7 +18,10 @@ impl BasicInfoHud {
     pub fn ui(&self, is_dead: bool, game_mode: &GameMode) -> View {
         let active_players = currently_active_players();        
         let include_header = active_players.len() > 1;
-        let max_hp_to_show = if is_dead { -99.0 } else { 60.0 };
+        let max_hp_to_show = if game_mode.allows_pvp() {
+            101.0
+        } else if is_dead { -99.0 } else { 60.0 };
+        
         let max_hp = game_mode.player_hp();
 
         zstack!(

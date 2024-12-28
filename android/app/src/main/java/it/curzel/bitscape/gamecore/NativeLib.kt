@@ -56,6 +56,7 @@ class NativeLib {
     external fun isTurnPrep(): Boolean
     external fun ammoCountForWeapon(weaponSpeciesId: Int, player: Int): Int
     external fun weapons(player: Int): List<AmmoRecap>
+    external fun setWeaponEquipped(weaponSpeciesId: Int, currentPlayerIndex: Int)
 
     companion object {
         const val MAX_PLAYERS: Int = 4

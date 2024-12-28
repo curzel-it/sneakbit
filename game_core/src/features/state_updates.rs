@@ -36,6 +36,7 @@ pub enum EngineStateUpdate {
     SwordSlash(PlayerIndex),
     GunShot(PlayerIndex),
     LoudGunShot(PlayerIndex),
+    PlayerReceivedDamage(PlayerIndex),
     FastTravel,
     PvpArena
 }

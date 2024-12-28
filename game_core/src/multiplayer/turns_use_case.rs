@@ -59,12 +59,16 @@ impl TurnsUseCase {
         }
     }
 
-    pub fn update_turn_ranged_attack(&self, current_turn: &GameTurn) -> GameTurn {
+    pub fn update_turn_after_player_damage(&self, current_turn: &GameTurn, damaged_player: &usize) -> GameTurn {
         match current_turn {
             GameTurn::RealTime => GameTurn::RealTime,
             GameTurn::PlayerPrep(turn_info) => GameTurn::PlayerPrep(*turn_info),
             GameTurn::Player(turn_info) => {
-                GameTurn::Player(turn_info.with_reduced_due_to_ranged_weapon_usage())
+                if turn_info.player_index != *damaged_player {
+                    GameTurn::Player(turn_info.with_reduced_due_to_enemy_player_damage())
+                } else {
+                    GameTurn::Player(*turn_info)
+                }
             },
         }
     }
