@@ -13,8 +13,8 @@ pub fn render_tile_map(d: &mut RaylibDrawHandle, camera_viewport: &FRect) -> boo
         let scaled_map_width = tile_map_image.width() as f32 * scale;
         let scaled_map_height = tile_map_image.height() as f32 * scale;
 
-        let offset_x = -camera_viewport.x as f32 * tile_size;
-        let offset_y = -camera_viewport.y as f32 * tile_size;
+        let offset_x = { -camera_viewport.x } * tile_size;
+        let offset_y = { -camera_viewport.y } * tile_size;
 
         let dest_rect = Rectangle {
             x: offset_x,

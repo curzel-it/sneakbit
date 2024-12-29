@@ -27,8 +27,8 @@ pub fn render_tiles(
 
     for col in x_start..x_end {
         for row in y_start..y_end {
-            let actual_row = row as f32 - camera_viewport.y as f32;
-            let actual_col = col as f32 - camera_viewport.x as f32;
+            let actual_row = row as f32 - camera_viewport.y;
+            let actual_col = col as f32 - camera_viewport.x;
 
             let dest_rect = Rectangle {
                 x: actual_col * tile_scale,
@@ -70,10 +70,10 @@ pub fn render_tiles(
                     let source = construction_tile.texture_source_rect(0);
 
                     let source_rect = Rectangle {
-                        x: TILE_SIZE * source.x as f32,
-                        y: TILE_SIZE * source.y as f32,
-                        width: TILE_SIZE * source.w as f32,
-                        height: TILE_SIZE * source.h as f32,
+                        x: TILE_SIZE * source.x,
+                        y: TILE_SIZE * source.y,
+                        width: TILE_SIZE * source.w,
+                        height: TILE_SIZE * source.h,
                     };
 
                     d.draw_texture_pro(

@@ -459,13 +459,13 @@ impl MapEditor {
             text!(Typography::Regular, "map_editor.placement".localized()),
             with_fixed_position(
                 Vector2d::new(
-                    TILE_SIZE * (frame.x - camera_viewport.x) as f32,
-                    TILE_SIZE * (frame.y - camera_viewport.y) as f32,
+                    TILE_SIZE * (frame.x - camera_viewport.x),
+                    TILE_SIZE * (frame.y - camera_viewport.y),
                 ),
                 zstack!(
                     Spacing::Zero,
                     COLOR_GENERAL_HIGHLIGHT,
-                    spacing!(Spacing::Custom(TILE_SIZE * frame.w as f32))
+                    spacing!(Spacing::Custom(TILE_SIZE * frame.w))
                 )
             )
         )

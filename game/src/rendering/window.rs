@@ -6,8 +6,8 @@ use crate::{features::font_helpers::{bold_font_path, latin_characters, regular_f
 use super::{textures::load_textures, ui::{init_rendering_config, RenderingConfig}};
 
 pub fn start_rl(creative_mode: bool) -> GameContext {    
-    let width = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.w as f32) as i32;
-    let height = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.h as f32) as i32;
+    let width = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.w) as i32;
+    let height = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.h) as i32;
 
     let (mut rl, rl_thread) = if is_debug_build() { 
         raylib::init()

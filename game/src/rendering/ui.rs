@@ -123,25 +123,25 @@ fn calculate_position(layout: &Layout, anchor: &AnchorPoint, view: &View, config
 
     let (x, y) = match anchor {
         AnchorPoint::Center => (
-            (layout.frame.x + layout.frame.w as f32 - size.x) / 2.0, 
-            (layout.frame.y + layout.frame.h as f32 - size.y) / 2.0
+            (layout.frame.x + layout.frame.w - size.x) / 2.0, 
+            (layout.frame.y + layout.frame.h - size.y) / 2.0
         ), 
         AnchorPoint::TopLeft => (0.0, 0.0), 
         AnchorPoint::TopRight => (
-            layout.frame.x + layout.frame.w as f32 - size.x, 
+            layout.frame.x + layout.frame.w - size.x, 
             0.0
         ),
         AnchorPoint::BottomCenter => (
-            layout.frame.x + layout.frame.w as f32 / 2.0 - size.x / 2.0, 
-            layout.frame.y + layout.frame.h as f32 - size.y
+            layout.frame.x + layout.frame.w / 2.0 - size.x / 2.0, 
+            layout.frame.y + layout.frame.h - size.y
         ),
         AnchorPoint::BottomLeft => (
             0.0, 
-            layout.frame.y + layout.frame.h as f32 - size.y
+            layout.frame.y + layout.frame.h - size.y
         ),
         AnchorPoint::BottomRight => (
-            layout.frame.x + layout.frame.w as f32 - size.x, 
-            layout.frame.y + layout.frame.h as f32 - size.y
+            layout.frame.x + layout.frame.w - size.x, 
+            layout.frame.y + layout.frame.h - size.y
         ),
     };
     Vector2d::new(x, y)
@@ -389,10 +389,10 @@ fn render_texture(
 ) {
     if let Some(texture) = config.get_texture(*key) {           
         let source_rect = Rectangle::new(
-            TILE_SIZE * source.x as f32, 
-            TILE_SIZE * source.y as f32, 
-            TILE_SIZE * source.w as f32,
-            TILE_SIZE * source.h as f32
+            TILE_SIZE * source.x, 
+            TILE_SIZE * source.y, 
+            TILE_SIZE * source.w,
+            TILE_SIZE * source.h
         );
         let dest_rect = Rectangle::new(
             position.x, 
