@@ -1,6 +1,8 @@
-use std::{f32::EPSILON, ops::Add};
+use std::ops::Add;
 
 use serde::{Deserialize, Serialize};
+
+use crate::constants::EPSILON;
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 #[repr(C)]
