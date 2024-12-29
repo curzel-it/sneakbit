@@ -243,16 +243,33 @@ impl Entity {
     }
 
     pub fn hittable_frame(&self) -> FRect {
-        let x_offset = 0.0;
-        let y_offset = if self.frame.h > 1.0 { 1.0 } else { 0.0 };
-        let width = self.frame.w;
-        let height = if self.frame.h > 1.0 { self.frame.h - 1.0 } else { self.frame.h };
-
-        FRect {
-            x: self.frame.x + x_offset,
-            y: self.frame.y + y_offset,
-            w: width.max(1.0),
-            h: height.max(1.0),
+        match self.entity_type {
+            EntityType::Hero | EntityType::Npc => {
+                let x_offset = 0.15;
+                let y_offset = if self.frame.h > 1.0 { 1.15 } else { 0.1 };
+                let width = self.frame.w - 0.3;
+                let height = self.frame.h - if self.frame.h > 1.0 { 1.35 } else { 0.2 };
+        
+                FRect {
+                    x: self.frame.x + x_offset,
+                    y: self.frame.y + y_offset,
+                    w: width,
+                    h: height
+                }
+            },
+            _ => {
+                let x_offset = 0.1;
+                let y_offset = if self.frame.h > 1.0 { 1.1 } else { 0.1 };
+                let width = self.frame.w - 0.2;
+                let height = self.frame.h - if self.frame.h > 1.0 { 1.2 } else { 0.2 };
+        
+                FRect {
+                    x: self.frame.x + x_offset,
+                    y: self.frame.y + y_offset,
+                    w: width,
+                    h: height
+                }
+            }
         }
     }
 

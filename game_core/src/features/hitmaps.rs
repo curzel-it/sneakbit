@@ -5,7 +5,11 @@ pub struct Hitmap {
     data: Vec<(FRect, i32, EntityId, SpeciesId)>
 }
 
-impl World {
+impl World {    
+    pub fn area_hits(&self, myid: &u32, area: &FRect) -> bool {
+        self.hitmap.area_hits(myid, area) || self.tiles_hitmap.area_hits(myid, area)
+    }
+    
     pub fn hits(&self, x: f32, y: f32) -> bool {
         self.hitmap.hits_xy(x, y) || self.tiles_hitmap.hits_xy(x, y) 
     }
@@ -35,7 +39,7 @@ impl World {
             if let Some(entity) = entities.get(index) {
                 if entity.is_rigid {
                     let item = (
-                        entity.frame,
+                        entity.hittable_frame(),
                         if entity.has_weight() { 1 } else { 0 },
                         entity.id, 
                         entity.species_id
@@ -55,7 +59,7 @@ impl World {
                 let construction_obstacle = self.construction_tiles.tiles[y][x].is_obstacle();
 
                 if biome_obstacle || construction_obstacle {
-                    let frame = FRect::new(x as f32, y as f32, 1.0, 1.0);
+                    let frame = FRect::new(x as f32 + 0.15, y as f32 + 0.15, 0.7, 0.7);
                     let item = (frame, 0, 0, 0);
                     self.tiles_hitmap.data.push(item);
                 }
@@ -75,6 +79,17 @@ impl Hitmap {
         Self {
             data: vec![]
         }
+    }
+
+    fn area_hits(&self, myid: &u32, area: &FRect) -> bool {
+        self.data.iter().any(|(other, _, entity_id, species_id)| {            
+            if entity_id != myid && other.overlaps_or_touches(area) {
+                println!("> Collision with {} {} between {:#?} and {:#?}", entity_id, species_id, area, other);
+                true
+            } else {
+                false
+            }
+        })
     }
 
     fn hits_xy(&self, x: f32, y: f32) -> bool {

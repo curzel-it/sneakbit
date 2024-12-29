@@ -58,7 +58,7 @@ fn debug_info(show_debug_info: bool, fps: u32) -> View {
         vstack!(
             Spacing::MD,
             text!(Typography::Regular, format!("Fps: {}", fps)),
-            text!(Typography::Regular, format!("x {} y {}", hero.x, hero.y)),
+            text!(Typography::Regular, format!("x {:0.1} y {:0.1}", hero.x, hero.y)),
             text!(Typography::Regular, format!("World Id: {}", world_id)),
             text!(Typography::Regular, format!("Hp: {:0.1}", hp))
         )

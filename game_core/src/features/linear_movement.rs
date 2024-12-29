@@ -1,74 +1,35 @@
-use crate::{config::config, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{config::config, constants::{PLAYER1_ENTITY_ID, TILE_SIZE}, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 
-        let frame = self.frame;
-
         if self.current_speed == 0.0 || matches!(self.direction, Direction::Unknown) {
             return
         }
-        if would_exit_bounds(&frame, &self.direction, &world.bounds) {
+        
+        let d = self.direction.as_vector();
+        let base_speed = config().base_entity_speed;
+        let dx = d.x * self.current_speed * base_speed * time_since_last_update / TILE_SIZE;
+        let dy = d.y * self.current_speed * base_speed * time_since_last_update / TILE_SIZE;
+        let next_collidable_frame = self.hittable_frame().offset(dx, dy);
+
+        if !world.bounds.contains(&next_collidable_frame) {
             return
         }
         if self.is_rigid {
-            if would_collide(&frame, &self.direction, world) {
+            if world.area_hits(&self.id, &next_collidable_frame) {
                 if self.is_player() && world.frame_is_slippery_surface(&self.hittable_frame()) {
                     self.current_speed = 0.0;
                 }
                 return
             }
-            if !can_step_over_hero(self) && would_collide_with_hero(&frame, &self.direction, world) {
-                return
-            }
+            // if !can_step_over_hero(self) && would_collide_with_hero(&frame, &self.direction, world) {
+            //    println!("#{} Would step over hero, skipping", self.id);
+            //    return
+            // }
         }
-        
-        let d = self.direction.as_vector();
-        let base_speed = config().base_entity_speed;
-        
-        self.frame.x += d.x * self.current_speed * base_speed * time_since_last_update;
-        self.frame.y += d.y * self.current_speed * base_speed * time_since_last_update;
 
-        /* 
-        let updated_offset = updated_offset(&self.offset, &self.direction, self.current_speed, time_since_last_update);    
-        let tiles_x_f = updated_offset.x / TILE_SIZE;
-        let tiles_y_f = updated_offset.y / TILE_SIZE;
-        let tiles_x = if updated_offset.x > 0.0 { tiles_x_f.floor() } else { tiles_x_f.ceil() };
-        let tiles_y = if updated_offset.y > 0.0 { tiles_y_f.floor() } else { tiles_y_f.ceil() };
-        
-        self.frame = frame.offset(tiles_x, tiles_y);
-
-        if tiles_x != 0.0 || tiles_y != 0.0 {
-            self.offset = Vector2d::zero();
-            self.update_sorting_key();
-        } else {
-            self.offset = Vector2d::new(
-                updated_offset.x - tiles_x * TILE_SIZE,
-                updated_offset.y - tiles_y * TILE_SIZE
-            );
-        }*/
+        self.frame = self.frame.offset(dx, dy);        
     } 
-}
-
-fn can_step_over_hero(entity: &Entity) -> bool {
-    entity.is_player() || entity.melee_attacks_hero()
-}
-/*
-fn updated_offset(offset: &Vector2d, direction: &Direction, speed: f32, time_since_last_update: f32) -> Vector2d {
-    direction.as_vector()
-        .scaled(speed)
-        .scaled(time_since_last_update)
-        .scaled(config().base_entity_speed) + *offset
-} */
-
-fn would_exit_bounds(frame: &FRect, direction: &Direction, bounds: &FRect) -> bool {
-    match direction {
-        Direction::Up => frame.y <= bounds.y,
-        Direction::Right => (frame.x + frame.w) >= (bounds.x + bounds.w),
-        Direction::Down => (frame.y + frame.h) >= (bounds.y + bounds.h),
-        Direction::Left => frame.x <= bounds.x,
-        Direction::Unknown => false,
-        Direction::Still => false,
-    }
 }
 
 pub fn would_collide(frame: &FRect, direction: &Direction, world: &World) -> bool {

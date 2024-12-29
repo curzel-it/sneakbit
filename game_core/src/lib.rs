@@ -133,6 +133,7 @@ pub struct RenderableItem {
     pub sprite_sheet_id: u32,
     pub texture_rect: FRect,
     pub frame: FRect,
+    pub hittable_frame: FRect,
     pub sorting_key: u32
 }
 
@@ -150,6 +151,7 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
                 sprite_sheet_id: e.sprite_sheet(),
                 texture_rect: e.texture_source_rect(),
                 frame: e.frame,
+                hittable_frame: e.hittable_frame(),
                 sorting_key: e.sorting_key
             }
         })

@@ -110,6 +110,10 @@ impl FRect {
     pub fn contains_or_touches(&self, point: &Vector2d) -> bool {
         self.x <= point.x && point.x <= self.x + self.w && self.y <= point.y && point.y <= self.y + self.h
     }
+
+    pub fn contains(&self, other: &FRect) -> bool {
+        self.x <= other.x && self.max_x() >= other.max_x() && self.y <= other.y && self.max_y() >= other.max_y()
+    }
     
     pub fn scaled(&self, scalar: f32) -> FRect {
         FRect::new(

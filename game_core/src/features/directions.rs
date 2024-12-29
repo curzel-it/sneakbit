@@ -1,11 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    currently_active_players,
-    features::entity::Entity,
-    utils::{directions::Direction, rect::FRect},
-    worlds::world::World,
-};
+use crate::{currently_active_players, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub enum MovementDirections {
@@ -31,7 +26,15 @@ impl Entity {
     pub fn update_direction(&mut self, world: &World) {
         match self.movement_directions {
             MovementDirections::None => {}
-            MovementDirections::Keyboard => self.direction = world.players[self.player_index].direction_based_on_current_keys,
+            MovementDirections::Keyboard => {
+                let new_direction = world.players[self.player_index].direction_based_on_current_keys;
+                if matches!(new_direction, Direction::Up | Direction::Right | Direction::Down | Direction::Left) {
+                    self.direction = new_direction;
+                    self.reset_speed();
+                } else {
+                    self.current_speed = 0.0;
+                }
+            },
             MovementDirections::Free => self.move_around_free(world),
             MovementDirections::FindHero => self.search_for_hero(world),
         }

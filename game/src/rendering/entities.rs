@@ -23,8 +23,6 @@ fn render_entity(
     
     if let Some(texture) = get_rendering_config().get_texture(sprite_key) {
         let source = item.texture_rect;
-        let frame = item.frame;
-
         let source_rect = Rectangle {
             x: source.x as f32 * TILE_SIZE, 
             y: source.y as f32 * TILE_SIZE,
@@ -32,12 +30,10 @@ fn render_entity(
             height: source.h as f32 * TILE_SIZE,
         };
 
-        let actual_col = frame.x - camera_viewport.x;
-        let actual_row = frame.y - camera_viewport.y;
-        
+        let frame = item.frame;
         let dest_rect = Rectangle {
-            x: actual_col * tile_scale,
-            y: actual_row * tile_scale,
+            x: (frame.x - camera_viewport.x) * tile_scale,
+            y: (frame.y - camera_viewport.y) * tile_scale,
             width: frame.w as f32 * tile_scale,
             height: frame.h as f32 * tile_scale,
         };
@@ -50,5 +46,15 @@ fn render_entity(
             0.0,
             Color::WHITE,
         );
+
+        let frame = item.hittable_frame;
+        let dest_rect = Rectangle {
+            x: (frame.x - camera_viewport.x) * tile_scale,
+            y: (frame.y - camera_viewport.y) * tile_scale,
+            width: frame.w as f32 * tile_scale,
+            height: frame.h as f32 * tile_scale,
+        };
+
+        d.draw_rectangle_rec(dest_rect, Color::RED.alpha(0.5));
     }
 }

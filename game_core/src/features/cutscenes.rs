@@ -31,6 +31,7 @@ impl CutScene {
             sprite_sheet_id: sprite.sheet_id,
             texture_rect: sprite.frame,
             frame: self.frame,
+            hittable_frame: self.frame,
             sorting_key: 2_000_000_000
         }
     }
