@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{currently_active_players, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID}, currently_active_players, entities::{known_species::SPECIES_HERO, species::SpeciesId}, features::entity::Entity, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
+
+use super::{entity::EntityId, hitmaps::Hittable};
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub enum MovementDirections {
@@ -49,15 +51,55 @@ impl Entity {
         }
     }
 
-    fn search_for_hero(&mut self, world: &World) {
-        if !self.frame.origin().is_close_to_int() {
-            return
+    pub fn search_for_hero(&mut self, world: &World) {
+        let my_position = self.frame.center();
+
+        if let Some((player, _, _, _)) = self.first_active_vulnerable_player_in_line_of_sight(world) {
+            self.direction = Direction::between_points(
+                &my_position, 
+                &player.center(), 
+                Direction::Right
+            );
+            println!("Saw hero, changed direction to {:#?}", self.direction);
+        } else {
+            let d = self.direction.as_vector().scaled(0.2);
+            let next = self.hittable_frame().offset(d.x, d.y);
+            
+            if world.first_entity_id_by_area(&vec![self.id], &next).is_none() {
+                self.pick_next_direction(world);
+            }
         }
-        if let Some(target) = self.is_any_active_vulnerable_player_in_line_of_sight(world) {
-            self.change_direction_towards_target(&target);
-        } else if self.is_obstacle_in_direction(world, self.direction) {
-            self.pick_next_direction(world);
+    }
+
+    pub fn first_active_vulnerable_player_in_line_of_sight(&self, world: &World) -> Option<Hittable> {
+        let my_position = self.frame.center();
+        let exclude = vec![self.id, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID];
+
+        for &player_index in currently_active_players().iter() {
+            let player = world.players[player_index].props;
+            let player_position = player.frame.center();
+
+            let ray = FRect::new(
+                my_position.x.min(player_position.x),
+                my_position.y.min(player_position.y),
+                (my_position.x - player_position.x).abs(),
+                (my_position.y - player_position.y).abs()
+            );
+            
+            let xxx = world.first_entity_id_by_area(&exclude, &ray);
+
+            println!("Checking...");
+            println!("  Me: {:#?}", my_position);
+            println!("  Player: {:#?}", player);
+            println!("  Ray: {:#?}", ray);
+            println!("  Hits: {:#?}", xxx);
+
+            if world.first_entity_id_by_area(&exclude, &ray).is_none() {
+                println!("  Passed!");
+                return Some((player.frame, 1, player.id, SPECIES_HERO))
+            }
         }
+        None
     }
 
     fn pick_next_direction(&mut self, world: &World) {
@@ -72,108 +114,6 @@ impl Entity {
                 self.direction = dir;
                 break;
             }
-        }
-    }
-
-    pub fn is_any_active_vulnerable_player_in_line_of_sight(&self, world: &World) -> Option<FRect> {
-        for &player_index in currently_active_players().iter() {
-            let player = &world.players[player_index];
-
-            if player.props.is_invulnerable {
-                continue;
-            }
-            let hero = player.props.hittable_frame;
-            let npc = self.hittable_frame(); 
-            
-            let npc_x_range = npc.x..(npc.x + npc.w);
-            let npc_y_range = npc.y..(npc.y + npc.h);
-
-            let hero_x_range = hero.x..(hero.x + hero.w);
-            let hero_y_range = hero.y..(hero.y + hero.h);
-
-            if ranges_overlap(&npc_x_range, &hero_x_range) {
-                let x_min = npc_x_range.start.max(hero_x_range.start);
-                let x_max = npc_x_range.end.min(hero_x_range.end);
-
-                let min_y = npc.y.min(hero.y);
-                let max_y = (npc.y + npc.h - 1.0).max(hero.y + hero.h - 1.0);
-
-                let mut obstructed = false;
-                // Convert floating ranges to integer ranges for grid-based collision
-                let x_min_int = x_min.floor() as i32;
-                let x_max_int = x_max.ceil() as i32;
-                let min_y_int = min_y.floor() as i32 + 1;
-                let max_y_int = max_y.ceil() as i32;
-
-                for x in x_min_int..x_max_int {
-                    for y in min_y_int..max_y_int {
-                        if world.hits(x as f32, y as f32) {
-                            obstructed = true;
-                            break;
-                        }
-                    }
-                    if obstructed {
-                        break;
-                    }
-                }
-
-                if !obstructed {
-                    return Some(hero);
-                }
-            }
-
-            if ranges_overlap(&npc_y_range, &hero_y_range) {
-                let y_min = npc_y_range.start.max(hero_y_range.start);
-                let y_max = npc_y_range.end.min(hero_y_range.end);
-
-                let min_x = npc.x.min(hero.x);
-                let max_x = (npc.x + npc.w - 1.0).max(hero.x + hero.w - 1.0);
-
-                let mut obstructed = false;
-                // Convert floating ranges to integer ranges for grid-based collision
-                let y_min_int = y_min.floor() as i32;
-                let y_max_int = y_max.ceil() as i32;
-                let min_x_int = min_x.floor() as i32 + 1;
-                let max_x_int = max_x.ceil() as i32;
-
-                for y in y_min_int..y_max_int {
-                    for x in min_x_int..max_x_int {
-                        if world.hits(x as f32, y as f32) {
-                            obstructed = true;
-                            break;
-                        }
-                    }
-                    if obstructed {
-                        break;
-                    }
-                }
-
-                if !obstructed {
-                    return Some(hero);
-                }
-            }
-        }
-        None
-    }
-
-    fn change_direction_towards_target(&mut self, target: &FRect) {
-        let npc = self.hittable_frame();
-
-        let npc_center_x = npc.x + npc.w / 2.0;
-        let npc_center_y = npc.y + npc.h / 2.0;
-        let target_center_x = target.x + target.w / 2.0;
-        let target_center_y = target.y + target.h / 2.0;
-
-        if target_center_x > npc_center_x {
-            self.direction = Direction::Right;
-        } else if target_center_x < npc_center_x {
-            self.direction = Direction::Left;
-        }
-
-        if target_center_y > npc_center_y {
-            self.direction = Direction::Down;
-        } else if target_center_y < npc_center_y {
-            self.direction = Direction::Up;
         }
     }
 

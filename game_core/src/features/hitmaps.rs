@@ -2,8 +2,10 @@ use crate::{entities::species::{EntityType, SpeciesId}, features::entity::{Entit
 
 #[derive(Clone)]
 pub struct Hitmap {
-    data: Vec<(FRect, i32, EntityId, SpeciesId)>
+    data: Vec<Hittable>
 }
+
+pub type Hittable = (FRect, i32, EntityId, SpeciesId);
 
 impl World {    
     pub fn area_hits(&self, myid: &u32, area: &FRect) -> bool {
@@ -20,6 +22,14 @@ impl World {
 
     pub fn entity_ids(&self, x: f32, y: f32) -> Vec<(EntityId, SpeciesId)> {
         self.hitmap.ids_xy(x, y)
+    }
+    
+    pub fn entity_ids_by_area(&self, exclude: &[u32], area: &FRect) -> Vec<(EntityId, SpeciesId)> {
+        self.hitmap.entity_ids_by_area(exclude, area)
+    }
+
+    pub fn first_entity_id_by_area(&self, exclude: &[u32], area: &FRect) -> Option<Hittable> {
+        self.hitmap.first_entity_id_by_area(exclude, area)
     }
 
     pub fn has_weight(&self, x: f32, y: f32) -> bool {
@@ -110,6 +120,30 @@ impl Hitmap {
         self.data.iter().any(|(other, weight, _, _)| {
             *weight > 0 && other.contains_or_touches(point)
         })
+    }
+
+    fn first_entity_id_by_area(&self, exclude: &[u32], area: &FRect) -> Option<Hittable> {
+        self.data
+            .iter()
+            .find(|(other, _, entity_id, _)| {
+                !exclude.contains(entity_id) && area.overlaps_or_touches(other)
+            })
+            .cloned()
+    }
+
+    fn entity_ids_by_area(&self, exclude: &[u32], area: &FRect) -> Vec<(EntityId, SpeciesId)> {
+        self.data
+            .iter()
+            .filter_map(|(other, _, entity_id, species_id)| {
+                if exclude.contains(entity_id) { 
+                    return None 
+                } else if area.overlaps_or_touches(other) {
+                    return Some((*entity_id, *species_id))
+                } else {
+                    None
+                }
+            })
+            .collect()
     }
 
     fn ids_xy(&self, x: f32, y: f32) -> Vec<(EntityId, SpeciesId)> {

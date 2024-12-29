@@ -99,7 +99,7 @@ impl Entity {
             return vec![]
         }
 
-        if let Some(hero_frame) = self.is_any_active_vulnerable_player_in_line_of_sight(world) {
+        if let Some((hero_frame, _, _, _)) = self.first_active_vulnerable_player_in_line_of_sight(world) {
             let boss_frame = self.hittable_frame();
             let distance = boss_frame.center().dumb_distance_to(&hero_frame.center());
 

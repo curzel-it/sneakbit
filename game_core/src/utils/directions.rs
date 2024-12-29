@@ -19,6 +19,26 @@ impl Direction {
         Vector2d::new(col as f32, row as f32)
     }
 
+    pub fn between_points(
+        origin: &Vector2d, 
+        destination: &Vector2d,
+        default: Direction
+    ) -> Direction {
+        let dx = (origin.x - destination.x).abs();
+        let dy = (origin.y - destination.y).abs();
+
+        if origin.x < destination.x && dx > dy { 
+            return Direction::Right 
+        } else if origin.x > destination.x && dx > dy { 
+            return Direction::Left
+        } else if origin.y < destination.y && dy > dx { 
+            return Direction::Down 
+        } else if origin.y > destination.y && dy > dx { 
+            return Direction::Up 
+        }
+        default
+    }
+
     pub fn as_col_row_offset(&self) -> (f32, f32) {
         match self {
             Direction::Still => (0.0, 0.0),
