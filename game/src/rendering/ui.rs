@@ -123,25 +123,25 @@ fn calculate_position(layout: &Layout, anchor: &AnchorPoint, view: &View, config
 
     let (x, y) = match anchor {
         AnchorPoint::Center => (
-            (layout.frame.x as f32 + layout.frame.w as f32 - size.x) / 2.0, 
-            (layout.frame.y as f32 + layout.frame.h as f32 - size.y) / 2.0
+            (layout.frame.x + layout.frame.w as f32 - size.x) / 2.0, 
+            (layout.frame.y + layout.frame.h as f32 - size.y) / 2.0
         ), 
         AnchorPoint::TopLeft => (0.0, 0.0), 
         AnchorPoint::TopRight => (
-            layout.frame.x as f32 + layout.frame.w as f32 - size.x, 
+            layout.frame.x + layout.frame.w as f32 - size.x, 
             0.0
         ),
         AnchorPoint::BottomCenter => (
-            layout.frame.x as f32 + layout.frame.w as f32 / 2.0 - size.x / 2.0, 
-            layout.frame.y as f32 + layout.frame.h as f32 - size.y
+            layout.frame.x + layout.frame.w as f32 / 2.0 - size.x / 2.0, 
+            layout.frame.y + layout.frame.h as f32 - size.y
         ),
         AnchorPoint::BottomLeft => (
             0.0, 
-            layout.frame.y as f32 + layout.frame.h as f32 - size.y
+            layout.frame.y + layout.frame.h as f32 - size.y
         ),
         AnchorPoint::BottomRight => (
-            layout.frame.x as f32 + layout.frame.w as f32 - size.x, 
-            layout.frame.y as f32 + layout.frame.h as f32 - size.y
+            layout.frame.x + layout.frame.w as f32 - size.x, 
+            layout.frame.y + layout.frame.h as f32 - size.y
         ),
     };
     Vector2d::new(x, y)

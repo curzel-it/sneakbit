@@ -26,8 +26,8 @@ pub fn camera_center(
                 if p.index >= number_of_players {
                     return None
                 }
-                let x = p.props.hittable_frame.x as f32;
-                let y = p.props.hittable_frame.y as f32;
+                let x = p.props.hittable_frame.x;
+                let y = p.props.hittable_frame.y;
                 Some((x, y))
             })
             .fold((0.0, 0.0), |acc, (x, y)| {
