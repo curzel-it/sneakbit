@@ -92,13 +92,8 @@ impl Hitmap {
     }
 
     fn area_hits(&self, myid: &u32, area: &FRect) -> bool {
-        self.data.iter().any(|(other, _, entity_id, species_id)| {            
-            if entity_id != myid && other.overlaps_or_touches(area) {
-                println!("> Collision with {} {} between {:#?} and {:#?}", entity_id, species_id, area, other);
-                true
-            } else {
-                false
-            }
+        self.data.iter().any(|(other, _, entity_id, _)| {            
+            entity_id != myid && other.overlaps_or_touches(area)
         })
     }
 
@@ -148,13 +143,6 @@ impl Hitmap {
 
     fn ids_xy(&self, x: f32, y: f32) -> Vec<(EntityId, SpeciesId)> {
         self.ids_point(&Vector2d::new(x, y))
-    }
-
-    fn ids_rect(&self, rect: &FRect) -> Vec<(EntityId, SpeciesId)> {
-        self.data.iter()
-            .filter(|(other, _, _, _)| other.overlaps_or_touches(rect))
-            .map(|(_, _, entity_id, species_id)| (*entity_id, *species_id))
-            .collect()
     }
 
     fn ids_point(&self, point: &Vector2d) -> Vec<(EntityId, SpeciesId)> {

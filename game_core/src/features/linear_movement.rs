@@ -1,4 +1,4 @@
-use crate::{config::config, constants::{PLAYER1_ENTITY_ID, TILE_SIZE}, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{config::config, constants::TILE_SIZE, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 

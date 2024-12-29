@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID}, currently_active_players, entities::{known_species::SPECIES_HERO, species::SpeciesId}, features::entity::Entity, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID}, currently_active_players, entities::known_species::SPECIES_HERO, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
-use super::{entity::EntityId, hitmaps::Hittable};
+use super::hitmaps::Hittable;
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub enum MovementDirections {
