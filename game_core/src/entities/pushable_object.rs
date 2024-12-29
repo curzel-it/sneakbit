@@ -1,4 +1,4 @@
-use crate::{features::{entity::Entity, entity_props::EntityProps, linear_movement::{would_collide, would_over_weight}, state_updates::WorldStateUpdate}, utils::directions::Direction, worlds::world::World};
+use crate::{features::{entity::Entity, entity_props::EntityProps, linear_movement::{would_collide, would_over_weight}, state_updates::WorldStateUpdate}, worlds::world::World};
 
 impl Entity {
     pub fn update_pushable(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
@@ -21,15 +21,7 @@ impl Entity {
         let player_direction = player_props.direction;       
         
         if !player.origin().is_close_to_int() {
-            let is_around = match player_direction {
-                Direction::Up => player.y == self.frame.y + self.frame.h && player.x >= self.frame.x && player.x < self.frame.x + self.frame.w,
-                Direction::Right => player.x == self.frame.x - 1.0 && player.y >= self.frame.y && player.y < self.frame.y + self.frame.h,
-                Direction::Down => player.y == self.frame.y && player.x >= self.frame.x && player.x < self.frame.x + self.frame.w,
-                Direction::Left => player.x == self.frame.x + self.frame.w && player.y >= self.frame.y && player.y < self.frame.y + self.frame.h,
-                Direction::Unknown => false,
-                Direction::Still => false,
-            };
-            if is_around {
+            if player.is_around_and_pointed_at(&self.frame, &player_direction) {
                 let hits = would_collide(&self.frame, &player_direction, world);
                 let weights = would_over_weight(&self.frame, &player_direction, world);
                 

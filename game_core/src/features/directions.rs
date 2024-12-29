@@ -30,7 +30,7 @@ impl Entity {
             MovementDirections::None => {}
             MovementDirections::Keyboard => {
                 let new_direction = world.players[self.player_index].direction_based_on_current_keys;
-                if matches!(new_direction, Direction::Up | Direction::Right | Direction::Down | Direction::Left) {
+                if !matches!(new_direction, Direction::Unknown | Direction::Still) {
                     self.direction = new_direction;
                     self.reset_speed();
                 } else {
@@ -90,7 +90,9 @@ impl Entity {
     fn pick_next_direction(&mut self, world: &World) {
         let directions = [
             self.direction.turn_right(),
+            self.direction.turn_right().turn_right(),
             self.direction.turn_left(),
+            self.direction.turn_left().turn_left(),
             self.direction.opposite(),
         ];
 

@@ -62,17 +62,17 @@ impl Entity {
 }
 
 fn bullet_offsets(direction: Direction) -> Vec<(f32, f32)> {
-    match direction {
+    match direction { // Todo will need to be adjusted
         Direction::Up => vec![
             (-1.0, -1.0), (0.0, -2.0), (0.0, -1.0), (1.0, -1.0)
         ],
         Direction::Down | Direction::Unknown | Direction::Still => vec![
             (-1.0, 1.0), (0.0, 2.0), (0.0, 1.0), (1.0, 1.0)
         ],
-        Direction::Right => vec![
+        Direction::Right | Direction::UpRight | Direction::DownRight => vec![
             (1.0, -1.0), (2.0, 0.0), (1.0, 0.0), (1.0, 1.0)
         ],
-        Direction::Left => vec![
+        Direction::Left | Direction::UpLeft | Direction::DownLeft => vec![
             (-1.0, -1.0), (-2.0, 0.0), (-1.0, 0.0), (-1.0, 1.0)
         ],
     }
