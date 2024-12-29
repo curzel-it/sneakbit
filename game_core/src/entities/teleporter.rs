@@ -9,7 +9,11 @@ impl Entity {
     pub fn update_teleporter(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {   
         self.is_rigid = !matches!(self.lock_type, LockType::None);
 
-        if is_player_entering_tile(world, self.frame.x, self.frame.y) {
+        let player = world.players[0].props;
+        let is_near_entrance = player.hittable_frame.is_around_and_pointed_at(&self.frame, &player.direction);
+        let is_moving = player.speed > 0.0;
+
+        if is_near_entrance && is_moving {
             if !is_creative_mode() && self.lock_type != LockType::None {
                 vec![show_locked_message()]
             } else if let Some(destination) = self.destination.clone() {

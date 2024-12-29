@@ -133,7 +133,7 @@ impl World {
                 if is_player(bullet.parent_id) {
                     bullet.direction = bullet.direction.opposite();
                     bullet.update_sprite_for_current_state();
-                    let (dx, dy) = bullet.direction.as_col_row_offset();
+                    let (dx, dy) = bullet.direction.as_offset();
                     bullet.frame.x += dx;
                     bullet.frame.y += dy;
                     return vec![EngineStateUpdate::BulletBounced]

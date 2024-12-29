@@ -1,4 +1,4 @@
-use crate::{features::{entity::Entity, entity_props::EntityProps, linear_movement::{would_collide, would_over_weight}, state_updates::WorldStateUpdate}, worlds::world::World};
+use crate::{features::{entity::Entity, entity_props::EntityProps, state_updates::WorldStateUpdate}, worlds::world::World};
 
 impl Entity {
     pub fn update_pushable(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
@@ -21,19 +21,12 @@ impl Entity {
         let player_direction = player_props.direction;       
         
         if !player.origin().is_close_to_int() {
-            if player.is_around_and_pointed_at(&self.frame, &player_direction) {
-                let hits = would_collide(&self.frame, &player_direction, world);
-                let weights = would_over_weight(&self.frame, &player_direction, world);
-                
-                if hits {
-                    return vec![]
-                } else if weights {
-                    return vec![WorldStateUpdate::StopHeroMovement]
-                } else {
-                    self.direction = player_direction;
-                    self.current_speed = 1.2 * world.players[0].props.speed;
-                    self.move_linearly(world, time_since_last_update);
-                }
+            if player.is_around_and_pointed_at(&self.frame, &player_direction) && player_props.speed > 0.0 {
+                self.direction = player_direction;
+                self.current_speed = 1.2 * world.players[0].props.speed;
+                self.move_linearly(world, time_since_last_update);
+            } else {
+                self.current_speed = 0.0;
             }
         }
 

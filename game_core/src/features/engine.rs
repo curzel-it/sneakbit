@@ -204,7 +204,6 @@ impl GameEngine {
             self.previous_world = Some(self.world.clone());
         }
         self.world = new_world;
-        self.world.spawn_point = (hero_frame.x, hero_frame.y);
         self.center_camera_at(hero_frame.x, hero_frame.y);
 
         self.keyboard.on_world_changed();

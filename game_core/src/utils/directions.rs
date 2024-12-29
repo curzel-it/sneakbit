@@ -19,8 +19,8 @@ pub enum Direction {
 
 impl Direction {
     pub fn as_vector(&self) -> Vector2d {
-        let (col, row) = self.as_col_row_offset();
-        Vector2d::new(col as f32, row as f32)
+        let (col, row) = self.as_offset();
+        Vector2d::new(col, row)
     }
 
     pub fn between_points(
@@ -43,7 +43,7 @@ impl Direction {
         default
     }
 
-    pub fn as_col_row_offset(&self) -> (f32, f32) {
+    pub fn as_offset(&self) -> (f32, f32) {
         match self {
             Direction::Still => (0.0, 0.0),
             Direction::Up => (0.0, -1.0),

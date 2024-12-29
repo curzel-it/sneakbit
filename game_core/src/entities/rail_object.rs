@@ -31,7 +31,7 @@ impl Entity {
         let y = self.frame.y;
 
         for direction in self.directions_to_check() {
-            let (dx, dy) = direction.as_col_row_offset();
+            let (dx, dy) = direction.as_offset();
 
             if is_rail(world, x + dx, y + dy) {
                 return direction;

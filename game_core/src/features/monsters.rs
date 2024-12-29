@@ -45,8 +45,7 @@ impl Entity {
         if world.players[0].props.is_invulnerable {
             return vec![]
         }
-        let frame = self.hittable_frame();     
-        let players_being_hit = world.entity_ids_of_all_players_at(frame.x, frame.y);
+        let players_being_hit = world.entity_ids_of_all_players_in(&self.hittable_frame());
            
         if !players_being_hit.is_empty() {
             let damage = self.dps * time_since_last_update;

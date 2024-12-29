@@ -86,18 +86,18 @@ impl FRect {
     }
 
     pub fn is_around_and_pointed_at(&self, other: &FRect, direction: &Direction) -> bool {
-        let center = self.center();
+        if !self.overlaps_or_touches(other) {
+            return false
+        }
 
-        if other.contains_or_touches(&center) {
-            return true;
-        }
-        match direction {
-            Direction::Down => other.contains_or_touches(&center.offset_y(1.0)),
-            Direction::Up => other.contains_or_touches(&center.offset_y(-1.0)),
-            Direction::Left => other.contains_or_touches(&center.offset_x(1.0)),
-            Direction::Right => other.contains_or_touches(&center.offset_x(-1.0)),            
-            _ => false
-        }
+        let center = self.center();
+        let other_center = other.center();
+        let required_direction = Direction::between_points(
+            &center, 
+            &other_center, 
+            Direction::Unknown
+        );
+        required_direction == *direction
     }
     
     pub fn overlaps_or_touches(&self, other: &FRect) -> bool {        

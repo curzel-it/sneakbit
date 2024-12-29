@@ -223,6 +223,7 @@ impl World {
         direction: Direction,
     ) {
         let (x, y) = self.destination_x_y(source, original_x, original_y);
+        self.spawn_point = (x, y);
         let mut entity = make_entity_by_species(SPECIES_HERO);
 
         if !matches!(direction, Direction::Unknown | Direction::Still) {
@@ -238,7 +239,7 @@ impl World {
 
             for new_direction in &likely_directions {
                 if self.has_space_for_hero_in_direction(x, y, new_direction) {
-                    let (ox, oy) = new_direction.as_col_row_offset();
+                    let (ox, oy) = new_direction.as_offset();
                     entity.frame.x = x + ox;
                     entity.frame.y = y - 1.0 + oy;
                     entity.direction = *new_direction;
@@ -352,7 +353,7 @@ impl World {
         y: f32,
         direction: &Direction,
     ) -> bool {
-        let (ox, oy) = direction.as_col_row_offset();
+        let (ox, oy) = direction.as_offset();
 
         let y_fix = match direction {
             Direction::Up => 0.0,

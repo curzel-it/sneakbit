@@ -30,7 +30,7 @@ impl Entity {
         }
 
         if self.current_speed == 0.0 && !is_creative_mode() {   
-            if let Some(player) = world.first_index_of_player_at(self.frame.x, self.frame.y) {
+            if let Some(player) = world.first_index_of_player_in(&self.hittable_frame()) {
                 return object_pick_up_sequence(player, self);
             }            
         }
@@ -111,8 +111,7 @@ pub fn make_bullet_ex(
 ) -> Entity {
     let mut bullet = species_by_id(species).make_entity();
     bullet.direction = direction;
-    let (dx, dy) = direction.as_col_row_offset();
-    bullet.frame = starting_frame.offset(dx, dy); 
+    bullet.frame = starting_frame.offset_by(direction.as_offset());
     
     bullet.parent_id = parent_id;
     bullet.remaining_lifespan = lifespan;

@@ -324,7 +324,7 @@ impl World {
         let hero = self.players[0].props.hittable_frame;
         let hero_direction: Direction = self.players[0].props.direction;        
         
-        if self.is_any_hero_in(target) {
+        if self.is_any_player_in(target) {
             return true
         }
         if hero.is_around_and_pointed_at(&target, &hero_direction) {

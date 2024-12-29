@@ -40,15 +40,6 @@ pub fn empty_props_for_all_players() -> Vec<PlayerProps> {
 }
 
 impl World {
-    pub fn first_index_of_player_at(&self, x: f32, y: f32) -> Option<usize> {
-        for p in &self.players {
-            if p.props.hittable_frame.x == x && p.props.hittable_frame.y == y {
-                return Some(p.index)
-            }
-        }
-        None
-    }
-
     pub fn first_index_of_player_in(&self, area: &FRect) -> Option<usize> {
         for p in &self.players {
             if area.contains_or_touches(&p.props.hittable_frame.center()) {
@@ -58,8 +49,8 @@ impl World {
         None
     }
     
-    pub fn entity_ids_of_all_players_at(&self, x: f32, y: f32) -> Vec<u32> { 
-        self.index_of_all_players_at(x, y)
+    pub fn entity_ids_of_all_players_in(&self, area: &FRect) -> Vec<u32> { 
+        self.index_of_all_players_in(area)
             .into_iter()
             .filter_map(|i| self.player_entity_id_by_index(i)) 
             .collect()
@@ -75,9 +66,9 @@ impl World {
         }
     }
 
-    fn index_of_all_players_at(&self, x: f32, y: f32) -> Vec<usize> {
+    fn index_of_all_players_in(&self, area: &FRect) -> Vec<usize> {
         self.players.iter().filter_map(|p| {
-            if p.props.hittable_frame.x == x && p.props.hittable_frame.y == y {
+            if area.overlaps_or_touches(&p.props.hittable_frame) {
                 Some(p.index)
             } else {
                 None
@@ -86,7 +77,7 @@ impl World {
         .collect()
     }
 
-    pub fn is_any_hero_in(&self, area: &FRect) -> bool {
+    pub fn is_any_player_in(&self, area: &FRect) -> bool {
         self.players.iter().any(|p| area.overlaps_or_touches(&p.props.hittable_frame))
     }
 }

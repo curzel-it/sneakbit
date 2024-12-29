@@ -1,4 +1,4 @@
-use crate::{config::config, constants::TILE_SIZE, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{config::config, constants::TILE_SIZE, features::entity::Entity, utils::directions::Direction, worlds::world::World};
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 
@@ -39,30 +39,4 @@ impl Entity {
 
         self.frame = self.frame.offset(dx, dy);        
     } 
-}
-
-pub fn would_collide(frame: &FRect, direction: &Direction, world: &World) -> bool {
-    let (col_offset, row_offset) = direction.as_col_row_offset();
-    let base_y = frame.y + frame.h - 1.0;
-    let base_x = frame.x;
-    let x = base_x + col_offset;
-    let y = base_y + row_offset;
-    world.hits(x, y)
-}
-
-pub fn would_over_weight(frame: &FRect, direction: &Direction, world: &World) -> bool {
-    let (col_offset, row_offset) = direction.as_col_row_offset();
-    let base_y = frame.y + frame.h - 1.0;
-    let base_x = frame.x;
-    let x = base_x + col_offset;
-    let y = base_y + row_offset;
-    world.has_weight(x, y)
-}
-
-pub fn would_collide_with_hero(frame: &FRect, direction: &Direction, world: &World) -> bool {
-    let (col_offset, row_offset) = direction.as_col_row_offset();
-    let y = frame.y + frame.h - 1.0 + row_offset;
-    let x = frame.x + col_offset;
-    let hero = world.players[0].props.hittable_frame;
-    hero.x == x && hero.y == y 
 }
