@@ -131,5 +131,40 @@ impl FRect {
     pub fn max_y(&self) -> f32 {
         self.y + self.h
     }
+
+    pub fn intersects_line(&self, x1: f32, y1: f32, x2: f32, y2: f32) -> bool {
+        let p1 = Vector2d::new(x1, y1);
+        let p2 = Vector2d::new(x2, y2);
+
+        if self.contains_or_touches(&p1) && self.contains_or_touches(&p2) {
+            return true;
+        }
+
+        let edges = [
+            ((self.x, self.y), (self.x + self.w, self.y)),
+            ((self.x + self.w, self.y), (self.x + self.w, self.y + self.h)), 
+            ((self.x + self.w, self.y + self.h), (self.x, self.y + self.h)), 
+            ((self.x, self.y + self.h), (self.x, self.y)),
+        ];
+
+        for &((ex1, ey1), (ex2, ey2)) in &edges {
+            if lines_intersect(x1, y1, x2, y2, ex1, ey1, ex2, ey2) {
+                return true;
+            }
+        }
+
+        false
+    }
 }
 
+fn lines_intersect(x1: f32, y1: f32, x2: f32, y2: f32, x3: f32, y3: f32, x4: f32, y4: f32) -> bool {
+    let denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+    if denom == 0.0 {
+        return false;
+    }
+
+    let ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denom;
+    let ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denom;
+
+    ua >= 0.0 && ua <= 1.0 && ub >= 0.0 && ub <= 1.0
+}

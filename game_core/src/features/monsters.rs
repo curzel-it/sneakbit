@@ -1,4 +1,4 @@
-use crate::{entities::{bullets::{make_bullet_ex, BulletHits}, known_species::{is_monster, SPECIES_MONSTER, SPECIES_MONSTER_BLUEBERRY, SPECIES_MONSTER_GOOSEBERRY, SPECIES_MONSTER_SMALL, SPECIES_MONSTER_STRAWBERRY}, species::{species_by_id, EntityType}}, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::rect::FRect, worlds::world::World};
+use crate::{entities::{bullets::{make_bullet_ex, BulletHits}, known_species::{is_monster, SPECIES_MONSTER, SPECIES_MONSTER_BLUEBERRY, SPECIES_MONSTER_GOOSEBERRY, SPECIES_MONSTER_SMALL, SPECIES_MONSTER_STRAWBERRY}, species::{species_by_id, EntityType}}, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, worlds::world::World};
 
 impl Entity {
     pub fn setup_monster(&mut self) {
@@ -112,7 +112,7 @@ impl Entity {
             let minion = make_bullet_ex(
                 self.species.bullet_species_id, 
                 self.id, 
-                &FRect::square_from_origin(1.0).centered_at(&self.frame.center()), 
+                &self.frame.center(), 
                 self.direction, 
                 self.species.bullet_lifespan
             );

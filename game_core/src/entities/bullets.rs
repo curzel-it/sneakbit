@@ -1,4 +1,4 @@
-use crate::{constants::PLAYER1_INDEX, entities::known_species::is_building, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{constants::PLAYER1_INDEX, entities::known_species::is_building, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
 
 use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species, SpeciesId}};
 
@@ -47,16 +47,11 @@ impl Entity {
     }
 
     fn check_hits(&self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
+        let exclude = vec![0, self.id, self.parent_id];
         let valid_hits: Vec<u32> = world
-            .entity_ids(self.frame.x, self.frame.y)
+            .entity_ids_by_area(&exclude, &self.hittable_frame())
             .into_iter()
-            .filter_map(|(entity_id, _)| {
-                if self.is_valid_hit_target(entity_id) {
-                    Some(entity_id)
-                } else {
-                    None
-                }
-            })
+            .map(|(entity_id, _)| entity_id)
             .collect();
 
         if valid_hits.is_empty() {
@@ -105,13 +100,19 @@ impl Entity {
 pub fn make_bullet_ex(
     species: u32, 
     parent_id: u32, 
-    starting_frame: &FRect, 
+    center: &Vector2d, 
     direction: Direction, 
     lifespan: f32
 ) -> Entity {
+    let (dx, dy) = direction.as_offset();
     let mut bullet = species_by_id(species).make_entity();
     bullet.direction = direction;
-    bullet.frame = starting_frame.offset_by(direction.as_offset());
+    bullet.frame = FRect::new(
+        center.x - bullet.frame.w / 2.0 + dx / 4.0, 
+        center.y - bullet.frame.h / 2.0 + dy / 4.0, 
+        bullet.frame.w, 
+        bullet.frame.h
+    );
     
     bullet.parent_id = parent_id;
     bullet.remaining_lifespan = lifespan;
@@ -126,7 +127,7 @@ pub fn make_player_bullet(parent_id: u32, world: &World, weapon_species: &Specie
     let mut bullet = make_bullet_ex(
         weapon_species.bullet_species_id,
         parent_id,
-        &player.hittable_frame,
+        &player.hittable_frame.center(),
         player.direction,
         weapon_species.bullet_lifespan
     );

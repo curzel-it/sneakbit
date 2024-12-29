@@ -54,7 +54,6 @@ fn render_entity(
             width: frame.w * tile_scale,
             height: frame.h * tile_scale,
         };
-
-        d.draw_rectangle_rec(dest_rect, Color::RED.alpha(0.5));
+        d.draw_rectangle_lines_ex(dest_rect, 1.0, Color::RED.alpha(0.5));
     }
 }

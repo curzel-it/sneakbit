@@ -257,6 +257,19 @@ impl Entity {
                     h: height
                 }
             },
+            EntityType::Bullet => {
+                let (ox, oy) = match self.direction {
+                    Direction::Up | Direction::Down => (0.2, 0.0),
+                    Direction::Right | Direction::Left => (0.0, 0.2),
+                    _ => (0.0, 0.0)
+                };
+                FRect {
+                    x: self.frame.x + ox,
+                    y: self.frame.y + oy,
+                    w: self.frame.w - ox * 2.0,
+                    h: self.frame.h - oy * 2.0
+                }
+            },
             _ => {
                 let x_offset = 0.1;
                 let y_offset = if self.frame.h > 1.0 { 1.1 } else { 0.1 };

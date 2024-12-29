@@ -192,7 +192,6 @@ impl World {
         let half_w = self.bounds.w / 2.0;
         let half_h = self.bounds.h / 2.0;
 
-        // Convert floating-point bounds to integer steps for iteration
         let start_x = self.bounds.x.ceil() as i32;
         let end_x = (self.bounds.x + half_w).floor() as i32;
         let start_y = self.bounds.y.ceil() as i32;

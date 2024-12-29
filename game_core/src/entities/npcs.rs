@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::directions::direction_between_rects, worlds::world::World};
+use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::directions::Direction, worlds::world::World};
 
 pub type NpcId = u32;
 
@@ -23,7 +23,7 @@ impl Entity {
 
         if !self.dialogues.is_empty() && world.is_hero_around_and_on_collision_with(&self.frame) {            
             if world.has_confirmation_key_been_pressed_by_anyone {
-                self.direction = direction_between_rects(&self.frame, &world.players[0].props.hittable_frame);
+                self.direction = Direction::between_rects(&self.frame, &world.players[0].props.hittable_frame);
                 self.update_sprite_for_current_state();
             }         
             

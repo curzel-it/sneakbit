@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID}, currently_active_players, entities::known_species::SPECIES_HERO, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID}, currently_active_players, entities::known_species::SPECIES_HERO, features::entity::Entity, utils::directions::Direction, worlds::world::World};
 
 use super::hitmaps::Hittable;
 
@@ -43,12 +43,7 @@ impl Entity {
     }
 
     fn move_around_free(&mut self, world: &World) {
-        if !self.frame.origin().is_close_to_int() {
-            return
-        }
-        if self.is_obstacle_in_direction(world, self.direction) {
-            self.pick_next_direction(world);
-        }
+        self.pick_next_direction(world);
     }
 
     pub fn search_for_hero(&mut self, world: &World) {
@@ -60,28 +55,21 @@ impl Entity {
                 &player.center(), 
                 Direction::Right
             );
-        } else if self.is_obstacle_in_direction(world, self.direction) {
+        } else  {
             self.pick_next_direction(world);
         }
     }
 
     pub fn first_active_vulnerable_player_in_line_of_sight(&self, world: &World) -> Option<Hittable> {
-        let my_position = self.frame.center();
+        let me = self.hittable_frame().center();
         let exclude = vec![self.id, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID];
-
+    
         for &player_index in currently_active_players().iter() {
             let player = world.players[player_index].props;
-            let player_position = player.frame.center();
-
-            let ray = FRect::new(
-                my_position.x.min(player_position.x),
-                my_position.y.min(player_position.y),
-                (my_position.x - player_position.x).abs(),
-                (my_position.y - player_position.y).abs()
-            );
-            
-            if world.first_entity_id_by_area(&exclude, &ray).is_none() {
-                return Some((player.frame, 1, player.id, SPECIES_HERO))
+            let player_position = player.hittable_frame.center();
+    
+            if !world.hits_line(&exclude, &me, &player_position) {
+                return Some((player.hittable_frame, 1, player.id, SPECIES_HERO));
             }
         }
         None
@@ -89,6 +77,7 @@ impl Entity {
 
     fn pick_next_direction(&mut self, world: &World) {
         let directions = [
+            self.direction,
             self.direction.turn_right(),
             self.direction.turn_right().turn_right(),
             self.direction.turn_left(),
@@ -107,6 +96,6 @@ impl Entity {
     fn is_obstacle_in_direction(&self, world: &World, direction: Direction) -> bool {
         let d = direction.as_vector().scaled(0.2);
         let next = self.hittable_frame().offset(d.x, d.y);
-        world.first_entity_id_by_area(&vec![self.id], &next).is_some()
+        world.area_hits(&self.id, &next)
     }
 }

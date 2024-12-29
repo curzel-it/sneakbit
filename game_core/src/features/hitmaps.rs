@@ -15,9 +15,13 @@ impl World {
     pub fn hits(&self, x: f32, y: f32) -> bool {
         self.hitmap.hits_xy(x, y) || self.tiles_hitmap.hits_xy(x, y) 
     }
-
+    
     pub fn hits_or_out_of_bounds(&self, x: f32, y: f32) -> bool {
         x < 0.0 || y < 0.0 || x >= self.bounds.max_x() || y >= self.bounds.max_y() || self.hits(x, y)
+    }
+
+    pub fn hits_line(&self, exclude: &[u32], start: &Vector2d, end: &Vector2d) -> bool {
+        self.hitmap.hits_line(exclude, start, end) || self.tiles_hitmap.hits_line(exclude, start, end)
     }
 
     pub fn entity_ids(&self, x: f32, y: f32) -> Vec<(EntityId, SpeciesId)> {
@@ -69,7 +73,7 @@ impl World {
                 let construction_obstacle = self.construction_tiles.tiles[y][x].is_obstacle();
 
                 if biome_obstacle || construction_obstacle {
-                    let frame = FRect::new(x as f32 + 0.15, y as f32 + 0.15, 0.7, 0.7);
+                    let frame = FRect::new(x as f32 + 0.05, y as f32 + 0.1, 0.9, 0.8);
                     let item = (frame, 0, 0, 0);
                     self.tiles_hitmap.data.push(item);
                 }
@@ -105,6 +109,15 @@ impl Hitmap {
         self.data.iter().any(|(other, _, _, _)| {
             other.contains_or_touches(point)
         })
+    }
+
+    fn hits_line(&self, exclude: &[u32], start: &Vector2d, end: &Vector2d) -> bool {
+        self.data
+            .iter()
+            .any(|(obstacle_rect, _, entity_id, _)| {
+                if exclude.contains(entity_id) { return false }
+                obstacle_rect.intersects_line(start.x, start.y, end.x, end.y)
+            })
     }
 
     fn has_weight_xy(&self, x: f32, y: f32) -> bool {

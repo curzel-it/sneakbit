@@ -23,23 +23,23 @@ impl Direction {
         Vector2d::new(col, row)
     }
 
-    pub fn between_points(
-        origin: &Vector2d, 
-        destination: &Vector2d,
-        default: Direction
-    ) -> Direction {
-        let dx = (origin.x - destination.x).abs();
-        let dy = (origin.y - destination.y).abs();
+    pub fn between_rects(source: &FRect, other: &FRect) -> Self {
+        Self::between_points(
+            &source.center(), 
+            &other.center(), 
+            Direction::Unknown
+        )
+    }
 
-        if origin.x < destination.x && dx > dy { 
-            return Direction::Right 
-        } else if origin.x > destination.x && dx > dy { 
-            return Direction::Left
-        } else if origin.y < destination.y && dy > dx { 
-            return Direction::Down 
-        } else if origin.y > destination.y && dy > dx { 
-            return Direction::Up 
-        }
+    pub fn between_points(origin: &Vector2d, destination: &Vector2d, default: Direction) -> Direction {
+        if origin.y > destination.y && origin.x < destination.x { return Direction::UpRight }
+        if origin.y > destination.y && origin.x > destination.x { return Direction::UpLeft }
+        if origin.y < destination.y && origin.x < destination.x { return Direction::DownRight }
+        if origin.y < destination.y && origin.x > destination.x { return Direction::DownLeft }
+        if origin.y > destination.y { return Direction::Up }
+        if origin.x < destination.x { return Direction::Right }
+        if origin.y < destination.y { return Direction::Down }
+        if origin.x > destination.x { return Direction::Left }
         default
     }
 
@@ -117,16 +117,4 @@ impl Direction {
             Direction::Unknown => Direction::Unknown,
         }
     }
-}
-
-pub fn direction_between_rects(source: &FRect, other: &FRect) -> Direction {
-    if source.y > other.y && source.x < other.x { return Direction::UpRight }
-    if source.y > other.y && source.x > other.x { return Direction::UpLeft }
-    if source.y < other.y && source.x < other.x { return Direction::DownRight }
-    if source.y < other.y && source.x > other.x { return Direction::DownLeft }
-    if source.y > other.y { return Direction::Up }
-    if source.x < other.x { return Direction::Right }
-    if source.y < other.y { return Direction::Down }
-    if source.x > other.x { return Direction::Left }
-    Direction::Unknown
 }
