@@ -147,10 +147,11 @@ impl FRect {
     pub fn scaled_from_center(&self, scalar: f32) -> FRect {
         let w = self.w * scalar;
         let h = self.h * scalar;
+        let center = self.center();
 
         FRect::new(
-            self.x + (w - self.w) / 2.0,
-            self.y + (h - self.h) / 2.0,
+            center.x - self.w / 2.0,
+            center.y - self.h / 2.0,
             w, h
         )
     }

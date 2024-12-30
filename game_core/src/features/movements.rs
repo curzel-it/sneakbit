@@ -120,7 +120,7 @@ impl Entity {
         }
     }
 
-    fn is_obstacle_in_direction(&self, world: &World, direction: Direction) -> bool {
+    pub fn is_obstacle_in_direction(&self, world: &World, direction: Direction) -> bool {
         let d = direction.as_vector().scaled(0.3);
         let next = self.hittable_frame().offset(d.x, d.y);
         world.area_hits(&vec![self.id], &next)

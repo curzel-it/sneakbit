@@ -179,10 +179,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 44,
-        "y": 31
+        "h": 2.0,
+        "w": 1.0,
+        "x": 44.0,
+        "y": 31.0
       },
       "id": 14169702,
       "is_consumable": false,
@@ -197,10 +197,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 47,
-        "y": 31
+        "h": 2.0,
+        "w": 1.0,
+        "x": 47.0,
+        "y": 31.0
       },
       "id": 14169703,
       "is_consumable": false,
@@ -215,10 +215,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 2,
-        "x": 50,
-        "y": 31
+        "h": 2.0,
+        "w": 2.0,
+        "x": 50.0,
+        "y": 31.0
       },
       "id": 14169704,
       "is_consumable": false,
@@ -233,10 +233,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 53,
-        "y": 31
+        "h": 1.0,
+        "w": 1.0,
+        "x": 53.0,
+        "y": 31.0
       },
       "id": 14169706,
       "is_consumable": false,
@@ -251,10 +251,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 56,
-        "y": 35
+        "h": 1.0,
+        "w": 1.0,
+        "x": 56.0,
+        "y": 35.0
       },
       "id": 14170575,
       "is_consumable": false,
@@ -269,10 +269,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 59,
-        "y": 35
+        "h": 1.0,
+        "w": 1.0,
+        "x": 59.0,
+        "y": 35.0
       },
       "id": 14170576,
       "is_consumable": false,
@@ -287,10 +287,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 58,
-        "y": 35
+        "h": 1.0,
+        "w": 1.0,
+        "x": 58.0,
+        "y": 35.0
       },
       "id": 14170577,
       "is_consumable": false,
@@ -305,10 +305,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 57,
-        "y": 35
+        "h": 1.0,
+        "w": 1.0,
+        "x": 57.0,
+        "y": 35.0
       },
       "id": 14170578,
       "is_consumable": false,
@@ -323,10 +323,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 58,
-        "y": 39
+        "h": 1.0,
+        "w": 1.0,
+        "x": 58.0,
+        "y": 39.0
       },
       "id": 14170719,
       "is_consumable": false,
@@ -341,10 +341,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 59,
-        "y": 39
+        "h": 1.0,
+        "w": 1.0,
+        "x": 59.0,
+        "y": 39.0
       },
       "id": 14170720,
       "is_consumable": false,
@@ -359,10 +359,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 60,
-        "y": 39
+        "h": 1.0,
+        "w": 1.0,
+        "x": 60.0,
+        "y": 39.0
       },
       "id": 14170721,
       "is_consumable": false,
@@ -377,10 +377,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 61,
-        "y": 39
+        "h": 1.0,
+        "w": 1.0,
+        "x": 61.0,
+        "y": 39.0
       },
       "id": 14170722,
       "is_consumable": false,
@@ -395,10 +395,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 48
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 48.0
       },
       "id": 14171320,
       "is_consumable": false,
@@ -413,10 +413,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 40,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 40.0,
+        "y": 47.0
       },
       "id": 14171321,
       "is_consumable": false,
@@ -431,10 +431,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 40,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 40.0,
+        "y": 47.0
       },
       "id": 14171322,
       "is_consumable": false,
@@ -449,10 +449,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 38,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 38.0,
+        "y": 47.0
       },
       "id": 14171323,
       "is_consumable": false,
@@ -467,10 +467,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 38,
-        "y": 48
+        "h": 2.0,
+        "w": 1.0,
+        "x": 38.0,
+        "y": 48.0
       },
       "id": 14171324,
       "is_consumable": false,
@@ -485,10 +485,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 39,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 39.0,
+        "y": 47.0
       },
       "id": 14171325,
       "is_consumable": false,
@@ -503,10 +503,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 39,
-        "y": 49
+        "h": 2.0,
+        "w": 1.0,
+        "x": 39.0,
+        "y": 49.0
       },
       "id": 14171326,
       "is_consumable": false,
@@ -521,10 +521,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 41,
-        "y": 49
+        "h": 2.0,
+        "w": 1.0,
+        "x": 41.0,
+        "y": 49.0
       },
       "id": 14171327,
       "is_consumable": false,
@@ -539,10 +539,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 39,
-        "y": 48
+        "h": 2.0,
+        "w": 1.0,
+        "x": 39.0,
+        "y": 48.0
       },
       "id": 14171328,
       "is_consumable": false,
@@ -557,10 +557,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 40,
-        "y": 48
+        "h": 2.0,
+        "w": 1.0,
+        "x": 40.0,
+        "y": 48.0
       },
       "id": 14171329,
       "is_consumable": false,
@@ -575,10 +575,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 41,
-        "y": 48
+        "h": 2.0,
+        "w": 1.0,
+        "x": 41.0,
+        "y": 48.0
       },
       "id": 14171330,
       "is_consumable": false,
@@ -593,10 +593,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 42,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 42.0,
+        "y": 47.0
       },
       "id": 14171331,
       "is_consumable": false,
@@ -611,10 +611,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 41,
-        "y": 46
+        "h": 2.0,
+        "w": 1.0,
+        "x": 41.0,
+        "y": 46.0
       },
       "id": 14171332,
       "is_consumable": false,
@@ -629,10 +629,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 40,
-        "y": 45
+        "h": 2.0,
+        "w": 1.0,
+        "x": 40.0,
+        "y": 45.0
       },
       "id": 14171333,
       "is_consumable": false,
@@ -647,10 +647,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 39,
-        "y": 45
+        "h": 2.0,
+        "w": 1.0,
+        "x": 39.0,
+        "y": 45.0
       },
       "id": 14171334,
       "is_consumable": false,
@@ -665,10 +665,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 44.0
       },
       "id": 14171335,
       "is_consumable": false,
@@ -683,10 +683,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 44.0
       },
       "id": 14171336,
       "is_consumable": false,
@@ -701,10 +701,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 38,
-        "y": 43
+        "h": 2.0,
+        "w": 1.0,
+        "x": 38.0,
+        "y": 43.0
       },
       "id": 14171337,
       "is_consumable": false,
@@ -719,10 +719,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 39,
-        "y": 42
+        "h": 2.0,
+        "w": 1.0,
+        "x": 39.0,
+        "y": 42.0
       },
       "id": 14171338,
       "is_consumable": false,
@@ -737,10 +737,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 38,
-        "y": 42
+        "h": 2.0,
+        "w": 1.0,
+        "x": 38.0,
+        "y": 42.0
       },
       "id": 14171339,
       "is_consumable": false,
@@ -755,10 +755,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 41
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 41.0
       },
       "id": 14171340,
       "is_consumable": false,
@@ -773,10 +773,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 41
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 41.0
       },
       "id": 14171341,
       "is_consumable": false,
@@ -791,10 +791,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 40,
-        "y": 41
+        "h": 2.0,
+        "w": 1.0,
+        "x": 40.0,
+        "y": 41.0
       },
       "id": 14171342,
       "is_consumable": false,
@@ -809,10 +809,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 41,
-        "y": 42
+        "h": 2.0,
+        "w": 1.0,
+        "x": 41.0,
+        "y": 42.0
       },
       "id": 14171343,
       "is_consumable": false,
@@ -827,10 +827,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 42,
-        "y": 43
+        "h": 2.0,
+        "w": 1.0,
+        "x": 42.0,
+        "y": 43.0
       },
       "id": 14171344,
       "is_consumable": false,
@@ -845,10 +845,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 42,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 42.0,
+        "y": 44.0
       },
       "id": 14171345,
       "is_consumable": false,
@@ -863,10 +863,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 44,
-        "y": 46
+        "h": 2.0,
+        "w": 1.0,
+        "x": 44.0,
+        "y": 46.0
       },
       "id": 14171346,
       "is_consumable": false,
@@ -881,10 +881,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 44,
-        "y": 46
+        "h": 2.0,
+        "w": 1.0,
+        "x": 44.0,
+        "y": 46.0
       },
       "id": 14171347,
       "is_consumable": false,
@@ -899,10 +899,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 45,
-        "y": 45
+        "h": 2.0,
+        "w": 1.0,
+        "x": 45.0,
+        "y": 45.0
       },
       "id": 14171348,
       "is_consumable": false,
@@ -917,10 +917,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 44,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 44.0,
+        "y": 44.0
       },
       "id": 14171349,
       "is_consumable": false,
@@ -935,10 +935,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 44,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 44.0,
+        "y": 44.0
       },
       "id": 14171350,
       "is_consumable": false,
@@ -953,10 +953,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 45,
-        "y": 43
+        "h": 2.0,
+        "w": 1.0,
+        "x": 45.0,
+        "y": 43.0
       },
       "id": 14171351,
       "is_consumable": false,
@@ -971,10 +971,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 45,
-        "y": 43
+        "h": 2.0,
+        "w": 1.0,
+        "x": 45.0,
+        "y": 43.0
       },
       "id": 14171352,
       "is_consumable": false,
@@ -989,10 +989,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 46,
-        "y": 43
+        "h": 2.0,
+        "w": 1.0,
+        "x": 46.0,
+        "y": 43.0
       },
       "id": 14171353,
       "is_consumable": false,
@@ -1007,10 +1007,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 47,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 47.0,
+        "y": 44.0
       },
       "id": 14171354,
       "is_consumable": false,
@@ -1025,10 +1025,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 48,
-        "y": 46
+        "h": 2.0,
+        "w": 1.0,
+        "x": 48.0,
+        "y": 46.0
       },
       "id": 14171355,
       "is_consumable": false,
@@ -1043,10 +1043,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 47,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 47.0,
+        "y": 47.0
       },
       "id": 14171356,
       "is_consumable": false,
@@ -1061,10 +1061,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 46,
-        "y": 48
+        "h": 2.0,
+        "w": 1.0,
+        "x": 46.0,
+        "y": 48.0
       },
       "id": 14171357,
       "is_consumable": false,
@@ -1079,10 +1079,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 45,
-        "y": 48
+        "h": 2.0,
+        "w": 1.0,
+        "x": 45.0,
+        "y": 48.0
       },
       "id": 14171358,
       "is_consumable": false,
@@ -1097,10 +1097,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 44,
-        "y": 49
+        "h": 2.0,
+        "w": 1.0,
+        "x": 44.0,
+        "y": 49.0
       },
       "id": 14171359,
       "is_consumable": false,
@@ -1115,10 +1115,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 44,
-        "y": 50
+        "h": 2.0,
+        "w": 1.0,
+        "x": 44.0,
+        "y": 50.0
       },
       "id": 14171360,
       "is_consumable": false,
@@ -1133,10 +1133,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 44,
-        "y": 51
+        "h": 2.0,
+        "w": 1.0,
+        "x": 44.0,
+        "y": 51.0
       },
       "id": 14171361,
       "is_consumable": false,
@@ -1151,10 +1151,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 45,
-        "y": 52
+        "h": 2.0,
+        "w": 1.0,
+        "x": 45.0,
+        "y": 52.0
       },
       "id": 14171362,
       "is_consumable": false,
@@ -1169,10 +1169,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 47,
-        "y": 52
+        "h": 2.0,
+        "w": 1.0,
+        "x": 47.0,
+        "y": 52.0
       },
       "id": 14171363,
       "is_consumable": false,
@@ -1187,10 +1187,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 48,
-        "y": 52
+        "h": 2.0,
+        "w": 1.0,
+        "x": 48.0,
+        "y": 52.0
       },
       "id": 14171364,
       "is_consumable": false,
@@ -1205,10 +1205,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 48,
-        "y": 52
+        "h": 2.0,
+        "w": 1.0,
+        "x": 48.0,
+        "y": 52.0
       },
       "id": 14171365,
       "is_consumable": false,
@@ -1223,10 +1223,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 50,
-        "y": 53
+        "h": 2.0,
+        "w": 1.0,
+        "x": 50.0,
+        "y": 53.0
       },
       "id": 14171366,
       "is_consumable": false,
@@ -1241,10 +1241,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 51,
-        "y": 52
+        "h": 2.0,
+        "w": 1.0,
+        "x": 51.0,
+        "y": 52.0
       },
       "id": 14171367,
       "is_consumable": false,
@@ -1259,10 +1259,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 41,
-        "y": 30
+        "h": 2.0,
+        "w": 1.0,
+        "x": 41.0,
+        "y": 30.0
       },
       "id": 14171368,
       "is_consumable": false,
@@ -1277,10 +1277,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 40,
-        "y": 31
+        "h": 2.0,
+        "w": 1.0,
+        "x": 40.0,
+        "y": 31.0
       },
       "id": 14171369,
       "is_consumable": false,
@@ -1295,10 +1295,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 39,
-        "y": 32
+        "h": 2.0,
+        "w": 1.0,
+        "x": 39.0,
+        "y": 32.0
       },
       "id": 14171370,
       "is_consumable": false,
@@ -1313,10 +1313,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 34
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 34.0
       },
       "id": 14171371,
       "is_consumable": false,
@@ -1331,10 +1331,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 36,
-        "y": 35
+        "h": 2.0,
+        "w": 1.0,
+        "x": 36.0,
+        "y": 35.0
       },
       "id": 14171372,
       "is_consumable": false,
@@ -1349,10 +1349,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 38,
-        "y": 33
+        "h": 2.0,
+        "w": 1.0,
+        "x": 38.0,
+        "y": 33.0
       },
       "id": 14171373,
       "is_consumable": false,
@@ -1367,10 +1367,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 39,
-        "y": 35
+        "h": 2.0,
+        "w": 1.0,
+        "x": 39.0,
+        "y": 35.0
       },
       "id": 14171374,
       "is_consumable": false,
@@ -1385,10 +1385,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 38,
-        "y": 37
+        "h": 2.0,
+        "w": 1.0,
+        "x": 38.0,
+        "y": 37.0
       },
       "id": 14171375,
       "is_consumable": false,
@@ -1403,10 +1403,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 22,
-        "y": 49
+        "h": 2.0,
+        "w": 1.0,
+        "x": 22.0,
+        "y": 49.0
       },
       "id": 14171376,
       "is_consumable": false,
@@ -1421,10 +1421,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 26,
-        "y": 42
+        "h": 2.0,
+        "w": 1.0,
+        "x": 26.0,
+        "y": 42.0
       },
       "id": 14171377,
       "is_consumable": false,
@@ -1439,10 +1439,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 26,
-        "y": 42
+        "h": 2.0,
+        "w": 1.0,
+        "x": 26.0,
+        "y": 42.0
       },
       "id": 14171378,
       "is_consumable": false,
@@ -1457,10 +1457,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 33,
-        "y": 45
+        "h": 2.0,
+        "w": 1.0,
+        "x": 33.0,
+        "y": 45.0
       },
       "id": 14171379,
       "is_consumable": false,
@@ -1475,10 +1475,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 33,
-        "y": 45
+        "h": 2.0,
+        "w": 1.0,
+        "x": 33.0,
+        "y": 45.0
       },
       "id": 14171380,
       "is_consumable": false,
@@ -1493,10 +1493,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 33,
-        "y": 45
+        "h": 2.0,
+        "w": 1.0,
+        "x": 33.0,
+        "y": 45.0
       },
       "id": 14171381,
       "is_consumable": false,
@@ -1511,10 +1511,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 51
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 51.0
       },
       "id": 14171382,
       "is_consumable": false,
@@ -1529,10 +1529,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 51
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 51.0
       },
       "id": 14171383,
       "is_consumable": false,
@@ -1547,10 +1547,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 51
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 51.0
       },
       "id": 14171384,
       "is_consumable": false,
@@ -1565,10 +1565,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 51
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 51.0
       },
       "id": 14171385,
       "is_consumable": false,
@@ -1583,10 +1583,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 36,
-        "y": 49
+        "h": 2.0,
+        "w": 1.0,
+        "x": 36.0,
+        "y": 49.0
       },
       "id": 14171386,
       "is_consumable": false,
@@ -1601,10 +1601,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 36,
-        "y": 50
+        "h": 2.0,
+        "w": 1.0,
+        "x": 36.0,
+        "y": 50.0
       },
       "id": 14171387,
       "is_consumable": false,
@@ -1619,10 +1619,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 36,
-        "y": 51
+        "h": 2.0,
+        "w": 1.0,
+        "x": 36.0,
+        "y": 51.0
       },
       "id": 14171388,
       "is_consumable": false,
@@ -1637,10 +1637,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 36,
-        "y": 52
+        "h": 2.0,
+        "w": 1.0,
+        "x": 36.0,
+        "y": 52.0
       },
       "id": 14171389,
       "is_consumable": false,
@@ -1655,10 +1655,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 38,
-        "y": 50
+        "h": 2.0,
+        "w": 1.0,
+        "x": 38.0,
+        "y": 50.0
       },
       "id": 14171392,
       "is_consumable": false,
@@ -1673,10 +1673,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 38,
-        "y": 51
+        "h": 2.0,
+        "w": 1.0,
+        "x": 38.0,
+        "y": 51.0
       },
       "id": 14171393,
       "is_consumable": false,
@@ -1691,10 +1691,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 38,
-        "y": 52
+        "h": 2.0,
+        "w": 1.0,
+        "x": 38.0,
+        "y": 52.0
       },
       "id": 14171394,
       "is_consumable": false,
@@ -1709,10 +1709,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 22,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 22.0,
+        "y": 47.0
       },
       "id": 14171436,
       "is_consumable": false,
@@ -1727,10 +1727,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 25,
-        "y": 45
+        "h": 2.0,
+        "w": 1.0,
+        "x": 25.0,
+        "y": 45.0
       },
       "id": 14171396,
       "is_consumable": false,
@@ -1745,10 +1745,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 26,
-        "y": 45
+        "h": 2.0,
+        "w": 1.0,
+        "x": 26.0,
+        "y": 45.0
       },
       "id": 14171397,
       "is_consumable": false,
@@ -1763,10 +1763,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 27,
-        "y": 45
+        "h": 2.0,
+        "w": 1.0,
+        "x": 27.0,
+        "y": 45.0
       },
       "id": 14171398,
       "is_consumable": false,
@@ -1781,10 +1781,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 27,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 27.0,
+        "y": 44.0
       },
       "id": 14171399,
       "is_consumable": false,
@@ -1799,10 +1799,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 27,
-        "y": 43
+        "h": 2.0,
+        "w": 1.0,
+        "x": 27.0,
+        "y": 43.0
       },
       "id": 14171400,
       "is_consumable": false,
@@ -1817,10 +1817,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 27,
-        "y": 42
+        "h": 2.0,
+        "w": 1.0,
+        "x": 27.0,
+        "y": 42.0
       },
       "id": 14171401,
       "is_consumable": false,
@@ -1835,10 +1835,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 27,
-        "y": 41
+        "h": 2.0,
+        "w": 1.0,
+        "x": 27.0,
+        "y": 41.0
       },
       "id": 14171402,
       "is_consumable": false,
@@ -1853,10 +1853,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 27,
-        "y": 40
+        "h": 2.0,
+        "w": 1.0,
+        "x": 27.0,
+        "y": 40.0
       },
       "id": 14171403,
       "is_consumable": false,
@@ -1871,10 +1871,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 25,
-        "y": 41
+        "h": 2.0,
+        "w": 1.0,
+        "x": 25.0,
+        "y": 41.0
       },
       "id": 14171404,
       "is_consumable": false,
@@ -1889,10 +1889,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 25,
-        "y": 42
+        "h": 2.0,
+        "w": 1.0,
+        "x": 25.0,
+        "y": 42.0
       },
       "id": 14171405,
       "is_consumable": false,
@@ -1907,10 +1907,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 25,
-        "y": 43
+        "h": 2.0,
+        "w": 1.0,
+        "x": 25.0,
+        "y": 43.0
       },
       "id": 14171406,
       "is_consumable": false,
@@ -1925,10 +1925,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 25,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 25.0,
+        "y": 44.0
       },
       "id": 14171407,
       "is_consumable": false,
@@ -1943,10 +1943,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 21,
-        "y": 48
+        "h": 2.0,
+        "w": 1.0,
+        "x": 21.0,
+        "y": 48.0
       },
       "id": 14171409,
       "is_consumable": false,
@@ -1961,10 +1961,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 21,
-        "y": 49
+        "h": 2.0,
+        "w": 1.0,
+        "x": 21.0,
+        "y": 49.0
       },
       "id": 14171410,
       "is_consumable": false,
@@ -1979,10 +1979,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 21,
-        "y": 50
+        "h": 2.0,
+        "w": 1.0,
+        "x": 21.0,
+        "y": 50.0
       },
       "id": 14171411,
       "is_consumable": false,
@@ -1997,10 +1997,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 21,
-        "y": 51
+        "h": 2.0,
+        "w": 1.0,
+        "x": 21.0,
+        "y": 51.0
       },
       "id": 14171412,
       "is_consumable": false,
@@ -2015,10 +2015,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 21,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 21.0,
+        "y": 47.0
       },
       "id": 14171413,
       "is_consumable": false,
@@ -2033,10 +2033,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 23,
-        "y": 48
+        "h": 2.0,
+        "w": 1.0,
+        "x": 23.0,
+        "y": 48.0
       },
       "id": 14171414,
       "is_consumable": false,
@@ -2051,10 +2051,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 23,
-        "y": 49
+        "h": 2.0,
+        "w": 1.0,
+        "x": 23.0,
+        "y": 49.0
       },
       "id": 14171415,
       "is_consumable": false,
@@ -2069,10 +2069,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 23,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 23.0,
+        "y": 47.0
       },
       "id": 14171416,
       "is_consumable": false,
@@ -2087,10 +2087,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 23,
-        "y": 50
+        "h": 2.0,
+        "w": 1.0,
+        "x": 23.0,
+        "y": 50.0
       },
       "id": 14171417,
       "is_consumable": false,
@@ -2105,10 +2105,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 23,
-        "y": 51
+        "h": 2.0,
+        "w": 1.0,
+        "x": 23.0,
+        "y": 51.0
       },
       "id": 14171418,
       "is_consumable": false,
@@ -2123,10 +2123,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 22,
-        "y": 51
+        "h": 2.0,
+        "w": 1.0,
+        "x": 22.0,
+        "y": 51.0
       },
       "id": 14171435,
       "is_consumable": false,
@@ -2141,10 +2141,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 34,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 34.0,
+        "y": 44.0
       },
       "id": 14171420,
       "is_consumable": false,
@@ -2159,10 +2159,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 33,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 33.0,
+        "y": 44.0
       },
       "id": 14171421,
       "is_consumable": false,
@@ -2177,10 +2177,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 32,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 32.0,
+        "y": 44.0
       },
       "id": 14171422,
       "is_consumable": false,
@@ -2195,10 +2195,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 31,
-        "y": 45
+        "h": 2.0,
+        "w": 1.0,
+        "x": 31.0,
+        "y": 45.0
       },
       "id": 14171423,
       "is_consumable": false,
@@ -2213,10 +2213,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 31,
-        "y": 46
+        "h": 2.0,
+        "w": 1.0,
+        "x": 31.0,
+        "y": 46.0
       },
       "id": 14171424,
       "is_consumable": false,
@@ -2231,10 +2231,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 32,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 32.0,
+        "y": 47.0
       },
       "id": 14171425,
       "is_consumable": false,
@@ -2249,10 +2249,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 33,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 33.0,
+        "y": 47.0
       },
       "id": 14171426,
       "is_consumable": false,
@@ -2267,10 +2267,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 34,
-        "y": 47
+        "h": 2.0,
+        "w": 1.0,
+        "x": 34.0,
+        "y": 47.0
       },
       "id": 14171427,
       "is_consumable": false,
@@ -2285,10 +2285,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 35,
-        "y": 45
+        "h": 2.0,
+        "w": 1.0,
+        "x": 35.0,
+        "y": 45.0
       },
       "id": 14171429,
       "is_consumable": false,
@@ -2303,10 +2303,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 35,
-        "y": 46
+        "h": 2.0,
+        "w": 1.0,
+        "x": 35.0,
+        "y": 46.0
       },
       "id": 14171430,
       "is_consumable": false,
@@ -2321,10 +2321,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 36,
-        "y": 53
+        "h": 2.0,
+        "w": 1.0,
+        "x": 36.0,
+        "y": 53.0
       },
       "id": 14171434,
       "is_consumable": false,
@@ -2339,10 +2339,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 38,
-        "y": 53
+        "h": 2.0,
+        "w": 1.0,
+        "x": 38.0,
+        "y": 53.0
       },
       "id": 14171432,
       "is_consumable": false,
@@ -2357,10 +2357,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 53
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 53.0
       },
       "id": 14171433,
       "is_consumable": false,
@@ -2375,10 +2375,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 25,
-        "y": 40
+        "h": 2.0,
+        "w": 1.0,
+        "x": 25.0,
+        "y": 40.0
       },
       "id": 14171437,
       "is_consumable": false,
@@ -2393,10 +2393,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 26,
-        "y": 40
+        "h": 2.0,
+        "w": 1.0,
+        "x": 26.0,
+        "y": 40.0
       },
       "id": 14171438,
       "is_consumable": false,
@@ -2411,10 +2411,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 41,
-        "y": 53
+        "h": 2.0,
+        "w": 1.0,
+        "x": 41.0,
+        "y": 53.0
       },
       "id": 14171495,
       "is_consumable": false,
@@ -2429,10 +2429,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 36,
-        "y": 46
+        "h": 2.0,
+        "w": 1.0,
+        "x": 36.0,
+        "y": 46.0
       },
       "id": 14171496,
       "is_consumable": false,
@@ -2447,10 +2447,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 39,
-        "y": 44
+        "h": 2.0,
+        "w": 1.0,
+        "x": 39.0,
+        "y": 44.0
       },
       "id": 14171497,
       "is_consumable": false,
@@ -2465,10 +2465,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 55,
-        "y": 53
+        "h": 2.0,
+        "w": 1.0,
+        "x": 55.0,
+        "y": 53.0
       },
       "id": 14171498,
       "is_consumable": false,
@@ -2483,10 +2483,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 67,
-        "y": 51
+        "h": 2.0,
+        "w": 1.0,
+        "x": 67.0,
+        "y": 51.0
       },
       "id": 14171499,
       "is_consumable": false,
@@ -2501,10 +2501,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 72,
-        "y": 49
+        "h": 2.0,
+        "w": 1.0,
+        "x": 72.0,
+        "y": 49.0
       },
       "id": 14171500,
       "is_consumable": false,
@@ -2519,10 +2519,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 71,
-        "y": 34
+        "h": 2.0,
+        "w": 1.0,
+        "x": 71.0,
+        "y": 34.0
       },
       "id": 14171501,
       "is_consumable": false,
@@ -2537,10 +2537,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 73,
-        "y": 31
+        "h": 2.0,
+        "w": 1.0,
+        "x": 73.0,
+        "y": 31.0
       },
       "id": 14171502,
       "is_consumable": false,
@@ -2555,10 +2555,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 24,
-        "y": 34
+        "h": 2.0,
+        "w": 1.0,
+        "x": 24.0,
+        "y": 34.0
       },
       "id": 14171503,
       "is_consumable": false,
@@ -2573,10 +2573,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 30,
-        "y": 29
+        "h": 2.0,
+        "w": 1.0,
+        "x": 30.0,
+        "y": 29.0
       },
       "id": 14171504,
       "is_consumable": false,
@@ -2591,10 +2591,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 27,
-        "y": 49
+        "h": 2.0,
+        "w": 1.0,
+        "x": 27.0,
+        "y": 49.0
       },
       "id": 14171505,
       "is_consumable": false,
@@ -2609,10 +2609,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 31,
-        "y": 52
+        "h": 2.0,
+        "w": 1.0,
+        "x": 31.0,
+        "y": 52.0
       },
       "id": 14171506,
       "is_consumable": false,
@@ -2627,10 +2627,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 40,
-        "y": 24
+        "h": 2.0,
+        "w": 1.0,
+        "x": 40.0,
+        "y": 24.0
       },
       "id": 14171507,
       "is_consumable": false,
@@ -2645,10 +2645,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 40,
-        "y": 22
+        "h": 2.0,
+        "w": 1.0,
+        "x": 40.0,
+        "y": 22.0
       },
       "id": 14171508,
       "is_consumable": false,
@@ -2663,10 +2663,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 37,
-        "y": 23
+        "h": 2.0,
+        "w": 1.0,
+        "x": 37.0,
+        "y": 23.0
       },
       "id": 14171509,
       "is_consumable": false,
@@ -2681,10 +2681,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 60,
-        "y": 23
+        "h": 2.0,
+        "w": 1.0,
+        "x": 60.0,
+        "y": 23.0
       },
       "id": 14171510,
       "is_consumable": false,
@@ -2699,10 +2699,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 65,
-        "y": 27
+        "h": 2.0,
+        "w": 1.0,
+        "x": 65.0,
+        "y": 27.0
       },
       "id": 14171511,
       "is_consumable": false,
@@ -2717,10 +2717,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 68,
-        "y": 24
+        "h": 2.0,
+        "w": 1.0,
+        "x": 68.0,
+        "y": 24.0
       },
       "id": 14171512,
       "is_consumable": false,
@@ -2735,10 +2735,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 69,
-        "y": 26
+        "h": 2.0,
+        "w": 1.0,
+        "x": 69.0,
+        "y": 26.0
       },
       "id": 14171513,
       "is_consumable": false,
@@ -2753,10 +2753,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 72,
-        "y": 26
+        "h": 2.0,
+        "w": 1.0,
+        "x": 72.0,
+        "y": 26.0
       },
       "id": 14171514,
       "is_consumable": false,
@@ -2771,10 +2771,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 44,
-        "y": 36
+        "h": 2.0,
+        "w": 1.0,
+        "x": 44.0,
+        "y": 36.0
       },
       "id": 14905326,
       "is_consumable": false,
@@ -2789,10 +2789,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 49,
-        "y": 34
+        "h": 2.0,
+        "w": 1.0,
+        "x": 49.0,
+        "y": 34.0
       },
       "id": 14905666,
       "is_consumable": false,
@@ -2807,10 +2807,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 54,
-        "y": 38
+        "h": 1.0,
+        "w": 1.0,
+        "x": 54.0,
+        "y": 38.0
       },
       "id": 14920007,
       "is_consumable": false,
@@ -2825,15 +2825,69 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 3,
-        "w": 2,
-        "x": 88,
-        "y": 31
+        "h": 3.0,
+        "w": 2.0,
+        "x": 88.0,
+        "y": 31.0
       },
       "id": 14920008,
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 4008
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Still",
+      "display_conditions": [],
+      "frame": {
+        "h": 1.0,
+        "w": 1.0,
+        "x": 49.15,
+        "y": 40.30875
+      },
+      "id": 15582845,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1030
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1.0,
+        "w": 1.0,
+        "x": 42.15,
+        "y": 34.15
+      },
+      "id": 15582846,
+      "is_consumable": false,
+      "lock_type": "Yellow",
+      "species_id": 1040
+    },
+    {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 1.0,
+        "w": 1.0,
+        "x": 47.15,
+        "y": 40.15
+      },
+      "id": 15582847,
+      "is_consumable": false,
+      "lock_type": "Yellow",
+      "species_id": 1050
     }
   ],
   "ephemeral_state": true,
