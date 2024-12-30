@@ -241,37 +241,13 @@ impl Entity {
 
     pub fn hittable_frame(&self) -> FRect {
         match self.entity_type {
-            EntityType::Hero | EntityType::Npc => {
-                let x_offset = 0.15;
-                let y_offset = if self.frame.h > 1.0 { 1.15 } else { 0.1 };
-                let width = self.frame.w - 0.3;
-                let height = self.frame.h - if self.frame.h > 1.0 { 1.35 } else { 0.2 };
-        
-                FRect {
-                    x: self.frame.x + x_offset,
-                    y: self.frame.y + y_offset,
-                    w: width,
-                    h: height
-                }
-            },
-            EntityType::Bullet => {
-                let (ox, oy) = match self.direction {
-                    Direction::Up | Direction::Down => (0.2, 0.0),
-                    Direction::Right | Direction::Left => (0.0, 0.2),
-                    _ => (0.0, 0.0)
-                };
-                FRect {
-                    x: self.frame.x + ox,
-                    y: self.frame.y + oy,
-                    w: self.frame.w - ox * 2.0,
-                    h: self.frame.h - oy * 2.0
-                }
-            },
+            EntityType::Hero | EntityType::Npc => self.npc_hittable_frame(),
+            EntityType::Bullet => self.bullet_hittable_frame(),
             _ => {
-                let x_offset = 0.1;
-                let y_offset = if self.frame.h > 1.0 { 1.1 } else { 0.1 };
-                let width = self.frame.w - 0.2;
-                let height = self.frame.h - if self.frame.h > 1.0 { 1.2 } else { 0.2 };
+                let x_offset = 0.15;
+                let y_offset = if self.frame.h > 1.0 { 1.15 } else { 0.15 };
+                let width = self.frame.w - 0.3;
+                let height = self.frame.h - if self.frame.h > 1.0 { 1.3 } else { 0.3 };
         
                 FRect {
                     x: self.frame.x + x_offset,

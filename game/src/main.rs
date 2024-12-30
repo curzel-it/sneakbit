@@ -15,7 +15,7 @@ use sys_locale::get_locale;
 fn main() {
     initialize_config_paths(
         false,
-        TILE_SIZE * 1.8,
+        TILE_SIZE * 1.6,
         current_locale(),
         local_path("data"),
         local_path("data/species.json"),

@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::directions::Direction, worlds::world::World};
+use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
 pub type NpcId = u32;
 
@@ -30,5 +30,19 @@ impl Entity {
             return self.handle_dialogue_interaction(world).unwrap_or_default()
         }
         vec![]
+    }
+
+    pub fn npc_hittable_frame(&self) -> FRect {
+        let x_offset = 0.15;
+        let y_offset = if self.frame.h > 1.0 { 1.15 } else { 0.1 };
+        let width = self.frame.w - 0.3;
+        let height = self.frame.h - if self.frame.h > 1.0 { 1.35 } else { 0.2 };
+
+        FRect {
+            x: self.frame.x + x_offset,
+            y: self.frame.y + y_offset,
+            w: width,
+            h: height
+        }
     }
 }

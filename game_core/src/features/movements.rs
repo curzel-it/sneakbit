@@ -121,8 +121,9 @@ impl Entity {
     }
 
     pub fn is_obstacle_in_direction(&self, world: &World, direction: Direction) -> bool {
+        let exclude = vec![self.id, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID];
         let d = direction.as_vector().scaled(0.3);
         let next = self.hittable_frame().offset(d.x, d.y);
-        world.area_hits(&vec![self.id], &next)
+        world.area_hits(&exclude, &next)
     }
 }

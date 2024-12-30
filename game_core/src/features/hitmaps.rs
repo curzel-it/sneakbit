@@ -94,36 +94,8 @@ impl World {
                     let construction_tile = self.construction_tiles.tiles[y][x];
 
                     if construction_tile.is_obstacle() {
-                        let geometry_texture_index = construction_tile.texture_source_rect.y.floor() as i32;
-
-                        let (top, right, bottom, left) = match geometry_texture_index {
-                            0 => (0.2, 0.0, 0.0, 0.0), // top side
-                            1 => (0.15, 0.15, 0.15, 0.15), // single
-                            2 => (0.2, 0.2, 0.0, 0.0), // top right corner
-                            3 => (0.2, 0.0, 0.0, 0.2), // top left corner
-                            4 => (0.0, 0.2, 0.0, 0.2), // middle pillar, no sides
-                            5 => (0.0, 0.2, 0.2, 0.2), // bottom pillar
-                            6 => (0.2, 0.2, 0.0, 0.2), // top pillar
-                            7 => (0.0, 0.0, 0.2, 0.2), // bottom left corner
-                            8 => (0.0, 0.2, 0.2, 0.0), // bottom right corner
-                            9 => (0.2, 0.0, 0.0, 0.2), // top left corner
-                            10 => (0.2, 0.2, 0.0, 0.0), // top right corner
-                            11 => (0.0, 0.0, 0.0, 0.2), // left side
-                            12 => (0.0, 0.2, 0.0, 0.0), // right side
-                            13 => (0.0, 0.0, 0.2, 0.0), // bottom side
-                            14 => (0.2, 0.0, 0.0, 0.0), // top side
-                            15 => (0.0, 0.0, 0.0, 0.0), // center cross
-                            _ => (0.15, 0.15, 0.15, 0.15)
-                        };
-
-                        let frame = FRect::new(
-                            x as f32 + left, 
-                            y as f32 + top, 
-                            1.0 - left - right, 
-                            1.0 - top - bottom
-                        );
                         let item = Hittable {
-                            frame,
+                            frame: construction_tile.hittable_frame(x, y),
                             weight: 0,
                             entity_id: 0, 
                             species_id: 0,

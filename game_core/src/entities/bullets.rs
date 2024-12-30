@@ -92,6 +92,20 @@ impl Entity {
         }
         vec![]
     }
+
+    pub fn bullet_hittable_frame(&self) -> FRect {
+        let (ox, oy) = match self.direction {
+            Direction::Up | Direction::Down => (0.2, 0.0),
+            Direction::Right | Direction::Left => (0.0, 0.2),
+            _ => (0.0, 0.0)
+        };
+        FRect {
+            x: self.frame.x + ox,
+            y: self.frame.y + oy,
+            w: self.frame.w - ox * 2.0,
+            h: self.frame.h - oy * 2.0
+        }
+    }
 }
 
 pub fn make_bullet_ex(

@@ -1,4 +1,4 @@
-use crate::{features::{entity::Entity, entity_props::EntityProps, state_updates::WorldStateUpdate}, utils::{directions::Direction, math::ZeroComparable, rect::FRect, vector::Vector2d}, worlds::world::World};
+use crate::{features::{entity::Entity, entity_props::EntityProps, state_updates::WorldStateUpdate}, utils::directions::Direction, worlds::world::World};
 
 impl Entity {
     pub fn update_pushable(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
@@ -16,13 +16,13 @@ impl Entity {
         world: &World,
         time_since_last_update: f32
     ) {
-        if player_props.speed <= 0.0 || matches!(player_props.direction, Direction::Unknown | Direction::Still) {
+        if player_props.speed <= 0.0 || matches!(player_props.direction, Direction::Unknown | Direction::Still) {            
             self.pushable_set_still();
             return
         }
 
-        let is_pushing = self.is_being_pushed_by_player(player_props);
-
+        let is_pushing = self.is_being_pushed_by_player(world, player_props);
+        
         if !is_pushing {
             self.pushable_set_still();
             return
@@ -38,20 +38,25 @@ impl Entity {
         self.move_linearly(world, time_since_last_update);
     }
 
-    fn is_being_pushed_by_player(&self, player: &EntityProps) -> bool {
+    fn is_being_pushed_by_player(&self, world: &World, player: &EntityProps) -> bool {
         let player_center = player.hittable_frame.center();
 
-        let is_on_top = self.frame.offset_y(-0.6).contains_or_touches(&player_center);
-        let is_on_right = self.frame.offset_x(0.6).contains_or_touches(&player_center);
-        let is_on_bottom = self.frame.offset_y(0.6).contains_or_touches(&player_center);
-        let is_on_left = self.frame.offset_x(-0.6).contains_or_touches(&player_center);
+        if !self.frame.scaled_from_center(3.0).contains_or_touches(&player_center) {
+            return false;
+        }
 
+        if self.frame.contains_or_touches(&player_center) {
+            if self.is_obstacle_in_direction(world, player.direction.opposite()) {
+                return true
+            }
+        }
+        
         match player.direction {
-            Direction::Up => is_on_bottom,
-            Direction::Right => is_on_left,
-            Direction::Down => is_on_top,
-            Direction::Left => is_on_right,
-            Direction::Unknown | Direction::Still => false,
+            Direction::Up => self.frame.offset_y(0.6).contains_or_touches(&player_center),
+            Direction::Right => self.frame.offset_x(-0.6).contains_or_touches(&player_center),
+            Direction::Down => self.frame.offset_y(-0.6).contains_or_touches(&player_center),
+            Direction::Left => self.frame.offset_x(0.6).contains_or_touches(&player_center),
+            Direction::Unknown | Direction::Still => false
         }
     }
 
