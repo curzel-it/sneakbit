@@ -23,25 +23,23 @@ impl Entity {
             return
         }
 
-        let exclude = if matches!(self.entity_type, EntityType::Bullet) {
-            vec![self.id, self.parent_id, 0]
-        } else {
-            vec![self.id]
-        };
+        let exclude = vec![self.id];
         
-        if world.area_hits(&exclude, &next_collidable_frame) {
-            let next_collidable_frame_x_only = self.hittable_frame().offset_x(dx);
-            let next_collidable_frame_y_only = self.hittable_frame().offset_y(dy);
+        if !matches!(self.entity_type, EntityType::Bullet) {
+            if world.area_hits(&exclude, &next_collidable_frame) {
+                let next_collidable_frame_x_only = self.hittable_frame().offset_x(dx);
+                let next_collidable_frame_y_only = self.hittable_frame().offset_y(dy);
 
-            if !world.area_hits(&exclude, &next_collidable_frame_x_only) { 
-                dy = 0.0;
-            } else if !world.area_hits(&exclude, &next_collidable_frame_y_only) { 
-                dx = 0.0;
-            } else if self.is_player() && world.frame_is_slippery_surface(&self.hittable_frame()) {
-                self.current_speed = 0.0;
-                return
-            } else {
-                return
+                if !world.area_hits(&exclude, &next_collidable_frame_x_only) { 
+                    dy = 0.0;
+                } else if !world.area_hits(&exclude, &next_collidable_frame_y_only) { 
+                    dx = 0.0;
+                } else if self.is_player() && world.frame_is_slippery_surface(&self.hittable_frame()) {
+                    self.current_speed = 0.0;
+                    return
+                } else {
+                    return
+                }
             }
         }
 
