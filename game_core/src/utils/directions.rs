@@ -28,10 +28,10 @@ impl Direction {
     }
     
     pub fn between_points(origin: &Vector2d, destination: &Vector2d, default: Direction) -> Direction {
-        let ox = (origin.x * 10.0).floor();
-        let oy = (origin.y * 10.0).floor();
-        let dx = (destination.x * 10.0).floor();
-        let dy = (destination.y * 10.0).floor();
+        let ox = origin.x.round();
+        let oy = origin.y.round();
+        let dx = destination.x.round();
+        let dy = destination.y.round();
 
         if oy > dy { return Direction::Up }
         if ox < dx { return Direction::Right }

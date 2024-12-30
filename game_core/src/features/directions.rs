@@ -1,8 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID}, currently_active_players, entities::known_species::SPECIES_HERO, features::entity::Entity, utils::directions::Direction, worlds::world::World};
-
-use super::hitmaps::Hittable;
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID}, currently_active_players, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub enum MovementDirections {
@@ -49,33 +47,41 @@ impl Entity {
     pub fn search_for_hero(&mut self, world: &World) {
         let my_position = self.frame.center();
 
-        if let Some(hittable) = self.first_active_vulnerable_player_in_line_of_sight(world) {
+        if let Some(frame) = self.first_active_vulnerable_player_in_line_of_sight(world) {
             self.direction = Direction::between_points_with_current(
                 &my_position, 
-                &hittable.frame.center(), 
+                &frame.center(), 
                 self.direction
             ).simplified();
-        } else  {
+        } else {
             self.pick_next_direction(world);
         }
     }
 
-    pub fn first_active_vulnerable_player_in_line_of_sight(&self, world: &World) -> Option<Hittable> {
-        let me = self.hittable_frame().center();
-        let exclude = vec![self.id, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID];
-    
+    pub fn first_active_vulnerable_player_in_line_of_sight(&self, world: &World) -> Option<FRect> {
+        let me = self.hittable_frame(); 
+        let exclude = vec![
+            self.id,
+            PLAYER1_ENTITY_ID,
+            PLAYER2_ENTITY_ID,
+            PLAYER3_ENTITY_ID,
+            PLAYER4_ENTITY_ID,
+        ];
+
         for &player_index in currently_active_players().iter() {
-            let player = world.players[player_index].props;
-            let player_position = player.hittable_frame.center();
-    
-            if !world.hits_line(&exclude, &me, &player_position) {
-                return Some(Hittable { 
-                    frame: player.hittable_frame, 
-                    weight: 1, 
-                    is_rigid: true, 
-                    entity_id: player.id, 
-                    species_id: SPECIES_HERO 
-                });
+            let player = &world.players[player_index].props;
+            let player_frame = player.hittable_frame;
+
+            let padding = 0.0;
+            let min_x = me.x.min(player_frame.x) - padding;
+            let max_x = me.max_x().max(player_frame.max_x()) + padding;
+            let min_y = me.y.min(player_frame.y) - padding;
+            let max_y = me.max_y().max(player_frame.max_y()) + padding;
+
+            let vision_rect = FRect::new(min_x, min_y, max_x - min_x, max_y - min_y);
+
+            if !world.area_hits(&exclude, &vision_rect) {
+                return Some(player.hittable_frame);
             }
         }
         None
@@ -98,8 +104,8 @@ impl Entity {
     }
 
     fn is_obstacle_in_direction(&self, world: &World, direction: Direction) -> bool {
-        let d = direction.as_vector().scaled(0.2);
+        let d = direction.as_vector().scaled(0.3);
         let next = self.hittable_frame().offset(d.x, d.y);
-        world.area_hits(&self.id, &next)
+        world.area_hits(&vec![self.id], &next)
     }
 }

@@ -15,8 +15,8 @@ pub struct Hittable {
 }
 
 impl World {    
-    pub fn area_hits(&self, myid: &u32, area: &FRect) -> bool {
-        self.hitmap.area_hits(myid, area) || self.tiles_hitmap.area_hits(myid, area)
+    pub fn area_hits(&self, exclude: &[u32], area: &FRect) -> bool {
+        self.hitmap.area_hits(exclude, area) || self.tiles_hitmap.area_hits(exclude, area)
     }
     
     pub fn hits(&self, x: f32, y: f32) -> bool {
@@ -75,11 +75,13 @@ impl World {
 
         for y in 0..self.biome_tiles.tiles.len() {
             for x in 0..self.biome_tiles.tiles[0].len() {
-                let biome_obstacle = self.biome_tiles.tiles[y][x].is_obstacle();
-                let construction_obstacle = self.construction_tiles.tiles[y][x].is_obstacle();
-
-                if biome_obstacle || construction_obstacle {
-                    let frame = FRect::new(x as f32 + 0.05, y as f32 + 0.1, 0.9, 0.8);           
+                if self.biome_tiles.tiles[y][x].is_obstacle() {
+                    let frame = FRect::new(
+                        x as f32 + 0.15, 
+                        y as f32 + 0.15, 
+                        0.7, 
+                        0.7
+                    );
                     let item = Hittable {
                         frame,
                         weight: 0,
@@ -88,6 +90,47 @@ impl World {
                         is_rigid: true,
                     };
                     self.tiles_hitmap.data.push(item);
+                } else {
+                    let construction_tile = self.construction_tiles.tiles[y][x];
+
+                    if construction_tile.is_obstacle() {
+                        let geometry_texture_index = construction_tile.texture_source_rect.y.floor() as i32;
+
+                        let (top, right, bottom, left) = match geometry_texture_index {
+                            0 => (0.15, 0.0, 0.0, 0.0),
+                            1 => (0.15, 0.15, 0.15, 0.15), 
+                            2 => (0.25, 0.25, 0.0, 0.0), 
+                            3 => (0.25, 0.0, 0.0, 0.25), 
+                            4 => (0.0, 0.25, 0.0, 0.25), 
+                            5 => (0.0, 0.25, 0.15, 0.25), 
+                            6 => (0.15, 0.25, 0.0, 0.25), 
+                            7 => (0.0, 0.0, 0.25, 0.25), 
+                            8 => (0.0, 0.25, 0.25, 0.0), 
+                            9 => (0.25, 0.0, 0.0, 0.25), 
+                            10 => (0.25, 0.25, 0.0, 0.0), 
+                            11 => (0.0, 0.0, 0.0, 0.15), 
+                            12 => (0.0, 0.15, 0.0, 0.0), 
+                            13 => (0.0, 0.0, 0.15, 0.0), 
+                            14 => (0.15, 0.0, 0.0, 0.0), 
+                            15 => (0.0, 0.0, 0.0, 0.0), 
+                            _ => (0.15, 0.15, 0.15, 0.15)
+                        };
+
+                        let frame = FRect::new(
+                            x as f32 + left, 
+                            y as f32 + top, 
+                            1.0 - left - right, 
+                            1.0 - top - bottom
+                        );
+                        let item = Hittable {
+                            frame,
+                            weight: 0,
+                            entity_id: 0, 
+                            species_id: 0,
+                            is_rigid: true,
+                        };
+                        self.tiles_hitmap.data.push(item);
+                    }
                 }
             }
         }
@@ -107,9 +150,9 @@ impl Hitmap {
         }
     }
 
-    fn area_hits(&self, myid: &u32, area: &FRect) -> bool {
+    fn area_hits(&self, exclude: &[u32], area: &FRect) -> bool {
         self.data.iter().any(|hittable| {            
-            hittable.is_rigid && hittable.entity_id != *myid && hittable.frame.overlaps_or_touches(area)
+            hittable.is_rigid && !exclude.contains(&hittable.entity_id) && hittable.frame.overlaps_or_touches(area)
         })
     }
 

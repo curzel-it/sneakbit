@@ -114,13 +114,7 @@ impl Entity {
         else if self.z_index == Z_INDEX_UNDERLAY { 0 }
         else { 10_000_000 };
 
-        let accounting_y = if self.is_equipment() {
-            self.frame.center().y.floor() as i32
-        } else {
-            (self.frame.y + self.frame.h).floor() as i32
-        };
-
-        let a = accounting_y * 10_000;
+        let a = 10_000 * (self.frame.y + self.frame.h).floor() as i32;
         let b = if self.z_index != Z_INDEX_OVERLAY && self.z_index != Z_INDEX_UNDERLAY { self.z_index * 10 } else { 0 };
         let p = if matches!(self.entity_type, EntityType::PushableObject) { 1 } else { 0 };
 

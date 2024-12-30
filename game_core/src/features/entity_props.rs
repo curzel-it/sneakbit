@@ -6,6 +6,8 @@ pub struct EntityProps {
     pub id: u32,
     pub direction: Direction,
     pub frame: FRect,
+    pub z_index: i32,
+    pub sorting_key: u32,
     pub speed: f32,
     pub hittable_frame: FRect,
     pub is_invulnerable: bool,
@@ -21,7 +23,9 @@ impl Default for EntityProps {
             speed: 0.0,
             hittable_frame: FRect::square_from_origin(1.0),
             is_invulnerable: false,
-            hp: 0.0
+            hp: 0.0,
+            z_index: 0,
+            sorting_key: 0
         }
     }
 }
@@ -35,7 +39,9 @@ impl Entity {
             speed: self.current_speed,
             is_invulnerable: self.is_invulnerable,            
             hittable_frame: self.hittable_frame(),
-            hp: self.hp
+            hp: self.hp,
+            z_index: self.z_index,
+            sorting_key: self.sorting_key
         }            
     }
 }

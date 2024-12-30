@@ -16,16 +16,16 @@ impl Entity {
         vec![]
     }
 
-    fn z_index_for_state(&self) -> i32 {
+    fn should_be_over_hero(&self) -> bool {
         let is_being_used = self.action_cooldown_remaining > 0.0;
         if self.species.always_in_front_of_hero_when_equipped {
-            16
+            true
         } else {
             match (self.direction, is_being_used) {
-                (Direction::Left, false) => 14,
-                (Direction::Right, false) => 14,
-                (Direction::Down, false) => 14,
-                _ => 16
+                (Direction::Left, false) => false,
+                (Direction::Right, false) => false,
+                (Direction::Down, false) => false,
+                _ => true
             }
         }
     }
@@ -33,11 +33,19 @@ impl Entity {
     pub fn update_equipment_position(&mut self, world: &World) {   
         let hero = world.players[self.player_index].props;
         self.direction = hero.direction;
-        self.z_index = self.z_index_for_state();
         self.current_speed = hero.speed;
         self.frame.x = hero.frame.x - 1.5;
         self.frame.y = hero.frame.y - 1.0;
-        self.update_sorting_key();
+
+        let player = world.players[self.player_index].props;
+
+        if self.should_be_over_hero() { 
+            self.z_index = player.z_index + 1;
+            self.sorting_key = player.sorting_key + 1;
+        } else { 
+            self.z_index = player.z_index - 1;
+            self.sorting_key = player.sorting_key - 1;
+        };
     }
 
     pub fn play_equipment_usage_animation(&mut self) {
