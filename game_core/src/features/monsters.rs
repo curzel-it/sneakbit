@@ -73,7 +73,7 @@ impl Entity {
         if let Some(next_species_id) = next_species_id(self.species_id) {
             let exclude = vec![0, self.id, self.parent_id];
             let compatible_monster = world
-                .entity_ids_by_area(&exclude, &self.frame)
+                .entity_ids_by_area(&exclude, &self.hittable_frame())
                 .into_iter()
                 .find(|&(_, species_id)| is_monster(species_id) && species_id <= self.species_id);
 
