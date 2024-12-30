@@ -48,27 +48,29 @@ pub fn render_frame(context: &mut GameContext) {
         render_limited_visibility(&mut d, screen_width, screen_height);
         render_layout(&hud, &mut d);
 
-        engine().world.hitmap.data.iter().for_each(|hittable| {
-            let frame = hittable.frame;
-            let dest_rect = Rectangle {
-                x: (frame.x - camera_viewport.x) * TILE_SIZE * config.rendering_scale,
-                y: (frame.y - camera_viewport.y) * TILE_SIZE * config.rendering_scale,
-                width: frame.w * TILE_SIZE * config.rendering_scale,
-                height: frame.h * TILE_SIZE * config.rendering_scale,
-            };
-            d.draw_rectangle_lines_ex(dest_rect, 1.0, Color::RED.alpha(0.5));
-        });
+        if config.show_debug_info {
+            engine().world.hitmap.data.iter().for_each(|hittable| {
+                let frame = hittable.frame;
+                let dest_rect = Rectangle {
+                    x: (frame.x - camera_viewport.x) * TILE_SIZE * config.rendering_scale,
+                    y: (frame.y - camera_viewport.y) * TILE_SIZE * config.rendering_scale,
+                    width: frame.w * TILE_SIZE * config.rendering_scale,
+                    height: frame.h * TILE_SIZE * config.rendering_scale,
+                };
+                d.draw_rectangle_lines_ex(dest_rect, 1.0, Color::RED.alpha(0.5));
+            });
 
-        engine().world.tiles_hitmap.data.iter().for_each(|hittable| {
-            let frame = hittable.frame;
-            let dest_rect = Rectangle {
-                x: (frame.x - camera_viewport.x) * TILE_SIZE * config.rendering_scale,
-                y: (frame.y - camera_viewport.y) * TILE_SIZE * config.rendering_scale,
-                width: frame.w * TILE_SIZE * config.rendering_scale,
-                height: frame.h * TILE_SIZE * config.rendering_scale,
-            };
-            d.draw_rectangle_lines_ex(dest_rect, 1.0, Color::BLUE.alpha(0.5));
-        });
+            engine().world.tiles_hitmap.data.iter().for_each(|hittable| {
+                let frame = hittable.frame;
+                let dest_rect = Rectangle {
+                    x: (frame.x - camera_viewport.x) * TILE_SIZE * config.rendering_scale,
+                    y: (frame.y - camera_viewport.y) * TILE_SIZE * config.rendering_scale,
+                    width: frame.w * TILE_SIZE * config.rendering_scale,
+                    height: frame.h * TILE_SIZE * config.rendering_scale,
+                };
+                d.draw_rectangle_lines_ex(dest_rect, 1.0, Color::BLUE.alpha(0.5));
+            });
+        }
     }
 }
 

@@ -55,12 +55,16 @@ impl Entity {
     }
     
     fn leave_footsteps(&self, world: &World) -> Vec<WorldStateUpdate> {
-        let previous = world.players[0].props.hittable_frame;
-        let x = self.frame.x;
-        let y = self.frame.y + 1.0;
+        let previous = world.players[self.player_index].props.hittable_frame.center();
+        let previous_x = previous.x.floor() as i32;
+        let previous_y = previous.y.floor() as i32;
 
-        if previous.x != x || previous.y != y {
-            leave_footsteps(world, &self.direction, x, y)
+        let current = self.hittable_frame().center();
+        let current_x = current.x.floor() as i32;
+        let current_y = current.y.floor() as i32;
+
+        if previous_x != current_x || previous_y != current_y {
+            leave_footsteps(world, &self.direction, self.frame.x, self.frame.y + 1.0)
         } else {
             vec![]
         }
