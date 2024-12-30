@@ -1,4 +1,4 @@
-use crate::{entities::bullets::make_player_bullet, features::{entity::Entity, state_updates::WorldStateUpdate}, utils::directions::Direction, worlds::world::World};
+use crate::{entities::bullets::make_player_bullet, features::{entity::Entity, state_updates::WorldStateUpdate}, worlds::world::World};
 
 use super::basics::is_equipped;
 
@@ -33,7 +33,7 @@ impl Entity {
         }
         if world.players[self.player_index].has_close_attack_key_been_pressed {
             let hero = world.players[self.player_index].props;
-            let offsets = bullet_offsets(world.players[self.player_index].props.direction);
+            let offsets = bullet_offsets();
 
             self.action_cooldown_remaining = self.species.cooldown_after_use;
             self.sprite.reset();
@@ -61,19 +61,12 @@ impl Entity {
     } 
 }
 
-fn bullet_offsets(direction: Direction) -> Vec<(f32, f32)> {
-    match direction { // Todo will need to be adjusted
-        Direction::Up => vec![
-            (-1.0, -1.0), (0.0, -2.0), (0.0, -1.0), (1.0, -1.0)
-        ],
-        Direction::Down | Direction::Unknown | Direction::Still => vec![
-            (-1.0, 1.0), (0.0, 2.0), (0.0, 1.0), (1.0, 1.0)
-        ],
-        Direction::Right => vec![
-            (1.0, -1.0), (2.0, 0.0), (1.0, 0.0), (1.0, 1.0)
-        ],
-        Direction::Left => vec![
-            (-1.0, -1.0), (-2.0, 0.0), (-1.0, 0.0), (-1.0, 1.0)
-        ],
-    }
+fn bullet_offsets() -> Vec<(f32, f32)> {
+    vec![
+        (0.0, 0.0),
+        (0.0, -1.0),
+        (1.0, 0.0),
+        (-1.0, 0.0),
+        (0.0, 1.0),
+    ]
 }
