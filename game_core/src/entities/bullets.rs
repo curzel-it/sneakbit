@@ -91,10 +91,6 @@ impl Entity {
         }
         vec![]
     }
-
-    pub fn is_valid_hit_target(&self, entity_id: u32) -> bool {
-        entity_id != 0 && entity_id != self.id && entity_id != self.parent_id 
-    }
 }
 
 pub fn make_bullet_ex(

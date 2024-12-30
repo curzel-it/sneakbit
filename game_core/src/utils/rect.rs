@@ -86,19 +86,55 @@ impl FRect {
     }
 
     pub fn is_around_and_pointed_at(&self, other: &FRect, direction: &Direction) -> bool {
+        // Step 1: Check if the rectangles overlap or touch
         if !self.overlaps_or_touches(other) {
-            return false
+            return false;
         }
-
-        let center = self.center();
+    
+        // Step 2: Calculate the centers of both rectangles
+        let self_center = self.center();
         let other_center = other.center();
-        let required_direction = Direction::between_points(
-            &center, 
-            &other_center, 
-            Direction::Unknown
-        );
-        required_direction == *direction
+    
+        // Step 3: Determine relative positions
+        let is_above = self_center.y > other_center.y;
+        let is_below = self_center.y < other_center.y;
+        let is_left = self_center.x < other_center.x;
+        let is_right = self_center.x > other_center.x;
+    
+        // Step 4: Match on the provided direction and verify alignment
+        match direction {
+            Direction::Up => {
+                is_above
+            },
+            Direction::Down => {
+                is_below
+            },
+            Direction::Left => {
+                is_left
+            },
+            Direction::Right => {
+                is_right
+            },
+            // Handling diagonal directions explicitly
+            Direction::UpLeft => {
+                is_above || is_left
+            },
+            Direction::UpRight => {
+                is_above || is_right
+            },
+            Direction::DownLeft => {
+                is_below || is_left
+            },
+            Direction::DownRight => {
+                is_below || is_right
+            },
+            // Handle other directions as not matching
+            Direction::Unknown | Direction::Still => {
+                false
+            }
+        }
     }
+    
     
     pub fn overlaps_or_touches(&self, other: &FRect) -> bool {        
         self.x <= other.x + other.w &&
@@ -121,6 +157,17 @@ impl FRect {
             self.y * scalar,
             self.w * scalar,
             self.h * scalar
+        )
+    }
+    
+    pub fn scaled_from_center(&self, scalar: f32) -> FRect {
+        let w = self.w * scalar;
+        let h = self.h * scalar;
+
+        FRect::new(
+            self.x + (w - self.w) / 2.0,
+            self.y + (h - self.h) / 2.0,
+            w, h
         )
     }
     

@@ -30,7 +30,6 @@ impl Direction {
             Direction::Unknown
         )
     }
-
     pub fn between_points(origin: &Vector2d, destination: &Vector2d, default: Direction) -> Direction {
         if origin.y > destination.y && origin.x < destination.x { return Direction::UpRight }
         if origin.y > destination.y && origin.x > destination.x { return Direction::UpLeft }

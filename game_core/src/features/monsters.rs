@@ -71,16 +71,18 @@ impl Entity {
             return vec![]
         }
         if let Some(next_species_id) = next_species_id(self.species_id) {
-            let hits = world.entity_ids(self.frame.x, self.frame.y);
+            let exclude = vec![0, self.id, self.parent_id];
+            let compatible_monster = world
+                .entity_ids_by_area(&exclude, &self.hittable_frame())
+                .into_iter()
+                .find(|(_, species_id)| is_monster(*species_id) && *species_id <= self.species_id);
 
-            for (hit, species_id) in hits {        
-                if self.is_valid_hit_target(hit) && is_monster(species_id) && species_id <= self.species_id {
-                    let next_species = species_by_id(next_species_id);
-                    self.species_id = next_species.id;
-                    self.species = next_species.clone();
-                    next_species.reload_props(self);
-                    return vec![WorldStateUpdate::RemoveEntity(hit)]
-                }
+            if let Some((entity_id, _)) = compatible_monster {
+                let next_species = species_by_id(next_species_id);
+                self.species_id = next_species.id;
+                self.species = next_species.clone();
+                next_species.reload_props(self);
+                return vec![WorldStateUpdate::RemoveEntity(entity_id)]
             }
         }
         vec![]

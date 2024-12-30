@@ -1,4 +1,4 @@
-use crate::{current_world_id, entities::{species::EntityType, teleporter::is_player_entering_tile}, features::{destination::Destination, entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, StorageKey}}, worlds::world::World};
+use crate::{current_world_id, entities::species::EntityType, features::{destination::Destination, entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, StorageKey}}, utils::rect::FRect, worlds::world::World};
 
 impl Entity {
     pub fn setup_fast_travel(&mut self) {
@@ -6,11 +6,24 @@ impl Entity {
     }
 
     pub fn update_fast_travel(&mut self, world: &World) -> Vec<WorldStateUpdate> {   
-        if is_player_entering_tile(world, self.frame.x + 1.0, self.frame.y + 1.0) {
+        let player = world.players[0].props;
+        let is_near_entrance = player.hittable_frame.is_around_and_pointed_at(&self.fast_travel_entrance(), &player.direction);
+        let is_moving = player.speed > 0.0;
+
+        if is_near_entrance && is_moving {
             vec![WorldStateUpdate::EngineUpdate(EngineStateUpdate::FastTravel)]
         } else {
             vec![]
         }        
+    }
+
+    fn fast_travel_entrance(&self) -> FRect {
+        FRect {
+            x: self.frame.x + 1.0,
+            y: self.frame.y + 1.0,
+            w: 1.0,
+            h: 1.0
+        }
     }
 }
 
