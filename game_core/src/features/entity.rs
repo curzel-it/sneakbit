@@ -95,7 +95,10 @@ pub struct Entity {
     pub species: Species,
     
     #[serde(skip)]
-    pub reset_offset_on_next_direction_change: bool
+    pub reset_offset_on_next_direction_change: bool,
+    
+    #[serde(skip)]
+    pub direction_change_cooldown: f32,
 }
 
 impl Entity {
@@ -130,7 +133,7 @@ pub struct DisplayCondition {
 }
 
 impl Entity {
-    pub fn update(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {      
+    pub fn update(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
         let mut updates = match self.entity_type {
             EntityType::Hero => self.update_hero(world, time_since_last_update),
             EntityType::Npc => self.update_npc(world, time_since_last_update),

@@ -17,7 +17,7 @@ impl Entity {
         }
         
         if !is_creative_mode() {
-            self.update_direction(world);
+            self.update_direction(world, time_since_last_update);
             self.move_linearly(world, time_since_last_update);
         }
 

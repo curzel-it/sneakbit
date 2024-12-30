@@ -12,7 +12,7 @@ impl Entity {
         let is_slipping = world.frame_is_slippery_surface(&self.hittable_frame());
 
         if !(is_slipping && self.current_speed > 0.0) {
-            self.update_direction(world);
+            self.update_direction(world, time_since_last_update);
             self.update_sprite_for_current_state();
         } else {
             self.update_sprite_for_direction_speed(self.direction, 0.0);

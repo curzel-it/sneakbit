@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID}, currently_active_players, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{constants::{DIRECTION_CHANGE_COOLDOWN, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID}, currently_active_players, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub enum MovementDirections {
@@ -23,7 +23,7 @@ impl MovementDirections {
 }
 
 impl Entity {
-    pub fn update_direction(&mut self, world: &World) {
+    pub fn update_direction(&mut self, world: &World, time_since_last_update: f32) {
         match self.movement_directions {
             MovementDirections::None => {}
             MovementDirections::Keyboard => {
@@ -35,9 +35,26 @@ impl Entity {
                     self.current_speed = 0.0;
                 }
             },
-            MovementDirections::Free => self.move_around_free(world),
-            MovementDirections::FindHero => self.search_for_hero(world),
+            MovementDirections::Free => {
+                if self.can_change_direction(time_since_last_update) {
+                    self.move_around_free(world)
+                }
+            },
+            MovementDirections::FindHero =>  {
+                if self.can_change_direction(time_since_last_update) {
+                    self.search_for_hero(world)
+                }
+            },
         }
+    }
+
+    fn can_change_direction(&mut self, time_since_last_update: f32) -> bool {
+        self.direction_change_cooldown -= time_since_last_update;
+        if self.direction_change_cooldown > 0.0 {
+            return false
+        }
+        self.direction_change_cooldown = DIRECTION_CHANGE_COOLDOWN;
+        return true
     }
 
     fn move_around_free(&mut self, world: &World) {

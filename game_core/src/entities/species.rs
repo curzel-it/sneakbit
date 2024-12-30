@@ -158,7 +158,8 @@ impl Species {
             sorting_key: 0,
             player_index: 0,
             species: self.clone(),
-            reset_offset_on_next_direction_change: false
+            reset_offset_on_next_direction_change: false,
+            direction_change_cooldown: 0.0
         }
     }
 
