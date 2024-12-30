@@ -76,9 +76,10 @@ impl Entity {
     }
 
     fn check_stoppers(&self, world: &World) -> Vec<WorldStateUpdate> {
-        let construction = &world.construction_at(self.frame.x, self.frame.y);
-        let biome = &world.biome_at(self.frame.x, self.frame.y);
-        let hits = world.entity_ids(self.frame.x, self.frame.y);
+        let center = self.frame.center();
+        let construction = &world.construction_at(center.x, center.y);
+        let biome = &world.biome_at(center.x, center.y);
+        let hits = world.entity_ids(center.x, center.y);
 
         if construction.stops_bullets() || biome.stops_bullets() {
             return vec![WorldStateUpdate::HandleBulletStopped(self.id)]
