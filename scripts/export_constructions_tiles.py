@@ -1,8 +1,4 @@
-import pdb
-from PIL import Image
-import sys
 import os
-import subprocess
 
 tile_size = 16
 aseprite_path = "/Applications/Aseprite.app/Contents/MacOS/aseprite"

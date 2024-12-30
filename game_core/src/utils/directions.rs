@@ -30,16 +30,45 @@ impl Direction {
             Direction::Unknown
         )
     }
+    
     pub fn between_points(origin: &Vector2d, destination: &Vector2d, default: Direction) -> Direction {
-        if origin.y > destination.y && origin.x < destination.x { return Direction::UpRight }
-        if origin.y > destination.y && origin.x > destination.x { return Direction::UpLeft }
-        if origin.y < destination.y && origin.x < destination.x { return Direction::DownRight }
-        if origin.y < destination.y && origin.x > destination.x { return Direction::DownLeft }
-        if origin.y > destination.y { return Direction::Up }
-        if origin.x < destination.x { return Direction::Right }
-        if origin.y < destination.y { return Direction::Down }
-        if origin.x > destination.x { return Direction::Left }
+        let ox = (origin.x * 10.0).floor();
+        let oy = (origin.y * 10.0).floor();
+        let dx = (destination.x * 10.0).floor();
+        let dy = (destination.y * 10.0).floor();
+
+        if oy > dy && ox < dx { return Direction::UpRight }
+        if oy > dy && ox > dx { return Direction::UpLeft }
+        if oy < dy && ox < dx { return Direction::DownRight }
+        if oy < dy && ox > dx { return Direction::DownLeft }
+        if oy > dy { return Direction::Up }
+        if ox < dx { return Direction::Right }
+        if oy < dy { return Direction::Down }
+        if ox > dx { return Direction::Left }
         default
+    }
+    
+    pub fn between_points_with_current(origin: &Vector2d, destination: &Vector2d, current: Direction) -> Direction {
+        if current.is_valid_between(origin, destination) {
+            return current
+        }
+        Self::between_points(origin, destination, current)
+    }
+    
+    pub fn is_valid_between(&self, origin: &Vector2d, destination: &Vector2d) -> bool {
+        let expected_direction = Self::between_points(origin, destination, Direction::Unknown);
+        match self {
+            Direction::Up => matches!(expected_direction, Direction::Up | Direction::UpRight | Direction::UpLeft),
+            Direction::Down => matches!(expected_direction, Direction::Down | Direction::DownRight | Direction::DownLeft),
+            Direction::Left => matches!(expected_direction, Direction::Left | Direction::UpLeft | Direction::DownLeft),
+            Direction::Right => matches!(expected_direction, Direction::Right | Direction::UpRight | Direction::DownRight),
+            Direction::UpRight => matches!(expected_direction, Direction::UpRight | Direction::Up | Direction::Right),
+            Direction::UpLeft => matches!(expected_direction, Direction::UpLeft | Direction::Up | Direction::Left),
+            Direction::DownRight => matches!(expected_direction, Direction::DownRight | Direction::Down | Direction::Right),
+            Direction::DownLeft => matches!(expected_direction, Direction::DownLeft | Direction::Down | Direction::Left),
+            Direction::Still => expected_direction == Direction::Still,
+            Direction::Unknown => expected_direction == Direction::Unknown,
+        }
     }
 
     pub fn as_offset(&self) -> (f32, f32) {

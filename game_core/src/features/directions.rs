@@ -50,10 +50,10 @@ impl Entity {
         let my_position = self.frame.center();
 
         if let Some((player, _, _, _)) = self.first_active_vulnerable_player_in_line_of_sight(world) {
-            self.direction = Direction::between_points(
+            self.direction = Direction::between_points_with_current(
                 &my_position, 
                 &player.center(), 
-                Direction::Right
+                self.direction
             );
         } else  {
             self.pick_next_direction(world);

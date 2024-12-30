@@ -134,8 +134,7 @@ impl FRect {
             }
         }
     }
-    
-    
+        
     pub fn overlaps_or_touches(&self, other: &FRect) -> bool {        
         self.x <= other.x + other.w &&
         self.x + self.w >= other.x &&
@@ -199,7 +198,7 @@ impl FRect {
                 return true;
             }
         }
-
+        
         false
     }
 }
