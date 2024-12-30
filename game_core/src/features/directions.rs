@@ -78,9 +78,7 @@ impl Entity {
     fn pick_next_direction(&mut self, world: &World) {
         let directions = [
             self.direction,
-            self.direction.turn_right(),
             self.direction.turn_right().turn_right(),
-            self.direction.turn_left(),
             self.direction.turn_left().turn_left(),
             self.direction.opposite(),
         ];
