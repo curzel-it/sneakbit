@@ -1,6 +1,6 @@
 use std::f32::EPSILON;
 
-use crate::{config::config, constants::TILE_SIZE, entities::species::EntityType, features::entity::Entity, utils::directions::Direction, worlds::world::World};
+use crate::{config::config, constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::{known_species::is_monster, species::EntityType}, features::entity::Entity, utils::directions::Direction, worlds::world::World};
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 
@@ -23,7 +23,11 @@ impl Entity {
             return
         }
 
-        let exclude = vec![self.id];
+        let exclude = if is_monster(self.species_id) { 
+            vec![self.id, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID]
+        } else {
+            vec![self.id] 
+        };
         
         if !matches!(self.entity_type, EntityType::Bullet) {
             if world.area_hits(&exclude, &next_collidable_frame) {

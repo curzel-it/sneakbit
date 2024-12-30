@@ -33,7 +33,7 @@ impl Vector2d {
     }
 
     pub fn is_close_to_int(&self) -> bool {
-        (self.x - self.x.floor()).abs() < EPSILON && (self.y - self.y.floor()).abs() < EPSILON
+        (self.x * 100.0).abs().floor() < EPSILON && (self.y * 100.0).abs().floor() < EPSILON
     }
 
     pub fn scaled(&self, value: f32) -> Self {
