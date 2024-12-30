@@ -54,7 +54,7 @@ impl Entity {
                 &my_position, 
                 &player.center(), 
                 self.direction
-            );
+            ).simplified();
         } else  {
             self.pick_next_direction(world);
         }

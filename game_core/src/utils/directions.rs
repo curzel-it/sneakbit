@@ -54,6 +54,21 @@ impl Direction {
         }
         Self::between_points(origin, destination, current)
     }
+
+    pub fn simplified(&self) -> Self {
+        match self {
+            Direction::Up => Direction::Up,
+            Direction::UpRight => Direction::Up,
+            Direction::Right => Direction::Right,
+            Direction::DownRight => Direction::Right,
+            Direction::Down => Direction::Down,
+            Direction::DownLeft => Direction::Down,
+            Direction::Left => Direction::Left,
+            Direction::UpLeft => Direction::Left,
+            Direction::Unknown => Direction::Unknown,
+            Direction::Still => Direction::Still,
+        }
+    }
     
     pub fn is_valid_between(&self, origin: &Vector2d, destination: &Vector2d) -> bool {
         let expected_direction = Self::between_points(origin, destination, Direction::Unknown);
