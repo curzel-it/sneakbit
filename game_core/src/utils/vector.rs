@@ -2,7 +2,7 @@ use std::ops::Add;
 
 use serde::{Deserialize, Serialize};
 
-use crate::constants::EPSILON;
+use super::math::ZeroComparable;
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 #[repr(C)]
@@ -13,7 +13,7 @@ pub struct Vector2d {
 
 impl PartialEq for Vector2d {
     fn eq(&self, other: &Self) -> bool {
-        (self.x - other.x).abs() < EPSILON && (self.y - other.y).abs() < EPSILON
+        (self.x - other.x).is_zero() && (self.y - other.y).is_zero()
     }
 }
 
@@ -30,10 +30,6 @@ impl Vector2d {
 
     pub fn from_indeces(x: usize, y: usize) -> Self {
         Self::new(x as f32, y as f32)
-    }
-
-    pub fn is_close_to_int(&self) -> bool {
-        (self.x * 100.0).abs().floor() < EPSILON && (self.y * 100.0).abs().floor() < EPSILON
     }
 
     pub fn scaled(&self, value: f32) -> Self {
@@ -55,9 +51,15 @@ impl Vector2d {
     pub fn offset_y(&self, y: f32) -> Self {
         self.offset(0.0, y)
     }
+}
 
-    pub fn is_zero(&self) -> bool {
-        self.x.abs() < EPSILON && self.y.abs() < EPSILON
+impl ZeroComparable for Vector2d {
+    fn is_zero(&self) -> bool {
+        self.x.is_zero() && self.y.is_zero()
+    }
+
+    fn is_close_to_int(&self) -> bool {
+        self.x.is_close_to_int() && self.y.is_close_to_int()
     }
 }
 

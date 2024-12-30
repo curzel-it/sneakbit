@@ -1,8 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::constants::EPSILON;
-
-use super::{directions::Direction, vector::Vector2d};
+use super::{directions::Direction, math::ZeroComparable, vector::Vector2d};
 
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 #[repr(C)]
@@ -15,10 +13,10 @@ pub struct FRect {
 
 impl PartialEq for FRect {
     fn eq(&self, other: &Self) -> bool {
-        (self.x - other.x).abs() < EPSILON && 
-        (self.y - other.y).abs() < EPSILON && 
-        (self.w - other.w).abs() < EPSILON && 
-        (self.h - other.h).abs() < EPSILON
+        (self.x - other.x).is_zero() && 
+        (self.y - other.y).is_zero() && 
+        (self.w - other.w).is_zero() && 
+        (self.h - other.h).is_zero()
     }
 }
 

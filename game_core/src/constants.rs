@@ -12,7 +12,6 @@ pub const MAX_PLAYERS: usize = 4;
 pub const TURN_DURATION: f32 = 10.0;
 pub const TURN_DURATION_AFTER_ENEMY_PLAYER_DAMAGE: f32 = 2.0;
 pub const TURN_PREP_DURATION: f32 = 3.0;
-pub const EPSILON: f32 = 0.001;
 
 // Input
 pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST: f32 = 0.4;

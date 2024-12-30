@@ -75,7 +75,9 @@ impl Entity {
             let compatible_monster = world
                 .entity_ids_by_area(&exclude, &self.hittable_frame())
                 .into_iter()
-                .find(|&(_, species_id)| is_monster(species_id) && species_id <= self.species_id);
+                .find(|&(entity_id, species_id)| {
+                    is_monster(species_id) && species_id <= self.species_id && entity_id <= self.id
+                });
 
             if let Some((entity_id, _)) = compatible_monster {
                 let next_species = species_by_id(next_species_id);

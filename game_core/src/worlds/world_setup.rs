@@ -1,4 +1,4 @@
-use crate::{constants::{EPSILON, PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, multiplayer::modes::GameMode, number_of_players, utils::directions::Direction};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, multiplayer::modes::GameMode, number_of_players, utils::{directions::Direction, math::ZeroComparable}};
 use super::{world::World, world_type::WorldType};
 
 impl World {
@@ -317,7 +317,7 @@ impl World {
 
         match self.world_type {
             WorldType::Dungeon => {
-                options.extend(vertical);
+                options.push(Direction::Down);
                 options.extend(horizontal);
             }
             WorldType::Exterior => {
@@ -378,7 +378,7 @@ impl World {
         if self.id == 1001 && (source == 0 || source == 1000) {
             return (68.0, 23.0);
         }
-        if original_x.abs() < EPSILON && original_y.abs() < EPSILON {
+        if original_x.is_zero() && original_y.is_zero() {
             if let Some(teleporter_position) = self.find_teleporter_for_destination(source) {
                 return (teleporter_position.x, teleporter_position.y);
             } else if let Some(teleporter_position) = self.find_any_teleporter() {

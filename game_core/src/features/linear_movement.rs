@@ -1,6 +1,6 @@
-use std::f32::EPSILON;
+use crate::{config::config, constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::known_species::is_monster, features::entity::Entity, utils::{directions::Direction, math::ZeroComparable}, worlds::world::World};
 
-use crate::{config::config, constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, entities::known_species::is_monster, features::entity::Entity, utils::directions::Direction, worlds::world::World};
+use super::movements::MovementDirections;
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 
@@ -13,7 +13,7 @@ impl Entity {
         let mut dx = d.x * self.current_speed * base_speed * time_since_last_update / TILE_SIZE;
         let mut dy = d.y * self.current_speed * base_speed * time_since_last_update / TILE_SIZE;
 
-        if dx.abs() < EPSILON && dy.abs() < EPSILON {
+        if dx.is_zero() && dy.is_zero() {
             return
         }
 
@@ -29,7 +29,7 @@ impl Entity {
             vec![self.id] 
         };
         
-        if self.is_rigid {
+        if matches!(self.movement_directions, MovementDirections::Keyboard) {
             if world.area_hits(&exclude, &next_collidable_frame) {
                 let next_collidable_frame_x_only = self.hittable_frame().offset_x(dx);
                 let next_collidable_frame_y_only = self.hittable_frame().offset_y(dy);
