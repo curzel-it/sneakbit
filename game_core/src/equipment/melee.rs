@@ -69,10 +69,10 @@ fn bullet_offsets(direction: Direction) -> Vec<(f32, f32)> {
         Direction::Down | Direction::Unknown | Direction::Still => vec![
             (-1.0, 1.0), (0.0, 2.0), (0.0, 1.0), (1.0, 1.0)
         ],
-        Direction::Right | Direction::UpRight | Direction::DownRight => vec![
+        Direction::Right => vec![
             (1.0, -1.0), (2.0, 0.0), (1.0, 0.0), (1.0, 1.0)
         ],
-        Direction::Left | Direction::UpLeft | Direction::DownLeft => vec![
+        Direction::Left => vec![
             (-1.0, -1.0), (-2.0, 0.0), (-1.0, 0.0), (-1.0, 1.0)
         ],
     }

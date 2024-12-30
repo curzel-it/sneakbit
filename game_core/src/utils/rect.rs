@@ -115,19 +115,6 @@ impl FRect {
             Direction::Right => {
                 is_right
             },
-            // Handling diagonal directions explicitly
-            Direction::UpLeft => {
-                is_above || is_left
-            },
-            Direction::UpRight => {
-                is_above || is_right
-            },
-            Direction::DownLeft => {
-                is_below || is_left
-            },
-            Direction::DownRight => {
-                is_below || is_right
-            },
             // Handle other directions as not matching
             Direction::Unknown | Direction::Still => {
                 false
@@ -198,7 +185,7 @@ impl FRect {
                 return true;
             }
         }
-        
+
         false
     }
 }

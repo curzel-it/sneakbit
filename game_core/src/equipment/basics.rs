@@ -44,8 +44,8 @@ impl Entity {
         self.sprite.frame.y = match self.direction {
             Direction::Up => 37.0,
             Direction::Down => 45.0,
-            Direction::Right | Direction::UpRight | Direction::DownRight => 41.0,
-            Direction::Left | Direction::UpLeft | Direction::DownLeft => 49.0,
+            Direction::Right => 41.0,
+            Direction::Left => 49.0,
             Direction::Unknown => 37.0,
             Direction::Still => 37.0,
         }

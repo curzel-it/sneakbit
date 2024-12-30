@@ -2,10 +2,17 @@ use crate::{entities::species::{EntityType, SpeciesId}, features::entity::{Entit
 
 #[derive(Clone)]
 pub struct Hitmap {
-    data: Vec<Hittable>
+    pub data: Vec<Hittable>
 }
 
-pub type Hittable = (FRect, i32, EntityId, SpeciesId);
+#[derive(Clone)]
+pub struct Hittable {
+    pub frame: FRect,
+    pub weight: i32,
+    pub is_rigid: bool,
+    pub entity_id: EntityId,
+    pub species_id: SpeciesId
+}
 
 impl World {    
     pub fn area_hits(&self, myid: &u32, area: &FRect) -> bool {
@@ -50,16 +57,15 @@ impl World {
         let entities = &self.entities.borrow();
 
         for &(index, _) in &self.visible_entities {
-            if let Some(entity) = entities.get(index) {
-                if entity.is_rigid {
-                    let item = (
-                        entity.hittable_frame(),
-                        if entity.has_weight() { 1 } else { 0 },
-                        entity.id, 
-                        entity.species_id
-                    );
-                    self.hitmap.data.push(item);
-                }
+            if let Some(entity) = entities.get(index) {                
+                let item = Hittable {
+                    frame: entity.hittable_frame(),
+                    weight: if entity.has_weight() { 1 } else { 0 },
+                    entity_id: entity.id, 
+                    species_id: entity.species_id,
+                    is_rigid: entity.is_rigid,
+                };
+                self.hitmap.data.push(item);
             }
         }
     } 
@@ -73,8 +79,14 @@ impl World {
                 let construction_obstacle = self.construction_tiles.tiles[y][x].is_obstacle();
 
                 if biome_obstacle || construction_obstacle {
-                    let frame = FRect::new(x as f32 + 0.05, y as f32 + 0.1, 0.9, 0.8);
-                    let item = (frame, 0, 0, 0);
+                    let frame = FRect::new(x as f32 + 0.05, y as f32 + 0.1, 0.9, 0.8);           
+                    let item = Hittable {
+                        frame,
+                        weight: 0,
+                        entity_id: 0, 
+                        species_id: 0,
+                        is_rigid: true,
+                    };
                     self.tiles_hitmap.data.push(item);
                 }
             }
@@ -96,8 +108,8 @@ impl Hitmap {
     }
 
     fn area_hits(&self, myid: &u32, area: &FRect) -> bool {
-        self.data.iter().any(|(other, _, entity_id, _)| {            
-            entity_id != myid && other.overlaps_or_touches(area)
+        self.data.iter().any(|hittable| {            
+            hittable.is_rigid && hittable.entity_id != *myid && hittable.frame.overlaps_or_touches(area)
         })
     }
 
@@ -106,17 +118,18 @@ impl Hitmap {
     }
 
     fn hits_point(&self, point: &Vector2d) -> bool {
-        self.data.iter().any(|(other, _, _, _)| {
-            other.contains_or_touches(point)
+        self.data.iter().any(|hittable| {
+            hittable.is_rigid && hittable.frame.contains_or_touches(point)
         })
     }
 
     fn hits_line(&self, exclude: &[u32], start: &Vector2d, end: &Vector2d) -> bool {
         self.data
             .iter()
-            .any(|(obstacle_rect, _, entity_id, _)| {
-                if exclude.contains(entity_id) { return false }
-                obstacle_rect.intersects_line(start.x, start.y, end.x, end.y)
+            .any(|hittable| {
+                if !hittable.is_rigid { return false }
+                if exclude.contains(&hittable.entity_id) { return false }
+                hittable.frame.intersects_line(start.x, start.y, end.x, end.y)
             })
     }
 
@@ -125,16 +138,16 @@ impl Hitmap {
     }
 
     fn has_weight_point(&self, point: &Vector2d) -> bool {
-        self.data.iter().any(|(other, weight, _, _)| {
-            *weight > 0 && other.contains_or_touches(point)
+        self.data.iter().any(|hittable| {
+            hittable.weight > 0 && hittable.frame.contains_or_touches(point)
         })
     }
 
     fn first_entity_id_by_area(&self, exclude: &[u32], area: &FRect) -> Option<Hittable> {
         self.data
             .iter()
-            .find(|(other, _, entity_id, _)| {
-                !exclude.contains(entity_id) && area.overlaps_or_touches(other)
+            .find(|hittable| {
+                !exclude.contains(&hittable.entity_id) && hittable.frame.overlaps_or_touches(area)
             })
             .cloned()
     }
@@ -142,11 +155,11 @@ impl Hitmap {
     fn entity_ids_by_area(&self, exclude: &[u32], area: &FRect) -> Vec<(EntityId, SpeciesId)> {
         self.data
             .iter()
-            .filter_map(|(other, _, entity_id, species_id)| {
-                if exclude.contains(entity_id) { 
+            .filter_map(|hittable| {
+                if exclude.contains(&hittable.entity_id) { 
                     return None 
-                } else if area.overlaps_or_touches(other) {
-                    return Some((*entity_id, *species_id))
+                } else if hittable.frame.overlaps_or_touches(area) {
+                    return Some((hittable.entity_id, hittable.species_id))
                 } else {
                     None
                 }
@@ -160,8 +173,13 @@ impl Hitmap {
 
     fn ids_point(&self, point: &Vector2d) -> Vec<(EntityId, SpeciesId)> {
         self.data.iter()
-            .filter(|(other, _, _, _)| other.contains_or_touches(point))
-            .map(|(_, _, entity_id, species_id)| (*entity_id, *species_id))
+            .filter_map(|hittable| {
+                if hittable.frame.contains_or_touches(point) {
+                    Some((hittable.entity_id, hittable.species_id))
+                } else {
+                    None
+                }
+            })
             .collect()
     }
 }

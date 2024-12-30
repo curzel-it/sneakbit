@@ -35,7 +35,7 @@ pub mod worlds;
 
 static mut ENGINE: *mut GameEngine = std::ptr::null_mut();
 
-fn engine() -> &'static GameEngine {
+pub fn engine() -> &'static GameEngine {
     unsafe {
         &*ENGINE
     }

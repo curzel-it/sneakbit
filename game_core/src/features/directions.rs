@@ -49,10 +49,10 @@ impl Entity {
     pub fn search_for_hero(&mut self, world: &World) {
         let my_position = self.frame.center();
 
-        if let Some((player, _, _, _)) = self.first_active_vulnerable_player_in_line_of_sight(world) {
+        if let Some(hittable) = self.first_active_vulnerable_player_in_line_of_sight(world) {
             self.direction = Direction::between_points_with_current(
                 &my_position, 
-                &player.center(), 
+                &hittable.frame.center(), 
                 self.direction
             ).simplified();
         } else  {
@@ -69,7 +69,13 @@ impl Entity {
             let player_position = player.hittable_frame.center();
     
             if !world.hits_line(&exclude, &me, &player_position) {
-                return Some((player.hittable_frame, 1, player.id, SPECIES_HERO));
+                return Some(Hittable { 
+                    frame: player.hittable_frame, 
+                    weight: 1, 
+                    is_rigid: true, 
+                    entity_id: player.id, 
+                    species_id: SPECIES_HERO 
+                });
             }
         }
         None
@@ -78,8 +84,8 @@ impl Entity {
     fn pick_next_direction(&mut self, world: &World) {
         let directions = [
             self.direction,
-            self.direction.turn_right().turn_right(),
-            self.direction.turn_left().turn_left(),
+            self.direction.turn_right(),
+            self.direction.turn_left(),
             self.direction.opposite(),
         ];
 

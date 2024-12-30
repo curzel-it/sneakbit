@@ -46,14 +46,5 @@ fn render_entity(
             0.0,
             Color::WHITE,
         );
-
-        let frame = item.hittable_frame;
-        let dest_rect = Rectangle {
-            x: (frame.x - camera_viewport.x) * tile_scale,
-            y: (frame.y - camera_viewport.y) * tile_scale,
-            width: frame.w * tile_scale,
-            height: frame.h * tile_scale,
-        };
-        d.draw_rectangle_lines_ex(dest_rect, 1.0, Color::RED.alpha(0.5));
     }
 }

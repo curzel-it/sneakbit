@@ -17,8 +17,8 @@ impl GameMode {
 
     pub fn player_hp(&self) -> f32 {
         match self {
-            GameMode::RealTimeCoOp => 100.0,
-            GameMode::Creative => 100.0,
+            GameMode::RealTimeCoOp => 1000.0,
+            GameMode::Creative => 1000.0,
             GameMode::TurnBasedPvp => 1000.0,
         }
     }

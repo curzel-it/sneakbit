@@ -73,11 +73,12 @@ impl Entity {
         if let Some(next_species_id) = next_species_id(self.species_id) {
             let exclude = vec![0, self.id, self.parent_id];
             let compatible_monster = world
-                .entity_ids_by_area(&exclude, &self.hittable_frame())
+                .entity_ids_by_area(&exclude, &self.frame)
                 .into_iter()
-                .find(|(_, species_id)| is_monster(*species_id) && *species_id <= self.species_id);
+                .find(|&(_, species_id)| is_monster(species_id) && species_id <= self.species_id);
 
             if let Some((entity_id, _)) = compatible_monster {
+                println!("Found compatible monster!");
                 let next_species = species_by_id(next_species_id);
                 self.species_id = next_species.id;
                 self.species = next_species.clone();
@@ -100,9 +101,9 @@ impl Entity {
             return vec![]
         }
 
-        if let Some((hero_frame, _, _, _)) = self.first_active_vulnerable_player_in_line_of_sight(world) {
+        if let Some(hittable) = self.first_active_vulnerable_player_in_line_of_sight(world) {
             let boss_frame = self.hittable_frame();
-            let distance = boss_frame.center().dumb_distance_to(&hero_frame.center());
+            let distance = boss_frame.center().dumb_distance_to(&hittable.frame.center());
 
             if distance < 3.5 {
                 return vec![];

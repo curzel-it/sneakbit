@@ -1,4 +1,4 @@
-use game_core::{camera_viewport, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, current_world_biome_tiles, current_world_construction_tiles, is_limited_visibility, is_night};
+use game_core::{camera_viewport, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, current_world_biome_tiles, current_world_construction_tiles, engine, is_limited_visibility, is_night};
 use raylib::prelude::*;
 
 use crate::{gameui::game_hud::hud_ui, GameContext};
@@ -47,6 +47,28 @@ pub fn render_frame(context: &mut GameContext) {
         render_entities(&mut d, &camera_viewport);
         render_limited_visibility(&mut d, screen_width, screen_height);
         render_layout(&hud, &mut d);
+
+        engine().world.hitmap.data.iter().for_each(|hittable| {
+            let frame = hittable.frame;
+            let dest_rect = Rectangle {
+                x: (frame.x - camera_viewport.x) * TILE_SIZE * config.rendering_scale,
+                y: (frame.y - camera_viewport.y) * TILE_SIZE * config.rendering_scale,
+                width: frame.w * TILE_SIZE * config.rendering_scale,
+                height: frame.h * TILE_SIZE * config.rendering_scale,
+            };
+            d.draw_rectangle_lines_ex(dest_rect, 1.0, Color::RED.alpha(0.5));
+        });
+
+        engine().world.tiles_hitmap.data.iter().for_each(|hittable| {
+            let frame = hittable.frame;
+            let dest_rect = Rectangle {
+                x: (frame.x - camera_viewport.x) * TILE_SIZE * config.rendering_scale,
+                y: (frame.y - camera_viewport.y) * TILE_SIZE * config.rendering_scale,
+                width: frame.w * TILE_SIZE * config.rendering_scale,
+                height: frame.h * TILE_SIZE * config.rendering_scale,
+            };
+            d.draw_rectangle_lines_ex(dest_rect, 1.0, Color::BLUE.alpha(0.5));
+        });
     }
 }
 

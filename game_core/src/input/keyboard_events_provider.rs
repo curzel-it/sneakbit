@@ -307,6 +307,7 @@ impl PlayerKeyboardEventsProvider {
             self.direction_down.is_down,
             self.direction_left.is_down,
         );
+        
         match direction_from_new_keys {
             Direction::Unknown => current,
             Direction::Still => Direction::Unknown,
