@@ -67,8 +67,8 @@ Melee weapons don't require ammunition, but the underlying mechanisms makes them
 #### Weapons
 |Weapon|Dps|Speed|Lifespan|Cooldown|
 |--|--|--|--|--|
-|Sword|480|2.0|0.3|0.35|
-|Dark Blade|600|2.0|0.3|0.35|
+|Sword|555|2.0|0.4|0.35|
+|Dark Blade|666|2.0|0.4|0.35|
 
 #### Shields
 |Weapon|Received Damage Reduction|
@@ -80,13 +80,13 @@ There is a single kind of monster, but they can fuse to level up.
 
 |Name|Dps|Hp|Speed|
 |--|--|--|--|
-|Grapeberry|300|80|3.0|
-|Chokeberry|300|80|3.0|
-|Blackberry|400|200|2.5|
-|Blueberry|500|600|2.75|
-|Strawberry|600|1300|3.05|
-|Gooseberry|700|2000|3.4|
-|Grapevine|600|4800|1.4|
+|Grapeberry|150|80|3.0|
+|Chokeberry|200|80|3.0|
+|Blackberry|300|200|2.5|
+|Blueberry|400|600|2.75|
+|Strawberry|500|1300|3.05|
+|Gooseberry|600|2000|3.4|
+|Grapevine|500|4800|1.4|
 
 ### Skills
 The player can complete optional quests to gain special combat skills.

@@ -1153,7 +1153,7 @@
   },
   {
     "base_speed": 3.0,
-    "dps": 300.0,
+    "dps": 200.0,
     "entity_type": "CloseCombatMonster",
     "hp": 80,
     "id": 4003,
@@ -1178,7 +1178,7 @@
   },
   {
     "base_speed": 2.5,
-    "dps": 400.0,
+    "dps": 300.0,
     "entity_type": "CloseCombatMonster",
     "hp": 200,
     "id": 4004,
@@ -1203,7 +1203,7 @@
   },
   {
     "base_speed": 2.75,
-    "dps": 500.0,
+    "dps": 400.0,
     "entity_type": "CloseCombatMonster",
     "hp": 600,
     "id": 4005,
@@ -1228,7 +1228,7 @@
   },
   {
     "base_speed": 3.05,
-    "dps": 600.0,
+    "dps": 500.0,
     "entity_type": "CloseCombatMonster",
     "hp": 1300,
     "id": 4006,
@@ -1253,7 +1253,7 @@
   },
   {
     "base_speed": 3.4,
-    "dps": 700.0,
+    "dps": 600.0,
     "entity_type": "CloseCombatMonster",
     "hp": 2000,
     "id": 4007,
@@ -1281,7 +1281,7 @@
     "bullet_lifespan": -420.0,
     "bullet_species_id": 4009,
     "cooldown_after_use": 1.0,
-    "dps": 600.0,
+    "dps": 500.0,
     "entity_type": "CloseCombatMonster",
     "hp": 4800,
     "id": 4008,
@@ -1308,7 +1308,7 @@
     "base_speed": 3.0,
     "bullet_lifespan": -420.0,
     "bullet_species_id": 0,
-    "dps": 300.0,
+    "dps": 150.0,
     "entity_type": "CloseCombatMonster",
     "hp": 80,
     "id": 4009,
@@ -3900,7 +3900,7 @@
   },
   {
     "base_speed": 3.0,
-    "bullet_lifespan": 0.3,
+    "bullet_lifespan": 0.4,
     "bullet_species_id": 1166,
     "cooldown_after_use": 0.35,
     "entity_type": "WeaponMelee",
@@ -3948,7 +3948,7 @@
   },
   {
     "base_speed": 2.0,
-    "dps": 480,
+    "dps": 555,
     "entity_type": "Bullet",
     "id": 1166,
     "inventory_texture_offset": [
@@ -4519,7 +4519,7 @@
   },
   {
     "base_speed": 3.0,
-    "bullet_lifespan": 0.3,
+    "bullet_lifespan": 0.4,
     "bullet_species_id": 1181,
     "cooldown_after_use": 0.35,
     "entity_type": "WeaponMelee",
@@ -4567,7 +4567,7 @@
   },
   {
     "base_speed": 2.0,
-    "dps": 600,
+    "dps": 666,
     "entity_type": "Bullet",
     "id": 1181,
     "inventory_texture_offset": [
