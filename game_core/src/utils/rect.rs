@@ -170,6 +170,18 @@ impl FRect {
             w, h
         )
     }
+
+    pub fn with_closest_int_origin(&self) -> Self {
+        Self::new(self.x.round(), self.y.round(), self.w, self.h)
+    }
+
+    pub fn with_closest_int_origin_x(&self) -> Self {
+        Self::new(self.x.round(), self.y, self.w, self.h)
+    }
+
+    pub fn with_closest_int_origin_y(&self) -> Self {
+        Self::new(self.x, self.y.round(), self.w, self.h)
+    }
     
     pub fn max_x(&self) -> f32 {
         self.x + self.w

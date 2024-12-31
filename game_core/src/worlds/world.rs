@@ -453,6 +453,13 @@ impl World {
         &self.construction_tiles.tiles[y][x].tile_type
     }
 
+    pub fn constructions_in(&self, area: &FRect) -> Vec<Construction> {
+        self.coordinates_to_indeces_from_area(area)
+            .iter()
+            .map(|&(x, y)| self.construction_tiles.tiles[y][x].tile_type)
+            .collect()
+    }
+
     pub fn biome_at(&self, x: f32, y: f32) -> &Biome {
         let (x, y) = self.coordinates_to_indeces(x, y);
         &self.biome_tiles.tiles[y][x].tile_type
@@ -464,5 +471,22 @@ impl World {
         let x = (x.max(0.0) as usize).min(columns - 1);
         let y = (y.max(0.0) as usize).min(rows - 1);
         (x, y)
+    }
+
+    fn coordinates_to_indeces_from_area(&self, area: &FRect) -> Vec<(usize, usize)> {
+        let min_x = area.x.floor() as usize;
+        let max_x = area.max_x().ceil() as usize;
+        let min_y = area.y.floor() as usize;
+        let max_y = area.max_y().ceil() as usize;
+
+        let mut coordinates: Vec<(usize, usize)> = vec![];
+        
+        for x in min_x..max_x {
+            for y in min_y..max_y {
+                coordinates.push((x, y));
+            }
+        }
+
+        coordinates
     }
 }

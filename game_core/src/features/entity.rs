@@ -245,6 +245,7 @@ impl Entity {
             EntityType::Bullet => self.bullet_hittable_frame(),
             EntityType::PushableObject => self.pushable_object_hittable_frame(),
             EntityType::PressurePlate => self.pressure_plate_hittable_frame(),
+            EntityType::RailObject => self.rail_object_hittable_frame(),
             _ => {
                 let x_offset = 0.15;
                 let y_offset = if self.frame.h > 1.0 { 1.15 } else { 0.15 };

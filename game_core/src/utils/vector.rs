@@ -63,6 +63,14 @@ impl ZeroComparable for Vector2d {
     }
 }
 
+impl Vector2d {
+    pub fn is_close_to_tile(&self, tolerance: f32) -> bool {
+        let x = self.x.abs();
+        let y = self.y.abs();
+        (x - x.floor()) < tolerance && (y - y.floor()) < tolerance
+    }
+}
+
 impl Add for Vector2d {
     type Output = Self;
 
