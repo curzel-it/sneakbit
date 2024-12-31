@@ -173,44 +173,6 @@ impl ConstructionTile {
         }
     }
 
-    pub fn is_slope(&self) -> bool {
-        match self.tile_type {
-            Construction::SlopeGreenTopLeft => true,
-            Construction::SlopeGreenTopRight => true,
-            Construction::SlopeGreenBottomRight => true,
-            Construction::SlopeGreenBottomLeft => true,
-            Construction::SlopeGreenBottom => true,
-            Construction::SlopeGreenTop => true,
-            Construction::SlopeGreenLeft => true,
-            Construction::SlopeGreenRight => true,
-            Construction::SlopeRockTopLeft => true,
-            Construction::SlopeRockTopRight => true,
-            Construction::SlopeRockBottomRight => true,
-            Construction::SlopeRockBottomLeft => true,
-            Construction::SlopeRockBottom => true,
-            Construction::SlopeRockTop => true,
-            Construction::SlopeRockLeft => true,
-            Construction::SlopeRockRight => true,
-            Construction::SlopeSandTopLeft => true,
-            Construction::SlopeSandTopRight => true,
-            Construction::SlopeSandBottomRight => true,
-            Construction::SlopeSandBottomLeft => true,
-            Construction::SlopeSandBottom => true,
-            Construction::SlopeSandTop => true,
-            Construction::SlopeSandLeft => true,
-            Construction::SlopeSandRight => true,
-            Construction::SlopeDarkRockTopLeft => true,
-            Construction::SlopeDarkRockTopRight => true,
-            Construction::SlopeDarkRockBottomRight => true,
-            Construction::SlopeDarkRockBottomLeft => true,
-            Construction::SlopeDarkRockBottom => true,
-            Construction::SlopeDarkRockTop => true,
-            Construction::SlopeDarkRockLeft => true,
-            Construction::SlopeDarkRockRight => true,
-            _ => false
-        }
-    }
-
     pub fn is_bridge(&self) -> bool {
         matches!(self.tile_type, Construction::Bridge)
     }
@@ -255,33 +217,48 @@ impl ConstructionTile {
     pub fn hittable_frame(&self, x: usize, y: usize) -> FRect {
         let geometry_texture_index = self.texture_source_rect.y.floor() as i32;
 
-        let (top, right, bottom, left) = if self.is_slope() {
+        let padding = if self.tile_type.is_slope() {
             self.slope_hittable_frame_padding()
         } else {
             self.hittable_frame_padding_for_texture(geometry_texture_index)
         };
 
-        FRect::new(
-            x as f32 + left, 
-            y as f32 + top, 
-            1.0 - left - right, 
-            1.0 - top - bottom
-        )
+        FRect::new(x as f32, y as f32, 1.0, 1.0).padded(padding)
     }
 
     fn slope_hittable_frame_padding(&self) -> (f32, f32, f32, f32) {
-        let equivalent_index = match self.tile_type {
-            Construction::SlopeGreenTopLeft | Construction::SlopeRockTopLeft | Construction::SlopeSandTopLeft | Construction::SlopeDarkRockTopLeft => 3,
-            Construction::SlopeGreenTopRight | Construction::SlopeRockTopRight | Construction::SlopeSandTopRight | Construction::SlopeDarkRockTopRight => 2,
-            Construction::SlopeGreenBottomRight | Construction::SlopeRockBottomRight | Construction::SlopeSandBottomRight | Construction::SlopeDarkRockBottomRight => 8,
-            Construction::SlopeGreenBottomLeft | Construction::SlopeRockBottomLeft | Construction::SlopeSandBottomLeft | Construction::SlopeDarkRockBottomLeft => 7,
-            Construction::SlopeGreenBottom | Construction::SlopeRockBottom | Construction::SlopeSandBottom | Construction::SlopeDarkRockBottom => 13,
-            Construction::SlopeGreenTop | Construction::SlopeRockTop | Construction::SlopeSandTop | Construction::SlopeDarkRockTop => 14,
-            Construction::SlopeGreenLeft | Construction::SlopeRockLeft | Construction::SlopeSandLeft | Construction::SlopeDarkRockLeft => 11,
-            Construction::SlopeGreenRight | Construction::SlopeRockRight | Construction::SlopeSandRight | Construction::SlopeDarkRockRight => 12,
-            _ => 1
-        };
-        self.hittable_frame_padding_for_texture(equivalent_index)
+        let ptx = if !self.tile_up_type.is_slope() { 0.3 } else { 0.0 };
+        let prx = if !self.tile_right_type.is_slope() { 0.3 } else { 0.0 };
+        let pbx = if !self.tile_down_type.is_slope() { 0.3 } else { 0.0 };
+        let plx = if !self.tile_left_type.is_slope() { 0.3 } else { 0.0 };
+
+        match self.tile_type {
+            Construction::SlopeGreenTopLeft | Construction::SlopeRockTopLeft | Construction::SlopeSandTopLeft | Construction::SlopeDarkRockTopLeft => {
+                (0.4, 0.0, 0.0, 0.4)
+            },
+            Construction::SlopeGreenTopRight | Construction::SlopeRockTopRight | Construction::SlopeSandTopRight | Construction::SlopeDarkRockTopRight => {
+                (0.4, 0.4, 0.0, 0.0)
+            },
+            Construction::SlopeGreenBottomRight | Construction::SlopeRockBottomRight | Construction::SlopeSandBottomRight | Construction::SlopeDarkRockBottomRight => {
+                (0.0, 0.4, 0.4, 0.0)
+            },
+            Construction::SlopeGreenBottomLeft | Construction::SlopeRockBottomLeft | Construction::SlopeSandBottomLeft | Construction::SlopeDarkRockBottomLeft => {
+                (0.0, 0.0, 0.4, 0.4)
+            },
+            Construction::SlopeGreenBottom | Construction::SlopeRockBottom | Construction::SlopeSandBottom | Construction::SlopeDarkRockBottom => {
+                (0.4, prx, 0.25, plx)
+            },
+            Construction::SlopeGreenTop | Construction::SlopeRockTop | Construction::SlopeSandTop | Construction::SlopeDarkRockTop => {
+                (0.25, prx, 0.4, plx)
+            },
+            Construction::SlopeGreenLeft | Construction::SlopeRockLeft | Construction::SlopeSandLeft | Construction::SlopeDarkRockLeft => {
+                (ptx, 0.4, pbx, 0.25)
+            },
+            Construction::SlopeGreenRight | Construction::SlopeRockRight | Construction::SlopeSandRight | Construction::SlopeDarkRockRight => {
+                (ptx, 0.25, pbx, 0.4)
+            },
+            _ => self.hittable_frame_padding_for_texture(1)
+        }
     }
 
     fn hittable_frame_padding_for_texture(&self, geometry_texture_index: i32) -> (f32, f32, f32, f32) {
@@ -361,6 +338,46 @@ impl ConstructionTile {
         };
         tile.setup_textures();
         tile
+    }
+}
+
+impl Construction {
+    fn is_slope(&self) -> bool {
+        match self {
+            Construction::SlopeGreenTopLeft => true,
+            Construction::SlopeGreenTopRight => true,
+            Construction::SlopeGreenBottomRight => true,
+            Construction::SlopeGreenBottomLeft => true,
+            Construction::SlopeGreenBottom => true,
+            Construction::SlopeGreenTop => true,
+            Construction::SlopeGreenLeft => true,
+            Construction::SlopeGreenRight => true,
+            Construction::SlopeRockTopLeft => true,
+            Construction::SlopeRockTopRight => true,
+            Construction::SlopeRockBottomRight => true,
+            Construction::SlopeRockBottomLeft => true,
+            Construction::SlopeRockBottom => true,
+            Construction::SlopeRockTop => true,
+            Construction::SlopeRockLeft => true,
+            Construction::SlopeRockRight => true,
+            Construction::SlopeSandTopLeft => true,
+            Construction::SlopeSandTopRight => true,
+            Construction::SlopeSandBottomRight => true,
+            Construction::SlopeSandBottomLeft => true,
+            Construction::SlopeSandBottom => true,
+            Construction::SlopeSandTop => true,
+            Construction::SlopeSandLeft => true,
+            Construction::SlopeSandRight => true,
+            Construction::SlopeDarkRockTopLeft => true,
+            Construction::SlopeDarkRockTopRight => true,
+            Construction::SlopeDarkRockBottomRight => true,
+            Construction::SlopeDarkRockBottomLeft => true,
+            Construction::SlopeDarkRockBottom => true,
+            Construction::SlopeDarkRockTop => true,
+            Construction::SlopeDarkRockLeft => true,
+            Construction::SlopeDarkRockRight => true,
+            _ => false
+        }
     }
 }
 

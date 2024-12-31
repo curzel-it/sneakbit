@@ -33,6 +33,21 @@ impl FRect {
         Self::from_origin(size, size)
     }
 
+    pub fn padded(&self, padding: (f32, f32, f32, f32)) -> Self {
+        let (top, right, bottom, left) = padding;
+        
+        Self::new(
+            self.x + left, 
+            self.y + top, 
+            self.w - left - right, 
+            self.h - top - bottom
+        )
+    }
+
+    pub fn padded_all(&self, padding: f32) -> Self {
+        self.padded((padding, padding, padding, padding))
+    }
+
     pub fn center(&self) -> Vector2d {
         Vector2d::new(
             self.x as f32 + self.w as f32 / 2.0, 

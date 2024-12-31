@@ -76,14 +76,8 @@ impl World {
         for y in 0..self.biome_tiles.tiles.len() {
             for x in 0..self.biome_tiles.tiles[0].len() {
                 if self.biome_tiles.tiles[y][x].is_obstacle() {
-                    let frame = FRect::new(
-                        x as f32 + 0.15, 
-                        y as f32 + 0.15, 
-                        0.7, 
-                        0.7
-                    );
                     let item = Hittable {
-                        frame,
+                        frame: FRect::new(x as f32, y as f32, 1.0, 1.0).padded_all(0.15),
                         weight: 0,
                         entity_id: 0, 
                         species_id: 0,

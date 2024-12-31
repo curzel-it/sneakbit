@@ -373,7 +373,7 @@ impl Entity {
         self.is_rigid = false;
         self.is_dying = true;
         self.remaining_lifespan = 10.0 / ANIMATIONS_FPS;                
-        self.frame = self.hittable_frame(); 
+        self.frame = FRect::square_from_origin(1.0).centered_at(&self.frame.center());
         self.sprite = AnimatedSprite::new(
             SPRITE_SHEET_ANIMATED_OBJECTS, 
             FRect::new(0.0, 10.0, 1.0, 1.0), 
