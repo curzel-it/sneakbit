@@ -18,7 +18,7 @@ pub struct World {
     pub players: Vec<PlayerProps>,
     pub has_confirmation_key_been_pressed_by_anyone: bool,
     pub is_any_arrow_key_down: bool,
-    pub hitmap: Hitmap,
+    pub(crate) hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
     pub world_type: WorldType,
     pub pressure_plate_down_red: bool,
@@ -376,7 +376,8 @@ impl World {
 
         let entities = self.entities.borrow();
 
-        for (index, entity) in entities.iter().enumerate() {
+        for index in 0..entities.len() {
+            let entity = &entities[index];            
             let is_visible = false || 
                 matches!(entity.entity_type, EntityType::Hero) ||
                 matches!(entity.entity_type, EntityType::PressurePlate) ||

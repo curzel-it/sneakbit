@@ -8,6 +8,7 @@ use entities::known_species::SPECIES_KUNAI_LAUNCHER;
 use entities::species::species_by_id;
 use equipment::basics::{available_weapons, set_equipped, AmmoRecap};
 use features::fast_travel::{available_fast_travel_destinations_from_current_world, FastTravelDestination};
+use features::hitmaps::Hittable;
 use features::messages::{CDisplayableMessage, DisplayableMessage, DisplayableMessageCRepr};
 use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::WorldStateUpdate, toasts::ToastCRepr};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
@@ -35,7 +36,7 @@ pub mod worlds;
 
 static mut ENGINE: *mut GameEngine = std::ptr::null_mut();
 
-pub fn engine() -> &'static GameEngine {
+fn engine() -> &'static GameEngine {
     unsafe {
         &*ENGINE
     }
@@ -571,4 +572,12 @@ pub extern "C" fn free_weapons(ptr: *mut AmmoRecap, length: usize) {
 pub extern "C" fn set_weapon_equipped(species_id: u32, player: usize) {
     let species = species_by_id(species_id);
     set_equipped(&species, player);
+}
+
+pub fn hittables() -> &'static Vec<Hittable> {
+    &engine().world.hitmap.data
+}
+
+pub fn tiles_hittables() -> &'static Vec<Hittable> {
+    &engine().world.tiles_hitmap.data
 }

@@ -113,9 +113,14 @@ impl Hitmap {
     }
 
     fn area_hits(&self, exclude: &[u32], area: &FRect) -> bool {
-        self.data.iter().any(|hittable| {            
-            hittable.is_rigid && !exclude.contains(&hittable.entity_id) && hittable.frame.overlaps_or_touches(area)
-        })
+        for hittable in &self.data {
+            if !hittable.is_rigid { continue }
+            if exclude.contains(&hittable.entity_id) { continue }
+            if hittable.frame.overlaps_or_touches(area) {
+                return true
+            }
+        }
+        false
     }
 
     fn hits_xy(&self, x: f32, y: f32) -> bool {
@@ -123,37 +128,47 @@ impl Hitmap {
     }
 
     fn hits_point(&self, point: &Vector2d) -> bool {
-        self.data.iter().any(|hittable| {
-            hittable.is_rigid && hittable.frame.contains_or_touches(point)
-        })
+        for hittable in &self.data {
+            if !hittable.is_rigid { continue }
+            if hittable.frame.contains_or_touches(point) {
+                return true
+            }
+        }
+        false
     }
 
     fn hits_line(&self, exclude: &[u32], start: &Vector2d, end: &Vector2d) -> bool {
-        self.data
-            .iter()
-            .any(|hittable| {
-                if !hittable.is_rigid { return false }
-                if exclude.contains(&hittable.entity_id) { return false }
-                hittable.frame.intersects_line(start.x, start.y, end.x, end.y)
-            })
+        for hittable in &self.data {
+            if !hittable.is_rigid { continue }
+            if exclude.contains(&hittable.entity_id) { continue }
+            if hittable.frame.intersects_line(start.x, start.y, end.x, end.y) {
+                return true
+            }
+        }
+        false
     }
 
     fn has_weight(&self, area: &FRect) -> bool {
         let area_center = area.center();
-        self.data.iter().any(|hittable| {
-            if hittable.weight == 0 { return false } 
+
+        for hittable in &self.data {
+            if hittable.weight == 0 { continue } 
             if hittable.frame.overlaps_or_touches(area) { return true }
-            hittable.frame.contains_or_touches(&area_center) || area.contains_or_touches(&hittable.frame.center())
-        })
+            if hittable.frame.contains_or_touches(&area_center) || area.contains_or_touches(&hittable.frame.center()) {
+                return true
+            }
+        }
+        false
     }
 
     fn first_entity_id_by_area(&self, exclude: &[u32], area: &FRect) -> Option<Hittable> {
-        self.data
-            .iter()
-            .find(|hittable| {
-                !exclude.contains(&hittable.entity_id) && hittable.frame.overlaps_or_touches(area)
-            })
-            .cloned()
+        for hittable in &self.data {
+            if exclude.contains(&hittable.entity_id) { continue }
+            if hittable.frame.overlaps_or_touches(area) {
+                return Some(hittable.clone())
+            }
+        }
+        None
     }
 
     fn entity_ids_by_area(&self, exclude: &[u32], area: &FRect) -> Vec<(EntityId, SpeciesId)> {
