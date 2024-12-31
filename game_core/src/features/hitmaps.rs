@@ -43,12 +43,8 @@ impl World {
         self.hitmap.first_entity_id_by_area(exclude, area)
     }
 
-    pub fn has_weight(&self, x: f32, y: f32) -> bool {
-        if x < 0.0 || y < 0.0 || y >= self.bounds.h || x >= self.bounds.w { 
-            false 
-        } else { 
-            self.hitmap.has_weight_xy(x, y)
-        }
+    pub fn has_weight(&self, area: &FRect) -> bool {
+        self.hitmap.has_weight(area)
     }
 
     pub fn update_hitmaps(&mut self) {
@@ -142,13 +138,12 @@ impl Hitmap {
             })
     }
 
-    fn has_weight_xy(&self, x: f32, y: f32) -> bool {
-        self.has_weight_point(&Vector2d::new(x, y))
-    }
-
-    fn has_weight_point(&self, point: &Vector2d) -> bool {
+    fn has_weight(&self, area: &FRect) -> bool {
+        let area_center = area.center();
         self.data.iter().any(|hittable| {
-            hittable.weight > 0 && hittable.frame.contains_or_touches(point)
+            if hittable.weight == 0 { return false } 
+            if hittable.frame.overlaps_or_touches(area) { return true }
+            hittable.frame.contains_or_touches(&area_center) || area.contains_or_touches(&hittable.frame.center())
         })
     }
 

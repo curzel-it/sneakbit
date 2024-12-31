@@ -1,7 +1,7 @@
 use std::{cell::RefCell, cmp::Ordering};
 
 use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, current_player_index, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, is_turn_based_game_mode, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::FRect, vector::Vector2d}};
-use crate::features::{hitmaps::Hitmap, entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
+use crate::features::{hitmaps::Hitmap, entity::Entity, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
 
@@ -374,22 +374,14 @@ impl World {
     pub fn update_visible_entities(&mut self, viewport: &FRect) {
         self.visible_entities.clear();
 
-        let min_row = viewport.y - 1.0;
-        let max_row = viewport.y + viewport.h + 1.0;
-        let min_col = viewport.x - 1.0;
-        let max_col = viewport.x + viewport.w + 1.0;
-
         let entities = self.entities.borrow();
 
         for (index, entity) in entities.iter().enumerate() {
-            let is_visible = is_player_index(index) || {
-                let frame = entity.frame;
-                let frame_y = frame.y;
-                let frame_x = frame.x;
-                let max_y = frame_y + frame.h;
-                let max_x = frame_x + frame.w;
-                max_y >= min_row && frame_y <= max_row && max_x >= min_col && frame_x <= max_col
-            };
+            let is_visible = false || 
+                matches!(entity.entity_type, EntityType::Hero) ||
+                matches!(entity.entity_type, EntityType::PressurePlate) ||
+                matches!(entity.entity_type, EntityType::PushableObject) ||
+                viewport.overlaps_or_touches(&entity.frame);
 
             if is_visible {
                 self.visible_entities.push((index, entity.id));

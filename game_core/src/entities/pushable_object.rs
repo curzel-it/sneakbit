@@ -1,4 +1,4 @@
-use crate::{features::{entity::Entity, entity_props::EntityProps, state_updates::WorldStateUpdate}, utils::directions::Direction, worlds::world::World};
+use crate::{features::{entity::Entity, entity_props::EntityProps, state_updates::WorldStateUpdate}, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
 impl Entity {
     pub fn update_pushable(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
@@ -8,6 +8,10 @@ impl Entity {
             time_since_last_update
         );
         vec![]
+    }
+
+    pub fn pushable_object_hittable_frame(&self) -> FRect {
+        self.frame.padded_all(0.1)
     }
 
     fn update_pushable_with_player_props(
