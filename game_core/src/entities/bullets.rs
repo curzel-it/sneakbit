@@ -134,11 +134,15 @@ pub fn make_bullet_ex(
 pub fn make_player_bullet(parent_id: u32, world: &World, weapon_species: &Species) -> Entity {
     let index = world.player_index_by_entity_id(parent_id).unwrap_or(PLAYER1_INDEX);
     let player = world.players[index].props;
+    let (dx, dy) = player.direction.as_offset();
 
     let mut bullet = make_bullet_ex(
         weapon_species.bullet_species_id,
         parent_id,
-        &player.hittable_frame.center(),
+        &player.hittable_frame
+            .offset_x(dx * (player.hittable_frame.w + 0.01))
+            .offset_y(dy * (player.hittable_frame.h + 0.01))
+            .center(),
         player.direction,
         weapon_species.bullet_lifespan
     );
