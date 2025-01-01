@@ -10,7 +10,6 @@ impl World {
         original_y: f32,
         direction: Direction,
     ) {
-        self.visible_entities.reserve(1000);
         self.remove_players();
         self.remove_all_equipment();
         self.remove_dying_entities();

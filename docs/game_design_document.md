@@ -67,8 +67,8 @@ Melee weapons don't require ammunition, but the underlying mechanisms makes them
 #### Weapons
 |Weapon|Dps|Speed|Lifespan|Cooldown|
 |--|--|--|--|--|
-|Sword|555|2.0|0.4|0.35|
-|Dark Blade|666|2.0|0.4|0.35|
+|Sword|450|2.0|0.4|0.35|
+|Dark Blade|550|2.0|0.4|0.35|
 
 #### Shields
 |Weapon|Received Damage Reduction|
