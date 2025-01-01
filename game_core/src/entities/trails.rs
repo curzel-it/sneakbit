@@ -1,4 +1,4 @@
-use crate::{entities::{known_species::SPECIES_FOOTSTEPS, species::species_by_id}, features::{entity::Entity, state_updates::WorldStateUpdate}, maps::biome_tiles::Biome, utils::directions::Direction, worlds::world::World};
+use crate::{entities::{known_species::SPECIES_FOOTSTEPS, species::species_by_id}, features::{entity::Entity, state_updates::WorldStateUpdate}, maps::biomes::Biome, utils::directions::Direction, worlds::world::World};
 
 impl Entity {
     pub fn update_trail(&mut self) -> Vec<WorldStateUpdate> {  

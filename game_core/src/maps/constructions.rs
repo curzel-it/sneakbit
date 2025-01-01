@@ -1,0 +1,148 @@
+use std::collections::HashMap;
+
+use lazy_static::lazy_static;
+
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
+#[derive(Default)]
+#[repr(i32)]
+pub enum Construction {
+    WoodenFence = 1,
+    #[default]
+    Nothing = 2,
+    DarkRock = 3,
+    LightWall = 4,
+    Counter = 5,
+    Library = 6,
+    TallGrass = 7,
+    Forest = 8,
+    Bamboo = 9,
+    Box = 10,
+    Rail = 11,
+    StoneWall = 12,
+    IndicatorArrow = 13,
+    Bridge = 14,
+    Broadleaf = 15,
+    MetalFence = 16,       
+    StoneBox = 17,
+    SpoiledTree = 18,
+    WineTree = 19,
+    SolarPanel = 20,
+    Pipe = 21,
+    BroadleafPurple = 22,
+    WoodenWall = 23,
+    SnowPile = 24,
+    SnowyForest = 25,
+    Darkness15 = 26,
+    Darkness30 = 27,
+    Darkness45 = 28,
+    SlopeGreenTopLeft = 29,
+    SlopeGreenTopRight = 30,
+    SlopeGreenBottomRight = 31,
+    SlopeGreenBottomLeft = 32,
+    SlopeGreenBottom = 33,
+    SlopeGreenTop = 34,
+    SlopeGreenLeft = 35,
+    SlopeGreenRight = 36,
+    SlopeRockTopLeft = 37,
+    SlopeRockTopRight = 38,
+    SlopeRockBottomRight = 39,
+    SlopeRockBottomLeft = 40,
+    SlopeRockBottom = 41,
+    SlopeRockTop = 42,
+    SlopeRockLeft = 43,
+    SlopeRockRight = 44,
+    SlopeSandTopLeft = 45,
+    SlopeSandTopRight = 46,
+    SlopeSandBottomRight = 47,
+    SlopeSandBottomLeft = 48,
+    SlopeSandBottom = 49,
+    SlopeSandTop = 50,
+    SlopeSandLeft = 51,
+    SlopeSandRight = 52,
+    SlopeDarkRockTopLeft = 53,
+    SlopeDarkRockTopRight = 54,
+    SlopeDarkRockBottomRight = 55,
+    SlopeDarkRockBottomLeft = 56,
+    SlopeDarkRockBottom = 57,
+    SlopeDarkRockTop = 58,
+    SlopeDarkRockLeft = 59,
+    SlopeDarkRockRight = 60,
+}
+
+lazy_static! {
+    pub static ref CONSTRUCTION_ENCODINGS: Vec<(char, Construction)> = vec![
+        ('0', Construction::Nothing),
+        ('1', Construction::WoodenFence),
+        ('3', Construction::DarkRock),
+        ('4', Construction::LightWall),
+        ('5', Construction::Counter),
+        ('6', Construction::Library),
+        ('7', Construction::TallGrass),
+        ('8', Construction::Forest),
+        ('9', Construction::Bamboo),
+        ('A', Construction::Box),
+        ('B', Construction::Rail),
+        ('C', Construction::StoneWall),
+        ('D', Construction::IndicatorArrow),
+        ('E', Construction::Bridge),
+        ('F', Construction::Broadleaf),
+        ('G', Construction::MetalFence),
+        ('H', Construction::StoneBox),
+        ('J', Construction::SpoiledTree),
+        ('K', Construction::WineTree),
+        ('L', Construction::SolarPanel),
+        ('M', Construction::Pipe),
+        ('N', Construction::BroadleafPurple),
+        ('O', Construction::WoodenWall),
+        ('P', Construction::SnowPile),
+        ('Q', Construction::SnowyForest),
+        ('R', Construction::Darkness15),
+        ('S', Construction::Darkness30),
+        ('T', Construction::Darkness45),
+        ('U', Construction::SlopeGreenTopLeft),
+        ('V', Construction::SlopeGreenTopRight),
+        ('W', Construction::SlopeGreenBottomRight),
+        ('X', Construction::SlopeGreenBottomLeft),
+        ('Y', Construction::SlopeGreenBottom),
+        ('Z', Construction::SlopeGreenTop),
+        ('a', Construction::SlopeGreenLeft),
+        ('b', Construction::SlopeGreenRight),
+        ('c', Construction::SlopeRockTopLeft),
+        ('d', Construction::SlopeRockTopRight),
+        ('e', Construction::SlopeRockBottomRight),
+        ('f', Construction::SlopeRockBottomLeft),
+        ('g', Construction::SlopeRockBottom),
+        ('h', Construction::SlopeRockTop),
+        ('j', Construction::SlopeRockLeft),
+        ('k', Construction::SlopeRockRight),
+        ('i', Construction::SlopeSandTopLeft),
+        ('l', Construction::SlopeSandTopRight),
+        ('m', Construction::SlopeSandBottomRight),
+        ('n', Construction::SlopeSandBottomLeft),
+        ('o', Construction::SlopeSandBottom),
+        ('p', Construction::SlopeSandTop),
+        ('q', Construction::SlopeSandLeft),
+        ('r', Construction::SlopeSandRight),
+        ('s', Construction::SlopeDarkRockTopLeft),
+        ('t', Construction::SlopeDarkRockTopRight),
+        ('u', Construction::SlopeDarkRockBottomRight),
+        ('v', Construction::SlopeDarkRockBottomLeft),
+        ('w', Construction::SlopeDarkRockBottom),
+        ('x', Construction::SlopeDarkRockTop),
+        ('y', Construction::SlopeDarkRockLeft),
+        ('z', Construction::SlopeDarkRockRight),
+    ];
+
+    static ref CHAR_TO_CONSTRUCTION: HashMap<char, Construction> = CONSTRUCTION_ENCODINGS.clone().into_iter().collect();
+    static ref CONSTRUCTION_TO_CHAR: HashMap<Construction, char> = CONSTRUCTION_ENCODINGS.clone().into_iter().map(|(char, biome)| (biome, char)).collect();
+}
+
+impl Construction {
+    pub fn from_char(c: char) -> Self {
+        *CHAR_TO_CONSTRUCTION.get(&c).unwrap_or(&Construction::Nothing)
+    }
+
+    pub fn to_char(self) -> char {
+        *CONSTRUCTION_TO_CHAR.get(&self).unwrap_or(&'0')
+    }
+}
