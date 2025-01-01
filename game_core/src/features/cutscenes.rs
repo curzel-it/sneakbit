@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::SPRITE_SHEET_BLANK, features::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, set_value_for_key}}, utils::{rect::IntRect, vector::Vector2d}, RenderableItem};
+use crate::{constants::SPRITE_SHEET_BLANK, features::{entity::Entity, state_updates::WorldStateUpdate, storage::{get_value_for_global_key, set_value_for_key}}, utils::rect::FRect, RenderableItem};
 
 use super::animated_sprite::AnimatedSprite;
 
@@ -9,8 +9,8 @@ pub struct CutScene {
     key: String,
     idle_sprite: AnimatedSprite,
     play_sprite: AnimatedSprite,
-    frame: IntRect,
-    trigger_position: (i32, i32),
+    frame: FRect,
+    trigger_position: (f32, f32),
     on_end: Vec<Entity>,
 
     #[serde(skip)]
@@ -30,13 +30,13 @@ impl CutScene {
         RenderableItem {
             sprite_sheet_id: sprite.sheet_id,
             texture_rect: sprite.frame,
-            offset: Vector2d::zero(),
             frame: self.frame,
+            hittable_frame: self.frame,
             sorting_key: 2_000_000_000
         }
     }
 
-    pub fn update(&mut self, hero_frame: &IntRect, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
+    pub fn update(&mut self, hero_frame: &FRect, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
         let did_already_play = get_value_for_global_key(&self.key).unwrap_or_default() == 1;
 
         if !self.did_setup {
@@ -82,6 +82,6 @@ impl CutScene {
     fn hide(&mut self) {
         self.is_playing = false;
         self.idle_sprite.sheet_id = SPRITE_SHEET_BLANK;
-        self.idle_sprite.frame = IntRect::square_from_origin(1);
+        self.idle_sprite.frame = FRect::square_from_origin(1.0);
     }
 }

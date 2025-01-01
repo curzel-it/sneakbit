@@ -1,4 +1,4 @@
-use game_core::{camera_viewport, camera_viewport_offset, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, current_world_biome_tiles, current_world_construction_tiles, is_limited_visibility, is_night};
+use game_core::{camera_viewport, constants::{SPRITE_SHEET_CAVE_DARKNESS, TILE_SIZE}, current_world_biome_tiles, current_world_construction_tiles, hittables, is_limited_visibility, is_night, tiles_hittables};
 use raylib::prelude::*;
 
 use crate::{gameui::game_hud::hud_ui, GameContext};
@@ -13,8 +13,8 @@ pub fn render_frame(context: &mut GameContext) {
     let can_render_frame = context.can_render_frame();
     let hud = hud_ui(
         context,
-        config.canvas_size.x as i32, 
-        config.canvas_size.y as i32,
+        config.canvas_size.x, 
+        config.canvas_size.y,
         config.show_debug_info,
         fps
     );
@@ -23,38 +23,60 @@ pub fn render_frame(context: &mut GameContext) {
     d.clear_background(Color::BLACK);
     
     let camera_viewport = camera_viewport();
-    let camera_viewport_offset = camera_viewport_offset();
 
     if can_render_frame {
         if config.render_using_individual_tiles {
             render_tiles(
                 &mut d, 
                 &camera_viewport, 
-                &camera_viewport_offset,
                 current_world_biome_tiles(),
                 current_world_construction_tiles()
             );
         } else {
-            let success = render_tile_map(
-                &mut d, 
-                &camera_viewport, 
-                &camera_viewport_offset
-            );
+            let success = render_tile_map(&mut d, &camera_viewport);
             if !success {
                 render_tiles(
                     &mut d, 
                     &camera_viewport, 
-                    &camera_viewport_offset,
                     current_world_biome_tiles(),
                     current_world_construction_tiles()
                 );
             }
         }
         render_night(&mut d, screen_width, screen_height);
-        render_entities(&mut d, &camera_viewport, &camera_viewport_offset);
+        render_entities(&mut d, &camera_viewport);
         render_limited_visibility(&mut d, screen_width, screen_height);
         render_layout(&hud, &mut d);
+        // draw_hittable_overlays(&mut d);
     }
+}
+
+#[allow(dead_code)]
+fn draw_hittable_overlays(d: &mut RaylibDrawHandle) {
+    let config = get_rendering_config();
+    let camera_viewport = camera_viewport();
+
+    hittables().iter().for_each(|hittable| {
+        let frame = hittable.frame;
+        let dest_rect = Rectangle {
+            x: (frame.x - camera_viewport.x) * TILE_SIZE * config.rendering_scale,
+            y: (frame.y - camera_viewport.y) * TILE_SIZE * config.rendering_scale,
+            width: frame.w * TILE_SIZE * config.rendering_scale,
+            height: frame.h * TILE_SIZE * config.rendering_scale,
+        };
+        d.draw_rectangle_lines_ex(dest_rect, 1.0, Color::RED.alpha(0.5));
+    });
+
+    tiles_hittables().iter().for_each(|hittable| {
+        let frame = hittable.frame;
+        let dest_rect = Rectangle {
+            x: (frame.x - camera_viewport.x) * TILE_SIZE * config.rendering_scale,
+            y: (frame.y - camera_viewport.y) * TILE_SIZE * config.rendering_scale,
+            width: frame.w * TILE_SIZE * config.rendering_scale,
+            height: frame.h * TILE_SIZE * config.rendering_scale,
+        };
+        d.draw_rectangle_lines_ex(dest_rect, 1.0, Color::BLUE.alpha(0.5));
+    });
 }
 
 fn render_night(d: &mut RaylibDrawHandle, screen_width: i32, screen_height: i32) {

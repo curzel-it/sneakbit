@@ -1,53 +1,71 @@
-use crate::{features::{entity::Entity, entity_props::EntityProps, linear_movement::{would_collide, would_over_weight}, state_updates::WorldStateUpdate}, utils::directions::Direction, worlds::world::World};
+use crate::{features::{entity::Entity, entity_props::EntityProps, state_updates::WorldStateUpdate}, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
 impl Entity {
     pub fn update_pushable(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
-        for player in &world.players {
-            let updates = self.update_pushable_with_player_props(
-                &player.props, 
-                world, 
-                time_since_last_update
-            );
-            if !updates.is_empty() {
-                return updates
-            }
-        }
-
+        self.update_pushable_with_player_props(
+            &world.players[0].props, 
+            world, 
+            time_since_last_update
+        );
         vec![]
     }
 
-    fn update_pushable_with_player_props(&mut self, player_props: &EntityProps, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
-        let player = player_props.hittable_frame;
-        let player_direction = player_props.direction;       
-        let player_offset = player_props.offset;        
-        let non_zero_offset = player_offset.x != 0.0 || player_offset.y != 0.0;
-        
-        if non_zero_offset {
-            let is_around = match player_direction {
-                Direction::Up => player.y == self.frame.y + self.frame.h && player.x >= self.frame.x && player.x < self.frame.x + self.frame.w,
-                Direction::Right => player.x == self.frame.x - 1 && player.y >= self.frame.y && player.y < self.frame.y + self.frame.h,
-                Direction::Down => player.y == self.frame.y && player.x >= self.frame.x && player.x < self.frame.x + self.frame.w,
-                Direction::Left => player.x == self.frame.x + self.frame.w && player.y >= self.frame.y && player.y < self.frame.y + self.frame.h,
-                Direction::Unknown => false,
-                Direction::Still => false,
-            };
-            if is_around {
-                let hits = would_collide(&self.frame, &player_direction, world);
-                let weights = would_over_weight(&self.frame, &player_direction, world);
-                
-                if hits {
-                    return vec![]
-                } else if weights {
-                    return vec![WorldStateUpdate::StopHeroMovement]
-                } else {
-                    self.direction = player_direction;
-                    self.current_speed = 1.2 * world.players[0].props.speed;
-                    self.move_linearly(world, time_since_last_update);
-                }
-            }
+    pub fn pushable_object_hittable_frame(&self) -> FRect {
+        self.frame.padded_all(0.1)
+    }
+
+    fn update_pushable_with_player_props(
+        &mut self,
+        player_props: &EntityProps,
+        world: &World,
+        time_since_last_update: f32
+    ) {
+        if player_props.speed <= 0.0 || matches!(player_props.direction, Direction::Unknown | Direction::Still) {            
+            self.pushable_set_still();
+            return
         }
 
-        vec![]
+        let is_pushing = self.is_being_pushed_by_player(world, player_props);
+        
+        if !is_pushing {
+            self.pushable_set_still();
+            return
+        }
+
+        if self.is_obstacle_in_direction(world, player_props.direction) {
+            self.pushable_set_still();
+            return
+        }
+
+        self.current_speed = player_props.speed;
+        self.direction = player_props.direction;
+        self.move_linearly(world, time_since_last_update);
+    }
+
+    fn is_being_pushed_by_player(&self, world: &World, player: &EntityProps) -> bool {
+        let player_center = player.hittable_frame.center();
+
+        if !self.frame.scaled_from_center(3.0).contains_or_touches(&player_center) {
+            return false;
+        }
+
+        if self.frame.contains_or_touches(&player_center) {
+            if self.is_obstacle_in_direction(world, player.direction.opposite()) {
+                return true
+            }
+        }
+        
+        match player.direction {
+            Direction::Up => self.frame.offset_y(0.6).contains_or_touches(&player_center),
+            Direction::Right => self.frame.offset_x(-0.6).contains_or_touches(&player_center),
+            Direction::Down => self.frame.offset_y(-0.6).contains_or_touches(&player_center),
+            Direction::Left => self.frame.offset_x(0.6).contains_or_touches(&player_center),
+            Direction::Unknown | Direction::Still => false
+        }
+    }
+
+    fn pushable_set_still(&mut self) {
+        self.current_speed = 0.0;
+        self.direction = Direction::Still;
     }
 }
-

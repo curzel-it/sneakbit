@@ -6,7 +6,7 @@ pub fn update_game_hud(context: &mut GameContext) {
     context.basic_info_hud.update();
 }
 
-pub fn hud_ui(context: &GameContext, width: i32, height: i32, show_debug_info: bool, fps: u32) -> Layout {
+pub fn hud_ui(context: &GameContext, width: f32, height: f32, show_debug_info: bool, fps: u32) -> Layout {
     let is_dead = context.is_dead();
     let game_mode = &current_game_mode();
 
@@ -58,7 +58,7 @@ fn debug_info(show_debug_info: bool, fps: u32) -> View {
         vstack!(
             Spacing::MD,
             text!(Typography::Regular, format!("Fps: {}", fps)),
-            text!(Typography::Regular, format!("x {} y {}", hero.x, hero.y)),
+            text!(Typography::Regular, format!("x {:0.1} y {:0.1}", hero.x, hero.y)),
             text!(Typography::Regular, format!("World Id: {}", world_id)),
             text!(Typography::Regular, format!("Hp: {:0.1}", hp))
         )

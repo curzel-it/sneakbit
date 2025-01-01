@@ -1,7 +1,7 @@
 import Foundation
 
-extension IntRect {
-    static let zero = IntRect(x: 0, y: 0, w: 0, h: 0)
+extension FRect {
+    static let zero = FRect(x: 0, y: 0, w: 0, h: 0)
     
     func cgRect() -> CGRect {
         CGRect(
@@ -13,7 +13,7 @@ extension IntRect {
     }
 }
 
-extension IntRect: Hashable, Equatable {
+extension FRect: Hashable, Equatable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(x)
         hasher.combine(y)
@@ -21,7 +21,7 @@ extension IntRect: Hashable, Equatable {
         hasher.combine(h)
     }
     
-    public static func == (lhs: IntRect, rhs: IntRect) -> Bool {
+    public static func == (lhs: FRect, rhs: FRect) -> Bool {
         lhs.x == rhs.x && lhs.y == rhs.y && lhs.w == rhs.w && lhs.h == rhs.h
     }
 }

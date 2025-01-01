@@ -1,15 +1,16 @@
 use game_core::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE}, current_game_mode, features::storage::{bool_for_global_key, StorageKey}, is_creative_mode, number_of_players, set_wants_fullscreen, ui::components::Typography, utils::vector::Vector2d, wants_fullscreen, window_size_changed};
 use raylib::prelude::*;
 
-use crate::{features::font_helpers::{bold_font_path, latin_characters, regular_font_path}, is_debug_build, rendering::ui::{get_rendering_config_mut, is_rendering_config_initialized}, GameContext};
+use crate::{features::font_helpers::{bold_font_path, latin_characters, regular_font_path}, rendering::ui::{get_rendering_config_mut, is_rendering_config_initialized}, GameContext};
 
 use super::{textures::load_textures, ui::{init_rendering_config, RenderingConfig}};
 
 pub fn start_rl(creative_mode: bool) -> GameContext {    
-    let width = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.w as f32) as i32;
-    let height = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.h as f32) as i32;
+    let debug = cfg!(debug_assertions);
+    let width = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.w) as i32;
+    let height = (TILE_SIZE * INITIAL_CAMERA_VIEWPORT.h) as i32;
 
-    let (mut rl, rl_thread) = if is_debug_build() { 
+    let (mut rl, rl_thread) = if debug { 
         raylib::init()
             .size(width, height)
             .resizable()
@@ -28,7 +29,7 @@ pub fn start_rl(creative_mode: bool) -> GameContext {
     let font = rl.load_font_ex(&rl_thread, &regular_font_path(), 8, Some(&characters)).unwrap();
     let font_bold = rl.load_font_ex(&rl_thread, &bold_font_path(), 8, Some(&characters)).unwrap();
     
-    update_target_refresh_rate(&mut rl);
+    update_target_refresh_rate(&mut rl, debug);
     rl.set_window_min_size(360, 240);
 
     init_rendering_config(RenderingConfig {
@@ -38,11 +39,11 @@ pub fn start_rl(creative_mode: bool) -> GameContext {
         rendering_scale: 2.0,
         font_rendering_scale: 2.0,
         canvas_size: Vector2d::new(1.0, 1.0),
-        show_debug_info: is_debug_build(),
+        show_debug_info: debug,
         render_using_individual_tiles: creative_mode
     });
 
-    GameContext::new(rl, rl_thread)
+    GameContext::new(rl, rl_thread, debug)
 }
 
 pub fn handle_window_updates(context: &mut GameContext) {
@@ -75,8 +76,8 @@ fn set_fullscreen(rl: &mut RaylibHandle, wants_fullscreen: bool) {
     }
 }
 
-fn update_target_refresh_rate(rl: &mut RaylibHandle) {
-    if !is_debug_build() {
+fn update_target_refresh_rate(rl: &mut RaylibHandle, debug: bool) {
+    if !debug {
         let monitor = get_current_monitor();
         let monitor_refresh_rate = get_monitor_refresh_rate(monitor);
         rl.set_target_fps(monitor_refresh_rate as u32);
@@ -137,7 +138,7 @@ fn handle_window_size_changed(context: &mut GameContext) {
     context.menu.messages.visible_line_count = visible_line_count;
     
     window_size_changed(width, height, scale);
-    update_target_refresh_rate(&mut context.rl);
+    update_target_refresh_rate(&mut context.rl, context.debug);
 }
 
 fn rendering_scale_for_screen_width(width: f32) -> f32 {

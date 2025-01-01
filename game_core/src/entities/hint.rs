@@ -8,13 +8,13 @@ impl Entity {
             self.sprite.frame.y = self.species.inventory_texture_offset.0;
         } else {
             self.sprite.sheet_id = SPRITE_SHEET_STATIC_OBJECTS;
-            self.sprite.frame.x = 4;
-            self.sprite.frame.y = 2;
+            self.sprite.frame.x = 4.0;
+            self.sprite.frame.y = 2.0;
         }
     }
 
     pub fn update_hint(&mut self, world: &World, _: f32) -> Vec<WorldStateUpdate> {   
-        if !is_creative_mode() && world.is_any_hero_at(self.frame.x, self.frame.y) {
+        if !is_creative_mode() && world.is_any_player_in(&self.frame) {
             self.hint_updates()    
         } else {
             vec![]

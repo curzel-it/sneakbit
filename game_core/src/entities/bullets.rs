@@ -1,4 +1,4 @@
-use crate::{constants::{PLAYER1_INDEX, TILE_SIZE}, entities::known_species::is_building, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::PLAYER1_INDEX, entities::known_species::is_building, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
 
 use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species, SpeciesId}};
 
@@ -30,7 +30,7 @@ impl Entity {
         }
 
         if self.current_speed == 0.0 && !is_creative_mode() {   
-            if let Some(player) = world.first_index_of_player_at(self.frame.x, self.frame.y) {
+            if let Some(player) = world.first_index_of_player_in(&self.hittable_frame()) {
                 return object_pick_up_sequence(player, self);
             }            
         }
@@ -47,20 +47,11 @@ impl Entity {
     }
 
     fn check_hits(&self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
-        let (previous_x, previous_y) = self.previous_position();
-        let previous_hits = world.entity_ids(previous_x, previous_y);
-        let current_hits = world.entity_ids(self.frame.x, self.frame.y);
-        
-        let valid_hits: Vec<u32> = vec![previous_hits, current_hits]
+        let exclude = vec![0, self.id, self.parent_id];
+        let valid_hits: Vec<u32> = world
+            .entity_ids_by_area(&exclude, &self.hittable_frame())
             .into_iter()
-            .flatten()
-            .filter_map(|(entity_id, _)| {
-                if self.is_valid_hit_target(entity_id) {
-                    Some(entity_id)
-                } else {
-                    None
-                }
-            })
+            .map(|(entity_id, _)| entity_id)
             .collect();
 
         if valid_hits.is_empty() {
@@ -85,16 +76,12 @@ impl Entity {
     }
 
     fn check_stoppers(&self, world: &World) -> Vec<WorldStateUpdate> {
-        if self.frame.x < 0 { return vec![] }
-        if self.frame.x as usize >= world.construction_tiles.tiles[0].len() { return vec![] }
-        if self.frame.y < 0 { return vec![] }
-        if self.frame.y as usize >= world.construction_tiles.tiles.len() { return vec![] }
-        
-        let construction = &world.construction_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
-        let biome = &world.biome_tiles.tiles[self.frame.y as usize][self.frame.x as usize];
-        let hits = world.entity_ids(self.frame.x, self.frame.y);
+        let center = self.frame.center();
+        let construction = &world.construction_at(center.x, center.y);
+        let biome = &world.biome_at(center.x, center.y);
+        let hits = world.entity_ids(center.x, center.y);
 
-        if construction.tile_type.stops_bullets() || biome.tile_type.stops_bullets() {
+        if construction.stops_bullets() || biome.stops_bullets() {
             return vec![WorldStateUpdate::HandleBulletStopped(self.id)]
         }
         if hits.iter().any(|(_, species_id)| is_building(*species_id)) {
@@ -106,33 +93,37 @@ impl Entity {
         vec![]
     }
 
-    pub fn is_valid_hit_target(&self, entity_id: u32) -> bool {
-        entity_id != 0 && entity_id != self.id && entity_id != self.parent_id 
+    pub fn bullet_hittable_frame(&self) -> FRect {
+        let (ox, oy) = match self.direction {
+            Direction::Up | Direction::Down => (0.2, 0.0),
+            Direction::Right | Direction::Left => (0.0, 0.2),
+            _ => (0.0, 0.0)
+        };
+        FRect {
+            x: self.frame.x + ox,
+            y: self.frame.y + oy,
+            w: self.frame.w - ox * 2.0,
+            h: self.frame.h - oy * 2.0
+        }
     }
-
-    fn previous_position(&self) -> (i32, i32) {
-        let (ox, oy) = self.direction.as_col_row_offset();
-        (self.frame.x - ox, self.frame.y - oy)
-    } 
 }
 
 pub fn make_bullet_ex(
     species: u32, 
     parent_id: u32, 
-    starting_frame: &IntRect, 
-    starting_offset: &Vector2d, 
+    center: &Vector2d, 
     direction: Direction, 
     lifespan: f32
 ) -> Entity {
+    let (dx, dy) = direction.as_offset();
     let mut bullet = species_by_id(species).make_entity();
     bullet.direction = direction;
-    let (dx, dy) = direction.as_col_row_offset();
-    bullet.frame = starting_frame.offset(dx, dy); 
-    
-    if starting_offset.x > TILE_SIZE / 2.0 { bullet.frame.x += 1 }
-    if starting_offset.x < -TILE_SIZE / 2.0 { bullet.frame.x -= 1 }
-    if starting_offset.y > TILE_SIZE / 2.0 { bullet.frame.y += 1 }
-    if starting_offset.y < -TILE_SIZE / 2.0 { bullet.frame.y -= 1 }
+    bullet.frame = FRect::new(
+        center.x - bullet.frame.w / 2.0 + dx / 4.0, 
+        center.y - bullet.frame.h / 2.0 + dy / 4.0, 
+        bullet.frame.w, 
+        bullet.frame.h
+    );
     
     bullet.parent_id = parent_id;
     bullet.remaining_lifespan = lifespan;
@@ -143,12 +134,15 @@ pub fn make_bullet_ex(
 pub fn make_player_bullet(parent_id: u32, world: &World, weapon_species: &Species) -> Entity {
     let index = world.player_index_by_entity_id(parent_id).unwrap_or(PLAYER1_INDEX);
     let player = world.players[index].props;
+    let (dx, dy) = player.direction.as_offset();
 
     let mut bullet = make_bullet_ex(
         weapon_species.bullet_species_id,
         parent_id,
-        &player.hittable_frame,
-        &player.offset,
+        &player.hittable_frame
+            .offset_x(dx * (player.hittable_frame.w + 0.01))
+            .offset_y(dy * (player.hittable_frame.h + 0.01))
+            .center(),
         player.direction,
         weapon_species.bullet_lifespan
     );

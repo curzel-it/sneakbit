@@ -1,4 +1,4 @@
-use crate::{entities::{bullets::{make_bullet_ex, BulletHits}, known_species::{is_monster, SPECIES_MONSTER, SPECIES_MONSTER_BLUEBERRY, SPECIES_MONSTER_GOOSEBERRY, SPECIES_MONSTER_SMALL, SPECIES_MONSTER_STRAWBERRY}, species::{species_by_id, EntityType}}, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::rect::IntRect, worlds::world::World};
+use crate::{entities::{bullets::{make_bullet_ex, BulletHits}, known_species::{is_monster, SPECIES_MONSTER, SPECIES_MONSTER_BLUEBERRY, SPECIES_MONSTER_GOOSEBERRY, SPECIES_MONSTER_SMALL, SPECIES_MONSTER_STRAWBERRY}, species::{species_by_id, EntityType}}, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, worlds::world::World};
 
 impl Entity {
     pub fn setup_monster(&mut self) {
@@ -9,7 +9,7 @@ impl Entity {
         self.update_sprite_for_current_state();
         
         if !is_creative_mode() {
-            self.update_direction(world);
+            self.update_direction(world, time_since_last_update);
             self.move_linearly(world, time_since_last_update);
             
             let updates = self.handle_melee_attack(world, time_since_last_update);                
@@ -45,8 +45,7 @@ impl Entity {
         if world.players[0].props.is_invulnerable {
             return vec![]
         }
-        let frame = self.hittable_frame();     
-        let players_being_hit = world.entity_ids_of_all_players_at(frame.x, frame.y);
+        let players_being_hit = world.entity_ids_of_all_players_in(&self.hittable_frame());
            
         if !players_being_hit.is_empty() {
             let damage = self.dps * time_since_last_update;
@@ -72,16 +71,20 @@ impl Entity {
             return vec![]
         }
         if let Some(next_species_id) = next_species_id(self.species_id) {
-            let hits = world.entity_ids(self.frame.x, self.frame.y);
+            let exclude = vec![0, self.id, self.parent_id];
+            let compatible_monster = world
+                .entity_ids_by_area(&exclude, &self.hittable_frame())
+                .into_iter()
+                .find(|&(entity_id, species_id)| {
+                    is_monster(species_id) && species_id <= self.species_id && entity_id <= self.id
+                });
 
-            for (hit, species_id) in hits {        
-                if self.is_valid_hit_target(hit) && is_monster(species_id) && species_id <= self.species_id {
-                    let next_species = species_by_id(next_species_id);
-                    self.species_id = next_species.id;
-                    self.species = next_species.clone();
-                    next_species.reload_props(self);
-                    return vec![WorldStateUpdate::RemoveEntity(hit)]
-                }
+            if let Some((entity_id, _)) = compatible_monster {
+                let next_species = species_by_id(next_species_id);
+                self.species_id = next_species.id;
+                self.species = next_species.clone();
+                next_species.reload_props(self);
+                return vec![WorldStateUpdate::RemoveEntity(entity_id)]
             }
         }
         vec![]
@@ -99,9 +102,9 @@ impl Entity {
             return vec![]
         }
 
-        if let Some(hero_frame) = self.is_any_active_vulnerable_player_in_line_of_sight(world) {
+        if let Some(frame) = self.first_active_vulnerable_player_in_line_of_sight(world) {
             let boss_frame = self.hittable_frame();
-            let distance = boss_frame.center().dumb_distance_to(&hero_frame.center());
+            let distance = boss_frame.center().dumb_distance_to(&frame.center());
 
             if distance < 3.5 {
                 return vec![];
@@ -113,8 +116,7 @@ impl Entity {
             let minion = make_bullet_ex(
                 self.species.bullet_species_id, 
                 self.id, 
-                &IntRect::square_from_origin(1).centered_at(&self.frame.center()), 
-                &self.offset, 
+                &self.frame.center(), 
                 self.direction, 
                 self.species.bullet_lifespan
             );

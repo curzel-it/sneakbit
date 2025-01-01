@@ -8,6 +8,7 @@ use entities::known_species::SPECIES_KUNAI_LAUNCHER;
 use entities::species::species_by_id;
 use equipment::basics::{available_weapons, set_equipped, AmmoRecap};
 use features::fast_travel::{available_fast_travel_destinations_from_current_world, FastTravelDestination};
+use features::hitmaps::Hittable;
 use features::messages::{CDisplayableMessage, DisplayableMessage, DisplayableMessageCRepr};
 use features::{light_conditions::LightConditions, sound_effects::SoundEffect, state_updates::WorldStateUpdate, toasts::ToastCRepr};
 use features::{engine::GameEngine, storage::{get_value_for_global_key, inventory_count, StorageKey}};
@@ -17,7 +18,7 @@ use maps::biome_tiles::BiomeTile;
 use maps::construction_tiles::ConstructionTile;
 use multiplayer::turns_use_case::{CMatchResult, MatchResult};
 use multiplayer::{modes::GameMode, turns::GameTurn};
-use utils::{rect::{IntPoint, IntRect}, strings::{c_char_ptr_to_string, string_to_c_char}, vector::Vector2d};
+use utils::{rect::FRect, strings::{c_char_ptr_to_string, string_to_c_char}, vector::Vector2d};
 
 pub mod config;
 pub mod constants;
@@ -131,9 +132,9 @@ pub extern "C" fn update_mouse(
 #[repr(C)]
 pub struct RenderableItem {
     pub sprite_sheet_id: u32,
-    pub texture_rect: IntRect,
-    pub offset: Vector2d,
-    pub frame: IntRect,
+    pub texture_rect: FRect,
+    pub frame: FRect,
+    pub hittable_frame: FRect,
     pub sorting_key: u32
 }
 
@@ -150,8 +151,8 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
             RenderableItem {
                 sprite_sheet_id: e.sprite_sheet(),
                 texture_rect: e.texture_source_rect(),
-                offset: e.offset,
                 frame: e.frame,
+                hittable_frame: e.hittable_frame(),
                 sorting_key: e.sorting_key
             }
         })
@@ -216,23 +217,18 @@ pub extern "C" fn current_biome_tiles_variant() -> i32 {
 }
 
 #[no_mangle]
-pub extern "C" fn current_world_width() -> i32 {
+pub extern "C" fn current_world_width() -> f32 {
     engine().world.bounds.w
 }
 
 #[no_mangle]
-pub extern "C" fn current_world_height() -> i32 {
+pub extern "C" fn current_world_height() -> f32 {
     engine().world.bounds.h
 }
 
 #[no_mangle]
-pub extern "C" fn camera_viewport() -> IntRect {
+pub extern "C" fn camera_viewport() -> FRect {
     engine().camera_viewport
-}
-
-#[no_mangle]
-pub extern "C" fn camera_viewport_offset() -> Vector2d {
-    engine().camera_viewport_offset
 }
 
 fn to_path(value: *const c_char) -> PathBuf {
@@ -255,14 +251,14 @@ pub extern "C" fn player_current_hp(player: usize) -> f32 {
     engine().world.players[player].props.hp
 }
 
-pub fn cached_players_positions() -> Vec<IntPoint> {
+pub fn cached_players_positions() -> Vec<Vector2d> {
     engine().world.players
         .iter()
         .map(|p| p.props.hittable_frame.origin())
         .collect()
 }
 
-pub fn cached_player_position(player: usize) -> IntPoint {
+pub fn cached_player_position(player: usize) -> Vector2d {
     engine().world.players[player].props.hittable_frame.origin()
 }
 
@@ -400,7 +396,7 @@ pub fn current_mouse_state() -> &'static MouseEventsProvider {
     &engine().mouse
 }
 
-pub fn current_camera_viewport() -> &'static IntRect {
+pub fn current_camera_viewport() -> &'static FRect {
     &engine().camera_viewport
 }
 
@@ -576,4 +572,12 @@ pub extern "C" fn free_weapons(ptr: *mut AmmoRecap, length: usize) {
 pub extern "C" fn set_weapon_equipped(species_id: u32, player: usize) {
     let species = species_by_id(species_id);
     set_equipped(&species, player);
+}
+
+pub fn hittables() -> &'static Vec<Hittable> {
+    &engine().world.hitmap.data
+}
+
+pub fn tiles_hittables() -> &'static Vec<Hittable> {
+    &engine().world.tiles_hitmap.data
 }

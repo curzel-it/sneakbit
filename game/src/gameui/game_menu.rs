@@ -1,5 +1,5 @@
 use std::process;
-use game_core::{constants::{MAX_PLAYERS, WORLD_ID_NONE}, current_camera_viewport, current_world_id, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, is_pvp, lang::localizable::LocalizableText, number_of_players, save_game, set_wants_fullscreen, spacing, start_new_game, ui::components::{Spacing, View}, exit_pvp_arena, update_number_of_players, utils::rect::IntRect, wants_fullscreen};
+use game_core::{constants::{MAX_PLAYERS, WORLD_ID_NONE}, current_camera_viewport, current_world_id, features::{sound_effects::{are_sound_effects_enabled, is_music_enabled, toggle_music, toggle_sound_effects}, storage::{set_value_for_key, StorageKey}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, is_pvp, lang::localizable::LocalizableText, number_of_players, save_game, set_wants_fullscreen, spacing, start_new_game, ui::components::{Spacing, View}, exit_pvp_arena, update_number_of_players, utils::rect::FRect, wants_fullscreen};
 use crate::features::context::GameContext;
 use super::{confirmation::{ConfirmationDialog, ConfirmationOption}, messages::MessagesDisplay, map_editor::MapEditor, menu::{Menu, MenuItem}};
 
@@ -241,7 +241,7 @@ impl GameMenu {
 
     pub fn update(
         &mut self,
-        camera_viewport: &IntRect,
+        camera_viewport: &FRect,
         keyboard: &KeyboardEventsProvider,
         mouse: &MouseEventsProvider,
     ) -> bool {
@@ -449,7 +449,7 @@ impl GameMenu {
 
     fn update_from_map_editor(
         &mut self,
-        camera_viewport: &IntRect,
+        camera_viewport: &FRect,
         keyboard: &KeyboardEventsProvider,
         mouse: &MouseEventsProvider,
     ) {
@@ -465,7 +465,7 @@ impl GameMenu {
 
     fn update_from_place_item(
         &mut self,
-        camera_viewport: &IntRect,
+        camera_viewport: &FRect,
         keyboard: &KeyboardEventsProvider,
         mouse: &MouseEventsProvider,
     ) {
@@ -518,7 +518,7 @@ impl GameMenu {
         }
     }
 
-    pub fn ui(&self, camera_viewport: &IntRect) -> View {
+    pub fn ui(&self, camera_viewport: &FRect) -> View {
         match self.state {
             MenuState::Closed => spacing!(Spacing::Zero),
             MenuState::Open => self.menu.ui(),

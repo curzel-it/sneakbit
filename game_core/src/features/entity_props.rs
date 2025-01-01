@@ -1,14 +1,15 @@
-use crate::utils::{directions::Direction, rect::IntRect, vector::Vector2d};
+use crate::utils::{directions::Direction, rect::FRect};
 use super::entity::Entity;
 
 #[derive(Debug, Copy, Clone)]
 pub struct EntityProps {
     pub id: u32,
     pub direction: Direction,
-    pub frame: IntRect,
-    pub offset: Vector2d,
+    pub frame: FRect,
+    pub z_index: i32,
+    pub sorting_key: u32,
     pub speed: f32,
-    pub hittable_frame: IntRect,
+    pub hittable_frame: FRect,
     pub is_invulnerable: bool,
     pub hp: f32,
 }
@@ -18,12 +19,13 @@ impl Default for EntityProps {
         Self { 
             id: 0,
             direction: Default::default(), 
-            frame: IntRect::square_from_origin(1), 
-            offset: Vector2d::zero(),
+            frame: FRect::square_from_origin(1.0), 
             speed: 0.0,
-            hittable_frame: IntRect::square_from_origin(1),
+            hittable_frame: FRect::square_from_origin(1.0),
             is_invulnerable: false,
-            hp: 0.0
+            hp: 0.0,
+            z_index: 0,
+            sorting_key: 0
         }
     }
 }
@@ -34,11 +36,12 @@ impl Entity {
             id: self.id,
             frame: self.frame,
             direction: self.direction,
-            offset: self.offset,
             speed: self.current_speed,
             is_invulnerable: self.is_invulnerable,            
             hittable_frame: self.hittable_frame(),
-            hp: self.hp
+            hp: self.hp,
+            z_index: self.z_index,
+            sorting_key: self.sorting_key
         }            
     }
 }

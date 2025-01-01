@@ -113,7 +113,7 @@ class GameView: UIView {
         context.fill(CGRect(x: 0, y: 0, width: halfTile + centerX - visibleAreaHalf, height: rect.height))
         context.fill(CGRect(x: centerX + visibleAreaHalf + halfTile, y: 0, width: centerX - visibleAreaHalf, height: rect.height))
         
-        if let image = spritesProvider.cgImage(for: UInt32(SPRITE_SHEET_CAVE_DARKNESS), textureRect: IntRect(x: 0, y: 0, w: 16, h: 16)) {
+        if let image = spritesProvider.cgImage(for: UInt32(SPRITE_SHEET_CAVE_DARKNESS), textureRect: FRect(x: 0, y: 0, w: 16, h: 16)) {
             render(texture: image, at: visibleAreaRect, in: context)
         }
     }

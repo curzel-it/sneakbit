@@ -1,13 +1,9 @@
-use game_core::{constants::TILE_SIZE, current_biome_tiles_variant, current_world_id, utils::{rect::IntRect, vector::Vector2d}};
+use game_core::{constants::TILE_SIZE, current_biome_tiles_variant, current_world_id, utils::rect::FRect};
 use raylib::prelude::*;
 
 use super::ui::get_rendering_config;
 
-pub fn render_tile_map(
-    d: &mut RaylibDrawHandle,
-    camera_viewport: &IntRect,
-    camera_viewport_offset: &Vector2d
-) -> bool {
+pub fn render_tile_map(d: &mut RaylibDrawHandle, camera_viewport: &FRect) -> bool {
     let config = get_rendering_config();
     
     if let Some(tile_map_image) = config.get_texture(current_map_key()) {
@@ -17,8 +13,8 @@ pub fn render_tile_map(
         let scaled_map_width = tile_map_image.width() as f32 * scale;
         let scaled_map_height = tile_map_image.height() as f32 * scale;
 
-        let offset_x = -camera_viewport.x as f32 * tile_size - camera_viewport_offset.x * scale;
-        let offset_y = -camera_viewport.y as f32 * tile_size - camera_viewport_offset.y * scale;
+        let offset_x = { -camera_viewport.x } * tile_size;
+        let offset_y = { -camera_viewport.y } * tile_size;
 
         let dest_rect = Rectangle {
             x: offset_x,

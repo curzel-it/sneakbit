@@ -1,4 +1,4 @@
-use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::directions::direction_between_rects, worlds::world::World};
+use crate::{constants::SPRITE_SHEET_HUMANOIDS_1X2, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::FRect}, worlds::world::World};
 
 pub type NpcId = u32;
 
@@ -17,18 +17,32 @@ impl Entity {
         }
         
         if !is_creative_mode() {
-            self.update_direction(world);
+            self.update_direction(world, time_since_last_update);
             self.move_linearly(world, time_since_last_update);
         }
 
         if !self.dialogues.is_empty() && world.is_hero_around_and_on_collision_with(&self.frame) {            
             if world.has_confirmation_key_been_pressed_by_anyone {
-                self.direction = direction_between_rects(&self.frame, &world.players[0].props.hittable_frame);
+                self.direction = Direction::between_rects(&self.frame, &world.players[0].props.hittable_frame);
                 self.update_sprite_for_current_state();
             }         
             
             return self.handle_dialogue_interaction(world).unwrap_or_default()
         }
         vec![]
+    }
+
+    pub fn npc_hittable_frame(&self) -> FRect {
+        let x_offset = 0.15;
+        let y_offset = if self.frame.h > 1.0 { 1.15 } else { 0.1 };
+        let width = self.frame.w - 0.3;
+        let height = self.frame.h - if self.frame.h > 1.0 { 1.35 } else { 0.2 };
+
+        FRect {
+            x: self.frame.x + x_offset,
+            y: self.frame.y + y_offset,
+            w: width,
+            h: height
+        }
     }
 }

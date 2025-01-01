@@ -41,9 +41,9 @@ class GameEngine {
     private var frameCount: Int = 0
     
     let tileSize = CGFloat(TILE_SIZE)
+    private(set) var tileScale: CGFloat = tileScale
     private(set) var renderingScale: CGFloat = 1
-    private(set) var cameraViewport: IntRect = .zero
-    private(set) var cameraViewportOffset: Vector2d = .zero
+    private(set) var cameraViewport: FRect = .zero
     private(set) var safeAreaInsets: UIEdgeInsets = .zero
     private(set) var canRender: Bool = true
     private(set) var isNight: Bool = false
@@ -158,6 +158,7 @@ class GameEngine {
     func setupChanged(safeArea: UIEdgeInsets?, windowSize: CGSize, screenScale: CGFloat?) {
         safeArea.let { safeAreaInsets = $0 }
         renderingScale = renderingScaleUseCase.calculate(windowSize: windowSize, screenScale: screenScale)
+        tileScale = tileSize * renderingScale
         size = windowSize
         window_size_changed(Float(size.width), Float(size.height), Float(renderingScale))
         worldHeight = Int(current_world_height())
@@ -176,18 +177,15 @@ class GameEngine {
         }
     }
     
-    private func renderingFrame(for frame: IntRect, offset: Vector2d = .zero) -> CGRect {
+    private func renderingFrame(for frame: FRect, offset: Vector2d = .zero) -> CGRect {
         let actualCol = CGFloat(frame.x - cameraViewport.x)
-        let actualOffsetX = CGFloat(offset.x - cameraViewportOffset.x)
-
         let actualRow = CGFloat(frame.y - cameraViewport.y)
-        let actualOffsetY = CGFloat(offset.y - cameraViewportOffset.y)
         
         return CGRect(
-            x: (actualCol * tileSize + actualOffsetX) * renderingScale,
-            y: (actualRow * tileSize + actualOffsetY) * renderingScale,
-            width: CGFloat(frame.w) * tileSize * renderingScale,
-            height: CGFloat(frame.h) * tileSize * renderingScale
+            x: actualCol * tileScale,
+            y: actualRow * tileScale,
+            width: CGFloat(frame.w) * tileScale,
+            height: CGFloat(frame.h) * tileScale
         )
     }
     
@@ -278,6 +276,5 @@ class GameEngine {
     private func fetchRenderingInfo() {
         currentBiomeVariant = Int(current_biome_tiles_variant())
         cameraViewport = camera_viewport()
-        cameraViewportOffset = camera_viewport_offset()
     }
 }

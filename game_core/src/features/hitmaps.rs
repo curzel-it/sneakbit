@@ -1,36 +1,184 @@
-use std::fmt::{self, Debug};
-
-use crate::{entities::species::{EntityType, SpeciesId}, features::entity::{is_player, Entity, EntityId}, is_creative_mode, worlds::world::World};
+use crate::{entities::species::{EntityType, SpeciesId}, features::entity::{Entity, EntityId}, utils::{rect::FRect, vector::Vector2d}, worlds::world::World};
 
 #[derive(Clone)]
 pub struct Hitmap {
-    bits: Vec<bool>,
-    width: usize,
+    pub data: Vec<Hittable>
 }
 
-pub type EntityIdsMap = Vec<(i32, i32, EntityId, SpeciesId)>;
+#[derive(Clone)]
+pub struct Hittable {
+    pub frame: FRect,
+    pub weight: i32,
+    pub is_rigid: bool,
+    pub entity_id: EntityId,
+    pub species_id: SpeciesId
+}
 
-impl World {
-    pub fn hits(&self, x: i32, y: i32) -> bool {
-        if x < 0 || y < 0 || y >= self.bounds.h || x >= self.bounds.w { 
-            false 
-        } else { 
-            let x = x as usize;
-            let y = y as usize;
-            self.hitmap.hits(x, y) || self.tiles_hitmap.hits(x, y) 
+impl World {    
+    pub fn area_hits(&self, exclude: &[u32], area: &FRect) -> bool {
+        self.hitmap.area_hits(exclude, area) || self.tiles_hitmap.area_hits(exclude, area)
+    }
+    
+    pub fn hits(&self, x: f32, y: f32) -> bool {
+        self.hitmap.hits_xy(x, y) || self.tiles_hitmap.hits_xy(x, y) 
+    }
+    
+    pub fn hits_or_out_of_bounds(&self, x: f32, y: f32) -> bool {
+        x < 0.0 || y < 0.0 || x >= self.bounds.max_x() || y >= self.bounds.max_y() || self.hits(x, y)
+    }
+
+    pub fn hits_line(&self, exclude: &[u32], start: &Vector2d, end: &Vector2d) -> bool {
+        self.hitmap.hits_line(exclude, start, end) || self.tiles_hitmap.hits_line(exclude, start, end)
+    }
+
+    pub fn entity_ids(&self, x: f32, y: f32) -> Vec<(EntityId, SpeciesId)> {
+        self.hitmap.ids_xy(x, y)
+    }
+    
+    pub fn entity_ids_by_area(&self, exclude: &[u32], area: &FRect) -> Vec<(EntityId, SpeciesId)> {
+        self.hitmap.entity_ids_by_area(exclude, area)
+    }
+
+    pub fn first_entity_id_by_area(&self, exclude: &[u32], area: &FRect) -> Option<Hittable> {
+        self.hitmap.first_entity_id_by_area(exclude, area)
+    }
+
+    pub fn has_weight(&self, area: &FRect) -> bool {
+        self.hitmap.has_weight(area)
+    }
+
+    pub fn update_hitmaps(&mut self) {
+        self.hitmap.data.clear();
+
+        let entities = &self.entities.borrow();
+
+        for &(index, _) in &self.visible_entities {
+            if let Some(entity) = entities.get(index) {                
+                let item = Hittable {
+                    frame: entity.hittable_frame(),
+                    weight: if entity.has_weight() { 1 } else { 0 },
+                    entity_id: entity.id, 
+                    species_id: entity.species_id,
+                    is_rigid: entity.is_rigid,
+                };
+                self.hitmap.data.push(item);
+            }
+        }
+    } 
+
+    pub fn update_tiles_hitmap(&mut self) {
+        self.tiles_hitmap.data.clear();
+
+        for y in 0..self.biome_tiles.tiles.len() {
+            for x in 0..self.biome_tiles.tiles[0].len() {
+                if self.biome_tiles.tiles[y][x].is_obstacle() {
+                    let item = Hittable {
+                        frame: FRect::new(x as f32, y as f32, 1.0, 1.0).padded_all(0.15),
+                        weight: 0,
+                        entity_id: 0, 
+                        species_id: 0,
+                        is_rigid: true,
+                    };
+                    self.tiles_hitmap.data.push(item);
+                } else {
+                    let construction_tile = self.construction_tiles.tiles[y][x];
+
+                    if construction_tile.is_obstacle() {
+                        let item = Hittable {
+                            frame: construction_tile.hittable_frame(x, y),
+                            weight: 0,
+                            entity_id: 0, 
+                            species_id: 0,
+                            is_rigid: true,
+                        };
+                        self.tiles_hitmap.data.push(item);
+                    }
+                }
+            }
+        }
+    } 
+}
+
+impl Entity {
+    fn has_weight(&self) -> bool {
+        !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate | EntityType::WeaponMelee | EntityType::WeaponRanged)
+    }
+}
+
+impl Hitmap {
+    pub fn new() -> Self {
+        Self {
+            data: vec![]
         }
     }
 
-    pub fn hits_or_out_of_bounds(&self, x: i32, y: i32) -> bool {
-        x < 0 || y < 0 || self.hits(x, y)
+    fn area_hits(&self, exclude: &[u32], area: &FRect) -> bool {
+        for hittable in &self.data {
+            if !hittable.is_rigid { continue }
+            if exclude.contains(&hittable.entity_id) { continue }
+            if hittable.frame.overlaps_or_touches(area) {
+                return true
+            }
+        }
+        false
     }
 
-    pub fn entity_ids(&self, x: i32, y: i32) -> Vec<(EntityId, SpeciesId)> {
-        self.idsmap
+    fn hits_xy(&self, x: f32, y: f32) -> bool {
+        self.hits_point(&Vector2d::new(x, y))
+    }
+
+    fn hits_point(&self, point: &Vector2d) -> bool {
+        for hittable in &self.data {
+            if !hittable.is_rigid { continue }
+            if hittable.frame.contains_or_touches(point) {
+                return true
+            }
+        }
+        false
+    }
+
+    fn hits_line(&self, exclude: &[u32], start: &Vector2d, end: &Vector2d) -> bool {
+        for hittable in &self.data {
+            if !hittable.is_rigid { continue }
+            if exclude.contains(&hittable.entity_id) { continue }
+            if hittable.frame.intersects_line(start.x, start.y, end.x, end.y) {
+                return true
+            }
+        }
+        false
+    }
+
+    fn has_weight(&self, area: &FRect) -> bool {
+        let area_center = area.center();
+
+        for hittable in &self.data {
+            if hittable.weight == 0 { continue } 
+            if hittable.frame.overlaps_or_touches(area) { return true }
+            if hittable.frame.contains_or_touches(&area_center) || area.contains_or_touches(&hittable.frame.center()) {
+                return true
+            }
+        }
+        false
+    }
+
+    fn first_entity_id_by_area(&self, exclude: &[u32], area: &FRect) -> Option<Hittable> {
+        for hittable in &self.data {
+            if exclude.contains(&hittable.entity_id) { continue }
+            if hittable.frame.overlaps_or_touches(area) {
+                return Some(hittable.clone())
+            }
+        }
+        None
+    }
+
+    fn entity_ids_by_area(&self, exclude: &[u32], area: &FRect) -> Vec<(EntityId, SpeciesId)> {
+        self.data
             .iter()
-            .filter_map(|&(ex, ey, id, species_id)| {
-                if ex == x && ey == y {
-                    Some((id, species_id))
+            .filter_map(|hittable| {
+                if exclude.contains(&hittable.entity_id) { 
+                    return None 
+                } else if hittable.frame.overlaps_or_touches(area) {
+                    return Some((hittable.entity_id, hittable.species_id))
                 } else {
                     None
                 }
@@ -38,128 +186,19 @@ impl World {
             .collect()
     }
 
-    pub fn has_weight(&self, x: i32, y: i32) -> bool {
-        if x < 0 || y < 0 || y >= self.bounds.h || x >= self.bounds.w { 
-            false 
-        } else { 
-            self.weightmap.hits(x as usize, y as usize) 
-        }
+    fn ids_xy(&self, x: f32, y: f32) -> Vec<(EntityId, SpeciesId)> {
+        self.ids_point(&Vector2d::new(x, y))
     }
-}
 
-impl World {
-    pub fn update_hitmaps(&mut self) {
-        self.hitmap.clear();
-        self.weightmap.clear();
-        self.idsmap.clear();
-        
-        let entities = self.entities.borrow();
-        let height = self.bounds.h as usize;
-        let width = self.bounds.w as usize;
-
-        for &(index, id) in &self.visible_entities {
-            let entity = &entities[index];
-            let is_rigid = entity.is_rigid && !is_player(id);
-            let has_weight = entity.has_weight();
-
-            if !is_rigid && !has_weight {
-                continue;
-            }
-
-            let hittable_frame = entity.hittable_frame();
-
-            let col_start = hittable_frame.x.max(0) as usize;
-            let col_end = ((hittable_frame.x + hittable_frame.w) as usize).min(width);
-            let row_start = hittable_frame.y.max(0) as usize;
-            let row_end = ((hittable_frame.y + hittable_frame.h) as usize).min(height);
-
-            for y in row_start..row_end {
-                for x in col_start..col_end {
-                    if is_rigid {
-                        self.hitmap.set(x, y, true);
-                    }
-                    if has_weight {
-                        self.weightmap.set(x, y, true);
-                    }
-                    self.idsmap.push((x as i32, y as i32, id, entity.species_id));
+    fn ids_point(&self, point: &Vector2d) -> Vec<(EntityId, SpeciesId)> {
+        self.data.iter()
+            .filter_map(|hittable| {
+                if hittable.frame.contains_or_touches(point) {
+                    Some((hittable.entity_id, hittable.species_id))
+                } else {
+                    None
                 }
-            }
-        }
-    }
-
-    #[allow(clippy::needless_range_loop)] 
-    pub fn update_tiles_hitmap(&mut self) {    
-        self.weightmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
-        self.tiles_hitmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
-        self.hitmap = Hitmap::new(self.bounds.w as usize, self.bounds.h as usize);
-
-        if is_creative_mode() || self.biome_tiles.tiles.is_empty() {
-            return;
-        }
-
-        let min_row = self.bounds.y as usize;
-        let max_row = ((self.bounds.y + self.bounds.h) as usize).min(self.biome_tiles.tiles.len());
-        let min_col = self.bounds.x as usize;
-        let max_col = ((self.bounds.x + self.bounds.w) as usize).min(self.biome_tiles.tiles[0].len());
-
-        for row in min_row..max_row {
-            for col in min_col..max_col {
-                if !self.tiles_hitmap.hits(col, row) {
-                    let biome = &self.biome_tiles.tiles[row][col];
-                    let constructions = &self.construction_tiles.tiles[row][col];
-                    let is_obstacle = (biome.is_obstacle() || constructions.is_obstacle()) && !constructions.is_bridge();
-
-                    if is_obstacle {
-                        self.tiles_hitmap.set(col, row, true);
-                    }
-                }
-            }
-        }
-    }
-}
-
-impl Hitmap {
-    pub fn new(width: usize, height: usize) -> Self {
-        Hitmap {
-            bits: vec![false; width * height],
-            width,
-        }
-    }
-
-    fn clear(&mut self) {
-        self.bits = vec![false; self.bits.len()];
-    }
-
-    fn get_index(&self, x: usize, y: usize) -> usize {
-        y * self.width + x
-    }
-
-    pub fn hits(&self, x: usize, y: usize) -> bool {
-        let index = self.get_index(x, y);
-        self.bits[index]
-    }
-
-    fn set(&mut self, x: usize, y: usize, value: bool) {
-        let index = self.get_index(x, y);
-        self.bits[index] = value;
-    }
-}
-
-impl Debug for Hitmap {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for y in 0..(self.bits.len() / self.width) {
-            for x in 0..self.width {
-                let bit = if self.hits(x, y) { '1' } else { '0' };
-                write!(f, "{}", bit)?;
-            }
-            writeln!(f)?; 
-        }
-        Ok(())
-    }
-}
-
-impl Entity {
-    fn has_weight(&self) -> bool {
-        !matches!(self.entity_type, EntityType::PressurePlate | EntityType::Gate | EntityType::InverseGate | EntityType::WeaponMelee | EntityType::WeaponRanged)
+            })
+            .collect()
     }
 }

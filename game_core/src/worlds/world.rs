@@ -1,7 +1,7 @@
 use std::{cell::RefCell, cmp::Ordering};
 
-use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, current_player_index, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, is_turn_based_game_mode, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::IntRect, vector::Vector2d}};
-use crate::features::{hitmaps::{EntityIdsMap, Hitmap}, entity::{is_player_index, Entity}, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
+use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, current_player_index, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, is_turn_based_game_mode, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::FRect, vector::Vector2d}};
+use crate::features::{hitmaps::Hitmap, entity::Entity, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
 
@@ -9,7 +9,7 @@ use super::world_type::WorldType;
 pub struct World {
     pub id: u32,
     pub revision: u32,
-    pub bounds: IntRect,
+    pub bounds: FRect,
     pub biome_tiles: TileSet<BiomeTile>,
     pub construction_tiles: TileSet<ConstructionTile>,
     pub entities: RefCell<Vec<Entity>>,    
@@ -18,17 +18,15 @@ pub struct World {
     pub players: Vec<PlayerProps>,
     pub has_confirmation_key_been_pressed_by_anyone: bool,
     pub is_any_arrow_key_down: bool,
-    pub hitmap: Hitmap,
+    pub(crate) hitmap: Hitmap,
     pub tiles_hitmap: Hitmap,
-    pub weightmap: Hitmap,
-    pub idsmap: EntityIdsMap,
     pub world_type: WorldType,
     pub pressure_plate_down_red: bool,
     pub pressure_plate_down_green: bool,
     pub pressure_plate_down_blue: bool,
     pub pressure_plate_down_silver: bool,
     pub pressure_plate_down_yellow: bool,
-    pub spawn_point: (i32, i32),
+    pub spawn_point: (f32, f32),
     pub light_conditions: LightConditions,
     pub soundtrack: Option<String>,
     pub cutscenes: Vec<CutScene>,
@@ -43,7 +41,7 @@ impl World {
         Self {
             id,
             revision: 0,
-            bounds: IntRect::from_origin(WORLD_SIZE_COLUMNS as i32, WORLD_SIZE_ROWS as i32),
+            bounds: FRect::from_origin(WORLD_SIZE_COLUMNS as f32, WORLD_SIZE_ROWS as f32),
             biome_tiles: TileSet::empty(),
             construction_tiles: TileSet::empty(),
             entities: RefCell::new(vec![]),
@@ -52,10 +50,8 @@ impl World {
             players: empty_props_for_all_players(),
             has_confirmation_key_been_pressed_by_anyone: false,
             is_any_arrow_key_down: false,
-            hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
-            tiles_hitmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
-            weightmap: Hitmap::new(WORLD_SIZE_COLUMNS, WORLD_SIZE_ROWS),
-            idsmap: vec![],
+            hitmap: Hitmap::new(),
+            tiles_hitmap: Hitmap::new(),
             world_type: WorldType::HouseInterior,
             pressure_plate_down_red: false,
             pressure_plate_down_green: false,
@@ -64,7 +60,7 @@ impl World {
             pressure_plate_down_yellow: false,
             light_conditions: LightConditions::Day,
             cutscenes: vec![],
-            spawn_point: (0, 0),
+            spawn_point: (0.0, 0.0),
             soundtrack: None, 
             number_of_entities: 0
         }
@@ -134,7 +130,7 @@ impl World {
     pub fn update(
         &mut self, 
         time_since_last_update: f32,
-        viewport: &IntRect,
+        viewport: &FRect,
         keyboard: &KeyboardEventsProvider
     ) -> Vec<EngineStateUpdate> {
         self.update_players(keyboard);
@@ -246,10 +242,7 @@ impl World {
             .borrow_mut()
             .iter_mut()
             .filter(|e| e.is_player())
-            .for_each(|e| {            
-                e.offset = Vector2d::zero();
-                e.current_speed = 0.0;
-            });
+            .for_each(|e| e.current_speed = 0.0);
     }
 
     fn change_lock(&mut self, id: u32, lock_type: LockType) {
@@ -270,7 +263,7 @@ impl World {
         self.update_tiles_hitmap();
     }  
     
-    pub fn find_teleporter_for_destination(&self, destination_world: u32) -> Option<IntRect> {
+    pub fn find_teleporter_for_destination(&self, destination_world: u32) -> Option<FRect> {
         self.entities.borrow().iter()
             .find(|t| {
                 if !matches!(t.entity_type, EntityType::Teleporter) {
@@ -284,7 +277,7 @@ impl World {
             .map(|t| t.frame)
     }
 
-    pub fn find_any_teleporter(&self) -> Option<IntRect> {
+    pub fn find_any_teleporter(&self) -> Option<FRect> {
         let entities = self.entities.borrow();
         let mut teleporters: Vec<&Entity> = entities.iter().filter(|t| matches!(t.entity_type, EntityType::Teleporter)).collect();
         
@@ -323,31 +316,29 @@ impl World {
         }
     }
 
-    pub fn frame_is_slippery_surface(&self, frame: &IntRect) -> bool {
+    pub fn frame_is_slippery_surface(&self, frame: &FRect) -> bool {
         self.is_slippery_surface(frame.x as usize, frame.y as usize)
     }
 
-    pub fn is_hero_around_and_on_collision_with(&self, target: &IntRect) -> bool {
+    pub fn is_hero_around_and_on_collision_with(&self, target: &FRect) -> bool {
         let hero = self.players[0].props.hittable_frame;
         let hero_direction: Direction = self.players[0].props.direction;        
         
-        if self.is_any_hero_at(target.x, target.y) {
+        if self.is_any_player_in(target) {
             return true
         }
-        if target.is_around_and_pointed_at(&hero.origin(), &hero_direction) {
+        if hero.is_around_and_pointed_at(&target, &hero_direction) {
             return true 
-        }
-        if self.hits(hero.x, hero.y - 1) && hero.x == target.x && hero.y.saturating_sub(3) == target.y && matches!(hero_direction, Direction::Up) {
-            return true
         }
         false
     }
 
     fn find_non_hero_entity_at_coords(&self, row: usize, col: usize) -> Option<(usize, u32)> {
+        let point = Vector2d::from_indeces(row, col);
         self.entities.borrow().iter()
             .enumerate()
             .find(|(_, entity)| {
-                entity.species_id != SPECIES_HERO && entity.frame.contains_or_touches_tile(col as i32, row as i32)
+                entity.species_id != SPECIES_HERO && entity.frame.contains_or_touches(&point)
             })
             .map(|(index, e)| (index, e.id))
     }
@@ -380,25 +371,18 @@ impl World {
         !self.is_pressure_plate_down(lock_type)
     }
     
-    pub fn update_visible_entities(&mut self, viewport: &IntRect) {
+    pub fn update_visible_entities(&mut self, viewport: &FRect) {
         self.visible_entities.clear();
-
-        let min_row = viewport.y - 1;
-        let max_row = viewport.y + viewport.h + 1;
-        let min_col = viewport.x - 1;
-        let max_col = viewport.x + viewport.w + 1;
 
         let entities = self.entities.borrow();
 
-        for (index, entity) in entities.iter().enumerate() {
-            let is_visible = is_player_index(index) || {
-                let frame = entity.frame;
-                let frame_y = frame.y;
-                let frame_x = frame.x;
-                let max_y = frame_y + frame.h;
-                let max_x = frame_x + frame.w;
-                max_y >= min_row && frame_y <= max_row && max_x >= min_col && frame_x <= max_col
-            };
+        for index in 0..entities.len() {
+            let entity = &entities[index];            
+            let is_visible = false || 
+                matches!(entity.entity_type, EntityType::Hero) ||
+                matches!(entity.entity_type, EntityType::PressurePlate) ||
+                matches!(entity.entity_type, EntityType::PushableObject) ||
+                viewport.overlaps_or_touches(&entity.frame);
 
             if is_visible {
                 self.visible_entities.push((index, entity.id));
@@ -462,5 +446,47 @@ impl World {
             self.players[2].update(keyboard);
             self.players[3].update(keyboard);
         }
+    }
+
+    pub fn construction_at(&self, x: f32, y: f32) -> &Construction {
+        let (x, y) = self.coordinates_to_indeces(x, y);
+        &self.construction_tiles.tiles[y][x].tile_type
+    }
+
+    pub fn constructions_in(&self, area: &FRect) -> Vec<Construction> {
+        self.coordinates_to_indeces_from_area(area)
+            .iter()
+            .map(|&(x, y)| self.construction_tiles.tiles[y][x].tile_type)
+            .collect()
+    }
+
+    pub fn biome_at(&self, x: f32, y: f32) -> &Biome {
+        let (x, y) = self.coordinates_to_indeces(x, y);
+        &self.biome_tiles.tiles[y][x].tile_type
+    }
+
+    pub fn coordinates_to_indeces(&self, x: f32, y: f32) -> (usize, usize) {
+        let rows = self.construction_tiles.tiles.len();
+        let columns = self.construction_tiles.tiles[0].len();
+        let x = (x.max(0.0) as usize).min(columns - 1);
+        let y = (y.max(0.0) as usize).min(rows - 1);
+        (x, y)
+    }
+
+    fn coordinates_to_indeces_from_area(&self, area: &FRect) -> Vec<(usize, usize)> {
+        let min_x = area.x.floor() as usize;
+        let max_x = area.max_x().ceil() as usize;
+        let min_y = area.y.floor() as usize;
+        let max_y = area.max_y().ceil() as usize;
+
+        let mut coordinates: Vec<(usize, usize)> = vec![];
+        
+        for x in min_x..max_x {
+            for y in min_y..max_y {
+                coordinates.push((x, y));
+            }
+        }
+
+        coordinates
     }
 }

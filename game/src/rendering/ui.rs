@@ -1,7 +1,7 @@
 use std::sync::Once;
 
 use nohash_hasher::IntMap;
-use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View, COLOR_TEXT, COLOR_TEXT_HIGHLIGHTED, COLOR_TEXT_SHADOW, COLOR_TURN_COUNTDOWN}, layouts::{AnchorPoint, Layout}}, utils::{rect::IntRect, vector::Vector2d}};
+use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View, COLOR_TEXT, COLOR_TEXT_HIGHLIGHTED, COLOR_TEXT_SHADOW, COLOR_TURN_COUNTDOWN}, layouts::{AnchorPoint, Layout}}, utils::{rect::FRect, vector::Vector2d}};
 use raylib::prelude::*;
 
 pub struct RenderingConfig {
@@ -123,25 +123,25 @@ fn calculate_position(layout: &Layout, anchor: &AnchorPoint, view: &View, config
 
     let (x, y) = match anchor {
         AnchorPoint::Center => (
-            (layout.frame.x as f32 + layout.frame.w as f32 - size.x) / 2.0, 
-            (layout.frame.y as f32 + layout.frame.h as f32 - size.y) / 2.0
+            (layout.frame.x + layout.frame.w - size.x) / 2.0, 
+            (layout.frame.y + layout.frame.h - size.y) / 2.0
         ), 
         AnchorPoint::TopLeft => (0.0, 0.0), 
         AnchorPoint::TopRight => (
-            layout.frame.x as f32 + layout.frame.w as f32 - size.x, 
+            layout.frame.x + layout.frame.w - size.x, 
             0.0
         ),
         AnchorPoint::BottomCenter => (
-            layout.frame.x as f32 + layout.frame.w as f32 / 2.0 - size.x / 2.0, 
-            layout.frame.y as f32 + layout.frame.h as f32 - size.y
+            layout.frame.x + layout.frame.w / 2.0 - size.x / 2.0, 
+            layout.frame.y + layout.frame.h - size.y
         ),
         AnchorPoint::BottomLeft => (
             0.0, 
-            layout.frame.y as f32 + layout.frame.h as f32 - size.y
+            layout.frame.y + layout.frame.h - size.y
         ),
         AnchorPoint::BottomRight => (
-            layout.frame.x as f32 + layout.frame.w as f32 - size.x, 
-            layout.frame.y as f32 + layout.frame.h as f32 - size.y
+            layout.frame.x + layout.frame.w - size.x, 
+            layout.frame.y + layout.frame.h - size.y
         ),
     };
     Vector2d::new(x, y)
@@ -383,16 +383,16 @@ fn render_texture(
     d: &mut RaylibDrawHandle,
     config: &RenderingConfig,
     key: &u32,
-    source: &IntRect,
+    source: &FRect,
     position: &Vector2d,
     size:  &Vector2d
 ) {
     if let Some(texture) = config.get_texture(*key) {           
         let source_rect = Rectangle::new(
-            TILE_SIZE * source.x as f32, 
-            TILE_SIZE * source.y as f32, 
-            TILE_SIZE * source.w as f32,
-            TILE_SIZE * source.h as f32
+            TILE_SIZE * source.x, 
+            TILE_SIZE * source.y, 
+            TILE_SIZE * source.w,
+            TILE_SIZE * source.h
         );
         let dest_rect = Rectangle::new(
             position.x, 

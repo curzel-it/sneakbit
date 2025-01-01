@@ -76,10 +76,10 @@
       "contents": null,
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "Down",
         "world": 1003,
-        "x": 0,
-        "y": 0
+        "x": 16,
+        "y": 14
       },
       "dialogues": [],
       "direction": "Down",
@@ -100,10 +100,10 @@
       "contents": null,
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "Down",
         "world": 1003,
-        "x": 0,
-        "y": 0
+        "x": 16,
+        "y": 14
       },
       "dialogues": [],
       "direction": "Down",

@@ -1,7 +1,7 @@
 import UIKit
 
 protocol SpritesProvider {
-    func cgImage(for spriteSheetID: UInt32, textureRect: IntRect) -> CGImage?
+    func cgImage(for spriteSheetID: UInt32, textureRect: FRect) -> CGImage?
 }
 
 extension SpritesProvider {
@@ -13,7 +13,7 @@ extension SpritesProvider {
 class MemCachedSpritesProvider: SpritesProvider {
     private struct CacheKey: Hashable {
         let spriteSheetID: UInt32
-        let rect: IntRect
+        let rect: FRect
     }
 
     private var cache = [CacheKey: CGImage]()
@@ -24,7 +24,7 @@ class MemCachedSpritesProvider: SpritesProvider {
         self.spriteSheetFileNames = spriteSheetFileNames
     }
 
-    func cgImage(for spriteSheetID: UInt32, textureRect: IntRect) -> CGImage? {
+    func cgImage(for spriteSheetID: UInt32, textureRect: FRect) -> CGImage? {
         let cacheKey = CacheKey(spriteSheetID: spriteSheetID, rect: textureRect)
 
         if let cachedImage = cache[cacheKey] {

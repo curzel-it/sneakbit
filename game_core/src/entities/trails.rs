@@ -4,7 +4,7 @@ impl Entity {
     pub fn update_trail(&mut self) -> Vec<WorldStateUpdate> {  
         self.update_sprite_for_direction_speed(self.direction, 0.0);
 
-        if (self.sprite.frame.x - self.sprite.original_frame.x) == 14 {
+        if (self.sprite.frame.x - self.sprite.original_frame.x) >= 13.9 {
             vec![WorldStateUpdate::RemoveEntity(self.id)]
         } else {
             vec![]
@@ -12,7 +12,7 @@ impl Entity {
     }
 }
 
-pub fn leave_footsteps(world: &World, direction: &Direction, x: i32, y: i32) -> Vec<WorldStateUpdate> {
+pub fn leave_footsteps(world: &World, direction: &Direction, x: f32, y: f32) -> Vec<WorldStateUpdate> {
     let biome = world.biome_tiles.tiles[y as usize][x as usize].tile_type;
     
     if biome.supports_trails() {

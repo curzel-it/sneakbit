@@ -1,7 +1,6 @@
-use crate::{entities::bullets::make_player_bullet, features::{entity::Entity, state_updates::WorldStateUpdate}, utils::{directions::Direction, vector::Vector2d}, worlds::world::World};
+use crate::{entities::bullets::make_player_bullet, features::{entity::Entity, state_updates::WorldStateUpdate}, worlds::world::World};
 
 use super::basics::is_equipped;
-
 
 impl Entity {
     pub fn setup_melee(&mut self) {
@@ -34,7 +33,7 @@ impl Entity {
         }
         if world.players[self.player_index].has_close_attack_key_been_pressed {
             let hero = world.players[self.player_index].props;
-            let offsets = bullet_offsets(world.players[self.player_index].props.direction);
+            let offsets = bullet_offsets();
 
             self.action_cooldown_remaining = self.species.cooldown_after_use;
             self.sprite.reset();
@@ -43,7 +42,6 @@ impl Entity {
             let mut updates: Vec<WorldStateUpdate> = offsets.into_iter()
                 .map(|(dx, dy)| {
                     let mut bullet = make_player_bullet(self.parent_id, world, &self.species);
-                    bullet.offset = Vector2d::zero();
                     bullet.dps *= self.species.melee_dps_multiplier;
                     bullet.frame = hero.hittable_frame.offset_by((dx, dy)); 
                     bullet.direction = hero.direction;
@@ -63,19 +61,12 @@ impl Entity {
     } 
 }
 
-fn bullet_offsets(direction: Direction) -> Vec<(i32, i32)> {
-    match direction {
-        Direction::Up => vec![
-            (-1, -1), (0, -2), (0, -1), (1, -1)
-        ],
-        Direction::Down | Direction::Unknown | Direction::Still => vec![
-            (-1, 1), (0, 2), (0, 1), (1, 1)
-        ],
-        Direction::Right => vec![
-            (1, -1), (2, 0), (1, 0), (1, 1)
-        ],
-        Direction::Left => vec![
-            (-1, -1), (-2, 0), (-1, 0), (-1, 1)
-        ],
-    }
+fn bullet_offsets() -> Vec<(f32, f32)> {
+    vec![
+        (0.0, 0.0),
+        (0.0, -1.0),
+        (1.0, 0.0),
+        (-1.0, 0.0),
+        (0.0, 1.0),
+    ]
 }

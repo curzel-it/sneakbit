@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import it.curzel.bitscape.BuildConfig
 import it.curzel.bitscape.engine.GameEngine
-import it.curzel.bitscape.gamecore.IntRect
+import it.curzel.bitscape.gamecore.FRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
 import kotlinx.coroutines.CoroutineScope
@@ -147,7 +147,7 @@ class GameView @JvmOverloads constructor(
         canvas.drawRect(visibleAreaRect.right, visibleAreaRect.top, canvasWidth + 200f, visibleAreaRect.bottom, paint)
 
         val spriteId = NativeLib.SPRITE_SHEET_CAVE_DARKNESS
-        val textureRect = IntRect(0, 0, 10, 10)
+        val textureRect = FRect(0, 0, 10, 10)
         spritesProvider.bitmapFor(spriteId, textureRect)?.let {
             renderTexture(it, visibleAreaRect, canvas)
         }

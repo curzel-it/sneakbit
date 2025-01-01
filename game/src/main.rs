@@ -15,7 +15,7 @@ use sys_locale::get_locale;
 fn main() {
     initialize_config_paths(
         false,
-        TILE_SIZE * 1.8,
+        TILE_SIZE * 1.6,
         current_locale(),
         local_path("data"),
         local_path("data/species.json"),
@@ -36,7 +36,7 @@ fn main() {
     load_last_fullscreen_settings();
 
     loop {
-        let time_since_last_update = context.rl.get_frame_time().min(0.5);
+        let time_since_last_update = context.rl.get_frame_time().min(0.05);
         context.total_run_time += time_since_last_update;
 
         let keyboard = current_keyboard_state();
@@ -102,8 +102,4 @@ fn current_locale() -> String {
     } else {
         LANG_EN.to_string()
     }
-}
-
-fn is_debug_build() -> bool {
-    cfg!(debug_assertions)
 }

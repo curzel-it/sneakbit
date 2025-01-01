@@ -213,12 +213,12 @@ typedef enum ToastMode {
 
 typedef struct Option_Toast Option_Toast;
 
-typedef struct IntRect {
+typedef struct FRect {
   int32_t x;
   int32_t y;
   int32_t w;
   int32_t h;
-} IntRect;
+} FRect;
 
 typedef struct Vector2d {
   float x;
@@ -227,16 +227,16 @@ typedef struct Vector2d {
 
 typedef struct RenderableItem {
   uint32_t sprite_sheet_id;
-  struct IntRect texture_rect;
+  struct FRect texture_rect;
   struct Vector2d offset;
-  struct IntRect frame;
+  struct FRect frame;
   uint32_t sorting_key;
 } RenderableItem;
 
 typedef struct CToastImage {
   bool is_valid;
   uint32_t sprite_sheet_id;
-  struct IntRect texture_frame;
+  struct FRect texture_frame;
 } CToastImage;
 
 typedef struct CToast {
@@ -277,8 +277,8 @@ typedef struct GameState {
 typedef struct AmmoRecap {
   const char *weapon_name;
   uint32_t weapon_species_id;
-  struct IntRect weapon_sprite;
-  struct IntRect weapon_inventory_sprite;
+  struct FRect weapon_sprite;
+  struct FRect weapon_inventory_sprite;
   uint32_t bullet_species_id;
   const char *bullet_name;
   uint32_t ammo_inventory_count;
@@ -338,7 +338,7 @@ int32_t current_world_width(void);
 
 int32_t current_world_height(void);
 
-struct IntRect camera_viewport(void);
+struct FRect camera_viewport(void);
 
 struct Vector2d camera_viewport_offset(void);
 

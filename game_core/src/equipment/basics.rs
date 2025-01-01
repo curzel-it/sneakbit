@@ -2,7 +2,7 @@ use std::os::raw::c_char;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::TILE_SIZE, entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{species_by_id, EntityType, Species, ALL_SPECIES}}, features::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, has_species_in_inventory, inventory_count, set_value_for_key, StorageKey}}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::IntRect, strings::string_to_c_char}, worlds::world::World};
+use crate::{entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{species_by_id, EntityType, Species, ALL_SPECIES}}, features::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, has_species_in_inventory, inventory_count, set_value_for_key, StorageKey}}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::FRect, strings::string_to_c_char}, worlds::world::World};
 
 impl Entity {
     pub fn setup_equipment(&mut self) {
@@ -16,16 +16,16 @@ impl Entity {
         vec![]
     }
 
-    fn z_index_for_state(&self) -> i32 {
+    fn should_be_over_hero(&self) -> bool {
         let is_being_used = self.action_cooldown_remaining > 0.0;
         if self.species.always_in_front_of_hero_when_equipped {
-            16
+            true
         } else {
             match (self.direction, is_being_used) {
-                (Direction::Left, false) => 14,
-                (Direction::Right, false) => 14,
-                (Direction::Down, false) => 14,
-                _ => 16
+                (Direction::Left, false) => false,
+                (Direction::Right, false) => false,
+                (Direction::Down, false) => false,
+                _ => true
             }
         }
     }
@@ -33,23 +33,29 @@ impl Entity {
     pub fn update_equipment_position(&mut self, world: &World) {   
         let hero = world.players[self.player_index].props;
         self.direction = hero.direction;
-        self.z_index = self.z_index_for_state();
         self.current_speed = hero.speed;
-        self.frame.x = hero.frame.x;
-        self.frame.y = hero.frame.y;
-        self.offset.x = hero.offset.x - 1.5 * TILE_SIZE;
-        self.offset.y = hero.offset.y - 1.0 * TILE_SIZE;
-        self.update_sorting_key();
+        self.frame.x = hero.frame.x - 1.5;
+        self.frame.y = hero.frame.y - 1.0;
+
+        let player = world.players[self.player_index].props;
+
+        if self.should_be_over_hero() { 
+            self.z_index = player.z_index + 1;
+            self.sorting_key = player.sorting_key + 1;
+        } else { 
+            self.z_index = player.z_index - 1;
+            self.sorting_key = player.sorting_key - 1;
+        };
     }
 
     pub fn play_equipment_usage_animation(&mut self) {
         self.sprite.frame.y = match self.direction {
-            Direction::Up => 37,
-            Direction::Down => 45,
-            Direction::Right => 41,
-            Direction::Left => 49,
-            Direction::Unknown => 37,
-            Direction::Still => 37,
+            Direction::Up => 37.0,
+            Direction::Down => 45.0,
+            Direction::Right => 41.0,
+            Direction::Left => 49.0,
+            Direction::Unknown => 37.0,
+            Direction::Still => 37.0,
         }
     }
 }
@@ -91,9 +97,9 @@ pub fn available_weapons(player: usize) -> Vec<AmmoRecap> {
             AmmoRecap {
                 weapon_name: string_to_c_char(species.name.localized()),
                 weapon_species_id: species.id,
-                weapon_sprite: IntRect::new(
-                    if matches!(species.id, SPECIES_KUNAI_LAUNCHER) { 5 } else { species.sprite_frame.x }, 
-                    57, 2, 2
+                weapon_sprite: FRect::new(
+                    if matches!(species.id, SPECIES_KUNAI_LAUNCHER) { 5.0 } else { species.sprite_frame.x }, 
+                    57.0, 2.0, 2.0
                 ),
                 weapon_inventory_sprite: species.inventory_sprite_frame(),
                 bullet_species_id: species.bullet_species_id,
@@ -137,8 +143,8 @@ fn equipment_key_for_species(species: &Species, player: usize) -> String {
 pub struct AmmoRecap {
     pub weapon_name: *const c_char,
     pub weapon_species_id: u32,
-    pub weapon_sprite: IntRect,
-    pub weapon_inventory_sprite: IntRect,
+    pub weapon_sprite: FRect,
+    pub weapon_inventory_sprite: FRect,
     pub bullet_species_id: u32,
     pub bullet_name: *const c_char,
     pub ammo_inventory_count: u32,

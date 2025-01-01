@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{destination::Destination, sound_effects::SoundEffectsManager, toasts::{Toast, ToastImage, ToastMode}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::IntRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{destination::Destination, sound_effects::SoundEffectsManager, toasts::{Toast, ToastImage, ToastMode}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
 
 use super::{camera::camera_center, fast_travel::FastTravelDestination, messages::DisplayableMessage, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
@@ -7,8 +7,7 @@ pub struct GameEngine {
     pub previous_world: Option<World>,
     pub keyboard: KeyboardEventsProvider,
     pub mouse: MouseEventsProvider,
-    pub camera_viewport: IntRect,
-    pub camera_viewport_offset: Vector2d,
+    pub camera_viewport: FRect,
     pub is_running: bool,
     pub wants_fullscreen: bool,
     pub sound_effects: SoundEffectsManager,
@@ -33,7 +32,6 @@ impl GameEngine {
             keyboard: KeyboardEventsProvider::new(),
             mouse: MouseEventsProvider::new(),
             camera_viewport: INITIAL_CAMERA_VIEWPORT,
-            camera_viewport_offset: Vector2d::zero(),
             is_running: true,
             wants_fullscreen: false,
             sound_effects: SoundEffectsManager::new(),
@@ -84,8 +82,8 @@ impl GameEngine {
     }
 
     pub fn window_size_changed(&mut self, width: f32, height: f32, scale: f32) {
-        self.camera_viewport.w = (width / (scale * TILE_SIZE)) as i32;
-        self.camera_viewport.h = (height / (scale * TILE_SIZE)) as i32;
+        self.camera_viewport.w = width / (scale * TILE_SIZE);
+        self.camera_viewport.h = height / (scale * TILE_SIZE);
     }
     
     fn clear_messages(&mut self) {
@@ -116,14 +114,14 @@ impl GameEngine {
     }
 
     fn center_camera_onto_players(&mut self) {
-        let (x, y, offset) = camera_center(
+        let (x, y) = camera_center(
             self.game_mode,
             &self.turn,
             self.number_of_players,
             &self.world.players,
             &self.dead_players
         );
-        self.center_camera_at(x, y, &offset);
+        self.center_camera_at(x, y);
     }
     
     pub fn apply_world_state_updates(&mut self, world_updates: Vec<WorldStateUpdate>) {
@@ -206,8 +204,7 @@ impl GameEngine {
             self.previous_world = Some(self.world.clone());
         }
         self.world = new_world;
-        self.world.spawn_point = (hero_frame.x, hero_frame.y);
-        self.center_camera_at(hero_frame.x, hero_frame.y, &Vector2d::zero());
+        self.center_camera_at(hero_frame.x, hero_frame.y);
 
         self.keyboard.on_world_changed();
         self.mouse.on_world_changed();
@@ -233,9 +230,8 @@ impl GameEngine {
         }
     }
 
-    fn center_camera_at(&mut self, x: i32, y: i32, offset: &Vector2d) {
+    fn center_camera_at(&mut self, x: f32, y: f32) {
         self.camera_viewport.center_at(&Vector2d::new(x as f32, y as f32));
-        self.camera_viewport_offset = *offset;
     }
 
     pub fn start_new_game(&mut self) {
@@ -274,7 +270,7 @@ impl GameEngine {
                             .localized()
                             .replace("%PLAYER_NAME%", &format!("{}", dead_player_index + 1)),
                         ToastImage::new(
-                            IntRect::new(9, 17, 1, 1), 
+                            FRect::new(9.0, 17.0, 1.0, 1.0), 
                             SPRITE_SHEET_ANIMATED_OBJECTS, 
                             4
                         )
@@ -325,7 +321,7 @@ impl GameEngine {
         self.turn = self.turns_use_case.first_turn(self.game_mode);
         self.dead_players.clear();
         self.number_of_players = 1;
-        self.teleport(&Destination::new(1011, 59, 57));
+        self.teleport(&Destination::new(1011, 59.0, 57.0));
     }
 
     pub fn handle_pvp_arena(&mut self, number_of_players: usize) {   

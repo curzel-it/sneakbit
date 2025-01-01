@@ -22,11 +22,12 @@ pub struct GameContext {
     pub loading_screen: LoadingScreen,
     pub last_sound_track: String,
     pub fast_travel_menu: FastTravelMenu,
-    pub pvp_arena_menu: PvpArenaMenu
+    pub pvp_arena_menu: PvpArenaMenu,
+    pub debug: bool
 }
 
 impl GameContext {
-    pub fn new(rl: RaylibHandle, rl_thread: RaylibThread) -> Self {
+    pub fn new(rl: RaylibHandle, rl_thread: RaylibThread, debug: bool) -> Self {
         Self {
             rl,
             rl_thread,
@@ -47,7 +48,8 @@ impl GameContext {
             death_screen: DeathScreen::new(),
             loading_screen: LoadingScreen::new(),
             fast_travel_menu: FastTravelMenu::new(),
-            pvp_arena_menu: PvpArenaMenu::new()
+            pvp_arena_menu: PvpArenaMenu::new(),
+            debug
         }
     }
 

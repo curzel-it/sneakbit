@@ -1,6 +1,6 @@
 use std::os::raw::c_char;
 
-use crate::utils::{rect::IntRect, strings::str_to_c_char};
+use crate::utils::{rect::FRect, strings::str_to_c_char};
 
 #[derive(Debug, Clone)]
 pub struct Toast {
@@ -20,7 +20,7 @@ pub enum ToastMode {
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]
 pub struct ToastImage {
-    pub sprite_frame: IntRect,
+    pub sprite_frame: FRect,
     pub sprite_sheet_id: u32,
     pub number_of_frames: i32,    
 }
@@ -46,7 +46,7 @@ impl ToastMode {
 }
 
 impl ToastImage {
-    pub fn new(sprite_frame: IntRect, sprite_sheet_id: u32, number_of_frames: i32) -> Self {
+    pub fn new(sprite_frame: FRect, sprite_sheet_id: u32, number_of_frames: i32) -> Self {
         Self {
             sprite_frame,
             sprite_sheet_id,
@@ -54,7 +54,7 @@ impl ToastImage {
         }
     }
     
-    pub fn static_image(sprite_frame: IntRect, sprite_sheet_id: u32) -> Self {
+    pub fn static_image(sprite_frame: FRect, sprite_sheet_id: u32) -> Self {
         Self::new(sprite_frame, sprite_sheet_id, 1)
     }
 }
@@ -72,7 +72,7 @@ pub struct CToast {
 pub struct CToastImage {
     pub is_valid: bool,
     pub sprite_sheet_id: u32,
-    pub texture_frame: IntRect
+    pub texture_frame: FRect
 }
 
 impl CToast {
@@ -92,7 +92,7 @@ impl CToastImage {
         Self {
             is_valid: false,
             sprite_sheet_id: 0,
-            texture_frame: IntRect::square_from_origin(1)
+            texture_frame: FRect::square_from_origin(1.0)
         }
     }
 }    

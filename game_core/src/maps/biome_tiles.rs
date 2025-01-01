@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use lazy_static::lazy_static;
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer, de::Deserializer};
-use crate::utils::{directions::Direction, rect::IntRect};
+use crate::utils::{directions::Direction, rect::FRect};
 use super::tiles::{SpriteTile, TileSet};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -63,17 +63,17 @@ pub struct BiomeTile {
     pub tile_right_type: Biome,
     pub tile_down_type: Biome,
     pub tile_left_type: Biome,
-    pub texture_offset_x: i32,
-    pub texture_offset_y: i32,
+    pub texture_offset_x: f32,
+    pub texture_offset_y: f32,
 }
 
 impl SpriteTile for BiomeTile {
-    fn texture_source_rect(&self, variant: i32) -> IntRect {
-        IntRect::new(
+    fn texture_source_rect(&self, variant: i32) -> FRect {
+        FRect::new(
             self.texture_offset_x,
-            self.texture_offset_y + variant * *NUMBER_OF_BIOMES,
-            1, 
-            1
+            self.texture_offset_y + (variant * *NUMBER_OF_BIOMES) as f32,
+            1.0, 
+            1.0
         )
     }
 }
@@ -92,8 +92,8 @@ impl BiomeTile {
     }
 
     fn setup_textures(&mut self) {
-        self.texture_offset_x = self.texture_index_for_neighbors();
-        self.texture_offset_y = self.tile_type.texture_index(); 
+        self.texture_offset_x = self.texture_index_for_neighbors() as f32;
+        self.texture_offset_y = self.tile_type.texture_index() as f32;  
     }
 
     fn texture_index_for_neighbors(&self) -> i32 {
@@ -312,8 +312,8 @@ impl BiomeTile {
             tile_right_type: Biome::Nothing,
             tile_down_type: Biome::Nothing,
             tile_left_type: Biome::Nothing,
-            texture_offset_x: 0, 
-            texture_offset_y: 0 
+            texture_offset_x: 0.0, 
+            texture_offset_y: 0.0
         };
         tile.setup_textures();
         tile

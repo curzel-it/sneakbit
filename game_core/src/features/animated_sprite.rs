@@ -1,19 +1,19 @@
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use crate::{constants::{ANIMATIONS_FPS, SPRITE_SHEET_BLANK, SPRITE_SHEET_HEROES, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_MONSTERS, SPRITE_SHEET_WEAPONS}, features::entity::Entity, utils::{directions::Direction, rect::IntRect, timed_content_provider::TimedContentProvider}};
+use crate::{constants::{ANIMATIONS_FPS, SPRITE_SHEET_BLANK, SPRITE_SHEET_HEROES, SPRITE_SHEET_HUMANOIDS_1X1, SPRITE_SHEET_HUMANOIDS_1X2, SPRITE_SHEET_HUMANOIDS_2X2, SPRITE_SHEET_MONSTERS, SPRITE_SHEET_WEAPONS}, features::entity::Entity, utils::{directions::Direction, rect::FRect, timed_content_provider::TimedContentProvider}};
 
 #[derive(Debug, Clone)]
 pub struct AnimatedSprite {
     pub sheet_id: u32, 
-    pub frame: IntRect,
+    pub frame: FRect,
     pub supports_directions: bool,
-    pub original_frame: IntRect,
+    pub original_frame: FRect,
     number_of_frames: i32,
-    frames_provider: TimedContentProvider<i32>,
+    frames_provider: TimedContentProvider<f32>,
 }
 
 impl AnimatedSprite {
-    pub fn new(sheet_id: u32, frame: IntRect, number_of_frames: i32) -> Self {
+    pub fn new(sheet_id: u32, frame: FRect, number_of_frames: i32) -> Self {
         Self {
             sheet_id, 
             frame,
@@ -31,7 +31,7 @@ impl AnimatedSprite {
         }
     }
 
-    pub fn texture_source_rect(&self) -> IntRect {
+    pub fn texture_source_rect(&self) -> FRect {
         self.frame
     }
 
@@ -48,7 +48,7 @@ impl Entity {
     pub fn update_sprite_for_current_state(&mut self) {
         if !self.is_dying { 
             if self.demands_attention {
-                self.sprite.frame.y = self.sprite.original_frame.y + self.sprite.frame.h * 8
+                self.sprite.frame.y = self.sprite.original_frame.y + self.sprite.frame.h * 8.0
             } else {
                 self.update_sprite_for_direction_speed(self.direction, self.current_speed)
             }
@@ -70,13 +70,13 @@ impl Entity {
             (Direction::Still, true) => 4,
             (Direction::Still, false) => 5,
         };
-        self.sprite.frame.y = self.sprite.original_frame.y + self.sprite.frame.h * row;
+        self.sprite.frame.y = self.sprite.original_frame.y + self.sprite.frame.h * row as f32;
     }
 }
 
-impl TimedContentProvider<i32> {
-    pub fn frames(x: i32, n: i32, w: i32) -> Self {
-        let frames = (0..n).map(|i| x + i * w).collect();
+impl TimedContentProvider<f32> {
+    pub fn frames(x: f32, n: i32, w: f32) -> Self {
+        let frames = (0..n).map(|i| x + i as f32 * w).collect();
         Self::new(frames, ANIMATIONS_FPS)
     }
 }
@@ -88,7 +88,7 @@ fn supports_directions(sheet_id: u32) -> bool {
 #[derive(Serialize, Deserialize)]
 struct AnimatedSpriteData {
     sheet_id: u32, 
-    frame: IntRect,
+    frame: FRect,
     number_of_frames: i32,
 }
 
@@ -115,11 +115,11 @@ impl Default for AnimatedSprite {
     fn default() -> Self {
         Self { 
             sheet_id: SPRITE_SHEET_BLANK, 
-            frame: IntRect::square_from_origin(1), 
+            frame: FRect::square_from_origin(1.0), 
             supports_directions: false, 
-            original_frame: IntRect::square_from_origin(1), 
+            original_frame: FRect::square_from_origin(1.0), 
             number_of_frames: 1,
-            frames_provider: TimedContentProvider::new(vec![0], ANIMATIONS_FPS)
+            frames_provider: TimedContentProvider::new(vec![0.0], ANIMATIONS_FPS)
         }
     }
 }
