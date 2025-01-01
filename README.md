@@ -23,15 +23,14 @@ Available now on [Steam](https://store.steampowered.com/app/3360860/SneakBit) fo
 
 ## Features
 * Adventure-action gameplay with close and long range combat
-* Grid-based dual-layer tiling system
 * Unlockable combat skills
 * Nostalgic Gameboy-like pixel art aesthetics
 * Local co-op multiplayer mode for PC
 * Unlockable Fast travel
 * Turn-based Pvp 
 * Coming soon! Linux & SteamOS support
-
-> Currently moving from grid-based collision system to AABB, `main` currently unstable
+* Pre-rendered backgrounds using a dual-layer tiling system
+* AABB collision detection
 
 ## Build from source
 ### macOS, Linux
