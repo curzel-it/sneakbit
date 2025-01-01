@@ -1,5 +1,5 @@
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer, de::Deserializer};
-use crate::utils::{directions::Direction, rect::FRect};
+use crate::{features::hitmaps::Hittable, utils::{directions::Direction, rect::FRect}};
 use super::{biomes::{Biome, NUMBER_OF_BIOMES}, tiles::{SpriteTile, TileSet}};
 
 #[derive(Default, Debug, Clone)]
@@ -12,6 +12,7 @@ pub struct BiomeTile {
     pub tile_left_type: Biome,
     pub texture_offset_x: f32,
     pub texture_offset_y: f32,
+    pub hittable: Hittable
 }
 
 impl SpriteTile for BiomeTile {
@@ -30,12 +31,23 @@ impl BiomeTile {
         matches!(&self.tile_type, Biome::Water | Biome::Nothing | Biome::Lava | Biome::DarkWater)
     }
 
-    pub fn setup_neighbors(&mut self, up: Biome, right: Biome, bottom: Biome, left: Biome) {
+    pub fn setup(&mut self, x: usize, y: usize, up: Biome, right: Biome, bottom: Biome, left: Biome) {
         self.tile_up_type = up;
         self.tile_right_type = right;
         self.tile_down_type = bottom;
         self.tile_left_type = left;        
         self.setup_textures();    
+        self.setup_hittable(x, y);
+    }
+
+    fn setup_hittable(&mut self, x: usize, y: usize) {
+        self.hittable = Hittable {
+            frame: FRect::new(x as f32, y as f32, 1.0, 1.0).padded_all(0.15),
+            has_weight: false,
+            entity_id: 0, 
+            species_id: 0,
+            is_rigid: self.is_obstacle(),
+        }
     }
 
     fn setup_textures(&mut self) {
@@ -200,7 +212,8 @@ impl BiomeTile {
             tile_down_type: Biome::Nothing,
             tile_left_type: Biome::Nothing,
             texture_offset_x: 0.0, 
-            texture_offset_y: 0.0
+            texture_offset_y: 0.0,
+            hittable: Hittable::default()
         };
         tile.setup_textures();
         tile
@@ -248,7 +261,7 @@ impl<'de> Deserialize<'de> for TileSet<BiomeTile> {
                 let down = if row < rows - 1 { tiles[row+1][col].tile_type } else { Biome::Nothing };
                 let left = if col > 0 { tiles[row][col-1].tile_type } else { Biome::Nothing };
 
-                tiles[row][col].setup_neighbors(up, right, down, left)
+                tiles[row][col].setup(col, row, up, right, down, left)
             }
         }
 

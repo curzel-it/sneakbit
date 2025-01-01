@@ -5,10 +5,10 @@ pub struct Hitmap {
     pub data: Vec<Hittable>
 }
 
-#[derive(Clone)]
+#[derive(Debug, Default, Clone, Copy)]
 pub struct Hittable {
     pub frame: FRect,
-    pub weight: i32,
+    pub has_weight: bool,
     pub is_rigid: bool,
     pub entity_id: EntityId,
     pub species_id: SpeciesId
@@ -47,52 +47,51 @@ impl World {
         self.hitmap.has_weight(area)
     }
 
-    pub fn update_hitmaps(&mut self) {
+    pub unsafe fn update_hitmaps(&mut self, viewport: &FRect) {
+        self.visible_entities.clear();
         self.hitmap.data.clear();
+        self.tiles_hitmap.data.clear();
 
         let entities = &self.entities.borrow();
 
-        for &(index, _) in &self.visible_entities {
-            if let Some(entity) = entities.get(index) {                
-                let item = Hittable {
-                    frame: entity.hittable_frame(),
-                    weight: if entity.has_weight() { 1 } else { 0 },
-                    entity_id: entity.id, 
-                    species_id: entity.species_id,
-                    is_rigid: entity.is_rigid,
-                };
-                self.hitmap.data.push(item);
+        for index in 0..entities.len() {
+            let entity = entities.get_unchecked(index);     
+            let is_visible = false || 
+                matches!(entity.entity_type, EntityType::Hero) ||
+                matches!(entity.entity_type, EntityType::PressurePlate) ||
+                matches!(entity.entity_type, EntityType::PushableObject) ||
+                viewport.overlaps_or_touches(&entity.frame);
+
+            if !is_visible {
+                continue;
             }
+
+            let item = Hittable {
+                frame: entity.hittable_frame(),
+                has_weight: entity.has_weight(),
+                entity_id: entity.id, 
+                species_id: entity.species_id,
+                is_rigid: entity.is_rigid,
+            };
+            self.visible_entities.push((index, entity.id));
+            self.hitmap.data.push(item);
         }
-    } 
 
-    pub fn update_tiles_hitmap(&mut self) {
-        self.tiles_hitmap.data.clear();
+        let min_x = viewport.x.floor().max(self.bounds.x) as usize;
+        let max_x = viewport.max_x().min(self.bounds.max_x()).floor() as usize;
+        let min_y = viewport.y.floor().max(self.bounds.y) as usize;
+        let max_y = viewport.max_y().floor().min(self.bounds.max_y()) as usize;
 
-        for y in 0..self.biome_tiles.tiles.len() {
-            for x in 0..self.biome_tiles.tiles[0].len() {
-                if self.biome_tiles.tiles[y][x].is_obstacle() {
-                    let item = Hittable {
-                        frame: FRect::new(x as f32, y as f32, 1.0, 1.0).padded_all(0.15),
-                        weight: 0,
-                        entity_id: 0, 
-                        species_id: 0,
-                        is_rigid: true,
-                    };
+        for y in min_y..max_y {
+            for x in min_x..max_x {
+                let item = self.biome_tiles.tiles.get_unchecked(y).get_unchecked(x).hittable; 
+                if item.is_rigid {
                     self.tiles_hitmap.data.push(item);
-                } else {
-                    let construction_tile = self.construction_tiles.tiles[y][x];
+                }
 
-                    if construction_tile.is_obstacle() {
-                        let item = Hittable {
-                            frame: construction_tile.hittable_frame(x, y),
-                            weight: 0,
-                            entity_id: 0, 
-                            species_id: 0,
-                            is_rigid: true,
-                        };
-                        self.tiles_hitmap.data.push(item);
-                    }
+                let item = self.construction_tiles.tiles.get_unchecked(y).get_unchecked(x).hittable; 
+                if item.is_rigid {
+                    self.tiles_hitmap.data.push(item);
                 }
             }
         }
@@ -152,7 +151,7 @@ impl Hitmap {
         let area_center = area.center();
 
         for hittable in &self.data {
-            if hittable.weight == 0 { continue } 
+            if !hittable.has_weight { continue } 
             if hittable.frame.overlaps_or_touches(area) { return true }
             if hittable.frame.contains_or_touches(&area_center) || area.contains_or_touches(&hittable.frame.center()) {
                 return true

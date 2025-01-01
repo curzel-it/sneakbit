@@ -44,7 +44,7 @@ impl Entity {
             self.sorting_key = player.sorting_key + 1;
         } else { 
             self.z_index = player.z_index - 1;
-            self.sorting_key = player.sorting_key - 1;
+            self.sorting_key = player.sorting_key.saturating_sub(1);
         };
     }
 

@@ -59,10 +59,10 @@ impl World {
 
         let biome_tile_set = TileSet::<BiomeTile>::with_tiles(
             SPRITE_SHEET_BIOME_TILES, 
-            (0..world.bounds.h as usize).map(|_| {
-                (0..world.bounds.w as usize).map(|_| {
+            (0..world.bounds.h as usize).map(|y| {
+                (0..world.bounds.w as usize).map(|x| {
                     let mut tile = BiomeTile::from_data('0');
-                    tile.setup_neighbors(tile.tile_type, tile.tile_type, tile.tile_type, tile.tile_type);
+                    tile.setup(x, y, tile.tile_type, tile.tile_type, tile.tile_type, tile.tile_type);
                     tile
                 }).collect()
             }).collect()
@@ -71,10 +71,10 @@ impl World {
 
         let construction_tile_set = TileSet::<ConstructionTile>::with_tiles(
             SPRITE_SHEET_CONSTRUCTION_TILES, 
-            (0..world.bounds.h as usize).map(|_| {
-                (0..world.bounds.w as usize).map(|_| {
+            (0..world.bounds.h as usize).map(|y| {
+                (0..world.bounds.w as usize).map(|x| {
                     let mut tile = ConstructionTile::from_data('0');
-                    tile.setup_neighbors(tile.tile_type, tile.tile_type, tile.tile_type, tile.tile_type);
+                    tile.setup(x, y, tile.tile_type, tile.tile_type, tile.tile_type, tile.tile_type);
                     tile
                 }).collect()
             }).collect()
@@ -86,7 +86,7 @@ impl World {
     
     fn load_biome_tiles(&mut self, tiles: TileSet<BiomeTile>) {
         let mut grass = BiomeTile::from_data('1');
-        grass.setup_neighbors(Biome::Grass, Biome::Grass, Biome::Grass, Biome::Grass);
+        grass.setup(0, 0, Biome::Grass, Biome::Grass, Biome::Grass, Biome::Grass);
 
         let tiles = if tiles.tiles.is_empty() {
             TileSet::<BiomeTile>::with_tiles(

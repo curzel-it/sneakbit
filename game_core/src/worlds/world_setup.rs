@@ -14,9 +14,11 @@ impl World {
         self.remove_players();
         self.remove_all_equipment();
         self.remove_dying_entities();
-        self.update_visible_entities(&self.bounds.clone());
-        self.update_tiles_hitmap();
-        self.update_hitmaps();
+
+        unsafe {
+            self.update_hitmaps(&self.bounds.clone());
+        }
+        
         self.setup_entities();
         self.spawn_players(source, hero_direction, original_x, original_y, direction);
         self.spawn_equipment();

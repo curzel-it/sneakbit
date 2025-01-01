@@ -1,5 +1,5 @@
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer, de::Deserializer};
-use crate::utils::rect::FRect;
+use crate::{features::hitmaps::Hittable, utils::rect::FRect};
 use super::{constructions::Construction, tiles::{SpriteTile, TileSet}};
 
 #[derive(Debug, Default, Clone, Copy)]
@@ -11,6 +11,7 @@ pub struct ConstructionTile {
     pub tile_down_type: Construction,
     pub tile_left_type: Construction,
     pub texture_source_rect: FRect,
+    pub hittable: Hittable
 }
 
 impl SpriteTile for ConstructionTile {
@@ -39,12 +40,27 @@ impl ConstructionTile {
         matches!(self.tile_type, Construction::Bridge)
     }
 
-    pub fn setup_neighbors(&mut self, up: Construction, right: Construction, bottom: Construction, left: Construction) {
+    pub fn setup(
+        &mut self, 
+        x: usize, y: usize,
+        up: Construction, right: Construction, bottom: Construction, left: Construction
+    ) {
         self.tile_up_type = up;
         self.tile_right_type = right;
         self.tile_down_type = bottom;
         self.tile_left_type = left;        
         self.setup_textures();    
+        self.setup_hittable(x, y);
+    }
+
+    fn setup_hittable(&mut self, x: usize, y: usize) {
+        self.hittable = Hittable {
+            frame: self.hittable_frame(x, y),
+            has_weight: false,
+            entity_id: 0, 
+            species_id: 0,
+            is_rigid: self.is_obstacle(),
+        }
     }
 
     fn setup_textures(&mut self) {
@@ -186,7 +202,8 @@ impl ConstructionTile {
             tile_right_type: Construction::Nothing, 
             tile_down_type: Construction::Nothing, 
             tile_left_type: Construction::Nothing, 
-            texture_source_rect: FRect::square_from_origin(1.0) 
+            texture_source_rect: FRect::square_from_origin(1.0),
+            hittable: Hittable::default()
         };
         tile.setup_textures();
         tile
@@ -274,7 +291,7 @@ impl<'de> Deserialize<'de> for TileSet<ConstructionTile> {
                 let down = if row < rows - 1 { tiles[row+1][col].tile_type } else { Construction::Nothing };
                 let left = if col > 0 { tiles[row][col-1].tile_type } else { Construction::Nothing };
 
-                tiles[row][col].setup_neighbors(up, right, down, left)
+                tiles[row][col].setup(col, row, up, right, down, left)
             }
         }
 

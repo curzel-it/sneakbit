@@ -71,7 +71,7 @@ pub fn generate_tile_map_image(
             let down = if row < world_height - 1 { construction_tiles_copy[row + 1][col].tile_type } else { Construction::Nothing };
             let left = if col > 0 { construction_tiles_copy[row][col -1].tile_type } else { Construction::Nothing };
             let tile = &mut construction_tiles_copy[row][col];
-            tile.setup_neighbors(up, right, down, left);
+            tile.setup(col, row, up, right, down, left);
         }
     }
 

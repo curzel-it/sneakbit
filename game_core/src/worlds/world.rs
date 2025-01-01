@@ -143,8 +143,9 @@ impl World {
         engine_updates.extend(self.update_entities(time_since_last_update));
         engine_updates.extend(self.update_cutscenes(time_since_last_update));
 
-        self.update_visible_entities(viewport);
-        self.update_hitmaps();
+        unsafe {
+            self.update_hitmaps(viewport);
+        }
         engine_updates
     }
 
@@ -255,12 +256,20 @@ impl World {
 
     fn update_biome_tile(&mut self, row: usize, col: usize, new_biome: Biome) {
         self.biome_tiles.update_tile(row, col, new_biome);
-        self.update_tiles_hitmap();
+        let viewport = self.bounds.clone();
+        
+        unsafe { 
+            self.update_hitmaps(&viewport);
+        }
     }
 
     fn update_construction_tile(&mut self, row: usize, col: usize, new_construction: Construction) {
         self.construction_tiles.update_tile(row, col, new_construction);
-        self.update_tiles_hitmap();
+        let viewport = self.bounds.clone();
+
+        unsafe { 
+            self.update_hitmaps(&viewport);
+        }
     }  
     
     pub fn find_teleporter_for_destination(&self, destination_world: u32) -> Option<FRect> {
@@ -369,25 +378,6 @@ impl World {
 
     pub fn is_pressure_plate_up(&self, lock_type: &LockType) -> bool {
         !self.is_pressure_plate_down(lock_type)
-    }
-    
-    pub fn update_visible_entities(&mut self, viewport: &FRect) {
-        self.visible_entities.clear();
-
-        let entities = self.entities.borrow();
-
-        for index in 0..entities.len() {
-            let entity = &entities[index];            
-            let is_visible = false || 
-                matches!(entity.entity_type, EntityType::Hero) ||
-                matches!(entity.entity_type, EntityType::PressurePlate) ||
-                matches!(entity.entity_type, EntityType::PushableObject) ||
-                viewport.overlaps_or_touches(&entity.frame);
-
-            if is_visible {
-                self.visible_entities.push((index, entity.id));
-            }
-        }
     }
 
     pub fn index_of_any_player_who_is_pressing_confirm(&self) -> Option<usize> {
