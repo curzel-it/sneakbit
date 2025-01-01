@@ -31,6 +31,8 @@ Available now on [Steam](https://store.steampowered.com/app/3360860/SneakBit) fo
 * Turn-based Pvp 
 * Coming soon! Linux & SteamOS support
 
+> Currently moving from grid-based collision system to AABB, `main` currently unstable
+
 ## Build from source
 ### macOS, Linux
 ```bash
