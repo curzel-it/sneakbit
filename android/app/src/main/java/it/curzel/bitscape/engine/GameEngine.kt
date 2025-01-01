@@ -14,7 +14,6 @@ import it.curzel.bitscape.gamecore.GameState
 import it.curzel.bitscape.gamecore.FRect
 import it.curzel.bitscape.gamecore.NativeLib
 import it.curzel.bitscape.gamecore.RenderableItem
-import it.curzel.bitscape.gamecore.Vector2d
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,7 +40,8 @@ class GameEngine(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    var size = Size(0.0, 0.0)
+    var windowWidth: Float = 0.0f
+    var windowHeight: Float = 0.0f
     var fps = 0.0
 
     private var isGamePaused = false
@@ -50,8 +50,7 @@ class GameEngine(
     private var frameCount = 0
 
     var renderingScale = 1f
-    var cameraViewport = FRect(0.0, 0.0, 0.0, 0.0)
-    var cameraViewportOffset = Vector2d(0.0f, 0.0f)
+    var cameraViewport = FRect.zero()
     var canRender = true
 
     private var isLimitedVisibility: Boolean = false
@@ -75,7 +74,7 @@ class GameEngine(
         val langPath = AssetUtils.extractAssetFolder(context, "lang", "lang")
 
         nativeLib.initializeConfig(
-            baseEntitySpeed = NativeLib.TILE_SIZE * 1.8f,
+            baseEntitySpeed = NativeLib.TILE_SIZE * 1.6f,
             currentLang = currentLang(),
             levelsPath = dataPath,
             speciesPath = "$dataPath/species.json",
@@ -127,17 +126,18 @@ class GameEngine(
         return nativeLib.fetchRenderableItems()
     }
 
-    fun setupChanged(windowSize: Size) {
+    fun setupChanged(width: Float, height: Float) {
         renderingScale = renderingScaleUseCase.current()
-        size = windowSize
-        nativeLib.windowSizeChanged(size.width.toFloat(), size.height.toFloat(), renderingScale)
+        windowWidth = width
+        windowHeight = height
+        nativeLib.windowSizeChanged(width, height, renderingScale)
         worldWidth = nativeLib.currentWorldWidth()
         worldHeight = nativeLib.currentWorldHeight()
         updateTileMapImages()
     }
 
     fun renderingFrame(entity: RenderableItem): RectF {
-        return renderingFrame(entity.frame, entity.offset)
+        return renderingFrame(entity.frame)
     }
 
     fun tileMapImage(): Bitmap? {
@@ -316,14 +316,12 @@ class GameEngine(
         return file.absolutePath
     }
 
-    private fun renderingFrame(frame: FRect, offset: Vector2d = Vector2d(0.0f, 0.0f)): RectF {
-        val actualCol = (frame.x - cameraViewport.x).toFloat()
-        val actualOffsetX = offset.x - cameraViewportOffset.x
-        val actualRow = (frame.y - cameraViewport.y).toFloat()
-        val actualOffsetY = offset.y - cameraViewportOffset.y
+    private fun renderingFrame(frame: FRect): RectF {
+        val actualCol = frame.x - cameraViewport.x
+        val actualRow = frame.y - cameraViewport.y
 
-        val x = (actualCol * tileSize + actualOffsetX) * renderingScale
-        val y = (actualRow * tileSize + actualOffsetY) * renderingScale
+        val x = actualCol * tileSize * renderingScale
+        val y = actualRow * tileSize * renderingScale
 
         return RectF(
             x, y,
@@ -343,15 +341,10 @@ class GameEngine(
     private fun fetchRenderingInfo() {
         currentBiomeVariant = nativeLib.currentBiomeTilesVariant()
         cameraViewport = nativeLib.cameraViewport().toRect()
-        cameraViewportOffset = nativeLib.cameraViewportOffset().toVector2d()
     }
 
-    private fun IntArray.toRect(): FRect {
+    private fun FloatArray.toRect(): FRect {
         return FRect(this[0], this[1], this[2], this[3])
-    }
-
-    private fun FloatArray.toVector2d(): Vector2d {
-        return Vector2d(this[0], this[1])
     }
 
     fun revive() {

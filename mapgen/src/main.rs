@@ -59,7 +59,7 @@ pub fn generate_tile_map_image(
             let down = if row < world_height - 1 { biome_tiles_copy[row + 1][col].tile_type } else { Biome::Nothing };
             let left = if col > 0 { biome_tiles_copy[row][col -1].tile_type } else { Biome::Nothing };
             let tile = &mut biome_tiles_copy[row][col];
-            tile.setup_neighbors(up, right, down, left);
+            tile.setup(col, row, up, right, down, left);
         }
     }
 

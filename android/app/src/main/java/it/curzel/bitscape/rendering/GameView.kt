@@ -70,7 +70,7 @@ class GameView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         CoroutineScope(Dispatchers.Main).launch {
-            engine.setupChanged(Size(w, h))
+            engine.setupChanged(w.toFloat(), h.toFloat())
         }
     }
 
@@ -147,7 +147,7 @@ class GameView @JvmOverloads constructor(
         canvas.drawRect(visibleAreaRect.right, visibleAreaRect.top, canvasWidth + 200f, visibleAreaRect.bottom, paint)
 
         val spriteId = NativeLib.SPRITE_SHEET_CAVE_DARKNESS
-        val textureRect = FRect(0, 0, 10, 10)
+        val textureRect = FRect(0.0f, 0.0f, 10.0f, 10.0f)
         spritesProvider.bitmapFor(spriteId, textureRect)?.let {
             renderTexture(it, visibleAreaRect, canvas)
         }
@@ -195,12 +195,11 @@ class GameView @JvmOverloads constructor(
     private fun renderTileMap(canvas: Canvas) {
         val tileMapBitmap = engine.tileMapImage() ?: return
         val cameraViewport = engine.cameraViewport
-        val cameraOffset = engine.cameraViewportOffset
         val tileSize = NativeLib.TILE_SIZE * engine.renderingScale
         val scaledMapWidth = tileMapBitmap.width * engine.renderingScale
         val scaledMapHeight = tileMapBitmap.height * engine.renderingScale
-        val offsetX = -cameraViewport.x * tileSize - cameraOffset.x * engine.renderingScale
-        val offsetY = -cameraViewport.y * tileSize - cameraOffset.y * engine.renderingScale
+        val offsetX = -cameraViewport.x * tileSize
+        val offsetY = -cameraViewport.y * tileSize
 
         val saveCount = canvas.save()
         canvas.translate(offsetX, offsetY)

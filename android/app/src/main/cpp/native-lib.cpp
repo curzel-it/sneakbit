@@ -164,21 +164,21 @@ Java_it_curzel_bitscape_gamecore_NativeLib_currentBiomeTilesVariant(JNIEnv *env,
 }
 
 extern "C"
-JNIEXPORT jintArray JNICALL
+JNIEXPORT jfloatArray JNICALL
 Java_it_curzel_bitscape_gamecore_NativeLib_cameraViewport(JNIEnv *env, jobject thiz) {
     auto viewport = camera_viewport();
-    jintArray result = env->NewIntArray(4);
+    jfloatArray result = env->NewFloatArray(4);
     if (result == nullptr) {
         return nullptr;
     }
 
-    jint temp[4];
+    jfloat temp[4];
     temp[0] = viewport.x;
     temp[1] = viewport.y;
     temp[2] = viewport.w;
     temp[3] = viewport.h;
 
-    env->SetIntArrayRegion(result, 0, 4, temp);
+    env->SetFloatArrayRegion(result, 0, 4, temp);
     return result;
 }
 
@@ -189,16 +189,14 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, job
     RenderableItem *items = get_renderables(&length);
 
     jclass FRectClass = env->FindClass("it/curzel/bitscape/gamecore/FRect");
-    jclass vector2dClass = env->FindClass("it/curzel/bitscape/gamecore/Vector2d");
     jclass renderableItemClass = env->FindClass("it/curzel/bitscape/gamecore/RenderableItem");
     jclass arrayListClass = env->FindClass("java/util/ArrayList");
 
-    jmethodID FRectConstructor = env->GetMethodID(FRectClass, "<init>", "(IIII)V");
-    jmethodID vector2dConstructor = env->GetMethodID(vector2dClass, "<init>", "(FF)V");
+    jmethodID FRectConstructor = env->GetMethodID(FRectClass, "<init>", "(FFFF)V");
     jmethodID renderableItemConstructor = env->GetMethodID(
             renderableItemClass,
             "<init>",
-            "(ILit/curzel/bitscape/gamecore/FRect;Lit/curzel/bitscape/gamecore/Vector2d;Lit/curzel/bitscape/gamecore/FRect;)V"
+            "(ILit/curzel/bitscape/gamecore/FRect;Lit/curzel/bitscape/gamecore/FRect;)V"
     );
     jmethodID arrayListConstructor = env->GetMethodID(arrayListClass, "<init>", "()V");
     jmethodID arrayListAddMethod = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
@@ -226,13 +224,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, job
                 item.frame.h
         );
 
-        jobject offsetObject = env->NewObject(
-                vector2dClass,
-                vector2dConstructor,
-                item.offset.x,
-                item.offset.y
-        );
-
         jclass uIntClass = env->FindClass("kotlin/UInt");
         jmethodID uIntConstructor = env->GetStaticMethodID(uIntClass, "constructor-impl", "(I)I");
         jint spriteSheetIdUInt = env->CallStaticIntMethod(uIntClass, uIntConstructor,
@@ -243,7 +234,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, job
                 renderableItemConstructor,
                 spriteSheetIdUInt,
                 textureRectObject,
-                offsetObject,
                 frameObject
         );
 
@@ -251,7 +241,6 @@ Java_it_curzel_bitscape_gamecore_NativeLib_fetchRenderableItems(JNIEnv *env, job
 
         env->DeleteLocalRef(textureRectObject);
         env->DeleteLocalRef(frameObject);
-        env->DeleteLocalRef(offsetObject);
         env->DeleteLocalRef(renderableItemObject);
     }
 
@@ -643,15 +632,15 @@ jobject createDisplayableToast(JNIEnv *env, const struct CToast &toast) {
 
                 // create FRect for texture_frame
                 jclass FRectClass = env->FindClass("it/curzel/bitscape/gamecore/FRect");
-                jmethodID FRectCtor = env->GetMethodID(FRectClass, "<init>", "(IIII)V");
+                jmethodID FRectCtor = env->GetMethodID(FRectClass, "<init>", "(FFFF)V");
                 // (x, y, w, h)
                 jobject textureFrameObj = env->NewObject(
                         FRectClass,
                         FRectCtor,
-                        static_cast<jint>(toast.image.texture_frame.x),
-                        static_cast<jint>(toast.image.texture_frame.y),
-                        static_cast<jint>(toast.image.texture_frame.w),
-                        static_cast<jint>(toast.image.texture_frame.h)
+                        static_cast<jfloat>(toast.image.texture_frame.x),
+                        static_cast<jfloat>(toast.image.texture_frame.y),
+                        static_cast<jfloat>(toast.image.texture_frame.w),
+                        static_cast<jfloat>(toast.image.texture_frame.h)
                 );
 
                 jImage = env->NewObject(imageClass, imageCtor, spriteSheetId, textureFrameObj);
@@ -784,7 +773,7 @@ Java_it_curzel_bitscape_gamecore_NativeLib_weapons(JNIEnv *env, jobject thiz, ji
         return nullptr; // Methods not found
     }
 
-    jmethodID FRectCtor = env->GetMethodID(FRectClass, "<init>", "(IIII)V");
+    jmethodID FRectCtor = env->GetMethodID(FRectClass, "<init>", "(FFFF)V");
     if (FRectCtor == nullptr) {
         return nullptr; // Constructor not found
     }

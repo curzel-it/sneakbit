@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define BUILD_NUMBER 40
+#define BUILD_NUMBER 70
 
 #define UNLIMITED_LIFESPAN -420.0
 
@@ -23,6 +23,10 @@
 #define TURN_DURATION_AFTER_ENEMY_PLAYER_DAMAGE 2.0
 
 #define TURN_PREP_DURATION 3.0
+
+#define DIRECTION_CHANGE_COOLDOWN 0.1
+
+#define RAIL_CHANGE_COOLDOWN 0.2
 
 #define KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST 0.4
 
@@ -214,22 +218,17 @@ typedef enum ToastMode {
 typedef struct Option_Toast Option_Toast;
 
 typedef struct FRect {
-  int32_t x;
-  int32_t y;
-  int32_t w;
-  int32_t h;
-} FRect;
-
-typedef struct Vector2d {
   float x;
   float y;
-} Vector2d;
+  float w;
+  float h;
+} FRect;
 
 typedef struct RenderableItem {
   uint32_t sprite_sheet_id;
   struct FRect texture_rect;
-  struct Vector2d offset;
   struct FRect frame;
+  struct FRect hittable_frame;
   uint32_t sorting_key;
 } RenderableItem;
 
@@ -334,13 +333,11 @@ void initialize_config(bool is_mobile,
 
 int32_t current_biome_tiles_variant(void);
 
-int32_t current_world_width(void);
+float current_world_width(void);
 
-int32_t current_world_height(void);
+float current_world_height(void);
 
 struct FRect camera_viewport(void);
-
-struct Vector2d camera_viewport_offset(void);
 
 uint32_t current_world_id(void);
 
