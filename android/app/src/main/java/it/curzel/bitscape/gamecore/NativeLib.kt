@@ -33,8 +33,7 @@ class NativeLib {
     )
     external fun updateGame(timeSinceLastUpdate: Float)
     external fun currentBiomeTilesVariant(): Int
-    external fun cameraViewport(): IntArray
-    external fun cameraViewportOffset(): FloatArray
+    external fun cameraViewport(): FloatArray
     external fun fetchRenderableItems(): List<RenderableItem>
     external fun gameState(): GameState
     external fun isNight(): Boolean
@@ -60,7 +59,7 @@ class NativeLib {
 
     companion object {
         const val MAX_PLAYERS: Int = 4
-        const val TILE_SIZE: Int = 16
+        const val TILE_SIZE: Float = 16.0f
         const val BIOME_NUMBER_OF_FRAMES: Int = 4
 
         const val SPECIES_KUNAI_LAUNCHER: Int = 1160

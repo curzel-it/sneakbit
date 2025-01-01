@@ -1,144 +1,6 @@
-use std::collections::HashMap;
-
-use lazy_static::lazy_static;
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer, de::Deserializer};
-use crate::utils::rect::FRect;
-use super::tiles::{SpriteTile, TileSet};
-
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
-#[derive(Default)]
-#[repr(i32)]
-pub enum Construction {
-    WoodenFence = 1,
-    #[default]
-    Nothing = 2,
-    DarkRock = 3,
-    LightWall = 4,
-    Counter = 5,
-    Library = 6,
-    TallGrass = 7,
-    Forest = 8,
-    Bamboo = 9,
-    Box = 10,
-    Rail = 11,
-    StoneWall = 12,
-    IndicatorArrow = 13,
-    Bridge = 14,
-    Broadleaf = 15,
-    MetalFence = 16,       
-    StoneBox = 17,
-    SpoiledTree = 18,
-    WineTree = 19,
-    SolarPanel = 20,
-    Pipe = 21,
-    BroadleafPurple = 22,
-    WoodenWall = 23,
-    SnowPile = 24,
-    SnowyForest = 25,
-    Darkness15 = 26,
-    Darkness30 = 27,
-    Darkness45 = 28,
-    SlopeGreenTopLeft = 29,
-    SlopeGreenTopRight = 30,
-    SlopeGreenBottomRight = 31,
-    SlopeGreenBottomLeft = 32,
-    SlopeGreenBottom = 33,
-    SlopeGreenTop = 34,
-    SlopeGreenLeft = 35,
-    SlopeGreenRight = 36,
-    SlopeRockTopLeft = 37,
-    SlopeRockTopRight = 38,
-    SlopeRockBottomRight = 39,
-    SlopeRockBottomLeft = 40,
-    SlopeRockBottom = 41,
-    SlopeRockTop = 42,
-    SlopeRockLeft = 43,
-    SlopeRockRight = 44,
-    SlopeSandTopLeft = 45,
-    SlopeSandTopRight = 46,
-    SlopeSandBottomRight = 47,
-    SlopeSandBottomLeft = 48,
-    SlopeSandBottom = 49,
-    SlopeSandTop = 50,
-    SlopeSandLeft = 51,
-    SlopeSandRight = 52,
-    SlopeDarkRockTopLeft = 53,
-    SlopeDarkRockTopRight = 54,
-    SlopeDarkRockBottomRight = 55,
-    SlopeDarkRockBottomLeft = 56,
-    SlopeDarkRockBottom = 57,
-    SlopeDarkRockTop = 58,
-    SlopeDarkRockLeft = 59,
-    SlopeDarkRockRight = 60,
-}
-
-lazy_static! {
-    static ref CONSTRUCTION_ENCODINGS: Vec<(char, Construction)> = vec![
-        ('0', Construction::Nothing),
-        ('1', Construction::WoodenFence),
-        ('3', Construction::DarkRock),
-        ('4', Construction::LightWall),
-        ('5', Construction::Counter),
-        ('6', Construction::Library),
-        ('7', Construction::TallGrass),
-        ('8', Construction::Forest),
-        ('9', Construction::Bamboo),
-        ('A', Construction::Box),
-        ('B', Construction::Rail),
-        ('C', Construction::StoneWall),
-        ('D', Construction::IndicatorArrow),
-        ('E', Construction::Bridge),
-        ('F', Construction::Broadleaf),
-        ('G', Construction::MetalFence),
-        ('H', Construction::StoneBox),
-        ('J', Construction::SpoiledTree),
-        ('K', Construction::WineTree),
-        ('L', Construction::SolarPanel),
-        ('M', Construction::Pipe),
-        ('N', Construction::BroadleafPurple),
-        ('O', Construction::WoodenWall),
-        ('P', Construction::SnowPile),
-        ('Q', Construction::SnowyForest),
-        ('R', Construction::Darkness15),
-        ('S', Construction::Darkness30),
-        ('T', Construction::Darkness45),
-        ('U', Construction::SlopeGreenTopLeft),
-        ('V', Construction::SlopeGreenTopRight),
-        ('W', Construction::SlopeGreenBottomRight),
-        ('X', Construction::SlopeGreenBottomLeft),
-        ('Y', Construction::SlopeGreenBottom),
-        ('Z', Construction::SlopeGreenTop),
-        ('a', Construction::SlopeGreenLeft),
-        ('b', Construction::SlopeGreenRight),
-        ('c', Construction::SlopeRockTopLeft),
-        ('d', Construction::SlopeRockTopRight),
-        ('e', Construction::SlopeRockBottomRight),
-        ('f', Construction::SlopeRockBottomLeft),
-        ('g', Construction::SlopeRockBottom),
-        ('h', Construction::SlopeRockTop),
-        ('j', Construction::SlopeRockLeft),
-        ('k', Construction::SlopeRockRight),
-        ('i', Construction::SlopeSandTopLeft),
-        ('l', Construction::SlopeSandTopRight),
-        ('m', Construction::SlopeSandBottomRight),
-        ('n', Construction::SlopeSandBottomLeft),
-        ('o', Construction::SlopeSandBottom),
-        ('p', Construction::SlopeSandTop),
-        ('q', Construction::SlopeSandLeft),
-        ('r', Construction::SlopeSandRight),
-        ('s', Construction::SlopeDarkRockTopLeft),
-        ('t', Construction::SlopeDarkRockTopRight),
-        ('u', Construction::SlopeDarkRockBottomRight),
-        ('v', Construction::SlopeDarkRockBottomLeft),
-        ('w', Construction::SlopeDarkRockBottom),
-        ('x', Construction::SlopeDarkRockTop),
-        ('y', Construction::SlopeDarkRockLeft),
-        ('z', Construction::SlopeDarkRockRight),
-    ];
-
-    static ref CHAR_TO_CONSTRUCTION: HashMap<char, Construction> = CONSTRUCTION_ENCODINGS.clone().into_iter().collect();
-    static ref CONSTRUCTION_TO_CHAR: HashMap<Construction, char> = CONSTRUCTION_ENCODINGS.clone().into_iter().map(|(char, biome)| (biome, char)).collect();
-}
+use crate::{features::hitmaps::Hittable, utils::rect::FRect};
+use super::{constructions::Construction, tiles::{SpriteTile, TileSet}};
 
 #[derive(Debug, Default, Clone, Copy)]
 #[repr(C)]
@@ -149,6 +11,7 @@ pub struct ConstructionTile {
     pub tile_down_type: Construction,
     pub tile_left_type: Construction,
     pub texture_source_rect: FRect,
+    pub hittable: Hittable
 }
 
 impl SpriteTile for ConstructionTile {
@@ -177,12 +40,27 @@ impl ConstructionTile {
         matches!(self.tile_type, Construction::Bridge)
     }
 
-    pub fn setup_neighbors(&mut self, up: Construction, right: Construction, bottom: Construction, left: Construction) {
+    pub fn setup(
+        &mut self, 
+        x: usize, y: usize,
+        up: Construction, right: Construction, bottom: Construction, left: Construction
+    ) {
         self.tile_up_type = up;
         self.tile_right_type = right;
         self.tile_down_type = bottom;
         self.tile_left_type = left;        
         self.setup_textures();    
+        self.setup_hittable(x, y);
+    }
+
+    fn setup_hittable(&mut self, x: usize, y: usize) {
+        self.hittable = Hittable {
+            frame: self.hittable_frame(x, y),
+            has_weight: false,
+            entity_id: 0, 
+            species_id: 0,
+            is_rigid: self.is_obstacle(),
+        }
     }
 
     fn setup_textures(&mut self) {
@@ -316,16 +194,6 @@ impl TileSet<ConstructionTile> {
     }
 }
 
-impl Construction {
-    pub fn from_char(c: char) -> Self {
-        *CHAR_TO_CONSTRUCTION.get(&c).unwrap_or(&Construction::Nothing)
-    }
-
-    pub fn to_char(self) -> char {
-        *CONSTRUCTION_TO_CHAR.get(&self).unwrap_or(&'0')
-    }
-}
-
 impl ConstructionTile {
     pub fn from_data(data: char) -> Self {
         let mut tile = Self { 
@@ -334,7 +202,8 @@ impl ConstructionTile {
             tile_right_type: Construction::Nothing, 
             tile_down_type: Construction::Nothing, 
             tile_left_type: Construction::Nothing, 
-            texture_source_rect: FRect::square_from_origin(1.0) 
+            texture_source_rect: FRect::square_from_origin(1.0),
+            hittable: Hittable::default()
         };
         tile.setup_textures();
         tile
@@ -422,7 +291,7 @@ impl<'de> Deserialize<'de> for TileSet<ConstructionTile> {
                 let down = if row < rows - 1 { tiles[row+1][col].tile_type } else { Construction::Nothing };
                 let left = if col > 0 { tiles[row][col-1].tile_type } else { Construction::Nothing };
 
-                tiles[row][col].setup_neighbors(up, right, down, left)
+                tiles[row][col].setup(col, row, up, right, down, left)
             }
         }
 

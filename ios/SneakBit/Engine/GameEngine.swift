@@ -41,7 +41,8 @@ class GameEngine {
     private var frameCount: Int = 0
     
     let tileSize = CGFloat(TILE_SIZE)
-    private(set) var tileScale: CGFloat = tileScale
+    
+    private(set) var tileScale: CGFloat = CGFloat(TILE_SIZE)
     private(set) var renderingScale: CGFloat = 1
     private(set) var cameraViewport: FRect = .zero
     private(set) var safeAreaInsets: UIEdgeInsets = .zero
@@ -62,7 +63,7 @@ class GameEngine {
     init() {
         initialize_config(
             true,
-            Float(TILE_SIZE * 1.8),
+            Float(TILE_SIZE * 1.6),
             currentLang(),
             dataFolder(),
             speciesJson(),
@@ -166,7 +167,7 @@ class GameEngine {
     }
     
     func renderingFrame(for entity: RenderableItem) -> CGRect {
-        renderingFrame(for: entity.frame, offset: entity.offset)
+        renderingFrame(for: entity.frame)
     }
     
     func tileMapImage() -> UIImage? {
@@ -177,7 +178,7 @@ class GameEngine {
         }
     }
     
-    private func renderingFrame(for frame: FRect, offset: Vector2d = .zero) -> CGRect {
+    private func renderingFrame(for frame: FRect) -> CGRect {
         let actualCol = CGFloat(frame.x - cameraViewport.x)
         let actualRow = CGFloat(frame.y - cameraViewport.y)
         

@@ -1,59 +1,6 @@
-use std::collections::HashMap;
-
-use lazy_static::lazy_static;
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer, de::Deserializer};
-use crate::utils::{directions::Direction, rect::FRect};
-use super::tiles::{SpriteTile, TileSet};
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
-#[derive(Default)]
-#[repr(i32)]
-pub enum Biome {
-    Water = 0,
-    Desert = 1,
-    Grass = 2,
-    Rock = 3,
-    Snow = 4,
-    LightWood = 5,
-    DarkWood = 6,
-    #[default]
-    Nothing = 7,
-    DarkRock = 8,
-    Ice = 9,
-    DarkGrass = 10,
-    RockPlates = 11,
-    Lava = 12,
-    Farmland = 13,
-    DarkWater = 14,
-    DarkSand = 15,
-    SandPlates = 16
-}
-
-lazy_static! {
-    static ref BIOME_ENCODINGS: Vec<(char, Biome)> = vec![
-        ('0', Biome::Nothing),
-        ('1', Biome::Grass),
-        ('2', Biome::Water),
-        ('3', Biome::Rock),
-        ('4', Biome::Desert),
-        ('5', Biome::Snow),
-        ('6', Biome::DarkWood),
-        ('7', Biome::LightWood),
-        ('8', Biome::DarkRock),
-        ('9', Biome::Ice),
-        ('A', Biome::DarkGrass),
-        ('B', Biome::RockPlates),
-        ('G', Biome::Lava),
-        ('H', Biome::Farmland),
-        ('J', Biome::DarkWater),
-        ('K', Biome::DarkSand),
-        ('L', Biome::SandPlates)
-    ];
-
-    static ref NUMBER_OF_BIOMES: i32 = BIOME_ENCODINGS.len() as i32;
-    static ref CHAR_TO_BIOME: HashMap<char, Biome> = BIOME_ENCODINGS.clone().into_iter().collect();
-    static ref BIOME_TO_CHAR: HashMap<Biome, char> = BIOME_ENCODINGS.clone().into_iter().map(|(char, biome)| (biome, char)).collect();
-}
+use crate::{features::hitmaps::Hittable, utils::{directions::Direction, rect::FRect}};
+use super::{biomes::{Biome, NUMBER_OF_BIOMES}, tiles::{SpriteTile, TileSet}};
 
 #[derive(Default, Debug, Clone)]
 #[repr(C)]
@@ -65,6 +12,7 @@ pub struct BiomeTile {
     pub tile_left_type: Biome,
     pub texture_offset_x: f32,
     pub texture_offset_y: f32,
+    pub hittable: Hittable
 }
 
 impl SpriteTile for BiomeTile {
@@ -83,12 +31,23 @@ impl BiomeTile {
         matches!(&self.tile_type, Biome::Water | Biome::Nothing | Biome::Lava | Biome::DarkWater)
     }
 
-    pub fn setup_neighbors(&mut self, up: Biome, right: Biome, bottom: Biome, left: Biome) {
+    pub fn setup(&mut self, x: usize, y: usize, up: Biome, right: Biome, bottom: Biome, left: Biome) {
         self.tile_up_type = up;
         self.tile_right_type = right;
         self.tile_down_type = bottom;
         self.tile_left_type = left;        
         self.setup_textures();    
+        self.setup_hittable(x, y);
+    }
+
+    fn setup_hittable(&mut self, x: usize, y: usize) {
+        self.hittable = Hittable {
+            frame: FRect::new(x as f32, y as f32, 1.0, 1.0).padded_all(0.15),
+            has_weight: false,
+            entity_id: 0, 
+            species_id: 0,
+            is_rigid: self.is_obstacle(),
+        }
     }
 
     fn setup_textures(&mut self) {
@@ -217,56 +176,6 @@ impl BiomeTile {
     }
 }
 
-impl Biome {    
-    fn number_of_combinations() -> i32 {
-        15
-    }
-
-    fn texture_index(&self) -> i32 {
-        match self {
-            Biome::Water => 0,
-            Biome::Desert => 1,
-            Biome::Grass => 2,
-            Biome::Rock => 3,
-            Biome::Snow => 4,
-            Biome::LightWood => 5,
-            Biome::DarkWood => 6,
-            Biome::Nothing => 7,
-            Biome::DarkRock => 8,
-            Biome::Ice => 9,
-            Biome::DarkGrass => 10,
-            Biome::RockPlates => 11,
-            Biome::Lava => 12,
-            Biome::Farmland => 13,
-            Biome::DarkWater => 14,
-            Biome::DarkSand => 15,
-            Biome::SandPlates => 16
-        }
-    }
-
-    fn is_same(&self, other: Biome) -> bool {
-        self == &other || (self.is_light_grass() && other.is_light_grass())
-    }
-
-    fn is_light_grass(&self) -> bool {
-        matches!(self, Biome::Grass)
-    }
-
-    fn is_dark_grass(&self) -> bool {
-        matches!(self, Biome::DarkGrass)
-    }
-
-    fn is_liquid(&self) -> bool {
-        matches!(self, Biome::Water | Biome::DarkWater | Biome::Lava)
-    }
-}
-
-impl Biome {
-    pub fn stops_bullets(&self) -> bool {
-        matches!(self, Biome::Nothing)
-    }
-}
-
 impl TileSet<BiomeTile> {
     pub fn update_tile(&mut self, row: usize, col: usize, new_biome: Biome) {
         if row >= self.tiles.len() || col >= self.tiles[0].len() {
@@ -294,16 +203,6 @@ impl TileSet<BiomeTile> {
     }
 }
 
-impl Biome {
-    pub fn from_char(c: char) -> Self {
-        *CHAR_TO_BIOME.get(&c).unwrap_or(&Biome::Nothing)
-    }
-
-    pub fn to_char(self) -> char {
-        *BIOME_TO_CHAR.get(&self).unwrap_or(&'0')
-    }
-}
-
 impl BiomeTile {
     pub fn from_data(data: char) -> Self {
         let mut tile = Self { 
@@ -313,7 +212,8 @@ impl BiomeTile {
             tile_down_type: Biome::Nothing,
             tile_left_type: Biome::Nothing,
             texture_offset_x: 0.0, 
-            texture_offset_y: 0.0
+            texture_offset_y: 0.0,
+            hittable: Hittable::default()
         };
         tile.setup_textures();
         tile
@@ -361,7 +261,7 @@ impl<'de> Deserialize<'de> for TileSet<BiomeTile> {
                 let down = if row < rows - 1 { tiles[row+1][col].tile_type } else { Biome::Nothing };
                 let left = if col > 0 { tiles[row][col-1].tile_type } else { Biome::Nothing };
 
-                tiles[row][col].setup_neighbors(up, right, down, left)
+                tiles[row][col].setup(col, row, up, right, down, left)
             }
         }
 

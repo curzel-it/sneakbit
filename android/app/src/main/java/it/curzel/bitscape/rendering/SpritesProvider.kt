@@ -29,10 +29,10 @@ class SpritesProvider(private val context: Context, private val spriteSheetFileN
             val sheetImage = loadSpriteSheetImage(spriteSheetID) ?: return null
 
             val rect = Rect(
-                textureRect.x * NativeLib.TILE_SIZE,
-                textureRect.y * NativeLib.TILE_SIZE,
-                (textureRect.x + textureRect.w) * NativeLib.TILE_SIZE,
-                (textureRect.y + textureRect.h) * NativeLib.TILE_SIZE
+                (textureRect.x * NativeLib.TILE_SIZE).toInt(),
+                (textureRect.y * NativeLib.TILE_SIZE).toInt(),
+                ((textureRect.x + textureRect.w) * NativeLib.TILE_SIZE).toInt(),
+                ((textureRect.y + textureRect.h) * NativeLib.TILE_SIZE).toInt()
             )
 
             val width = rect.width()

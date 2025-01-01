@@ -1443,7 +1443,7 @@
   },
   {
     "base_speed": 7.0,
-    "dps": 1600,
+    "dps": 1800,
     "entity_type": "Bullet",
     "id": 7000,
     "inventory_texture_offset": [
@@ -3948,7 +3948,7 @@
   },
   {
     "base_speed": 2.0,
-    "dps": 555,
+    "dps": 450,
     "entity_type": "Bullet",
     "id": 1166,
     "inventory_texture_offset": [
@@ -4567,7 +4567,7 @@
   },
   {
     "base_speed": 2.0,
-    "dps": 666,
+    "dps": 550,
     "entity_type": "Bullet",
     "id": 1181,
     "inventory_texture_offset": [

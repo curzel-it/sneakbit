@@ -1,6 +1,6 @@
 use std::{cell::RefCell, cmp::Ordering};
 
-use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, current_player_index, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, is_turn_based_game_mode, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::FRect, vector::Vector2d}};
+use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, current_player_index, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, is_turn_based_game_mode, maps::{biomes::Biome, biome_tiles::BiomeTile, constructions::Construction, construction_tiles::ConstructionTile, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::FRect, vector::Vector2d}};
 use crate::features::{hitmaps::Hitmap, entity::Entity, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
@@ -143,8 +143,9 @@ impl World {
         engine_updates.extend(self.update_entities(time_since_last_update));
         engine_updates.extend(self.update_cutscenes(time_since_last_update));
 
-        self.update_visible_entities(viewport);
-        self.update_hitmaps();
+        unsafe {
+            self.update_hitmaps(viewport);
+        }
         engine_updates
     }
 
@@ -255,12 +256,20 @@ impl World {
 
     fn update_biome_tile(&mut self, row: usize, col: usize, new_biome: Biome) {
         self.biome_tiles.update_tile(row, col, new_biome);
-        self.update_tiles_hitmap();
+        let viewport = self.bounds.clone();
+        
+        unsafe { 
+            self.update_hitmaps(&viewport);
+        }
     }
 
     fn update_construction_tile(&mut self, row: usize, col: usize, new_construction: Construction) {
         self.construction_tiles.update_tile(row, col, new_construction);
-        self.update_tiles_hitmap();
+        let viewport = self.bounds.clone();
+
+        unsafe { 
+            self.update_hitmaps(&viewport);
+        }
     }  
     
     pub fn find_teleporter_for_destination(&self, destination_world: u32) -> Option<FRect> {
@@ -369,25 +378,6 @@ impl World {
 
     pub fn is_pressure_plate_up(&self, lock_type: &LockType) -> bool {
         !self.is_pressure_plate_down(lock_type)
-    }
-    
-    pub fn update_visible_entities(&mut self, viewport: &FRect) {
-        self.visible_entities.clear();
-
-        let entities = self.entities.borrow();
-
-        for index in 0..entities.len() {
-            let entity = &entities[index];            
-            let is_visible = false || 
-                matches!(entity.entity_type, EntityType::Hero) ||
-                matches!(entity.entity_type, EntityType::PressurePlate) ||
-                matches!(entity.entity_type, EntityType::PushableObject) ||
-                viewport.overlaps_or_touches(&entity.frame);
-
-            if is_visible {
-                self.visible_entities.push((index, entity.id));
-            }
-        }
     }
 
     pub fn index_of_any_player_who_is_pressing_confirm(&self) -> Option<usize> {

@@ -1,4 +1,4 @@
-use crate::{config::config, constants::{RAIL_CHANGE_COOLDOWN, TILE_SIZE}, features::{entity::Entity, state_updates::WorldStateUpdate}, maps::construction_tiles::Construction, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
+use crate::{config::config, constants::{RAIL_CHANGE_COOLDOWN, TILE_SIZE}, features::{entity::Entity, state_updates::WorldStateUpdate}, maps::constructions::Construction, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
 
 impl Entity {
     pub fn setup_rail(&mut self) {

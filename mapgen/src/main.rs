@@ -2,7 +2,7 @@ use image::{DynamicImage, GenericImageView, ImageBuffer, RgbImage, RgbaImage, im
 use std::{error::Error, fs::{self, File}, io::BufWriter, path::Path, sync::mpsc::{self, Receiver, Sender}, thread};
 use regex::Regex;
 
-use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, TILE_SIZE}, initialize_game, lang::localizable::LANG_EN, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::{SpriteTile, TileSet}}, multiplayer::modes::GameMode, worlds::world::World};
+use game_core::{config::initialize_config_paths, constants::{BIOME_NUMBER_OF_FRAMES, TILE_SIZE}, initialize_game, lang::localizable::LANG_EN, maps::{biomes::Biome, biome_tiles::BiomeTile, constructions::Construction, construction_tiles::ConstructionTile, tiles::{SpriteTile, TileSet}}, multiplayer::modes::GameMode, worlds::world::World};
 
 struct Job {
     world_id: u32,
@@ -59,7 +59,7 @@ pub fn generate_tile_map_image(
             let down = if row < world_height - 1 { biome_tiles_copy[row + 1][col].tile_type } else { Biome::Nothing };
             let left = if col > 0 { biome_tiles_copy[row][col -1].tile_type } else { Biome::Nothing };
             let tile = &mut biome_tiles_copy[row][col];
-            tile.setup_neighbors(up, right, down, left);
+            tile.setup(col, row, up, right, down, left);
         }
     }
 
@@ -71,7 +71,7 @@ pub fn generate_tile_map_image(
             let down = if row < world_height - 1 { construction_tiles_copy[row + 1][col].tile_type } else { Construction::Nothing };
             let left = if col > 0 { construction_tiles_copy[row][col -1].tile_type } else { Construction::Nothing };
             let tile = &mut construction_tiles_copy[row][col];
-            tile.setup_neighbors(up, right, down, left);
+            tile.setup(col, row, up, right, down, left);
         }
     }
 

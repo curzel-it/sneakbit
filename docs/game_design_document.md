@@ -22,16 +22,21 @@ The feature is accessible from the arena in Duskhaven.
 
 Still a work in progress, a single map is available.
 
-## Tiling System
-The game operates on a grid-based tile system.
-There are two types of tiles:
-* Biomes, which act as a background (water, grass, lava, rocky pavement, parquet, ...)
-* Constructions, which act as a second layer of elements on the map
+## Architecture
+### Tiling System
+The levels are defined using a dual-layer tiling system system:
+* The first layer represents biomes, which act as a background (water, grass, lava, rocky pavement, parquet, ...)
+* The second one represents constructions, which act as a second layer of elements on the map
 
 Both kinds of tiles can represent an obstacle, the player cannot walk on water, lava and over fences for example, but can walk over grass.
 To mimic the effect of density, different construction tiles have different properties, for example some can reflect bullets (walls) while others don't.
 
 Tiles are pre-rendered and distributed along with the game.
+
+### Collision detection
+Using classic AABB since version 1.7.
+
+Biomes, constructions and entities each have a "hittable frame" of dynamic size.
 
 ## Combat System
 * Monsters only attack melee for now
@@ -49,7 +54,7 @@ Bullets travel straight and inflict a damage per second, so the faster bullets a
 
 |Ammo|Dps|Speed|Lifespan|
 |--|--|--|--|
-|Kunai|1600|7.0|1.4|
+|Kunai|1800|7.0|1.4|
 |.223 Rem|600|10.0|2.0|
 |Cannonball|5000|8.0|2.0|
 
@@ -67,8 +72,8 @@ Melee weapons don't require ammunition, but the underlying mechanisms makes them
 #### Weapons
 |Weapon|Dps|Speed|Lifespan|Cooldown|
 |--|--|--|--|--|
-|Sword|555|2.0|0.4|0.35|
-|Dark Blade|666|2.0|0.4|0.35|
+|Sword|450|2.0|0.4|0.35|
+|Dark Blade|550|2.0|0.4|0.35|
 
 #### Shields
 |Weapon|Received Damage Reduction|

@@ -1,4 +1,4 @@
-use game_core::{constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, TILE_SIZE}, current_biome_tiles_variant, current_world_height, current_world_width, maps::{biome_tiles::{Biome, BiomeTile}, construction_tiles::{Construction, ConstructionTile}, tiles::SpriteTile}, utils::rect::FRect};
+use game_core::{constants::{SPRITE_SHEET_BIOME_TILES, SPRITE_SHEET_CONSTRUCTION_TILES, TILE_SIZE}, current_biome_tiles_variant, current_world_height, current_world_width, maps::{biomes::Biome, biome_tiles::BiomeTile, constructions::Construction, construction_tiles::ConstructionTile, tiles::SpriteTile}, utils::rect::FRect};
 use raylib::prelude::*;
 
 use super::ui::get_rendering_config;

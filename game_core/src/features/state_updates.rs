@@ -1,4 +1,4 @@
-use crate::{entities::{bullets::{BulletHits, BulletId}, species::SpeciesId}, features::destination::Destination, maps::{biome_tiles::Biome, construction_tiles::Construction}};
+use crate::{entities::{bullets::{BulletHits, BulletId}, species::SpeciesId}, features::destination::Destination, maps::{biomes::Biome, constructions::Construction}};
 
 use super::{entity::{Entity, EntityId}, entity_props::EntityProps, locks::LockType, messages::DisplayableMessage, toasts::Toast};
 

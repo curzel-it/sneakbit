@@ -39,8 +39,8 @@ data class AmmoRecap(
         val empty: AmmoRecap = AmmoRecap(
             weaponName = "",
             weaponSpeciesId = 0,
-            weaponSprite = FRect(0.0, 0.0, 0.0, 0.0),
-            weaponInventorySprite = FRect(0.0, 0.0, 0.0, 0.0),
+            weaponSprite = FRect.zero(),
+            weaponInventorySprite = FRect.zero(),
             bulletName = "",
             bulletSpeciesId = 0,
             ammoInventoryCount = 0,
@@ -53,21 +53,21 @@ data class AmmoRecap(
 }
 
 data class FRect(
-    val x: Int,
-    val y: Int,
-    val w: Int,
-    val h: Int
-)
-
-data class Vector2d(
     val x: Float,
-    val y: Float
-)
+    val y: Float,
+    val w: Float,
+    val h: Float
+) {
+    companion object {
+        fun zero(): FRect {
+            return FRect(0.0f, 0.0f, 0.0f, 0.0f)
+        }
+    }
+}
 
 data class RenderableItem(
     val spriteSheetId: UInt,
     val textureRect: FRect,
-    val offset: Vector2d,
     val frame: FRect
 )
 

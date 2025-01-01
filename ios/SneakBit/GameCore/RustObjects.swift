@@ -26,10 +26,6 @@ extension FRect: Hashable, Equatable {
     }
 }
 
-extension Vector2d {
-    static let zero = Vector2d(x: 0, y: 0)
-}
-
 extension CDisplayableMessage: Equatable {
     public static func == (lhs: CDisplayableMessage, rhs: CDisplayableMessage) -> Bool {
         if lhs.is_valid && rhs.is_valid {
