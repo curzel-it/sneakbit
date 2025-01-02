@@ -23,8 +23,7 @@ impl Entity {
 
     pub fn update_bullet(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
         self.update_sprite_for_current_state();
-        self.move_linearly(world, time_since_last_update);
-
+        
         if self.is_at_the_edge_of_the_world(&world.bounds) {
             return vec![WorldStateUpdate::RemoveEntity(self.id)]
         }

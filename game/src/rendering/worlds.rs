@@ -47,7 +47,10 @@ pub fn render_frame(context: &mut GameContext) {
         render_entities(&mut d, &camera_viewport);
         render_limited_visibility(&mut d, screen_width, screen_height);
         render_layout(&hud, &mut d);
-        // draw_hittable_overlays(&mut d);
+        
+        if config.show_advanced_debug_info {
+            draw_hittable_overlays(&mut d);
+        }
     }
 }
 

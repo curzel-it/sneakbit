@@ -6,9 +6,10 @@ use super::ui::get_rendering_config;
 pub fn render_entities(d: &mut RaylibDrawHandle, camera_viewport: &FRect) {
     let config = get_rendering_config();
     let scale = config.rendering_scale;
+    let draw_entity_ids = config.show_advanced_debug_info;
     
     for item in &get_renderables_vec() {
-        render_entity(d, scale, item, camera_viewport);
+        render_entity(d, scale, item, camera_viewport, draw_entity_ids);
     }
 }
 
@@ -16,7 +17,8 @@ fn render_entity(
     d: &mut RaylibDrawHandle, 
     scale: f32,
     item: &RenderableItem, 
-    camera_viewport: &FRect
+    camera_viewport: &FRect,
+    draw_entity_ids: bool
 ) {
     let sprite_key = item.sprite_sheet_id;
     let tile_scale = TILE_SIZE * scale;
@@ -46,5 +48,13 @@ fn render_entity(
             0.0,
             Color::WHITE,
         );
+
+        if draw_entity_ids {
+            let x = dest_rect.x as i32 - 8;
+            let y = dest_rect.y as i32 + 2;
+            d.draw_text(&format!("{}", item.id), x - 1, y - 1, 10, Color::BLACK);
+            d.draw_text(&format!("{}", item.id), x + 1, y + 1, 10, Color::BLACK);
+            d.draw_text(&format!("{}", item.id), x, y, 10, Color::WHITE);
+        }
     }
 }

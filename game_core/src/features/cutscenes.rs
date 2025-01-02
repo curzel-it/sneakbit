@@ -28,6 +28,7 @@ impl CutScene {
         let sprite = if self.is_playing { &self.play_sprite } else { &self.idle_sprite };
 
         RenderableItem {
+            id: 0,
             sprite_sheet_id: sprite.sheet_id,
             texture_rect: sprite.frame,
             frame: self.frame,

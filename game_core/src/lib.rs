@@ -28,6 +28,7 @@ pub mod features;
 pub mod lang;
 pub mod input;
 pub mod maps;
+pub mod movement;
 pub mod multiplayer;
 pub mod prefabs;
 pub mod ui;
@@ -131,6 +132,7 @@ pub extern "C" fn update_mouse(
 
 #[repr(C)]
 pub struct RenderableItem {
+    pub id: u32,
     pub sprite_sheet_id: u32,
     pub texture_rect: FRect,
     pub frame: FRect,
@@ -149,6 +151,7 @@ pub fn get_renderables_vec() -> Vec<RenderableItem> {
         .filter(|e| !e.is_equipment() || e.is_equipped)
         .map(|e| {
             RenderableItem {
+                id: e.id,
                 sprite_sheet_id: e.sprite_sheet(),
                 texture_rect: e.texture_source_rect(),
                 frame: e.frame,

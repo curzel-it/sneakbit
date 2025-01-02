@@ -9,22 +9,9 @@ impl Entity {
 
     pub fn update_hero(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {        
         let mut updates: Vec<WorldStateUpdate> = vec![];
-        let is_slipping = world.frame_is_slippery_surface(&self.hittable_frame());
 
-        if !(is_slipping && self.current_speed > 0.0) {
-            self.update_direction(world, time_since_last_update);
-            self.update_sprite_for_current_state();
-        } else {
-            self.update_sprite_for_direction_speed(self.direction, 0.0);
-        }
-        
-        self.time_immobilized -= time_since_last_update;
-        if self.time_immobilized <= 0.0 {
-            self.move_linearly(world, time_since_last_update)
-        }
-        if self.hp < 100.0 {
-            self.hp += HERO_RECOVERY_PS * time_since_last_update
-        }
+        self.hero_update_sprite(world);        
+        self.self_heal(time_since_last_update);
         
         updates.push(self.cache_props());
         updates.extend(self.leave_footsteps(world));
@@ -67,6 +54,22 @@ impl Entity {
             leave_footsteps(world, &self.direction, self.frame.x, self.frame.y + 1.0)
         } else {
             vec![]
+        }
+    }
+
+    fn hero_update_sprite(&mut self, world: &World) {
+        let is_slipping = world.frame_is_slippery_surface(&self.hittable_frame());
+
+        if !(is_slipping && self.current_speed > 0.0) {
+            self.update_sprite_for_current_state();
+        } else {
+            self.update_sprite_for_direction_speed(self.direction, 0.0);
+        }
+    }
+
+    fn self_heal(&mut self, time_since_last_update: f32) {
+        if self.hp < 100.0 {
+            self.hp += HERO_RECOVERY_PS * time_since_last_update
         }
     }
 }

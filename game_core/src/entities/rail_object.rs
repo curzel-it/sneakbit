@@ -39,7 +39,6 @@ impl Entity {
                 self.frame = self.frame.offset(dx, dy);
                 self.direction_change_cooldown -= time_since_last_update;
             }
-            self.update_sorting_key();
             break
         }
     } 

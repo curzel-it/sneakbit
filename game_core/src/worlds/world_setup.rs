@@ -1,4 +1,4 @@
-use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, multiplayer::modes::GameMode, number_of_players, utils::{directions::Direction, math::ZeroComparable}};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, multiplayer::modes::GameMode, number_of_players, utils::{directions::Direction, math::ZeroComparable, rect::FRect}};
 use super::{world::World, world_type::WorldType};
 
 impl World {
@@ -65,153 +65,65 @@ impl World {
         }
     }
 
-    fn find_spawn_position_from_corner(&self, corner: Corner) -> Option<(f32, f32)> {
-        let max_distance = self.bounds.w.max(self.bounds.h).ceil() as u32; // Convert to integer steps
-
-        for distance in 0..=max_distance {
-            let positions = match corner {
-                Corner::TopLeft => self.generate_positions(
-                    self.bounds.x,
-                    self.bounds.y,
-                    distance as f32,
-                    1.0,
-                    1.0,
-                ),
-                Corner::TopRight => self.generate_positions(
-                    self.bounds.x + self.bounds.w - 1.0,
-                    self.bounds.y,
-                    distance as f32,
-                    -1.0,
-                    1.0,
-                ),
-                Corner::BottomLeft => self.generate_positions(
-                    self.bounds.x,
-                    self.bounds.y + self.bounds.h - 1.0,
-                    distance as f32,
-                    1.0,
-                    -1.0,
-                ),
-                Corner::BottomRight => self.generate_positions(
-                    self.bounds.x + self.bounds.w - 1.0,
-                    self.bounds.y + self.bounds.h - 1.0,
-                    distance as f32,
-                    -1.0,
-                    -1.0,
-                ),
-            };
-
-            for (x, y) in positions {
-                if !self.hits(x, y) {
-                    return Some((x, y));
-                }
-            }
-        }
-
-        None
-    }
-
-    fn generate_positions(
-        &self,
-        start_x: f32,
-        start_y: f32,
-        distance: f32,
-        x_step: f32,
-        y_step: f32,
-    ) -> Vec<(f32, f32)> {
-        let mut positions = Vec::new();
-        let integer_distance = distance.ceil() as u32; // Ensure integer steps
-
-        for dx in 0..=integer_distance {
-            let dy = integer_distance - dx;
-
-            let x = start_x + dx as f32 * x_step;
-            let y = start_y + dy as f32 * y_step;
-
-            if self.is_within_bounds(x, y) {
-                positions.push((x, y));
-            }
-
-            if dy != 0 {
-                let x = start_x + dx as f32 * x_step;
-                let y = start_y - dy as f32 * y_step;
-
-                if self.is_within_bounds(x, y) {
-                    positions.push((x, y));
-                }
-            }
-        }
-
-        positions
-    }
-
-    fn is_within_bounds(&self, x: f32, y: f32) -> bool {
-        x >= self.bounds.x
-            && x < self.bounds.x + self.bounds.w
-            && y >= self.bounds.y
-            && y < self.bounds.y + self.bounds.h
-    }
-
     fn spawn_players_at_map_corners(&mut self) {
         let player_ids = self.player_entity_ids();
         let num_players = number_of_players();
 
-        let corners = match num_players {
-            1 => vec![Corner::TopLeft],
-            2 => vec![Corner::TopLeft, Corner::TopRight],
-            3 => vec![Corner::TopLeft, Corner::TopRight, Corner::BottomLeft],
-            4 => vec![
-                Corner::TopLeft,
-                Corner::TopRight,
-                Corner::BottomLeft,
-                Corner::BottomRight,
-            ],
-            _ => vec![Corner::TopLeft],
-        };
+        let half_width = self.bounds.w / 2.0;
+        let half_height = self.bounds.h / 2.0;
 
-        let default_position = self.find_default_position();
+        let quarters = vec![
+            Corner::TopLeft,
+            Corner::TopRight,
+            Corner::BottomLeft,
+            Corner::BottomRight,
+        ];
 
-        for (i, &id) in player_ids.iter().enumerate().take(num_players) {
-            let corner = corners.get(i).cloned().unwrap_or(Corner::TopLeft);
-            let pos = self
-                .find_spawn_position_from_corner(corner)
-                .unwrap_or(default_position);
+        for (i, &player_id) in player_ids.iter().take(num_players).enumerate() {
+            if let Some(corner) = quarters.get(i) {
+                let (start_x, start_y, end_x, end_y) = match corner {
+                    Corner::TopLeft => (0.0, 0.0, half_width, half_height),
+                    Corner::TopRight => (self.bounds.w - 2.0, 0.0, half_width, half_height),
+                    Corner::BottomLeft => (0.0, self.bounds.h - 2.0, half_width, half_height),
+                    Corner::BottomRight => (self.bounds.w - 2.0, self.bounds.h - 2.0, half_width, half_height),
+                };
 
-            let (x, y) = pos;
-            let mut entity = make_entity_by_species(SPECIES_HERO);
-            entity.frame.x = x;
-            entity.frame.y = y - 1.0;
-            entity.direction = Direction::Down;
-            entity.id = id;
-            entity.setup_hero_with_player_index(i);
-            entity.immobilize_for_seconds(0.2);
-            self.players[i].props = entity.props();
-            self.insert_entity(entity, i);
+                let (x, y) = self.spawn_position_from_point(start_x, start_y, end_x, end_y);
+
+                let mut entity = make_entity_by_species(SPECIES_HERO);
+                entity.frame.x = x;
+                entity.frame.y = y;
+                entity.direction = Direction::Down; 
+                entity.id = player_id;
+                entity.setup_hero_with_player_index(i);
+                entity.immobilize_for_seconds(0.2);
+
+                self.players[i].props = entity.props();
+                self.insert_entity(entity, i);
+            }
         }
     }
 
-    fn find_default_position(&self) -> (f32, f32) {
-        let half_w = self.bounds.w / 2.0;
-        let half_h = self.bounds.h / 2.0;
+    fn spawn_position_from_point(&self, start_x: f32, start_y: f32, end_x: f32, end_y: f32) -> (f32, f32) {
+        let dx = if end_x > start_x { 1.0 } else { -1.0 };
+        let x_steps = (start_x.max(end_x) - start_x.min(end_x)).floor() as usize;
 
-        let start_x = self.bounds.x.ceil() as i32;
-        let end_x = (self.bounds.x + half_w).floor() as i32;
-        let start_y = self.bounds.y.ceil() as i32;
-        let end_y = (self.bounds.y + half_h).floor() as i32;
+        let dy = if end_y > start_y { 1.0 } else { -1.0 };
+        let y_steps = (start_y.max(end_y) - start_y.min(end_y)).floor() as usize;
 
-        for x in start_x..=end_x {
-            for y in start_y..=end_y {
-                let x_f32 = x as f32;
-                let y_f32 = y as f32;
-                if !self.hits(x_f32, y_f32) {
-                    return (x_f32, y_f32);
+        for xi in 0..x_steps {
+            let x = start_x + (xi as f32) * dx;
+
+            for yi in 0..y_steps {
+                let y = start_y + (yi as f32) * dy;
+                let area = FRect::new(x, y, 2.0, 2.0);
+
+                if !self.area_hits(&vec![], &area) {
+                    return (x, y)
                 }
             }
         }
-
-        (
-            self.bounds.x + self.bounds.w / 2.0,
-            self.bounds.y + self.bounds.h / 2.0,
-        )
+        return (0.0, 0.0)
     }
 
     fn spawn_hero_at_last_known_location(
