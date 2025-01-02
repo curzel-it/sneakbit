@@ -41,12 +41,8 @@ impl BiomeTile {
     }
 
     fn setup_hittable(&mut self, x: usize, y: usize) {        
-        let frame = FRect::new(x as f32, y as f32, 1.0, 1.0).padded_all(
-            if matches!(self.tile_type, Biome::Nothing) { 0.0 } else { 0.1 }
-        );
-
         self.hittable = Hittable {
-            frame,
+            frame: FRect::new(x as f32, y as f32, 1.0, 1.0).padded_all(0.1),
             has_weight: false,
             entity_id: 0, 
             species_id: 0,
