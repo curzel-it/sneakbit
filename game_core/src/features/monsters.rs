@@ -8,10 +8,7 @@ impl Entity {
     pub fn update_monster(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> { 
         self.update_sprite_for_current_state();
         
-        if !is_creative_mode() {
-            self.update_direction(world, time_since_last_update);
-            self.move_linearly(world, time_since_last_update);
-            
+        if !is_creative_mode() {            
             let updates = self.handle_melee_attack(world, time_since_last_update);                
             if !updates.is_empty() {
                 return updates;

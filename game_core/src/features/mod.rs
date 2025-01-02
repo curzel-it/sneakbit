@@ -13,7 +13,6 @@ pub mod engine;
 pub mod hitmaps;
 pub mod hits_handling_use_case;
 pub mod light_conditions;
-pub mod linear_movement;
 pub mod links;
 pub mod locks;
 pub mod messages;
