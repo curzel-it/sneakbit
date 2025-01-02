@@ -5,7 +5,6 @@ pub mod monsters;
 pub mod cutscenes;
 pub mod destination;
 pub mod dialogues;
-pub mod movements;
 pub mod fast_travel;
 pub mod entity;
 pub mod entity_props;

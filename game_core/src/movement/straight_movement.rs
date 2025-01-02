@@ -1,4 +1,6 @@
-use crate::{config::config, constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, features::{entity::Entity, movements::MovementDirections}, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{config::config, constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+
+use super::movement_directions::MovementDirections;
 
 impl Entity {
     pub fn projected_frames_by_moving_straight(&self, direction: &Direction, time_since_last_update: f32) -> (FRect, FRect) {
