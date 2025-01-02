@@ -4,6 +4,7 @@ use std::{collections::HashSet, path::PathBuf, ptr};
 use std::os::raw::c_char;
 
 use config::initialize_config_paths;
+use constants::PLAYER1_INDEX;
 use entities::known_species::SPECIES_KUNAI_LAUNCHER;
 use entities::species::species_by_id;
 use equipment::basics::{available_weapons, set_equipped, AmmoRecap};
@@ -18,6 +19,7 @@ use maps::biome_tiles::BiomeTile;
 use maps::construction_tiles::ConstructionTile;
 use multiplayer::turns_use_case::{CMatchResult, MatchResult};
 use multiplayer::{modes::GameMode, turns::GameTurn};
+use utils::directions::Direction;
 use utils::{rect::FRect, strings::{c_char_ptr_to_string, string_to_c_char}, vector::Vector2d};
 
 pub mod config;
@@ -583,4 +585,9 @@ pub fn hittables() -> &'static Vec<Hittable> {
 
 pub fn tiles_hittables() -> &'static Vec<Hittable> {
     &engine().world.tiles_hitmap.data
+}
+
+#[no_mangle]
+pub extern "C" fn current_main_player_direction() -> Direction {
+    engine().world.players[PLAYER1_INDEX].props.direction
 }

@@ -1,7 +1,7 @@
 use std::sync::Once;
 
 use nohash_hasher::IntMap;
-use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View, COLOR_TEXT, COLOR_TEXT_HIGHLIGHTED, COLOR_TEXT_SHADOW, COLOR_TURN_COUNTDOWN}, layouts::{AnchorPoint, Layout}}, utils::{rect::FRect, vector::Vector2d}};
+use game_core::{constants::TILE_SIZE, ui::{components::{BordersTextures, GridSpacing, NonColor, Spacing, Typography, View, COLOR_TEXT, COLOR_TEXT_HIGHLIGHTED, COLOR_TEXT_SHADOW, COLOR_TURN_COUNTDOWN}, layouts::{AnchorPoint, Layout}}, utils::{directions::Direction, rect::FRect, vector::Vector2d}};
 use raylib::prelude::*;
 
 pub struct RenderingConfig {
@@ -11,6 +11,7 @@ pub struct RenderingConfig {
     pub rendering_scale: f32,
     pub font_rendering_scale: f32,
     pub canvas_size: Vector2d,
+    pub direction: Direction,
     pub show_debug_info: bool,
     pub show_advanced_debug_info: bool,
     pub render_using_individual_tiles: bool

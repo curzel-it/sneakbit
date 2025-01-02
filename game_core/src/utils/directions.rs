@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use super::{rect::FRect, vector::Vector2d};
 
 #[derive(Default, Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[repr(C)]
 pub enum Direction {
     Up = 0,
     Right,

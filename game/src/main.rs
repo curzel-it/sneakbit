@@ -7,9 +7,9 @@ mod rendering;
 use std::{env, process};
 
 use features::{audio::play_audio, context::GameContext, death_screen::update_death_screen, fast_travel::update_fast_travel, inputs::{handle_keyboard_updates, handle_mouse_updates}, loading_screen::update_loading_screen, paths::local_path, pvp_arena::update_pvp_arena};
-use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_keyboard_state, current_mouse_state, current_soundtrack_string, current_world_id, features::sound_effects::is_music_enabled, initialize_game, lang::localizable::LANG_EN, multiplayer::modes::GameMode, update_game};
+use game_core::{config::initialize_config_paths, constants::TILE_SIZE, current_keyboard_state, current_main_player_direction, current_mouse_state, current_soundtrack_string, current_world_id, features::sound_effects::is_music_enabled, initialize_game, lang::localizable::LANG_EN, multiplayer::modes::GameMode, update_game};
 use gameui::{game_hud::update_game_hud, game_menu::update_game_menu, messages::update_messages, toasts::update_toasts, weapon_selection::update_weapons_selection};
-use rendering::{textures::load_tile_map_textures, ui::get_rendering_config, window::{handle_window_updates, load_last_fullscreen_settings, start_rl}, worlds::render_frame};
+use rendering::{textures::load_tile_map_textures, ui::{get_rendering_config, get_rendering_config_mut}, window::{handle_window_updates, load_last_fullscreen_settings, start_rl}, worlds::render_frame};
 use sys_locale::get_locale;
 
 fn main() {
@@ -57,6 +57,8 @@ fn main() {
         update_death_screen(&mut context, keyboard);
         update_loading_screen(&mut context, time_since_last_update);
         
+        get_rendering_config_mut().direction = current_main_player_direction();
+
         if !is_game_paused {
             update_game(time_since_last_update);
         } 

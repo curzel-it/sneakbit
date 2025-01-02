@@ -1,4 +1,4 @@
-use game_core::{constants::TILE_SIZE, get_renderables_vec, utils::rect::FRect, RenderableItem};
+use game_core::{constants::TILE_SIZE, get_renderables_vec, utils::{directions::Direction, rect::FRect}, RenderableItem};
 use raylib::prelude::*;
 
 use super::ui::get_rendering_config;
@@ -9,7 +9,12 @@ pub fn render_entities(d: &mut RaylibDrawHandle, camera_viewport: &FRect) {
     let draw_entity_ids = config.show_advanced_debug_info;
     
     for item in &get_renderables_vec() {
-        render_entity(d, scale, item, camera_viewport, draw_entity_ids);
+        render_entity(
+            d, scale, item, 
+            camera_viewport,
+            &config.direction, 
+            draw_entity_ids
+        );
     }
 }
 
@@ -18,27 +23,21 @@ fn render_entity(
     scale: f32,
     item: &RenderableItem, 
     camera_viewport: &FRect,
+    camera_direction: &Direction,
     draw_entity_ids: bool
 ) {
     let sprite_key = item.sprite_sheet_id;
-    let tile_scale = TILE_SIZE * scale;
     
     if let Some(texture) = get_rendering_config().get_texture(sprite_key) {
         let source = item.texture_rect;
-        let source_rect = Rectangle {
-            x: source.x * TILE_SIZE, 
-            y: source.y * TILE_SIZE,
-            width: source.w * TILE_SIZE,
-            height: source.h * TILE_SIZE,
-        };
+        let source_rect = frect_to_texture_source_rect(&source);
 
-        let frame = item.frame;
-        let dest_rect = Rectangle {
-            x: (frame.x - camera_viewport.x) * tile_scale,
-            y: (frame.y - camera_viewport.y) * tile_scale,
-            width: frame.w * tile_scale,
-            height: frame.h * tile_scale,
-        };
+        let dest_rect = frect_to_dest_rect_with_camera_direction(
+            &item.frame,
+            camera_viewport, 
+            camera_direction,
+            scale
+        );
 
         d.draw_texture_pro(
             texture,
@@ -56,5 +55,32 @@ fn render_entity(
             d.draw_text(&format!("{}", item.id), x + 1, y + 1, 10, Color::BLACK);
             d.draw_text(&format!("{}", item.id), x, y, 10, Color::WHITE);
         }
+    }
+}
+
+fn frect_to_texture_source_rect(source: &FRect) -> Rectangle {
+    Rectangle {
+        x: source.x * TILE_SIZE, 
+        y: source.y * TILE_SIZE,
+        width: source.w * TILE_SIZE,
+        height: source.h * TILE_SIZE,
+    }
+}
+
+fn frect_to_dest_rect_with_camera_direction(
+    frame: &FRect, 
+    camera_viewport: &FRect, 
+    camera_direction: &Direction,
+    scale: f32
+) -> Rectangle {
+    frect_to_dest_rect(frame, camera_viewport, scale)
+}
+
+fn frect_to_dest_rect(frame: &FRect, camera_viewport: &FRect, scale: f32) -> Rectangle {
+    Rectangle {
+        x: (frame.x - camera_viewport.x) * TILE_SIZE * scale,
+        y: (frame.y - camera_viewport.y) * TILE_SIZE * scale,
+        width: frame.w * TILE_SIZE * scale,
+        height: frame.h * TILE_SIZE * scale,
     }
 }
