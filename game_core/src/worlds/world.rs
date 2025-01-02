@@ -317,7 +317,7 @@ impl World {
     }
 
     pub fn is_slippery_surface(&self, x: usize, y: usize) -> bool {
-        if y < self.biome_tiles.tiles.len() {
+        if y < self.biome_tiles.tiles.len() && x < self.biome_tiles.tiles[y].len() {
             let tile = self.biome_tiles.tiles[y][x].tile_type;
             matches!(tile, Biome::Ice)
         } else {

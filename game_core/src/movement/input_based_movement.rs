@@ -23,7 +23,6 @@ impl Entity {
         }
 
         self.frame = next;
-        self.update_sorting_key();
     }
 
     fn update_direction_based_on_keyboard(&mut self, world: &World) {

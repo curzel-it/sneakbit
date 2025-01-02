@@ -33,5 +33,6 @@ impl Entity {
             MovementDirections::Free => self.move_around_free(world, time_since_last_update),
             MovementDirections::FindHero =>  self.move_chasing_player(world, time_since_last_update)
         }
+        self.update_sorting_key();
     }
 }

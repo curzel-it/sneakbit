@@ -167,7 +167,6 @@ impl Entity {
             self.remaining_lifespan = UNLIMITED_LIFESPAN;
         }
         species_by_id(self.species_id).reload_props(self);
-        self.update_sorting_key();
         
         match self.entity_type {
             EntityType::Hero => self.setup_hero(),

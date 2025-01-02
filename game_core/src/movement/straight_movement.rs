@@ -52,6 +52,5 @@ impl Entity {
         }
 
         self.frame = next;
-        self.update_sorting_key();
     } 
 }
