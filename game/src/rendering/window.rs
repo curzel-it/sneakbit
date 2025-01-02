@@ -5,7 +5,7 @@ use raylib::prelude::*;
 
 use crate::{features::font_helpers::{bold_font_path, latin_characters, regular_font_path}, rendering::ui::{get_rendering_config_mut, is_rendering_config_initialized}, GameContext};
 
-use super::{textures::load_textures, ui::{init_rendering_config, RenderingConfig}};
+use super::{textures::load_textures, ui::{init_rendering_config, CameraDirection, RenderingConfig}};
 
 pub fn start_rl(creative_mode: bool) -> GameContext {    
     let debug = cfg!(debug_assertions);
@@ -44,7 +44,7 @@ pub fn start_rl(creative_mode: bool) -> GameContext {
         show_debug_info: debug,
         show_advanced_debug_info: env::args().any(|arg| arg == "debug"),
         render_using_individual_tiles: creative_mode,
-        direction: Direction::Unknown,
+        direction: CameraDirection::Down
     });
 
     GameContext::new(rl, rl_thread, debug)

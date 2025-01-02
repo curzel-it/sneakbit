@@ -11,10 +11,30 @@ pub struct RenderingConfig {
     pub rendering_scale: f32,
     pub font_rendering_scale: f32,
     pub canvas_size: Vector2d,
-    pub direction: Direction,
+    pub direction: CameraDirection,
     pub show_debug_info: bool,
     pub show_advanced_debug_info: bool,
     pub render_using_individual_tiles: bool
+}
+
+#[derive(Clone)]
+pub enum CameraDirection {
+    Up,
+    Right,
+    Down,
+    Left
+}
+
+impl CameraDirection {
+    pub fn from_player(player_direction: &Direction) -> Option<CameraDirection> {
+        match player_direction {
+            Direction::Up => Some(CameraDirection::Up),
+            Direction::Right => Some(CameraDirection::Right),
+            Direction::Down => Some(CameraDirection::Down),
+            Direction::Left => Some(CameraDirection::Left),
+            _ => None
+        }        
+    }
 }
 
 pub static INIT_RENDERING_CONFIG: Once = Once::new();

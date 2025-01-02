@@ -1,7 +1,7 @@
-use game_core::{constants::TILE_SIZE, get_renderables_vec, utils::{directions::Direction, rect::FRect}, RenderableItem};
+use game_core::{constants::TILE_SIZE, get_renderables_vec, utils::rect::FRect, RenderableItem};
 use raylib::prelude::*;
 
-use super::ui::get_rendering_config;
+use super::ui::{get_rendering_config, CameraDirection};
 
 pub fn render_entities(d: &mut RaylibDrawHandle, camera_viewport: &FRect) {
     let config = get_rendering_config();
@@ -23,7 +23,7 @@ fn render_entity(
     scale: f32,
     item: &RenderableItem, 
     camera_viewport: &FRect,
-    camera_direction: &Direction,
+    camera_direction: &CameraDirection,
     draw_entity_ids: bool
 ) {
     let sprite_key = item.sprite_sheet_id;
@@ -70,7 +70,7 @@ fn frect_to_texture_source_rect(source: &FRect) -> Rectangle {
 fn frect_to_dest_rect_with_camera_direction(
     frame: &FRect, 
     camera_viewport: &FRect, 
-    camera_direction: &Direction,
+    camera_direction: &CameraDirection,
     scale: f32
 ) -> Rectangle {
     frect_to_dest_rect(frame, camera_viewport, scale)
