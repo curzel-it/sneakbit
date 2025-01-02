@@ -1,3 +1,5 @@
+use std::env;
+
 use game_core::{constants::{INITIAL_CAMERA_VIEWPORT, TILE_SIZE}, current_game_mode, features::storage::{bool_for_global_key, StorageKey}, is_creative_mode, number_of_players, set_wants_fullscreen, ui::components::Typography, utils::vector::Vector2d, wants_fullscreen, window_size_changed};
 use raylib::prelude::*;
 
@@ -40,6 +42,7 @@ pub fn start_rl(creative_mode: bool) -> GameContext {
         font_rendering_scale: 2.0,
         canvas_size: Vector2d::new(1.0, 1.0),
         show_debug_info: debug,
+        show_advanced_debug_info: env::args().any(|arg| arg == "debug"),
         render_using_individual_tiles: creative_mode
     });
 

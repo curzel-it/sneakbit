@@ -4,6 +4,9 @@ use super::movements::MovementDirections;
 
 impl Entity {
     pub fn move_linearly(&mut self, world: &World, time_since_last_update: f32) { 
+        if !matches!(self.movement_directions, MovementDirections::None | MovementDirections::Keyboard) {
+            return
+        }
         if self.current_speed == 0.0 || matches!(self.direction, Direction::Unknown | Direction::Still) {
             return
         }

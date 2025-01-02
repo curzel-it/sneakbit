@@ -12,6 +12,7 @@ pub struct RenderingConfig {
     pub font_rendering_scale: f32,
     pub canvas_size: Vector2d,
     pub show_debug_info: bool,
+    pub show_advanced_debug_info: bool,
     pub render_using_individual_tiles: bool
 }
 

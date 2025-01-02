@@ -77,10 +77,11 @@ impl World {
             self.hitmap.data.push(item);
         }
 
-        let min_x = viewport.x.floor().max(self.bounds.x) as usize;
-        let max_x = viewport.max_x().min(self.bounds.max_x()).floor() as usize;
-        let min_y = viewport.y.floor().max(self.bounds.y) as usize;
-        let max_y = viewport.max_y().floor().min(self.bounds.max_y()) as usize;
+        let t = viewport.padded_all(-2.0);
+        let min_x = t.x.floor().max(self.bounds.x) as usize;
+        let max_x = t.max_x().min(self.bounds.max_x()).floor() as usize;
+        let min_y = t.y.floor().max(self.bounds.y) as usize;
+        let max_y = t.max_y().floor().min(self.bounds.max_y()) as usize;
 
         for y in min_y..max_y {
             for x in min_x..max_x {

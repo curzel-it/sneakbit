@@ -25,24 +25,27 @@ impl Entity {
             return
         }
 
-        let is_pushing = self.is_being_pushed_by_player(world, player_props);
+        let is_pushing = self.is_being_pushed_by_player(world, player_props, time_since_last_update);
         
         if !is_pushing {
             self.pushable_set_still();
             return
         }
 
-        if self.is_obstacle_in_direction(world, player_props.direction) {
+        let d = player_props.direction;
+        let exclude = self.my_and_players_ids();
+        let (next, next_collidable) = self.projected_frames_by_moving_straight(&d, time_since_last_update);
+
+        if world.area_hits(&exclude, &next_collidable) {
             self.pushable_set_still();
             return
         }
-
+        self.frame = next;
+        self.direction = d;
         self.current_speed = player_props.speed;
-        self.direction = player_props.direction;
-        self.move_linearly(world, time_since_last_update);
     }
 
-    fn is_being_pushed_by_player(&self, world: &World, player: &EntityProps) -> bool {
+    fn is_being_pushed_by_player(&self, world: &World, player: &EntityProps, time_since_last_update: f32) -> bool {
         let player_center = player.hittable_frame.center();
 
         if !self.frame.scaled_from_center(3.0).contains_or_touches(&player_center) {
@@ -50,7 +53,13 @@ impl Entity {
         }
 
         if self.frame.contains_or_touches(&player_center) {
-            if self.is_obstacle_in_direction(world, player.direction.opposite()) {
+            let exclude = self.my_and_players_ids();
+            let (_, next_collidable) = self.projected_frames_by_moving_straight(
+                &player.direction.opposite(), 
+                time_since_last_update
+            );
+
+            if world.area_hits(&exclude, &next_collidable) {
                 return true
             }
         }
