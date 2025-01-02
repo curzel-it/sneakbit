@@ -36,6 +36,10 @@ impl Vector2d {
         Self::new(self.x * value, self.y * value)
     }
     
+    pub fn distance_to(&self, other: &Vector2d) -> f32 {
+        ((self.x - other.x).powf(2.0) + (self.y - other.y).powf(2.0)).sqrt()
+    }
+    
     pub fn dumb_distance_to(&self, other: &Vector2d) -> f32 {
         (self.x - other.x).abs() + (self.y - other.y).abs()
     }
