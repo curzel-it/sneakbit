@@ -25,6 +25,27 @@ pub fn render_frame(context: &mut GameContext) {
     let camera_viewport = camera_viewport();
 
     if can_render_frame {
+        if !config.is3d {
+            if config.render_using_individual_tiles {
+                render_tiles(
+                    &mut d, 
+                    &camera_viewport, 
+                    current_world_biome_tiles(),
+                    current_world_construction_tiles()
+                );
+            } else {
+                let success = render_tile_map(&mut d, &camera_viewport);
+                if !success {
+                    render_tiles(
+                        &mut d, 
+                        &camera_viewport, 
+                        current_world_biome_tiles(),
+                        current_world_construction_tiles()
+                    );
+                }
+            }
+        }
+        
         render_night(&mut d, screen_width, screen_height);
         render_entities(&mut d, &camera_viewport);
         render_limited_visibility(&mut d, screen_width, screen_height);

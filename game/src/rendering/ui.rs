@@ -14,7 +14,8 @@ pub struct RenderingConfig {
     pub direction: CameraDirection,
     pub show_debug_info: bool,
     pub show_advanced_debug_info: bool,
-    pub render_using_individual_tiles: bool
+    pub render_using_individual_tiles: bool,
+    pub is3d: bool
 }
 
 #[derive(Clone)]

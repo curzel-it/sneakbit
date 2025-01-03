@@ -44,7 +44,8 @@ pub fn start_rl(creative_mode: bool) -> GameContext {
         show_debug_info: debug,
         show_advanced_debug_info: env::args().any(|arg| arg == "debug"),
         render_using_individual_tiles: creative_mode,
-        direction: CameraDirection::Down
+        direction: CameraDirection::Down,
+        is3d: env::args().any(|arg| arg == "3d"),
     });
 
     GameContext::new(rl, rl_thread, debug)
