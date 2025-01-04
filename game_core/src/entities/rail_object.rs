@@ -52,7 +52,7 @@ impl Entity {
             if self.direction_change_cooldown > 0.0 {
                 vec![d]
             } else {
-                vec![d, d.turn_right(), d.turn_left(), d.opposite()]
+                vec![d, d.turn_right().turn_right(), d.turn_left().turn_left(), d.opposite()]
             }
         }
     }

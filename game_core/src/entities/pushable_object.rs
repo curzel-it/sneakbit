@@ -66,9 +66,13 @@ impl Entity {
         
         match player.direction {
             Direction::Up => self.frame.offset_y(0.6).contains_or_touches(&player_center),
+            Direction::UpRight => self.frame.offset(-0.6, 0.6).contains_or_touches(&player_center),
             Direction::Right => self.frame.offset_x(-0.6).contains_or_touches(&player_center),
+            Direction::DownRight => self.frame.offset(-0.6, -0.6).contains_or_touches(&player_center),
             Direction::Down => self.frame.offset_y(-0.6).contains_or_touches(&player_center),
+            Direction::DownLeft => self.frame.offset(0.6, -0.6).contains_or_touches(&player_center),
             Direction::Left => self.frame.offset_x(0.6).contains_or_touches(&player_center),
+            Direction::UpLeft => self.frame.offset(0.6, 0.6).contains_or_touches(&player_center),
             Direction::None => false
         }
     }

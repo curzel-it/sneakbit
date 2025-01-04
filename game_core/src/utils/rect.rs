@@ -116,22 +116,15 @@ impl FRect {
     
         // Step 4: Match on the provided direction and verify alignment
         match direction {
-            Direction::Up => {
-                is_above
-            },
-            Direction::Down => {
-                is_below
-            },
-            Direction::Left => {
-                is_left
-            },
-            Direction::Right => {
-                is_right
-            },
-            // Handle other directions as not matching
-            Direction::None => {
-                false
-            }
+            Direction::Up => is_above,
+            Direction::UpRight => is_above || is_right,
+            Direction::Right => is_right,
+            Direction::DownRight => is_below || is_right,
+            Direction::Down => is_below,
+            Direction::DownLeft => is_below || is_left,
+            Direction::Left => is_left,
+            Direction::UpLeft => is_above || is_left,
+            Direction::None => false
         }
     }
         

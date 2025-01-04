@@ -8,7 +8,7 @@ impl Entity {
                 &self.frame.center(), 
                 &player.center(), 
                 self.direction
-            ).simplified();
+            );
             self.move_straight(world, time_since_last_update);
         } else {
             self.move_around_free(world, time_since_last_update);
@@ -19,8 +19,8 @@ impl Entity {
         let me = self.hittable_frame(); 
         let exclude = self.my_and_players_ids();
 
-        let vision_x = self.frame.w * 2.0;
-        let vision_y = self.frame.h * 2.0;
+        let vision_x = self.frame.w * 4.0;
+        let vision_y = self.frame.h * 4.0;
 
         for &player_index in currently_active_players().iter() {
             let player = &world.players[player_index].props;

@@ -59,12 +59,12 @@ impl Entity {
         let row = match (direction, speed != 0.0) {
             (Direction::Up, true) => 0,
             (Direction::Up, false) => 1,
-            (Direction::Right, true) => 2,
-            (Direction::Right, false) => 3,
+            (Direction::Right | Direction::UpRight | Direction::DownRight, true) => 2,
+            (Direction::Right | Direction::UpRight | Direction::DownRight, false) => 3,
             (Direction::Down, true) => 4,
             (Direction::Down, false) => 5,
-            (Direction::Left, true) => 6,
-            (Direction::Left, false) => 7,
+            (Direction::Left | Direction::UpLeft | Direction::DownLeft, true) => 6,
+            (Direction::Left | Direction::UpLeft | Direction::DownLeft, false) => 7,
             (Direction::None, true) => 4,
             (Direction::None, false) => 5,
         };

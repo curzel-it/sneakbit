@@ -18,11 +18,20 @@ impl Entity {
         if world.area_hits(&vec![self.id], &next_collidable_frame) {
             if world.frame_is_slippery_surface(&self.hittable_frame()) {
                 self.current_speed = 0.0;
+                return
             }
-            return
-        }
 
-        self.frame = next;
+            for direction in self.direction.components() {
+                let (next, next_collidable_frame) = self.projected_frames_by_moving_straight(&direction, time_since_last_update);
+                if !world.area_hits(&vec![self.id], &next_collidable_frame) {
+                    self.frame = next;
+                    self.direction = direction;
+                    return
+                }
+            }
+        } else {
+            self.frame = next;
+        }
     }
 
     fn update_direction_based_on_keyboard(&mut self, world: &World) {
