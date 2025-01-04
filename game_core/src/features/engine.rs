@@ -237,7 +237,7 @@ impl GameEngine {
     pub fn start_new_game(&mut self) {
         self.clear_messages();
         self.previous_world = None;
-        self.world.players[0].props.direction = Direction::Unknown;        
+        self.world.players[0].props.direction = Direction::None;        
         reset_all_stored_values();
         self.world = World::load(1000).unwrap();
         self.teleport_to_previous();
@@ -295,7 +295,7 @@ impl GameEngine {
         self.match_result = MatchResult::InProgress;
         self.dead_players.clear();
         self.previous_world = None;
-        self.world.players[0].props.direction = Direction::Unknown;
+        self.world.players[0].props.direction = Direction::None;
         self.teleport_to_previous();
         self.did_just_revive = true;
     }

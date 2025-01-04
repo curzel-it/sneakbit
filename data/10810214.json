@@ -53,7 +53,7 @@
       "contents": null,
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 10810213,
         "x": 0,
         "y": 0

@@ -135,7 +135,7 @@
       "contents": null,
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 1014,
         "x": 12,
         "y": 15
@@ -178,7 +178,7 @@
       "contents": null,
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 1016,
         "x": 1,
         "y": 19
@@ -221,7 +221,7 @@
       "contents": null,
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 1014,
         "x": 21,
         "y": 5
@@ -416,7 +416,7 @@
       "contents": null,
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 1016,
         "x": 47,
         "y": 8
@@ -440,7 +440,7 @@
       "contents": null,
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 1016,
         "x": 22,
         "y": 2

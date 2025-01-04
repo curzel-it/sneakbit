@@ -552,7 +552,7 @@
       "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 11199957,
         "x": 0,
         "y": 0
@@ -857,7 +857,7 @@
       "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 11199897,
         "x": 0,
         "y": 0
@@ -1083,7 +1083,7 @@
       "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 11718859,
         "x": 0,
         "y": 0

@@ -22,7 +22,7 @@ impl Destination {
     }
 
     pub fn new(world: u32, x: f32, y: f32) -> Self {
-        Self::new_ex(world, x, y, Direction::Unknown)
+        Self::new_ex(world, x, y, Direction::None)
     }
 
     pub fn nearest(world: u32) -> Self {

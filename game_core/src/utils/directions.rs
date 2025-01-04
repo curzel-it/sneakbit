@@ -9,8 +9,7 @@ pub enum Direction {
     Down,
     Left,
     #[default]
-    Unknown,
-    Still,
+    None
 }
 
 impl Direction {
@@ -23,7 +22,7 @@ impl Direction {
         Self::between_points(
             &source.center(), 
             &other.center(), 
-            Direction::Unknown
+            Direction::None
         )
     }
     
@@ -53,75 +52,69 @@ impl Direction {
             Direction::Right => Direction::Right,
             Direction::Down => Direction::Down,
             Direction::Left => Direction::Left,
-            Direction::Unknown => Direction::Unknown,
-            Direction::Still => Direction::Still,
+            Direction::None => Direction::None
         }
     }
     
     pub fn is_valid_between(&self, origin: &Vector2d, destination: &Vector2d) -> bool {
-        let expected_direction = Self::between_points(origin, destination, Direction::Unknown);
+        let expected_direction = Self::between_points(origin, destination, Direction::None);
         match self {
             Direction::Up => matches!(expected_direction, Direction::Up),
             Direction::Down => matches!(expected_direction, Direction::Down),
             Direction::Left => matches!(expected_direction, Direction::Left),
             Direction::Right => matches!(expected_direction, Direction::Right),
-            Direction::Still => expected_direction == Direction::Still,
-            Direction::Unknown => expected_direction == Direction::Unknown,
+            Direction::None => expected_direction == Direction::None,
         }
     }
 
     pub fn as_offset(&self) -> (f32, f32) {
         match self {
-            Direction::Still => (0.0, 0.0),
             Direction::Up => (0.0, -1.0),
             Direction::Right => (1.0, 0.0),
             Direction::Down => (0.0, 1.0),
             Direction::Left => (-1.0, 0.0),
-            Direction::Unknown => (0.0, 0.0),
+            Direction::None => (0.0, 0.0),
         }  
     }
 
-    pub fn from_data(up: bool, right: bool, down: bool, left: bool) -> Self {
+    pub fn from_data(up: bool, right: bool, down: bool, left: bool) -> Option<Self> {
         match (up, right, down, left) {
-            (false, false , false, false) => Direction::Still,
-            (true, false , false, false) => Direction::Up,
-            (false, true , false, false) => Direction::Right,
-            (false, false , true, false) => Direction::Down,
-            (false, false , false, true) => Direction::Left,
-            _ => Direction::Unknown,
+            (false, false , false, false) => Some(Direction::None),
+            (true, false , false, false) => Some(Direction::Up),
+            (false, true , false, false) => Some(Direction::Right),
+            (false, false , true, false) => Some(Direction::Down),
+            (false, false , false, true) => Some(Direction::Left),
+            _ => None,
         }
     }
 
     pub fn opposite(&self) -> Direction {
         match self {
-            Direction::Still => Direction::Still,
             Direction::Up => Direction::Down,
             Direction::Right => Direction::Left,
             Direction::Down => Direction::Up,
             Direction::Left => Direction::Right,
-            Direction::Unknown => Direction::Unknown,
+            Direction::None => Direction::None,
         }
     }
 
     pub fn turn_right(&self) -> Direction {
         match self {
-            Direction::Still => Direction::Still,
             Direction::Up => Direction::Right,
             Direction::Right => Direction::Down,
             Direction::Down => Direction::Left,
             Direction::Left => Direction::Up,
-            Direction::Unknown => Direction::Unknown,
+            Direction::None => Direction::None,
         }
     }
 
     pub fn turn_left(&self) -> Direction {
         match self {
-            Direction::Still => Direction::Still,
             Direction::Up => Direction::Left,
             Direction::Right => Direction::Up,
             Direction::Down => Direction::Right,
             Direction::Left => Direction::Down,
-            Direction::Unknown => Direction::Unknown,
+            Direction::None => Direction::None,
         }
     }
 }

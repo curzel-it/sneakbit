@@ -225,6 +225,7 @@ typedef struct FRect {
 } FRect;
 
 typedef struct RenderableItem {
+  uint32_t id;
   uint32_t sprite_sheet_id;
   struct FRect texture_rect;
   struct FRect frame;
