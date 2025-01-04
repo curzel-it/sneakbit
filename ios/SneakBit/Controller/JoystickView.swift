@@ -46,7 +46,7 @@ private class JoystickViewModel: ObservableObject {
     
     @Published var dragLocation: CGPoint = .zero
     @Published var isDragging = false
-    @Published var currentActiveKey: EmulatedKey?
+    @Published var currentActiveKeys: Set<EmulatedKey> = []
     @Published var center: CGPoint = .zero
     
     let baseRadius: CGFloat = 32
@@ -88,36 +88,43 @@ private class JoystickViewModel: ObservableObject {
         withAnimation {
             isDragging = false
         }
-        releaseCurrentKey()
+        releaseCurrentKeys()
     }
 
     private func handleDirection(angle: CGFloat) {
-        let adjustedAngle = angle < 0 ? angle + 2 * .pi : angle
-        let pi = CGFloat.pi
-
-        let newActiveKey: EmulatedKey? = switch adjustedAngle {
-        case 7 * pi / 4...2 * pi, 0...pi / 4: .right
-        case pi / 4...3 * pi / 4: .down
-        case 3 * pi / 4...5 * pi / 4: .left
-        case 5 * pi / 4...7 * pi / 4: .up
-        default: nil
+        let adjustedAngle = (angle < 0 ? angle + 2 * .pi : angle) / CGFloat.pi
+        let newActiveKeys = Set(directionForAngle(adjustedAngle))
+        let keysToRelease = currentActiveKeys.subtracting(newActiveKeys)
+        let keysToPress = newActiveKeys.subtracting(currentActiveKeys)
+        
+        for key in keysToRelease {
+            engine.setKeyUp(key)
         }
-
-        if currentActiveKey != newActiveKey {
-            if let key = currentActiveKey {
-                engine.setKeyUp(key)
-            }
-            if let key = newActiveKey {
-                engine.setKeyDown(key)
-            }
-            currentActiveKey = newActiveKey
+        for key in keysToPress {
+            engine.setKeyDown(key)
         }
+        
+        currentActiveKeys = newActiveKeys
     }
 
-    private func releaseCurrentKey() {
-        if let key = currentActiveKey {
+    private func releaseCurrentKeys() {
+        for key in currentActiveKeys {
             engine.setKeyUp(key)
-            currentActiveKey = nil
+        }
+        currentActiveKeys.removeAll()
+    }
+    
+    private func directionForAngle(_ angle: CGFloat) -> [EmulatedKey] {
+        switch angle {
+        case 0..<1/8, 15/8..<2: [.right]
+        case 1/8..<3/8: [.right, .down]
+        case 3/8..<5/8: [.down]
+        case 5/8..<7/8: [.down, .left]
+        case 7/8..<9/8: [.left]
+        case 9/8..<11/8: [.left, .up]
+        case 11/8..<13/8: [.up]
+        case 13/8..<15/8: [.up, .right]
+        default: []
         }
     }
 }

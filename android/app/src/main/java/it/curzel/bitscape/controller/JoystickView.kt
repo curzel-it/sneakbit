@@ -39,7 +39,7 @@ fun JoystickView(
                         viewModel.handleDragStarted(offset)
                     },
                     onDrag = { change, _ ->
-                        change.consume()
+                        change.consume() // Consume the event to prevent further propagation
                         viewModel.handleDragChanged(change.position)
                     },
                     onDragEnd = {
@@ -52,6 +52,7 @@ fun JoystickView(
             }
     ) {
         if (viewModel.isDragging) {
+            // Joystick Base
             Image(
                 bitmap = ImageBitmap.imageResource(R.drawable.joystick),
                 contentDescription = "Joystick Base",
@@ -64,6 +65,7 @@ fun JoystickView(
                         translationY = viewModel.center.y - viewModel.baseRadiusPx
                     }
             )
+            // Joystick Lever
             Image(
                 bitmap = ImageBitmap.imageResource(R.drawable.joystick_lever),
                 contentDescription = "Joystick Lever",
@@ -87,7 +89,7 @@ class JoystickViewModel(
 ) {
     var dragLocation by mutableStateOf(Offset.Zero)
     var isDragging by mutableStateOf(false)
-    var currentActiveKey: EmulatedKey? by mutableStateOf(null)
+    var currentActiveKeys: MutableSet<EmulatedKey> = mutableSetOf()
     var center by mutableStateOf(Offset.Zero)
 
     val baseRadius: Dp = 32.dp
@@ -155,31 +157,44 @@ class JoystickViewModel(
 
     fun handleDragEnded() {
         isDragging = false
-        releaseCurrentKey()
+        releaseCurrentKeys()
     }
 
     private fun handleDirection(angle: Float) {
-        val adjustedAngle = if (angle < 0) angle + 2 * PI.toFloat() else angle
-        val pi = PI.toFloat()
+        val adjustedAngle = (if (angle < 0) angle + 2 * PI.toFloat() else angle) / PI.toFloat()
+        val newActiveKeys = directionForAngle(adjustedAngle)
+        val keysToRelease = currentActiveKeys - newActiveKeys
+        val keysToPress = newActiveKeys - currentActiveKeys
 
-        val newActiveKey: EmulatedKey? = when {
-            (7 * pi / 4 <= adjustedAngle && adjustedAngle <= 2 * pi) || (0 <= adjustedAngle && adjustedAngle <= pi / 4) -> EmulatedKey.RIGHT
-            (pi / 4 < adjustedAngle && adjustedAngle <= 3 * pi / 4) -> EmulatedKey.DOWN
-            (3 * pi / 4 < adjustedAngle && adjustedAngle <= 5 * pi / 4) -> EmulatedKey.LEFT
-            (5 * pi / 4 < adjustedAngle && adjustedAngle <= 7 * pi / 4) -> EmulatedKey.UP
-            else -> null
+        keysToRelease.forEach { key ->
+            setKeyUp(key)
+            currentActiveKeys.remove(key)
         }
-
-        if (currentActiveKey != newActiveKey) {
-            currentActiveKey?.let { setKeyUp(it) }
-            newActiveKey?.let { setKeyDown(it) }
-            currentActiveKey = newActiveKey
+        keysToPress.forEach { key ->
+            setKeyDown(key)
+            currentActiveKeys.add(key)
         }
     }
 
-    private fun releaseCurrentKey() {
-        currentActiveKey?.let { setKeyUp(it) }
-        currentActiveKey = null
+    private fun directionForAngle(angle: Float): Set<EmulatedKey> {
+        return when {
+            (0f <= angle && angle <= 1/8f) || (15/8f <= angle && angle <= 2f) -> setOf(EmulatedKey.RIGHT)
+            (1/8f < angle && angle <= 3/8f) -> setOf(EmulatedKey.RIGHT, EmulatedKey.DOWN)
+            (3/8f < angle && angle <= 5/8f) -> setOf(EmulatedKey.DOWN)
+            (5/8f < angle && angle <= 7/8f) -> setOf(EmulatedKey.DOWN, EmulatedKey.LEFT)
+            (7/8f < angle && angle <= 9/8f) -> setOf(EmulatedKey.LEFT)
+            (9/8f < angle && angle <= 11/8f) -> setOf(EmulatedKey.LEFT, EmulatedKey.UP)
+            (11/8f < angle && angle <= 13/8f) -> setOf(EmulatedKey.UP)
+            (13/8f < angle && angle <= 15/8f) -> setOf(EmulatedKey.UP, EmulatedKey.RIGHT)
+            else -> emptySet()
+        }
+    }
+
+    private fun releaseCurrentKeys() {
+        currentActiveKeys.forEach { key ->
+            setKeyUp(key)
+        }
+        currentActiveKeys.clear()
     }
 
     private fun Offset.getAngle(): Float = atan2(this.y, this.x)
