@@ -33,7 +33,7 @@ impl Entity {
     }
 
     pub fn move_straight(&mut self, world: &World, time_since_last_update: f32) { 
-        if self.current_speed == 0.0 || matches!(self.direction, Direction::Unknown | Direction::Still) {
+        if self.current_speed == 0.0 || matches!(self.direction, Direction::None) {
             return
         }
         let (next, next_collidable) = self.projected_frames_by_moving_straight(&self.direction, time_since_last_update);

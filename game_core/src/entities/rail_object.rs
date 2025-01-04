@@ -46,7 +46,7 @@ impl Entity {
     fn directions_to_check(&self) -> Vec<Direction> {
         let d = self.direction;
 
-        if matches!(d, Direction::Unknown | Direction::Still) {
+        if matches!(d, Direction::None) {
             vec![Direction::Up, Direction::Right, Direction::Down, Direction::Left]
         } else {
             if self.direction_change_cooldown > 0.0 {

@@ -298,21 +298,15 @@ impl PlayerKeyboardEventsProvider {
 
     fn direction_based_on_current_keys(&self, current: Direction) -> Direction {
         if self.discard_direction_events_until_next_arrow_key_is_pressed {
-            return Direction::Unknown;
+            return Direction::None;
         }
-
         let direction_from_new_keys = Direction::from_data(
             self.direction_up.is_down,
             self.direction_right.is_down,
             self.direction_down.is_down,
             self.direction_left.is_down,
         );
-        
-        match direction_from_new_keys {
-            Direction::Unknown => current,
-            Direction::Still => Direction::Unknown,
-            _ => direction_from_new_keys
-        }
+        direction_from_new_keys.unwrap_or(current)
     }
 
     fn is_any_arrow_key_down(&self) -> bool {

@@ -15,7 +15,7 @@ impl PlayerProps {
     fn new(index: usize) -> Self {
         Self {
             index,
-            direction_based_on_current_keys: Direction::Unknown,
+            direction_based_on_current_keys: Direction::None,
             is_any_arrow_key_down: false,
             has_ranged_attack_key_been_pressed: false,
             has_close_attack_key_been_pressed: false,

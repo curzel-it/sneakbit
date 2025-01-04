@@ -372,7 +372,7 @@ impl Entity {
     }
 
     pub fn play_death_animation(&mut self) {
-        self.direction = Direction::Unknown;
+        self.direction = Direction::None;
         self.current_speed = 0.0;
         self.is_rigid = false;
         self.is_dying = true;

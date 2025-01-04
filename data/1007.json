@@ -487,7 +487,7 @@
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
-      "direction": "Still",
+      "direction": "None",
       "display_conditions": [],
       "frame": {
         "h": 1.0,
@@ -505,7 +505,7 @@
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
-      "direction": "Still",
+      "direction": "None",
       "display_conditions": [],
       "frame": {
         "h": 1.0,
@@ -523,7 +523,7 @@
       "demands_attention": false,
       "destination": null,
       "dialogues": [],
-      "direction": "Still",
+      "direction": "None",
       "display_conditions": [],
       "frame": {
         "h": 1.0,

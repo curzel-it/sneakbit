@@ -175,7 +175,7 @@
       "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 1002,
         "x": 0,
         "y": 0

@@ -294,7 +294,7 @@
       "contents": null,
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 1008,
         "x": 23,
         "y": 63
@@ -4832,7 +4832,7 @@
       "contents": null,
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 1008,
         "x": 70,
         "y": 23

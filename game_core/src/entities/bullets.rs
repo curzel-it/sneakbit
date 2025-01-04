@@ -34,7 +34,7 @@ impl Entity {
             }            
         }
 
-        if self.current_speed == 0.0 || matches!(self.direction, Direction::Unknown) {
+        if self.current_speed == 0.0 || matches!(self.direction, Direction::None) {
             return vec![]
         }
 

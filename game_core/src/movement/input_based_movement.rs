@@ -9,7 +9,7 @@ impl Entity {
 
         self.update_direction_based_on_keyboard(world);
 
-        if self.current_speed == 0.0 || matches!(self.direction, Direction::Unknown | Direction::Still) {
+        if self.current_speed == 0.0 || matches!(self.direction, Direction::None) {
             return
         }
 
@@ -27,7 +27,7 @@ impl Entity {
 
     fn update_direction_based_on_keyboard(&mut self, world: &World) {
         let new_direction = world.players[self.player_index].direction_based_on_current_keys;
-        if !matches!(new_direction, Direction::Unknown | Direction::Still) {
+        if !matches!(new_direction, Direction::None) {
             self.direction = new_direction;
             self.reset_speed();
         } else {

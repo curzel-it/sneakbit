@@ -129,7 +129,7 @@ impl FRect {
                 is_right
             },
             // Handle other directions as not matching
-            Direction::Unknown | Direction::Still => {
+            Direction::None => {
                 false
             }
         }

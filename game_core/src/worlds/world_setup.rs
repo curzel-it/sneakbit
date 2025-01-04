@@ -138,7 +138,7 @@ impl World {
         self.spawn_point = (x, y);
         let mut entity = make_entity_by_species(SPECIES_HERO);
 
-        if !matches!(direction, Direction::Unknown | Direction::Still) {
+        if !matches!(direction, Direction::None) {
             entity.direction = direction;
             entity.frame.x = x;
             entity.frame.y = y;

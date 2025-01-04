@@ -20,7 +20,7 @@ impl Entity {
         world: &World,
         time_since_last_update: f32
     ) {
-        if player_props.speed <= 0.0 || matches!(player_props.direction, Direction::Unknown | Direction::Still) {            
+        if player_props.speed <= 0.0 || matches!(player_props.direction, Direction::None) {            
             self.pushable_set_still();
             return
         }
@@ -69,12 +69,12 @@ impl Entity {
             Direction::Right => self.frame.offset_x(-0.6).contains_or_touches(&player_center),
             Direction::Down => self.frame.offset_y(-0.6).contains_or_touches(&player_center),
             Direction::Left => self.frame.offset_x(0.6).contains_or_touches(&player_center),
-            Direction::Unknown | Direction::Still => false
+            Direction::None => false
         }
     }
 
     fn pushable_set_still(&mut self) {
         self.current_speed = 0.0;
-        self.direction = Direction::Still;
+        self.direction = Direction::None;
     }
 }

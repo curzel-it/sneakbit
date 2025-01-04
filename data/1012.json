@@ -193,7 +193,7 @@
       "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 1014,
         "x": 0,
         "y": 0
@@ -420,7 +420,7 @@
       "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 11110869,
         "x": 0,
         "y": 0
@@ -893,7 +893,7 @@
       "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 11110774,
         "x": 0,
         "y": 0
@@ -934,7 +934,7 @@
       "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 11110814,
         "x": 0,
         "y": 0
@@ -975,7 +975,7 @@
       "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 11110854,
         "x": 0,
         "y": 0
@@ -1239,7 +1239,7 @@
       "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": {
-        "direction": "Unknown",
+        "direction": "None",
         "world": 11718861,
         "x": 0,
         "y": 0

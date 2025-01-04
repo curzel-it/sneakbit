@@ -54,8 +54,7 @@ impl Entity {
             Direction::Down => 45.0,
             Direction::Right => 41.0,
             Direction::Left => 49.0,
-            Direction::Unknown => 37.0,
-            Direction::Still => 37.0,
+            Direction::None => 37.0,
         }
     }
 }
