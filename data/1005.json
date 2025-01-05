@@ -141,7 +141,18 @@
       "destination": null,
       "dialogues": [],
       "direction": "Down",
-      "display_conditions": [],
+      "display_conditions": [
+        {
+          "expected_value": 1,
+          "key": "player.0.inventory.amount.2002",
+          "visible": false
+        },
+        {
+          "expected_value": 1,
+          "key": "always",
+          "visible": true
+        }
+      ],
       "frame": {
         "h": 2,
         "w": 1,
