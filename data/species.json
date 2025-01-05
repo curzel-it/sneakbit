@@ -1153,7 +1153,7 @@
   },
   {
     "base_speed": 3.0,
-    "dps": 110.0,
+    "dps": 150.0,
     "entity_type": "CloseCombatMonster",
     "hp": 80,
     "id": 4003,
@@ -1178,7 +1178,7 @@
   },
   {
     "base_speed": 2.5,
-    "dps": 140.0,
+    "dps": 170.0,
     "entity_type": "CloseCombatMonster",
     "hp": 200,
     "id": 4004,
@@ -1203,7 +1203,7 @@
   },
   {
     "base_speed": 2.75,
-    "dps": 170.0,
+    "dps": 190.0,
     "entity_type": "CloseCombatMonster",
     "hp": 500,
     "id": 4005,
@@ -1228,7 +1228,7 @@
   },
   {
     "base_speed": 3.05,
-    "dps": 200.0,
+    "dps": 210.0,
     "entity_type": "CloseCombatMonster",
     "hp": 900,
     "id": 4006,
@@ -1308,7 +1308,7 @@
     "base_speed": 3.0,
     "bullet_lifespan": -420.0,
     "bullet_species_id": 0,
-    "dps": 70.0,
+    "dps": 80.0,
     "entity_type": "CloseCombatMonster",
     "hp": 80,
     "id": 4009,
