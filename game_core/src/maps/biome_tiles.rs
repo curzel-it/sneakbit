@@ -1,5 +1,5 @@
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer, de::Deserializer};
-use crate::{features::hitmaps::Hittable, utils::{rect::FRect}};
+use crate::{features::hitmaps::Hittable, utils::rect::FRect};
 use super::{biomes::{Biome, NUMBER_OF_BIOMES}, tiles::{SpriteTile, TileSet}};
 
 #[derive(Default, Debug, Clone)]

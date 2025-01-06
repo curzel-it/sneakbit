@@ -1,4 +1,4 @@
-use crate::{entities::{known_species::SPECIES_FOOTSTEPS, species::species_by_id}, features::{entity::Entity, state_updates::WorldStateUpdate}, maps::biomes::Biome, utils::vector::Vector2d, worlds::world::World};
+use crate::{features::{entity::Entity, state_updates::WorldStateUpdate}, utils::vector::Vector2d, worlds::world::World};
 
 impl Entity {
     pub fn update_trail(&mut self) -> Vec<WorldStateUpdate> {  
@@ -12,12 +12,6 @@ impl Entity {
     }
 }
 
-pub fn leave_footsteps(world: &World, direction: &Vector2d, x: f32, y: f32) -> Vec<WorldStateUpdate> {
+pub fn leave_footsteps(_: &World, _: &Vector2d, _: f32, _: f32) -> Vec<WorldStateUpdate> {
     vec![]
-}
-
-impl Biome {
-    fn supports_trails(&self) -> bool {
-        matches!(self, Biome::Snow)
-    }
 }

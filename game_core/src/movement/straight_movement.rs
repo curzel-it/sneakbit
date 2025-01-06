@@ -70,22 +70,26 @@ impl Entity {
         let exclude = self.my_and_players_ids();
         let mut did_move = false;
 
-        let dy = Vector2d::new(0.0, self.direction.y);
-        let (ny, ncy) = self.projected_frames_by_moving_straight(&dy, time_since_last_update);
-        if !world.area_hits(&exclude, &ncy) {
-            self.frame.y = ny.y;
-            did_move = true;
-        } else {
-            self.direction.y = 0.0;
+        if !self.direction.y.is_zero() {
+            let dy = Vector2d::new(0.0, self.direction.y);
+            let (ny, ncy) = self.projected_frames_by_moving_straight(&dy, time_since_last_update);
+            if !world.area_hits(&exclude, &ncy) {
+                self.frame.y = ny.y;
+                did_move = true;
+            } else {
+                self.direction.y = 0.0;
+            }
         }
 
-        let dx = Vector2d::new(self.direction.x, 0.0);
-        let (nx, ncx) = self.projected_frames_by_moving_straight(&dx, time_since_last_update);
-        if !world.area_hits(&exclude, &ncx) {
-            self.frame.x = nx.x;
-            did_move = true;
-        } else {
-            self.direction.x = 0.0;
+        if !self.direction.x.is_zero() {
+            let dx = Vector2d::new(self.direction.x, 0.0);
+            let (nx, ncx) = self.projected_frames_by_moving_straight(&dx, time_since_last_update);
+            if !world.area_hits(&exclude, &ncx) {
+                self.frame.x = nx.x;
+                did_move = true;
+            } else {
+                self.direction.x = 0.0;
+            }
         }
 
         did_move
