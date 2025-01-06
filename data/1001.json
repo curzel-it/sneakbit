@@ -52,7 +52,29 @@
     ],
     "sheet_id": 1003
   },
-  "entities": [  ],
+  "entities": [
+    {
+      "id": 16156072,
+      "frame": {
+        "x": 24.11106,
+        "y": 12.79685,
+        "w": 1.0,
+        "h": 2.0
+      },
+      "species_id": 4004,
+      "direction": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "dialogues": [],
+      "destination": null,
+      "lock_type": "None",
+      "display_conditions": [],
+      "is_consumable": false,
+      "demands_attention": false,
+      "after_dialogue": "Nothing"
+    }
+  ],
   "light_conditions": "Day",
   "cutscenes": [],
   "soundtrack": null,

@@ -256,3 +256,12 @@ impl Div<f32> for Vector2d {
         Self::new(self.x / scalar, self.y / scalar)
     }
 }
+
+impl Vector2d {
+    pub fn normalized_horizontally(&self) -> Self {
+        Self::new(self.x.signum() * 1.0, 0.0)
+    }
+    pub fn normalized_vertically(&self) -> Self {
+        Self::new(0.0, self.y.signum() * 1.0)
+    }
+}

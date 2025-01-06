@@ -14,6 +14,9 @@ pub const TURN_DURATION_AFTER_ENEMY_PLAYER_DAMAGE: f32 = 2.0;
 pub const TURN_PREP_DURATION: f32 = 3.0;
 pub const DIRECTION_CHANGE_COOLDOWN: f32 = 0.1;
 pub const RAIL_CHANGE_COOLDOWN: f32 = 0.2;
+pub const GRAVITY: f32 = 3.0; 
+pub const JUMP_SPEED: f32 = -2.0; 
+pub const TERMINAL_VELOCITY: f32 = 9.8;
 
 // Input
 pub const KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST: f32 = 0.4;

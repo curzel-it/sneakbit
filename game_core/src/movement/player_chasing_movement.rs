@@ -3,8 +3,8 @@ use crate::{currently_active_players, features::entity::Entity, utils::{rect::FR
 impl Entity {
     pub fn move_chasing_player(&mut self, world: &World, time_since_last_update: f32) {
         if let Some(player) = self.first_active_vulnerable_player_in_line_of_sight(world) {
-            self.direction = Vector2d::direction_to(&self.frame.center(), &player.center());
-            self.move_straight(world, time_since_last_update);
+            let input_direction = Vector2d::direction_to(&self.frame.center(), &player.center()).normalized_horizontally();
+            self.move_with_new_direction(input_direction, world, time_since_last_update);
         } else {
             self.move_around_free(world, time_since_last_update);
         }
