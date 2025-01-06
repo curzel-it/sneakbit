@@ -42,7 +42,7 @@ impl BiomeTile {
 
     fn setup_hittable(&mut self, x: usize, y: usize) {        
         self.hittable = Hittable {
-            frame: FRect::new(x as f32, y as f32, 1.0, 1.0).padded_all(0.1),
+            frame: FRect::new(x as f32, y as f32, 1.0, 1.0),
             has_weight: false,
             entity_id: 0, 
             species_id: 0,
