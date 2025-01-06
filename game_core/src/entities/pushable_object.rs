@@ -1,4 +1,4 @@
-use crate::{features::{entity::Entity, entity_props::EntityProps, state_updates::WorldStateUpdate}, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{features::{entity::Entity, entity_props::EntityProps, state_updates::WorldStateUpdate}, utils::{math::ZeroComparable, rect::FRect, vector::Vector2d}, worlds::world::World};
 
 impl Entity {
     pub fn update_pushable(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {  
@@ -20,7 +20,7 @@ impl Entity {
         world: &World,
         time_since_last_update: f32
     ) {
-        if player_props.speed <= 0.0 || matches!(player_props.direction, Direction::None) {            
+        if player_props.speed <= 0.0 || player_props.direction == Vector2d::zero() {            
             self.pushable_set_still();
             return
         }
@@ -63,22 +63,16 @@ impl Entity {
                 return true
             }
         }
-        
-        match player.direction {
-            Direction::Up => self.frame.offset_y(0.6).contains_or_touches(&player_center),
-            Direction::UpRight => self.frame.offset(-0.6, 0.6).contains_or_touches(&player_center),
-            Direction::Right => self.frame.offset_x(-0.6).contains_or_touches(&player_center),
-            Direction::DownRight => self.frame.offset(-0.6, -0.6).contains_or_touches(&player_center),
-            Direction::Down => self.frame.offset_y(-0.6).contains_or_touches(&player_center),
-            Direction::DownLeft => self.frame.offset(0.6, -0.6).contains_or_touches(&player_center),
-            Direction::Left => self.frame.offset_x(0.6).contains_or_touches(&player_center),
-            Direction::UpLeft => self.frame.offset(0.6, 0.6).contains_or_touches(&player_center),
-            Direction::None => false
+
+        if player.direction.is_zero() {
+            return false
         }
+        let opposite = player.direction.opposite();
+        self.frame.offset(opposite.x, opposite.y).contains_or_touches(&player_center)
     }
 
     fn pushable_set_still(&mut self) {
         self.current_speed = 0.0;
-        self.direction = Direction::None;
+        self.direction = Vector2d::zero();
     }
 }

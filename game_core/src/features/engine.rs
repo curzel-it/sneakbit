@@ -1,4 +1,4 @@
-use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{destination::Destination, sound_effects::SoundEffectsManager, toasts::{Toast, ToastImage, ToastMode}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::{INITIAL_CAMERA_VIEWPORT, SPRITE_SHEET_ANIMATED_OBJECTS, TILE_SIZE, WORLD_ID_NONE}, features::{destination::Destination, sound_effects::SoundEffectsManager, toasts::{Toast, ToastImage, ToastMode}}, input::{keyboard_events_provider::KeyboardEventsProvider, mouse_events_provider::MouseEventsProvider}, is_creative_mode, lang::localizable::LocalizableText, multiplayer::{modes::GameMode, turns::GameTurn, turns_use_case::{MatchResult, TurnResultAfterPlayerDeath, TurnsUseCase}}, utils::{rect::FRect, vector::Vector2d}, worlds::world::World};
 
 use super::{camera::camera_center, fast_travel::FastTravelDestination, messages::DisplayableMessage, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{decrease_inventory_count, get_value_for_global_key, increment_inventory_count, reset_all_stored_values, set_value_for_key, StorageKey}};
 
@@ -237,7 +237,7 @@ impl GameEngine {
     pub fn start_new_game(&mut self) {
         self.clear_messages();
         self.previous_world = None;
-        self.world.players[0].props.direction = Direction::None;        
+        self.world.players[0].props.direction = Vector2d::zero();        
         reset_all_stored_values();
         self.world = World::load(1000).unwrap();
         self.teleport_to_previous();
@@ -295,7 +295,7 @@ impl GameEngine {
         self.match_result = MatchResult::InProgress;
         self.dead_players.clear();
         self.previous_world = None;
-        self.world.players[0].props.direction = Direction::None;
+        self.world.players[0].props.direction = Vector2d::zero();
         self.teleport_to_previous();
         self.did_just_revive = true;
     }

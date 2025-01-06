@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{constants::{ANIMATIONS_FPS, NO_PARENT, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType, Species}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, movement::movement_directions::MovementDirections, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{constants::{ANIMATIONS_FPS, NO_PARENT, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX, SPRITE_SHEET_ANIMATED_OBJECTS, UNLIMITED_LIFESPAN, Z_INDEX_OVERLAY, Z_INDEX_UNDERLAY}, entities::species::{species_by_id, EntityType, Species}, features::{animated_sprite::AnimatedSprite, destination::Destination, dialogues::{AfterDialogueBehavior, Dialogue, EntityDialogues}, storage::{set_value_for_key, StorageKey}}, is_creative_mode, movement::movement_directions::MovementDirections, utils::{rect::FRect, vector::Vector2d}, worlds::world::World};
 
 use super::{fast_travel::is_fast_travel_available, locks::LockType, messages::DisplayableMessage, pvp_arena::is_pvp_arena_available, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{bool_for_global_key, key_value_matches}};
 
@@ -11,7 +11,7 @@ pub struct Entity {
     pub id: EntityId,
     pub frame: FRect,  
     pub species_id: u32,  
-    pub direction: Direction,
+    pub direction: Vector2d,
     pub dialogues: EntityDialogues,
     pub destination: Option<Destination>,
     pub lock_type: LockType,
@@ -149,7 +149,6 @@ impl Entity {
             EntityType::InverseGate => self.update_inverse_gate(world, time_since_last_update),
             EntityType::PressurePlate => self.update_pressure_plate(world, time_since_last_update),
             EntityType::Bullet => self.update_bullet(world, time_since_last_update),
-            EntityType::RailObject => self.update_rail(world, time_since_last_update),
             EntityType::Hint => self.update_hint(world, time_since_last_update),
             EntityType::Trail => self.update_trail(),
             EntityType::WeaponMelee => self.update_melee(world, time_since_last_update),
@@ -181,7 +180,6 @@ impl Entity {
             EntityType::InverseGate => self.setup_inverse_gate(),
             EntityType::PressurePlate => self.setup_pressure_plate(),
             EntityType::Bullet => self.setup_bullet(),
-            EntityType::RailObject => self.setup_rail(),
             EntityType::Hint => self.setup_hint(),
             EntityType::Trail => self.setup_generic(),
             EntityType::WeaponMelee => self.setup_melee(),
@@ -246,7 +244,6 @@ impl Entity {
             EntityType::Bullet => self.bullet_hittable_frame(),
             EntityType::PushableObject => self.pushable_object_hittable_frame(),
             EntityType::PressurePlate => self.pressure_plate_hittable_frame(),
-            EntityType::RailObject => self.rail_object_hittable_frame(),
             _ => {
                 let x_offset = 0.15;
                 let y_offset = if self.frame.h > 1.0 { 1.15 } else { 0.15 };
@@ -308,7 +305,7 @@ impl Entity {
                 },
             AfterDialogueBehavior::FlyAwayEast => {
                 self.is_rigid = false;
-                self.direction = Direction::Left;
+                self.direction = Vector2d::left();
                 self.reset_speed();
                 vec![]
             }
@@ -372,7 +369,7 @@ impl Entity {
     }
 
     pub fn play_death_animation(&mut self) {
-        self.direction = Direction::None;
+        self.direction = Vector2d::zero();
         self.current_speed = 0.0;
         self.is_rigid = false;
         self.is_dying = true;

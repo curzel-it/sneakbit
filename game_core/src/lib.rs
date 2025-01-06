@@ -354,14 +354,6 @@ pub extern "C" fn current_soundtrack() -> *const c_char {
     string_to_c_char(current_soundtrack_string().unwrap_or_default())
 }
 
-pub fn is_any_hero_on_a_slippery_surface() -> bool {
-    engine().world.is_any_hero_on_a_slippery_surface()
-}
-
-pub fn is_player_by_index_on_slippery_surface(index: usize) -> bool {
-    engine().world.is_player_by_index_on_slippery_surface(index)
-}
-
 pub fn number_of_players() -> usize {
     engine().number_of_players
 }

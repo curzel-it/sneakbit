@@ -1,4 +1,4 @@
-use crate::{constants::HERO_RECOVERY_PS, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::directions::Direction, worlds::world::World};
+use crate::{constants::HERO_RECOVERY_PS, features::{entity::Entity, state_updates::WorldStateUpdate}, is_creative_mode, utils::vector::Vector2d, worlds::world::World};
 
 use super::trails::leave_footsteps;
 
@@ -10,7 +10,7 @@ impl Entity {
     pub fn update_hero(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {        
         let mut updates: Vec<WorldStateUpdate> = vec![];
 
-        self.hero_update_sprite(world);        
+        self.update_sprite_for_current_state();        
         self.self_heal(time_since_last_update);
         
         updates.push(self.cache_props());
@@ -20,7 +20,7 @@ impl Entity {
 
     pub fn setup_hero_with_player_index(&mut self, player_index: usize) {
         self.player_index = player_index;
-        self.direction = Direction::Down;
+        self.direction = Vector2d::zero();
         self.reset_offset_on_next_direction_change = true;
 
         let (x, y) = match player_index {
@@ -54,16 +54,6 @@ impl Entity {
             leave_footsteps(world, &self.direction, self.frame.x, self.frame.y + 1.0)
         } else {
             vec![]
-        }
-    }
-
-    fn hero_update_sprite(&mut self, world: &World) {
-        let is_slipping = world.frame_is_slippery_surface(&self.hittable_frame());
-
-        if !(is_slipping && self.current_speed > 0.0) {
-            self.update_sprite_for_current_state();
-        } else {
-            self.update_sprite_for_direction_speed(self.direction, 0.0);
         }
     }
 

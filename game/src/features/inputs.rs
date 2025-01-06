@@ -24,7 +24,7 @@ pub fn handle_keyboard_updates(context: &mut GameContext, time_since_last_update
 
     let has_controller_now = context.rl.is_gamepad_available(0);
     let controller_availability_changed = context.total_run_time > 0.5 && (context.using_controller != has_controller_now);  
-    let lost_focus = !context.rl.is_window_focused();
+    let lost_focus = false; // !context.rl.is_window_focused();
     let should_pause = controller_availability_changed || (lost_focus && !context.debug);
 
     if controller_availability_changed {        

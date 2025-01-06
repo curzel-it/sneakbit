@@ -1500,28 +1500,6 @@
     "z_index": 14
   },
   {
-    "base_speed": 2.0,
-    "entity_type": "RailObject",
-    "id": 9000,
-    "inventory_texture_offset": [
-      6,
-      3
-    ],
-    "is_consumable": true,
-    "is_rigid": false,
-    "lock_type": "None",
-    "name": "objects.name.rail.cart",
-    "sprite_frame": {
-      "h": 1,
-      "w": 1,
-      "x": 2,
-      "y": 3
-    },
-    "sprite_number_of_frames": 1,
-    "sprite_sheet_id": 1010,
-    "z_index": 5
-  },
-  {
     "base_speed": 0.0,
     "entity_type": "StaticObject",
     "id": 10000,

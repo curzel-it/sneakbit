@@ -1,10 +1,10 @@
-use crate::utils::{directions::Direction, rect::FRect};
+use crate::utils::{rect::FRect, vector::Vector2d};
 use super::entity::Entity;
 
 #[derive(Debug, Copy, Clone)]
 pub struct EntityProps {
     pub id: u32,
-    pub direction: Direction,
+    pub direction: Vector2d,
     pub frame: FRect,
     pub z_index: i32,
     pub sorting_key: u32,

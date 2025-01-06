@@ -2,7 +2,7 @@ use std::os::raw::c_char;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{species_by_id, EntityType, Species, ALL_SPECIES}}, features::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, has_species_in_inventory, inventory_count, set_value_for_key, StorageKey}}, lang::localizable::LocalizableText, utils::{directions::Direction, rect::FRect, strings::string_to_c_char}, worlds::world::World};
+use crate::{entities::{known_species::SPECIES_KUNAI_LAUNCHER, species::{species_by_id, EntityType, Species, ALL_SPECIES}}, features::{entity::Entity, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{get_value_for_global_key, has_species_in_inventory, inventory_count, set_value_for_key, StorageKey}}, lang::localizable::LocalizableText, utils::{rect::FRect, strings::string_to_c_char}, worlds::world::World};
 
 impl Entity {
     pub fn setup_equipment(&mut self) {
@@ -21,11 +21,10 @@ impl Entity {
         if self.species.always_in_front_of_hero_when_equipped {
             true
         } else {
-            match (self.direction, is_being_used) {
-                (Direction::Left, false) => false,
-                (Direction::Right, false) => false,
-                (Direction::Down, false) => false,
-                _ => true
+            if is_being_used {
+                true
+            } else {
+                self.direction.is_left() || self.direction.is_right() || self.direction.is_down()
             }
         }
     }
@@ -49,12 +48,16 @@ impl Entity {
     }
 
     pub fn play_equipment_usage_animation(&mut self) {
-        self.sprite.frame.y = match self.direction {
-            Direction::Up => 37.0,
-            Direction::Down => 45.0,
-            Direction::Right | Direction::DownRight | Direction::UpRight => 41.0,
-            Direction::Left | Direction::DownLeft | Direction::UpLeft => 49.0,
-            Direction::None => 37.0,
+        self.sprite.frame.y = if self.direction.is_up() {
+            37.0
+        } else if self.direction.is_down() { 
+            45.0
+        } else if self.direction.is_right() {
+            41.0
+        } else if self.direction.is_left() {
+            49.0
+        } else {
+            37.0
         }
     }
 }

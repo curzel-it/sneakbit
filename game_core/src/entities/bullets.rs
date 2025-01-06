@@ -1,4 +1,4 @@
-use crate::{constants::PLAYER1_INDEX, entities::known_species::is_building, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{directions::Direction, rect::FRect, vector::Vector2d}, worlds::world::World};
+use crate::{constants::PLAYER1_INDEX, entities::known_species::is_building, features::{entity::{Entity, EntityId}, state_updates::WorldStateUpdate}, is_creative_mode, utils::{rect::FRect, vector::Vector2d}, worlds::world::World};
 
 use super::{pickable_object::object_pick_up_sequence, species::{species_by_id, Species, SpeciesId}};
 
@@ -34,7 +34,7 @@ impl Entity {
             }            
         }
 
-        if self.current_speed == 0.0 || matches!(self.direction, Direction::None) {
+        if self.current_speed == 0.0 || self.direction == Vector2d::zero() {
             return vec![]
         }
 
@@ -93,17 +93,7 @@ impl Entity {
     }
 
     pub fn bullet_hittable_frame(&self) -> FRect {
-        let (ox, oy) = match self.direction {
-            Direction::Up | Direction::Down => (0.2, 0.0),
-            Direction::Right | Direction::Left => (0.0, 0.2),
-            _ => (0.0, 0.0)
-        };
-        FRect {
-            x: self.frame.x + ox,
-            y: self.frame.y + oy,
-            w: self.frame.w - ox * 2.0,
-            h: self.frame.h - oy * 2.0
-        }
+        self.frame.padded_all(0.1)
     }
 }
 
@@ -111,15 +101,14 @@ pub fn make_bullet_ex(
     species: u32, 
     parent_id: u32, 
     center: &Vector2d, 
-    direction: Direction, 
+    direction: Vector2d, 
     lifespan: f32
 ) -> Entity {
-    let (dx, dy) = direction.as_offset();
     let mut bullet = species_by_id(species).make_entity();
     bullet.direction = direction;
     bullet.frame = FRect::new(
-        center.x - bullet.frame.w / 2.0 + dx / 4.0, 
-        center.y - bullet.frame.h / 2.0 + dy / 4.0, 
+        center.x - bullet.frame.w / 2.0 + direction.x / 4.0, 
+        center.y - bullet.frame.h / 2.0 + direction.y / 4.0, 
         bullet.frame.w, 
         bullet.frame.h
     );
@@ -133,14 +122,13 @@ pub fn make_bullet_ex(
 pub fn make_player_bullet(parent_id: u32, world: &World, weapon_species: &Species) -> Entity {
     let index = world.player_index_by_entity_id(parent_id).unwrap_or(PLAYER1_INDEX);
     let player = world.players[index].props;
-    let (dx, dy) = player.direction.as_offset();
-
+    
     let mut bullet = make_bullet_ex(
         weapon_species.bullet_species_id,
         parent_id,
         &player.hittable_frame
-            .offset_x(dx * (player.hittable_frame.w + 0.01))
-            .offset_y(dy * (player.hittable_frame.h + 0.01))
+            .offset_x(player.direction.x * (player.hittable_frame.w + 0.01))
+            .offset_y(player.direction.y * (player.hittable_frame.h + 0.01))
             .center(),
         player.direction,
         weapon_species.bullet_lifespan

@@ -1,9 +1,9 @@
-use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, features::entity_props::EntityProps, input::keyboard_events_provider::KeyboardEventsProvider, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, features::entity_props::EntityProps, input::keyboard_events_provider::KeyboardEventsProvider, utils::{rect::FRect, vector::Vector2d}, worlds::world::World};
 
 #[derive(Clone, Default, Debug)]
 pub struct PlayerProps {
     pub index: usize,
-    pub direction_based_on_current_keys: Direction,
+    pub direction_based_on_current_keys: Vector2d,
     pub is_any_arrow_key_down: bool,
     pub has_ranged_attack_key_been_pressed: bool,
     pub has_close_attack_key_been_pressed: bool,
@@ -15,7 +15,7 @@ impl PlayerProps {
     fn new(index: usize) -> Self {
         Self {
             index,
-            direction_based_on_current_keys: Direction::None,
+            direction_based_on_current_keys: Vector2d::zero(),
             is_any_arrow_key_down: false,
             has_ranged_attack_key_been_pressed: false,
             has_close_attack_key_been_pressed: false,

@@ -1,6 +1,6 @@
 use lazy_static::lazy_static;
 
-use crate::{constants::{KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS, KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST, MAX_PLAYERS}, utils::directions::Direction};
+use crate::{constants::{KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS, KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST, MAX_PLAYERS}, utils::vector::Vector2d};
 
 lazy_static! {
     pub static ref NO_KEYBOARD_EVENTS: KeyboardEventsProvider = KeyboardEventsProvider::new();
@@ -178,7 +178,7 @@ impl KeyboardEventsProvider {
         }
     }
 
-    pub fn direction_based_on_current_keys(&self, player: usize, current: Direction) -> Direction {
+    pub fn direction_based_on_current_keys(&self, player: usize, current: Vector2d) -> Vector2d {
         self.players[player].direction_based_on_current_keys(current)
     }
 
@@ -296,11 +296,11 @@ impl PlayerKeyboardEventsProvider {
         self.discard_direction_events_until_next_arrow_key_is_pressed = true;
     }
 
-    fn direction_based_on_current_keys(&self, current: Direction) -> Direction {
+    fn direction_based_on_current_keys(&self, current: Vector2d) -> Vector2d {
         if self.discard_direction_events_until_next_arrow_key_is_pressed {
-            return Direction::None;
+            return Vector2d::zero();
         }
-        let direction_from_new_keys = Direction::from_data(
+        let direction_from_new_keys = Vector2d::from_data(
             self.direction_up.is_down,
             self.direction_right.is_down,
             self.direction_down.is_down,

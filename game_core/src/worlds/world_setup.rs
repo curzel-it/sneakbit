@@ -1,14 +1,14 @@
-use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, multiplayer::modes::GameMode, number_of_players, utils::{directions::Direction, math::ZeroComparable, rect::FRect}};
-use super::{world::World, world_type::WorldType};
+use crate::{constants::{PLAYER1_ENTITY_ID, PLAYER2_ENTITY_ID, PLAYER3_ENTITY_ID, PLAYER4_ENTITY_ID, TILE_SIZE}, current_game_mode, entities::{known_species::SPECIES_HERO, species::{make_entity_by_species, species_by_id, ALL_EQUIPMENT_IDS}}, multiplayer::modes::GameMode, number_of_players, utils::{math::ZeroComparable, rect::FRect, vector::Vector2d}};
+use super::world::World;
 
 impl World {
     pub fn setup(
         &mut self,
         source: u32,
-        hero_direction: &Direction,
+        hero_direction: &Vector2d,
         original_x: f32,
         original_y: f32,
-        direction: Direction,
+        direction: Vector2d,
     ) {
         self.remove_players();
         self.remove_all_equipment();
@@ -43,10 +43,10 @@ impl World {
     fn spawn_players(
         &mut self,
         source: u32,
-        hero_direction: &Direction,
+        hero_direction: &Vector2d,
         original_x: f32,
         original_y: f32,
-        direction: Direction,
+        direction: Vector2d,
     ) {
         match current_game_mode() {
             GameMode::Creative | GameMode::RealTimeCoOp => {
@@ -93,7 +93,7 @@ impl World {
                 let mut entity = make_entity_by_species(SPECIES_HERO);
                 entity.frame.x = x;
                 entity.frame.y = y;
-                entity.direction = Direction::Down; 
+                entity.direction = Vector2d::zero(); 
                 entity.id = player_id;
                 entity.setup_hero_with_player_index(i);
                 entity.immobilize_for_seconds(0.2);
@@ -129,36 +129,18 @@ impl World {
     fn spawn_hero_at_last_known_location(
         &mut self,
         source: u32,
-        hero_direction: &Direction,
+        hero_direction: &Vector2d,
         original_x: f32,
         original_y: f32,
-        direction: Direction,
+        direction: Vector2d,
     ) {
         let (x, y) = self.destination_x_y(source, original_x, original_y);
         self.spawn_point = (x, y);
         let mut entity = make_entity_by_species(SPECIES_HERO);
 
-        if !matches!(direction, Direction::None) {
-            entity.direction = direction;
-            entity.frame.x = x;
-            entity.frame.y = y;
-        } else {
-            entity.direction = Direction::Down;
-            entity.frame.x = x;
-            entity.frame.y = y;
-
-            let likely_directions = self.likely_direction_for_hero(x, y, hero_direction);
-
-            for new_direction in &likely_directions {
-                if self.has_space_for_hero_in_direction(x, y, new_direction) {
-                    let (ox, oy) = new_direction.as_offset();
-                    entity.frame.x = x + ox;
-                    entity.frame.y = y - 1.0 + oy;
-                    entity.direction = *new_direction;
-                    break;
-                }
-            }
-        }
+        entity.direction = if direction.is_zero() { hero_direction.clone() } else { direction };
+        entity.frame.x = x;
+        entity.frame.y = y;
 
         println!("Spawning hero at {}, {}", entity.frame.x, entity.frame.y);
         entity.immobilize_for_seconds(0.2);
@@ -196,56 +178,6 @@ impl World {
         }
     }
 
-    fn likely_direction_for_hero(
-        &self,
-        x: f32,
-        y: f32,
-        current_direction: &Direction,
-    ) -> Vec<Direction> {
-        if matches!(self.world_type, WorldType::HouseInterior) {
-            return if y < 4.0 {
-                vec![Direction::Down]
-            } else {
-                vec![Direction::Up]
-            };
-        }
-
-        let mut options: Vec<Direction> = vec![];
-
-        let going_horizontally = matches!(current_direction, Direction::Left | Direction::Right);
-        let going_left = matches!(current_direction, Direction::Left);
-        let horizontal = if going_left || (!going_horizontally && x > self.bounds.w / 2.0) {
-            vec![Direction::Left, Direction::Right]
-        } else {
-            vec![Direction::Right, Direction::Left]
-        };
-
-        let going_vertically = matches!(current_direction, Direction::Up | Direction::Down);
-        let going_up = matches!(current_direction, Direction::Up);
-        let vertical = if going_up || (!going_vertically && y > self.bounds.h / 2.0) {
-            vec![Direction::Up, Direction::Down]
-        } else {
-            vec![Direction::Down, Direction::Up]
-        };
-
-        match self.world_type {
-            WorldType::Dungeon => {
-                options.push(Direction::Down);
-                options.extend(horizontal);
-            }
-            WorldType::Exterior => {
-                options.extend(horizontal);
-                options.extend(vertical);
-            }
-            WorldType::HouseInterior => {
-                options.extend(vertical);
-                options.extend(horizontal);
-            }
-        }
-
-        options
-    }
-
     fn remove_dying_entities(&mut self) {
         let dying_ids: Vec<u32> = self
             .entities
@@ -259,38 +191,7 @@ impl World {
         }
     }
 
-    fn has_space_for_hero_in_direction(
-        &self,
-        x: f32,
-        y: f32,
-        direction: &Direction,
-    ) -> bool {
-        let (ox, oy) = direction.as_offset();
-
-        let y_fix = match direction {
-            Direction::Up => 0.0,
-            Direction::Down => 1.0,
-            _ => 0.0,
-        };
-
-        for i in 0..3 {
-            let nx = x + i as f32 * ox;
-            let ny = y + i as f32 * oy + y_fix;
-
-            if (ny == y || ny == y + 1.0) && nx == x {
-                continue;
-            }
-            if self.hits(nx, ny) {
-                return false;
-            }
-        }
-        true
-    }
-
     fn destination_x_y(&self, source: u32, original_x: f32, original_y: f32) -> (f32, f32) {
-        if self.id == 1001 && (source == 0 || source == 1000) {
-            return (68.0, 23.0);
-        }
         if original_x.is_zero() && original_y.is_zero() {
             if let Some(teleporter_position) = self.find_teleporter_for_destination(source) {
                 return (teleporter_position.x, teleporter_position.y);

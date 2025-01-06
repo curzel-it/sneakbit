@@ -1,14 +1,9 @@
-
-use crate::{currently_active_players, features::entity::Entity, utils::{directions::Direction, rect::FRect}, worlds::world::World};
+use crate::{currently_active_players, features::entity::Entity, utils::{rect::FRect, vector::Vector2d}, worlds::world::World};
 
 impl Entity {
     pub fn move_chasing_player(&mut self, world: &World, time_since_last_update: f32) {
         if let Some(player) = self.first_active_vulnerable_player_in_line_of_sight(world) {
-            self.direction = Direction::between_points_with_current(
-                &self.frame.center(), 
-                &player.center(), 
-                self.direction
-            );
+            self.direction = Vector2d::direction_to(&self.frame.center(), &player.center());
             self.move_straight(world, time_since_last_update);
         } else {
             self.move_around_free(world, time_since_last_update);

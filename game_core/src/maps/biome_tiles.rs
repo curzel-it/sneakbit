@@ -1,5 +1,5 @@
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer, de::Deserializer};
-use crate::{features::hitmaps::Hittable, utils::{directions::Direction, rect::FRect}};
+use crate::{features::hitmaps::Hittable, utils::{rect::FRect}};
 use super::{biomes::{Biome, NUMBER_OF_BIOMES}, tiles::{SpriteTile, TileSet}};
 
 #[derive(Default, Debug, Clone)]
@@ -28,7 +28,7 @@ impl SpriteTile for BiomeTile {
 
 impl BiomeTile {
     pub fn is_obstacle(&self) -> bool {
-        matches!(&self.tile_type, Biome::Water | Biome::Nothing | Biome::Lava | Biome::DarkWater)
+        !matches!(&self.tile_type, Biome::Nothing)
     }
 
     pub fn setup(&mut self, x: usize, y: usize, up: Biome, right: Biome, bottom: Biome, left: Biome) {
@@ -267,4 +267,9 @@ impl<'de> Deserialize<'de> for TileSet<BiomeTile> {
 
         Ok(TileSet::with_tiles(data.sheet_id, tiles))
     }
+}
+
+#[derive(Clone, Copy, Debug)]
+enum Direction {
+    Up, Right, Down, Left
 }

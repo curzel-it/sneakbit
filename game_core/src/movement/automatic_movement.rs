@@ -1,4 +1,3 @@
-
 use crate::{features::entity::Entity, worlds::world::World};
 
 impl Entity {

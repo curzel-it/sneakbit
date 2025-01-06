@@ -1,6 +1,6 @@
 use std::{cell::RefCell, cmp::Ordering};
 
-use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, current_player_index, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, is_turn_based_game_mode, maps::{biomes::Biome, biome_tiles::BiomeTile, constructions::Construction, construction_tiles::ConstructionTile, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{directions::Direction, rect::FRect, vector::Vector2d}};
+use crate::{constants::{MAX_PLAYERS, PLAYER1_ENTITY_ID, PLAYER1_INDEX, PLAYER2_ENTITY_ID, PLAYER2_INDEX, PLAYER3_ENTITY_ID, PLAYER3_INDEX, PLAYER4_ENTITY_ID, PLAYER4_INDEX}, current_player_index, entities::{known_species::SPECIES_HERO, species::EntityType}, features::{cutscenes::CutScene, entity::is_player, light_conditions::LightConditions}, input::keyboard_events_provider::{KeyboardEventsProvider, NO_KEYBOARD_EVENTS}, is_turn_based_game_mode, maps::{biomes::Biome, biome_tiles::BiomeTile, constructions::Construction, construction_tiles::ConstructionTile, tiles::TileSet}, multiplayer::player_props::{empty_props_for_all_players, PlayerProps}, number_of_players, utils::{rect::FRect, vector::Vector2d}};
 use crate::features::{hitmaps::Hitmap, entity::Entity, locks::LockType, state_updates::{EngineStateUpdate, WorldStateUpdate}, storage::{lock_override, save_lock_override, set_value_for_key, StorageKey}};
 
 use super::world_type::WorldType;
@@ -307,31 +307,9 @@ impl World {
         }
     }
 
-    pub fn is_any_hero_on_a_slippery_surface(&self) -> bool {
-        self.is_player_by_index_on_slippery_surface(0) || self.is_player_by_index_on_slippery_surface(1) || self.is_player_by_index_on_slippery_surface(2) || self.is_player_by_index_on_slippery_surface(3)
-    }
-
-    pub fn is_player_by_index_on_slippery_surface(&self, index: usize) -> bool {
-        let frame = self.players[index].props.hittable_frame;
-        self.is_slippery_surface(frame.x as usize, frame.y as usize)
-    }
-
-    pub fn is_slippery_surface(&self, x: usize, y: usize) -> bool {
-        if y < self.biome_tiles.tiles.len() && x < self.biome_tiles.tiles[y].len() {
-            let tile = self.biome_tiles.tiles[y][x].tile_type;
-            matches!(tile, Biome::Ice)
-        } else {
-            false
-        }
-    }
-
-    pub fn frame_is_slippery_surface(&self, frame: &FRect) -> bool {
-        self.is_slippery_surface(frame.x as usize, frame.y as usize)
-    }
-
     pub fn is_hero_around_and_on_collision_with(&self, target: &FRect) -> bool {
         let hero = self.players[0].props.hittable_frame;
-        let hero_direction: Direction = self.players[0].props.direction;        
+        let hero_direction: Vector2d = self.players[0].props.direction;        
         
         if self.is_any_player_in(target) {
             return true
@@ -343,7 +321,7 @@ impl World {
     }
 
     fn find_non_hero_entity_at_coords(&self, row: usize, col: usize) -> Option<(usize, u32)> {
-        let point = Vector2d::from_indeces(row, col);
+        let point = Vector2d::new(row as f32, col as f32);
         self.entities.borrow().iter()
             .enumerate()
             .find(|(_, entity)| {

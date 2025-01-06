@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use common_macros::hash_set;
 
-use crate::{cached_players_positions, constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_explosive, is_key, is_monster, is_pickable}, features::{state_updates::{AddToInventoryReason, EngineStateUpdate}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, input::keyboard_events_provider::KeyboardEventsProvider, is_player_by_index_on_slippery_surface, utils::vector::Vector2d};
+use crate::{cached_players_positions, constants::WORLD_ID_NONE, entities::known_species::{is_ammo, is_explosive, is_key, is_monster, is_pickable}, features::{state_updates::{AddToInventoryReason, EngineStateUpdate}, storage::{bool_for_global_key, set_value_for_key, StorageKey}}, input::keyboard_events_provider::KeyboardEventsProvider, utils::vector::Vector2d};
 
 use super::toasts::{Toast, ToastMode};
 
@@ -140,7 +140,7 @@ impl SoundEffectsManager {
 
         if self.last_players_positions.len() == current_positions.len() {
             for (index, &current_position) in current_positions.iter().enumerate().take(self.last_players_positions.len()) {
-                if self.last_players_positions[index] != current_position && !is_player_by_index_on_slippery_surface(index) {
+                if self.last_players_positions[index] != current_position {
                     self.prepare(SoundEffect::StepTaken);
                 }
             }

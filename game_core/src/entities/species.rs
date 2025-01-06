@@ -1,7 +1,7 @@
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use std::{fs::File, io::Read};
-use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, equipment::basics::EquipmentUsageSoundEffect, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior, entity::Entity, locks::LockType}, lang::localizable::LocalizableText, movement::movement_directions::MovementDirections, utils::{directions::Direction, ids::get_next_id, rect::FRect}};
+use crate::{config::config, constants::{NO_PARENT, PLAYER1_ENTITY_ID, SPRITE_SHEET_BIOME_TILES, UNLIMITED_LIFESPAN}, equipment::basics::EquipmentUsageSoundEffect, features::{animated_sprite::AnimatedSprite, dialogues::AfterDialogueBehavior, entity::Entity, locks::LockType}, lang::localizable::LocalizableText, movement::movement_directions::MovementDirections, utils::{ids::get_next_id, rect::FRect, vector::Vector2d}};
 
 pub type SpeciesId = u32;
 
@@ -96,7 +96,6 @@ pub enum EntityType {
     PressurePlate,
     Bullet,
     Bundle,
-    RailObject,
     Hint,
     Trail,
     WeaponMelee,
@@ -129,7 +128,7 @@ impl Species {
             frame: self.sprite_frame,  
             species_id: self.id,  
             entity_type: self.entity_type,
-            direction: Direction::Down,
+            direction: Vector2d::zero(),
             current_speed: initial_speed,
             is_rigid: self.is_rigid,
             z_index: self.z_index,

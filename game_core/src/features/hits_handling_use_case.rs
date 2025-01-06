@@ -133,9 +133,8 @@ impl World {
                 if is_player(bullet.parent_id) {
                     bullet.direction = bullet.direction.opposite();
                     bullet.update_sprite_for_current_state();
-                    let (dx, dy) = bullet.direction.as_offset();
-                    bullet.frame.x += dx;
-                    bullet.frame.y += dy;
+                    bullet.frame.x += bullet.direction.x;
+                    bullet.frame.y += bullet.direction.y;
                     return vec![EngineStateUpdate::BulletBounced]
                 }
             }
