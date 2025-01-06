@@ -18,11 +18,6 @@ impl Entity {
             if !updates.is_empty() {
                 return updates;
             }
-
-            let updates = self.spawn_minions_if_needed(world, time_since_last_update);
-            if !updates.is_empty() {
-                return updates;
-            }
         }
         vec![]
     }
@@ -85,42 +80,6 @@ impl Entity {
             }
         }
         vec![]
-    }
-
-    fn spawn_minions_if_needed(&mut self, world: &World, time_since_last_update: f32) -> Vec<WorldStateUpdate> {
-        if self.species_id != 4008 {
-            return vec![]
-        }
-        if self.species.bullet_species_id == 0 {
-            return vec![]
-        }
-        self.action_cooldown_remaining -= time_since_last_update;
-        if self.action_cooldown_remaining > 0.0 {
-            return vec![]
-        }
-
-        if let Some(frame) = self.first_active_vulnerable_player_in_line_of_sight(world) {
-            let boss_frame = self.hittable_frame();
-            let distance = boss_frame.center().dumb_distance_to(&frame.center());
-
-            if distance < 3.5 {
-                return vec![];
-            }
-
-            let random = if world.number_of_entities % 2 == 0 { 0.8 } else { 1.2 };
-            self.action_cooldown_remaining = self.species.cooldown_after_use * random;
-
-            let minion = make_bullet_ex(
-                self.species.bullet_species_id, 
-                self.id, 
-                &self.frame.center(), 
-                self.direction, 
-                self.species.bullet_lifespan
-            );
-            vec![WorldStateUpdate::AddEntity(Box::new(minion))]
-        } else {
-            vec![]
-        }
     }
 }
 

@@ -28,7 +28,7 @@ impl Entity {
             return
         }
         match self.movement_directions {
-            MovementDirections::None => self.move_with_new_direction(self.direction, world, time_since_last_update),
+            MovementDirections::None => _ = self.move_in_current_direction(world, time_since_last_update),
             MovementDirections::Keyboard => self.move_based_on_player_input(world, time_since_last_update),
             MovementDirections::Free => self.move_around_free(world, time_since_last_update),
             MovementDirections::FindHero =>  self.move_chasing_player(world, time_since_last_update)
