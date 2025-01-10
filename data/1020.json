@@ -66,9 +66,9 @@
       "555555555553559999999999999999555559999999999999995999999999599999999999999999553555555555",
       "555555533333559999999999999999959995999999999999959999999999999999999999999995553555555555",
       "555555535555599999999999999999999999999999999999999599999999999999999999999995333555555555",
-      "555555535555599999999999999999999999999999999999999959999999999999999999999995355555555555",
-      "555555535555599999999999955999999999999999999999995999999999999999999555999995355555555555",
-      "555555533335599999999999559999999999999999599999999999999999999999995559999995355555555555",
+      "555555535555599999999999999999999999999999999999999559999999999999999999999995355555555555",
+      "555555535555599999999999955999999999999999999999995599999999999999999555999995355555555555",
+      "555555533335599999999999559999999999999999599999995999999999999999995559999995355555555555",
       "555555555535555999999999999999999999999999999999999999999999999999955599999955355555555555",
       "555555555535555599999999999995599999999999999999999999999999999999955999999555355555555555",
       "555555555533333559999999999999999999999999999999959999999999999999959999999533355555555555",
@@ -176,10 +176,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 72,
-        "y": 27
+        "h": 2.0,
+        "w": 1.0,
+        "x": 72.0,
+        "y": 27.0
       },
       "id": 13009278,
       "is_consumable": false,
@@ -194,10 +194,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 61,
-        "y": 25
+        "h": 2.0,
+        "w": 1.0,
+        "x": 61.0,
+        "y": 25.0
       },
       "id": 12632307,
       "is_consumable": false,
@@ -212,10 +212,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 83,
-        "y": 39
+        "h": 2.0,
+        "w": 1.0,
+        "x": 83.0,
+        "y": 39.0
       },
       "id": 12632279,
       "is_consumable": false,
@@ -230,10 +230,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 68,
-        "y": 39
+        "h": 2.0,
+        "w": 1.0,
+        "x": 68.0,
+        "y": 39.0
       },
       "id": 12632280,
       "is_consumable": false,
@@ -248,10 +248,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 34,
-        "y": 24
+        "h": 2.0,
+        "w": 1.0,
+        "x": 34.0,
+        "y": 24.0
       },
       "id": 12632284,
       "is_consumable": false,
@@ -266,10 +266,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 42,
-        "y": 37
+        "h": 2.0,
+        "w": 1.0,
+        "x": 42.0,
+        "y": 37.0
       },
       "id": 12632285,
       "is_consumable": false,
@@ -284,10 +284,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 25,
-        "y": 34
+        "h": 2.0,
+        "w": 1.0,
+        "x": 25.0,
+        "y": 34.0
       },
       "id": 12632301,
       "is_consumable": false,
@@ -302,10 +302,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 1,
-        "y": 18
+        "h": 2.0,
+        "w": 1.0,
+        "x": 1.0,
+        "y": 18.0
       },
       "id": 12632283,
       "is_consumable": false,
@@ -320,10 +320,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 45,
-        "y": 49
+        "h": 2.0,
+        "w": 1.0,
+        "x": 45.0,
+        "y": 49.0
       },
       "id": 12632275,
       "is_consumable": false,
@@ -338,10 +338,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 16,
-        "y": 17
+        "h": 2.0,
+        "w": 1.0,
+        "x": 16.0,
+        "y": 17.0
       },
       "id": 12632296,
       "is_consumable": false,
@@ -375,10 +375,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 23,
-        "y": 14
+        "h": 2.0,
+        "w": 1.0,
+        "x": 23.0,
+        "y": 14.0
       },
       "id": 13009130,
       "is_consumable": false,
@@ -429,10 +429,10 @@
         }
       ],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 74,
-        "y": 37
+        "h": 2.0,
+        "w": 1.0,
+        "x": 74.0,
+        "y": 37.0
       },
       "id": 13782356,
       "is_consumable": false,
@@ -447,10 +447,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 71,
-        "y": 19
+        "h": 2.0,
+        "w": 1.0,
+        "x": 71.0,
+        "y": 19.0
       },
       "id": 12632306,
       "is_consumable": false,
@@ -463,17 +463,17 @@
       "destination": {
         "direction": "Right",
         "world": 1011,
-        "x": 9,
-        "y": 58
+        "x": 9.0,
+        "y": 58.0
       },
       "dialogues": [],
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 81,
-        "y": 52
+        "h": 1.0,
+        "w": 1.0,
+        "x": 81.0,
+        "y": 52.0
       },
       "id": 12635302,
       "is_consumable": false,
@@ -488,10 +488,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 2,
-        "x": 49,
-        "y": 25
+        "h": 2.0,
+        "w": 2.0,
+        "x": 49.0,
+        "y": 25.0
       },
       "id": 12745541,
       "is_consumable": false,
@@ -506,10 +506,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 51,
-        "y": 56
+        "h": 1.0,
+        "w": 1.0,
+        "x": 51.0,
+        "y": 56.0
       },
       "id": 12745551,
       "is_consumable": false,
@@ -524,10 +524,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 12,
-        "y": 34
+        "h": 1.0,
+        "w": 1.0,
+        "x": 12.0,
+        "y": 34.0
       },
       "id": 12745543,
       "is_consumable": false,
@@ -542,10 +542,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 2,
-        "x": 31,
-        "y": 20
+        "h": 2.0,
+        "w": 2.0,
+        "x": 31.0,
+        "y": 20.0
       },
       "id": 12745542,
       "is_consumable": false,
@@ -560,10 +560,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 81,
-        "y": 28
+        "h": 1.0,
+        "w": 1.0,
+        "x": 81.0,
+        "y": 28.0
       },
       "id": 12745544,
       "is_consumable": false,
@@ -578,10 +578,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 84,
-        "y": 36
+        "h": 1.0,
+        "w": 1.0,
+        "x": 84.0,
+        "y": 36.0
       },
       "id": 12745545,
       "is_consumable": false,
@@ -596,10 +596,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 47,
-        "y": 41
+        "h": 1.0,
+        "w": 1.0,
+        "x": 47.0,
+        "y": 41.0
       },
       "id": 12745547,
       "is_consumable": false,
@@ -614,10 +614,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 57,
-        "y": 20
+        "h": 1.0,
+        "w": 1.0,
+        "x": 57.0,
+        "y": 20.0
       },
       "id": 12745546,
       "is_consumable": false,
@@ -632,10 +632,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 2,
-        "x": 70,
-        "y": 26
+        "h": 2.0,
+        "w": 2.0,
+        "x": 70.0,
+        "y": 26.0
       },
       "id": 12745540,
       "is_consumable": false,
@@ -648,17 +648,17 @@
       "destination": {
         "direction": "Up",
         "world": 12745769,
-        "x": 0,
-        "y": 0
+        "x": 0.0,
+        "y": 0.0
       },
       "dialogues": [],
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 53,
-        "y": 34
+        "h": 1.0,
+        "w": 1.0,
+        "x": 53.0,
+        "y": 34.0
       },
       "id": 12745770,
       "is_consumable": false,
@@ -673,10 +673,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 3,
-        "w": 3,
-        "x": 52,
-        "y": 32
+        "h": 3.0,
+        "w": 3.0,
+        "x": 52.0,
+        "y": 32.0
       },
       "id": 12745768,
       "is_consumable": false,
@@ -691,10 +691,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 3,
-        "w": 3,
-        "x": 77,
-        "y": 31
+        "h": 3.0,
+        "w": 3.0,
+        "x": 77.0,
+        "y": 31.0
       },
       "id": 12745778,
       "is_consumable": false,
@@ -707,17 +707,17 @@
       "destination": {
         "direction": "None",
         "world": 12745779,
-        "x": 0,
-        "y": 0
+        "x": 0.0,
+        "y": 0.0
       },
       "dialogues": [],
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 78,
-        "y": 33
+        "h": 1.0,
+        "w": 1.0,
+        "x": 78.0,
+        "y": 33.0
       },
       "id": 12745780,
       "is_consumable": false,
@@ -732,10 +732,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 3,
-        "w": 3,
-        "x": 72,
-        "y": 30
+        "h": 3.0,
+        "w": 3.0,
+        "x": 72.0,
+        "y": 30.0
       },
       "id": 12745857,
       "is_consumable": false,
@@ -748,17 +748,17 @@
       "destination": {
         "direction": "None",
         "world": 12745848,
-        "x": 0,
-        "y": 0
+        "x": 0.0,
+        "y": 0.0
       },
       "dialogues": [],
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 70,
-        "y": 24
+        "h": 1.0,
+        "w": 1.0,
+        "x": 70.0,
+        "y": 24.0
       },
       "id": 12745849,
       "is_consumable": false,
@@ -771,17 +771,17 @@
       "destination": {
         "direction": "None",
         "world": 12745868,
-        "x": 0,
-        "y": 0
+        "x": 0.0,
+        "y": 0.0
       },
       "dialogues": [],
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 58,
-        "y": 27
+        "h": 1.0,
+        "w": 1.0,
+        "x": 58.0,
+        "y": 27.0
       },
       "id": 12745869,
       "is_consumable": false,
@@ -794,17 +794,17 @@
       "destination": {
         "direction": "None",
         "world": 12745838,
-        "x": 0,
-        "y": 0
+        "x": 0.0,
+        "y": 0.0
       },
       "dialogues": [],
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 65,
-        "y": 27
+        "h": 1.0,
+        "w": 1.0,
+        "x": 65.0,
+        "y": 27.0
       },
       "id": 12745839,
       "is_consumable": false,
@@ -819,10 +819,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 3,
-        "w": 5,
-        "x": 68,
-        "y": 22
+        "h": 3.0,
+        "w": 5.0,
+        "x": 68.0,
+        "y": 22.0
       },
       "id": 12745847,
       "is_consumable": false,
@@ -837,10 +837,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 3,
-        "w": 3,
-        "x": 57,
-        "y": 25
+        "h": 3.0,
+        "w": 3.0,
+        "x": 57.0,
+        "y": 25.0
       },
       "id": 12745867,
       "is_consumable": false,
@@ -853,17 +853,17 @@
       "destination": {
         "direction": "None",
         "world": 12745858,
-        "x": 0,
-        "y": 0
+        "x": 0.0,
+        "y": 0.0
       },
       "dialogues": [],
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 73,
-        "y": 32
+        "h": 1.0,
+        "w": 1.0,
+        "x": 73.0,
+        "y": 32.0
       },
       "id": 12745859,
       "is_consumable": false,
@@ -878,10 +878,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 3,
-        "w": 5,
-        "x": 63,
-        "y": 25
+        "h": 3.0,
+        "w": 5.0,
+        "x": 63.0,
+        "y": 25.0
       },
       "id": 12745837,
       "is_consumable": false,
@@ -896,10 +896,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 78,
-        "y": 35
+        "h": 1.0,
+        "w": 1.0,
+        "x": 78.0,
+        "y": 35.0
       },
       "id": 12746426,
       "is_consumable": false,
@@ -914,10 +914,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 70,
-        "y": 26
+        "h": 1.0,
+        "w": 1.0,
+        "x": 70.0,
+        "y": 26.0
       },
       "id": 12746425,
       "is_consumable": false,
@@ -932,10 +932,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 65,
-        "y": 29
+        "h": 1.0,
+        "w": 1.0,
+        "x": 65.0,
+        "y": 29.0
       },
       "id": 12746424,
       "is_consumable": false,
@@ -957,10 +957,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 52,
-        "y": 41
+        "h": 2.0,
+        "w": 1.0,
+        "x": 52.0,
+        "y": 41.0
       },
       "id": 13008876,
       "is_consumable": false,
@@ -973,17 +973,17 @@
       "destination": {
         "direction": "Down",
         "world": 1021,
-        "x": 9,
-        "y": 2
+        "x": 9.0,
+        "y": 2.0
       },
       "dialogues": [],
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 10,
-        "y": 5
+        "h": 1.0,
+        "w": 1.0,
+        "x": 10.0,
+        "y": 5.0
       },
       "id": 13003569,
       "is_consumable": false,
@@ -998,10 +998,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 10,
-        "y": 4
+        "h": 2.0,
+        "w": 1.0,
+        "x": 10.0,
+        "y": 4.0
       },
       "id": 13003568,
       "is_consumable": false,
@@ -1016,10 +1016,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 42,
-        "y": 65
+        "h": 2.0,
+        "w": 1.0,
+        "x": 42.0,
+        "y": 65.0
       },
       "id": 13003646,
       "is_consumable": false,
@@ -1032,17 +1032,17 @@
       "destination": {
         "direction": "Down",
         "world": 1021,
-        "x": 88,
-        "y": 62
+        "x": 88.0,
+        "y": 62.0
       },
       "dialogues": [],
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 42,
-        "y": 66
+        "h": 1.0,
+        "w": 1.0,
+        "x": 42.0,
+        "y": 66.0
       },
       "id": 13003647,
       "is_consumable": false,
@@ -1064,10 +1064,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 1,
-        "w": 2,
-        "x": 75,
-        "y": 48
+        "h": 1.0,
+        "w": 2.0,
+        "x": 75.0,
+        "y": 48.0
       },
       "id": 13009374,
       "is_consumable": false,
@@ -1082,10 +1082,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 3,
-        "w": 4,
-        "x": 22,
-        "y": 10
+        "h": 3.0,
+        "w": 4.0,
+        "x": 22.0,
+        "y": 10.0
       },
       "id": 13613351,
       "is_consumable": false,
@@ -1100,10 +1100,10 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 2,
-        "w": 3,
-        "x": 48,
-        "y": 23
+        "h": 2.0,
+        "w": 3.0,
+        "x": 48.0,
+        "y": 23.0
       },
       "id": 14997630,
       "is_consumable": false,

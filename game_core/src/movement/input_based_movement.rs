@@ -1,9 +1,9 @@
-use crate::{features::entity::Entity, utils::directions::Direction, worlds::world::World};
+use crate::{features::entity::Entity, utils::{directions::Direction, math::ZeroComparable}, worlds::world::World};
 
 impl Entity {
     pub fn move_based_on_player_input(&mut self, world: &World, time_since_last_update: f32) { 
         self.time_immobilized -= time_since_last_update;
-        if self.time_immobilized > 0.0 {
+        if self.time_immobilized > 0.0 {            
             return;
         }
 
@@ -35,7 +35,12 @@ impl Entity {
     }
 
     fn update_direction_based_on_keyboard(&mut self, world: &World) {
+        if world.frame_is_slippery_surface(&self.hittable_frame()) && !self.current_speed.is_zero() {
+            return
+        }
+
         let new_direction = world.players[self.player_index].direction_based_on_current_keys;
+
         if !matches!(new_direction, Direction::None) {
             self.direction = new_direction;
             self.reset_speed();

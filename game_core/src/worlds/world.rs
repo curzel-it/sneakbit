@@ -326,7 +326,7 @@ impl World {
     }
 
     pub fn frame_is_slippery_surface(&self, frame: &FRect) -> bool {
-        self.is_slippery_surface(frame.x as usize, frame.y as usize)
+        self.is_slippery_surface(frame.x as usize, frame.y as usize) && self.is_slippery_surface(frame.max_x() as usize, frame.max_y() as usize)
     }
 
     pub fn is_hero_around_and_on_collision_with(&self, target: &FRect) -> bool {

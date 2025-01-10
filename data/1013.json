@@ -2843,7 +2843,18 @@
       "destination": null,
       "dialogues": [],
       "direction": "Down",
-      "display_conditions": [],
+      "display_conditions": [
+        {
+          "expected_value": 1,
+          "key": "player.0.inventory.amount.2000",
+          "visible": false
+        },
+        {
+          "expected_value": 1,
+          "key": "always",
+          "visible": true
+        }
+      ],
       "frame": {
         "h": 1,
         "w": 1,
