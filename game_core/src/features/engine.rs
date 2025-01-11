@@ -95,7 +95,11 @@ impl GameEngine {
     }
 
     fn apply_state_updates(&mut self, updates: Vec<EngineStateUpdate>) {
-        let mut sorted_updates = updates.clone();
+        let mut sorted_updates: Vec<EngineStateUpdate> = updates
+            .iter()
+            .filter(|update| !matches!(update, EngineStateUpdate::Teleport(_)))
+            .cloned()
+            .collect();
 
         sorted_updates.sort_by(|a, b| {
             use EngineStateUpdate::*;
@@ -111,6 +115,14 @@ impl GameEngine {
         sorted_updates.iter().for_each(|u| {
             self.apply_state_update(u)
         });
+
+        let first_teleportation = updates
+            .iter()
+            .find(|update| matches!(update, EngineStateUpdate::Teleport(_)));
+
+        if let Some(first_teleportation) = first_teleportation {
+            self.apply_state_update(first_teleportation)
+        }
     }
 
     fn center_camera_onto_players(&mut self) {
