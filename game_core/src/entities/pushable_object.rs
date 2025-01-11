@@ -73,6 +73,9 @@ impl Entity {
             Direction::DownLeft => self.frame.offset(0.6, -0.6).contains_or_touches(&player_center),
             Direction::Left => self.frame.offset_x(0.6).contains_or_touches(&player_center),
             Direction::UpLeft => self.frame.offset(0.6, 0.6).contains_or_touches(&player_center),
+            Direction::Vector(dx, dy) => {
+                self.frame.offset(-dx, -dy).contains_or_touches(&player_center)
+            },
             Direction::None => false
         }
     }

@@ -2,9 +2,9 @@ use serde::{Deserialize, Serialize};
 
 use super::{rect::FRect, vector::Vector2d};
 
-#[derive(Default, Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Default, Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum Direction {
-    Up = 0,
+    Up,
     UpRight,
     Right,
     DownRight,
@@ -12,8 +12,22 @@ pub enum Direction {
     DownLeft,
     Left,
     UpLeft,
+    Vector(f32, f32),
     #[default]
     None
+}
+
+impl PartialEq for Direction {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::Vector(l0, l1), Self::Vector(r0, r1)) => l0 == r0 && l1 == r1,
+            _ => core::mem::discriminant(self) == core::mem::discriminant(other),
+        }
+    }
+}
+
+impl Eq for Direction {
+    // ...
 }
 
 impl Direction {
@@ -63,6 +77,7 @@ impl Direction {
             Direction::DownLeft => vec![Direction::Down, Direction::Left],
             Direction::Left => vec![Direction::Left],
             Direction::UpLeft => vec![Direction::Up, Direction::Left],
+            Direction::Vector(dx, dy) => vec![Direction::Vector(*dx, 0.0), Direction::Vector(0.0, *dy)],
             Direction::None => vec![]
         }
     }
@@ -77,6 +92,7 @@ impl Direction {
             Direction::DownLeft => (-0.7, 0.7),
             Direction::Left => (-1.0, 0.0),
             Direction::UpLeft => (-0.7, -0.7),
+            Direction::Vector(dx, dy) => (*dx, *dy),
             Direction::None => (0.0, 0.0),
         }  
     }
@@ -106,6 +122,7 @@ impl Direction {
             Direction::DownLeft => Direction::UpRight,
             Direction::Left => Direction::Right,
             Direction::UpLeft => Direction::DownRight,
+            Direction::Vector(dx, dy) => Direction::Vector(-dx, -dy),
             Direction::None => Direction::None,
         }
     }
@@ -120,6 +137,9 @@ impl Direction {
             Direction::DownLeft => Direction::Left,
             Direction::Left => Direction::UpLeft,
             Direction::UpLeft => Direction::Up,
+            Direction::Vector(dx, dy) => {
+                Vector2d::new(*dx, *dy).rotated(-std::f32::consts::FRAC_PI_2).as_vector_direction()
+            },
             Direction::None => Direction::None,
         }
     }
@@ -134,7 +154,45 @@ impl Direction {
             Direction::DownLeft => Direction::Down,
             Direction::Left => Direction::DownLeft,
             Direction::UpLeft => Direction::Left,
+            Direction::Vector(dx, dy) => {
+                Vector2d::new(*dx, *dy).rotated(std::f32::consts::FRAC_PI_2).as_vector_direction()
+            },
             Direction::None => Direction::None,
+        }
+    }
+}
+
+impl Direction {
+    pub fn to_4_direction(&self) -> Direction {
+        match self {
+            Direction::Up => Direction::Up,
+            Direction::Right | Direction::UpRight | Direction::DownRight => Direction::Right,
+            Direction::Down => Direction::Down,
+            Direction::Left | Direction::UpLeft | Direction::DownLeft => Direction::Left,
+            Direction::Vector(dx, dy) => Vector2d::new(*dx, *dy).as_closest_4_direction(),
+            Direction::None => Direction::None,
+        }
+    }
+}
+
+impl Vector2d {
+    fn as_vector_direction(&self) -> Direction {
+        Direction::Vector(self.x, self.y)
+    }
+
+    pub fn as_closest_4_direction(&self) -> Direction {
+        if self.x.abs() > self.y.abs() {
+            if self.x > 0.0 {
+                Direction::Right
+            } else {
+                Direction::Left
+            }
+        } else {
+            if self.y > 0.0 {
+                Direction::Down
+            } else {
+                Direction::Up
+            }
         }
     }
 }

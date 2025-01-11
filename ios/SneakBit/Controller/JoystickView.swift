@@ -46,7 +46,6 @@ private class JoystickViewModel: ObservableObject {
     
     @Published var dragLocation: CGPoint = .zero
     @Published var isDragging = false
-    @Published var currentActiveKeys: Set<EmulatedKey> = []
     @Published var center: CGPoint = .zero
     
     let baseRadius: CGFloat = 32
@@ -88,43 +87,10 @@ private class JoystickViewModel: ObservableObject {
         withAnimation {
             isDragging = false
         }
-        releaseCurrentKeys()
-    }
-
-    private func handleDirection(angle: CGFloat) {
-        let adjustedAngle = (angle < 0 ? angle + 2 * .pi : angle) / CGFloat.pi
-        let newActiveKeys = Set(directionForAngle(adjustedAngle))
-        let keysToRelease = currentActiveKeys.subtracting(newActiveKeys)
-        let keysToPress = newActiveKeys.subtracting(currentActiveKeys)
-        
-        for key in keysToRelease {
-            engine.setKeyUp(key)
-        }
-        for key in keysToPress {
-            engine.setKeyDown(key)
-        }
-        
-        currentActiveKeys = newActiveKeys
-    }
-
-    private func releaseCurrentKeys() {
-        for key in currentActiveKeys {
-            engine.setKeyUp(key)
-        }
-        currentActiveKeys.removeAll()
+        engine.joystickAngle = 0
     }
     
-    private func directionForAngle(_ angle: CGFloat) -> [EmulatedKey] {
-        switch angle {
-        case 0..<1/8, 15/8..<2: [.right]
-        case 1/8..<3/8: [.right, .down]
-        case 3/8..<5/8: [.down]
-        case 5/8..<7/8: [.down, .left]
-        case 7/8..<9/8: [.left]
-        case 9/8..<11/8: [.left, .up]
-        case 11/8..<13/8: [.up]
-        case 13/8..<15/8: [.up, .right]
-        default: []
-        }
+    private func handleDirection(angle: CGFloat) {
+        engine.joystickAngle = angle
     }
 }

@@ -1,4 +1,4 @@
-use game_core::{current_keyboard_state, input::keyboard_events_provider::KeyboardEventsProvider, is_turn_prep, number_of_players, update_keyboard, update_mouse};
+use game_core::{current_keyboard_state, input::keyboard_events_provider::KeyboardEventsProvider, is_turn_prep, number_of_players, update_keyboard, update_mouse, utils::vector::Vector2d};
 use raylib::prelude::*;
 
 use crate::GameContext;
@@ -70,6 +70,7 @@ fn update_keyboard_for_primary_player(rl: &mut RaylibHandle, should_pause: bool,
         rl.is_key_down(KeyboardKey::KEY_D) || rl.is_key_down(KeyboardKey::KEY_RIGHT) || rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || joystick_right, 
         rl.is_key_down(KeyboardKey::KEY_S) || rl.is_key_down(KeyboardKey::KEY_DOWN) || rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || joystick_down, 
         rl.is_key_down(KeyboardKey::KEY_A) || rl.is_key_down(KeyboardKey::KEY_LEFT) || rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || joystick_left, 
+        current_joystick_angle(rl, 0),
         rl.is_key_pressed(KeyboardKey::KEY_ESCAPE) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
         should_pause || rl.is_key_pressed(KeyboardKey::KEY_X) || rl.is_key_pressed(KeyboardKey::KEY_ENTER) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
         rl.is_key_pressed(KeyboardKey::KEY_E) || rl.is_key_pressed(KeyboardKey::KEY_K) || rl.is_key_pressed(KeyboardKey::KEY_SPACE) || rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
@@ -102,6 +103,7 @@ fn update_keyboard_for_secondary_player(rl: &mut RaylibHandle, previous_keyboard
         rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || joystick_right, 
         rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_DOWN) || joystick_down, 
         rl.is_gamepad_button_down(gamepad, GamepadButton::GAMEPAD_BUTTON_LEFT_FACE_LEFT) || joystick_left, 
+        current_joystick_angle(rl, gamepad),
         rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_MIDDLE_RIGHT), 
         rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_MIDDLE_LEFT), 
         rl.is_gamepad_button_pressed(gamepad, GamepadButton::GAMEPAD_BUTTON_RIGHT_FACE_RIGHT), 
@@ -111,6 +113,12 @@ fn update_keyboard_for_secondary_player(rl: &mut RaylibHandle, previous_keyboard
         false,
         time_since_last_update
     );
+}
+
+fn current_joystick_angle(rl: &RaylibHandle, gamepad: i32) -> f32 {
+    let x = rl.get_gamepad_axis_movement(gamepad, GamepadAxis::GAMEPAD_AXIS_LEFT_X);
+    let y = rl.get_gamepad_axis_movement(gamepad, GamepadAxis::GAMEPAD_AXIS_LEFT_Y);    
+    Vector2d::new(x, y).angle()
 }
 
 fn current_joystick_directions(rl: &RaylibHandle, gamepad: i32) -> (bool, bool, bool, bool) {

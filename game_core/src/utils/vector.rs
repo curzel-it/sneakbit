@@ -28,6 +28,10 @@ impl Vector2d {
         Self::new(0.0, 0.0)
     }
 
+    pub fn from_angle(radians: f32) -> Self {
+        Self::new(radians.cos(), radians.sin())
+    }
+
     pub fn from_indeces(x: usize, y: usize) -> Self {
         Self::new(x as f32, y as f32)
     }
@@ -51,6 +55,10 @@ impl Vector2d {
     pub fn offset_y(&self, y: f32) -> Self {
         self.offset(0.0, y)
     }
+
+    pub fn values(&self) -> (f32, f32) {
+        (self.x, self.y)
+    }
 }
 
 impl ZeroComparable for Vector2d {
@@ -63,11 +71,18 @@ impl ZeroComparable for Vector2d {
     }
 }
 
-impl Vector2d {
-    pub fn is_close_to_tile(&self, tolerance: f32) -> bool {
-        let x = self.x.abs();
-        let y = self.y.abs();
-        (x - x.floor()) < tolerance && (y - y.floor()) < tolerance
+impl Vector2d {    
+    pub fn angle(&self) -> f32 {
+        self.y.atan2(self.x)
+    }
+
+    pub fn rotated(&self, radians: f32) -> Self {
+        let cos_theta = radians.cos();
+        let sin_theta = radians.sin();
+        Self::new(
+            self.x * cos_theta - self.y * sin_theta,
+            self.x * sin_theta + self.y * cos_theta,
+        )
     }
 }
 

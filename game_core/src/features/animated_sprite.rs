@@ -56,17 +56,17 @@ impl Entity {
     }
 
     pub fn update_sprite_for_direction_speed(&mut self, direction: Direction, speed: f32) {
-        let row = match (direction, speed != 0.0) {
+        let row = match (direction.to_4_direction(), speed != 0.0) {
             (Direction::Up, true) => 0,
             (Direction::Up, false) => 1,
-            (Direction::Right | Direction::UpRight | Direction::DownRight, true) => 2,
-            (Direction::Right | Direction::UpRight | Direction::DownRight, false) => 3,
+            (Direction::Right, true) => 2,
+            (Direction::Right, false) => 3,
             (Direction::Down, true) => 4,
             (Direction::Down, false) => 5,
-            (Direction::Left | Direction::UpLeft | Direction::DownLeft, true) => 6,
-            (Direction::Left | Direction::UpLeft | Direction::DownLeft, false) => 7,
-            (Direction::None, true) => 4,
-            (Direction::None, false) => 5,
+            (Direction::Left, true) => 6,
+            (Direction::Left, false) => 7,
+            (_, true) => 4,
+            (_, false) => 5,
         };
         self.sprite.frame.y = self.sprite.original_frame.y + self.sprite.frame.h * row as f32;
     }

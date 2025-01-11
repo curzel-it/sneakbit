@@ -27,6 +27,7 @@ class GameEngine {
     
     var size: CGSize = .zero
     var fps: Double = 0.0
+    var joystickAngle: CGFloat = 0.0
     
     var isLandscape: Bool {
         cameraViewport.w >= cameraViewport.h
@@ -234,6 +235,7 @@ class GameEngine {
                     keyDown.contains(.right),
                     keyDown.contains(.down),
                     keyDown.contains(.left),
+                    Float(joystickAngle),
                     keyPressed.contains(.escape),
                     keyPressed.contains(.menu),
                     keyPressed.contains(.confirm),
@@ -248,6 +250,7 @@ class GameEngine {
                     UInt(playerIndex),
                     false, false, false, false,
                     false, false, false, false,
+                    0,
                     false, false, false,
                     false, false,
                     false,

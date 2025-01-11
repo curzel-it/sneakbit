@@ -1,6 +1,6 @@
 use lazy_static::lazy_static;
 
-use crate::{constants::{KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS, KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST, MAX_PLAYERS}, utils::directions::Direction};
+use crate::{constants::{KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS, KEYBOARD_KEY_HOLD_TIME_TO_NEXT_PRESS_FIRST, MAX_PLAYERS}, utils::{directions::Direction, math::ZeroComparable, vector::Vector2d}};
 
 lazy_static! {
     pub static ref NO_KEYBOARD_EVENTS: KeyboardEventsProvider = KeyboardEventsProvider::new();
@@ -24,15 +24,6 @@ impl KeyboardEventsProvider {
 }
 
 impl KeyboardEventsProvider {
-    pub fn has_ranged_attack_key_been_pressed_by_anyone(&self) -> bool {
-        for player in &self.players {
-            if player.has_ranged_attack_key_been_pressed {
-                return true
-            }
-        }
-        false
-    }
-
     pub fn index_of_any_player_who_is_pressing_confirm(&self) -> Option<usize> {
         for index in 0..MAX_PLAYERS {
             if self.players[index].has_confirmation_been_pressed {
@@ -63,15 +54,6 @@ impl KeyboardEventsProvider {
     pub fn is_any_arrow_key_down_for_anyone(&self) -> bool {
         for player in &self.players {
             if player.is_any_arrow_key_down() {
-                return true
-            }
-        }
-        false
-    }
-
-    pub fn has_close_attack_key_been_pressed_by_anyone(&self) -> bool {
-        for player in &self.players {
-            if player.has_close_attack_key_been_pressed {
                 return true
             }
         }
@@ -186,10 +168,6 @@ impl KeyboardEventsProvider {
         self.players[player].is_any_arrow_key_down()
     }
     
-    pub fn has_any_arrow_key_been_pressed(&self, player: usize) -> bool {
-        self.players[player].has_any_arrow_key_been_pressed()
-    }
-    
     pub fn has_ranged_attack_key_been_pressed(&self, player: usize) -> bool {
         self.players[player].has_ranged_attack_key_been_pressed
     }
@@ -205,15 +183,6 @@ impl KeyboardEventsProvider {
     pub fn has_weapon_selection_been_pressed(&self, player: usize) -> bool {
         self.players[player].has_weapon_selection_been_pressed
     }
-    
-    pub fn has_weapon_selection_been_pressed_by_anyone(&self) -> bool {
-        for player in &self.players {
-            if player.has_weapon_selection_been_pressed {
-                return true
-            }
-        }
-        false
-    }
 
     #[allow(clippy::too_many_arguments)]
     pub fn update(
@@ -227,6 +196,7 @@ impl KeyboardEventsProvider {
         right_down: bool,
         down_down: bool,
         left_down: bool,
+        joystick_angle: f32,
         escape_pressed: bool,
         menu_pressed: bool,
         confirm_pressed: bool,
@@ -245,6 +215,7 @@ impl KeyboardEventsProvider {
             right_down,
             down_down,
             left_down,
+            joystick_angle,
             escape_pressed,
             menu_pressed,
             confirm_pressed,
@@ -271,6 +242,8 @@ struct PlayerKeyboardEventsProvider {
     direction_down: HoldableKey,
     direction_left: HoldableKey,
 
+    joystick_angle: f32,
+
     discard_direction_events_until_next_arrow_key_is_pressed: bool,
 }
 
@@ -288,6 +261,7 @@ impl PlayerKeyboardEventsProvider {
             direction_right: HoldableKey::new(),
             direction_down: HoldableKey::new(),
             direction_left: HoldableKey::new(),
+            joystick_angle: 0.0,
             discard_direction_events_until_next_arrow_key_is_pressed: false,
         }
     }
@@ -300,12 +274,18 @@ impl PlayerKeyboardEventsProvider {
         if self.discard_direction_events_until_next_arrow_key_is_pressed {
             return Direction::None;
         }
-        let direction_from_new_keys = Direction::from_data(
-            self.direction_up.is_down,
-            self.direction_right.is_down,
-            self.direction_down.is_down,
-            self.direction_left.is_down,
-        );
+        let (dx, dy) = Vector2d::from_angle(self.joystick_angle).values();
+        println!("joystick_angle: {} {} {}", self.joystick_angle, dx, dy);
+        let direction_from_new_keys = if self.joystick_angle.is_zero() {
+            Direction::from_data(
+                self.direction_up.is_down,
+                self.direction_right.is_down,
+                self.direction_down.is_down,
+                self.direction_left.is_down,
+            )
+        } else {        
+            Some(Direction::Vector(dx, dy))
+        };
         direction_from_new_keys.unwrap_or(current)
     }
 
@@ -314,13 +294,7 @@ impl PlayerKeyboardEventsProvider {
             || self.direction_right.is_down
             || self.direction_down.is_down
             || self.direction_left.is_down
-    }
-
-    fn has_any_arrow_key_been_pressed(&self) -> bool {
-        self.direction_up.is_pressed
-            || self.direction_right.is_pressed
-            || self.direction_down.is_pressed
-            || self.direction_left.is_pressed
+            || !self.joystick_angle.is_zero()
     }
 }
 
@@ -368,6 +342,7 @@ impl PlayerKeyboardEventsProvider {
         right_down: bool,
         down_down: bool,
         left_down: bool,
+        joystick_angle: f32,
         escape_pressed: bool,
         menu_pressed: bool,
         confirm_pressed: bool,
@@ -382,7 +357,8 @@ impl PlayerKeyboardEventsProvider {
             !up_pressed &&
             !right_pressed &&
             !down_pressed &&
-            !left_pressed;
+            !left_pressed && 
+            joystick_angle.is_zero();
     
         self.has_back_been_pressed = escape_pressed;
         self.has_menu_been_pressed = menu_pressed;
@@ -391,7 +367,8 @@ impl PlayerKeyboardEventsProvider {
         self.has_ranged_attack_key_been_pressed = ranged_attack_pressed;
         self.has_weapon_selection_been_pressed = weapon_selection_pressed;
         self.has_backspace_been_pressed = backspace_pressed;
-    
+
+        self.joystick_angle = joystick_angle;
         self.direction_up.update(up_pressed, up_down, time_since_last_update);
         self.direction_right.update(right_pressed, right_down, time_since_last_update);
         self.direction_down.update(down_pressed, down_down, time_since_last_update);

@@ -99,22 +99,18 @@ impl FRect {
     }
 
     pub fn is_around_and_pointed_at(&self, other: &FRect, direction: &Direction) -> bool {
-        // Step 1: Check if the rectangles overlap or touch
         if !self.overlaps_or_touches(other) {
             return false;
         }
     
-        // Step 2: Calculate the centers of both rectangles
         let self_center = self.center();
         let other_center = other.center();
     
-        // Step 3: Determine relative positions
         let is_above = self_center.y > other_center.y;
         let is_below = self_center.y < other_center.y;
         let is_left = self_center.x < other_center.x;
         let is_right = self_center.x > other_center.x;
     
-        // Step 4: Match on the provided direction and verify alignment
         match direction {
             Direction::Up => is_above,
             Direction::UpRight => is_above || is_right,
@@ -124,6 +120,10 @@ impl FRect {
             Direction::DownLeft => is_below || is_left,
             Direction::Left => is_left,
             Direction::UpLeft => is_above || is_left,
+            Direction::Vector(dx, dy) => {
+                let d = Vector2d::new(*dx, *dy).as_closest_4_direction();
+                self.is_around_and_pointed_at(other, &d)
+            },
             Direction::None => false
         }
     }
