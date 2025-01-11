@@ -96,7 +96,6 @@ pub enum EntityType {
     PressurePlate,
     Bullet,
     Bundle,
-    RailObject,
     Hint,
     Trail,
     WeaponMelee,

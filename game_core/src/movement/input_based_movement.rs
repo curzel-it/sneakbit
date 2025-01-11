@@ -15,7 +15,7 @@ impl Entity {
 
         let (next, next_collidable_frame) = self.projected_frames_by_moving_straight(&self.direction, time_since_last_update);
 
-        if world.area_hits(&vec![self.id], &next_collidable_frame) {
+        if world.area_hits_or_out_of_bounds(&vec![self.id], &next_collidable_frame) {
             if world.frame_is_slippery_surface(&self.hittable_frame()) {
                 self.current_speed = 0.0;
             }

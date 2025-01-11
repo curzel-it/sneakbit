@@ -18,6 +18,14 @@ impl World {
     pub fn area_hits(&self, exclude: &[u32], area: &FRect) -> bool {
         self.hitmap.area_hits(exclude, area) || self.tiles_hitmap.area_hits(exclude, area)
     }
+
+    pub fn area_hits_or_out_of_bounds(&self, exclude: &[u32], area: &FRect) -> bool {
+        self.is_out_of_bounds(area.x, area.y) || 
+        self.is_out_of_bounds(area.x, area.max_y()) || 
+        self.is_out_of_bounds(area.max_x(), area.y) || 
+        self.is_out_of_bounds(area.max_x(), area.max_y()) || 
+        self.area_hits(exclude, area)
+    }
     
     pub fn hits(&self, x: f32, y: f32) -> bool {
         self.hitmap.hits_xy(x, y) || self.tiles_hitmap.hits_xy(x, y) 
@@ -25,6 +33,10 @@ impl World {
     
     pub fn hits_or_out_of_bounds(&self, x: f32, y: f32) -> bool {
         x < 0.0 || y < 0.0 || x >= self.bounds.max_x() || y >= self.bounds.max_y() || self.hits(x, y)
+    }
+    
+    pub fn is_out_of_bounds(&self, x: f32, y: f32) -> bool {
+        x < 0.0 || y < 0.0 || x >= self.bounds.max_x() || y >= self.bounds.max_y()
     }
 
     pub fn hits_line(&self, exclude: &[u32], start: &Vector2d, end: &Vector2d) -> bool {
