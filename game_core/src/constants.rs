@@ -1,6 +1,6 @@
 use crate::utils::rect::FRect;
 
-pub const BUILD_NUMBER: u32 = 72;
+pub const BUILD_NUMBER: u32 = 73;
 
 // Default Props
 pub const INITIAL_CAMERA_VIEWPORT: FRect = FRect::new(0.0, 0.0, 60.0, 40.0);

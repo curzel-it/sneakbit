@@ -167,13 +167,10 @@ impl World {
     }
 
     fn spawn_coop_players_around_hero(&mut self) {
-        let offset = TILE_SIZE / 3.0;
-
         for (index, &id) in self.player_entity_ids().iter().enumerate().skip(1) {
             let mut entity = make_entity_by_species(SPECIES_HERO);
-            entity.frame = self.players[0].props.frame
-            .offset_x(if index == 1 { offset } else { 0.0 })
-            .offset_y(if index == 2 { offset } else if index == 3 { -offset } else { 0.0 });
+            let (dx, dy) = self.players[0].props.direction.as_offset();
+            entity.frame = self.players[0].props.frame.offset(dx, dy);
             entity.direction = self.players[0].props.direction;
             entity.id = id;
             entity.setup_hero_with_player_index(index);
