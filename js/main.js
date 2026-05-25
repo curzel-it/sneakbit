@@ -23,6 +23,7 @@ import { loadSettings, getSettings } from "./settings.js";
 import { installMenu, isMenuOpen } from "./menu.js";
 import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js";
 import { installMusic, playTrack } from "./music.js";
+import { installTouchControls } from "./touch.js";
 
 async function main() {
   initInput();
@@ -33,6 +34,7 @@ async function main() {
   installTransitions();
   installMusic();
   installDialogue();
+  installTouchControls();
 
   const [, speciesRaw, stringsRaw, worldRaw] = await Promise.all([
     loadAssets(),
