@@ -6,7 +6,6 @@ import { getSprite } from "./assets.js";
 import { getBiomeSheet } from "./biomeSheet.js";
 import { NUM_BIOMES } from "./biomes.js";
 import { CONSTRUCTION } from "./constructions.js";
-import { getPlayerSpriteFrame } from "./player.js";
 import { drawEntities } from "./entities.js";
 
 export function createRenderer(canvas) {
@@ -23,8 +22,7 @@ export function render(renderer, world, camera, player, biomeFrame) {
 
   drawBiome(ctx, world, camera, biomeFrame | 0);
   drawConstructions(ctx, world, camera);
-  drawEntities(ctx, world, camera);
-  drawPlayer(ctx, camera, player);
+  drawEntities(ctx, world, camera, player);
   drawDarkness(ctx, canvas, world, camera, player);
 }
 
@@ -89,17 +87,3 @@ function drawConstructions(ctx, world, camera) {
   }
 }
 
-function drawPlayer(ctx, camera, player) {
-  const sheet = getSprite("heroes");
-  const frame = getPlayerSpriteFrame(player);
-
-  const sx = frame.x * TILE_SIZE;
-  const sy = frame.y * TILE_SIZE;
-  const sw = frame.w * TILE_SIZE;
-  const sh = frame.h * TILE_SIZE;
-
-  const px = Math.round((player.x - camera.x) * TILE_SIZE);
-  const py = Math.round((player.y - camera.y - 1) * TILE_SIZE);
-
-  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
-}

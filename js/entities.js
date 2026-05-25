@@ -9,6 +9,8 @@
 
 import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js";
 import { getEntitySheet, getSpecies } from "./species.js";
+import { getSprite } from "./assets.js";
+import { getPlayerSpriteFrame } from "./player.js";
 
 let animClock = 0;
 
@@ -16,11 +18,35 @@ export function tickEntities(dt) {
   animClock += dt;
 }
 
-export function drawEntities(ctx, world, camera) {
-  if (!world.entities || world.entities.length === 0) return;
+export function drawEntities(ctx, world, camera, player) {
   const visible = collect(world, camera);
+  if (player) visible.push(makePlayerSortItem(player));
   visible.sort((a, b) => a._bottom - b._bottom || a._zIndex - b._zIndex);
-  for (const e of visible) draw(ctx, e, camera);
+  for (const e of visible) {
+    if (e._isPlayer) drawPlayer(ctx, e._player, camera);
+    else draw(ctx, e, camera);
+  }
+}
+
+function makePlayerSortItem(player) {
+  return {
+    _isPlayer: true,
+    _player: player,
+    _bottom: player.y + 1,
+    _zIndex: 15,
+  };
+}
+
+function drawPlayer(ctx, player, camera) {
+  const sheet = getSprite("heroes");
+  const frame = getPlayerSpriteFrame(player);
+  const sx = frame.x * TILE_SIZE;
+  const sy = frame.y * TILE_SIZE;
+  const sw = frame.w * TILE_SIZE;
+  const sh = frame.h * TILE_SIZE;
+  const px = Math.round((player.x - camera.x) * TILE_SIZE);
+  const py = Math.round((player.y - camera.y - 1) * TILE_SIZE);
+  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 }
 
 function collect(world, camera) {
