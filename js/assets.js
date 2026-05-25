@@ -1,0 +1,32 @@
+// Loads and caches sprite-sheet <img> elements keyed by name.
+// Features ask `getSprite(name)` rather than constructing Image objects.
+
+const cache = new Map();
+
+const SOURCES = {
+  heroes: "./assets/heroes.png",
+  tilesBiome: "./assets/tiles_biome_raw1.png",
+  tilesConstructions: "./assets/tiles_constructions_raw.png",
+};
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    img.src = src;
+  });
+}
+
+export async function loadAssets() {
+  const entries = await Promise.all(
+    Object.entries(SOURCES).map(async ([name, src]) => [name, await loadImage(src)])
+  );
+  for (const [name, img] of entries) cache.set(name, img);
+}
+
+export function getSprite(name) {
+  const img = cache.get(name);
+  if (!img) throw new Error(`Sprite not loaded: ${name}`);
+  return img;
+}

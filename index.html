@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SneakBit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        height: 100%;
+        overflow: hidden;
+        font-family: monospace;
+        color: #ccc;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      canvas {
+        display: block;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+        background: #000;
+        max-width: 100vw;
+        max-height: 100vh;
+      }
+      #hud {
+        position: fixed;
+        top: 8px;
+        left: 8px;
+        font-size: 12px;
+        opacity: 0.6;
+        pointer-events: none;
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="game" width="960" height="640"></canvas>
+    <div id="hud">WASD / arrows to move</div>
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>

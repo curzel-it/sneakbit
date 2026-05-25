@@ -1,0 +1,9 @@
+- [ ] game is hosted on github pages at sneakbit.curzel.it, update readme (now public facing) and claude.md accordingly
+- [ ] update claude.md to mention you now need to commit frequently and push to main every time there is a large enough change, so that users can see it
+- [ ] implement correct terrain rendering, biome tiles, construction tiles
+- [ ] implement correct tile rendering accounting for neighbooring tiles, like in the original game
+- [ ] implement biome frame-to-frame variations so that we can see water moving andsuch
+- [ ] terrain image caching using local storage
+- [ ] automatic zoom level based on screen desnsity/canvas/page size, equivalent to what has been done in the original game
+- [ ] implement collisions with biomes (water, lava, ...) and constructions (most of them, exceept like bridges and stuff)
+- [ ] rendering of non-player entities, such as monsters and so on
