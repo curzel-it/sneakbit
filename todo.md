@@ -1,4 +1,3 @@
-- [ ] game is hosted on github pages at sneakbit.curzel.it, update readme (now public facing) and claude.md accordingly
 - [ ] update claude.md to mention you now need to commit frequently and push to main every time there is a large enough change, so that users can see it
 - [ ] implement correct terrain rendering, biome tiles, construction tiles
 - [ ] implement correct tile rendering accounting for neighbooring tiles, like in the original game
@@ -7,3 +6,6 @@
 - [ ] automatic zoom level based on screen desnsity/canvas/page size, equivalent to what has been done in the original game
 - [ ] implement collisions with biomes (water, lava, ...) and constructions (most of them, exceept like bridges and stuff)
 - [ ] rendering of non-player entities, such as monsters and so on
+- [ ] reimplement menus and other ui elements using "real html" and not in the canvas
+- [ ] reimplement all the game settings that it makes sense to have at this stage of development
+- [ ] scaffold audio system and let's get footstep sound in. Avoid the audio context thing that requires users to click on the page if possible
