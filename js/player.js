@@ -17,6 +17,7 @@
 // integer tile and is the source of truth for collision and snapping.
 
 import { ANIMATIONS_FPS, SPRITE_SHEET_HEROES, STARTING_SPAWN } from "./constants.js";
+import { isWalkable } from "./world.js";
 
 const HERO_BASE_FRAME = { x: 1, y: 1, w: 1, h: 2 };
 const HERO_FRAME_COUNT = 4;
@@ -157,9 +158,7 @@ function startStep(player, dir, world) {
 }
 
 function canEnter(tx, ty, world) {
-  if (!world) return true;
-  if (tx < 0 || ty < 0 || tx >= world.cols || ty >= world.rows) return false;
-  return true;
+  return isWalkable(world, tx, ty);
 }
 
 function updateAnimation(player, dt) {

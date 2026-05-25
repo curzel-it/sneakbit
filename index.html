@@ -32,15 +32,18 @@
         top: 8px;
         left: 8px;
         font-size: 12px;
-        opacity: 0.6;
+        line-height: 1.4;
+        opacity: 0.75;
         pointer-events: none;
         user-select: none;
+        text-shadow: 0 1px 0 #000;
       }
+      .hud-row { white-space: nowrap; }
     </style>
   </head>
   <body>
     <canvas id="game" width="960" height="640"></canvas>
-    <div id="hud">WASD / arrows to move</div>
+    <div id="hud"></div>
     <script type="module" src="./js/main.js"></script>
   </body>
 </html>

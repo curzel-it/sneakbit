@@ -1,7 +1,8 @@
 # SneakBit HTML
 
-> This thing is entirely vibe coded and prompts itself based on snapshot tests
-> Do with this information what you will
+> This thing is entirely vibe coded and prompts itself based on snapshot tests.
+
+> Do with this information what you will...
 
 HTML5 / Canvas / vanilla JS port of [SneakBit](https://github.com/curzel-it/sneakbit) — a top-down adventure-action game originally written in Rust and shipped on Steam, iOS and Android.
 

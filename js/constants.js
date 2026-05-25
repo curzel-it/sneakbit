@@ -4,6 +4,8 @@
 export const TILE_SIZE = 16;
 
 export const ANIMATIONS_FPS = 10;
+export const TILE_VARIATIONS_FPS = 0.75;
+export const BIOME_NUMBER_OF_FRAMES = 4;
 
 export const VIEWPORT_TILES_W = 60;
 export const VIEWPORT_TILES_H = 40;
