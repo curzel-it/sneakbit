@@ -15,8 +15,10 @@ export function installHud() {
 
 export function updateHud(hud, { worldId, fps, showFps = true }) {
   if (!hud) return;
-  _fpsEMA = _fpsEMA ? _fpsEMA * 0.95 + fps * 0.05 : fps;
-  hud.meta.textContent = showFps
+  if (Number.isFinite(fps)) {
+    _fpsEMA = _fpsEMA ? _fpsEMA * 0.95 + fps * 0.05 : fps;
+  }
+  hud.meta.textContent = showFps && _fpsEMA
     ? `World ${worldId} · ${_fpsEMA.toFixed(0)} fps`
     : `World ${worldId}`;
 }

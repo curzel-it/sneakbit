@@ -50,6 +50,7 @@ export function buildWorld(raw) {
     collision,
     entities: raw.entities ?? [],
     soundtrack: raw.soundtrack ?? null,
+    lightConditions: raw.light_conditions ?? "Day",
   };
 }
 

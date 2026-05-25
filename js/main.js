@@ -5,7 +5,7 @@ import { loadAssets } from "./assets.js";
 import { loadSpecies, loadStrings, loadWorld } from "./data.js";
 import { loadStringsData } from "./strings.js";
 import { installDialogue, isDialogueOpen } from "./dialogue.js";
-import { installInteract } from "./interact.js";
+import { installInteract, tickInteract } from "./interact.js";
 import { loadSpeciesData } from "./species.js";
 import { composeBiomeSheet } from "./biomeSheet.js";
 import { buildWorld } from "./world.js";
@@ -36,11 +36,12 @@ async function main() {
   installDialogue();
   installTouchControls();
 
+  const startId = parseInt(new URLSearchParams(location.search).get("world"), 10) || STARTING_WORLD_ID;
   const [, speciesRaw, stringsRaw, worldRaw] = await Promise.all([
     loadAssets(),
     loadSpecies(),
     loadStrings("en"),
-    loadWorld(STARTING_WORLD_ID),
+    loadWorld(startId),
   ]);
 
   loadSpeciesData(speciesRaw);
@@ -50,11 +51,17 @@ async function main() {
   const canvas = document.getElementById("game");
   const renderer = createRenderer(canvas);
   const biomeAnim = createBiomeAnimation();
+  const world = buildWorld(worldRaw);
+  const player = createPlayer();
+  // If the URL pointed us at a non-default world the hard-coded spawn
+  // is likely off the map; place the player at the first teleporter (a
+  // typical entry portal) or fall back to a safe in-bounds tile.
+  if (startId !== STARTING_WORLD_ID) snapToEntry(player, world);
   const state = {
-    world: buildWorld(worldRaw),
-    player: createPlayer(),
+    world,
+    player,
     camera: createCamera(),
-    lastTile: { x: -1, y: -1 },
+    lastTile: { x: player.tileX, y: player.tileY },
   };
   installAutoZoom(canvas, state.camera, hud.el);
   installInteract(() => state);
@@ -70,6 +77,7 @@ async function main() {
     updateCamera(state.camera, state.player, state.world);
     tickBiomeAnimation(biomeAnim, dt);
     tickEntities(dt);
+    tickInteract();
     render(renderer, state.world, state.camera, state.player, biomeAnim.frame);
     updateHud(hud, {
       worldId: state.world.id,
@@ -77,6 +85,17 @@ async function main() {
       showFps: getSettings().showFps,
     });
   });
+}
+
+function snapToEntry(player, world) {
+  const tele = (world.entities || []).find(e => e.species_id === 1019 && e.frame);
+  let x = tele?.frame.x ?? 0;
+  let y = tele?.frame.y ?? 0;
+  if (!Number.isFinite(x) || !Number.isFinite(y)) { x = 1; y = 1; }
+  x = Math.max(0, Math.min(world.cols - 1, x));
+  y = Math.max(0, Math.min(world.rows - 1, y));
+  player.tileX = x; player.tileY = y;
+  player.x = x; player.y = y;
 }
 
 function maybeTeleport(state) {

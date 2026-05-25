@@ -67,7 +67,8 @@ function musicVolume() {
 function ensure(name) {
   let a = cache.get(name);
   if (!a) {
-    a = new Audio(`./assets/audio/${name}.mp3`);
+    const fileName = name.endsWith(".mp3") ? name : `${name}.mp3`;
+    a = new Audio(`./assets/audio/${fileName}`);
     a.preload = "auto";
     cache.set(name, a);
   }

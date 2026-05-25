@@ -65,7 +65,7 @@ export async function travelTo(state, destination) {
     const raw = await loadWorld(destination.world);
     const world = buildWorld(raw);
     state.world = world;
-    state.lastTile = { x: -1, y: -1 };
+    state.lastTile = { x: state.player.tileX, y: state.player.tileY };
     if (world.soundtrack) playTrack(world.soundtrack);
     const spawnX = destination.x ?? STARTING_SPAWN.x;
     const spawnY = destination.y ?? STARTING_SPAWN.y;
