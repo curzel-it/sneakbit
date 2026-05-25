@@ -9,5 +9,5 @@
 - [x] reimplement all the game settings that it makes sense to have at this stage of development
 - [x] scaffold audio system and let's get footstep sound in. (Avoid the audio context thing that requires users to click on the page if possible, i'm not sure how this works)
 - [x] implement transitions from level to level
-- [ ] continue working on porting the rest of the game until session limit is reached
-- [ ] Have fun!
+- [x] continue working on porting the rest of the game until session limit is reached
+- [x] Have fun!
