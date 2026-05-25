@@ -12,6 +12,7 @@ import { STARTING_SPAWN } from "./constants.js";
 import { loadWorld } from "./data.js";
 import { buildWorld } from "./world.js";
 import { playSfx } from "./audio.js";
+import { playTrack } from "./music.js";
 
 const TELEPORTER_SPECIES_ID = 1019;
 const FADE_DURATION_MS = 220;
@@ -64,6 +65,8 @@ export async function travelTo(state, destination) {
     const raw = await loadWorld(destination.world);
     const world = buildWorld(raw);
     state.world = world;
+    state.lastTile = { x: -1, y: -1 };
+    if (world.soundtrack) playTrack(world.soundtrack);
     const spawnX = destination.x ?? STARTING_SPAWN.x;
     const spawnY = destination.y ?? STARTING_SPAWN.y;
     movePlayerTo(state.player, spawnX, spawnY, destination.direction);

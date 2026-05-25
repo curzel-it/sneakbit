@@ -19,3 +19,9 @@ export async function loadSpecies() {
   if (!cache.has(key)) cache.set(key, await fetchJson("./data/species.json"));
   return cache.get(key);
 }
+
+export async function loadStrings(lang = "en") {
+  const key = `strings:${lang}`;
+  if (!cache.has(key)) cache.set(key, await fetchJson(`./data/strings.${lang}.json`));
+  return cache.get(key);
+}

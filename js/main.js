@@ -2,7 +2,10 @@
 
 import { STARTING_WORLD_ID } from "./constants.js";
 import { loadAssets } from "./assets.js";
-import { loadSpecies, loadWorld } from "./data.js";
+import { loadSpecies, loadStrings, loadWorld } from "./data.js";
+import { loadStringsData } from "./strings.js";
+import { installDialogue, isDialogueOpen } from "./dialogue.js";
+import { installInteract } from "./interact.js";
 import { loadSpeciesData } from "./species.js";
 import { composeBiomeSheet } from "./biomeSheet.js";
 import { buildWorld } from "./world.js";
@@ -12,12 +15,14 @@ import { createCamera, updateCamera } from "./camera.js";
 import { createRenderer, render } from "./renderer.js";
 import { startGameLoop } from "./gameLoop.js";
 import { createBiomeAnimation, tickBiomeAnimation } from "./biomeAnimation.js";
+import { tickEntities } from "./entities.js";
 import { installAutoZoom } from "./zoom.js";
 import { installHud, updateHud } from "./hud.js";
 import { loadAudio } from "./audio.js";
 import { loadSettings, getSettings } from "./settings.js";
 import { installMenu, isMenuOpen } from "./menu.js";
 import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js";
+import { installMusic, playTrack } from "./music.js";
 
 async function main() {
   initInput();
@@ -26,14 +31,18 @@ async function main() {
   const hud = installHud();
   installMenu();
   installTransitions();
+  installMusic();
+  installDialogue();
 
-  const [, speciesRaw, worldRaw] = await Promise.all([
+  const [, speciesRaw, stringsRaw, worldRaw] = await Promise.all([
     loadAssets(),
     loadSpecies(),
+    loadStrings("en"),
     loadWorld(STARTING_WORLD_ID),
   ]);
 
   loadSpeciesData(speciesRaw);
+  loadStringsData(stringsRaw);
   await composeBiomeSheet();
 
   const canvas = document.getElementById("game");
@@ -46,9 +55,11 @@ async function main() {
     lastTile: { x: -1, y: -1 },
   };
   installAutoZoom(canvas, state.camera, hud.el);
+  installInteract(() => state);
+  if (state.world.soundtrack) playTrack(state.world.soundtrack);
 
   startGameLoop((dt) => {
-    const paused = isMenuOpen();
+    const paused = isMenuOpen() || isDialogueOpen();
     const input = pollInput();
     if (!paused) {
       updatePlayer(state.player, input, dt, state.world);
@@ -56,6 +67,7 @@ async function main() {
     }
     updateCamera(state.camera, state.player, state.world);
     tickBiomeAnimation(biomeAnim, dt);
+    tickEntities(dt);
     render(renderer, state.world, state.camera, state.player, biomeAnim.frame);
     updateHud(hud, {
       worldId: state.world.id,
