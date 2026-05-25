@@ -72,7 +72,11 @@ function draw(ctx, e, camera) {
 
   const { x, y, w, h } = e.frame;
   const frames = Math.max(1, sp.frames);
-  const frame = frames > 1 ? Math.floor(animClock * ANIMATIONS_FPS) % frames : 0;
+  // Directional NPCs animate per-frame only when moving; we don't yet
+  // simulate NPC movement so they stay on the still frame.
+  const frame = (frames > 1 && !sp.directional)
+    ? Math.floor(animClock * ANIMATIONS_FPS) % frames
+    : 0;
   const dirRow = sp.directional ? dirRowIndex(e.direction) : 0;
 
   const sx = (sp.texture_x + frame * w) * TILE_SIZE;

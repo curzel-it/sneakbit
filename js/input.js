@@ -33,6 +33,12 @@ export function initInput() {
     held.clear();
     pressEvents.length = 0;
   });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      held.clear();
+      pressEvents.length = 0;
+    }
+  });
 }
 
 // Returns { events, held } and drains the press queue.

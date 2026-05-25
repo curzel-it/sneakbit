@@ -28,8 +28,12 @@ export function installMenu() {
       </div>
       <div class="menu-row menu-controls">
         <button id="opt-close">Close (Esc)</button>
+        <button id="opt-clear-cache">Clear cache &amp; reload</button>
       </div>
-      <p class="menu-hint">WASD / arrow keys to move &middot; Esc to toggle menu</p>
+      <p class="menu-hint">
+        WASD / arrows to move &middot; E or Enter to interact<br>
+        Esc to toggle menu &middot; Space to advance dialogue
+      </p>
     </div>
   `;
   Object.assign(root.style, {
@@ -86,6 +90,10 @@ function bindWidgets() {
     saveSettings({ showFps: fps.checked });
   });
   close.addEventListener("click", () => toggle());
+  root.querySelector("#opt-clear-cache").addEventListener("click", () => {
+    try { localStorage.clear(); } catch {}
+    location.reload();
+  });
 }
 
 function syncWidgetsFromSettings() {
