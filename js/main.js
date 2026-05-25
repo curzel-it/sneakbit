@@ -14,10 +14,18 @@ import { startGameLoop } from "./gameLoop.js";
 import { createBiomeAnimation, tickBiomeAnimation } from "./biomeAnimation.js";
 import { installAutoZoom } from "./zoom.js";
 import { installHud, updateHud } from "./hud.js";
+import { loadAudio } from "./audio.js";
+import { loadSettings, getSettings } from "./settings.js";
+import { installMenu, isMenuOpen } from "./menu.js";
+import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js";
 
 async function main() {
   initInput();
+  loadSettings();
+  loadAudio();
   const hud = installHud();
+  installMenu();
+  installTransitions();
 
   const [, speciesRaw, worldRaw] = await Promise.all([
     loadAssets(),
@@ -26,24 +34,44 @@ async function main() {
   ]);
 
   loadSpeciesData(speciesRaw);
-  composeBiomeSheet();
+  await composeBiomeSheet();
 
-  const world = buildWorld(worldRaw);
-  const player = createPlayer();
-  const camera = createCamera();
   const canvas = document.getElementById("game");
   const renderer = createRenderer(canvas);
   const biomeAnim = createBiomeAnimation();
-  installAutoZoom(canvas, camera, hud.el);
+  const state = {
+    world: buildWorld(worldRaw),
+    player: createPlayer(),
+    camera: createCamera(),
+    lastTile: { x: -1, y: -1 },
+  };
+  installAutoZoom(canvas, state.camera, hud.el);
 
   startGameLoop((dt) => {
+    const paused = isMenuOpen();
     const input = pollInput();
-    updatePlayer(player, input, dt, world);
-    updateCamera(camera, player, world);
+    if (!paused) {
+      updatePlayer(state.player, input, dt, state.world);
+      maybeTeleport(state);
+    }
+    updateCamera(state.camera, state.player, state.world);
     tickBiomeAnimation(biomeAnim, dt);
-    render(renderer, world, camera, player, biomeAnim.frame);
-    updateHud(hud, { worldId: world.id, fps: 1 / dt });
+    render(renderer, state.world, state.camera, state.player, biomeAnim.frame);
+    updateHud(hud, {
+      worldId: state.world.id,
+      fps: 1 / dt,
+      showFps: getSettings().showFps,
+    });
   });
+}
+
+function maybeTeleport(state) {
+  const { player, world, lastTile } = state;
+  if (player.tileX === lastTile.x && player.tileY === lastTile.y) return;
+  lastTile.x = player.tileX;
+  lastTile.y = player.tileY;
+  const tele = findTeleporterAt(world, player.tileX, player.tileY);
+  if (tele) travelTo(state, tele.destination);
 }
 
 main().catch((err) => {

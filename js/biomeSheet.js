@@ -38,8 +38,16 @@ const COMBO_SOURCE = [
 
 let composed = null;
 
-export function composeBiomeSheet() {
+const CACHE_KEY = "sneakbit.biomeSheet.v1";
+
+export async function composeBiomeSheet() {
   if (composed) return composed;
+
+  const fromCache = await tryReadCache();
+  if (fromCache) {
+    composed = fromCache;
+    return composed;
+  }
 
   const rawSheets = [
     getSprite("tilesBiome1"),
@@ -78,7 +86,40 @@ export function composeBiomeSheet() {
   }
 
   composed = canvas;
+  writeCache(canvas);
   return composed;
+}
+
+function writeCache(canvas) {
+  try {
+    const dataUrl = canvas.toDataURL("image/png");
+    localStorage.setItem(CACHE_KEY, dataUrl);
+  } catch {
+    // Quota or canvas tainted — silently skip.
+  }
+}
+
+function tryReadCache() {
+  return new Promise((resolve) => {
+    let raw;
+    try { raw = localStorage.getItem(CACHE_KEY); } catch { return resolve(null); }
+    if (!raw) return resolve(null);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas);
+    };
+    img.onerror = () => {
+      try { localStorage.removeItem(CACHE_KEY); } catch {}
+      resolve(null);
+    };
+    img.src = raw;
+  });
 }
 
 function blitCell(ctx, src, srcCol, srcRow, dstCol, dstRow) {

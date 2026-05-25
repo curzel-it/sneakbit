@@ -18,6 +18,7 @@
 
 import { ANIMATIONS_FPS, SPRITE_SHEET_HEROES, STARTING_SPAWN } from "./constants.js";
 import { isWalkable } from "./world.js";
+import { playSfx } from "./audio.js";
 
 const HERO_BASE_FRAME = { x: 1, y: 1, w: 1, h: 2 };
 const HERO_FRAME_COUNT = 4;
@@ -155,6 +156,7 @@ function startStep(player, dir, world) {
     toY,
     progress: 0,
   };
+  playSfx("footstep", { volume: 0.5, jitter: 0.08 });
 }
 
 function canEnter(tx, ty, world) {

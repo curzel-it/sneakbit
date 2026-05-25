@@ -13,8 +13,10 @@ export function installHud() {
   return { el, controls: el.querySelector("#hud-controls"), meta: el.querySelector("#hud-meta") };
 }
 
-export function updateHud(hud, { worldId, fps }) {
+export function updateHud(hud, { worldId, fps, showFps = true }) {
   if (!hud) return;
   _fpsEMA = _fpsEMA ? _fpsEMA * 0.95 + fps * 0.05 : fps;
-  hud.meta.textContent = `World ${worldId} · ${_fpsEMA.toFixed(0)} fps`;
+  hud.meta.textContent = showFps
+    ? `World ${worldId} · ${_fpsEMA.toFixed(0)} fps`
+    : `World ${worldId}`;
 }

@@ -1,13 +1,13 @@
 - [x] implement correct terrain rendering, biome tiles, construction tiles
 - [x] implement correct tile rendering accounting for neighbooring tiles, like in the original game
 - [x] implement biome frame-to-frame variations so that we can see water moving andsuch
-- [ ] terrain image caching using local storage
+- [x] terrain image caching using local storage
 - [x] automatic zoom level based on screen desnsity/canvas/page size, equivalent to what has been done in the original game
 - [x] implement collisions with biomes (water, lava, ...) and constructions (most of them, exceept like bridges and stuff)
 - [x] rendering of non-player entities, such as monsters and so on
-- [ ] reimplement menus and other ui elements using "real html" and not in the canvas
-- [ ] reimplement all the game settings that it makes sense to have at this stage of development
-- [ ] scaffold audio system and let's get footstep sound in. (Avoid the audio context thing that requires users to click on the page if possible, i'm not sure how this works)
-- [ ] implement transitions from level to level
+- [x] reimplement menus and other ui elements using "real html" and not in the canvas
+- [x] reimplement all the game settings that it makes sense to have at this stage of development
+- [x] scaffold audio system and let's get footstep sound in. (Avoid the audio context thing that requires users to click on the page if possible, i'm not sure how this works)
+- [x] implement transitions from level to level
 - [ ] continue working on porting the rest of the game until session limit is reached
 - [ ] Have fun!
