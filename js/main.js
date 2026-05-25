@@ -22,6 +22,7 @@ import { loadAudio } from "./audio.js";
 import { loadSettings, getSettings } from "./settings.js";
 import { installMenu, isMenuOpen } from "./menu.js";
 import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js";
+import { checkPickup } from "./pickups.js";
 import { installMusic, playTrack } from "./music.js";
 import { installTouchControls } from "./touch.js";
 
@@ -103,6 +104,7 @@ function maybeTeleport(state) {
   if (player.tileX === lastTile.x && player.tileY === lastTile.y) return;
   lastTile.x = player.tileX;
   lastTile.y = player.tileY;
+  checkPickup(state);
   const tele = findTeleporterAt(world, player.tileX, player.tileY);
   if (tele) travelTo(state, tele.destination);
 }
