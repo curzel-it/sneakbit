@@ -9,20 +9,26 @@
 // through their own callback registry (see gamepad.setGamepadAction).
 
 import { pollGamepadDirections } from "./gamepad.js";
+import { actionForCode } from "./keyBindings.js";
 
-const KEY_MAP = {
-  ArrowUp: "up",    KeyW: "up",
-  ArrowDown: "down", KeyS: "down",
-  ArrowLeft: "left", KeyA: "left",
-  ArrowRight: "right", KeyD: "right",
+const ACTION_TO_DIR = {
+  moveUp: "up",
+  moveDown: "down",
+  moveLeft: "left",
+  moveRight: "right",
 };
 
 const held = new Set();
 const pressEvents = [];
 
+function dirForEvent(e) {
+  const action = actionForCode(e.code);
+  return action ? ACTION_TO_DIR[action] : undefined;
+}
+
 export function initInput() {
   window.addEventListener("keydown", (e) => {
-    const dir = KEY_MAP[e.code];
+    const dir = dirForEvent(e);
     if (!dir) return;
     e.preventDefault();
     if (e.repeat) return;
@@ -30,7 +36,7 @@ export function initInput() {
     held.add(dir);
   });
   window.addEventListener("keyup", (e) => {
-    const dir = KEY_MAP[e.code];
+    const dir = dirForEvent(e);
     if (!dir) return;
     e.preventDefault();
     held.delete(dir);

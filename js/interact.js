@@ -7,6 +7,7 @@
 
 import { showDialogue, resolveEntityDialogue, isDialogueOpen } from "./dialogue.js";
 import { handleAfterDialogue } from "./afterDialogue.js";
+import { matchesAction } from "./keyBindings.js";
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -23,7 +24,7 @@ export function installInteract(getState) {
   hintEl = makeHint();
   window.addEventListener("keydown", (e) => {
     if (e.repeat) return;
-    if (e.code !== "KeyE" && e.code !== "Enter") return;
+    if (!matchesAction("interact", e.code)) return;
     if (isDialogueOpen()) return;
     const state = stateRef();
     if (!state) return;

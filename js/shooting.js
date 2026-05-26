@@ -12,6 +12,7 @@ import { getSpecies } from "./species.js";
 import { getAmmo, removeAmmo } from "./inventory.js";
 import { playSfx } from "./audio.js";
 import { getEquipped, SLOT_RANGED } from "./equipment.js";
+import { matchesAction } from "./keyBindings.js";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
@@ -59,7 +60,7 @@ export function tryShoot() {
 
 function onKey(e) {
   if (e.repeat) return;
-  if (e.code !== "KeyF" && e.code !== "KeyJ") return;
+  if (!matchesAction("shoot", e.code)) return;
   const state = stateRef?.();
   if (!state) return;
   e.preventDefault();

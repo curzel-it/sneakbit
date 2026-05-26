@@ -12,10 +12,14 @@ import { clearProgress } from "./save.js";
 import { getSkills } from "./skills.js";
 import { renderInventoryInto } from "./inventoryScreen.js";
 import { isCreativeMode } from "./creativeMode.js";
+import { ACTIONS, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js";
 
 let root = null;
 let open = false;
-let screen = "pause"; // "pause" | "settings" | "skills" | "credits" | "inventory"
+let screen = "pause"; // "pause" | "settings" | "skills" | "credits" | "inventory" | "controls"
+// While non-null, we're listening for the next keypress to rebind an
+// action. The captured binding is written via setBinding(action, slot, code).
+let rebindCapture = null; // { action, slot } | null
 
 export function installMenu() {
   if (root) return root;
@@ -60,7 +64,19 @@ export function installMenu() {
         <label for="opt-fps"><input id="opt-fps" type="checkbox" /> Show FPS</label>
       </div>
       <div class="menu-row menu-controls">
+        <button id="menu-open-controls">Key bindings…</button>
         <button id="menu-settings-back">Back</button>
+      </div>
+    </div>
+    <div class="menu-card" data-screen="controls">
+      <h1>Key Bindings</h1>
+      <ul class="menu-controls-list" id="menu-controls-list"></ul>
+      <p class="menu-hint">
+        Click a binding and press the key you want to use. Esc cancels capture.
+      </p>
+      <div class="menu-row menu-controls">
+        <button id="menu-controls-reset">Reset to defaults</button>
+        <button id="menu-controls-back">Back</button>
       </div>
     </div>
     <div class="menu-card" data-screen="skills">
@@ -118,7 +134,11 @@ export function installMenu() {
   applyCreativeModeVisibility();
 
   window.addEventListener("keydown", (e) => {
-    if (e.code !== "Escape" && e.code !== "KeyM") return;
+    // Settings screen is doing live key capture for rebinding; don't
+    // hijack the keystroke as a menu toggle. Esc still backs out of
+    // the capture itself (handled in the rebinding flow below).
+    if (rebindCapture) return;
+    if (!matchesAction("menu", e.code) && e.code !== "Escape") return;
     e.preventDefault();
     if (!open) { openMenu(); return; }
     if (screen !== "pause") { showScreen("pause"); return; }
@@ -162,6 +182,61 @@ function showScreen(next) {
   if (next === "settings") syncSettingsWidgets();
   if (next === "skills") syncSkillsWidgets();
   if (next === "inventory") renderInventoryInto(root.querySelector("#menu-inventory-body"));
+  if (next === "controls") renderControlsList();
+  if (next !== "controls") cancelRebindCapture();
+}
+
+function renderControlsList() {
+  const list = root.querySelector("#menu-controls-list");
+  if (!list) return;
+  list.innerHTML = ACTIONS.map((a) => {
+    const codes = codesFor(a.id);
+    return `<li>
+      <span class="menu-controls-label">${a.label}</span>
+      <button class="menu-controls-key" data-action="${a.id}" data-slot="0">${formatCode(codes[0])}</button>
+      <button class="menu-controls-key" data-action="${a.id}" data-slot="1">${formatCode(codes[1])}</button>
+    </li>`;
+  }).join("");
+  for (const btn of list.querySelectorAll(".menu-controls-key")) {
+    btn.addEventListener("click", () => beginRebindCapture(btn));
+  }
+}
+
+function formatCode(code) {
+  if (!code) return "—";
+  // Browser KeyboardEvent.code values like "KeyA", "ArrowUp", "Digit1".
+  if (code.startsWith("Key")) return code.slice(3);
+  if (code.startsWith("Digit")) return code.slice(5);
+  if (code.startsWith("Numpad")) return "Num " + code.slice(6);
+  return code;
+}
+
+function beginRebindCapture(btn) {
+  cancelRebindCapture();
+  rebindCapture = { action: btn.dataset.action, slot: parseInt(btn.dataset.slot, 10), btn };
+  btn.classList.add("capturing");
+  btn.textContent = "Press a key…";
+  window.addEventListener("keydown", onCaptureKeydown, true);
+}
+
+function onCaptureKeydown(e) {
+  if (!rebindCapture) return;
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.code === "Escape") { cancelRebindCapture(); return; }
+  const { action, slot } = rebindCapture;
+  setBinding(action, slot, e.code);
+  cancelRebindCapture();
+  renderControlsList();
+}
+
+function cancelRebindCapture() {
+  if (!rebindCapture) return;
+  rebindCapture.btn?.classList.remove("capturing");
+  rebindCapture = null;
+  window.removeEventListener("keydown", onCaptureKeydown, true);
+  // Re-render so a cancelled button reverts to its old label.
+  if (screen === "controls") renderControlsList();
 }
 
 const SKILL_LABELS = [
@@ -192,6 +267,13 @@ function bindWidgets() {
   root.querySelector("#menu-open-credits").addEventListener("click", () => showScreen("credits"));
   root.querySelector("#menu-open-inventory").addEventListener("click", () => showScreen("inventory"));
   root.querySelector("#menu-settings-back").addEventListener("click", () => showScreen("pause"));
+  root.querySelector("#menu-open-controls").addEventListener("click", () => showScreen("controls"));
+  root.querySelector("#menu-controls-back").addEventListener("click", () => showScreen("settings"));
+  root.querySelector("#menu-controls-reset").addEventListener("click", () => {
+    if (!confirm("Reset all key bindings to their defaults?")) return;
+    resetBindings();
+    renderControlsList();
+  });
   root.querySelector("#menu-skills-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-credits-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-inventory-back").addEventListener("click", () => showScreen("pause"));
@@ -358,6 +440,11 @@ function injectStyles() {
     #menu .inv-list .inv-action button { background: #2a2a2a; color: #eee; border: 1px solid #444; padding: 3px 8px; border-radius: 3px; font-size: 11px; cursor: pointer; }
     #menu .inv-list .inv-action button:hover { background: #353535; }
     #menu .inv-equipped-tag { color: #b8c6ff; font-size: 10px; letter-spacing: 1px; }
+    #menu .menu-controls-list { list-style: none; padding: 0; margin: 0 0 12px; min-width: 360px; }
+    #menu .menu-controls-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 4px 0; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: 3px; }
+    #menu .menu-controls-label { flex: 1; font-size: 12px; color: #ccc; }
+    #menu .menu-controls-key { min-width: 96px; text-align: center !important; font-family: monospace; font-size: 11px; padding: 4px 8px !important; }
+    #menu .menu-controls-key.capturing { background: #3a3a55; border-color: #5a5a88; color: #fff; }
   `;
   const style = document.createElement("style");
   style.id = "menu-styles";

@@ -8,6 +8,7 @@
 import { getSpecies } from "./species.js";
 import { getEquipped, SLOT_MELEE } from "./equipment.js";
 import { playSfx } from "./audio.js";
+import { matchesAction } from "./keyBindings.js";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -69,7 +70,7 @@ export function tryMelee() {
 
 function onKey(e) {
   if (e.repeat) return;
-  if (e.code !== "KeyG" && e.code !== "KeyK") return;
+  if (!matchesAction("melee", e.code)) return;
   const state = stateRef?.();
   if (!state) return;
   e.preventDefault();

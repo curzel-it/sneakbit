@@ -13,6 +13,7 @@ import { getValue, setValue, keyMatches } from "./storage.js";
 import { addAmmo } from "./inventory.js";
 import { showToast } from "./toast.js";
 import { getSpecies } from "./species.js";
+import { matchesAction } from "./keyBindings.js";
 
 let root = null;
 let active = null; // { lines, idx, resolve, dialogue }
@@ -58,7 +59,10 @@ export function installDialogue() {
 
   listener = (e) => {
     if (!active) return;
-    if (e.code === "Space" || e.code === "Enter" || e.code === "KeyE") {
+    // Always accept Space as a universal "advance" so the dialogue
+    // remains dismissable even if the player rebinds interact onto an
+    // unusual key. Otherwise the rebound interact key works too.
+    if (e.code === "Space" || matchesAction("interact", e.code)) {
       e.preventDefault();
       advance();
     }
