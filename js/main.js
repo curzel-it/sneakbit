@@ -37,6 +37,7 @@ import { tickAfterDialogue } from "./afterDialogue.js";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
 import { installHealthHud } from "./healthHud.js";
 import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js";
+import { installMessage, isMessageOpen } from "./message.js";
 import { installFastTravel, isFastTravelOpen, tickFastTravel, markVisited } from "./fastTravel.js";
 import { applyFirstLaunch } from "./firstLaunch.js";
 import { loadProgress, saveProgress, clearProgress } from "./save.js";
@@ -61,6 +62,7 @@ async function main() {
   installToast();
   installTouchControls();
   installGameOver();
+  installMessage();
   applyFirstLaunch();
 
   const urlWorld = parseInt(new URLSearchParams(location.search).get("world"), 10);
@@ -121,7 +123,7 @@ async function main() {
   if (state.world.soundtrack) playTrack(state.world.soundtrack);
 
   startGameLoop((dt) => {
-    const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen();
+    const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen();
     const input = pollInput();
     if (!paused) {
       updatePlayer(state.player, input, dt, state.world);
