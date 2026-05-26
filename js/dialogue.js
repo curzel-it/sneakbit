@@ -38,6 +38,11 @@ export function installDialogue() {
   const style = document.createElement("style");
   style.textContent = `
     #dialogue-hint { color: #888; font-size: 11px; margin-top: 8px; text-align: right; }
+    /* On touch devices the on-screen joystick sits at the bottom; flip
+       the modal dialogue to the top so it doesn't cover the controls. */
+    @media (pointer: coarse) {
+      #dialogue { bottom: auto !important; top: 6% !important; }
+    }
   `;
   document.head.appendChild(style);
 
@@ -61,7 +66,7 @@ export function showDialogue(lines) {
     active = { lines: flat, idx: 0, resolve };
     paint();
     root.style.display = "block";
-    playSfx("interact", { volume: 0.5 });
+    playSfx("hintReceived", { volume: 0.5 });
   });
 }
 
@@ -77,7 +82,7 @@ function advance() {
     return;
   }
   paint();
-  playSfx("neutral", { volume: 0.3 });
+  playSfx("hintReceived", { volume: 0.3 });
 }
 
 function paint() {

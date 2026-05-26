@@ -6,13 +6,18 @@
 // yet — we'll wire that when combat lands). Teleporters are handled in
 // transitions.js so they can fade between worlds.
 
-import { showDialogue, resolveEntityDialogue } from "./dialogue.js";
+import { resolveEntityDialogue } from "./dialogue.js";
+import { showToast } from "./toast.js";
 import { playSfx } from "./audio.js";
 import { getSpecies } from "./species.js";
+import { addAmmo } from "./inventory.js";
 
 // Bullet is here because in world data, placed Bullets (speed=0) act as
-// stationary collectibles — same rule as the original Rust core. Once we
-// add shooting we'll need to gate this on a moving/stationary flag.
+// stationary collectibles — same rule as the original Rust core. Bundles
+// expand into N copies of their bundle_contents species (e.g. one
+// "kunai.x10" gives 10 kunai). Player-spawned bullets carry _spawned and
+// are explicitly excluded so the kunai you just threw doesn't immediately
+// re-collect itself.
 const AUTO_PICKUP_TYPES = new Set(["Bundle", "PickableObject", "Bullet"]);
 
 export function checkPickup(state) {
@@ -20,6 +25,7 @@ export function checkPickup(state) {
   if (!world.entities) return;
   for (let i = 0; i < world.entities.length; i++) {
     const e = world.entities[i];
+    if (e._spawned) continue;
     const kind = classify(e);
     if (!kind) continue;
     const f = e.frame; if (!f) continue;
@@ -42,9 +48,17 @@ function classify(e) {
 function trigger(e, kind) {
   if (kind === "hint") {
     const lines = resolveEntityDialogue(e);
-    playSfx("pickup", { volume: 0.6 });
-    if (lines && lines.length) showDialogue(lines);
+    playSfx("hintReceived");
+    if (lines && lines.length) showToast(lines.join("\n"), "hint");
     return;
   }
-  playSfx("pickup", { volume: 0.7 });
+  const sp = getSpecies(e.species_id);
+  if (sp?.bundle_contents?.length) {
+    const counts = new Map();
+    for (const cid of sp.bundle_contents) counts.set(cid, (counts.get(cid) || 0) + 1);
+    for (const [cid, n] of counts) addAmmo(cid, n);
+  } else {
+    addAmmo(e.species_id, 1);
+  }
+  playSfx("ammoCollected");
 }

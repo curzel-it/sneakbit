@@ -1,10 +1,12 @@
 // On-screen touch controls for mobile: 4-way directional pad on the
-// bottom-left and an action button on the bottom-right. Synthesises the
-// same keydown/keyup events that input.js already listens for, so no
-// extra wiring is needed downstream.
+// bottom-left and action buttons on the bottom-right (talk + throw).
+// Synthesises the same keydown/keyup events that input.js already listens
+// for, so no extra wiring is needed downstream.
 //
 // Hidden by default; show when a touch (or pointer with pointerType ===
 // "touch") is detected so we don't clutter desktop screens.
+
+import { tryShoot } from "./shooting.js";
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 const heldBindings = new Map(); // dir -> pointerId
@@ -24,7 +26,8 @@ export function installTouchControls() {
       <button class="touch-btn" data-dir="down">▼</button>
     </div>
     <div class="touch-pad" data-side="right">
-      <button class="touch-btn touch-action" data-action="interact">E</button>
+      <button class="touch-btn touch-action touch-throw"   data-action="throw">✦</button>
+      <button class="touch-btn touch-action touch-interact" data-action="interact">E</button>
     </div>
   `;
   Object.assign(root.style, {
@@ -77,6 +80,10 @@ function onPress(e, btn) {
     dispatchKey("keydown", KEY_FOR_DIR[dir]);
   } else if (action === "interact") {
     dispatchKey("keydown", "KeyE");
+  } else if (action === "throw") {
+    // Don't synthesise a key event — shooting.js owns its own cooldown
+    // and we want a single shot per tap, not a held-key auto-repeat.
+    tryShoot();
   }
 }
 
@@ -121,7 +128,11 @@ function injectStyles() {
     #touch-controls .touch-pad[data-side="left"] .touch-btn[data-dir="down"]  { grid-column: 2; grid-row: 3; }
     #touch-controls .touch-pad[data-side="right"] {
       right: 4vw;
-      bottom: 12vh;
+      bottom: 8vh;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 14px;
+      align-items: center;
     }
     #touch-controls .touch-btn {
       pointer-events: auto;
@@ -142,10 +153,13 @@ function injectStyles() {
       touch-action: none;
     }
     #touch-controls .touch-action {
-      width: 72px;
-      height: 72px;
+      width: 64px;
+      height: 64px;
       font-size: 22px;
       background: rgba(60, 100, 60, 0.7);
+    }
+    #touch-controls .touch-throw {
+      background: rgba(120, 70, 70, 0.75);
     }
     #touch-controls .touch-btn.active {
       background: rgba(120, 120, 120, 0.85);

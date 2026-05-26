@@ -6,6 +6,7 @@ import { biomeFromChar, biomeIsObstacle, BIOME } from "./biomes.js";
 import { constructionFromChar, constructionIsObstacle, constructionIsBridge, constructionIsVisible, CONSTRUCTION } from "./constructions.js";
 import { biomeTextureCol } from "./biomeTiles.js";
 import { constructionTextureRow } from "./constructionTiles.js";
+import { getSpecies } from "./species.js";
 
 export function buildWorld(raw) {
   const biomeChars = raw.biome_tiles.tiles;
@@ -58,6 +59,24 @@ export function isWalkable(world, tileX, tileY) {
   if (!world) return true;
   if (tileX < 0 || tileY < 0 || tileX >= world.cols || tileY >= world.rows) return false;
   return !world.collision[tileY][tileX];
+}
+
+// True if any rigid entity occupies the given tile. Bullets we spawned
+// (carrying _spawned) don't count; teleporters explicitly don't block
+// either, so the player can step onto them and trigger the transition.
+export function isEntityBlocked(world, tileX, tileY) {
+  if (!world?.entities) return false;
+  for (const e of world.entities) {
+    if (e._spawned) continue;
+    const sp = getSpecies(e.species_id);
+    if (!sp || !sp.is_rigid) continue;
+    if (sp.entity_type === "Teleporter") continue;
+    const f = e.frame; if (!f) continue;
+    if (tileX < f.x || tileX >= f.x + f.w) continue;
+    if (tileY < f.y || tileY >= f.y + f.h) continue;
+    return true;
+  }
+  return false;
 }
 
 function isBlocked(biome, construction) {

@@ -25,6 +25,9 @@ import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js
 import { checkPickup } from "./pickups.js";
 import { installMusic, playTrack } from "./music.js";
 import { installTouchControls } from "./touch.js";
+import { installToast } from "./toast.js";
+import { installShooting, tickShooting } from "./shooting.js";
+import { installAmmoHud, updateAmmoHud } from "./ammoHud.js";
 
 async function main() {
   initInput();
@@ -35,6 +38,7 @@ async function main() {
   installTransitions();
   installMusic();
   installDialogue();
+  installToast();
   installTouchControls();
 
   const startId = parseInt(new URLSearchParams(location.search).get("world"), 10) || STARTING_WORLD_ID;
@@ -66,6 +70,8 @@ async function main() {
   };
   installAutoZoom(canvas, state.camera, hud.el);
   installInteract(() => state);
+  installShooting(() => state);
+  installAmmoHud();
   if (state.world.soundtrack) playTrack(state.world.soundtrack);
 
   startGameLoop((dt) => {
@@ -74,6 +80,7 @@ async function main() {
     if (!paused) {
       updatePlayer(state.player, input, dt, state.world);
       maybeTeleport(state);
+      tickShooting(dt);
     }
     updateCamera(state.camera, state.player, state.world);
     tickBiomeAnimation(biomeAnim, dt);
@@ -85,6 +92,7 @@ async function main() {
       fps: 1 / dt,
       showFps: getSettings().showFps,
     });
+    updateAmmoHud();
   });
 }
 

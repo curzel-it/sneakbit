@@ -38,7 +38,7 @@ const COMBO_SOURCE = [
 
 let composed = null;
 
-const CACHE_KEY = "sneakbit.biomeSheet.v1";
+const CACHE_KEY = "sneakbit.biomeSheet.v2";
 
 export async function composeBiomeSheet() {
   if (composed) return composed;
@@ -135,7 +135,11 @@ function blitRotatedCell(ctx, src, srcCol, srcRow, dstCol, dstRow, deg) {
   const dy = dstRow * TILE_SIZE;
   ctx.save();
   ctx.translate(dx + TILE_SIZE / 2, dy + TILE_SIZE / 2);
-  ctx.rotate((deg * Math.PI) / 180);
+  // The COMBO_SOURCE angles mirror the original Python export script
+  // (scripts/export_biome_tiles.py), which uses PIL Image.rotate — that's
+  // counter-clockwise for positive angles. Canvas2D rotate is clockwise,
+  // so we negate to match.
+  ctx.rotate((-deg * Math.PI) / 180);
   ctx.drawImage(
     src,
     srcCol * TILE_SIZE, srcRow * TILE_SIZE, TILE_SIZE, TILE_SIZE,

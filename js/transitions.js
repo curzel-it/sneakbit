@@ -8,7 +8,6 @@
 // the canvas — that keeps the renderer ignorant and gives us free
 // CSS transitions.
 
-import { STARTING_SPAWN } from "./constants.js";
 import { loadWorld } from "./data.js";
 import { buildWorld } from "./world.js";
 import { playSfx } from "./audio.js";
@@ -60,21 +59,59 @@ export async function travelTo(state, destination) {
   if (busy) return;
   busy = true;
   try {
-    playSfx("doorOpen", { volume: 0.7 });
+    const sourceWorldId = state.world?.id ?? 0;
+    playSfx("worldChange");
     await fadeOut();
     const raw = await loadWorld(destination.world);
     const world = buildWorld(raw);
     state.world = world;
     state.lastTile = { x: state.player.tileX, y: state.player.tileY };
     if (world.soundtrack) playTrack(world.soundtrack);
-    const spawnX = destination.x ?? STARTING_SPAWN.x;
-    const spawnY = destination.y ?? STARTING_SPAWN.y;
+    const [spawnX, spawnY] = resolveSpawn(world, destination, sourceWorldId);
     movePlayerTo(state.player, spawnX, spawnY, destination.direction);
     await fadeIn();
   } finally {
     busy = false;
   }
 }
+
+// Mirrors world_setup.rs::destination_x_y. When the source teleporter
+// stores (0, 0) the engine looks up the destination world's teleporter
+// that points back at us and lands there; otherwise it uses the literal
+// coordinates, clamped to the world bounds.
+function resolveSpawn(world, destination, sourceWorldId) {
+  const ox = destination.x ?? 0;
+  const oy = destination.y ?? 0;
+  if (ox === 0 && oy === 0) {
+    const back = findTeleporterBack(world, sourceWorldId) ?? findAnyTeleporter(world);
+    if (back) return [back.x, back.y];
+    return [Math.floor(world.cols / 2), Math.floor(world.rows / 2)];
+  }
+  return [
+    clamp(ox, 0, world.cols - 1),
+    clamp(oy, 0, world.rows - 1),
+  ];
+}
+
+function findTeleporterBack(world, sourceWorldId) {
+  if (!world.entities || !sourceWorldId) return null;
+  for (const e of world.entities) {
+    if (e.species_id !== TELEPORTER_SPECIES_ID) continue;
+    if (e.destination?.world !== sourceWorldId) continue;
+    if (e.frame) return e.frame;
+  }
+  return null;
+}
+
+function findAnyTeleporter(world) {
+  if (!world.entities) return null;
+  for (const e of world.entities) {
+    if (e.species_id === TELEPORTER_SPECIES_ID && e.frame) return e.frame;
+  }
+  return null;
+}
+
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
 function movePlayerTo(player, tileX, tileY, direction) {
   player.tileX = tileX;

@@ -3,6 +3,7 @@
 
 import { getSettings, saveSettings } from "./settings.js";
 import { playSfx } from "./audio.js";
+import { APP_VERSION } from "./constants.js";
 
 let root = null;
 let open = false;
@@ -32,8 +33,9 @@ export function installMenu() {
       </div>
       <p class="menu-hint">
         WASD / arrows to move &middot; E or Enter to interact<br>
-        Esc to toggle menu &middot; Space to advance dialogue
+        F to throw a kunai &middot; Esc to toggle menu
       </p>
+      <p class="menu-version">v${APP_VERSION}</p>
     </div>
   `;
   Object.assign(root.style, {
@@ -68,7 +70,7 @@ export function toggle() {
   open = !open;
   root.style.display = open ? "flex" : "none";
   if (open) syncWidgetsFromSettings();
-  playSfx("neutral", { volume: 0.5 });
+  playSfx("hintReceived", { volume: 0.5 });
 }
 
 function bindWidgets() {
@@ -126,6 +128,7 @@ function injectStyles() {
     }
     #menu button:hover { background: #353535; }
     #menu .menu-hint { color: #888; font-size: 11px; margin: 14px 0 0; }
+    #menu .menu-version { color: #555; font-size: 10px; margin: 10px 0 0; text-align: right; }
   `;
   const style = document.createElement("style");
   style.id = "menu-styles";

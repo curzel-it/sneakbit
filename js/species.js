@@ -57,6 +57,7 @@ function decorate(raw) {
   const directional = isDirectional(raw);
   return {
     id: raw.id,
+    name: raw.name,
     entity_type: raw.entity_type,
     sprite_sheet_id: raw.sprite_sheet_id,
     texture_x: f.x,
@@ -67,6 +68,9 @@ function decorate(raw) {
     directional,
     z_index: raw.z_index ?? 0,
     is_rigid: raw.is_rigid ?? false,
+    base_speed: raw.base_speed ?? 0,
+    bundle_contents: raw.bundle_contents ?? null,
+    inventory_texture_offset: raw.inventory_texture_offset ?? null,
   };
 }
 

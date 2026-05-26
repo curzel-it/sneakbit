@@ -17,7 +17,7 @@
 // integer tile and is the source of truth for collision and snapping.
 
 import { ANIMATIONS_FPS, SPRITE_SHEET_HEROES, STARTING_SPAWN } from "./constants.js";
-import { isWalkable } from "./world.js";
+import { isWalkable, isEntityBlocked } from "./world.js";
 import { playSfx } from "./audio.js";
 
 const HERO_BASE_FRAME = { x: 1, y: 1, w: 1, h: 2 };
@@ -156,11 +156,13 @@ function startStep(player, dir, world) {
     toY,
     progress: 0,
   };
-  playSfx("footstep", { volume: 0.5, jitter: 0.08 });
+  playSfx("stepTaken", { volume: 0.5, jitter: 0.08 });
 }
 
 function canEnter(tx, ty, world) {
-  return isWalkable(world, tx, ty);
+  if (!isWalkable(world, tx, ty)) return false;
+  if (isEntityBlocked(world, tx, ty)) return false;
+  return true;
 }
 
 function updateAnimation(player, dt) {

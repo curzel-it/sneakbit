@@ -1,13 +1,13 @@
-- [x] implement correct terrain rendering, biome tiles, construction tiles
-- [x] implement correct tile rendering accounting for neighbooring tiles, like in the original game
-- [x] implement biome frame-to-frame variations so that we can see water moving andsuch
-- [x] terrain image caching using local storage
-- [x] automatic zoom level based on screen desnsity/canvas/page size, equivalent to what has been done in the original game
-- [x] implement collisions with biomes (water, lava, ...) and constructions (most of them, exceept like bridges and stuff)
-- [x] rendering of non-player entities, such as monsters and so on
-- [x] reimplement menus and other ui elements using "real html" and not in the canvas
-- [x] reimplement all the game settings that it makes sense to have at this stage of development
-- [x] scaffold audio system and let's get footstep sound in. (Avoid the audio context thing that requires users to click on the page if possible, i'm not sure how this works)
-- [x] implement transitions from level to level
-- [x] continue working on porting the rest of the game until session limit is reached
-- [x] Have fun!
+- [x] Rendering of tiles (both bimoe and construction) is properly scaffolded, but we have some bugs. For example, we don't use the correct tile based on neighboring tiles. 
+- [x] Seems like we are not using the same sound effects as the old game, I think it's time we port them over
+- [x] I need icons to see how much ammo I have (like the old game did)
+- [x] I want to be able to shoot kunais
+- [x] z-index is not calculated in the same way as it was in the original game. for example, the hero spanws on a magic circle in 1001, but in our js implementation the hero spawns "behind" it
+- [x] Supposedly static npcs appear to be walking, such as the wizard in 1001 (who appears to be walking up)
+- [x] Single kunais that I can pick up from the ground are usingthe movmenet sprite instead of the "idle" one
+- [x] On mobile, toasts notification partially cover the movement joystick, they should instead be shown on the top
+- [x] Toast notifications do not be have like the og, for example, some show a "tap to dismiss" thing. They should all be auto-dismiss
+- [x] I should be able to collide with other npcs, based on their species
+- [x] When traversing a teleporter and loading the new world, the player should appear in the correct place, as indicated in the (source) world json
+- [x] We need a pause menu
+- [x] Pause menu should show app version somehwere in small text
