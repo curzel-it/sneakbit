@@ -82,13 +82,12 @@ export function installMenu() {
     <div class="menu-card" data-screen="credits">
       <h1>Credits</h1>
       <p class="menu-credits">
-        <strong>SneakBit</strong> · web port<br>
-        Original game by <a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener">curzel-it</a><br>
-        Shipped on Steam, iOS, and Android.
+        <strong>SneakBit</strong> · web port of the
+        <a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener">original Rust build</a>.
       </p>
       <p class="menu-credits">
-        HTML5/Canvas port maintained by Federico Curzel.<br>
-        Source: <a href="https://github.com/curzel-it/sneakbit-html" target="_blank" rel="noopener">github.com/curzel-it/sneakbit-html</a>
+        Web port source:
+        <a href="https://github.com/curzel-it/sneakbit-html" target="_blank" rel="noopener">github.com/curzel-it/sneakbit-html</a>
       </p>
       <p class="menu-hint">
         Tile + sprite art and audio are from the original Rust build.

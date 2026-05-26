@@ -95,6 +95,13 @@ export async function travelTo(state, destination) {
 // that points back at us; we then step the player one tile *out* of
 // that teleporter (typically down) so they don't immediately retrigger
 // it and so they stand visually in front of the door, not on it.
+//
+// Note on the +1 below: Rust stores the hero's frame.y as the TOP of the
+// 1×2 sprite — feet sit at frame.y + 1 (see leave_footsteps). Our
+// player.tileY is the FEET tile, so destinations baked into world data
+// need to be shifted down one tile to land in the same spot the Rust
+// build does. Without it the player appears one tile high (visible
+// when teleporting between 1001 ↔ 1002).
 function resolveSpawn(world, destination, sourceWorldId) {
   const ox = destination.x ?? 0;
   const oy = destination.y ?? 0;
@@ -105,7 +112,7 @@ function resolveSpawn(world, destination, sourceWorldId) {
   }
   return [
     clamp(ox, 0, world.cols - 1),
-    clamp(oy, 0, world.rows - 1),
+    clamp(oy + 1, 0, world.rows - 1),
   ];
 }
 
