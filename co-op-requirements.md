@@ -178,15 +178,17 @@ These Rust co-op-adjacent features are intentionally **not** ported:
 
 ## Implementation Order (suggested)
 
-1. **UI**: Move co-op toggle from the pause menu into Settings (small, isolated).
-2. **Sprites**: Use the per-index hero offsets (cosmetic, isolated). Visible parity win.
-3. **Spawning**: Place P2 in P1's facing direction instead of stacked on the same tile.
-4. **HP per player**: Split `playerHealth.js` into a per-player record; render N HP bars.
-5. **Inventory per player**: Migrate storage; thread `playerIndex` through `addAmmo`/`removeAmmo`/`getAmmo`. Touches `pickups.js`, `dialogue.js` (reward), `shooting.js` (ammo decrement), `melee.js`.
-6. **Equipment per player**: Same fan-out for `equipment.js`. Add to migrations.
-7. **Combat per player**: `resolveMeleeMonsters` over all live players; bullets tag `playerIndex`; catcher refunds to that player.
-8. **Pickups per player**: First adjacent player wins; equip into that player's slot.
-9. **Camera averaging**: `updateCamera(camera, [p1, p2], world)` averages live positions.
-10. **P2 death + revive**: Track `deadPlayers`; only P1 death ends the game; respawn-on-world-change resets everyone.
+Status legend: ✅ landed · ⏳ not started.
 
-Steps 1-3 are visible wins with very small blast radius. Steps 4-7 are the meat of feature parity. Step 10 closes the loop.
+1. ✅ **UI**: Co-op toggle lives in the Settings screen — `menu.js`.
+2. ✅ **Sprites**: Per-index hero column on `heroes.png` via `createPlayer({ index })` — `player.js`. P0=x:1, P1=x:5, P2=x:9, P3=x:13.
+3. ✅ **Spawning**: P2 spawns one tile in P1's facing direction (`makeCoopP2(p1, world)` in `main.js`), and `transitions.js::repositionCoopP2` re-applies the rule on every world transition.
+4. ⏳ **HP per player**: Split `playerHealth.js` into a per-player record; render N HP bars.
+5. ⏳ **Inventory per player**: Migrate storage; thread `playerIndex` through `addAmmo`/`removeAmmo`/`getAmmo`. Touches `pickups.js`, `dialogue.js` (reward), `shooting.js` (ammo decrement), `melee.js`.
+6. ⏳ **Equipment per player**: Same fan-out for `equipment.js`. Add to migrations.
+7. ⏳ **Combat per player**: `resolveMeleeMonsters` over all live players; bullets tag `playerIndex`; catcher refunds to that player. Add `friendlyFire` setting (default off) — bullet whose `playerIndex !== target.index` only damages when the setting is on.
+8. ⏳ **Pickups per player**: First adjacent player wins; equip into that player's slot.
+9. ⏳ **Camera averaging**: `updateCamera(camera, [p1, p2], world)` averages live positions.
+10. ⏳ **P2 death + revive**: Track `deadPlayers`; only P1 death ends the game; respawn-on-world-change resets everyone.
+
+Steps 1-3 are visible wins with very small blast radius (shipped). Steps 4-7 are the meat of feature parity. Step 10 closes the loop.
