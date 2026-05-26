@@ -50,10 +50,16 @@ Multiplayer:
 - [ ] Co-op using WASD+ZXC and IJKL+BNM, can be started from menu
 
 Bugs:
-- [ ] New games does not reset player position
-- [ ] After a sword has been equipped there is no key that can be pressed to use it
-- [ ] In the first level a `Press E to talk` hint is shown and immeditely dismissed automatically. It is WAY too fast and not in the correct position (~screen center instead of top, like other toast)
-- [ ] Some creatures have the wrong speed, such as slime for example
+- [x] New games does not reset player position — `beforeunload` was re-saving the position on top of the cleared payload during the reload; `window.save.suppressUnloadSave()` now stops that.
+- [x] After a sword has been equipped there is no key that can be pressed to use it — pause-menu hint and pickup toast now both mention G (melee swing).
+- [x] In the first level a `Press E to talk` hint is shown and immeditely dismissed automatically. It is WAY too fast and not in the correct position (~screen center instead of top, like other toast) — hint moved to top: 6% (same band as the toast). The "auto-dismiss" was the hint correctly hiding once the player stops facing the entity; if it still feels flaky after the reposition we can look again.
+- [x] Some creatures have the wrong speed, such as slime, cats and pigs for example — mob step duration now derived from species.base_speed × Rust's TILE_RATE_PER_BASE_SPEED.
+- [x] Monsters see gates as obstacles even when open — mobs.js canEnter now matches world.isEntityBlocked (skips open gates + teleporter tiles).
+- [ ] Pushable objects can currently be pushed into a position from where they cannot be recovered. image a corridor that is 1-tile wide with a dead end. if I push the rock there I cannot get it back. Rust implementation solved this by allowing the character to walk "over" the rock (in the same tile) and bring it back with him when walking back
+- [ ] After I die level state does not correctly update. Not sure if there was a full reset in rust, but need to check as something is off
+- [ ] The game is now correctly being rendered with integer scaling, this means that we have some leftover space around the rendered tiles, which looks like a black border. black-border.png shows what that looks like in the bottom left corner of the screen. in Rust we had the same issue and solved it by rendering an additional row of tiles paritally out of the canvas bounds (so that it was effectly cut off at hte canvas limit, while the part drawn inside was clearing up the black border)
+- [ ] Traversing the teleporter in 1001 that goes to 1002 and viceversa the player does not appear in the correct position, it seems to appar 1 tile above the correct spot.
+- [ ] Credits section correctly links the original repo, but does not link any of the people credited in the original game ("shipped on..." and "port maintained by..." can both be removed)
 
 Notes:
 - **Asset gap (cutscenes):** `js/cutscenes.js:110` has an empty `CUTSCENE_SHEETS` map — the demon-lord-defeat PNG isn't bundled. Logic ticks fine but renders nothing. Decide whether to ship the sheet or leave the no-op as intentional.
