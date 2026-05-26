@@ -31,6 +31,9 @@ export function installTouchControls() {
       <button class="touch-btn touch-action touch-throw"    data-action="throw">✦</button>
       <button class="touch-btn touch-action touch-interact" data-action="interact">E</button>
     </div>
+    <div class="touch-pad" data-side="top-right">
+      <button class="touch-btn touch-menu" data-action="menu">☰</button>
+    </div>
   `;
   Object.assign(root.style, {
     position: "fixed",
@@ -82,6 +85,8 @@ function onPress(e, btn) {
     dispatchKey("keydown", KEY_FOR_DIR[dir]);
   } else if (action === "interact") {
     dispatchKey("keydown", "KeyE");
+  } else if (action === "menu") {
+    dispatchKey("keydown", "Escape");
   } else if (action === "throw") {
     // Don't synthesise a key event — shooting.js owns its own cooldown
     // and we want a single shot per tap, not a held-key auto-repeat.
@@ -137,6 +142,17 @@ function injectStyles() {
       flex-direction: column-reverse;
       gap: 14px;
       align-items: center;
+    }
+    #touch-controls .touch-pad[data-side="top-right"] {
+      top: 12px;
+      right: 12px;
+      bottom: auto;
+    }
+    #touch-controls .touch-menu {
+      width: 44px;
+      height: 44px;
+      font-size: 20px;
+      background: rgba(40, 40, 40, 0.6);
     }
     #touch-controls .touch-btn {
       pointer-events: auto;

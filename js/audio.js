@@ -38,7 +38,7 @@ const DEFAULT_VOLUME = 0.8;
 
 const buffers = new Map();
 let muted = false;
-let masterVolume = 0.6;
+let sfxVolume = 0.6;
 
 export function loadAudio() {
   for (const [name, src] of Object.entries(SOURCES)) {
@@ -55,14 +55,14 @@ export function playSfx(name, opts = {}) {
   if (!proto) return;
   const a = proto.cloneNode(true);
   const base = opts.volume ?? VOLUMES[name] ?? DEFAULT_VOLUME;
-  a.volume = clamp(base * masterVolume, 0, 1);
+  a.volume = clamp(base * sfxVolume, 0, 1);
   if (opts.jitter) a.playbackRate = 1 + (Math.random() - 0.5) * opts.jitter;
   a.play().catch(() => {});
 }
 
 export function setMuted(next) { muted = !!next; }
 export function isMuted() { return muted; }
-export function setVolume(v) { masterVolume = clamp(v, 0, 1); }
-export function getVolume() { return masterVolume; }
+export function setSfxVolume(v) { sfxVolume = clamp(v, 0, 1); }
+export function getSfxVolume() { return sfxVolume; }
 
 function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }

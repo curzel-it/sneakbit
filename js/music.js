@@ -61,7 +61,7 @@ export function refreshMusicVolume() {
 function musicVolume() {
   const s = getSettings();
   if (s.muted) return 0;
-  return s.volume * (s.musicVolume ?? 0.45);
+  return clamp(s.musicVolume ?? 0.45, 0, 1);
 }
 
 function ensure(name) {

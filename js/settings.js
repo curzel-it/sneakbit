@@ -1,26 +1,34 @@
 // User-tweakable settings persisted to localStorage. Tiny: just a few
 // knobs you'd want to flip without recompiling.
 
-import { setMuted, setVolume, getVolume, isMuted } from "./audio.js";
+import { setMuted, setSfxVolume } from "./audio.js";
+import { refreshMusicVolume } from "./music.js";
 
 const KEY = "sneakbit.settings.v1";
 
 const DEFAULTS = {
-  volume: 0.6,
+  sfxVolume: 0.6,
+  musicVolume: 0.45,
   muted: false,
   showFps: true,
 };
 
 let current = { ...DEFAULTS };
+let firstLaunch = false;
 
 export function loadSettings() {
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) current = { ...DEFAULTS, ...JSON.parse(raw) };
-  } catch {}
+  let raw = null;
+  try { raw = localStorage.getItem(KEY); } catch {}
+  if (raw) {
+    try { current = { ...DEFAULTS, ...JSON.parse(raw) }; } catch {}
+  } else {
+    firstLaunch = true;
+  }
   applyToRuntime();
   return current;
 }
+
+export function isFirstLaunch() { return firstLaunch; }
 
 export function saveSettings(patch) {
   current = { ...current, ...patch };
@@ -32,12 +40,7 @@ export function saveSettings(patch) {
 export function getSettings() { return current; }
 
 function applyToRuntime() {
-  setVolume(current.volume);
+  setSfxVolume(current.sfxVolume);
   setMuted(current.muted);
-}
-
-export function syncFromRuntime() {
-  // In case other code mutated audio directly (debug, etc.).
-  current.volume = getVolume();
-  current.muted = isMuted();
+  refreshMusicVolume();
 }

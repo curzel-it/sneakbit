@@ -34,6 +34,7 @@ import { tickCombat } from "./combat.js";
 import { tickAfterDialogue } from "./afterDialogue.js";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
 import { installHealthHud } from "./healthHud.js";
+import { applyFirstLaunch } from "./firstLaunch.js";
 
 async function main() {
   initInput();
@@ -46,6 +47,7 @@ async function main() {
   installDialogue();
   installToast();
   installTouchControls();
+  applyFirstLaunch();
 
   const startId = parseInt(new URLSearchParams(location.search).get("world"), 10) || STARTING_WORLD_ID;
   const [, speciesRaw, stringsRaw, worldRaw] = await Promise.all([
