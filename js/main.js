@@ -46,6 +46,7 @@ import { getWorldCache } from "./worldCache.js";
 import { setupPuzzles, tickPuzzles } from "./puzzles.js";
 import { setupCutscenes, tickCutscenes } from "./cutscenes.js";
 import { tickTrails } from "./trails.js";
+import { tickPushables } from "./pushables.js";
 import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js";
 import { runMigrations } from "./migrations.js";
 
@@ -156,6 +157,7 @@ async function main() {
       tickPuzzles(state.world, state.player);
       tickCutscenes(state.world, state.player, dt);
       tickTrails(state.world, state.player, dt);
+      tickPushables(state.world, dt);
       tickPlayerHealth(dt);
       tickFastTravel(dt);
       if (isPlayerDead()) handleDeath(state);

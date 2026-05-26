@@ -15,6 +15,7 @@ import { getSprite } from "./assets.js";
 import { getPlayerSpriteFrame } from "./player.js";
 import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { getMeleeSwingProgress } from "./melee.js";
+import { pushableRenderOffset } from "./pushables.js";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
@@ -213,7 +214,13 @@ function draw(ctx, e, camera) {
   const sw = w * TILE_SIZE;
   const sh = h * TILE_SIZE;
 
-  const px = Math.round((x - camera.x) * TILE_SIZE);
-  const py = Math.round((y - camera.y) * TILE_SIZE);
+  // Pushables interpolate their position with a render-time offset so
+  // the rock visually slides toward its new tile (already committed in
+  // frame.x/y for collision purposes).
+  const slide = pushableRenderOffset(e);
+  const rx = slide ? x - slide.x : x;
+  const ry = slide ? y - slide.y : y;
+  const px = Math.round((rx - camera.x) * TILE_SIZE);
+  const py = Math.round((ry - camera.y) * TILE_SIZE);
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 }

@@ -19,7 +19,7 @@
 import { ANIMATIONS_FPS, SPRITE_SHEET_HEROES, STARTING_SPAWN } from "./constants.js";
 import { isWalkable, isEntityBlocked, hasEnterableTeleporter, isTileSlippery } from "./world.js";
 import { playSfx } from "./audio.js";
-import { findPushableAt, pushOneTile } from "./pushables.js";
+import { findPushableAt, pushOneTile, startSlide } from "./pushables.js";
 import { findGateAt, tryUnlockGate } from "./gateUnlock.js";
 
 const HERO_BASE_FRAME = { x: 1, y: 1, w: 1, h: 2 };
@@ -202,6 +202,7 @@ function startStep(player, dir, world) {
       !isWalkable(world, oppX, oppY) ||
       isEntityBlocked(world, oppX, oppY, { ignore: standingOn });
     if (rockPinned && canPushableEnter(world, standingOn, toX, toY)) {
+      startSlide(standingOn, dx, dy);
       standingOn.frame.x = toX;
       standingOn.frame.y = toY;
     }

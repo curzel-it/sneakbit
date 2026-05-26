@@ -1,10 +1,13 @@
 // Pushable objects (boulders, crates). Tile-locked: the player attempts a
 // step into the object's tile; if the tile beyond it is clear, the object
-// slides one tile in the same direction and the player follows. Pushables
-// remain in their original world JSON until the world is reloaded.
+// slides one tile in the same direction and the player follows. The slide
+// is interpolated by tickPushables so the rock visually keeps pace with
+// the player's step animation instead of teleporting one tile per press.
 
 import { getSpecies } from "./species.js";
 import { isWalkable, isEntityBlocked } from "./world.js";
+
+const SLIDE_DURATION = 0.22; // matches player STEP_DURATION in player.js
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -33,6 +36,11 @@ export function findPushableAt(world, tx, ty) {
 // Try to push `pushable` one tile along `dir`. Returns true if it moved.
 // Pushables block other pushables, so the destination tile check uses
 // the same isEntityBlocked rules the player walks against.
+//
+// The slide is animated: frame.x/y commits to the destination
+// immediately (so collisions read the new tile), and a `_slide` record
+// drives a per-frame render offset toward zero. entities.js applies the
+// offset when blitting the sprite.
 export function pushOneTile(world, pushable, dir) {
   const [dx, dy] = DIR_DELTA[dir] ?? [0, 0];
   if (!dx && !dy) return false;
@@ -47,7 +55,35 @@ export function pushOneTile(world, pushable, dir) {
       if (isEntityBlocked(world, xx, yy, { ignore: pushable })) return false;
     }
   }
+  startSlide(pushable, dx, dy);
   f.x = nx;
   f.y = ny;
   return true;
+}
+
+// Carry-back path (player.js startStep) also moves a pushable but writes
+// frame.x/y directly. Wire the slide through this helper so the rock
+// glides instead of teleporting.
+export function startSlide(pushable, dx, dy) {
+  pushable._slide = { ox: -dx, oy: -dy, t: 0, duration: SLIDE_DURATION };
+}
+
+// Returns the {x, y} render offset (in tiles) the renderer should
+// subtract from frame.x/y to interpolate the slide. Decays linearly
+// from (-dx, -dy) at t=0 to (0, 0) at t=1.
+export function pushableRenderOffset(pushable) {
+  const s = pushable._slide;
+  if (!s) return null;
+  const remaining = 1 - s.t;
+  return { x: s.ox * remaining, y: s.oy * remaining };
+}
+
+export function tickPushables(world, dt) {
+  if (!world?.entities) return;
+  for (const e of world.entities) {
+    const s = e._slide;
+    if (!s) continue;
+    s.t += dt / s.duration;
+    if (s.t >= 1) delete e._slide;
+  }
 }
