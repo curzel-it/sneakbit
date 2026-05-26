@@ -9,10 +9,11 @@ import { getSettings, saveSettings } from "./settings.js";
 import { playSfx } from "./audio.js";
 import { APP_VERSION } from "./constants.js";
 import { clearProgress } from "./save.js";
+import { getSkills } from "./skills.js";
 
 let root = null;
 let open = false;
-let screen = "pause"; // "pause" | "settings"
+let screen = "pause"; // "pause" | "settings" | "skills" | "credits"
 
 export function installMenu() {
   if (root) return root;
@@ -24,6 +25,8 @@ export function installMenu() {
       <div class="menu-row menu-controls menu-stack">
         <button id="menu-resume">Resume (Esc)</button>
         <button id="menu-open-settings">Settings</button>
+        <button id="menu-open-skills">Skills</button>
+        <button id="menu-open-credits">Credits</button>
         <button id="menu-new-game">New game (wipe save)</button>
         <button id="menu-clear-cache">Clear cache &amp; reload</button>
       </div>
@@ -55,6 +58,34 @@ export function installMenu() {
         <button id="menu-settings-back">Back</button>
       </div>
     </div>
+    <div class="menu-card" data-screen="skills">
+      <h1>Skills</h1>
+      <ul class="menu-skills" id="menu-skill-list"></ul>
+      <p class="menu-hint">
+        Earn skills from the three ninja questlines (red / black / blue).
+      </p>
+      <div class="menu-row menu-controls">
+        <button id="menu-skills-back">Back</button>
+      </div>
+    </div>
+    <div class="menu-card" data-screen="credits">
+      <h1>Credits</h1>
+      <p class="menu-credits">
+        <strong>SneakBit</strong> · web port<br>
+        Original game by <a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener">curzel-it</a><br>
+        Shipped on Steam, iOS, and Android.
+      </p>
+      <p class="menu-credits">
+        HTML5/Canvas port maintained by Federico Curzel.<br>
+        Source: <a href="https://github.com/curzel-it/sneakbit-html" target="_blank" rel="noopener">github.com/curzel-it/sneakbit-html</a>
+      </p>
+      <p class="menu-hint">
+        Tile + sprite art and audio are from the original Rust build.
+      </p>
+      <div class="menu-row menu-controls">
+        <button id="menu-credits-back">Back</button>
+      </div>
+    </div>
   `;
   Object.assign(root.style, {
     position: "fixed",
@@ -76,7 +107,7 @@ export function installMenu() {
     if (e.code !== "Escape" && e.code !== "KeyM") return;
     e.preventDefault();
     if (!open) { openMenu(); return; }
-    if (screen === "settings") { showScreen("pause"); return; }
+    if (screen !== "pause") { showScreen("pause"); return; }
     closeMenu();
   });
   return root;
@@ -103,12 +134,38 @@ function showScreen(next) {
     card.style.display = card.dataset.screen === next ? "block" : "none";
   });
   if (next === "settings") syncSettingsWidgets();
+  if (next === "skills") syncSkillsWidgets();
+}
+
+const SKILL_LABELS = [
+  { id: "piercing",  name: "Piercing Kunai",  desc: "Kunai deals 2× damage." },
+  { id: "boomerang", name: "Boomerang Kunai", desc: "Kunai bounces back on wall/kill." },
+  { id: "catcher",   name: "Bullet Catcher",  desc: "Caught bullets refund into ammo." },
+];
+
+function syncSkillsWidgets() {
+  const list = root.querySelector("#menu-skill-list");
+  if (!list) return;
+  const skills = getSkills();
+  list.innerHTML = SKILL_LABELS.map(s => {
+    const unlocked = !!skills[s.id];
+    const tag = unlocked ? `<span class="menu-skill-tag on">UNLOCKED</span>`
+                         : `<span class="menu-skill-tag off">LOCKED</span>`;
+    return `<li class="${unlocked ? "on" : "off"}">
+      <div class="menu-skill-head">${s.name} ${tag}</div>
+      <div class="menu-skill-desc">${s.desc}</div>
+    </li>`;
+  }).join("");
 }
 
 function bindWidgets() {
   root.querySelector("#menu-resume").addEventListener("click", closeMenu);
   root.querySelector("#menu-open-settings").addEventListener("click", () => showScreen("settings"));
+  root.querySelector("#menu-open-skills").addEventListener("click", () => showScreen("skills"));
+  root.querySelector("#menu-open-credits").addEventListener("click", () => showScreen("credits"));
   root.querySelector("#menu-settings-back").addEventListener("click", () => showScreen("pause"));
+  root.querySelector("#menu-skills-back").addEventListener("click", () => showScreen("pause"));
+  root.querySelector("#menu-credits-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-new-game").addEventListener("click", () => {
     if (!confirm("Wipe save and start over? Inventory, dialogue progress and unlocked skills will be reset.")) return;
     try { localStorage.clear(); } catch {}
@@ -179,6 +236,18 @@ function injectStyles() {
     #menu button:hover { background: #353535; }
     #menu .menu-hint { color: #888; font-size: 11px; margin: 14px 0 0; }
     #menu .menu-version { color: #555; font-size: 10px; margin: 10px 0 0; text-align: right; }
+    #menu .menu-skills { list-style: none; padding: 0; margin: 0 0 12px; min-width: 320px; }
+    #menu .menu-skills li { padding: 8px 10px; margin: 6px 0; border-radius: 4px; background: #1f1f1f; border: 1px solid #2e2e2e; }
+    #menu .menu-skills li.on  { background: #1d2a1d; border-color: #335433; }
+    #menu .menu-skills li.off { opacity: 0.75; }
+    #menu .menu-skill-head { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+    #menu .menu-skill-desc { color: #aaa; font-size: 11px; margin-top: 2px; }
+    #menu .menu-skill-tag { font-size: 10px; padding: 1px 6px; border-radius: 3px; letter-spacing: 1px; }
+    #menu .menu-skill-tag.on  { background: #2a5a2a; color: #d8f5d8; }
+    #menu .menu-skill-tag.off { background: #3a3a3a; color: #aaa; }
+    #menu .menu-credits { font-size: 12px; line-height: 1.5; color: #ccc; margin: 0 0 10px; }
+    #menu .menu-credits a { color: #9ab1ff; text-decoration: none; }
+    #menu .menu-credits a:hover { text-decoration: underline; }
   `;
   const style = document.createElement("style");
   style.id = "menu-styles";
