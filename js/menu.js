@@ -113,11 +113,14 @@ function bindWidgets() {
     if (!confirm("Wipe save and start over? Inventory, dialogue progress and unlocked skills will be reset.")) return;
     try { localStorage.clear(); } catch {}
     clearProgress();
-    location.reload();
+    // A `?world=X` query overrides saved progress in main.js. After wiping
+    // the save we also need to drop the URL override or the player would
+    // reload back into the same world at the same tile.
+    location.replace(location.pathname);
   });
   root.querySelector("#menu-clear-cache").addEventListener("click", () => {
     try { localStorage.clear(); } catch {}
-    location.reload();
+    location.replace(location.pathname);
   });
 
   const sfx = root.querySelector("#opt-sfx-volume");
