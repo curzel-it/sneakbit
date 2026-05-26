@@ -12,6 +12,8 @@ import { playSfx } from "./audio.js";
 import { getSpecies } from "./species.js";
 import { addAmmo } from "./inventory.js";
 import { getValue, setValue } from "./storage.js";
+import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
+import { tr } from "./strings.js";
 
 // Bullet is here because in world data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles
@@ -67,6 +69,28 @@ function trigger(e, kind) {
     addAmmo(e.species_id, 1);
   }
   playSfx("ammoCollected");
+  maybeEquipWeapon(sp);
+}
+
+// When a pickup is associated with a weapon (sword pickup → sword,
+// AR15 pickup → AR15, …) auto-equip it into the matching slot so the
+// player can immediately see — and use — the weapon they just grabbed.
+// Mirrors how `available_weapons` in Rust surfaces a weapon as soon as
+// its pickup species lands in the inventory, with the JS twist that
+// we equip it directly instead of opening a chooser (no inventory UI yet).
+function maybeEquipWeapon(pickupSp) {
+  if (!pickupSp) return;
+  const weaponId = pickupSp.associated_weapon;
+  if (!weaponId) return;
+  const weaponSp = getSpecies(weaponId);
+  if (!weaponSp) return;
+  let slot = null;
+  if (weaponSp.entity_type === "WeaponMelee")  slot = SLOT_MELEE;
+  if (weaponSp.entity_type === "WeaponRanged") slot = SLOT_RANGED;
+  if (!slot) return;
+  setEquipped(slot, weaponId);
+  const name = tr(weaponSp.name) || weaponSp.name || "weapon";
+  showToast(`Equipped: ${name}`, "hint");
 }
 
 // Renders the hint as a toast. For persistent hints (Rust is_consumable=false)
