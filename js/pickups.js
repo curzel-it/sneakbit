@@ -1,44 +1,47 @@
-// Pickups + hints: when the player snaps onto a consumable entity we
-// trigger its effect and remove it from the world.
+// Pickups + hints: when the player snaps onto an auto-triggered entity we
+// fire its effect and remove it from the world.
 //
-// Hint entities show their dialogue, then vanish. Bundles play a pickup
-// SFX and vanish (no inventory yet — we'll wire that when combat lands).
+// Hint entities (consumable variant) show their dialogue, then vanish.
+// Bundles and PickableObjects play a pickup SFX and vanish (no inventory
+// yet — we'll wire that when combat lands). Teleporters are handled in
+// transitions.js so they can fade between worlds.
 
 import { showDialogue, resolveEntityDialogue } from "./dialogue.js";
 import { playSfx } from "./audio.js";
+import { getSpecies } from "./species.js";
+
+const AUTO_PICKUP_TYPES = new Set(["Bundle", "PickableObject"]);
 
 export function checkPickup(state) {
   const { world, player } = state;
   if (!world.entities) return;
   for (let i = 0; i < world.entities.length; i++) {
     const e = world.entities[i];
-    if (!e.is_consumable && e.species_id !== 1019 /* teleporter handled elsewhere */) {
-      // Only auto-trigger flagged consumables.
-      if (!isAutoTrigger(e)) continue;
-    }
-    if (!isAutoTrigger(e)) continue;
+    const kind = classify(e);
+    if (!kind) continue;
     const f = e.frame; if (!f) continue;
     if (player.tileX < f.x || player.tileX >= f.x + f.w) continue;
     if (player.tileY < f.y || player.tileY >= f.y + f.h) continue;
     world.entities.splice(i, 1);
-    trigger(e);
+    trigger(e, kind);
     return;
   }
 }
 
-function isAutoTrigger(e) {
-  if (!e.is_consumable) return false;
-  // Teleporters are consumable in the data but we treat them in transitions.js.
-  if (e.species_id === 1019) return false;
-  return true;
+function classify(e) {
+  const sp = getSpecies(e.species_id);
+  if (!sp) return null;
+  if (AUTO_PICKUP_TYPES.has(sp.entity_type)) return "pickup";
+  if (sp.entity_type === "Hint" && e.is_consumable) return "hint";
+  return null;
 }
 
-function trigger(e) {
-  const lines = resolveEntityDialogue(e);
-  if (lines && lines.length) {
+function trigger(e, kind) {
+  if (kind === "hint") {
+    const lines = resolveEntityDialogue(e);
     playSfx("pickup", { volume: 0.6 });
-    showDialogue(lines);
-  } else {
-    playSfx("pickup", { volume: 0.7 });
+    if (lines && lines.length) showDialogue(lines);
+    return;
   }
+  playSfx("pickup", { volume: 0.7 });
 }

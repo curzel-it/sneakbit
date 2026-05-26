@@ -135,6 +135,11 @@ function injectStyles() {
       font-family: monospace;
       cursor: pointer;
       transition: background 80ms ease;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: none;
     }
     #touch-controls .touch-action {
       width: 72px;
