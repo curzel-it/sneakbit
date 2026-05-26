@@ -3,6 +3,12 @@
 //   - the set of directions currently held (state)
 // The player module needs both: presses to distinguish tap-vs-hold and
 // to queue inputs mid-step; held to keep stepping while a key is down.
+//
+// pollInput() also folds in gamepad input (gamepad.js) — left stick /
+// d-pad fan into the same directional channel; action buttons go
+// through their own callback registry (see gamepad.setGamepadAction).
+
+import { pollGamepadDirections } from "./gamepad.js";
 
 const KEY_MAP = {
   ArrowUp: "up",    KeyW: "up",
@@ -45,7 +51,11 @@ export function initInput() {
 // `events` is the FIFO of press directions since the last poll.
 // `held` is a fresh Set snapshot so consumers can read it freely.
 export function pollInput() {
+  const gp = pollGamepadDirections();
   const events = pressEvents.slice();
   pressEvents.length = 0;
-  return { events, held: new Set(held) };
+  for (const e of gp.events) events.push(e);
+  const mergedHeld = new Set(held);
+  for (const d of gp.held) mergedHeld.add(d);
+  return { events, held: mergedHeld };
 }

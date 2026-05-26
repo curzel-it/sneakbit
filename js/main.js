@@ -26,8 +26,9 @@ import { checkPickup } from "./pickups.js";
 import { installMusic, playTrack } from "./music.js";
 import { installTouchControls } from "./touch.js";
 import { installToast } from "./toast.js";
-import { installShooting, tickShooting } from "./shooting.js";
-import { installMelee, tickMelee } from "./melee.js";
+import { installShooting, tickShooting, tryShoot } from "./shooting.js";
+import { installMelee, tickMelee, tryMelee } from "./melee.js";
+import { setGamepadAction } from "./gamepad.js";
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js";
 import { tickMobs } from "./mobs.js";
 import { tickMonsterFusion } from "./monsters.js";
@@ -119,6 +120,13 @@ async function main() {
   installAmmoHud();
   installHealthHud();
   installFastTravel(() => state);
+  setGamepadAction("shoot", () => tryShoot());
+  setGamepadAction("melee", () => tryMelee());
+  setGamepadAction("interact", () => {
+    // Synthesise an interact keypress so interact.js's listener fires
+    // without us having to duplicate its "find entity in front" logic.
+    window.dispatchEvent(new KeyboardEvent("keydown", { code: "KeyE" }));
+  });
   markVisited(state.world.id);
   if (state.world.soundtrack) playTrack(state.world.soundtrack);
 
