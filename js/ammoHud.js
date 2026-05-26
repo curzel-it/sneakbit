@@ -1,13 +1,13 @@
-// Ammo HUD: small chip in the top-right showing the kunai sprite and the
-// player's current count. Pins to the corner so it doesn't fight the
-// on-screen joystick (bottom) or the text HUD (top-left). Sprite is
-// pulled from the humanoids_1x1 sheet at the species' sprite_frame —
-// same source the world entity uses, so the icon always matches the item
-// you pick up.
+// Ammo HUD: small chip in the top-right showing the kunai inventory icon
+// and the player's current count. Pins to the corner so it doesn't fight
+// the on-screen joystick (bottom) or the text HUD (top-left). The icon is
+// drawn from the dedicated inventory sprite sheet at the species'
+// `inventory_texture_offset`, matching the original game's HUD.
 
 import { TILE_SIZE } from "./constants.js";
+import { getSprite } from "./assets.js";
 import { getAmmo, onInventoryChange } from "./inventory.js";
-import { getSpecies, getEntitySheet } from "./species.js";
+import { getSpecies } from "./species.js";
 
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
@@ -75,15 +75,18 @@ export function updateAmmoHud() {
 
 function paintIcon() {
   const sp = getSpecies(KUNAI_SPECIES_ID);
-  if (!sp) return;
-  const sheet = getEntitySheet(sp);
+  if (!sp || !sp.inventory_texture_offset) return;
+  let sheet;
+  try { sheet = getSprite("inventory"); } catch { return; }
   if (!sheet || !sheet.complete) return;
+  // `inventory_texture_offset` is [row, col] in the rust source.
+  const [row, col] = sp.inventory_texture_offset;
   const ctx = iconCanvas.getContext("2d");
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, TILE_SIZE, TILE_SIZE);
   ctx.drawImage(
     sheet,
-    sp.texture_x * TILE_SIZE, sp.texture_y * TILE_SIZE, TILE_SIZE, TILE_SIZE,
+    col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE,
     0, 0, TILE_SIZE, TILE_SIZE,
   );
   iconCanvas.dataset.painted = "1";
