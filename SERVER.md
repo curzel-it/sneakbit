@@ -60,7 +60,7 @@ The instancing model: **every online player belongs to exactly one party. Zone i
 
 - A connected player with no party is auto-assigned a fresh party-of-one.
 - Party creation is implicit on connect. The party gets a short, human-typable **join code** (e.g. `K7-MJ2`, 5 alphanumeric chars).
-- The current party's join code is shown in the client (Settings or a dedicated "Party" panel — HTML, not canvas).
+- The current party's join code is shown in the client in a dedicated Party panel reachable from the pause menu (HTML, not canvas). The panel is the single place to see your code, enter another code, leave the party, and see who else is connected. The HUD itself stays unchanged — local co-op already uses HUD slots for P1/P2, and the online-party state is separate enough to live behind a menu entry.
 - Joining: enter a code in the client; server moves the joiner into that party. The joiner's old solo party is destroyed if empty.
 - Leaving: explicit "Leave party" action. Returns the player to a fresh party-of-one.
 - Party persists while at least one member is online. Once empty, the party (and all its zone instances) is garbage-collected.
@@ -75,61 +75,14 @@ The instancing model: **every online player belongs to exactly one party. Zone i
 
 ## Wire protocol
 
-- Transport: WebSocket at `wss://sneakbit.curzel.it/ws` (and `ws://localhost:8090/ws` for dev).
-- Frames: JSON objects with an `op` discriminant. Versioned via a handshake `op:hello`.
-- Direction:
-  - **Client → server** is small and frequent (input intents, ack/ping).
-  - **Server → client** is the bulk (snapshots, events).
+See **[`protocol.md`](./protocol.md)** for the full message catalogue (every op, payload shape, close code, sequence diagrams, rate limits).
 
-### Handshake
-
-```jsonc
-// C → S, first frame
-{"op":"hello", "protocol":1, "uuid":"...", "joinCode":"K7-MJ2"|null}
-
-// S → C
-{"op":"welcome", "playerId":"...", "partyId":"...", "partyCode":"K7-MJ2",
- "members":[{"playerId":"...","name":"Player-a3f9"}],
- "zone":{"id":1001, "snapshot":{...}}}
-
-// On protocol mismatch
-{"op":"obsolete", "minProtocol":2}  // client must reload
-```
-
-### Client → server
-
-```jsonc
-{"op":"input", "intent":"stepUp"|"stepDown"|"stepLeft"|"stepRight"|"interact"|"shoot"|"melee"}
-{"op":"travel", "viaEntityId":N}    // resolved server-side
-{"op":"party.join", "code":"K7-MJ2"}
-{"op":"party.leave"}
-{"op":"ping"}
-```
-
-Inputs are intents, not raw keypresses. The client interprets keyboard/gamepad/touch into intents and sends those. This keeps the protocol input-method-agnostic.
-
-### Server → client
-
-```jsonc
-// Full snapshot on join and zone-change
-{"op":"snapshot", "tick":N, "zone":{...full state...}}
-
-// Per-tick delta
-{"op":"delta", "tick":N, "players":[...changed only...], "entities":[...changed only...]}
-
-// Discrete events
-{"op":"event", "kind":"dialogueOpen", "entityId":N, "lines":[...]}
-{"op":"event", "kind":"pickup", "playerId":"...", "speciesId":N, "amount":1}
-{"op":"event", "kind":"death", "playerId":"..."}
-{"op":"event", "kind":"zoneChange", "zoneId":N, "snapshot":{...}}
-{"op":"event", "kind":"partyUpdate", "members":[...]}
-
-{"op":"pong"}
-```
-
-### Versioning
-
-The handshake carries `protocol:N`. Server bumps `N` when the wire shape changes. Stale clients receive `obsolete` and must reload. There is no protocol-version compatibility layer in v0 — server and client are always deployed together.
+Summary:
+- **Transport:** WebSocket at `wss://sneakbit.curzel.it/ws` (and `ws://localhost:8090/ws` for dev). JSON frames, one object per frame.
+- **Handshake:** `hello {protocol, uuid, joinCode?}` → `welcome {playerId, partyCode, members, zone}` (or `obsolete` + close if protocol is stale).
+- **Client → server:** `input` (intents, not key events), `travel`, `party.create|join|leave`, `ping`.
+- **Server → client:** `snapshot` (full state on join/zone-change), `delta` (per-tick state diffs), `event` (discrete things like dialogue, pickup, death, partyUpdate, zoneChange, toast), `pong`.
+- **Versioning:** single integer in the handshake. No compatibility layer — server and client are always deployed together. Stale tabs receive `obsolete` and force-reload.
 
 ## Server tick
 
@@ -199,12 +152,104 @@ Phases are gated on the previous landing. Each phase ends with a runnable, deplo
 - [x] This document
 
 ### Phase 1 — Headless simulation
-Make the simulation modules run under `node` with no DOM. Outcome: `node -e "import('./js/zone.js').then(m => m.buildZone(rawJson))"` works.
+Make the simulation modules run under `node` with no DOM. The final shape is three top-level folders:
 
-- Catalog every `js/*.js`: tag as `pure` / `mixed` / `client`.
-- For `mixed` files, split: `pure` half becomes the shared module, `client` half stays as a render/UI shim.
-- Replace `Image` / `fetch` / `localStorage` references in `pure` files with injected I/O passed in by the host (Node passes filesystem readers, browser passes fetch/blob loaders).
-- No behavior change for the client; this is purely a refactor.
+```
+client/   browser-only code (Canvas, audio, input devices, HUD, modals, IndexedDB, localStorage)
+server/   Node-only code (the hello-world is already there; the tick lands here)
+shared/   pure simulation and data — imported by both client and server, no browser APIs
+```
+
+Hard rules:
+- `shared/` MUST NOT import from `client/` or `server/`.
+- `client/` may import from `shared/` freely. Same for `server/`.
+- Persistence in `shared/` is an injected interface; concrete backends are localStorage (client), in-memory or SQLite (server).
+- The protocol is owned by `shared/` if it contains data shapes; the transport (WS server / WS client) lives in `server/` and `client/` respectively.
+
+Outcome: `node -e "import('./shared/zone.js').then(m => m.buildZone(rawJson))"` works.
+
+See `## Phase 1 file classification` below for the per-file landing plan.
+
+### Phase 1 — File classification
+
+Audit of every file in `js/` against direct browser-API use (`document`, `window`, `localStorage`, `fetch`, `Image`, `Audio`, `getContext`, `addEventListener`, `requestAnimationFrame`, `indexedDB`, `location`, `navigator`). Three buckets:
+
+**A. Move to `shared/` as-is — no browser APIs, pure simulation/data:**
+
+| File | Notes |
+|---|---|
+| `afterDialogue.js` | post-dialogue side-effects on world state |
+| `biomeAnimation.js` | frame counter |
+| `biomes.js`, `biomeTiles.js` | biome data + tile-selection rules |
+| `camera.js` | camera math (interpolation, world-to-screen) |
+| `combat.js` | damage resolution, hitboxes |
+| `constants.js` | tile size, sprite-sheet IDs |
+| `constructions.js`, `constructionTiles.js` | construction data + tile-selection |
+| `cutscenes.js` | cutscene state machine |
+| `entities.js` | entity tick driver |
+| `entityVisibility.js` | visibility predicates |
+| `explosives.js` | explosive state |
+| `firstLaunch.js` | first-launch flag (no browser deps) |
+| `gateUnlock.js` | gate unlock rules |
+| `locks.js` | lock state |
+| `minions.js`, `mobs.js`, `monsters.js` | mob AI + spawning |
+| `movement.js` | tile-locked stepping math |
+| `pickups.js` | pickup resolution |
+| `player.js` | player tick |
+| `prefabs.js` | raw-zone generator (creative mode) |
+| `pushables.js` | pushable resolution |
+| `puzzles.js` | puzzle state |
+| `save.js` | uses `storage` interface, not localStorage directly — portable |
+| `species.js`, `strings.js` | data tables |
+| `trails.js` | trail decay |
+| `zone.js`, `zoneVisibility.js` | zone state |
+
+**B. Move to `client/` as-is — pure browser concerns:**
+
+| File | Why it's client-only |
+|---|---|
+| `ammoHud.js`, `healthHud.js`, `hud.js` | DOM HUD elements |
+| `assets.js` | `new Image()` sprite loading |
+| `audio.js`, `music.js` | Web Audio |
+| `biomeSheet.js` | Canvas-baked sprite atlas |
+| `dialogue.js`, `gameOver.js`, `message.js`, `toast.js`, `inventoryScreen.js`, `loadingScreen.js`, `fastTravel.js`, `menu.js` | DOM modals + event listeners |
+| `data.js` | `fetch()` for level/species/strings JSON in browser |
+| `gameLoop.js` | `requestAnimationFrame` |
+| `gamepad.js`, `input.js`, `keyBindings.js`, `touch.js` | input devices |
+| `main.js` | entry point — wires everything browser-side |
+| `mapEditor.js` | creative-mode DOM editor |
+| `renderer.js` | Canvas 2D drawing |
+| `settings.js` | DOM settings UI |
+| `zoom.js` | Canvas/DOM zoom |
+| `zoneBuffer.js` | IndexedDB-backed zone-state buffer |
+| `zoneCache.js` | Canvas-baked static-tile surfaces |
+
+**C. Split — one file landing in two places:**
+
+| File | shared/ part | client/ part |
+|---|---|---|
+| `storage.js` | the `getValue`/`setValue` interface + a Map-backed default | localStorage backend that's installed on boot |
+| `coopMode.js` | the flag accessor (reads injected storage) | the localStorage backing + Settings toggle |
+| `creativeMode.js` | the flag accessor | URL-param read on boot |
+| `migrations.js` | migration ladder + storage-only steps | the v2 legacy-inventory scan (raw `localStorage.length` walk) |
+| `inventory.js` | per-player amounts + mutation | the legacy `sneakbit.inventory.v1` scan helper |
+| `equipment.js` | slot state + getters | `window.equipment` devtools binding |
+| `skills.js` | skill resolution + active set | `window.skills` devtools binding + override-key localStorage read |
+| `playerHealth.js` | HP + invuln-window state | (re-audit — comment `invuln window` triggered a false positive; likely already pure) |
+| `interact.js` | "interact with entity ahead" resolution | `window.addEventListener("keydown", ...)` and the touch-hint DOM element |
+| `melee.js` | swing resolution + cooldown | `window.addEventListener("keydown", ...)` |
+| `shooting.js` | bullet spawn + ammo decrement | `window.addEventListener("keydown", ...)` |
+| `transitions.js` | zone-change + spawn-resolution logic | fade-overlay DOM element |
+
+After the split, each file in the right column is small (input wiring or one DOM element); each file in the left column is the actual simulation surface.
+
+### Phase 1 — Order of work
+1. Create the `client/`, `server/`, `shared/` skeleton (no code moves yet — just empty directories with a `.gitkeep`).
+2. Move bucket A files into `shared/`. Update import paths in their consumers. Run tests after each batch.
+3. Move bucket B files into `client/`. Same.
+4. Tackle bucket C one file at a time. Each split is its own commit. After every split, `node --test` is green AND the page still loads in a browser.
+5. Adjust `index.html` to point at `client/main.js`.
+6. Verify `node -e "import('./shared/zone.js')"` loads cleanly with zero browser shims.
 
 ### Phase 2 — Smallest server-authoritative slice
 One zone, one player, server-authoritative walking. No mobs, no combat, no pickups.
