@@ -20,6 +20,11 @@ import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { getSpecies } from "./species.js";
 
 const MAX_HP = 100;
+// Intentional divergence from Rust HERO_RECOVERY_PS=1.0. Block-A playtests
+// found 1 HP/s left the player chip-damage-locked when crossing biome
+// edges with low health — the web build also has no inventory consumables
+// yet, so there's no other heal path. Bump up to 3 if/when potion drops
+// land, then re-evaluate.
 const RECOVERY_PER_SEC = 3;
 const REGEN_DELAY_AFTER_HIT = 1.5;
 const INVULN_AFTER_BURST = 0.4;
