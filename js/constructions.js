@@ -1,4 +1,13 @@
 // Construction type metadata. Mirrors game_core/src/maps/constructions.rs.
+//
+// Slope variants (29..60, four biomes × eight orientations) ship as
+// individual ids so the renderer can pick the right corner/edge sprite,
+// but we treat them as rectangular obstacles. Rust does the same
+// is_obstacle() = true (fall-through to `_ => true`) but additionally
+// computes a shaped hittable_frame with per-orientation padding
+// (slope_hittable_frame_padding). That extra trim lets the player walk
+// into the "downhill" half of a slope tile in Rust; ours rejects the
+// whole tile. Cosmetic difference at edges, no functional gap.
 
 export const CONSTRUCTION = Object.freeze({
   WOODEN_FENCE: 1,
