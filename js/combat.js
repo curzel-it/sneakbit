@@ -21,6 +21,13 @@ const BOUNCE_LIFESPAN_BONUS = 0.8;
 // (covers the case where a monster on an adjacent tile starts sliding
 // towards us — by progress 0.1 it's already in range).
 const MELEE_DAMAGE_RADIUS = 0.9;
+// Spawned at the hit position when a non-fatal damage tick lands on a
+// monster — mirrors Rust SPECIES_DAMAGE_INDICATOR + the 0.2s lifespan
+// from hits_handling_use_case.rs:49. Renders via the normal entity
+// pipeline (sheet 1012 / animated_objects, 4-frame anim, z=99 overlay).
+const DAMAGE_INDICATOR_SPECIES_ID = 1178;
+const DAMAGE_INDICATOR_LIFESPAN = 0.2;
+let nextIndicatorId = -1_000_000;
 
 // Run one combat tick. Returns void; mutates world.entities (splices on
 // kill) and player health via playerHealth.js.
@@ -28,6 +35,33 @@ export function tickCombat(world, player, dt) {
   if (!world?.entities) return;
   resolveBullets(world, player, dt);
   resolveMeleeMonsters(world, player, dt);
+  tickDamageIndicators(world, dt);
+}
+
+// Ages damage-indicator entities and removes them when their lifespan
+// runs out. Spawned by `resolveBullets` whenever a non-fatal hit lands.
+function tickDamageIndicators(world, dt) {
+  const ents = world.entities;
+  for (let i = ents.length - 1; i >= 0; i--) {
+    const e = ents[i];
+    if (!e._damageIndicator) continue;
+    e._lifespan -= dt;
+    if (e._lifespan <= 0) ents.splice(i, 1);
+  }
+}
+
+function spawnDamageIndicator(world, hittable, parentId) {
+  world.entities.push({
+    id: nextIndicatorId--,
+    species_id: DAMAGE_INDICATOR_SPECIES_ID,
+    _damageIndicator: true,
+    _lifespan: DAMAGE_INDICATOR_LIFESPAN,
+    parent_id: parentId,
+    is_consumable: false,
+    direction: "Down",
+    frame: { x: hittable.x, y: hittable.y, w: hittable.w, h: hittable.h },
+    dialogues: [],
+  });
 }
 
 function resolveBullets(world, player, dt) {
@@ -74,6 +108,8 @@ function resolveBullets(world, player, dt) {
         ents.splice(j, 1);
         if (j < i) i -= 1;
         consumed = true;
+      } else {
+        spawnDamageIndicator(world, entityHittable(t, tsp), b.parent_id ?? b.id);
       }
     }
     if (consumed) {
