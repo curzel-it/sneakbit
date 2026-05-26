@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Auto-deploy the Node server when the just-made commit touched server/ or deploy.py.
+# Runs detached so `git commit` returns instantly; log lives at /tmp/sneakbit-deploy.log.
+#
+# Install: `python3 deploy.py --install-hook` (sets git config core.hooksPath .githooks).
+# Disable: `git config --unset core.hooksPath`.
+
+set -e
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+# First-commit safety: HEAD~1 doesn't exist on an initial commit, so diff against
+# the empty tree to compare HEAD against "nothing".
+if git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
+  range="HEAD~1 HEAD"
+else
+  range="$(git hash-object -t tree /dev/null) HEAD"
+fi
+
+changed="$(git diff --name-only $range)"
+
+if echo "$changed" | grep -qE '^(server/|deploy\.py$|\.githooks/)'; then
+  echo "[post-commit] server/deploy changes detected — deploying in background"
+  echo "[post-commit] tail -f /tmp/sneakbit-deploy.log to watch"
+  # nohup + setsid + & so the deploy survives the shell exiting and won't
+  # block the commit. stdin closed to be safe under interactive shells.
+  nohup setsid python3 "$repo_root/deploy.py" \
+    >> /tmp/sneakbit-deploy.log 2>&1 </dev/null &
+  disown || true
+else
+  echo "[post-commit] no server changes, skipping deploy"
+fi
