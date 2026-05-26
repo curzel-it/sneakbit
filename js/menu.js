@@ -13,6 +13,7 @@ import { getSkills } from "./skills.js";
 import { renderInventoryInto } from "./inventoryScreen.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { ACTIONS, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js";
+import { isCoopMode, setCoopMode } from "./coopMode.js";
 
 let root = null;
 let open = false;
@@ -36,6 +37,7 @@ export function installMenu() {
         <button id="menu-export-save" data-creative-only>Export save (copy JSON)</button>
         <button id="menu-import-save" data-creative-only>Import save (paste JSON)</button>
         <button id="menu-open-credits">Credits</button>
+        <button id="menu-toggle-coop">Co-op: <span id="menu-coop-state">off</span></button>
         <button id="menu-new-game">New game (wipe save)</button>
         <button id="menu-clear-cache">Clear cache &amp; reload</button>
       </div>
@@ -154,6 +156,11 @@ export function isMenuOpen() { return open; }
 // save-related actions when GameMode::Creative). In the regular
 // player-facing build, progress is saved automatically and there's no
 // need to expose JSON blobs.
+function refreshCoopLabel() {
+  const el = root.querySelector("#menu-coop-state");
+  if (el) el.textContent = isCoopMode() ? "on" : "off";
+}
+
 function applyCreativeModeVisibility() {
   const visible = isCreativeMode();
   root.querySelectorAll("[data-creative-only]").forEach((el) => {
@@ -279,6 +286,16 @@ function bindWidgets() {
   root.querySelector("#menu-inventory-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-export-save").addEventListener("click", exportSave);
   root.querySelector("#menu-import-save").addEventListener("click", importSave);
+  refreshCoopLabel();
+  root.querySelector("#menu-toggle-coop").addEventListener("click", () => {
+    const next = !isCoopMode();
+    const msg = next
+      ? "Enable co-op?\n\nP1: WASD + Z/X/C (interact / kunai / melee)\nP2: IJKL + B/N/M\n\nThe page will reload."
+      : "Disable co-op?\n\nThe page will reload and P2 will be removed.";
+    if (!confirm(msg)) return;
+    setCoopMode(next);
+    location.reload();
+  });
   root.querySelector("#menu-new-game").addEventListener("click", () => {
     if (!confirm("Wipe save and start over? Inventory, dialogue progress and unlocked skills will be reset.")) return;
     // Tell main.js's beforeunload listener to stand down — otherwise it

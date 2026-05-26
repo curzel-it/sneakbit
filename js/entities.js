@@ -36,7 +36,9 @@ export function tickEntities(dt) {
 
 export function drawEntities(ctx, world, camera, player) {
   const visible = collect(world, camera);
-  if (player) visible.push(makePlayerSortItem(player));
+  // Accept a single player or an array of players (co-op).
+  const players = Array.isArray(player) ? player : (player ? [player] : []);
+  for (const p of players) visible.push(makePlayerSortItem(p));
   visible.sort((a, b) => a._sortKey - b._sortKey);
   for (const e of visible) {
     if (e._isPlayer) drawPlayer(ctx, e._player, camera);

@@ -8,6 +8,7 @@
 import { showDialogue, resolveEntityDialogue, isDialogueOpen } from "./dialogue.js";
 import { handleAfterDialogue } from "./afterDialogue.js";
 import { matchesAction } from "./keyBindings.js";
+import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js";
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -24,17 +25,30 @@ export function installInteract(getState) {
   hintEl = makeHint();
   window.addEventListener("keydown", (e) => {
     if (e.repeat) return;
-    if (!matchesAction("interact", e.code)) return;
     if (isDialogueOpen()) return;
     const state = stateRef();
     if (!state) return;
-    const target = findFacingEntity(state.world, state.player);
+    const initiator = pickInitiator(state, e.code);
+    if (!initiator) return;
+    const target = findFacingEntity(state.world, initiator);
     if (!target) return;
     const dialogue = resolveEntityDialogue(target);
     if (!dialogue) return;
     e.preventDefault();
     showDialogue(dialogue).then(() => handleAfterDialogue(state.world, target));
   });
+}
+
+// Maps a keydown to the player who should act on it. In co-op the two
+// players have their own interact keys (KeyZ / KeyB); in single-player
+// the rebindable interact action drives P1.
+function pickInitiator(state, code) {
+  if (isCoopMode()) {
+    if (code === COOP_KEYMAPS[1].interact) return state.player;
+    if (code === COOP_KEYMAPS[2].interact) return state.player2 || state.player;
+    return null;
+  }
+  return matchesAction("interact", code) ? state.player : null;
 }
 
 export function tickInteract() {

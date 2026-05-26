@@ -19,11 +19,17 @@ export function render(renderer, world, camera, player, biomeFrame) {
   ctx.fillStyle = "#000";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // `player` may be a single object (single-player) or an array (co-op).
+  // The darkness overlay always tracks the first player so it has a
+  // single, deterministic centre — co-op players need to stay close
+  // enough to share the same cone of light.
+  const primary = Array.isArray(player) ? player[0] : player;
+
   drawWorldLayers(ctx, world, camera, biomeFrame | 0);
   drawTrails(ctx, world, camera);
   drawEntities(ctx, world, camera, player);
   drawCutscenes(ctx, world, camera);
-  drawDarkness(ctx, canvas, world, camera, player);
+  drawDarkness(ctx, canvas, world, camera, primary);
 }
 
 // Blit the pre-baked biome + construction layers. The cache is built

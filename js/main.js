@@ -48,6 +48,7 @@ import { setupCutscenes, tickCutscenes } from "./cutscenes.js";
 import { tickTrails } from "./trails.js";
 import { tickPushables } from "./pushables.js";
 import { updateVisibleEntities } from "./worldVisibility.js";
+import { isCoopMode } from "./coopMode.js";
 import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js";
 import { runMigrations } from "./migrations.js";
 
@@ -101,9 +102,14 @@ async function main() {
   } else if (startId !== STARTING_WORLD_ID) {
     snapToEntry(player, world);
   }
+  // In co-op, spawn P2 right next to P1 on the same tile by default — the
+  // first move will separate them. Rust co-op uses the same "spawn around
+  // hero" rule (game_core/src/worlds/world_setup.rs::spawn_coop_players_around_hero).
+  const player2 = isCoopMode() ? makeCoopP2(player) : null;
   const state = {
     world,
     player,
+    player2,
     camera: createCamera(),
     lastTile: { x: player.tileX, y: player.tileY },
   };
@@ -147,6 +153,10 @@ async function main() {
     const input = pollInput();
     if (!paused) {
       updatePlayer(state.player, input, dt, state.world);
+      if (state.player2) {
+        const input2 = pollInput(2);
+        updatePlayer(state.player2, input2, dt, state.world);
+      }
       maybeTeleport(state);
       // Camera locks to the player and feeds the visibility filter that
       // gates per-entity ticks below. Moved here so the entity ticks see
@@ -176,7 +186,10 @@ async function main() {
     tickBiomeAnimation(biomeAnim, dt);
     tickEntities(dt);
     tickInteract();
-    render(renderer, state.world, state.camera, state.player, biomeAnim.frame);
+    // Pass both players to the renderer so P2 sorts correctly with the
+    // entity z-stack and not just on top as a separate draw call.
+    const renderPlayers = state.player2 ? [state.player, state.player2] : state.player;
+    render(renderer, state.world, state.camera, renderPlayers, biomeAnim.frame);
     updateHud(hud, {
       worldId: state.world.id,
       fps: 1 / dt,
@@ -184,6 +197,21 @@ async function main() {
     });
     updateAmmoHud();
   });
+}
+
+// Build the co-op second player. Shares everything with P1 (sprite,
+// step duration, etc) — the only differences are the starting tile
+// (one to the right of P1, fallback to same tile) and a fresh
+// direction. Inventory / HP are global so no per-player state needed
+// on these fields here.
+function makeCoopP2(p1) {
+  const p2 = createPlayer();
+  p2.tileX = p1.tileX;
+  p2.tileY = p1.tileY;
+  p2.x = p1.x;
+  p2.y = p1.y;
+  p2.direction = "down";
+  return p2;
 }
 
 function snapToEntry(player, world) {

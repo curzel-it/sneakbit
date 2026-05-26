@@ -9,6 +9,7 @@ import { getSpecies } from "./species.js";
 import { getEquipped, SLOT_MELEE } from "./equipment.js";
 import { playSfx } from "./audio.js";
 import { matchesAction } from "./keyBindings.js";
+import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -65,19 +66,30 @@ export function tickMelee(dt) {
 export function tryMelee() {
   const state = stateRef?.();
   if (!state) return;
-  swing(state);
+  swing(state, state.player);
 }
 
 function onKey(e) {
   if (e.repeat) return;
-  if (!matchesAction("melee", e.code)) return;
   const state = stateRef?.();
   if (!state) return;
+  const swinger = pickSwinger(state, e.code);
+  if (!swinger) return;
   e.preventDefault();
-  swing(state);
+  swing(state, swinger);
+}
+
+function pickSwinger(state, code) {
+  if (isCoopMode()) {
+    if (code === COOP_KEYMAPS[1].melee) return state.player;
+    if (code === COOP_KEYMAPS[2].melee) return state.player2 || state.player;
+    return null;
+  }
+  return matchesAction("melee", code) ? state.player : null;
 }
 
 // Spawns the cross-pattern bullets. Exported for unit tests.
+// `opts.swinger` defaults to state.player so existing tests keep working.
 export function performMeleeSwing(state, opts = {}) {
   if (cooldown > 0 && !opts.ignoreCooldown) return false;
   const weaponId = getEquipped(SLOT_MELEE);
@@ -95,16 +107,14 @@ export function performMeleeSwing(state, opts = {}) {
   const speed = bulletSp.base_speed > 0 ? bulletSp.base_speed : 0;
   const dps = (bulletSp.dps || 0) * (weapon.melee_dps_multiplier || 1);
 
-  const dir = state.player.direction;
+  const swinger = opts.swinger || state.player;
+  const dir = swinger.direction;
   const [vx, vy] = DIR_DELTA[dir] ?? [0, 1];
 
   for (const [ox, oy] of BULLET_OFFSETS) {
     const bullet = {
       id: -(nextBulletId++),
       _spawned: true,
-      // Melee bullets are invisible damage zones — the equipped-weapon
-      // overlay animation in entities.js is the visual swing. Without
-      // this the player sees 5 tiny dots flicker around them every G.
       _invisible: true,
       _vx: vx * speed,
       _vy: vy * speed,
@@ -114,8 +124,8 @@ export function performMeleeSwing(state, opts = {}) {
       is_consumable: false,
       direction: capitalize(dir),
       frame: {
-        x: state.player.tileX + ox,
-        y: state.player.tileY + oy,
+        x: swinger.tileX + ox,
+        y: swinger.tileY + oy,
         w: 1, h: 1,
       },
       dialogues: [],
@@ -126,6 +136,8 @@ export function performMeleeSwing(state, opts = {}) {
   return true;
 }
 
-function swing(state) { performMeleeSwing(state); }
+function swing(state, swinger) {
+  performMeleeSwing(state, { swinger: swinger || state.player });
+}
 
 function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : "Down"; }

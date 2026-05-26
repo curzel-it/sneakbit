@@ -13,6 +13,7 @@ import { getAmmo, removeAmmo } from "./inventory.js";
 import { playSfx } from "./audio.js";
 import { getEquipped, SLOT_RANGED } from "./equipment.js";
 import { matchesAction } from "./keyBindings.js";
+import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
@@ -55,19 +56,29 @@ export function tickShooting(dt) {
 export function tryShoot() {
   const state = stateRef?.();
   if (!state) return;
-  shoot(state);
+  shoot(state, state.player);
 }
 
 function onKey(e) {
   if (e.repeat) return;
-  if (!matchesAction("shoot", e.code)) return;
   const state = stateRef?.();
   if (!state) return;
+  const shooter = pickShooter(state, e.code);
+  if (!shooter) return;
   e.preventDefault();
-  shoot(state);
+  shoot(state, shooter);
 }
 
-function shoot(state) {
+function pickShooter(state, code) {
+  if (isCoopMode()) {
+    if (code === COOP_KEYMAPS[1].shoot) return state.player;
+    if (code === COOP_KEYMAPS[2].shoot) return state.player2 || state.player;
+    return null;
+  }
+  return matchesAction("shoot", code) ? state.player : null;
+}
+
+function shoot(state, shooter) {
   if (cooldown > 0) return;
   const { weapon, bulletId } = resolveRangedWeapon();
   const bulletSp = getSpecies(bulletId);
@@ -76,7 +87,7 @@ function shoot(state) {
   if (!removeAmmo(bulletId, 1)) return;
   cooldown = (weapon?.cooldown_after_use > 0) ? weapon.cooldown_after_use : COOLDOWN;
 
-  const dir = state.player.direction;
+  const dir = shooter.direction;
   const [dx, dy] = DIR_DELTA[dir] ?? DIR_DELTA.down;
   const speed = bulletSp.base_speed > 0 ? bulletSp.base_speed : BULLET_SPEED;
   const lifespan = (weapon?.bullet_lifespan > 0) ? weapon.bullet_lifespan : BULLET_LIFESPAN;
@@ -92,8 +103,8 @@ function shoot(state) {
     is_consumable: false,
     direction: capitalize(dir),
     frame: {
-      x: state.player.tileX + dx,
-      y: state.player.tileY + dy,
+      x: shooter.tileX + dx,
+      y: shooter.tileY + dy,
       w: 1,
       h: 1,
     },
