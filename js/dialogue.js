@@ -74,12 +74,12 @@ export function installDialogue() {
 
 export function isDialogueOpen() { return active !== null; }
 
-export function showDialogue(payload) {
+export function showDialogue(payload, playerIndex = 0) {
   return new Promise((resolve) => {
     const dialogue = isDialogueObject(payload) ? payload : null;
     const rawLines = dialogue ? [dialogue.text] : (Array.isArray(payload) ? payload : [payload]);
     const lines = rawLines.flatMap(splitOnSeparator).map((s) => tr(s));
-    active = { lines, idx: 0, resolve, dialogue };
+    active = { lines, idx: 0, resolve, dialogue, playerIndex: playerIndex | 0 };
     paint();
     root.style.display = "block";
     playSfx("hintReceived", { volume: 0.5 });
@@ -114,23 +114,27 @@ function close() {
   if (!active) return;
   const resolve = active.resolve;
   const dialogue = active.dialogue;
+  const playerIndex = active.playerIndex | 0;
   active = null;
   root.style.display = "none";
-  if (dialogue) handleReward(dialogue);
+  if (dialogue) handleReward(dialogue, playerIndex);
   resolve(dialogue);
 }
 
 // Mark the dialogue as read (gates downstream dialogues) and grant any
-// one-time reward. Mirrors Rust dialogues.rs::handle_reward and
-// storage.rs::set_dialogue_read — key prefix is `dialogue.answer.` so
-// the data files' existing display_conditions resolve correctly.
-function handleReward(d) {
+// one-time reward to the initiating player. Mirrors Rust
+// dialogues.rs::handle_reward and storage.rs::set_dialogue_read — key
+// prefix is `dialogue.answer.` so the data files' existing
+// display_conditions resolve correctly. The reward-collected flag is
+// global (one-shot per dialogue text), but the ammo lands in the
+// initiating player's bucket.
+function handleReward(d, playerIndex) {
   if (d.text) setValue(`dialogue.answer.${d.text}`, 1);
   if (!d.reward) return;
   const rewardKey = `dialogue.reward.${d.text}`;
   if (getValue(rewardKey) === 1) return;
   setValue(rewardKey, 1);
-  addAmmo(d.reward, 1);
+  addAmmo(d.reward, 1, playerIndex | 0);
   const sp = getSpecies(d.reward);
   const name = sp ? tr(sp.name) : String(d.reward);
   const template = tr("dialogue.reward_received");

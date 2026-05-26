@@ -36,7 +36,7 @@ export function installInteract(getState) {
     const dialogue = resolveEntityDialogue(target);
     if (!dialogue) return;
     e.preventDefault();
-    showDialogue(dialogue).then(() => handleAfterDialogue(state.world, target));
+    showDialogue(dialogue, initiator.index | 0).then(() => handleAfterDialogue(state.world, target));
   });
 }
 

@@ -19,7 +19,7 @@
 
 import { isCreativeMode } from "./creativeMode.js";
 import { TILE_SIZE } from "./constants.js";
-import { allSpecies, getSpecies } from "./species.js";
+import { allSpecies, getSpecies, getEntitySheet } from "./species.js";
 import { BIOME, biomeToChar } from "./biomes.js";
 import { CONSTRUCTION, constructionToChar } from "./constructions.js";
 import { buildWorld } from "./world.js";
@@ -27,10 +27,18 @@ import { setupPuzzles } from "./puzzles.js";
 import { setupCutscenes } from "./cutscenes.js";
 import { invalidateWorldCache } from "./data.js";
 import { putBufferedWorld } from "./worldBuffer.js";
+import { getBiomeSheet } from "./biomeSheet.js";
+import { getSprite } from "./assets.js";
+import { tryBuildingPrefab } from "./prefabs.js";
 
 let stateGetter = () => null;
 let canvasEl = null;
 let pickerEl = null;
+let ghostCanvas = null;       // overlay canvas for the ghost-sprite preview
+let ghostCtx = null;
+let ghostRafId = 0;
+let cursorCssX = -1;          // last-known mouse position in CSS pixels
+let cursorCssY = -1;
 let openState = false;
 let selection = null; // { kind: "biome"|"construction"|"species", id, label, char? }
 let painting = false; // mouse held during a tile-paint stroke
@@ -124,6 +132,8 @@ export function openMapEditor() {
   pickerEl.style.display = "block";
   injectStyles();
   populatePicker();
+  ensureGhostCanvas();
+  startGhostLoop();
 }
 
 export function closeMapEditor() {
@@ -132,6 +142,8 @@ export function closeMapEditor() {
   selection = null;
   painting = false;
   if (pickerEl) pickerEl.style.display = "none";
+  stopGhostLoop();
+  if (ghostCanvas) ghostCanvas.style.display = "none";
 }
 
 export function isMapEditorOpen() {
@@ -322,7 +334,14 @@ function onCanvasMouseDown(e) {
 }
 
 function onCanvasMouseMove(e) {
-  if (!openState || !painting) return;
+  if (!openState) return;
+  // Track the cursor for the ghost preview even when we're not in the
+  // middle of a paint stroke — the ghost should follow the cursor
+  // whenever the editor is open and a selection is active.
+  const rect = canvasEl.getBoundingClientRect();
+  cursorCssX = e.clientX - rect.left;
+  cursorCssY = e.clientY - rect.top;
+  if (!painting) return;
   if (!selection || (selection.kind !== "biome" && selection.kind !== "construction")) return;
   const t = canvasEventToTile(e);
   if (!t) return;
@@ -401,10 +420,32 @@ function setConstructionChar(raw, tileX, tileY, ch) {
 
 // Stamp a new entity into raw.entities. NPCs use a 1×2 sprite whose
 // feet land on the cursor — Rust map_editor offsets frame.y by -1 for
-// that. Everything else lands at the cursor's top-left.
+// that. Everything else lands at the cursor's top-left. Buildings get
+// the prefab expansion (door teleporter + auto-generated interior world
+// in the IndexedDB buffer); unknown buildings fall through to the
+// single-entity path.
 function addEntity(raw, tileX, tileY, speciesId) {
   const sp = getSpecies(speciesId);
   if (!sp) return;
+
+  if (sp.entity_type === "Building") {
+    const prefab = tryBuildingPrefab(speciesId, raw.id, tileX, tileY);
+    if (prefab) {
+      raw.entities = raw.entities ?? [];
+      for (const e of prefab.entities) raw.entities.push(e);
+      // Persist each generated interior world to the override buffer so the
+      // door teleporter resolves on first crossing. Fire-and-forget — IDB
+      // writes are async, but the player can't reach the interior faster
+      // than the write commits.
+      for (const interior of prefab.interiorWorlds ?? []) {
+        putBufferedWorld(interior.id, interior).catch((err) => {
+          console.warn("prefabs: failed to buffer interior world", err);
+        });
+      }
+      return;
+    }
+  }
+
   const w = Math.max(1, sp.width || 1);
   const h = Math.max(1, sp.height || 1);
   const isNpc = sp.entity_type === "Npc";
@@ -444,6 +485,132 @@ function rebuildWorld(state) {
       console.warn("creative: buffer flush failed", err);
     });
   }
+}
+
+// Ghost preview overlay: a transparent canvas pinned over the game canvas
+// that draws the current selection's real sprite at the cursor tile,
+// at half opacity. Replaces Rust's red-rectangle placeholder with the
+// actual asset the player will see once they click.
+function ensureGhostCanvas() {
+  if (ghostCanvas) return;
+  ghostCanvas = document.createElement("canvas");
+  ghostCanvas.id = "map-editor-ghost";
+  Object.assign(ghostCanvas.style, {
+    position: "fixed",
+    pointerEvents: "none",
+    imageRendering: "pixelated",
+    zIndex: "5",
+    display: "none",
+  });
+  document.body.appendChild(ghostCanvas);
+  ghostCtx = ghostCanvas.getContext("2d");
+  ghostCtx.imageSmoothingEnabled = false;
+}
+
+function startGhostLoop() {
+  if (ghostRafId) return;
+  const tick = () => {
+    if (!openState) { ghostRafId = 0; return; }
+    drawGhostFrame();
+    ghostRafId = requestAnimationFrame(tick);
+  };
+  ghostRafId = requestAnimationFrame(tick);
+}
+
+function stopGhostLoop() {
+  if (!ghostRafId) return;
+  cancelAnimationFrame(ghostRafId);
+  ghostRafId = 0;
+}
+
+function drawGhostFrame() {
+  if (!canvasEl || !ghostCanvas || !ghostCtx) return;
+  // Mirror the game canvas's bounding rect (CSS) and its drawing-buffer
+  // dimensions every frame so the overlay tracks zoom.js's resizes
+  // without us subscribing to anything.
+  const rect = canvasEl.getBoundingClientRect();
+  if (ghostCanvas.width !== canvasEl.width)   ghostCanvas.width  = canvasEl.width;
+  if (ghostCanvas.height !== canvasEl.height) ghostCanvas.height = canvasEl.height;
+  Object.assign(ghostCanvas.style, {
+    left:   `${rect.left}px`,
+    top:    `${rect.top}px`,
+    width:  `${rect.width}px`,
+    height: `${rect.height}px`,
+  });
+  ghostCtx.clearRect(0, 0, ghostCanvas.width, ghostCanvas.height);
+
+  const state = stateGetter();
+  if (!state?.world || !selection) { ghostCanvas.style.display = "none"; return; }
+  if (cursorCssX < 0 || cursorCssY < 0) { ghostCanvas.style.display = "none"; return; }
+
+  // CSS-pixel cursor → drawing-buffer pixel → tile.
+  const bx = (cursorCssX / rect.width)  * canvasEl.width;
+  const by = (cursorCssY / rect.height) * canvasEl.height;
+  const ox = Math.round(-state.camera.x * TILE_SIZE);
+  const oy = Math.round(-state.camera.y * TILE_SIZE);
+  const tileX = Math.floor((bx - ox) / TILE_SIZE);
+  const tileY = Math.floor((by - oy) / TILE_SIZE);
+  if (tileX < 0 || tileY < 0 || tileX >= state.world.cols || tileY >= state.world.rows) {
+    ghostCanvas.style.display = "none";
+    return;
+  }
+  ghostCanvas.style.display = "block";
+
+  ghostCtx.save();
+  ghostCtx.globalAlpha = 0.5;
+  try {
+    if (selection.kind === "biome")        drawBiomeGhost(tileX, tileY, ox, oy);
+    else if (selection.kind === "construction") drawConstructionGhost(tileX, tileY, ox, oy);
+    else if (selection.kind === "species") drawSpeciesGhost(tileX, tileY, ox, oy);
+  } catch {
+    // Sprite sheet not yet loaded — skip this frame, the next will retry.
+  }
+  ghostCtx.restore();
+}
+
+function drawBiomeGhost(tileX, tileY, ox, oy) {
+  const sheet = getBiomeSheet();
+  if (!sheet) return;
+  // Column 0 of the composed sheet is the pure base tile; row = biome id
+  // (with the animation frame collapsed to 0 for the preview).
+  const sx = 0;
+  const sy = selection.id * TILE_SIZE;
+  const dx = ox + tileX * TILE_SIZE;
+  const dy = oy + tileY * TILE_SIZE;
+  ghostCtx.drawImage(sheet, sx, sy, TILE_SIZE, TILE_SIZE, dx, dy, TILE_SIZE, TILE_SIZE);
+}
+
+function drawConstructionGhost(tileX, tileY, ox, oy) {
+  const sheet = getSprite("tilesConstructions");
+  if (!sheet) return;
+  // Construction sheet: col = construction id, row 1 = "isolated tile"
+  // pattern from constructionTiles.js (matches what an editor stroke
+  // will render as before neighbors join up).
+  const sx = selection.id * TILE_SIZE;
+  const sy = 1 * TILE_SIZE;
+  const dx = ox + tileX * TILE_SIZE;
+  const dy = oy + tileY * TILE_SIZE;
+  ghostCtx.drawImage(sheet, sx, sy, TILE_SIZE, TILE_SIZE, dx, dy, TILE_SIZE, TILE_SIZE);
+}
+
+function drawSpeciesGhost(tileX, tileY, ox, oy) {
+  const sp = getSpecies(selection.id);
+  if (!sp) return;
+  const sheet = getEntitySheet(sp);
+  if (!sheet) return;
+  // Mirror addEntity's NPC y-offset so the ghost lands where the click
+  // would commit it. Otherwise the preview would float one tile off.
+  const isNpc = sp.entity_type === "Npc";
+  const placeY = isNpc ? tileY - 1 : tileY;
+  const w = Math.max(1, sp.width || 1);
+  const h = Math.max(1, sp.height || 1);
+  const sx = sp.texture_x * TILE_SIZE;
+  const sy = sp.texture_y * TILE_SIZE;
+  const sw = w * TILE_SIZE;
+  const sh = h * TILE_SIZE;
+  const dx = ox + tileX * TILE_SIZE;
+  const dy = oy + placeY * TILE_SIZE;
+  ghostCtx.drawImage(sheet, sx, sy, sw, sh, dx, dy, sw, sh);
 }
 
 function injectStyles() {
