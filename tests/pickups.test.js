@@ -8,7 +8,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadSpeciesData, getSpecies } from "../js/species.js";
 
-const AUTO_PICKUP_TYPES = new Set(["Bundle", "PickableObject"]);
+const AUTO_PICKUP_TYPES = new Set(["Bundle", "PickableObject", "Bullet"]);
 
 function classify(e) {
   const sp = getSpecies(e.species_id);
@@ -21,6 +21,7 @@ function classify(e) {
 loadSpeciesData([
   { id: 50000, entity_type: "Hint", sprite_sheet_id: 1010 },
   { id: 7001,  entity_type: "Bundle", sprite_sheet_id: 1010 },
+  { id: 7000,  entity_type: "Bullet", sprite_sheet_id: 1014 },
   { id: 2000,  entity_type: "PickableObject", sprite_sheet_id: 1012 },
   { id: 1019,  entity_type: "Teleporter", sprite_sheet_id: 1010 },
   { id: 1003,  entity_type: "Building", sprite_sheet_id: 1004 },
@@ -41,6 +42,13 @@ test("bundle classifies as 'pickup' regardless of is_consumable flag", () => {
 
 test("pickable object classifies as 'pickup'", () => {
   assert.equal(classify({ species_id: 2000, is_consumable: false }), "pickup");
+});
+
+test("placed bullet (kunai in world) classifies as 'pickup'", () => {
+  // The HTML port has no shooting yet, so every Bullet in world data is
+  // stationary and acts as a collectible — matches the original engine's
+  // behaviour for bullets with current_speed == 0.
+  assert.equal(classify({ species_id: 7000, is_consumable: false }), "pickup");
 });
 
 test("teleporter is never auto-triggered (transitions.js owns it)", () => {

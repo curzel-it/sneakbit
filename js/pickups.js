@@ -10,7 +10,10 @@ import { showDialogue, resolveEntityDialogue } from "./dialogue.js";
 import { playSfx } from "./audio.js";
 import { getSpecies } from "./species.js";
 
-const AUTO_PICKUP_TYPES = new Set(["Bundle", "PickableObject"]);
+// Bullet is here because in world data, placed Bullets (speed=0) act as
+// stationary collectibles — same rule as the original Rust core. Once we
+// add shooting we'll need to gate this on a moving/stationary flag.
+const AUTO_PICKUP_TYPES = new Set(["Bundle", "PickableObject", "Bullet"]);
 
 export function checkPickup(state) {
   const { world, player } = state;
