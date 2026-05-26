@@ -1,20 +1,20 @@
 // Player ranged attack: press F (or the on-screen knife button) to throw a
 // kunai. We spawn a Bullet entity that travels in the player's facing
-// direction at constant speed; pickups.js leaves player-spawned bullets
-// alone (via the _spawned flag) so the thrown kunai doesn't immediately
-// re-collect itself.
+// direction. pickups.js leaves player-spawned bullets alone (via the
+// _spawned flag) so the thrown kunai doesn't re-collect itself.
 //
-// We don't simulate true collision against walls/entities yet — bullets
-// just fade out when they leave the world bounds or after a max range.
+// Bullet/entity collision is handled in combat.js — here we only spawn
+// bullets and advance them through space. The bullet is removed when it
+// runs out of lifespan or leaves the world bounds; combat.js removes
+// bullets that hit walls or kill targets.
 
 import { getSpecies } from "./species.js";
 import { getAmmo, removeAmmo } from "./inventory.js";
 import { playSfx } from "./audio.js";
 
-// The kunai species id matches the original (game_core/known_species).
 const KUNAI_SPECIES_ID = 7000;
-const BULLET_SPEED = 14;          // tiles/sec
-const BULLET_MAX_TRAVEL = 12;     // tiles before despawn
+const BULLET_SPEED = 9;           // tiles/sec — base_speed of kunai species
+const BULLET_LIFESPAN = 1.6;      // seconds before auto-despawn
 const COOLDOWN = 0.35;            // seconds between throws
 
 const DIR_DELTA = {
@@ -69,16 +69,24 @@ function shoot(state) {
 
   const dir = state.player.direction;
   const [dx, dy] = DIR_DELTA[dir] ?? DIR_DELTA.down;
+  const speed = sp.base_speed > 0 ? sp.base_speed : BULLET_SPEED;
+  // Spawn one tile ahead of the player so the bullet doesn't start
+  // overlapping the player's own hitbox.
   const bullet = {
     id: -(nextBulletId++),
     _spawned: true,
-    _vx: dx * BULLET_SPEED,
-    _vy: dy * BULLET_SPEED,
-    _travelled: 0,
+    _vx: dx * speed,
+    _vy: dy * speed,
+    _lifespan: BULLET_LIFESPAN,
     species_id: KUNAI_SPECIES_ID,
     is_consumable: false,
     direction: capitalize(dir),
-    frame: { x: state.player.tileX, y: state.player.tileY, w: 1, h: 1 },
+    frame: {
+      x: state.player.tileX + dx,
+      y: state.player.tileY + dy,
+      w: 1,
+      h: 1,
+    },
     dialogues: [],
   };
   state.world.entities.push(bullet);
@@ -87,17 +95,18 @@ function shoot(state) {
 
 function advanceBullets(state, dt) {
   const ents = state.world.entities;
+  const world = state.world;
   for (let i = ents.length - 1; i >= 0; i--) {
     const e = ents[i];
     if (!e._spawned) continue;
     const f = e.frame;
     f.x += e._vx * dt;
     f.y += e._vy * dt;
-    e._travelled += Math.hypot(e._vx, e._vy) * dt;
+    e._lifespan -= dt;
     if (
-      e._travelled > BULLET_MAX_TRAVEL ||
+      e._lifespan <= 0 ||
       f.x < -1 || f.y < -1 ||
-      f.x > state.world.cols || f.y > state.world.rows
+      f.x > world.cols || f.y > world.rows
     ) {
       ents.splice(i, 1);
     }

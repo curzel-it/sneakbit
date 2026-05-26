@@ -21,7 +21,8 @@ const PLAYER_Z_INDEX = 15;
 // Directional sheets store 8 rows per sprite:
 //   row 0 Up-moving, row 1 Up-still, row 2 Right-moving, row 3 Right-still,
 //   row 4 Down-moving, row 5 Down-still, row 6 Left-moving, row 7 Left-still.
-const DIR_ROW_STILL = { up: 1, right: 3, down: 5, left: 7 };
+const DIR_ROW_STILL  = { up: 1, right: 3, down: 5, left: 7 };
+const DIR_ROW_MOVING = { up: 0, right: 2, down: 4, left: 6 };
 
 let animClock = 0;
 
@@ -37,6 +38,14 @@ export function drawEntities(ctx, world, camera, player) {
     if (e._isPlayer) drawPlayer(ctx, e._player, camera);
     else draw(ctx, e, camera);
   }
+}
+
+// Decides whether an entity should render its "moving" sprite row.
+// Each AI/owner system tags the entity with a small flag we read here.
+function isEntityMoving(e, sp) {
+  if (sp.entity_type === "Bullet") return !!e._spawned;
+  if (e._ai?.step) return true;
+  return false;
 }
 
 function makePlayerSortItem(player) {
@@ -95,21 +104,16 @@ function draw(ctx, e, camera) {
 
   const { x, y, w, h } = e.frame;
   const frames = Math.max(1, sp.frames);
-  // Animation rules:
-  //   * Directional NPCs we don't yet simulate movement for stay on the
-  //     "still" row (frame 0) of their facing direction.
-  //   * Stationary Bullets (placed kunai in world data) keep frame 0; they
-  //     only spin when actually flying — once shooting lands, in-flight
-  //     bullets will animate per-frame.
-  //   * Other multi-frame sprites cycle on the global anim clock.
   let frame = 0;
   let dirRow = 0;
+  const moving = isEntityMoving(e, sp);
   if (sp.directional) {
-    dirRow = DIR_ROW_STILL[(e.direction || "down").toLowerCase()] ?? DIR_ROW_STILL.down;
-  } else if (sp.entity_type === "Bullet") {
-    // Player-thrown bullets carry _spawned and spin while flying; placed
-    // bullets in world data sit on frame 0.
-    if (e._spawned && frames > 1) frame = Math.floor(animClock * ANIMATIONS_FPS) % frames;
+    const dirKey = (e.direction || "down").toLowerCase();
+    const table = moving ? DIR_ROW_MOVING : DIR_ROW_STILL;
+    dirRow = table[dirKey] ?? DIR_ROW_STILL.down;
+    if (moving && frames > 1) {
+      frame = Math.floor(animClock * ANIMATIONS_FPS) % frames;
+    }
   } else if (frames > 1) {
     frame = Math.floor(animClock * ANIMATIONS_FPS) % frames;
   }

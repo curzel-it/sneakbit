@@ -4,8 +4,6 @@
 
 import { getSprite } from "./assets.js";
 import {
-  SPRITE_SHEET_BIOME_TILES,
-  SPRITE_SHEET_CONSTRUCTION_TILES,
   SPRITE_SHEET_BUILDINGS,
   SPRITE_SHEET_HUMANOIDS_1X2,
   SPRITE_SHEET_STATIC_OBJECTS,
@@ -54,7 +52,6 @@ export function getDefaultDirection(species) {
 
 function decorate(raw) {
   const f = raw.sprite_frame ?? { x: 0, y: 0, w: 1, h: 1 };
-  const directional = isDirectional(raw);
   return {
     id: raw.id,
     name: raw.name,
@@ -65,17 +62,30 @@ function decorate(raw) {
     width: f.w,
     height: f.h,
     frames: raw.sprite_number_of_frames ?? 1,
-    directional,
+    directional: supportsDirections(raw.sprite_sheet_id),
     z_index: raw.z_index ?? 0,
     is_rigid: raw.is_rigid ?? false,
     base_speed: raw.base_speed ?? 0,
+    hp: raw.hp ?? 100,
+    dps: raw.dps ?? 0,
+    movement_directions: raw.movement_directions ?? "None",
+    melee_attacks_hero: !!raw.melee_attacks_hero,
     bundle_contents: raw.bundle_contents ?? null,
     inventory_texture_offset: raw.inventory_texture_offset ?? null,
   };
 }
 
-function isDirectional(raw) {
-  // Hero + walking NPCs animate per direction (rows of 4 frames each).
-  const md = raw.movement_directions;
-  return raw.entity_type === "Hero" || md === "Keyboard" || md === "Walks";
+// Mirrors the original's `supports_directions(sheet_id)`: any sprite on
+// one of these sheets has 8 rows (4 directions × moving/still).
+const DIRECTIONAL_SHEETS = new Set([
+  SPRITE_SHEET_HUMANOIDS_1X1,
+  SPRITE_SHEET_HUMANOIDS_1X2,
+  SPRITE_SHEET_HUMANOIDS_2X2,
+  SPRITE_SHEET_MONSTERS,
+  SPRITE_SHEET_HEROES,
+  SPRITE_SHEET_WEAPONS,
+]);
+
+function supportsDirections(sheetId) {
+  return DIRECTIONAL_SHEETS.has(sheetId);
 }

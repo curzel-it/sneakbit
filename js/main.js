@@ -1,6 +1,6 @@
 // Entry point. Wires features together; holds no game logic itself.
 
-import { STARTING_WORLD_ID } from "./constants.js";
+import { STARTING_WORLD_ID, STARTING_SPAWN } from "./constants.js";
 import { loadAssets } from "./assets.js";
 import { loadSpecies, loadStrings, loadWorld } from "./data.js";
 import { loadStringsData } from "./strings.js";
@@ -28,6 +28,10 @@ import { installTouchControls } from "./touch.js";
 import { installToast } from "./toast.js";
 import { installShooting, tickShooting } from "./shooting.js";
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js";
+import { tickMobs } from "./mobs.js";
+import { tickCombat } from "./combat.js";
+import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
+import { installHealthHud } from "./healthHud.js";
 
 async function main() {
   initInput();
@@ -72,6 +76,7 @@ async function main() {
   installInteract(() => state);
   installShooting(() => state);
   installAmmoHud();
+  installHealthHud();
   if (state.world.soundtrack) playTrack(state.world.soundtrack);
 
   startGameLoop((dt) => {
@@ -81,6 +86,10 @@ async function main() {
       updatePlayer(state.player, input, dt, state.world);
       maybeTeleport(state);
       tickShooting(dt);
+      tickMobs(state.world, state.player, dt);
+      tickCombat(state.world, state.player, dt);
+      tickPlayerHealth(dt);
+      if (isPlayerDead()) handleDeath(state);
     }
     updateCamera(state.camera, state.player, state.world);
     tickBiomeAnimation(biomeAnim, dt);
@@ -105,6 +114,23 @@ function snapToEntry(player, world) {
   y = Math.max(0, Math.min(world.rows - 1, y));
   player.tileX = x; player.tileY = y;
   player.x = x; player.y = y;
+}
+
+let dying = false;
+function handleDeath(state) {
+  if (dying) return;
+  dying = true;
+  playSfxOnce("gameOver");
+  const dest = { world: STARTING_WORLD_ID, x: STARTING_SPAWN.x, y: STARTING_SPAWN.y, direction: "Down" };
+  travelTo(state, dest).then(() => {
+    resetPlayerHealth();
+    dying = false;
+  });
+}
+
+function playSfxOnce(name) {
+  // Lazy import to avoid a hard cross-feature dependency at the top.
+  import("./audio.js").then(m => m.playSfx(name)).catch(() => {});
 }
 
 function maybeTeleport(state) {
