@@ -11,6 +11,7 @@ import { APP_VERSION } from "./constants.js";
 import { clearProgress } from "./save.js";
 import { getSkills } from "./skills.js";
 import { renderInventoryInto } from "./inventoryScreen.js";
+import { isCreativeMode } from "./creativeMode.js";
 
 let root = null;
 let open = false;
@@ -28,8 +29,8 @@ export function installMenu() {
         <button id="menu-open-inventory">Inventory &amp; Equipment</button>
         <button id="menu-open-skills">Skills</button>
         <button id="menu-open-settings">Settings</button>
-        <button id="menu-export-save">Export save (copy JSON)</button>
-        <button id="menu-import-save">Import save (paste JSON)</button>
+        <button id="menu-export-save" data-creative-only>Export save (copy JSON)</button>
+        <button id="menu-import-save" data-creative-only>Import save (paste JSON)</button>
         <button id="menu-open-credits">Credits</button>
         <button id="menu-new-game">New game (wipe save)</button>
         <button id="menu-clear-cache">Clear cache &amp; reload</button>
@@ -114,6 +115,7 @@ export function installMenu() {
   document.body.appendChild(root);
   injectStyles();
   bindWidgets();
+  applyCreativeModeVisibility();
 
   window.addEventListener("keydown", (e) => {
     if (e.code !== "Escape" && e.code !== "KeyM") return;
@@ -126,6 +128,18 @@ export function installMenu() {
 }
 
 export function isMenuOpen() { return open; }
+
+// Save export/import are creative-mode-only — they map onto the Rust
+// build's "Save" menu entry (game/src/gameui/game_menu.rs only shows
+// save-related actions when GameMode::Creative). In the regular
+// player-facing build, progress is saved automatically and there's no
+// need to expose JSON blobs.
+function applyCreativeModeVisibility() {
+  const visible = isCreativeMode();
+  root.querySelectorAll("[data-creative-only]").forEach((el) => {
+    el.style.display = visible ? "" : "none";
+  });
+}
 
 function openMenu() {
   open = true;
