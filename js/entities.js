@@ -13,6 +13,7 @@ import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js";
 import { getEntitySheet, getSpecies } from "./species.js";
 import { getSprite } from "./assets.js";
 import { getPlayerSpriteFrame } from "./player.js";
+import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
@@ -67,6 +68,16 @@ function playerZIndex() {
 }
 
 function drawPlayer(ctx, player, camera) {
+  // Equipment overlay z-order mirrors Rust equipment/basics.rs::should_be_over_hero:
+  // facing Up draws weapons in front of the hero (handle/barrel visible past
+  // the shoulder); facing Left/Right/Down draws them behind so the hero's
+  // body occludes the part of the weapon that should be on the far side.
+  const equipInFront = player.direction === "up";
+  if (!equipInFront) {
+    drawEquipment(ctx, player, camera, getEquipped(SLOT_RANGED));
+    drawEquipment(ctx, player, camera, getEquipped(SLOT_MELEE));
+  }
+
   const sheet = getSprite("heroes");
   const frame = getPlayerSpriteFrame(player);
   const sx = frame.x * TILE_SIZE;
@@ -75,6 +86,47 @@ function drawPlayer(ctx, player, camera) {
   const sh = frame.h * TILE_SIZE;
   const px = Math.round((player.x - camera.x) * TILE_SIZE);
   const py = Math.round((player.y - camera.y - 1) * TILE_SIZE);
+  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+
+  if (equipInFront) {
+    drawEquipment(ctx, player, camera, getEquipped(SLOT_RANGED));
+    drawEquipment(ctx, player, camera, getEquipped(SLOT_MELEE));
+  }
+}
+
+// Renders one equipped weapon (sword, AR15, …) overlaid on the player.
+// World offset (-1.5, -2.0) and direction-row selection mirror Rust
+// equipment/basics.rs::update_equipment_position and the standard 8-row
+// directional sprite layout. Skips weapons whose sprite sheet isn't loaded
+// (e.g. the kunai launcher, which has no in-world overlay sprite).
+function drawEquipment(ctx, player, camera, weaponId) {
+  if (!weaponId) return;
+  const sp = getSpecies(weaponId);
+  if (!sp) return;
+  const sheet = getEntitySheet(sp);
+  if (!sheet) return;
+
+  const w = sp.width || 1;
+  const h = sp.height || 1;
+  const dirRow = (player.moving ? DIR_ROW_MOVING : DIR_ROW_STILL)[player.direction]
+    ?? DIR_ROW_STILL.down;
+  const frames = Math.max(1, sp.frames);
+  const frameIdx = player.moving && frames > 1
+    ? Math.floor(animClock * ANIMATIONS_FPS) % frames
+    : 0;
+
+  const sx = (sp.texture_x + frameIdx * w) * TILE_SIZE;
+  const sy = (sp.texture_y + dirRow * h) * TILE_SIZE;
+  const sw = w * TILE_SIZE;
+  const sh = h * TILE_SIZE;
+
+  // Player's top-left in world coords is (player.x, player.y - 1) because
+  // the hero is a 1×2 sprite with feet at (x, y). Equipment frame is offset
+  // (-1.5, -1.0) from that.
+  const wx = player.x - 1.5;
+  const wy = player.y - 2.0;
+  const px = Math.round((wx - camera.x) * TILE_SIZE);
+  const py = Math.round((wy - camera.y) * TILE_SIZE);
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 }
 
