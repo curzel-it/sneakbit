@@ -45,9 +45,11 @@ import { setupPuzzles, tickPuzzles } from "./puzzles.js";
 import { setupCutscenes, tickCutscenes } from "./cutscenes.js";
 import { tickTrails } from "./trails.js";
 import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js";
+import { runMigrations } from "./migrations.js";
 
 async function main() {
   showLoadingScreen(5); // assets + species + strings + world + biome sheet bake
+  runMigrations();
   initInput();
   loadSettings();
   loadAudio();
