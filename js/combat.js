@@ -62,7 +62,7 @@ function resolveBullets(world, player, dt) {
       if (!tsp || !isBulletTarget(tsp)) continue;
       if (!rectsOverlap(hitbox, entityHittable(t, tsp))) continue;
 
-      const dps = bsp.dps || 0;
+      const dps = (b._dpsOverride != null ? b._dpsOverride : bsp.dps) || 0;
       t._hp = (t._hp ?? tsp.hp ?? 100) - dps * dmgMul * dt;
       if (t._hp <= 0) {
         playSfx("deathMonster");

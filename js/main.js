@@ -27,9 +27,11 @@ import { installMusic, playTrack } from "./music.js";
 import { installTouchControls } from "./touch.js";
 import { installToast } from "./toast.js";
 import { installShooting, tickShooting } from "./shooting.js";
+import { installMelee, tickMelee } from "./melee.js";
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js";
 import { tickMobs } from "./mobs.js";
 import { tickCombat } from "./combat.js";
+import { tickAfterDialogue } from "./afterDialogue.js";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
 import { installHealthHud } from "./healthHud.js";
 
@@ -75,6 +77,7 @@ async function main() {
   installAutoZoom(canvas, state.camera, hud.el);
   installInteract(() => state);
   installShooting(() => state);
+  installMelee(() => state);
   installAmmoHud();
   installHealthHud();
   if (state.world.soundtrack) playTrack(state.world.soundtrack);
@@ -86,8 +89,10 @@ async function main() {
       updatePlayer(state.player, input, dt, state.world);
       maybeTeleport(state);
       tickShooting(dt);
+      tickMelee(dt);
       tickMobs(state.world, state.player, dt);
       tickCombat(state.world, state.player, dt);
+      tickAfterDialogue(state.world, dt);
       tickPlayerHealth(dt);
       if (isPlayerDead()) handleDeath(state);
     }

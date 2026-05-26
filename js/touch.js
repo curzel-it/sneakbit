@@ -7,6 +7,7 @@
 // "touch") is detected so we don't clutter desktop screens.
 
 import { tryShoot } from "./shooting.js";
+import { tryMelee } from "./melee.js";
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 const heldBindings = new Map(); // dir -> pointerId
@@ -26,7 +27,8 @@ export function installTouchControls() {
       <button class="touch-btn" data-dir="down">▼</button>
     </div>
     <div class="touch-pad" data-side="right">
-      <button class="touch-btn touch-action touch-throw"   data-action="throw">✦</button>
+      <button class="touch-btn touch-action touch-melee"    data-action="melee">⚔</button>
+      <button class="touch-btn touch-action touch-throw"    data-action="throw">✦</button>
       <button class="touch-btn touch-action touch-interact" data-action="interact">E</button>
     </div>
   `;
@@ -84,6 +86,8 @@ function onPress(e, btn) {
     // Don't synthesise a key event — shooting.js owns its own cooldown
     // and we want a single shot per tap, not a held-key auto-repeat.
     tryShoot();
+  } else if (action === "melee") {
+    tryMelee();
   }
 }
 

@@ -11,11 +11,21 @@
 import { getSpecies } from "./species.js";
 import { getAmmo, removeAmmo } from "./inventory.js";
 import { playSfx } from "./audio.js";
+import { getEquipped, SLOT_RANGED } from "./equipment.js";
 
-const KUNAI_SPECIES_ID = 7000;
-const BULLET_SPEED = 9;           // tiles/sec — base_speed of kunai species
-const BULLET_LIFESPAN = 1.6;      // seconds before auto-despawn
-const COOLDOWN = 0.35;            // seconds between throws
+const KUNAI_BULLET_SPECIES_ID = 7000;
+const BULLET_SPEED = 9;           // fallback: kunai base_speed
+const BULLET_LIFESPAN = 1.6;      // fallback when species lifespan missing
+const COOLDOWN = 0.35;            // fallback when weapon.cooldown_after_use==0
+
+// Maps Rust EquipmentUsageSoundEffect → audio.js sfx names.
+const SFX_FOR_USAGE = {
+  SwordSlash:  "swordSlash",
+  GunShot:     "gunShot",
+  LoudGunShot: "loudGunShot",
+  KnifeThrown: "knifeThrown",
+  NoAmmo:      "noAmmo",
+};
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -58,18 +68,17 @@ function onKey(e) {
 
 function shoot(state) {
   if (cooldown > 0) return;
-  const sp = getSpecies(KUNAI_SPECIES_ID);
-  if (!sp) return;
-  if (getAmmo(KUNAI_SPECIES_ID) <= 0) {
-    playSfx("noAmmo");
-    return;
-  }
-  if (!removeAmmo(KUNAI_SPECIES_ID, 1)) return;
-  cooldown = COOLDOWN;
+  const { weapon, bulletId } = resolveRangedWeapon();
+  const bulletSp = getSpecies(bulletId);
+  if (!bulletSp) return;
+  if (getAmmo(bulletId) <= 0) { playSfx("noAmmo"); return; }
+  if (!removeAmmo(bulletId, 1)) return;
+  cooldown = (weapon?.cooldown_after_use > 0) ? weapon.cooldown_after_use : COOLDOWN;
 
   const dir = state.player.direction;
   const [dx, dy] = DIR_DELTA[dir] ?? DIR_DELTA.down;
-  const speed = sp.base_speed > 0 ? sp.base_speed : BULLET_SPEED;
+  const speed = bulletSp.base_speed > 0 ? bulletSp.base_speed : BULLET_SPEED;
+  const lifespan = (weapon?.bullet_lifespan > 0) ? weapon.bullet_lifespan : BULLET_LIFESPAN;
   // Spawn one tile ahead of the player so the bullet doesn't start
   // overlapping the player's own hitbox.
   const bullet = {
@@ -77,8 +86,8 @@ function shoot(state) {
     _spawned: true,
     _vx: dx * speed,
     _vy: dy * speed,
-    _lifespan: BULLET_LIFESPAN,
-    species_id: KUNAI_SPECIES_ID,
+    _lifespan: lifespan,
+    species_id: bulletId,
     is_consumable: false,
     direction: capitalize(dir),
     frame: {
@@ -90,7 +99,19 @@ function shoot(state) {
     dialogues: [],
   };
   state.world.entities.push(bullet);
-  playSfx("knifeThrown");
+  playSfx(SFX_FOR_USAGE[weapon?.equipment_usage_sound_effect] || "knifeThrown");
+}
+
+// Picks the equipped ranged weapon's bullet species, falling back to the
+// kunai bullet so the game keeps working when no species data is loaded
+// (tests) or when equipment storage is empty in an unusual way.
+function resolveRangedWeapon() {
+  const weaponId = getEquipped(SLOT_RANGED);
+  const weapon = weaponId ? getSpecies(weaponId) : null;
+  if (weapon && weapon.entity_type === "WeaponRanged" && weapon.bullet_species_id) {
+    return { weapon, bulletId: weapon.bullet_species_id };
+  }
+  return { weapon: null, bulletId: KUNAI_BULLET_SPECIES_ID };
 }
 
 function advanceBullets(state, dt) {
