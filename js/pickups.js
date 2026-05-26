@@ -85,12 +85,13 @@ function maybeEquipWeapon(pickupSp) {
   const weaponSp = getSpecies(weaponId);
   if (!weaponSp) return;
   let slot = null;
-  if (weaponSp.entity_type === "WeaponMelee")  slot = SLOT_MELEE;
-  if (weaponSp.entity_type === "WeaponRanged") slot = SLOT_RANGED;
+  let hint = "";
+  if (weaponSp.entity_type === "WeaponMelee")  { slot = SLOT_MELEE;  hint = "Press G to swing"; }
+  if (weaponSp.entity_type === "WeaponRanged") { slot = SLOT_RANGED; hint = "Press F to shoot"; }
   if (!slot) return;
   setEquipped(slot, weaponId);
   const name = tr(weaponSp.name) || weaponSp.name || "weapon";
-  showToast(`Equipped: ${name}`, "hint");
+  showToast(`Equipped: ${name}\n${hint}`, "longHint");
 }
 
 // Renders the hint as a toast. For persistent hints (Rust is_consumable=false)

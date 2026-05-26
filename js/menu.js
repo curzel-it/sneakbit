@@ -36,7 +36,7 @@ export function installMenu() {
       </div>
       <p class="menu-hint">
         WASD / arrows to move &middot; E or Enter to interact<br>
-        F to throw a kunai &middot; Esc to toggle menu
+        F to throw a kunai &middot; G to swing melee &middot; Esc to toggle menu
       </p>
       <p class="menu-version">v${APP_VERSION}</p>
     </div>
