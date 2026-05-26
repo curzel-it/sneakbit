@@ -11,6 +11,7 @@ import { showToast } from "./toast.js";
 import { playSfx } from "./audio.js";
 import { getSpecies } from "./species.js";
 import { addAmmo } from "./inventory.js";
+import { getValue, setValue } from "./storage.js";
 
 // Bullet is here because in world data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles
@@ -31,8 +32,13 @@ export function checkPickup(state) {
     const f = e.frame; if (!f) continue;
     if (player.tileX < f.x || player.tileX >= f.x + f.w) continue;
     if (player.tileY < f.y || player.tileY >= f.y + f.h) continue;
-    world.entities.splice(i, 1);
-    trigger(e, kind);
+    if (kind === "hint-persistent") {
+      // Non-consumable hint: show the toast (once per text), don't despawn.
+      triggerHint(e, /* persist */ true);
+    } else {
+      world.entities.splice(i, 1);
+      trigger(e, kind);
+    }
     return;
   }
 }
@@ -41,16 +47,15 @@ function classify(e) {
   const sp = getSpecies(e.species_id);
   if (!sp) return null;
   if (AUTO_PICKUP_TYPES.has(sp.entity_type)) return "pickup";
-  if (sp.entity_type === "Hint" && e.is_consumable) return "hint";
+  if (sp.entity_type === "Hint") {
+    return e.is_consumable ? "hint" : "hint-persistent";
+  }
   return null;
 }
 
 function trigger(e, kind) {
   if (kind === "hint") {
-    const dialogue = resolveEntityDialogue(e);
-    const lines = dialogueLines(dialogue);
-    playSfx("hintReceived");
-    if (lines.length) showToast(lines.join("\n"), "hint");
+    triggerHint(e, /* persist */ false);
     return;
   }
   const sp = getSpecies(e.species_id);
@@ -62,4 +67,22 @@ function trigger(e, kind) {
     addAmmo(e.species_id, 1);
   }
   playSfx("ammoCollected");
+}
+
+// Renders the hint as a toast. For persistent hints (Rust is_consumable=false)
+// we suppress repeats by storing a read-flag under "hint.read.<text>" — same
+// storage key as Rust entities/hint.rs::set_hint_read. The flag persists
+// across reloads so a hint the player has already seen never spams again.
+function triggerHint(e, persist) {
+  const dialogue = resolveEntityDialogue(e);
+  const lines = dialogueLines(dialogue);
+  if (!lines.length) return;
+  const text = lines.join("\n");
+  if (persist) {
+    const key = `hint.read.${text}`;
+    if (getValue(key)) return;
+    setValue(key, 1);
+  }
+  playSfx("hintReceived");
+  showToast(text, "hint");
 }
