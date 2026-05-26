@@ -6,7 +6,7 @@
 // yet — we'll wire that when combat lands). Teleporters are handled in
 // transitions.js so they can fade between worlds.
 
-import { resolveEntityDialogue } from "./dialogue.js";
+import { resolveEntityDialogue, dialogueLines } from "./dialogue.js";
 import { showToast } from "./toast.js";
 import { playSfx } from "./audio.js";
 import { getSpecies } from "./species.js";
@@ -47,9 +47,10 @@ function classify(e) {
 
 function trigger(e, kind) {
   if (kind === "hint") {
-    const lines = resolveEntityDialogue(e);
+    const dialogue = resolveEntityDialogue(e);
+    const lines = dialogueLines(dialogue);
     playSfx("hintReceived");
-    if (lines && lines.length) showToast(lines.join("\n"), "hint");
+    if (lines.length) showToast(lines.join("\n"), "hint");
     return;
   }
   const sp = getSpecies(e.species_id);

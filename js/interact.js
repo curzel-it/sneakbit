@@ -6,6 +6,7 @@
 // player, so the action is discoverable without reading the README.
 
 import { showDialogue, resolveEntityDialogue, isDialogueOpen } from "./dialogue.js";
+import { handleAfterDialogue } from "./afterDialogue.js";
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -28,10 +29,10 @@ export function installInteract(getState) {
     if (!state) return;
     const target = findFacingEntity(state.world, state.player);
     if (!target) return;
-    const lines = resolveEntityDialogue(target);
-    if (!lines) return;
+    const dialogue = resolveEntityDialogue(target);
+    if (!dialogue) return;
     e.preventDefault();
-    showDialogue(lines);
+    showDialogue(dialogue).then(() => handleAfterDialogue(state.world, target));
   });
 }
 

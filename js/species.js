@@ -74,6 +74,12 @@ function decorate(raw) {
     supports_bullet_catching:  !!raw.supports_bullet_catching,
     bundle_contents: raw.bundle_contents ?? null,
     inventory_texture_offset: raw.inventory_texture_offset ?? null,
+    bullet_species_id: raw.bullet_species_id ?? 0,
+    bullet_lifespan: raw.bullet_lifespan ?? 1.5,
+    cooldown_after_use: raw.cooldown_after_use ?? 0,
+    melee_dps_multiplier: raw.melee_dps_multiplier ?? 1,
+    equipment_usage_sound_effect: raw.equipment_usage_sound_effect ?? null,
+    associated_weapon: raw.associated_weapon ?? null,
   };
 }
 
