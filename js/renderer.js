@@ -27,17 +27,26 @@ export function render(renderer, world, camera, player, biomeFrame) {
 }
 
 function drawDarkness(ctx, canvas, world, camera, player) {
-  if (world.lightConditions !== "CantSeeShit") return;
-  const cx = (player.x + 0.5 - camera.x) * TILE_SIZE;
-  const cy = (player.y - camera.y) * TILE_SIZE;
-  const inner = TILE_SIZE * 2.5;
-  const outer = TILE_SIZE * 5.5;
-  const grad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
-  grad.addColorStop(0, "rgba(0,0,0,0)");
-  grad.addColorStop(0.6, "rgba(0,0,0,0.85)");
-  grad.addColorStop(1, "rgba(0,0,0,0.985)");
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if (world.lightConditions === "CantSeeShit") {
+    const cx = (player.x + 0.5 - camera.x) * TILE_SIZE;
+    const cy = (player.y - camera.y) * TILE_SIZE;
+    const inner = TILE_SIZE * 2.5;
+    const outer = TILE_SIZE * 5.5;
+    const grad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
+    grad.addColorStop(0, "rgba(0,0,0,0)");
+    grad.addColorStop(0.6, "rgba(0,0,0,0.85)");
+    grad.addColorStop(1, "rgba(0,0,0,0.985)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    return;
+  }
+  if (world.lightConditions === "Night") {
+    // Flat translucent blue wash for nighttime levels. Less aggressive
+    // than CantSeeShit (no radial mask) — the player can still see the
+    // whole viewport, just with a cool tint.
+    ctx.fillStyle = "rgba(15, 25, 70, 0.45)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
 }
 
 function tileWindow(world, camera) {
