@@ -37,4 +37,3 @@ Each feature lives in exactly one file. A "feature" is a single, self-contained 
 - Cross-feature communication happens through explicit imports of named exports — no globals, no event bus until we genuinely need one.
 - Feature-local constants live in the feature file. Truly cross-cutting constants (tile size, sprite-sheet ids) live in `js/constants.js`.
 - Asset loading is its own feature (`js/assets.js`). Data loading (levels, species) is its own feature (`js/data.js`). Features ask them by name; they never new up `Image` or `fetch` themselves.
-- Keep files short. Past ~150 lines is a smell — look for a sub-feature wanting to escape.
