@@ -17,6 +17,7 @@ import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { getMeleeSwingProgress } from "./melee.js";
 import { pushableRenderOffset } from "./pushables.js";
 import { shouldBeVisible } from "./entityVisibility.js";
+import { isCreativeMode } from "./creativeMode.js";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
@@ -53,6 +54,17 @@ function isEntityMoving(e, sp) {
   if (sp.entity_type === "Bullet") return !!e._spawned;
   if (e._ai?.step) return true;
   return false;
+}
+
+// In creative mode hint signs render from the inventory sheet at their
+// inventory_texture_offset instead of the static_objects placed-sign
+// sprite. Returns null when no re-skin applies.
+function creativeHintReskin(sp) {
+  if (!isCreativeMode()) return null;
+  if (sp?.entity_type !== "Hint") return null;
+  const off = sp.inventory_texture_offset;
+  if (!off) return null;
+  return { row: off[0] | 0, col: off[1] | 0 };
 }
 
 function makePlayerSortItem(player) {
@@ -193,28 +205,43 @@ export function sortingKey(bottom, zIndex, isPushable) {
 
 function draw(ctx, e, camera) {
   const sp = e._species;
-  const sheet = getEntitySheet(sp);
+
+  // Creative-mode hint re-skin: in the Rust core hint signs render from
+  // the inventory sheet at their `inventory_texture_offset` instead of
+  // the placed-sign sprite on static_objects. Same one-off override here.
+  const reskin = creativeHintReskin(sp);
+  const sheet = reskin ? getSprite("inventory") : getEntitySheet(sp);
   if (!sheet) return;
 
   const { x, y, w, h } = e.frame;
-  const frames = Math.max(1, sp.frames);
+  const frames = reskin ? 1 : Math.max(1, sp.frames);
   let frame = 0;
   let dirRow = 0;
   const moving = isEntityMoving(e, sp);
-  if (sp.directional) {
+  if (!reskin && sp.directional) {
     const dirKey = (e.direction || "down").toLowerCase();
     const table = moving ? DIR_ROW_MOVING : DIR_ROW_STILL;
     dirRow = table[dirKey] ?? DIR_ROW_STILL.down;
     if (moving && frames > 1) {
       frame = Math.floor(animClock * ANIMATIONS_FPS) % frames;
     }
-  } else if (frames > 1) {
+  } else if (!reskin && frames > 1) {
     frame = Math.floor(animClock * ANIMATIONS_FPS) % frames;
   }
 
   const offsetX = (e._frameOffsetX | 0);
-  const sx = (sp.texture_x + offsetX + frame * w) * TILE_SIZE;
-  const sy = (sp.texture_y + dirRow * h) * TILE_SIZE;
+  // inventory_texture_offset is [row, col]; everything else uses
+  // texture_x / texture_y (cols, rows).
+  const baseX = reskin ? reskin.col : sp.texture_x;
+  // Teleporters use a different sprite row in non-creative — Rust
+  // setup_teleporter assigns 6 normally and 5 in creative. species.json
+  // ships with the creative row (5), so add +1 for the non-creative
+  // "placed teleporter" art.
+  const teleporterRowShift =
+    !reskin && sp?.entity_type === "Teleporter" && !isCreativeMode() ? 1 : 0;
+  const baseY = reskin ? reskin.row : sp.texture_y + teleporterRowShift;
+  const sx = (baseX + offsetX + frame * w) * TILE_SIZE;
+  const sy = (baseY + dirRow * h) * TILE_SIZE;
   const sw = w * TILE_SIZE;
   const sh = h * TILE_SIZE;
 

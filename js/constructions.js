@@ -139,6 +139,16 @@ export function constructionFromChar(c) {
   return CHAR_TO_CONSTRUCTION[c] ?? CONSTRUCTION.NOTHING;
 }
 
+// Inverse of constructionFromChar. Built lazily from CHAR_TO_CONSTRUCTION
+// so the two stay in sync without duplicating the table.
+const CONSTRUCTION_TO_CHAR = Object.fromEntries(
+  Object.entries(CHAR_TO_CONSTRUCTION).map(([ch, id]) => [id, ch]),
+);
+
+export function constructionToChar(id) {
+  return CONSTRUCTION_TO_CHAR[id] ?? "0";
+}
+
 const NON_OBSTACLE = new Set([
   CONSTRUCTION.NOTHING,
   CONSTRUCTION.TALL_GRASS,

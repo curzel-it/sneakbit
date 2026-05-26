@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { buildWorld, isWalkable, isEntityBlocked } from "../js/world.js";
 import { loadSpeciesData } from "../js/species.js";
+import { _setCreativeModeForTesting } from "../js/creativeMode.js";
 
 loadSpeciesData([
   { id: 1006, entity_type: "Building", is_rigid: true, sprite_sheet_id: 1010,
@@ -10,6 +11,8 @@ loadSpeciesData([
     sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
   { id: 3007, entity_type: "Npc", is_rigid: true, sprite_sheet_id: 1009,
     sprite_frame: { x: 0, y: 0, w: 1, h: 2 } },
+  { id: 2010, entity_type: "Gate", is_rigid: true, sprite_sheet_id: 1010,
+    sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
 ]);
 
 const storage = await import("../js/storage.js");
@@ -110,6 +113,28 @@ test("NPC 1x2 only blocks its feet tile, head tile is walkable", () => {
   // Head row free, feet row blocked.
   assert.equal(isEntityBlocked(w, 1, 1), false);
   assert.equal(isEntityBlocked(w, 1, 2), true);
+});
+
+test("creative mode walks through Building and closed Gate (is_rigid dropped)", () => {
+  storage._resetStorageForTesting();
+  const w = buildWorld({
+    ...TINY,
+    biome_tiles: { sheet_id: 1002, tiles: ["1111","1111","1111","1111"] },
+    construction_tiles: { sheet_id: 1003, tiles: ["0000","0000","0000","0000"] },
+    entities: [
+      { species_id: 1006, frame: { x: 0, y: 0, w: 3, h: 3 } },
+      { id: 5, species_id: 2010, frame: { x: 3, y: 3, w: 1, h: 1 } },
+    ],
+  });
+  // Non-creative: building blocks (0,0); closed gate blocks (3,3).
+  _setCreativeModeForTesting(false);
+  assert.equal(isEntityBlocked(w, 0, 0), true);
+  assert.equal(isEntityBlocked(w, 3, 3), true);
+  // Creative: both pass through.
+  _setCreativeModeForTesting(true);
+  assert.equal(isEntityBlocked(w, 0, 0), false);
+  assert.equal(isEntityBlocked(w, 3, 3), false);
+  _setCreativeModeForTesting(false);
 });
 
 test("entity hidden by display_conditions does not block", () => {

@@ -6,6 +6,7 @@
 
 import { getSpecies } from "./species.js";
 import { isWalkable, isEntityBlocked } from "./world.js";
+import { isCreativeMode } from "./creativeMode.js";
 
 const SLIDE_DURATION = 0.22; // matches player STEP_DURATION in player.js
 
@@ -23,6 +24,11 @@ export function isPushable(entity) {
 
 export function findPushableAt(world, tx, ty) {
   if (!world?.entities) return null;
+  // Creative mode: pushables behave like every other Generic entity —
+  // is_rigid is dropped, so the hero just walks across them instead of
+  // shoving them. Skipping the lookup keeps player.js's pushable carry-
+  // back path inert in creative too.
+  if (isCreativeMode()) return null;
   for (const e of world.entities) {
     if (!isPushable(e)) continue;
     const f = e.frame; if (!f) continue;

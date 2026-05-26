@@ -10,6 +10,7 @@ export const BIOME_NUMBER_OF_FRAMES = 4;
 export const VIEWPORT_TILES_W = 60;
 export const VIEWPORT_TILES_H = 40;
 
+export const SPRITE_SHEET_INVENTORY = 1001;
 export const SPRITE_SHEET_BIOME_TILES = 1002;
 export const SPRITE_SHEET_CONSTRUCTION_TILES = 1003;
 export const SPRITE_SHEET_BUILDINGS = 1004;

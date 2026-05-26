@@ -12,6 +12,7 @@
 
 import { getSpecies } from "./species.js";
 import { isWalkable } from "./world.js";
+import { isCreativeMode } from "./creativeMode.js";
 
 const VISION_TILES = 6;            // chase trigger range (Manhattan)
 const WANDER_PAUSE = 0.9;          // sec idle between wander steps
@@ -34,6 +35,11 @@ const ALL_DIRS = ["up", "down", "left", "right"];
 
 export function tickMobs(world, player, dt) {
   if (!world?.entities) return;
+  // Creative mode freezes every AI-driven entity in place so the level
+  // designer can lay out monsters / NPCs without them wandering off.
+  // Mirrors Rust movement/movement_directions.rs::perform_movement
+  // short-circuiting in creative.
+  if (isCreativeMode()) return;
   // Only tick mobs whose frame overlaps the viewport this frame. Mirrors
   // Rust's update_hitmaps gating: a monster that has wandered off-screen
   // freezes in place. This is gameplay, not just perf — it stops monsters

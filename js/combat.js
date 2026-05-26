@@ -13,6 +13,7 @@ import { applyPlayerDamage, applyPlayerContinuousDamage } from "./playerHealth.j
 import { hasPiercingKnifeSkill, hasBoomerangSkill, hasBulletCatcherSkill } from "./skills.js";
 import { addAmmo } from "./inventory.js";
 import { isExplosive } from "./explosives.js";
+import { isCreativeMode } from "./creativeMode.js";
 
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;
@@ -157,6 +158,10 @@ function bulletOverlapsPlayer(b, player) {
 
 function resolveMeleeMonsters(world, player, dt) {
   if (!player) return;
+  // Creative mode: monsters can be inspected next to the hero without
+  // chewing through HP. Mirrors Rust features/monsters.rs returning
+  // before handle_melee_attack runs.
+  if (isCreativeMode()) return;
   const px = player.x + 0.5;
   const py = player.y + 0.5;
   // Off-screen monsters can't damage the player. Matches Rust's hitmap-

@@ -15,6 +15,8 @@ import { playTrack } from "./music.js";
 import { getWorldCache } from "./worldCache.js";
 import { setupPuzzles } from "./puzzles.js";
 import { setupCutscenes } from "./cutscenes.js";
+import { isCreativeMode } from "./creativeMode.js";
+import { putBufferedWorld } from "./worldBuffer.js";
 
 const TELEPORTER_SPECIES_ID = 1019;
 const FADE_DURATION_MS = 220;
@@ -70,6 +72,15 @@ export async function travelTo(state, destination) {
   busy = true;
   try {
     const sourceWorldId = state.world?.id ?? 0;
+    // Creative mode persists the source world's raw JSON to the
+    // IndexedDB override buffer before we tear down, so map-editor
+    // mutations made on the way out survive the world transition (Rust
+    // engine.save() runs on every teleport in creative). Awaited so the
+    // write actually flushes before we lose the source reference.
+    if (isCreativeMode() && sourceWorldId && state.rawWorld) {
+      try { await putBufferedWorld(sourceWorldId, state.rawWorld); }
+      catch (e) { console.warn("creative: failed to buffer world on teleport", e); }
+    }
     playSfx("worldChange");
     await fadeOut();
     const raw = await loadWorld(destination.world);
@@ -80,6 +91,11 @@ export async function travelTo(state, destination) {
     // first rendered frame is already cheap.
     getWorldCache(world);
     state.world = world;
+    // Keep the raw JSON next to the built world so the creative editor
+    // can mutate it in place and re-run buildWorld() to refresh derived
+    // state. Non-creative play also keeps it around — cheap, and the
+    // save-on-teleport path above is the only consumer.
+    state.rawWorld = raw;
     state.lastTile = { x: state.player.tileX, y: state.player.tileY };
     if (world.soundtrack) playTrack(world.soundtrack);
     const [spawnX, spawnY] = resolveSpawn(world, destination, sourceWorldId);

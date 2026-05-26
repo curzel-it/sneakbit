@@ -47,6 +47,16 @@ export function biomeFromChar(c) {
   return CHAR_TO_BIOME[c] ?? BIOME.NOTHING;
 }
 
+// Inverse of biomeFromChar. Built lazily from CHAR_TO_BIOME so the two
+// stay in sync without duplicating the table.
+const BIOME_TO_CHAR = Object.fromEntries(
+  Object.entries(CHAR_TO_BIOME).map(([ch, id]) => [id, ch]),
+);
+
+export function biomeToChar(id) {
+  return BIOME_TO_CHAR[id] ?? "0";
+}
+
 const LIQUIDS = new Set([BIOME.WATER, BIOME.DARK_WATER, BIOME.LAVA]);
 export function isLiquid(b) { return LIQUIDS.has(b); }
 export function isLightGrass(b) { return b === BIOME.GRASS; }

@@ -8,6 +8,22 @@ import { biomeTextureCol } from "./biomeTiles.js";
 import { constructionTextureRow } from "./constructionTiles.js";
 import { getSpecies } from "./species.js";
 import { shouldBeVisible, entityHittableFrame, rectOverlapsTile } from "./entityVisibility.js";
+import { isCreativeMode } from "./creativeMode.js";
+
+// Entity types that go through Rust's setup_generic — they all have
+// is_rigid forced to false in creative mode. Plus Gate / InverseGate get
+// the same treatment from setup_gate / setup_inverse_gate. Together
+// these cover "walk through anything" in creative.
+const CREATIVE_NON_RIGID_TYPES = new Set([
+  "Building",
+  "StaticObject",
+  "PickableObject",
+  "Bundle",
+  "PushableObject",
+  "Trail",
+  "Gate",
+  "InverseGate",
+]);
 
 export function buildWorld(raw) {
   const biomeChars = raw.biome_tiles.tiles;
@@ -106,6 +122,7 @@ export function isTileSlippery(world, tileX, tileY) {
 export function isEntityBlocked(world, tileX, tileY, opts) {
   if (!world?.entities) return false;
   if (hasEnterableTeleporter(world, tileX, tileY)) return false;
+  const creative = isCreativeMode();
   const ignore = opts?.ignore;
   for (const e of world.entities) {
     if (e === ignore) continue;
@@ -114,6 +131,7 @@ export function isEntityBlocked(world, tileX, tileY, opts) {
     if (!sp) continue;
     if (sp.entity_type === "Teleporter") continue;
     if ((sp.entity_type === "Gate" || sp.entity_type === "InverseGate") && e._open) continue;
+    if (creative && CREATIVE_NON_RIGID_TYPES.has(sp.entity_type)) continue;
     if (!sp.is_rigid && sp.entity_type !== "PushableObject") continue;
     if (!shouldBeVisible(e)) continue;
     const hit = entityHittableFrame(e, sp);

@@ -13,6 +13,7 @@ import {
   SPRITE_SHEET_WEAPONS,
   SPRITE_SHEET_MONSTERS,
   SPRITE_SHEET_HEROES,
+  SPRITE_SHEET_INVENTORY,
 } from "./constants.js";
 
 const SHEET_NAMES = {
@@ -25,6 +26,7 @@ const SHEET_NAMES = {
   [SPRITE_SHEET_ANIMATED_OBJECTS]: "animated_objects",
   [SPRITE_SHEET_WEAPONS]: "weapons",
   [SPRITE_SHEET_MONSTERS]: "monsters",
+  [SPRITE_SHEET_INVENTORY]: "inventory",
 };
 
 const speciesById = new Map();
@@ -38,6 +40,12 @@ export function loadSpeciesData(rawArray) {
 
 export function getSpecies(id) {
   return speciesById.get(id) ?? null;
+}
+
+// Iterator over every loaded species. Used by the creative-mode editor
+// to enumerate stockable items; not in any hot path.
+export function allSpecies() {
+  return Array.from(speciesById.values());
 }
 
 export function getEntitySheet(species) {

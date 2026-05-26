@@ -51,6 +51,7 @@ import { updateVisibleEntities } from "./worldVisibility.js";
 import { isCoopMode } from "./coopMode.js";
 import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js";
 import { runMigrations } from "./migrations.js";
+import { installMapEditor } from "./mapEditor.js";
 
 async function main() {
   showLoadingScreen(5); // assets + species + strings + world + biome sheet bake
@@ -59,7 +60,11 @@ async function main() {
   loadSettings();
   loadAudio();
   const hud = installHud();
-  installMenu();
+  // installMenu accepts a state getter so the creative-mode "Save world"
+  // / "Export world" / "Reset world" actions can read state.rawWorld and
+  // state.world?.id at click time. `state` isn't assigned yet here —
+  // that's fine, the closure resolves it lazily when the user clicks.
+  installMenu(() => state);
   installTransitions();
   installMusic();
   installDialogue();
@@ -114,6 +119,10 @@ async function main() {
   const player2 = isCoopMode() ? makeCoopP2(player, world) : null;
   const state = {
     world,
+    // Creative mode needs the raw JSON kept around — the editor mutates
+    // it directly and re-runs buildWorld(raw) to refresh derived state,
+    // and transitions.js flushes it to IndexedDB on every teleport.
+    rawWorld: worldRaw,
     player,
     player2,
     camera: createCamera(),
@@ -138,6 +147,7 @@ async function main() {
     };
   }
   installAutoZoom(canvas, state.camera, hud.el);
+  installMapEditor(() => state);
   installInteract(() => state);
   installShooting(() => state);
   installMelee(() => state);

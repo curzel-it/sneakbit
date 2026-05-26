@@ -1,12 +1,14 @@
-# Creative Mode — Rust Reference Spec
+# Creative Mode — HTML Spec
 
-A line-by-line inventory of every behavior the Rust core (`C:/dev/sneakbit`) changes when the engine boots into `GameMode::Creative`. The list is sourced from every call site of `is_creative_mode()` and from the menu / map-editor UI that only exists in creative builds.
+A line-by-line inventory of every behavior creative mode changes, originally extracted from the Rust core (`../dev/sneakbit`) and adapted for the HTML port.
 
-Source notes:
+The Rust project is no longer actively developed. **Format parity with the Rust core is an explicit non-goal**: the HTML schema may drift freely. The only round-trip constraint is internal — every world JSON currently in `data/` must load, play, edit, save, and reload cleanly within the HTML port itself.
+
+Source notes (kept as background, since the original Rust source still maps cleanly onto the gates the HTML port needs):
 - `game_core/src/lib.rs::is_creative_mode()` is the single global predicate.
 - `game_core/src/multiplayer/modes.rs::GameMode::Creative = 1` (alongside `RealTimeCoOp`, `TurnBasedPvp`).
-- The desktop build picks the mode from `argv` (`game/src/main.rs`): `cargo run -- creative` flips `GameMode::Creative`, otherwise `GameMode::RealTimeCoOp`.
-- The HTML port must replicate the same predicate but driven by `?creative=true`.
+- The desktop build picked the mode from `argv` (`game/src/main.rs`): `cargo run -- creative` flipped `GameMode::Creative`.
+- The HTML port replicates the same predicate, driven by `?creative=true`.
 
 ## Activation
 
@@ -108,23 +110,85 @@ These are worth listing because they could mislead someone reading the codebase:
 - The save format is the same JSON; creative mode just *also* writes it back on Save/teleport.
 - There is no map-wide undo, multi-tile selection box, or copy/paste — placement is one tile or one entity at a time.
 
+## Authoring & persistence (HTML port)
+
+The browser cannot write to the site's deploy directory, so creative-mode edits live in IndexedDB until the author manually exports them as JSON and commits them back into `./data/`. Three principles drive the design:
+
+1. **No backend.** The site stays a static deploy (`git push` → `curzel.it/sneakbit-html`). Adding a REST API would buy "edit from anywhere" — a feature we don't need, since the map editor is desktop-only — at the cost of hosting, auth, CORS, and an online dependency.
+2. **Worlds are already static files.** `js/data.js::loadWorld(id)` fetches `./data/{id}.json`. Creative mode hooks that path; it doesn't replace it.
+3. **Existing world JSONs must round-trip.** Every file in `./data/` today must load, play, be editable, be saved, and reload cleanly under the new persistence layer. The format on disk can evolve (Rust parity is dropped), but the existing corpus is the regression bar.
+
+### Load path
+
+`loadWorld(id)` consults the creative override store first, then falls back to the shipped static JSON:
+
+1. If creative mode is on AND an IndexedDB entry exists for `world:<id>`, return it.
+2. Otherwise fetch `./data/{id}.json` as today.
+
+In non-creative play the override store is ignored entirely (players never see author edits-in-progress).
+
+### Edit model: edit-then-rebuild
+
+The runtime world (`world.js::buildWorld(raw)`) derives heavy precomputed state — `biomeCol`, `constructionRow`, `collision`, cloned `entities`, etc. — from the compact source schema (tile grids are *strings of single-character codes*, not 2D arrays). Editing the derived state and trying to re-encode it on export is fragile.
+
+Instead: **the creative editor mutates a kept-around copy of the `raw` JSON, then re-runs `buildWorld(raw)` to refresh the derived state.** The performance cost (full rebuild on each placement) is fine for an authoring tool that's not in the hot path. The benefit is that whatever is in IndexedDB and whatever Export emits is, by construction, the same shape as the shipped files in `./data/`.
+
+`data.js::loadWorld(id)` will return the `raw` JSON as today; the creative editor holds the reference and mutates it directly. Calls to `buildWorld(raw)` come from `main.js` / `worldCache.js`; those keep working unchanged.
+
+### Save path
+
+Creative-mode edits are buffered in IndexedDB, keyed by world id, in a **new module** (`js/worldBuffer.js`) — not in `js/storage.js`, which is localStorage-only and stores u32 integers, not blobs. Three user-facing actions in the creative menu:
+
+- **Export world** — serializes the current `raw` world JSON to a downloadable `{id}.json`. The author drops the file into `./data/` and commits. This is the canonical "ship the edit" path.
+- **Reset world** — clears the IndexedDB entry for the current world, reverting to the shipped JSON on next load. Lets the author throw away an experiment.
+- **(Optional, Chromium-only) Connect repo folder** — uses the File System Access API to remember a directory handle pointing at `./data/`. When set, **Export world** writes the file directly instead of triggering a download. Strictly a quality-of-life nicety for the solo author.
+
+Save-on-teleport (the Rust core's behavior of writing the world out on teleport) maps to "flush the current `raw` to its IndexedDB entry on teleport" — same trigger, just one tier shallower than disk.
+
+### Platform gating
+
+The map editor and its menu entries are **desktop-only**, hidden when `matchMedia("(pointer: coarse)").matches` (same probe `js/touch.js` already uses for the touch overlay). Rationale: the editor is a click-and-drag tool with right-click erase and keyboard shortcuts; a thumb-driven UI for it is out of scope. The `?creative=true` URL flag is still parsed on touch devices (gameplay gates still apply), but the editor and Save/Export menu items simply don't render.
+
 ## HTML port — required behavior summary
 
-For the port to be at parity with Rust's creative mode, the following user-visible features must be implemented (in roughly increasing order of effort):
+For the port to be at feature parity with the old Rust creative mode, the following user-visible features must be implemented (in roughly increasing order of effort). Status as of 2026-05-26.
 
-1. Parse `?creative=true` once at boot; expose `isCreativeMode()` from a single feature file.
-2. Hero speed `× 2` when creative.
-3. Skip `is_limited_visibility` darkness overlay in creative.
-4. Skip monster melee damage in creative (`tickCombat::resolveMeleeMonsters`).
-5. Freeze AI-driven entity movement for everything except the hero in creative (`tickMobs`).
-6. Skip pickup auto-collection (`pickups.js::checkPickup`).
-7. Skip hint-toast trigger (toast-on-walk-over) and re-skin the sign sprite from static-objects sheet to inventory sheet.
-8. Skip the `Disappear` after-dialogue removal in creative.
-9. Treat `Entity::should_be_visible` as always-true (i.e. render every entity regardless of `lock_type`, story flags, etc.).
-10. Drop `is_rigid` on Generic / Gate / InverseGate setups in creative so the hero can walk through everything.
-11. Use the creative teleporter sprite row (`frame.y = 5` vs `6`) and skip locked-teleporter messages.
-12. Gate **save/load (export/import) UI** so it's only visible in creative mode (matches Rust's "save is creative-only" rule).
-13. Add menu entries for `Save` and `MapEditor` only when creative.
-14. Build the map editor itself: stockable grid, click-to-place, right-click-to-erase, drag-paint for tiles, special handling for `Building` (multi-entity) and `Npc` (Y-offset) placements.
+Gameplay gates — each is one branch in the corresponding feature file:
 
-Items 1–3 are trivial. Items 4–11 are gated by one branch each in the corresponding feature file. Item 12 is the only requirement the todo.md explicitly carves out today. Items 13–14 are the largest delta and ship together with the map editor.
+1. ✅ Parse `?creative=true` once at boot; expose `isCreativeMode()` from a single feature file. *(Done — `js/creativeMode.js`.)*
+2. ✅ Hero speed `× 2` when creative. *(Done — `js/player.js::stepDuration`.)*
+3. ✅ Skip `is_limited_visibility` darkness overlay in creative. *(Done — `js/renderer.js::drawDarkness`.)*
+4. ✅ Skip monster melee damage in creative (`tickCombat::resolveMeleeMonsters`). *(Done — `js/combat.js`.)*
+5. ✅ Freeze AI-driven entity movement for everything except the hero in creative (`tickMobs`). *(Done — `js/mobs.js`.)*
+6. ✅ Skip pickup auto-collection (`pickups.js::checkPickup`). *(Done — early-return covers hint-toast suppression too.)*
+7. ✅ Skip hint-toast trigger (toast-on-walk-over) and re-skin the sign sprite from static-objects sheet to inventory sheet. *(Done — toast skip via #6 above; re-skin in `js/entities.js::creativeHintReskin`.)*
+8. ✅ Skip the `Disappear` after-dialogue removal in creative. *(Done — `js/afterDialogue.js`.)*
+9. ✅ Treat `Entity::should_be_visible` as always-true. *(Done — `js/entityVisibility.js::shouldBeVisible`.)*
+10. ✅ Drop `is_rigid` on Generic / Gate / InverseGate setups in creative. *(Done — `js/world.js::isEntityBlocked` short-circuits the listed types; pushables skip via `js/pushables.js::findPushableAt`; player's gate-unlock skip in `js/player.js::canEnter`.)*
+11. ✅ Use the creative teleporter sprite row (`frame.y = 5` vs `6`) and skip locked-teleporter messages. *(Done — sprite row override in `js/entities.js::draw`; the HTML port has no locked-teleporter message path so no skip needed.)*
+
+UI gating:
+
+12. ✅ Gate **save/load (export/import) UI** so it's only visible in creative mode. *(Done — `js/menu.js` `[data-creative-only]` + `applyCreativeModeVisibility`.)*
+13. ✅ Add menu entries for `Save` and `MapEditor` only when creative — AND only on desktop. *(Done — new `[data-desktop-only]` attribute alongside `[data-creative-only]`; `applyCreativeModeVisibility` ANDs the two.)*
+
+Persistence layer (see addendum):
+
+14. ✅ **World override store**: new `js/worldBuffer.js` module backed by IndexedDB. *(Done — `js/data.js::loadWorld` consults the buffer first in creative.)*
+15. ✅ **Save-on-teleport** for creative mode: flush the current `raw` world JSON to its IndexedDB entry whenever the hero crosses a teleporter. *(Done — `js/transitions.js::travelTo` awaits `putBufferedWorld(state.rawWorld)` before tearing down the source world.)*
+16. ✅ **Export world** menu action: download the current `raw` world JSON as `{id}.json`. *(Done — `js/menu.js::exportWorld`.)*
+17. ✅ **Reset world** menu action: clear the IndexedDB entry for the current world. *(Done — `js/menu.js::resetWorld`.)*
+18. (Optional, Chromium-only) **Connect repo folder** via the File System Access API. *(Deferred — quality-of-life only; current Export-world path writes a download.)*
+
+Editor (single feature, several internal pieces):
+
+19. ✅ The map editor itself: stockable grid, click-to-place, right-click-to-erase, drag-paint for tiles. *(Done — `js/mapEditor.js`. NPC placement applies the `-1.0` Y offset. Building-prefab expansion is **deferred**: placing a Building drops a single entity at the cursor instead of expanding to doors / interior teleporter; porting `prefabs::all::new_building` from Rust remains a follow-up.)*
+
+Suggested slicing for first PRs (smallest, most self-contained first):
+
+- **PR 1** — IndexedDB world buffer + `loadWorld` override hook (item 14). No UI yet; verifiable from devtools.
+- **PR 2** — Export / Reset menu actions (items 16, 17). Requires PR 1.
+- **PR 3** — Desktop / creative gating on the new menu entries (item 13).
+- **PR 4** — Save-on-teleport flush (item 15).
+- **PR 5+** — Gameplay gates 2–11, one per commit (cheap, but each touches a feature file that wants its own focused review).
+- **PR N** — The editor itself (item 19), as its own multi-commit effort, prefab expansion included.

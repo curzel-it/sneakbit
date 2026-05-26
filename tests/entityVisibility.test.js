@@ -5,6 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadSpeciesData } from "../js/species.js";
 import { shouldBeVisible, entityHittableFrame, rectOverlapsTile } from "../js/entityVisibility.js";
+import { _setCreativeModeForTesting } from "../js/creativeMode.js";
 
 loadSpeciesData([
   { id: 3007, entity_type: "Npc",  is_rigid: true, sprite_sheet_id: 1009,
@@ -61,6 +62,33 @@ test("shouldBeVisible: item_collected.<id> hides regardless of conditions", () =
   assert.equal(shouldBeVisible(e), true);
   storage.setValue("item_collected.42", 1);
   assert.equal(shouldBeVisible(e), false);
+});
+
+test("shouldBeVisible: creative mode shows everything (even collected / story-hidden)", () => {
+  storage._resetStorageForTesting();
+  // Reproduce the wizard fixture from above — normally hidden until punk
+  // dialogue, then re-hidden after talking to wizard.
+  const wizard = {
+    id: 11887215,
+    species_id: 3007,
+    display_conditions: [
+      { expected_value: 1, key: "dialogue.answer.wizard", visible: false },
+      { expected_value: 1, key: "dialogue.answer.punk",   visible: true  },
+      { expected_value: 0, key: "always",                 visible: false },
+    ],
+  };
+  // Collected item — would normally be hidden.
+  const collected = { id: 99, species_id: 3007, display_conditions: [] };
+  storage.setValue("item_collected.99", 1);
+  // Outside creative the existing visibility rules apply.
+  _setCreativeModeForTesting(false);
+  assert.equal(shouldBeVisible(wizard), false);
+  assert.equal(shouldBeVisible(collected), false);
+  // In creative, both are forced visible.
+  _setCreativeModeForTesting(true);
+  assert.equal(shouldBeVisible(wizard), true);
+  assert.equal(shouldBeVisible(collected), true);
+  _setCreativeModeForTesting(false);
 });
 
 test("entityHittableFrame: 1x2 NPC shrinks to a feet rect", () => {

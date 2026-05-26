@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   BIOME,
   biomeFromChar,
+  biomeToChar,
   biomeIsObstacle,
   biomeIsSame,
   isLiquid,
@@ -44,4 +45,16 @@ test("biomeIsSame treats only grass as the light-grass equivalence class", () =>
   assert.equal(biomeIsSame(BIOME.GRASS, BIOME.DARK_GRASS), false);
   assert.equal(isLightGrass(BIOME.GRASS), true);
   assert.equal(isLightGrass(BIOME.DARK_GRASS), false);
+});
+
+test("biomeToChar round-trips with biomeFromChar for every char in the table", () => {
+  // The creative-mode map editor depends on this round-trip: it reads a
+  // char from raw.biome_tiles.tiles[r][c], translates to an enum id, and
+  // later writes the chosen biome back as a char into the same string.
+  const chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                 "A", "B", "G", "H", "J", "K", "L"];
+  for (const ch of chars) {
+    const id = biomeFromChar(ch);
+    assert.equal(biomeToChar(id), ch, `${ch} → ${id} → expected ${ch}`);
+  }
 });

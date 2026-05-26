@@ -15,6 +15,7 @@ import { getValue, setValue } from "./storage.js";
 import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { tr } from "./strings.js";
 import { shouldBeVisible } from "./entityVisibility.js";
+import { isCreativeMode } from "./creativeMode.js";
 
 // Bullet is here because in world data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles
@@ -27,6 +28,12 @@ const AUTO_PICKUP_TYPES = new Set(["Bundle", "PickableObject", "Bullet"]);
 export function checkPickup(state) {
   const { world, player } = state;
   if (!world.entities) return;
+  // Creative mode never auto-collects: pickups stay on the floor (so
+  // the designer can keep arranging them), and hint signs don't fire
+  // their toast (toast suppression also matches the re-skinned sprite
+  // they get in creative). Mirrors Rust update_pickable_object and
+  // hint handling early-returning in creative.
+  if (isCreativeMode()) return;
   for (let i = 0; i < world.entities.length; i++) {
     const e = world.entities[i];
     if (e._spawned) continue;

@@ -14,9 +14,14 @@
 
 import { getValue, keyMatches } from "./storage.js";
 import { getSpecies } from "./species.js";
+import { isCreativeMode } from "./creativeMode.js";
 
 export function shouldBeVisible(entity) {
   if (!entity) return false;
+  // Creative mode shows every entity, including ones the player would
+  // normally never see (story-flag-hidden NPCs, collected items, etc.).
+  // Mirrors Rust Entity::should_be_visible returning true in creative.
+  if (isCreativeMode()) return true;
   if (entity.id != null && getValue(`item_collected.${entity.id}`) === 1) {
     return false;
   }

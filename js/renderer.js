@@ -6,6 +6,7 @@ import { drawEntities } from "./entities.js";
 import { getWorldCache } from "./worldCache.js";
 import { drawCutscenes } from "./cutscenes.js";
 import { drawTrails } from "./trails.js";
+import { isCreativeMode } from "./creativeMode.js";
 
 export function createRenderer(canvas) {
   const ctx = canvas.getContext("2d");
@@ -49,6 +50,10 @@ function drawWorldLayers(ctx, world, camera, frame) {
 // daylight tint or shader), Night washes the viewport flat blue, and
 // CantSeeShit clamps the player into a small radial cone of vision.
 function drawDarkness(ctx, canvas, world, camera, player) {
+  // Creative mode disables limited visibility entirely — the level
+  // designer needs to see everything regardless of CantSeeShit / Night.
+  // Mirrors Rust lib.rs::is_limited_visibility returning false in creative.
+  if (isCreativeMode()) return;
   if (world.lightConditions === "CantSeeShit") {
     const cx = (player.x + 0.5 - camera.x) * TILE_SIZE;
     const cy = (player.y - camera.y) * TILE_SIZE;

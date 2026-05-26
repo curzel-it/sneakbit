@@ -14,6 +14,8 @@ import { renderInventoryInto } from "./inventoryScreen.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { ACTIONS, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js";
 import { isCoopMode, setCoopMode } from "./coopMode.js";
+import { putBufferedWorld, clearBufferedWorld } from "./worldBuffer.js";
+import { invalidateWorldCache } from "./data.js";
 
 let root = null;
 let open = false;
@@ -21,8 +23,22 @@ let screen = "pause"; // "pause" | "settings" | "skills" | "credits" | "inventor
 // While non-null, we're listening for the next keypress to rebind an
 // action. The captured binding is written via setBinding(action, slot, code).
 let rebindCapture = null; // { action, slot } | null
+// Optional getter the host wires in at install time. Provides access to
+// the live game state (rawWorld + current world id) without coupling the
+// menu module to main.js. Returns null when no state is wired or when
+// installMenu was called without a getter (e.g. early-init / tests).
+let getState = () => null;
 
-export function installMenu() {
+// Desktop-only probe — matches the touch overlay's gate in js/touch.js.
+// Creative-mode editor + Save / Reset / Export are click-and-drag tools
+// that don't have a sensible thumb UI, so we hide them on coarse pointers.
+function isDesktop() {
+  if (typeof matchMedia === "undefined") return true;
+  return !matchMedia("(pointer: coarse)").matches;
+}
+
+export function installMenu(stateGetter) {
+  if (typeof stateGetter === "function") getState = stateGetter;
   if (root) return root;
   root = document.createElement("div");
   root.id = "menu";
@@ -36,6 +52,10 @@ export function installMenu() {
         <button id="menu-open-settings">Settings</button>
         <button id="menu-export-save" data-creative-only>Export save (copy JSON)</button>
         <button id="menu-import-save" data-creative-only>Import save (paste JSON)</button>
+        <button id="menu-save-world" data-creative-only data-desktop-only>Save world (flush to buffer)</button>
+        <button id="menu-export-world" data-creative-only data-desktop-only>Export world JSON…</button>
+        <button id="menu-reset-world" data-creative-only data-desktop-only>Reset world (revert to shipped)</button>
+        <button id="menu-open-map-editor" data-creative-only data-desktop-only>Map editor…</button>
         <button id="menu-open-credits">Credits</button>
         <button id="menu-new-game">New game (wipe save)</button>
         <button id="menu-clear-cache">Clear cache &amp; reload</button>
@@ -164,9 +184,17 @@ export function isMenuOpen() { return open; }
 // need to expose JSON blobs.
 
 function applyCreativeModeVisibility() {
-  const visible = isCreativeMode();
+  const creative = isCreativeMode();
+  const desktop = isDesktop();
+  // Two attributes, ANDed: a [data-creative-only] entry hides outside
+  // creative; [data-desktop-only] additionally hides on coarse-pointer
+  // devices where the click-and-drag editor + Save/Export wouldn't be
+  // usable. Most existing entries only carry [data-creative-only]; the
+  // editor and world-buffer actions carry both.
   root.querySelectorAll("[data-creative-only]").forEach((el) => {
-    el.style.display = visible ? "" : "none";
+    const requiresDesktop = el.hasAttribute("data-desktop-only");
+    const show = creative && (!requiresDesktop || desktop);
+    el.style.display = show ? "" : "none";
   });
 }
 
@@ -288,6 +316,13 @@ function bindWidgets() {
   root.querySelector("#menu-inventory-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-export-save").addEventListener("click", exportSave);
   root.querySelector("#menu-import-save").addEventListener("click", importSave);
+  root.querySelector("#menu-save-world").addEventListener("click", saveWorldNow);
+  root.querySelector("#menu-export-world").addEventListener("click", exportWorld);
+  root.querySelector("#menu-reset-world").addEventListener("click", resetWorld);
+  root.querySelector("#menu-open-map-editor").addEventListener("click", () => {
+    closeMenu();
+    window.creative?.openMapEditor?.();
+  });
   root.querySelector("#menu-new-game").addEventListener("click", () => {
     if (!confirm("Wipe save and start over? Inventory, dialogue progress and unlocked skills will be reset.")) return;
     // Tell main.js's beforeunload listener to stand down — otherwise it
@@ -355,6 +390,63 @@ function syncSettingsWidgets() {
   root.querySelector("#opt-muted").checked = !!s.muted;
   root.querySelector("#opt-fps").checked = !!s.showFps;
   root.querySelector("#opt-coop").checked = isCoopMode();
+}
+
+// Flush the in-memory raw world JSON to the IndexedDB override buffer
+// without leaving the current world. Mirrors the Rust desktop's "Save"
+// menu action — engine.save() writes the current world to disk on
+// demand. Useful between teleports so creative work is durable even if
+// the tab is closed before the next world transition.
+async function saveWorldNow() {
+  const st = getState();
+  const id = st?.world?.id;
+  const raw = st?.rawWorld;
+  if (!id || !raw) { alert("No world is loaded yet."); return; }
+  try {
+    await putBufferedWorld(id, raw);
+    invalidateWorldCache(id);
+    alert(`Saved world ${id} to the creative buffer.`);
+  } catch (e) {
+    alert(`Save failed: ${e?.message ?? "unknown error"}`);
+  }
+}
+
+// Download the current world's raw JSON as `{id}.json`. The author drops
+// the file into ./data/ and commits — that's the canonical "ship the
+// edit" path described in creative-mode-requirements.md.
+function exportWorld() {
+  const st = getState();
+  const id = st?.world?.id;
+  const raw = st?.rawWorld;
+  if (!id || !raw) { alert("No world is loaded yet."); return; }
+  const json = JSON.stringify(raw, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${id}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  // Revoke after a tick — Firefox cancels the download if the URL is
+  // freed before the browser starts streaming the blob.
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// Drop the IndexedDB override for the current world. The next reload
+// (or teleport back) falls through to the shipped ./data/{id}.json.
+async function resetWorld() {
+  const st = getState();
+  const id = st?.world?.id;
+  if (!id) { alert("No world is loaded yet."); return; }
+  if (!confirm(`Reset world ${id} to the shipped version? Any buffered creative edits will be discarded on next reload.`)) return;
+  try {
+    await clearBufferedWorld(id);
+    invalidateWorldCache(id);
+    alert(`Cleared creative buffer for world ${id}. Reload (or teleport in/out) to see the shipped version.`);
+  } catch (e) {
+    alert(`Reset failed: ${e?.message ?? "unknown error"}`);
+  }
 }
 
 // Snapshot every sneakbit.* localStorage key into a JSON blob and try to
