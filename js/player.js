@@ -185,6 +185,28 @@ function startStep(player, dir, world) {
   const toY = player.tileY + dy;
   player.direction = dir;
   if (!canEnter(toX, toY, world, dir)) return;
+
+  // Pushable carry-back: if we're standing ON a pushable (because we
+  // walked onto a stuck one — see canEnter below) and the rock is pinned
+  // on the side OPPOSITE the step we're about to take, drag it along
+  // with us. Mirrors the Rust pushable behaviour in
+  // entities/pushable_object.rs::is_being_pushed_by_player. Without
+  // this, a rock shoved into a dead-end corridor is permanently lost.
+  const standingOn = findPushableAt(world, player.tileX, player.tileY);
+  if (standingOn) {
+    const opp = OPPOSITE_DIR[dir];
+    const [odx, ody] = DIR_DELTA[opp] ?? [0, 0];
+    const oppX = player.tileX + odx;
+    const oppY = player.tileY + ody;
+    const rockPinned =
+      !isWalkable(world, oppX, oppY) ||
+      isEntityBlocked(world, oppX, oppY, { ignore: standingOn });
+    if (rockPinned && canPushableEnter(world, standingOn, toX, toY)) {
+      standingOn.frame.x = toX;
+      standingOn.frame.y = toY;
+    }
+  }
+
   player.step = {
     fromX: player.tileX,
     fromY: player.tileY,
@@ -195,6 +217,14 @@ function startStep(player, dir, world) {
   playSfx("stepTaken", { volume: 0.5, jitter: 0.08 });
 }
 
+const OPPOSITE_DIR = { up: "down", down: "up", left: "right", right: "left" };
+
+function canPushableEnter(world, pushable, tx, ty) {
+  if (!isWalkable(world, tx, ty)) return false;
+  if (isEntityBlocked(world, tx, ty, { ignore: pushable })) return false;
+  return true;
+}
+
 function canEnter(tx, ty, world, dir) {
   // Interior door tiles sit on a NOTHING biome tile — the player is meant
   // to leave through them, so a teleporter on an otherwise-unwalkable tile
@@ -203,10 +233,16 @@ function canEnter(tx, ty, world, dir) {
   const onTeleporter = hasEnterableTeleporter(world, tx, ty);
   if (!onTeleporter && !isWalkable(world, tx, ty)) return false;
   // Pushables: if there's one in front, try to shove it one tile in the
-  // same direction. On success the player steps in; on failure they bounce.
+  // same direction. On success the player steps in. If the push fails
+  // (rock pinned by a wall, gate, water, etc.), the player still walks
+  // ONTO the rock's tile — they share the tile until the player steps
+  // back out, at which point startStep() drags the rock with them
+  // (Rust pushable carry-back). Without that escape hatch a rock shoved
+  // into a 1-wide dead end would be unrecoverable.
   const pushable = findPushableAt(world, tx, ty);
   if (pushable) {
-    return pushOneTile(world, pushable, dir);
+    pushOneTile(world, pushable, dir);
+    return true;
   }
   // Locked gates: if the player has a matching key, consume it and open
   // the gate permanently. Otherwise the gate blocks like any rigid entity.
