@@ -83,6 +83,10 @@ export async function travelTo(state, destination) {
     state.lastTile = { x: state.player.tileX, y: state.player.tileY };
     if (world.soundtrack) playTrack(world.soundtrack);
     const [spawnX, spawnY] = resolveSpawn(world, destination, sourceWorldId);
+    // Mirror Rust world.spawn_point: remember the entry tile so that death
+    // respawn can drop the player back at the door they came in through,
+    // instead of teleporting them all the way to the starting world.
+    world.spawnPoint = { x: spawnX, y: spawnY };
     movePlayerTo(state.player, spawnX, spawnY, destination.direction);
     await fadeIn();
   } finally {
@@ -101,7 +105,8 @@ export async function travelTo(state, destination) {
 // is the Rust frame.y, i.e. the TOP of the 1×2 sprite) must add 1
 // before calling travelTo — main.js::maybeTeleport does this for the
 // in-world teleporter path. The death-respawn path in main.js passes
-// STARTING_SPAWN directly because that constant is already feet-tile.
+// world.spawnPoint, which is already feet-tile (set by travelTo on the
+// previous entry, or seeded by computeEntryTile on initial load).
 function resolveSpawn(world, destination, sourceWorldId) {
   const ox = destination.x ?? 0;
   const oy = destination.y ?? 0;

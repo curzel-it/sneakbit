@@ -102,6 +102,12 @@ async function main() {
   } else if (startId !== STARTING_WORLD_ID) {
     snapToEntry(player, world);
   }
+  // world.spawnPoint mirrors Rust's world.spawn_point: the tile the player
+  // should respawn on after death. This is the world's entry — back
+  // teleporter (or any teleporter) for non-starting worlds, STARTING_SPAWN
+  // for world 1001 — NOT the player's current position (which may be a
+  // mid-dungeon save). transitions.js refreshes this on every travelTo.
+  world.spawnPoint = computeEntryTile(world);
   // In co-op, spawn P2 right next to P1 on the same tile by default — the
   // first move will separate them. Rust co-op uses the same "spawn around
   // hero" rule (game_core/src/worlds/world_setup.rs::spawn_coop_players_around_hero).
@@ -225,6 +231,22 @@ function snapToEntry(player, world) {
   player.x = x; player.y = y;
 }
 
+// Mirrors Rust world_setup::destination_x_y with source=0 (no back-link):
+// 1001 has a hard-coded entry tile, every other world falls back to any
+// teleporter, then to the world centre. Used to seed world.spawnPoint
+// when there's no incoming travelTo to derive it from.
+function computeEntryTile(world) {
+  if (world.id === STARTING_WORLD_ID) {
+    return { x: STARTING_SPAWN.x, y: STARTING_SPAWN.y };
+  }
+  const tele = (world.entities || []).find(e => e.species_id === 1019 && e.frame);
+  if (tele) return { x: tele.frame.x, y: tele.frame.y };
+  return {
+    x: Math.max(0, Math.floor(world.cols / 2)),
+    y: Math.max(0, Math.floor(world.rows / 2)),
+  };
+}
+
 function applySavedSpawn(player, world, saved) {
   const x = Math.max(0, Math.min(world.cols - 1, saved.x));
   const y = Math.max(0, Math.min(world.rows - 1, saved.y));
@@ -238,7 +260,14 @@ function handleDeath(state) {
   if (dying) return;
   dying = true;
   showGameOver(() => {
-    const dest = { world: STARTING_WORLD_ID, x: STARTING_SPAWN.x, y: STARTING_SPAWN.y, direction: "Down" };
+    // Mirror Rust engine.revive(): teleport to the current world's
+    // spawn_point (the door the player came in through), not the global
+    // starting world. travelTo reloads the world fresh so ephemeral
+    // entities reset just like Rust's full teleport reload.
+    const sp = state.world?.spawnPoint
+      ?? { x: STARTING_SPAWN.x, y: STARTING_SPAWN.y };
+    const worldId = state.world?.id ?? STARTING_WORLD_ID;
+    const dest = { world: worldId, x: sp.x, y: sp.y, direction: "Down" };
     travelTo(state, dest).then(() => {
       resetPlayerHealth();
       dying = false;
