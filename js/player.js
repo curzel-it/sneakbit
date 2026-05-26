@@ -17,7 +17,7 @@
 // integer tile and is the source of truth for collision and snapping.
 
 import { ANIMATIONS_FPS, SPRITE_SHEET_HEROES, STARTING_SPAWN } from "./constants.js";
-import { isWalkable, isEntityBlocked, hasEnterableTeleporter, isTileSlippery } from "./world.js";
+import { isWalkable, isEntityBlocked, hasEnterableTeleporter, isTileSlippery } from "./zone.js";
 import { playSfx } from "./audio.js";
 import { findPushableAt, pushOneTile, startSlide } from "./pushables.js";
 import { findGateAt, tryUnlockGate } from "./gateUnlock.js";
@@ -94,9 +94,9 @@ export function createPlayer(opts = {}) {
   };
 }
 
-export function updatePlayer(player, input, dt, world) {
-  if (player.step) advanceStep(player, input, dt, world);
-  else handleIdle(player, input, dt, world);
+export function updatePlayer(player, input, dt, zone) {
+  if (player.step) advanceStep(player, input, dt, zone);
+  else handleIdle(player, input, dt, zone);
   updateAnimation(player, dt);
 }
 
@@ -105,28 +105,28 @@ export function updatePlayer(player, input, dt, world) {
 // state-change is "is the slide blocked? then stop". Returns true if
 // the slippery-slide path consumed this tick and the normal idle logic
 // should be skipped.
-function handleIdleOnIce(player, world) {
+function handleIdleOnIce(player, zone) {
   if (!player._sliding) return false;
   // Try to continue sliding in the same direction. If the next tile is
   // blocked we burn off the slide and become idle there.
   if (canEnter(player.tileX + DIR_DELTA[player.direction][0],
-               player.tileY + DIR_DELTA[player.direction][1], world, player.direction)) {
-    startStep(player, player.direction, world);
+               player.tileY + DIR_DELTA[player.direction][1], zone, player.direction)) {
+    startStep(player, player.direction, zone);
   } else {
     player._sliding = false;
   }
   return true;
 }
 
-function handleIdle(player, input, dt, world) {
-  if (isTileSlippery(world, player.tileX, player.tileY) && handleIdleOnIce(player, world)) return;
+function handleIdle(player, input, dt, zone) {
+  if (isTileSlippery(zone, player.tileX, player.tileY) && handleIdleOnIce(player, zone)) return;
 
   for (const dir of input.events) {
     if (dir === player.direction) {
       // Already facing → commit immediately, clear any pending rotate.
       player.pendingDir = null;
       player.pendingTimer = 0;
-      startStep(player, dir, world);
+      startStep(player, dir, zone);
       if (player.step) return;
     } else {
       // Rotate now, start commit timer.
@@ -147,17 +147,17 @@ function handleIdle(player, input, dt, world) {
         const dir = player.pendingDir;
         player.pendingDir = null;
         player.pendingTimer = 0;
-        startStep(player, dir, world);
+        startStep(player, dir, zone);
       }
     }
   }
 }
 
-function advanceStep(player, input, dt, world) {
+function advanceStep(player, input, dt, zone) {
   // Any press during a step replaces the queued direction (last-wins),
   // EXCEPT while sliding on ice — slippery surfaces commit you to the
   // current direction until you hit a wall.
-  const slidingOnIce = isTileSlippery(world, player.tileX, player.tileY);
+  const slidingOnIce = isTileSlippery(zone, player.tileX, player.tileY);
   if (!slidingOnIce) {
     for (const dir of input.events) player.queuedDir = dir;
   }
@@ -182,7 +182,7 @@ function advanceStep(player, input, dt, world) {
   // If we just landed on (or stayed on) a slippery tile, the next tick
   // will auto-chain in the same direction via handleIdleOnIce. Mark
   // momentum so we don't have to re-derive it.
-  if (isTileSlippery(world, player.tileX, player.tileY)) {
+  if (isTileSlippery(zone, player.tileX, player.tileY)) {
     player._sliding = true;
     return;
   }
@@ -199,16 +199,16 @@ function advanceStep(player, input, dt, world) {
   if (nextDir) {
     // Chain: face and step immediately, no commit delay.
     player.direction = nextDir;
-    startStep(player, nextDir, world);
+    startStep(player, nextDir, zone);
   }
 }
 
-function startStep(player, dir, world) {
+function startStep(player, dir, zone) {
   const [dx, dy] = DIR_DELTA[dir];
   const toX = player.tileX + dx;
   const toY = player.tileY + dy;
   player.direction = dir;
-  if (!canEnter(toX, toY, world, dir)) return;
+  if (!canEnter(toX, toY, zone, dir)) return;
 
   // Pushable carry-back: if we're standing ON a pushable (because we
   // walked onto a stuck one — see canEnter below) and the rock is pinned
@@ -216,16 +216,16 @@ function startStep(player, dir, world) {
   // with us. Mirrors the Rust pushable behaviour in
   // entities/pushable_object.rs::is_being_pushed_by_player. Without
   // this, a rock shoved into a dead-end corridor is permanently lost.
-  const standingOn = findPushableAt(world, player.tileX, player.tileY);
+  const standingOn = findPushableAt(zone, player.tileX, player.tileY);
   if (standingOn) {
     const opp = OPPOSITE_DIR[dir];
     const [odx, ody] = DIR_DELTA[opp] ?? [0, 0];
     const oppX = player.tileX + odx;
     const oppY = player.tileY + ody;
     const rockPinned =
-      !isWalkable(world, oppX, oppY) ||
-      isEntityBlocked(world, oppX, oppY, { ignore: standingOn });
-    if (rockPinned && canPushableEnter(world, standingOn, toX, toY)) {
+      !isWalkable(zone, oppX, oppY) ||
+      isEntityBlocked(zone, oppX, oppY, { ignore: standingOn });
+    if (rockPinned && canPushableEnter(zone, standingOn, toX, toY)) {
       startSlide(standingOn, dx, dy);
       standingOn.frame.x = toX;
       standingOn.frame.y = toY;
@@ -244,19 +244,19 @@ function startStep(player, dir, world) {
 
 const OPPOSITE_DIR = { up: "down", down: "up", left: "right", right: "left" };
 
-function canPushableEnter(world, pushable, tx, ty) {
-  if (!isWalkable(world, tx, ty)) return false;
-  if (isEntityBlocked(world, tx, ty, { ignore: pushable })) return false;
+function canPushableEnter(zone, pushable, tx, ty) {
+  if (!isWalkable(zone, tx, ty)) return false;
+  if (isEntityBlocked(zone, tx, ty, { ignore: pushable })) return false;
   return true;
 }
 
-function canEnter(tx, ty, world, dir) {
+function canEnter(tx, ty, zone, dir) {
   // Interior door tiles sit on a NOTHING biome tile — the player is meant
   // to leave through them, so a teleporter on an otherwise-unwalkable tile
   // overrides the biome obstacle (it already overrides rigid building tiles
   // for entries; same idea in reverse for exits).
-  const onTeleporter = hasEnterableTeleporter(world, tx, ty);
-  if (!onTeleporter && !isWalkable(world, tx, ty)) return false;
+  const onTeleporter = hasEnterableTeleporter(zone, tx, ty);
+  if (!onTeleporter && !isWalkable(zone, tx, ty)) return false;
   // Pushables: if there's one in front, try to shove it one tile in the
   // same direction. On success the player steps in. If the push fails
   // (rock pinned by a wall, gate, water, etc.), the player still walks
@@ -264,9 +264,9 @@ function canEnter(tx, ty, world, dir) {
   // back out, at which point startStep() drags the rock with them
   // (Rust pushable carry-back). Without that escape hatch a rock shoved
   // into a 1-wide dead end would be unrecoverable.
-  const pushable = findPushableAt(world, tx, ty);
+  const pushable = findPushableAt(zone, tx, ty);
   if (pushable) {
-    pushOneTile(world, pushable, dir);
+    pushOneTile(zone, pushable, dir);
     return true;
   }
   // Locked gates: if the player has a matching key, consume it and open
@@ -274,13 +274,13 @@ function canEnter(tx, ty, world, dir) {
   // Creative mode skips the key check entirely — gates are non-rigid in
   // creative (per setup_gate in Rust), so the hero strolls through.
   if (!isCreativeMode()) {
-    const gate = findGateAt(world, tx, ty);
+    const gate = findGateAt(zone, tx, ty);
     if (gate && !gate._open) {
       if (tryUnlockGate(gate)) return true;
       return false;
     }
   }
-  if (isEntityBlocked(world, tx, ty)) return false;
+  if (isEntityBlocked(zone, tx, ty)) return false;
   return true;
 }
 

@@ -5,7 +5,7 @@
 //
 // Bullet/entity collision is handled in combat.js — here we only spawn
 // bullets and advance them through space. The bullet is removed when it
-// runs out of lifespan or leaves the world bounds; combat.js removes
+// runs out of lifespan or leaves the zone bounds; combat.js removes
 // bullets that hit walls or kill targets.
 
 import { getSpecies } from "./species.js";
@@ -115,7 +115,7 @@ function shoot(state, shooter) {
     },
     dialogues: [],
   };
-  state.world.entities.push(bullet);
+  state.zone.entities.push(bullet);
   playSfx(SFX_FOR_USAGE[weapon?.equipment_usage_sound_effect] || "knifeThrown");
 }
 
@@ -132,8 +132,8 @@ function resolveRangedWeapon(playerIndex) {
 }
 
 function advanceBullets(state, dt) {
-  const ents = state.world.entities;
-  const world = state.world;
+  const ents = state.zone.entities;
+  const zone = state.zone;
   for (let i = ents.length - 1; i >= 0; i--) {
     const e = ents[i];
     if (!e._spawned) continue;
@@ -144,7 +144,7 @@ function advanceBullets(state, dt) {
     if (
       e._lifespan <= 0 ||
       f.x < -1 || f.y < -1 ||
-      f.x > world.cols || f.y > world.rows
+      f.x > zone.cols || f.y > zone.rows
     ) {
       ents.splice(i, 1);
     }

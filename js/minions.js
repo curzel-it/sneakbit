@@ -17,13 +17,13 @@ const MAX_SPAWN_DISTANCE = 12;         // line-of-sight cap (Manhattan)
 const DEFAULT_COOLDOWN = 1.5;          // seconds, used if species data omits it
 
 let spawnCounter = 0;
-let nextMinionId = -1_000_000; // negative ids stay clear of world-loaded entity ids
+let nextMinionId = -1_000_000; // negative ids stay clear of zone-loaded entity ids
 
-export function tickMinionSpawning(world, player, dt) {
-  if (!world?.entities || !player) return;
+export function tickMinionSpawning(zone, player, dt) {
+  if (!zone?.entities || !player) return;
   // Only spawn minions for bosses currently on screen — matches Rust's
   // visibility-gated update path. An off-screen boss freezes its cooldown.
-  const list = world.visibleEntities ?? world.entities;
+  const list = zone.visibleEntities ?? zone.entities;
   for (const e of list) {
     if (e.species_id !== BOSS_SPECIES_ID) continue;
     if (e._spawned || e._dying) continue;
@@ -37,7 +37,7 @@ export function tickMinionSpawning(world, player, dt) {
 
     if (!playerInRange(e, player)) continue;
 
-    spawnMinion(world, e, minionSpeciesId);
+    spawnMinion(zone, e, minionSpeciesId);
     const base = sp.cooldown_after_use > 0 ? sp.cooldown_after_use : DEFAULT_COOLDOWN;
     // Match Rust's deterministic random jitter so the cadence isn't a perfect
     // metronome.
@@ -60,7 +60,7 @@ function playerInRange(boss, player) {
   return true;
 }
 
-function spawnMinion(world, boss, minionSpeciesId) {
+function spawnMinion(zone, boss, minionSpeciesId) {
   const f = boss.frame;
   const cx = f.x + (f.w || 1) * 0.5;
   const cy = f.y + (f.h || 1) * 0.5;
@@ -80,7 +80,7 @@ function spawnMinion(world, boss, minionSpeciesId) {
     },
     dialogues: [],
   };
-  world.entities.push(minion);
+  zone.entities.push(minion);
 }
 
 // Test-only hook to reset module state between tests.

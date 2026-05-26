@@ -2,15 +2,15 @@
 //
 // Placing a Building species via the editor should not just drop a single
 // 5x4 sprite — it should expand into a building + door teleporter + a fresh
-// interior world (walls / floor / furniture / back-door). Mirrors Rust's
+// interior zone (walls / floor / furniture / back-door). Mirrors Rust's
 // prefabs::all::new_building dispatch table, adapted to use the HTML port's
-// raw-JSON world format.
+// raw-JSON zone format.
 //
 // Each entry point returns:
-//   { entities, interiorWorlds }
-// where `entities` are appended to the source world's raw.entities and
-// every world in `interiorWorlds` should be persisted via
-// putBufferedWorld(id, raw) so the door teleporter's destination resolves
+//   { entities, interiorZones }
+// where `entities` are appended to the source zone's raw.entities and
+// every zone in `interiorZones` should be persisted via
+// putBufferedZone(id, raw) so the door teleporter's destination resolves
 // when the player walks through it.
 //
 // Returns null when the building species isn't a known prefab — the caller
@@ -33,7 +33,7 @@ const SPECIES_STAIRS_DOWN = 1011;
 // floor extents are all derived from these.
 const HOUSE_INTERIOR_ROWS = 6;
 const HOUSE_INTERIOR_COLUMNS = 10;
-// Interior world tile grid. Rust's bounds = 30×10; the HTML port only
+// Interior zone tile grid. Rust's bounds = 30×10; the HTML port only
 // needs a grid big enough to hold the walls + door cutouts + 1 row of
 // margin below the back door so stepOutOf has somewhere to walk to.
 const INTERIOR_GRID_COLS = 30;
@@ -46,7 +46,7 @@ const HOUSE_IDS       = new Set([1002, 1003, 1004, 1084, 1086, 1087, 1129]);
 const TWO_FLOOR_IDS   = new Set([1005, 1006, 1007, 1085]);
 const SHOP_IDS        = new Set([1070, 1071, 1072]);
 
-// Editor-allocated world ids must stay within int32 because js/storage.js
+// Editor-allocated zone ids must stay within int32 because js/storage.js
 // (saveProgress → setValue → `n | 0`) round-trips numeric values through
 // int32. We pick a base well above any shipped id (shipped tops out near
 // 1.5e7) and add seconds-since-epoch, leaving room for several back-to-
@@ -54,7 +54,7 @@ const SHOP_IDS        = new Set([1070, 1071, 1072]);
 // until ~2038 — long enough to revisit if the port is still alive then.
 const INTERIOR_ID_BASE = 100_000_000; // safely above any shipped id
 let lastInteriorId = 0;
-function nextInteriorWorldId() {
+function nextInteriorZoneId() {
   const stamp = INTERIOR_ID_BASE + Math.floor(Date.now() / 1000);
   const id = Math.max(stamp, lastInteriorId + 1);
   lastInteriorId = id;
@@ -68,13 +68,13 @@ function nextInteriorWorldId() {
 let nextEditorEntityId = -1_000_000;
 function nextEntityId() { return nextEditorEntityId--; }
 
-export function tryBuildingPrefab(speciesId, sourceWorldId, tileX, tileY) {
+export function tryBuildingPrefab(speciesId, sourceZoneId, tileX, tileY) {
   const sp = getSpecies(speciesId);
   if (!sp || sp.entity_type !== "Building") return null;
-  if (SMALL_HOUSE_IDS.has(speciesId)) return smallHouse(sp, sourceWorldId, tileX, tileY);
-  if (HOUSE_IDS.has(speciesId))       return singleFloorHouse(sp, sourceWorldId, tileX, tileY);
-  if (TWO_FLOOR_IDS.has(speciesId))   return twoFloorHouse(sp, sourceWorldId, tileX, tileY);
-  if (SHOP_IDS.has(speciesId))        return shopBuilding(sp, sourceWorldId, tileX, tileY);
+  if (SMALL_HOUSE_IDS.has(speciesId)) return smallHouse(sp, sourceZoneId, tileX, tileY);
+  if (HOUSE_IDS.has(speciesId))       return singleFloorHouse(sp, sourceZoneId, tileX, tileY);
+  if (TWO_FLOOR_IDS.has(speciesId))   return twoFloorHouse(sp, sourceZoneId, tileX, tileY);
+  if (SHOP_IDS.has(speciesId))        return shopBuilding(sp, sourceZoneId, tileX, tileY);
   return null;
 }
 
@@ -94,12 +94,14 @@ function entity(speciesId, x, y, w, h) {
   };
 }
 
-function teleporter(x, y, destWorldId) {
+function teleporter(x, y, destZoneId) {
   const e = entity(SPECIES_TELEPORTER, x, y, 1, 1);
   // (0, 0) is the magic destination value that tells transitions.js to
-  // look up the back-teleporter in the destination world and step out of
+  // look up the back-teleporter in the destination zone and step out of
   // it. Same convention every shipped door uses.
-  e.destination = { world: destWorldId, x: 0, y: 0, direction: "None" };
+  // Raw destination shape matches upstream Rust JSON (`world` field).
+  // buildZone() rewrites it to `.zone` at parse time; runtime reads use `.zone`.
+  e.destination = { world: destZoneId, x: 0, y: 0, direction: "None" };
   return e;
 }
 
@@ -107,10 +109,10 @@ function buildingEntity(sp, tileX, tileY) {
   return entity(sp.id, tileX, tileY, sp.width || 1, sp.height || 1);
 }
 
-function emptyInteriorRaw(worldId) {
+function emptyInteriorRaw(zoneId) {
   const rowOfZeros = "0".repeat(INTERIOR_GRID_COLS);
   return {
-    id: worldId,
+    id: zoneId,
     biome_tiles:        { sheet_id: SPRITE_SHEET_BIOME_TILES,        tiles: Array(INTERIOR_GRID_ROWS).fill(rowOfZeros) },
     construction_tiles: { sheet_id: SPRITE_SHEET_CONSTRUCTION_TILES, tiles: Array(INTERIOR_GRID_ROWS).fill(rowOfZeros) },
     cutscenes: [],
@@ -156,11 +158,11 @@ function paintInteriorShell(interior, doorBackCols) {
   }
 }
 
-function addBackDoors(interior, sourceWorldId) {
+function addBackDoors(interior, sourceZoneId) {
   const x = Math.ceil(HOUSE_INTERIOR_COLUMNS / 2); // 5
   const y = HOUSE_INTERIOR_ROWS + 2;               // 8
-  interior.entities.push(teleporter(x,     y, sourceWorldId));
-  interior.entities.push(teleporter(x + 1, y, sourceWorldId));
+  interior.entities.push(teleporter(x,     y, sourceZoneId));
+  interior.entities.push(teleporter(x + 1, y, sourceZoneId));
   return new Set([x, x + 1]);
 }
 
@@ -172,38 +174,38 @@ function addDefaultFurniture(interior) {
   interior.entities.push(entity(SPECIES_SEAT_GREEN, 2, 6, 1, 1));
 }
 
-function smallHouse(sp, sourceWorldId, tileX, tileY) {
-  const interiorId = nextInteriorWorldId();
+function smallHouse(sp, sourceZoneId, tileX, tileY) {
+  const interiorId = nextInteriorZoneId();
   const interior = emptyInteriorRaw(interiorId);
-  const doorCols = addBackDoors(interior, sourceWorldId);
+  const doorCols = addBackDoors(interior, sourceZoneId);
   paintInteriorShell(interior, doorCols);
   addDefaultFurniture(interior);
 
   const building = buildingEntity(sp, tileX, tileY);
   const w = sp.width || 1;
   const door = teleporter(tileX + Math.ceil(w / 2), tileY + 2, interiorId);
-  return { entities: [building, door], interiorWorlds: [interior] };
+  return { entities: [building, door], interiorZones: [interior] };
 }
 
-function singleFloorHouse(sp, sourceWorldId, tileX, tileY) {
-  const interiorId = nextInteriorWorldId();
+function singleFloorHouse(sp, sourceZoneId, tileX, tileY) {
+  const interiorId = nextInteriorZoneId();
   const interior = emptyInteriorRaw(interiorId);
-  const doorCols = addBackDoors(interior, sourceWorldId);
+  const doorCols = addBackDoors(interior, sourceZoneId);
   paintInteriorShell(interior, doorCols);
   addDefaultFurniture(interior);
 
   const building = buildingEntity(sp, tileX, tileY);
   const w = sp.width || 1;
   const door = teleporter(tileX + Math.ceil(w / 2), tileY + 3, interiorId);
-  return { entities: [building, door], interiorWorlds: [interior] };
+  return { entities: [building, door], interiorZones: [interior] };
 }
 
-function twoFloorHouse(sp, sourceWorldId, tileX, tileY) {
-  const firstFloorId  = nextInteriorWorldId();
-  const secondFloorId = nextInteriorWorldId();
+function twoFloorHouse(sp, sourceZoneId, tileX, tileY) {
+  const firstFloorId  = nextInteriorZoneId();
+  const secondFloorId = nextInteriorZoneId();
 
   const first = emptyInteriorRaw(firstFloorId);
-  const firstDoorCols = addBackDoors(first, sourceWorldId);
+  const firstDoorCols = addBackDoors(first, sourceZoneId);
   paintInteriorShell(first, firstDoorCols);
   addDefaultFurniture(first);
   // Stairs up at the top-right of the floor.
@@ -220,13 +222,13 @@ function twoFloorHouse(sp, sourceWorldId, tileX, tileY) {
   const building = buildingEntity(sp, tileX, tileY);
   const w = sp.width || 1;
   const door = teleporter(tileX + Math.ceil(w / 2), tileY + 4, firstFloorId);
-  return { entities: [building, door], interiorWorlds: [first, second] };
+  return { entities: [building, door], interiorZones: [first, second] };
 }
 
-function shopBuilding(sp, sourceWorldId, tileX, tileY) {
-  const interiorId = nextInteriorWorldId();
+function shopBuilding(sp, sourceZoneId, tileX, tileY) {
+  const interiorId = nextInteriorZoneId();
   const interior = emptyInteriorRaw(interiorId);
-  const doorCols = addBackDoors(interior, sourceWorldId);
+  const doorCols = addBackDoors(interior, sourceZoneId);
   paintInteriorShell(interior, doorCols);
   addDefaultFurniture(interior);
 
@@ -246,5 +248,5 @@ function shopBuilding(sp, sourceWorldId, tileX, tileY) {
   const building = buildingEntity(sp, tileX, tileY);
   const w = sp.width || 1;
   const door = teleporter(tileX + Math.ceil(w / 2), tileY + 3, interiorId);
-  return { entities: [building, door], interiorWorlds: [interior] };
+  return { entities: [building, door], interiorZones: [interior] };
 }

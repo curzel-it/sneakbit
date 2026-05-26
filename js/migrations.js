@@ -16,10 +16,12 @@
 import { getValue, setValue } from "./storage.js";
 
 // Bump on every breaking storage-shape change. Mirror the Rust constant.
-export const BUILD_NUMBER = 2;
+export const BUILD_NUMBER = 3;
 
 const KEY_BUILD = "build_number";
 const LEGACY_INVENTORY_KEY = "sneakbit.inventory.v1";
+const LEGACY_LATEST_WORLD_KEY = "latest_world";
+const CURRENT_LATEST_ZONE_KEY = "latest_zone";
 
 // Ordered list of migrations. Each entry: `to` is the version this
 // migration upgrades the save TO; `run` performs the rewrite. They're
@@ -56,6 +58,19 @@ const MIGRATIONS = [
       // the same shape under the new code, so no rewrite is needed for
       // P1. P2 starts with no overrides — the default kunai launcher
       // fallback kicks in via getEquipped(SLOT_RANGED, 1) on first read.
+    },
+  },
+  {
+    // v3: rename the "world" terminology to "zone". The on-disk progress
+    // key moved from `latest_world` to `latest_zone`. Copy the old value
+    // forward if present, then drop the old key.
+    to: 3,
+    run() {
+      const legacy = getValue(LEGACY_LATEST_WORLD_KEY);
+      if (legacy != null && getValue(CURRENT_LATEST_ZONE_KEY) == null) {
+        setValue(CURRENT_LATEST_ZONE_KEY, legacy);
+      }
+      setValue(LEGACY_LATEST_WORLD_KEY, null);
     },
   },
 ];

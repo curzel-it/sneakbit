@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 import { projectStraight, moveStraight } from "../js/movement.js";
 
-const WORLD = { cols: 10, rows: 10 };
+const ZONE = { cols: 10, rows: 10 };
 
 test("projectStraight moves down at the requested speed for dt seconds", () => {
   const f = { x: 1, y: 1, w: 1, h: 1 };
@@ -21,7 +21,7 @@ test("projectStraight accepts capitalized directions (Rust-style)", () => {
 
 test("moveStraight applies the step in place and returns true", () => {
   const f = { x: 3, y: 3, w: 1, h: 1 };
-  const ok = moveStraight(f, "right", 8, 0.125, WORLD);
+  const ok = moveStraight(f, "right", 8, 0.125, ZONE);
   assert.equal(ok, true);
   assert.equal(f.x, 4);
   assert.equal(f.y, 3);
@@ -29,23 +29,23 @@ test("moveStraight applies the step in place and returns true", () => {
 
 test("moveStraight returns false and leaves frame untouched with zero speed", () => {
   const f = { x: 3, y: 3, w: 1, h: 1 };
-  assert.equal(moveStraight(f, "right", 0, 0.5, WORLD), false);
+  assert.equal(moveStraight(f, "right", 0, 0.5, ZONE), false);
   assert.equal(f.x, 3);
 });
 
 test("moveStraight returns false on 'none' / missing direction", () => {
   const f = { x: 3, y: 3, w: 1, h: 1 };
-  assert.equal(moveStraight(f, "none", 5, 0.1, WORLD), false);
-  assert.equal(moveStraight(f, null,   5, 0.1, WORLD), false);
+  assert.equal(moveStraight(f, "none", 5, 0.1, ZONE), false);
+  assert.equal(moveStraight(f, null,   5, 0.1, ZONE), false);
   assert.equal(f.x, 3);
 });
 
-test("moveStraight refuses to leave the world bounds", () => {
+test("moveStraight refuses to leave the zone bounds", () => {
   const f = { x: 0, y: 0, w: 1, h: 1 };
-  assert.equal(moveStraight(f, "left", 5, 1.0, WORLD), false);
+  assert.equal(moveStraight(f, "left", 5, 1.0, ZONE), false);
   assert.equal(f.x, 0);
 
   const g = { x: 9, y: 9, w: 1, h: 1 };
-  assert.equal(moveStraight(g, "right", 5, 1.0, WORLD), false);
+  assert.equal(moveStraight(g, "right", 5, 1.0, ZONE), false);
   assert.equal(g.x, 9);
 });

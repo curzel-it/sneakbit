@@ -18,7 +18,7 @@ loadSpeciesData([
 
 const { tickMinionSpawning, _resetMinionsForTesting } = await import("../js/minions.js");
 
-function makeWorld(entities) {
+function makeZone(entities) {
   return { id: 1, cols: 30, rows: 30, entities };
 }
 
@@ -27,12 +27,12 @@ test("boss spawns a minion once the cooldown elapses and player is in range", ()
   const boss = { id: 1, species_id: 4008, direction: "Right",
                  frame: { x: 5, y: 5, w: 2, h: 3 } };
   const player = { x: 12, y: 6, tileX: 12, tileY: 6 };
-  const world = makeWorld([boss]);
+  const zone = makeZone([boss]);
 
   // First tick consumes the (initially zero) cooldown and spawns.
-  tickMinionSpawning(world, player, 0.5);
-  assert.equal(world.entities.length, 2);
-  assert.equal(world.entities[1].species_id, 4009);
+  tickMinionSpawning(zone, player, 0.5);
+  assert.equal(zone.entities.length, 2);
+  assert.equal(zone.entities[1].species_id, 4009);
 });
 
 test("no spawn while player is in melee range (< 3.5 tiles centre-to-centre)", () => {
@@ -40,9 +40,9 @@ test("no spawn while player is in melee range (< 3.5 tiles centre-to-centre)", (
   const boss = { id: 1, species_id: 4008, direction: "Down",
                  frame: { x: 5, y: 5, w: 2, h: 3 } };
   const player = { x: 6, y: 7, tileX: 6, tileY: 7 }; // adjacent to boss
-  const world = makeWorld([boss]);
-  tickMinionSpawning(world, player, 1.0);
-  assert.equal(world.entities.length, 1);
+  const zone = makeZone([boss]);
+  tickMinionSpawning(zone, player, 1.0);
+  assert.equal(zone.entities.length, 1);
 });
 
 test("cooldown gates subsequent spawns", () => {
@@ -50,16 +50,16 @@ test("cooldown gates subsequent spawns", () => {
   const boss = { id: 1, species_id: 4008, direction: "Right",
                  frame: { x: 5, y: 5, w: 2, h: 3 } };
   const player = { x: 15, y: 6, tileX: 15, tileY: 6 };
-  const world = makeWorld([boss]);
+  const zone = makeZone([boss]);
 
-  tickMinionSpawning(world, player, 0.1);
-  assert.equal(world.entities.length, 2);
+  tickMinionSpawning(zone, player, 0.1);
+  assert.equal(zone.entities.length, 2);
   // Immediately tick again — the boss should be on cooldown.
-  tickMinionSpawning(world, player, 0.1);
-  assert.equal(world.entities.length, 2);
+  tickMinionSpawning(zone, player, 0.1);
+  assert.equal(zone.entities.length, 2);
   // After enough time the cooldown clears and a second minion spawns.
-  tickMinionSpawning(world, player, 3.0);
-  assert.equal(world.entities.length, 3);
+  tickMinionSpawning(zone, player, 3.0);
+  assert.equal(zone.entities.length, 3);
 });
 
 test("non-boss monsters never spawn minions", () => {
@@ -67,7 +67,7 @@ test("non-boss monsters never spawn minions", () => {
   const other = { id: 1, species_id: 4009, direction: "Right",
                   frame: { x: 5, y: 5, w: 1, h: 1 } };
   const player = { x: 15, y: 6, tileX: 15, tileY: 6 };
-  const world = makeWorld([other]);
-  tickMinionSpawning(world, player, 5.0);
-  assert.equal(world.entities.length, 1);
+  const zone = makeZone([other]);
+  tickMinionSpawning(zone, player, 5.0);
+  assert.equal(zone.entities.length, 1);
 });

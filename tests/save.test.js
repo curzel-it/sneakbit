@@ -5,9 +5,9 @@ const { _resetStorageForTesting } = await import("../js/storage.js");
 const { saveProgress, loadProgress, clearProgress, hasSavedProgress } =
   await import("../js/save.js");
 
-function makeState(worldId, tileX, tileY, direction = "down") {
+function makeState(zoneId, tileX, tileY, direction = "down") {
   return {
-    world: { id: worldId },
+    zone: { id: zoneId },
     player: { tileX, tileY, direction },
   };
 }
@@ -18,11 +18,11 @@ test("loadProgress returns null when no save is present", () => {
   assert.equal(hasSavedProgress(), false);
 });
 
-test("saveProgress round-trips world id + tile + direction", () => {
+test("saveProgress round-trips zone id + tile + direction", () => {
   _resetStorageForTesting();
   saveProgress(makeState(1042, 11, 7, "left"));
   const got = loadProgress();
-  assert.deepEqual(got, { worldId: 1042, x: 11, y: 7, direction: "left" });
+  assert.deepEqual(got, { zoneId: 1042, x: 11, y: 7, direction: "left" });
   assert.equal(hasSavedProgress(), true);
 });
 
@@ -49,10 +49,10 @@ test("clearProgress wipes the save", () => {
   assert.equal(loadProgress(), null);
 });
 
-test("saveProgress is a no-op without world or player", () => {
+test("saveProgress is a no-op without zone or player", () => {
   _resetStorageForTesting();
   saveProgress(null);
   saveProgress({});
-  saveProgress({ world: { id: 1 } });
+  saveProgress({ zone: { id: 1 } });
   assert.equal(loadProgress(), null);
 });

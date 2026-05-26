@@ -19,7 +19,7 @@ function makeRaw() {
   };
 }
 
-function makeWorld(cutsceneRaws) {
+function makeZone(cutsceneRaws) {
   return {
     id: 1,
     cols: 20, rows: 20,
@@ -30,53 +30,53 @@ function makeWorld(cutsceneRaws) {
 
 test("setupCutscenes builds runtime state from raw JSON", () => {
   storage._resetStorageForTesting();
-  const world = makeWorld([makeRaw()]);
-  setupCutscenes(world);
-  assert.equal(world.cutscenes.length, 1);
-  assert.equal(world.cutscenes[0].key, "demo_cutscene");
-  assert.equal(world.cutscenes[0]._isPlaying, false);
-  assert.equal(world.cutscenes[0]._hidden, false);
+  const zone = makeZone([makeRaw()]);
+  setupCutscenes(zone);
+  assert.equal(zone.cutscenes.length, 1);
+  assert.equal(zone.cutscenes[0].key, "demo_cutscene");
+  assert.equal(zone.cutscenes[0]._isPlaying, false);
+  assert.equal(zone.cutscenes[0]._hidden, false);
 });
 
 test("setupCutscenes marks already-played cutscenes hidden", () => {
   storage._resetStorageForTesting();
   storage.setValue("demo_cutscene", 1);
-  const world = makeWorld([makeRaw()]);
-  setupCutscenes(world);
-  assert.equal(world.cutscenes[0]._hidden, true);
+  const zone = makeZone([makeRaw()]);
+  setupCutscenes(zone);
+  assert.equal(zone.cutscenes[0]._hidden, true);
 });
 
 test("tickCutscenes triggers when player steps on trigger tile", () => {
   storage._resetStorageForTesting();
-  const world = makeWorld([makeRaw()]);
-  setupCutscenes(world);
-  tickCutscenes(world, { tileX: 0, tileY: 0 }, 0.05);
-  assert.equal(world.cutscenes[0]._isPlaying, false);
-  tickCutscenes(world, { tileX: 5, tileY: 5 }, 0.05);
-  assert.equal(world.cutscenes[0]._isPlaying, true);
+  const zone = makeZone([makeRaw()]);
+  setupCutscenes(zone);
+  tickCutscenes(zone, { tileX: 0, tileY: 0 }, 0.05);
+  assert.equal(zone.cutscenes[0]._isPlaying, false);
+  tickCutscenes(zone, { tileX: 5, tileY: 5 }, 0.05);
+  assert.equal(zone.cutscenes[0]._isPlaying, true);
 });
 
 test("tickCutscenes finishes after one full play, persists, and spawns on_end entities", () => {
   storage._resetStorageForTesting();
-  const world = makeWorld([makeRaw()]);
-  setupCutscenes(world);
+  const zone = makeZone([makeRaw()]);
+  setupCutscenes(zone);
   // Step on the trigger.
-  tickCutscenes(world, { tileX: 5, tileY: 5 }, 0);
+  tickCutscenes(zone, { tileX: 5, tileY: 5 }, 0);
   // Advance 5 frames worth (number_of_frames in play_sprite).
   const oneSec = 1; // > 5 * (1/ANIMATIONS_FPS)
-  tickCutscenes(world, { tileX: 5, tileY: 5 }, oneSec);
-  assert.equal(world.cutscenes[0]._isPlaying, false);
-  assert.equal(world.cutscenes[0]._hidden, true);
+  tickCutscenes(zone, { tileX: 5, tileY: 5 }, oneSec);
+  assert.equal(zone.cutscenes[0]._isPlaying, false);
+  assert.equal(zone.cutscenes[0]._hidden, true);
   assert.equal(storage.getValue("demo_cutscene"), 1);
-  assert.equal(world.entities.length, 1, "on_end entity inserted");
-  assert.equal(world.entities[0].species_id, 999);
+  assert.equal(zone.entities.length, 1, "on_end entity inserted");
+  assert.equal(zone.entities[0].species_id, 999);
 });
 
-test("tickCutscenes is a no-op when the world has no cutscenes", () => {
+test("tickCutscenes is a no-op when the zone has no cutscenes", () => {
   storage._resetStorageForTesting();
-  const world = makeWorld([]);
-  setupCutscenes(world);
+  const zone = makeZone([]);
+  setupCutscenes(zone);
   // Should not throw.
-  tickCutscenes(world, { tileX: 0, tileY: 0 }, 0.05);
-  assert.equal(world.cutscenes.length, 0);
+  tickCutscenes(zone, { tileX: 0, tileY: 0 }, 0.05);
+  assert.equal(zone.cutscenes.length, 0);
 });

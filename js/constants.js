@@ -23,7 +23,7 @@ export const SPRITE_SHEET_WEAPONS = 1022;
 export const SPRITE_SHEET_MONSTERS = 1023;
 export const SPRITE_SHEET_HEROES = 1024;
 
-export const STARTING_WORLD_ID = 1001;
+export const STARTING_ZONE_ID = 1001;
 export const STARTING_SPAWN = { x: 68, y: 23 };
 
 export const APP_VERSION = "0.4.0";

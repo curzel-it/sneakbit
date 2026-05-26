@@ -14,8 +14,8 @@ import { renderInventoryInto } from "./inventoryScreen.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { ACTIONS, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js";
 import { isCoopMode, setCoopMode } from "./coopMode.js";
-import { putBufferedWorld, clearBufferedWorld } from "./worldBuffer.js";
-import { invalidateWorldCache } from "./data.js";
+import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js";
+import { invalidateZoneCache } from "./data.js";
 
 let root = null;
 let open = false;
@@ -24,7 +24,7 @@ let screen = "pause"; // "pause" | "settings" | "skills" | "credits" | "inventor
 // action. The captured binding is written via setBinding(action, slot, code).
 let rebindCapture = null; // { action, slot } | null
 // Optional getter the host wires in at install time. Provides access to
-// the live game state (rawWorld + current world id) without coupling the
+// the live game state (rawZone + current zone id) without coupling the
 // menu module to main.js. Returns null when no state is wired or when
 // installMenu was called without a getter (e.g. early-init / tests).
 let getState = () => null;
@@ -52,9 +52,9 @@ export function installMenu(stateGetter) {
         <button id="menu-open-settings">Settings</button>
         <button id="menu-export-save" data-creative-only>Export save (copy JSON)</button>
         <button id="menu-import-save" data-creative-only>Import save (paste JSON)</button>
-        <button id="menu-save-world" data-creative-only data-desktop-only>Save world (flush to buffer)</button>
-        <button id="menu-export-world" data-creative-only data-desktop-only>Export world JSON…</button>
-        <button id="menu-reset-world" data-creative-only data-desktop-only>Reset world (revert to shipped)</button>
+        <button id="menu-save-zone" data-creative-only data-desktop-only>Save zone (flush to buffer)</button>
+        <button id="menu-export-zone" data-creative-only data-desktop-only>Export zone JSON…</button>
+        <button id="menu-reset-zone" data-creative-only data-desktop-only>Reset zone (revert to shipped)</button>
         <button id="menu-open-map-editor" data-creative-only data-desktop-only>Map editor…</button>
         <button id="menu-open-credits">Credits</button>
         <button id="menu-new-game">New game (wipe save)</button>
@@ -193,7 +193,7 @@ function applyCreativeModeVisibility() {
   // creative; [data-desktop-only] additionally hides on coarse-pointer
   // devices where the click-and-drag editor + Save/Export wouldn't be
   // usable. Most existing entries only carry [data-creative-only]; the
-  // editor and world-buffer actions carry both.
+  // editor and zone-buffer actions carry both.
   root.querySelectorAll("[data-creative-only]").forEach((el) => {
     const requiresDesktop = el.hasAttribute("data-desktop-only");
     const show = creative && (!requiresDesktop || desktop);
@@ -319,9 +319,9 @@ function bindWidgets() {
   root.querySelector("#menu-inventory-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-export-save").addEventListener("click", exportSave);
   root.querySelector("#menu-import-save").addEventListener("click", importSave);
-  root.querySelector("#menu-save-world").addEventListener("click", saveWorldNow);
-  root.querySelector("#menu-export-world").addEventListener("click", exportWorld);
-  root.querySelector("#menu-reset-world").addEventListener("click", resetWorld);
+  root.querySelector("#menu-save-zone").addEventListener("click", saveZoneNow);
+  root.querySelector("#menu-export-zone").addEventListener("click", exportZone);
+  root.querySelector("#menu-reset-zone").addEventListener("click", resetZone);
   root.querySelector("#menu-open-map-editor").addEventListener("click", () => {
     closeMenu();
     window.creative?.openMapEditor?.();
@@ -329,15 +329,15 @@ function bindWidgets() {
   root.querySelector("#menu-new-game").addEventListener("click", () => {
     if (!confirm("Wipe save and start over? Inventory, dialogue progress and unlocked skills will be reset.")) return;
     // Tell main.js's beforeunload listener to stand down — otherwise it
-    // re-saves the player's current world+tile on top of the cleared
+    // re-saves the player's current zone+tile on top of the cleared
     // payload during the reload, and we'd end up right back where we
     // started.
     try { window.save?.suppressUnloadSave?.(); } catch {}
     try { localStorage.clear(); } catch {}
     clearProgress();
-    // A `?world=X` query overrides saved progress in main.js. After wiping
+    // A `?zone=X` query overrides saved progress in main.js. After wiping
     // the save we also need to drop the URL override or the player would
-    // reload back into the same world at the same tile.
+    // reload back into the same zone at the same tile.
     location.replace(location.pathname);
   });
   root.querySelector("#menu-clear-cache").addEventListener("click", () => {
@@ -399,33 +399,33 @@ function syncSettingsWidgets() {
   root.querySelector("#opt-friendly-fire").checked = !!s.friendlyFire;
 }
 
-// Flush the in-memory raw world JSON to the IndexedDB override buffer
-// without leaving the current world. Mirrors the Rust desktop's "Save"
-// menu action — engine.save() writes the current world to disk on
+// Flush the in-memory raw zone JSON to the IndexedDB override buffer
+// without leaving the current zone. Mirrors the Rust desktop's "Save"
+// menu action — engine.save() writes the current zone to disk on
 // demand. Useful between teleports so creative work is durable even if
-// the tab is closed before the next world transition.
-async function saveWorldNow() {
+// the tab is closed before the next zone transition.
+async function saveZoneNow() {
   const st = getState();
-  const id = st?.world?.id;
-  const raw = st?.rawWorld;
-  if (!id || !raw) { alert("No world is loaded yet."); return; }
+  const id = st?.zone?.id;
+  const raw = st?.rawZone;
+  if (!id || !raw) { alert("No zone is loaded yet."); return; }
   try {
-    await putBufferedWorld(id, raw);
-    invalidateWorldCache(id);
-    alert(`Saved world ${id} to the creative buffer.`);
+    await putBufferedZone(id, raw);
+    invalidateZoneCache(id);
+    alert(`Saved zone ${id} to the creative buffer.`);
   } catch (e) {
     alert(`Save failed: ${e?.message ?? "unknown error"}`);
   }
 }
 
-// Download the current world's raw JSON as `{id}.json`. The author drops
+// Download the current zone's raw JSON as `{id}.json`. The author drops
 // the file into ./data/ and commits — that's the canonical "ship the
 // edit" path described in creative-mode-requirements.md.
-function exportWorld() {
+function exportZone() {
   const st = getState();
-  const id = st?.world?.id;
-  const raw = st?.rawWorld;
-  if (!id || !raw) { alert("No world is loaded yet."); return; }
+  const id = st?.zone?.id;
+  const raw = st?.rawZone;
+  if (!id || !raw) { alert("No zone is loaded yet."); return; }
   const json = JSON.stringify(raw, null, 2);
   const blob = new Blob([json], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -440,17 +440,17 @@ function exportWorld() {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-// Drop the IndexedDB override for the current world. The next reload
+// Drop the IndexedDB override for the current zone. The next reload
 // (or teleport back) falls through to the shipped ./data/{id}.json.
-async function resetWorld() {
+async function resetZone() {
   const st = getState();
-  const id = st?.world?.id;
-  if (!id) { alert("No world is loaded yet."); return; }
-  if (!confirm(`Reset world ${id} to the shipped version? Any buffered creative edits will be discarded on next reload.`)) return;
+  const id = st?.zone?.id;
+  if (!id) { alert("No zone is loaded yet."); return; }
+  if (!confirm(`Reset zone ${id} to the shipped version? Any buffered creative edits will be discarded on next reload.`)) return;
   try {
-    await clearBufferedWorld(id);
-    invalidateWorldCache(id);
-    alert(`Cleared creative buffer for world ${id}. Reload (or teleport in/out) to see the shipped version.`);
+    await clearBufferedZone(id);
+    invalidateZoneCache(id);
+    alert(`Cleared creative buffer for zone ${id}. Reload (or teleport in/out) to see the shipped version.`);
   } catch (e) {
     alert(`Reset failed: ${e?.message ?? "unknown error"}`);
   }

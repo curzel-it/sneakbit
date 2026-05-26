@@ -1,4 +1,4 @@
-// Background music. Tracks live in assets/audio/<name>.mp3 — world JSON
+// Background music. Tracks live in assets/audio/<name>.mp3 — zone JSON
 // names the track without extension. Cross-fades on track change and
 // loops indefinitely.
 //

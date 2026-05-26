@@ -44,8 +44,8 @@ test("pickable object classifies as 'pickup'", () => {
   assert.equal(classify({ species_id: 2000, is_consumable: false }), "pickup");
 });
 
-test("placed bullet (kunai in world) classifies as 'pickup'", () => {
-  // The HTML port has no shooting yet, so every Bullet in world data is
+test("placed bullet (kunai in zone) classifies as 'pickup'", () => {
+  // The HTML port has no shooting yet, so every Bullet in zone data is
   // stationary and acts as a collectible — matches the original engine's
   // behaviour for bullets with current_speed == 0.
   assert.equal(classify({ species_id: 7000, is_consumable: false }), "pickup");

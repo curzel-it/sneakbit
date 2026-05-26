@@ -8,7 +8,7 @@
 // Bullets pass through targets they don't kill in the same frame.
 
 import { getSpecies } from "./species.js";
-import { isWalkable } from "./world.js";
+import { isWalkable } from "./zone.js";
 import { playSfx } from "./audio.js";
 import { applyPlayerContinuousDamage, applyPlayerDamage, isPlayerDead } from "./playerHealth.js";
 import { hasPiercingKnifeSkill, hasBoomerangSkill, hasBulletCatcherSkill } from "./skills.js";
@@ -33,16 +33,16 @@ const DAMAGE_INDICATOR_SPECIES_ID = 1178;
 const DAMAGE_INDICATOR_LIFESPAN = 0.2;
 let nextIndicatorId = -1_000_000;
 
-// Run one combat tick. Returns void; mutates world.entities (splices on
+// Run one combat tick. Returns void; mutates zone.entities (splices on
 // kill) and player health via playerHealth.js.
 // `player` may be a single player object (single-player) or an array of
 // players (co-op).
-export function tickCombat(world, player, dt) {
-  if (!world?.entities) return;
+export function tickCombat(zone, player, dt) {
+  if (!zone?.entities) return;
   const players = toLivePlayers(player);
-  resolveBullets(world, players, dt);
-  resolveMeleeMonsters(world, players, dt);
-  tickDamageIndicators(world, dt);
+  resolveBullets(zone, players, dt);
+  resolveMeleeMonsters(zone, players, dt);
+  tickDamageIndicators(zone, dt);
 }
 
 function toLivePlayers(player) {
@@ -53,8 +53,8 @@ function toLivePlayers(player) {
 
 // Ages damage-indicator entities and removes them when their lifespan
 // runs out. Spawned by `resolveBullets` whenever a non-fatal hit lands.
-function tickDamageIndicators(world, dt) {
-  const ents = world.entities;
+function tickDamageIndicators(zone, dt) {
+  const ents = zone.entities;
   for (let i = ents.length - 1; i >= 0; i--) {
     const e = ents[i];
     if (!e._damageIndicator) continue;
@@ -63,8 +63,8 @@ function tickDamageIndicators(world, dt) {
   }
 }
 
-function spawnDamageIndicator(world, hittable, parentId) {
-  world.entities.push({
+function spawnDamageIndicator(zone, hittable, parentId) {
+  zone.entities.push({
     id: nextIndicatorId--,
     species_id: DAMAGE_INDICATOR_SPECIES_ID,
     _damageIndicator: true,
@@ -77,8 +77,8 @@ function spawnDamageIndicator(world, hittable, parentId) {
   });
 }
 
-function resolveBullets(world, players, dt) {
-  const ents = world.entities;
+function resolveBullets(zone, players, dt) {
+  const ents = zone.entities;
   const friendlyFire = !!getSettings().friendlyFire;
   for (let i = ents.length - 1; i >= 0; i--) {
     const b = ents[i];
@@ -122,7 +122,7 @@ function resolveBullets(world, players, dt) {
     }
 
     // Wall / impassable construction → bullet stops (or bounces).
-    if (bulletHitsWall(b, world)) {
+    if (bulletHitsWall(b, zone)) {
       if (!tryBounce(b, bsp)) ents.splice(i, 1);
       continue;
     }
@@ -151,7 +151,7 @@ function resolveBullets(world, players, dt) {
         if (j < i) i -= 1;
         consumed = true;
       } else {
-        spawnDamageIndicator(world, entityHittable(t, tsp), b.parent_id ?? b.id);
+        spawnDamageIndicator(zone, entityHittable(t, tsp), b.parent_id ?? b.id);
       }
     }
     if (consumed) {
@@ -196,7 +196,7 @@ function findOverlappingPlayer(b, players) {
   return null;
 }
 
-function resolveMeleeMonsters(world, players, dt) {
+function resolveMeleeMonsters(zone, players, dt) {
   if (!players.length) return;
   // Creative mode: monsters can be inspected next to the hero without
   // chewing through HP. Mirrors Rust features/monsters.rs returning
@@ -205,7 +205,7 @@ function resolveMeleeMonsters(world, players, dt) {
   // Off-screen monsters can't damage the player. Matches Rust's hitmap-
   // based attack resolution and prevents unseen "ghost" damage from
   // critters lurking past the camera edge.
-  const list = world.visibleEntities ?? world.entities;
+  const list = zone.visibleEntities ?? zone.entities;
   for (const e of list) {
     if (e._spawned) continue;
     const sp = getSpecies(e.species_id);
@@ -235,14 +235,14 @@ function withinMeleeRange(e, sp, px, py) {
   return (dx * dx + dy * dy) <= MELEE_DAMAGE_RADIUS * MELEE_DAMAGE_RADIUS;
 }
 
-function bulletHitsWall(b, world) {
+function bulletHitsWall(b, zone) {
   const f = b.frame;
   const cx = f.x + f.w * 0.5;
   const cy = f.y + f.h * 0.5;
   const tx = Math.floor(cx);
   const ty = Math.floor(cy);
-  if (!isWalkable(world, tx, ty)) return true;
-  for (const o of world.entities) {
+  if (!isWalkable(zone, tx, ty)) return true;
+  for (const o of zone.entities) {
     if (o === b) continue;
     if (o._spawned) continue;
     const sp = getSpecies(o.species_id);

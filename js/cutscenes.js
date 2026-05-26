@@ -1,7 +1,7 @@
 // One-shot scripted sprite animations triggered by stepping onto a
 // specific tile. Persisted via a storage key so they only play once
 // per save. When the play-sprite cycles all the way through, the
-// `on_end` entities are inserted into the world (typically dialogues
+// `on_end` entities are inserted into the zone (typically dialogues
 // or a credits hint).
 //
 // Rendering degrades gracefully: cutscene sheet IDs are not in the
@@ -14,13 +14,13 @@ import { getSprite } from "./assets.js";
 
 const CUTSCENE_Z = 20_000_000; // mirrors Rust's 2_000_000_000 / 100 bucket
 
-export function setupCutscenes(world) {
-  const raw = world?._cutscenesRaw;
+export function setupCutscenes(zone) {
+  const raw = zone?._cutscenesRaw;
   if (!raw || raw.length === 0) {
-    world.cutscenes = [];
+    zone.cutscenes = [];
     return;
   }
-  world.cutscenes = raw.map((c) => ({
+  zone.cutscenes = raw.map((c) => ({
     key: c.key || "",
     idleSprite: normaliseSprite(c.idle_sprite),
     playSprite: normaliseSprite(c.play_sprite),
@@ -44,20 +44,20 @@ function normaliseSprite(s) {
   };
 }
 
-export function tickCutscenes(world, player, dt) {
-  if (!world?.cutscenes?.length) return;
-  for (const c of world.cutscenes) {
+export function tickCutscenes(zone, player, dt) {
+  if (!zone?.cutscenes?.length) return;
+  for (const c of zone.cutscenes) {
     if (c._hidden) continue;
     if (c._isPlaying) {
       const s = c.playSprite;
-      if (!s) { finishCutscene(world, c); continue; }
+      if (!s) { finishCutscene(zone, c); continue; }
       c._frameTimer += dt;
       const period = 1 / ANIMATIONS_FPS;
       while (c._frameTimer >= period) {
         c._frameTimer -= period;
         c._frameIndex++;
         if (c._frameIndex >= s.frames) {
-          finishCutscene(world, c);
+          finishCutscene(zone, c);
           break;
         }
       }
@@ -69,12 +69,12 @@ export function tickCutscenes(world, player, dt) {
   }
 }
 
-function finishCutscene(world, c) {
+function finishCutscene(zone, c) {
   c._isPlaying = false;
   c._hidden = true;
   if (c.key) setValue(c.key, 1);
   if (c.onEnd?.length) {
-    for (const e of c.onEnd) world.entities.push(clone(e));
+    for (const e of c.onEnd) zone.entities.push(clone(e));
   }
 }
 
@@ -84,9 +84,9 @@ function clone(e) {
   return { ...e, frame: e.frame ? { ...e.frame } : null };
 }
 
-export function drawCutscenes(ctx, world, camera) {
-  if (!world?.cutscenes?.length) return;
-  for (const c of world.cutscenes) {
+export function drawCutscenes(ctx, zone, camera) {
+  if (!zone?.cutscenes?.length) return;
+  for (const c of zone.cutscenes) {
     if (c._hidden) continue;
     const sprite = c._isPlaying ? c.playSprite : c.idleSprite;
     if (!sprite) continue;

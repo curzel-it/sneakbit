@@ -1,11 +1,11 @@
 // Pickups + hints: when one of the live players snaps onto an auto-
-// triggered entity we fire its effect and remove it from the world.
+// triggered entity we fire its effect and remove it from the zone.
 //
 // Hint entities (consumable variant) show their dialogue, then vanish.
 // Bundles and PickableObjects play a pickup SFX and vanish; the ammo
 // goes into the picking-up player's inventory, and weapon pickups equip
 // into that player's slot. Teleporters are handled in transitions.js so
-// they can fade between worlds.
+// they can fade between zones.
 //
 // Co-op rule: iterate every live player and the first one whose tile
 // overlaps a pickup wins it. Single-player just passes one player.
@@ -22,7 +22,7 @@ import { shouldBeVisible } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { isPlayerDead } from "./playerHealth.js";
 
-// Bullet is here because in world data, placed Bullets (speed=0) act as
+// Bullet is here because in zone data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles
 // expand into N copies of their bundle_contents species (e.g. one
 // "kunai.x10" gives 10 kunai). Player-spawned bullets carry _spawned and
@@ -31,8 +31,8 @@ import { isPlayerDead } from "./playerHealth.js";
 const AUTO_PICKUP_TYPES = new Set(["Bundle", "PickableObject", "Bullet"]);
 
 export function checkPickup(state) {
-  const { world } = state;
-  if (!world.entities) return;
+  const { zone } = state;
+  if (!zone.entities) return;
   // Creative mode never auto-collects: pickups stay on the floor (so
   // the designer can keep arranging them), and hint signs don't fire
   // their toast (toast suppression also matches the re-skinned sprite
@@ -42,8 +42,8 @@ export function checkPickup(state) {
   const players = livePlayers(state);
   if (!players.length) return;
 
-  for (let i = 0; i < world.entities.length; i++) {
-    const e = world.entities[i];
+  for (let i = 0; i < zone.entities.length; i++) {
+    const e = zone.entities[i];
     if (e._spawned) continue;
     if (!shouldBeVisible(e)) continue;
     const kind = classify(e);
@@ -58,8 +58,8 @@ export function checkPickup(state) {
       // Non-consumable hint: show the toast (once per text), don't despawn.
       triggerHint(e, /* persist */ true);
     } else {
-      world.entities.splice(i, 1);
-      if (e.id != null && !world.ephemeralState) {
+      zone.entities.splice(i, 1);
+      if (e.id != null && !zone.ephemeralState) {
         setValue(`item_collected.${e.id}`, 1);
       }
       trigger(e, kind, picker.index | 0);

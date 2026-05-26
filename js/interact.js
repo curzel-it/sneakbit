@@ -31,12 +31,12 @@ export function installInteract(getState) {
     if (!state) return;
     const initiator = pickInitiator(state, e.code);
     if (!initiator) return;
-    const target = findFacingEntity(state.world, initiator);
+    const target = findFacingEntity(state.zone, initiator);
     if (!target) return;
     const dialogue = resolveEntityDialogue(target);
     if (!dialogue) return;
     e.preventDefault();
-    showDialogue(dialogue, initiator.index | 0).then(() => handleAfterDialogue(state.world, target));
+    showDialogue(dialogue, initiator.index | 0).then(() => handleAfterDialogue(state.zone, target));
   });
 }
 
@@ -56,7 +56,7 @@ export function tickInteract() {
   if (!stateRef || !hintEl) return;
   if (isDialogueOpen()) { hintEl.style.display = "none"; return; }
   const state = stateRef();
-  const target = state ? findFacingEntity(state.world, state.player) : null;
+  const target = state ? findFacingEntity(state.zone, state.player) : null;
   hintEl.style.display = target ? "block" : "none";
 }
 
@@ -64,7 +64,7 @@ function makeHint() {
   const el = document.createElement("div");
   el.id = "interact-hint";
   el.textContent = "Press E to talk";
-  // Styled to match toast.js exactly so the in-world interact prompt and
+  // Styled to match toast.js exactly so the in-zone interact prompt and
   // pickup/hint toasts are visually consistent (top: 6% band, same
   // background, radius, padding, fontSize). Persistent while a
   // dialogue-bearing entity is in front of the player — main.js calls
@@ -93,11 +93,11 @@ function makeHint() {
   return el;
 }
 
-function findFacingEntity(world, player) {
+function findFacingEntity(zone, player) {
   const [dx, dy] = DIR_DELTA[player.direction] ?? [0, 1];
   const tx = player.tileX + dx;
   const ty = player.tileY + dy;
-  for (const e of world.entities) {
+  for (const e of zone.entities) {
     if (!e.frame) continue;
     if (!shouldBeVisible(e)) continue;
     const { x, y, w, h } = e.frame;

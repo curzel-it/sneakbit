@@ -87,7 +87,7 @@ function redraw() {
     const max = getPlayerMaxHp();
     const dead = isPlayerDead(b.index);
     // P2 hides while dead (matches Rust: dead co-op player drops out of
-    // play until the world reloads). P1 stays visible even at 0 — the
+    // play until the zone reloads). P1 stays visible even at 0 — the
     // game-over modal takes over.
     if (b.index > 0 && dead) {
       b.root.style.display = "none";

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 const { BIOME } = await import("../js/biomes.js");
 const { tickTrails } = await import("../js/trails.js");
 
-function makeWorld(biomeCell) {
+function makeZone(biomeCell) {
   const rows = 5, cols = 5;
   const biome = [];
   for (let r = 0; r < rows; r++) {
@@ -16,40 +16,40 @@ function makeWorld(biomeCell) {
 }
 
 test("no trail on grass, even after several tile steps", () => {
-  const world = makeWorld(BIOME.GRASS);
+  const zone = makeZone(BIOME.GRASS);
   // First tick seeds the lastTile cache without dropping a trail.
-  tickTrails(world, { tileX: 1, tileY: 1, direction: "down" }, 0.016);
-  tickTrails(world, { tileX: 1, tileY: 2, direction: "down" }, 0.016);
-  tickTrails(world, { tileX: 1, tileY: 3, direction: "down" }, 0.016);
-  assert.equal(world._trails.length, 0);
+  tickTrails(zone, { tileX: 1, tileY: 1, direction: "down" }, 0.016);
+  tickTrails(zone, { tileX: 1, tileY: 2, direction: "down" }, 0.016);
+  tickTrails(zone, { tileX: 1, tileY: 3, direction: "down" }, 0.016);
+  assert.equal(zone._trails.length, 0);
 });
 
 test("snow drops a footstep at the previous tile when player moves", () => {
-  const world = makeWorld(BIOME.SNOW);
-  tickTrails(world, { tileX: 1, tileY: 1, direction: "down" }, 0.016);
-  tickTrails(world, { tileX: 1, tileY: 2, direction: "down" }, 0.016);
-  assert.equal(world._trails.length, 1);
-  assert.equal(world._trails[0].x, 1);
+  const zone = makeZone(BIOME.SNOW);
+  tickTrails(zone, { tileX: 1, tileY: 1, direction: "down" }, 0.016);
+  tickTrails(zone, { tileX: 1, tileY: 2, direction: "down" }, 0.016);
+  assert.equal(zone._trails.length, 1);
+  assert.equal(zone._trails[0].x, 1);
   // y of trail sprite is one tile below the *previous* foot tile.
-  assert.equal(world._trails[0].y, 2);
-  assert.equal(world._trails[0].direction, "down");
+  assert.equal(zone._trails[0].y, 2);
+  assert.equal(zone._trails[0].direction, "down");
 });
 
 test("trails decay and disappear after their lifespan", () => {
-  const world = makeWorld(BIOME.SNOW);
-  tickTrails(world, { tileX: 1, tileY: 1, direction: "down" }, 0.016);
-  tickTrails(world, { tileX: 1, tileY: 2, direction: "down" }, 0.016);
-  assert.equal(world._trails.length, 1);
+  const zone = makeZone(BIOME.SNOW);
+  tickTrails(zone, { tileX: 1, tileY: 1, direction: "down" }, 0.016);
+  tickTrails(zone, { tileX: 1, tileY: 2, direction: "down" }, 0.016);
+  assert.equal(zone._trails.length, 1);
   // Lifespan is 15/8 ≈ 1.875s — advance well past it.
-  tickTrails(world, { tileX: 1, tileY: 2, direction: "down" }, 5.0);
-  assert.equal(world._trails.length, 0);
+  tickTrails(zone, { tileX: 1, tileY: 2, direction: "down" }, 5.0);
+  assert.equal(zone._trails.length, 0);
 });
 
-test("trail cache is per-world (teleport between worlds resets it)", () => {
-  const a = makeWorld(BIOME.SNOW);
-  const b = makeWorld(BIOME.SNOW);
+test("trail cache is per-zone (teleport between zones resets it)", () => {
+  const a = makeZone(BIOME.SNOW);
+  const b = makeZone(BIOME.SNOW);
   tickTrails(a, { tileX: 1, tileY: 1, direction: "down" }, 0.016);
-  // Switch to a fresh world with the same player position — first tick
+  // Switch to a fresh zone with the same player position — first tick
   // in `b` shouldn't immediately drop a trail.
   tickTrails(b, { tileX: 1, tileY: 1, direction: "down" }, 0.016);
   assert.equal(b._trails.length, 0);

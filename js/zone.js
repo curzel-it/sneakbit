@@ -1,4 +1,4 @@
-// Parses raw level JSON into a runtime world: typed tile grids, precomputed
+// Parses raw level JSON into a runtime zone: typed tile grids, precomputed
 // sprite-sheet coordinates (with neighbor-aware tile selection), and a
 // collision mask. Heavy work happens here so the render loop stays simple.
 
@@ -25,7 +25,7 @@ const CREATIVE_NON_RIGID_TYPES = new Set([
   "InverseGate",
 ]);
 
-export function buildWorld(raw) {
+export function buildZone(raw) {
   const biomeChars = raw.biome_tiles.tiles;
   const constructionChars = raw.construction_tiles.tiles;
   const rows = biomeChars.length;
@@ -56,15 +56,15 @@ export function buildWorld(raw) {
   const collision = make2D(rows, cols, (r, c) => isBlocked(biome[r][c], construction[r][c]));
 
   // Mirror Rust world_setup::remove_all_equipment — placed melee/ranged
-  // weapon entities aren't world props, they're per-player equipment. The
+  // weapon entities aren't zone props, they're per-player equipment. The
   // engine attaches a fresh set to the hero on spawn and only renders them
   // when equipped. Strip them from level data so they don't leave a
   // standalone "sword on the floor" sprite behind in shops.
   //
-  // Each entity is shallow-cloned (with a fresh `frame` rect) so the world
+  // Each entity is shallow-cloned (with a fresh `frame` rect) so the zone
   // can mutate position / HP / gate-open flags without polluting the
-  // module-level loadWorld cache. Otherwise dying and respawning would
-  // bring back the world with pushables in their last-pushed position,
+  // module-level loadZone cache. Otherwise dying and respawning would
+  // bring back the zone with pushables in their last-pushed position,
   // gates left open by drained pressure plates, etc.
   const entities = (raw.entities ?? [])
     .filter((e) => {
@@ -80,7 +80,7 @@ export function buildWorld(raw) {
     cols,
     biomeSheetId: raw.biome_tiles.sheet_id,
     constructionSheetId: raw.construction_tiles.sheet_id,
-    worldType: raw.world_type ?? null,
+    zoneType: raw.world_type ?? null,
     biome,
     biomeCol,
     construction,
@@ -94,19 +94,19 @@ export function buildWorld(raw) {
   };
 }
 
-export function isWalkable(world, tileX, tileY) {
-  if (!world) return true;
-  if (tileX < 0 || tileY < 0 || tileX >= world.cols || tileY >= world.rows) return false;
-  return !world.collision[tileY][tileX];
+export function isWalkable(zone, tileX, tileY) {
+  if (!zone) return true;
+  if (tileX < 0 || tileY < 0 || tileX >= zone.cols || tileY >= zone.rows) return false;
+  return !zone.collision[tileY][tileX];
 }
 
 // Mirrors Rust World::is_slippery_surface. True if the biome under the
 // given tile is one we treat as slippery (Ice today). Out-of-bounds
 // reads as false so callers don't have to guard.
-export function isTileSlippery(world, tileX, tileY) {
-  if (!world) return false;
-  if (tileX < 0 || tileY < 0 || tileX >= world.cols || tileY >= world.rows) return false;
-  return isSlippery(world.biome[tileY][tileX]);
+export function isTileSlippery(zone, tileX, tileY) {
+  if (!zone) return false;
+  if (tileX < 0 || tileY < 0 || tileX >= zone.cols || tileY >= zone.rows) return false;
+  return isSlippery(zone.biome[tileY][tileX]);
 }
 
 // True if any rigid entity occupies the given tile. Bullets we spawned
@@ -119,12 +119,12 @@ export function isTileSlippery(world, tileX, tileY) {
 // flag) so a pressure-plate-opened gate is walkable until the plate flips.
 // `opts.ignore` excludes a specific entity from the check (used when a
 // pushable checks if its destination tile is clear of other rigids).
-export function isEntityBlocked(world, tileX, tileY, opts) {
-  if (!world?.entities) return false;
-  if (hasEnterableTeleporter(world, tileX, tileY)) return false;
+export function isEntityBlocked(zone, tileX, tileY, opts) {
+  if (!zone?.entities) return false;
+  if (hasEnterableTeleporter(zone, tileX, tileY)) return false;
   const creative = isCreativeMode();
   const ignore = opts?.ignore;
-  for (const e of world.entities) {
+  for (const e of zone.entities) {
     if (e === ignore) continue;
     if (e._spawned) continue;
     const sp = getSpecies(e.species_id);
@@ -147,8 +147,8 @@ export function isEntityBlocked(world, tileX, tileY, opts) {
   return false;
 }
 
-export function hasEnterableTeleporter(world, tileX, tileY) {
-  for (const e of world.entities) {
+export function hasEnterableTeleporter(zone, tileX, tileY) {
+  for (const e of zone.entities) {
     if (e.species_id !== 1019) continue;
     if (!e.destination) continue;
     const f = e.frame; if (!f) continue;
@@ -168,7 +168,16 @@ function isBlocked(biome, construction) {
 function cloneEntity(e) {
   const out = { ...e };
   if (e.frame) out.frame = { ...e.frame };
-  if (e.destination) out.destination = { ...e.destination };
+  if (e.destination) {
+    out.destination = { ...e.destination };
+    // Raw entity destinations use the upstream field name `world`. Translate
+    // to our internal `zone` so all runtime code reads a single name. The
+    // raw JSON shape on disk (data/*.json + prefabs output) is preserved.
+    if (out.destination.world !== undefined && out.destination.zone === undefined) {
+      out.destination.zone = out.destination.world;
+      delete out.destination.world;
+    }
+  }
   // `dialogues` is referenced by dialogue.js but its handlers only read,
   // so a shallow copy of the array is enough.
   if (Array.isArray(e.dialogues)) out.dialogues = e.dialogues.slice();

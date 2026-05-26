@@ -38,13 +38,13 @@ function nextSpeciesId(id) {
 
 export function isMonsterSpecies(id) { return MONSTER_TIERS.has(id); }
 
-export function tickMonsterFusion(world) {
-  if (!world?.entities) return;
+export function tickMonsterFusion(zone) {
+  if (!zone?.entities) return;
   // Only fuse monsters that are currently on screen. Two off-screen
   // monsters merging would tier up unchecked while the player can't
   // see — matches Rust's visibility-gated hitmap behavior.
-  const entities = world.visibleEntities ?? world.entities;
-  const removalSource = world.entities;
+  const entities = zone.visibleEntities ?? zone.entities;
+  const removalSource = zone.entities;
   for (let i = entities.length - 1; i >= 0; i--) {
     const self = entities[i];
     if (!isMonsterSpecies(self.species_id)) continue;

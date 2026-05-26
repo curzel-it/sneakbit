@@ -141,7 +141,7 @@ export function performMeleeSwing(state, opts = {}) {
       },
       dialogues: [],
     };
-    state.world.entities.push(bullet);
+    state.zone.entities.push(bullet);
   }
   playSfx(SFX_FOR_USAGE[weapon.equipment_usage_sound_effect] || "swordSlash");
   return true;

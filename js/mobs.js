@@ -11,7 +11,7 @@
 // matching the player's movement model in player.js.
 
 import { getSpecies } from "./species.js";
-import { isWalkable } from "./world.js";
+import { isWalkable } from "./zone.js";
 import { isCreativeMode } from "./creativeMode.js";
 
 const VISION_TILES = 6;            // chase trigger range (Manhattan)
@@ -33,8 +33,8 @@ const DIR_DELTA = {
 };
 const ALL_DIRS = ["up", "down", "left", "right"];
 
-export function tickMobs(world, player, dt) {
-  if (!world?.entities) return;
+export function tickMobs(zone, player, dt) {
+  if (!zone?.entities) return;
   // Creative mode freezes every AI-driven entity in place so the level
   // designer can lay out monsters / NPCs without them wandering off.
   // Mirrors Rust movement/movement_directions.rs::perform_movement
@@ -45,7 +45,7 @@ export function tickMobs(world, player, dt) {
   // freezes in place. This is gameplay, not just perf — it stops monsters
   // from merging behind the camera and lets the player time kunai launches
   // against a stable layout.
-  const list = world.visibleEntities ?? world.entities;
+  const list = zone.visibleEntities ?? zone.entities;
   for (const e of list) {
     if (e._spawned) continue;
     const sp = getSpecies(e.species_id);
@@ -53,7 +53,7 @@ export function tickMobs(world, player, dt) {
     if (!isMobAi(sp)) continue;
     ensureAi(e);
     if (e._ai.step) advanceStep(e, dt);
-    else decideStep(e, sp, world, player, dt);
+    else decideStep(e, sp, zone, player, dt);
   }
 }
 
@@ -76,14 +76,14 @@ function ensureAi(e) {
   e.frame.y = e._ai.tileY;
 }
 
-function decideStep(e, sp, world, player, dt) {
+function decideStep(e, sp, zone, player, dt) {
   e._ai.decideTimer -= dt;
   if (e._ai.decideTimer > 0) return;
 
   const stepDuration = stepDurationFor(sp);
   if (sp.movement_directions === "FindHero") {
     for (const dir of chaseDirections(e, player)) {
-      if (tryStartStep(e, dir, world, stepDuration)) return;
+      if (tryStartStep(e, dir, zone, stepDuration)) return;
     }
   }
   // Wander — also the fallback for FindHero mobs that can't see/reach
@@ -91,16 +91,16 @@ function decideStep(e, sp, world, player, dt) {
   const dirs = ALL_DIRS.slice();
   shuffle(dirs);
   for (const dir of dirs) {
-    if (tryStartStep(e, dir, world, stepDuration)) return;
+    if (tryStartStep(e, dir, zone, stepDuration)) return;
   }
   e._ai.decideTimer = WANDER_PAUSE;
 }
 
-function tryStartStep(e, dir, world, duration) {
+function tryStartStep(e, dir, zone, duration) {
   const [dx, dy] = DIR_DELTA[dir];
   const toX = e._ai.tileX + dx;
   const toY = e._ai.tileY + dy;
-  if (!canEnter(world, e, toX, toY)) return false;
+  if (!canEnter(zone, e, toX, toY)) return false;
   e.direction = capitalize(dir);
   e._ai.step = {
     fromX: e._ai.tileX,
@@ -154,15 +154,15 @@ export function chaseDirections(e, player) {
   return out;
 }
 
-function canEnter(world, self, tileX, tileY) {
+function canEnter(zone, self, tileX, tileY) {
   const bottomY = tileY + self._ai.h - 1;
-  if (!isWalkable(world, tileX, bottomY)) return false;
-  for (const other of world.entities) {
+  if (!isWalkable(zone, tileX, bottomY)) return false;
+  for (const other of zone.entities) {
     if (other === self) continue;
     if (other._spawned) continue;
     const sp = getSpecies(other.species_id);
     if (!sp) continue;
-    // Open gates are walkable just like in world.isEntityBlocked. Without
+    // Open gates are walkable just like in zone.isEntityBlocked. Without
     // this, monsters refuse to cross a gate the player has unlocked.
     if ((sp.entity_type === "Gate" || sp.entity_type === "InverseGate") && other._open) continue;
     if (sp.entity_type === "Teleporter") continue;

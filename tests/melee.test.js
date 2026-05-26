@@ -27,7 +27,7 @@ const storage = await import("../js/storage.js");
 
 function fakeState() {
   return {
-    world: { entities: [] },
+    zone: { entities: [] },
     player: { tileX: 10, tileY: 10, direction: "right" },
   };
 }
@@ -37,7 +37,7 @@ test("performMeleeSwing: no-op when no melee weapon equipped", () => {
   const s = fakeState();
   const ok = melee.performMeleeSwing(s, { ignoreCooldown: true });
   assert.equal(ok, false);
-  assert.equal(s.world.entities.length, 0);
+  assert.equal(s.zone.entities.length, 0);
 });
 
 test("performMeleeSwing: spawns 5 bullets in cross pattern", () => {
@@ -46,16 +46,16 @@ test("performMeleeSwing: spawns 5 bullets in cross pattern", () => {
   const s = fakeState();
   const ok = melee.performMeleeSwing(s, { ignoreCooldown: true });
   assert.equal(ok, true);
-  assert.equal(s.world.entities.length, 5);
+  assert.equal(s.zone.entities.length, 5);
 
-  const offsets = s.world.entities
+  const offsets = s.zone.entities
     .map(b => [b.frame.x - s.player.tileX, b.frame.y - s.player.tileY])
     .map(([x, y]) => `${x},${y}`)
     .sort();
   const expected = ["0,0", "0,-1", "0,1", "1,0", "-1,0"].sort();
   assert.deepEqual(offsets, expected);
 
-  for (const b of s.world.entities) {
+  for (const b of s.zone.entities) {
     assert.equal(b._spawned, true);
     assert.equal(b.species_id, 1166);
     assert.equal(b._dpsOverride, 450);
@@ -69,7 +69,7 @@ test("performMeleeSwing: applies melee_dps_multiplier", () => {
   equipment.setEquipped(equipment.SLOT_MELEE, 1159);
   const s = fakeState();
   assert.equal(melee.performMeleeSwing(s, { ignoreCooldown: true }), true);
-  for (const b of s.world.entities) {
+  for (const b of s.zone.entities) {
     assert.equal(b._dpsOverride, 200);
   }
 });
@@ -84,5 +84,5 @@ test("performMeleeSwing: refuses non-melee species in melee slot", () => {
   equipment.setEquipped(equipment.SLOT_MELEE, 9999);
   const s = fakeState();
   assert.equal(melee.performMeleeSwing(s, { ignoreCooldown: true }), false);
-  assert.equal(s.world.entities.length, 0);
+  assert.equal(s.zone.entities.length, 0);
 });

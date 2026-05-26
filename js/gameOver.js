@@ -2,7 +2,7 @@
 //
 // Shown when the player's HP drops to zero. Mirrors Rust
 // MatchResult::GameOver — the play loop halts behind a dimmed overlay and
-// the player has to acknowledge before the world teleports them back to
+// the player has to acknowledge before the zone teleports them back to
 // the starting spawn. The modal lives in the DOM (like menu.js) so we get
 // styling + a real button focusable by keyboard for free.
 

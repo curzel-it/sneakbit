@@ -62,6 +62,7 @@ export function isLiquid(b) { return LIQUIDS.has(b); }
 export function isLightGrass(b) { return b === BIOME.GRASS; }
 export function isDarkGrass(b) { return b === BIOME.DARK_GRASS; }
 // Mirrors Rust World::is_slippery_surface — only Ice tiles slide today.
+// (Rust upstream still calls them "worlds"; our codebase renamed to "zone".)
 export function isSlippery(b) { return b === BIOME.ICE; }
 
 export function biomeIsObstacle(b) {

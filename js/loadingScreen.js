@@ -53,7 +53,7 @@ export function bumpLoadingProgress(label) {
 
 export function hideLoadingScreen() {
   if (!root) return;
-  // Fade out so the world appears underneath instead of a hard cut.
+  // Fade out so the zone appears underneath instead of a hard cut.
   root.style.transition = "opacity 220ms ease";
   root.style.opacity = "0";
   setTimeout(() => { root?.remove(); root = null; bar = null; }, 240);

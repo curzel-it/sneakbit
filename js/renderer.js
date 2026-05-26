@@ -1,9 +1,9 @@
-// Draws the world and player into a 2D canvas context.
+// Draws the zone and player into a 2D canvas context.
 // Layer order: biome → construction → entities → player.
 
 import { TILE_SIZE } from "./constants.js";
 import { drawEntities } from "./entities.js";
-import { getWorldCache } from "./worldCache.js";
+import { getZoneCache } from "./zoneCache.js";
 import { drawCutscenes } from "./cutscenes.js";
 import { drawTrails } from "./trails.js";
 import { isCreativeMode } from "./creativeMode.js";
@@ -14,7 +14,7 @@ export function createRenderer(canvas) {
   return { canvas, ctx };
 }
 
-export function render(renderer, world, camera, player, biomeFrame) {
+export function render(renderer, zone, camera, player, biomeFrame) {
   const { ctx, canvas } = renderer;
 
   ctx.fillStyle = "#000";
@@ -26,17 +26,17 @@ export function render(renderer, world, camera, player, biomeFrame) {
   // enough to share the same cone of light.
   const primary = Array.isArray(player) ? player[0] : player;
 
-  drawWorldLayers(ctx, world, camera, biomeFrame | 0);
-  drawTrails(ctx, world, camera);
-  drawEntities(ctx, world, camera, player);
-  drawCutscenes(ctx, world, camera);
-  drawDarkness(ctx, canvas, world, camera, primary);
+  drawZoneLayers(ctx, zone, camera, biomeFrame | 0);
+  drawTrails(ctx, zone, camera);
+  drawEntities(ctx, zone, camera, player);
+  drawCutscenes(ctx, zone, camera);
+  drawDarkness(ctx, canvas, zone, camera, primary);
 }
 
 // Blit the pre-baked biome + construction layers. The cache is built
 // lazily on first render so we don't pay for it before assets are ready.
-function drawWorldLayers(ctx, world, camera, frame) {
-  const cache = getWorldCache(world);
+function drawZoneLayers(ctx, zone, camera, frame) {
+  const cache = getZoneCache(zone);
   if (!cache) return;
   const ox = Math.round(-camera.x * TILE_SIZE);
   const oy = Math.round(-camera.y * TILE_SIZE);
@@ -45,16 +45,16 @@ function drawWorldLayers(ctx, world, camera, frame) {
   ctx.drawImage(cache.construction, ox, oy);
 }
 
-// Applies a per-world light-condition overlay. Mirrors Rust's three
+// Applies a per-zone light-condition overlay. Mirrors Rust's three
 // LightConditions variants: Day is a no-op (verified — Rust ships no
 // daylight tint or shader), Night washes the viewport flat blue, and
 // CantSeeShit clamps the player into a small radial cone of vision.
-function drawDarkness(ctx, canvas, world, camera, player) {
+function drawDarkness(ctx, canvas, zone, camera, player) {
   // Creative mode disables limited visibility entirely — the level
   // designer needs to see everything regardless of CantSeeShit / Night.
   // Mirrors Rust lib.rs::is_limited_visibility returning false in creative.
   if (isCreativeMode()) return;
-  if (world.lightConditions === "CantSeeShit") {
+  if (zone.lightConditions === "CantSeeShit") {
     const cx = (player.x + 0.5 - camera.x) * TILE_SIZE;
     const cy = (player.y - camera.y) * TILE_SIZE;
     const inner = TILE_SIZE * 2.5;
@@ -67,7 +67,7 @@ function drawDarkness(ctx, canvas, world, camera, player) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     return;
   }
-  if (world.lightConditions === "Night") {
+  if (zone.lightConditions === "Night") {
     // Flat translucent blue wash for nighttime levels. Less aggressive
     // than CantSeeShit (no radial mask) — the player can still see the
     // whole viewport, just with a cool tint.

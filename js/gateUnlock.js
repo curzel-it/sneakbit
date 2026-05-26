@@ -1,6 +1,6 @@
 // Key-consuming unlocks for colored gates. Walking into a closed gate
 // while holding a matching key spends the key, marks the gate's lock as
-// None (so it stays open across world reloads), and lets the player pass.
+// None (so it stays open across zone reloads), and lets the player pass.
 // Mirrors Rust's `lock_override` storage.
 
 import { getSpecies } from "./species.js";
@@ -15,9 +15,9 @@ import { getAmmo, removeAmmo } from "./inventory.js";
 import { playSfx } from "./audio.js";
 import { showToast } from "./toast.js";
 
-export function findGateAt(world, tx, ty) {
-  if (!world?.entities) return null;
-  for (const e of world.entities) {
+export function findGateAt(zone, tx, ty) {
+  if (!zone?.entities) return null;
+  for (const e of zone.entities) {
     const sp = getSpecies(e.species_id);
     if (!sp) continue;
     if (sp.entity_type !== "Gate" && sp.entity_type !== "InverseGate") continue;

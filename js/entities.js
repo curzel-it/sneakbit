@@ -1,5 +1,5 @@
-// Renders non-player entities from world.entities. Each entity has a
-// `frame` rect (x, y, w, h) in tile units giving its world footprint, plus
+// Renders non-player entities from zone.entities. Each entity has a
+// `frame` rect (x, y, w, h) in tile units giving its zone footprint, plus
 // a `species_id` and `direction`. Species metadata controls which sprite
 // sheet to sample and whether the sprite animates.
 //
@@ -36,8 +36,8 @@ export function tickEntities(dt) {
   animClock += dt;
 }
 
-export function drawEntities(ctx, world, camera, player) {
-  const visible = collect(world, camera);
+export function drawEntities(ctx, zone, camera, player) {
+  const visible = collect(zone, camera);
   // Accept a single player or an array of players (co-op).
   const players = Array.isArray(player) ? player : (player ? [player] : []);
   for (const p of players) visible.push(makePlayerSortItem(p));
@@ -119,10 +119,10 @@ function drawPlayer(ctx, player, camera) {
 const ATTACK_ROW_Y = { up: 37, right: 41, down: 45, left: 49 };
 
 // Renders one equipped weapon (sword, AR15, …) overlaid on the player.
-// World offset (-1.5, -2.0) and direction-row selection mirror Rust
+// Zone offset (-1.5, -2.0) and direction-row selection mirror Rust
 // equipment/basics.rs::update_equipment_position and the standard 8-row
 // directional sprite layout. Skips weapons whose sprite sheet isn't loaded
-// (e.g. the kunai launcher, which has no in-world overlay sprite).
+// (e.g. the kunai launcher, which has no in-zone overlay sprite).
 //
 // When the player is mid-swing (melee.getMeleeSwingProgress > 0 and this
 // is the melee slot) the overlay flips to the absolute attack-row strip
@@ -159,7 +159,7 @@ function drawEquipment(ctx, player, camera, weaponId, slot) {
   const sw = w * TILE_SIZE;
   const sh = h * TILE_SIZE;
 
-  // Player's top-left in world coords is (player.x, player.y - 1) because
+  // Player's top-left in zone coords is (player.x, player.y - 1) because
   // the hero is a 1×2 sprite with feet at (x, y). Equipment frame is offset
   // (-1.5, -1.0) from that.
   const wx = player.x - 1.5;
@@ -169,9 +169,9 @@ function drawEquipment(ctx, player, camera, weaponId, slot) {
   ctx.drawImage(sheet, sx, sourceY, sw, sh, px, py, sw, sh);
 }
 
-function collect(world, camera) {
+function collect(zone, camera) {
   const out = [];
-  for (const e of world.entities) {
+  for (const e of zone.entities) {
     if (e._invisible) continue;
     if (!e._spawned && !shouldBeVisible(e)) continue;
     const sp = getSpecies(e.species_id);

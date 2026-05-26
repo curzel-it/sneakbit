@@ -37,23 +37,23 @@ export function projectStraight(frame, direction, speed, dt) {
 
 // Steps `frame` in place by one slice of motion. Returns true if the step
 // was applied, false if it was rejected (zero speed, no direction, or the
-// step would leave the world). The world bounds check matches Rust: the
-// projected hittable frame must stay inside world.bounds (cols × rows).
-export function moveStraight(frame, direction, speed, dt, world) {
+// step would leave the zone). The zone bounds check matches Rust: the
+// projected hittable frame must stay inside zone.bounds (cols × rows).
+export function moveStraight(frame, direction, speed, dt, zone) {
   if (!speed || speed === 0) return false;
   const d = vec(direction);
   if (d.x === 0 && d.y === 0) return false;
   const next = projectStraight(frame, direction, speed, dt);
-  if (!worldContains(world, next)) return false;
+  if (!zoneContains(zone, next)) return false;
   frame.x = next.x;
   frame.y = next.y;
   return true;
 }
 
-function worldContains(world, frame) {
-  if (!world) return true;
+function zoneContains(zone, frame) {
+  if (!zone) return true;
   if (frame.x < 0 || frame.y < 0) return false;
-  if (frame.x + frame.w > world.cols) return false;
-  if (frame.y + frame.h > world.rows) return false;
+  if (frame.x + frame.w > zone.cols) return false;
+  if (frame.y + frame.h > zone.rows) return false;
   return true;
 }

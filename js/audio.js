@@ -7,7 +7,7 @@
 
 const SOURCES = {
   stepTaken:         "./assets/audio/sfx_movement_footsteps1a.mp3",
-  worldChange:       "./assets/audio/sfx_movement_dooropen1.mp3",
+  zoneChange:       "./assets/audio/sfx_movement_dooropen1.mp3",
   ammoCollected:     "./assets/audio/sfx_sounds_interaction22.mp3",
   keyCollected:      "./assets/audio/sfx_sounds_fanfare3.mp3",
   hintReceived:      "./assets/audio/sfx_sound_neutral5.mp3",
@@ -31,7 +31,7 @@ const VOLUMES = {
   gunShot: 0.8,
   loudGunShot: 1.0,
   bulletBounced: 0.2,
-  worldChange: 0.7,
+  zoneChange: 0.7,
   ammoCollected: 0.6,
 };
 const DEFAULT_VOLUME = 0.8;

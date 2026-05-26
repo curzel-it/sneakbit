@@ -1,5 +1,5 @@
 // Building-prefab expansion. Mirrors Rust prefabs::all::new_building's
-// dispatch + emits a buffered interior world per source-side door.
+// dispatch + emits a buffered interior zone per source-side door.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -46,7 +46,7 @@ test("non-prefab building (unknown id) → null, single-entity fallback", () => 
   assert.equal(tryBuildingPrefab(9999, SOURCE, 10, 10), null);
 });
 
-test("single-floor house emits building + door + one interior world", () => {
+test("single-floor house emits building + door + one interior zone", () => {
   const out = tryBuildingPrefab(1002, SOURCE, 40, 20);
   assert.ok(out, "prefab should match");
   assert.equal(out.entities.length, 2, "one building + one door teleporter");
@@ -60,15 +60,15 @@ test("single-floor house emits building + door + one interior world", () => {
   assert.equal(door.species_id, 1019);
   assert.equal(door.frame.x, 40 + 3); // ceil(5/2) = 3
   assert.equal(door.frame.y, 20 + 3);
-  // Door destination resolves to a freshly-generated interior world id.
+  // Door destination resolves to a freshly-generated interior zone id.
   assert.ok(door.destination && door.destination.world > 0);
-  assert.equal(out.interiorWorlds.length, 1);
-  assert.equal(out.interiorWorlds[0].id, door.destination.world);
+  assert.equal(out.interiorZones.length, 1);
+  assert.equal(out.interiorZones[0].id, door.destination.world);
 });
 
-test("interior world has the right shell: floor, walls, back-doors", () => {
+test("interior zone has the right shell: floor, walls, back-doors", () => {
   const out = tryBuildingPrefab(1002, SOURCE, 0, 0);
-  const interior = out.interiorWorlds[0];
+  const interior = out.interiorZones[0];
   assert.equal(interior.world_type, "HouseInterior");
   // 30 cols × 10 rows is the bounds Rust ships with.
   assert.equal(interior.biome_tiles.tiles.length, 10);
@@ -80,7 +80,7 @@ test("interior world has the right shell: floor, walls, back-doors", () => {
   // Back-door cutouts at row 8, cols 5 and 6 stay as Nothing (no wall).
   assert.equal(interior.construction_tiles.tiles[8][5], "0");
   assert.equal(interior.construction_tiles.tiles[8][6], "0");
-  // Two teleporters in the interior point back to the source world.
+  // Two teleporters in the interior point back to the source zone.
   const backs = interior.entities.filter(
     (e) => e.species_id === 1019 && e.destination?.world === SOURCE,
   );
@@ -94,8 +94,8 @@ test("two-floor house: door points to first floor, stairs link first → second"
   const [, door] = out.entities;
   // Two-floor door y-offset is +4.
   assert.equal(door.frame.y, 4);
-  assert.equal(out.interiorWorlds.length, 2);
-  const [first, second] = out.interiorWorlds;
+  assert.equal(out.interiorZones.length, 2);
+  const [first, second] = out.interiorZones;
   assert.equal(door.destination.world, first.id);
   // First floor contains a teleporter pointing to the second floor.
   const upDoor = first.entities.find(
@@ -124,7 +124,7 @@ test("small house: door y-offset is +2 (smaller building)", () => {
 
 test("shop: interior has counter + library construction blocks + clerk NPC", () => {
   const out = tryBuildingPrefab(1070, SOURCE, 0, 0);
-  const interior = out.interiorWorlds[0];
+  const interior = out.interiorZones[0];
   // Counter (id 5 → char "5") tile at one of the cluster positions.
   assert.equal(interior.construction_tiles.tiles[3][5], "5");
   // Library (id 6 → char "6") tile.
@@ -146,25 +146,25 @@ test("editor entity ids are negative (so the eraser keeps shipped entities)", ()
   for (const e of out.entities) {
     assert.ok(e.id < 0, `editor entity id should be negative, got ${e.id}`);
   }
-  for (const e of out.interiorWorlds[0].entities) {
+  for (const e of out.interiorZones[0].entities) {
     assert.ok(e.id < 0, `interior entity id should be negative, got ${e.id}`);
   }
 });
 
-test("interior world ids are unique across back-to-back placements", () => {
+test("interior zone ids are unique across back-to-back placements", () => {
   const a = tryBuildingPrefab(1002, SOURCE, 0, 0);
   const b = tryBuildingPrefab(1002, SOURCE, 10, 10);
-  assert.notEqual(a.interiorWorlds[0].id, b.interiorWorlds[0].id);
+  assert.notEqual(a.interiorZones[0].id, b.interiorZones[0].id);
 });
 
-test("interior world id fits in int32 (storage.js coerces via `n | 0`)", () => {
+test("interior zone id fits in int32 (storage.js coerces via `n | 0`)", () => {
   // js/storage.js stores numeric values as int32 (n | 0). A larger id
   // would truncate when latest_world is saved, so the player would
-  // reload into a non-existent world. This regression test pins the
+  // reload into a non-existent zone. This regression test pins the
   // contract: interior ids must round-trip through int32 unchanged.
   const INT32_MAX = 2 ** 31 - 1;
   const out = tryBuildingPrefab(1002, SOURCE, 0, 0);
-  for (const w of out.interiorWorlds) {
+  for (const w of out.interiorZones) {
     assert.ok(
       w.id > 0 && w.id <= INT32_MAX,
       `interior id ${w.id} must fit in [1, ${INT32_MAX}]`,

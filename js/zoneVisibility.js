@@ -15,10 +15,10 @@ const ALWAYS_VISIBLE_TYPES = new Set([
   "PushableObject",
 ]);
 
-export function updateVisibleEntities(world, camera) {
-  if (!world) return;
+export function updateVisibleEntities(zone, camera) {
+  if (!zone) return;
   const out = [];
-  const ents = world.entities || [];
+  const ents = zone.entities || [];
   for (let i = 0; i < ents.length; i++) {
     const e = ents[i];
     let visible;
@@ -32,7 +32,7 @@ export function updateVisibleEntities(world, camera) {
     e._visible = visible;
     if (visible) out.push(e);
   }
-  world.visibleEntities = out;
+  zone.visibleEntities = out;
 }
 
 // Camera + entity-frame overlap check, edges inclusive. Matches Rust

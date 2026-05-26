@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildWorld, isWalkable, isEntityBlocked } from "../js/world.js";
+import { buildZone, isWalkable, isEntityBlocked } from "../js/zone.js";
 import { loadSpeciesData } from "../js/species.js";
 import { _setCreativeModeForTesting } from "../js/creativeMode.js";
 
@@ -40,8 +40,8 @@ const TINY = {
   entities: [],
 };
 
-test("buildWorld produces correct dimensions and tile grids", () => {
-  const w = buildWorld(TINY);
+test("buildZone produces correct dimensions and tile grids", () => {
+  const w = buildZone(TINY);
   assert.equal(w.rows, 4);
   assert.equal(w.cols, 4);
   assert.ok(Array.isArray(w.biome));
@@ -52,7 +52,7 @@ test("buildWorld produces correct dimensions and tile grids", () => {
 });
 
 test("walkability: grass walkable, water blocked, bridge over water walkable, forest blocked", () => {
-  const w = buildWorld(TINY);
+  const w = buildZone(TINY);
   // (0,0) is grass
   assert.equal(isWalkable(w, 0, 0), true);
   // (3,0) is water
@@ -64,7 +64,7 @@ test("walkability: grass walkable, water blocked, bridge over water walkable, fo
 });
 
 test("walkability rejects out-of-bounds", () => {
-  const w = buildWorld(TINY);
+  const w = buildZone(TINY);
   assert.equal(isWalkable(w, -1, 0), false);
   assert.equal(isWalkable(w, 0, -1), false);
   assert.equal(isWalkable(w, 4, 0), false);
@@ -72,13 +72,13 @@ test("walkability rejects out-of-bounds", () => {
 });
 
 test("destination-teleporter on a building tile is enterable", () => {
-  const w = buildWorld({
+  const w = buildZone({
     ...TINY,
     biome_tiles: { sheet_id: 1002, tiles: ["1111","1111","1111","1111"] },
     construction_tiles: { sheet_id: 1003, tiles: ["0000","0000","0000","0000"] },
     entities: [
       { species_id: 1006, frame: { x: 0, y: 0, w: 3, h: 3 } },
-      { species_id: 1019, destination: { world: 42, x: 0, y: 0 },
+      { species_id: 1019, destination: { zone: 42, x: 0, y: 0 },
         frame: { x: 1, y: 2, w: 1, h: 1 } },
     ],
   });
@@ -87,7 +87,7 @@ test("destination-teleporter on a building tile is enterable", () => {
 });
 
 test("teleporter without destination does not unblock the building", () => {
-  const w = buildWorld({
+  const w = buildZone({
     ...TINY,
     biome_tiles: { sheet_id: 1002, tiles: ["1111","1111","1111","1111"] },
     construction_tiles: { sheet_id: 1003, tiles: ["0000","0000","0000","0000"] },
@@ -102,7 +102,7 @@ test("teleporter without destination does not unblock the building", () => {
 
 test("NPC 1x2 only blocks its feet tile, head tile is walkable", () => {
   storage._resetStorageForTesting();
-  const w = buildWorld({
+  const w = buildZone({
     ...TINY,
     biome_tiles: { sheet_id: 1002, tiles: ["1111","1111","1111","1111"] },
     construction_tiles: { sheet_id: 1003, tiles: ["0000","0000","0000","0000"] },
@@ -117,7 +117,7 @@ test("NPC 1x2 only blocks its feet tile, head tile is walkable", () => {
 
 test("creative mode walks through Building and closed Gate (is_rigid dropped)", () => {
   storage._resetStorageForTesting();
-  const w = buildWorld({
+  const w = buildZone({
     ...TINY,
     biome_tiles: { sheet_id: 1002, tiles: ["1111","1111","1111","1111"] },
     construction_tiles: { sheet_id: 1003, tiles: ["0000","0000","0000","0000"] },
@@ -139,7 +139,7 @@ test("creative mode walks through Building and closed Gate (is_rigid dropped)", 
 
 test("entity hidden by display_conditions does not block", () => {
   storage._resetStorageForTesting();
-  const w = buildWorld({
+  const w = buildZone({
     ...TINY,
     biome_tiles: { sheet_id: 1002, tiles: ["1111","1111","1111","1111"] },
     construction_tiles: { sheet_id: 1003, tiles: ["0000","0000","0000","0000"] },

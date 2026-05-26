@@ -5,7 +5,7 @@
 // the player's step animation instead of teleporting one tile per press.
 
 import { getSpecies } from "./species.js";
-import { isWalkable, isEntityBlocked } from "./world.js";
+import { isWalkable, isEntityBlocked } from "./zone.js";
 import { isCreativeMode } from "./creativeMode.js";
 
 const SLIDE_DURATION = 0.22; // matches player STEP_DURATION in player.js
@@ -22,14 +22,14 @@ export function isPushable(entity) {
   return sp?.entity_type === "PushableObject";
 }
 
-export function findPushableAt(world, tx, ty) {
-  if (!world?.entities) return null;
+export function findPushableAt(zone, tx, ty) {
+  if (!zone?.entities) return null;
   // Creative mode: pushables behave like every other Generic entity —
   // is_rigid is dropped, so the hero just walks across them instead of
   // shoving them. Skipping the lookup keeps player.js's pushable carry-
   // back path inert in creative too.
   if (isCreativeMode()) return null;
-  for (const e of world.entities) {
+  for (const e of zone.entities) {
     if (!isPushable(e)) continue;
     const f = e.frame; if (!f) continue;
     if (tx < f.x || tx >= f.x + f.w) continue;
@@ -47,18 +47,18 @@ export function findPushableAt(world, tx, ty) {
 // immediately (so collisions read the new tile), and a `_slide` record
 // drives a per-frame render offset toward zero. entities.js applies the
 // offset when blitting the sprite.
-export function pushOneTile(world, pushable, dir) {
+export function pushOneTile(zone, pushable, dir) {
   const [dx, dy] = DIR_DELTA[dir] ?? [0, 0];
   if (!dx && !dy) return false;
   const f = pushable.frame; if (!f) return false;
   const nx = f.x + dx;
   const ny = f.y + dy;
-  if (nx < 0 || ny < 0 || nx + f.w > world.cols || ny + f.h > world.rows) return false;
+  if (nx < 0 || ny < 0 || nx + f.w > zone.cols || ny + f.h > zone.rows) return false;
   // Sweep every tile the pushable would occupy in its new footprint.
   for (let yy = ny; yy < ny + f.h; yy++) {
     for (let xx = nx; xx < nx + f.w; xx++) {
-      if (!isWalkable(world, xx, yy)) return false;
-      if (isEntityBlocked(world, xx, yy, { ignore: pushable })) return false;
+      if (!isWalkable(zone, xx, yy)) return false;
+      if (isEntityBlocked(zone, xx, yy, { ignore: pushable })) return false;
     }
   }
   startSlide(pushable, dx, dy);
@@ -84,9 +84,9 @@ export function pushableRenderOffset(pushable) {
   return { x: s.ox * remaining, y: s.oy * remaining };
 }
 
-export function tickPushables(world, dt) {
-  if (!world?.entities) return;
-  for (const e of world.entities) {
+export function tickPushables(zone, dt) {
+  if (!zone?.entities) return;
+  for (const e of zone.entities) {
     const s = e._slide;
     if (!s) continue;
     s.t += dt / s.duration;

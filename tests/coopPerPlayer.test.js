@@ -95,12 +95,12 @@ test("per-player equipped weapon is independent (P1 ≠ P2)", () => {
 
 test("camera averages two live players in co-op", () => {
   const camera = createCamera();
-  // World large enough to avoid the world-bounds clamp pulling the
+  // Zone large enough to avoid the zone-bounds clamp pulling the
   // camera back at either edge. Both players sit deep inside.
-  const world = { cols: 1000, rows: 1000 };
+  const zone = { cols: 1000, rows: 1000 };
   const p1 = { x: 100, y: 100 };
   const p2 = { x: 120, y: 108 };
-  updateCamera(camera, [p1, p2], world);
+  updateCamera(camera, [p1, p2], zone);
   const camCenterX = camera.x + camera.w / 2;
   const camCenterY = camera.y + camera.h / 2;
   assert.ok(Math.abs(camCenterX - 110.5) < 0.001, `camCenterX=${camCenterX}`);
@@ -109,8 +109,8 @@ test("camera averages two live players in co-op", () => {
 
 test("camera with a single player matches the old single-player path", () => {
   const camera = createCamera();
-  const world = { cols: 1000, rows: 1000 };
-  updateCamera(camera, { x: 100, y: 100 }, world);
+  const zone = { cols: 1000, rows: 1000 };
+  updateCamera(camera, { x: 100, y: 100 }, zone);
   const camCenterX = camera.x + camera.w / 2;
   const camCenterY = camera.y + camera.h / 2;
   assert.ok(Math.abs(camCenterX - 100.5) < 0.001);

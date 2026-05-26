@@ -1,12 +1,12 @@
-// Per-world pre-rendered canvases. The biome and construction layers
+// Per-zone pre-rendered canvases. The biome and construction layers
 // are mostly static (construction never changes; biome cycles through
 // BIOME_NUMBER_OF_FRAMES animation strips that swap once per ~1.3s).
 // Re-blitting the whole tile grid every frame is the main render cost
-// on phones, so we bake each world's tiles into offscreen canvases the
+// on phones, so we bake each zone's tiles into offscreen canvases the
 // first time we draw it and then blit one big rect per layer per frame.
 //
-// Cache lives in a WeakMap keyed on the world object, so unloaded
-// worlds (via teleport) drop their canvases when GC'd.
+// Cache lives in a WeakMap keyed on the zone object, so unloaded
+// zones (via teleport) drop their canvases when GC'd.
 
 import { TILE_SIZE, BIOME_NUMBER_OF_FRAMES } from "./constants.js";
 import { getSprite } from "./assets.js";
@@ -16,16 +16,16 @@ import { CONSTRUCTION } from "./constructions.js";
 
 const cache = new WeakMap();
 
-export function getWorldCache(world) {
-  let entry = cache.get(world);
+export function getZoneCache(zone) {
+  let entry = cache.get(zone);
   if (!entry) {
-    entry = build(world);
-    if (entry) cache.set(world, entry);
+    entry = build(zone);
+    if (entry) cache.set(zone, entry);
   }
   return entry;
 }
 
-function build(world) {
+function build(zone) {
   let biomeSheet, constructionSheet;
   try {
     biomeSheet = getBiomeSheet();
@@ -35,28 +35,28 @@ function build(world) {
   }
   if (!biomeSheet || !constructionSheet) return null;
 
-  const w = world.cols * TILE_SIZE;
-  const h = world.rows * TILE_SIZE;
+  const w = zone.cols * TILE_SIZE;
+  const h = zone.rows * TILE_SIZE;
 
   const biomeFrames = [];
   for (let frame = 0; frame < BIOME_NUMBER_OF_FRAMES; frame++) {
-    biomeFrames.push(bakeBiome(world, biomeSheet, frame, w, h));
+    biomeFrames.push(bakeBiome(zone, biomeSheet, frame, w, h));
   }
-  const construction = bakeConstruction(world, constructionSheet, w, h);
+  const construction = bakeConstruction(zone, constructionSheet, w, h);
 
   return { biomeFrames, construction, width: w, height: h };
 }
 
-function bakeBiome(world, sheet, frame, w, h) {
+function bakeBiome(zone, sheet, frame, w, h) {
   const cv = document.createElement("canvas");
   cv.width = w; cv.height = h;
   const ctx = cv.getContext("2d");
   ctx.imageSmoothingEnabled = false;
   const rowOffset = frame * NUM_BIOMES;
-  for (let r = 0; r < world.rows; r++) {
-    const biomeRow = world.biome[r];
-    const colRow = world.biomeCol[r];
-    for (let c = 0; c < world.cols; c++) {
+  for (let r = 0; r < zone.rows; r++) {
+    const biomeRow = zone.biome[r];
+    const colRow = zone.biomeCol[r];
+    for (let c = 0; c < zone.cols; c++) {
       const b = biomeRow[c];
       const sheetCol = colRow[c];
       const sx = sheetCol * TILE_SIZE;
@@ -68,15 +68,15 @@ function bakeBiome(world, sheet, frame, w, h) {
   return cv;
 }
 
-function bakeConstruction(world, sheet, w, h) {
+function bakeConstruction(zone, sheet, w, h) {
   const cv = document.createElement("canvas");
   cv.width = w; cv.height = h;
   const ctx = cv.getContext("2d");
   ctx.imageSmoothingEnabled = false;
-  for (let r = 0; r < world.rows; r++) {
-    const conRow = world.construction[r];
-    const rowIdx = world.constructionRow[r];
-    for (let c = 0; c < world.cols; c++) {
+  for (let r = 0; r < zone.rows; r++) {
+    const conRow = zone.construction[r];
+    const rowIdx = zone.constructionRow[r];
+    for (let c = 0; c < zone.cols; c++) {
       const id = conRow[c];
       if (id === CONSTRUCTION.NOTHING) continue;
       const sx = id * TILE_SIZE;

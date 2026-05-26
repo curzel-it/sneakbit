@@ -3,12 +3,12 @@
 // construction tiles, entity species) plus click-to-place / right-click
 // to erase, with drag-paint on tile selections.
 //
-// Edits mutate state.rawWorld directly — the same raw JSON object that
-// buildWorld() consumed at boot. After each placement we re-run
-// buildWorld(raw) and swap state.world; the world cache (WeakMap keyed
-// on the world object) auto-rebuilds on the next render. This matches
+// Edits mutate state.rawZone directly — the same raw JSON object that
+// buildZone() consumed at boot. After each placement we re-run
+// buildZone(raw) and swap state.zone; the zone cache (WeakMap keyed
+// on the zone object) auto-rebuilds on the next render. This matches
 // the spec's "edit-then-rebuild" model: whatever the editor produces in
-// memory matches the shape of the shipped JSON, so Export-world is a
+// memory matches the shape of the shipped JSON, so Export-zone is a
 // straight serialize.
 //
 // Desktop-only: the menu entry that opens this is hidden on coarse
@@ -22,11 +22,11 @@ import { TILE_SIZE } from "./constants.js";
 import { allSpecies, getSpecies, getEntitySheet } from "./species.js";
 import { BIOME, biomeToChar } from "./biomes.js";
 import { CONSTRUCTION, constructionToChar } from "./constructions.js";
-import { buildWorld } from "./world.js";
+import { buildZone } from "./zone.js";
 import { setupPuzzles } from "./puzzles.js";
 import { setupCutscenes } from "./cutscenes.js";
-import { invalidateWorldCache } from "./data.js";
-import { putBufferedWorld } from "./worldBuffer.js";
+import { invalidateZoneCache } from "./data.js";
+import { putBufferedZone } from "./zoneBuffer.js";
 import { getBiomeSheet } from "./biomeSheet.js";
 import { getSprite } from "./assets.js";
 import { tryBuildingPrefab } from "./prefabs.js";
@@ -44,7 +44,7 @@ let selection = null; // { kind: "biome"|"construction"|"species", id, label, ch
 let painting = false; // mouse held during a tile-paint stroke
 
 // Negative-id pool for editor-spawned entities — keeps them visually
-// distinct in JSON diffs from the world's shipped ids (which are large
+// distinct in JSON diffs from the zone's shipped ids (which are large
 // positive numbers like 10754362). Decrementing keeps subsequent
 // placements unique.
 let nextEditorEntityId = -1;
@@ -295,27 +295,27 @@ function highlightSelected(grid, btn) {
   btn.classList.add("selected");
 }
 
-// Convert a mouse event on the game canvas into a world (tileX, tileY).
-// Returns null if the click landed outside the world.
+// Convert a mouse event on the game canvas into a zone (tileX, tileY).
+// Returns null if the click landed outside the zone.
 function canvasEventToTile(e) {
   const state = stateGetter();
-  if (!state?.world || !canvasEl) return null;
+  if (!state?.zone || !canvasEl) return null;
   const rect = canvasEl.getBoundingClientRect();
   const cssX = e.clientX - rect.left;
   const cssY = e.clientY - rect.top;
   if (cssX < 0 || cssY < 0 || cssX >= rect.width || cssY >= rect.height) return null;
   const bx = (cssX / rect.width) * canvasEl.width;
   const by = (cssY / rect.height) * canvasEl.height;
-  // Renderer applies Math.round(-camera.x * TILE_SIZE) as the world-origin
-  // pixel offset; invert that to recover the world-tile under the cursor.
+  // Renderer applies Math.round(-camera.x * TILE_SIZE) as the zone-origin
+  // pixel offset; invert that to recover the zone-tile under the cursor.
   const ox = Math.round(-state.camera.x * TILE_SIZE);
   const oy = Math.round(-state.camera.y * TILE_SIZE);
-  const worldPxX = bx - ox;
-  const worldPxY = by - oy;
-  const tileX = Math.floor(worldPxX / TILE_SIZE);
-  const tileY = Math.floor(worldPxY / TILE_SIZE);
+  const zonePxX = bx - ox;
+  const zonePxY = by - oy;
+  const tileX = Math.floor(zonePxX / TILE_SIZE);
+  const tileY = Math.floor(zonePxY / TILE_SIZE);
   if (tileX < 0 || tileY < 0) return null;
-  if (tileX >= state.world.cols || tileY >= state.world.rows) return null;
+  if (tileX >= state.zone.cols || tileY >= state.zone.rows) return null;
   return { tileX, tileY };
 }
 
@@ -360,13 +360,13 @@ function onCanvasContextMenu(e) {
   eraseTile(t.tileX, t.tileY);
 }
 
-// Mutates state.rawWorld to apply the current selection at (tileX, tileY)
-// then rebuilds state.world so the change is visible immediately.
+// Mutates state.rawZone to apply the current selection at (tileX, tileY)
+// then rebuilds state.zone so the change is visible immediately.
 function placeSelection(tileX, tileY) {
   if (!selection) return;
   const state = stateGetter();
-  if (!state?.rawWorld) return;
-  const raw = state.rawWorld;
+  if (!state?.rawZone) return;
+  const raw = state.rawZone;
   if (selection.kind === "biome") {
     setBiomeChar(raw, tileX, tileY, selection.char);
   } else if (selection.kind === "construction") {
@@ -376,13 +376,13 @@ function placeSelection(tileX, tileY) {
   } else {
     return;
   }
-  rebuildWorld(state);
+  rebuildZone(state);
 }
 
 function eraseTile(tileX, tileY) {
   const state = stateGetter();
-  if (!state?.rawWorld) return;
-  const raw = state.rawWorld;
+  if (!state?.rawZone) return;
+  const raw = state.rawZone;
   // Erase = NOTHING on the construction layer (matches Rust map_editor's
   // Construction::Nothing payload). Leaves the biome untouched so the
   // floor underneath stays the same.
@@ -397,7 +397,7 @@ function eraseTile(tileX, tileY) {
                 && tileY >= f.y && tileY < f.y + f.h;
     return !within;
   });
-  rebuildWorld(state);
+  rebuildZone(state);
 }
 
 function setBiomeChar(raw, tileX, tileY, ch) {
@@ -421,7 +421,7 @@ function setConstructionChar(raw, tileX, tileY, ch) {
 // Stamp a new entity into raw.entities. NPCs use a 1×2 sprite whose
 // feet land on the cursor — Rust map_editor offsets frame.y by -1 for
 // that. Everything else lands at the cursor's top-left. Buildings get
-// the prefab expansion (door teleporter + auto-generated interior world
+// the prefab expansion (door teleporter + auto-generated interior zone
 // in the IndexedDB buffer); unknown buildings fall through to the
 // single-entity path.
 function addEntity(raw, tileX, tileY, speciesId) {
@@ -433,13 +433,13 @@ function addEntity(raw, tileX, tileY, speciesId) {
     if (prefab) {
       raw.entities = raw.entities ?? [];
       for (const e of prefab.entities) raw.entities.push(e);
-      // Persist each generated interior world to the override buffer so the
+      // Persist each generated interior zone to the override buffer so the
       // door teleporter resolves on first crossing. Fire-and-forget — IDB
       // writes are async, but the player can't reach the interior faster
       // than the write commits.
-      for (const interior of prefab.interiorWorlds ?? []) {
-        putBufferedWorld(interior.id, interior).catch((err) => {
-          console.warn("prefabs: failed to buffer interior world", err);
+      for (const interior of prefab.interiorZones ?? []) {
+        putBufferedZone(interior.id, interior).catch((err) => {
+          console.warn("prefabs: failed to buffer interior zone", err);
         });
       }
       return;
@@ -467,21 +467,21 @@ function addEntity(raw, tileX, tileY, speciesId) {
   raw.entities.push(entity);
 }
 
-// Re-derive the runtime world from the mutated raw JSON. Also flushes
+// Re-derive the runtime zone from the mutated raw JSON. Also flushes
 // the override buffer in the background so the edit survives a refresh
-// even without an intervening teleport — matches the spec's "Save world
+// even without an intervening teleport — matches the spec's "Save zone
 // (flush to buffer)" semantics, just automatic on every placement.
-function rebuildWorld(state) {
-  const next = buildWorld(state.rawWorld);
+function rebuildZone(state) {
+  const next = buildZone(state.rawZone);
   setupPuzzles(next);
   setupCutscenes(next);
   // Preserve the spawnPoint the player came in on so death respawn still
   // works while the level is being edited.
-  if (state.world?.spawnPoint) next.spawnPoint = state.world.spawnPoint;
-  state.world = next;
-  invalidateWorldCache(state.world?.id ?? state.rawWorld.id);
-  if (state.rawWorld?.id != null) {
-    putBufferedWorld(state.rawWorld.id, state.rawWorld).catch((err) => {
+  if (state.zone?.spawnPoint) next.spawnPoint = state.zone.spawnPoint;
+  state.zone = next;
+  invalidateZoneCache(state.zone?.id ?? state.rawZone.id);
+  if (state.rawZone?.id != null) {
+    putBufferedZone(state.rawZone.id, state.rawZone).catch((err) => {
       console.warn("creative: buffer flush failed", err);
     });
   }
@@ -540,7 +540,7 @@ function drawGhostFrame() {
   ghostCtx.clearRect(0, 0, ghostCanvas.width, ghostCanvas.height);
 
   const state = stateGetter();
-  if (!state?.world || !selection) { ghostCanvas.style.display = "none"; return; }
+  if (!state?.zone || !selection) { ghostCanvas.style.display = "none"; return; }
   if (cursorCssX < 0 || cursorCssY < 0) { ghostCanvas.style.display = "none"; return; }
 
   // CSS-pixel cursor → drawing-buffer pixel → tile.
@@ -550,7 +550,7 @@ function drawGhostFrame() {
   const oy = Math.round(-state.camera.y * TILE_SIZE);
   const tileX = Math.floor((bx - ox) / TILE_SIZE);
   const tileY = Math.floor((by - oy) / TILE_SIZE);
-  if (tileX < 0 || tileY < 0 || tileX >= state.world.cols || tileY >= state.world.rows) {
+  if (tileX < 0 || tileY < 0 || tileX >= state.zone.cols || tileY >= state.zone.rows) {
     ghostCanvas.style.display = "none";
     return;
   }

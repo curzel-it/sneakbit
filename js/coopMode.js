@@ -8,7 +8,7 @@
 //   * inventory, HP, skills and save data are shared (one save slot)
 //   * the camera follows the midpoint between the two players
 //
-// Toggling the flag triggers a page reload — it changes the world's
+// Toggling the flag triggers a page reload — it changes the zone's
 // entity list (we add/remove P2) and the input wiring at boot, which
 // is simpler than tearing both down at runtime.
 
