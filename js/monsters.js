@@ -40,7 +40,11 @@ export function isMonsterSpecies(id) { return MONSTER_TIERS.has(id); }
 
 export function tickMonsterFusion(world) {
   if (!world?.entities) return;
-  const entities = world.entities;
+  // Only fuse monsters that are currently on screen. Two off-screen
+  // monsters merging would tier up unchecked while the player can't
+  // see — matches Rust's visibility-gated hitmap behavior.
+  const entities = world.visibleEntities ?? world.entities;
+  const removalSource = world.entities;
   for (let i = entities.length - 1; i >= 0; i--) {
     const self = entities[i];
     if (!isMonsterSpecies(self.species_id)) continue;
@@ -48,38 +52,32 @@ export function tickMonsterFusion(world) {
     const nextId = nextSpeciesId(self.species_id);
     if (nextId == null) continue;
 
-    const partnerIdx = findCompatiblePartner(entities, i, self);
-    if (partnerIdx === -1) continue;
+    const partner = findCompatiblePartner(entities, i, self);
+    if (!partner) continue;
 
     promoteSpecies(self, nextId);
-    entities.splice(partnerIdx, 1);
-    // Index shift: removing partner before `i` would invalidate the iteration
-    // step on the next pass, but our outer loop already iterates backward
-    // and we exit as soon as we promote one monster per tick anyway.
+    const removeAt = removalSource.indexOf(partner);
+    if (removeAt >= 0) removalSource.splice(removeAt, 1);
     return;
   }
 }
 
 function findCompatiblePartner(entities, selfIdx, self) {
   const selfFrame = self.frame;
-  if (!selfFrame) return -1;
+  if (!selfFrame) return null;
   for (let j = 0; j < entities.length; j++) {
     if (j === selfIdx) continue;
     const other = entities[j];
     if (!isMonsterSpecies(other.species_id)) continue;
     if (other._dying) continue;
-    // Mirrors Rust's "species_id <= self.species_id && entity_id <= self.id"
-    // — we use array index as a deterministic stand-in for entity id when
-    // entities don't carry one. This keeps fusion idempotent: only one
-    // direction of the pair triggers, no ping-pong.
     if (other.species_id > self.species_id) continue;
     const oid = other.id ?? j;
     const sid = self.id ?? selfIdx;
     if (oid > sid) continue;
     if (!framesOverlap(selfFrame, other.frame)) continue;
-    return j;
+    return other;
   }
-  return -1;
+  return null;
 }
 
 function framesOverlap(a, b) {

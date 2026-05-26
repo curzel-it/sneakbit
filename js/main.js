@@ -47,6 +47,7 @@ import { setupPuzzles, tickPuzzles } from "./puzzles.js";
 import { setupCutscenes, tickCutscenes } from "./cutscenes.js";
 import { tickTrails } from "./trails.js";
 import { tickPushables } from "./pushables.js";
+import { updateVisibleEntities } from "./worldVisibility.js";
 import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js";
 import { runMigrations } from "./migrations.js";
 
@@ -147,6 +148,11 @@ async function main() {
     if (!paused) {
       updatePlayer(state.player, input, dt, state.world);
       maybeTeleport(state);
+      // Camera locks to the player and feeds the visibility filter that
+      // gates per-entity ticks below. Moved here so the entity ticks see
+      // the current frame's viewport instead of last frame's.
+      updateCamera(state.camera, state.player, state.world);
+      updateVisibleEntities(state.world, state.camera);
       tickShooting(dt);
       tickMelee(dt);
       tickMobs(state.world, state.player, dt);
@@ -161,8 +167,12 @@ async function main() {
       tickPlayerHealth(dt);
       tickFastTravel(dt);
       if (isPlayerDead()) handleDeath(state);
+    } else {
+      // When paused, keep the camera tracking the player so on resume
+      // there's no jolt, but don't bother re-running the visibility pass
+      // (the entity ticks are gated by `paused` above and won't read it).
+      updateCamera(state.camera, state.player, state.world);
     }
-    updateCamera(state.camera, state.player, state.world);
     tickBiomeAnimation(biomeAnim, dt);
     tickEntities(dt);
     tickInteract();

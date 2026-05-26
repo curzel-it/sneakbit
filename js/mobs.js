@@ -34,7 +34,13 @@ const ALL_DIRS = ["up", "down", "left", "right"];
 
 export function tickMobs(world, player, dt) {
   if (!world?.entities) return;
-  for (const e of world.entities) {
+  // Only tick mobs whose frame overlaps the viewport this frame. Mirrors
+  // Rust's update_hitmaps gating: a monster that has wandered off-screen
+  // freezes in place. This is gameplay, not just perf — it stops monsters
+  // from merging behind the camera and lets the player time kunai launches
+  // against a stable layout.
+  const list = world.visibleEntities ?? world.entities;
+  for (const e of list) {
     if (e._spawned) continue;
     const sp = getSpecies(e.species_id);
     if (!sp) continue;

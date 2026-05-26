@@ -21,7 +21,10 @@ let nextMinionId = -1_000_000; // negative ids stay clear of world-loaded entity
 
 export function tickMinionSpawning(world, player, dt) {
   if (!world?.entities || !player) return;
-  for (const e of world.entities) {
+  // Only spawn minions for bosses currently on screen — matches Rust's
+  // visibility-gated update path. An off-screen boss freezes its cooldown.
+  const list = world.visibleEntities ?? world.entities;
+  for (const e of list) {
     if (e.species_id !== BOSS_SPECIES_ID) continue;
     if (e._spawned || e._dying) continue;
     const sp = getSpecies(e.species_id);

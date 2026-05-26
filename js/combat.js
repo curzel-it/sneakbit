@@ -98,6 +98,10 @@ function resolveBullets(world, player, dt) {
       if (j === i) continue;
       const t = ents[j];
       if (t._spawned) continue;
+      // Off-screen targets don't take bullet damage. Matches Rust's hitmap
+      // gating — a kunai launched towards a tile the player can no longer
+      // see passes harmlessly through it.
+      if (t._visible === false) continue;
       const tsp = getSpecies(t.species_id);
       if (!tsp || !isBulletTarget(tsp)) continue;
       if (!rectsOverlap(hitbox, entityHittable(t, tsp))) continue;
@@ -155,7 +159,11 @@ function resolveMeleeMonsters(world, player, dt) {
   if (!player) return;
   const px = player.x + 0.5;
   const py = player.y + 0.5;
-  for (const e of world.entities) {
+  // Off-screen monsters can't damage the player. Matches Rust's hitmap-
+  // based attack resolution and prevents unseen "ghost" damage from
+  // critters lurking past the camera edge.
+  const list = world.visibleEntities ?? world.entities;
+  for (const e of list) {
     if (e._spawned) continue;
     const sp = getSpecies(e.species_id);
     if (!sp) continue;
