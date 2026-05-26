@@ -62,6 +62,16 @@ test("FindHero mob takes a step toward the player on tick", () => {
   assert.equal(mob._ai.step, null);
 });
 
+test("FindHero mob wanders when the player is out of vision range", () => {
+  const world = makeWorld();
+  const mob = { species_id: 4004, frame: { x: 5, y: 5, w: 1, h: 2 } };
+  world.entities.push(mob);
+  // Player far away (Manhattan distance > VISION_TILES=6).
+  const player = { tileX: 19, tileY: 19 };
+  tickMobs(world, player, 0.02);
+  assert.ok(mob._ai.step, "wander step started even though player is out of vision");
+});
+
 test("FindHero mob falls back to the secondary direction when primary is blocked", () => {
   // Wall directly to the right of the mob's feet tile.
   const world = makeWorld((c, r) => !(c === 6 && r === 6));

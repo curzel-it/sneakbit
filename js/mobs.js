@@ -1,9 +1,10 @@
 // Mob AI — tile-locked, Gameboy-style stepping.
 //
 // Two movement modes match the original Rust core:
-//   * FindHero (e.g. monsters 4003/4004/4005…) chases the player when
-//     the player is within line-of-sight distance, otherwise wanders.
-//   * Free (e.g. slime 4001) just wanders at random.
+//   * FindHero chases the player when within vision range; otherwise it
+//     wanders, matching `move_chasing_player`'s fall-through to
+//     `move_around_free` in the Rust core.
+//   * Free just wanders at random.
 //
 // Each mob carries a small `_ai` state with its own step (from→to, with
 // progress 0..1) so its sprite slides smoothly between integer tiles,
@@ -65,10 +66,9 @@ function decideStep(e, sp, world, player, dt) {
     for (const dir of chaseDirections(e, player)) {
       if (tryStartStep(e, dir, world, /* chase */ true)) return;
     }
-    e._ai.decideTimer = 0.15;
-    return;
   }
-  // Wander.
+  // Wander — also the fallback for FindHero mobs that can't see/reach
+  // the player, so monsters keep moving even out of line of sight.
   const dirs = ALL_DIRS.slice();
   shuffle(dirs);
   for (const dir of dirs) {
