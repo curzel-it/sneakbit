@@ -14,9 +14,15 @@ import { getSpecies } from "./species.js";
 import { isWalkable } from "./world.js";
 
 const VISION_TILES = 6;            // chase trigger range (Manhattan)
-const CHASE_STEP_DURATION = 0.30;  // sec/tile when chasing
-const WANDER_STEP_DURATION = 0.45; // sec/tile when wandering
 const WANDER_PAUSE = 0.9;          // sec idle between wander steps
+// Mirrors Rust config().base_entity_speed = TILE_SIZE * 1.6 (so the
+// effective movement rate is `base_speed × 1.6` tiles/sec). Used to
+// derive a per-species step duration from species.base_speed instead
+// of fixed CHASE / WANDER constants. The two flat constants were too
+// fast for slow critters (slime, 1.0) and too slow for fast ones (cat,
+// 2.0), which is what bug #4 in todo.md was about.
+const TILE_RATE_PER_BASE_SPEED = 1.6;
+const FALLBACK_BASE_SPEED = 1.4;   // ~Rust grapevine boss speed
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -62,9 +68,10 @@ function decideStep(e, sp, world, player, dt) {
   e._ai.decideTimer -= dt;
   if (e._ai.decideTimer > 0) return;
 
+  const stepDuration = stepDurationFor(sp);
   if (sp.movement_directions === "FindHero") {
     for (const dir of chaseDirections(e, player)) {
-      if (tryStartStep(e, dir, world, /* chase */ true)) return;
+      if (tryStartStep(e, dir, world, stepDuration)) return;
     }
   }
   // Wander — also the fallback for FindHero mobs that can't see/reach
@@ -72,12 +79,12 @@ function decideStep(e, sp, world, player, dt) {
   const dirs = ALL_DIRS.slice();
   shuffle(dirs);
   for (const dir of dirs) {
-    if (tryStartStep(e, dir, world, false)) return;
+    if (tryStartStep(e, dir, world, stepDuration)) return;
   }
   e._ai.decideTimer = WANDER_PAUSE;
 }
 
-function tryStartStep(e, dir, world, chase) {
+function tryStartStep(e, dir, world, duration) {
   const [dx, dy] = DIR_DELTA[dir];
   const toX = e._ai.tileX + dx;
   const toY = e._ai.tileY + dy;
@@ -88,9 +95,19 @@ function tryStartStep(e, dir, world, chase) {
     fromY: e._ai.tileY,
     toX, toY,
     progress: 0,
-    duration: chase ? CHASE_STEP_DURATION : WANDER_STEP_DURATION,
+    duration,
   };
   return true;
+}
+
+// Per-species step duration mirrors Rust's straight-movement math
+// (current_speed × 1.6 tiles/sec, derived from base_entity_speed =
+// TILE_SIZE × 1.6 set in game/src/main.rs). Clamped so an extreme
+// species data value can't produce a sub-frame step or freeze a mob.
+function stepDurationFor(sp) {
+  const base = sp.base_speed > 0 ? sp.base_speed : FALLBACK_BASE_SPEED;
+  const tilesPerSec = base * TILE_RATE_PER_BASE_SPEED;
+  return Math.max(0.12, Math.min(1.5, 1 / tilesPerSec));
 }
 
 function advanceStep(e, dt) {
