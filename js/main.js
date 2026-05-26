@@ -214,7 +214,14 @@ function maybeTeleport(state) {
   checkPickup(state);
   const tele = findTeleporterAt(world, player.tileX, player.tileY);
   if (tele) {
-    travelTo(state, tele.destination).then(() => {
+    // World data stores destination.y as the Rust frame.y (sprite TOP)
+    // while travelTo / player.tileY work in feet-tile space. Bump by 1
+    // so the player drops onto the floor in front of the destination
+    // door instead of clipping a tile high. Other callers of travelTo
+    // (death respawn, fast travel) already pass feet-y values.
+    const d = tele.destination;
+    const dest = { ...d, y: (d?.y ?? 0) + 1 };
+    travelTo(state, dest).then(() => {
       markVisited(state.world.id);
       saveProgress(state);
     });

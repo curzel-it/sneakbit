@@ -96,12 +96,12 @@ export async function travelTo(state, destination) {
 // that teleporter (typically down) so they don't immediately retrigger
 // it and so they stand visually in front of the door, not on it.
 //
-// Note on the +1 below: Rust stores the hero's frame.y as the TOP of the
-// 1×2 sprite — feet sit at frame.y + 1 (see leave_footsteps). Our
-// player.tileY is the FEET tile, so destinations baked into world data
-// need to be shifted down one tile to land in the same spot the Rust
-// build does. Without it the player appears one tile high (visible
-// when teleporting between 1001 ↔ 1002).
+// Convention: destination.x, destination.y are in the feet/tile space —
+// same as player.tileX/tileY. Callers reading from world data (where Y
+// is the Rust frame.y, i.e. the TOP of the 1×2 sprite) must add 1
+// before calling travelTo — main.js::maybeTeleport does this for the
+// in-world teleporter path. The death-respawn path in main.js passes
+// STARTING_SPAWN directly because that constant is already feet-tile.
 function resolveSpawn(world, destination, sourceWorldId) {
   const ox = destination.x ?? 0;
   const oy = destination.y ?? 0;
@@ -112,7 +112,7 @@ function resolveSpawn(world, destination, sourceWorldId) {
   }
   return [
     clamp(ox, 0, world.cols - 1),
-    clamp(oy + 1, 0, world.rows - 1),
+    clamp(oy, 0, world.rows - 1),
   ];
 }
 
@@ -170,6 +170,10 @@ function movePlayerTo(player, tileX, tileY, direction) {
   player.queuedDir = null;
   player.pendingDir = null;
   player.pendingTimer = 0;
+  // Strip any in-flight slide momentum from ice — keeps the respawned
+  // player from immediately stepping off in whatever direction they
+  // were sliding when they died.
+  player._sliding = false;
   if (direction && direction !== "None") {
     player.direction = direction.toLowerCase();
   }
