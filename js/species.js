@@ -80,6 +80,7 @@ function decorate(raw) {
     melee_dps_multiplier: raw.melee_dps_multiplier ?? 1,
     equipment_usage_sound_effect: raw.equipment_usage_sound_effect ?? null,
     associated_weapon: raw.associated_weapon ?? null,
+    received_damage_reduction: raw.received_damage_reduction ?? 0,
   };
 }
 
