@@ -37,7 +37,6 @@ export function installMenu() {
         <button id="menu-export-save" data-creative-only>Export save (copy JSON)</button>
         <button id="menu-import-save" data-creative-only>Import save (paste JSON)</button>
         <button id="menu-open-credits">Credits</button>
-        <button id="menu-toggle-coop">Co-op: <span id="menu-coop-state">off</span></button>
         <button id="menu-new-game">New game (wipe save)</button>
         <button id="menu-clear-cache">Clear cache &amp; reload</button>
       </div>
@@ -65,6 +64,13 @@ export function installMenu() {
       <div class="menu-row">
         <label for="opt-fps"><input id="opt-fps" type="checkbox" /> Show FPS</label>
       </div>
+      <div class="menu-row">
+        <label for="opt-coop"><input id="opt-coop" type="checkbox" /> Local co-op (2 players)</label>
+      </div>
+      <p class="menu-hint" id="opt-coop-hint">
+        P1: WASD + Z/X/C &nbsp;·&nbsp; P2: IJKL + B/N/M<br>
+        Toggling reloads the page.
+      </p>
       <div class="menu-row menu-controls">
         <button id="menu-open-controls">Key bindings…</button>
         <button id="menu-settings-back">Back</button>
@@ -156,10 +162,6 @@ export function isMenuOpen() { return open; }
 // save-related actions when GameMode::Creative). In the regular
 // player-facing build, progress is saved automatically and there's no
 // need to expose JSON blobs.
-function refreshCoopLabel() {
-  const el = root.querySelector("#menu-coop-state");
-  if (el) el.textContent = isCoopMode() ? "on" : "off";
-}
 
 function applyCreativeModeVisibility() {
   const visible = isCreativeMode();
@@ -286,16 +288,6 @@ function bindWidgets() {
   root.querySelector("#menu-inventory-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-export-save").addEventListener("click", exportSave);
   root.querySelector("#menu-import-save").addEventListener("click", importSave);
-  refreshCoopLabel();
-  root.querySelector("#menu-toggle-coop").addEventListener("click", () => {
-    const next = !isCoopMode();
-    const msg = next
-      ? "Enable co-op?\n\nP1: WASD + Z/X/C (interact / kunai / melee)\nP2: IJKL + B/N/M\n\nThe page will reload."
-      : "Disable co-op?\n\nThe page will reload and P2 will be removed.";
-    if (!confirm(msg)) return;
-    setCoopMode(next);
-    location.reload();
-  });
   root.querySelector("#menu-new-game").addEventListener("click", () => {
     if (!confirm("Wipe save and start over? Inventory, dialogue progress and unlocked skills will be reset.")) return;
     // Tell main.js's beforeunload listener to stand down — otherwise it
@@ -334,6 +326,22 @@ function bindWidgets() {
   });
   muted.addEventListener("change", () => saveSettings({ muted: muted.checked }));
   fps.addEventListener("change", () => saveSettings({ showFps: fps.checked }));
+
+  const coop = root.querySelector("#opt-coop");
+  coop.addEventListener("change", () => {
+    const next = coop.checked;
+    const msg = next
+      ? "Enable co-op?\n\nP1: WASD + Z/X/C (interact / kunai / melee)\nP2: IJKL + B/N/M\n\nThe page will reload."
+      : "Disable co-op?\n\nThe page will reload and P2 will be removed.";
+    if (!confirm(msg)) {
+      // User cancelled — revert the checkbox to its old state without
+      // touching storage or reloading.
+      coop.checked = !next;
+      return;
+    }
+    setCoopMode(next);
+    location.reload();
+  });
 }
 
 function syncSettingsWidgets() {
@@ -346,6 +354,7 @@ function syncSettingsWidgets() {
   root.querySelector("#opt-music-volume-val").textContent = `${music}%`;
   root.querySelector("#opt-muted").checked = !!s.muted;
   root.querySelector("#opt-fps").checked = !!s.showFps;
+  root.querySelector("#opt-coop").checked = isCoopMode();
 }
 
 // Snapshot every sneakbit.* localStorage key into a JSON blob and try to

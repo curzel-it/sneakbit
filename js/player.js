@@ -21,12 +21,32 @@ import { isWalkable, isEntityBlocked, hasEnterableTeleporter, isTileSlippery } f
 import { playSfx } from "./audio.js";
 import { findPushableAt, pushOneTile, startSlide } from "./pushables.js";
 import { findGateAt, tryUnlockGate } from "./gateUnlock.js";
+import { isCreativeMode } from "./creativeMode.js";
 
+// Hero sprites live on the `heroes` sheet at columns (1, 5, 9, 13) — one
+// per player index. Mirrors Rust entities/hero.rs::setup_hero_with_player_index.
+// Each sprite is a 4-frame strip starting at the column for that player.
 const HERO_BASE_FRAME = { x: 1, y: 1, w: 1, h: 2 };
+const HERO_FRAME_COLUMN_STRIDE = 4;
 const HERO_FRAME_COUNT = 4;
 
-const STEP_DURATION = 0.22;        // seconds per tile (~4.5 tiles/s)
+function heroFrameForIndex(index) {
+  return {
+    ...HERO_BASE_FRAME,
+    x: HERO_BASE_FRAME.x + (index | 0) * HERO_FRAME_COLUMN_STRIDE,
+  };
+}
+
+const STEP_DURATION_BASE = 0.22;   // seconds per tile (~4.5 tiles/s)
 const ROTATE_COMMIT_DELAY = 0.06;  // seconds a key must be held to commit a step
+
+// Creative mode doubles hero speed (Rust entities/hero.rs::setup_hero
+// applies a 2.0 multiplier in creative). Halving the per-step duration
+// produces the same tiles-per-second result without changing the rest
+// of the tile-locked movement model.
+function stepDuration() {
+  return isCreativeMode() ? STEP_DURATION_BASE * 0.5 : STEP_DURATION_BASE;
+}
 
 // Direction-state → sprite-row offset, multiplied by frame.h to get y.
 const DIRECTION_ROW = {
@@ -45,8 +65,12 @@ const DIR_DELTA = {
 
 const HOLD_PRIORITY = ["up", "down", "left", "right"];
 
-export function createPlayer() {
+export function createPlayer(opts = {}) {
+  const index = opts.index | 0;
   return {
+    // Identity. `index` selects which hero sprite column this player draws
+    // from and is the seam for upcoming per-player state (HP, inventory).
+    index,
     // Rendered position (floats, equal to tileX/tileY when idle).
     x: STARTING_SPAWN.x,
     y: STARTING_SPAWN.y,
@@ -57,7 +81,7 @@ export function createPlayer() {
     direction: "down",
     // Sprite-sheet metadata.
     sheetId: SPRITE_SHEET_HEROES,
-    baseFrame: { ...HERO_BASE_FRAME },
+    baseFrame: heroFrameForIndex(index),
     frameCount: HERO_FRAME_COUNT,
     frameIndex: 0,
     frameTimer: 0,
@@ -139,7 +163,7 @@ function advanceStep(player, input, dt, world) {
   }
 
   const step = player.step;
-  step.progress += dt / STEP_DURATION;
+  step.progress += dt / stepDuration();
 
   if (step.progress < 1) {
     const t = step.progress;
@@ -247,10 +271,14 @@ function canEnter(tx, ty, world, dir) {
   }
   // Locked gates: if the player has a matching key, consume it and open
   // the gate permanently. Otherwise the gate blocks like any rigid entity.
-  const gate = findGateAt(world, tx, ty);
-  if (gate && !gate._open) {
-    if (tryUnlockGate(gate)) return true;
-    return false;
+  // Creative mode skips the key check entirely — gates are non-rigid in
+  // creative (per setup_gate in Rust), so the hero strolls through.
+  if (!isCreativeMode()) {
+    const gate = findGateAt(world, tx, ty);
+    if (gate && !gate._open) {
+      if (tryUnlockGate(gate)) return true;
+      return false;
+    }
   }
   if (isEntityBlocked(world, tx, ty)) return false;
   return true;

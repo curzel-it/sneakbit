@@ -9,7 +9,7 @@ Source: `../dev/sneakbit/game_core/src` (read-only reference). The Rust project 
 | Aspect | Rust | Current HTML | Required |
 | --- | --- | --- | --- |
 | Co-op mode predicate | `is_real_time_co_op()` derived from `GameMode::RealTimeCoOp` (`multiplayer/modes.rs`) | `isCoopMode()` reads `sneakbit.coop.v1` from localStorage (`js/coopMode.js:25`) | unchanged |
-| Number of players | `0..MAX_PLAYERS` runtime-settable via `update_number_of_players` (`features/engine.rs:265-269`, `constants.rs:11`); `MAX_PLAYERS=4` | hardcoded to 1 (single) or 2 (co-op) in `main.js:114` | Pick: stay at 2-player only (web-realistic), OR support up to 4. Recommend **2** (we have at most one keyboard per machine; 4-player needs gamepads we haven't wired). |
+| Number of players | `0..MAX_PLAYERS` runtime-settable via `update_number_of_players` (`features/engine.rs:265-269`, `constants.rs:11`); `MAX_PLAYERS=4` | hardcoded to 1 (single) or 2 (co-op) in `main.js:114` | **Decided: 2-player only for now.** 3- and 4-player support is deferred until gamepad routing lands (then each extra player gets a connected controller). The codebase should still be structured around a `playerIndex` so the jump is mechanical, not a refactor. |
 | Player entity IDs | Hardcoded `420..423` in `constants.rs:23-30` (`PLAYER1_ENTITY_ID`..`PLAYER4_ENTITY_ID`) | Players don't currently live in `world.entities` — `state.player` / `state.player2` are separate objects | Adopt the same ID convention IF we ever push players into `world.entities`. Otherwise: skip — our split keeps player draw/update simpler. |
 | First turn / match rules | `GameTurn::RealTime`, match in-progress until P1 dies (`turns_use_case.rs:91-114`) | No turn system; HP-driven game over | Keep current — turn logic only matters for PvP. |
 | Player HP cap | `100.0` for RealTimeCoOp via `modes.rs::player_hp` | `MAX_HP=100` per player in `playerHealth.js:22` | unchanged |
@@ -109,7 +109,7 @@ These offsets index 4 visually distinct hero sprites on the `heroes.png` sheet (
 | Death signal | `PlayerDied(player_index)` → `dead_players.push(index)` + `handle_win_lose` (`engine.rs:163-167`) | `isPlayerDead()` → `handleDeath` immediately shows game over (`main.js:152, 179`) | Track dead players. Only call game over when **P1** dies. |
 | P2 death (P1 alive) | Game continues; P2 stays out of play until the world reloads. Toast: `"notification.player.died"` (`engine.rs:275-296`) | n/a | Hide P2's sprite + HP bar; let P1 keep playing. Show a toast. P2 returns to play on the next world transition (which respawns all players via `spawn_players`). |
 | P1 death | `MatchResult::GameOver`; engine waits for `revive()` (`turns_use_case.rs:91-99`, `engine.rs:306-313`) | Game over screen → travel to current world's `spawnPoint` (`main.js:262-272`, just landed) | unchanged for P1; ensure the revive path **also resets P2** (re-runs the co-op spawn-around-hero rule and clears `dead_players`). |
-| Self-damage / friendly fire | Player bullets can damage other players because Rust's `pvp_allowed` is true in RealTimeCoOp (`hits_handling_use_case.rs:20-35`) | n/a — only player→monster damage is wired | Decision needed. Recommend **off** for co-op (the original is friendly-fire-on, but for a casual web build that's surprising). |
+| Self-damage / friendly fire | Player bullets can damage other players because Rust's `pvp_allowed` is true in RealTimeCoOp (`hits_handling_use_case.rs:20-35`) | n/a — only player→monster damage is wired | **Decided: gate behind a setting, default off.** Add `friendlyFire` to `settings.js`; in `combat.js`, when a bullet's `playerIndex` overlaps a different player, only apply damage if the setting is on. |
 | Slippery / immobilize | `time_immobilized` clears per-player | n/a per-player | After per-player HP/state lands, immobilization tracking moves to the per-player record. |
 
 ## Combat / Damage Attribution
@@ -172,8 +172,7 @@ Concrete migration tasks once the per-player split lands:
 These Rust co-op-adjacent features are intentionally **not** ported:
 
 - **PvP arena.** Entire `GameMode::TurnBasedPvp` path, corner-spawn (`world_setup.rs:68-105`), turn rotation (`turns_use_case.rs::Player(turn_info)`), HP=1000.0 cap, world 1301.
-- **4-player support.** We target a single keyboard. Stretch goal only.
-- **Friendly fire.** Off by default in the HTML port.
+- **3- and 4-player support.** Deferred until gamepad routing lands — at that point each extra player gets a connected controller. The code should still thread `playerIndex` generically so adding P3/P4 is a wiring change, not a redesign.
 - **Per-player sound pan.** Web SFX is mono — `(PlayerIndex)` payloads on sound events stay informational.
 - **Save format compatibility with the Rust desktop save.** Behavioral parity only.
 

@@ -88,6 +88,10 @@ export async function travelTo(state, destination) {
     // instead of teleporting them all the way to the starting world.
     world.spawnPoint = { x: spawnX, y: spawnY };
     movePlayerTo(state.player, spawnX, spawnY, destination.direction);
+    // Co-op: respawn P2 next to P1 in P1's facing direction (Rust's
+    // spawn_coop_players_around_hero runs on every world entry). Falls
+    // back to stacking on P1 if the offset tile is blocked.
+    if (state.player2) repositionCoopP2(state.player2, state.player, world);
     await fadeIn();
   } finally {
     busy = false;
@@ -165,6 +169,21 @@ function findAnyTeleporter(world) {
 }
 
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+// Place P2 one tile in P1's facing direction, falling back to the same
+// tile as P1 if the offset is blocked / out of bounds. Matches Rust
+// world_setup::spawn_coop_players_around_hero.
+function repositionCoopP2(p2, p1, world) {
+  const off = DIR_OFFSET[p1.direction] ?? DIR_OFFSET.down;
+  const candX = p1.tileX + off[0];
+  const candY = p1.tileY + off[1];
+  const inBounds = candX >= 0 && candY >= 0
+    && candX < world.cols && candY < world.rows;
+  const free = inBounds
+    && isWalkable(world, candX, candY)
+    && !isEntityBlocked(world, candX, candY);
+  movePlayerTo(p2, free ? candX : p1.tileX, free ? candY : p1.tileY, p1.direction);
+}
 
 function movePlayerTo(player, tileX, tileY, direction) {
   player.tileX = tileX;

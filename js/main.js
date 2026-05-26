@@ -8,7 +8,7 @@ import { installDialogue, isDialogueOpen } from "./dialogue.js";
 import { installInteract, tickInteract } from "./interact.js";
 import { loadSpeciesData } from "./species.js";
 import { composeBiomeSheet } from "./biomeSheet.js";
-import { buildWorld } from "./world.js";
+import { buildWorld, isWalkable, isEntityBlocked } from "./world.js";
 import { initInput, pollInput } from "./input.js";
 import { createPlayer, updatePlayer } from "./player.js";
 import { createCamera, updateCamera } from "./camera.js";
@@ -111,7 +111,7 @@ async function main() {
   // In co-op, spawn P2 right next to P1 on the same tile by default — the
   // first move will separate them. Rust co-op uses the same "spawn around
   // hero" rule (game_core/src/worlds/world_setup.rs::spawn_coop_players_around_hero).
-  const player2 = isCoopMode() ? makeCoopP2(player) : null;
+  const player2 = isCoopMode() ? makeCoopP2(player, world) : null;
   const state = {
     world,
     player,
@@ -205,17 +205,35 @@ async function main() {
   });
 }
 
-// Build the co-op second player. Shares everything with P1 (sprite,
-// step duration, etc) — the only differences are the starting tile
-// (one to the right of P1, fallback to same tile) and a fresh
-// direction. Inventory / HP are global so no per-player state needed
-// on these fields here.
-function makeCoopP2(p1) {
-  const p2 = createPlayer();
-  p2.tileX = p1.tileX;
-  p2.tileY = p1.tileY;
-  p2.x = p1.x;
-  p2.y = p1.y;
+// Build the co-op second player. Mirrors Rust world_setup.rs's
+// spawn_coop_players_around_hero: P2 spawns one tile in P1's facing
+// direction so the two players don't overlap, falling back to the same
+// tile when the offset is blocked. createPlayer({ index: 1 }) selects
+// the second hero column from the heroes sheet so P2 is visually
+// distinct from P1.
+const DIR_DELTA = {
+  up:    [ 0, -1],
+  down:  [ 0,  1],
+  left:  [-1,  0],
+  right: [ 1,  0],
+};
+
+function makeCoopP2(p1, world) {
+  const p2 = createPlayer({ index: 1 });
+  const [dx, dy] = DIR_DELTA[p1.direction] ?? DIR_DELTA.down;
+  const candX = p1.tileX + dx;
+  const candY = p1.tileY + dy;
+  const okX = candX >= 0 && candX < world.cols;
+  const okY = candY >= 0 && candY < world.rows;
+  const useOffset = okX && okY
+    && isWalkable(world, candX, candY)
+    && !isEntityBlocked(world, candX, candY);
+  const sx = useOffset ? candX : p1.tileX;
+  const sy = useOffset ? candY : p1.tileY;
+  p2.tileX = sx;
+  p2.tileY = sy;
+  p2.x = sx;
+  p2.y = sy;
   p2.direction = "down";
   return p2;
 }
