@@ -17,8 +17,10 @@
 // integer tile and is the source of truth for collision and snapping.
 
 import { ANIMATIONS_FPS, SPRITE_SHEET_HEROES, STARTING_SPAWN } from "./constants.js";
-import { isWalkable, isEntityBlocked } from "./world.js";
+import { isWalkable, isEntityBlocked, hasEnterableTeleporter } from "./world.js";
 import { playSfx } from "./audio.js";
+import { findPushableAt, pushOneTile } from "./pushables.js";
+import { findGateAt, tryUnlockGate } from "./gateUnlock.js";
 
 const HERO_BASE_FRAME = { x: 1, y: 1, w: 1, h: 2 };
 const HERO_FRAME_COUNT = 4;
@@ -148,7 +150,7 @@ function startStep(player, dir, world) {
   const toX = player.tileX + dx;
   const toY = player.tileY + dy;
   player.direction = dir;
-  if (!canEnter(toX, toY, world)) return;
+  if (!canEnter(toX, toY, world, dir)) return;
   player.step = {
     fromX: player.tileX,
     fromY: player.tileY,
@@ -159,8 +161,26 @@ function startStep(player, dir, world) {
   playSfx("stepTaken", { volume: 0.5, jitter: 0.08 });
 }
 
-function canEnter(tx, ty, world) {
-  if (!isWalkable(world, tx, ty)) return false;
+function canEnter(tx, ty, world, dir) {
+  // Interior door tiles sit on a NOTHING biome tile — the player is meant
+  // to leave through them, so a teleporter on an otherwise-unwalkable tile
+  // overrides the biome obstacle (it already overrides rigid building tiles
+  // for entries; same idea in reverse for exits).
+  const onTeleporter = hasEnterableTeleporter(world, tx, ty);
+  if (!onTeleporter && !isWalkable(world, tx, ty)) return false;
+  // Pushables: if there's one in front, try to shove it one tile in the
+  // same direction. On success the player steps in; on failure they bounce.
+  const pushable = findPushableAt(world, tx, ty);
+  if (pushable) {
+    return pushOneTile(world, pushable, dir);
+  }
+  // Locked gates: if the player has a matching key, consume it and open
+  // the gate permanently. Otherwise the gate blocks like any rigid entity.
+  const gate = findGateAt(world, tx, ty);
+  if (gate && !gate._open) {
+    if (tryUnlockGate(gate)) return true;
+    return false;
+  }
   if (isEntityBlocked(world, tx, ty)) return false;
   return true;
 }

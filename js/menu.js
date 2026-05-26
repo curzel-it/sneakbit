@@ -8,6 +8,7 @@
 import { getSettings, saveSettings } from "./settings.js";
 import { playSfx } from "./audio.js";
 import { APP_VERSION } from "./constants.js";
+import { clearProgress } from "./save.js";
 
 let root = null;
 let open = false;
@@ -23,6 +24,7 @@ export function installMenu() {
       <div class="menu-row menu-controls menu-stack">
         <button id="menu-resume">Resume (Esc)</button>
         <button id="menu-open-settings">Settings</button>
+        <button id="menu-new-game">New game (wipe save)</button>
         <button id="menu-clear-cache">Clear cache &amp; reload</button>
       </div>
       <p class="menu-hint">
@@ -107,6 +109,12 @@ function bindWidgets() {
   root.querySelector("#menu-resume").addEventListener("click", closeMenu);
   root.querySelector("#menu-open-settings").addEventListener("click", () => showScreen("settings"));
   root.querySelector("#menu-settings-back").addEventListener("click", () => showScreen("pause"));
+  root.querySelector("#menu-new-game").addEventListener("click", () => {
+    if (!confirm("Wipe save and start over? Inventory, dialogue progress and unlocked skills will be reset.")) return;
+    try { localStorage.clear(); } catch {}
+    clearProgress();
+    location.reload();
+  });
   root.querySelector("#menu-clear-cache").addEventListener("click", () => {
     try { localStorage.clear(); } catch {}
     location.reload();

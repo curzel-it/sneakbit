@@ -11,11 +11,18 @@ export function updateCamera(camera, target, world) {
   let cx = target.x + 0.5 - camera.w / 2;
   let cy = target.y + 0.5 - camera.h / 2;
 
-  if (world) {
+  // Interior worlds match Rust: the camera always centers on the player,
+  // no clamping. Anything outside the world bounds is just empty space.
+  // Exterior worlds still clamp so the camera can't drift off the map.
+  if (world && !isInteriorWorld(world)) {
     cx = Math.max(0, Math.min(cx, world.cols - camera.w));
     cy = Math.max(0, Math.min(cy, world.rows - camera.h));
   }
 
   camera.x = cx;
   camera.y = cy;
+}
+
+function isInteriorWorld(world) {
+  return world.worldType === "HouseInterior";
 }

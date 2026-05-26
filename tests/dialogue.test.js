@@ -65,19 +65,19 @@ test("resolveEntityDialogue: expected=0 matches an unset key", () => {
   assert.equal(resolveEntityDialogue(entity), null);
 });
 
-test("resolveEntityDialogue: progression chain via dialogue_read keys", () => {
+test("resolveEntityDialogue: progression chain via dialogue.answer keys", () => {
   storage._resetStorageForTesting();
   const entity = {
     dialogues: [
-      { text: "third",  key: "dialogue_read.second", expected_value: 1 },
-      { text: "second", key: "dialogue_read.first",  expected_value: 1 },
+      { text: "third",  key: "dialogue.answer.second", expected_value: 1 },
+      { text: "second", key: "dialogue.answer.first",  expected_value: 1 },
       { text: "first",  key: "always" },
     ],
   };
   // No reads yet → only "first" matches.
   assert.equal(resolveEntityDialogue(entity).text, "first");
-  storage.setValue("dialogue_read.first", 1);
+  storage.setValue("dialogue.answer.first", 1);
   assert.equal(resolveEntityDialogue(entity).text, "second");
-  storage.setValue("dialogue_read.second", 1);
+  storage.setValue("dialogue.answer.second", 1);
   assert.equal(resolveEntityDialogue(entity).text, "third");
 });

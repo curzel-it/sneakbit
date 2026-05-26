@@ -117,9 +117,11 @@ function close() {
 }
 
 // Mark the dialogue as read (gates downstream dialogues) and grant any
-// one-time reward. Mirrors Rust dialogues.rs::handle_reward.
+// one-time reward. Mirrors Rust dialogues.rs::handle_reward and
+// storage.rs::set_dialogue_read — key prefix is `dialogue.answer.` so
+// the data files' existing display_conditions resolve correctly.
 function handleReward(d) {
-  if (d.text) setValue(`dialogue_read.${d.text}`, 1);
+  if (d.text) setValue(`dialogue.answer.${d.text}`, 1);
   if (!d.reward) return;
   const rewardKey = `dialogue.reward.${d.text}`;
   if (getValue(rewardKey) === 1) return;

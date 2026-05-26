@@ -1,0 +1,55 @@
+// Key-consuming unlocks for colored gates. Walking into a closed gate
+// while holding a matching key spends the key, marks the gate's lock as
+// None (so it stays open across world reloads), and lets the player pass.
+// Mirrors Rust's `lock_override` storage.
+
+import { getSpecies } from "./species.js";
+import {
+  canonicaliseLock,
+  keySpeciesIdForLock,
+  LOCK_NONE,
+  LOCK_PERMANENT,
+  saveLockOverride,
+} from "./locks.js";
+import { getAmmo, removeAmmo } from "./inventory.js";
+import { playSfx } from "./audio.js";
+import { showToast } from "./toast.js";
+
+export function findGateAt(world, tx, ty) {
+  if (!world?.entities) return null;
+  for (const e of world.entities) {
+    const sp = getSpecies(e.species_id);
+    if (!sp) continue;
+    if (sp.entity_type !== "Gate" && sp.entity_type !== "InverseGate") continue;
+    const f = e.frame; if (!f) continue;
+    if (tx < f.x || tx >= f.x + f.w) continue;
+    if (ty < f.y || ty >= f.y + f.h) continue;
+    return e;
+  }
+  return null;
+}
+
+// Returns true if the gate is now open (either was already open, or was
+// keyed and the player held a matching key).
+export function tryUnlockGate(gate) {
+  if (!gate) return false;
+  if (gate._open) return true;
+  const lock = canonicaliseLock(gate.lock_type);
+  if (lock === LOCK_NONE) {
+    gate._open = true;
+    gate._frameOffsetX = 1;
+    return true;
+  }
+  if (lock === LOCK_PERMANENT) return false;
+  const keyId = keySpeciesIdForLock(lock);
+  if (keyId == null) return false;
+  if (getAmmo(keyId) <= 0) return false;
+  removeAmmo(keyId, 1);
+  gate.lock_type = LOCK_NONE;
+  gate._open = true;
+  gate._frameOffsetX = 1;
+  if (gate.id != null) saveLockOverride(gate.id, LOCK_NONE);
+  playSfx("keyCollected");
+  showToast(`Unlocked ${lock.toLowerCase()} gate`, "hint");
+  return true;
+}

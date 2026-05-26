@@ -52,15 +52,15 @@ Gameboy-/Pokémon-style tile-locked stepping, implemented in `js/player.js`. Thi
 
 ## Assets
 
-Sprite sheets in `assets/` are exported from `~/dev/sneakbit/aseprite/*.aseprite`. To re-export from the original repo:
+Sprite sheets in `assets/` are exported from `../dev/sneakbit/aseprite/*.aseprite`. To re-export from the original repo:
 
 ```bash
 /Applications/Aseprite.app/Contents/MacOS/aseprite \
-  -b ~/dev/sneakbit/aseprite/heroes.aseprite \
+  -b ../dev/sneakbit/aseprite/heroes.aseprite \
   --all-layers --sheet ./assets/heroes.png
 ```
 
-Level data in `data/` is copied verbatim from `~/dev/sneakbit/data/`.
+Level data in `data/` is copied verbatim from `../dev/sneakbit/data/`.
 
 ## Credits
 

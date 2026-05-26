@@ -30,11 +30,17 @@ import { installShooting, tickShooting } from "./shooting.js";
 import { installMelee, tickMelee } from "./melee.js";
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js";
 import { tickMobs } from "./mobs.js";
+import { tickMonsterFusion } from "./monsters.js";
 import { tickCombat } from "./combat.js";
 import { tickAfterDialogue } from "./afterDialogue.js";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
 import { installHealthHud } from "./healthHud.js";
 import { applyFirstLaunch } from "./firstLaunch.js";
+import { loadProgress, saveProgress, clearProgress } from "./save.js";
+import { getWorldCache } from "./worldCache.js";
+import { setupPuzzles, tickPuzzles } from "./puzzles.js";
+import { setupCutscenes, tickCutscenes } from "./cutscenes.js";
+import { tickTrails } from "./trails.js";
 
 async function main() {
   initInput();
@@ -49,7 +55,9 @@ async function main() {
   installTouchControls();
   applyFirstLaunch();
 
-  const startId = parseInt(new URLSearchParams(location.search).get("world"), 10) || STARTING_WORLD_ID;
+  const urlWorld = parseInt(new URLSearchParams(location.search).get("world"), 10);
+  const saved = Number.isFinite(urlWorld) ? null : loadProgress();
+  const startId = Number.isFinite(urlWorld) ? urlWorld : (saved?.worldId ?? STARTING_WORLD_ID);
   const [, speciesRaw, stringsRaw, worldRaw] = await Promise.all([
     loadAssets(),
     loadSpecies(),
@@ -65,17 +73,32 @@ async function main() {
   const renderer = createRenderer(canvas);
   const biomeAnim = createBiomeAnimation();
   const world = buildWorld(worldRaw);
+  setupPuzzles(world);
+  setupCutscenes(world);
+  getWorldCache(world); // pre-bake static tile layers before first paint
   const player = createPlayer();
-  // If the URL pointed us at a non-default world the hard-coded spawn
-  // is likely off the map; place the player at the first teleporter (a
-  // typical entry portal) or fall back to a safe in-bounds tile.
-  if (startId !== STARTING_WORLD_ID) snapToEntry(player, world);
+  // Restore the saved spawn first; otherwise (URL override / no save) fall
+  // back to the entry teleporter on non-default worlds. The hard-coded
+  // STARTING_SPAWN only fits world 1001.
+  if (saved && saved.x != null && saved.y != null) {
+    applySavedSpawn(player, world, saved);
+  } else if (startId !== STARTING_WORLD_ID) {
+    snapToEntry(player, world);
+  }
   const state = {
     world,
     player,
     camera: createCamera(),
     lastTile: { x: player.tileX, y: player.tileY },
   };
+  saveProgress(state);
+  window.addEventListener("beforeunload", () => saveProgress(state));
+  if (typeof window !== "undefined") {
+    window.save = {
+      now: () => saveProgress(state),
+      reset: () => { clearProgress(); location.reload(); },
+    };
+  }
   installAutoZoom(canvas, state.camera, hud.el);
   installInteract(() => state);
   installShooting(() => state);
@@ -93,8 +116,12 @@ async function main() {
       tickShooting(dt);
       tickMelee(dt);
       tickMobs(state.world, state.player, dt);
+      tickMonsterFusion(state.world);
       tickCombat(state.world, state.player, dt);
       tickAfterDialogue(state.world, dt);
+      tickPuzzles(state.world, state.player);
+      tickCutscenes(state.world, state.player, dt);
+      tickTrails(state.world, state.player, dt);
       tickPlayerHealth(dt);
       if (isPlayerDead()) handleDeath(state);
     }
@@ -123,6 +150,14 @@ function snapToEntry(player, world) {
   player.x = x; player.y = y;
 }
 
+function applySavedSpawn(player, world, saved) {
+  const x = Math.max(0, Math.min(world.cols - 1, saved.x));
+  const y = Math.max(0, Math.min(world.rows - 1, saved.y));
+  player.tileX = x; player.tileY = y;
+  player.x = x; player.y = y;
+  if (saved.direction) player.direction = saved.direction;
+}
+
 let dying = false;
 function handleDeath(state) {
   if (dying) return;
@@ -147,7 +182,11 @@ function maybeTeleport(state) {
   lastTile.y = player.tileY;
   checkPickup(state);
   const tele = findTeleporterAt(world, player.tileX, player.tileY);
-  if (tele) travelTo(state, tele.destination);
+  if (tele) {
+    travelTo(state, tele.destination).then(() => saveProgress(state));
+  } else {
+    saveProgress(state);
+  }
 }
 
 main().catch((err) => {

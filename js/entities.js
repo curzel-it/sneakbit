@@ -16,7 +16,8 @@ import { getPlayerSpriteFrame } from "./player.js";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
-const PLAYER_Z_INDEX = 15;
+const HERO_SPECIES_ID = 1001;
+const FALLBACK_PLAYER_Z_INDEX = 15;
 
 // Directional sheets store 8 rows per sprite:
 //   row 0 Up-moving, row 1 Up-still, row 2 Right-moving, row 3 Right-still,
@@ -52,8 +53,17 @@ function makePlayerSortItem(player) {
   return {
     _isPlayer: true,
     _player: player,
-    _sortKey: sortingKey(player.y + 1, PLAYER_Z_INDEX, false),
+    // Mirror Rust update_sorting_key for the hero: bottom row = frame.y +
+    // frame.h. Hero sprite is 1×2 with feet at player.y, so frame.y here
+    // is conceptually player.y - 1 + 2 = player.y + 1. Keep this in sync
+    // with the species data rather than a hard-coded constant.
+    _sortKey: sortingKey(player.y + 1, playerZIndex(), false),
   };
+}
+
+function playerZIndex() {
+  const sp = getSpecies(HERO_SPECIES_ID);
+  return sp?.z_index ?? FALLBACK_PLAYER_Z_INDEX;
 }
 
 function drawPlayer(ctx, player, camera) {
@@ -85,8 +95,8 @@ function collect(world, camera) {
 
 // Mirrors Entity::update_sorting_key in the Rust core. Packs underlay /
 // normal / overlay into separate buckets so floor decals stay underneath
-// even when their bottom row is below the player's.
-function sortingKey(bottom, zIndex, isPushable) {
+// even when their bottom row is below the player's. Exported for tests.
+export function sortingKey(bottom, zIndex, isPushable) {
   let z;
   if (zIndex === Z_INDEX_OVERLAY) z = 20_000_000;
   else if (zIndex === Z_INDEX_UNDERLAY) z = 0;
@@ -94,6 +104,10 @@ function sortingKey(bottom, zIndex, isPushable) {
   const a = 10_000 * Math.floor(bottom);
   const b = (zIndex === Z_INDEX_OVERLAY || zIndex === Z_INDEX_UNDERLAY) ? 0 : zIndex * 10;
   const p = isPushable ? 1 : 0;
+  // Rust casts to u32 at the end. We don't need the cast in JS but we DO
+  // want negative z_index values to land sensibly: a non-UNDERLAY entity
+  // with z_index = -5 (unusual but legal) should still bucket as normal
+  // and just trail negative tiebreakers under same-row peers.
   return z + a + b + p;
 }
 
@@ -118,7 +132,8 @@ function draw(ctx, e, camera) {
     frame = Math.floor(animClock * ANIMATIONS_FPS) % frames;
   }
 
-  const sx = (sp.texture_x + frame * w) * TILE_SIZE;
+  const offsetX = (e._frameOffsetX | 0);
+  const sx = (sp.texture_x + offsetX + frame * w) * TILE_SIZE;
   const sy = (sp.texture_y + dirRow * h) * TILE_SIZE;
   const sw = w * TILE_SIZE;
   const sh = h * TILE_SIZE;

@@ -62,7 +62,7 @@ function decorate(raw) {
     width: f.w,
     height: f.h,
     frames: raw.sprite_number_of_frames ?? 1,
-    directional: supportsDirections(raw.sprite_sheet_id),
+    directional: supportsDirections(raw.sprite_sheet_id, raw.entity_type),
     z_index: raw.z_index ?? 0,
     is_rigid: raw.is_rigid ?? false,
     base_speed: raw.base_speed ?? 0,
@@ -94,6 +94,19 @@ const DIRECTIONAL_SHEETS = new Set([
   SPRITE_SHEET_WEAPONS,
 ]);
 
-function supportsDirections(sheetId) {
-  return DIRECTIONAL_SHEETS.has(sheetId);
+// The weapons sheet houses both directional sprites (bullets in flight,
+// equipped weapons) and non-directional ones (PickableObject ground icons,
+// dropped weapons). In Rust only entities whose update path calls
+// `update_sprite_for_current_state` actually shift rows — for everything
+// else the sprite stays on its original row. Mirror that here by gating
+// directionality on entity_type, not just the sheet.
+const DIRECTIONAL_TYPES = new Set([
+  "Hero",
+  "Npc",
+  "CloseCombatMonster",
+  "Bullet",
+]);
+
+function supportsDirections(sheetId, entityType) {
+  return DIRECTIONAL_SHEETS.has(sheetId) && DIRECTIONAL_TYPES.has(entityType);
 }

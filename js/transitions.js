@@ -13,6 +13,8 @@ import { buildWorld, isWalkable, isEntityBlocked } from "./world.js";
 import { playSfx } from "./audio.js";
 import { playTrack } from "./music.js";
 import { getWorldCache } from "./worldCache.js";
+import { setupPuzzles } from "./puzzles.js";
+import { setupCutscenes } from "./cutscenes.js";
 
 const TELEPORTER_SPECIES_ID = 1019;
 const FADE_DURATION_MS = 220;
@@ -72,6 +74,8 @@ export async function travelTo(state, destination) {
     await fadeOut();
     const raw = await loadWorld(destination.world);
     const world = buildWorld(raw);
+    setupPuzzles(world);
+    setupCutscenes(world);
     // Bake the static tile layers during the black-screen window so the
     // first rendered frame is already cheap.
     getWorldCache(world);

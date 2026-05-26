@@ -12,6 +12,7 @@ let fadeTimer = null;
 
 export function installToast() {
   if (root) return root;
+  if (typeof document === "undefined") return null;
   root = document.createElement("div");
   root.id = "toast";
   Object.assign(root.style, {
@@ -45,6 +46,7 @@ export function installToast() {
 
 export function showToast(text, mode = "hint") {
   if (!root) installToast();
+  if (!root) return;
   clearTimers();
   root.textContent = text;
   root.style.display = "block";

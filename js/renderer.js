@@ -4,6 +4,8 @@
 import { TILE_SIZE } from "./constants.js";
 import { drawEntities } from "./entities.js";
 import { getWorldCache } from "./worldCache.js";
+import { drawCutscenes } from "./cutscenes.js";
+import { drawTrails } from "./trails.js";
 
 export function createRenderer(canvas) {
   const ctx = canvas.getContext("2d");
@@ -18,7 +20,9 @@ export function render(renderer, world, camera, player, biomeFrame) {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   drawWorldLayers(ctx, world, camera, biomeFrame | 0);
+  drawTrails(ctx, world, camera);
   drawEntities(ctx, world, camera, player);
+  drawCutscenes(ctx, world, camera);
   drawDarkness(ctx, canvas, world, camera, player);
 }
 

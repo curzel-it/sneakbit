@@ -106,6 +106,24 @@ test("bounced bullet caught by player refunds ammo with catcher skill", () => {
   assert.equal(inventory.getAmmo(7000), 1, "ammo refunded");
 });
 
+test("unlockSkillFromGameplay flips the read flag", async () => {
+  const storage = await import("../js/storage.js");
+  storage._resetStorageForTesting();
+  skills.setSkill("piercing", null);
+  assert.equal(skills.hasPiercingKnifeSkill(), false);
+  skills.unlockSkillFromGameplay("piercing");
+  assert.equal(skills.hasPiercingKnifeSkill(), true);
+});
+
+test("devtools override pins skill on regardless of dialogue state", async () => {
+  const storage = await import("../js/storage.js");
+  storage._resetStorageForTesting();
+  skills.setSkill("boomerang", true);
+  assert.equal(skills.hasBoomerangSkill(), true);
+  skills.setSkill("boomerang", null);
+  assert.equal(skills.hasBoomerangSkill(), false);
+});
+
 test("bounced bullet on player without catcher skill just despawns", () => {
   resetAllSkills();
   inventory.clearInventory();

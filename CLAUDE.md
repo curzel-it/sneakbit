@@ -2,7 +2,7 @@
 
 HTML5 / Canvas / vanilla JS port of [SneakBit](https://github.com/curzel-it/sneakbit), originally a Rust-core game shipped on Steam (raylib desktop), iOS (CoreGraphics) and Android (Compose).
 
-The original game's source lives at `~/dev/sneakbit`. Treat it as read-only reference material — do not modify it.
+The original game's source lives at `../dev/sneakbit`. Treat it as read-only reference material — do not modify it.
 
 ## Handling a Task
 1. For non-trivial tasks, use the built-in plan mode to create a plan before implementing

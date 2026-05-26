@@ -38,20 +38,33 @@ export function buildWorld(raw) {
 
   const collision = make2D(rows, cols, (r, c) => isBlocked(biome[r][c], construction[r][c]));
 
+  // Mirror Rust world_setup::remove_all_equipment — placed melee/ranged
+  // weapon entities aren't world props, they're per-player equipment. The
+  // engine attaches a fresh set to the hero on spawn and only renders them
+  // when equipped. Strip them from level data so they don't leave a
+  // standalone "sword on the floor" sprite behind in shops.
+  const entities = (raw.entities ?? []).filter((e) => {
+    const sp = getSpecies(e.species_id);
+    if (!sp) return true;
+    return sp.entity_type !== "WeaponMelee" && sp.entity_type !== "WeaponRanged";
+  });
+
   return {
     id: raw.id,
     rows,
     cols,
     biomeSheetId: raw.biome_tiles.sheet_id,
     constructionSheetId: raw.construction_tiles.sheet_id,
+    worldType: raw.world_type ?? null,
     biome,
     biomeCol,
     construction,
     constructionRow,
     collision,
-    entities: raw.entities ?? [],
+    entities,
     soundtrack: raw.soundtrack ?? null,
     lightConditions: raw.light_conditions ?? "Day",
+    _cutscenesRaw: raw.cutscenes ?? [],
   };
 }
 
@@ -67,14 +80,22 @@ export function isWalkable(world, tileX, tileY) {
 // A destination-teleporter on a tile also unblocks any rigid entity
 // covering the same tile — that's how building entrances work: the
 // teleporter sits on the door tile, inside the (rigid) building footprint.
-export function isEntityBlocked(world, tileX, tileY) {
+// Gates / InverseGates report blocking via `_open` (puzzles.js owns that
+// flag) so a pressure-plate-opened gate is walkable until the plate flips.
+// `opts.ignore` excludes a specific entity from the check (used when a
+// pushable checks if its destination tile is clear of other rigids).
+export function isEntityBlocked(world, tileX, tileY, opts) {
   if (!world?.entities) return false;
   if (hasEnterableTeleporter(world, tileX, tileY)) return false;
+  const ignore = opts?.ignore;
   for (const e of world.entities) {
+    if (e === ignore) continue;
     if (e._spawned) continue;
     const sp = getSpecies(e.species_id);
-    if (!sp || !sp.is_rigid) continue;
+    if (!sp) continue;
     if (sp.entity_type === "Teleporter") continue;
+    if ((sp.entity_type === "Gate" || sp.entity_type === "InverseGate") && e._open) continue;
+    if (!sp.is_rigid && sp.entity_type !== "PushableObject") continue;
     const f = e.frame; if (!f) continue;
     if (tileX < f.x || tileX >= f.x + f.w) continue;
     if (tileY < f.y || tileY >= f.y + f.h) continue;
@@ -83,7 +104,7 @@ export function isEntityBlocked(world, tileX, tileY) {
   return false;
 }
 
-function hasEnterableTeleporter(world, tileX, tileY) {
+export function hasEnterableTeleporter(world, tileX, tileY) {
   for (const e of world.entities) {
     if (e.species_id !== 1019) continue;
     if (!e.destination) continue;
