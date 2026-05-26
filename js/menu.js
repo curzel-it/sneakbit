@@ -26,6 +26,8 @@ export function installMenu() {
         <button id="menu-resume">Resume (Esc)</button>
         <button id="menu-open-settings">Settings</button>
         <button id="menu-open-skills">Skills</button>
+        <button id="menu-export-save">Export save (copy JSON)</button>
+        <button id="menu-import-save">Import save (paste JSON)</button>
         <button id="menu-open-credits">Credits</button>
         <button id="menu-new-game">New game (wipe save)</button>
         <button id="menu-clear-cache">Clear cache &amp; reload</button>
@@ -166,6 +168,8 @@ function bindWidgets() {
   root.querySelector("#menu-settings-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-skills-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-credits-back").addEventListener("click", () => showScreen("pause"));
+  root.querySelector("#menu-export-save").addEventListener("click", exportSave);
+  root.querySelector("#menu-import-save").addEventListener("click", importSave);
   root.querySelector("#menu-new-game").addEventListener("click", () => {
     if (!confirm("Wipe save and start over? Inventory, dialogue progress and unlocked skills will be reset.")) return;
     try { localStorage.clear(); } catch {}
@@ -210,6 +214,63 @@ function syncSettingsWidgets() {
   root.querySelector("#opt-music-volume-val").textContent = `${music}%`;
   root.querySelector("#opt-muted").checked = !!s.muted;
   root.querySelector("#opt-fps").checked = !!s.showFps;
+}
+
+// Snapshot every sneakbit.* localStorage key into a JSON blob and try to
+// copy it to the clipboard; on failure (clipboard API blocked, http
+// without secure-context) fall back to a textarea-and-Ctrl-C prompt so
+// the player can still grab it.
+async function exportSave() {
+  const payload = {};
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k || !k.startsWith("sneakbit.")) continue;
+      payload[k] = localStorage.getItem(k);
+    }
+  } catch {}
+  const json = JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), entries: payload });
+  try {
+    await navigator.clipboard.writeText(json);
+    alert(`Save exported to clipboard (${Object.keys(payload).length} keys).`);
+  } catch {
+    prompt("Save export — copy the text below:", json);
+  }
+}
+
+// Replace the current sneakbit.* localStorage payload with the contents
+// of a pasted JSON blob (produced by exportSave). Reloads on success so
+// every module hydrates fresh from the restored values.
+function importSave() {
+  const json = prompt("Paste your previously-exported save JSON:");
+  if (!json) return;
+  let parsed;
+  try {
+    parsed = JSON.parse(json);
+  } catch {
+    alert("That doesn't look like valid JSON.");
+    return;
+  }
+  if (!parsed?.entries || typeof parsed.entries !== "object") {
+    alert("Missing 'entries' object in save payload.");
+    return;
+  }
+  if (!confirm("Importing will overwrite your current progress. Continue?")) return;
+  try {
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith("sneakbit.")) localStorage.removeItem(k);
+    }
+    for (const [k, v] of Object.entries(parsed.entries)) {
+      if (typeof k === "string" && k.startsWith("sneakbit.") && typeof v === "string") {
+        localStorage.setItem(k, v);
+      }
+    }
+  } catch (e) {
+    alert(`Import failed: ${e?.message ?? "unknown error"}`);
+    return;
+  }
+  location.replace(location.pathname);
 }
 
 function injectStyles() {
