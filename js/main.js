@@ -37,6 +37,7 @@ import { tickAfterDialogue } from "./afterDialogue.js";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
 import { installHealthHud } from "./healthHud.js";
 import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js";
+import { installFastTravel, isFastTravelOpen, tickFastTravel, markVisited } from "./fastTravel.js";
 import { applyFirstLaunch } from "./firstLaunch.js";
 import { loadProgress, saveProgress, clearProgress } from "./save.js";
 import { getWorldCache } from "./worldCache.js";
@@ -108,10 +109,12 @@ async function main() {
   installMelee(() => state);
   installAmmoHud();
   installHealthHud();
+  installFastTravel(() => state);
+  markVisited(state.world.id);
   if (state.world.soundtrack) playTrack(state.world.soundtrack);
 
   startGameLoop((dt) => {
-    const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen();
+    const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen();
     const input = pollInput();
     if (!paused) {
       updatePlayer(state.player, input, dt, state.world);
@@ -127,6 +130,7 @@ async function main() {
       tickCutscenes(state.world, state.player, dt);
       tickTrails(state.world, state.player, dt);
       tickPlayerHealth(dt);
+      tickFastTravel(dt);
       if (isPlayerDead()) handleDeath(state);
     }
     updateCamera(state.camera, state.player, state.world);
@@ -183,7 +187,10 @@ function maybeTeleport(state) {
   checkPickup(state);
   const tele = findTeleporterAt(world, player.tileX, player.tileY);
   if (tele) {
-    travelTo(state, tele.destination).then(() => saveProgress(state));
+    travelTo(state, tele.destination).then(() => {
+      markVisited(state.world.id);
+      saveProgress(state);
+    });
   } else {
     saveProgress(state);
   }
