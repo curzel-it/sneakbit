@@ -106,11 +106,21 @@ async function main() {
     lastTile: { x: player.tileX, y: player.tileY },
   };
   saveProgress(state);
-  window.addEventListener("beforeunload", () => saveProgress(state));
+  let suppressUnloadSave = false;
+  window.addEventListener("beforeunload", () => {
+    if (suppressUnloadSave) return;
+    saveProgress(state);
+  });
   if (typeof window !== "undefined") {
     window.save = {
       now: () => saveProgress(state),
       reset: () => { clearProgress(); location.reload(); },
+      // Called by menu.js's New Game / Clear-cache handlers *before* they
+      // wipe localStorage. Without this guard the beforeunload listener
+      // above would re-save the current player position on top of the
+      // freshly-cleared save, so the page would reload right back into
+      // the world+tile the player just tried to leave.
+      suppressUnloadSave: () => { suppressUnloadSave = true; },
     };
   }
   installAutoZoom(canvas, state.camera, hud.el);

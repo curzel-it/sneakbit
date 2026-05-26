@@ -184,6 +184,11 @@ function bindWidgets() {
   root.querySelector("#menu-import-save").addEventListener("click", importSave);
   root.querySelector("#menu-new-game").addEventListener("click", () => {
     if (!confirm("Wipe save and start over? Inventory, dialogue progress and unlocked skills will be reset.")) return;
+    // Tell main.js's beforeunload listener to stand down — otherwise it
+    // re-saves the player's current world+tile on top of the cleared
+    // payload during the reload, and we'd end up right back where we
+    // started.
+    try { window.save?.suppressUnloadSave?.(); } catch {}
     try { localStorage.clear(); } catch {}
     clearProgress();
     // A `?world=X` query overrides saved progress in main.js. After wiping
@@ -192,6 +197,7 @@ function bindWidgets() {
     location.replace(location.pathname);
   });
   root.querySelector("#menu-clear-cache").addEventListener("click", () => {
+    try { window.save?.suppressUnloadSave?.(); } catch {}
     try { localStorage.clear(); } catch {}
     location.replace(location.pathname);
   });
@@ -268,6 +274,7 @@ function importSave() {
     return;
   }
   if (!confirm("Importing will overwrite your current progress. Continue?")) return;
+  try { window.save?.suppressUnloadSave?.(); } catch {}
   try {
     for (let i = localStorage.length - 1; i >= 0; i--) {
       const k = localStorage.key(i);
