@@ -10,10 +10,11 @@ import { playSfx } from "./audio.js";
 import { APP_VERSION } from "./constants.js";
 import { clearProgress } from "./save.js";
 import { getSkills } from "./skills.js";
+import { renderInventoryInto } from "./inventoryScreen.js";
 
 let root = null;
 let open = false;
-let screen = "pause"; // "pause" | "settings" | "skills" | "credits"
+let screen = "pause"; // "pause" | "settings" | "skills" | "credits" | "inventory"
 
 export function installMenu() {
   if (root) return root;
@@ -24,8 +25,9 @@ export function installMenu() {
       <h1>SneakBit</h1>
       <div class="menu-row menu-controls menu-stack">
         <button id="menu-resume">Resume (Esc)</button>
-        <button id="menu-open-settings">Settings</button>
+        <button id="menu-open-inventory">Inventory &amp; Equipment</button>
         <button id="menu-open-skills">Skills</button>
+        <button id="menu-open-settings">Settings</button>
         <button id="menu-export-save">Export save (copy JSON)</button>
         <button id="menu-import-save">Import save (paste JSON)</button>
         <button id="menu-open-credits">Credits</button>
@@ -68,6 +70,13 @@ export function installMenu() {
       </p>
       <div class="menu-row menu-controls">
         <button id="menu-skills-back">Back</button>
+      </div>
+    </div>
+    <div class="menu-card" data-screen="inventory">
+      <h1>Inventory</h1>
+      <div id="menu-inventory-body"></div>
+      <div class="menu-row menu-controls">
+        <button id="menu-inventory-back">Back</button>
       </div>
     </div>
     <div class="menu-card" data-screen="credits">
@@ -137,6 +146,7 @@ function showScreen(next) {
   });
   if (next === "settings") syncSettingsWidgets();
   if (next === "skills") syncSkillsWidgets();
+  if (next === "inventory") renderInventoryInto(root.querySelector("#menu-inventory-body"));
 }
 
 const SKILL_LABELS = [
@@ -165,9 +175,11 @@ function bindWidgets() {
   root.querySelector("#menu-open-settings").addEventListener("click", () => showScreen("settings"));
   root.querySelector("#menu-open-skills").addEventListener("click", () => showScreen("skills"));
   root.querySelector("#menu-open-credits").addEventListener("click", () => showScreen("credits"));
+  root.querySelector("#menu-open-inventory").addEventListener("click", () => showScreen("inventory"));
   root.querySelector("#menu-settings-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-skills-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-credits-back").addEventListener("click", () => showScreen("pause"));
+  root.querySelector("#menu-inventory-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-export-save").addEventListener("click", exportSave);
   root.querySelector("#menu-import-save").addEventListener("click", importSave);
   root.querySelector("#menu-new-game").addEventListener("click", () => {
@@ -309,6 +321,21 @@ function injectStyles() {
     #menu .menu-credits { font-size: 12px; line-height: 1.5; color: #ccc; margin: 0 0 10px; }
     #menu .menu-credits a { color: #9ab1ff; text-decoration: none; }
     #menu .menu-credits a:hover { text-decoration: underline; }
+    #menu .inv-empty { color: #888; font-style: italic; margin: 0 0 12px; }
+    #menu .inv-equipped { background: #1d2440; border: 1px solid #303a60; border-radius: 4px; padding: 8px 12px; margin-bottom: 10px; font-size: 12px; color: #cfd6e8; }
+    #menu .inv-equipped > div { display: flex; align-items: center; gap: 8px; margin: 2px 0; }
+    #menu .inv-equipped .inv-label { color: #8090b0; min-width: 60px; }
+    #menu .inv-equipped em { color: #777; font-style: italic; }
+    #menu .inv-equipped-default { color: #7a8aa8; font-size: 10px; }
+    #menu .inv-equipped button { background: #2a2a2a; color: #eee; border: 1px solid #444; padding: 2px 8px; border-radius: 3px; font-size: 10px; cursor: pointer; }
+    #menu .inv-list { list-style: none; padding: 0; margin: 0; max-height: 280px; overflow-y: auto; min-width: 340px; }
+    #menu .inv-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 4px 0; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: 3px; }
+    #menu .inv-list .inv-name { flex: 1; font-size: 12px; }
+    #menu .inv-list .inv-count { color: #aaa; font-size: 11px; min-width: 36px; text-align: right; }
+    #menu .inv-list .inv-action { min-width: 70px; text-align: right; }
+    #menu .inv-list .inv-action button { background: #2a2a2a; color: #eee; border: 1px solid #444; padding: 3px 8px; border-radius: 3px; font-size: 11px; cursor: pointer; }
+    #menu .inv-list .inv-action button:hover { background: #353535; }
+    #menu .inv-equipped-tag { color: #b8c6ff; font-size: 10px; letter-spacing: 1px; }
   `;
   const style = document.createElement("style");
   style.id = "menu-styles";
