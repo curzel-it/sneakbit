@@ -12,6 +12,7 @@ import { playSfx } from "./audio.js";
 import { applyPlayerDamage, applyPlayerContinuousDamage } from "./playerHealth.js";
 import { hasPiercingKnifeSkill, hasBoomerangSkill, hasBulletCatcherSkill } from "./skills.js";
 import { addAmmo } from "./inventory.js";
+import { isExplosive } from "./explosives.js";
 
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;
@@ -104,7 +105,7 @@ function resolveBullets(world, player, dt) {
       const dps = (b._dpsOverride != null ? b._dpsOverride : bsp.dps) || 0;
       t._hp = (t._hp ?? tsp.hp ?? 100) - dps * dmgMul * dt;
       if (t._hp <= 0) {
-        playSfx("deathMonster");
+        playSfx(isExplosive(t.species_id) ? "smallExplosion" : "deathMonster");
         ents.splice(j, 1);
         if (j < i) i -= 1;
         consumed = true;
@@ -203,7 +204,14 @@ function bulletHitsWall(b, world) {
 }
 
 function isBulletTarget(sp) {
-  return sp.entity_type === "CloseCombatMonster";
+  if (sp.entity_type === "CloseCombatMonster") return true;
+  // Explosive barrels are StaticObjects but bullets break them — Rust
+  // routes the kill through the normal damage path (sound_effects.rs
+  // swaps the death SFX based on is_explosive). Their HP comes from the
+  // species' `hp` field (defaults to 100), so a single kunai chips a
+  // small amount, and a sword swing destroys most barrels in one hit.
+  if (isExplosive(sp.id)) return true;
+  return false;
 }
 
 export function bulletHitbox(b) {
