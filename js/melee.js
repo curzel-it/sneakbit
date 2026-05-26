@@ -38,7 +38,18 @@ const SFX_FOR_USAGE = {
 
 let stateRef = null;
 let cooldown = 0;
+let cooldownDuration = 0; // length of the most recent swing — used by the equipment
+                          // overlay to compute attack-animation progress
 let nextBulletId = 1;
+
+// Returns 0..1 if a melee swing is mid-animation (where 1.0 = just
+// started, 0.0 = finished), or null otherwise. entities.js::drawEquipment
+// reads this to flip the equipment sprite to its usage-row strip while
+// the swing plays out.
+export function getMeleeSwingProgress() {
+  if (cooldown <= 0 || cooldownDuration <= 0) return null;
+  return Math.max(0, Math.min(1, cooldown / cooldownDuration));
+}
 
 export function installMelee(getState) {
   stateRef = getState;
@@ -78,6 +89,7 @@ export function performMeleeSwing(state, opts = {}) {
   if (!bulletSp) return false;
 
   cooldown = weapon.cooldown_after_use > 0 ? weapon.cooldown_after_use : DEFAULT_COOLDOWN;
+  cooldownDuration = cooldown;
   const lifespan = weapon.bullet_lifespan > 0 ? weapon.bullet_lifespan : DEFAULT_LIFESPAN;
   const speed = bulletSp.base_speed > 0 ? bulletSp.base_speed : 0;
   const dps = (bulletSp.dps || 0) * (weapon.melee_dps_multiplier || 1);
@@ -89,6 +101,10 @@ export function performMeleeSwing(state, opts = {}) {
     const bullet = {
       id: -(nextBulletId++),
       _spawned: true,
+      // Melee bullets are invisible damage zones — the equipped-weapon
+      // overlay animation in entities.js is the visual swing. Without
+      // this the player sees 5 tiny dots flicker around them every G.
+      _invisible: true,
       _vx: vx * speed,
       _vy: vy * speed,
       _lifespan: lifespan,

@@ -14,6 +14,7 @@ import { getEntitySheet, getSpecies } from "./species.js";
 import { getSprite } from "./assets.js";
 import { getPlayerSpriteFrame } from "./player.js";
 import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
+import { getMeleeSwingProgress } from "./melee.js";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
@@ -72,10 +73,10 @@ function drawPlayer(ctx, player, camera) {
   // facing Up draws weapons in front of the hero (handle/barrel visible past
   // the shoulder); facing Left/Right/Down draws them behind so the hero's
   // body occludes the part of the weapon that should be on the far side.
-  const equipInFront = player.direction === "up";
+  const equipInFront = player.direction === "up" || getMeleeSwingProgress() != null;
   if (!equipInFront) {
-    drawEquipment(ctx, player, camera, getEquipped(SLOT_RANGED));
-    drawEquipment(ctx, player, camera, getEquipped(SLOT_MELEE));
+    drawEquipment(ctx, player, camera, getEquipped(SLOT_RANGED), SLOT_RANGED);
+    drawEquipment(ctx, player, camera, getEquipped(SLOT_MELEE), SLOT_MELEE);
   }
 
   const sheet = getSprite("heroes");
@@ -89,17 +90,29 @@ function drawPlayer(ctx, player, camera) {
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 
   if (equipInFront) {
-    drawEquipment(ctx, player, camera, getEquipped(SLOT_RANGED));
-    drawEquipment(ctx, player, camera, getEquipped(SLOT_MELEE));
+    drawEquipment(ctx, player, camera, getEquipped(SLOT_RANGED), SLOT_RANGED);
+    drawEquipment(ctx, player, camera, getEquipped(SLOT_MELEE), SLOT_MELEE);
   }
 }
+
+// Absolute sprite-sheet rows used by Rust's
+// equipment/basics.rs::play_equipment_usage_animation. Same for every
+// 4-tile-tall weapon (sword / AR15 / cannon / shield), keyed on the
+// player's facing direction. Each row is a 4-frame strip along x.
+const ATTACK_ROW_Y = { up: 37, right: 41, down: 45, left: 49 };
 
 // Renders one equipped weapon (sword, AR15, …) overlaid on the player.
 // World offset (-1.5, -2.0) and direction-row selection mirror Rust
 // equipment/basics.rs::update_equipment_position and the standard 8-row
 // directional sprite layout. Skips weapons whose sprite sheet isn't loaded
 // (e.g. the kunai launcher, which has no in-world overlay sprite).
-function drawEquipment(ctx, player, camera, weaponId) {
+//
+// When the player is mid-swing (melee.getMeleeSwingProgress > 0 and this
+// is the melee slot) the overlay flips to the absolute attack-row strip
+// at ATTACK_ROW_Y[direction] and the source-x frame index advances with
+// the cooldown — that's the sword swing animation the player expects to
+// see in response to G.
+function drawEquipment(ctx, player, camera, weaponId, slot) {
   if (!weaponId) return;
   const sp = getSpecies(weaponId);
   if (!sp) return;
@@ -108,15 +121,24 @@ function drawEquipment(ctx, player, camera, weaponId) {
 
   const w = sp.width || 1;
   const h = sp.height || 1;
-  const dirRow = (player.moving ? DIR_ROW_MOVING : DIR_ROW_STILL)[player.direction]
-    ?? DIR_ROW_STILL.down;
   const frames = Math.max(1, sp.frames);
-  const frameIdx = player.moving && frames > 1
-    ? Math.floor(animClock * ANIMATIONS_FPS) % frames
-    : 0;
+
+  const swing = slot === SLOT_MELEE ? getMeleeSwingProgress() : null;
+  let sourceY, frameIdx;
+  if (swing != null) {
+    sourceY = (ATTACK_ROW_Y[player.direction] ?? ATTACK_ROW_Y.down) * TILE_SIZE;
+    // swing is 1.0 at start, 0.0 at end → frame counts forward over the strip.
+    frameIdx = Math.min(frames - 1, Math.floor((1 - swing) * frames));
+  } else {
+    const dirRow = (player.moving ? DIR_ROW_MOVING : DIR_ROW_STILL)[player.direction]
+      ?? DIR_ROW_STILL.down;
+    sourceY = (sp.texture_y + dirRow * h) * TILE_SIZE;
+    frameIdx = player.moving && frames > 1
+      ? Math.floor(animClock * ANIMATIONS_FPS) % frames
+      : 0;
+  }
 
   const sx = (sp.texture_x + frameIdx * w) * TILE_SIZE;
-  const sy = (sp.texture_y + dirRow * h) * TILE_SIZE;
   const sw = w * TILE_SIZE;
   const sh = h * TILE_SIZE;
 
@@ -127,12 +149,13 @@ function drawEquipment(ctx, player, camera, weaponId) {
   const wy = player.y - 2.0;
   const px = Math.round((wx - camera.x) * TILE_SIZE);
   const py = Math.round((wy - camera.y) * TILE_SIZE);
-  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+  ctx.drawImage(sheet, sx, sourceY, sw, sh, px, py, sw, sh);
 }
 
 function collect(world, camera) {
   const out = [];
   for (const e of world.entities) {
+    if (e._invisible) continue;
     const sp = getSpecies(e.species_id);
     if (!sp) continue;
     const f = e.frame; if (!f) continue;
