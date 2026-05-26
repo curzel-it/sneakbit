@@ -48,27 +48,30 @@ function makeHint() {
   const el = document.createElement("div");
   el.id = "interact-hint";
   el.textContent = "Press E to talk";
-  // Top-anchored, matching toast.js's position (top: 6%) so the in-world
-  // interact prompt sits in the same band of the screen as toasts and
-  // doesn't visually compete with the touch d-pad or HUD bottom row.
-  // Persistent while a dialogue-bearing entity is in front of the
-  // player — main.js calls tickInteract() once per frame to toggle the
-  // visibility.
+  // Styled to match toast.js exactly so the in-world interact prompt and
+  // pickup/hint toasts are visually consistent (top: 6% band, same
+  // background, radius, padding, fontSize). Persistent while a
+  // dialogue-bearing entity is in front of the player — main.js calls
+  // tickInteract() once per frame to toggle the visibility.
   Object.assign(el.style, {
     position: "fixed",
     top: "6%",
     left: "50%",
     transform: "translateX(-50%)",
-    padding: "6px 14px",
-    background: "rgba(10, 10, 10, 0.85)",
-    border: "1px solid #555",
-    borderRadius: "12px",
+    maxWidth: "min(640px, 86vw)",
+    padding: "10px 16px",
+    background: "rgba(10, 10, 10, 0.92)",
+    border: "1px solid #444",
+    borderRadius: "6px",
     color: "#eee",
     fontFamily: "monospace",
-    fontSize: "12px",
+    fontSize: "14px",
+    lineHeight: "1.4",
+    textAlign: "center",
     display: "none",
     pointerEvents: "none",
     zIndex: "13",
+    boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
   });
   document.body.appendChild(el);
   return el;

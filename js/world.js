@@ -43,11 +43,19 @@ export function buildWorld(raw) {
   // engine attaches a fresh set to the hero on spawn and only renders them
   // when equipped. Strip them from level data so they don't leave a
   // standalone "sword on the floor" sprite behind in shops.
-  const entities = (raw.entities ?? []).filter((e) => {
-    const sp = getSpecies(e.species_id);
-    if (!sp) return true;
-    return sp.entity_type !== "WeaponMelee" && sp.entity_type !== "WeaponRanged";
-  });
+  //
+  // Each entity is shallow-cloned (with a fresh `frame` rect) so the world
+  // can mutate position / HP / gate-open flags without polluting the
+  // module-level loadWorld cache. Otherwise dying and respawning would
+  // bring back the world with pushables in their last-pushed position,
+  // gates left open by drained pressure plates, etc.
+  const entities = (raw.entities ?? [])
+    .filter((e) => {
+      const sp = getSpecies(e.species_id);
+      if (!sp) return true;
+      return sp.entity_type !== "WeaponMelee" && sp.entity_type !== "WeaponRanged";
+    })
+    .map(cloneEntity);
 
   return {
     id: raw.id,
@@ -129,6 +137,16 @@ function isBlocked(biome, construction) {
   if (constructionIsObstacle(construction)) return true;
   if (biomeIsObstacle(biome) && !constructionIsBridge(construction)) return true;
   return false;
+}
+
+function cloneEntity(e) {
+  const out = { ...e };
+  if (e.frame) out.frame = { ...e.frame };
+  if (e.destination) out.destination = { ...e.destination };
+  // `dialogues` is referenced by dialogue.js but its handlers only read,
+  // so a shallow copy of the array is enough.
+  if (Array.isArray(e.dialogues)) out.dialogues = e.dialogues.slice();
+  return out;
 }
 
 function make2D(rows, cols, fill) {

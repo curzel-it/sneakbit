@@ -47,6 +47,10 @@ export function installToast() {
 export function showToast(text, mode = "hint") {
   if (!root) installToast();
   if (!root) return;
+  // Skip empty toasts silently — they used to show up as an unexplained
+  // empty box (one of the 1001 hints had an empty dialogue line and
+  // tripped this).
+  if (text == null || String(text).trim() === "") return;
   clearTimers();
   root.textContent = text;
   root.style.display = "block";
