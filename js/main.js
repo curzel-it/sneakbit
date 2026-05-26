@@ -217,12 +217,19 @@ function maybeTeleport(state) {
   const tele = findTeleporterAt(world, player.tileX, player.tileY);
   if (tele) {
     // World data stores destination.y as the Rust frame.y (sprite TOP)
-    // while travelTo / player.tileY work in feet-tile space. Bump by 1
+    // while travelTo / player.tileY work in feet-tile space — bump by 1
     // so the player drops onto the floor in front of the destination
-    // door instead of clipping a tile high. Other callers of travelTo
-    // (death respawn, fast travel) already pass feet-y values.
+    // door instead of clipping a tile high. EXCEPTION: (0, 0) is a
+    // magic value telling resolveSpawn to look up the back-teleporter
+    // in the destination world (covers house interiors); +1 here would
+    // become (0, 1) and the magic-value check would miss, dumping the
+    // player on the top-left corner of the interior on a wall tile.
     const d = tele.destination;
-    const dest = { ...d, y: (d?.y ?? 0) + 1 };
+    const dx = d?.x ?? 0;
+    const dy = d?.y ?? 0;
+    const dest = (dx === 0 && dy === 0)
+      ? { ...d }
+      : { ...d, y: dy + 1 };
     travelTo(state, dest).then(() => {
       markVisited(state.world.id);
       saveProgress(state);
