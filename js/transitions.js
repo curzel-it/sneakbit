@@ -9,12 +9,20 @@
 // CSS transitions.
 
 import { loadWorld } from "./data.js";
-import { buildWorld } from "./world.js";
+import { buildWorld, isWalkable, isEntityBlocked } from "./world.js";
 import { playSfx } from "./audio.js";
 import { playTrack } from "./music.js";
+import { getWorldCache } from "./worldCache.js";
 
 const TELEPORTER_SPECIES_ID = 1019;
 const FADE_DURATION_MS = 220;
+
+const DIR_OFFSET = {
+  up:    [ 0, -1],
+  down:  [ 0,  1],
+  left:  [-1,  0],
+  right: [ 1,  0],
+};
 
 let fadeEl = null;
 let busy = false;
@@ -64,6 +72,9 @@ export async function travelTo(state, destination) {
     await fadeOut();
     const raw = await loadWorld(destination.world);
     const world = buildWorld(raw);
+    // Bake the static tile layers during the black-screen window so the
+    // first rendered frame is already cheap.
+    getWorldCache(world);
     state.world = world;
     state.lastTile = { x: state.player.tileX, y: state.player.tileY };
     if (world.soundtrack) playTrack(world.soundtrack);
@@ -77,20 +88,46 @@ export async function travelTo(state, destination) {
 
 // Mirrors world_setup.rs::destination_x_y. When the source teleporter
 // stores (0, 0) the engine looks up the destination world's teleporter
-// that points back at us and lands there; otherwise it uses the literal
-// coordinates, clamped to the world bounds.
+// that points back at us; we then step the player one tile *out* of
+// that teleporter (typically down) so they don't immediately retrigger
+// it and so they stand visually in front of the door, not on it.
 function resolveSpawn(world, destination, sourceWorldId) {
   const ox = destination.x ?? 0;
   const oy = destination.y ?? 0;
   if (ox === 0 && oy === 0) {
     const back = findTeleporterBack(world, sourceWorldId) ?? findAnyTeleporter(world);
-    if (back) return [back.x, back.y];
+    if (back) return stepOutOf(world, back, destination.direction);
     return [Math.floor(world.cols / 2), Math.floor(world.rows / 2)];
   }
   return [
     clamp(ox, 0, world.cols - 1),
     clamp(oy, 0, world.rows - 1),
   ];
+}
+
+// Pick a tile adjacent to the back teleporter's frame that the player
+// can stand on. Tries the destination's stated direction first (or down
+// as the natural "out of the door" default), then falls back to other
+// directions, finally to the teleporter tile itself.
+function stepOutOf(world, frame, direction) {
+  const preferred = direction && direction !== "None"
+    ? direction.toLowerCase()
+    : "down";
+  const order = [preferred, "down", "up", "left", "right"];
+  const seen = new Set();
+  for (const dir of order) {
+    if (seen.has(dir)) continue;
+    seen.add(dir);
+    const off = DIR_OFFSET[dir];
+    if (!off) continue;
+    const tx = (off[0] >= 0 ? frame.x + frame.w - 1 : frame.x) + off[0];
+    const ty = (off[1] >= 0 ? frame.y + frame.h - 1 : frame.y) + off[1];
+    if (tx < 0 || ty < 0 || tx >= world.cols || ty >= world.rows) continue;
+    if (!isWalkable(world, tx, ty)) continue;
+    if (isEntityBlocked(world, tx, ty)) continue;
+    return [tx, ty];
+  }
+  return [frame.x, frame.y];
 }
 
 function findTeleporterBack(world, sourceWorldId) {

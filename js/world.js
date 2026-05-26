@@ -64,13 +64,29 @@ export function isWalkable(world, tileX, tileY) {
 // True if any rigid entity occupies the given tile. Bullets we spawned
 // (carrying _spawned) don't count; teleporters explicitly don't block
 // either, so the player can step onto them and trigger the transition.
+// A destination-teleporter on a tile also unblocks any rigid entity
+// covering the same tile — that's how building entrances work: the
+// teleporter sits on the door tile, inside the (rigid) building footprint.
 export function isEntityBlocked(world, tileX, tileY) {
   if (!world?.entities) return false;
+  if (hasEnterableTeleporter(world, tileX, tileY)) return false;
   for (const e of world.entities) {
     if (e._spawned) continue;
     const sp = getSpecies(e.species_id);
     if (!sp || !sp.is_rigid) continue;
     if (sp.entity_type === "Teleporter") continue;
+    const f = e.frame; if (!f) continue;
+    if (tileX < f.x || tileX >= f.x + f.w) continue;
+    if (tileY < f.y || tileY >= f.y + f.h) continue;
+    return true;
+  }
+  return false;
+}
+
+function hasEnterableTeleporter(world, tileX, tileY) {
+  for (const e of world.entities) {
+    if (e.species_id !== 1019) continue;
+    if (!e.destination) continue;
     const f = e.frame; if (!f) continue;
     if (tileX < f.x || tileX >= f.x + f.w) continue;
     if (tileY < f.y || tileY >= f.y + f.h) continue;
