@@ -51,6 +51,8 @@ const LIQUIDS = new Set([BIOME.WATER, BIOME.DARK_WATER, BIOME.LAVA]);
 export function isLiquid(b) { return LIQUIDS.has(b); }
 export function isLightGrass(b) { return b === BIOME.GRASS; }
 export function isDarkGrass(b) { return b === BIOME.DARK_GRASS; }
+// Mirrors Rust World::is_slippery_surface — only Ice tiles slide today.
+export function isSlippery(b) { return b === BIOME.ICE; }
 
 export function biomeIsObstacle(b) {
   return b === BIOME.WATER || b === BIOME.NOTHING || b === BIOME.LAVA || b === BIOME.DARK_WATER;

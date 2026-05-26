@@ -17,7 +17,7 @@
 // integer tile and is the source of truth for collision and snapping.
 
 import { ANIMATIONS_FPS, SPRITE_SHEET_HEROES, STARTING_SPAWN } from "./constants.js";
-import { isWalkable, isEntityBlocked, hasEnterableTeleporter } from "./world.js";
+import { isWalkable, isEntityBlocked, hasEnterableTeleporter, isTileSlippery } from "./world.js";
 import { playSfx } from "./audio.js";
 import { findPushableAt, pushOneTile } from "./pushables.js";
 import { findGateAt, tryUnlockGate } from "./gateUnlock.js";
@@ -76,7 +76,27 @@ export function updatePlayer(player, input, dt, world) {
   updateAnimation(player, dt);
 }
 
+// Mirrors Rust update_direction_based_on_keyboard: while standing on a
+// slippery tile the player can't change direction; the only available
+// state-change is "is the slide blocked? then stop". Returns true if
+// the slippery-slide path consumed this tick and the normal idle logic
+// should be skipped.
+function handleIdleOnIce(player, world) {
+  if (!player._sliding) return false;
+  // Try to continue sliding in the same direction. If the next tile is
+  // blocked we burn off the slide and become idle there.
+  if (canEnter(player.tileX + DIR_DELTA[player.direction][0],
+               player.tileY + DIR_DELTA[player.direction][1], world, player.direction)) {
+    startStep(player, player.direction, world);
+  } else {
+    player._sliding = false;
+  }
+  return true;
+}
+
 function handleIdle(player, input, dt, world) {
+  if (isTileSlippery(world, player.tileX, player.tileY) && handleIdleOnIce(player, world)) return;
+
   for (const dir of input.events) {
     if (dir === player.direction) {
       // Already facing → commit immediately, clear any pending rotate.
@@ -110,8 +130,13 @@ function handleIdle(player, input, dt, world) {
 }
 
 function advanceStep(player, input, dt, world) {
-  // Any press during a step replaces the queued direction (last-wins).
-  for (const dir of input.events) player.queuedDir = dir;
+  // Any press during a step replaces the queued direction (last-wins),
+  // EXCEPT while sliding on ice — slippery surfaces commit you to the
+  // current direction until you hit a wall.
+  const slidingOnIce = isTileSlippery(world, player.tileX, player.tileY);
+  if (!slidingOnIce) {
+    for (const dir of input.events) player.queuedDir = dir;
+  }
 
   const step = player.step;
   step.progress += dt / STEP_DURATION;
@@ -130,7 +155,16 @@ function advanceStep(player, input, dt, world) {
   player.y = step.toY;
   player.step = null;
 
-  // Decide what to do next: queued > held.
+  // If we just landed on (or stayed on) a slippery tile, the next tick
+  // will auto-chain in the same direction via handleIdleOnIce. Mark
+  // momentum so we don't have to re-derive it.
+  if (isTileSlippery(world, player.tileX, player.tileY)) {
+    player._sliding = true;
+    return;
+  }
+  player._sliding = false;
+
+  // Normal chaining: queued > held.
   let nextDir = player.queuedDir;
   player.queuedDir = null;
   if (!nextDir) {

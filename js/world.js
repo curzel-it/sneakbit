@@ -2,7 +2,7 @@
 // sprite-sheet coordinates (with neighbor-aware tile selection), and a
 // collision mask. Heavy work happens here so the render loop stays simple.
 
-import { biomeFromChar, biomeIsObstacle, BIOME } from "./biomes.js";
+import { biomeFromChar, biomeIsObstacle, BIOME, isSlippery } from "./biomes.js";
 import { constructionFromChar, constructionIsObstacle, constructionIsBridge, constructionIsVisible, CONSTRUCTION } from "./constructions.js";
 import { biomeTextureCol } from "./biomeTiles.js";
 import { constructionTextureRow } from "./constructionTiles.js";
@@ -72,6 +72,15 @@ export function isWalkable(world, tileX, tileY) {
   if (!world) return true;
   if (tileX < 0 || tileY < 0 || tileX >= world.cols || tileY >= world.rows) return false;
   return !world.collision[tileY][tileX];
+}
+
+// Mirrors Rust World::is_slippery_surface. True if the biome under the
+// given tile is one we treat as slippery (Ice today). Out-of-bounds
+// reads as false so callers don't have to guard.
+export function isTileSlippery(world, tileX, tileY) {
+  if (!world) return false;
+  if (tileX < 0 || tileY < 0 || tileX >= world.cols || tileY >= world.rows) return false;
+  return isSlippery(world.biome[tileY][tileX]);
 }
 
 // True if any rigid entity occupies the given tile. Bullets we spawned
