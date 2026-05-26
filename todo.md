@@ -3,7 +3,7 @@ Todo list uses a tier system that is part propritization and part parallelizatio
 Possible bugs:
 - [x] `New Game` does not wipe current level and position
 - [x] Make absolutely sure we are during integer scaling to preserve pixel art, across all platforms and screen sizes. See suspicious-non-integer-scaling.png
-- [~] Rendering of equipment such as swords, AR15, and so on — first pass landed (overlay rendered while equipped), but pickups don't auto-equip yet so it isn't visible end-to-end
+- [~] Rendering of equipment such as swords, AR15, and so on — overlay rendered while equipped and pickups now auto-equip. Open issue: no key bound to actually swing the equipped sword (see Bugs below).
 
 Combat & feedback parity:
 - [x] **Knockback / straight-line movement primitive.** Ported as `js/movement.js`. Use sites (knockback, projectile trails, minion ejection) still TBD.
@@ -30,24 +30,30 @@ Missing entity types & weapons (data shipped, code missing):
 World, movement & rendering:
 - [x] **Slippery surfaces (Ice biome).** Player slides until blocked; direction input is locked while on ice.
 - [x] **Slope traversal audit.** Closed as cosmetic-only gap (Rust slopes are also `is_obstacle = true`, just with shaped hittable_frame padding). See header in `js/constructions.js`.
-- [ ] **Light conditions audit.** Rust has 3 modes (Day/Night/CantSeeShit); JS renderer handles Night (flat blue wash) and CantSeeShit (radial mask). Day is no-op — confirm Rust isn't applying any daylight tint or shader.
-- [ ] **Save migrations.** Rust `features/migrations.rs::run_migrations()` runs on `BUILD_NUMBER` bump to upgrade old save formats. JS uses versioned localStorage prefixes (`sneakbit.kv.v1`, `sneakbit.inventory.v1`, `sneakbit.settings.v1`) but has no migration code — bumping a version silently orphans old saves.
+- [x] **Light conditions audit.** Confirmed Rust applies no Day-mode tint — noted in `js/renderer.js`.
+- [x] **Save migrations.** `js/migrations.js` runs at startup, walks the MIGRATIONS list from the stored `build_number` up to the current `BUILD_NUMBER`. Empty migration list today; framework is ready for the first breaking change.
 
 UI / accessibility:
 - [ ] **Toasts with images.** Rust `features/toasts.rs:9` allows an optional `ToastImage` (used for reward toasts to show the item icon). JS `toast.js` is text-only.
-- [ ] **DisplayableMessage modal.** Rust `features/messages.rs` is a full-screen `{title, text}` modal distinct from toasts and dialogues. No JS equivalent.
+- [x] **DisplayableMessage modal.** `js/message.js` — full-screen `{title, text}` modal, exposed as `window.showMessage(title, text, cb)`. Pauses the loop until the player acknowledges.
 - [ ] **Language picker.** Rust supports `en` + `it` (`lang/localizable.rs`). JS hardcodes `"en"` in `main.js`, ships only `data/strings.en.json`, and has no Settings selector. Port the Italian `.stringx` content to `strings.it.json` and surface a dropdown.
-- [ ] **Loading screen.** First frame is whatever the HTML shows during `await Promise.all` of asset loads. Add a minimal splash + progress bar.
-- [ ] **Inventory screen + equipment-swap UI in pause menu.** Currently swapping weapons requires `window.equipment` devtools. Needs an inventory grid + weapon-slot picker accessible from Esc.
-- [ ] **Skill-tree view.** Three skill unlocks exist (piercing/boomerang/catcher) but there's no panel that lists them as earned/locked.
-- [ ] **Credits screen.**
+- [x] **Loading screen.** `js/loadingScreen.js` — dark splash + progress bar that ticks once per fulfilled Promise.all leg and fades out when the world is ready.
+- [x] **Inventory screen + equipment-swap UI in pause menu.** `js/inventoryScreen.js` rendered inside a new menu tab; click Equip on any weapon-associated pickup to swap loadouts.
+- [x] **Skill-tree view.** Skills tab in the pause menu shows piercing / boomerang / catcher with UNLOCKED / LOCKED tags.
+- [x] **Credits screen.** Credits tab in the pause menu with attribution + repo links.
 - [ ] **Key rebinding UI.** WASD/arrows and F/G/K/J/E/Esc/M are hardcoded; no remap.
-- [ ] **Gamepad support.** Browser Gamepad API; no entry point in `js/input.js`.
-- [ ] **Save export/import.** Single implicit slot — let the user dump/restore the localStorage payload as JSON.
+- [x] **Gamepad support.** `js/gamepad.js` — left-stick / d-pad fan into the directional channel; standard-mapping buttons fire shoot / melee / interact / menu.
+- [x] **Save export/import.** Export / Import buttons in the pause menu round-trip every `sneakbit.*` localStorage key as a JSON blob.
 - [ ] **Touch: virtual analog stick variant.** Current `js/touch.js` is a 4-way d-pad; analog suits diagonals + slippery surfaces better. Keep d-pad as default.
 
 Multiplayer:
 - [ ] Co-op using WASD+ZXC and IJKL+BNM, can be started from menu
+
+Bugs:
+- [ ] New games does not reset player position
+- [ ] After a sword has been equipped there is no key that can be pressed to use it
+- [ ] In the first level a `Press E to talk` hint is shown and immeditely dismissed automatically. It is WAY too fast and not in the correct position (~screen center instead of top, like other toast)
+- [ ] Some creatures have the wrong speed, such as slime for example
 
 Notes:
 - **Asset gap (cutscenes):** `js/cutscenes.js:110` has an empty `CUTSCENE_SHEETS` map — the demon-lord-defeat PNG isn't bundled. Logic ticks fine but renders nothing. Decide whether to ship the sheet or leave the no-op as intentional.
