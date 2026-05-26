@@ -16,26 +16,48 @@
 import { getValue, setValue } from "./storage.js";
 
 // Bump on every breaking storage-shape change. Mirror the Rust constant.
-export const BUILD_NUMBER = 1;
+export const BUILD_NUMBER = 2;
 
 const KEY_BUILD = "build_number";
+const LEGACY_INVENTORY_KEY = "sneakbit.inventory.v1";
 
 // Ordered list of migrations. Each entry: `to` is the version this
 // migration upgrades the save TO; `run` performs the rewrite. They're
 // applied in `to` order against any save with `build_number < to`.
 const MIGRATIONS = [
-  // Example for the next breaking change (kept commented as documentation):
-  // {
-  //   to: 2,
-  //   run() {
-  //     // e.g. rename the equipment storage key:
-  //     const old = getValue("player.0.equipped.gun");
-  //     if (old != null) {
-  //       setValue("player.0.equipped.ranged", old);
-  //       setValue("player.0.equipped.gun", null);
-  //     }
-  //   },
-  // },
+  {
+    // v2: split global inventory + extend equipment to per-player keys.
+    // Old layout: one JSON blob at sneakbit.inventory.v1, plus
+    // `player.0.equipped.ranged|melee` in the kv store.
+    // New layout: `player.{p}.inventory.amount.{species_id}` in the kv
+    // store, per-player equipment slots, and the old blob is dropped.
+    to: 2,
+    run() {
+      // Inventory: read the legacy JSON blob, fan into player.0.*.
+      if (typeof localStorage !== "undefined") {
+        try {
+          const raw = localStorage.getItem(LEGACY_INVENTORY_KEY);
+          if (raw) {
+            let parsed = null;
+            try { parsed = JSON.parse(raw); } catch {}
+            if (parsed && typeof parsed === "object") {
+              for (const [sid, n] of Object.entries(parsed)) {
+                const sidNum = Number(sid);
+                const count = Number(n) | 0;
+                if (!Number.isFinite(sidNum) || count <= 0) continue;
+                setValue(`player.0.inventory.amount.${sidNum}`, count);
+              }
+            }
+            localStorage.removeItem(LEGACY_INVENTORY_KEY);
+          }
+        } catch {}
+      }
+      // Equipment: legacy keys (player.0.equipped.ranged / .melee) keep
+      // the same shape under the new code, so no rewrite is needed for
+      // P1. P2 starts with no overrides — the default kunai launcher
+      // fallback kicks in via getEquipped(SLOT_RANGED, 1) on first read.
+    },
+  },
 ];
 
 export function runMigrations() {

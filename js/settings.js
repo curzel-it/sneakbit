@@ -11,6 +11,9 @@ const DEFAULTS = {
   musicVolume: 0.45,
   muted: false,
   showFps: true,
+  // Co-op friendly fire — off by default. When on, a bullet whose
+  // playerIndex doesn't match the player it overlaps applies damage.
+  friendlyFire: false,
 };
 
 let current = { ...DEFAULTS };

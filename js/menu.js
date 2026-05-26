@@ -91,6 +91,9 @@ export function installMenu(stateGetter) {
         P1: WASD + Z/X/C &nbsp;·&nbsp; P2: IJKL + B/N/M<br>
         Toggling reloads the page.
       </p>
+      <div class="menu-row">
+        <label for="opt-friendly-fire"><input id="opt-friendly-fire" type="checkbox" /> Friendly fire (co-op)</label>
+      </div>
       <div class="menu-row menu-controls">
         <button id="menu-open-controls">Key bindings…</button>
         <button id="menu-settings-back">Back</button>
@@ -362,6 +365,9 @@ function bindWidgets() {
   muted.addEventListener("change", () => saveSettings({ muted: muted.checked }));
   fps.addEventListener("change", () => saveSettings({ showFps: fps.checked }));
 
+  const ff = root.querySelector("#opt-friendly-fire");
+  ff.addEventListener("change", () => saveSettings({ friendlyFire: ff.checked }));
+
   const coop = root.querySelector("#opt-coop");
   coop.addEventListener("change", () => {
     const next = coop.checked;
@@ -390,6 +396,7 @@ function syncSettingsWidgets() {
   root.querySelector("#opt-muted").checked = !!s.muted;
   root.querySelector("#opt-fps").checked = !!s.showFps;
   root.querySelector("#opt-coop").checked = isCoopMode();
+  root.querySelector("#opt-friendly-fire").checked = !!s.friendlyFire;
 }
 
 // Flush the in-memory raw world JSON to the IndexedDB override buffer
@@ -558,6 +565,8 @@ function injectStyles() {
     #menu .inv-list .inv-action button { background: #2a2a2a; color: #eee; border: 1px solid #444; padding: 3px 8px; border-radius: 3px; font-size: 11px; cursor: pointer; }
     #menu .inv-list .inv-action button:hover { background: #353535; }
     #menu .inv-equipped-tag { color: #b8c6ff; font-size: 10px; letter-spacing: 1px; }
+    #menu .inv-player { margin: 8px 0 6px; font-size: 13px; color: #b8c6ff; letter-spacing: 1px; }
+    #menu .inv-sep { border: none; border-top: 1px dashed #2e2e2e; margin: 14px 0; }
     #menu .menu-controls-list { list-style: none; padding: 0; margin: 0 0 12px; min-width: 360px; }
     #menu .menu-controls-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 4px 0; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: 3px; }
     #menu .menu-controls-label { flex: 1; font-size: 12px; color: #ccc; }

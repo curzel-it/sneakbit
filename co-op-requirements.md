@@ -183,12 +183,12 @@ Status legend: ✅ landed · ⏳ not started.
 1. ✅ **UI**: Co-op toggle lives in the Settings screen — `menu.js`.
 2. ✅ **Sprites**: Per-index hero column on `heroes.png` via `createPlayer({ index })` — `player.js`. P0=x:1, P1=x:5, P2=x:9, P3=x:13.
 3. ✅ **Spawning**: P2 spawns one tile in P1's facing direction (`makeCoopP2(p1, world)` in `main.js`), and `transitions.js::repositionCoopP2` re-applies the rule on every world transition.
-4. ⏳ **HP per player**: Split `playerHealth.js` into a per-player record; render N HP bars.
-5. ⏳ **Inventory per player**: Migrate storage; thread `playerIndex` through `addAmmo`/`removeAmmo`/`getAmmo`. Touches `pickups.js`, `dialogue.js` (reward), `shooting.js` (ammo decrement), `melee.js`.
-6. ⏳ **Equipment per player**: Same fan-out for `equipment.js`. Add to migrations.
-7. ⏳ **Combat per player**: `resolveMeleeMonsters` over all live players; bullets tag `playerIndex`; catcher refunds to that player. Add `friendlyFire` setting (default off) — bullet whose `playerIndex !== target.index` only damages when the setting is on.
-8. ⏳ **Pickups per player**: First adjacent player wins; equip into that player's slot.
-9. ⏳ **Camera averaging**: `updateCamera(camera, [p1, p2], world)` averages live positions.
-10. ⏳ **P2 death + revive**: Track `deadPlayers`; only P1 death ends the game; respawn-on-world-change resets everyone.
+4. ✅ **HP per player**: `playerHealth.js` holds a record per player; `healthHud.js` renders one bar per active player and hides P2's when they're dead.
+5. ✅ **Inventory per player**: storage keys split to `player.{p}.inventory.amount.{species_id}`; `addAmmo`/`removeAmmo`/`getAmmo` take a `playerIndex`. Migration v2 fans the legacy `sneakbit.inventory.v1` blob into `player.0.*` and drops the old key.
+6. ✅ **Equipment per player**: `getEquipped` / `setEquipped` take a `playerIndex`; inventory screen renders one section per player; `pickups.js` equips into the picking-up player's slot; default kunai launcher applies per player.
+7. ✅ **Combat per player**: `resolveMeleeMonsters` iterates live players; bullets tag `_playerIndex`; catcher refunds route through that index. `friendlyFire` setting (default off) gates bullet damage on a different-player overlap.
+8. ✅ **Pickups per player**: `checkPickup` iterates every live player; the first one whose tile overlaps the pickup wins. `maybeTeleport` now also fires on P2 movement.
+9. ✅ **Camera averaging**: `updateCamera` accepts an array; averages live positions; dead players excluded by the caller in `main.js::livePlayersForCamera`.
+10. ✅ **P2 death + revive**: `playerHealth.isPlayerDead(playerIndex)` per player. P2 death triggers a one-shot toast (`notification.player.died`); only P1 death opens the Game Over modal. `transitions.js::travelTo` resets a dead P2's HP on every world entry (matches Rust's `dead_players` clearing on world reload), and the P1 revive path also calls the global `resetPlayerHealth()` so both players come back full.
 
-Steps 1-3 are visible wins with very small blast radius (shipped). Steps 4-7 are the meat of feature parity. Step 10 closes the loop.
+PvP arena, 3-/4-player support, per-player SFX panning, and Rust save-format compatibility remain out of scope as documented above.

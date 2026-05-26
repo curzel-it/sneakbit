@@ -133,3 +133,58 @@ test("continuous damage from a melee monster stacks every tick (no invuln)", () 
   // 100 dps × 0.5 s = 50 damage (allow a small slack).
   assert.ok(before - after >= 30, `expected ≥30 hp lost, lost ${before - after}`);
 });
+
+test("melee monster only damages the player(s) actually in range", () => {
+  playerHealth.resetPlayerHealth();
+  const world = makeWorld();
+  const monster = { species_id: 4004, frame: { x: 1, y: 0, w: 1, h: 2 }, direction: "Down" };
+  world.entities.push(monster);
+  // P1 is right next to the monster (in range); P2 is far across the map.
+  const p1 = { index: 0, x: 1, y: 1, tileX: 1, tileY: 1 };
+  const p2 = { index: 1, x: 15, y: 15, tileX: 15, tileY: 15 };
+
+  combat.tickCombat(world, [p1, p2], 0.1);
+  assert.ok(playerHealth.getPlayerHp(0) < 100, "P1 took damage");
+  assert.equal(playerHealth.getPlayerHp(1), 100, "P2 untouched");
+});
+
+test("friendly fire OFF: a P1-owned bullet flying through P2 does no damage", async () => {
+  playerHealth.resetPlayerHealth();
+  const world = makeWorld();
+  // Bullet owned by P1 sits exactly on top of P2.
+  const bullet = {
+    species_id: 7000, _spawned: true, _vx: 0, _vy: 0, _lifespan: 1.0,
+    _playerIndex: 0,
+    frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Right",
+  };
+  world.entities.push(bullet);
+  const p1 = { index: 0, x: 1, y: 1, tileX: 1, tileY: 1 };
+  const p2 = { index: 1, x: 5, y: 5, tileX: 5, tileY: 5 };
+
+  // friendlyFire default is false → P2 takes no damage.
+  const { saveSettings } = await import("../js/settings.js");
+  saveSettings({ friendlyFire: false });
+  combat.tickCombat(world, [p1, p2], 0.05);
+  assert.equal(playerHealth.getPlayerHp(1), 100, "no friendly fire");
+});
+
+test("friendly fire ON: a P1-owned bullet damages P2 but not P1", async () => {
+  playerHealth.resetPlayerHealth();
+  const world = makeWorld();
+  const bullet = {
+    species_id: 7000, _spawned: true, _vx: 0, _vy: 0, _lifespan: 1.0,
+    _playerIndex: 0,
+    frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Right",
+  };
+  world.entities.push(bullet);
+  const p1 = { index: 0, x: 1, y: 1, tileX: 1, tileY: 1 };
+  const p2 = { index: 1, x: 5, y: 5, tileX: 5, tileY: 5 };
+
+  const { saveSettings } = await import("../js/settings.js");
+  saveSettings({ friendlyFire: true });
+  combat.tickCombat(world, [p1, p2], 0.05);
+  assert.ok(playerHealth.getPlayerHp(1) < 100, "P2 took friendly fire damage");
+  assert.equal(playerHealth.getPlayerHp(0), 100, "shooter (P1) untouched");
+  // Restore default so other tests run with friendly fire off.
+  saveSettings({ friendlyFire: false });
+});

@@ -5,6 +5,9 @@
 // slot, and offers an inline Equip button on weapon-associated items
 // so the player can swap loadouts without dropping to devtools.
 //
+// In co-op mode each player has their own inventory and equipment slots,
+// so we render one section per player.
+//
 // Pure DOM, like the rest of the pause menu. The pause menu owns the
 // "open / close / Esc back out" wiring; this file just renders into a
 // host element passed by menu.js when the Inventory tab is shown.
@@ -13,19 +16,20 @@ import { getSpecies } from "./species.js";
 import { tr } from "./strings.js";
 import { getEquipped, setEquipped, clearEquipped, SLOT_MELEE, SLOT_RANGED,
          DEFAULT_RANGED_WEAPON_ID } from "./equipment.js";
-
-const PREFIX = "sneakbit.inventory.v1";
+import { snapshotInventory } from "./inventory.js";
+import { isCoopMode } from "./coopMode.js";
 
 export function renderInventoryInto(host) {
   if (!host) return;
-  host.innerHTML = inventoryHtml();
+  const indices = isCoopMode() ? [0, 1] : [0];
+  host.innerHTML = indices.map(playerSectionHtml).join('<hr class="inv-sep"/>');
   bindInventoryButtons(host);
 }
 
-function inventoryHtml() {
-  const counts = loadCounts();
-  const equippedMelee  = getEquipped(SLOT_MELEE);
-  const equippedRanged = getEquipped(SLOT_RANGED);
+function playerSectionHtml(playerIndex) {
+  const counts = snapshotInventory(playerIndex);
+  const equippedMelee  = getEquipped(SLOT_MELEE, playerIndex);
+  const equippedRanged = getEquipped(SLOT_RANGED, playerIndex);
 
   const rows = Object.entries(counts)
     .map(([id, n]) => ({ id: Number(id), count: n | 0 }))
@@ -34,22 +38,29 @@ function inventoryHtml() {
     .filter(r => r.sp)
     .sort(byKindThenName);
 
+  const header = isCoopMode() ? `<h2 class="inv-player">Player ${playerIndex + 1}</h2>` : "";
+
   if (rows.length === 0) {
-    return `<p class="inv-empty">Your inventory is empty.</p>`;
+    return `${header}
+      <div class="inv-equipped">
+        <div><span class="inv-label">Melee:</span>  ${equipName(equippedMelee, playerIndex)}</div>
+        <div><span class="inv-label">Ranged:</span> ${equipName(equippedRanged, playerIndex)}</div>
+      </div>
+      <p class="inv-empty">Inventory is empty.</p>`;
   }
 
-  return `
+  return `${header}
     <div class="inv-equipped">
-      <div><span class="inv-label">Melee:</span>  ${equipName(equippedMelee)}</div>
-      <div><span class="inv-label">Ranged:</span> ${equipName(equippedRanged)}</div>
+      <div><span class="inv-label">Melee:</span>  ${equipName(equippedMelee, playerIndex)}</div>
+      <div><span class="inv-label">Ranged:</span> ${equipName(equippedRanged, playerIndex)}</div>
     </div>
     <ul class="inv-list">
-      ${rows.map(r => itemRow(r, equippedMelee, equippedRanged)).join("")}
+      ${rows.map(r => itemRow(r, equippedMelee, equippedRanged, playerIndex)).join("")}
     </ul>
   `;
 }
 
-function itemRow(r, equippedMelee, equippedRanged) {
+function itemRow(r, equippedMelee, equippedRanged, playerIndex) {
   const name = tr(r.sp.name) || r.sp.name || `Species ${r.id}`;
   const weaponId = r.sp.associated_weapon;
   let action = "";
@@ -62,7 +73,7 @@ function itemRow(r, equippedMelee, equippedRanged) {
     if (equippedNow) {
       action = `<span class="inv-equipped-tag">Equipped</span>`;
     } else if (isMelee || isRanged) {
-      action = `<button data-equip="${weaponId}" data-slot="${isMelee ? "melee" : "ranged"}">Equip</button>`;
+      action = `<button data-equip="${weaponId}" data-slot="${isMelee ? "melee" : "ranged"}" data-player="${playerIndex}">Equip</button>`;
     }
   }
   return `<li>
@@ -77,20 +88,21 @@ function bindInventoryButtons(host) {
     btn.addEventListener("click", () => {
       const id = parseInt(btn.dataset.equip, 10);
       const slot = btn.dataset.slot === "melee" ? SLOT_MELEE : SLOT_RANGED;
-      setEquipped(slot, id);
+      const idx = parseInt(btn.dataset.player, 10) | 0;
+      setEquipped(slot, id, idx);
       renderInventoryInto(host); // re-render so labels flip
     });
   }
-  const unequipMelee = host.querySelector("[data-unequip-melee]");
-  if (unequipMelee) {
-    unequipMelee.addEventListener("click", () => {
-      clearEquipped(SLOT_MELEE);
+  for (const btn of host.querySelectorAll("[data-unequip-melee]")) {
+    btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.unequipMelee, 10) | 0;
+      clearEquipped(SLOT_MELEE, idx);
       renderInventoryInto(host);
     });
   }
 }
 
-function equipName(weaponId) {
+function equipName(weaponId, playerIndex) {
   if (!weaponId) return `<em>none</em>`;
   const sp = getSpecies(weaponId);
   const name = sp ? (tr(sp.name) || sp.name) : `Species ${weaponId}`;
@@ -100,7 +112,7 @@ function equipName(weaponId) {
   // Melee can be cleared back to nothing; ranged falls back to the kunai
   // launcher anyway, so the only meaningful unequip button is for melee.
   const sl = sp?.entity_type === "WeaponMelee"
-    ? ` <button data-unequip-melee>Unequip</button>`
+    ? ` <button data-unequip-melee="${playerIndex | 0}">Unequip</button>`
     : "";
   return `${escapeHtml(name)}${sl}`;
 }
@@ -114,17 +126,6 @@ function byKindThenName(a, b) {
   const an = tr(a.sp.name) || a.sp.name || "";
   const bn = tr(b.sp.name) || b.sp.name || "";
   return an.localeCompare(bn);
-}
-
-function loadCounts() {
-  try {
-    const raw = (typeof localStorage !== "undefined") && localStorage.getItem(PREFIX);
-    if (!raw) return {};
-    const parsed = JSON.parse(raw);
-    return (parsed && typeof parsed === "object") ? parsed : {};
-  } catch {
-    return {};
-  }
 }
 
 function escapeHtml(s) {

@@ -17,6 +17,7 @@ import { setupPuzzles } from "./puzzles.js";
 import { setupCutscenes } from "./cutscenes.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { putBufferedWorld } from "./worldBuffer.js";
+import { resetPlayerHealth, isPlayerDead } from "./playerHealth.js";
 
 const TELEPORTER_SPECIES_ID = 1019;
 const FADE_DURATION_MS = 220;
@@ -97,6 +98,9 @@ export async function travelTo(state, destination) {
     // save-on-teleport path above is the only consumer.
     state.rawWorld = raw;
     state.lastTile = { x: state.player.tileX, y: state.player.tileY };
+    if (state.player2) {
+      state.lastTile2 = { x: state.player2.tileX, y: state.player2.tileY };
+    }
     if (world.soundtrack) playTrack(world.soundtrack);
     const [spawnX, spawnY] = resolveSpawn(world, destination, sourceWorldId);
     // Mirror Rust world.spawn_point: remember the entry tile so that death
@@ -106,8 +110,14 @@ export async function travelTo(state, destination) {
     movePlayerTo(state.player, spawnX, spawnY, destination.direction);
     // Co-op: respawn P2 next to P1 in P1's facing direction (Rust's
     // spawn_coop_players_around_hero runs on every world entry). Falls
-    // back to stacking on P1 if the offset tile is blocked.
-    if (state.player2) repositionCoopP2(state.player2, state.player, world);
+    // back to stacking on P1 if the offset tile is blocked. A dead P2
+    // is brought back to life by the world reload — matches Rust's
+    // dead_players being cleared on every world entry.
+    if (state.player2) {
+      const wasDead = isPlayerDead(state.player2.index | 0);
+      repositionCoopP2(state.player2, state.player, world);
+      if (wasDead) resetPlayerHealth(state.player2.index | 0);
+    }
     await fadeIn();
   } finally {
     busy = false;

@@ -1,10 +1,14 @@
-// Pickups + hints: when the player snaps onto an auto-triggered entity we
-// fire its effect and remove it from the world.
+// Pickups + hints: when one of the live players snaps onto an auto-
+// triggered entity we fire its effect and remove it from the world.
 //
 // Hint entities (consumable variant) show their dialogue, then vanish.
-// Bundles and PickableObjects play a pickup SFX and vanish (no inventory
-// yet — we'll wire that when combat lands). Teleporters are handled in
-// transitions.js so they can fade between worlds.
+// Bundles and PickableObjects play a pickup SFX and vanish; the ammo
+// goes into the picking-up player's inventory, and weapon pickups equip
+// into that player's slot. Teleporters are handled in transitions.js so
+// they can fade between worlds.
+//
+// Co-op rule: iterate every live player and the first one whose tile
+// overlaps a pickup wins it. Single-player just passes one player.
 
 import { resolveEntityDialogue, dialogueLines } from "./dialogue.js";
 import { showToast } from "./toast.js";
@@ -16,6 +20,7 @@ import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { tr } from "./strings.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
+import { isPlayerDead } from "./playerHealth.js";
 
 // Bullet is here because in world data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles
@@ -26,7 +31,7 @@ import { isCreativeMode } from "./creativeMode.js";
 const AUTO_PICKUP_TYPES = new Set(["Bundle", "PickableObject", "Bullet"]);
 
 export function checkPickup(state) {
-  const { world, player } = state;
+  const { world } = state;
   if (!world.entities) return;
   // Creative mode never auto-collects: pickups stay on the floor (so
   // the designer can keep arranging them), and hint signs don't fire
@@ -34,6 +39,9 @@ export function checkPickup(state) {
   // they get in creative). Mirrors Rust update_pickable_object and
   // hint handling early-returning in creative.
   if (isCreativeMode()) return;
+  const players = livePlayers(state);
+  if (!players.length) return;
+
   for (let i = 0; i < world.entities.length; i++) {
     const e = world.entities[i];
     if (e._spawned) continue;
@@ -41,8 +49,11 @@ export function checkPickup(state) {
     const kind = classify(e);
     if (!kind) continue;
     const f = e.frame; if (!f) continue;
-    if (player.tileX < f.x || player.tileX >= f.x + f.w) continue;
-    if (player.tileY < f.y || player.tileY >= f.y + f.h) continue;
+    const picker = players.find(p =>
+      p.tileX >= f.x && p.tileX < f.x + f.w &&
+      p.tileY >= f.y && p.tileY < f.y + f.h
+    );
+    if (!picker) continue;
     if (kind === "hint-persistent") {
       // Non-consumable hint: show the toast (once per text), don't despawn.
       triggerHint(e, /* persist */ true);
@@ -51,10 +62,17 @@ export function checkPickup(state) {
       if (e.id != null && !world.ephemeralState) {
         setValue(`item_collected.${e.id}`, 1);
       }
-      trigger(e, kind);
+      trigger(e, kind, picker.index | 0);
     }
     return;
   }
+}
+
+function livePlayers(state) {
+  const arr = [];
+  if (state.player && !isPlayerDead(state.player.index | 0)) arr.push(state.player);
+  if (state.player2 && !isPlayerDead(state.player2.index | 0)) arr.push(state.player2);
+  return arr;
 }
 
 function classify(e) {
@@ -67,7 +85,7 @@ function classify(e) {
   return null;
 }
 
-function trigger(e, kind) {
+function trigger(e, kind, playerIndex) {
   if (kind === "hint") {
     triggerHint(e, /* persist */ false);
     return;
@@ -76,12 +94,12 @@ function trigger(e, kind) {
   if (sp?.bundle_contents?.length) {
     const counts = new Map();
     for (const cid of sp.bundle_contents) counts.set(cid, (counts.get(cid) || 0) + 1);
-    for (const [cid, n] of counts) addAmmo(cid, n);
+    for (const [cid, n] of counts) addAmmo(cid, n, playerIndex);
   } else {
-    addAmmo(e.species_id, 1);
+    addAmmo(e.species_id, 1, playerIndex);
   }
   playSfx("ammoCollected");
-  maybeEquipWeapon(sp);
+  maybeEquipWeapon(sp, playerIndex);
 }
 
 // When a pickup is associated with a weapon (sword pickup → sword,
@@ -90,7 +108,7 @@ function trigger(e, kind) {
 // Mirrors how `available_weapons` in Rust surfaces a weapon as soon as
 // its pickup species lands in the inventory, with the JS twist that
 // we equip it directly instead of opening a chooser (no inventory UI yet).
-function maybeEquipWeapon(pickupSp) {
+function maybeEquipWeapon(pickupSp, playerIndex) {
   if (!pickupSp) return;
   const weaponId = pickupSp.associated_weapon;
   if (!weaponId) return;
@@ -101,7 +119,7 @@ function maybeEquipWeapon(pickupSp) {
   if (weaponSp.entity_type === "WeaponMelee")  { slot = SLOT_MELEE;  hint = "Press G to swing"; }
   if (weaponSp.entity_type === "WeaponRanged") { slot = SLOT_RANGED; hint = "Press F to shoot"; }
   if (!slot) return;
-  setEquipped(slot, weaponId);
+  setEquipped(slot, weaponId, playerIndex);
   const name = tr(weaponSp.name) || weaponSp.name || "weapon";
   showToast(`Equipped: ${name}\n${hint}`, "longHint", {
     image: inventoryIconFor(weaponSp),

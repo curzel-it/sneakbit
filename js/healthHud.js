@@ -1,11 +1,19 @@
-// Small HP bar pinned to the top-left of the viewport. Lives in the DOM,
-// not the canvas, per the project's UI rule.
+// HP bars pinned to the top of the viewport. Lives in the DOM, not the
+// canvas, per the project's UI rule.
+//
+// In single-player a single bar sits top-left. In co-op an extra bar sits
+// below it — the second player's HP. A bar hides when its player is dead.
 
-import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange } from "./playerHealth.js";
+import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange, isPlayerDead } from "./playerHealth.js";
+import { isCoopMode } from "./coopMode.js";
+
+const PLAYER_COLORS = [
+  "linear-gradient(90deg, #b13 0%, #e54 100%)",
+  "linear-gradient(90deg, #168 0%, #4ad 100%)",
+];
 
 let root = null;
-let fill = null;
-let label = null;
+const bars = []; // [{ label, fill, index }]
 
 export function installHealthHud() {
   if (root) return root;
@@ -15,6 +23,28 @@ export function installHealthHud() {
     position: "fixed",
     top: "12px",
     left: "12px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "6px",
+    zIndex: "11",
+    pointerEvents: "none",
+    userSelect: "none",
+    WebkitUserSelect: "none",
+  });
+
+  const count = isCoopMode() ? 2 : 1;
+  for (let i = 0; i < count; i++) bars.push(makeBar(i));
+  for (const b of bars) root.appendChild(b.root);
+  document.body.appendChild(root);
+
+  onPlayerHealthChange(redraw);
+  redraw();
+  return root;
+}
+
+function makeBar(index) {
+  const card = document.createElement("div");
+  Object.assign(card.style, {
     width: "180px",
     padding: "6px 10px",
     background: "rgba(10, 10, 10, 0.7)",
@@ -23,13 +53,9 @@ export function installHealthHud() {
     color: "#eee",
     fontFamily: "monospace",
     fontSize: "12px",
-    zIndex: "11",
-    pointerEvents: "none",
-    userSelect: "none",
-    WebkitUserSelect: "none",
   });
 
-  label = document.createElement("div");
+  const label = document.createElement("div");
   label.style.marginBottom = "4px";
 
   const bar = document.createElement("div");
@@ -42,28 +68,35 @@ export function installHealthHud() {
     overflow: "hidden",
   });
 
-  fill = document.createElement("div");
+  const fill = document.createElement("div");
   Object.assign(fill.style, {
     width: "100%",
     height: "100%",
-    background: "linear-gradient(90deg, #b13 0%, #e54 100%)",
+    background: PLAYER_COLORS[index] ?? PLAYER_COLORS[0],
     transition: "width 120ms linear",
   });
   bar.appendChild(fill);
-  root.appendChild(label);
-  root.appendChild(bar);
-  document.body.appendChild(root);
-
-  onPlayerHealthChange(redraw);
-  redraw();
-  return root;
+  card.appendChild(label);
+  card.appendChild(bar);
+  return { root: card, label, fill, index };
 }
 
 function redraw() {
-  if (!root) return;
-  const hp = getPlayerHp();
-  const max = getPlayerMaxHp();
-  const pct = Math.max(0, Math.min(100, (hp / max) * 100));
-  label.textContent = `HP ${Math.ceil(hp)} / ${max}`;
-  fill.style.width = `${pct}%`;
+  for (const b of bars) {
+    const hp = getPlayerHp(b.index);
+    const max = getPlayerMaxHp();
+    const dead = isPlayerDead(b.index);
+    // P2 hides while dead (matches Rust: dead co-op player drops out of
+    // play until the world reloads). P1 stays visible even at 0 — the
+    // game-over modal takes over.
+    if (b.index > 0 && dead) {
+      b.root.style.display = "none";
+      continue;
+    }
+    b.root.style.display = "";
+    const pct = Math.max(0, Math.min(100, (hp / max) * 100));
+    const tag = bars.length > 1 ? `P${b.index + 1} ` : "";
+    b.label.textContent = `${tag}HP ${Math.ceil(hp)} / ${max}`;
+    b.fill.style.width = `${pct}%`;
+  }
 }

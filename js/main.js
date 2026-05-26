@@ -3,7 +3,7 @@
 import { STARTING_WORLD_ID, STARTING_SPAWN } from "./constants.js";
 import { loadAssets } from "./assets.js";
 import { loadSpecies, loadStrings, loadWorld } from "./data.js";
-import { loadStringsData } from "./strings.js";
+import { loadStringsData, tr } from "./strings.js";
 import { installDialogue, isDialogueOpen } from "./dialogue.js";
 import { installInteract, tickInteract } from "./interact.js";
 import { loadSpeciesData } from "./species.js";
@@ -25,7 +25,7 @@ import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js
 import { checkPickup } from "./pickups.js";
 import { installMusic, playTrack } from "./music.js";
 import { installTouchControls } from "./touch.js";
-import { installToast } from "./toast.js";
+import { installToast, showToast } from "./toast.js";
 import { installShooting, tickShooting, tryShoot } from "./shooting.js";
 import { installMelee, tickMelee, tryMelee } from "./melee.js";
 import { setGamepadAction } from "./gamepad.js";
@@ -127,6 +127,7 @@ async function main() {
     player2,
     camera: createCamera(),
     lastTile: { x: player.tileX, y: player.tileY },
+    lastTile2: player2 ? { x: player2.tileX, y: player2.tileY } : null,
   };
   saveProgress(state);
   let suppressUnloadSave = false;
@@ -174,17 +175,21 @@ async function main() {
         updatePlayer(state.player2, input2, dt, state.world);
       }
       maybeTeleport(state);
-      // Camera locks to the player and feeds the visibility filter that
-      // gates per-entity ticks below. Moved here so the entity ticks see
-      // the current frame's viewport instead of last frame's.
-      updateCamera(state.camera, state.player, state.world);
+      // Camera averages every live player so co-op players stay on screen.
+      // Dead co-op players drop out of the average so the camera doesn't
+      // anchor to where they fell. Single-player still passes one target.
+      const liveForCamera = livePlayersForCamera(state);
+      updateCamera(state.camera, liveForCamera, state.world);
       updateVisibleEntities(state.world, state.camera);
       tickShooting(dt);
       tickMelee(dt);
       tickMobs(state.world, state.player, dt);
       tickMonsterFusion(state.world);
       tickMinionSpawning(state.world, state.player, dt);
-      tickCombat(state.world, state.player, dt);
+      // Combat now iterates every live player for melee monster damage
+      // resolution; bullets carry _playerIndex for catcher refunds and
+      // friendly-fire gating.
+      tickCombat(state.world, allPlayers(state), dt);
       tickAfterDialogue(state.world, dt);
       tickPuzzles(state.world, state.player);
       tickCutscenes(state.world, state.player, dt);
@@ -192,19 +197,24 @@ async function main() {
       tickPushables(state.world, dt);
       tickPlayerHealth(dt);
       tickFastTravel(dt);
-      if (isPlayerDead()) handleDeath(state);
+      // P2 death is handled inline (toast + hide bar). Only P1 death
+      // halts the game with the Game Over modal.
+      handleCoopDeaths(state);
+      if (isPlayerDead(0)) handleDeath(state);
     } else {
       // When paused, keep the camera tracking the player so on resume
       // there's no jolt, but don't bother re-running the visibility pass
       // (the entity ticks are gated by `paused` above and won't read it).
-      updateCamera(state.camera, state.player, state.world);
+      updateCamera(state.camera, livePlayersForCamera(state), state.world);
     }
     tickBiomeAnimation(biomeAnim, dt);
     tickEntities(dt);
     tickInteract();
-    // Pass both players to the renderer so P2 sorts correctly with the
-    // entity z-stack and not just on top as a separate draw call.
-    const renderPlayers = state.player2 ? [state.player, state.player2] : state.player;
+    // Pass live players to the renderer so P2 sorts correctly with the
+    // entity z-stack and not just on top as a separate draw call. Dead
+    // co-op players are filtered out so they vanish from the screen
+    // until the next world transition respawns them.
+    const renderPlayers = livePlayersForCamera(state);
     render(renderer, state.world, state.camera, renderPlayers, biomeAnim.frame);
     updateHud(hud, {
       worldId: state.world.id,
@@ -297,18 +307,73 @@ function handleDeath(state) {
     const worldId = state.world?.id ?? STARTING_WORLD_ID;
     const dest = { world: worldId, x: sp.x, y: sp.y, direction: "Down" };
     travelTo(state, dest).then(() => {
+      // Revive resets every player's HP (P1 + P2) and the death flags
+      // — the next tick treats P2 as alive again next to P1 (the
+      // co-op spawn rule re-applied inside travelTo).
       resetPlayerHealth();
+      p2DeathToasted = false;
       dying = false;
     });
   });
 }
 
+// One-shot toast latch for P2 death — the game keeps running so the
+// per-frame death check would re-fire every tick without it.
+let p2DeathToasted = false;
+function handleCoopDeaths(state) {
+  if (!state.player2) return;
+  const p2Dead = isPlayerDead(state.player2.index | 0);
+  if (p2Dead && !p2DeathToasted) {
+    p2DeathToasted = true;
+    const tmpl = tr("notification.player.died");
+    const msg = tmpl.replace("%PLAYER_NAME%", "2");
+    showToast(msg, "longHint");
+  }
+  if (!p2Dead && p2DeathToasted) {
+    // Defensive: a heal somewhere brought P2 back to life mid-world.
+    // Drop the latch so a future death re-toasts.
+    p2DeathToasted = false;
+  }
+}
+
+// Returns every live player as an array, suitable for systems that
+// want to act on each player (pickups, combat).
+function allPlayers(state) {
+  const out = [];
+  if (state.player && !isPlayerDead(state.player.index | 0)) out.push(state.player);
+  if (state.player2 && !isPlayerDead(state.player2.index | 0)) out.push(state.player2);
+  return out;
+}
+
+// Camera follows live players (dead P2 doesn't drag the centre off).
+// Single-player always returns [P1].
+function livePlayersForCamera(state) {
+  const live = allPlayers(state);
+  // If everyone's dead the camera freezes on P1's last position so the
+  // Game Over overlay doesn't snap to (0, 0).
+  return live.length ? live : (state.player ? [state.player] : []);
+}
+
 function maybeTeleport(state) {
-  const { player, world, lastTile } = state;
-  if (player.tileX === lastTile.x && player.tileY === lastTile.y) return;
-  lastTile.x = player.tileX;
-  lastTile.y = player.tileY;
+  const { player, player2, world, lastTile, lastTile2 } = state;
+  const p1Moved = player.tileX !== lastTile.x || player.tileY !== lastTile.y;
+  const p2Moved = player2 && lastTile2
+    && (player2.tileX !== lastTile2.x || player2.tileY !== lastTile2.y);
+  if (!p1Moved && !p2Moved) return;
+  if (p1Moved) {
+    lastTile.x = player.tileX;
+    lastTile.y = player.tileY;
+  }
+  if (p2Moved) {
+    lastTile2.x = player2.tileX;
+    lastTile2.y = player2.tileY;
+  }
+  // Pickups: scan once with both players in play so whichever player
+  // stepped onto the pickup tile wins it.
   checkPickup(state);
+  // Teleporters: only P1 triggers world transitions — matches Rust's
+  // co-op rule where the world reload always recenters on P1.
+  if (!p1Moved) return;
   const tele = findTeleporterAt(world, player.tileX, player.tileY);
   if (tele) {
     // World data stores destination.y as the Rust frame.y (sprite TOP)

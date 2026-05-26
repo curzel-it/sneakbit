@@ -1,4 +1,5 @@
-// Combat resolution: bullets vs entities, and melee monsters vs player.
+// Combat resolution: bullets vs entities, bullets vs players, and melee
+// monsters vs every live player.
 // Lives separately from shooting.js (which only handles spawning + flight
 // physics for player-thrown bullets) so the hit/damage logic is shared
 // across attackers and isolated from the input layer.
@@ -9,11 +10,12 @@
 import { getSpecies } from "./species.js";
 import { isWalkable } from "./world.js";
 import { playSfx } from "./audio.js";
-import { applyPlayerDamage, applyPlayerContinuousDamage } from "./playerHealth.js";
+import { applyPlayerContinuousDamage, applyPlayerDamage, isPlayerDead } from "./playerHealth.js";
 import { hasPiercingKnifeSkill, hasBoomerangSkill, hasBulletCatcherSkill } from "./skills.js";
 import { addAmmo } from "./inventory.js";
 import { isExplosive } from "./explosives.js";
 import { isCreativeMode } from "./creativeMode.js";
+import { getSettings } from "./settings.js";
 
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;
@@ -33,11 +35,20 @@ let nextIndicatorId = -1_000_000;
 
 // Run one combat tick. Returns void; mutates world.entities (splices on
 // kill) and player health via playerHealth.js.
+// `player` may be a single player object (single-player) or an array of
+// players (co-op).
 export function tickCombat(world, player, dt) {
   if (!world?.entities) return;
-  resolveBullets(world, player, dt);
-  resolveMeleeMonsters(world, player, dt);
+  const players = toLivePlayers(player);
+  resolveBullets(world, players, dt);
+  resolveMeleeMonsters(world, players, dt);
   tickDamageIndicators(world, dt);
+}
+
+function toLivePlayers(player) {
+  const arr = Array.isArray(player) ? player : (player ? [player] : []);
+  // Filter to "alive" — a dead co-op player is invisible and not damageable.
+  return arr.filter(p => !isPlayerDead(p?.index | 0));
 }
 
 // Ages damage-indicator entities and removes them when their lifespan
@@ -66,23 +77,48 @@ function spawnDamageIndicator(world, hittable, parentId) {
   });
 }
 
-function resolveBullets(world, player, dt) {
+function resolveBullets(world, players, dt) {
   const ents = world.entities;
+  const friendlyFire = !!getSettings().friendlyFire;
   for (let i = ents.length - 1; i >= 0; i--) {
     const b = ents[i];
     if (!b._spawned) continue;
     const bsp = getSpecies(b.species_id);
     if (!bsp) continue;
 
-    // Catcher / catch-event: a bounced bullet has returned to the player.
-    // Original behavior: the bullet always despawns; with the catcher
-    // skill it also refunds one of itself into ammo.
-    if (b._bounced && bulletOverlapsPlayer(b, player)) {
-      if (hasBulletCatcherSkill() && bsp.supports_bullet_catching) {
-        addAmmo(b.species_id, 1);
+    // Catcher / catch-event: a bounced bullet has returned to one of the
+    // players. Original behavior: the bullet always despawns; with the
+    // catcher skill it also refunds one of itself into the bullet's
+    // owning player's ammo (mirrors Rust hits_handling_use_case.rs).
+    if (b._bounced) {
+      const catcher = findOverlappingPlayer(b, players);
+      if (catcher) {
+        if (hasBulletCatcherSkill() && bsp.supports_bullet_catching) {
+          addAmmo(b.species_id, 1, b._playerIndex | 0);
+        }
+        ents.splice(i, 1);
+        continue;
       }
-      ents.splice(i, 1);
-      continue;
+    }
+
+    // Bullet-vs-player: when friendly fire is on, a bullet whose owning
+    // player index doesn't match the player it overlaps applies damage.
+    // Out-of-co-op (single player) the bullet's _playerIndex is 0 and
+    // there's only one player, so the check is a no-op.
+    if (friendlyFire) {
+      const victim = findOverlappingPlayer(b, players);
+      if (victim) {
+        const victimIdx = victim.index | 0;
+        const ownerIdx = b._playerIndex | 0;
+        if (victimIdx !== ownerIdx) {
+          const dps = (b._dpsOverride != null ? b._dpsOverride : bsp.dps) || 0;
+          // Bullets hit briefly and pass through — treat them as a burst
+          // (with invuln gate) rather than a sustained continuous tick.
+          applyPlayerDamage(dps * damageMultiplier(b) * dt, victimIdx);
+          if (!tryBounce(b, bsp)) ents.splice(i, 1);
+          continue;
+        }
+      }
     }
 
     // Wall / impassable construction → bullet stops (or bounces).
@@ -151,19 +187,21 @@ function oppositeDir(d) {
   return { Up: "Down", Down: "Up", Left: "Right", Right: "Left" }[d] || d;
 }
 
-function bulletOverlapsPlayer(b, player) {
-  if (!player) return false;
-  return rectsOverlap(bulletHitbox(b), playerHittable(player));
+function findOverlappingPlayer(b, players) {
+  const hb = bulletHitbox(b);
+  for (const p of players) {
+    if (!p) continue;
+    if (rectsOverlap(hb, playerHittable(p))) return p;
+  }
+  return null;
 }
 
-function resolveMeleeMonsters(world, player, dt) {
-  if (!player) return;
+function resolveMeleeMonsters(world, players, dt) {
+  if (!players.length) return;
   // Creative mode: monsters can be inspected next to the hero without
   // chewing through HP. Mirrors Rust features/monsters.rs returning
   // before handle_melee_attack runs.
   if (isCreativeMode()) return;
-  const px = player.x + 0.5;
-  const py = player.y + 0.5;
   // Off-screen monsters can't damage the player. Matches Rust's hitmap-
   // based attack resolution and prevents unseen "ghost" damage from
   // critters lurking past the camera edge.
@@ -175,9 +213,12 @@ function resolveMeleeMonsters(world, player, dt) {
     if (sp.entity_type !== "CloseCombatMonster") continue;
     const dps = sp.dps || 0;
     if (dps <= 0) continue;
-    if (!withinMeleeRange(e, sp, px, py)) continue;
-    const result = applyPlayerContinuousDamage(dps * dt);
-    if (result === "died") break;
+    for (const p of players) {
+      const px = p.x + 0.5;
+      const py = p.y + 0.5;
+      if (!withinMeleeRange(e, sp, px, py)) continue;
+      applyPlayerContinuousDamage(dps * dt, p.index | 0);
+    }
   }
 }
 

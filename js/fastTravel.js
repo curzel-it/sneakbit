@@ -53,7 +53,10 @@ export function tickFastTravel(dt) {
   const state = stateRef?.();
   if (!state?.world || !state.player) return;
   if (!hasUnlocked()) return;
-  const link = findLinkNearPlayer(state.world, state.player);
+  // Either player can stand on a fast-travel link in co-op. Mirrors Rust
+  // features/fast_travel.rs iterating live players.
+  const link = findLinkNearPlayer(state.world, state.player)
+    || (state.player2 && findLinkNearPlayer(state.world, state.player2));
   if (!link) return;
   showFastTravelMenu(state);
 }

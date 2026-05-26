@@ -19,6 +19,7 @@ const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
 const BULLET_LIFESPAN = 1.6;      // fallback when species lifespan missing
 const COOLDOWN = 0.35;            // fallback when weapon.cooldown_after_use==0
+const MAX_PLAYERS = 2;
 
 // Maps Rust EquipmentUsageSoundEffect → audio.js sfx names.
 const SFX_FOR_USAGE = {
@@ -37,7 +38,7 @@ const DIR_DELTA = {
 };
 
 let stateRef = null;
-let cooldown = 0;
+const cooldown = new Float32Array(MAX_PLAYERS);
 let nextBulletId = 1;
 
 export function installShooting(getState) {
@@ -46,7 +47,9 @@ export function installShooting(getState) {
 }
 
 export function tickShooting(dt) {
-  if (cooldown > 0) cooldown = Math.max(0, cooldown - dt);
+  for (let i = 0; i < MAX_PLAYERS; i++) {
+    if (cooldown[i] > 0) cooldown[i] = Math.max(0, cooldown[i] - dt);
+  }
   const state = stateRef?.();
   if (!state) return;
   advanceBullets(state, dt);
@@ -79,13 +82,14 @@ function pickShooter(state, code) {
 }
 
 function shoot(state, shooter) {
-  if (cooldown > 0) return;
-  const { weapon, bulletId } = resolveRangedWeapon();
+  const idx = (shooter?.index | 0) || 0;
+  if (cooldown[idx] > 0) return;
+  const { weapon, bulletId } = resolveRangedWeapon(idx);
   const bulletSp = getSpecies(bulletId);
   if (!bulletSp) return;
-  if (getAmmo(bulletId) <= 0) { playSfx("noAmmo"); return; }
-  if (!removeAmmo(bulletId, 1)) return;
-  cooldown = (weapon?.cooldown_after_use > 0) ? weapon.cooldown_after_use : COOLDOWN;
+  if (getAmmo(bulletId, idx) <= 0) { playSfx("noAmmo"); return; }
+  if (!removeAmmo(bulletId, 1, idx)) return;
+  cooldown[idx] = (weapon?.cooldown_after_use > 0) ? weapon.cooldown_after_use : COOLDOWN;
 
   const dir = shooter.direction;
   const [dx, dy] = DIR_DELTA[dir] ?? DIR_DELTA.down;
@@ -99,6 +103,7 @@ function shoot(state, shooter) {
     _vx: dx * speed,
     _vy: dy * speed,
     _lifespan: lifespan,
+    _playerIndex: idx,
     species_id: bulletId,
     is_consumable: false,
     direction: capitalize(dir),
@@ -117,8 +122,8 @@ function shoot(state, shooter) {
 // Picks the equipped ranged weapon's bullet species, falling back to the
 // kunai bullet so the game keeps working when no species data is loaded
 // (tests) or when equipment storage is empty in an unusual way.
-function resolveRangedWeapon() {
-  const weaponId = getEquipped(SLOT_RANGED);
+function resolveRangedWeapon(playerIndex) {
+  const weaponId = getEquipped(SLOT_RANGED, playerIndex);
   const weapon = weaponId ? getSpecies(weaponId) : null;
   if (weapon && weapon.entity_type === "WeaponRanged" && weapon.bullet_species_id) {
     return { weapon, bulletId: weapon.bullet_species_id };
