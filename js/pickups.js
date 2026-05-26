@@ -14,6 +14,7 @@ import { addAmmo } from "./inventory.js";
 import { getValue, setValue } from "./storage.js";
 import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { tr } from "./strings.js";
+import { shouldBeVisible } from "./entityVisibility.js";
 
 // Bullet is here because in world data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles
@@ -29,6 +30,7 @@ export function checkPickup(state) {
   for (let i = 0; i < world.entities.length; i++) {
     const e = world.entities[i];
     if (e._spawned) continue;
+    if (!shouldBeVisible(e)) continue;
     const kind = classify(e);
     if (!kind) continue;
     const f = e.frame; if (!f) continue;
@@ -39,6 +41,9 @@ export function checkPickup(state) {
       triggerHint(e, /* persist */ true);
     } else {
       world.entities.splice(i, 1);
+      if (e.id != null && !world.ephemeralState) {
+        setValue(`item_collected.${e.id}`, 1);
+      }
       trigger(e, kind);
     }
     return;

@@ -16,6 +16,7 @@ import { getPlayerSpriteFrame } from "./player.js";
 import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { getMeleeSwingProgress } from "./melee.js";
 import { pushableRenderOffset } from "./pushables.js";
+import { shouldBeVisible } from "./entityVisibility.js";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
@@ -159,6 +160,7 @@ function collect(world, camera) {
   const out = [];
   for (const e of world.entities) {
     if (e._invisible) continue;
+    if (!e._spawned && !shouldBeVisible(e)) continue;
     const sp = getSpecies(e.species_id);
     if (!sp) continue;
     const f = e.frame; if (!f) continue;

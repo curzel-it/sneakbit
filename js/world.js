@@ -7,6 +7,7 @@ import { constructionFromChar, constructionIsObstacle, constructionIsBridge, con
 import { biomeTextureCol } from "./biomeTiles.js";
 import { constructionTextureRow } from "./constructionTiles.js";
 import { getSpecies } from "./species.js";
+import { shouldBeVisible, entityHittableFrame, rectOverlapsTile } from "./entityVisibility.js";
 
 export function buildWorld(raw) {
   const biomeChars = raw.biome_tiles.tiles;
@@ -72,6 +73,7 @@ export function buildWorld(raw) {
     entities,
     soundtrack: raw.soundtrack ?? null,
     lightConditions: raw.light_conditions ?? "Day",
+    ephemeralState: !!raw.ephemeral_state,
     _cutscenesRaw: raw.cutscenes ?? [],
   };
 }
@@ -113,9 +115,15 @@ export function isEntityBlocked(world, tileX, tileY, opts) {
     if (sp.entity_type === "Teleporter") continue;
     if ((sp.entity_type === "Gate" || sp.entity_type === "InverseGate") && e._open) continue;
     if (!sp.is_rigid && sp.entity_type !== "PushableObject") continue;
-    const f = e.frame; if (!f) continue;
-    if (tileX < f.x || tileX >= f.x + f.w) continue;
-    if (tileY < f.y || tileY >= f.y + f.h) continue;
+    if (!shouldBeVisible(e)) continue;
+    const hit = entityHittableFrame(e, sp);
+    if (!hit) continue;
+    if (sp.entity_type === "Npc" || sp.entity_type === "Hero") {
+      if (!rectOverlapsTile(hit, tileX, tileY)) continue;
+    } else {
+      if (tileX < hit.x || tileX >= hit.x + hit.w) continue;
+      if (tileY < hit.y || tileY >= hit.y + hit.h) continue;
+    }
     return true;
   }
   return false;

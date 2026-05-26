@@ -9,6 +9,7 @@ import { showDialogue, resolveEntityDialogue, isDialogueOpen } from "./dialogue.
 import { handleAfterDialogue } from "./afterDialogue.js";
 import { matchesAction } from "./keyBindings.js";
 import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js";
+import { shouldBeVisible } from "./entityVisibility.js";
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -98,6 +99,7 @@ function findFacingEntity(world, player) {
   const ty = player.tileY + dy;
   for (const e of world.entities) {
     if (!e.frame) continue;
+    if (!shouldBeVisible(e)) continue;
     const { x, y, w, h } = e.frame;
     if (tx >= x && tx < x + w && ty >= y && ty < y + h) {
       if ((e.dialogues || []).length > 0) return e;
