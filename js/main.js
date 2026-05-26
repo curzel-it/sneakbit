@@ -44,8 +44,10 @@ import { getWorldCache } from "./worldCache.js";
 import { setupPuzzles, tickPuzzles } from "./puzzles.js";
 import { setupCutscenes, tickCutscenes } from "./cutscenes.js";
 import { tickTrails } from "./trails.js";
+import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js";
 
 async function main() {
+  showLoadingScreen(5); // assets + species + strings + world + biome sheet bake
   initInput();
   loadSettings();
   loadAudio();
@@ -62,16 +64,19 @@ async function main() {
   const urlWorld = parseInt(new URLSearchParams(location.search).get("world"), 10);
   const saved = Number.isFinite(urlWorld) ? null : loadProgress();
   const startId = Number.isFinite(urlWorld) ? urlWorld : (saved?.worldId ?? STARTING_WORLD_ID);
+
   const [, speciesRaw, stringsRaw, worldRaw] = await Promise.all([
-    loadAssets(),
-    loadSpecies(),
-    loadStrings("en"),
-    loadWorld(startId),
+    loadAssets().then(r => { bumpLoadingProgress("Sprites loaded"); return r; }),
+    loadSpecies().then(r => { bumpLoadingProgress("Species loaded"); return r; }),
+    loadStrings("en").then(r => { bumpLoadingProgress("Strings loaded"); return r; }),
+    loadWorld(startId).then(r => { bumpLoadingProgress("World loaded"); return r; }),
   ]);
 
   loadSpeciesData(speciesRaw);
   loadStringsData(stringsRaw);
   await composeBiomeSheet();
+  bumpLoadingProgress("Ready");
+  hideLoadingScreen();
 
   const canvas = document.getElementById("game");
   const renderer = createRenderer(canvas);

@@ -38,6 +38,10 @@ function drawWorldLayers(ctx, world, camera, frame) {
   ctx.drawImage(cache.construction, ox, oy);
 }
 
+// Applies a per-world light-condition overlay. Mirrors Rust's three
+// LightConditions variants: Day is a no-op (verified — Rust ships no
+// daylight tint or shader), Night washes the viewport flat blue, and
+// CantSeeShit clamps the player into a small radial cone of vision.
 function drawDarkness(ctx, canvas, world, camera, player) {
   if (world.lightConditions === "CantSeeShit") {
     const cx = (player.x + 0.5 - camera.x) * TILE_SIZE;
