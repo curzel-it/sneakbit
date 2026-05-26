@@ -38,9 +38,14 @@ export function applyAutoZoom(canvas, camera, hud) {
     scale++;
   }
 
-  let tilesW = Math.floor(pvW / (scale * TILE_SIZE));
+  // Use ceil so the canvas covers the viewport even when the viewport
+  // width isn't an exact multiple of (scale × TILE_SIZE). The overflowing
+  // half-tiles at the edges land outside the visible area (clipped by
+  // body { overflow: hidden }), so the player sees a seamless surface
+  // instead of a thin black border on the bottom/right.
+  let tilesW = Math.ceil(pvW / (scale * TILE_SIZE));
   tilesW = Math.max(MIN_TILES_W, Math.min(MAX_TILES_W, tilesW));
-  let tilesH = Math.max(10, Math.floor(pvH / (scale * TILE_SIZE)));
+  let tilesH = Math.max(10, Math.ceil(pvH / (scale * TILE_SIZE)));
 
   const backingW = tilesW * TILE_SIZE;
   const backingH = tilesH * TILE_SIZE;
