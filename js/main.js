@@ -36,6 +36,7 @@ import { tickCombat } from "./combat.js";
 import { tickAfterDialogue } from "./afterDialogue.js";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
 import { installHealthHud } from "./healthHud.js";
+import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js";
 import { applyFirstLaunch } from "./firstLaunch.js";
 import { loadProgress, saveProgress, clearProgress } from "./save.js";
 import { getWorldCache } from "./worldCache.js";
@@ -54,6 +55,7 @@ async function main() {
   installDialogue();
   installToast();
   installTouchControls();
+  installGameOver();
   applyFirstLaunch();
 
   const urlWorld = parseInt(new URLSearchParams(location.search).get("world"), 10);
@@ -109,7 +111,7 @@ async function main() {
   if (state.world.soundtrack) playTrack(state.world.soundtrack);
 
   startGameLoop((dt) => {
-    const paused = isMenuOpen() || isDialogueOpen();
+    const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen();
     const input = pollInput();
     if (!paused) {
       updatePlayer(state.player, input, dt, state.world);
@@ -164,17 +166,13 @@ let dying = false;
 function handleDeath(state) {
   if (dying) return;
   dying = true;
-  playSfxOnce("gameOver");
-  const dest = { world: STARTING_WORLD_ID, x: STARTING_SPAWN.x, y: STARTING_SPAWN.y, direction: "Down" };
-  travelTo(state, dest).then(() => {
-    resetPlayerHealth();
-    dying = false;
+  showGameOver(() => {
+    const dest = { world: STARTING_WORLD_ID, x: STARTING_SPAWN.x, y: STARTING_SPAWN.y, direction: "Down" };
+    travelTo(state, dest).then(() => {
+      resetPlayerHealth();
+      dying = false;
+    });
   });
-}
-
-function playSfxOnce(name) {
-  // Lazy import to avoid a hard cross-feature dependency at the top.
-  import("./audio.js").then(m => m.playSfx(name)).catch(() => {});
 }
 
 function maybeTeleport(state) {
