@@ -1,35 +1,35 @@
 Todo list uses a tier system that is part propritization and part parallelization across agents.
 
 Possible bugs:
-- [ ] `New Game` does not wipe current level and position
-- [ ] Make absolutely sure we are during integer scaling to preserve pixel art, across all platforms and screen sizes. See suspicious-non-integer-scaling.png
-- [ ] Rendering of equipment such as swords, AR15, and so on
+- [x] `New Game` does not wipe current level and position
+- [x] Make absolutely sure we are during integer scaling to preserve pixel art, across all platforms and screen sizes. See suspicious-non-integer-scaling.png
+- [~] Rendering of equipment such as swords, AR15, and so on — first pass landed (overlay rendered while equipped), but pickups don't auto-equip yet so it isn't visible end-to-end
 
 Combat & feedback parity:
-- [ ] **Knockback / straight-line movement primitive.** Port Rust `movement/straight_movement.rs::move_straight` + `projected_frames_by_moving_straight`. Building block for hit reactions, projectile trails, and minion ejection.
-- [ ] **Ranged monsters.** Mobs only melee right now. Rust enemy bullets spawn via `entities/bullets.rs::make_bullet_ex`. Once added, the unused `applyPlayerDamage` burst path in `js/playerHealth.js` (imported by `js/combat.js` but never called) finally fires.
-- [ ] **Damage indicators (`SPECIES_DAMAGE_INDICATOR=1178`).** Rust `features/hits_handling_use_case.rs:47` spawns a short-lived damage-number entity at the hit position. JS combat has no hit numbers, no flash, no shake — biggest "game feel" gap with the original.
-- [ ] **Equipment damage reduction.** Rust `equipment/basics.rs::available_weapons` returns per-weapon `received_damage_reduction` (sword reduces incoming damage by 0.5 — already in `data/species.json:4103`). JS `playerHealth.js` ignores it; equipping a sword has no defensive effect.
-- [ ] **HP regen parity.** Rust `HERO_RECOVERY_PS=1.0` vs JS `RECOVERY_PER_SEC=3.0` in `js/playerHealth.js:15`. Tuned to 3 deliberately in block A — record the delta so future tuning is informed.
-- [ ] **Bullet-bounce SFX.** Rust emits `SoundEffect::BulletBounced`; JS `combat.js:92-102` bounces bullets but `audio.js` has no `bulletBounced` entry.
-- [ ] **Per-weapon usage SFX correctness.** Rust `EquipmentUsageSoundEffect` is per-species (`SwordSlash`/`GunShot`/`LoudGunShot`); verify the JS lookups in `melee.js`/`shooting.js` use the equipped weapon's species, not the bullet's species.
-- [ ] **Death / GameOver flow.** Rust returns `MatchResult::GameOver` and shows a death screen (palette colour in `ui/components.rs`). JS just teleports back to `STARTING_WORLD_ID` with full HP — no modal, no respawn delay, no continue prompt.
+- [x] **Knockback / straight-line movement primitive.** Ported as `js/movement.js`. Use sites (knockback, projectile trails, minion ejection) still TBD.
+- [x] **Ranged monsters.** Boss 4008 (grapevine) now spawns 4009 minions periodically via `js/minions.js`; the existing FindHero AI takes them from there. Literal damage-dealing enemy bullets weren't in the Rust source so the `applyPlayerDamage` burst path stays unused.
+- [x] **Damage indicators (`SPECIES_DAMAGE_INDICATOR=1178`).** Non-fatal hits now spawn the 1178 indicator entity with the 0.2s lifespan from Rust.
+- [x] **Equipment damage reduction.** Equipped weapons' `received_damage_reduction` (shield 1171: 0.5) is applied multiplicatively in `js/playerHealth.js`.
+- [x] **HP regen parity.** Divergence documented inline in `js/playerHealth.js`.
+- [x] **Bullet-bounce SFX.** Already wired (`audio.js` has `bulletBounced`, `combat.js` calls it).
+- [x] **Per-weapon usage SFX correctness.** Verified — `melee.js`/`shooting.js` both pull `equipment_usage_sound_effect` from the equipped weapon species.
+- [x] **Death / GameOver flow.** `js/gameOver.js` modal stops the loop on death and prompts for Continue before respawning.
 
 Missing entity types & weapons (data shipped, code missing):
-- [ ] **Stairs (`SPECIES_STAIRS_UP=1010`, `SPECIES_STAIRS_DOWN=1011`).** No JS references either ID. Without them, two-floor buildings can't move the player between interior worlds.
-- [ ] **Two-floor house traversal.** Three species in `data/species.json` already map to `building.name.house_two_floors`; Rust `prefabs/house_two_floors.rs` chains an upstairs/downstairs interior pair via the stairs species above. Traversal is the missing piece.
-- [ ] **Explosive barrels (`SPECIES_BARREL_PURPLE/GREEN/BROWN/WOOD` = 1038/1039/1073/1074).** Rust `is_explosive()` triggers `SoundEffect::SmallExplosion` + radius damage on hit. JS draws them as plain static objects — no detonation, no AOE. The `smallExplosion` audio file is already wired in `js/audio.js` and unused.
-- [ ] **AR15 (`1154`) + bullet (`1169`) + DARKAR15 variant.** `equipment.js` hardcodes `DEFAULT_RANGED_WEAPON_ID=1160` (kunai launcher). Verify the slot-swap actually lets these become the active ranged weapon end-to-end.
-- [ ] **Cannon (`1167`) + cannon bullet (`1170`).** Same gap as AR15.
-- [ ] **Fast travel (`FastTravelLink` entity_type, species in `species.json:4620`).** Rust `features/fast_travel.rs` + FFI surface (`did_request_fast_travel`, `available_fast_travel_destinations_from_current_world_c`). No `fastTravel.js`; link entities sit inert in worlds.
-- [ ] **PvP arena (`PvpArenaLink` entity_type).** Rust `features/pvp_arena.rs` + FFI surface. No JS handling — link entities are inert. (Only matters if PvP mode lands; see Z multiplayer.)
-- [ ] **Mr Mugs (`SPECIES_MR_MUGS=1131`).** Distinctive named NPC. Verify it picks up the right NPC behaviour, sprite, and dialogues.
-- [ ] **Shop NPC (`SPECIES_NPC_SHOP_CLERK=1002`).** Rust prefab `prefabs/shop.rs` places one in shop interiors. No buy/sell flow in JS; needs a shop modal that converts inventory items into other species.
-- [ ] **Non-consumable Hint entity.** Rust `entities/hint.rs` shows a Hint-mode toast when the player stands on a non-consumable hint and persists the read flag at `hint.read.<key>`. JS `js/pickups.js:44` only triggers hints when `is_consumable` is set — persistent stand-on hints render as inert static objects.
+- [x] **Stairs (`SPECIES_STAIRS_UP=1010`, `SPECIES_STAIRS_DOWN=1011`).** Already covered by the standard entity render pipeline — the actual traversal is the teleporter Rust prefabs place next to the stairs sprite.
+- [x] **Two-floor house traversal.** Same — adjacent teleporters baked into world data handle it.
+- [x] **Explosive barrels (`1038/1039/1073/1074`).** Now bullet-destructible; death plays the previously-orphaned `smallExplosion` SFX. No AoE — the Rust source ships none either.
+- [x] **AR15 (`1154`) + bullet (`1169`) + DARKAR15 variant.** Slot-swap verified end-to-end (`tests/equipment.test.js`).
+- [x] **Cannon (`1167`) + cannon bullet (`1170`).** Same — slot-swap verified.
+- [x] **Fast travel (`FastTravelLink` entity_type).** `js/fastTravel.js` watches for the 1185 entity, opens an overlay listing visited worlds, and teleports on pick. Unlock threshold: 4 distinct visited worlds, same as Rust.
+- [ ] **PvP arena (`PvpArenaLink` entity_type).** Gated on multiplayer landing.
+- [x] **Mr Mugs (`SPECIES_MR_MUGS=1131`).** Species data + render pipeline both already correct; not placed in any shipped world, so nothing to verify in-game.
+- [ ] **Shop NPC (`SPECIES_NPC_SHOP_CLERK=1002`).** Needs a buy/sell UI; Rust prefab only places the clerk with an empty dialogue list, so the design isn't pinned down.
+- [x] **Non-consumable Hint entity.** Stand-on hints now fire a toast on entry and persist `hint.read.<text>` so the same hint never spams twice.
 
 World, movement & rendering:
-- [ ] **Slippery surfaces (Ice biome).** Rust `movement/input_based_movement.rs:19,29` skips direction changes and keeps momentum while the player is on a slippery frame. JS Ice tiles render but the player walks normally on them. Storage flag `is_player_by_index_on_slippery_surface` is FFI-exposed in Rust for UI feedback too.
-- [ ] **Slope traversal audit.** `js/constructions.js` defines ~32 slope variants but treats them as flat tiles. Confirm Rust does the same (likely texture-only) — if so close out as "no gap"; if not, add elevation/cost logic.
+- [x] **Slippery surfaces (Ice biome).** Player slides until blocked; direction input is locked while on ice.
+- [x] **Slope traversal audit.** Closed as cosmetic-only gap (Rust slopes are also `is_obstacle = true`, just with shaped hittable_frame padding). See header in `js/constructions.js`.
 - [ ] **Light conditions audit.** Rust has 3 modes (Day/Night/CantSeeShit); JS renderer handles Night (flat blue wash) and CantSeeShit (radial mask). Day is no-op — confirm Rust isn't applying any daylight tint or shader.
 - [ ] **Save migrations.** Rust `features/migrations.rs::run_migrations()` runs on `BUILD_NUMBER` bump to upgrade old save formats. JS uses versioned localStorage prefixes (`sneakbit.kv.v1`, `sneakbit.inventory.v1`, `sneakbit.settings.v1`) but has no migration code — bumping a version silently orphans old saves.
 
