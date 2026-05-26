@@ -150,6 +150,10 @@ function canEnter(world, self, tileX, tileY) {
     if (other._spawned) continue;
     const sp = getSpecies(other.species_id);
     if (!sp) continue;
+    // Open gates are walkable just like in world.isEntityBlocked. Without
+    // this, monsters refuse to cross a gate the player has unlocked.
+    if ((sp.entity_type === "Gate" || sp.entity_type === "InverseGate") && other._open) continue;
+    if (sp.entity_type === "Teleporter") continue;
     if (!sp.is_rigid && !isMobAi(sp)) continue;
     const f = other.frame;
     if (!f) continue;
