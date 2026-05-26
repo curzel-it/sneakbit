@@ -91,7 +91,27 @@ function maybeEquipWeapon(pickupSp) {
   if (!slot) return;
   setEquipped(slot, weaponId);
   const name = tr(weaponSp.name) || weaponSp.name || "weapon";
-  showToast(`Equipped: ${name}\n${hint}`, "longHint");
+  showToast(`Equipped: ${name}\n${hint}`, "longHint", {
+    image: inventoryIconFor(weaponSp),
+  });
+}
+
+// Builds the ToastImage payload for a species' inventory icon. Returns
+// null if the species has no inventory_texture_offset. Mirrors Rust
+// ToastImage::static_image(species.inventory_sprite_frame(), SHEET_INVENTORY).
+function inventoryIconFor(sp) {
+  const off = sp?.inventory_texture_offset;
+  if (!off) return null;
+  const TILE = 16;
+  return {
+    url: "./assets/inventory.png",
+    // inventory_texture_offset is [row, col] in Rust.
+    sx: (off[1] | 0) * TILE,
+    sy: (off[0] | 0) * TILE,
+    sw: TILE,
+    sh: TILE,
+    renderSize: 32,
+  };
 }
 
 // Renders the hint as a toast. For persistent hints (Rust is_consumable=false)

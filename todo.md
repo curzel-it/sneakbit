@@ -34,7 +34,7 @@ World, movement & rendering:
 - [x] **Save migrations.** `js/migrations.js` runs at startup, walks the MIGRATIONS list from the stored `build_number` up to the current `BUILD_NUMBER`. Empty migration list today; framework is ready for the first breaking change.
 
 UI / accessibility:
-- [ ] **Toasts with images.** Rust `features/toasts.rs:9` allows an optional `ToastImage` (used for reward toasts to show the item icon). JS `toast.js` is text-only.
+- [x] **Toasts with images.** toast.js now takes an optional `image` arg (url + source rect + renderSize) and blits the icon onto a pixel-perfect canvas to the left of the text. pickups.js wires it up: the 'Equipped: <name>' toast now shows the weapon's inventory icon next to the message.
 - [x] **DisplayableMessage modal.** `js/message.js` — full-screen `{title, text}` modal, exposed as `window.showMessage(title, text, cb)`. Pauses the loop until the player acknowledges.
 - [ ] **Language picker.** Rust supports `en` + `it` (`lang/localizable.rs`). JS hardcodes `"en"` in `main.js`, ships only `data/strings.en.json`, and has no Settings selector. Port the Italian `.stringx` content to `strings.it.json` and surface a dropdown.
 - [x] **Loading screen.** `js/loadingScreen.js` — dark splash + progress bar that ticks once per fulfilled Promise.all leg and fades out when the world is ready.
