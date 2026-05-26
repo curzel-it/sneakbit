@@ -1,50 +1,63 @@
 // Auto-sizes the game canvas + camera to fit the viewport while keeping
-// tiles pixel-aligned. Picks an integer "renderScale" (CSS pixels per game
-// pixel), considering devicePixelRatio so high-DPI screens get crisper
-// art without growing the camera tile-count beyond what we want.
+// pixel art crisp.
 //
-// The camera is sized to fit roughly DESIRED_TILES_W × DESIRED_TILES_H of
-// the world on screen, but on very small/large viewports we adjust so a
-// tile is at least 2 CSS pixels and at most about 4× the base size.
+// Pixel-perfect rule: every source pixel in the canvas backing store must
+// map to an INTEGER number of physical screen pixels. The scale chain is
+// backing px → CSS px → physical px (the second hop is devicePixelRatio).
+// We pick an integer SCALE (physical px per source px) and then choose the
+// CSS dimensions so that (cssSize × dpr) / backing = SCALE exactly. This
+// works the same on a 1x desktop, a 1.5x Windows display, a 2x Retina
+// laptop and a 3x phone.
 
 import { TILE_SIZE } from "./constants.js";
 
 const MIN_TILES_W = 16;
 const MAX_TILES_W = 36;
-const TARGET_PHYS_TILE_PX = 32; // try to render each tile at ~32 CSS px
+const TARGET_PHYS_TILE_PX = 32; // target tile size at DPR=1 (CSS px)
 
 export function applyAutoZoom(canvas, camera, hud) {
   const vw = Math.max(1, window.innerWidth);
   const vh = Math.max(1, window.innerHeight);
-  const aspect = vw / vh;
-
-  // Choose tile count to fit the desired physical tile size.
-  let tilesW = Math.round(vw / TARGET_PHYS_TILE_PX);
-  tilesW = Math.max(MIN_TILES_W, Math.min(MAX_TILES_W, tilesW));
-  let tilesH = Math.max(10, Math.round(tilesW / aspect));
-
-  // Pixel size of the canvas backing store.
   const dpr = Math.max(1, window.devicePixelRatio || 1);
-  const cssW = Math.floor(vw);
-  const cssH = Math.floor(vh);
-  const physTileSize = Math.max(1, Math.floor(cssW / tilesW));
-  // Recompute tilesH from final tile size so we don't have a fractional row.
-  tilesH = Math.max(10, Math.floor(cssH / physTileSize));
+  const pvW = vw * dpr; // viewport in physical pixels
+  const pvH = vh * dpr;
+
+  // Pick the integer "physical px per source px" closest to the target tile
+  // size on this display. SCALE >= 2 keeps tiles visible even on tiny screens.
+  let scale = Math.max(2, Math.round((TARGET_PHYS_TILE_PX * dpr) / TILE_SIZE));
+  // If the viewport can't fit MIN_TILES_W tiles at this scale, drop the
+  // scale down step by step.
+  while (scale > 1 && Math.floor(pvW / (scale * TILE_SIZE)) < MIN_TILES_W) {
+    scale--;
+  }
+  // On very large displays, bump the scale up so big monitors don't leave
+  // half the screen as letterbox. Stops as soon as the next step would fall
+  // below MIN_TILES_W.
+  while (Math.floor(pvW / (scale * TILE_SIZE)) > MAX_TILES_W &&
+         Math.floor(pvW / ((scale + 1) * TILE_SIZE)) >= MIN_TILES_W) {
+    scale++;
+  }
+
+  let tilesW = Math.floor(pvW / (scale * TILE_SIZE));
+  tilesW = Math.max(MIN_TILES_W, Math.min(MAX_TILES_W, tilesW));
+  let tilesH = Math.max(10, Math.floor(pvH / (scale * TILE_SIZE)));
 
   const backingW = tilesW * TILE_SIZE;
   const backingH = tilesH * TILE_SIZE;
 
-  // Set internal resolution to integer tile multiples; CSS size scales it.
   if (canvas.width !== backingW) canvas.width = backingW;
   if (canvas.height !== backingH) canvas.height = backingH;
-  canvas.style.width = `${tilesW * physTileSize}px`;
-  canvas.style.height = `${tilesH * physTileSize}px`;
+  // CSS size chosen so backing→physical scale equals `scale` exactly. May
+  // be fractional CSS px on fractional DPRs (e.g. 1.5x Windows) — that's
+  // fine; physical pixels stay integer-aligned.
+  canvas.style.width = `${(backingW * scale) / dpr}px`;
+  canvas.style.height = `${(backingH * scale) / dpr}px`;
 
   camera.w = tilesW;
   camera.h = tilesH;
 
   if (hud) {
-    hud.dataset.tiles = `${tilesW}x${tilesH}@${physTileSize}px (dpr=${dpr.toFixed(1)})`;
+    hud.dataset.tiles = `${tilesW}×${tilesH} ${scale}× dpr=${dpr.toFixed(2)}`;
   }
 }
 
