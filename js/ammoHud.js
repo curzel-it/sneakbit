@@ -19,6 +19,7 @@ let lastDrawn = -1;
 
 export function installAmmoHud() {
   if (root) return root;
+  injectStyles();
   root = document.createElement("div");
   root.id = "ammo-hud";
   Object.assign(root.style, {
@@ -71,6 +72,16 @@ export function updateAmmoHud() {
   // Lazy-draw the icon the first time the sprite sheet is available
   // (it's loaded async at startup, so the first frames may not have it).
   if (!iconCanvas.dataset.painted) paintIcon();
+}
+
+function injectStyles() {
+  if (document.getElementById("ammo-hud-styles")) return;
+  const style = document.createElement("style");
+  style.id = "ammo-hud-styles";
+  style.textContent = `
+    body.touch-mode #ammo-hud { right: 62px; }
+  `;
+  document.head.appendChild(style);
 }
 
 function paintIcon() {

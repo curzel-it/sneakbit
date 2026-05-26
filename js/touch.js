@@ -8,6 +8,7 @@
 
 import { tryShoot } from "./shooting.js";
 import { tryMelee } from "./melee.js";
+import { getEquipped, onEquipmentChange, SLOT_MELEE } from "./equipment.js";
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 const heldBindings = new Map(); // dir -> pointerId
@@ -66,13 +67,24 @@ export function installTouchControls() {
 
   if (matchMedia("(pointer: coarse)").matches) show();
 
+  syncMeleeVisibility();
+  onEquipmentChange((slot) => { if (slot === SLOT_MELEE) syncMeleeVisibility(); });
+
   return root;
+}
+
+function syncMeleeVisibility() {
+  if (!root) return;
+  const btn = root.querySelector(".touch-melee");
+  if (!btn) return;
+  btn.style.display = getEquipped(SLOT_MELEE) ? "" : "none";
 }
 
 function show() {
   if (visible) return;
   visible = true;
   root.style.display = "block";
+  document.body.classList.add("touch-mode");
 }
 
 function onPress(e, btn) {
@@ -127,9 +139,9 @@ function injectStyles() {
     #touch-controls .touch-pad[data-side="left"] {
       left: 4vw;
       display: grid;
-      grid-template-columns: repeat(3, 56px);
-      grid-template-rows: repeat(3, 56px);
-      gap: 6px;
+      grid-template-columns: repeat(3, 52px);
+      grid-template-rows: repeat(3, 52px);
+      gap: 0px;
     }
     #touch-controls .touch-pad[data-side="left"] .touch-btn[data-dir="up"]    { grid-column: 2; grid-row: 1; }
     #touch-controls .touch-pad[data-side="left"] .touch-btn[data-dir="left"]  { grid-column: 1; grid-row: 2; }

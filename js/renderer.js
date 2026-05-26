@@ -2,11 +2,8 @@
 // Layer order: biome → construction → entities → player.
 
 import { TILE_SIZE } from "./constants.js";
-import { getSprite } from "./assets.js";
-import { getBiomeSheet } from "./biomeSheet.js";
-import { NUM_BIOMES } from "./biomes.js";
-import { CONSTRUCTION } from "./constructions.js";
 import { drawEntities } from "./entities.js";
+import { getWorldCache } from "./worldCache.js";
 
 export function createRenderer(canvas) {
   const ctx = canvas.getContext("2d");
@@ -20,10 +17,21 @@ export function render(renderer, world, camera, player, biomeFrame) {
   ctx.fillStyle = "#000";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  drawBiome(ctx, world, camera, biomeFrame | 0);
-  drawConstructions(ctx, world, camera);
+  drawWorldLayers(ctx, world, camera, biomeFrame | 0);
   drawEntities(ctx, world, camera, player);
   drawDarkness(ctx, canvas, world, camera, player);
+}
+
+// Blit the pre-baked biome + construction layers. The cache is built
+// lazily on first render so we don't pay for it before assets are ready.
+function drawWorldLayers(ctx, world, camera, frame) {
+  const cache = getWorldCache(world);
+  if (!cache) return;
+  const ox = Math.round(-camera.x * TILE_SIZE);
+  const oy = Math.round(-camera.y * TILE_SIZE);
+  const biomeCanvas = cache.biomeFrames[frame % cache.biomeFrames.length];
+  ctx.drawImage(biomeCanvas, ox, oy);
+  ctx.drawImage(cache.construction, ox, oy);
 }
 
 function drawDarkness(ctx, canvas, world, camera, player) {
@@ -48,51 +56,3 @@ function drawDarkness(ctx, canvas, world, camera, player) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 }
-
-function tileWindow(world, camera) {
-  const startCol = Math.max(0, Math.floor(camera.x));
-  const startRow = Math.max(0, Math.floor(camera.y));
-  const endCol = Math.min(world.cols, Math.ceil(camera.x + camera.w));
-  const endRow = Math.min(world.rows, Math.ceil(camera.y + camera.h));
-  return { startCol, startRow, endCol, endRow };
-}
-
-function drawBiome(ctx, world, camera, frame) {
-  const sheet = getBiomeSheet();
-  const { startCol, startRow, endCol, endRow } = tileWindow(world, camera);
-  const rowOffset = frame * NUM_BIOMES;
-
-  for (let r = startRow; r < endRow; r++) {
-    const biomeRow = world.biome[r];
-    const colRow = world.biomeCol[r];
-    for (let c = startCol; c < endCol; c++) {
-      const b = biomeRow[c];
-      const sheetCol = colRow[c];
-      const sx = sheetCol * TILE_SIZE;
-      const sy = (b + rowOffset) * TILE_SIZE;
-      const px = Math.round((c - camera.x) * TILE_SIZE);
-      const py = Math.round((r - camera.y) * TILE_SIZE);
-      ctx.drawImage(sheet, sx, sy, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
-    }
-  }
-}
-
-function drawConstructions(ctx, world, camera) {
-  const sheet = getSprite("tilesConstructions");
-  const { startCol, startRow, endCol, endRow } = tileWindow(world, camera);
-
-  for (let r = startRow; r < endRow; r++) {
-    const conRow = world.construction[r];
-    const rowIdx = world.constructionRow[r];
-    for (let c = startCol; c < endCol; c++) {
-      const id = conRow[c];
-      if (id === CONSTRUCTION.NOTHING) continue;
-      const sx = id * TILE_SIZE;
-      const sy = rowIdx[c] * TILE_SIZE;
-      const px = Math.round((c - camera.x) * TILE_SIZE);
-      const py = Math.round((r - camera.y) * TILE_SIZE);
-      ctx.drawImage(sheet, sx, sy, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
-    }
-  }
-}
-

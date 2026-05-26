@@ -80,9 +80,6 @@ test("bullet hitting a wall is consumed without applying damage", () => {
 
 test("melee monster overlapping the player applies damage", () => {
   playerHealth.resetPlayerHealth();
-  // Wait out the invuln so subsequent applyDamage can land.
-  while (playerHealth.isPlayerInvulnerable()) playerHealth.tickPlayerHealth(0.1);
-
   const world = makeWorld();
   const monster = { species_id: 4004, frame: { x: 1, y: 0, w: 1, h: 2 }, direction: "Down" };
   world.entities.push(monster);
@@ -92,4 +89,47 @@ test("melee monster overlapping the player applies damage", () => {
   combat.tickCombat(world, player, 0.1); // 100 dps × 0.1 = 10 damage
   const after = playerHealth.getPlayerHp();
   assert.ok(after < before, `hp should drop (was ${before}, now ${after})`);
+});
+
+test("melee monster on adjacent tile (just under 0.9 away) damages player", () => {
+  playerHealth.resetPlayerHealth();
+  const world = makeWorld();
+  // Monster on tile (2, 1), player on tile (1, 1). Centres 1.0 apart —
+  // outside range. Now slide the monster 0.2 towards the player: centre
+  // becomes 0.8 away.
+  const monster = { species_id: 4004, frame: { x: 1.8, y: 0, w: 1, h: 2 }, direction: "Left" };
+  world.entities.push(monster);
+  const player = { x: 1, y: 1, tileX: 1, tileY: 1 };
+
+  const before = playerHealth.getPlayerHp();
+  combat.tickCombat(world, player, 0.05);
+  assert.ok(playerHealth.getPlayerHp() < before, "should take damage at 0.8 tile distance");
+});
+
+test("melee monster more than 0.9 tiles away does not damage", () => {
+  playerHealth.resetPlayerHealth();
+  const world = makeWorld();
+  const monster = { species_id: 4004, frame: { x: 3, y: 0, w: 1, h: 2 }, direction: "Left" };
+  world.entities.push(monster);
+  const player = { x: 1, y: 1, tileX: 1, tileY: 1 };
+
+  const before = playerHealth.getPlayerHp();
+  combat.tickCombat(world, player, 0.1);
+  assert.equal(playerHealth.getPlayerHp(), before, "no damage when out of range");
+});
+
+test("continuous damage from a melee monster stacks every tick (no invuln)", () => {
+  playerHealth.resetPlayerHealth();
+  const world = makeWorld();
+  const monster = { species_id: 4004, frame: { x: 1, y: 0, w: 1, h: 2 }, direction: "Down" };
+  world.entities.push(monster);
+  const player = { x: 1, y: 1, tileX: 1, tileY: 1 };
+
+  const before = playerHealth.getPlayerHp();
+  // 10 small ticks back-to-back. With the old invuln gate only the first
+  // would have landed; now they should all bite.
+  for (let i = 0; i < 10; i++) combat.tickCombat(world, player, 0.05);
+  const after = playerHealth.getPlayerHp();
+  // 100 dps × 0.5 s = 50 damage (allow a small slack).
+  assert.ok(before - after >= 30, `expected ≥30 hp lost, lost ${before - after}`);
 });

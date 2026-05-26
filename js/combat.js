@@ -9,13 +9,18 @@
 import { getSpecies } from "./species.js";
 import { isWalkable } from "./world.js";
 import { playSfx } from "./audio.js";
-import { applyPlayerDamage, isPlayerInvulnerable } from "./playerHealth.js";
+import { applyPlayerDamage, applyPlayerContinuousDamage } from "./playerHealth.js";
 import { hasPiercingKnifeSkill, hasBoomerangSkill, hasBulletCatcherSkill } from "./skills.js";
 import { addAmmo } from "./inventory.js";
 
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;
 const BOUNCE_LIFESPAN_BONUS = 0.8;
+// A melee monster damages the player when its (feet) tile center is
+// within this Euclidean distance of the player's tile center. ≈1 tile
+// (covers the case where a monster on an adjacent tile starts sliding
+// towards us — by progress 0.1 it's already in range).
+const MELEE_DAMAGE_RADIUS = 0.9;
 
 // Run one combat tick. Returns void; mutates world.entities (splices on
 // kill) and player health via playerHealth.js.
@@ -111,8 +116,8 @@ function bulletOverlapsPlayer(b, player) {
 
 function resolveMeleeMonsters(world, player, dt) {
   if (!player) return;
-  if (isPlayerInvulnerable()) return;
-  const playerHitbox = playerHittable(player);
+  const px = player.x + 0.5;
+  const py = player.y + 0.5;
   for (const e of world.entities) {
     if (e._spawned) continue;
     const sp = getSpecies(e.species_id);
@@ -120,10 +125,23 @@ function resolveMeleeMonsters(world, player, dt) {
     if (sp.entity_type !== "CloseCombatMonster") continue;
     const dps = sp.dps || 0;
     if (dps <= 0) continue;
-    if (!rectsOverlap(playerHitbox, entityHittable(e, sp))) continue;
-    const result = applyPlayerDamage(dps * dt);
-    if (result === "hurt" || result === "died") break;
+    if (!withinMeleeRange(e, sp, px, py)) continue;
+    const result = applyPlayerContinuousDamage(dps * dt);
+    if (result === "died") break;
   }
+}
+
+// True if the mob's feet-tile centre is inside MELEE_DAMAGE_RADIUS of the
+// player's tile centre. The "feet" tile is the lower row for 1x2 sprites,
+// matching the player's collision tile, so this is symmetric.
+function withinMeleeRange(e, sp, px, py) {
+  const f = e.frame;
+  const feetH = sp.height || f.h || 1;
+  const cx = f.x + (f.w || 1) * 0.5;
+  const cy = f.y + (feetH - 0.5);
+  const dx = cx - px;
+  const dy = cy - py;
+  return (dx * dx + dy * dy) <= MELEE_DAMAGE_RADIUS * MELEE_DAMAGE_RADIUS;
 }
 
 function bulletHitsWall(b, world) {
