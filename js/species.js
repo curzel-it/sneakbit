@@ -70,6 +70,8 @@ function decorate(raw) {
     dps: raw.dps ?? 0,
     movement_directions: raw.movement_directions ?? "None",
     melee_attacks_hero: !!raw.melee_attacks_hero,
+    supports_bullet_boomerang: !!raw.supports_bullet_boomerang,
+    supports_bullet_catching:  !!raw.supports_bullet_catching,
     bundle_contents: raw.bundle_contents ?? null,
     inventory_texture_offset: raw.inventory_texture_offset ?? null,
   };
