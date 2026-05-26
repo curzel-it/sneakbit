@@ -89,8 +89,10 @@ export function installMenu() {
         Web port source:
         <a href="https://github.com/curzel-it/sneakbit-html" target="_blank" rel="noopener">github.com/curzel-it/sneakbit-html</a>
       </p>
-      <p class="menu-hint">
-        Tile + sprite art and audio are from the original Rust build.
+      <p class="menu-credits">
+        Music by <a href="https://www.filippovicarelli.com/8bit-game-background-music" target="_blank" rel="noopener">Filippo Vicarelli</a><br>
+        Sound effects by <a href="https://opengameart.org/content/512-sound-effects-8-bit-style" target="_blank" rel="noopener">SubspaceAudio</a><br>
+        Font by <a href="https://dl.dafont.com/dl/?f=pixel_operator" target="_blank" rel="noopener">HarvettFox96</a>
       </p>
       <div class="menu-row menu-controls">
         <button id="menu-credits-back">Back</button>
