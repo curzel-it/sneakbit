@@ -31,6 +31,7 @@ import { installMelee, tickMelee } from "./melee.js";
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js";
 import { tickMobs } from "./mobs.js";
 import { tickMonsterFusion } from "./monsters.js";
+import { tickMinionSpawning } from "./minions.js";
 import { tickCombat } from "./combat.js";
 import { tickAfterDialogue } from "./afterDialogue.js";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
@@ -117,6 +118,7 @@ async function main() {
       tickMelee(dt);
       tickMobs(state.world, state.player, dt);
       tickMonsterFusion(state.world);
+      tickMinionSpawning(state.world, state.player, dt);
       tickCombat(state.world, state.player, dt);
       tickAfterDialogue(state.world, dt);
       tickPuzzles(state.world, state.player);
