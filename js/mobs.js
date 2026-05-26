@@ -157,9 +157,13 @@ function canEnter(world, self, tileX, tileY) {
     if (!sp.is_rigid && !isMobAi(sp)) continue;
     const f = other.frame;
     if (!f) continue;
-    const ox = Math.floor(f.x);
-    const oyBottom = Math.floor(f.y) + (sp.height || f.h || 1) - 1;
-    if (tileX === ox && bottomY === oyBottom) return false;
+    const fw = sp.width || f.w || 1;
+    const fh = sp.height || f.h || 1;
+    const fx = Math.floor(f.x);
+    const fy = Math.floor(f.y);
+    if (tileX < fx || tileX >= fx + fw) continue;
+    if (bottomY < fy || bottomY >= fy + fh) continue;
+    return false;
   }
   return true;
 }

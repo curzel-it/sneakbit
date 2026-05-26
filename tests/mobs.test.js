@@ -72,6 +72,36 @@ test("FindHero mob wanders when the player is out of vision range", () => {
   assert.ok(mob._ai.step, "wander step started even though player is out of vision");
 });
 
+test("FindHero mob is blocked by every tile of a multi-tile rigid entity", () => {
+  // Load a "Building" species: 4 wide × 4 tall, rigid. Mirrors the house
+  // sprite from monster-over-house.png — without the multi-tile footprint
+  // check, mobs could walk through every tile except the bottom-left.
+  loadSpeciesData([
+    { id: 4004, entity_type: "CloseCombatMonster", sprite_sheet_id: 1023,
+      movement_directions: "FindHero", dps: 100, hp: 200,
+      sprite_frame: { x: 0, y: 0, w: 1, h: 2 } },
+    { id: 1100, entity_type: "Building", is_rigid: true, sprite_sheet_id: 1014,
+      width: 4, height: 4, sprite_frame: { x: 0, y: 0, w: 4, h: 4 } },
+  ]);
+  const world = makeWorld();
+  // Building covers (10..13, 10..13). Place the mob next to its east wall.
+  world.entities.push({ species_id: 1100, frame: { x: 10, y: 10, w: 4, h: 4 } });
+  const mob = { species_id: 4004, frame: { x: 14, y: 11, w: 1, h: 2 } };
+  world.entities.push(mob);
+  // Player is two tiles west of the mob — chase wants to go 'left' into
+  // the building's middle row. That tile should be blocked.
+  const player = { tileX: 12, tileY: 12 };
+  tickMobs(world, player, 0.02);
+  // Mob should NOT have stepped onto a tile inside the building. The
+  // chase 'left' tile (13, 12) is inside the footprint. If unblocked,
+  // pre-fix code happily moves there.
+  if (mob._ai.step) {
+    const { toX, toY } = mob._ai.step;
+    assert.ok(!(toX >= 10 && toX < 14 && toY >= 10 && toY < 14),
+      `mob walked into building footprint at (${toX}, ${toY})`);
+  }
+});
+
 test("FindHero mob falls back to the secondary direction when primary is blocked", () => {
   // Wall directly to the right of the mob's feet tile.
   const world = makeWorld((c, r) => !(c === 6 && r === 6));
