@@ -86,6 +86,34 @@ test("HTTP route /turn-credentials is wired end-to-end (503 without env)", async
   try {
     const res = await fetch(`http://${s.host}:${s.port}/turn-credentials`);
     assert.equal(res.status, 503);
+    // CORS must be present on the error path too — otherwise the browser
+    // logs a misleading "blocked by CORS policy" alongside the actual
+    // 503, even though primeIceServers's catch already handles the
+    // failure cleanly with a STUN-only fallback.
+    assert.equal(res.headers.get("access-control-allow-origin"), "*");
+  } finally {
+    await s.close();
+  }
+});
+
+test("OPTIONS preflight returns 204 + CORS headers", async () => {
+  const s = await startServer({ port: 0, host: "127.0.0.1" });
+  try {
+    const res = await fetch(`http://${s.host}:${s.port}/turn-credentials`, { method: "OPTIONS" });
+    assert.equal(res.status, 204);
+    assert.equal(res.headers.get("access-control-allow-origin"), "*");
+    assert.match(res.headers.get("access-control-allow-methods") || "", /GET/);
+  } finally {
+    await s.close();
+  }
+});
+
+test("404 fallback also carries CORS headers", async () => {
+  const s = await startServer({ port: 0, host: "127.0.0.1" });
+  try {
+    const res = await fetch(`http://${s.host}:${s.port}/nope`);
+    assert.equal(res.status, 404);
+    assert.equal(res.headers.get("access-control-allow-origin"), "*");
   } finally {
     await s.close();
   }

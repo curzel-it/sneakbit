@@ -9,10 +9,33 @@ import { handleTurnRequest } from "./turnCredentials.js";
 const PORT = Number(process.env.PORT) || 8090;
 const HOST = process.env.HOST || "127.0.0.1";
 
+// Always-on CORS: the client lives on curzel.it (GitHub Pages) and the
+// relay is at sneakbit.curzel.it — cross-origin by definition. Every HTTP
+// response gets the same permissive headers so error/empty responses
+// (503 when TURN is unset, 404 fallbacks, etc.) don't spam the browser
+// console with CORS errors. The WS upgrade has no CORS — the
+// `Sec-WebSocket-Origin` check is a separate mechanism we don't use.
+const CORS_HEADERS = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, HEAD, OPTIONS",
+  "access-control-allow-headers": "content-type",
+  "access-control-max-age": "86400",
+};
+
+function applyCors(res) {
+  for (const [k, v] of Object.entries(CORS_HEADERS)) res.setHeader(k, v);
+}
+
 export function startServer({ port = PORT, host = HOST, graceMs, idleTimeoutMs, idleCheckMs } = {}) {
   const relay = createRelay({ graceMs, idleTimeoutMs, idleCheckMs });
   const upgradedSockets = new Set();
   const server = createServer((req, res) => {
+    applyCors(res);
+    if (req.method === "OPTIONS") {
+      res.writeHead(204);
+      res.end();
+      return;
+    }
     if (req.method === "GET" && req.url === "/health") {
       res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
       res.end("ok\n");
