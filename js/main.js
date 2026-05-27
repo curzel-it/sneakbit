@@ -161,7 +161,7 @@ async function main() {
   onAnyClose(({ code }) => {
     if (code !== 4005) return;
     showToast("You were removed from the session", "longHint");
-    switchRole("offline");
+    switchRole("offline").catch((e) => console.error("[kick] switchRole(offline)", e));
   });
 
   // Honor the boot URL. resolveMode already seeded runtimeRole in

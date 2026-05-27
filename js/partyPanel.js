@@ -40,6 +40,12 @@ let hostingPeerList = null;
 let hostingCopyBtn = null;
 let hostingShareBtn = null;
 let hostingEndBtn = null;
+// playerId → { row, nameEl, slotEl } so we can patch peer rows in place
+// instead of tearing out the entire <ul> on every session-state update.
+// Preserves the hover/active state of the Kick button when a different
+// peer joins or leaves mid-click. Cleared when the view rebuilds.
+const peerRowsByPlayerId = new Map();
+let peerEmptyRow = null;
 // Guest view widgets we mutate on session-state updates.
 let guestTitleEl = null;
 let guestSlotEl = null;
@@ -243,8 +249,10 @@ function buildGuestView() {
 
 function renderAll() {
   renderChip();
-  if (overlay && overlay.style.display === "flex") renderPanel();
-  else renderPanel(); // keep DOM up to date so opening is instant
+  // Always patch the panel so opening is instant — the per-view render
+  // routines diff against last-rendered state and skip work when nothing
+  // has changed (peer list patches in place, etc.).
+  renderPanel();
 }
 
 function renderChip() {
@@ -301,41 +309,70 @@ function renderHostingView() {
   const hasCode = !!code;
   hostingCopyBtn.disabled = !hasCode;
   hostingShareBtn.disabled = !hasCode;
+  patchPeerList(getKnownPeers());
+}
 
-  // Rebuild the peer list. Use document fragment to avoid intermediate
-  // reflows; we keep input focus on widgets outside this <ul> because
-  // none of them live inside the list.
-  const peers = getKnownPeers();
-  hostingPeerList.replaceChildren();
-  if (peers.length === 0) {
-    const li = document.createElement("li");
-    li.className = "party-peer-empty";
-    li.textContent = "Waiting for friends…";
-    hostingPeerList.appendChild(li);
-  } else {
-    for (const p of peers) {
-      hostingPeerList.appendChild(buildPeerRow(p));
+// Diff the rendered <ul> against the incoming peer list: keep existing
+// rows in place (text-patch name/slot), append new rows for newcomers,
+// remove rows whose playerId no longer appears. The empty-state row is
+// added/removed independently. Preserves the Kick button's identity so
+// an in-flight click on it doesn't get torn out by an unrelated
+// peer.joined arriving mid-click.
+function patchPeerList(peers) {
+  const seen = new Set();
+  for (const p of peers) {
+    if (!p.playerId) continue;
+    seen.add(p.playerId);
+    const existing = peerRowsByPlayerId.get(p.playerId);
+    if (existing) {
+      const newName = p.name || p.playerId;
+      if (existing.nameEl.textContent !== newName) existing.nameEl.textContent = newName;
+      const newSlot = `slot ${p.slot}`;
+      if (existing.slotEl.textContent !== newSlot) existing.slotEl.textContent = newSlot;
+      continue;
     }
+    const built = buildPeerRow(p);
+    peerRowsByPlayerId.set(p.playerId, built);
+    hostingPeerList.appendChild(built.row);
+  }
+  for (const [pid, entry] of [...peerRowsByPlayerId]) {
+    if (seen.has(pid)) continue;
+    entry.row.remove();
+    peerRowsByPlayerId.delete(pid);
+  }
+  if (peers.length === 0) {
+    if (!peerEmptyRow) {
+      peerEmptyRow = document.createElement("li");
+      peerEmptyRow.className = "party-peer-empty";
+      peerEmptyRow.textContent = "Waiting for friends…";
+    }
+    if (!peerEmptyRow.isConnected) hostingPeerList.appendChild(peerEmptyRow);
+  } else if (peerEmptyRow && peerEmptyRow.isConnected) {
+    peerEmptyRow.remove();
   }
 }
 
 function buildPeerRow(peer) {
-  const li = document.createElement("li");
-  li.className = "party-peer";
-  const name = document.createElement("span");
-  name.className = "party-peer-name";
-  name.textContent = peer.name || peer.playerId || "Player";
-  const slot = document.createElement("span");
-  slot.className = "party-peer-slot";
-  slot.textContent = `slot ${peer.slot}`;
+  const row = document.createElement("li");
+  row.className = "party-peer";
+  const nameEl = document.createElement("span");
+  nameEl.className = "party-peer-name";
+  nameEl.textContent = peer.name || peer.playerId || "Player";
+  const slotEl = document.createElement("span");
+  slotEl.className = "party-peer-slot";
+  slotEl.textContent = `slot ${peer.slot}`;
   const kick = document.createElement("button");
   kick.textContent = "Kick";
   kick.className = "party-kick";
-  kick.addEventListener("click", () => onKickClick(peer));
-  li.appendChild(name);
-  li.appendChild(slot);
-  li.appendChild(kick);
-  return li;
+  // Capture playerId by value — the closure must not hold the whole peer
+  // object since later patches mutate text under us; the kick target is
+  // identified by playerId alone.
+  const playerId = peer.playerId;
+  kick.addEventListener("click", () => onKickClick({ playerId }));
+  row.appendChild(nameEl);
+  row.appendChild(slotEl);
+  row.appendChild(kick);
+  return { row, nameEl, slotEl };
 }
 
 function renderGuestView() {
@@ -553,4 +590,6 @@ export function _resetPartyPanelForTesting() {
   offlineJoinInput = null;
   offlineJoinBtn = null;
   offlineErrorEl = null;
+  peerRowsByPlayerId.clear();
+  peerEmptyRow = null;
 }
