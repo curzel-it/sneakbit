@@ -14,6 +14,11 @@ export function isCreativeMode() {
   if (cached !== null) return cached;
   if (typeof location === "undefined") return false;
   const params = new URLSearchParams(location.search);
+  // Guests don't own the world — letting them flip creative mode (which
+  // gates "walk through anything" and the map editor) would only desync
+  // their local view. Hard-disable for guests; host/offline read the
+  // ?creative= flag as before.
+  if (params.has("join")) { cached = false; return cached; }
   const raw = (params.get("creative") || "").toLowerCase();
   cached = raw === "true" || raw === "1" || raw === "yes";
   return cached;

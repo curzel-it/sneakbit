@@ -60,9 +60,11 @@ import { installGuestInputForwarder } from "./guestInputForwarder.js";
 import { installPredictedSelf, tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js";
 import { getSelfPlayerId } from "./onlineBootstrap.js";
 import { installGuestEvents } from "./guestEvents.js";
+import { installPartyPanel } from "./partyPanel.js";
 
 async function main() {
   bootstrapOnline();
+  installPartyPanel();
   const isGuest = getNetRole() === "guest";
   if (isGuest) installMirrorWorld(getNet());
   showLoadingScreen(5); // assets + species + strings + zone + biome sheet bake
