@@ -60,7 +60,7 @@ existing local tick   ◄───WS────  fan-out      ◄──── i
 | Guest's input intents | **Guest** (the only thing they truly own) |
 | Camera, zoom, animation interpolation, audio, HUD, menus, settings, key bindings | Each client locally |
 | Save state | Host's localStorage. Guests do not persist session state. |
-| Creative mode, map editor | Host only — disabled for guests, and the host can disable hosting from inside those modes. |
+| Creative mode, map editor | Host only — disabled for guests. While the host is in creative / map editor, the "Start hosting" control is disabled with a tooltip directing them to leave creative first (no force-exit, no live-editing-with-guests in v0). |
 
 The guest is allowed to **predict** but never to **decide**. If the guest's prediction disagrees with the host's snapshot, the host wins and the guest reconciles.
 
@@ -119,6 +119,22 @@ A session is created by a host and joined by guests using an invite code.
 - **Session lifetime:** while the host is connected (with a 30 s reconnect grace). Once the host drops past grace, the session is GC'd.
 
 There is no party model. A session *is* the group. Guests cannot promote, swap, or persist independently of a host.
+
+### Deep-link `?join=CODE` while already in a session
+
+If a `?join=CODE` URL is opened (or pasted into the URL bar) while the
+client is already hosting or guesting, the deep-link is **honored
+unconditionally**: the client auto-leaves its current session
+(`host.close` if hosting — which ends co-op for all current guests —
+or `guest.leave` if guesting) and then auto-joins the new session via
+the code. The user sees the same flow as a fresh-launch deep-link.
+
+Rationale: deep-links are typically followed deliberately (a friend
+just shared one), and the alternative behaviors (silent ignore, modal
+prompt) either trap the user in the wrong session or add a click on
+the most common path. The cost — a host's existing guests get a
+`session.closed` — is acceptable since hosting is also explicitly
+initiated.
 
 ## Host setup
 
@@ -323,6 +339,20 @@ Every message has an `op` discriminant. `C →` means client → server, `S →`
 ```
 Server replies with `session.closed` to all guests, frees the session.
 
+### `host.kick` (C →)
+```jsonc
+{"op":"host.kick","playerId":"p_b1d2e3"}
+```
+Sent by the host to eject a specific guest. Relay validates the sender's
+role (`host`) and that `playerId` is a guest in the same session. On
+success: relay closes the kicked guest's WS with code **4005** and fans
+`peer.left {playerId, reason: "kicked"}` to the host and remaining
+guests. The kicked guest's client does **not** auto-reconnect (4005 is
+in the no-reconnect family); they fall back to offline and must
+explicitly re-join. There is no host-side kick list — a kicked guest
+can immediately re-attempt `guest.join` with the same code, and it's
+the host's responsibility to kick again if desired.
+
 ### `guest.join` (C →) / `guest.joined` / `guest.joinFailed` (S →)
 ```jsonc
 {"op":"guest.join","code":"K7MJ2"}
@@ -343,10 +373,12 @@ Server tells host via `peer.left`.
 {"op":"peer.joined","playerId":"p_b1d2e3","name":"Player-b1d2"}
 ```
 
-### `peer.left` (S → host)
+### `peer.left` (S → host + remaining guests)
 ```jsonc
-{"op":"peer.left","playerId":"p_b1d2e3","reason":"leave"|"disconnect"|"timeout"}
+{"op":"peer.left","playerId":"p_b1d2e3","reason":"leave"|"disconnect"|"timeout"|"kicked"}
 ```
+Fanned to the host and to every remaining guest in the session, so all
+clients can despawn the departed peer's avatar in lockstep.
 
 ### `peer.ghosted` (S → host) / `host.ghosted` (S → guests)
 ```jsonc
@@ -443,6 +475,7 @@ Heartbeat. Server expects a `ping` at least every 30 seconds; missing pings for 
 | `4002` | Idle timeout (no pings) | Auto-reconnect once, then show "Disconnected" |
 | `4003` | UUID conflict | Show "Already playing in another tab" |
 | `4004` | Rate-limit ban | Show "Disconnected — too many messages" |
+| `4005` | Kicked by host | Show "You were removed from the session"; **do not** auto-reconnect; `switchRole("offline")` |
 | `4500` | Internal server error / restart | Show "Server error — reconnecting…" + auto-reconnect after 3 s |
 
 ## Rate limits

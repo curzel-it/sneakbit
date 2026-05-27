@@ -9,8 +9,8 @@ Js port replaces Rust codebase in production via Electron or similar, across all
 - [ ] Game remains playable completely offline, like it always was
 
 Miscellanea
-- [ ] When on mobile the 4 direction buttons work great, but they require me to lift the finger to switch from on direction to the next. Ideally we want users to be able to "drag the finger over the next button" to change direction.
-- [ ] Sometimes audio does not start muted on mobile
+- [x] When on mobile the 4 direction buttons work great, but they require me to lift the finger to switch from on direction to the next. Ideally we want users to be able to "drag the finger over the next button" to change direction.
+- [x] Sometimes audio does not start muted on mobile
 
 New game mode: online co-op (spec: host-authoritative-server.md)
 
@@ -53,16 +53,27 @@ Party UI redesign (single shot — UI + runtime role switching together)
 Design decisions:
   · Code generation is lazy: `host.open` is sent only after the user clicks "Start hosting", not on opening the panel — opening settings doesn't claim a session.
   · Role is a runtime piece of state, not a URL contract. Switching offline ↔ host ↔ guest happens in-place; no page reload. `?host=1` / `?join=CODE` stay supported as deep-link entry points but are not the only path.
+Product/UX decisions locked in 2026-05-27 (see party-ui-open-questions.md for the full rationale):
+  · Q1 — host End-co-op: brief toast "Co-op ended"; status chip vanishes. Session does NOT end when all guests leave (host stays in hosting state, broadcaster ticking, waiting for new joins).
+  · Q2 — guest save: fully independent of session state. Nothing the guest does in-session writes to their local save. Matches spec § Persistence.
+  · Q3 — hosting + creative: "Start hosting" button is disabled (greyed) while in creative / map editor with a tooltip "Leave creative mode first." No force-exit, no live-editing-with-guests in v0.
+  · Q4 — offline status chip: none. Party is reached via the pause/settings menu only when offline. Chip appears only while hosting or guesting.
+  · Q5 — deep-link `?join=CODE` while already in a session: honor unconditionally — auto-leave current session, auto-join new one. Documented in spec § Sessions and invites.
+  · Q6 — kick close code: 4005 (new entry in spec's close-code table).
+  · Q7 — reconnect on 4005: no auto-reconnect; kicked guest must explicitly re-join. No host-side kick list in v0.
 UI:
 - [ ] Move party info/management out of the always-on top-right overlay into a dedicated panel reached from the settings/pause menu
 - [ ] Replace the overlay with a small status chip ("Hosting · 2/4" / "Guest · slot 2" / nothing when offline) that opens the dedicated panel on click
 - [ ] Offline view: "Start hosting" button (lazy host.open) + "Join with code" input
-- [ ] Hosting view: invite code with copy-to-clipboard + share-link buttons, peer list with per-peer Kick, "End co-op" button
+- [ ] Hosting view: invite code with copy-to-clipboard + share-link buttons, peer list with per-peer Kick, "End co-op" button (emits a "Co-op ended" toast on the host per Q1)
 - [ ] Guest view: host name + slot + "Leave co-op" button
 - [ ] Reuse DOM nodes (no innerHTML rebuild) on state changes — keep focus / scroll
 - [ ] Responsive layout + touch-friendly for the new party screen
+- [ ] Disable the "Start hosting" button while in creative / map editor; show tooltip "Leave creative mode first." (Q3)
+- [ ] Handle deep-link `?join=CODE` while already in a session: auto-leave current, then auto-join the new code (Q5)
 Protocol:
-- [ ] New op `host.kick { playerId }` — relay closes the guest's WS (new close code 4005) and emits `peer.left { reason: "kicked" }` to the host + all remaining guests
+- [ ] New op `host.kick { playerId }` — relay closes the guest's WS with close code 4005 and emits `peer.left { reason: "kicked" }` to the host + all remaining guests (now in spec § host.kick + peer.left + close codes)
+- [ ] On 4005 close, net.js does NOT auto-reconnect; client runs `switchRole("offline")` and shows "You were removed from the session" toast (Q7)
 Runtime role switching:
 - [ ] Pair every install with a real teardown: snapshotBroadcaster, hostGuests, mirrorWorld, predictedSelf, guestInputForwarder, guestEvents
 - [ ] Audit module-level singletons for reset on role change (predictedSelf's `predicted` / `installed` / `lastAckedSeq`; hostGuests' `guestSlotByPlayerId`, etc.)
@@ -108,7 +119,6 @@ Polish — guest mode role gates
 - [ ] Gate menu's New Game / Reset by role (would wipe the guest's UUID + identity)
 - [ ] Gate firstLaunch tutorial by role
 - [ ] Defensively gate mapEditor install by role (today only protected by isCreativeMode → guest gate, defense-in-depth)
-- [ ] Disable hosting while in creative / map editor
 - [ ] Loading screen in guest mode → "Connecting to host…" not "Sprites loaded / Zone loaded"
 - [ ] Skip runMigrations on guests (a future migration touching the UUID key would be catastrophic)
 - [ ] Verify tickEntities is read-only on the guest (mutations are wiped by the next delta — confirm intent)
