@@ -78,7 +78,14 @@ APP_BIND = f"{APP_BIND_HOST}:{APP_BIND_PORT}"
 SERVER_NAME = "sneakbit.curzel.it"
 
 LOCAL_SERVER_DIR = ROOT / "server"
-SERVER_SYNC_PATHS = ["index.js", "package.json"]
+SERVER_SYNC_PATHS = [
+    "index.js",
+    "package.json",
+    "wsFrames.js",
+    "wsConnection.js",
+    "sessions.js",
+    "relay.js",
+]
 
 NODE_MAJOR = "22"
 
