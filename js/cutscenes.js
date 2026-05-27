@@ -11,6 +11,7 @@
 import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js?v=20260527b";
 import { getValue, setValue } from "./storage.js?v=20260527b";
 import { getSprite } from "./assets.js?v=20260527b";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260527b";
 
 const CUTSCENE_Z = 20_000_000; // mirrors Rust's 2_000_000_000 / 100 bucket
 
@@ -44,27 +45,43 @@ function normaliseSprite(s) {
   };
 }
 
-export function tickCutscenes(zone, player, dt) {
+export function tickCutscenes(zone, player, dt, opts = {}) {
   if (!zone?.cutscenes?.length) return;
+  // Guests pass { mirror: true } so the tick only advances the play
+  // animation — it never auto-triggers from tile position (the host
+  // owns that) and never calls finishCutscene (that runs on event:
+  // cutsceneEnd via endCutsceneByKey, which also avoids spawning the
+  // onEnd entities that would double up when the host's snapshot
+  // lands them).
+  const mirror = !!opts.mirror;
   for (const c of zone.cutscenes) {
     if (c._hidden) continue;
     if (c._isPlaying) {
       const s = c.playSprite;
-      if (!s) { finishCutscene(zone, c); continue; }
+      if (!s) {
+        if (!mirror) finishCutscene(zone, c);
+        continue;
+      }
       c._frameTimer += dt;
       const period = 1 / ANIMATIONS_FPS;
       while (c._frameTimer >= period) {
         c._frameTimer -= period;
         c._frameIndex++;
         if (c._frameIndex >= s.frames) {
+          if (mirror) {
+            c._frameIndex = s.frames - 1;
+            c._frameTimer = 0;
+            break;
+          }
           finishCutscene(zone, c);
           break;
         }
       }
-    } else if (player && player.tileX === c.triggerX && player.tileY === c.triggerY) {
+    } else if (!mirror && player && player.tileX === c.triggerX && player.tileY === c.triggerY) {
       c._isPlaying = true;
       c._frameTimer = 0;
       c._frameIndex = 0;
+      if (c.key) broadcastHostEvent("cutsceneStart", { key: c.key });
     }
   }
 }
@@ -75,6 +92,36 @@ function finishCutscene(zone, c) {
   if (c.key) setValue(c.key, 1);
   if (c.onEnd?.length) {
     for (const e of c.onEnd) zone.entities.push(clone(e));
+  }
+  if (c.key) broadcastHostEvent("cutsceneEnd", { key: c.key });
+}
+
+// Guest-side: flip the matching cutscene to playing without touching the
+// trigger-tile match (the host already owns the trigger logic). Idempotent
+// and no-op if the key isn't found or the cutscene is already hidden/done.
+export function startCutsceneByKey(zone, key) {
+  if (!zone?.cutscenes?.length || !key) return;
+  for (const c of zone.cutscenes) {
+    if (c.key !== key) continue;
+    if (c._hidden || c._isPlaying) return;
+    c._isPlaying = true;
+    c._frameTimer = 0;
+    c._frameIndex = 0;
+    return;
+  }
+}
+
+// Guest-side: force-finish a cutscene the host says is done, in case the
+// guest's animation timer drifted. We do NOT spawn onEnd entities here —
+// the host has already done that locally and the next snapshot/delta
+// brings them into the mirror's zone.entities.
+export function endCutsceneByKey(zone, key) {
+  if (!zone?.cutscenes?.length || !key) return;
+  for (const c of zone.cutscenes) {
+    if (c.key !== key) continue;
+    c._isPlaying = false;
+    c._hidden = true;
+    return;
   }
 }
 

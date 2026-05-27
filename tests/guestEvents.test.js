@@ -83,6 +83,50 @@ test("pickup events feed addAmmo so the guest's HUD updates", async () => {
   _uninstallGuestEventsForTesting();
 });
 
+test("cutscene events are routable through the override seam", () => {
+  _uninstallGuestEventsForTesting();
+  const seen = [];
+  setGuestEventHandler("cutsceneStart", (m) => seen.push(["start", m.key]));
+  setGuestEventHandler("cutsceneEnd", (m) => seen.push(["end", m.key]));
+  dispatch({ kind: "cutsceneStart", key: "demon.defeated" });
+  dispatch({ kind: "cutsceneEnd", key: "demon.defeated" });
+  assert.deepEqual(seen, [["start", "demon.defeated"], ["end", "demon.defeated"]]);
+  _uninstallGuestEventsForTesting();
+});
+
+test("dialogue events are routable through the override seam", () => {
+  _uninstallGuestEventsForTesting();
+  const seen = [];
+  setGuestEventHandler("dialogueOpen", (m) => seen.push(["open", m.lines]));
+  setGuestEventHandler("dialogueAdvance", (m) => seen.push(["advance", m.idx]));
+  setGuestEventHandler("dialogueClose", () => seen.push(["close"]));
+  dispatch({ kind: "dialogueOpen", lines: ["hello", "world"], idx: 0 });
+  dispatch({ kind: "dialogueAdvance", idx: 1 });
+  dispatch({ kind: "dialogueClose" });
+  assert.deepEqual(seen, [
+    ["open", ["hello", "world"]],
+    ["advance", 1],
+    ["close"],
+  ]);
+  _uninstallGuestEventsForTesting();
+});
+
+test("death/respawn events are routable through the override seam", () => {
+  _uninstallGuestEventsForTesting();
+  const seen = [];
+  setGuestEventHandler("death", (m) => seen.push(["death", m.playerId]));
+  setGuestEventHandler("respawn", (m) => seen.push(["respawn", m.playerId]));
+  dispatch({ kind: "death", playerId: "p_self" });
+  dispatch({ kind: "respawn", playerId: "p_self" });
+  dispatch({ kind: "death", playerId: "p_peer" });
+  assert.deepEqual(seen, [
+    ["death", "p_self"],
+    ["respawn", "p_self"],
+    ["death", "p_peer"],
+  ]);
+  _uninstallGuestEventsForTesting();
+});
+
 test("malformed events are ignored", () => {
   _uninstallGuestEventsForTesting();
   let count = 0;

@@ -188,6 +188,60 @@ test("zone change broadcasts event:zoneChange before the full snapshot", () => {
   });
 });
 
+test("hp 0-crossing emits event:death; recovery emits event:respawn", async () => {
+  const fakeNet = setupBootstrapWithFakeNet();
+  const ph = await import("../js/playerHealth.js?v=20260527b");
+  ph.resetPlayerHealth(); // baseline: all players at MAX_HP
+  const state = makeState();
+  // Seed baseline so the next delta has prev-hp to compare against.
+  _snapshotForTesting(state);
+  // Knock host's player down to 0 — we mutate state to force a sig
+  // change, then drive a delta. _broadcastDeltaForTesting bypasses the
+  // timer so we get a deterministic single tick.
+  // applyPlayerDamage caps at MAX_HP — go big to guarantee a kill.
+  ph.applyPlayerDamage(999, 0);
+  // Also bump position so sigPlayer differs from baseline (hp alone is
+  // enough but let's not depend on it).
+  state.player.tileX = 8;
+  state.player.x = 8;
+  fakeNet.sent.length = 0;
+  _broadcastDeltaForTesting(null, state);
+  const deaths = fakeNet.sent.filter((m) => m.op === "event" && m.kind === "death");
+  assert.equal(deaths.length, 1, "expected exactly one event:death");
+  assert.equal(deaths[0].playerId, "p_host01");
+  // Now revive and tick again — expect event:respawn.
+  ph.resetPlayerHealth(0);
+  state.player.tileX = 9;
+  state.player.x = 9;
+  fakeNet.sent.length = 0;
+  _broadcastDeltaForTesting(null, state);
+  const resps = fakeNet.sent.filter((m) => m.op === "event" && m.kind === "respawn");
+  assert.equal(resps.length, 1, "expected exactly one event:respawn");
+  assert.equal(resps[0].playerId, "p_host01");
+  stopSnapshotBroadcaster();
+});
+
+test("a fresh snapshot seeds hp baseline without re-emitting death", async () => {
+  const fakeNet = setupBootstrapWithFakeNet();
+  const ph = await import("../js/playerHealth.js?v=20260527b");
+  ph.resetPlayerHealth();
+  // Pre-kill the host before the first snapshot — the joiner should not
+  // be told the host is freshly dead; that already-dead state is encoded
+  // in the snapshot's hp field, not in a discrete event.
+  ph.applyPlayerDamage(999, 0);
+  const state = makeState();
+  fakeNet.sent.length = 0;
+  _snapshotForTesting(state);
+  // No tick has driven playerDeltas yet — emission only runs from the
+  // delta path. Now drive a delta with unchanged hp (still 0).
+  _broadcastDeltaForTesting(null, state);
+  const deaths = fakeNet.sent.filter((m) => m.op === "event" && m.kind === "death");
+  assert.equal(deaths.length, 0, "snapshot should seed baseline, no event:death");
+  // Cleanup: bring HP back so later tests start clean.
+  ph.resetPlayerHealth();
+  stopSnapshotBroadcaster();
+});
+
 test("zone id change forces the next delta to be a full snapshot", () => {
   setupBootstrapWithFakeNet();
   const state = makeState(1001);

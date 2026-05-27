@@ -14,6 +14,7 @@ import { addAmmo } from "./inventory.js?v=20260527b";
 import { showToast } from "./toast.js?v=20260527b";
 import { getSpecies } from "./species.js?v=20260527b";
 import { matchesAction } from "./keyBindings.js?v=20260527b";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260527b";
 
 let root = null;
 let active = null; // { lines, idx, resolve, dialogue }
@@ -59,6 +60,10 @@ export function installDialogue() {
 
   listener = (e) => {
     if (!active) return;
+    // Guest mirror is read-only — the host drives advance/close via
+    // event:dialogueAdvance/Close, and the guest's local keypresses
+    // would advance only their own copy, desyncing immediately.
+    if (active.isNetwork) return;
     // Always accept Space as a universal "advance" so the dialogue
     // remains dismissable even if the player rebinds interact onto an
     // unusual key. Otherwise the rebound interact key works too.
@@ -68,7 +73,10 @@ export function installDialogue() {
     }
   };
   window.addEventListener("keydown", listener);
-  root.addEventListener("click", () => advance());
+  root.addEventListener("click", () => {
+    if (active?.isNetwork) return;
+    advance();
+  });
   return root;
 }
 
@@ -83,7 +91,50 @@ export function showDialogue(payload, playerIndex = 0) {
     paint();
     root.style.display = "block";
     playSfx("hintReceived", { volume: 0.5 });
+    // Mirror to guests with the already-localized lines so they don't
+    // need their own dialogue/reward resolution. Idx starts at 0 to
+    // match the host's freshly-painted state.
+    broadcastHostEvent("dialogueOpen", { lines, idx: 0 });
   });
+}
+
+// Guest-side entry point. Driven by event:dialogueOpen from the host.
+// Reuses the same DOM but flags `isNetwork:true` so local keys/clicks
+// can't advance it — only event:dialogueAdvance/Close from the host
+// move the state forward.
+export function showNetworkDialogue(lines) {
+  if (!root) return;
+  if (!Array.isArray(lines) || lines.length === 0) return;
+  active = {
+    lines: lines.slice(),
+    idx: 0,
+    resolve: null,
+    dialogue: null,
+    playerIndex: 0,
+    isNetwork: true,
+  };
+  paint();
+  root.style.display = "block";
+  playSfx("hintReceived", { volume: 0.5 });
+}
+
+// Guest-side: set the displayed line index. No-op unless a network
+// dialogue is currently active.
+export function advanceNetworkDialogue(idx) {
+  if (!active || !active.isNetwork) return;
+  const n = active.lines.length;
+  active.idx = Math.max(0, Math.min(n - 1, idx | 0));
+  paint();
+  playSfx("hintReceived", { volume: 0.3 });
+}
+
+// Guest-side: hide the mirror. Host's close() fires after rewards have
+// already been resolved authoritatively; the guest doesn't replay
+// rewards (inventory is shared and addAmmo on guest would double-count).
+export function closeNetworkDialogue() {
+  if (!active || !active.isNetwork) return;
+  active = null;
+  if (root) root.style.display = "none";
 }
 
 function isDialogueObject(x) {
@@ -103,6 +154,7 @@ function advance() {
   }
   paint();
   playSfx("hintReceived", { volume: 0.3 });
+  broadcastHostEvent("dialogueAdvance", { idx: active.idx });
 }
 
 function paint() {
@@ -117,8 +169,9 @@ function close() {
   const playerIndex = active.playerIndex | 0;
   active = null;
   root.style.display = "none";
+  broadcastHostEvent("dialogueClose");
   if (dialogue) handleReward(dialogue, playerIndex);
-  resolve(dialogue);
+  if (typeof resolve === "function") resolve(dialogue);
 }
 
 // Mark the dialogue as read (gates downstream dialogues) and grant any

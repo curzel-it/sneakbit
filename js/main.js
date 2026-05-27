@@ -350,7 +350,17 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
     });
     return;
   }
-  tickPredictedSelf(dt);
+  // Pause the predicted self while the host has a modal dialogue open —
+  // the host pauses its own tick, so any movement the guest predicts now
+  // will rubber-band back the instant the host resumes. Gating here also
+  // means the on-screen overlay is the only thing reacting to input,
+  // which matches what the host sees.
+  if (!isDialogueOpen()) tickPredictedSelf(dt);
+  // Advance any cutscenes the host told us are playing. mirror:true
+  // suppresses auto-trigger (host owns that) and skips finishCutscene
+  // (we wait for event:cutsceneEnd instead, to avoid double-spawning
+  // onEnd entities that the host's snapshot will already mirror in).
+  tickCutscenes(mZone, null, dt, { mirror: true });
   const mPlayers = getMirrorPlayers();
   const renderPlayers = buildGuestRenderPlayers(mPlayers);
   if (!renderPlayers.length) {

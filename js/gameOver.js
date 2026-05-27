@@ -43,24 +43,52 @@ export function installGameOver() {
 
 export function isGameOverOpen() { return open; }
 
-export function showGameOver(onContinue) {
+export function showGameOver(onContinue, opts = {}) {
   if (open) return;
   open = true;
   pendingContinue = typeof onContinue === "function" ? onContinue : null;
   root.style.display = "flex";
-  // Brief delay before the button accepts a press so the player can't
-  // skip the screen with a stale Enter from in-game input.
   const btn = root.querySelector("#go-continue");
-  btn.disabled = true;
-  setTimeout(() => { btn.disabled = false; btn.focus(); }, 350);
+  // Online co-op guests can't drive their own respawn — only the host
+  // can teleport them back to the spawn point. We surface the overlay
+  // but hide the Continue button and the keyboard accelerator; an
+  // event:respawn from the host dismisses it via hideGameOver().
+  if (opts.waitingForHost) {
+    btn.style.display = "none";
+    const sub = root.querySelector(".go-sub");
+    if (sub) sub.textContent = "Waiting for the host…";
+  } else {
+    btn.style.display = "";
+    btn.disabled = true;
+    // Brief delay before the button accepts a press so the player can't
+    // skip the screen with a stale Enter from in-game input.
+    setTimeout(() => { btn.disabled = false; btn.focus(); }, 350);
+  }
   playSfx("gameOver");
+}
+
+// Programmatic dismiss used by the guest's event:respawn handler. Does
+// NOT invoke the onContinue callback (the host already did the respawn
+// work; this is just hiding the overlay).
+export function hideGameOver() {
+  if (!open) return;
+  open = false;
+  pendingContinue = null;
+  root.style.display = "none";
+  const sub = root.querySelector(".go-sub");
+  if (sub) sub.textContent = "The shadows have taken you.";
+  const btn = root.querySelector("#go-continue");
+  if (btn) btn.style.display = "";
 }
 
 function onKeydown(e) {
   if (!open) return;
   if (e.code !== "Enter" && e.code !== "Space" && e.code !== "Escape") return;
-  e.preventDefault();
   const btn = root.querySelector("#go-continue");
+  // Guest "waiting for host" mode hides the button — swallow the key so
+  // a stray Enter doesn't accidentally trigger a no-op pendingContinue.
+  if (btn?.style.display === "none") { e.preventDefault(); return; }
+  e.preventDefault();
   if (btn?.disabled) return;
   commitContinue();
 }

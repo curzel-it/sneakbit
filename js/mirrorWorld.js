@@ -12,6 +12,7 @@
 import { SPRITE_SHEET_HEROES } from "./constants.js?v=20260527b";
 import { loadZone } from "./data.js?v=20260527b";
 import { buildZone } from "./zone.js?v=20260527b";
+import { setupCutscenes } from "./cutscenes.js?v=20260527b";
 
 export const INTERP_DELAY_MS = 100;
 const STALE_MS = 300;
@@ -137,6 +138,11 @@ async function loadZoneAndApplySnapshot(msg, opts) {
     const z = await zonePromise;
     if (pendingZoneId !== zoneId) return; // superseded
     zone = z;
+    // The host's snapshot ships dynamic state only — cutscene
+    // definitions come from the level JSON. Initialize them on the
+    // mirror so event:cutsceneStart can flip _isPlaying on the right
+    // entry and drawCutscenes has something to paint.
+    setupCutscenes(zone);
     pendingZoneId = null;
     zonePromise = null;
     applySnapshotToCurrentZone(msg);

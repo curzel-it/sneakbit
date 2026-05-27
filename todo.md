@@ -39,10 +39,10 @@ Urgent:
 Phases 0–10 shipped (relay, prediction, events, zone transitions, party panel, WebRTC + STUN/TURN, permessage-deflate). Remaining work below.
 
 Phase 7 events end-to-end
-- [ ] Hook event:pickup into pickups.js so guest inventory matches host
-- [ ] Hook event:death / respawn into host emitters and guest UI
-- [ ] Hook event:dialogueOpen/Advance/Close — and decide what the guest does while the host is in a dialogue modal (host pauses tick, guest stays running; predicted self will lurch)
-- [ ] Hook event:cutsceneStart/End with the same dialogue concern
+- [x] Hook event:pickup into pickups.js so guest inventory matches host
+- [x] Hook event:death / respawn into host emitters and guest UI
+- [x] Hook event:dialogueOpen/Advance/Close — guest mirrors host's read-only overlay, predicted self pauses while open
+- [x] Hook event:cutsceneStart/End — guest plays the same animation, host owns trigger + onEnd entities
 
 Polish — server
 - [ ] WS frame size cap ~1 MB in parseFrames (currently > 2 GB before throwing)

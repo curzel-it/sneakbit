@@ -11,6 +11,7 @@
 import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260527b";
 import { getPlayerHp } from "./playerHealth.js?v=20260527b";
 import { getLastSeqMap } from "./hostGuests.js?v=20260527b";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260527b";
 
 export const BROADCAST_INTERVAL_MS = 50;
 
@@ -22,6 +23,11 @@ let lastEntitySigs = new Map();
 let knownEntityIds = new Set();
 let unsubs = [];
 let lastZoneId = null;
+// Per-playerId last-broadcast hp. Used by emitHpTransitions to fire a
+// single event:death (or event:respawn) on a 0-crossing — the snapshot
+// already ships hp as a number, but discrete UI flips (guest's gameOver
+// overlay, audio sting) want a rising-edge signal, not a steady-state.
+let lastHpByPlayerId = new Map();
 
 export function installSnapshotBroadcaster(getState, opts = {}) {
   if (getNetRole() !== "host") return false;
@@ -43,6 +49,7 @@ export function stopSnapshotBroadcaster() {
   lastPlayerSigs.clear();
   lastEntitySigs.clear();
   knownEntityIds = new Set();
+  lastHpByPlayerId.clear();
   tickCount = 0;
   lastZoneId = null;
 }
@@ -120,6 +127,11 @@ function buildSnapshot(state) {
     lastEntitySigs.set(e.id, sigEntity(e));
     knownEntityIds.add(e.id);
   }
+  // Seed hp baselines on a full snapshot. We do NOT emit transitions
+  // here — a fresh joiner shouldn't replay every death/respawn that
+  // happened before they connected.
+  lastHpByPlayerId.clear();
+  for (const p of players) lastHpByPlayerId.set(p.playerId, p.hp);
   return {
     op: "snapshot",
     t: tickCount++,
@@ -132,16 +144,38 @@ function buildSnapshot(state) {
 
 function playerDeltas(state) {
   const changed = [];
+  const allPlayers = [];
   for (const slot of playersOf(state)) {
     const p = serializePlayer(slot);
     if (!p) continue;
+    allPlayers.push(p);
     const sig = sigPlayer(p);
     if (lastPlayerSigs.get(p.playerId) !== sig) {
       lastPlayerSigs.set(p.playerId, sig);
       changed.push(p);
     }
   }
+  emitHpTransitions(allPlayers);
   return changed;
+}
+
+// Watch each tracked player's hp for a 0-crossing and emit a one-shot
+// event so guests can drive UI off it (gameOver overlay on self, toasts
+// on peers). Steady-state hp is already in the delta — this is only for
+// the rising edge. First sample for a player seeds without emission.
+function emitHpTransitions(players) {
+  for (const p of players) {
+    const prev = lastHpByPlayerId.get(p.playerId);
+    const cur = typeof p.hp === "number" ? p.hp : 100;
+    if (prev !== undefined) {
+      if (prev > 0 && cur <= 0) {
+        broadcastHostEvent("death", { playerId: p.playerId });
+      } else if (prev <= 0 && cur > 0) {
+        broadcastHostEvent("respawn", { playerId: p.playerId });
+      }
+    }
+    lastHpByPlayerId.set(p.playerId, cur);
+  }
 }
 
 function entityDeltas(state) {

@@ -8,6 +8,16 @@
 import { showToast } from "./toast.js?v=20260527b";
 import { fadeOverlayOut, fadeOverlayIn, FADE_OVERLAY_MS } from "./transitions.js?v=20260527b";
 import { addAmmo } from "./inventory.js?v=20260527b";
+import { showGameOver, hideGameOver, isGameOverOpen } from "./gameOver.js?v=20260527b";
+import { getSelfPlayerId, getNameForPlayerId } from "./onlineBootstrap.js?v=20260527b";
+import { tr } from "./strings.js?v=20260527b";
+import {
+  showNetworkDialogue,
+  advanceNetworkDialogue,
+  closeNetworkDialogue,
+} from "./dialogue.js?v=20260527b";
+import { startCutsceneByKey, endCutsceneByKey } from "./cutscenes.js?v=20260527b";
+import { getMirrorZone } from "./mirrorWorld.js?v=20260527b";
 
 let installed = false;
 let unsub = null;
@@ -52,9 +62,28 @@ export function dispatch(msg) {
     case "pickup":
       handlePickup(msg);
       return;
+    case "death":
+      handleDeath(msg);
+      return;
+    case "respawn":
+      handleRespawn(msg);
+      return;
+    case "dialogueOpen":
+      if (Array.isArray(msg.lines)) showNetworkDialogue(msg.lines);
+      return;
+    case "dialogueAdvance":
+      if (typeof msg.idx === "number") advanceNetworkDialogue(msg.idx);
+      return;
+    case "dialogueClose":
+      closeNetworkDialogue();
+      return;
+    case "cutsceneStart":
+      if (typeof msg.key === "string") startCutsceneByKey(getMirrorZone(), msg.key);
+      return;
+    case "cutsceneEnd":
+      if (typeof msg.key === "string") endCutsceneByKey(getMirrorZone(), msg.key);
+      return;
     default:
-      // Death / respawn / dialogue / cutscene land here in follow-up
-      // commits.
       return;
   }
 }
@@ -82,4 +111,34 @@ function handlePickup(msg) {
 function handleZoneChange() {
   fadeOverlayOut();
   setTimeout(() => fadeOverlayIn(), FADE_OVERLAY_MS);
+}
+
+// Self death → show the gameOver overlay in "waiting for host" mode
+// (no Continue button — only the host's event:respawn dismisses it).
+// Peer deaths get a transient toast so the guest knows their friend
+// went down. Self vs peer is decided by playerId.
+function handleDeath(msg) {
+  const selfId = getSelfPlayerId();
+  const pid = msg?.playerId;
+  if (!pid) return;
+  if (pid === selfId) {
+    showGameOver(null, { waitingForHost: true });
+    return;
+  }
+  const name = getNameForPlayerId(pid) || pid;
+  const tmpl = tr("notification.player.died");
+  const text = (tmpl && typeof tmpl === "string")
+    ? tmpl.replace("%PLAYER_NAME%", name)
+    : `${name} died`;
+  showToast(text, "longHint", { _fromNetwork: true });
+}
+
+// Self respawn → dismiss the gameOver overlay. The host has already
+// teleported the avatar; the next snapshot/delta will land the guest at
+// the new spawnPoint, so we only need to flip the UI.
+function handleRespawn(msg) {
+  const selfId = getSelfPlayerId();
+  const pid = msg?.playerId;
+  if (!pid) return;
+  if (pid === selfId && isGameOverOpen()) hideGameOver();
 }

@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { setupCutscenes, tickCutscenes } = await import("../js/cutscenes.js?v=20260527b");
+const { setupCutscenes, tickCutscenes, startCutsceneByKey, endCutsceneByKey } =
+  await import("../js/cutscenes.js?v=20260527b");
 const storage = await import("../js/storage.js?v=20260527b");
 
 function makeRaw() {
@@ -79,4 +80,51 @@ test("tickCutscenes is a no-op when the zone has no cutscenes", () => {
   // Should not throw.
   tickCutscenes(zone, { tileX: 0, tileY: 0 }, 0.05);
   assert.equal(zone.cutscenes.length, 0);
+});
+
+test("startCutsceneByKey flips _isPlaying without a tile match", () => {
+  storage._resetStorageForTesting();
+  const zone = makeZone([makeRaw()]);
+  setupCutscenes(zone);
+  startCutsceneByKey(zone, "demo_cutscene");
+  assert.equal(zone.cutscenes[0]._isPlaying, true);
+  assert.equal(zone.cutscenes[0]._frameIndex, 0);
+});
+
+test("startCutsceneByKey ignores unknown keys and already-hidden entries", () => {
+  storage._resetStorageForTesting();
+  storage.setValue("demo_cutscene", 1);
+  const zone = makeZone([makeRaw()]);
+  setupCutscenes(zone);
+  startCutsceneByKey(zone, "demo_cutscene");
+  assert.equal(zone.cutscenes[0]._isPlaying, false, "hidden cutscenes do not re-play");
+  startCutsceneByKey(zone, "no.such.key");
+  // No throw, no mutation.
+});
+
+test("endCutsceneByKey clears playing state without spawning on_end (host owns that)", () => {
+  storage._resetStorageForTesting();
+  const zone = makeZone([makeRaw()]);
+  setupCutscenes(zone);
+  startCutsceneByKey(zone, "demo_cutscene");
+  endCutsceneByKey(zone, "demo_cutscene");
+  assert.equal(zone.cutscenes[0]._isPlaying, false);
+  assert.equal(zone.cutscenes[0]._hidden, true);
+  assert.equal(zone.entities.length, 0, "guest must not duplicate on_end entities");
+});
+
+test("tickCutscenes in mirror mode skips auto-trigger and never finishes", () => {
+  storage._resetStorageForTesting();
+  const zone = makeZone([makeRaw()]);
+  setupCutscenes(zone);
+  // Standing on the trigger tile should NOT start the cutscene in mirror mode.
+  tickCutscenes(zone, { tileX: 5, tileY: 5 }, 0.05, { mirror: true });
+  assert.equal(zone.cutscenes[0]._isPlaying, false);
+  // Once the host says "start", we advance the play sprite locally.
+  startCutsceneByKey(zone, "demo_cutscene");
+  tickCutscenes(zone, null, 1, { mirror: true });
+  // Mirror tick clamps at last frame instead of finishing — onEnd must
+  // stay empty, and we wait for event:cutsceneEnd to actually retire it.
+  assert.equal(zone.cutscenes[0]._isPlaying, true);
+  assert.equal(zone.entities.length, 0);
 });
