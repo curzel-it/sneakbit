@@ -6,23 +6,23 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js");
+  await import("../js/onlineMode.js?v=20260527");
 const { _resetOnlineBootstrapForTesting } =
-  await import("../js/onlineBootstrap.js");
+  await import("../js/onlineBootstrap.js?v=20260527");
 
 // Force host mode + a fixed playerId before the broadcaster module
 // imports bootstrap.
 _resetOnlineBootstrapForTesting();
 _setOnlineModeForTesting({ mode: "host", uuid: "uuid-host-broadcaster" });
 
-const broadcaster = await import("../js/snapshotBroadcaster.js");
+const broadcaster = await import("../js/snapshotBroadcaster.js?v=20260527");
 const { _snapshotForTesting, _broadcastDeltaForTesting,
   installSnapshotBroadcaster, stopSnapshotBroadcaster } = broadcaster;
 
 // We can't easily stub getSelfPlayerId from bootstrap without driving the
 // real WS handshake — instead we drive bootstrap directly with a fake net
 // that emits a welcome frame, so selfPlayerId gets set.
-const { bootstrapOnline, getNet } = await import("../js/onlineBootstrap.js");
+const { bootstrapOnline, getNet } = await import("../js/onlineBootstrap.js?v=20260527");
 
 function makeFakeNet() {
   const handlers = new Map();

@@ -7,15 +7,15 @@
 // Damage model mirrors the original: damage = dps * dt while overlapping.
 // Bullets pass through targets they don't kill in the same frame.
 
-import { getSpecies } from "./species.js";
-import { isWalkable } from "./zone.js";
-import { playSfx } from "./audio.js";
-import { applyPlayerContinuousDamage, applyPlayerDamage, isPlayerDead } from "./playerHealth.js";
-import { hasPiercingKnifeSkill, hasBoomerangSkill, hasBulletCatcherSkill } from "./skills.js";
-import { addAmmo } from "./inventory.js";
-import { isExplosive } from "./explosives.js";
-import { isCreativeMode } from "./creativeMode.js";
-import { getSettings } from "./settings.js";
+import { getSpecies } from "./species.js?v=20260527";
+import { isWalkable } from "./zone.js?v=20260527";
+import { playSfx } from "./audio.js?v=20260527";
+import { applyPlayerContinuousDamage, applyPlayerDamage, isPlayerDead } from "./playerHealth.js?v=20260527";
+import { hasPiercingKnifeSkill, hasBoomerangSkill, hasBulletCatcherSkill } from "./skills.js?v=20260527";
+import { addAmmo } from "./inventory.js?v=20260527";
+import { isExplosive } from "./explosives.js?v=20260527";
+import { isCreativeMode } from "./creativeMode.js?v=20260527";
+import { getSettings } from "./settings.js?v=20260527";
 
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;

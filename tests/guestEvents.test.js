@@ -10,7 +10,7 @@ const {
   _uninstallGuestEventsForTesting,
   setGuestEventHandler,
   dispatch,
-} = await import("../js/guestEvents.js");
+} = await import("../js/guestEvents.js?v=20260527");
 
 function makeFakeNet() {
   const handlers = new Map();
@@ -68,7 +68,7 @@ test("zoneChange kind is routable through the override seam", () => {
 
 test("pickup events feed addAmmo so the guest's HUD updates", async () => {
   _uninstallGuestEventsForTesting();
-  const { getAmmo } = await import("../js/inventory.js");
+  const { getAmmo } = await import("../js/inventory.js?v=20260527");
   // Snapshot starting counts because other tests in the suite may have
   // hydrated inventory with non-zero values for the same species ids.
   const KUNAI = 7000;

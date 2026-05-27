@@ -1,9 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { _resetStorageForTesting } = await import("../js/storage.js");
+const { _resetStorageForTesting } = await import("../js/storage.js?v=20260527");
 const { saveProgress, loadProgress, clearProgress, hasSavedProgress } =
-  await import("../js/save.js");
+  await import("../js/save.js?v=20260527");
 
 function makeState(zoneId, tileX, tileY, direction = "down") {
   return {

@@ -5,9 +5,9 @@
 // Pickup / death / respawn / dialogue / cutscene flesh out over time as
 // the matching host-side hooks land.
 
-import { showToast } from "./toast.js";
-import { fadeOverlayOut, fadeOverlayIn, FADE_OVERLAY_MS } from "./transitions.js";
-import { addAmmo } from "./inventory.js";
+import { showToast } from "./toast.js?v=20260527";
+import { fadeOverlayOut, fadeOverlayIn, FADE_OVERLAY_MS } from "./transitions.js?v=20260527";
+import { addAmmo } from "./inventory.js?v=20260527";
 
 let installed = false;
 let unsub = null;

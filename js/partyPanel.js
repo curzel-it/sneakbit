@@ -11,7 +11,7 @@
 // Actions are all switchRole(...) calls or net.send({op: "host.kick"}).
 // No location.replace anywhere — role transitions stay in-page.
 
-import { getRuntimeRole, onRoleChange } from "./onlineMode.js";
+import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260527";
 import {
   getInviteCode,
   getKnownPeers,
@@ -21,10 +21,10 @@ import {
   getNameForPlayerId,
   getNet,
   onSessionState,
-} from "./onlineBootstrap.js";
-import { switchRole } from "./switchRole.js";
-import { showToast } from "./toast.js";
-import { isCreativeMode } from "./creativeMode.js";
+} from "./onlineBootstrap.js?v=20260527";
+import { switchRole } from "./switchRole.js?v=20260527";
+import { showToast } from "./toast.js?v=20260527";
+import { isCreativeMode } from "./creativeMode.js?v=20260527";
 
 let chip = null;
 let chipLabel = null;

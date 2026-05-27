@@ -5,12 +5,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js");
+  await import("../js/onlineMode.js?v=20260527");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js");
+  await import("../js/onlineBootstrap.js?v=20260527");
 const { installHostGuests, _uninstallHostGuestsForTesting } =
-  await import("../js/hostGuests.js");
-const inputModule = await import("../js/input.js");
+  await import("../js/hostGuests.js?v=20260527");
+const inputModule = await import("../js/input.js?v=20260527");
 
 function makeFakeNet() {
   const handlers = new Map();

@@ -20,7 +20,7 @@ Miscellanea
 - [x] Player 2 does not seem to have a key for shooting or using sword
 - [x] No keybindings for player 2 (one tab per player in exising key bindings dialog?)
 - [x] Player 2 is not being targeted by monsters (can still take damage)
-- [x] Reloading the page should turn off local co-op (back to 1 player)
+- [x] Closing the tab / fresh browser launch should turn off local co-op (back to 1 player). Implemented via sessionStorage — survives F5 within a tab on purpose so an accidental refresh doesn't kick everyone out, but a new tab / cold boot starts in single-player.
  
 # Online co-op (spec: docs/server.md)
 

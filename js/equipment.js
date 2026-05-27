@@ -6,8 +6,8 @@
 // holds the shared loadout — network co-op leaves indices independent.
 // Exposes `window.equipment` for devtools (parity with window.skills).
 
-import { getValue, setValue } from "./storage.js";
-import { isCoopActive } from "./coopMode.js";
+import { getValue, setValue } from "./storage.js?v=20260527";
+import { isCoopActive } from "./coopMode.js?v=20260527";
 
 export const SLOT_RANGED = "ranged";
 export const SLOT_MELEE  = "melee";

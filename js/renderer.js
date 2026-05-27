@@ -1,12 +1,12 @@
 // Draws the zone and player into a 2D canvas context.
 // Layer order: biome → construction → entities → player.
 
-import { TILE_SIZE } from "./constants.js";
-import { drawEntities } from "./entities.js";
-import { getZoneCache } from "./zoneCache.js";
-import { drawCutscenes } from "./cutscenes.js";
-import { drawTrails } from "./trails.js";
-import { isCreativeMode } from "./creativeMode.js";
+import { TILE_SIZE } from "./constants.js?v=20260527";
+import { drawEntities } from "./entities.js?v=20260527";
+import { getZoneCache } from "./zoneCache.js?v=20260527";
+import { drawCutscenes } from "./cutscenes.js?v=20260527";
+import { drawTrails } from "./trails.js?v=20260527";
+import { isCreativeMode } from "./creativeMode.js?v=20260527";
 
 export function createRenderer(canvas) {
   const ctx = canvas.getContext("2d");

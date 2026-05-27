@@ -11,7 +11,7 @@
 import {
   getRuntimeRole,
   setRuntimeRole,
-} from "./onlineMode.js";
+} from "./onlineMode.js?v=20260527";
 import {
   ensureNet,
   closeNet,
@@ -21,14 +21,14 @@ import {
   setPendingGuestCode,
   getInviteCode,
   getNet,
-} from "./onlineBootstrap.js";
-import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotBroadcaster.js";
-import { installHostGuests, uninstallHostGuests } from "./hostGuests.js";
-import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js";
-import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js";
-import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js";
-import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js";
-import { reapplyAutoZoom } from "./zoom.js";
+} from "./onlineBootstrap.js?v=20260527";
+import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotBroadcaster.js?v=20260527";
+import { installHostGuests, uninstallHostGuests } from "./hostGuests.js?v=20260527";
+import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js?v=20260527";
+import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js?v=20260527";
+import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js?v=20260527";
+import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js?v=20260527";
+import { reapplyAutoZoom } from "./zoom.js?v=20260527";
 
 // Callbacks main.js installs at boot. switchRole calls them to rebuild /
 // wipe the live `state` object that lives in main.js's closure.

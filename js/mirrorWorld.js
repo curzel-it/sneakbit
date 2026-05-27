@@ -9,9 +9,9 @@
 // loads them locally on the first snapshot or zone change and only
 // overwrites `zone.entities` from network frames.
 
-import { SPRITE_SHEET_HEROES } from "./constants.js";
-import { loadZone } from "./data.js";
-import { buildZone } from "./zone.js";
+import { SPRITE_SHEET_HEROES } from "./constants.js?v=20260527";
+import { loadZone } from "./data.js?v=20260527";
+import { buildZone } from "./zone.js?v=20260527";
 
 export const INTERP_DELAY_MS = 100;
 const STALE_MS = 300;

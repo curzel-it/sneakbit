@@ -5,18 +5,18 @@
 // screen. isMenuOpen() reports either screen as "open" so the game stays
 // paused while the player tweaks audio.
 
-import { getSettings, saveSettings } from "./settings.js";
-import { playSfx } from "./audio.js";
-import { APP_VERSION } from "./constants.js";
-import { clearProgress } from "./save.js";
-import { getSkills } from "./skills.js";
-import { renderInventoryInto } from "./inventoryScreen.js";
-import { isCreativeMode } from "./creativeMode.js";
-import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js";
-import { isCoopMode, isCoopActive, setCoopMode } from "./coopMode.js";
-import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js";
-import { invalidateZoneCache } from "./data.js";
-import { openPartyPanel } from "./partyPanel.js";
+import { getSettings, saveSettings } from "./settings.js?v=20260527";
+import { playSfx } from "./audio.js?v=20260527";
+import { APP_VERSION } from "./constants.js?v=20260527";
+import { clearProgress } from "./save.js?v=20260527";
+import { getSkills } from "./skills.js?v=20260527";
+import { renderInventoryInto } from "./inventoryScreen.js?v=20260527";
+import { isCreativeMode } from "./creativeMode.js?v=20260527";
+import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260527";
+import { isCoopMode, isCoopActive, setCoopMode } from "./coopMode.js?v=20260527";
+import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260527";
+import { invalidateZoneCache } from "./data.js?v=20260527";
+import { openPartyPanel } from "./partyPanel.js?v=20260527";
 
 let root = null;
 let open = false;

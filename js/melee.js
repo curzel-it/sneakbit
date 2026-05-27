@@ -5,12 +5,12 @@
 // weapon.melee_dps_multiplier, applied via combat.js's normal bullet
 // resolution path.
 
-import { getSpecies } from "./species.js";
-import { getEquipped, SLOT_MELEE } from "./equipment.js";
-import { playSfx } from "./audio.js";
-import { matchesAction } from "./keyBindings.js";
-import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
-import { getNetRole } from "./onlineBootstrap.js";
+import { getSpecies } from "./species.js?v=20260527";
+import { getEquipped, SLOT_MELEE } from "./equipment.js?v=20260527";
+import { playSfx } from "./audio.js?v=20260527";
+import { matchesAction } from "./keyBindings.js?v=20260527";
+import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260527";
+import { getNetRole } from "./onlineBootstrap.js?v=20260527";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
