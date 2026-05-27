@@ -1,7 +1,14 @@
-// Online-mode bookkeeping: which role (offline / host / guest) this tab
-// is running as, the persistent UUIDv4 identity, and the per-mode storage
-// namespace. The mode is fixed for the lifetime of the page — toggling
-// roles is a full reload.
+// Online-mode bookkeeping: which role this tab is *currently* running as,
+// the URL the tab booted with, the persistent UUIDv4 identity, and the
+// per-mode storage namespace.
+//
+// Two distinct notions of "role" live here:
+//   - getMode() / getJoinCode() — read once from the URL at boot. Used
+//     by deep-link entry-point logic (?host=1, ?join=CODE). Does NOT
+//     update at runtime.
+//   - getRuntimeRole() — the live role the tab is currently in. Starts
+//     null; switchRole() drives transitions between offline / host /
+//     guest in-place (no page reload).
 //
 // URL contract (matches host-authoritative-server.md):
 //   no params      → offline (default)
@@ -14,6 +21,12 @@ const ONLINE_UUID_KEY = "sneakbit.online.uuid";
 let cachedMode = null;
 let cachedCode = null;
 let cachedUuid = null;
+
+// Runtime role state. Distinct from cachedMode, which only reflects the
+// boot URL. switchRole() mutates this; partyPanel + status chip + main.js
+// tick gate subscribe to changes.
+let runtimeRole = null;
+const roleSubscribers = new Set();
 
 export function resolveMode(search) {
   const p = new URLSearchParams(search || "");
@@ -80,6 +93,26 @@ export function getOnlineUuid() {
   return cachedUuid;
 }
 
+export function getRuntimeRole() { return runtimeRole; }
+
+// switchRole.js is the canonical writer here, but the function itself is
+// exported so tests and the boot path can seed it directly. Subscribers
+// fire synchronously in registration order; a thrown handler is logged
+// and does not block others.
+export function setRuntimeRole(role) {
+  if (runtimeRole === role) return;
+  runtimeRole = role;
+  for (const fn of [...roleSubscribers]) {
+    try { fn(role); }
+    catch (e) { console.error("onRoleChange handler", e); }
+  }
+}
+
+export function onRoleChange(fn) {
+  roleSubscribers.add(fn);
+  return () => roleSubscribers.delete(fn);
+}
+
 // Test-only seams.
 export function _setOnlineModeForTesting({ mode = "offline", code = null, uuid = null } = {}) {
   cachedMode = mode;
@@ -91,4 +124,6 @@ export function _resetOnlineModeForTesting() {
   cachedMode = null;
   cachedCode = null;
   cachedUuid = null;
+  runtimeRole = null;
+  roleSubscribers.clear();
 }

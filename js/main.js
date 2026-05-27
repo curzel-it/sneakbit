@@ -52,22 +52,24 @@ import { isCoopMode } from "./coopMode.js";
 import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js";
 import { runMigrations } from "./migrations.js";
 import { installMapEditor } from "./mapEditor.js";
-import { bootstrapOnline, getNetRole, getNet } from "./onlineBootstrap.js";
-import { installSnapshotBroadcaster } from "./snapshotBroadcaster.js";
-import { installMirrorWorld, getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead } from "./mirrorWorld.js";
-import { installHostGuests } from "./hostGuests.js";
-import { installGuestInputForwarder } from "./guestInputForwarder.js";
-import { installPredictedSelf, tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js";
+import { bootstrapOnline } from "./onlineBootstrap.js";
+import { getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead } from "./mirrorWorld.js";
+import { tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js";
 import { getSelfPlayerId } from "./onlineBootstrap.js";
-import { installGuestEvents } from "./guestEvents.js";
 import { installPartyPanel } from "./partyPanel.js";
+import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js";
+import { switchRole, setStateHandlers } from "./switchRole.js";
+
+// Live game state. Module-level so switchRole's state-handlers (and the
+// beforeunload listener / window.save shim) can read and mutate it
+// through stable references. Single instance for the page's lifetime;
+// rebuilt in place on host/guest → offline transitions.
+let state = null;
 
 async function main() {
-  bootstrapOnline();
+  bootstrapOnline();             // seeds runtime role from URL; doesn't install role modules
   installPartyPanel();
-  const isGuest = getNetRole() === "guest";
-  if (isGuest) installMirrorWorld(getNet());
-  showLoadingScreen(5); // assets + species + strings + zone + biome sheet bake
+  showLoadingScreen(5);          // assets + species + strings + zone + biome sheet bake
   runMigrations();
   initInput();
   loadSettings();
@@ -87,65 +89,26 @@ async function main() {
   installMessage();
   applyFirstLaunch();
 
-  const urlZone = parseInt(new URLSearchParams(location.search).get("zone"), 10);
-  const saved = Number.isFinite(urlZone) ? null : loadProgress();
-  const startId = Number.isFinite(urlZone) ? urlZone : (saved?.zoneId ?? STARTING_ZONE_ID);
-
-  const [, speciesRaw, stringsRaw, zoneRaw] = await Promise.all([
+  const [, speciesRaw, stringsRaw] = await Promise.all([
     loadAssets().then(r => { bumpLoadingProgress("Sprites loaded"); return r; }),
     loadSpecies().then(r => { bumpLoadingProgress("Species loaded"); return r; }),
     loadStrings("en").then(r => { bumpLoadingProgress("Strings loaded"); return r; }),
-    loadZone(startId).then(r => { bumpLoadingProgress("Zone loaded"); return r; }),
   ]);
-
   loadSpeciesData(speciesRaw);
   loadStringsData(stringsRaw);
   await composeBiomeSheet();
+
+  // Build the offline state up front so the page is always ready to
+  // render *something* — even guests fall back to offline view when a
+  // session ends. switchRole later wipes/rebuilds these fields in place
+  // when transitioning between roles.
+  await initOfflineState();
   bumpLoadingProgress("Ready");
   hideLoadingScreen();
 
   const canvas = document.getElementById("game");
   const renderer = createRenderer(canvas);
   const biomeAnim = createBiomeAnimation();
-  const zone = buildZone(zoneRaw);
-  setupPuzzles(zone);
-  setupCutscenes(zone);
-  getZoneCache(zone); // pre-bake static tile layers before first paint
-  const player = createPlayer();
-  // Restore the saved spawn first; otherwise (URL override / no save) fall
-  // back to the entry teleporter on non-default zones. The hard-coded
-  // STARTING_SPAWN only fits zone 1001.
-  if (saved && saved.x != null && saved.y != null) {
-    applySavedSpawn(player, zone, saved);
-  } else if (startId !== STARTING_ZONE_ID) {
-    snapToEntry(player, zone);
-  }
-  // zone.spawnPoint mirrors Rust's zone.spawn_point: the tile the player
-  // should respawn on after death. This is the zone's entry — back
-  // teleporter (or any teleporter) for non-starting zones, STARTING_SPAWN
-  // for zone 1001 — NOT the player's current position (which may be a
-  // mid-dungeon save). transitions.js refreshes this on every travelTo.
-  zone.spawnPoint = computeEntryTile(zone);
-  // In co-op, spawn P2 right next to P1 on the same tile by default — the
-  // first move will separate them. Rust co-op uses the same "spawn around
-  // hero" rule (game_core/src/worlds/world_setup.rs::spawn_coop_players_around_hero).
-  const player2 = isCoopMode() ? makeCoopP2(player, zone) : null;
-  const state = {
-    zone,
-    // Creative mode needs the raw JSON kept around — the editor mutates
-    // it directly and re-runs buildZone(raw) to refresh derived state,
-    // and transitions.js flushes it to IndexedDB on every teleport.
-    rawZone: zoneRaw,
-    player,
-    player2,
-    // Extra network-guest slots beyond P2. hostGuests pushes { player,
-    // slot, playerId, lastTile } entries here for slots 3 and 4.
-    players: [],
-    camera: createCamera(),
-    lastTile: { x: player.tileX, y: player.tileY },
-    lastTile2: player2 ? { x: player2.tileX, y: player2.tileY } : null,
-  };
-  saveProgress(state);
   let suppressUnloadSave = false;
   window.addEventListener("beforeunload", () => {
     if (suppressUnloadSave) return;
@@ -181,39 +144,32 @@ async function main() {
   markVisited(state.zone.id);
   if (state.zone.soundtrack) playTrack(state.zone.soundtrack);
 
-  // Tag the host's own avatar with its server-side playerId once the
-  // welcome arrives, so entities.js's drawPlayer can look up the display
-  // name. Offline/guest don't need this — guest renders its own avatar
-  // from predictedSelf (which carries playerId already).
-  if (getNetRole() === "host") {
-    const net = getNet();
-    if (net) {
-      const seedSelfId = getSelfPlayerId();
-      if (seedSelfId) state.player.playerId = seedSelfId;
-      net.on("welcome", (m) => {
-        if (m?.playerId) state.player.playerId = m.playerId;
-      });
-    }
-  }
+  // Wire switchRole's state-handler registry so role transitions can
+  // rebuild / wipe the world state. Done BEFORE the boot deep-link
+  // dispatch so a ?host=1 / ?join=CODE entry has working callbacks.
+  setStateHandlers({
+    onEnterOffline: rebuildOfflineState,
+    onEnterHost: tagHostPlayerId,
+    onEnterGuest: wipeGuestState,
+    stateGetter: () => state,
+    p2Factory: makeCoopP2,
+  });
 
-  // In host mode this samples the live world at 20 Hz and emits sparse
-  // deltas to every guest, plus a full snapshot whenever a guest joins.
-  // No-op in offline / guest mode.
-  installSnapshotBroadcaster(() => state);
-  // Host: spawn / despawn guest avatars on peer.joined / peer.left and
-  // route guest `input` frames into the local input pipeline.
-  installHostGuests(() => state, { makeCoopP2 });
-  // Guest: capture keyboard and forward intents to the host. Also start
-  // local prediction so the guest's own avatar reacts within one frame
-  // regardless of RTT.
-  if (isGuest) {
-    installGuestInputForwarder(getNet());
-    installPredictedSelf(getNet());
-    installGuestEvents(getNet());
+  // Honor the boot URL. resolveMode already seeded runtimeRole in
+  // bootstrapOnline; the explicit setRuntimeRole("offline") fires
+  // subscribers (status chip, party panel) on the offline path too so
+  // they paint the initial empty state.
+  const urlRole = getMode();
+  if (urlRole === "host") {
+    await switchRole("host");
+  } else if (urlRole === "guest" && getJoinCode()) {
+    await switchRole("guest", { code: getJoinCode() });
+  } else {
+    setRuntimeRole("offline");
   }
 
   startGameLoop((dt) => {
-    if (isGuest) {
+    if (getRuntimeRole() === "guest") {
       tickGuestFrame(dt, state, renderer, hud, biomeAnim);
       return;
     }
@@ -286,15 +242,84 @@ function maybeFallBackToOffline() {
   if (!isMirrorDead()) return;
   mirrorDeathHandled = true;
   showToast("Lost host — going offline", "longHint");
-  // Strip the ?join so the next page lands in offline mode. Replace
-  // (not assign) so the back button doesn't dump the user right back
-  // into a dead session.
-  setTimeout(() => {
-    const url = new URL(location.href);
-    url.searchParams.delete("join");
-    url.searchParams.delete("host");
-    location.replace(url.toString());
-  }, 1200);
+  // Transition in-place instead of reloading the page. switchRole's
+  // offline setup re-runs initOfflineState via the registered handler,
+  // so the player lands back in their own save world cleanly.
+  switchRole("offline").then(() => { mirrorDeathHandled = false; });
+}
+
+// Build the initial offline state from local save + the configured zone.
+// Module-level `state` is populated here; consumers that captured `()
+// => state` keep working because they read the binding lazily.
+async function initOfflineState() {
+  const urlZone = parseInt(new URLSearchParams(location.search).get("zone"), 10);
+  const saved = Number.isFinite(urlZone) ? null : loadProgress();
+  const startId = Number.isFinite(urlZone) ? urlZone : (saved?.zoneId ?? STARTING_ZONE_ID);
+  const zoneRaw = await loadZone(startId).then(r => { bumpLoadingProgress("Zone loaded"); return r; });
+  const zone = buildZone(zoneRaw);
+  setupPuzzles(zone);
+  setupCutscenes(zone);
+  getZoneCache(zone);
+  const player = createPlayer();
+  if (saved && saved.x != null && saved.y != null) {
+    applySavedSpawn(player, zone, saved);
+  } else if (startId !== STARTING_ZONE_ID) {
+    snapToEntry(player, zone);
+  }
+  zone.spawnPoint = computeEntryTile(zone);
+  const player2 = isCoopMode() ? makeCoopP2(player, zone) : null;
+  // Preserve camera across role switches — the existing camera object
+  // captured by installAutoZoom etc. must remain referentially stable.
+  const camera = state?.camera ?? createCamera();
+  state = {
+    zone,
+    rawZone: zoneRaw,
+    player,
+    player2,
+    players: [],
+    camera,
+    lastTile: { x: player.tileX, y: player.tileY },
+    lastTile2: player2 ? { x: player2.tileX, y: player2.tileY } : null,
+  };
+  saveProgress(state);
+}
+
+// switchRole onEnterOffline callback. Re-runs the offline-state build so
+// a player coming back from a session lands on whatever their local save
+// said, untouched by the session. Differs from initOfflineState only in
+// that it can be called multiple times — initOfflineState already
+// handles re-entry correctly via the same code path.
+async function rebuildOfflineState() {
+  await initOfflineState();
+  markVisited(state.zone.id);
+  if (state.zone.soundtrack) playTrack(state.zone.soundtrack);
+}
+
+// switchRole onEnterGuest callback. The guest's view comes from the
+// mirror; the local sim doesn't run. Wipe state.zone/player so a stale
+// tick can't accidentally read host-world data that isn't there, and
+// drop any saved-progress side-effects the offline beforeunload listener
+// might otherwise dispatch (saveProgress no-ops on missing zone/player).
+function wipeGuestState() {
+  if (!state) return;
+  state.zone = null;
+  state.rawZone = null;
+  state.player = null;
+  state.player2 = null;
+  state.players = [];
+  state.lastTile = null;
+  state.lastTile2 = null;
+}
+
+// switchRole onEnterHost callback. Tags the host's local avatar with
+// the server-assigned playerId so entities.js can find the display
+// name. If welcome hasn't arrived yet (first open WS), the tag is
+// applied later via the welcome handler in onlineBootstrap — entities
+// label fallback is graceful in the meantime.
+function tagHostPlayerId() {
+  if (!state?.player) return;
+  const pid = getSelfPlayerId();
+  if (pid) state.player.playerId = pid;
 }
 
 // Guest-mode tick: skips simulation entirely (the host owns the world)
