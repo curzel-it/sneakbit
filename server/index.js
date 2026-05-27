@@ -6,9 +6,27 @@ import { createRelay } from "./relay.js";
 import { negotiate as negotiateExtensions, formatResponse as formatExtResponse } from "./wsExtensions.js";
 import { handleTurnRequest } from "./turnCredentials.js";
 import { parseAllowedHosts, isOriginAllowed } from "./originAllowlist.js";
+import { log } from "./logger.js";
+import { execSync } from "node:child_process";
+import { fileURLToPath as toPath } from "node:url";
+import { dirname as dirOf } from "node:path";
 
 const PORT = Number(process.env.PORT) || 8090;
 const HOST = process.env.HOST || "127.0.0.1";
+
+// Resolved once at startup so /version is cheap to call. Falls back to
+// the GIT_SHA env var (set by the deployer) when this isn't a git
+// checkout — the production VPS only has the tarball.
+function resolveGitSha() {
+  if (process.env.GIT_SHA) return process.env.GIT_SHA.trim().slice(0, 40);
+  try {
+    const here = dirOf(toPath(import.meta.url));
+    return execSync("git rev-parse HEAD", { cwd: here, stdio: ["ignore", "pipe", "ignore"] })
+      .toString("utf8").trim().slice(0, 40);
+  } catch { return "unknown"; }
+}
+const GIT_SHA = resolveGitSha();
+const STARTED_AT = new Date().toISOString();
 
 // Always-on CORS: the client lives on curzel.it (GitHub Pages) and the
 // relay is at sneakbit.curzel.it — cross-origin by definition. Every HTTP
@@ -41,6 +59,16 @@ export function startServer({ port = PORT, host = HOST, graceMs, idleTimeoutMs, 
     if (req.method === "GET" && req.url === "/health") {
       res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
       res.end("ok\n");
+      return;
+    }
+    if (req.method === "GET" && req.url === "/version") {
+      res.writeHead(200, { "content-type": "application/json; charset=utf-8" });
+      res.end(JSON.stringify({ git: GIT_SHA, startedAt: STARTED_AT }) + "\n");
+      return;
+    }
+    if (req.method === "GET" && req.url === "/metrics") {
+      res.writeHead(200, { "content-type": "application/json; charset=utf-8" });
+      res.end(JSON.stringify(relay.metrics.snapshot()) + "\n");
       return;
     }
     if (req.method === "GET" && req.url === "/") {
@@ -121,14 +149,14 @@ const invokedAsScript =
 
 if (invokedAsScript) {
   startServer().then(({ port, host }) => {
-    console.log(`sneakbit server listening on http://${host}:${port}`);
+    log.info("server.listen", { host, port, git: GIT_SHA });
   }).catch((err) => {
-    console.error(err);
+    log.error("server.startFailed", { err: err?.message || String(err) });
     process.exit(1);
   });
 
   const shutdown = (signal) => {
-    console.log(`received ${signal}, shutting down`);
+    log.info("server.shutdown", { signal });
     process.exit(0);
   };
   process.on("SIGTERM", () => shutdown("SIGTERM"));

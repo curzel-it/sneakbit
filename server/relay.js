@@ -11,6 +11,8 @@ import {
   makePlayerId,
   makeName,
 } from "./sessions.js";
+import { log as defaultLog } from "./logger.js";
+import { createMetrics } from "./metrics.js";
 
 export const PROTOCOL = 1;
 export const MIN_PROTOCOL = 1;
@@ -45,6 +47,8 @@ export function createRelay({
   graceMs = DEFAULT_GRACE_MS,
   idleTimeoutMs = IDLE_TIMEOUT_MS,
   idleCheckMs = IDLE_CHECK_MS,
+  log = defaultLog,
+  metrics = createMetrics(),
 } = {}) {
   const conns = new Set();
 
@@ -72,9 +76,11 @@ export function createRelay({
       lastSeenMs: nowMs(),
     };
     conns.add(ctx);
+    metrics.connOpened();
     ws.on("message", (text) => handleMessage(ctx, text));
     ws.on("close", () => {
       conns.delete(ctx);
+      metrics.connClosed();
       onDisconnect(ctx);
     });
     return ctx;
@@ -86,6 +92,8 @@ export function createRelay({
     const now = nowMs();
     for (const ctx of conns) {
       if (now - ctx.lastSeenMs > idleTimeoutMs) {
+        metrics.dropIdle();
+        log.warn("conn.idle", { uuid: ctx.uuid, role: ctx.role, sessionId: ctx.sessionId });
         try { ctx.ws.close(CLOSE_IDLE, "idle"); } catch { /* ignore */ }
       }
     }
@@ -174,6 +182,8 @@ export function createRelay({
     const session = store.createSession(ctx.uuid, ctx.ws);
     ctx.role = "host";
     ctx.sessionId = session.id;
+    metrics.sessionOpened();
+    log.info("session.open", { sessionId: session.id, code: session.code, hostUuid: ctx.uuid });
     ctx.ws.sendJSON({
       op: "host.opened",
       sessionId: session.id,
@@ -238,6 +248,8 @@ export function createRelay({
     if (kickedConn) {
       try { kickedConn.close(CLOSE_KICKED, "kicked"); } catch { /* ignore */ }
     }
+    metrics.peerLeft("kicked");
+    log.info("peer.left", { sessionId: session.id, playerId: msg.playerId, reason: "kicked" });
   }
 
   function closeSession(session, reason) {
@@ -248,6 +260,8 @@ export function createRelay({
       }
     }
     store.destroySession(session);
+    metrics.sessionClosed(reason);
+    log.info("session.close", { sessionId: session.id, code: session.code, reason });
   }
 
   function onGuestJoin(ctx, msg) {
@@ -283,6 +297,12 @@ export function createRelay({
       slot: guest.slot,
       peers,
     });
+    if (!isReconnect) {
+      metrics.peerJoined();
+      log.info("peer.join", { sessionId: session.id, playerId: ctx.playerId, slot: guest.slot });
+    } else {
+      log.info("peer.rejoin", { sessionId: session.id, playerId: ctx.playerId, slot: guest.slot });
+    }
     const peerFrame = {
       op: isReconnect ? "peer.rejoined" : "peer.joined",
       playerId: ctx.playerId,
@@ -314,6 +334,8 @@ export function createRelay({
     for (const g of session.guests.values()) {
       if (g.conn) g.conn.sendJSON(leftFrame);
     }
+    metrics.peerLeft("leave");
+    log.info("peer.left", { sessionId: ctx.sessionId, playerId: ctx.playerId, reason: "leave" });
     ctx.role = null;
     ctx.sessionId = null;
   }
@@ -322,16 +344,24 @@ export function createRelay({
     if (ctx.role !== "guest") return;
     const session = store.sessionsById.get(ctx.sessionId);
     if (!session || !session.hostConn) return;
-    session.hostConn.sendJSON({ ...msg, from: ctx.playerId });
+    const out = { ...msg, from: ctx.playerId };
+    session.hostConn.sendJSON(out);
+    metrics.frameRelayed("input", jsonByteLength(out));
   }
 
   function onHostBroadcast(ctx, msg) {
     if (ctx.role !== "host") return;
     const session = store.sessionsById.get(ctx.sessionId);
     if (!session) return;
+    const size = jsonByteLength(msg);
+    let fanout = 0;
     for (const g of session.guests.values()) {
-      if (g.conn) g.conn.sendJSON(msg);
+      if (g.conn) { g.conn.sendJSON(msg); fanout++; }
     }
+    // Charge bytes for every fan-out copy — that's what actually went
+    // over the wire. Frame count is one per host send, not per fan-out
+    // recipient.
+    metrics.frameRelayed(msg.op, size * fanout);
   }
 
   // Opaque pass-through for WebRTC offer/answer/ICE candidates. The relay
@@ -352,6 +382,7 @@ export function createRelay({
         if (g.playerId === msg.to && g.conn) {
           out.to = msg.to;
           g.conn.sendJSON(out);
+          metrics.frameRelayed("webrtc.signal", jsonByteLength(out));
           return;
         }
       }
@@ -362,6 +393,7 @@ export function createRelay({
     if (!session.hostConn) return;
     out.to = makePlayerId(session.hostUuid);
     session.hostConn.sendJSON(out);
+    metrics.frameRelayed("webrtc.signal", jsonByteLength(out));
   }
 
   function onDisconnect(ctx) {
@@ -405,6 +437,8 @@ export function createRelay({
         for (const other of s.guests.values()) {
           if (other.conn) other.conn.sendJSON(leftFrame);
         }
+        metrics.peerLeft("timeout");
+        log.info("peer.left", { sessionId: ctx.sessionId, playerId: ctx.playerId, reason: "timeout" });
       }, graceMs);
     }
   }
@@ -424,13 +458,13 @@ export function createRelay({
     let limit;
     if (op === "input") {
       limit = LIMIT_INPUT_PER_S;
-      if (++rl.countInput > limit) return false;
+      if (++rl.countInput > limit) { metrics.dropPerOp(); return false; }
     } else if (BROADCAST_OPS.has(op)) {
       limit = LIMIT_BROADCAST_PER_S;
-      if (++rl.countBroadcast > limit) return false;
+      if (++rl.countBroadcast > limit) { metrics.dropPerOp(); return false; }
     } else {
       limit = LIMIT_OTHER_PER_S;
-      if (++rl.countOther > limit) return false;
+      if (++rl.countOther > limit) { metrics.dropPerOp(); return false; }
     }
     // Severe-abuse 10s window. Trim and append; once over the threshold
     // we close with 4004 — the client is expected to back off for ~60s.
@@ -439,6 +473,8 @@ export function createRelay({
       rl.recent.shift();
     }
     if (rl.recent.length > SEVERE_LIMIT) {
+      metrics.dropSevere();
+      log.warn("conn.rateBan", { uuid: ctx.uuid, role: ctx.role, sessionId: ctx.sessionId });
       try { ctx.ws.close(CLOSE_RATE, "rate"); } catch { /* ignore */ }
       return false;
     }
@@ -449,7 +485,12 @@ export function createRelay({
     clearInterval(idleTimer);
   }
 
-  return { attach, store, shutdown };
+  return { attach, store, shutdown, metrics };
+}
+
+function jsonByteLength(obj) {
+  try { return Buffer.byteLength(JSON.stringify(obj), "utf8"); }
+  catch { return 0; }
 }
 
 function nowMs() {

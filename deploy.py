@@ -88,6 +88,8 @@ SERVER_SYNC_PATHS = [
     "relay.js",
     "turnCredentials.js",
     "originAllowlist.js",
+    "logger.js",
+    "metrics.js",
 ]
 
 NODE_MAJOR = "22"
@@ -119,7 +121,15 @@ NODE_MAJOR = "22"
 # their own ports.
 TURN_ENV_FILE = "/etc/sneakbit-server.env"
 
-SYSTEMD_UNIT = f"""[Unit]
+def render_systemd_unit(git_sha: str) -> str:
+    """Stamp the current git SHA into the unit at deploy time. The
+    relay's /version endpoint reads $GIT_SHA at startup — baking it
+    here means we don't need git on the VPS, and a redeploy without
+    a server/ change still produces a fresh restart with the right
+    SHA visible to ops. LOG_LEVEL defaults to info; override it via
+    /etc/sneakbit-server.env if you need to crank up verbosity
+    without redeploying."""
+    return f"""[Unit]
 Description=SneakBit game server (Node.js)
 After=network.target
 
@@ -131,8 +141,11 @@ WorkingDirectory={REMOTE_DIR}
 Environment=NODE_ENV=production
 Environment=HOST={APP_BIND_HOST}
 Environment=PORT={APP_BIND_PORT}
+Environment=LOG_LEVEL=info
+Environment=GIT_SHA={git_sha}
 # Optional: TURN_SECRET + TURN_URLS live here once the operator wires
 # coturn. Missing file is harmless — relay falls back to STUN-only.
+# LOG_LEVEL can be overridden here too if a live tweak is needed.
 EnvironmentFile=-{TURN_ENV_FILE}
 ExecStart=/usr/bin/node {REMOTE_DIR}/index.js
 Restart=on-failure
@@ -465,9 +478,24 @@ def step_push_restart(env):
     ssh(env, f"chown -R www-data:www-data {RESTART_REMOTE_ROOT}")
 
 
+def _local_git_sha() -> str:
+    """Best-effort local git SHA; falls back to 'unknown' if we're not
+    in a git checkout (e.g. ran from a tarball). The server side will
+    happily display whatever we send."""
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=str(ROOT), text=True,
+        ).strip()
+    except Exception:
+        return "unknown"
+
+
 def step_systemd(env):
     print("[7] systemd unit")
-    write_remote_file(env, f"/etc/systemd/system/{APP_NAME}.service", SYSTEMD_UNIT)
+    sha = _local_git_sha()
+    print(f"  git_sha = {sha}")
+    write_remote_file(env, f"/etc/systemd/system/{APP_NAME}.service",
+                      render_systemd_unit(sha))
     ssh(env, "systemctl daemon-reload")
 
 
@@ -522,13 +550,58 @@ def step_service(env):
 
 
 def step_health(env):
+    """Sanity-check the deploy end-to-end. Three concentric rings:
+      1. Service is active (catches crash-loop on startup).
+      2. Plain HTTP endpoints respond locally and through nginx.
+      3. A real WS upgrade through nginx → relay returns 101 Switching
+         Protocols. This catches the class of bugs where nginx serves /
+         fine but the proxy_set_header Upgrade chain is broken (or a
+         future config drops the websocket location). Without this we'd
+         only learn at the next user join attempt.
+      4. /version returns the SHA we just baked into the unit — proves
+         the new binary actually started, not a leftover from a failed
+         restart.
+
+    restartborgo.it is the paying-customer co-tenant; if its TLS or vhost
+    breaks during a sneakbit deploy this check fails before we move on."""
     print("[11] health checks")
+    ws_key = "dGhlIHNhbXBsZSBub25jZQ=="
+    expected_sha = _local_git_sha()
     ssh(env, (
         "sleep 2 && "
         f"systemctl is-active {APP_NAME} && "
         f"curl -fsS -o /dev/null -w 'local:%{{http_code}}\\n' http://{APP_BIND}/ && "
         f"curl -fsS -o /dev/null -w 'local-health:%{{http_code}}\\n' http://{APP_BIND}/health && "
         f"curl -fsSk -o /dev/null -w 'sneakbit:%{{http_code}}\\n' https://{SERVER_NAME}/ && "
+        # /version: must respond 200 and carry the git SHA we just baked.
+        # We grep for the SHA explicitly — a stale process from a failed
+        # restart would serve the old SHA and slip past a bare 200 check.
+        f"sha=$(curl -fsSk https://{SERVER_NAME}/version) && "
+        f"echo \"version:$sha\" && "
+        f"echo \"$sha\" | grep -q '{expected_sha}' && "
+        # /metrics: shape probe — must be valid JSON with the expected
+        # top-level keys. Doesn't assert values; just that the endpoint
+        # is wired through nginx and returning the snapshot.
+        f"curl -fsSk https://{SERVER_NAME}/metrics | "
+        f"  grep -q '\"connections\"' && "
+        f"  echo 'metrics:ok' && "
+        # WS upgrade through nginx. Must return HTTP/1.1 101 Switching
+        # Protocols with a Sec-WebSocket-Accept header. Curl can't be
+        # told "stop after the headers" for an upgrade, so we cap with
+        # --max-time and silence stderr — head -1 only needs the first
+        # line, and a missing/wrong line makes grep -q fail the chain.
+        # The -f flag is deliberately NOT used: a successful 101 looks
+        # like a server error to curl (status code >= 400 in its model)
+        # and would otherwise exit non-zero.
+        f"ws=$(curl -sk -i --http1.1 --max-time 3 "
+        f"  -H 'Connection: Upgrade' -H 'Upgrade: websocket' "
+        f"  -H 'Sec-WebSocket-Version: 13' "
+        f"  -H 'Sec-WebSocket-Key: {ws_key}' "
+        f"  -H 'Origin: https://curzel.it' "
+        f"  https://{SERVER_NAME}/ws 2>/dev/null | head -1) ; "
+        f"echo \"ws:$ws\" && "
+        f"echo \"$ws\" | grep -q '101 Switching Protocols' && "
+        # restartborgo co-tenant must still serve.
         f"curl -fsSk -o /dev/null -w 'restartborgo:%{{http_code}}\\n' https://{RESTART_DOMAIN}/"
     ))
 
