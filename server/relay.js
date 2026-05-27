@@ -2,7 +2,7 @@
 // Host frames (snapshot/delta/event) fan out to the session's guests; guest
 // frames (input) fan in to the session's host. Lifecycle frames
 // (peer.joined/left/ghosted, session.closed, host.ghosted/resumed) are
-// emitted by the relay itself. See host-authoritative-server.md.
+// emitted by the relay itself. See docs/server.md.
 
 import {
   SessionStore,
@@ -22,7 +22,7 @@ export const CLOSE_IDLE = 4002;
 export const CLOSE_RATE = 4004;
 export const CLOSE_KICKED = 4005;
 
-// Per-spec rate limits (host-authoritative-server.md §Rate limits).
+// Per-spec rate limits (docs/server.md §Rate limits).
 // Burst-friendly: input + snapshot/delta can hit 30/s, everything else
 // caps at 10/s. Severe abuse (~1000 msgs in a sliding window) trips a
 // 4004 close. Numbers chosen to match the spec; not tunable per
@@ -209,7 +209,7 @@ export function createRelay({
   // onDisconnect's `session.guests.get(ctx.uuid)` early-returns and we
   // don't double-emit a peer.ghosted / delayed peer.left for the same
   // playerId. Close code 4005 tells the kicked guest's net.js not to
-  // auto-reconnect (host-authoritative-server.md §Close codes).
+  // auto-reconnect (docs/server.md §Close codes).
   function onHostKick(ctx, msg) {
     if (ctx.role !== "host") return;
     if (typeof msg.playerId !== "string") return;
@@ -338,7 +338,7 @@ export function createRelay({
   // never inspects the payload — it just routes host ↔ named-guest. Once
   // the data channel is open, the game traffic moves off the WS and the
   // relay stops seeing snapshots/inputs for that pair. See
-  // host-authoritative-server.md §"WebRTC upgrade path".
+  // docs/server.md §"WebRTC upgrade path".
   function onWebrtcSignal(ctx, msg) {
     if (!ctx.role) return;
     const session = store.sessionsById.get(ctx.sessionId);

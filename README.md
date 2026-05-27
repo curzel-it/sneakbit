@@ -8,13 +8,13 @@ HTML5 / Canvas / vanilla JS port of [SneakBit](https://github.com/curzel-it/snea
 
 The original game uses a Rust core (`game_core`) with platform-specific renderers (raylib on desktop, CoreGraphics on iOS, Compose on Android). This project re-implements the renderer and runtime in plain JavaScript on top of an HTML canvas, reusing the original art and level data.
 
-## Status
-
-Phase 1: render the first level (Evergrove, world `1001`) and walk the player around with the correct directional sprites. No combat, no NPCs, no dialogue yet.
-
 ## Architecture
 
-One feature, one file. See [CLAUDE.md](./CLAUDE.md) for the full guide, the source-of-truth notes from the original Rust code, and the directory layout.
+One feature, one file. See [CLAUDE.md](./CLAUDE.md) for the full guide and directory layout.
+
+## Online co-op
+
+Up to four players (one host + three guests) can share the host's world. The host runs the existing single-player game unchanged; guests render the host's snapshots and predict their own avatar for fluidity. A small Node relay pairs hosts and guests by 5-char invite code — see [docs/server.md](./docs/server.md) for the full protocol spec.
 
 ## Running it
 
