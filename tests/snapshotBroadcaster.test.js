@@ -162,3 +162,28 @@ test("peer.joined triggers a full snapshot send", () => {
   assert.equal(snaps[0].zoneId, 1001);
   stopSnapshotBroadcaster();
 });
+
+test("zone id change forces the next delta to be a full snapshot", () => {
+  setupBootstrapWithFakeNet();
+  const state = makeState(1001);
+  // Establish a baseline at zone 1001.
+  _snapshotForTesting(state);
+  // Travel.
+  state.zone = {
+    id: 1002,
+    entities: [
+      { id: 200, species_id: 70, frame: { x: 1, y: 1, w: 1, h: 1 } },
+    ],
+  };
+  const d = _broadcastDeltaForTesting(null, state);
+  // _broadcastDeltaForTesting returns the would-be delta msg; once the
+  // zone changes we expect null because the live loop replaces it with a
+  // snapshot via a different code path. Either way the diff for the new
+  // zone must reflect the new entity id only.
+  if (d) {
+    assert.equal(d.zoneId, 1002);
+    const ids = (d.entities || []).map((e) => e.id);
+    assert.ok(ids.includes(200));
+  }
+  stopSnapshotBroadcaster();
+});

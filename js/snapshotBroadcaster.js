@@ -21,6 +21,7 @@ let lastPlayerSigs = new Map();
 let lastEntitySigs = new Map();
 let knownEntityIds = new Set();
 let unsubs = [];
+let lastZoneId = null;
 
 export function installSnapshotBroadcaster(getState, opts = {}) {
   if (getNetRole() !== "host") return false;
@@ -43,6 +44,7 @@ export function stopSnapshotBroadcaster() {
   lastEntitySigs.clear();
   knownEntityIds = new Set();
   tickCount = 0;
+  lastZoneId = null;
 }
 
 export function _broadcastDeltaForTesting(net, state) {
@@ -57,6 +59,13 @@ function broadcastDelta(net) {
   if (!net?.isConnected?.()) return;
   const state = stateGetter?.();
   if (!state?.zone) return;
+  // Zone changed under us (travelTo completed). Reset diff state and
+  // ship a fresh full snapshot — the diff machinery isn't useful when
+  // the entity set has been wholesale replaced.
+  if (lastZoneId !== state.zone.id) {
+    sendFullSnapshot(net);
+    return;
+  }
   const msg = buildDelta(state);
   if (!msg) return;
   net.send(msg);
@@ -92,6 +101,7 @@ function buildSnapshot(state) {
   lastPlayerSigs.clear();
   lastEntitySigs.clear();
   knownEntityIds = new Set();
+  lastZoneId = state.zone.id;
   const players = playersOf(state).map(serializePlayer).filter(Boolean);
   const entities = (state.zone?.entities || []).map(serializeEntity).filter(Boolean);
   for (const p of players) lastPlayerSigs.set(p.playerId, sigPlayer(p));

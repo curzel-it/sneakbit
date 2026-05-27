@@ -458,10 +458,18 @@ function maybeTeleport(state) {
   // Pickups: scan once with both players in play so whichever player
   // stepped onto the pickup tile wins it.
   checkPickup(state);
-  // Teleporters: only P1 triggers zone transitions — matches Rust's
-  // co-op rule where the zone reload always recenters on P1.
-  if (!p1Moved) return;
-  const tele = findTeleporterAt(zone, player.tileX, player.tileY);
+  // Teleporters: P1 always triggers; an online guest (P2 with a
+  // playerId) also triggers so the spec's "guest steps on teleporter →
+  // both move to the new zone" works. Local-only P2 (no playerId) still
+  // follows P1 like before, so local co-op behaves the same.
+  let teleEntity = null;
+  if (p1Moved) {
+    teleEntity = findTeleporterAt(zone, player.tileX, player.tileY);
+  }
+  if (!teleEntity && p2Moved && player2?.playerId) {
+    teleEntity = findTeleporterAt(zone, player2.tileX, player2.tileY);
+  }
+  const tele = teleEntity;
   if (tele) {
     // Zone data stores destination.y as the Rust frame.y (sprite TOP)
     // while travelTo / player.tileY work in feet-tile space — bump by 1
