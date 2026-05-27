@@ -52,11 +52,14 @@ import { isCoopMode } from "./coopMode.js";
 import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js";
 import { runMigrations } from "./migrations.js";
 import { installMapEditor } from "./mapEditor.js";
-import { bootstrapOnline } from "./onlineBootstrap.js";
+import { bootstrapOnline, getNetRole, getNet } from "./onlineBootstrap.js";
 import { installSnapshotBroadcaster } from "./snapshotBroadcaster.js";
+import { installMirrorWorld, getMirrorZone, getMirrorPlayers, isMirrorReady } from "./mirrorWorld.js";
 
 async function main() {
   bootstrapOnline();
+  const isGuest = getNetRole() === "guest";
+  if (isGuest) installMirrorWorld(getNet());
   showLoadingScreen(5); // assets + species + strings + zone + biome sheet bake
   runMigrations();
   initInput();
@@ -174,6 +177,10 @@ async function main() {
   installSnapshotBroadcaster(() => state);
 
   startGameLoop((dt) => {
+    if (isGuest) {
+      tickGuestFrame(dt, state, renderer, hud, biomeAnim);
+      return;
+    }
     const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen();
     const input = pollInput();
     if (!paused) {
@@ -230,6 +237,33 @@ async function main() {
       showFps: getSettings().showFps,
     });
     updateAmmoHud();
+  });
+}
+
+// Guest-mode tick: skips simulation entirely (the host owns the world)
+// and renders from the mirror. The mirror's zone arrives with the first
+// snapshot; until then the canvas stays blank with the loading-screen
+// overlay still visible.
+function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
+  const mZone = getMirrorZone();
+  const mPlayers = getMirrorPlayers();
+  tickBiomeAnimation(biomeAnim, dt);
+  tickEntities(dt);
+  if (!isMirrorReady() || !mZone || !mPlayers.length) {
+    updateHud(hud, {
+      zoneId: mZone?.id ?? null,
+      fps: 1 / dt,
+      showFps: getSettings().showFps,
+    });
+    return;
+  }
+  updateCamera(state.camera, mPlayers, mZone);
+  updateVisibleEntities(mZone, state.camera);
+  render(renderer, mZone, state.camera, mPlayers, biomeAnim.frame);
+  updateHud(hud, {
+    zoneId: mZone.id,
+    fps: 1 / dt,
+    showFps: getSettings().showFps,
   });
 }
 
