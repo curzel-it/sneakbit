@@ -69,14 +69,18 @@ export function pushOneTile(zone, pushable, dir) {
 
 // Carry-back path (player.js startStep) also moves a pushable but writes
 // frame.x/y directly. Wire the slide through this helper so the rock
-// glides instead of teleporting.
+// glides instead of teleporting. `dx, dy` is the direction the rock is
+// moving; the renderer subtracts this offset (decayed by t) from frame.x/y,
+// so the sprite starts one tile back at its previous position and walks
+// forward to its committed tile by t=1.
 export function startSlide(pushable, dx, dy) {
-  pushable._slide = { ox: -dx, oy: -dy, t: 0, duration: SLIDE_DURATION };
+  pushable._slide = { ox: dx, oy: dy, t: 0, duration: SLIDE_DURATION };
 }
 
-// Returns the {x, y} render offset (in tiles) the renderer should
-// subtract from frame.x/y to interpolate the slide. Decays linearly
-// from (-dx, -dy) at t=0 to (0, 0) at t=1.
+// Returns the {x, y} render offset (in tiles) the renderer subtracts
+// from frame.x/y to interpolate the slide. Decays linearly from
+// (dx, dy) at t=0 (rock drawn one tile back, at its previous position)
+// to (0, 0) at t=1 (rock drawn at its committed tile).
 export function pushableRenderOffset(pushable) {
   const s = pushable._slide;
   if (!s) return null;

@@ -210,22 +210,23 @@ function startStep(player, dir, zone) {
   player.direction = dir;
   if (!canEnter(toX, toY, zone, dir)) return;
 
-  // Pushable carry-back: if we're standing ON a pushable (because we
-  // walked onto a stuck one — see canEnter below) and the rock is pinned
-  // on the side OPPOSITE the step we're about to take, drag it along
-  // with us. Mirrors the Rust pushable behaviour in
-  // entities/pushable_object.rs::is_being_pushed_by_player. Without
-  // this, a rock shoved into a dead-end corridor is permanently lost.
+  // Pushable carry-back: if we're standing ON a pushable (canEnter only
+  // lets us walk onto a stuck one), shove the rock TWO tiles in the move
+  // direction so it lands one tile beyond our destination. The rock pops
+  // out of the dead end ahead of the player, separating from us; on the
+  // next step it's in front and the canEnter → pushOneTile path takes over
+  // for normal pushing. If a wall sits two tiles out, fall back to a
+  // single-tile drag so the rock at least follows us out of cramped spots
+  // instead of getting stranded.
   const standingOn = findPushableAt(zone, player.tileX, player.tileY);
   if (standingOn) {
-    const opp = OPPOSITE_DIR[dir];
-    const [odx, ody] = DIR_DELTA[opp] ?? [0, 0];
-    const oppX = player.tileX + odx;
-    const oppY = player.tileY + ody;
-    const rockPinned =
-      !isWalkable(zone, oppX, oppY) ||
-      isEntityBlocked(zone, oppX, oppY, { ignore: standingOn });
-    if (rockPinned && canPushableEnter(zone, standingOn, toX, toY)) {
+    const aheadX = toX + dx;
+    const aheadY = toY + dy;
+    if (canPushableEnter(zone, standingOn, aheadX, aheadY)) {
+      startSlide(standingOn, dx * 2, dy * 2);
+      standingOn.frame.x = aheadX;
+      standingOn.frame.y = aheadY;
+    } else if (canPushableEnter(zone, standingOn, toX, toY)) {
       startSlide(standingOn, dx, dy);
       standingOn.frame.x = toX;
       standingOn.frame.y = toY;
@@ -241,8 +242,6 @@ function startStep(player, dir, zone) {
   };
   playSfx("stepTaken", { volume: 0.5, jitter: 0.08 });
 }
-
-const OPPOSITE_DIR = { up: "down", down: "up", left: "right", right: "left" };
 
 function canPushableEnter(zone, pushable, tx, ty) {
   if (!isWalkable(zone, tx, ty)) return false;
