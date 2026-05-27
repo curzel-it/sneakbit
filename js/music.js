@@ -35,9 +35,16 @@ export function playTrack(name) {
 
   const next = ensure(name);
   next.loop = true;
+  const target = musicVolume();
+  // Belt-and-suspenders mute: setting `.muted = true` in addition to
+  // `volume = 0` hard-mutes the element. On iOS Safari calling `.play()`
+  // on a track whose `.muted` is false can leak a brief blip during the
+  // volume ramp even when we set volume to 0 first — happens on the very
+  // first track of a first-launch mobile visit. Hard-mute prevents it.
+  next.muted = target === 0;
   next.volume = 0;
   next.play().catch(() => {});
-  fadeTo(next, musicVolume(), FADE_MS);
+  fadeTo(next, target, FADE_MS);
 
   if (current) {
     const prev = current.audio;
@@ -55,7 +62,9 @@ export function stopTrack() {
 
 export function refreshMusicVolume() {
   if (!current) return;
-  current.audio.volume = musicVolume();
+  const v = musicVolume();
+  current.audio.muted = v === 0;
+  current.audio.volume = v;
 }
 
 function musicVolume() {

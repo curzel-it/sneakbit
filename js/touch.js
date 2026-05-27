@@ -169,16 +169,52 @@ function onPointerUp(e) {
 function onPointerMove(e) {
   const current = dirPointerHeld.get(e.pointerId);
   if (!current) return;
-  // Find a directional button under the finger (if any). Action buttons
-  // are intentionally excluded — they need a discrete tap.
-  const target = document.elementFromPoint(e.clientX, e.clientY);
-  const next = target?.closest?.('.touch-btn[data-dir]') || null;
+  // Decide direction by the dominant axis from the pad's centre rather
+  // than requiring elementFromPoint to land on a button. The grid has
+  // empty corner cells between adjacent directions, so a strict hit-test
+  // releases the direction key while the finger crosses the corner —
+  // feels like "I had to lift to switch." Quadrant logic keeps a
+  // direction pressed continuously and switches at the diagonals.
+  const next = directionButtonAt(e.clientX, e.clientY, current);
   if (next === current) return;
-  // Switch from `current` to `next` (which may be null if the finger
-  // moved off the pad entirely — in that case we just release).
   releaseDirForPointer(e.pointerId);
   if (next) pressDir(next, e.pointerId);
   e.preventDefault();
+}
+
+// How far from the pad's centre we still treat the finger as "on the pad."
+// The pad is a 3×3 grid of 52px cells (156px square); going much past the
+// outer edge releases the held direction so dragging the finger entirely
+// off the pad doesn't leave a stuck key.
+const PAD_RELEASE_RADIUS_PX = 110;
+
+function directionButtonAt(x, y, current) {
+  if (!root) return null;
+  const dirs = {};
+  let sumX = 0;
+  let sumY = 0;
+  let count = 0;
+  for (const b of root.querySelectorAll('.touch-btn[data-dir]')) {
+    const r = b.getBoundingClientRect();
+    dirs[b.dataset.dir] = b;
+    sumX += r.left + r.width / 2;
+    sumY += r.top + r.height / 2;
+    count++;
+  }
+  if (!count) return null;
+  const cx = sumX / count;
+  const cy = sumY / count;
+  const dx = x - cx;
+  const dy = y - cy;
+  if (Math.hypot(dx, dy) > PAD_RELEASE_RADIUS_PX) return null;
+  // Dominant axis wins. On exact ties (|dx| === |dy| — diagonal drag or
+  // sitting at centre) keep the current direction to avoid flapping
+  // between perpendicular keys.
+  const ax = Math.abs(dx);
+  const ay = Math.abs(dy);
+  if (ax > ay) return (dx >= 0 ? dirs.right : dirs.left) || null;
+  if (ay > ax) return (dy >= 0 ? dirs.down  : dirs.up)   || null;
+  return current;
 }
 
 function pressDir(btn, pointerId) {
