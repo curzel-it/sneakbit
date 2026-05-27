@@ -21,6 +21,7 @@ import { isGameOverOpen } from "./gameOver.js?v=20260527b";
 import { isFastTravelOpen } from "./fastTravel.js?v=20260527b";
 import { isMessageOpen } from "./message.js?v=20260527b";
 import { isDialogueOpen } from "./dialogue.js?v=20260527b";
+import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260527b";
 
 // Modals that own the keyboard while they're up. If any is open we treat
 // Esc / the menu key as "dismiss the active modal" — owned by that modal's
@@ -79,8 +80,8 @@ export function installMenu(stateGetter) {
         <button id="menu-reset-zone" data-creative-only data-desktop-only>Reset zone (revert to shipped)</button>
         <button id="menu-open-map-editor" data-creative-only data-desktop-only>Map editor…</button>
         <button id="menu-open-credits">Credits</button>
-        <button id="menu-new-game">New game (wipe save)</button>
-        <button id="menu-clear-cache">Clear cache &amp; reload</button>
+        <button id="menu-new-game" data-guest-hidden>New game (wipe save)</button>
+        <button id="menu-clear-cache" data-guest-hidden>Clear cache &amp; reload</button>
       </div>
       <p class="menu-hint">
         WASD / arrows to move &middot; E or Enter to interact<br>
@@ -185,6 +186,11 @@ export function installMenu(stateGetter) {
   injectStyles();
   bindWidgets();
   applyCreativeModeVisibility();
+  applyRoleVisibility();
+  // Keep the role gates live across role transitions — if the menu is
+  // already open when the user joins a session, the buttons should
+  // disappear without waiting for a close/reopen.
+  onRoleChange(() => { if (root) applyRoleVisibility(); });
 
   window.addEventListener("keydown", (e) => {
     // Settings screen is doing live key capture for rebinding; don't
@@ -228,9 +234,22 @@ function applyCreativeModeVisibility() {
   });
 }
 
+// "New Game" and "Clear cache" both wipe localStorage, which includes
+// the online UUID this tab uses as its stable identity. A guest doing
+// that mid-session would lose their seat (the server would treat the
+// next reconnect as a fresh peer). So we hide both buttons whenever
+// runtime role is guest, and re-show on every other role transition.
+function applyRoleVisibility() {
+  const isGuest = getRuntimeRole() === "guest";
+  root.querySelectorAll("[data-guest-hidden]").forEach((el) => {
+    el.style.display = isGuest ? "none" : "";
+  });
+}
+
 function openMenu() {
   open = true;
   showScreen("pause");
+  applyRoleVisibility();
   root.style.display = "flex";
   playSfx("hintReceived", { volume: 0.5 });
 }

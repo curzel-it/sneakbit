@@ -69,8 +69,23 @@ let state = null;
 async function main() {
   bootstrapOnline();             // seeds runtime role from URL; doesn't install role modules
   installPartyPanel();
-  showLoadingScreen(5);          // assets + species + strings + zone + biome sheet bake
-  runMigrations();
+  // `?join=CODE` tabs with a *well-formed* code are guests for the
+  // lifetime of the page — they never own a local save and shouldn't
+  // touch localStorage's identity bits, run the first-launch tutorial,
+  // render an HP/ammo HUD off the wrong source, or open the
+  // fast-travel/map-editor against a zone they don't own. A malformed
+  // `?join=…` (or `?join=` with nothing) keeps the page in offline mode
+  // so the party panel can still take a code from the user — without
+  // that fallback, the game loop later reads a null player.tileX. The
+  // runtime equivalent (offline → guest via party panel) is handled
+  // per-feature in switchRole / menu gating.
+  const bootGuest = getMode() === "guest" && !!getJoinCode();
+  // Fewer steps on the guest path — no migrations, no offline-state
+  // zone load, no first-launch toast. Loading screen also swaps to a
+  // "Connecting to host…" label everywhere.
+  showLoadingScreen(bootGuest ? 4 : 5);
+  const progressLabel = (label) => bootGuest ? "Connecting to host…" : label;
+  if (!bootGuest) runMigrations();
   initInput();
   loadSettings();
   loadAudio();
@@ -87,12 +102,12 @@ async function main() {
   installTouchControls();
   installGameOver();
   installMessage();
-  applyFirstLaunch();
+  if (!bootGuest) applyFirstLaunch();
 
   const [, speciesRaw, stringsRaw] = await Promise.all([
-    loadAssets().then(r => { bumpLoadingProgress("Sprites loaded"); return r; }),
-    loadSpecies().then(r => { bumpLoadingProgress("Species loaded"); return r; }),
-    loadStrings("en").then(r => { bumpLoadingProgress("Strings loaded"); return r; }),
+    loadAssets().then(r => { bumpLoadingProgress(progressLabel("Sprites loaded")); return r; }),
+    loadSpecies().then(r => { bumpLoadingProgress(progressLabel("Species loaded")); return r; }),
+    loadStrings("en").then(r => { bumpLoadingProgress(progressLabel("Strings loaded")); return r; }),
   ]);
   loadSpeciesData(speciesRaw);
   loadStringsData(stringsRaw);
@@ -101,9 +116,16 @@ async function main() {
   // Build the offline state up front so the page is always ready to
   // render *something* — even guests fall back to offline view when a
   // session ends. switchRole later wipes/rebuilds these fields in place
-  // when transitioning between roles.
-  await initOfflineState();
-  bumpLoadingProgress("Ready");
+  // when transitioning between roles. Guests skip the build: no
+  // STARTING_ZONE_ID load, no loadProgress, no zone bake. They get a
+  // bare stub with just a camera so installAutoZoom has something to
+  // bind to.
+  if (bootGuest) {
+    state = { zone: null, rawZone: null, player: null, player2: null, players: [], camera: createCamera() };
+  } else {
+    await initOfflineState();
+  }
+  bumpLoadingProgress(progressLabel("Ready"));
   hideLoadingScreen();
 
   const canvas = document.getElementById("game");
@@ -127,13 +149,22 @@ async function main() {
     };
   }
   installAutoZoom(canvas, state.camera, hud.el);
-  installMapEditor(() => state);
-  installInteract(() => state);
-  installShooting(() => state);
-  installMelee(() => state);
-  installAmmoHud();
-  installHealthHud();
-  installFastTravel(() => state);
+  // Guests don't own the world, the inventory, or the warp graph — and
+  // their local HUD would render against the wrong data source if it
+  // were installed (HP from playerHealth.js's local state, ammo from
+  // inventory.js's local store, neither of which match the host's
+  // view). The mapEditor gate is also defense-in-depth: today only
+  // creative mode opens it, but that creative-mode check shouldn't be
+  // load-bearing for "is this person allowed to edit the host's zones."
+  if (!bootGuest) {
+    installMapEditor(() => state);
+    installInteract(() => state);
+    installShooting(() => state);
+    installMelee(() => state);
+    installAmmoHud();
+    installHealthHud();
+    installFastTravel(() => state);
+  }
   setGamepadAction("shoot", () => tryShoot());
   setGamepadAction("melee", () => tryMelee());
   setGamepadAction("interact", () => {
@@ -141,8 +172,10 @@ async function main() {
     // without us having to duplicate its "find entity in front" logic.
     window.dispatchEvent(new KeyboardEvent("keydown", { code: "KeyE" }));
   });
-  markVisited(state.zone.id);
-  if (state.zone.soundtrack) playTrack(state.zone.soundtrack);
+  if (state.zone) {
+    markVisited(state.zone.id);
+    if (state.zone.soundtrack) playTrack(state.zone.soundtrack);
+  }
 
   // Wire switchRole's state-handler registry so role transitions can
   // rebuild / wipe the world state. Done BEFORE the boot deep-link

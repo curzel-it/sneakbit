@@ -74,15 +74,15 @@ Polish — client
 - [ ] friendlyReason: generic "Couldn't connect" fallback instead of raw reason string
 
 Polish — guest mode role gates
-- [ ] Gate fastTravel install by role
-- [ ] Gate healthHud / ammoHud installs by role (currently render the guest's local inventory, not the host's view)
-- [ ] Gate menu's New Game / Reset by role (would wipe the guest's UUID + identity)
-- [ ] Gate firstLaunch tutorial by role
-- [ ] Defensively gate mapEditor install by role (today only protected by isCreativeMode → guest gate, defense-in-depth)
-- [ ] Loading screen in guest mode → "Connecting to host…" not "Sprites loaded / Zone loaded"
-- [ ] Skip runMigrations on guests (a future migration touching the UUID key would be catastrophic)
-- [ ] Verify tickEntities is read-only on the guest (mutations are wiped by the next delta — confirm intent)
-- [ ] Don't load STARTING_ZONE_ID / STARTING_SPAWN / loadProgress on the guest path
+- [x] Gate fastTravel install by role
+- [x] Gate healthHud / ammoHud installs by role (currently render the guest's local inventory, not the host's view)
+- [x] Gate menu's New Game / Reset by role (would wipe the guest's UUID + identity)
+- [x] Gate firstLaunch tutorial by role
+- [x] Defensively gate mapEditor install by role (today only protected by isCreativeMode → guest gate, defense-in-depth)
+- [x] Loading screen in guest mode → "Connecting to host…" not "Sprites loaded / Zone loaded"
+- [x] Skip runMigrations on guests (a future migration touching the UUID key would be catastrophic)
+- [x] Verify tickEntities is read-only on the guest (just bumps a global animClock — confirmed safe)
+- [x] Don't load STARTING_ZONE_ID / STARTING_SPAWN / loadProgress on the guest path
 
 Ops / deploy
 - [ ] Production deploy of the relay (sneakbit.curzel.it/ws) + nginx + TLS
