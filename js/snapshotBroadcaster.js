@@ -260,10 +260,21 @@ function serializeEntity(e) {
   return out;
 }
 
+// Per-player change signature. Drives whether a player goes into the
+// outbound delta. We deliberately omit x/y here even though they're in
+// the payload — during a tile step the floats change every tick but
+// tileX/tileY/direction/moving stay put, so signing on x/y would emit
+// ~5 records per step (one per BROADCAST_INTERVAL_MS at the host's
+// 20 Hz). With x/y dropped, the only sig changes during a step are the
+// endpoints: moving=true at step start, tileX/tileY change at step
+// end. The mirror's lerp between those two payloads still reconstructs
+// the float path — receive-time interval ≈ step duration, and lerp
+// across (oldTile→newTile) over that interval gives the same visual
+// result as today, with ~80 records/sec less traffic in a four-player
+// session.
 function sigPlayer(p) {
   return [
     p.tileX, p.tileY,
-    p.x, p.y,
     p.direction,
     p.moving ? 1 : 0,
     p.hp,

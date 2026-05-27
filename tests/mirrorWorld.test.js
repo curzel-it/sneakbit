@@ -143,6 +143,58 @@ test("two deltas for the same player produce an interpolated position", async ()
   reset();
 });
 
+test("endpoint-only step lerp: tile A → tile B over the receive interval reconstructs the float path", async () => {
+  // Companion to the snapshot-broadcaster sigPlayer tightening. The
+  // host now ships only two samples per step: the step-start delta
+  // (moving=true, oldTile floats) and the step-end delta (newTile
+  // floats). The mirror's lerp between them must cover the full
+  // tile-to-tile transition smoothly — no freeze, no jump. If this
+  // test ever fails after the sig change, the float reconstruction
+  // is broken and the guest will see avatars teleporting.
+  reset();
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [{ playerId: "p_w", slot: 1, index: 0, x: 5, y: 3, tileX: 5, tileY: 3, direction: "right", moving: false }],
+    entities: [],
+  });
+  // Step START delta — same tile, moving flips true. This is the
+  // "old endpoint" — the host still has x=5,y=3 because the step has
+  // only just begun.
+  handleDelta({
+    op: "delta", zoneId: 1001,
+    players: [{ playerId: "p_w", x: 5, y: 3, tileX: 5, tileY: 3, direction: "right", moving: true }],
+  });
+  const stepStart = performance.now();
+  // ~220 ms later the step completes and the host emits the end
+  // delta with the new tile floats.
+  await new Promise((r) => setTimeout(r, 220));
+  handleDelta({
+    op: "delta", zoneId: 1001,
+    players: [{ playerId: "p_w", x: 6, y: 3, tileX: 6, tileY: 3, direction: "right", moving: true }],
+  });
+  // The lerp uses receive-time intervals; renderTime is back-dated
+  // by INTERP_DELAY_MS. Sample three points across the step and
+  // confirm x advances strictly between the two endpoints.
+  // stepStart was the END delta's receive moment relative to the
+  // start delta's; rendering at start+50ms (with the 100ms back-date,
+  // so renderTime≈stepStart-50ms = halfway through the lerp window)
+  // should land x roughly between 5 and 6.
+  const baseAt = performance.now();
+  // We want renderTime = stepStart + ~110ms (halfway through 220ms
+  // step). renderTime = at - 100, so at = stepStart + 210.
+  const mid = getMirrorPlayerById("p_w", stepStart + 210);
+  assert.ok(mid.x > 5 && mid.x < 6,
+    `mid-step x should lerp between 5 and 6, got ${mid.x}`);
+  // Late in the step: x should be closer to 6.
+  const late = getMirrorPlayerById("p_w", stepStart + 290);
+  assert.ok(late.x > mid.x,
+    `x should advance monotonically: ${mid.x} -> ${late.x}`);
+  // After currAt elapses, lerp clamps t=1 → x lands exactly on 6.
+  const after = getMirrorPlayerById("p_w", baseAt + 500);
+  assert.equal(after.x, 6, "after currAt the avatar must rest on the destination tile");
+  reset();
+});
+
 test("animation phase: idle player renders frame 0", async () => {
   reset();
   await applySnapshot({

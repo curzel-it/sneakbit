@@ -142,6 +142,85 @@ test("delta carries the player when position changes", () => {
   stopSnapshotBroadcaster();
 });
 
+test("mid-step x/y drift does NOT produce a delta (sigPlayer is tile-locked)", () => {
+  // The whole point of the sigPlayer tightening: between tile changes,
+  // the floats slide every host tick but tileX/tileY/direction/moving
+  // stay put. If we signed on x/y we'd emit ~5 deltas per step (one
+  // every BROADCAST_INTERVAL_MS = 50 ms). Now we emit only at the
+  // endpoints and the mirror's lerp handles the float path.
+  setupBootstrapWithFakeNet();
+  const state = makeState();
+  _snapshotForTesting(state);
+  // Player is mid-step: x has drifted from the tile but tileX hasn't
+  // committed yet (this is exactly what player.js does during step
+  // advancement). With the new signature, no delta should fire.
+  state.player.x = 7.45;
+  state.player.y = 8.0;
+  const d1 = _broadcastDeltaForTesting(null, state);
+  assert.equal(d1, null, "x/y drift alone must not produce a delta");
+  // A bit later, more drift — still nothing.
+  state.player.x = 7.7;
+  const d2 = _broadcastDeltaForTesting(null, state);
+  assert.equal(d2, null, "consecutive mid-step x drifts must remain silent");
+  // Step completes: tileX snaps. Now a delta fires.
+  state.player.tileX = 8;
+  state.player.x = 8;
+  const d3 = _broadcastDeltaForTesting(null, state);
+  assert.ok(d3, "tile change must produce a delta");
+  assert.equal(d3.players.length, 1);
+  assert.equal(d3.players[0].tileX, 8);
+  stopSnapshotBroadcaster();
+});
+
+test("moving toggle (step start) produces a delta even with same tile", () => {
+  // At step start the host sets moving=true but tileX/tileY haven't
+  // moved yet — sigPlayer must still emit so the guest sees moving=true
+  // and starts cycling its walk frames.
+  setupBootstrapWithFakeNet();
+  const state = makeState();
+  state.player.moving = false;
+  _snapshotForTesting(state);
+  state.player.moving = true;
+  const d = _broadcastDeltaForTesting(null, state);
+  assert.ok(d, "moving toggle must produce a delta");
+  assert.equal(d.players.length, 1);
+  assert.equal(d.players[0].moving, true);
+  stopSnapshotBroadcaster();
+});
+
+test("direction change (tap-to-turn, no step) produces a delta", () => {
+  // The player can turn without stepping — sigPlayer must include
+  // direction so guests see the rotation immediately.
+  setupBootstrapWithFakeNet();
+  const state = makeState();
+  state.player.direction = "down";
+  _snapshotForTesting(state);
+  state.player.direction = "right";
+  const d = _broadcastDeltaForTesting(null, state);
+  assert.ok(d, "direction change must produce a delta");
+  assert.equal(d.players[0].direction, "right");
+  stopSnapshotBroadcaster();
+});
+
+test("payload still carries x/y for the mirror's lerp endpoints", () => {
+  // sigPlayer dropping x/y is a change-detection tightening only — the
+  // payload must still ship them so the mirror has concrete floats to
+  // interpolate between. (The mirror lerps on prev.x/prev.y and
+  // curr.x/curr.y; if either is missing the lerp falls back to the
+  // tile-integer alone, which works but loses sub-tile precision on
+  // start/end frames where rounding might matter.)
+  setupBootstrapWithFakeNet();
+  const state = makeState();
+  _snapshotForTesting(state);
+  state.player.tileX = 8;
+  state.player.x = 8.0;
+  const d = _broadcastDeltaForTesting(null, state);
+  const p = d.players[0];
+  assert.equal(p.x, 8.0);
+  assert.equal(p.y, 8);
+  stopSnapshotBroadcaster();
+});
+
 test("installSnapshotBroadcaster does nothing in offline mode", () => {
   _resetOnlineBootstrapForTesting();
   _setOnlineModeForTesting({ mode: "offline" });
