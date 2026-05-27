@@ -118,6 +118,11 @@ export function _setOnlineModeForTesting({ mode = "offline", code = null, uuid =
   cachedMode = mode;
   cachedCode = code;
   if (uuid !== null) cachedUuid = uuid;
+  // Tests that pre-date the URL/runtime split set up "host" / "guest"
+  // via this seam and then call install-time gates that read the runtime
+  // role. Mirror the mode here so those callers keep working without
+  // having to set runtime role explicitly.
+  runtimeRole = mode;
 }
 
 export function _resetOnlineModeForTesting() {

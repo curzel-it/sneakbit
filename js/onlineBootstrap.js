@@ -7,7 +7,7 @@
 // handshake to issue (host.open / guest.join), so a reconnect after
 // grace re-issues the right frame automatically.
 
-import { getMode, getJoinCode, getRuntimeRole, setRuntimeRole } from "./onlineMode.js";
+import { getMode, getJoinCode, getRuntimeRole } from "./onlineMode.js";
 import { createNet } from "./net.js";
 import { installWebrtcTransport } from "./webrtcTransport.js";
 import { getIceServers, primeIceServers } from "./iceConfig.js";
@@ -41,6 +41,23 @@ const closeListeners = new Set();
 export function onAnyClose(fn) {
   closeListeners.add(fn);
   return () => closeListeners.delete(fn);
+}
+
+// Net-agnostic session-state listeners. Fired whenever something the UI
+// might want to re-render changes (welcome, host.opened, guest.joined,
+// peer add/remove, ghost/resume, session close). partyPanel subscribes
+// once at install and reads the current state via the getters.
+const sessionStateListeners = new Set();
+function notifySessionState() {
+  for (const fn of [...sessionStateListeners]) {
+    try { fn(); }
+    catch (e) { console.error("onSessionState handler", e); }
+  }
+}
+
+export function onSessionState(fn) {
+  sessionStateListeners.add(fn);
+  return () => sessionStateListeners.delete(fn);
 }
 
 // Compatibility: the legacy getNetRole() shim keeps consumers that read
@@ -114,6 +131,7 @@ export function resetOnlineState() {
   lastJoinError = null;
   pendingGuestCode = null;
   nameByPlayerId.clear();
+  notifySessionState();
 }
 
 // Send the role-appropriate handshake. Safe to call before welcome — the
@@ -137,12 +155,14 @@ function wireNetHandlers(n) {
     if (m.playerId && m.name) nameByPlayerId.set(m.playerId, m.name);
     welcomed = true;
     dispatchHandshake();
+    notifySessionState();
   });
 
   n.on("host.opened", (m) => {
     inviteCode = m.code;
     selfPlayerId = selfPlayerId || null;
     console.log("[online] host session", m.resumed ? "resumed" : "opened", "code =", m.code);
+    notifySessionState();
   });
 
   n.on("guest.joined", (m) => {
@@ -157,44 +177,53 @@ function wireNetHandlers(n) {
       if (p.playerId && p.name) nameByPlayerId.set(p.playerId, p.name);
     }
     console.log("[online] joined session", m.sessionId, "slot", m.slot);
+    notifySessionState();
   });
 
   n.on("guest.joinFailed", (m) => {
     lastJoinError = m.reason;
     console.error("[online] join failed:", m.reason);
+    notifySessionState();
   });
 
   n.on("peer.joined", (m) => {
     knownPeers.push({ playerId: m.playerId, name: m.name, slot: m.slot });
     if (m.playerId && m.name) nameByPlayerId.set(m.playerId, m.name);
     console.log("[online] peer joined:", m.playerId, "slot", m.slot);
+    notifySessionState();
   });
 
   n.on("peer.rejoined", (m) => {
     if (m.playerId && m.name) nameByPlayerId.set(m.playerId, m.name);
     console.log("[online] peer rejoined:", m.playerId);
+    notifySessionState();
   });
 
   n.on("peer.left", (m) => {
     knownPeers = knownPeers.filter((p) => p.playerId !== m.playerId);
     nameByPlayerId.delete(m.playerId);
     console.log("[online] peer left:", m.playerId, m.reason);
+    notifySessionState();
   });
 
   n.on("peer.ghosted", (m) => {
     console.log("[online] peer ghosted:", m.playerId);
+    notifySessionState();
   });
 
   n.on("host.ghosted", () => {
     console.warn("[online] host lagging…");
+    notifySessionState();
   });
 
   n.on("host.resumed", () => {
     console.log("[online] host back");
+    notifySessionState();
   });
 
   n.on("session.closed", (m) => {
     console.warn("[online] session closed:", m.reason);
+    notifySessionState();
   });
 
   n.on("_open", () => console.log("[online] ws open"));
@@ -210,14 +239,18 @@ function wireNetHandlers(n) {
   });
 }
 
-// Backwards-compatible boot path. Seeds runtime role from the URL and
-// opens the net if a role is selected. switchRole() is the canonical
-// runtime-role driver — this is just the deep-link entry seed.
+// Boot-time seed. Captures the URL's join code (if any), then — if the
+// URL selected a role — opens the net so the welcome handshake is in
+// flight by the time main.js's switchRole() runs. Does NOT set the
+// runtime role: switchRole owns that, otherwise its cur===target check
+// would skip the actual install. Tests that wire fake nets call this
+// after _setOnlineModeForTesting (which seeds both cachedMode and
+// runtimeRole), so the welcome handler dispatches the right handshake
+// during their setup.
 export function bootstrapOnline({ netFactory = createNet } = {}) {
   const mode = getMode();
-  setRuntimeRole(mode);
-  if (mode === "offline") return null;
   if (mode === "guest") pendingGuestCode = getJoinCode();
+  if (mode === "offline") return null;
   return ensureNet({ netFactory });
 }
 

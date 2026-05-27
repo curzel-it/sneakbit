@@ -16,6 +16,7 @@ import { ACTIONS, codesFor, setBinding, resetBindings, onBindingsChange, matches
 import { isCoopMode, setCoopMode } from "./coopMode.js";
 import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js";
 import { invalidateZoneCache } from "./data.js";
+import { openPartyPanel } from "./partyPanel.js";
 
 let root = null;
 let open = false;
@@ -47,6 +48,7 @@ export function installMenu(stateGetter) {
       <h1>SneakBit</h1>
       <div class="menu-row menu-controls menu-stack">
         <button id="menu-resume">Resume (Esc)</button>
+        <button id="menu-open-party">Party / Co-op</button>
         <button id="menu-open-inventory">Inventory &amp; Equipment</button>
         <button id="menu-open-skills">Skills</button>
         <button id="menu-open-settings">Settings</button>
@@ -302,6 +304,10 @@ function syncSkillsWidgets() {
 
 function bindWidgets() {
   root.querySelector("#menu-resume").addEventListener("click", closeMenu);
+  root.querySelector("#menu-open-party").addEventListener("click", () => {
+    closeMenu();
+    openPartyPanel();
+  });
   root.querySelector("#menu-open-settings").addEventListener("click", () => showScreen("settings"));
   root.querySelector("#menu-open-skills").addEventListener("click", () => showScreen("skills"));
   root.querySelector("#menu-open-credits").addEventListener("click", () => showScreen("credits"));
