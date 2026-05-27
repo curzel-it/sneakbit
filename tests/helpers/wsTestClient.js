@@ -83,7 +83,7 @@ export function openWsClient(host, port, path = "/ws", { deflate = false } = {})
           if (f.opcode === OP.TEXT) {
             let payload = f.payload;
             if (f.rsv1 && negotiatedDeflate) {
-              try { payload = inflateRawSync(appendTrailer(payload)); }
+              try { payload = inflateRawSync(appendTrailer(payload), { finishFlush: zlibConstants.Z_SYNC_FLUSH }); }
               catch { finishClose(1007); return; }
             }
             try { deliver(JSON.parse(payload.toString("utf8"))); }
@@ -104,7 +104,7 @@ export function openWsClient(host, port, path = "/ws", { deflate = false } = {})
           const json = JSON.stringify(obj);
           if (negotiatedDeflate) {
             const compressed = stripTrailer(
-              deflateRawSync(Buffer.from(json, "utf8"), { flush: zlibConstants.Z_SYNC_FLUSH })
+              deflateRawSync(Buffer.from(json, "utf8"), { finishFlush: zlibConstants.Z_SYNC_FLUSH })
             );
             socket.write(encodeFrame(OP.TEXT, compressed, { mask: true, rsv1: true }));
             return;

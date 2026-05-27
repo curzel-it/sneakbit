@@ -80,7 +80,11 @@ export class WsConnection extends EventEmitter {
           this.close(1009, "inflate input too big");
           return;
         }
-        try { decoded = inflateRawSync(appendTrailer(full)); }
+        // `finishFlush: Z_SYNC_FLUSH` lets the one-shot inflater accept a
+        // stream that ends with the SYNC_FLUSH marker (RFC 7692) instead
+        // of demanding a BFINAL block. Real browsers send SYNC_FLUSH —
+        // without this, inflateRawSync throws "unexpected end of file".
+        try { decoded = inflateRawSync(appendTrailer(full), { finishFlush: zlibConstants.Z_SYNC_FLUSH }); }
         catch (e) { this.close(1007, "inflate failed"); return; }
       }
       if (op === OP.TEXT) this.emit("message", decoded.toString("utf8"));
@@ -104,8 +108,13 @@ export class WsConnection extends EventEmitter {
       return;
     }
     const raw = Buffer.from(s, "utf8");
+    // `finishFlush: Z_SYNC_FLUSH` (NOT `flush:` — that option is ignored
+    // by deflateRawSync) makes the one-shot deflater end the stream with
+    // the `00 00 ff ff` marker that RFC 7692 mandates we then strip.
+    // With the wrong option, output ends with a BFINAL block instead,
+    // stripTrailer is a no-op, and peers can't inflate.
     const compressed = stripTrailer(
-      deflateRawSync(raw, { flush: zlibConstants.Z_SYNC_FLUSH })
+      deflateRawSync(raw, { finishFlush: zlibConstants.Z_SYNC_FLUSH })
     );
     this._sendRaw(encodeFrame(OP.TEXT, compressed, { rsv1: true }));
   }
