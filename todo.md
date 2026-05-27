@@ -16,7 +16,7 @@ Miscellanea
 # Online co-op (spec: docs/server.md)
 
 - [ ] It seems that resolution changes after starting a co-op (spotted on mobile)
-- [ ] ssaasda
+- [ ] When in offline co-op, users are playing on the same screen, so we have the camera be centered on both players. However, when playing online, each player has it's own screen, meaning we can keep the camera centered on the player like we do normally
 
 Phases 0–10 shipped (relay, prediction, events, zone transitions, party panel, WebRTC + STUN/TURN, permessage-deflate). Remaining work below.
 
