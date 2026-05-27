@@ -143,6 +143,99 @@ test("two deltas for the same player produce an interpolated position", async ()
   reset();
 });
 
+test("animation phase: idle player renders frame 0", async () => {
+  reset();
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [{ playerId: "p_idle", slot: 1, index: 0, x: 3, y: 3, tileX: 3, tileY: 3, direction: "down", moving: false }],
+    entities: [],
+  });
+  const p = getMirrorPlayerById("p_idle");
+  assert.equal(p.frameIndex, 0);
+  reset();
+});
+
+test("animation phase: a fresh step starts at frame 0 (no moonwalk)", async () => {
+  reset();
+  // Snapshot the player as moving. stepStartedAt is stamped to ≈ now.
+  const t0 = performance.now();
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [{ playerId: "p_m", slot: 1, index: 0, x: 0, y: 0, tileX: 0, tileY: 0, direction: "right", moving: true }],
+    entities: [],
+  });
+  // Rendering ~at-step-start must yield frame 0, regardless of where
+  // a global clock happens to be. This is the bug the fix targets:
+  // before, frameIndex came from `floor(now/120) % 4`, so a step
+  // beginning at e.g. t=370 ms would render frame 3 → moonwalk.
+  const p = getMirrorPlayerById("p_m", t0 + 5);
+  assert.equal(p.frameIndex, 0, "step start should render frame 0");
+  reset();
+});
+
+test("animation phase: a moving sprite advances frames at ANIMATIONS_FPS (10)", async () => {
+  reset();
+  // Start idle so stepStartedAt is 0; the delta below flips to moving
+  // and stamps stepStartedAt synchronously — we can pin it to the
+  // wall-clock immediately after the delta call without racing the
+  // zone loader.
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [{ playerId: "p_m", slot: 1, index: 0, x: 0, y: 0, tileX: 0, tileY: 0, direction: "right", moving: false }],
+    entities: [],
+  });
+  handleDelta({
+    op: "delta", zoneId: 1001,
+    players: [{ playerId: "p_m", x: 1, y: 0, tileX: 1, tileY: 0, direction: "right", moving: true }],
+  });
+  const stepStartedAt = performance.now(); // ≈ the t stamped by handleDelta
+  // The mirror back-dates render by INTERP_DELAY_MS to give the
+  // hold-and-interpolate buffer something to sample. Animation phase
+  // uses the same back-dated clock so position and frame stay in
+  // lockstep, so the test must compensate.
+  // 10 FPS → 100 ms per frame. Sample after the step started.
+  const samples = [5, 105, 205, 305, 405].map((dt) => {
+    const p = getMirrorPlayerById("p_m", stepStartedAt + INTERP_DELAY_MS + dt);
+    return p.frameIndex;
+  });
+  assert.equal(samples[0], 0);
+  assert.equal(samples[1], 1);
+  assert.equal(samples[2], 2);
+  assert.equal(samples[3], 3);
+  assert.equal(samples[4], 0, "wraps modulo frameCount");
+  reset();
+});
+
+test("animation phase: idle→moving transition rewinds phase; moving→moving keeps cycling", async () => {
+  reset();
+  // Snapshot as idle.
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [{ playerId: "p_x", slot: 1, index: 0, x: 0, y: 0, tileX: 0, tileY: 0, direction: "right", moving: false }],
+    entities: [],
+  });
+  // Wait a touch so a free-running clock would have advanced.
+  await new Promise((r) => setTimeout(r, 50));
+  // First delta flips to moving — stepStartedAt resets to "now".
+  handleDelta({
+    op: "delta", zoneId: 1001,
+    players: [{ playerId: "p_x", x: 1, y: 0, tileX: 1, tileY: 0, direction: "right", moving: true }],
+  });
+  const tMoveStart = performance.now();
+  const startFrame = getMirrorPlayerById("p_x", tMoveStart + INTERP_DELAY_MS + 5);
+  assert.equal(startFrame.frameIndex, 0, "idle→moving must reset to frame 0");
+
+  // Second delta keeps moving — stepStartedAt must NOT reset. Render
+  // 110 ms past the first step's start should now sit in frame 1.
+  handleDelta({
+    op: "delta", zoneId: 1001,
+    players: [{ playerId: "p_x", x: 2, y: 0, tileX: 2, tileY: 0, direction: "right", moving: true }],
+  });
+  const laterFrame = getMirrorPlayerById("p_x", tMoveStart + INTERP_DELAY_MS + 110);
+  assert.equal(laterFrame.frameIndex, 1, "moving→moving must keep the phase running");
+  reset();
+});
+
 test("installMirrorWorld wires snapshot + delta handlers off a net", async () => {
   reset();
   let snapHandler = null;

@@ -9,7 +9,7 @@
 // loads them locally on the first snapshot or zone change and only
 // overwrites `zone.entities` from network frames.
 
-import { SPRITE_SHEET_HEROES } from "./constants.js?v=20260527b";
+import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260527b";
 import { loadZone } from "./data.js?v=20260527b";
 import { buildZone } from "./zone.js?v=20260527b";
 import { setupCutscenes } from "./cutscenes.js?v=20260527b";
@@ -172,14 +172,29 @@ function ingestPlayer(p, t) {
   if (!p || !p.playerId) return;
   const prev = players.get(p.playerId);
   if (prev) {
+    const merged = { ...prev.curr, ...p };
+    const wasMoving = !!prev.curr?.moving;
+    const isMoving = !!merged.moving;
+    // Stamp the moment a step starts so animation phase is anchored to
+    // the step instead of a free-running clock. Once moving, the timer
+    // keeps running across consecutive tile-steps — only an
+    // idle→moving transition rewinds the phase to frame 0.
+    const stepStartedAt = isMoving && !wasMoving ? t : (prev.stepStartedAt || 0);
     players.set(p.playerId, {
       prev: prev.curr,
-      curr: { ...prev.curr, ...p },
+      curr: merged,
       prevAt: prev.currAt,
       currAt: t,
+      stepStartedAt,
     });
   } else {
-    players.set(p.playerId, { prev: p, curr: p, prevAt: t, currAt: t });
+    players.set(p.playerId, {
+      prev: p,
+      curr: p,
+      prevAt: t,
+      currAt: t,
+      stepStartedAt: p.moving ? t : 0,
+    });
   }
 }
 
@@ -219,14 +234,16 @@ function rebuildZoneEntities() {
   zone.entities = list;
 }
 
-function interpolatePlayer({ prev, curr, prevAt, currAt }, renderTime) {
+function interpolatePlayer({ prev, curr, prevAt, currAt, stepStartedAt }, renderTime) {
   const baseFrame = heroFrameForIndex(curr.index | 0);
-  const animFrame = pickAnimFrame(currAt);
   const span = currAt - prevAt;
   let t = span > 0 ? (renderTime - prevAt) / span : 1;
   if (t < 0) t = 0; if (t > 1) t = 1;
   const sx = (prev?.x ?? curr.x);
   const sy = (prev?.y ?? curr.y);
+  const animFrame = curr.moving
+    ? Math.floor((renderTime - (stepStartedAt || 0)) * ANIMATIONS_FPS / 1000) % HERO_FRAME_COUNT
+    : 0;
   return {
     index: curr.index | 0,
     playerId: curr.playerId,
@@ -240,7 +257,7 @@ function interpolatePlayer({ prev, curr, prevAt, currAt }, renderTime) {
     sheetId: SPRITE_SHEET_HEROES,
     baseFrame,
     frameCount: HERO_FRAME_COUNT,
-    frameIndex: animFrame,
+    frameIndex: animFrame < 0 ? 0 : animFrame,
     frameTimer: 0,
     step: curr.moving ? { progress: t } : null,
   };
@@ -253,13 +270,6 @@ function heroFrameForIndex(index) {
     w: HERO_FRAME_W,
     h: HERO_FRAME_H,
   };
-}
-
-// Cycle the walk-strip locally — same FPS the host runs at — so animation
-// stays smooth even when snapshots only carry positional changes.
-function pickAnimFrame(_currAt) {
-  const t = nowMs();
-  return Math.floor((t / 120) % HERO_FRAME_COUNT);
 }
 
 function nowMs() {
