@@ -28,7 +28,10 @@ export function installPredictedSelf(net) {
   unsubs.push(net.on("delta", onAuth));
 }
 
-export function _uninstallPredictedSelfForTesting() {
+// Production teardown — paired with installPredictedSelf. Drops net
+// subscriptions, the cached predicted avatar and the last-ack state so a
+// future install (e.g. after a role switch) starts from a clean slate.
+export function uninstallPredictedSelf() {
   for (const u of unsubs) { try { u(); } catch { /* ignore */ } }
   unsubs = [];
   installed = false;
@@ -37,6 +40,8 @@ export function _uninstallPredictedSelfForTesting() {
   lastAckedX = null;
   lastAckedY = null;
 }
+
+export const _uninstallPredictedSelfForTesting = uninstallPredictedSelf;
 
 export function getPredictedSelf() { return predicted; }
 export function getLastAckedSeq() { return lastAckedSeq; }

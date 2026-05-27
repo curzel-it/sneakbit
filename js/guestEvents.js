@@ -18,12 +18,15 @@ export function installGuestEvents(net) {
   unsub = net.on("event", dispatch);
 }
 
-export function _uninstallGuestEventsForTesting() {
+// Production teardown — paired with installGuestEvents.
+export function uninstallGuestEvents() {
   if (unsub) try { unsub(); } catch { /* ignore */ }
   unsub = null;
   installed = false;
   customHandlers.clear();
 }
+
+export const _uninstallGuestEventsForTesting = uninstallGuestEvents;
 
 // Optional override seam so tests can stub a kind without touching the
 // real toast.js DOM.

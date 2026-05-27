@@ -25,6 +25,7 @@ let stateGetter = null;
 let p2Factory = null;
 const guestSlotByPlayerId = new Map();
 const lastSeqByPlayerId = new Map();
+let unsubs = [];
 
 // Public: the host's broadcaster reads this so every snapshot/delta
 // carries `lastSeq[guestId]`, the highest seq the host has applied for
@@ -38,25 +39,35 @@ export function getLastSeqMap() {
 
 export function installHostGuests(getState, opts = {}) {
   if (getNetRole() !== "host" && !opts.force) return false;
+  uninstallHostGuests();
   stateGetter = typeof getState === "function" ? getState : () => getState;
   p2Factory = opts.makeCoopP2;
   const net = opts.net || getNet();
   if (!net) return false;
-  net.on("peer.joined", (m) => onPeerJoined(m, false));
-  net.on("peer.rejoined", (m) => onPeerJoined(m, true));
-  net.on("peer.left", onPeerLeft);
-  net.on("peer.ghosted", onPeerGhosted);
-  net.on("input", onInput);
+  unsubs.push(net.on("peer.joined", (m) => onPeerJoined(m, false)));
+  unsubs.push(net.on("peer.rejoined", (m) => onPeerJoined(m, true)));
+  unsubs.push(net.on("peer.left", onPeerLeft));
+  unsubs.push(net.on("peer.ghosted", onPeerGhosted));
+  unsubs.push(net.on("input", onInput));
   return true;
 }
 
-// Test seam — drop everything so a fresh test gets a clean slate.
-export function _uninstallHostGuestsForTesting() {
+// Production teardown — paired with installHostGuests; safe to call when
+// nothing is installed. Drops net subscriptions, the slot map and the
+// per-guest ack buckets, and zeroes the coopMode network-guest count so
+// isCoopActive() reverts to "single-player + maybe local-coop" semantics.
+export function uninstallHostGuests() {
+  for (const u of unsubs) { try { u(); } catch { /* ignore */ } }
+  unsubs = [];
   stateGetter = null;
   p2Factory = null;
   guestSlotByPlayerId.clear();
   lastSeqByPlayerId.clear();
+  setNetworkGuestCount(0);
 }
+
+// Test seam alias — kept so existing tests still link.
+export const _uninstallHostGuestsForTesting = uninstallHostGuests;
 
 function onPeerJoined(m, _isRejoin) {
   const state = stateGetter?.();

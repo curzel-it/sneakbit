@@ -22,6 +22,7 @@ let seq = 0;
 let installed = false;
 const held = new Set();
 let lastSentDir = null;
+let onVisibilityHandler = null;
 // Ring buffer of unacknowledged inputs so predictedSelf can replay
 // them after a snap. Bounded so a wedged ack-stream doesn't grow it
 // without limit — older entries get evicted but the bound is well
@@ -59,10 +60,31 @@ export function installGuestInputForwarder(netIn) {
   window.addEventListener("keyup", onKeyUp);
   window.addEventListener("blur", onBlur);
   if (typeof document !== "undefined") {
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) onBlur();
-    });
+    onVisibilityHandler = () => { if (document.hidden) onBlur(); };
+    document.addEventListener("visibilitychange", onVisibilityHandler);
   }
+}
+
+// Production teardown — paired with installGuestInputForwarder. Removes
+// the keyboard listeners so a role switch back to host/offline doesn't
+// keep forwarding intents to a torn-down net, and clears the unacked
+// input log + seq counter so the next install starts at seq 1.
+export function uninstallGuestInputForwarder() {
+  if (typeof window !== "undefined") {
+    window.removeEventListener("keydown", onKeyDown);
+    window.removeEventListener("keyup", onKeyUp);
+    window.removeEventListener("blur", onBlur);
+  }
+  if (typeof document !== "undefined" && onVisibilityHandler) {
+    document.removeEventListener("visibilitychange", onVisibilityHandler);
+  }
+  onVisibilityHandler = null;
+  net = null;
+  seq = 0;
+  installed = false;
+  held.clear();
+  lastSentDir = null;
+  inputLog.length = 0;
 }
 
 export function getSeq() { return seq; }
@@ -80,14 +102,7 @@ export function dropAckedInputs(ackedSeq) {
 // Test seams.
 export function _injectKeyDownForTesting(code) { onKeyDown({ code }); }
 export function _injectKeyUpForTesting(code) { onKeyUp({ code }); }
-export function _resetForwarderForTesting() {
-  net = null;
-  seq = 0;
-  installed = false;
-  held.clear();
-  lastSentDir = null;
-  inputLog.length = 0;
-}
+export const _resetForwarderForTesting = uninstallGuestInputForwarder;
 
 function onKeyDown(e) {
   if (e.repeat) return;
