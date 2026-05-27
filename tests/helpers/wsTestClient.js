@@ -10,12 +10,13 @@ import { stripTrailer, appendTrailer } from "../../server/wsExtensions.js";
 
 const MAGIC = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-export function openWsClient(host, port, path = "/ws", { deflate = false } = {}) {
+export function openWsClient(host, port, path = "/ws", { deflate = false, origin = null } = {}) {
   return new Promise((resolve, reject) => {
     const socket = connect({ host, port }, () => {
       const key = randomBytes(16).toString("base64");
       const expected = createHash("sha1").update(key + MAGIC).digest("base64");
       const extHeader = deflate ? "Sec-WebSocket-Extensions: permessage-deflate\r\n" : "";
+      const originHeader = origin ? `Origin: ${origin}\r\n` : "";
       const req =
         `GET ${path} HTTP/1.1\r\n` +
         `Host: ${host}:${port}\r\n` +
@@ -24,6 +25,7 @@ export function openWsClient(host, port, path = "/ws", { deflate = false } = {})
         `Sec-WebSocket-Key: ${key}\r\n` +
         `Sec-WebSocket-Version: 13\r\n` +
         extHeader +
+        originHeader +
         `\r\n`;
       socket.write(req);
 

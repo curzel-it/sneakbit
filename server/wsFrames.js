@@ -10,6 +10,13 @@ import { createHash } from "node:crypto";
 
 const MAGIC = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
+// Reject any single frame whose declared payload is larger than 1 MB.
+// The relay's real traffic (host snapshots ~50 Hz, guest input intents)
+// never approaches this — anything bigger is either a buggy client or a
+// memory-exhaustion attempt. The old guard at 2 GB would happily
+// allocate ~2 GB before throwing.
+export const MAX_FRAME_PAYLOAD = 1 << 20;
+
 export const OP = {
   CONT: 0x0,
   TEXT: 0x1,
@@ -88,11 +95,14 @@ export function parseFrames(buf) {
     } else if (len === 127) {
       if (buf.length - offset < 10) break;
       const big = buf.readBigUInt64BE(offset + 2);
-      if (big > BigInt(0x7fffffff)) {
+      if (big > BigInt(MAX_FRAME_PAYLOAD)) {
         throw new Error("frame too big");
       }
       len = Number(big);
       headerLen = 10;
+    }
+    if (len > MAX_FRAME_PAYLOAD) {
+      throw new Error("frame too big");
     }
     let maskKey;
     if (masked) {

@@ -18,6 +18,17 @@
 
 const ONLINE_UUID_KEY = "sneakbit.online.uuid";
 
+// Invite codes are minted server-side as 5 chars of [A-Z0-9]. Anything
+// else can't be a real code, so it's either a typo or someone fuzzing —
+// we reject before any network round-trip. Exported so the UI's join
+// form, the URL parser, and the handshake dispatcher all share one
+// canonical pattern.
+export const JOIN_CODE_PATTERN = /^[A-Z0-9]{5}$/;
+
+export function isValidJoinCode(code) {
+  return typeof code === "string" && JOIN_CODE_PATTERN.test(code);
+}
+
 let cachedMode = null;
 let cachedCode = null;
 let cachedUuid = null;
@@ -33,7 +44,11 @@ export function resolveMode(search) {
   if (p.has("host") && p.get("host") !== "0") return { mode: "host", code: null };
   if (p.has("join")) {
     const raw = (p.get("join") || "").trim().toUpperCase();
-    return { mode: "guest", code: raw || null };
+    // Treat a malformed `?join=` like an empty one — still enter guest
+    // mode (so the panel can prompt for a valid code) but don't carry
+    // the garbage through to the relay.
+    const code = isValidJoinCode(raw) ? raw : null;
+    return { mode: "guest", code };
   }
   return { mode: "offline", code: null };
 }

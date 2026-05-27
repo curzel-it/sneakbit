@@ -45,8 +45,8 @@ Phase 7 events end-to-end
 - [x] Hook event:cutsceneStart/End — guest plays the same animation, host owns trigger + onEnd entities
 
 Polish — server
-- [ ] WS frame size cap ~1 MB in parseFrames (currently > 2 GB before throwing)
-- [ ] Origin allowlist on WS upgrade
+- [x] WS frame size cap ~1 MB in parseFrames (currently > 2 GB before throwing)
+- [x] Origin allowlist on WS upgrade
 - [ ] Structured logging: session open/close, peer join/leave, ping-timeout closes
 - [ ] /metrics endpoint (active sessions, bytes relayed, drops)
 - [ ] /version endpoint with git SHA
@@ -59,8 +59,8 @@ Polish — server
 - [ ] Reuse mutable getLastSeqMap to avoid GC churn at 20 Hz
 
 Polish — client
-- [ ] Validate join-code format client-side (/^[A-Z0-9]{5}$/) before sending guest.join
-- [ ] Restrict ?server= URL override to localhost / 127.0.0.1 (anti-phishing)
+- [x] Validate join-code format client-side (/^[A-Z0-9]{5}$/) before sending guest.join
+- [x] Restrict ?server= URL override to localhost / 127.0.0.1 (anti-phishing)
 - [ ] Reset net.js backoff attempts counter on welcome, not on onopen (handshake-fail reconnects currently fast-loop)
 - [ ] Action intents (shoot/melee/interact): buffer last N, flush on reconnect — today a missed send is a missed shot
 - [ ] dispatchActionForSlot: replace synthetic KeyboardEvent with direct tryShootForSlot / tryMeleeForSlot / tryInteractForSlot

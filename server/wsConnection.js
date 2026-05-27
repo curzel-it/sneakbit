@@ -8,13 +8,14 @@
 
 import { EventEmitter } from "node:events";
 import { deflateRawSync, inflateRawSync, constants as zlibConstants } from "node:zlib";
-import { encodeFrame, encodeCloseFrame, parseFrames, OP } from "./wsFrames.js";
+import { encodeFrame, encodeCloseFrame, parseFrames, OP, MAX_FRAME_PAYLOAD } from "./wsFrames.js";
 import { stripTrailer, appendTrailer } from "./wsExtensions.js";
 
-// 1 MB cap for the compressed-payload buffer. Same order of magnitude as
-// the spec's "ws frame size cap ~1 MB" todo. Inflated output is bounded by
-// zlib itself.
-const MAX_INFLATE_INPUT = 1 << 20;
+// Inflated output is bounded by zlib itself. The compressed-payload cap
+// matches the per-frame limit so a fragmented compressed message can't
+// sneak past parseFrames' MAX_FRAME_PAYLOAD by spreading the payload
+// across continuation frames.
+const MAX_INFLATE_INPUT = MAX_FRAME_PAYLOAD;
 
 export class WsConnection extends EventEmitter {
   constructor(socket, { deflate = false } = {}) {

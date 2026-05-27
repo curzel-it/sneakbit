@@ -13,17 +13,34 @@ const BACKOFF_STEPS_MS = [1000, 2000, 4000, 8000, 16000, 30000];
 const PING_INTERVAL_MS = 20000;
 const CLIENT_TAG = "sneakbit-html";
 
-export function pickServerUrl() {
-  if (typeof location !== "undefined" && location?.search) {
+export function pickServerUrl(loc = typeof location !== "undefined" ? location : null) {
+  // ?server=… is a dev-only escape hatch — it lets you point the page
+  // at a local relay without editing source. In production it would be
+  // a phishing primitive: a malicious link like
+  //   https://curzel.it/sneakbit-html?server=wss://attacker.example/ws
+  // would silently re-route the player's session (and their session
+  // code, which is enough to impersonate them) to a server the
+  // attacker controls. We only honour the override when the page
+  // itself is loaded from a local host.
+  const host = loc?.hostname || "";
+  const isLocal = host === "localhost" || host === "127.0.0.1" || host === "";
+  if (loc?.search) {
     try {
-      const override = new URLSearchParams(location.search).get("server");
-      if (override) return override;
+      const override = new URLSearchParams(loc.search).get("server");
+      if (override) {
+        if (isLocal) return override;
+        // Surface the ignored override so a developer who set it
+        // intentionally on a deployed build can see why they ended up
+        // on the prod relay instead.
+        if (typeof console !== "undefined") {
+          console.warn(
+            `[net] ?server= override ignored on non-local host "${host}" (anti-phishing). Falling back to default relay.`
+          );
+        }
+      }
     } catch { /* ignore */ }
   }
-  if (typeof location !== "undefined") {
-    const host = location.hostname;
-    if (host === "localhost" || host === "127.0.0.1") return DEFAULT_DEV_WS;
-  }
+  if (isLocal) return DEFAULT_DEV_WS;
   return DEFAULT_PROD_WS;
 }
 

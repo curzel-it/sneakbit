@@ -11,7 +11,7 @@
 // Actions are all switchRole(...) calls or net.send({op: "host.kick"}).
 // No location.replace anywhere — role transitions stay in-page.
 
-import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260527b";
+import { getRuntimeRole, onRoleChange, isValidJoinCode } from "./onlineMode.js?v=20260527b";
 import {
   getInviteCode,
   getKnownPeers,
@@ -428,7 +428,7 @@ function onStartHostingClick() {
 
 function onJoinClick() {
   const raw = (offlineJoinInput?.value || "").trim().toUpperCase();
-  if (!/^[A-Z0-9]{5}$/.test(raw)) {
+  if (!isValidJoinCode(raw)) {
     showToast("Code is 5 letters or digits.", "hint");
     return;
   }
@@ -522,6 +522,7 @@ function friendlyReason(reason) {
     case "host_quit": return "Host left.";
     case "host_timeout": return "Host disconnected.";
     case "server_restart": return "Server restarted.";
+    case "invalid_code": return "Code is 5 letters or digits.";
     default: return "Couldn't connect.";
   }
 }

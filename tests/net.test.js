@@ -5,7 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { createNet, PROTOCOL } = await import("../js/net.js?v=20260527b");
+const { createNet, PROTOCOL, pickServerUrl } = await import("../js/net.js?v=20260527b");
 
 function makeFakeSocket() {
   const sock = {
@@ -167,6 +167,50 @@ test("ping is sent on the configured interval", async () => {
   const pings = sock.sent.filter((m) => m.op === "ping").length;
   assert.ok(pings >= 2, `expected >=2 pings, got ${pings}`);
   net.close();
+});
+
+test("pickServerUrl: ?server= override honored only on localhost / 127.0.0.1", () => {
+  // Local — override is honoured.
+  assert.equal(
+    pickServerUrl({ hostname: "localhost", search: "?server=ws://example.com/ws" }),
+    "ws://example.com/ws",
+  );
+  assert.equal(
+    pickServerUrl({ hostname: "127.0.0.1", search: "?server=wss://example.com/ws" }),
+    "wss://example.com/ws",
+  );
+  // file:// pages (hostname is "") count as local for dev convenience.
+  assert.equal(
+    pickServerUrl({ hostname: "", search: "?server=ws://example.com/ws" }),
+    "ws://example.com/ws",
+  );
+});
+
+test("pickServerUrl: ?server= override is ignored on a deployed origin (anti-phishing)", () => {
+  // Suppress the console.warn the override path emits — we only want
+  // to assert the URL choice here, not pin the log line itself.
+  const origWarn = console.warn;
+  console.warn = () => {};
+  try {
+    assert.equal(
+      pickServerUrl({ hostname: "curzel.it", search: "?server=wss://attacker.example/ws" }),
+      "wss://sneakbit.curzel.it/ws",
+    );
+    assert.equal(
+      pickServerUrl({ hostname: "evil.example.com", search: "?server=wss://attacker.example/ws" }),
+      "wss://sneakbit.curzel.it/ws",
+    );
+  } finally {
+    console.warn = origWarn;
+  }
+});
+
+test("pickServerUrl: default dev URL when local with no override", () => {
+  assert.equal(pickServerUrl({ hostname: "localhost", search: "" }), "ws://localhost:8090/ws");
+});
+
+test("pickServerUrl: default prod URL when remote with no override", () => {
+  assert.equal(pickServerUrl({ hostname: "curzel.it", search: "" }), "wss://sneakbit.curzel.it/ws");
 });
 
 test("bad JSON over the wire is silently dropped", () => {

@@ -5,6 +5,7 @@ import { WsConnection } from "./wsConnection.js";
 import { createRelay } from "./relay.js";
 import { negotiate as negotiateExtensions, formatResponse as formatExtResponse } from "./wsExtensions.js";
 import { handleTurnRequest } from "./turnCredentials.js";
+import { parseAllowedHosts, isOriginAllowed } from "./originAllowlist.js";
 
 const PORT = Number(process.env.PORT) || 8090;
 const HOST = process.env.HOST || "127.0.0.1";
@@ -26,8 +27,9 @@ function applyCors(res) {
   for (const [k, v] of Object.entries(CORS_HEADERS)) res.setHeader(k, v);
 }
 
-export function startServer({ port = PORT, host = HOST, graceMs, idleTimeoutMs, idleCheckMs } = {}) {
+export function startServer({ port = PORT, host = HOST, graceMs, idleTimeoutMs, idleCheckMs, allowedOrigins } = {}) {
   const relay = createRelay({ graceMs, idleTimeoutMs, idleCheckMs });
+  const allowedHosts = parseAllowedHosts(allowedOrigins ?? process.env.ALLOWED_ORIGINS);
   const upgradedSockets = new Set();
   const server = createServer((req, res) => {
     applyCors(res);
@@ -64,6 +66,11 @@ export function startServer({ port = PORT, host = HOST, graceMs, idleTimeoutMs, 
     }
     if (req.url !== "/ws" && req.url !== "/") {
       socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
+      socket.destroy();
+      return;
+    }
+    if (!isOriginAllowed(req.headers.origin, allowedHosts)) {
+      socket.write("HTTP/1.1 403 Forbidden\r\n\r\n");
       socket.destroy();
       return;
     }

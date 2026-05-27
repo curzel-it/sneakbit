@@ -7,7 +7,7 @@
 // handshake to issue (host.open / guest.join), so a reconnect after
 // grace re-issues the right frame automatically.
 
-import { getMode, getJoinCode, getRuntimeRole } from "./onlineMode.js?v=20260527b";
+import { getMode, getJoinCode, getRuntimeRole, isValidJoinCode } from "./onlineMode.js?v=20260527b";
 import { createNet } from "./net.js?v=20260527b";
 import { installWebrtcTransport } from "./webrtcTransport.js?v=20260527b";
 import { getIceServers, primeIceServers } from "./iceConfig.js?v=20260527b";
@@ -145,7 +145,16 @@ export function dispatchHandshake() {
     net.send({ op: "host.open" });
   } else if (role === "guest") {
     const code = pendingGuestCode || getJoinCode();
-    if (code) net.send({ op: "guest.join", code });
+    // Final-gate the format here so URL deep-links, panel input, and
+    // the test seam all flow through one check. A bad code never hits
+    // the wire — the server's onJoin code-shape check is defense in
+    // depth, not the only line.
+    if (!isValidJoinCode(code)) {
+      lastJoinError = "invalid_code";
+      notifySessionState();
+      return;
+    }
+    net.send({ op: "guest.join", code });
   }
 }
 
