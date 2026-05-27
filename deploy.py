@@ -87,6 +87,7 @@ SERVER_SYNC_PATHS = [
     "sessions.js",
     "relay.js",
     "turnCredentials.js",
+    "originAllowlist.js",
 ]
 
 NODE_MAJOR = "22"
