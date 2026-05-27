@@ -476,7 +476,10 @@ Each phase ends with a runnable, deployable state. The host is the existing clie
 ## Phase 0 — Foundations (this doc)
 - [x] Decisions locked: host-authoritative, in-memory relay, UUIDs, invite-code sessions
 - [x] This document
-- [ ] Audit existing local-2P-coop infra: confirm `coopMode.js`, `inventory.js`, `equipment.js`, etc. already support N slots cleanly enough for 4-player
+- [x] Audit existing local-2P-coop infra: confirmed during Phase 5/7 — input.js now
+      supports slots 1–4, coopMode.js exposes isCoopActive() that covers host
+      network co-op, and inventory/equipment/playerHealth already index by player
+      index. 4-player support is a thin extension once main.js gains state.players[]
 
 ## Phase 1 — Relay skeleton
 Make the server speak the protocol's connection lifecycle and session ops.
