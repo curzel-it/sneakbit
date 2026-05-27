@@ -473,7 +473,11 @@ function onKickClick(peer) {
 }
 
 function canNativeShare() {
-  return typeof navigator !== "undefined" && typeof navigator.share === "function";
+  if (typeof navigator === "undefined" || typeof navigator.share !== "function") return false;
+  if (navigator.userAgentData && typeof navigator.userAgentData.mobile === "boolean") {
+    return navigator.userAgentData.mobile;
+  }
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
 }
 
 function buildShareUrl(code) {
