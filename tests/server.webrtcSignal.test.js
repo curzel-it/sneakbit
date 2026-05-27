@@ -5,6 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { startServer } from "../server/index.js";
 import { openWsClient } from "./helpers/wsTestClient.js";
+import { toTestUuid } from "./helpers/testUuids.js";
 
 async function withServer(fn) {
   const s = await startServer({ port: 0, host: "127.0.0.1", graceMs: 80 });
@@ -12,7 +13,7 @@ async function withServer(fn) {
 }
 
 async function hello(c, uuid) {
-  c.send({ op: "hello", protocol: 1, uuid, client: "test" });
+  c.send({ op: "hello", protocol: 1, uuid: toTestUuid(uuid), client: "test" });
   return c.recv();
 }
 

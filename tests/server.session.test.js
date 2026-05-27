@@ -5,6 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { startServer } from "../server/index.js";
 import { openWsClient } from "./helpers/wsTestClient.js";
+import { toTestUuid } from "./helpers/testUuids.js";
 
 const GRACE = 80;
 
@@ -14,7 +15,7 @@ async function withServer(fn) {
 }
 
 async function hello(c, uuid) {
-  c.send({ op: "hello", protocol: 1, uuid, client: "test" });
+  c.send({ op: "hello", protocol: 1, uuid: toTestUuid(uuid), client: "test" });
   const w = await c.recv();
   assert.equal(w.op, "welcome");
   return w;
@@ -33,7 +34,7 @@ test("hello -> welcome", async () => {
 test("obsolete protocol closes with 4001", async () => {
   await withServer(async ({ host, port }) => {
     const c = await openWsClient(host, port);
-    c.send({ op: "hello", protocol: 0, uuid: "u-obsolete" });
+    c.send({ op: "hello", protocol: 0, uuid: toTestUuid("u-obsolete") });
     const m = await c.recv();
     assert.equal(m.op, "obsolete");
     const code = await c.waitClose();

@@ -1,5 +1,5 @@
 // Local co-op mode flag. When on:
-//   * a second player entity (P2) spawns next to P1 at boot
+//   * a second player entity (P2) spawns next to P1
 //   * P1 keeps its rebindable single-player keys (defaults: WASD/arrows
 //     + E/F/G + Esc)
 //   * P2 uses its own rebindable keymap (defaults: IJKL + B/N/M),
@@ -9,26 +9,15 @@
 //     toast / camera averaging features work
 //   * the camera follows the midpoint between the two players
 //
-// The flag is intentionally session-scoped (sessionStorage, not
-// localStorage): toggling it triggers a reload to rebuild the zone's
-// entity list, but a fresh browser launch always lands back in
-// single-player so a player who tried co-op once doesn't get stuck
-// hunting for P2 inputs on the next visit. Within a tab, sessionStorage
-// survives the toggle's reload — so the second-player spawn persists
-// for the whole session.
+// In-memory only — any reload (intentional F5, or one triggered by an
+// unrelated feature) lands back in single-player. Toggling on/off is
+// hot: partyPanel calls main.enableLocalCoop / disableLocalCoop, which
+// spawn or null out state.player2 without rebuilding the world.
 
-const STORAGE_KEY = "sneakbit.coop.v1";
-let cached = null;
+let cached = false;
 let networkGuestCount = 0;
 
-function load() {
-  if (cached !== null) return cached;
-  try { cached = sessionStorage.getItem(STORAGE_KEY) === "1"; }
-  catch { cached = false; }
-  return cached;
-}
-
-export function isCoopMode() { return load(); }
+export function isCoopMode() { return cached; }
 
 // Host network co-op uses the same per-slot input + render infrastructure
 // as local co-op, but flipping the persisted localStorage flag would
@@ -38,11 +27,10 @@ export function isCoopMode() { return load(); }
 // isCoopActive() to cover both cases.
 export function setNetworkGuestCount(n) { networkGuestCount = Math.max(0, n | 0); }
 export function getNetworkGuestCount() { return networkGuestCount; }
-export function isCoopActive() { return load() || networkGuestCount > 0; }
+export function isCoopActive() { return cached || networkGuestCount > 0; }
 
 export function setCoopMode(on) {
   cached = !!on;
-  try { sessionStorage.setItem(STORAGE_KEY, on ? "1" : "0"); } catch {}
 }
 
 // Fixed per-player keymaps for co-op. Slots 1/2 used to be the live

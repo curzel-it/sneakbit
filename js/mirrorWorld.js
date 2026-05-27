@@ -13,6 +13,7 @@ import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260527b"
 import { loadZone } from "./data.js?v=20260527b";
 import { buildZone } from "./zone.js?v=20260527b";
 import { setupCutscenes } from "./cutscenes.js?v=20260527b";
+import { evictZoneCache } from "./zoneCache.js?v=20260527b";
 
 export const INTERP_DELAY_MS = 100;
 const STALE_MS = 300;
@@ -72,6 +73,7 @@ export function uninstallMirrorWorld() {
   if (resyncTimer) { clearInterval(resyncTimer); resyncTimer = null; }
   netRef = null;
   lastResyncRequestAt = -Infinity;
+  if (zone) evictZoneCache(zone);
   zone = null;
   zonePromise = null;
   pendingZoneId = null;
@@ -181,6 +183,11 @@ async function loadZoneAndApplySnapshot(msg, opts) {
   try {
     const z = await zonePromise;
     if (pendingZoneId !== zoneId) return; // superseded
+    // Drop the outgoing zone's bake before we overwrite the only
+    // strong reference to its zone object. WeakMap would free it
+    // eventually; this just makes the canvases collectable in the
+    // same task as the zone swap rather than next-GC-pass.
+    if (zone && zone !== z) evictZoneCache(zone);
     zone = z;
     // The host's snapshot ships dynamic state only — cutscene
     // definitions come from the level JSON. Initialize them on the

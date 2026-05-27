@@ -329,6 +329,40 @@ test("peer.ghosted clears held keys only for the ghosting slot (other guests kee
   teardown();
 });
 
+test("action intent is dropped when the slot's avatar has been despawned (range gate)", async () => {
+  // Race: an `input` frame arrives for a slot whose state.players entry
+  // has just been wiped by peer.left. The cooldown bucket would still
+  // grant the action, so the range gate must short-circuit before the
+  // dispatcher is called. Pure routing assertion — no DOM, no real
+  // shoot/melee modules.
+  const { calls, restore } = await installDispatchSpies();
+  try {
+    const { fakeNet, state } = setup();
+    fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
+    // Simulate a despawn that hasn't yet led to a peer.left arriving.
+    state.player2 = null;
+    fakeNet.emit("input", { op: "input", seq: 1, from: "p_g1", intent: "shoot" });
+    assert.equal(calls.length, 0, "shoot must be dropped when avatar is gone");
+    teardown();
+  } finally { restore(); }
+});
+
+test("action intent is dropped when the slot's avatar is dead (range gate)", async () => {
+  const { calls, restore } = await installDispatchSpies();
+  const { applyPlayerDamage, resetPlayerHealth } =
+    await import("../js/playerHealth.js?v=20260527b");
+  try {
+    const { fakeNet } = setup();
+    fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
+    // The spawned slot-2 avatar has index=1 (see makeCoopP2). Kill it.
+    applyPlayerDamage(9999, 1);
+    fakeNet.emit("input", { op: "input", seq: 1, from: "p_g1", intent: "shoot" });
+    assert.equal(calls.length, 0, "shoot must be dropped while dead");
+    resetPlayerHealth(1);
+    teardown();
+  } finally { restore(); }
+});
+
 test("peer.ghosted without a known playerId is a no-op (defensive)", () => {
   const { fakeNet } = setup();
   fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });

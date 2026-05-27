@@ -125,6 +125,7 @@ function buildSnapshot(state) {
   lastPlayerSigs.clear();
   lastEntitySigs.clear();
   knownEntityIds = new Set();
+  serializeEntityResetWarnings();
   lastZoneId = state.zone.id;
   const players = playersOf(state).map(serializePlayer).filter(Boolean);
   const entities = (state.zone?.entities || []).map(serializeEntity).filter(Boolean);
@@ -251,8 +252,24 @@ function serializePlayer({ player, slot, playerId }) {
   };
 }
 
+// Dev-only warn ledger so we don't spam the console once per delta
+// (20 Hz × ~50 entities = a wall of duplicates). One log per offending
+// species/null-bucket. Cleared on every full snapshot via
+// `serializeEntityResetWarnings()` so the same offender re-surfaces if
+// it shows up in a fresh zone.
+const seenMissingIdSigs = new Set();
+function warnMissingId(e) {
+  if (typeof console === "undefined") return;
+  const sig = e ? `species:${e.species_id ?? "?"}` : "null-entity";
+  if (seenMissingIdSigs.has(sig)) return;
+  seenMissingIdSigs.add(sig);
+  console.warn("[broadcaster] dropping entity with missing id", sig, e);
+}
+function serializeEntityResetWarnings() { seenMissingIdSigs.clear(); }
+export const _serializeEntityResetWarningsForTesting = serializeEntityResetWarnings;
+
 function serializeEntity(e) {
-  if (!e || e.id == null) return null;
+  if (!e || e.id == null) { warnMissingId(e); return null; }
   const out = { id: e.id };
   if (e.species_id != null) out.species_id = e.species_id;
   if (e.frame) {

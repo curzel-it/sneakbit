@@ -7,6 +7,7 @@ import { randomBytes, createHash } from "node:crypto";
 import { deflateRawSync, inflateRawSync, constants as zlibConstants } from "node:zlib";
 import { startServer } from "../server/index.js";
 import { openWsClient } from "./helpers/wsTestClient.js";
+import { toTestUuid } from "./helpers/testUuids.js";
 
 async function withServer(fn) {
   const s = await startServer({ port: 0, host: "127.0.0.1", graceMs: 80 });
@@ -17,7 +18,7 @@ test("client offers permessage-deflate, server accepts", async () => {
   await withServer(async ({ host, port }) => {
     const c = await openWsClient(host, port, "/ws", { deflate: true });
     assert.equal(c.negotiatedDeflate, true);
-    c.send({ op: "hello", protocol: 1, uuid: "u-deflate-1", client: "test" });
+    c.send({ op: "hello", protocol: 1, uuid: toTestUuid("u-deflate-1"), client: "test" });
     const w = await c.recv();
     assert.equal(w.op, "welcome");
     c.close();
@@ -28,7 +29,7 @@ test("server still works when client does NOT offer deflate", async () => {
   await withServer(async ({ host, port }) => {
     const c = await openWsClient(host, port, "/ws");
     assert.equal(c.negotiatedDeflate, false);
-    c.send({ op: "hello", protocol: 1, uuid: "u-deflate-2", client: "test" });
+    c.send({ op: "hello", protocol: 1, uuid: toTestUuid("u-deflate-2"), client: "test" });
     const w = await c.recv();
     assert.equal(w.op, "welcome");
     c.close();
@@ -38,13 +39,13 @@ test("server still works when client does NOT offer deflate", async () => {
 test("deflate round-trip: host broadcast survives compression in both directions", async () => {
   await withServer(async ({ host, port }) => {
     const h = await openWsClient(host, port, "/ws", { deflate: true });
-    h.send({ op: "hello", protocol: 1, uuid: "u-dz-h", client: "test" });
+    h.send({ op: "hello", protocol: 1, uuid: toTestUuid("u-dz-h"), client: "test" });
     await h.recv();
     h.send({ op: "host.open" });
     const opened = await h.recv();
 
     const g = await openWsClient(host, port, "/ws", { deflate: true });
-    g.send({ op: "hello", protocol: 1, uuid: "u-dz-g", client: "test" });
+    g.send({ op: "hello", protocol: 1, uuid: toTestUuid("u-dz-g"), client: "test" });
     await g.recv();
     g.send({ op: "guest.join", code: opened.code });
     await g.recv();
@@ -73,14 +74,14 @@ test("deflate round-trip: host broadcast survives compression in both directions
 test("deflate + plaintext clients can coexist in the same session", async () => {
   await withServer(async ({ host, port }) => {
     const h = await openWsClient(host, port, "/ws", { deflate: true });
-    h.send({ op: "hello", protocol: 1, uuid: "u-mix-h", client: "test" });
+    h.send({ op: "hello", protocol: 1, uuid: toTestUuid("u-mix-h"), client: "test" });
     await h.recv();
     h.send({ op: "host.open" });
     const opened = await h.recv();
 
     const g = await openWsClient(host, port, "/ws"); // no deflate
     assert.equal(g.negotiatedDeflate, false);
-    g.send({ op: "hello", protocol: 1, uuid: "u-mix-g", client: "test" });
+    g.send({ op: "hello", protocol: 1, uuid: toTestUuid("u-mix-g"), client: "test" });
     await g.recv();
     g.send({ op: "guest.join", code: opened.code });
     await g.recv();
@@ -133,7 +134,7 @@ test("server inflates browser-style Z_SYNC_FLUSH compressed frames", async () =>
             if (!/permessage-deflate/i.test(head)) { clearTimeout(fail); reject(new Error("deflate not negotiated")); return; }
             upgraded = true;
             // Build a hello frame the browser-correct way.
-            const json = JSON.stringify({ op: "hello", protocol: 1, uuid: "browser-style-frame-test", client: "browser-emulator" });
+            const json = JSON.stringify({ op: "hello", protocol: 1, uuid: toTestUuid("browser-style-frame-test"), client: "browser-emulator" });
             const compressed = deflateRawSync(Buffer.from(json, "utf8"), { finishFlush: zlibConstants.Z_SYNC_FLUSH });
             assert.equal(compressed.slice(-4).toString("hex"), "0000ffff", "deflate should end with SYNC_FLUSH marker");
             const payload = compressed.slice(0, -4);

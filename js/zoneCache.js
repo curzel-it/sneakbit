@@ -25,6 +25,17 @@ export function getZoneCache(zone) {
   return entry;
 }
 
+// Explicit eviction. WeakMap entries do GC when the zone object loses
+// its last strong reference, but GC isn't immediate — on a guest that
+// follows a host through several zones in a row, the old bakes (5
+// canvases per zone, ~4 MB each at 30×30) can sit around until the next
+// pause. mirrorWorld.js calls this on the outgoing zone before swapping
+// `zone = z`, so the canvases free promptly.
+export function evictZoneCache(zone) {
+  if (!zone) return;
+  cache.delete(zone);
+}
+
 function build(zone) {
   let biomeSheet, constructionSheet;
   try {

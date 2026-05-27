@@ -16,6 +16,7 @@ import { setNetworkGuestCount } from "./coopMode.js?v=20260527b";
 import { tryShootForSlot } from "./shooting.js?v=20260527b";
 import { tryMeleeForSlot } from "./melee.js?v=20260527b";
 import { tryInteractForSlot } from "./interact.js?v=20260527b";
+import { isPlayerDead } from "./playerHealth.js?v=20260527b";
 
 const INTENT_TO_DIR = {
   moveUp: "up",
@@ -27,7 +28,12 @@ const INTENT_TO_DIR = {
 let stateGetter = null;
 let p2Factory = null;
 const guestSlotByPlayerId = new Map();
-const lastSeqByPlayerId = new Map();
+// Plain object kept in lockstep with the per-guest highest applied seq.
+// The broadcaster reads it ~20 times/sec via getLastSeqMap(); rebuilding
+// a fresh object on every read was producing observable GC churn. We
+// maintain `lastSeqOut` incrementally — set on input, delete on
+// peer.left — so getLastSeqMap() is now a constant-time reference.
+const lastSeqOut = Object.create(null);
 let unsubs = [];
 // Light cheat resistance: minimum gap between consecutive same-action
 // intents from a single guest. The honest human input limit on these
@@ -49,10 +55,12 @@ const lastActionAtByGuest = new Map();
 // carries `lastSeq[guestId]`, the highest seq the host has applied for
 // each guest. Used by predictedSelf.js on the guest side to decide
 // whether prediction is still in lockstep with the authority.
+//
+// Returns the live module-level object — callers must not mutate it.
+// The broadcaster serializes the snapshot synchronously so reuse is
+// safe; nothing buffers this reference across ticks.
 export function getLastSeqMap() {
-  const out = {};
-  for (const [pid, seq] of lastSeqByPlayerId) out[pid] = seq;
-  return out;
+  return lastSeqOut;
 }
 
 export function installHostGuests(getState, opts = {}) {
@@ -80,7 +88,7 @@ export function uninstallHostGuests() {
   stateGetter = null;
   p2Factory = null;
   guestSlotByPlayerId.clear();
-  lastSeqByPlayerId.clear();
+  for (const k of Object.keys(lastSeqOut)) delete lastSeqOut[k];
   lastActionAtByGuest.clear();
   setNetworkGuestCount(0);
 }
@@ -140,7 +148,7 @@ function onPeerLeft(m) {
   setNetworkGuestCount(guestSlotByPlayerId.size);
   if (slot == null) return;
   clearInputState(slot);
-  lastSeqByPlayerId.delete(m.playerId);
+  delete lastSeqOut[m.playerId];
   const state = stateGetter?.();
   if (!state) return;
   if (slot === 2) {
@@ -172,8 +180,8 @@ function onInput(m) {
   const slot = guestSlotByPlayerId.get(from);
   if (!slot) return;
   if (typeof m.seq === "number") {
-    const prev = lastSeqByPlayerId.get(from) ?? 0;
-    if (m.seq > prev) lastSeqByPlayerId.set(from, m.seq);
+    const prev = lastSeqOut[from] ?? 0;
+    if (m.seq > prev) lastSeqOut[from] = m.seq;
   }
   applyIntent(slot, m.intent, from);
 }
@@ -191,9 +199,52 @@ function applyIntent(slot, intent, from) {
   }
   if (intent === "stopMove") { clearInputHeld(slot); return; }
   if (intent === "interact" || intent === "shoot" || intent === "melee") {
+    // Range first — actionCooldownOk has the side effect of stamping the
+    // bucket, so checking it before a definite reject would lock out a
+    // legit guest who mashes the button during death animation.
+    if (!actionRangeOk(slot)) return;
     if (!actionCooldownOk(from, intent)) return;
     dispatchActionForSlot(slot, intent);
   }
+}
+
+// Range / state sanity check — second half of the "light cheat
+// resistance" pair next to the cooldown bucket. Blocks shoot/melee/
+// interact intents when the slot's actor isn't currently in a state
+// where they could plausibly act:
+//   - the slot's avatar exists in the host's local state (the wire
+//     identified the guest, but the host might have already despawned
+//     them on peer.left if the intent races the disconnect)
+//   - hp > 0 (a dead avatar can't fire)
+//   - tile coords are inside the current zone (defends against a
+//     malicious client somehow nudging the host's avatar off-grid via
+//     prior movement intents)
+// The downstream tryShoot/tryMelee/tryInteract paths also enforce
+// state-correct rules, but bouncing the intent here avoids spinning
+// the local sim's per-action machinery for a clearly bogus request.
+function actionRangeOk(slot) {
+  const state = stateGetter?.();
+  if (!state) return false;
+  const player = playerForSlot(state, slot);
+  if (!player) return false;
+  if (isPlayerDead(player.index | 0)) return false;
+  const zone = state.zone;
+  if (!zone) return false;
+  const cols = zone.cols | 0;
+  const rows = zone.rows | 0;
+  if (cols <= 0 || rows <= 0) return false;
+  const tx = player.tileX | 0;
+  const ty = player.tileY | 0;
+  if (tx < 0 || ty < 0 || tx >= cols || ty >= rows) return false;
+  return true;
+}
+
+function playerForSlot(state, slot) {
+  if (slot === 2) return state.player2 || null;
+  if (slot < 2 || slot > 4) return null;
+  if (!Array.isArray(state.players)) return null;
+  const s = state.players.find((e) => e.slot === slot);
+  return s ? s.player : null;
 }
 
 let actionDispatch = {

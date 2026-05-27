@@ -17,6 +17,16 @@ import { createMetrics } from "./metrics.js";
 export const PROTOCOL = 1;
 export const MIN_PROTOCOL = 1;
 
+// UUIDv4 by RFC 4122: 8-4-4-4-12 lowercase hex with version nibble 4
+// and variant high bits 10 (yielding [89abAB] in the variant nibble).
+// crypto.randomUUID() — the browser path in js/onlineMode.js — always
+// produces a string matching this regex; legacy short labels from old
+// tests no longer pass and are now expected to be rejected with 4001.
+const UUIDV4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+export function isValidUuidV4(s) {
+  return typeof s === "string" && UUIDV4_RE.test(s);
+}
+
 // Per-spec close codes. 4002 = idle (no pings for the timeout window);
 // 4004 = severe rate violation — the client gets banned for a minute;
 // 4005 = kicked by host (host.kick op) — no auto-reconnect on the client.
@@ -128,7 +138,7 @@ export function createRelay({
   }
 
   function onHello(ctx, msg) {
-    if (typeof msg.uuid !== "string" || msg.uuid.length < 4) {
+    if (!isValidUuidV4(msg.uuid)) {
       ctx.ws.close(4001, "bad uuid"); return;
     }
     if (typeof msg.protocol !== "number" || msg.protocol < MIN_PROTOCOL) {

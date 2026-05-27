@@ -29,6 +29,17 @@ export function isValidJoinCode(code) {
   return typeof code === "string" && JOIN_CODE_PATTERN.test(code);
 }
 
+// Boot-URL cache. These three values are seeded from `location.search`
+// on first read and NEVER refreshed by switchRole() or any other
+// runtime transition — getMode() / getJoinCode() are deep-link
+// metadata, not live state. If we ever add a "Leave to offline"
+// runtime path that needs the *current* mode (rather than the URL the
+// tab was opened with), switch the callsite to getRuntimeRole() — the
+// runtime-role machinery below is the writable counterpart.
+//
+// Only _resetOnlineModeForTesting / _setOnlineModeForTesting can
+// invalidate these; production code treats them as boot-time
+// constants.
 let cachedMode = null;
 let cachedCode = null;
 let cachedUuid = null;
@@ -65,6 +76,8 @@ function ensureCached() {
   cachedCode = r.code;
 }
 
+// Perma-cached after first call. See cachedMode block above — callers
+// that want the *current* role must use getRuntimeRole(), not this.
 export function getMode() { ensureCached(); return cachedMode; }
 export function getJoinCode() { ensureCached(); return cachedCode; }
 

@@ -92,7 +92,7 @@ export function startServer({ port = PORT, host = HOST, graceMs, idleTimeoutMs, 
       socket.destroy();
       return;
     }
-    if (req.url !== "/ws" && req.url !== "/") {
+    if (req.url !== "/ws") {
       socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
       socket.destroy();
       return;

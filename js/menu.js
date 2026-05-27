@@ -13,7 +13,7 @@ import { getSkills } from "./skills.js?v=20260527b";
 import { renderInventoryInto } from "./inventoryScreen.js?v=20260527b";
 import { isCreativeMode } from "./creativeMode.js?v=20260527b";
 import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260527b";
-import { isCoopMode, isCoopActive, setCoopMode } from "./coopMode.js?v=20260527b";
+import { isCoopMode, isCoopActive } from "./coopMode.js?v=20260527b";
 import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260527b";
 import { invalidateZoneCache } from "./data.js?v=20260527b";
 import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260527b";
@@ -106,9 +106,6 @@ export function installMenu(stateGetter) {
       </div>
       <div class="menu-row">
         <label for="opt-fps"><input id="opt-fps" type="checkbox" /> Show FPS</label>
-      </div>
-      <div class="menu-row">
-        <label for="opt-coop"><input id="opt-coop" type="checkbox" /> Local co-op (2 players)</label>
       </div>
       <div class="menu-row" id="opt-friendly-fire-row">
         <label for="opt-friendly-fire"><input id="opt-friendly-fire" type="checkbox" /> Friendly fire (co-op)</label>
@@ -447,22 +444,6 @@ function bindWidgets() {
 
   const ff = root.querySelector("#opt-friendly-fire");
   ff.addEventListener("change", () => saveSettings({ friendlyFire: ff.checked }));
-
-  const coop = root.querySelector("#opt-coop");
-  coop.addEventListener("change", () => {
-    const next = coop.checked;
-    const msg = next
-      ? "Enable co-op?\n\nP1: your normal keys\nP2: IJKL move + B interact + N kunai + M melee\n\nThe page will reload. Co-op stays on for this tab only — a fresh launch starts back in single-player."
-      : "Disable co-op?\n\nThe page will reload and P2 will be removed.";
-    if (!confirm(msg)) {
-      // User cancelled — revert the checkbox to its old state without
-      // touching storage or reloading.
-      coop.checked = !next;
-      return;
-    }
-    setCoopMode(next);
-    location.reload();
-  });
 }
 
 function syncSettingsWidgets() {
@@ -475,7 +456,6 @@ function syncSettingsWidgets() {
   root.querySelector("#opt-music-volume-val").textContent = `${music}%`;
   root.querySelector("#opt-muted").checked = !!s.muted;
   root.querySelector("#opt-fps").checked = !!s.showFps;
-  root.querySelector("#opt-coop").checked = isCoopMode();
   root.querySelector("#opt-friendly-fire").checked = !!s.friendlyFire;
   // Friendly fire is meaningless without a second hero in the world —
   // hide the row entirely unless local co-op is on or a network guest

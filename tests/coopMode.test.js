@@ -1,21 +1,9 @@
-// Co-op mode flag persists in localStorage and exposes the per-player
-// keymap that input.js / interact.js / shooting.js / melee.js consult
-// when coop is on.
+// Co-op mode flag is in-memory only (any reload returns to single-
+// player) and exposes the per-player keymap that input.js / interact.js
+// / shooting.js / melee.js consult when coop is on.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-
-globalThis.localStorage = (() => {
-  const m = new Map();
-  return {
-    get length() { return m.size; },
-    key: (i) => Array.from(m.keys())[i],
-    getItem: (k) => (m.has(k) ? m.get(k) : null),
-    setItem: (k, v) => m.set(k, String(v)),
-    removeItem: (k) => m.delete(k),
-    clear: () => m.clear(),
-  };
-})();
 
 const { isCoopMode, setCoopMode, COOP_KEYMAPS, _setCoopModeForTesting } =
   await import("../js/coopMode.js?v=20260527b");
@@ -25,7 +13,7 @@ test("defaults to disabled", () => {
   assert.equal(isCoopMode(), false);
 });
 
-test("setCoopMode toggles and persists", () => {
+test("setCoopMode toggles in-memory flag", () => {
   setCoopMode(true);
   assert.equal(isCoopMode(), true);
   setCoopMode(false);

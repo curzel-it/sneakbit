@@ -48,7 +48,7 @@ import { setupCutscenes, tickCutscenes } from "./cutscenes.js?v=20260527b";
 import { tickTrails } from "./trails.js?v=20260527b";
 import { tickPushables } from "./pushables.js?v=20260527b";
 import { updateVisibleEntities } from "./zoneVisibility.js?v=20260527b";
-import { isCoopMode } from "./coopMode.js?v=20260527b";
+import { isCoopMode, setCoopMode } from "./coopMode.js?v=20260527b";
 import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js?v=20260527b";
 import { runMigrations } from "./migrations.js?v=20260527b";
 import { installMapEditor } from "./mapEditor.js?v=20260527b";
@@ -57,6 +57,7 @@ import { getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead } from "./
 import { tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js?v=20260527b";
 import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260527b";
 import { installPartyPanel } from "./partyPanel.js?v=20260527b";
+import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js?v=20260527b";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js?v=20260527b";
 import { switchRole, setStateHandlers } from "./switchRole.js?v=20260527b";
 
@@ -69,6 +70,7 @@ let state = null;
 async function main() {
   bootstrapOnline();             // seeds runtime role from URL; doesn't install role modules
   installPartyPanel();
+  installHostLaggingOverlay();
   // `?join=CODE` tabs with a *well-formed* code are guests for the
   // lifetime of the page — they never own a local save and shouldn't
   // touch localStorage's identity bits, run the first-launch tutorial,
@@ -231,6 +233,8 @@ async function main() {
       // Camera averages every live player so co-op players stay on screen.
       // Dead co-op players drop out of the average so the camera doesn't
       // anchor to where they fell. Single-player still passes one target.
+      // For online hosts the camera only follows the host (each guest has
+      // their own viewport via their mirror).
       const liveForCamera = livePlayersForCamera(state);
       updateCamera(state.camera, liveForCamera, state.zone);
       updateVisibleEntities(state.zone, state.camera);
@@ -266,8 +270,11 @@ async function main() {
     // Pass live players to the renderer so P2 sorts correctly with the
     // entity z-stack and not just on top as a separate draw call. Dead
     // co-op players are filtered out so they vanish from the screen
-    // until the next zone transition respawns them.
-    const renderPlayers = livePlayersForCamera(state);
+    // until the next zone transition respawns them. Online hosts include
+    // every guest avatar here — livePlayersForCamera narrows the camera
+    // target down to the host themselves, but the host's screen still
+    // needs to render the guests (or "host can't see guests" lingers).
+    const renderPlayers = livePlayersForRender(state);
     render(renderer, state.zone, state.camera, renderPlayers, biomeAnim.frame);
     updateHud(hud, {
       zoneId: state.zone.id,
@@ -372,6 +379,7 @@ function tagHostPlayerId() {
 // snapshot/delta we snap it back to whatever the host says.
 function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
   maybeFallBackToOffline();
+  updateHostLaggingOverlay();
   const mZone = getMirrorZone();
   tickBiomeAnimation(biomeAnim, dt);
   tickEntities(dt);
@@ -461,24 +469,60 @@ const DIR_DELTA = {
   right: [ 1,  0],
 };
 
+// Spawn-tile search: try the tile in front of P1 first, then the other
+// three cardinals, finally fall back to P1's own tile if every neighbor
+// is walled / occupied. Walking the four neighbors (instead of just the
+// front tile) keeps hot-toggle from dropping P2 on top of P1 in tight
+// corridors where the front tile happens to be solid.
+function pickP2Spawn(p1, zone) {
+  const dirs = ["up", "down", "left", "right"];
+  const order = [p1.direction, ...dirs.filter((d) => d !== p1.direction)];
+  for (const d of order) {
+    const [dx, dy] = DIR_DELTA[d] ?? [0, 0];
+    const x = p1.tileX + dx;
+    const y = p1.tileY + dy;
+    if (x < 0 || x >= zone.cols || y < 0 || y >= zone.rows) continue;
+    if (!isWalkable(zone, x, y)) continue;
+    if (isEntityBlocked(zone, x, y)) continue;
+    return { x, y };
+  }
+  return { x: p1.tileX, y: p1.tileY };
+}
+
 function makeCoopP2(p1, zone, opts = {}) {
   const p2 = createPlayer({ index: opts.index ?? 1 });
-  const [dx, dy] = DIR_DELTA[p1.direction] ?? DIR_DELTA.down;
-  const candX = p1.tileX + dx;
-  const candY = p1.tileY + dy;
-  const okX = candX >= 0 && candX < zone.cols;
-  const okY = candY >= 0 && candY < zone.rows;
-  const useOffset = okX && okY
-    && isWalkable(zone, candX, candY)
-    && !isEntityBlocked(zone, candX, candY);
-  const sx = useOffset ? candX : p1.tileX;
-  const sy = useOffset ? candY : p1.tileY;
+  const { x: sx, y: sy } = pickP2Spawn(p1, zone);
   p2.tileX = sx;
   p2.tileY = sy;
   p2.x = sx;
   p2.y = sy;
   p2.direction = "down";
   return p2;
+}
+
+// Hot-toggle entry points for the party panel. Spawning / despawning P2
+// reuses the same makeCoopP2 helper that initOfflineState calls at boot;
+// per-frame consumers (input, melee/shoot/interact, HUD, inventory) all
+// already gate on isCoopMode() or state.player2, so the flip takes
+// effect on the next tick without further wiring. travelTo re-applies
+// the coop spawn rule on zone transitions, so a hot-toggled P2 survives
+// teleporters.
+export function enableLocalCoop() {
+  if (!state?.zone || !state.player) return;
+  if (state.player2) return;
+  setCoopMode(true);
+  state.player2 = makeCoopP2(state.player, state.zone);
+  state.lastTile2 = { x: state.player2.tileX, y: state.player2.tileY };
+  p2DeathToasted = false;
+}
+
+export function disableLocalCoop() {
+  if (!state) return;
+  if (!state.player2 && !isCoopMode()) return;
+  setCoopMode(false);
+  state.player2 = null;
+  state.lastTile2 = null;
+  p2DeathToasted = false;
 }
 
 function snapToEntry(player, zone) {
@@ -589,6 +633,19 @@ function livePlayersForCamera(state) {
   // If everyone's dead the camera freezes on P1's last position so the
   // Game Over overlay doesn't snap to (0, 0).
   return live.length ? live : (state.player ? [state.player] : []);
+}
+
+// What the renderer draws on the host/offline screen. Distinct from the
+// camera helper because the host's camera deliberately ignores guests
+// (so the view doesn't slide to wherever they walk) but the host must
+// still see them on-screen as fellow avatars. Earlier this reused
+// livePlayersForCamera for both, which meant the host's screen drew
+// only itself even though state.player2/state.players were being
+// simulated and broadcast — guests saw the host but the host saw an
+// empty world. Dead avatars are filtered out so a downed co-op player
+// vanishes until the next revive (same rule as before for offline).
+function livePlayersForRender(state) {
+  return allPlayers(state);
 }
 
 function maybeTeleport(state) {

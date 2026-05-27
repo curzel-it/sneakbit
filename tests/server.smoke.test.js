@@ -17,6 +17,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { Buffer } from "node:buffer";
 import { openWsClient } from "./helpers/wsTestClient.js";
 
 const SMOKE_URL = process.env.SMOKE_URL;
@@ -47,12 +48,15 @@ async function hello(c, uuid) {
   return w;
 }
 
-// Stable, non-conflicting UUID per smoke run — random nibbles plus a
-// distinguishable prefix so a misbehaving relay log makes it easy to
-// see "this came from a smoke test".
+// Stable, non-conflicting UUIDv4 per smoke run. The relay strict-validates
+// UUIDv4 shape now, so we can't smuggle a "smoke" prefix into the first
+// group — encode the tag into the timestamp segment instead so a
+// misbehaving relay log still makes it easy to see "this came from a
+// smoke test".
 function smokeUuid(tag) {
   const r = (n) => Math.floor(Math.random() * 16).toString(16).padStart(n, "0");
-  return `smoke${tag}-${r(4)}-4${r(3)}-8${r(3)}-${r(12)}`;
+  const tagHex = Buffer.from(String(tag)).toString("hex").padEnd(8, "0").slice(0, 8);
+  return `${tagHex}-${r(4)}-4${r(3)}-8${r(3)}-${r(12)}`;
 }
 
 test("[smoke] hello -> welcome over TLS", { skip: !SHOULD_RUN }, async () => {

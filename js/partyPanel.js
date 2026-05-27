@@ -25,6 +25,8 @@ import {
 import { switchRole } from "./switchRole.js?v=20260527b";
 import { showToast } from "./toast.js?v=20260527b";
 import { isCreativeMode } from "./creativeMode.js?v=20260527b";
+import { isCoopMode } from "./coopMode.js?v=20260527b";
+import { enableLocalCoop, disableLocalCoop } from "./main.js?v=20260527b";
 
 let chip = null;
 let chipLabel = null;
@@ -55,6 +57,8 @@ let guestTitleEl = null;
 let guestSlotEl = null;
 let guestLeaveBtn = null;
 // Offline view widgets — the start button gates on creative mode.
+let offlineLocalBtn = null;
+let offlineLocalHint = null;
 let offlineStartBtn = null;
 let offlineJoinInput = null;
 let offlineJoinBtn = null;
@@ -153,15 +157,29 @@ function buildOfflineView() {
   title.textContent = "Play co-op";
   root.appendChild(title);
 
+  offlineLocalBtn = document.createElement("button");
+  offlineLocalBtn.id = "party-local-coop";
+  offlineLocalBtn.addEventListener("click", onLocalCoopClick);
+  root.appendChild(offlineLocalBtn);
+
+  offlineLocalHint = document.createElement("p");
+  offlineLocalHint.className = "party-hint";
+  root.appendChild(offlineLocalHint);
+
   offlineStartBtn = document.createElement("button");
   offlineStartBtn.id = "party-start-hosting";
-  offlineStartBtn.textContent = "Start hosting";
+  offlineStartBtn.textContent = "Host online";
   offlineStartBtn.addEventListener("click", onStartHostingClick);
   root.appendChild(offlineStartBtn);
 
+  const hostHint = document.createElement("p");
+  hostHint.className = "party-hint";
+  hostHint.textContent = "Get an invite code to share. Friends join from another browser, up to 4 total.";
+  root.appendChild(hostHint);
+
   const joinLabel = document.createElement("p");
   joinLabel.className = "party-hint";
-  joinLabel.textContent = "Or join with an invite code:";
+  joinLabel.textContent = "Or join with an invite code from a friend:";
   root.appendChild(joinLabel);
 
   const joinRow = document.createElement("div");
@@ -323,6 +341,16 @@ function renderPanel() {
 
 function renderOfflineView() {
   const creative = isCreativeMode();
+  const coopOn = isCoopMode();
+  if (offlineLocalBtn) {
+    offlineLocalBtn.textContent = coopOn ? "Stop local co-op" : "Play on this device (2-player)";
+    offlineLocalBtn.classList.toggle("party-danger", coopOn);
+  }
+  if (offlineLocalHint) {
+    offlineLocalHint.textContent = coopOn
+      ? "P2 is in the world. Press IJKL to move them, B / N / M to act. Reload to end."
+      : "Share one keyboard. P2 uses IJKL to move, B interact, N kunai, M melee. Reload to end.";
+  }
   offlineStartBtn.disabled = creative;
   offlineStartBtn.title = creative ? "Leave creative mode first." : "";
   offlineStartBtn.classList.toggle("party-disabled", creative);
@@ -418,6 +446,18 @@ function renderGuestView() {
 
 // — Click handlers ——————————————————————————————————————————————————————
 
+function onLocalCoopClick() {
+  if (isCoopMode()) {
+    disableLocalCoop();
+    renderAll();
+    showToast("Local co-op ended", "hint");
+    return;
+  }
+  enableLocalCoop();
+  closePartyPanel();
+  showToast("Local co-op on — P2 uses IJKL", "longHint");
+}
+
 function onStartHostingClick() {
   if (isCreativeMode()) {
     showToast("Leave creative mode first.", "hint");
@@ -452,7 +492,11 @@ async function onShareClick() {
   const code = getInviteCode();
   if (!code) return;
   const url = buildShareUrl(code);
-  if (typeof navigator !== "undefined" && navigator.share) {
+  // Only invoke navigator.share when canNativeShare() agrees — desktop
+  // Chrome/Edge expose navigator.share since 2022 but pop a modal share
+  // menu that the user has to dismiss to copy. The button is rendered
+  // as "Copy link" on those platforms; clicking should just copy.
+  if (canNativeShare()) {
     try { await navigator.share({ title: "Join my SneakBit session", url }); return; }
     catch { /* user dismissed; fall through to clipboard */ }
   }
@@ -631,6 +675,8 @@ export function _resetPartyPanelForTesting() {
   guestTitleEl = null;
   guestSlotEl = null;
   guestLeaveBtn = null;
+  offlineLocalBtn = null;
+  offlineLocalHint = null;
   offlineStartBtn = null;
   offlineJoinInput = null;
   offlineJoinBtn = null;
