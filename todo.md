@@ -62,26 +62,26 @@ Product/UX decisions locked in 2026-05-27 (see party-ui-open-questions.md for th
   · Q6 — kick close code: 4005 (new entry in spec's close-code table).
   · Q7 — reconnect on 4005: no auto-reconnect; kicked guest must explicitly re-join. No host-side kick list in v0.
 UI:
-- [ ] Move party info/management out of the always-on top-right overlay into a dedicated panel reached from the settings/pause menu
-- [ ] Replace the overlay with a small status chip ("Hosting · 2/4" / "Guest · slot 2" / nothing when offline) that opens the dedicated panel on click
-- [ ] Offline view: "Start hosting" button (lazy host.open) + "Join with code" input
-- [ ] Hosting view: invite code with copy-to-clipboard + share-link buttons, peer list with per-peer Kick, "End co-op" button (emits a "Co-op ended" toast on the host per Q1)
-- [ ] Guest view: host name + slot + "Leave co-op" button
-- [ ] Reuse DOM nodes (no innerHTML rebuild) on state changes — keep focus / scroll
-- [ ] Responsive layout + touch-friendly for the new party screen
-- [ ] Disable the "Start hosting" button while in creative / map editor; show tooltip "Leave creative mode first." (Q3)
-- [ ] Handle deep-link `?join=CODE` while already in a session: auto-leave current, then auto-join the new code (Q5)
+- [x] Move party info/management out of the always-on top-right overlay into a dedicated panel reached from the settings/pause menu
+- [x] Replace the overlay with a small status chip ("Hosting · 2/4" / "Guest · slot 2" / nothing when offline) that opens the dedicated panel on click
+- [x] Offline view: "Start hosting" button (lazy host.open) + "Join with code" input
+- [x] Hosting view: invite code with copy-to-clipboard + share-link buttons, peer list with per-peer Kick, "End co-op" button (emits a "Co-op ended" toast on the host per Q1)
+- [x] Guest view: host name + slot + "Leave co-op" button
+- [x] Reuse DOM nodes (no innerHTML rebuild) on state changes — keep focus / scroll
+- [ ] Responsive layout + touch-friendly for the new party screen (works on desktop and mobile but not specifically tuned)
+- [x] Disable the "Start hosting" button while in creative / map editor; show tooltip "Leave creative mode first." (Q3)
+- [x] Handle deep-link `?join=CODE` while already in a session: auto-leave current, then auto-join the new code (Q5) — switchRole handles same-role-different-code; URL pastes navigate-and-re-run main, which is also covered
 Protocol:
-- [ ] New op `host.kick { playerId }` — relay closes the guest's WS with close code 4005 and emits `peer.left { reason: "kicked" }` to the host + all remaining guests (now in spec § host.kick + peer.left + close codes)
-- [ ] On 4005 close, net.js does NOT auto-reconnect; client runs `switchRole("offline")` and shows "You were removed from the session" toast (Q7)
+- [x] New op `host.kick { playerId }` — relay closes the guest's WS with close code 4005 and emits `peer.left { reason: "kicked" }` to the host + all remaining guests (server/relay.js + tests/server.session.test.js)
+- [x] On 4005 close, net.js does NOT auto-reconnect; client runs `switchRole("offline")` and shows "You were removed from the session" toast (Q7)
 Runtime role switching:
-- [ ] Pair every install with a real teardown: snapshotBroadcaster, hostGuests, mirrorWorld, predictedSelf, guestInputForwarder, guestEvents
-- [ ] Audit module-level singletons for reset on role change (predictedSelf's `predicted` / `installed` / `lastAckedSeq`; hostGuests' `guestSlotByPlayerId`, etc.)
-- [ ] Single `switchRole(role, opts)` entry point that drains the current role and brings up the next one in the right order
-- [ ] Role becomes a runtime piece of `onlineMode` state with subscribers; `getNetRole()` reads it, partyPanel + status chip subscribe to changes
-- [ ] Reset `state.player` / `state.zone` / save namespace on host ↔ guest transitions (currently set once at boot)
-- [ ] Party-panel buttons call `switchRole` directly — no `location.replace`
-- [ ] On boot, honor `?host=1` / `?join=CODE` once by calling `switchRole` after the initial offline boot completes (URL stays a deep-link entry point, not the role contract)
+- [x] Pair every install with a real teardown: snapshotBroadcaster, hostGuests, mirrorWorld, predictedSelf, guestInputForwarder, guestEvents
+- [x] Audit module-level singletons for reset on role change (predictedSelf's `predicted` / `installed` / `lastAckedSeq`; hostGuests' `guestSlotByPlayerId`, etc.)
+- [x] Single `switchRole(role, opts)` entry point that drains the current role and brings up the next one in the right order
+- [x] Role becomes a runtime piece of `onlineMode` state with subscribers; `getNetRole()` reads it, partyPanel + status chip subscribe to changes
+- [x] Reset `state.player` / `state.zone` / save namespace on host ↔ guest transitions (currently set once at boot)
+- [x] Party-panel buttons call `switchRole` directly — no `location.replace`
+- [x] On boot, honor `?host=1` / `?join=CODE` once by calling `switchRole` after the initial offline boot completes (URL stays a deep-link entry point, not the role contract)
 
 Polish — server
 - [ ] WS frame size cap ~1 MB in parseFrames (currently > 2 GB before throwing)
@@ -113,7 +113,7 @@ Polish — client
 - [ ] friendlyReason: generic "Couldn't connect" fallback instead of raw reason string
 
 Polish — guest mode role gates
-- [ ] Suppress saveProgress beforeunload for guests (today the local save accumulates stale state.player data)
+- [x] Suppress saveProgress beforeunload for guests (wipeGuestState nulls state.zone/player on guest entry; save.js's saveProgress already no-ops in that case)
 - [ ] Gate fastTravel install by role
 - [ ] Gate healthHud / ammoHud installs by role (currently render the guest's local inventory, not the host's view)
 - [ ] Gate menu's New Game / Reset by role (would wipe the guest's UUID + identity)
