@@ -52,8 +52,10 @@ import { isCoopMode } from "./coopMode.js";
 import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js";
 import { runMigrations } from "./migrations.js";
 import { installMapEditor } from "./mapEditor.js";
+import { bootstrapOnline } from "./onlineBootstrap.js";
 
 async function main() {
+  bootstrapOnline();
   showLoadingScreen(5); // assets + species + strings + zone + biome sheet bake
   runMigrations();
   initInput();
