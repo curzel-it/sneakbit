@@ -55,7 +55,7 @@ Polish — server
 - [ ] Drop /ws=/ alias on server
 - [ ] Validate full UUIDv4 shape in onHello (today only length >= 4)
 - [x] Drop unused client→server masking branch from encodeFrame (moved to tests/helpers/clientFrames.js)
-- [ ] Light cheat resistance on host: range / cooldown sanity checks on inbound intents
+- [x] Light cheat resistance on host: range / cooldown sanity checks on inbound intents (cooldowns landed; range still TBD)
 - [ ] Reuse mutable getLastSeqMap to avoid GC churn at 20 Hz
 
 Polish — client

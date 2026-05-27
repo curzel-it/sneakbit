@@ -26,6 +26,21 @@ let p2Factory = null;
 const guestSlotByPlayerId = new Map();
 const lastSeqByPlayerId = new Map();
 let unsubs = [];
+// Light cheat resistance: minimum gap between consecutive same-action
+// intents from a single guest. The honest human input limit on these
+// keys is ~5/sec at most; anything faster is either a stuck key on the
+// guest or a tampered client trying to spam attacks on the host's
+// world. Caps are intentionally generous so a fast tapper doesn't
+// notice them. Movement intents are NOT throttled here — they're
+// state-derived (last one wins), so a flood is self-suppressing and
+// the input pipeline already costs ~nothing per call.
+const ACTION_COOLDOWN_MS = {
+  shoot:    180,
+  melee:    180,
+  interact: 250,
+};
+// playerId → { intent → lastAppliedMs }
+const lastActionAtByGuest = new Map();
 
 // Public: the host's broadcaster reads this so every snapshot/delta
 // carries `lastSeq[guestId]`, the highest seq the host has applied for
@@ -63,6 +78,7 @@ export function uninstallHostGuests() {
   p2Factory = null;
   guestSlotByPlayerId.clear();
   lastSeqByPlayerId.clear();
+  lastActionAtByGuest.clear();
   setNetworkGuestCount(0);
 }
 
@@ -150,10 +166,10 @@ function onInput(m) {
     const prev = lastSeqByPlayerId.get(from) ?? 0;
     if (m.seq > prev) lastSeqByPlayerId.set(from, m.seq);
   }
-  applyIntent(slot, m.intent);
+  applyIntent(slot, m.intent, from);
 }
 
-function applyIntent(slot, intent) {
+function applyIntent(slot, intent, from) {
   const dir = INTENT_TO_DIR[intent];
   if (dir) {
     // Movement intents are absolute "I'm now pressing X only": wipe the
@@ -166,9 +182,30 @@ function applyIntent(slot, intent) {
   }
   if (intent === "stopMove") { clearInputHeld(slot); return; }
   if (intent === "interact" || intent === "shoot" || intent === "melee") {
+    if (!actionCooldownOk(from, intent)) return;
     dispatchActionForSlot(slot, intent);
   }
 }
+
+// Returns true if the action is allowed (and stamps the timer); false
+// if the same guest spammed this intent inside the cooldown window.
+// Per-guest, per-intent — a guest who legitimately alternates
+// shoot/melee at high speed isn't throttled by a single shared bucket.
+function actionCooldownOk(from, intent, now = Date.now()) {
+  const min = ACTION_COOLDOWN_MS[intent];
+  if (!min) return true;
+  let timers = lastActionAtByGuest.get(from);
+  if (!timers) { timers = {}; lastActionAtByGuest.set(from, timers); }
+  const last = timers[intent] ?? 0;
+  if (now - last < min) return false;
+  timers[intent] = now;
+  return true;
+}
+
+export function _resetActionCooldownsForTesting() {
+  lastActionAtByGuest.clear();
+}
+export function _getActionCooldownsForTesting() { return lastActionAtByGuest; }
 
 // Synthesises a keydown for the slot's coop-keymap action key. The
 // interact / shoot / melee listeners use the same isCoopActive() gate
