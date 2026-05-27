@@ -10,6 +10,7 @@
 
 import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js";
 import { getPlayerHp } from "./playerHealth.js";
+import { getLastSeqMap } from "./hostGuests.js";
 
 export const BROADCAST_INTERVAL_MS = 50;
 
@@ -79,7 +80,7 @@ function buildDelta(state) {
     zoneId: state.zone.id,
     players,
     entities,
-    lastSeq: {},
+    lastSeq: getLastSeqMap(),
   };
   if (removed.length) msg.removed = { entities: removed };
   return msg;
@@ -104,7 +105,7 @@ function buildSnapshot(state) {
     zoneId: state.zone.id,
     players,
     entities,
-    lastSeq: {},
+    lastSeq: getLastSeqMap(),
   };
 }
 

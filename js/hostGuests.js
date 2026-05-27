@@ -20,6 +20,17 @@ const INTENT_TO_DIR = {
 let stateGetter = null;
 let p2Factory = null;
 const guestSlotByPlayerId = new Map();
+const lastSeqByPlayerId = new Map();
+
+// Public: the host's broadcaster reads this so every snapshot/delta
+// carries `lastSeq[guestId]`, the highest seq the host has applied for
+// each guest. Used by predictedSelf.js on the guest side to decide
+// whether prediction is still in lockstep with the authority.
+export function getLastSeqMap() {
+  const out = {};
+  for (const [pid, seq] of lastSeqByPlayerId) out[pid] = seq;
+  return out;
+}
 
 export function installHostGuests(getState, opts = {}) {
   if (getNetRole() !== "host" && !opts.force) return false;
@@ -40,6 +51,7 @@ export function _uninstallHostGuestsForTesting() {
   stateGetter = null;
   p2Factory = null;
   guestSlotByPlayerId.clear();
+  lastSeqByPlayerId.clear();
 }
 
 function onPeerJoined(m, isRejoin) {
@@ -89,6 +101,10 @@ function onInput(m) {
   if (!from) return;
   const slot = guestSlotByPlayerId.get(from);
   if (!slot) return;
+  if (typeof m.seq === "number") {
+    const prev = lastSeqByPlayerId.get(from) ?? 0;
+    if (m.seq > prev) lastSeqByPlayerId.set(from, m.seq);
+  }
   applyIntent(slot, m.intent);
 }
 

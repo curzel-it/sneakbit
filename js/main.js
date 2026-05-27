@@ -57,6 +57,8 @@ import { installSnapshotBroadcaster } from "./snapshotBroadcaster.js";
 import { installMirrorWorld, getMirrorZone, getMirrorPlayers, isMirrorReady } from "./mirrorWorld.js";
 import { installHostGuests } from "./hostGuests.js";
 import { installGuestInputForwarder } from "./guestInputForwarder.js";
+import { installPredictedSelf, tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js";
+import { getSelfPlayerId } from "./onlineBootstrap.js";
 
 async function main() {
   bootstrapOnline();
@@ -180,8 +182,13 @@ async function main() {
   // Host: spawn / despawn guest avatars on peer.joined / peer.left and
   // route guest `input` frames into the local input pipeline.
   installHostGuests(() => state, { makeCoopP2 });
-  // Guest: capture keyboard and forward intents to the host.
-  if (isGuest) installGuestInputForwarder(getNet());
+  // Guest: capture keyboard and forward intents to the host. Also start
+  // local prediction so the guest's own avatar reacts within one frame
+  // regardless of RTT.
+  if (isGuest) {
+    installGuestInputForwarder(getNet());
+    installPredictedSelf(getNet());
+  }
 
   startGameLoop((dt) => {
     if (isGuest) {
@@ -250,13 +257,14 @@ async function main() {
 // Guest-mode tick: skips simulation entirely (the host owns the world)
 // and renders from the mirror. The mirror's zone arrives with the first
 // snapshot; until then the canvas stays blank with the loading-screen
-// overlay still visible.
+// overlay still visible. predictedSelf is advanced each frame so the
+// guest's own avatar moves locally with zero perceived latency; on
+// snapshot/delta we snap it back to whatever the host says.
 function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
   const mZone = getMirrorZone();
-  const mPlayers = getMirrorPlayers();
   tickBiomeAnimation(biomeAnim, dt);
   tickEntities(dt);
-  if (!isMirrorReady() || !mZone || !mPlayers.length) {
+  if (!isMirrorReady() || !mZone) {
     updateHud(hud, {
       zoneId: mZone?.id ?? null,
       fps: 1 / dt,
@@ -264,14 +272,42 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
     });
     return;
   }
-  updateCamera(state.camera, mPlayers, mZone);
+  tickPredictedSelf(dt);
+  const mPlayers = getMirrorPlayers();
+  const renderPlayers = buildGuestRenderPlayers(mPlayers);
+  if (!renderPlayers.length) {
+    updateHud(hud, { zoneId: mZone.id, fps: 1 / dt, showFps: getSettings().showFps });
+    return;
+  }
+  updateCamera(state.camera, renderPlayers, mZone);
   updateVisibleEntities(mZone, state.camera);
-  render(renderer, mZone, state.camera, mPlayers, biomeAnim.frame);
+  render(renderer, mZone, state.camera, renderPlayers, biomeAnim.frame);
   updateHud(hud, {
     zoneId: mZone.id,
     fps: 1 / dt,
     showFps: getSettings().showFps,
   });
+}
+
+// Swap the mirror's copy of the guest's own avatar with predictedSelf so
+// the local input → render path is round-trip-free. Everyone else stays
+// interpolated.
+function buildGuestRenderPlayers(mPlayers) {
+  const selfId = getSelfPlayerId();
+  const predicted = getPredictedSelf();
+  if (!selfId || !predicted) return mPlayers;
+  const out = [];
+  let injected = false;
+  for (const p of mPlayers) {
+    if (p.playerId === selfId) {
+      out.push(predicted);
+      injected = true;
+    } else {
+      out.push(p);
+    }
+  }
+  if (!injected) out.push(predicted);
+  return out;
 }
 
 // Build the co-op second player. Mirrors Rust world_setup.rs's
