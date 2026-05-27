@@ -13,10 +13,26 @@ Miscellanea
 - [x] Pushable objects have particular feature that covers the "pushed thing in a dead end" corner case. Basically when I pushed an object into a dead end, I can still move forward and go to the same tile it occupies, then, when I move next, the object should follow me. it seems it moves, but does not stay "in front of me", basically I can move it "one tile away from the dead end", but not "keep pushing it"...?
 - [ ] On mobile, the menu button is rendered on top of the ammo count, making both hard to see
 
+# Offline co-op
+
+- [ ] Player 1 can't shoot kunais
+- [ ] Player 2 does not seem to have a key for shooting or using sword
+- [ ] No keybindings for player 2 (one tab per player in exising key bindings dialog?)
+- [ ] Player 2 is not being targeted by monsters (can still take damage)
+- [ ] Reloading the page should turn off local co-op (back to 1 player)
+ 
 # Online co-op (spec: docs/server.md)
 
 - [ ] It seems that resolution changes after starting a co-op (spotted on mobile)
 - [ ] When in offline co-op, users are playing on the same screen, so we have the camera be centered on both players. However, when playing online, each player has it's own screen, meaning we can keep the camera centered on the player like we do normally
+- [ ] After connecting in co-op (as guest), the "in session..." dialogue can be closed automatically
+- [ ] Labels with player names are shown above each player character, let's remove them
+- [ ] Like in offline co-op, neither of the players can shoot
+- [ ] Guest players cannot pick up objects
+- [ ] Line in offline co-op, guests are not targeted by monsters (can still take damage)
+- [ ] When hosting on desktop replace "share link" with "copy link"
+- [ ] The "hosting n/4" thing we see in the top right does not have a style that matches the rest of the hud
+- [ ] The "hosting n/4" thing we see in the top right covers the ammo count, should probably be next to it or below the hp bar
 
 Phases 0–10 shipped (relay, prediction, events, zone transitions, party panel, WebRTC + STUN/TURN, permessage-deflate). Remaining work below.
 
@@ -25,11 +41,6 @@ Phase 7 events end-to-end
 - [ ] Hook event:death / respawn into host emitters and guest UI
 - [ ] Hook event:dialogueOpen/Advance/Close — and decide what the guest does while the host is in a dialogue modal (host pauses tick, guest stays running; predicted self will lurch)
 - [ ] Hook event:cutsceneStart/End with the same dialogue concern
-
-Party UI polish
-- [ ] Responsive layout + touch-friendly for the new party screen (works on desktop and mobile but not specifically tuned)
-- [ ] The "hosting n/4" thing we see in the top right does not have a style that matches the rest of the hud
-- [ ] The "hosting n/4" thing we see in the top right covers the ammo count, should probably be next to it or below the hp bar
 
 Polish — server
 - [ ] WS frame size cap ~1 MB in parseFrames (currently > 2 GB before throwing)
