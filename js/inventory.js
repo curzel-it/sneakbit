@@ -2,10 +2,12 @@
 // player index. Mirrors Rust storage.rs: `player.{p}.inventory.amount.{sid}`.
 //
 // Single-player calls keep working unchanged — they default to index 0.
-// Co-op call sites thread a playerIndex so each player keeps their own
-// ammo / pickups.
+// Local co-op (one save slot) FOLDS P2 (index 1) onto P1 (index 0) so
+// kunai pickups by either player feed a single shared pool. Network
+// co-op leaves indices independent — guests own their own inventory.
 
 import { getValue, setValue } from "./storage.js";
+import { isCoopMode } from "./coopMode.js";
 
 // In-memory mirror per player. Lazy-loaded once from storage on first
 // access of any function. We snapshot from storage.js's cache rather
@@ -52,6 +54,15 @@ function key(playerIndex, speciesId) {
   return `${PLAYER_KEY_PREFIX}${playerIndex | 0}${KEY_SUFFIX}${speciesId | 0}`;
 }
 
+// Local co-op shares one save slot — both heroes draw from / drop into
+// player.0.*. Slots 2 and 3 (host-side view of network guests) and
+// online-only sessions keep their own indices.
+function effectiveIndex(playerIndex) {
+  const idx = playerIndex | 0;
+  if (idx === 1 && isCoopMode()) return 0;
+  return idx;
+}
+
 function persist(playerIndex, speciesId) {
   const idx = playerIndex | 0;
   const v = counts[idx][speciesId] | 0;
@@ -61,14 +72,14 @@ function persist(playerIndex, speciesId) {
 
 export function getAmmo(speciesId, playerIndex = 0) {
   hydrate();
-  const idx = playerIndex | 0;
+  const idx = effectiveIndex(playerIndex);
   return (counts[idx] || counts[0])[speciesId] | 0;
 }
 
 export function addAmmo(speciesId, amount = 1, playerIndex = 0) {
   if (!amount) return;
   hydrate();
-  const idx = playerIndex | 0;
+  const idx = effectiveIndex(playerIndex);
   const bucket = counts[idx] || counts[0];
   bucket[speciesId] = (bucket[speciesId] | 0) + amount;
   persist(idx, speciesId);
@@ -76,7 +87,7 @@ export function addAmmo(speciesId, amount = 1, playerIndex = 0) {
 
 export function removeAmmo(speciesId, amount = 1, playerIndex = 0) {
   hydrate();
-  const idx = playerIndex | 0;
+  const idx = effectiveIndex(playerIndex);
   const bucket = counts[idx] || counts[0];
   const have = bucket[speciesId] | 0;
   if (have < amount) return false;
@@ -94,7 +105,7 @@ export function clearInventory(playerIndex) {
   hydrate();
   const targets = playerIndex == null
     ? [...counts.keys()]
-    : [playerIndex | 0];
+    : [effectiveIndex(playerIndex)];
   for (const idx of targets) {
     const bucket = counts[idx];
     if (!bucket) continue;
@@ -109,5 +120,5 @@ export function clearInventory(playerIndex) {
 // screen which renders a "pick up" list per player.
 export function snapshotInventory(playerIndex = 0) {
   hydrate();
-  return { ...(counts[playerIndex | 0] || {}) };
+  return { ...(counts[effectiveIndex(playerIndex)] || {}) };
 }

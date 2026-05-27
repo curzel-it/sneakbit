@@ -203,7 +203,7 @@ async function main() {
       updateVisibleEntities(state.zone, state.camera);
       tickShooting(dt);
       tickMelee(dt);
-      tickMobs(state.zone, state.player, dt);
+      tickMobs(state.zone, allPlayers(state), dt);
       tickMonsterFusion(state.zone);
       tickMinionSpawning(state.zone, state.player, dt);
       // Combat now iterates every live player for melee monster damage

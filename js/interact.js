@@ -8,7 +8,7 @@
 import { showDialogue, resolveEntityDialogue, isDialogueOpen } from "./dialogue.js";
 import { handleAfterDialogue } from "./afterDialogue.js";
 import { matchesAction } from "./keyBindings.js";
-import { isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
+import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { getNetRole } from "./onlineBootstrap.js";
 
@@ -46,21 +46,22 @@ export function installInteract(getState) {
   });
 }
 
-// Maps a keydown to the player who should act on it. In co-op the two
-// players have their own interact keys (KeyZ / KeyB); in single-player
-// the rebindable interact action drives P1.
+// Maps a keydown to the player who should act on it. P1 always uses
+// the rebindable interact action; P2 only fires when local co-op is on,
+// and slots 3/4 cover the host's view of network guests.
 function pickInitiator(state, code) {
+  if (matchesAction("interact", code, 0)) return state.player;
+  if (isCoopMode() && matchesAction("interact", code, 1)) {
+    return state.player2 || state.player;
+  }
   if (isCoopActive()) {
-    if (code === COOP_KEYMAPS[1].interact) return state.player;
-    if (code === COOP_KEYMAPS[2].interact) return state.player2 || state.player;
     for (const slot of [3, 4]) {
       if (code === COOP_KEYMAPS[slot]?.interact) {
         return playerForSlot(state, slot) || state.player;
       }
     }
-    return null;
   }
-  return matchesAction("interact", code) ? state.player : null;
+  return null;
 }
 
 function playerForSlot(state, slot) {

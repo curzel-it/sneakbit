@@ -12,8 +12,8 @@ import { clearProgress } from "./save.js";
 import { getSkills } from "./skills.js";
 import { renderInventoryInto } from "./inventoryScreen.js";
 import { isCreativeMode } from "./creativeMode.js";
-import { ACTIONS, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js";
-import { isCoopMode, setCoopMode } from "./coopMode.js";
+import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js";
+import { isCoopMode, isCoopActive, setCoopMode } from "./coopMode.js";
 import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js";
 import { invalidateZoneCache } from "./data.js";
 import { openPartyPanel } from "./partyPanel.js";
@@ -21,9 +21,14 @@ import { openPartyPanel } from "./partyPanel.js";
 let root = null;
 let open = false;
 let screen = "pause"; // "pause" | "settings" | "skills" | "credits" | "inventory" | "controls"
+// Which player's bindings are shown on the Key Bindings screen. The P2
+// tab is only visible when local co-op is on (no point rebinding P2 if
+// they're not spawned). 0 = P1, 1 = P2.
+let controlsPlayer = 0;
 // While non-null, we're listening for the next keypress to rebind an
-// action. The captured binding is written via setBinding(action, slot, code).
-let rebindCapture = null; // { action, slot } | null
+// action. The captured binding is written via setBinding(action, slot,
+// code, playerIndex).
+let rebindCapture = null; // { action, slot, playerIndex } | null
 // Optional getter the host wires in at install time. Provides access to
 // the live game state (rawZone + current zone id) without coupling the
 // menu module to main.js. Returns null when no state is wired or when
@@ -89,11 +94,7 @@ export function installMenu(stateGetter) {
       <div class="menu-row">
         <label for="opt-coop"><input id="opt-coop" type="checkbox" /> Local co-op (2 players)</label>
       </div>
-      <p class="menu-hint" id="opt-coop-hint">
-        P1: WASD + Z/X/C &nbsp;·&nbsp; P2: IJKL + B/N/M<br>
-        Toggling reloads the page.
-      </p>
-      <div class="menu-row">
+      <div class="menu-row" id="opt-friendly-fire-row">
         <label for="opt-friendly-fire"><input id="opt-friendly-fire" type="checkbox" /> Friendly fire (co-op)</label>
       </div>
       <div class="menu-row menu-controls">
@@ -103,6 +104,10 @@ export function installMenu(stateGetter) {
     </div>
     <div class="menu-card" data-screen="controls">
       <h1>Key Bindings</h1>
+      <div class="menu-tabs" id="menu-controls-tabs">
+        <button class="menu-tab" data-player="0">Player 1</button>
+        <button class="menu-tab" data-player="1">Player 2</button>
+      </div>
       <ul class="menu-controls-list" id="menu-controls-list"></ul>
       <p class="menu-hint">
         Click a binding and press the key you want to use. Esc cancels capture.
@@ -229,10 +234,24 @@ function showScreen(next) {
 }
 
 function renderControlsList() {
+  const tabs = root.querySelector("#menu-controls-tabs");
+  if (tabs) {
+    // Hide the P2 tab outside of local co-op — when there's no second
+    // player avatar, rebinding their keys would just persist defaults
+    // nobody can trigger.
+    const coop = isCoopMode();
+    tabs.style.display = coop ? "" : "none";
+    if (!coop) controlsPlayer = 0;
+    for (const b of tabs.querySelectorAll(".menu-tab")) {
+      const idx = parseInt(b.dataset.player, 10) | 0;
+      b.classList.toggle("active", idx === controlsPlayer);
+    }
+  }
   const list = root.querySelector("#menu-controls-list");
   if (!list) return;
-  list.innerHTML = ACTIONS.map((a) => {
-    const codes = codesFor(a.id);
+  const actions = controlsPlayer === 1 ? ACTIONS_P2 : ACTIONS;
+  list.innerHTML = actions.map((a) => {
+    const codes = codesFor(a.id, controlsPlayer);
     return `<li>
       <span class="menu-controls-label">${a.label}</span>
       <button class="menu-controls-key" data-action="${a.id}" data-slot="0">${formatCode(codes[0])}</button>
@@ -255,7 +274,12 @@ function formatCode(code) {
 
 function beginRebindCapture(btn) {
   cancelRebindCapture();
-  rebindCapture = { action: btn.dataset.action, slot: parseInt(btn.dataset.slot, 10), btn };
+  rebindCapture = {
+    action: btn.dataset.action,
+    slot: parseInt(btn.dataset.slot, 10),
+    playerIndex: controlsPlayer,
+    btn,
+  };
   btn.classList.add("capturing");
   btn.textContent = "Press a key…";
   window.addEventListener("keydown", onCaptureKeydown, true);
@@ -266,8 +290,8 @@ function onCaptureKeydown(e) {
   e.preventDefault();
   e.stopPropagation();
   if (e.code === "Escape") { cancelRebindCapture(); return; }
-  const { action, slot } = rebindCapture;
-  setBinding(action, slot, e.code);
+  const { action, slot, playerIndex } = rebindCapture;
+  setBinding(action, slot, e.code, playerIndex);
   cancelRebindCapture();
   renderControlsList();
 }
@@ -316,10 +340,21 @@ function bindWidgets() {
   root.querySelector("#menu-open-controls").addEventListener("click", () => showScreen("controls"));
   root.querySelector("#menu-controls-back").addEventListener("click", () => showScreen("settings"));
   root.querySelector("#menu-controls-reset").addEventListener("click", () => {
-    if (!confirm("Reset all key bindings to their defaults?")) return;
-    resetBindings();
+    const who = controlsPlayer === 1 ? "Player 2's" : "Player 1's";
+    if (!confirm(`Reset ${who} key bindings to their defaults?`)) return;
+    resetBindings(controlsPlayer);
     renderControlsList();
   });
+  const tabs = root.querySelector("#menu-controls-tabs");
+  if (tabs) {
+    for (const btn of tabs.querySelectorAll(".menu-tab")) {
+      btn.addEventListener("click", () => {
+        controlsPlayer = parseInt(btn.dataset.player, 10) | 0;
+        cancelRebindCapture();
+        renderControlsList();
+      });
+    }
+  }
   root.querySelector("#menu-skills-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-credits-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-inventory-back").addEventListener("click", () => showScreen("pause"));
@@ -378,7 +413,7 @@ function bindWidgets() {
   coop.addEventListener("change", () => {
     const next = coop.checked;
     const msg = next
-      ? "Enable co-op?\n\nP1: WASD + Z/X/C (interact / kunai / melee)\nP2: IJKL + B/N/M\n\nThe page will reload."
+      ? "Enable co-op?\n\nP1: your normal keys\nP2: IJKL move + B interact + N kunai + M melee\n\nThe page will reload. Co-op stays on for this tab only — a fresh launch starts back in single-player."
       : "Disable co-op?\n\nThe page will reload and P2 will be removed.";
     if (!confirm(msg)) {
       // User cancelled — revert the checkbox to its old state without
@@ -403,6 +438,11 @@ function syncSettingsWidgets() {
   root.querySelector("#opt-fps").checked = !!s.showFps;
   root.querySelector("#opt-coop").checked = isCoopMode();
   root.querySelector("#opt-friendly-fire").checked = !!s.friendlyFire;
+  // Friendly fire is meaningless without a second hero in the world —
+  // hide the row entirely unless local co-op is on or a network guest
+  // is connected. `isCoopActive()` covers both.
+  const ffRow = root.querySelector("#opt-friendly-fire-row");
+  if (ffRow) ffRow.style.display = isCoopActive() ? "" : "none";
 }
 
 // Flush the in-memory raw zone JSON to the IndexedDB override buffer
@@ -578,6 +618,10 @@ function injectStyles() {
     #menu .menu-controls-label { flex: 1; font-size: 12px; color: #ccc; }
     #menu .menu-controls-key { min-width: 96px; text-align: center !important; font-family: monospace; font-size: 11px; padding: 4px 8px !important; }
     #menu .menu-controls-key.capturing { background: #3a3a55; border-color: #5a5a88; color: #fff; }
+    #menu .menu-tabs { display: flex; gap: 6px; margin: 0 0 10px; }
+    #menu .menu-tab { background: #1f1f1f; color: #aaa; border: 1px solid #333; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+    #menu .menu-tab:hover { background: #2a2a2a; }
+    #menu .menu-tab.active { background: #2a3a55; border-color: #4a5a88; color: #fff; }
   `;
   const style = document.createElement("style");
   style.id = "menu-styles";

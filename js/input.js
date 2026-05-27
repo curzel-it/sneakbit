@@ -9,7 +9,7 @@
 // through their own callback registry (see gamepad.setGamepadAction).
 
 import { pollGamepadDirections } from "./gamepad.js";
-import { actionForCode } from "./keyBindings.js";
+import { resolveAction } from "./keyBindings.js";
 import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js";
 
 const ACTION_TO_DIR = {
@@ -21,7 +21,7 @@ const ACTION_TO_DIR = {
 
 // Per-player input state. In single-player mode only index 1 is touched;
 // gamepad input also feeds into player 1. In co-op, each player has its
-// own held/press from their own hardwired keymap (see coopMode.js).
+// own held/press fed from their own keyBindings slot.
 // Online co-op extends this with slots 3 / 4 driven by network input.
 const state = {
   1: { held: new Set(), pressEvents: [] },
@@ -69,21 +69,26 @@ export function clearInputState(playerIndex) {
   s.pressEvents.length = 0;
 }
 
-// Returns { playerIndex, direction } for a key event, or null if the
-// code isn't a movement key for any active player.
+// Returns { playerIndex, direction } (1-based slot) for a key event, or
+// null if the code isn't a movement key for any active player.
 function resolveDirection(code) {
-  if (isCoopMode()) {
-    for (const idx of [1, 2]) {
-      const km = COOP_KEYMAPS[idx];
-      for (const action of Object.keys(ACTION_TO_DIR)) {
-        if (km[action] === code) return { playerIndex: idx, direction: ACTION_TO_DIR[action] };
-      }
-    }
-    return null;
+  // Real keyboard players: keyBindings owns both P1 and (when local
+  // co-op is on) P2.
+  const r = resolveAction(code);
+  if (r && ACTION_TO_DIR[r.action]) {
+    if (r.playerIndex === 1 && !isCoopMode()) return null;
+    return { playerIndex: r.playerIndex + 1, direction: ACTION_TO_DIR[r.action] };
   }
-  const action = actionForCode(code);
-  if (!action || !ACTION_TO_DIR[action]) return null;
-  return { playerIndex: 1, direction: ACTION_TO_DIR[action] };
+  // Online guests (slots 3 / 4) — hostGuests synthesises keydowns with
+  // F-row sentinel codes that aren't in keyBindings.
+  for (const idx of [3, 4]) {
+    const km = COOP_KEYMAPS[idx];
+    if (!km) continue;
+    for (const action of Object.keys(ACTION_TO_DIR)) {
+      if (km[action] === code) return { playerIndex: idx, direction: ACTION_TO_DIR[action] };
+    }
+  }
+  return null;
 }
 
 function pushPress(idx, dir) {

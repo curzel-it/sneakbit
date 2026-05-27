@@ -102,6 +102,26 @@ test("FindHero mob is blocked by every tile of a multi-tile rigid entity", () =>
   }
 });
 
+test("FindHero mob targets the closest live player in co-op", () => {
+  loadSpeciesData([
+    { id: 4004, entity_type: "CloseCombatMonster", sprite_sheet_id: 1023,
+      movement_directions: "FindHero", dps: 100, hp: 200,
+      sprite_frame: { x: 0, y: 0, w: 1, h: 2 } },
+  ]);
+  const zone = makeZone();
+  const mob = { species_id: 4004, frame: { x: 5, y: 5, w: 1, h: 2 } };
+  zone.entities.push(mob);
+  // P1 is far (out of vision), P2 is right next door. The mob should
+  // chase P2, not stand around because the old code only saw P1.
+  const p1 = { tileX: 18, tileY: 18 };
+  const p2 = { tileX: 7, tileY: 6 };
+  tickMobs(zone, [p1, p2], 0.02);
+  assert.ok(mob._ai.step, "chase step started");
+  // Moves toward P2's tile (dx=+2, dy=+1 → 'right' first).
+  assert.equal(mob._ai.step.toX, 6);
+  assert.equal(mob._ai.step.toY, 5);
+});
+
 test("FindHero mob falls back to the secondary direction when primary is blocked", () => {
   // Wall directly to the right of the mob's feet tile.
   const zone = makeZone((c, r) => !(c === 6 && r === 6));

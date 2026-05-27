@@ -4,15 +4,15 @@
 // drawn from the dedicated inventory sprite sheet at the species'
 // `inventory_texture_offset`, matching the original game's HUD.
 //
-// In co-op mode the chip is duplicated and stacked vertically — P1 on top,
-// P2 below — so each player can see their own kunai count.
+// Local co-op shares the kunai pool (inventory.js folds P2 onto P1), so
+// a single chip covers both players. Network co-op also renders the
+// local hero's chip only — the host's HUD doesn't try to show guests'
+// counts.
 
 import { TILE_SIZE } from "./constants.js";
 import { getSprite } from "./assets.js";
 import { getAmmo, onInventoryChange } from "./inventory.js";
 import { getSpecies } from "./species.js";
-import { isCoopMode } from "./coopMode.js";
-
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
 
@@ -38,8 +38,7 @@ export function installAmmoHud() {
     WebkitUserSelect: "none",
   });
 
-  const count = isCoopMode() ? 2 : 1;
-  for (let i = 0; i < count; i++) chips.push(makeChip(i));
+  chips.push(makeChip(0));
   for (const c of chips) root.appendChild(c.root);
   document.body.appendChild(root);
 
@@ -72,8 +71,7 @@ function makeChip(index) {
   });
 
   const count = document.createElement("span");
-  const tag = isCoopMode() ? `P${index + 1} ` : "";
-  count.textContent = `${tag}x0`;
+  count.textContent = `x0`;
 
   card.appendChild(icon);
   card.appendChild(count);
@@ -82,12 +80,10 @@ function makeChip(index) {
 
 export function updateAmmoHud() {
   if (!root) return;
-  const coop = isCoopMode();
   for (const c of chips) {
     const n = getAmmo(KUNAI_SPECIES_ID, c.index);
     if (n !== c.lastDrawn) {
-      const tag = coop ? `P${c.index + 1} ` : "";
-      c.count.textContent = `${tag}x${n}`;
+      c.count.textContent = `x${n}`;
       c.lastDrawn = n;
     }
     // Lazy-draw the icon the first time the sprite sheet is available

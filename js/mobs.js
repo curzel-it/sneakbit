@@ -33,6 +33,10 @@ const DIR_DELTA = {
 };
 const ALL_DIRS = ["up", "down", "left", "right"];
 
+// `player` accepts either a single player object (single-player) or an
+// array of live players (co-op). For chase decisions the closest live
+// player within VISION_TILES wins; if no players are passed (everyone
+// dead) chase mobs fall back to wandering like normal.
 export function tickMobs(zone, player, dt) {
   if (!zone?.entities) return;
   // Creative mode freezes every AI-driven entity in place so the level
@@ -40,6 +44,7 @@ export function tickMobs(zone, player, dt) {
   // Mirrors Rust movement/movement_directions.rs::perform_movement
   // short-circuiting in creative.
   if (isCreativeMode()) return;
+  const players = Array.isArray(player) ? player.filter(Boolean) : (player ? [player] : []);
   // Only tick mobs whose frame overlaps the viewport this frame. Mirrors
   // Rust's update_hitmaps gating: a monster that has wandered off-screen
   // freezes in place. This is gameplay, not just perf — it stops monsters
@@ -53,7 +58,7 @@ export function tickMobs(zone, player, dt) {
     if (!isMobAi(sp)) continue;
     ensureAi(e);
     if (e._ai.step) advanceStep(e, dt);
-    else decideStep(e, sp, zone, player, dt);
+    else decideStep(e, sp, zone, players, dt);
   }
 }
 
@@ -76,14 +81,17 @@ function ensureAi(e) {
   e.frame.y = e._ai.tileY;
 }
 
-function decideStep(e, sp, zone, player, dt) {
+function decideStep(e, sp, zone, players, dt) {
   e._ai.decideTimer -= dt;
   if (e._ai.decideTimer > 0) return;
 
   const stepDuration = stepDurationFor(sp);
   if (sp.movement_directions === "FindHero") {
-    for (const dir of chaseDirections(e, player)) {
-      if (tryStartStep(e, dir, zone, stepDuration)) return;
+    const target = pickClosestVisible(e, players);
+    if (target) {
+      for (const dir of chaseDirections(e, target)) {
+        if (tryStartStep(e, dir, zone, stepDuration)) return;
+      }
     }
   }
   // Wander — also the fallback for FindHero mobs that can't see/reach
@@ -135,6 +143,25 @@ function advanceStep(e, dt) {
   e.frame.x = s.toX;
   e.frame.y = s.toY;
   e._ai.step = null;
+}
+
+// Picks the closest live player whose Manhattan distance from the mob's
+// feet tile is within VISION_TILES. Used by FindHero mobs so co-op mobs
+// switch targets when P2 gets in close range, instead of locking onto
+// P1 forever (mobs.js only knew about state.player before).
+function pickClosestVisible(e, players) {
+  const feetY = e._ai.tileY + e._ai.h - 1;
+  let best = null;
+  let bestDist = Infinity;
+  for (const p of players) {
+    if (!p) continue;
+    const dx = p.tileX - e._ai.tileX;
+    const dy = p.tileY - feetY;
+    const dist = Math.abs(dx) + Math.abs(dy);
+    if (dist === 0 || dist > VISION_TILES) continue;
+    if (dist < bestDist) { best = p; bestDist = dist; }
+  }
+  return best;
 }
 
 // Pure helper, exported for tests: which directions to try, in priority

@@ -9,7 +9,7 @@ import { getSpecies } from "./species.js";
 import { getEquipped, SLOT_MELEE } from "./equipment.js";
 import { playSfx } from "./audio.js";
 import { matchesAction } from "./keyBindings.js";
-import { isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
+import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
 import { getNetRole } from "./onlineBootstrap.js";
 
 const DEFAULT_COOLDOWN = 0.35;
@@ -94,17 +94,18 @@ function onKey(e) {
 }
 
 function pickSwinger(state, code) {
+  if (matchesAction("melee", code, 0)) return state.player;
+  if (isCoopMode() && matchesAction("melee", code, 1)) {
+    return state.player2 || state.player;
+  }
   if (isCoopActive()) {
-    if (code === COOP_KEYMAPS[1].melee) return state.player;
-    if (code === COOP_KEYMAPS[2].melee) return state.player2 || state.player;
     for (const slot of [3, 4]) {
       if (code === COOP_KEYMAPS[slot]?.melee) {
         return playerForSlot(state, slot) || state.player;
       }
     }
-    return null;
   }
-  return matchesAction("melee", code) ? state.player : null;
+  return null;
 }
 
 function playerForSlot(state, slot) {

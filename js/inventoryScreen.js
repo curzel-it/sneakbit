@@ -5,8 +5,9 @@
 // slot, and offers an inline Equip button on weapon-associated items
 // so the player can swap loadouts without dropping to devtools.
 //
-// In co-op mode each player has their own inventory and equipment slots,
-// so we render one section per player.
+// Local co-op shares one save slot (P1 / P2 fold to index 0 in
+// inventory.js + equipment.js), so we render a single section even when
+// co-op is on — duplicating it would just show the same numbers twice.
 //
 // Pure DOM, like the rest of the pause menu. The pause menu owns the
 // "open / close / Esc back out" wiring; this file just renders into a
@@ -21,8 +22,9 @@ import { isCoopMode } from "./coopMode.js";
 
 export function renderInventoryInto(host) {
   if (!host) return;
-  const indices = isCoopMode() ? [0, 1] : [0];
-  host.innerHTML = indices.map(playerSectionHtml).join('<hr class="inv-sep"/>');
+  // P1 backs the shared local-coop inventory; in network coop we only
+  // ever render the local player's loadout from this screen.
+  host.innerHTML = playerSectionHtml(0);
   bindInventoryButtons(host);
 }
 
@@ -38,7 +40,7 @@ function playerSectionHtml(playerIndex) {
     .filter(r => r.sp)
     .sort(byKindThenName);
 
-  const header = isCoopMode() ? `<h2 class="inv-player">Player ${playerIndex + 1}</h2>` : "";
+  const header = isCoopMode() ? `<h2 class="inv-player">Shared</h2>` : "";
 
   if (rows.length === 0) {
     return `${header}

@@ -25,12 +25,14 @@ const playerHealth = await import("../js/playerHealth.js");
 const inventory = await import("../js/inventory.js");
 const equipment = await import("../js/equipment.js");
 const storage = await import("../js/storage.js");
+const coopMode = await import("../js/coopMode.js");
 const { updateCamera, createCamera } = await import("../js/camera.js");
 
 function freshAll() {
   storage._resetStorageForTesting();
   playerHealth.resetPlayerHealth();
   inventory.clearInventory();
+  coopMode._setCoopModeForTesting(false);
 }
 
 test("per-player HP is independent (damage to P1 doesn't touch P2)", () => {
@@ -115,6 +117,32 @@ test("camera with a single player matches the old single-player path", () => {
   const camCenterY = camera.y + camera.h / 2;
   assert.ok(Math.abs(camCenterX - 100.5) < 0.001);
   assert.ok(Math.abs(camCenterY - 100.5) < 0.001);
+});
+
+test("local co-op folds P2 inventory onto P1 (shared kunai pool)", () => {
+  freshAll();
+  coopMode._setCoopModeForTesting(true);
+  inventory.addAmmo(7000, 5, 0);
+  // P2 deposit goes into the same pool as P1; the HUD reads index 0 and
+  // shows the combined count, so P1 isn't stuck with 0 kunai because P2
+  // happened to step on the pickup first.
+  inventory.addAmmo(7000, 3, 1);
+  assert.equal(inventory.getAmmo(7000, 0), 8);
+  assert.equal(inventory.getAmmo(7000, 1), 8);
+  // Either player removing decrements the shared pool.
+  inventory.removeAmmo(7000, 2, 1);
+  assert.equal(inventory.getAmmo(7000, 0), 6);
+  coopMode._setCoopModeForTesting(false);
+});
+
+test("local co-op folds P2 equipment onto P1 (shared loadout)", () => {
+  freshAll();
+  coopMode._setCoopModeForTesting(true);
+  // P2 picks up the AR15 — equipment.js routes the write to index 0.
+  equipment.setEquipped(equipment.SLOT_RANGED, 1154, 1);
+  assert.equal(equipment.getEquipped(equipment.SLOT_RANGED, 0), 1154);
+  assert.equal(equipment.getEquipped(equipment.SLOT_RANGED, 1), 1154);
+  coopMode._setCoopModeForTesting(false);
 });
 
 test("camera ignores dead players (caller filters them) — empty array is a no-op", () => {

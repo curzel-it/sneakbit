@@ -13,7 +13,7 @@ import { getAmmo, removeAmmo } from "./inventory.js";
 import { playSfx } from "./audio.js";
 import { getEquipped, SLOT_RANGED } from "./equipment.js";
 import { matchesAction } from "./keyBindings.js";
-import { isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
+import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
 import { getNetRole } from "./onlineBootstrap.js";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
@@ -80,17 +80,23 @@ function onKey(e) {
 }
 
 function pickShooter(state, code) {
+  // P1 always uses their rebindable bindings, even in co-op — so muscle
+  // memory from single-player still works.
+  if (matchesAction("shoot", code, 0)) return state.player;
+  // P2 only exists in local co-op (spawned at boot when isCoopMode()).
+  if (isCoopMode() && matchesAction("shoot", code, 1)) {
+    return state.player2 || state.player;
+  }
+  // Online guests fire through hostGuests.dispatchActionForSlot, which
+  // synthesises a keydown with one of the slot-3/4 sentinel codes.
   if (isCoopActive()) {
-    if (code === COOP_KEYMAPS[1].shoot) return state.player;
-    if (code === COOP_KEYMAPS[2].shoot) return state.player2 || state.player;
     for (const slot of [3, 4]) {
       if (code === COOP_KEYMAPS[slot]?.shoot) {
         return playerForSlot(state, slot) || state.player;
       }
     }
-    return null;
   }
-  return matchesAction("shoot", code) ? state.player : null;
+  return null;
 }
 
 function playerForSlot(state, slot) {
