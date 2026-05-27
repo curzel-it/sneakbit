@@ -53,6 +53,7 @@ import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loa
 import { runMigrations } from "./migrations.js";
 import { installMapEditor } from "./mapEditor.js";
 import { bootstrapOnline } from "./onlineBootstrap.js";
+import { installSnapshotBroadcaster } from "./snapshotBroadcaster.js";
 
 async function main() {
   bootstrapOnline();
@@ -166,6 +167,11 @@ async function main() {
   });
   markVisited(state.zone.id);
   if (state.zone.soundtrack) playTrack(state.zone.soundtrack);
+
+  // In host mode this samples the live world at 20 Hz and emits sparse
+  // deltas to every guest, plus a full snapshot whenever a guest joins.
+  // No-op in offline / guest mode.
+  installSnapshotBroadcaster(() => state);
 
   startGameLoop((dt) => {
     const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen();

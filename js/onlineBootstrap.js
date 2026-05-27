@@ -31,7 +31,8 @@ export function bootstrapOnline({ netFactory = createNet } = {}) {
   role = mode;
   net = netFactory();
 
-  net.on("welcome", () => {
+  net.on("welcome", (m) => {
+    selfPlayerId = m.playerId || selfPlayerId;
     if (role === "host") net.send({ op: "host.open" });
     else if (role === "guest") {
       const code = getJoinCode();
