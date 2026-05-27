@@ -10,9 +10,9 @@
 // state.players[] alongside player/player2 so all four slots move and
 // participate in pickups/combat.
 
-import { getNetRole, getNet } from "./onlineBootstrap.js?v=20260527";
-import { pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260527";
-import { setNetworkGuestCount, COOP_KEYMAPS } from "./coopMode.js?v=20260527";
+import { getNetRole, getNet } from "./onlineBootstrap.js?v=20260527b";
+import { pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260527b";
+import { setNetworkGuestCount, COOP_KEYMAPS } from "./coopMode.js?v=20260527b";
 
 const INTENT_TO_DIR = {
   moveUp: "up",

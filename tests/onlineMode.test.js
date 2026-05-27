@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 const { resolveMode, _setOnlineModeForTesting, _resetOnlineModeForTesting,
   getMode, getJoinCode, getStorageNamespace, getOnlineUuid } =
-  await import("../js/onlineMode.js?v=20260527");
+  await import("../js/onlineMode.js?v=20260527b");
 
 test("resolveMode: no params -> offline", () => {
   assert.deepEqual(resolveMode(""), { mode: "offline", code: null });

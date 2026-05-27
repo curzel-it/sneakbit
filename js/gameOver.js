@@ -6,7 +6,7 @@
 // the starting spawn. The modal lives in the DOM (like menu.js) so we get
 // styling + a real button focusable by keyboard for free.
 
-import { playSfx } from "./audio.js?v=20260527";
+import { playSfx } from "./audio.js?v=20260527b";
 
 let root = null;
 let open = false;
@@ -58,7 +58,7 @@ export function showGameOver(onContinue) {
 
 function onKeydown(e) {
   if (!open) return;
-  if (e.code !== "Enter" && e.code !== "Space") return;
+  if (e.code !== "Enter" && e.code !== "Space" && e.code !== "Escape") return;
   e.preventDefault();
   const btn = root.querySelector("#go-continue");
   if (btn?.disabled) return;

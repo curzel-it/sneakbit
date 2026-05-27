@@ -5,8 +5,8 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadSpeciesData } from "../js/species.js?v=20260527";
-import { updateVisibleEntities } from "../js/zoneVisibility.js?v=20260527";
+import { loadSpeciesData } from "../js/species.js?v=20260527b";
+import { updateVisibleEntities } from "../js/zoneVisibility.js?v=20260527b";
 
 loadSpeciesData([
   { id: 4004, entity_type: "CloseCombatMonster", sprite_sheet_id: 1023,

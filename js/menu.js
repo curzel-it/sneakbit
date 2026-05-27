@@ -5,18 +5,33 @@
 // screen. isMenuOpen() reports either screen as "open" so the game stays
 // paused while the player tweaks audio.
 
-import { getSettings, saveSettings } from "./settings.js?v=20260527";
-import { playSfx } from "./audio.js?v=20260527";
-import { APP_VERSION } from "./constants.js?v=20260527";
-import { clearProgress } from "./save.js?v=20260527";
-import { getSkills } from "./skills.js?v=20260527";
-import { renderInventoryInto } from "./inventoryScreen.js?v=20260527";
-import { isCreativeMode } from "./creativeMode.js?v=20260527";
-import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260527";
-import { isCoopMode, isCoopActive, setCoopMode } from "./coopMode.js?v=20260527";
-import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260527";
-import { invalidateZoneCache } from "./data.js?v=20260527";
-import { openPartyPanel } from "./partyPanel.js?v=20260527";
+import { getSettings, saveSettings } from "./settings.js?v=20260527b";
+import { playSfx } from "./audio.js?v=20260527b";
+import { APP_VERSION } from "./constants.js?v=20260527b";
+import { clearProgress } from "./save.js?v=20260527b";
+import { getSkills } from "./skills.js?v=20260527b";
+import { renderInventoryInto } from "./inventoryScreen.js?v=20260527b";
+import { isCreativeMode } from "./creativeMode.js?v=20260527b";
+import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260527b";
+import { isCoopMode, isCoopActive, setCoopMode } from "./coopMode.js?v=20260527b";
+import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260527b";
+import { invalidateZoneCache } from "./data.js?v=20260527b";
+import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260527b";
+import { isGameOverOpen } from "./gameOver.js?v=20260527b";
+import { isFastTravelOpen } from "./fastTravel.js?v=20260527b";
+import { isMessageOpen } from "./message.js?v=20260527b";
+import { isDialogueOpen } from "./dialogue.js?v=20260527b";
+
+// Modals that own the keyboard while they're up. If any is open we treat
+// Esc / the menu key as "dismiss the active modal" — owned by that modal's
+// own listener — and don't pop the pause menu on top of it.
+function isAnotherModalOpen() {
+  return isGameOverOpen()
+    || isFastTravelOpen()
+    || isMessageOpen()
+    || isDialogueOpen()
+    || isPartyPanelOpen();
+}
 
 let root = null;
 let open = false;
@@ -177,6 +192,11 @@ export function installMenu(stateGetter) {
     // the capture itself (handled in the rebinding flow below).
     if (rebindCapture) return;
     if (!matchesAction("menu", e.code) && e.code !== "Escape") return;
+    // If another modal already owns Esc (game over, fast travel, message,
+    // dialogue, party panel) let that modal handle the keystroke. Without
+    // this the pause menu pops on top of e.g. the You-Died screen the
+    // moment the player tries to dismiss it.
+    if (!open && isAnotherModalOpen()) return;
     e.preventDefault();
     if (!open) { openMenu(); return; }
     if (screen !== "pause") { showScreen("pause"); return; }

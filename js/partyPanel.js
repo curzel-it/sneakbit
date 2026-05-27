@@ -11,7 +11,7 @@
 // Actions are all switchRole(...) calls or net.send({op: "host.kick"}).
 // No location.replace anywhere — role transitions stay in-page.
 
-import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260527";
+import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260527b";
 import {
   getInviteCode,
   getKnownPeers,
@@ -21,10 +21,10 @@ import {
   getNameForPlayerId,
   getNet,
   onSessionState,
-} from "./onlineBootstrap.js?v=20260527";
-import { switchRole } from "./switchRole.js?v=20260527";
-import { showToast } from "./toast.js?v=20260527";
-import { isCreativeMode } from "./creativeMode.js?v=20260527";
+} from "./onlineBootstrap.js?v=20260527b";
+import { switchRole } from "./switchRole.js?v=20260527b";
+import { showToast } from "./toast.js?v=20260527b";
+import { isCreativeMode } from "./creativeMode.js?v=20260527b";
 
 let chip = null;
 let chipLabel = null;
@@ -70,6 +70,17 @@ export function installPartyPanel() {
   document.body.appendChild(overlay);
   onRoleChange(() => renderAll());
   onSessionState(() => renderAll());
+  window.addEventListener("keydown", (e) => {
+    if (e.code !== "Escape") return;
+    if (!isPartyPanelOpen()) return;
+    e.preventDefault();
+    // installPartyPanel registers before installMenu, so this listener
+    // fires first. Without stopImmediatePropagation the menu's keydown
+    // listener still runs after, sees the panel already closed, and pops
+    // the pause overlay on top — defeating the dismissal.
+    e.stopImmediatePropagation();
+    closePartyPanel();
+  });
   renderAll();
 }
 

@@ -18,7 +18,7 @@ globalThis.localStorage = (() => {
   };
 })();
 
-const mod = await import("../js/keyBindings.js?v=20260527");
+const mod = await import("../js/keyBindings.js?v=20260527b");
 const {
   ACTIONS, ACTIONS_P2,
   codesFor, actionForCode, matchesAction, resolveAction,

@@ -9,10 +9,10 @@
 // local hero's chip only — the host's HUD doesn't try to show guests'
 // counts.
 
-import { TILE_SIZE } from "./constants.js?v=20260527";
-import { getSprite } from "./assets.js?v=20260527";
-import { getAmmo, onInventoryChange } from "./inventory.js?v=20260527";
-import { getSpecies } from "./species.js?v=20260527";
+import { TILE_SIZE } from "./constants.js?v=20260527b";
+import { getSprite } from "./assets.js?v=20260527b";
+import { getAmmo, onInventoryChange } from "./inventory.js?v=20260527b";
+import { getSpecies } from "./species.js?v=20260527b";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
 
@@ -24,19 +24,6 @@ export function installAmmoHud() {
   injectStyles();
   root = document.createElement("div");
   root.id = "ammo-hud";
-  Object.assign(root.style, {
-    position: "fixed",
-    top: "12px",
-    right: "12px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    gap: "6px",
-    zIndex: "11",
-    pointerEvents: "none",
-    userSelect: "none",
-    WebkitUserSelect: "none",
-  });
 
   chips.push(makeChip(0));
   for (const c of chips) root.appendChild(c.root);
@@ -96,8 +83,29 @@ function injectStyles() {
   if (document.getElementById("ammo-hud-styles")) return;
   const style = document.createElement("style");
   style.id = "ammo-hud-styles";
+  // Positioning + layout lives here (not inline) so the touch-mode rule
+  // below can actually shift the chip left of the menu button. Inline
+  // style.right beats a class selector, which used to silently neuter
+  // the touch-mode shift and stacked the ☰ button on top of the chip.
   style.textContent = `
-    body.touch-mode #ammo-hud { right: 62px; }
+    #ammo-hud {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      z-index: 11;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    /* Touch-mode shift clears the ☰ menu button at top-right. The menu
+       button is 56px wide pinned at right:12px (its rendered size — the
+       .touch-menu CSS attempts width:44px but a later .touch-btn rule
+       wins on specificity), so 12+56+8 = 76px gives a comfortable gap. */
+    body.touch-mode #ammo-hud { right: 76px; }
   `;
   document.head.appendChild(style);
 }

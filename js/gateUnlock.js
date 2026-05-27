@@ -3,17 +3,17 @@
 // None (so it stays open across zone reloads), and lets the player pass.
 // Mirrors Rust's `lock_override` storage.
 
-import { getSpecies } from "./species.js?v=20260527";
+import { getSpecies } from "./species.js?v=20260527b";
 import {
   canonicaliseLock,
   keySpeciesIdForLock,
   LOCK_NONE,
   LOCK_PERMANENT,
   saveLockOverride,
-} from "./locks.js?v=20260527";
-import { getAmmo, removeAmmo } from "./inventory.js?v=20260527";
-import { playSfx } from "./audio.js?v=20260527";
-import { showToast } from "./toast.js?v=20260527";
+} from "./locks.js?v=20260527b";
+import { getAmmo, removeAmmo } from "./inventory.js?v=20260527b";
+import { playSfx } from "./audio.js?v=20260527b";
+import { showToast } from "./toast.js?v=20260527b";
 
 export function findGateAt(zone, tx, ty) {
   if (!zone?.entities) return null;

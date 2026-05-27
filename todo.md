@@ -11,8 +11,8 @@ JS port replaces Rust codebase in production via Electron or similar, across all
 Miscellanea
 - [x] Pushable objects animation is wrong, it seems they "teleport two tiles in the push direction, then, with animation, come back of one", instead, we should see them moving from one tile to the next with a single smooth animation
 - [x] Pushable objects have particular feature that covers the "pushed thing in a dead end" corner case. Basically when I pushed an object into a dead end, I can still move forward and go to the same tile it occupies, then, when I move next, the object should follow me. it seems it moves, but does not stay "in front of me", basically I can move it "one tile away from the dead end", but not "keep pushing it"...?
-- [ ] On mobile, the menu button is rendered on top of the ammo count, making both hard to see
-- [ ] Behavior of ESC is not consistent across differnet dialogues. For example, it cannot be used to close the "you died" dialog or any submenus.
+- [x] On mobile, the menu button is rendered on top of the ammo count, making both hard to see
+- [x] Behavior of ESC is not consistent across differnet dialogues. For example, it cannot be used to close the "you died" dialog or any submenus.
 
 # Offline co-op
 

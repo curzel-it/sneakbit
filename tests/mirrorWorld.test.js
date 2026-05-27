@@ -15,7 +15,7 @@ const {
   getMirrorPlayerById,
   isMirrorReady,
   INTERP_DELAY_MS,
-} = await import("../js/mirrorWorld.js?v=20260527");
+} = await import("../js/mirrorWorld.js?v=20260527b");
 
 function makeFakeZone(id) {
   return { id, rows: 10, cols: 10, entities: [] };
