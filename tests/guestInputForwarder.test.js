@@ -90,3 +90,107 @@ test("interact key emits intent: interact", () => {
   assert.equal(net.sent[0].intent, "interact");
   fwd._resetForwarderForTesting();
 });
+
+function makeDisconnectableNet() {
+  const sent = [];
+  let connected = true;
+  return {
+    sent,
+    setConnected(v) { connected = v; },
+    send(frame) { if (!connected) return false; sent.push(frame); return true; },
+    isConnected: () => connected,
+  };
+}
+
+test("action intents fired while disconnected are buffered, not sent", () => {
+  fwd._resetForwarderForTesting();
+  const net = makeDisconnectableNet();
+  fwd.installGuestInputForwarder(net);
+  net.setConnected(false);
+  fwd._injectKeyDownForTesting("KeyF"); // shoot
+  fwd._injectKeyDownForTesting("KeyG"); // melee
+  fwd._injectKeyDownForTesting("KeyE"); // interact
+  assert.equal(net.sent.length, 0, "nothing should hit the wire while disconnected");
+  const pending = fwd._getPendingActionsForTesting();
+  assert.deepEqual(pending.map((p) => p.intent), ["shoot", "melee", "interact"]);
+  fwd._resetForwarderForTesting();
+});
+
+test("movement intents fired while disconnected are NOT buffered (state re-derives on resume)", () => {
+  fwd._resetForwarderForTesting();
+  const net = makeDisconnectableNet();
+  fwd.installGuestInputForwarder(net);
+  net.setConnected(false);
+  fwd._injectKeyDownForTesting("KeyD"); // moveRight
+  assert.equal(net.sent.length, 0);
+  assert.equal(fwd._getPendingActionsForTesting().length, 0,
+    "movement intents must not pile up in the action buffer — buffering would phantom-step the avatar on reconnect");
+  fwd._resetForwarderForTesting();
+});
+
+test("flushOnReconnect drains buffered actions in order", () => {
+  fwd._resetForwarderForTesting();
+  const net = makeDisconnectableNet();
+  fwd.installGuestInputForwarder(net);
+  net.setConnected(false);
+  fwd._injectKeyDownForTesting("KeyF");
+  fwd._injectKeyDownForTesting("KeyG");
+  net.setConnected(true);
+  fwd.flushOnReconnect();
+  assert.equal(fwd._getPendingActionsForTesting().length, 0);
+  const intents = net.sent.map((m) => m.intent);
+  assert.deepEqual(intents, ["shoot", "melee"]);
+  fwd._resetForwarderForTesting();
+});
+
+test("flushOnReconnect drops entries older than ACTION_TTL_MS (5 s)", () => {
+  fwd._resetForwarderForTesting();
+  const net = makeDisconnectableNet();
+  fwd.installGuestInputForwarder(net);
+  net.setConnected(false);
+  fwd._injectKeyDownForTesting("KeyF");
+  fwd._injectKeyDownForTesting("KeyG");
+  net.setConnected(true);
+  // Pretend a long time passed before the welcome arrived.
+  fwd.flushOnReconnect(Date.now() + 6000);
+  assert.equal(net.sent.length, 0, "stale intents should be dropped — a 6 s-old shoot would surprise the player");
+  fwd._resetForwarderForTesting();
+});
+
+test("pending action buffer is bounded (oldest entries evicted past cap)", () => {
+  fwd._resetForwarderForTesting();
+  const net = makeDisconnectableNet();
+  fwd.installGuestInputForwarder(net);
+  net.setConnected(false);
+  // Press shoot 10 times — cap is 8, so the first 2 should evict.
+  for (let i = 0; i < 10; i++) {
+    fwd._injectKeyDownForTesting("KeyF");
+    fwd._injectKeyUpForTesting("KeyF"); // shoot is an action, but keyup makes the next keydown fire
+  }
+  // The forwarder only emits shoot on keydown if !e.repeat, and our
+  // synthetic events have no repeat flag, so each KeyF down fires
+  // shoot. With keyup between each, the cap should be 8.
+  const pending = fwd._getPendingActionsForTesting();
+  assert.equal(pending.length, 8);
+  fwd._resetForwarderForTesting();
+});
+
+test("flushOnReconnect re-emits a still-held movement direction", () => {
+  fwd._resetForwarderForTesting();
+  const net = makeDisconnectableNet();
+  fwd.installGuestInputForwarder(net);
+  // User starts walking right while connected.
+  fwd._injectKeyDownForTesting("KeyD"); // moveRight
+  assert.equal(net.sent[0].intent, "moveRight");
+  net.sent.length = 0;
+  // Connection drops mid-walk. User is still holding KeyD.
+  net.setConnected(false);
+  // … blip …
+  net.setConnected(true);
+  fwd.flushOnReconnect();
+  // The forwarder should emit moveRight again so the host's avatar
+  // resumes walking without the user lifting + repressing the key.
+  assert.equal(net.sent.length, 1);
+  assert.equal(net.sent[0].intent, "moveRight");
+  fwd._resetForwarderForTesting();
+});

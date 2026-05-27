@@ -11,6 +11,7 @@ import { getMode, getJoinCode, getRuntimeRole, isValidJoinCode } from "./onlineM
 import { createNet } from "./net.js?v=20260527b";
 import { installWebrtcTransport } from "./webrtcTransport.js?v=20260527b";
 import { getIceServers, primeIceServers } from "./iceConfig.js?v=20260527b";
+import { flushOnReconnect } from "./guestInputForwarder.js?v=20260527b";
 
 let net = null;
 let inviteCode = null;
@@ -164,6 +165,11 @@ function wireNetHandlers(n) {
     if (m.playerId && m.name) nameByPlayerId.set(m.playerId, m.name);
     welcomed = true;
     dispatchHandshake();
+    // Drain any shoot/melee/interact intents that were buffered while
+    // the link was down, and re-emit the current movement direction so
+    // a still-held key resumes motion without a release+press. Safe to
+    // call from non-guest paths — the forwarder no-ops if not installed.
+    flushOnReconnect();
     notifySessionState();
   });
 

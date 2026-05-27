@@ -47,10 +47,10 @@ Phase 7 events end-to-end
 Polish — server
 - [x] WS frame size cap ~1 MB in parseFrames (currently > 2 GB before throwing)
 - [x] Origin allowlist on WS upgrade
-- [ ] Structured logging: session open/close, peer join/leave, ping-timeout closes
-- [ ] /metrics endpoint (active sessions, bytes relayed, drops)
-- [ ] /version endpoint with git SHA
-- [ ] LOG_LEVEL env var
+- [x] Structured logging: session open/close, peer join/leave, ping-timeout closes
+- [x] /metrics endpoint (active sessions, bytes relayed, drops)
+- [x] /version endpoint with git SHA
+- [x] LOG_LEVEL env var
 - [ ] Graceful drain on SIGTERM: broadcast session.closed{server_restart} before exit
 - [ ] Drop /ws=/ alias on server
 - [ ] Validate full UUIDv4 shape in onHello (today only length >= 4)
@@ -62,7 +62,7 @@ Polish — client
 - [x] Validate join-code format client-side (/^[A-Z0-9]{5}$/) before sending guest.join
 - [x] Restrict ?server= URL override to localhost / 127.0.0.1 (anti-phishing)
 - [x] Reset net.js backoff attempts counter on welcome, not on onopen (handshake-fail reconnects currently fast-loop)
-- [ ] Action intents (shoot/melee/interact): buffer last N, flush on reconnect — today a missed send is a missed shot
+- [x] Action intents (shoot/melee/interact): buffer last N, flush on reconnect — today a missed send is a missed shot
 - [ ] dispatchActionForSlot: replace synthetic KeyboardEvent with direct tryShootForSlot / tryMeleeForSlot / tryInteractForSlot
 - [ ] Snapshot delta signature: drop x/y floats from sigPlayer, ship only on tile/direction change, reconstruct float path on guest from step.progress (saves ~80 records/sec while moving)
 - [x] Mirror animation phase: align to step start, not free-running nowMs()/120 (sprites currently moonwalk briefly)
@@ -86,7 +86,7 @@ Polish — guest mode role gates
 
 Ops / deploy
 - [x] Production deploy of the relay (sneakbit.curzel.it/ws) + nginx + TLS
-- [ ] Health-check /ws upgrade in deploy.py (today step_health hits `/` only — adds insurance against an nginx misconfig that breaks the upgrade path)
+- [x] Health-check /ws upgrade in deploy.py (today step_health hits `/` only — adds insurance against an nginx misconfig that breaks the upgrade path)
 - [x] Check nginx config for /ws into the repo (vhost lives as an embedded template in deploy.py — version-controlled and re-applied on every run)
 - [x] Check systemd unit sneakbit-server into the repo (same — embedded in deploy.py)
 - [ ] Production smoke test: run tests/server.session.test.js against wss://sneakbit.curzel.it/ws after deploy (wsTestClient is plain `node:net` — needs a TLS variant)

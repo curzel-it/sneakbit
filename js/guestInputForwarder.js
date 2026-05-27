@@ -16,6 +16,12 @@ const ACTION_TO_INTENT = {
 };
 
 const MOVE_INTENTS = new Set(["moveUp", "moveDown", "moveLeft", "moveRight"]);
+// Discrete one-shot intents — losing one is a missed shot/swing/talk,
+// which is what the buffer exists to prevent. Movement intents are
+// state-derived (re-emitted from `held` on resume), so they don't need
+// buffering; buffering them would actually be wrong because the player
+// likely released the key during the blip.
+const ACTION_INTENTS = new Set(["shoot", "melee", "interact"]);
 
 let net = null;
 let seq = 0;
@@ -30,6 +36,14 @@ let onVisibilityHandler = null;
 // MAX_LOG entries before the bound bites).
 const INPUT_LOG_CAP = 256;
 const inputLog = [];
+// Action intents (shoot/melee/interact) fired while the WS is down get
+// parked here and flushed on the next welcome. Bounded — a long-dead
+// connection shouldn't dump 30 shots into the host on resume. Each
+// entry is stamped with wall-clock; entries older than ACTION_TTL_MS
+// at flush time are dropped (a five-second-old shoot is stale).
+const PENDING_ACTION_CAP = 8;
+const ACTION_TTL_MS = 5000;
+const pendingActions = [];
 
 function intentToDir(intent) {
   switch (intent) {
@@ -85,7 +99,43 @@ export function uninstallGuestInputForwarder() {
   held.clear();
   lastSentDir = null;
   inputLog.length = 0;
+  pendingActions.length = 0;
 }
+
+// Called by onlineBootstrap on every `welcome`. Drains action intents
+// that fired while we were mid-reconnect (sub-TTL only) and re-emits
+// the current movement direction so the host's avatar resumes walking
+// without the user having to lift+repress the key. No-op if we don't
+// have an active net (e.g. tear-down racing the welcome).
+export function flushOnReconnect(now = Date.now()) {
+  if (!net?.isConnected?.()) return;
+  while (pendingActions.length) {
+    const entry = pendingActions.shift();
+    if (now - entry.queuedAt > ACTION_TTL_MS) continue;
+    seq++;
+    inputLog.push({ seq, intent: entry.intent });
+    if (inputLog.length > INPUT_LOG_CAP) inputLog.shift();
+    net.send({ op: "input", seq, t: now, intent: entry.intent });
+  }
+  // Re-emit movement so a key the user is still holding produces
+  // motion again without a release+press. lastSentDir was zeroed at
+  // disconnect time (clearInputHeld via onlineBootstrap teardown
+  // doesn't run mid-blip, but a fresh welcome means the host's view
+  // of our heading is unset).
+  if (held.size > 0) {
+    const dir = lastSentDir ?? [...held][0];
+    lastSentDir = dir;
+    const intent = dirToIntent(dir);
+    if (intent) {
+      seq++;
+      inputLog.push({ seq, intent });
+      if (inputLog.length > INPUT_LOG_CAP) inputLog.shift();
+      net.send({ op: "input", seq, t: now, intent });
+    }
+  }
+}
+
+export function _getPendingActionsForTesting() { return pendingActions.slice(); }
 
 export function getSeq() { return seq; }
 
@@ -150,7 +200,17 @@ function onBlur() {
 }
 
 function send(intent) {
-  if (!net?.isConnected?.()) return;
+  if (!net?.isConnected?.()) {
+    // Movement intents are state-derived; on reconnect, the still-held
+    // key is re-emitted from flushOnReconnect. Buffering a moveLeft
+    // that the user already released would be a phantom step.
+    // Action intents are one-shot — drop = miss, so park them.
+    if (ACTION_INTENTS.has(intent)) {
+      if (pendingActions.length >= PENDING_ACTION_CAP) pendingActions.shift();
+      pendingActions.push({ intent, queuedAt: Date.now() });
+    }
+    return;
+  }
   seq++;
   inputLog.push({ seq, intent });
   if (inputLog.length > INPUT_LOG_CAP) inputLog.shift();
