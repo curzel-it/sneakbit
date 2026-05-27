@@ -14,6 +14,7 @@
 
 const STORAGE_KEY = "sneakbit.coop.v1";
 let cached = null;
+let networkGuestCount = 0;
 
 function load() {
   if (cached !== null) return cached;
@@ -23,6 +24,16 @@ function load() {
 }
 
 export function isCoopMode() { return load(); }
+
+// Host network co-op uses the same per-slot input + render infrastructure
+// as local co-op, but flipping the persisted localStorage flag would
+// change a bunch of unrelated behavior (P2 spawned at boot, save slot
+// share, ...). Instead, hostGuests.js reports the live count of network
+// guests here and code that only cared about "is there a P2?" can ask
+// isCoopActive() to cover both cases.
+export function setNetworkGuestCount(n) { networkGuestCount = Math.max(0, n | 0); }
+export function getNetworkGuestCount() { return networkGuestCount; }
+export function isCoopActive() { return load() || networkGuestCount > 0; }
 
 export function setCoopMode(on) {
   cached = !!on;

@@ -13,7 +13,7 @@ import { getAmmo, removeAmmo } from "./inventory.js";
 import { playSfx } from "./audio.js";
 import { getEquipped, SLOT_RANGED } from "./equipment.js";
 import { matchesAction } from "./keyBindings.js";
-import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js";
+import { isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
@@ -73,7 +73,7 @@ function onKey(e) {
 }
 
 function pickShooter(state, code) {
-  if (isCoopMode()) {
+  if (isCoopActive()) {
     if (code === COOP_KEYMAPS[1].shoot) return state.player;
     if (code === COOP_KEYMAPS[2].shoot) return state.player2 || state.player;
     return null;

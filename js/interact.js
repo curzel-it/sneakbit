@@ -8,7 +8,7 @@
 import { showDialogue, resolveEntityDialogue, isDialogueOpen } from "./dialogue.js";
 import { handleAfterDialogue } from "./afterDialogue.js";
 import { matchesAction } from "./keyBindings.js";
-import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js";
+import { isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 
 const DIR_DELTA = {
@@ -44,7 +44,7 @@ export function installInteract(getState) {
 // players have their own interact keys (KeyZ / KeyB); in single-player
 // the rebindable interact action drives P1.
 function pickInitiator(state, code) {
-  if (isCoopMode()) {
+  if (isCoopActive()) {
     if (code === COOP_KEYMAPS[1].interact) return state.player;
     if (code === COOP_KEYMAPS[2].interact) return state.player2 || state.player;
     return null;

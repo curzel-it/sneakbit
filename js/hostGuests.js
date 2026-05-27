@@ -9,6 +9,7 @@
 
 import { getNetRole, getNet } from "./onlineBootstrap.js";
 import { pushInputPress, clearInputHeld, clearInputState } from "./input.js";
+import { setNetworkGuestCount, COOP_KEYMAPS } from "./coopMode.js";
 
 const INTENT_TO_DIR = {
   moveUp: "up",
@@ -62,6 +63,7 @@ function onPeerJoined(m, isRejoin) {
   // P3/P4 lives in Phase 7+ once main.js gains a state.players[] array.
   if (slot !== 2) return;
   guestSlotByPlayerId.set(m.playerId, slot);
+  setNetworkGuestCount(guestSlotByPlayerId.size);
   if (state.player2) {
     // Same slot reused on a reconnect: just rebind the playerId.
     state.player2.playerId = m.playerId;
@@ -79,8 +81,10 @@ function onPeerJoined(m, isRejoin) {
 function onPeerLeft(m) {
   const slot = guestSlotByPlayerId.get(m.playerId);
   guestSlotByPlayerId.delete(m.playerId);
+  setNetworkGuestCount(guestSlotByPlayerId.size);
   if (slot == null) return;
   clearInputState(slot);
+  lastSeqByPlayerId.delete(m.playerId);
   const state = stateGetter?.();
   if (!state) return;
   if (slot === 2) {
@@ -120,5 +124,21 @@ function applyIntent(slot, intent) {
     return;
   }
   if (intent === "stopMove") { clearInputHeld(slot); return; }
-  // interact / shoot / melee arrive in Phase 7 — fall through for now.
+  if (intent === "interact" || intent === "shoot" || intent === "melee") {
+    dispatchActionForSlot(slot, intent);
+  }
+}
+
+// Synthesises a keydown for the slot's coop-keymap action key. The
+// interact / shoot / melee listeners use the same isCoopActive() gate
+// (set by setNetworkGuestCount on peer.joined) so the dispatched key
+// routes to the right state.player2 / etc.
+function dispatchActionForSlot(slot, action) {
+  if (typeof window === "undefined") return;
+  const km = COOP_KEYMAPS[slot];
+  if (!km) return;
+  const code = km[action];
+  if (!code) return;
+  try { window.dispatchEvent(new KeyboardEvent("keydown", { code })); }
+  catch { /* ignore — no DOM in tests */ }
 }

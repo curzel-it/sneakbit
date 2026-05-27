@@ -9,6 +9,8 @@
 // renderSize (default 32px) is the CSS size of the icon shown left of
 // the text.
 
+import { broadcastHostEvent } from "./hostEvents.js";
+
 const DURATIONS = { regular: 1.0, hint: 2.0, longHint: 3.0 };
 const FADE_OUT = 0.25; // seconds
 
@@ -75,6 +77,9 @@ export function showToast(text, mode = "hint", opts = {}) {
   // empty box (one of the 1001 hints had an empty dialogue line and
   // tripped this).
   if (text == null || String(text).trim() === "") return;
+  // In host mode push this toast to every guest so their UI mirrors the
+  // host's notification cadence. No-op offline / on guests.
+  if (!opts._fromNetwork) broadcastHostEvent("toast", { text, toastType: mode });
   clearTimers();
   textEl.textContent = text;
   applyToastImage(opts.image);

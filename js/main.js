@@ -59,6 +59,7 @@ import { installHostGuests } from "./hostGuests.js";
 import { installGuestInputForwarder } from "./guestInputForwarder.js";
 import { installPredictedSelf, tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js";
 import { getSelfPlayerId } from "./onlineBootstrap.js";
+import { installGuestEvents } from "./guestEvents.js";
 
 async function main() {
   bootstrapOnline();
@@ -188,6 +189,7 @@ async function main() {
   if (isGuest) {
     installGuestInputForwarder(getNet());
     installPredictedSelf(getNet());
+    installGuestEvents(getNet());
   }
 
   startGameLoop((dt) => {
