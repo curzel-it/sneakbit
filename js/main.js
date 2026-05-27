@@ -55,6 +55,8 @@ import { installMapEditor } from "./mapEditor.js";
 import { bootstrapOnline, getNetRole, getNet } from "./onlineBootstrap.js";
 import { installSnapshotBroadcaster } from "./snapshotBroadcaster.js";
 import { installMirrorWorld, getMirrorZone, getMirrorPlayers, isMirrorReady } from "./mirrorWorld.js";
+import { installHostGuests } from "./hostGuests.js";
+import { installGuestInputForwarder } from "./guestInputForwarder.js";
 
 async function main() {
   bootstrapOnline();
@@ -175,6 +177,11 @@ async function main() {
   // deltas to every guest, plus a full snapshot whenever a guest joins.
   // No-op in offline / guest mode.
   installSnapshotBroadcaster(() => state);
+  // Host: spawn / despawn guest avatars on peer.joined / peer.left and
+  // route guest `input` frames into the local input pipeline.
+  installHostGuests(() => state, { makeCoopP2 });
+  // Guest: capture keyboard and forward intents to the host.
+  if (isGuest) installGuestInputForwarder(getNet());
 
   startGameLoop((dt) => {
     if (isGuest) {

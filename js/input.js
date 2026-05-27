@@ -22,10 +22,52 @@ const ACTION_TO_DIR = {
 // Per-player input state. In single-player mode only index 1 is touched;
 // gamepad input also feeds into player 1. In co-op, each player has its
 // own held/press from their own hardwired keymap (see coopMode.js).
+// Online co-op extends this with slots 3 / 4 driven by network input.
 const state = {
   1: { held: new Set(), pressEvents: [] },
   2: { held: new Set(), pressEvents: [] },
+  3: { held: new Set(), pressEvents: [] },
+  4: { held: new Set(), pressEvents: [] },
 };
+
+function ensureSlot(playerIndex) {
+  let s = state[playerIndex];
+  if (s) return s;
+  s = { held: new Set(), pressEvents: [] };
+  state[playerIndex] = s;
+  return s;
+}
+
+// Network-driven injection seams used by hostGuests.js to feed guest
+// inputs into the existing input pipeline for slots 2..4. Same data
+// shape as local keyboard presses so nothing downstream cares.
+export function pushInputPress(playerIndex, direction) {
+  const s = ensureSlot(playerIndex);
+  if (!s.held.has(direction)) s.pressEvents.push(direction);
+  s.held.add(direction);
+}
+
+export function releaseInputHeld(playerIndex, direction) {
+  const s = state[playerIndex];
+  if (s) s.held.delete(direction);
+}
+
+// Clears held only. Pending press events are kept so an in-flight step
+// finishes — matches the spec's `stopMove` intent (release the key but
+// let the press that started this step land).
+export function clearInputHeld(playerIndex) {
+  const s = state[playerIndex];
+  if (s) s.held.clear();
+}
+
+// Clears everything (held + pending presses). Used on guest disconnect
+// and window blur — there's no avatar around to consume the queue.
+export function clearInputState(playerIndex) {
+  const s = state[playerIndex];
+  if (!s) return;
+  s.held.clear();
+  s.pressEvents.length = 0;
+}
 
 // Returns { playerIndex, direction } for a key event, or null if the
 // code isn't a movement key for any active player.
@@ -51,7 +93,7 @@ function pushPress(idx, dir) {
 }
 
 function clearAll() {
-  for (const idx of [1, 2]) {
+  for (const idx of [1, 2, 3, 4]) {
     state[idx].held.clear();
     state[idx].pressEvents.length = 0;
   }

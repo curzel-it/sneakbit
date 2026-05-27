@@ -146,8 +146,9 @@ function entityDeltas(state) {
   return { changed, removed };
 }
 
-// Phase 3 emits the host's own avatar only. Phase 5 will extend this
-// with the guest-driven P2/P3/P4 entries from state.players[].
+// state.player is the host's own avatar; state.player2/etc. are the
+// guest avatars spawned by hostGuests.js — each carries the guest's
+// playerId so we can address it on the wire.
 function playersOf(state) {
   const out = [];
   if (state.player) {
@@ -157,9 +158,16 @@ function playersOf(state) {
       playerId: getSelfPlayerId(),
     });
   }
+  if (state.player2 && state.player2.playerId) {
+    out.push({
+      player: state.player2,
+      slot: state.player2.slot ?? 2,
+      playerId: state.player2.playerId,
+    });
+  }
   if (Array.isArray(state.players)) {
     for (const s of state.players) {
-      if (s?.player) out.push(s);
+      if (s?.player && s?.playerId) out.push(s);
     }
   }
   return out;
