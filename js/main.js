@@ -357,7 +357,11 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
     updateHud(hud, { zoneId: mZone.id, fps: 1 / dt, showFps: getSettings().showFps });
     return;
   }
-  updateCamera(state.camera, renderPlayers, mZone);
+  // Each guest plays on their own device — centre on their own avatar
+  // rather than averaging across every mirrored player (which would
+  // drag the view halfway to the host).
+  const cameraTarget = pickGuestCameraTarget(renderPlayers);
+  updateCamera(state.camera, cameraTarget, mZone);
   updateVisibleEntities(mZone, state.camera);
   render(renderer, mZone, state.camera, renderPlayers, biomeAnim.frame);
   updateHud(hud, {
@@ -365,6 +369,19 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
     fps: 1 / dt,
     showFps: getSettings().showFps,
   });
+}
+
+// Picks which mirror player the camera should follow on the guest side
+// — the predicted-self entry if it's in the render list, otherwise the
+// first mirrored player (only the host has joined, etc.). Returning a
+// single player keeps updateCamera off the "average every coord" path.
+function pickGuestCameraTarget(renderPlayers) {
+  const selfId = getSelfPlayerId();
+  if (selfId) {
+    const self = renderPlayers.find((p) => p.playerId === selfId);
+    if (self) return self;
+  }
+  return renderPlayers[0];
 }
 
 // Swap the mirror's copy of the guest's own avatar with predictedSelf so
@@ -514,8 +531,17 @@ function allPlayers(state) {
 }
 
 // Camera follows live players (dead P2 doesn't drag the centre off).
-// Single-player always returns [P1].
+// In local co-op both players share one screen so we average over every
+// live player to keep them both in view. In online co-op the host and
+// each guest see the world on separate devices, so the camera should
+// stay centred on the local player — averaging would push the host's
+// view halfway to wherever the guest is standing.
 function livePlayersForCamera(state) {
+  if (getRuntimeRole() === "host") {
+    // Online host: only follow the host's own avatar. Guests render the
+    // world from their own mirror with predictedSelf at the centre.
+    return state.player ? [state.player] : [];
+  }
   const live = allPlayers(state);
   // If everyone's dead the camera freezes on P1's last position so the
   // Game Over overlay doesn't snap to (0, 0).

@@ -31,6 +31,10 @@ let chipLabel = null;
 let overlay = null;
 let card = null;
 let installed = false;
+// Latch so the auto-close-on-join behavior only fires once per session.
+// Without it a stray render after closing could re-close the panel if the
+// user re-opens it before leaving the session.
+let guestAutoClosedForSlot = null;
 
 // View subtrees — built once, toggled by display.
 let views = { offline: null, hosting: null, guest: null };
@@ -200,7 +204,10 @@ function buildHostingView() {
   hostingCopyBtn.textContent = "Copy code";
   hostingCopyBtn.addEventListener("click", onCopyClick);
   hostingShareBtn = document.createElement("button");
-  hostingShareBtn.textContent = "Share link";
+  // Desktop has no native share sheet, so the button just copies the
+  // join URL to the clipboard. Calling it "Share link" there suggests an
+  // action the browser can't actually take — keep the label honest.
+  hostingShareBtn.textContent = canNativeShare() ? "Share link" : "Copy link";
   hostingShareBtn.addEventListener("click", onShareClick);
   codeBtns.appendChild(hostingCopyBtn);
   codeBtns.appendChild(hostingShareBtn);
@@ -253,6 +260,21 @@ function renderAll() {
   // routines diff against last-rendered state and skip work when nothing
   // has changed (peer list patches in place, etc.).
   renderPanel();
+  maybeAutoCloseAfterGuestJoin();
+}
+
+// Once a guest has been assigned a slot, the "In session with…" view has
+// nothing actionable on it — the player just wants to start playing. Drop
+// the overlay so they're not stuck on the dialog. Latched per-slot so we
+// don't fight a user re-opening the panel after we closed it.
+function maybeAutoCloseAfterGuestJoin() {
+  const role = getRuntimeRole();
+  if (role !== "guest") { guestAutoClosedForSlot = null; return; }
+  const slot = getMySlot();
+  if (slot == null) return;
+  if (guestAutoClosedForSlot === slot) return;
+  guestAutoClosedForSlot = slot;
+  if (isPartyPanelOpen()) closePartyPanel();
 }
 
 function renderChip() {
@@ -450,6 +472,10 @@ function onKickClick(peer) {
   net.send({ op: "host.kick", playerId: peer.playerId });
 }
 
+function canNativeShare() {
+  return typeof navigator !== "undefined" && typeof navigator.share === "function";
+}
+
 function buildShareUrl(code) {
   if (typeof location === "undefined") return code;
   const u = new URL(location.href);
@@ -491,17 +517,20 @@ function injectStyles() {
   const style = document.createElement("style");
   style.id = "party-styles";
   style.textContent = `
+    /* Positioned below the HP bar (top-left) instead of the top-right
+       corner so it can't cover the ammo HUD. Styled to match the HP /
+       ammo cards (same translucent background, border, radius, font) so
+       the three pieces of the HUD read as one set. */
     #party-chip {
-      position: fixed; top: 12px; right: 12px;
+      position: fixed; top: 52px; left: 12px;
       display: none; align-items: center; gap: 8px;
-      padding: 6px 12px;
-      background: rgba(10, 10, 10, 0.92);
-      border: 1px solid #444; border-radius: 999px;
+      padding: 6px 10px;
+      background: rgba(10, 10, 10, 0.7);
+      border: 1px solid #333; border-radius: 6px;
       color: #eee; font-family: monospace; font-size: 12px;
       z-index: 13; cursor: pointer; user-select: none;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.6);
     }
-    #party-chip:hover { background: rgba(30, 30, 30, 0.95); }
+    #party-chip:hover { background: rgba(30, 30, 30, 0.85); }
     .party-chip-dot {
       width: 8px; height: 8px; border-radius: 50%;
       background: #5fd16a; box-shadow: 0 0 6px #5fd16a;
@@ -592,4 +621,5 @@ export function _resetPartyPanelForTesting() {
   offlineErrorEl = null;
   peerRowsByPlayerId.clear();
   peerEmptyRow = null;
+  guestAutoClosedForSlot = null;
 }

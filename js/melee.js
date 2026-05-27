@@ -99,6 +99,9 @@ function pickSwinger(state, code) {
     return state.player2 || state.player;
   }
   if (isCoopActive()) {
+    if (code === COOP_KEYMAPS[2]?.melee && state.player2?.playerId) {
+      return state.player2;
+    }
     for (const slot of [3, 4]) {
       if (code === COOP_KEYMAPS[slot]?.melee) {
         return playerForSlot(state, slot) || state.player;

@@ -55,6 +55,9 @@ function pickInitiator(state, code) {
     return state.player2 || state.player;
   }
   if (isCoopActive()) {
+    if (code === COOP_KEYMAPS[2]?.interact && state.player2?.playerId) {
+      return state.player2;
+    }
     for (const slot of [3, 4]) {
       if (code === COOP_KEYMAPS[slot]?.interact) {
         return playerForSlot(state, slot) || state.player;

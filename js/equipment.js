@@ -7,7 +7,7 @@
 // Exposes `window.equipment` for devtools (parity with window.skills).
 
 import { getValue, setValue } from "./storage.js";
-import { isCoopMode } from "./coopMode.js";
+import { isCoopActive } from "./coopMode.js";
 
 export const SLOT_RANGED = "ranged";
 export const SLOT_MELEE  = "melee";
@@ -23,7 +23,7 @@ function keyFor(slot, index) {
 
 function effectiveIndex(index) {
   const i = index | 0;
-  if (i === 1 && isCoopMode()) return 0;
+  if (i > 0 && isCoopActive()) return 0;
   return i;
 }
 

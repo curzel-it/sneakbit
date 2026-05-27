@@ -66,10 +66,22 @@ export function applyAutoZoom(canvas, camera, hud) {
   }
 }
 
+let activeApply = null;
+
 export function installAutoZoom(canvas, camera, hud) {
   const apply = () => applyAutoZoom(canvas, camera, hud);
+  activeApply = apply;
   apply();
   window.addEventListener("resize", apply);
   window.addEventListener("orientationchange", apply);
   return apply;
+}
+
+// Re-runs the most recently installed auto-zoom. Useful after a role
+// switch or modal close — mobile browsers don't always fire a resize
+// event when their address bar / soft keyboard re-collapses, so the
+// canvas can be left sized for a transient viewport. Safe no-op when
+// installAutoZoom hasn't run yet.
+export function reapplyAutoZoom() {
+  if (activeApply) activeApply();
 }

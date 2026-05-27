@@ -7,6 +7,7 @@
 
 import { showToast } from "./toast.js";
 import { fadeOverlayOut, fadeOverlayIn, FADE_OVERLAY_MS } from "./transitions.js";
+import { addAmmo } from "./inventory.js";
 
 let installed = false;
 let unsub = null;
@@ -48,10 +49,29 @@ export function dispatch(msg) {
     case "zoneChange":
       handleZoneChange();
       return;
-    default:
-      // Pickup / death / respawn / dialogue / cutscene land here in
-      // follow-up commits.
+    case "pickup":
+      handlePickup(msg);
       return;
+    default:
+      // Death / respawn / dialogue / cutscene land here in follow-up
+      // commits.
+      return;
+  }
+}
+
+// Mirror the host's inventory.addAmmo into the guest's local counts.
+// Pickups are resolved authoritatively on the host; we run addAmmo here
+// just so the guest's ammo HUD reflects the result. Inventory is shared
+// in online co-op (isCoopActive → effectiveIndex folds to 0), so the
+// playerIndex argument is irrelevant.
+function handlePickup(msg) {
+  const items = Array.isArray(msg?.items) ? msg.items : [];
+  for (const it of items) {
+    if (!it) continue;
+    const sid = it.speciesId | 0;
+    const amount = it.amount | 0;
+    if (!sid || amount <= 0) continue;
+    addAmmo(sid, amount, 0);
   }
 }
 

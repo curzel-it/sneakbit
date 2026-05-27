@@ -66,6 +66,23 @@ test("zoneChange kind is routable through the override seam", () => {
   _uninstallGuestEventsForTesting();
 });
 
+test("pickup events feed addAmmo so the guest's HUD updates", async () => {
+  _uninstallGuestEventsForTesting();
+  const { getAmmo } = await import("../js/inventory.js");
+  // Snapshot starting counts because other tests in the suite may have
+  // hydrated inventory with non-zero values for the same species ids.
+  const KUNAI = 7000;
+  const SWORD = 1170;
+  const before = { kunai: getAmmo(KUNAI, 0), sword: getAmmo(SWORD, 0) };
+  dispatch({ kind: "pickup", items: [{ speciesId: KUNAI, amount: 3 }, { speciesId: SWORD, amount: 1 }] });
+  assert.equal(getAmmo(KUNAI, 0), before.kunai + 3);
+  assert.equal(getAmmo(SWORD, 0), before.sword + 1);
+  // Defensive: malformed item entries don't throw and don't add.
+  dispatch({ kind: "pickup", items: [null, { speciesId: 0, amount: 5 }, { speciesId: KUNAI, amount: -2 }] });
+  assert.equal(getAmmo(KUNAI, 0), before.kunai + 3);
+  _uninstallGuestEventsForTesting();
+});
+
 test("malformed events are ignored", () => {
   _uninstallGuestEventsForTesting();
   let count = 0;

@@ -25,16 +25,16 @@ Miscellanea
 # Online co-op (spec: docs/server.md)
 
 Urgent:
-- [ ] It seems that resolution changes after starting a co-op (spotted on mobile)
-- [ ] When in offline co-op, users are playing on the same screen, so we have the camera be centered on both players. However, when playing online, each player has it's own screen, meaning we can keep the camera centered on the player like we do normally
-- [ ] After connecting in co-op (as guest), the "in session..." dialogue can be closed automatically
-- [ ] Labels with player names are shown above each player character, let's remove them
-- [ ] Like in offline co-op, neither of the players can shoot
-- [ ] Guest players cannot pick up objects
-- [ ] Line in offline co-op, guests are not targeted by monsters (can still take damage)
-- [ ] When hosting on desktop replace "share link" with "copy link"
-- [ ] The "hosting n/4" thing we see in the top right does not have a style that matches the rest of the hud
-- [ ] The "hosting n/4" thing we see in the top right covers the ammo count, should probably be next to it or below the hp bar
+- [x] It seems that resolution changes after starting a co-op (spotted on mobile)
+- [x] When in offline co-op, users are playing on the same screen, so we have the camera be centered on both players. However, when playing online, each player has it's own screen, meaning we can keep the camera centered on the player like we do normally
+- [x] After connecting in co-op (as guest), the "in session..." dialogue can be closed automatically
+- [x] Labels with player names are shown above each player character, let's remove them
+- [x] Like in offline co-op, neither of the players can shoot
+- [x] Guest players cannot pick up objects
+- [x] Line in offline co-op, guests are not targeted by monsters (can still take damage)
+- [x] When hosting on desktop replace "share link" with "copy link"
+- [x] The "hosting n/4" thing we see in the top right does not have a style that matches the rest of the hud
+- [x] The "hosting n/4" thing we see in the top right covers the ammo count, should probably be next to it or below the hp bar
 
 Phases 0–10 shipped (relay, prediction, events, zone transitions, party panel, WebRTC + STUN/TURN, permessage-deflate). Remaining work below.
 

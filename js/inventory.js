@@ -7,7 +7,7 @@
 // co-op leaves indices independent — guests own their own inventory.
 
 import { getValue, setValue } from "./storage.js";
-import { isCoopMode } from "./coopMode.js";
+import { isCoopActive } from "./coopMode.js";
 
 // In-memory mirror per player. Lazy-loaded once from storage on first
 // access of any function. We snapshot from storage.js's cache rather
@@ -54,12 +54,14 @@ function key(playerIndex, speciesId) {
   return `${PLAYER_KEY_PREFIX}${playerIndex | 0}${KEY_SUFFIX}${speciesId | 0}`;
 }
 
-// Local co-op shares one save slot — both heroes draw from / drop into
-// player.0.*. Slots 2 and 3 (host-side view of network guests) and
-// online-only sessions keep their own indices.
+// Co-op shares one save slot — both local heroes and any online guest
+// avatar (slots 2/3/4 spawned by hostGuests) draw from / drop into
+// player.0.*. Single-player keeps its own index. Online host without any
+// guest connected behaves like single-player (isCoopActive returns false
+// until a guest joins).
 function effectiveIndex(playerIndex) {
   const idx = playerIndex | 0;
-  if (idx === 1 && isCoopMode()) return 0;
+  if (idx > 0 && isCoopActive()) return 0;
   return idx;
 }
 

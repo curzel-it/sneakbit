@@ -88,8 +88,14 @@ function pickShooter(state, code) {
     return state.player2 || state.player;
   }
   // Online guests fire through hostGuests.dispatchActionForSlot, which
-  // synthesises a keydown with one of the slot-3/4 sentinel codes.
+  // synthesises a keydown with the matching slot's COOP_KEYMAPS code.
+  // Slot 2 lives in state.player2 (network guest); slots 3/4 in
+  // state.players[]. Gated on a playerId so a local-coop P2 (no playerId)
+  // doesn't accidentally claim the slot-2 sentinel.
   if (isCoopActive()) {
+    if (code === COOP_KEYMAPS[2]?.shoot && state.player2?.playerId) {
+      return state.player2;
+    }
     for (const slot of [3, 4]) {
       if (code === COOP_KEYMAPS[slot]?.shoot) {
         return playerForSlot(state, slot) || state.player;

@@ -21,6 +21,7 @@ import { tr } from "./strings.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { isPlayerDead } from "./playerHealth.js";
+import { broadcastHostEvent } from "./hostEvents.js";
 
 // Bullet is here because in zone data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles
@@ -96,15 +97,25 @@ function trigger(e, kind, playerIndex) {
     return;
   }
   const sp = getSpecies(e.species_id);
+  const items = [];
   if (sp?.bundle_contents?.length) {
     const counts = new Map();
     for (const cid of sp.bundle_contents) counts.set(cid, (counts.get(cid) || 0) + 1);
-    for (const [cid, n] of counts) addAmmo(cid, n, playerIndex);
+    for (const [cid, n] of counts) {
+      addAmmo(cid, n, playerIndex);
+      items.push({ speciesId: cid, amount: n });
+    }
   } else {
     addAmmo(e.species_id, 1, playerIndex);
+    items.push({ speciesId: e.species_id, amount: 1 });
   }
   playSfx("ammoCollected");
   maybeEquipWeapon(sp, playerIndex);
+  // Online co-op shares the inventory pool — broadcast the items so each
+  // guest can mirror the addAmmo into their own counts[0] (host already
+  // applied it locally above). Without this the kunai vanishes on the
+  // guest's screen but their HUD never ticks up.
+  broadcastHostEvent("pickup", { items });
 }
 
 // When a pickup is associated with a weapon (sword pickup → sword,

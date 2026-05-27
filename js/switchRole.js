@@ -28,6 +28,7 @@ import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js";
 import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js";
 import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js";
 import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js";
+import { reapplyAutoZoom } from "./zoom.js";
 
 // Callbacks main.js installs at boot. switchRole calls them to rebuild /
 // wipe the live `state` object that lives in main.js's closure.
@@ -76,6 +77,19 @@ export async function switchRole(target, opts = {}) {
   await teardownRole(cur);
   await setupRole(target, opts);
   setRuntimeRole(target);
+  // Mobile browsers don't always fire a `resize` event when their soft
+  // keyboard / address bar settles after a role transition (e.g. closing
+  // the party panel that asked for a join code). Without this re-apply,
+  // the canvas can be left sized for the transient viewport, making the
+  // game look "zoomed in" until the next real resize. Symptom called out
+  // in todo.md: "resolution changes after starting a co-op (spotted on
+  // mobile)". Re-fire on the next frame too so we catch the viewport
+  // *after* the overlay has finished tearing down and the chrome has
+  // had a chance to redraw.
+  reapplyAutoZoom();
+  if (typeof requestAnimationFrame !== "undefined") {
+    requestAnimationFrame(() => reapplyAutoZoom());
+  }
 }
 
 async function teardownRole(role) {
