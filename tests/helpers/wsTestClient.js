@@ -1,8 +1,12 @@
 // Minimal WebSocket client for tests. Speaks just enough of RFC 6455 to
 // drive the relay: HTTP upgrade, masked text frames, recv parsing, close.
-// Optionally opts in to permessage-deflate via { deflate: true }.
+// Optionally opts in to permessage-deflate via { deflate: true }, or
+// TLS via { tls: true } — the latter is used by the post-deploy
+// smoke test to talk to wss://sneakbit.curzel.it/ws over the real
+// nginx proxy.
 
 import { connect } from "node:net";
+import { connect as tlsConnect } from "node:tls";
 import { createHash, randomBytes } from "node:crypto";
 import { deflateRawSync, inflateRawSync, constants as zlibConstants } from "node:zlib";
 import { parseFrames, OP } from "../../server/wsFrames.js";
@@ -11,16 +15,25 @@ import { stripTrailer, appendTrailer } from "../../server/wsExtensions.js";
 
 const MAGIC = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-export function openWsClient(host, port, path = "/ws", { deflate = false, origin = null } = {}) {
+export function openWsClient(host, port, path = "/ws", { deflate = false, origin = null, tls = false } = {}) {
   return new Promise((resolve, reject) => {
-    const socket = connect({ host, port }, () => {
+    // The `Host:` header must NOT include the default port for
+    // wss://host:443, otherwise nginx's server_name match misses
+    // when the upstream relies on the bare hostname for routing.
+    const hostHeader = tls
+      ? (port === 443 ? host : `${host}:${port}`)
+      : `${host}:${port}`;
+    const socket = tls
+      ? tlsConnect({ host, port, servername: host }, onConnect)
+      : connect({ host, port }, onConnect);
+    function onConnect() {
       const key = randomBytes(16).toString("base64");
       const expected = createHash("sha1").update(key + MAGIC).digest("base64");
       const extHeader = deflate ? "Sec-WebSocket-Extensions: permessage-deflate\r\n" : "";
       const originHeader = origin ? `Origin: ${origin}\r\n` : "";
       const req =
         `GET ${path} HTTP/1.1\r\n` +
-        `Host: ${host}:${port}\r\n` +
+        `Host: ${hostHeader}\r\n` +
         `Upgrade: websocket\r\n` +
         `Connection: Upgrade\r\n` +
         `Sec-WebSocket-Key: ${key}\r\n` +
@@ -144,7 +157,7 @@ export function openWsClient(host, port, path = "/ws", { deflate = false, origin
         get isClosed() { return closed; },
         get closeCode() { return closeCode; },
       };
-    });
+    }
     socket.once("error", reject);
   });
 }

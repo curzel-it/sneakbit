@@ -606,6 +606,28 @@ def step_health(env):
     ))
 
 
+def step_smoke(env):
+    """Final post-deploy gate: run the local TLS smoke suite against
+    the just-deployed relay. Exercises the real client→nginx→relay
+    round-trip (handshake, host.open, guest.join failure path, ping)
+    which the bash health gate above can't reach. Skipped if Node
+    isn't installed locally — the deployer's machine might not have
+    matching tooling, and the bash checks already cover the basics."""
+    print("[12] tls smoke (local node --test against prod)")
+    if subprocess.run(["which", "node"], stdout=subprocess.DEVNULL,
+                      stderr=subprocess.DEVNULL).returncode != 0:
+        print("  node not on PATH, skipping smoke")
+        return
+    smoke_url = f"wss://{SERVER_NAME}/ws"
+    result = subprocess.run(
+        ["node", "--test", "tests/server.smoke.test.js"],
+        cwd=str(ROOT),
+        env={**os.environ, "SMOKE_URL": smoke_url},
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"smoke tests failed against {smoke_url}")
+
+
 # ---- post-commit hook installer -------------------------------------------
 
 def install_hook() -> int:
@@ -656,6 +678,7 @@ def main(argv: list[str] | None = None) -> int:
     step_certs(env)
     step_service(env)
     step_health(env)
+    step_smoke(env)
 
     print(f"\nDone.")
     print(f"  https://{SERVER_NAME}/")
