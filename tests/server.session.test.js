@@ -172,6 +172,75 @@ test("host delta fans out to every guest", async () => {
   });
 });
 
+test("host.kick closes the guest with 4005 and fans peer.left{reason:kicked}", async () => {
+  await withServer(async ({ host, port }) => {
+    const h = await openWsClient(host, port);
+    await hello(h, "u-kick-h");
+    h.send({ op: "host.open" });
+    const opened = await h.recv();
+
+    const victim = await openWsClient(host, port);
+    await hello(victim, "u-kick-v");
+    victim.send({ op: "guest.join", code: opened.code });
+    const victimJoined = await victim.recv();
+    await h.recv(); // host's peer.joined for victim
+
+    const bystander = await openWsClient(host, port);
+    await hello(bystander, "u-kick-b");
+    bystander.send({ op: "guest.join", code: opened.code });
+    await bystander.recv(); // own guest.joined
+    await h.recv();          // host's peer.joined for bystander
+    await victim.recv();     // victim's peer.joined for bystander
+
+    h.send({ op: "host.kick", playerId: victimJoined.selfPlayerId });
+
+    const hostLeft = await h.recv();
+    assert.equal(hostLeft.op, "peer.left");
+    assert.equal(hostLeft.playerId, victimJoined.selfPlayerId);
+    assert.equal(hostLeft.reason, "kicked");
+
+    const bystanderLeft = await bystander.recv();
+    assert.equal(bystanderLeft.op, "peer.left");
+    assert.equal(bystanderLeft.playerId, victimJoined.selfPlayerId);
+    assert.equal(bystanderLeft.reason, "kicked");
+
+    const code = await victim.waitClose();
+    assert.equal(code, 4005);
+
+    h.close(); bystander.close();
+  });
+});
+
+test("host.kick from a non-host is silently dropped", async () => {
+  await withServer(async ({ host, port }) => {
+    const h = await openWsClient(host, port);
+    await hello(h, "u-kick-auth-h");
+    h.send({ op: "host.open" });
+    const opened = await h.recv();
+
+    const g1 = await openWsClient(host, port);
+    await hello(g1, "u-kick-auth-g1");
+    g1.send({ op: "guest.join", code: opened.code });
+    const g1Joined = await g1.recv();
+    await h.recv();
+
+    const g2 = await openWsClient(host, port);
+    await hello(g2, "u-kick-auth-g2");
+    g2.send({ op: "guest.join", code: opened.code });
+    const g2Joined = await g2.recv();
+    await h.recv();
+    await g1.recv();
+
+    // Guest tries to kick another guest — should be a no-op.
+    g1.send({ op: "host.kick", playerId: g2Joined.selfPlayerId });
+    // No frame should be fanned; the host channel goes idle.
+    await assert.rejects(h.recv(300), /timeout/);
+    assert.equal(g2.isClosed, false);
+
+    h.close(); g1.close(); g2.close();
+  });
+});
+
 test("guest cannot send snapshot/delta", async () => {
   await withServer(async ({ host, port }) => {
     const h = await openWsClient(host, port);

@@ -32,6 +32,16 @@ let pendingGuestCode = null;
 // entities.js reads this to label avatars; mirrorWorld players carry
 // playerId so the same lookup works for the local-render side.
 const nameByPlayerId = new Map();
+// Listeners survive net recreations — registered once at boot, fire on
+// every WS close (across the original net, the re-opened net after a
+// role switch, etc.). Net `on("_close", ...)` is per-net, so we proxy
+// here. Used for things like "show toast + switchRole on 4005".
+const closeListeners = new Set();
+
+export function onAnyClose(fn) {
+  closeListeners.add(fn);
+  return () => closeListeners.delete(fn);
+}
 
 // Compatibility: the legacy getNetRole() shim keeps consumers that read
 // "what role is this tab" pointing at the runtime role.
@@ -188,9 +198,15 @@ function wireNetHandlers(n) {
   });
 
   n.on("_open", () => console.log("[online] ws open"));
-  n.on("_close", ({ code, reason }) => {
+  n.on("_close", (m) => {
     welcomed = false;
+    const code = m?.code;
+    const reason = m?.reason;
     console.warn("[online] ws closed", code, reason);
+    for (const fn of [...closeListeners]) {
+      try { fn({ code, reason }); }
+      catch (e) { console.error("onAnyClose handler", e); }
+    }
   });
 }
 

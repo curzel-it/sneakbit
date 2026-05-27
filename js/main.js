@@ -52,7 +52,7 @@ import { isCoopMode } from "./coopMode.js";
 import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js";
 import { runMigrations } from "./migrations.js";
 import { installMapEditor } from "./mapEditor.js";
-import { bootstrapOnline } from "./onlineBootstrap.js";
+import { bootstrapOnline, onAnyClose } from "./onlineBootstrap.js";
 import { getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead } from "./mirrorWorld.js";
 import { tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js";
 import { getSelfPlayerId } from "./onlineBootstrap.js";
@@ -153,6 +153,15 @@ async function main() {
     onEnterGuest: wipeGuestState,
     stateGetter: () => state,
     p2Factory: makeCoopP2,
+  });
+
+  // 4005 = "kicked by host". net.js already suppresses auto-reconnect on
+  // this code; here we surface the UX side (toast + drop back to
+  // offline). Per host-authoritative-server.md §Close codes.
+  onAnyClose(({ code }) => {
+    if (code !== 4005) return;
+    showToast("You were removed from the session", "longHint");
+    switchRole("offline");
   });
 
   // Honor the boot URL. resolveMode already seeded runtimeRole in

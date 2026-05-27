@@ -16,9 +16,11 @@ export const PROTOCOL = 1;
 export const MIN_PROTOCOL = 1;
 
 // Per-spec close codes. 4002 = idle (no pings for the timeout window);
-// 4004 = severe rate violation — the client gets banned for a minute.
+// 4004 = severe rate violation — the client gets banned for a minute;
+// 4005 = kicked by host (host.kick op) — no auto-reconnect on the client.
 export const CLOSE_IDLE = 4002;
 export const CLOSE_RATE = 4004;
+export const CLOSE_KICKED = 4005;
 
 // Per-spec rate limits (host-authoritative-server.md §Rate limits).
 // Burst-friendly: input + snapshot/delta can hit 30/s, everything else
@@ -102,6 +104,7 @@ export function createRelay({
       case "pong": return;
       case "host.open": return onHostOpen(ctx);
       case "host.close": return onHostClose(ctx);
+      case "host.kick": return onHostKick(ctx, msg);
       case "guest.join": return onGuestJoin(ctx, msg);
       case "guest.leave": return onGuestLeave(ctx);
       case "input": return onInput(ctx, msg);
@@ -199,6 +202,42 @@ export function createRelay({
     const session = store.sessionsById.get(ctx.sessionId);
     if (!session) return;
     closeSession(session, "host_quit");
+  }
+
+  // Host requests that a specific guest be ejected. Auth-gated to the
+  // host of the session. We remove the guest *before* closing the WS so
+  // onDisconnect's `session.guests.get(ctx.uuid)` early-returns and we
+  // don't double-emit a peer.ghosted / delayed peer.left for the same
+  // playerId. Close code 4005 tells the kicked guest's net.js not to
+  // auto-reconnect (host-authoritative-server.md §Close codes).
+  function onHostKick(ctx, msg) {
+    if (ctx.role !== "host") return;
+    if (typeof msg.playerId !== "string") return;
+    const session = store.sessionsById.get(ctx.sessionId);
+    if (!session) return;
+    let kickedUuid = null;
+    let kickedConn = null;
+    for (const g of session.guests.values()) {
+      if (g.playerId === msg.playerId) {
+        kickedUuid = g.uuid;
+        kickedConn = g.conn;
+        break;
+      }
+    }
+    if (!kickedUuid) return;
+    store.removeGuest(session, kickedUuid);
+    const leftFrame = {
+      op: "peer.left",
+      playerId: msg.playerId,
+      reason: "kicked",
+    };
+    if (session.hostConn) session.hostConn.sendJSON(leftFrame);
+    for (const g of session.guests.values()) {
+      if (g.conn) g.conn.sendJSON(leftFrame);
+    }
+    if (kickedConn) {
+      try { kickedConn.close(CLOSE_KICKED, "kicked"); } catch { /* ignore */ }
+    }
   }
 
   function closeSession(session, reason) {
