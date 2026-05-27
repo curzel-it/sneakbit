@@ -493,7 +493,14 @@ H → snapshot (full, fresh)
 
 **Shipped (phase 10):** WebRTC data channel for game traffic with relay-only signaling, STUN + TURN-credential endpoint, RFC 7692 `permessage-deflate` on the WS path. See `js/webrtcChannel.js`, `js/webrtcTransport.js`, `server/webrtc*.js`.
 
-**Remaining:** see `todo.md` for the live punch list — discrete-event hooks (`event:pickup`, `event:death`, dialogue, cutscene), server polish (frame size cap, origin allowlist, structured logging, `/metrics`, `/version`, SIGTERM drain), client polish (action-intent buffering, snapshot delta signature tightening, mirror animation phase alignment), and ops (production relay deploy, nginx vhost, smoke tests).
+**Shipped (post-phase-10):**
+- Phase 7 discrete-event hooks end-to-end: `event:pickup` mirrored into guest inventory, `event:death`/`event:respawn` with guest UI, `event:dialogueOpen`/`Advance`/`Close` (guest mirrors host's read-only overlay, predicted self pauses while open), `event:cutsceneStart`/`End` (guest plays the same animation; host owns trigger + onEnd entities).
+- Security batch: WS frame size cap (1 MB) checked before allocation; origin allowlist on WS upgrade (`curzel.it`, `sneakbit.curzel.it`, `localhost`, `127.0.0.1`; overridable via `ALLOWED_ORIGINS`); join-code format gate; `?server=` override restricted to localhost (anti-phishing).
+- Guest role gates: `?join=CODE` boot path skips host-only installs (migrations, firstLaunch, HUDs reading offline state); hides "New game"/"Clear cache" while running as guest.
+- Reconnect backoff fix: `attempts` counter resets on `welcome` (not `onopen`), so a TLS-handshake-OK-but-server-closes failure escalates backoff instead of fast-looping at the 1 s floor.
+- **Ops:** relay live at `https://sneakbit.curzel.it/ws` (nginx reverse proxy, systemd unit `sneakbit-server`, TLS via certbot). Health endpoint `/health` returns "ok"; WS upgrade through nginx verified end-to-end; origin allowlist verified against prod. Restartborgo.it co-tenant protected by `deploy.py`'s final health gate.
+
+**Remaining:** see `todo.md` for the live punch list — server polish (structured logging, `/metrics`, `/version`, `LOG_LEVEL`, SIGTERM drain, full UUID validation, intent cheat-resistance), client polish (action-intent buffering on reconnect, snapshot delta signature tightening, mirror animation phase alignment, mirror resync op), and ops smoke tests (WS-upgrade health check inside `deploy.py`, full session suite against `wss://sneakbit.curzel.it/ws`).
 
 # Out of scope
 

@@ -85,12 +85,12 @@ Polish — guest mode role gates
 - [x] Don't load STARTING_ZONE_ID / STARTING_SPAWN / loadProgress on the guest path
 
 Ops / deploy
-- [ ] Production deploy of the relay (sneakbit.curzel.it/ws) + nginx + TLS
-- [ ] Health-check /ws upgrade in deploy.py
-- [ ] Check nginx config for /ws into the repo
-- [ ] Check systemd unit sneakbit-server into the repo
-- [ ] Production smoke test: run tests/server.session.test.js against wss://sneakbit.curzel.it/ws after deploy
-- [ ] Production smoke test: restartborgo.it remains reachable and serves a static website like before
+- [x] Production deploy of the relay (sneakbit.curzel.it/ws) + nginx + TLS
+- [ ] Health-check /ws upgrade in deploy.py (today step_health hits `/` only — adds insurance against an nginx misconfig that breaks the upgrade path)
+- [x] Check nginx config for /ws into the repo (vhost lives as an embedded template in deploy.py — version-controlled and re-applied on every run)
+- [x] Check systemd unit sneakbit-server into the repo (same — embedded in deploy.py)
+- [ ] Production smoke test: run tests/server.session.test.js against wss://sneakbit.curzel.it/ws after deploy (wsTestClient is plain `node:net` — needs a TLS variant)
+- [x] Production smoke test: restartborgo.it remains reachable and serves a static website like before (covered by deploy.py's final `curl -fsSk https://restartborgo.it/` gate)
 
 Future work (spec defers)
 - [ ] Real accounts (email / OAuth), uuids to be used as primary key
