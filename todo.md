@@ -61,7 +61,7 @@ Polish — server
 Polish — client
 - [x] Validate join-code format client-side (/^[A-Z0-9]{5}$/) before sending guest.join
 - [x] Restrict ?server= URL override to localhost / 127.0.0.1 (anti-phishing)
-- [ ] Reset net.js backoff attempts counter on welcome, not on onopen (handshake-fail reconnects currently fast-loop)
+- [x] Reset net.js backoff attempts counter on welcome, not on onopen (handshake-fail reconnects currently fast-loop)
 - [ ] Action intents (shoot/melee/interact): buffer last N, flush on reconnect — today a missed send is a missed shot
 - [ ] dispatchActionForSlot: replace synthetic KeyboardEvent with direct tryShootForSlot / tryMeleeForSlot / tryInteractForSlot
 - [ ] Snapshot delta signature: drop x/y floats from sigPlayer, ship only on tile/direction change, reconstruct float path on guest from step.progress (saves ~80 records/sec while moving)

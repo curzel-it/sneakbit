@@ -135,8 +135,6 @@ export function createNet({
     }
     ws = sock;
     sock.onopen = () => {
-      attempts = 0;
-      idleRetryUsed = false;
       send({ op: "hello", protocol: PROTOCOL, uuid: resolvedUuid, client: CLIENT_TAG });
       startPing();
       emit("_open", { url: resolvedUrl });
@@ -146,6 +144,15 @@ export function createNet({
       try { msg = JSON.parse(ev.data); }
       catch { return; }
       if (!msg || typeof msg.op !== "string") return;
+      // Reset backoff only after a successful handshake round-trip.
+      // Resetting in onopen lets a TLS-handshake-OK-but-server-closes
+      // failure (bad protocol, immediate reject) fast-loop at the
+      // 1 s floor — by the time we see `welcome` we know the relay
+      // accepted us, so escalating backoff is safe to wipe.
+      if (msg.op === "welcome") {
+        attempts = 0;
+        idleRetryUsed = false;
+      }
       emit(msg.op, msg);
     };
     sock.onclose = (ev) => {

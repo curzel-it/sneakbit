@@ -137,6 +137,58 @@ test("unexpected close (1006) triggers a reconnect", async () => {
   net.close();
 });
 
+test("handshake-fail reconnects escalate backoff (no fast-loop before welcome)", async () => {
+  // Each socket opens fine, then the server closes 1006 before sending
+  // welcome — same shape as a bad-hello / protocol-mismatch rejection.
+  // The first close should schedule at step[0], the second at step[1],
+  // proving attempts isn't reset by onopen.
+  const factory = makeFactory();
+  const net = createNet({
+    url: "ws://test/ws",
+    uuid: "u",
+    wsFactory: factory,
+    backoffSteps: [5, 200],
+  });
+  net.connect();
+  factory.last()._open();
+  factory.last()._serverClose(1006);
+  // First retry uses step[0] = 5 ms; show up within ~30 ms.
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(factory.sockets.length, 2, "first retry should have happened");
+  factory.last()._open();
+  factory.last()._serverClose(1006);
+  // Second retry uses step[1] = 200 ms; must NOT have happened at 30 ms.
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(factory.sockets.length, 2, "second retry must wait for backoff step[1], not fast-loop at step[0]");
+  await new Promise((r) => setTimeout(r, 220));
+  assert.equal(factory.sockets.length, 3);
+  net.close();
+});
+
+test("welcome resets backoff: a close after welcome retries at step[0] again", async () => {
+  const factory = makeFactory();
+  const net = createNet({
+    url: "ws://test/ws",
+    uuid: "u",
+    wsFactory: factory,
+    backoffSteps: [5, 200],
+  });
+  net.connect();
+  // First connection: open but no welcome, server drops → attempts=1.
+  factory.last()._open();
+  factory.last()._serverClose(1006);
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(factory.sockets.length, 2);
+  // Second connection: open + welcome → attempts must reset.
+  factory.last()._open();
+  factory.last()._serverMsg({ op: "welcome", protocol: 1, playerId: "p", name: "P" });
+  factory.last()._serverClose(1006);
+  // Next retry should fire fast (step[0] = 5 ms), not slow.
+  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(factory.sockets.length, 3, "post-welcome close should retry at step[0]");
+  net.close();
+});
+
 test("explicit close() prevents reconnect", async () => {
   const factory = makeFactory();
   const net = createNet({
