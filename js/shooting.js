@@ -64,6 +64,35 @@ export function tryShoot() {
   shoot(state, state.player);
 }
 
+// Host-side network injection seam. hostGuests.dispatchActionForSlot
+// used to round-trip through window.dispatchEvent(new KeyboardEvent),
+// which (a) couldn't run in a Node test without a DOM stub and (b)
+// stayed brittle whenever this module's bindings changed. The slot
+// directly resolves the actor in the host's local world:
+//   1 → state.player           (the host themselves; only fires here if
+//                                explicitly invoked, the keyboard handler
+//                                already covers normal play)
+//   2 → state.player2          (online guest slot 2, gated on playerId
+//                                so a local-coop P2 sentinel doesn't
+//                                accidentally claim the slot)
+//   3, 4 → state.players[]     (online guest slots 3/4)
+export function tryShootForSlot(slot) {
+  if (getNetRole() === "guest") return;
+  const state = stateRef?.();
+  if (!state) return;
+  const shooter = playerForSlotInState(state, slot);
+  if (!shooter) return;
+  shoot(state, shooter);
+}
+
+function playerForSlotInState(state, slot) {
+  if (slot === 1) return state.player || null;
+  if (slot === 2) return (state.player2 && state.player2.playerId) ? state.player2 : null;
+  if (!Array.isArray(state.players)) return null;
+  const s = state.players.find((e) => e.slot === slot);
+  return s ? s.player : null;
+}
+
 function onKey(e) {
   if (e.repeat) return;
   // Guests must not drive the local sim — they forward the intent over

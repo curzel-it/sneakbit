@@ -63,13 +63,13 @@ Polish — client
 - [x] Restrict ?server= URL override to localhost / 127.0.0.1 (anti-phishing)
 - [x] Reset net.js backoff attempts counter on welcome, not on onopen (handshake-fail reconnects currently fast-loop)
 - [x] Action intents (shoot/melee/interact): buffer last N, flush on reconnect — today a missed send is a missed shot
-- [ ] dispatchActionForSlot: replace synthetic KeyboardEvent with direct tryShootForSlot / tryMeleeForSlot / tryInteractForSlot
+- [x] dispatchActionForSlot: replace synthetic KeyboardEvent with direct tryShootForSlot / tryMeleeForSlot / tryInteractForSlot
 - [x] Snapshot delta signature: drop x/y floats from sigPlayer, ship only on tile/direction change, reconstruct float path on guest from step.progress (saves ~80 records/sec while moving)
 - [x] Mirror animation phase: align to step start, not free-running nowMs()/120 (sprites currently moonwalk briefly)
 - [x] Mirror resync request op (guest asks host for a fresh full snapshot)
 - [ ] Surface isMirrorStale as "Host lagging…" overlay (not just the toast on host.ghosted)
 - [ ] Toast-event allowlist on hostEvents.broadcastHostEvent
-- [ ] onPeerGhosted: clearInputHeld only for the ghosting slot, not all
+- [x] onPeerGhosted: clearInputHeld only for the ghosting slot, not all
 - [ ] dev-warn when serializeEntity drops an entity for missing id
 - [ ] friendlyReason: generic "Couldn't connect" fallback instead of raw reason string
 

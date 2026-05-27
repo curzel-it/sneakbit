@@ -12,7 +12,10 @@
 
 import { getNetRole, getNet } from "./onlineBootstrap.js?v=20260527b";
 import { pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260527b";
-import { setNetworkGuestCount, COOP_KEYMAPS } from "./coopMode.js?v=20260527b";
+import { setNetworkGuestCount } from "./coopMode.js?v=20260527b";
+import { tryShootForSlot } from "./shooting.js?v=20260527b";
+import { tryMeleeForSlot } from "./melee.js?v=20260527b";
+import { tryInteractForSlot } from "./interact.js?v=20260527b";
 
 const INTENT_TO_DIR = {
   moveUp: "up",
@@ -150,10 +153,16 @@ function onPeerLeft(m) {
   }
 }
 
-function onPeerGhosted(_m) {
-  // The guest's avatar stays put per spec — just release any held keys
-  // so the host's tick doesn't keep stepping a disconnected guest.
-  for (const slot of guestSlotByPlayerId.values()) clearInputHeld(slot);
+function onPeerGhosted(m) {
+  // The guest's avatar stays put per spec — release any held keys for
+  // JUST this slot so the host's tick doesn't keep stepping the ghosted
+  // guest. Earlier this iterated every slot in the session — a single
+  // ghosted peer would freeze the input of every other guest until they
+  // re-pressed their movement keys, which felt like a "co-op got
+  // disconnected" hitch even though the other peers were fine.
+  if (!m || !m.playerId) return;
+  const slot = guestSlotByPlayerId.get(m.playerId);
+  if (slot) clearInputHeld(slot);
 }
 
 function onInput(m) {
@@ -187,6 +196,22 @@ function applyIntent(slot, intent, from) {
   }
 }
 
+let actionDispatch = {
+  shoot:    tryShootForSlot,
+  melee:    tryMeleeForSlot,
+  interact: tryInteractForSlot,
+};
+
+// Test seam: swap action dispatchers for assertion-friendly stubs.
+// Pass undefined values to restore defaults; `{}` is a no-op.
+export function _setActionDispatchForTesting(overrides) {
+  actionDispatch = {
+    shoot:    overrides?.shoot    ?? tryShootForSlot,
+    melee:    overrides?.melee    ?? tryMeleeForSlot,
+    interact: overrides?.interact ?? tryInteractForSlot,
+  };
+}
+
 // Returns true if the action is allowed (and stamps the timer); false
 // if the same guest spammed this intent inside the cooldown window.
 // Per-guest, per-intent — a guest who legitimately alternates
@@ -207,16 +232,14 @@ export function _resetActionCooldownsForTesting() {
 }
 export function _getActionCooldownsForTesting() { return lastActionAtByGuest; }
 
-// Synthesises a keydown for the slot's coop-keymap action key. The
-// interact / shoot / melee listeners use the same isCoopActive() gate
-// (set by setNetworkGuestCount on peer.joined) so the dispatched key
-// routes to the right state.player2 / etc.
+// Routes the guest's action intent straight to the matching module's
+// per-slot entry point. Replaces an earlier path that synthesised a
+// `new KeyboardEvent("keydown", { code: COOP_KEYMAPS[slot][action] })`
+// and let the shoot/melee/interact key listeners re-derive the slot —
+// brittle (every binding rename had a second place to update), DOM-
+// dependent (couldn't run in Node tests without a window stub), and
+// went through the global event bus for no benefit.
 function dispatchActionForSlot(slot, action) {
-  if (typeof window === "undefined") return;
-  const km = COOP_KEYMAPS[slot];
-  if (!km) return;
-  const code = km[action];
-  if (!code) return;
-  try { window.dispatchEvent(new KeyboardEvent("keydown", { code })); }
-  catch { /* ignore — no DOM in tests */ }
+  const fn = actionDispatch[action];
+  if (fn) fn(slot);
 }

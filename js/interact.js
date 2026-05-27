@@ -37,13 +37,43 @@ export function installInteract(getState) {
     if (!state) return;
     const initiator = pickInitiator(state, e.code);
     if (!initiator) return;
-    const target = findFacingEntity(state.zone, initiator);
-    if (!target) return;
-    const dialogue = resolveEntityDialogue(target);
-    if (!dialogue) return;
-    e.preventDefault();
-    showDialogue(dialogue, initiator.index | 0).then(() => handleAfterDialogue(state.zone, target));
+    if (performInteract(state, initiator)) {
+      e.preventDefault();
+    }
   });
+}
+
+// Network injection seam — see shooting.tryShootForSlot for the
+// motivation. hostGuests.dispatchActionForSlot calls this directly
+// instead of synthesising a KeyboardEvent for the slot's interact key.
+export function tryInteractForSlot(slot) {
+  if (getNetRole() === "guest") return;
+  if (isDialogueOpen()) return;
+  const state = stateRef?.();
+  if (!state) return;
+  const initiator = playerForSlotInState(state, slot);
+  if (!initiator) return;
+  performInteract(state, initiator);
+}
+
+function playerForSlotInState(state, slot) {
+  if (slot === 1) return state.player || null;
+  if (slot === 2) return (state.player2 && state.player2.playerId) ? state.player2 : null;
+  if (!Array.isArray(state.players)) return null;
+  const s = state.players.find((e) => e.slot === slot);
+  return s ? s.player : null;
+}
+
+// Returns true if a dialogue was kicked off (the keyboard handler then
+// preventDefault's so the key doesn't double-fire downstream). Returns
+// false when there's nothing in front to talk to.
+function performInteract(state, initiator) {
+  const target = findFacingEntity(state.zone, initiator);
+  if (!target) return false;
+  const dialogue = resolveEntityDialogue(target);
+  if (!dialogue) return false;
+  showDialogue(dialogue, initiator.index | 0).then(() => handleAfterDialogue(state.zone, target));
+  return true;
 }
 
 // Maps a keydown to the player who should act on it. P1 always uses

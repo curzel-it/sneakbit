@@ -79,6 +79,26 @@ export function tryMelee() {
   swing(state, state.player);
 }
 
+// Network injection seam — see shooting.tryShootForSlot for the
+// motivation. dispatchActionForSlot calls this directly instead of
+// synthesising a KeyboardEvent.
+export function tryMeleeForSlot(slot) {
+  if (getNetRole() === "guest") return;
+  const state = stateRef?.();
+  if (!state) return;
+  const swinger = playerForSlotInState(state, slot);
+  if (!swinger) return;
+  swing(state, swinger);
+}
+
+function playerForSlotInState(state, slot) {
+  if (slot === 1) return state.player || null;
+  if (slot === 2) return (state.player2 && state.player2.playerId) ? state.player2 : null;
+  if (!Array.isArray(state.players)) return null;
+  const s = state.players.find((e) => e.slot === slot);
+  return s ? s.player : null;
+}
+
 function onKey(e) {
   if (e.repeat) return;
   // Guests forward the melee intent over the wire — local sim is the

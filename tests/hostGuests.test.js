@@ -197,85 +197,77 @@ test("input from slot 3 guest routes into slot 3 input state", () => {
   teardown();
 });
 
-// --- Action cooldowns ------------------------------------------------------
-// hostGuests's action path calls window.dispatchEvent for shoot/melee/
-// interact. In Node tests there's no DOM, so we stub window with a
-// counter and observe how many synthesised key events reach the
-// "would dispatch" layer. That tells us whether the cooldown swallowed
-// the inbound intent.
+// --- Action dispatch (direct call, no DOM bus) -----------------------------
+// hostGuests.dispatchActionForSlot used to round-trip through
+// window.dispatchEvent(new KeyboardEvent(...)); the test stubbed window
+// and counted events. The refactor calls tryShootForSlot/etc directly,
+// so we install assertion-friendly stub dispatchers via the test seam.
 
-function stubWindow() {
-  const dispatched = [];
-  globalThis.window = {
-    dispatchEvent(ev) { dispatched.push({ code: ev.code, type: ev.type }); return true; },
+async function installDispatchSpies() {
+  const calls = [];
+  const stub = (action) => (slot) => calls.push({ action, slot });
+  const { _setActionDispatchForTesting, _resetActionCooldownsForTesting } =
+    await import("../js/hostGuests.js?v=20260527b");
+  _setActionDispatchForTesting({
+    shoot: stub("shoot"),
+    melee: stub("melee"),
+    interact: stub("interact"),
+  });
+  _resetActionCooldownsForTesting();
+  return {
+    calls,
+    restore: () => _setActionDispatchForTesting({}),
   };
-  // The host code constructs `new KeyboardEvent("keydown", { code })`,
-  // which doesn't exist in Node either. Provide a minimal shim.
-  if (typeof globalThis.KeyboardEvent === "undefined") {
-    globalThis.KeyboardEvent = class { constructor(type, init) { this.type = type; this.code = init?.code; } };
-  }
-  return dispatched;
-}
-
-function unstubWindow() {
-  delete globalThis.window;
-  // Leave KeyboardEvent in place — installing it twice is harmless.
 }
 
 test("rapid shoot intents from one guest are throttled by the cooldown", async () => {
-  const dispatched = stubWindow();
+  const { calls, restore } = await installDispatchSpies();
   try {
     const { fakeNet } = setup();
     fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
-    const { _resetActionCooldownsForTesting } =
-      await import("../js/hostGuests.js?v=20260527b");
-    _resetActionCooldownsForTesting();
     // Fire three back-to-back shoots — the cooldown is 180 ms, so two
     // of them should be silently dropped.
     fakeNet.emit("input", { op: "input", seq: 1, from: "p_g1", intent: "shoot" });
     fakeNet.emit("input", { op: "input", seq: 2, from: "p_g1", intent: "shoot" });
     fakeNet.emit("input", { op: "input", seq: 3, from: "p_g1", intent: "shoot" });
-    // KeyJ is the slot-2 default for shoot in COOP_KEYMAPS; we only
-    // care about the count of synthesised events, not the specific key.
-    const shoots = dispatched.filter((d) => d.type === "keydown");
+    const shoots = calls.filter((c) => c.action === "shoot");
     assert.equal(shoots.length, 1, `expected 1 dispatched shoot (rest throttled), got ${shoots.length}`);
+    assert.equal(shoots[0].slot, 2, "dispatch must carry the slot, not a synthesised key code");
     teardown();
-  } finally { unstubWindow(); }
+  } finally { restore(); }
 });
 
 test("cooldown is per-guest per-intent (shoot from g1 doesn't gate shoot from g2; shoot doesn't gate melee)", async () => {
-  const dispatched = stubWindow();
+  const { calls, restore } = await installDispatchSpies();
   try {
     const { fakeNet } = setup();
     fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
     fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g2", slot: 3 });
-    const { _resetActionCooldownsForTesting } =
-      await import("../js/hostGuests.js?v=20260527b");
-    _resetActionCooldownsForTesting();
     fakeNet.emit("input", { op: "input", seq: 1, from: "p_g1", intent: "shoot" });
     fakeNet.emit("input", { op: "input", seq: 2, from: "p_g2", intent: "shoot" });
     fakeNet.emit("input", { op: "input", seq: 3, from: "p_g1", intent: "melee" });
     // All three should land — different (guest, intent) tuples.
-    assert.equal(dispatched.length, 3);
+    assert.equal(calls.length, 3);
+    assert.deepEqual(
+      calls.map((c) => `${c.action}/${c.slot}`),
+      ["shoot/2", "shoot/3", "melee/2"],
+    );
     teardown();
-  } finally { unstubWindow(); }
+  } finally { restore(); }
 });
 
 test("cooldown clears after the window — slow tapping isn't penalised", async () => {
-  const dispatched = stubWindow();
+  const { calls, restore } = await installDispatchSpies();
   try {
     const { fakeNet } = setup();
     fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
-    const { _resetActionCooldownsForTesting } =
-      await import("../js/hostGuests.js?v=20260527b");
-    _resetActionCooldownsForTesting();
     fakeNet.emit("input", { op: "input", seq: 1, from: "p_g1", intent: "shoot" });
     // Sleep past the 180 ms cooldown — second shoot should land too.
     await new Promise((r) => setTimeout(r, 200));
     fakeNet.emit("input", { op: "input", seq: 2, from: "p_g1", intent: "shoot" });
-    assert.equal(dispatched.length, 2);
+    assert.equal(calls.length, 2);
     teardown();
-  } finally { unstubWindow(); }
+  } finally { restore(); }
 });
 
 test("movement intents are never throttled (state-derived, last-wins)", async () => {
@@ -283,18 +275,66 @@ test("movement intents are never throttled (state-derived, last-wins)", async ()
   // any cooldown — held key state would otherwise desync from the
   // honest case where a real user is just holding the key down.
   // We can observe by reading the slot's input state after the flood.
-  stubWindow();
+  const { restore } = await installDispatchSpies();
   try {
     const { fakeNet } = setup();
     fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
-    const { _resetActionCooldownsForTesting } =
-      await import("../js/hostGuests.js?v=20260527b");
-    _resetActionCooldownsForTesting();
     for (let i = 0; i < 50; i++) {
       fakeNet.emit("input", { op: "input", seq: i, from: "p_g1", intent: "moveRight" });
     }
     const { held } = inputModule.pollInput(2);
     assert.ok(held.has("right"), "moveRight must still be held after a flood");
     teardown();
-  } finally { unstubWindow(); }
+  } finally { restore(); }
+});
+
+test("dispatchActionForSlot routes shoot/melee/interact to the right per-slot entry points", async () => {
+  // Pin the direct-call shape — three intents from one guest fire
+  // three distinct dispatchers with the slot as the payload, in order.
+  const { calls, restore } = await installDispatchSpies();
+  try {
+    const { fakeNet } = setup();
+    fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 4 });
+    fakeNet.emit("input", { op: "input", seq: 1, from: "p_g1", intent: "shoot" });
+    await new Promise((r) => setTimeout(r, 200));
+    fakeNet.emit("input", { op: "input", seq: 2, from: "p_g1", intent: "melee" });
+    await new Promise((r) => setTimeout(r, 300));
+    fakeNet.emit("input", { op: "input", seq: 3, from: "p_g1", intent: "interact" });
+    assert.deepEqual(
+      calls.map((c) => `${c.action}/${c.slot}`),
+      ["shoot/4", "melee/4", "interact/4"],
+    );
+    teardown();
+  } finally { restore(); }
+});
+
+// --- onPeerGhosted slot isolation ------------------------------------------
+
+test("peer.ghosted clears held keys only for the ghosting slot (other guests keep moving)", () => {
+  // Regression: this used to iterate every guest and wipe their held
+  // set. A single ghosted peer would freeze every other guest's
+  // movement until they re-pressed their keys — felt like the whole
+  // co-op had hitched even though only one peer was actually gone.
+  const { fakeNet } = setup();
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g2", slot: 3 });
+  fakeNet.emit("input", { op: "input", seq: 1, from: "p_g1", intent: "moveDown" });
+  fakeNet.emit("input", { op: "input", seq: 2, from: "p_g2", intent: "moveRight" });
+  fakeNet.emit("peer.ghosted", { op: "peer.ghosted", playerId: "p_g1" });
+  const slot2 = inputModule.pollInput(2);
+  const slot3 = inputModule.pollInput(3);
+  assert.equal(slot2.held.size, 0, "ghosting guest's held keys must clear");
+  assert.ok(slot3.held.has("right"),
+    "non-ghosting guest's held keys must NOT be touched");
+  teardown();
+});
+
+test("peer.ghosted without a known playerId is a no-op (defensive)", () => {
+  const { fakeNet } = setup();
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
+  fakeNet.emit("input", { op: "input", seq: 1, from: "p_g1", intent: "moveDown" });
+  fakeNet.emit("peer.ghosted", { op: "peer.ghosted", playerId: "p_stranger" });
+  const { held } = inputModule.pollInput(2);
+  assert.ok(held.has("down"), "unknown playerId must not affect other slots");
+  teardown();
 });
