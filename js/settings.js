@@ -9,7 +9,14 @@ const KEY = "sneakbit.settings.v1";
 const DEFAULTS = {
   sfxVolume: 0.6,
   musicVolume: 0.45,
-  muted: false,
+  // Start muted by default. firstLaunch.js promotes this to a persisted
+  // `muted: true` on the very first visit, but applyFirstLaunch runs
+  // *after* loadAudio / installMusic / installToast — leaving a small
+  // window where any sound (a footstep from an early input, a music
+  // track that auto-starts) would play unmuted on mobile. Starting from
+  // `true` collapses that window. Returning visitors keep whatever
+  // they set in the settings panel.
+  muted: true,
   showFps: true,
   // Co-op friendly fire — off by default. When on, a bullet whose
   // playerIndex doesn't match the player it overlaps applies damage.

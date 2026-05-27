@@ -15,6 +15,11 @@ import { codesFor } from "./keyBindings.js";
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 const heldBindings = new Map(); // dir -> pointerId
 
+// pointerId -> direction button currently "pressed" by that finger. Used
+// to implement drag-to-switch: as the finger moves over a different D-pad
+// button, we release the old and press the new without requiring a lift.
+const dirPointerHeld = new Map();
+
 let root = null;
 let visible = false;
 
@@ -55,11 +60,28 @@ export function installTouchControls() {
     btn.addEventListener("pointerup", (e) => onRelease(e, btn));
     btn.addEventListener("pointercancel", (e) => onRelease(e, btn));
     btn.addEventListener("pointerleave", (e) => {
-      if (heldBindings.get(btn.dataset.dir) === e.pointerId) onRelease(e, btn);
+      // Action buttons (no data-dir) auto-release on leave. Directional
+      // buttons stay "held" until either pointerup or until the finger
+      // moves over a *different* directional button — handled in the
+      // document-level pointermove below.
+      if (!btn.dataset.dir && btn.dataset.action) onRelease(e, btn);
     });
     // Prevent the browser's default context menu / long-press behaviour.
     btn.addEventListener("contextmenu", (e) => e.preventDefault());
   }
+
+  // Drag-to-switch on the D-pad: pointer events have implicit capture to
+  // the original target, so we can't rely on pointerdown firing on a
+  // *different* button when the finger slides. Instead we listen for
+  // pointermove at the document level and use elementFromPoint to find
+  // which button (if any) the finger is currently over.
+  document.addEventListener("pointermove", onPointerMove, { passive: false });
+  // We released implicit capture on pointerdown for D-pad buttons, so
+  // pointerup fires on whichever element is under the finger at release
+  // — that may be off the pad entirely. Catch it at the document level
+  // to make sure direction keys go up exactly once.
+  document.addEventListener("pointerup", onPointerUp);
+  document.addEventListener("pointercancel", onPointerUp);
 
   // Auto-reveal once we see touch input.
   window.addEventListener("pointerdown", (e) => {
@@ -95,7 +117,12 @@ function onPress(e, btn) {
   const dir = btn.dataset.dir;
   const action = btn.dataset.action;
   if (dir) {
+    // Release implicit pointer capture so pointermove on the document
+    // fires for the *element under the finger* rather than always for
+    // the button we started on.
+    try { btn.releasePointerCapture?.(e.pointerId); } catch { /* ignore */ }
     heldBindings.set(dir, e.pointerId);
+    dirPointerHeld.set(e.pointerId, btn);
     dispatchKey("keydown", KEY_FOR_DIR[dir]);
   } else if (action === "interact") {
     dispatchKey("keydown", "KeyE");
@@ -122,15 +149,56 @@ function onPress(e, btn) {
 
 function onRelease(e, btn) {
   e.preventDefault();
+  // Direction releases follow the pointer, not the original element — the
+  // finger may have moved off `btn` onto a sibling D-pad button.
+  if (e.pointerId != null && dirPointerHeld.has(e.pointerId)) {
+    releaseDirForPointer(e.pointerId);
+    return;
+  }
+  btn.classList.remove("active");
+  const action = btn.dataset.action;
+  if (action === "interact") {
+    dispatchKey("keyup", "KeyE");
+  }
+}
+
+function onPointerUp(e) {
+  if (dirPointerHeld.has(e.pointerId)) releaseDirForPointer(e.pointerId);
+}
+
+function onPointerMove(e) {
+  const current = dirPointerHeld.get(e.pointerId);
+  if (!current) return;
+  // Find a directional button under the finger (if any). Action buttons
+  // are intentionally excluded — they need a discrete tap.
+  const target = document.elementFromPoint(e.clientX, e.clientY);
+  const next = target?.closest?.('.touch-btn[data-dir]') || null;
+  if (next === current) return;
+  // Switch from `current` to `next` (which may be null if the finger
+  // moved off the pad entirely — in that case we just release).
+  releaseDirForPointer(e.pointerId);
+  if (next) pressDir(next, e.pointerId);
+  e.preventDefault();
+}
+
+function pressDir(btn, pointerId) {
+  const dir = btn.dataset.dir;
+  if (!dir) return;
+  btn.classList.add("active");
+  heldBindings.set(dir, pointerId);
+  dirPointerHeld.set(pointerId, btn);
+  dispatchKey("keydown", KEY_FOR_DIR[dir]);
+}
+
+function releaseDirForPointer(pointerId) {
+  const btn = dirPointerHeld.get(pointerId);
+  if (!btn) return;
+  dirPointerHeld.delete(pointerId);
   btn.classList.remove("active");
   const dir = btn.dataset.dir;
-  const action = btn.dataset.action;
-  if (dir) {
-    if (heldBindings.get(dir) !== e.pointerId) return;
+  if (heldBindings.get(dir) === pointerId) {
     heldBindings.delete(dir);
     dispatchKey("keyup", KEY_FOR_DIR[dir]);
-  } else if (action === "interact") {
-    dispatchKey("keyup", "KeyE");
   }
 }
 
