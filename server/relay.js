@@ -116,6 +116,7 @@ export function createRelay({
       case "guest.join": return onGuestJoin(ctx, msg);
       case "guest.leave": return onGuestLeave(ctx);
       case "input": return onInput(ctx, msg);
+      case "guest.resync": return onGuestResync(ctx);
       case "snapshot":
       case "delta":
       case "event":
@@ -349,6 +350,21 @@ export function createRelay({
     metrics.frameRelayed("input", jsonByteLength(out));
   }
 
+  // Guest asks the host for a fresh full snapshot. Forwarded host-bound
+  // (same shape as input). The host's snapshotBroadcaster listens and
+  // emits a snapshot frame addressed to all guests — the requesting
+  // guest's mirror will adopt it on arrival. We deliberately don't
+  // address the snapshot back to just the requester: the spec says the
+  // snapshot is the authoritative baseline, so re-broadcasting it
+  // refreshes every other ghosted-and-recovering mirror in the session
+  // at no extra cost.
+  function onGuestResync(ctx) {
+    if (ctx.role !== "guest") return;
+    const session = store.sessionsById.get(ctx.sessionId);
+    if (!session || !session.hostConn) return;
+    session.hostConn.sendJSON({ op: "guest.resync", from: ctx.playerId });
+  }
+
   function onHostBroadcast(ctx, msg) {
     if (ctx.role !== "host") return;
     const session = store.sessionsById.get(ctx.sessionId);
@@ -481,11 +497,37 @@ export function createRelay({
     return true;
   }
 
+  // Graceful drain. On SIGTERM the bootstrap calls this before letting
+  // the process exit so guests see a clean "server restart" close
+  // frame instead of a TCP reset → "connection reset by peer" toast.
+  // Returns a promise that resolves once every connection has been
+  // signaled and given a short flush window. We don't actively close
+  // the underlying sockets here — the caller closes the HTTP server
+  // and lets its own teardown drop the upgraded TCP sockets so the
+  // OS doesn't half-close in the middle of a flushing frame.
+  function drain({ flushMs = 100 } = {}) {
+    clearInterval(idleTimer);
+    const frame = { op: "session.closed", reason: "server_restart" };
+    for (const session of store.sessionsById.values()) {
+      if (session.hostConn) {
+        try { session.hostConn.sendJSON(frame); } catch { /* ignore */ }
+      }
+      for (const g of session.guests.values()) {
+        if (g.conn) {
+          try { g.conn.sendJSON(frame); } catch { /* ignore */ }
+        }
+      }
+      metrics.sessionClosed("server_restart");
+      log.info("session.close", { sessionId: session.id, code: session.code, reason: "server_restart" });
+    }
+    return new Promise((res) => setTimeout(res, flushMs));
+  }
+
   function shutdown() {
     clearInterval(idleTimer);
   }
 
-  return { attach, store, shutdown, metrics };
+  return { attach, store, shutdown, drain, metrics };
 }
 
 function jsonByteLength(obj) {

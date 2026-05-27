@@ -288,6 +288,44 @@ test("animation phase: idle→moving transition rewinds phase; moving→moving k
   reset();
 });
 
+test("requestResync sends {op:guest.resync} and throttles within MIN_INTERVAL", async () => {
+  reset();
+  const sent = [];
+  const fakeNet = {
+    on() { return () => {}; },
+    isConnected: () => true,
+    send(frame) { sent.push(frame); },
+  };
+  const { installMirrorWorld, requestResync, uninstallMirrorWorld } =
+    await import("../js/mirrorWorld.js?v=20260527b");
+  installMirrorWorld(fakeNet);
+  assert.equal(requestResync(0), true);
+  assert.deepEqual(sent[sent.length - 1], { op: "guest.resync" });
+  // Same wall-clock-ish second → throttled.
+  assert.equal(requestResync(100), false);
+  assert.equal(requestResync(500), false);
+  // After RESYNC_MIN_INTERVAL_MS (2000), allowed again.
+  assert.equal(requestResync(2100), true);
+  assert.equal(sent.length, 2);
+  uninstallMirrorWorld();
+});
+
+test("requestResync no-ops when the net is disconnected", async () => {
+  reset();
+  const sent = [];
+  const fakeNet = {
+    on() { return () => {}; },
+    isConnected: () => false,
+    send(frame) { sent.push(frame); },
+  };
+  const { installMirrorWorld, requestResync, uninstallMirrorWorld } =
+    await import("../js/mirrorWorld.js?v=20260527b");
+  installMirrorWorld(fakeNet);
+  assert.equal(requestResync(), false);
+  assert.equal(sent.length, 0);
+  uninstallMirrorWorld();
+});
+
 test("installMirrorWorld wires snapshot + delta handlers off a net", async () => {
   reset();
   let snapHandler = null;

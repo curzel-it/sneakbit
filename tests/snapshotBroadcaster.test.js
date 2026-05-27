@@ -242,6 +242,18 @@ test("peer.joined triggers a full snapshot send", () => {
   stopSnapshotBroadcaster();
 });
 
+test("guest.resync triggers a full snapshot send (host reuses the peer.joined path)", () => {
+  const fakeNet = setupBootstrapWithFakeNet();
+  const state = makeState();
+  const ok = installSnapshotBroadcaster(() => state, { intervalMs: 100000, net: fakeNet });
+  assert.equal(ok, true);
+  fakeNet.emit("guest.resync", { op: "guest.resync", from: "p_lagging" });
+  const snaps = fakeNet.sent.filter((m) => m.op === "snapshot");
+  assert.equal(snaps.length, 1, "guest.resync must produce exactly one snapshot");
+  assert.equal(snaps[0].zoneId, 1001);
+  stopSnapshotBroadcaster();
+});
+
 test("zone change broadcasts event:zoneChange before the full snapshot", () => {
   const fakeNet = setupBootstrapWithFakeNet();
   const state = makeState(1001);

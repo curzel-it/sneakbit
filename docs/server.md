@@ -304,6 +304,20 @@ Sent by the host to eject a specific guest. Relay validates the sender's role (`
 ```
 Server tells host via `peer.left`.
 
+### `guest.resync` (C guest → S → host)
+```jsonc
+{"op":"guest.resync"}
+```
+Guest's mirror has gone stale and is asking the host for a fresh full
+snapshot. The relay forwards host-bound with `from: <guestPlayerId>`,
+identical routing to `input`. The host's broadcaster reuses its
+`peer.joined` path and emits a `snapshot` frame — fanned to all guests,
+not just the requester, so any other lagging mirrors in the session
+also re-baseline at no extra cost. Auto-fired by the guest after no
+delta has landed for ~1 s; client-side throttled to one request per
+~2 s. No reply is expected on the request itself — the resulting
+snapshot is the answer.
+
 ### `peer.joined` (S → host)
 ```jsonc
 {"op":"peer.joined","playerId":"p_b1d2e3","name":"Player-b1d2"}

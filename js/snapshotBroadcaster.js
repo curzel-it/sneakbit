@@ -38,6 +38,12 @@ export function installSnapshotBroadcaster(getState, opts = {}) {
   if (!net) return false;
   unsubs.push(net.on("peer.joined", () => sendFullSnapshot(net)));
   unsubs.push(net.on("peer.rejoined", () => sendFullSnapshot(net)));
+  // Guest-driven resync: when a guest's mirror has gone stale (no
+  // delta for >1s) it asks the host for a fresh baseline. The relay
+  // routes the request to us host-bound. Reuse sendFullSnapshot so the
+  // snapshot fans out to every guest — refreshing other lagging
+  // mirrors at no extra cost.
+  unsubs.push(net.on("guest.resync", () => sendFullSnapshot(net)));
   timer = setInterval(() => broadcastDelta(net), intervalMs);
   return true;
 }

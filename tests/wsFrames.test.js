@@ -6,8 +6,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { parseFrames, encodeFrame, OP, MAX_FRAME_PAYLOAD } =
+const { parseFrames, OP, MAX_FRAME_PAYLOAD } =
   await import("../server/wsFrames.js");
+const { encodeMaskedFrame } = await import("./helpers/clientFrames.js");
 
 test("MAX_FRAME_PAYLOAD is the 1 MB the spec calls out", () => {
   assert.equal(MAX_FRAME_PAYLOAD, 1 << 20);
@@ -16,7 +17,7 @@ test("MAX_FRAME_PAYLOAD is the 1 MB the spec calls out", () => {
 test("a frame at exactly MAX_FRAME_PAYLOAD parses fine", () => {
   // Use a single text frame, masked client-side as a browser would.
   const payload = Buffer.alloc(MAX_FRAME_PAYLOAD, 0x41);
-  const frame = encodeFrame(OP.TEXT, payload, { mask: true });
+  const frame = encodeMaskedFrame(OP.TEXT, payload);
   const { frames, rest } = parseFrames(frame);
   assert.equal(frames.length, 1);
   assert.equal(frames[0].payload.length, MAX_FRAME_PAYLOAD);
@@ -41,7 +42,7 @@ test("a 16-bit-length frame at the max 65535 still fits under the cap", () => {
   // Smoke test the 16-bit path: 65535 < 1 MB, so this must succeed even
   // though it uses the second header layout.
   const payload = Buffer.alloc(65535, 0x42);
-  const frame = encodeFrame(OP.TEXT, payload, { mask: true });
+  const frame = encodeMaskedFrame(OP.TEXT, payload);
   const { frames } = parseFrames(frame);
   assert.equal(frames.length, 1);
   assert.equal(frames[0].payload.length, 65535);
@@ -50,7 +51,7 @@ test("a 16-bit-length frame at the max 65535 still fits under the cap", () => {
 test("an incomplete frame keeps its bytes in the tail for the next call", () => {
   // Regression guard — the cap check must not consume a partial header.
   const payload = Buffer.from("hi", "utf8");
-  const full = encodeFrame(OP.TEXT, payload, { mask: true });
+  const full = encodeMaskedFrame(OP.TEXT, payload);
   const half = full.slice(0, full.length - 1);
   const { frames, rest } = parseFrames(half);
   assert.equal(frames.length, 0);

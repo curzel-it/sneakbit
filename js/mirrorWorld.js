@@ -17,6 +17,13 @@ import { setupCutscenes } from "./cutscenes.js?v=20260527b";
 export const INTERP_DELAY_MS = 100;
 const STALE_MS = 300;
 const DEAD_MS = 5000;
+// Auto-resync: after the mirror has been stale for this long, ask the
+// host for a fresh full snapshot. STALE_MS already gates the toast UI;
+// the resync is a separate threshold, deliberately higher so a typical
+// network hiccup (which the next 50 ms broadcaster tick recovers from)
+// doesn't pile resync requests on top of the recovery deltas.
+const RESYNC_AFTER_STALE_MS = 1000;
+const RESYNC_MIN_INTERVAL_MS = 2000;
 
 const HERO_BASE_X = 1;
 const HERO_BASE_Y = 1;
@@ -34,21 +41,37 @@ let lastFrameAt = 0;
 let readyCbs = [];
 let isReady = false;
 let unsubs = [];
+let netRef = null;
+// -Infinity so the first requestResync() after install isn't accidentally
+// throttled against the t=0 sentinel.
+let lastResyncRequestAt = -Infinity;
+let resyncTimer = null;
 
 export function installMirrorWorld(net, opts = {}) {
   uninstallMirrorWorld();
   if (!net) return;
+  netRef = net;
   unsubs.push(net.on("snapshot", (m) => handleSnapshot(m, opts)));
   unsubs.push(net.on("delta", handleDelta));
   // Without these the departed peer's last-known interpolated frame
   // keeps rendering forever (the host stops shipping the player in its
   // delta but mirror's `players` map keeps the stale entry).
   unsubs.push(net.on("peer.left", (m) => handlePeerLeft(m)));
+  // Auto-resync watchdog: if no delta has landed for RESYNC_AFTER_STALE_MS
+  // ask the host for a fresh full snapshot. Idempotent — the host's
+  // broadcaster reuses sendFullSnapshot which other ghosted mirrors in
+  // the same session also benefit from.
+  const checkMs = opts.resyncCheckMs ?? 500;
+  resyncTimer = setInterval(maybeRequestResync, checkMs);
+  if (resyncTimer.unref) resyncTimer.unref();
 }
 
 export function uninstallMirrorWorld() {
   for (const u of unsubs) { try { u(); } catch { /* ignore */ } }
   unsubs = [];
+  if (resyncTimer) { clearInterval(resyncTimer); resyncTimer = null; }
+  netRef = null;
+  lastResyncRequestAt = -Infinity;
   zone = null;
   zonePromise = null;
   pendingZoneId = null;
@@ -58,6 +81,27 @@ export function uninstallMirrorWorld() {
   isReady = false;
   readyCbs = [];
 }
+
+// Public seam for tests + a manual "refetch" button if we ever need it.
+// Returns true if the request actually went out, false if it was
+// throttled or the net isn't connected.
+export function requestResync(now = nowMs()) {
+  if (!netRef?.isConnected?.()) return false;
+  if (now - lastResyncRequestAt < RESYNC_MIN_INTERVAL_MS) return false;
+  lastResyncRequestAt = now;
+  netRef.send({ op: "guest.resync" });
+  return true;
+}
+
+function maybeRequestResync() {
+  if (!isReady || lastFrameAt === 0) return;
+  const now = nowMs();
+  if (now - lastFrameAt > RESYNC_AFTER_STALE_MS) {
+    requestResync(now);
+  }
+}
+
+export function _getLastResyncAtForTesting() { return lastResyncRequestAt; }
 
 export function getMirrorZone() { return zone; }
 export function isMirrorReady() { return isReady && !!zone; }

@@ -1,8 +1,16 @@
 // RFC 6455 framing — just the slice we need:
 //   - HTTP upgrade accept-key computation
 //   - text / close / ping / pong frames (single-frame and continuation)
-//   - server-to-client unmasked, client-to-server masked
+//   - server-to-client unmasked encode (the relay only ever sends
+//     server-bound, which RFC 6455 §5.1 says MUST NOT be masked)
+//   - parseFrames handles incoming masked + unmasked alike (clients
+//     MUST mask their outbound frames per the same section)
 //   - RSV1 bit for permessage-deflate (RFC 7692)
+//
+// Client-side masking lives in tests/helpers/clientFrames.js — only
+// test infrastructure that impersonates a browser needs to produce
+// masked frames, and shipping a randomised XOR + mask-key allocator
+// for every outbound server frame was dead weight in prod.
 //
 // No npm deps. Keeps the relay portable for the native wrapper bundle.
 
@@ -34,9 +42,9 @@ export function acceptKey(clientKey) {
   return createHash("sha1").update(clientKey + MAGIC).digest("base64");
 }
 
-// Server-to-client frames are never masked. `rsv1` opt-in lets the deflate
-// path mark a compressed payload — RFC 7692 §6.
-export function encodeFrame(opcode, payload, { mask = false, rsv1 = false } = {}) {
+// Server-to-client frames are never masked (RFC 6455 §5.1). `rsv1`
+// opt-in lets the deflate path mark a compressed payload — RFC 7692 §6.
+export function encodeFrame(opcode, payload, { rsv1 = false } = {}) {
   const data = Buffer.isBuffer(payload)
     ? payload
     : Buffer.from(payload || "", "utf8");
@@ -56,13 +64,7 @@ export function encodeFrame(opcode, payload, { mask = false, rsv1 = false } = {}
   }
   header[0] = 0x80 | (opcode & 0x0f);
   if (rsv1) header[0] |= RSV1;
-  if (!mask) return Buffer.concat([header, data]);
-  header[1] |= 0x80;
-  const maskKey = Buffer.alloc(4);
-  for (let i = 0; i < 4; i++) maskKey[i] = Math.floor(Math.random() * 256);
-  const masked = Buffer.alloc(len);
-  for (let i = 0; i < len; i++) masked[i] = data[i] ^ maskKey[i % 4];
-  return Buffer.concat([header, maskKey, masked]);
+  return Buffer.concat([header, data]);
 }
 
 export function encodeCloseFrame(code = 1000, reason = "", opts) {

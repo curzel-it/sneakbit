@@ -51,10 +51,10 @@ Polish — server
 - [x] /metrics endpoint (active sessions, bytes relayed, drops)
 - [x] /version endpoint with git SHA
 - [x] LOG_LEVEL env var
-- [ ] Graceful drain on SIGTERM: broadcast session.closed{server_restart} before exit
+- [x] Graceful drain on SIGTERM: broadcast session.closed{server_restart} before exit
 - [ ] Drop /ws=/ alias on server
 - [ ] Validate full UUIDv4 shape in onHello (today only length >= 4)
-- [ ] Drop unused client→server masking branch from encodeFrame
+- [x] Drop unused client→server masking branch from encodeFrame (moved to tests/helpers/clientFrames.js)
 - [ ] Light cheat resistance on host: range / cooldown sanity checks on inbound intents
 - [ ] Reuse mutable getLastSeqMap to avoid GC churn at 20 Hz
 
@@ -66,7 +66,7 @@ Polish — client
 - [ ] dispatchActionForSlot: replace synthetic KeyboardEvent with direct tryShootForSlot / tryMeleeForSlot / tryInteractForSlot
 - [x] Snapshot delta signature: drop x/y floats from sigPlayer, ship only on tile/direction change, reconstruct float path on guest from step.progress (saves ~80 records/sec while moving)
 - [x] Mirror animation phase: align to step start, not free-running nowMs()/120 (sprites currently moonwalk briefly)
-- [ ] Mirror resync request op (guest asks host for a fresh full snapshot)
+- [x] Mirror resync request op (guest asks host for a fresh full snapshot)
 - [ ] Surface isMirrorStale as "Host lagging…" overlay (not just the toast on host.ghosted)
 - [ ] Toast-event allowlist on hostEvents.broadcastHostEvent
 - [ ] onPeerGhosted: clearInputHeld only for the ghosting slot, not all

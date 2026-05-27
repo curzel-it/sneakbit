@@ -5,7 +5,8 @@
 import { connect } from "node:net";
 import { createHash, randomBytes } from "node:crypto";
 import { deflateRawSync, inflateRawSync, constants as zlibConstants } from "node:zlib";
-import { encodeFrame, parseFrames, OP } from "../../server/wsFrames.js";
+import { parseFrames, OP } from "../../server/wsFrames.js";
+import { encodeMaskedFrame } from "./clientFrames.js";
 import { stripTrailer, appendTrailer } from "../../server/wsExtensions.js";
 
 const MAGIC = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
@@ -108,10 +109,10 @@ export function openWsClient(host, port, path = "/ws", { deflate = false, origin
             const compressed = stripTrailer(
               deflateRawSync(Buffer.from(json, "utf8"), { finishFlush: zlibConstants.Z_SYNC_FLUSH })
             );
-            socket.write(encodeFrame(OP.TEXT, compressed, { mask: true, rsv1: true }));
+            socket.write(encodeMaskedFrame(OP.TEXT, compressed, { rsv1: true }));
             return;
           }
-          socket.write(encodeFrame(OP.TEXT, json, { mask: true }));
+          socket.write(encodeMaskedFrame(OP.TEXT, json));
         },
         get negotiatedDeflate() { return negotiatedDeflate; },
         recv(timeout = 1500) {

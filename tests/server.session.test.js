@@ -459,3 +459,92 @@ test("ping -> pong", async () => {
     c.close();
   });
 });
+
+test("drainAndClose announces server_restart to every connection before tearing sockets", async () => {
+  // Set up a session with a host and a guest, then trigger the graceful
+  // drain that the SIGTERM/SIGINT handlers would call. Both peers must
+  // receive {op:"session.closed", reason:"server_restart"} — no TCP
+  // reset, no missed close frame.
+  const s = await startServer({ port: 0, host: "127.0.0.1", graceMs: GRACE });
+  try {
+    const h = await openWsClient(s.host, s.port);
+    await hello(h, "u-drain-h");
+    h.send({ op: "host.open" });
+    const opened = await h.recv();
+
+    const g = await openWsClient(s.host, s.port);
+    await hello(g, "u-drain-g");
+    g.send({ op: "guest.join", code: opened.code });
+    await g.recv();   // guest.joined
+    await h.recv();   // peer.joined
+
+    // Drain. Don't await — capture the frames first so we don't race
+    // socket teardown.
+    const drainDone = s.drainAndClose({ flushMs: 50 });
+
+    const guestFrame = await g.recv();
+    assert.equal(guestFrame.op, "session.closed");
+    assert.equal(guestFrame.reason, "server_restart");
+
+    const hostFrame = await h.recv();
+    assert.equal(hostFrame.op, "session.closed");
+    assert.equal(hostFrame.reason, "server_restart");
+
+    await drainDone;
+    // Metrics should record the close.
+    const m = s.relay.metrics.snapshot();
+    assert.equal(m.sessions.closed.server_restart, 1);
+  } finally {
+    try { await s.close(); } catch { /* drainAndClose already tore down server */ }
+  }
+});
+
+test("guest.resync from a guest is forwarded host-bound with from=playerId", async () => {
+  await withServer(async ({ host, port }) => {
+    const h = await openWsClient(host, port);
+    await hello(h, "u-resync-h");
+    h.send({ op: "host.open" });
+    const opened = await h.recv();
+
+    const g = await openWsClient(host, port);
+    const gw = await hello(g, "u-resync-g");
+    g.send({ op: "guest.join", code: opened.code });
+    await g.recv();    // guest.joined
+    await h.recv();    // peer.joined
+
+    g.send({ op: "guest.resync" });
+    const fwd = await h.recv();
+    assert.equal(fwd.op, "guest.resync");
+    assert.equal(fwd.from, gw.playerId);
+
+    h.close(); g.close();
+  });
+});
+
+test("guest.resync from a non-guest is silently dropped", async () => {
+  // A solo client (no host.open, no guest.join) sending guest.resync
+  // must not crash the relay or get any response. Same defensive
+  // shape as snapshot/delta from a non-host.
+  await withServer(async ({ host, port }) => {
+    const c = await openWsClient(host, port);
+    await hello(c, "u-resync-solo");
+    c.send({ op: "guest.resync" });
+    // Send a follow-up ping to prove the connection is still healthy.
+    c.send({ op: "ping" });
+    const m = await c.recv();
+    assert.equal(m.op, "pong");
+    c.close();
+  });
+});
+
+test("drainAndClose is a no-op when no sessions are open", async () => {
+  // A drain that races a fresh boot must still resolve cleanly. This
+  // protects the SIGTERM handler from hanging on an empty relay.
+  const s = await startServer({ port: 0, host: "127.0.0.1", graceMs: GRACE });
+  try {
+    await s.drainAndClose({ flushMs: 20 });
+    // If it returned, we're good.
+  } finally {
+    try { await s.close(); } catch { /* ignore */ }
+  }
+});

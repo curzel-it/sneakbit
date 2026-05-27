@@ -139,6 +139,20 @@ export function startServer({ port = PORT, host = HOST, graceMs, idleTimeoutMs, 
           relay.shutdown?.();
           server.close(() => r());
         }),
+        // Graceful drain: announce server_restart to every connection
+        // BEFORE tearing the sockets down so guests see a clean
+        // session.closed close-code path instead of a TCP reset. Called
+        // by the SIGTERM/SIGINT handlers.
+        drainAndClose: async ({ flushMs = 150 } = {}) => {
+          // Stop taking new upgrades first — once the OS sees the
+          // server stop listening it'll reject incoming SYNs.
+          try { server.close(); } catch { /* ignore */ }
+          try { await relay.drain({ flushMs }); } catch { /* ignore */ }
+          for (const s of upgradedSockets) {
+            try { s.destroy(); } catch { /* ignore */ }
+          }
+          upgradedSockets.clear();
+        },
       });
     });
   });
@@ -148,15 +162,23 @@ const invokedAsScript =
   process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 
 if (invokedAsScript) {
-  startServer().then(({ port, host }) => {
-    log.info("server.listen", { host, port, git: GIT_SHA });
+  let started = null;
+  startServer().then((s) => {
+    started = s;
+    log.info("server.listen", { host: s.host, port: s.port, git: GIT_SHA });
   }).catch((err) => {
     log.error("server.startFailed", { err: err?.message || String(err) });
     process.exit(1);
   });
 
-  const shutdown = (signal) => {
+  let draining = false;
+  const shutdown = async (signal) => {
+    if (draining) return; // Second signal during drain → ignore.
+    draining = true;
     log.info("server.shutdown", { signal });
+    try { await started?.drainAndClose?.(); } catch (e) {
+      log.error("server.drainFailed", { err: e?.message || String(e) });
+    }
     process.exit(0);
   };
   process.on("SIGTERM", () => shutdown("SIGTERM"));

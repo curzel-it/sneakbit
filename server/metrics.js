@@ -15,7 +15,7 @@ export function createMetrics({ now = () => Date.now() } = {}) {
     sessions: {
       current: 0,
       totalOpened: 0,
-      closed: { host_quit: 0, host_timeout: 0 },
+      closed: { host_quit: 0, host_timeout: 0, server_restart: 0 },
     },
     peers: {
       joined: 0,
