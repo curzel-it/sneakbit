@@ -49,7 +49,9 @@ test("host.open returns a 5-char alphanumeric code", async () => {
     const opened = await h.recv();
     assert.equal(opened.op, "host.opened");
     assert.match(opened.code, /^[A-Z0-9]{5}$/);
-    assert.equal(opened.maxGuests, 3);
+    // Capped at 1 while hostGuests only spawns slot-2 avatars; bump
+    // back to 3 once main.js gains state.players[] for P3/P4.
+    assert.equal(opened.maxGuests, 1);
     h.close();
   });
 });
@@ -91,33 +93,29 @@ test("guest.join fails for unknown code", async () => {
   });
 });
 
-test("guest.join fails when session is full (max 3 guests)", async () => {
+test("guest.join fails when session is full (max 1 guest for now)", async () => {
   await withServer(async ({ host, port }) => {
     const h = await openWsClient(host, port);
     await hello(h, "u-full-host");
     h.send({ op: "host.open" });
     const opened = await h.recv();
 
-    const guests = [];
-    for (let i = 0; i < 3; i++) {
-      const g = await openWsClient(host, port);
-      await hello(g, `u-g-${i}`);
-      g.send({ op: "guest.join", code: opened.code });
-      const m = await g.recv();
-      assert.equal(m.op, "guest.joined");
-      assert.equal(m.slot, 2 + i);
-      await h.recv(); // peer.joined
-      guests.push(g);
-    }
-    const g4 = await openWsClient(host, port);
-    await hello(g4, "u-g-4");
-    g4.send({ op: "guest.join", code: opened.code });
-    const m = await g4.recv();
+    const g1 = await openWsClient(host, port);
+    await hello(g1, "u-g-0");
+    g1.send({ op: "guest.join", code: opened.code });
+    const joined = await g1.recv();
+    assert.equal(joined.op, "guest.joined");
+    assert.equal(joined.slot, 2);
+    await h.recv(); // peer.joined
+
+    const g2 = await openWsClient(host, port);
+    await hello(g2, "u-g-1");
+    g2.send({ op: "guest.join", code: opened.code });
+    const m = await g2.recv();
     assert.equal(m.op, "guest.joinFailed");
     assert.equal(m.reason, "full");
 
-    h.close(); g4.close();
-    for (const g of guests) g.close();
+    h.close(); g1.close(); g2.close();
   });
 });
 
@@ -157,18 +155,14 @@ test("host delta fans out to every guest", async () => {
     g1.send({ op: "guest.join", code: opened.code });
     await g1.recv(); await h.recv();
 
-    const g2 = await openWsClient(host, port);
-    await hello(g2, "u-bcast-g2");
-    g2.send({ op: "guest.join", code: opened.code });
-    await g2.recv(); await h.recv();
-
+    // MAX_GUESTS is currently 1 — exercise the fan-out path with the
+    // one connected guest. The relay's per-guest iteration is the same
+    // code path regardless of count.
     h.send({ op: "delta", t: 99, zoneId: 1001, players: [], entities: [], lastSeq: {} });
     const a = await g1.recv();
-    const b = await g2.recv();
     assert.equal(a.op, "delta"); assert.equal(a.t, 99);
-    assert.equal(b.op, "delta"); assert.equal(b.t, 99);
 
-    h.close(); g1.close(); g2.close();
+    h.close(); g1.close();
   });
 });
 

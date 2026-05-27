@@ -7,8 +7,8 @@ import { createRelay } from "./relay.js";
 const PORT = Number(process.env.PORT) || 8090;
 const HOST = process.env.HOST || "127.0.0.1";
 
-export function startServer({ port = PORT, host = HOST, graceMs } = {}) {
-  const relay = createRelay({ graceMs });
+export function startServer({ port = PORT, host = HOST, graceMs, idleTimeoutMs, idleCheckMs } = {}) {
+  const relay = createRelay({ graceMs, idleTimeoutMs, idleCheckMs });
   const upgradedSockets = new Set();
   const server = createServer((req, res) => {
     if (req.method === "GET" && req.url === "/health") {
@@ -69,6 +69,7 @@ export function startServer({ port = PORT, host = HOST, graceMs } = {}) {
             try { s.destroy(); } catch { /* ignore */ }
           }
           upgradedSockets.clear();
+          relay.shutdown?.();
           server.close(() => r());
         }),
       });

@@ -77,9 +77,14 @@ export function showToast(text, mode = "hint", opts = {}) {
   // empty box (one of the 1001 hints had an empty dialogue line and
   // tripped this).
   if (text == null || String(text).trim() === "") return;
-  // In host mode push this toast to every guest so their UI mirrors the
-  // host's notification cadence. No-op offline / on guests.
-  if (!opts._fromNetwork) broadcastHostEvent("toast", { text, toastType: mode });
+  // Broadcast is opt-in: host call sites pass `{ broadcast: true }` for
+  // world-visible events (gate unlocked, deaths the other party should
+  // see). Default is local-only so things like "Equipped: sword",
+  // "Player 2 died" (host's local notification) and the party-panel
+  // join/leave toasts don't leak to every guest.
+  if (opts.broadcast && !opts._fromNetwork) {
+    broadcastHostEvent("toast", { text, toastType: mode });
+  }
   clearTimers();
   textEl.textContent = text;
   applyToastImage(opts.image);

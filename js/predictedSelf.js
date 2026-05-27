@@ -9,9 +9,10 @@
 // place of the mirror's lagged copy for the guest's own slot.
 
 import { createPlayer, updatePlayer } from "./player.js";
-import { pollInput } from "./input.js";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js";
 import { getSelfPlayerId } from "./onlineBootstrap.js";
 import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js";
+import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js";
 
 let predicted = null;
 let installed = false;
@@ -76,6 +77,10 @@ function onAuth(msg) {
   if (!auth) return;
   const ackedSeq = (msg?.lastSeq && msg.lastSeq[selfId]) ?? lastAckedSeq;
   if (ackedSeq > lastAckedSeq) lastAckedSeq = ackedSeq;
+  // Drop acked entries — they're now in the past as far as reconciliation
+  // is concerned. Anything left in the log is what the host hasn't seen
+  // (or hasn't applied) yet, and is what we'll replay after a snap.
+  dropAckedInputs(lastAckedSeq);
   lastAckedX = auth.tileX;
   lastAckedY = auth.tileY;
   if (!predicted) {
@@ -91,5 +96,36 @@ function onAuth(msg) {
     predicted.y = auth.y;
     predicted.direction = auth.direction || predicted.direction;
     predicted.step = null;
+    // Replay the unacked input log so a snap-back doesn't undo the
+    // direction the user is still holding. Without this, on a burst
+    // (multiple direction changes faster than RTT) the predicted self
+    // visibly rubber-bands every time a stale snapshot arrives.
+    replayUnackedInputs();
+  }
+}
+
+// Re-applies queued direction intents through the local input layer.
+// updatePlayer is the only consumer of input state, so feeding it the
+// same press events that we already sent to the host keeps prediction
+// and authority converging on the same tile path.
+function replayUnackedInputs() {
+  const log = getInputLog();
+  if (log.length === 0) return;
+  // Start from a clean slot — held set may include presses the local
+  // user is *still* holding, which we want to preserve at the end.
+  // Walk the log in order so the final state matches the last intent.
+  clearInputState(1);
+  for (const { intent } of log) {
+    switch (intent) {
+      case "moveUp":    pushInputPress(1, "up"); break;
+      case "moveDown":  pushInputPress(1, "down"); break;
+      case "moveLeft":  pushInputPress(1, "left"); break;
+      case "moveRight": pushInputPress(1, "right"); break;
+      case "stopMove":  clearInputHeld(1); break;
+      // Action intents (shoot/melee/interact) aren't predicted — the
+      // host owns those side effects, so dropping them on replay is
+      // correct: the originals were already sent to the host.
+      default: break;
+    }
   }
 }

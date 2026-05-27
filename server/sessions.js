@@ -10,7 +10,13 @@ import { randomBytes } from "node:crypto";
 
 const CODE_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const CODE_LEN = 5;
-export const MAX_GUESTS = 3;
+// Spec allows up to 3 guests (4-player co-op), but hostGuests.js only
+// spawns a slot-2 avatar today — anyone past slot 2 gets a peer.joined
+// frame and then is silently ignored. Cap at 1 here so the server's
+// advertised maxGuests matches what the host can actually render.
+// Lift this back to 3 once main.js gains state.players[] and
+// hostGuests.js handles slots 3/4.
+export const MAX_GUESTS = 1;
 export const DEFAULT_GRACE_MS = 30000;
 
 export function generateCode() {

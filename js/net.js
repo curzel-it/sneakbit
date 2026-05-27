@@ -43,6 +43,11 @@ export function createNet({
   let intentionallyClosed = false;
   let pingTimer = null;
   let reconnectTimer = null;
+  // After a 4002 (idle close) we get exactly one auto-retry — typical
+  // cause is a transient network blip. If that retry also closes 4002,
+  // there's something wrong with the path and we stop fighting; the
+  // user can refresh / re-open the session manually.
+  let idleRetryUsed = false;
 
   function on(op, handler) {
     let list = handlers.get(op);
@@ -102,6 +107,7 @@ export function createNet({
     ws = sock;
     sock.onopen = () => {
       attempts = 0;
+      idleRetryUsed = false;
       send({ op: "hello", protocol: PROTOCOL, uuid: resolvedUuid, client: CLIENT_TAG });
       startPing();
       emit("_open", { url: resolvedUrl });
@@ -127,6 +133,16 @@ export function createNet({
         return;
       }
       if (code === 4003) return; // uuid conflict — don't fight the other tab
+      if (code === 4004) return; // rate-limit ban — see spec, 60s lockout
+      if (code === 4002) {
+        // Idle / ping-timeout. Give the link one chance to recover,
+        // then give up. Blindly reconnecting forever turns a wedged
+        // connection (e.g. captive portal) into a thundering retry.
+        if (idleRetryUsed) return;
+        idleRetryUsed = true;
+        scheduleReconnect();
+        return;
+      }
       scheduleReconnect();
     };
     sock.onerror = () => { /* onclose follows; nothing to do here */ };

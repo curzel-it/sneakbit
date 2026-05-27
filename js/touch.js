@@ -9,6 +9,8 @@
 import { tryShoot } from "./shooting.js";
 import { tryMelee } from "./melee.js";
 import { getEquipped, onEquipmentChange, SLOT_MELEE } from "./equipment.js";
+import { getNetRole } from "./onlineBootstrap.js";
+import { codesFor } from "./keyBindings.js";
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 const heldBindings = new Map(); // dir -> pointerId
@@ -100,11 +102,21 @@ function onPress(e, btn) {
   } else if (action === "menu") {
     dispatchKey("keydown", "Escape");
   } else if (action === "throw") {
-    // Don't synthesise a key event — shooting.js owns its own cooldown
-    // and we want a single shot per tap, not a held-key auto-repeat.
-    tryShoot();
+    if (getNetRole() === "guest") {
+      // Guests can't drive the local sim — synthesise a keydown so
+      // guestInputForwarder turns it into a `shoot` intent on the wire.
+      dispatchKey("keydown", codesFor("shoot")[0] || "KeyF");
+    } else {
+      // Don't synthesise a key event — shooting.js owns its own cooldown
+      // and we want a single shot per tap, not a held-key auto-repeat.
+      tryShoot();
+    }
   } else if (action === "melee") {
-    tryMelee();
+    if (getNetRole() === "guest") {
+      dispatchKey("keydown", codesFor("melee")[0] || "KeyG");
+    } else {
+      tryMelee();
+    }
   }
 }
 

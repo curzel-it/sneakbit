@@ -39,6 +39,10 @@ export function installMirrorWorld(net, opts = {}) {
   if (!net) return;
   unsubs.push(net.on("snapshot", (m) => handleSnapshot(m, opts)));
   unsubs.push(net.on("delta", handleDelta));
+  // Without these the departed peer's last-known interpolated frame
+  // keeps rendering forever (the host stops shipping the player in its
+  // delta but mirror's `players` map keeps the stale entry).
+  unsubs.push(net.on("peer.left", (m) => handlePeerLeft(m)));
 }
 
 export function uninstallMirrorWorld() {
@@ -100,6 +104,11 @@ export function handleSnapshot(msg, opts = {}) {
     return loadZoneAndApplySnapshot(msg, opts);
   }
   applySnapshotToCurrentZone(msg);
+}
+
+export function handlePeerLeft(msg) {
+  if (!msg || !msg.playerId) return;
+  players.delete(msg.playerId);
 }
 
 export function handleDelta(msg) {

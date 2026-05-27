@@ -10,6 +10,7 @@ import { getEquipped, SLOT_MELEE } from "./equipment.js";
 import { playSfx } from "./audio.js";
 import { matchesAction } from "./keyBindings.js";
 import { isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
+import { getNetRole } from "./onlineBootstrap.js";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -72,6 +73,7 @@ export function tickMelee(dt) {
 
 // Touch button entry point — parity with shooting.tryShoot.
 export function tryMelee() {
+  if (getNetRole() === "guest") return;
   const state = stateRef?.();
   if (!state) return;
   swing(state, state.player);
@@ -79,6 +81,10 @@ export function tryMelee() {
 
 function onKey(e) {
   if (e.repeat) return;
+  // Guests forward the melee intent over the wire — local sim is the
+  // host's, so swinging into the dead local zone would just spawn an
+  // orphan bullet entity and decrement nothing meaningful.
+  if (getNetRole() === "guest") return;
   const state = stateRef?.();
   if (!state) return;
   const swinger = pickSwinger(state, e.code);

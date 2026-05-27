@@ -50,6 +50,9 @@ export function tryUnlockGate(gate) {
   gate._frameOffsetX = 1;
   if (gate.id != null) saveLockOverride(gate.id, LOCK_NONE);
   playSfx("keyCollected");
-  showToast(`Unlocked ${lock.toLowerCase()} gate`, "hint");
+  // Gate unlock changes the host's world for everyone — broadcast so
+  // guests see the same notification when the host (or any guest)
+  // burns a key.
+  showToast(`Unlocked ${lock.toLowerCase()} gate`, "hint", { broadcast: true });
   return true;
 }

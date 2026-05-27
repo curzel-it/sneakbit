@@ -14,6 +14,7 @@ import { playSfx } from "./audio.js";
 import { getEquipped, SLOT_RANGED } from "./equipment.js";
 import { matchesAction } from "./keyBindings.js";
 import { isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
+import { getNetRole } from "./onlineBootstrap.js";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
@@ -57,6 +58,7 @@ export function tickShooting(dt) {
 
 // Exposed so the touch action button can trigger a shot.
 export function tryShoot() {
+  if (getNetRole() === "guest") return;
   const state = stateRef?.();
   if (!state) return;
   shoot(state, state.player);
@@ -64,6 +66,11 @@ export function tryShoot() {
 
 function onKey(e) {
   if (e.repeat) return;
+  // Guests must not drive the local sim — they forward the intent over
+  // the wire and let the host decide. Without this gate the local zone
+  // gets a bullet and the local ammo counter decrements on every press
+  // while the wire-side shot also fires (double-fire bug).
+  if (getNetRole() === "guest") return;
   const state = stateRef?.();
   if (!state) return;
   const shooter = pickShooter(state, e.code);

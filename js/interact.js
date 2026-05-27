@@ -10,6 +10,7 @@ import { handleAfterDialogue } from "./afterDialogue.js";
 import { matchesAction } from "./keyBindings.js";
 import { isCoopActive, COOP_KEYMAPS } from "./coopMode.js";
 import { shouldBeVisible } from "./entityVisibility.js";
+import { getNetRole } from "./onlineBootstrap.js";
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -27,6 +28,11 @@ export function installInteract(getState) {
   window.addEventListener("keydown", (e) => {
     if (e.repeat) return;
     if (isDialogueOpen()) return;
+    // Guests don't drive dialogues — the host owns the dialogue modal
+    // and broadcasts the resulting event frames back via guestEvents.
+    // Letting the local interact handler fire would pop a duplicate
+    // dialogue using the guest's lagged local-zone entity list.
+    if (getNetRole() === "guest") return;
     const state = stateRef();
     if (!state) return;
     const initiator = pickInitiator(state, e.code);

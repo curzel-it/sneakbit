@@ -22,6 +22,13 @@ let seq = 0;
 let installed = false;
 const held = new Set();
 let lastSentDir = null;
+// Ring buffer of unacknowledged inputs so predictedSelf can replay
+// them after a snap. Bounded so a wedged ack-stream doesn't grow it
+// without limit — older entries get evicted but the bound is well
+// above the ~30 Hz cap (host's lastSeq tail can't drift more than
+// MAX_LOG entries before the bound bites).
+const INPUT_LOG_CAP = 256;
+const inputLog = [];
 
 function intentToDir(intent) {
   switch (intent) {
@@ -60,6 +67,16 @@ export function installGuestInputForwarder(netIn) {
 
 export function getSeq() { return seq; }
 
+// Snapshot copy of the unacked input log. predictedSelf reads this on
+// every authoritative frame to replay after a snap-back.
+export function getInputLog() { return inputLog.slice(); }
+
+// Drop every entry with seq <= acked. Called by predictedSelf when a
+// snapshot/delta brings in a fresh `lastSeq[selfId]`.
+export function dropAckedInputs(ackedSeq) {
+  while (inputLog.length && inputLog[0].seq <= ackedSeq) inputLog.shift();
+}
+
 // Test seams.
 export function _injectKeyDownForTesting(code) { onKeyDown({ code }); }
 export function _injectKeyUpForTesting(code) { onKeyUp({ code }); }
@@ -69,6 +86,7 @@ export function _resetForwarderForTesting() {
   installed = false;
   held.clear();
   lastSentDir = null;
+  inputLog.length = 0;
 }
 
 function onKeyDown(e) {
@@ -119,5 +137,7 @@ function onBlur() {
 function send(intent) {
   if (!net?.isConnected?.()) return;
   seq++;
+  inputLog.push({ seq, intent });
+  if (inputLog.length > INPUT_LOG_CAP) inputLog.shift();
   net.send({ op: "input", seq, t: Date.now(), intent });
 }
