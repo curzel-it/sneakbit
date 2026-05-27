@@ -72,6 +72,11 @@ function livePlayers(state) {
   const arr = [];
   if (state.player && !isPlayerDead(state.player.index | 0)) arr.push(state.player);
   if (state.player2 && !isPlayerDead(state.player2.index | 0)) arr.push(state.player2);
+  if (Array.isArray(state.players)) {
+    for (const s of state.players) {
+      if (s.player && !isPlayerDead(s.player.index | 0)) arr.push(s.player);
+    }
+  }
   return arr;
 }
 

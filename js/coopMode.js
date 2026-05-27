@@ -41,7 +41,10 @@ export function setCoopMode(on) {
 }
 
 // Fixed per-player keymaps for co-op. Spread across the keyboard so the
-// two players can sit at the same machine without their hands colliding.
+// two local players can sit at the same machine without their hands
+// colliding. Slots 3/4 are reserved for network guests only — their
+// "keys" are synthesised by hostGuests.dispatchActionForSlot, so they
+// can use codes that no physical keyboard sends (F-row well past F12).
 export const COOP_KEYMAPS = {
   1: {
     moveUp:    "KeyW",
@@ -60,6 +63,24 @@ export const COOP_KEYMAPS = {
     interact:  "KeyB",
     shoot:     "KeyN",
     melee:     "KeyM",
+  },
+  3: {
+    moveUp:    "F13",
+    moveDown:  "F14",
+    moveLeft:  "F15",
+    moveRight: "F16",
+    interact:  "F17",
+    shoot:     "F18",
+    melee:     "F19",
+  },
+  4: {
+    moveUp:    "F20",
+    moveDown:  "F21",
+    moveLeft:  "F22",
+    moveRight: "F23",
+    interact:  "F24",
+    shoot:     "ContextMenu",  // unused on most keyboards
+    melee:     "BrowserSearch",
   },
 };
 

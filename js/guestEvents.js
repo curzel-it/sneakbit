@@ -6,6 +6,7 @@
 // the matching host-side hooks land.
 
 import { showToast } from "./toast.js";
+import { fadeOverlayOut, fadeOverlayIn, FADE_OVERLAY_MS } from "./transitions.js";
 
 let installed = false;
 let unsub = null;
@@ -41,9 +42,21 @@ export function dispatch(msg) {
         showToast(msg.text, msg.toastType || "hint", { _fromNetwork: true });
       }
       return;
+    case "zoneChange":
+      handleZoneChange();
+      return;
     default:
       // Pickup / death / respawn / dialogue / cutscene land here in
       // follow-up commits.
       return;
   }
+}
+
+// Drive the same fade overlay that the offline transitions code uses.
+// Host sends event:zoneChange BEFORE the new-zone full snapshot; we
+// fade to black immediately, then fade back in once the snapshot has
+// had a chance to land (matching the offline transition rhythm).
+function handleZoneChange() {
+  fadeOverlayOut();
+  setTimeout(() => fadeOverlayIn(), FADE_OVERLAY_MS);
 }

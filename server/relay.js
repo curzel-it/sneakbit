@@ -109,6 +109,8 @@ export function createRelay({
       case "delta":
       case "event":
         return onHostBroadcast(ctx, msg);
+      case "webrtc.signal":
+        return onWebrtcSignal(ctx, msg);
       default: return;
     }
   }
@@ -141,7 +143,13 @@ export function createRelay({
   function onHostOpen(ctx) {
     if (!ctx.authed) return;
     const existing = store.findByUuid(ctx.uuid);
-    if (existing && existing.hostUuid === ctx.uuid) {
+    const prevRole = store.roleOf(ctx.uuid);
+    // Only resume into the host's own session. Without the role gate, a
+    // stale guest entry whose uuidIndex still points at the previous
+    // session would fall through to createSession, which then overwrites
+    // uuidIndex; later the ghost-grace timer would call removeGuest →
+    // uuidIndex.delete and trample the new host's lookup.
+    if (existing && prevRole === "host" && existing.hostUuid === ctx.uuid) {
       store.resumeHost(existing, ctx.ws);
       ctx.role = "host";
       ctx.sessionId = existing.id;
@@ -157,6 +165,9 @@ export function createRelay({
       }
       return;
     }
+    if (existing && prevRole === "guest") {
+      ejectStaleGuest(existing, ctx);
+    }
     const session = store.createSession(ctx.uuid, ctx.ws);
     ctx.role = "host";
     ctx.sessionId = session.id;
@@ -166,6 +177,21 @@ export function createRelay({
       code: session.code,
       maxGuests: MAX_GUESTS,
     });
+  }
+
+  function ejectStaleGuest(session, ctx) {
+    const guest = session.guests.get(ctx.uuid);
+    if (!guest) return;
+    store.removeGuest(session, ctx.uuid);
+    const leftFrame = {
+      op: "peer.left",
+      playerId: guest.playerId,
+      reason: "leave",
+    };
+    if (session.hostConn) session.hostConn.sendJSON(leftFrame);
+    for (const other of session.guests.values()) {
+      if (other.conn) other.conn.sendJSON(leftFrame);
+    }
   }
 
   function onHostClose(ctx) {
@@ -267,6 +293,36 @@ export function createRelay({
     for (const g of session.guests.values()) {
       if (g.conn) g.conn.sendJSON(msg);
     }
+  }
+
+  // Opaque pass-through for WebRTC offer/answer/ICE candidates. The relay
+  // never inspects the payload — it just routes host ↔ named-guest. Once
+  // the data channel is open, the game traffic moves off the WS and the
+  // relay stops seeing snapshots/inputs for that pair. See
+  // host-authoritative-server.md §"WebRTC upgrade path".
+  function onWebrtcSignal(ctx, msg) {
+    if (!ctx.role) return;
+    const session = store.sessionsById.get(ctx.sessionId);
+    if (!session) return;
+    const out = { op: "webrtc.signal", from: ctx.playerId, payload: msg.payload };
+    if (ctx.role === "host") {
+      if (typeof msg.to !== "string") return;
+      // Host addresses a specific guest by playerId. Defensive: scan rather
+      // than build a side index — guests is a tiny Map.
+      for (const g of session.guests.values()) {
+        if (g.playerId === msg.to && g.conn) {
+          out.to = msg.to;
+          g.conn.sendJSON(out);
+          return;
+        }
+      }
+      return;
+    }
+    // Guest → host. Destination is always the host; we still echo `to` so
+    // the host can dispatch by guest playerId via from.
+    if (!session.hostConn) return;
+    out.to = makePlayerId(session.hostUuid);
+    session.hostConn.sendJSON(out);
   }
 
   function onDisconnect(ctx) {

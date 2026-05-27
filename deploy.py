@@ -83,11 +83,40 @@ SERVER_SYNC_PATHS = [
     "package.json",
     "wsFrames.js",
     "wsConnection.js",
+    "wsExtensions.js",
     "sessions.js",
     "relay.js",
+    "turnCredentials.js",
 ]
 
 NODE_MAJOR = "22"
+
+# /etc/sneakbit-server.env — TURN env vars live here so the secret stays
+# out of the repo. Format is a systemd EnvironmentFile (KEY=value, one per
+# line). When TURN_SECRET / TURN_URLS are unset the relay's
+# /turn-credentials endpoint returns 503 and clients use STUN only.
+#
+# To enable self-hosted TURN on this VPS:
+#   1. apt install coturn
+#   2. /etc/turnserver.conf:
+#        listening-port=3478
+#        tls-listening-port=5349
+#        fingerprint
+#        use-auth-secret
+#        static-auth-secret=<same as TURN_SECRET below>
+#        realm=sneakbit.curzel.it
+#        # certbot cert for the relay subdomain works fine here:
+#        cert=/etc/letsencrypt/live/sneakbit.curzel.it/fullchain.pem
+#        pkey=/etc/letsencrypt/live/sneakbit.curzel.it/privkey.pem
+#   3. /etc/default/coturn → TURNSERVER_ENABLED=1; systemctl restart coturn
+#   4. ufw allow 3478,5349; ufw allow 49152:65535/udp   (relay range)
+#   5. write /etc/sneakbit-server.env:
+#        TURN_SECRET=<...>
+#        TURN_URLS=turn:sneakbit.curzel.it:3478,turns:sneakbit.curzel.it:5349
+#   6. systemctl restart sneakbit-server
+# Restartborgo's nginx vhost is untouched by this — TURN/STUN run on
+# their own ports.
+TURN_ENV_FILE = "/etc/sneakbit-server.env"
 
 SYSTEMD_UNIT = f"""[Unit]
 Description=SneakBit game server (Node.js)
@@ -101,6 +130,9 @@ WorkingDirectory={REMOTE_DIR}
 Environment=NODE_ENV=production
 Environment=HOST={APP_BIND_HOST}
 Environment=PORT={APP_BIND_PORT}
+# Optional: TURN_SECRET + TURN_URLS live here once the operator wires
+# coturn. Missing file is harmless — relay falls back to STUN-only.
+EnvironmentFile=-{TURN_ENV_FILE}
 ExecStart=/usr/bin/node {REMOTE_DIR}/index.js
 Restart=on-failure
 RestartSec=3

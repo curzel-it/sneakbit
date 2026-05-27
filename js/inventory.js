@@ -13,7 +13,7 @@ import { getValue, setValue } from "./storage.js";
 // neutral as schema versions roll forward.
 const PLAYER_KEY_PREFIX = "player.";
 const KEY_SUFFIX = ".inventory.amount.";
-const MAX_PLAYERS = 2;
+const MAX_PLAYERS = 4;
 
 // counts[playerIndex] = { speciesId: count }
 const counts = Array.from({ length: MAX_PLAYERS }, () => ({}));

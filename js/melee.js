@@ -14,7 +14,7 @@ import { getNetRole } from "./onlineBootstrap.js";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
-const MAX_PLAYERS = 2;
+const MAX_PLAYERS = 4;
 
 // Bullet offsets around the hero, mirroring Rust bullet_offsets():
 // center + 4 cardinals.
@@ -97,9 +97,20 @@ function pickSwinger(state, code) {
   if (isCoopActive()) {
     if (code === COOP_KEYMAPS[1].melee) return state.player;
     if (code === COOP_KEYMAPS[2].melee) return state.player2 || state.player;
+    for (const slot of [3, 4]) {
+      if (code === COOP_KEYMAPS[slot]?.melee) {
+        return playerForSlot(state, slot) || state.player;
+      }
+    }
     return null;
   }
   return matchesAction("melee", code) ? state.player : null;
+}
+
+function playerForSlot(state, slot) {
+  if (!Array.isArray(state.players)) return null;
+  const s = state.players.find((e) => e.slot === slot);
+  return s ? s.player : null;
 }
 
 // Spawns the cross-pattern bullets. Exported for unit tests.

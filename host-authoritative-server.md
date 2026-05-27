@@ -211,9 +211,42 @@ Mobile wrappers (iOS/Android) get single-window offline + single-window online. 
 - **Framing:** one JSON object per WebSocket frame. UTF-8.
 - **Endpoint:** `/ws`. The dev server may expose it as `/`; the production nginx vhost mounts `/ws` explicitly with WebSocket upgrade headers.
 
-### WebRTC upgrade path (deferred)
+### WebRTC upgrade path (shipped)
 
-Once the WS relay works end-to-end, we can move the *game traffic* (snapshots + inputs) to a WebRTC data channel between host and each guest, with the relay only handling signaling. Benefits: lower latency, no relay bandwidth bill, host ↔ guest jitter independent of server load. Cost: NAT traversal needs STUN (free public) and sometimes TURN (~5 % of connections; can self-host on the same VPS). The wire shapes below don't change — only the transport does. Not in v0.
+Once the WS relay works end-to-end, game traffic (snapshots, deltas,
+events, inputs) moves to a WebRTC `RTCDataChannel` between host and each
+guest. The relay only forwards offer/answer/ICE candidates between the
+two endpoints (one `webrtc.signal` op, opaque payload). Wire shapes for
+game ops are unchanged — only the transport flips.
+
+Topology: the **guest is the initiator** for every channel. The guest
+creates the data channel and ships the offer; the host listens for
+offers from each peer and answers in kind. The host therefore needs no
+prior knowledge of who's joining — `peer.joined` is enough to allocate a
+channel slot. Once every relevant DC is `open`, the client's send-side
+interceptor (`js/webrtcTransport.js`) routes `input`/`snapshot`/`delta`/
+`event` over the data channels; the WS path stays warm for signaling,
+lifecycle frames, and pre-DC traffic, and is the fallback if WebRTC
+fails to negotiate.
+
+NAT traversal:
+- **STUN** — a list of free public servers (Google + Cloudflare) ships
+  in `js/webrtcChannel.js` (`DEFAULT_STUN_SERVERS`). Enough for the
+  vast majority of consumer NATs.
+- **TURN** — the relay exposes `GET /turn-credentials` which returns a
+  short-lived HMAC-SHA1 credential matching coturn's `use-auth-secret`
+  (TURN REST API, draft-uberti-rtcweb-turn-rest-00). When the relay's
+  `TURN_SECRET` + `TURN_URLS` env vars are unset, the endpoint returns
+  503 and the client uses STUN only — TURN is best-effort. Operator
+  runbook for self-hosting coturn on the VPS lives in `deploy.py`
+  beside `TURN_ENV_FILE`.
+
+Compression: the WS path negotiates RFC 7692 `permessage-deflate` with
+`no_context_takeover` on both sides — per-message sync compression
+gives ~60 % shrinkage on JSON deltas with no streaming state to
+manage. Browsers always offer the extension; the relay opts in by
+echoing it back during the upgrade. WebRTC's SCTP transport handles
+its own framing, so no extension applies there.
 
 ## Versioning
 
@@ -344,10 +377,16 @@ Full snapshot — sent on guest join, zone change, or significant correction.
   "op": "snapshot",
   "t": 1234,
   "zoneId": 1001,
-  "zone": { /* full zone state, same shape as today's local zone state */ },
+  "players": [
+    {"playerId":"p_a3f9b1","x":3.0,"y":5.0,"tileX":3,"tileY":5,"direction":"down","hp":100}
+  ],
+  "entities": [
+    {"id":4242,"species_id":1019,"frame":{"x":7,"y":2,"w":1,"h":1}}
+  ],
   "lastSeq": {"p_b1d2e3": 1240, "p_c4d5e6": 887}
 }
 ```
+**Static zone data — biome tiles, construction tiles, the level's static decor — is NOT shipped over the wire.** Host and guest run the same build and load the same level JSON from disk; the guest's mirror calls its local `loadZone(zoneId)` whenever a snapshot's `zoneId` is unfamiliar. Only dynamic state (players, entities, lastSeq) crosses the wire. This keeps full snapshots in the same ~KB range as deltas and makes zone transitions cheap to broadcast.
 
 ### `delta` (C host → S → all guests)
 Per-tick (20 Hz) sparse delta. Only changed fields appear.
@@ -372,8 +411,25 @@ Discrete one-shot events: `pickup`, `death`, `respawn`, `dialogueOpen`, `dialogu
 ```jsonc
 {"op":"event","kind":"pickup","playerId":"p_b1d2e3","speciesId":5,"amount":1}
 {"op":"event","kind":"death","playerId":"p_b1d2e3"}
-{"op":"event","kind":"zoneChange","zoneId":1002,"snapshot":{...},"t":N}
+{"op":"event","kind":"zoneChange","zoneId":1002,"fromZoneId":1001}
 ```
+`zoneChange` is a heads-up frame, **not** a payload carrier — the host emits it immediately *before* the new-zone `snapshot` so the guest can start fading its overlay out before the mirror swaps zones underneath it. The guest fades back in once the follow-up `snapshot` lands (or after a short timer, whichever comes first).
+
+### `webrtc.signal` (host ↔ guest, relayed)
+Opaque pass-through for WebRTC offer/answer/ICE candidates. The relay
+never inspects `payload`; it routes by `to`/`from` (host fan-in for
+unaddressed guest frames, host fan-out to the named guest for outbound
+frames). When the resulting `RTCDataChannel` is `open`, game traffic
+(snapshot/delta/event/input) moves off the WS — see
+"WebRTC upgrade path" above.
+```jsonc
+{"op":"webrtc.signal","to":"p_b1d2e3","payload":{"kind":"offer","sdp":"v=0..."}}
+{"op":"webrtc.signal","to":"p_a3f9b1","payload":{"kind":"answer","sdp":"v=0..."}}
+{"op":"webrtc.signal","payload":{"kind":"ice","candidate":{"candidate":"candidate:...","sdpMid":"0","sdpMLineIndex":0}}}
+```
+Guest frames omit `to` — destination is always the host. The relay
+stamps `from: <playerId>` on every forwarded frame. Rate limit: 10/s
+per connection (the "other" bucket).
 
 ### `ping` (either →) / `pong` (S →)
 Heartbeat. Server expects a `ping` at least every 30 seconds; missing pings for 60 seconds cause a close with code 4002.
@@ -535,7 +591,7 @@ Add client-side prediction and snap-and-replay reconciliation for the guest's ow
 
 ## Phase 8 — Zone transitions
 1. When the guest steps on a teleporter, the host's local sim handles the transition (it's just a P2/P3/P4 stepping on a teleporter in the host's world).
-2. Host sends `event:zoneChange` with a full snapshot of the new zone.
+2. Host emits `event:zoneChange {zoneId, fromZoneId}` as a heads-up frame, then immediately follows with a fresh full `snapshot` for the new zone. The guest fades its overlay out on the event and fades back in once the snapshot is applied.
 3. Guest's mirror world is reset to the new snapshot.
 4. Manual verify: host and guest teleport together; both end up in the right zone with each other visible.
 
@@ -546,7 +602,7 @@ Add client-side prediction and snap-and-replay reconciliation for the guest's ow
 4. Audit which features should be disabled per-mode (creative + map editor for guests; possibly also for the host while a session is open).
 
 ## Phase 10+ — Beyond
-- WebRTC data channel for game traffic, with the relay handling only signaling. See "WebRTC upgrade path" above.
+- [x] WebRTC data channel for game traffic, with the relay handling only signaling. See "WebRTC upgrade path" above. (Shipped: js/webrtcChannel.js, js/webrtcTransport.js, server `webrtc.signal` op, /turn-credentials endpoint, RFC 7692 permessage-deflate on the WS path.)
 - Light cheat resistance on the host: range/cooldown sanity checks on inbound intents.
 - Host save resumption: the host's local save is unchanged, but we could persist "which friends were in my last session" for quick re-invite.
 - Voice / text chat (separate scope — moderation concern).

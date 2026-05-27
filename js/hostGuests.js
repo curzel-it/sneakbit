@@ -3,9 +3,12 @@
 // frames into the existing input pipeline as if they were a local-coop
 // keyboard, and cleans up on peer.left / peer.ghosted.
 //
-// One file, one responsibility — the snapshot broadcaster sees the
-// resulting avatars via state.player2/etc and ships them like any other
-// local-coop player.
+// Slot 2 spawns into state.player2 (matches the local-coop second-player
+// shape used by pickups/combat/camera). Slots 3 and 4 spawn into
+// state.players[] entries — same wrapper shape the snapshot broadcaster
+// already expects { player, slot, playerId }. main.js's tick loop walks
+// state.players[] alongside player/player2 so all four slots move and
+// participate in pickups/combat.
 
 import { getNetRole, getNet } from "./onlineBootstrap.js";
 import { pushInputPress, clearInputHeld, clearInputState } from "./input.js";
@@ -55,27 +58,50 @@ export function _uninstallHostGuestsForTesting() {
   lastSeqByPlayerId.clear();
 }
 
-function onPeerJoined(m, isRejoin) {
+function onPeerJoined(m, _isRejoin) {
   const state = stateGetter?.();
   if (!state) return;
   const slot = m.slot;
-  // Phase 5 spawns slot-2 avatars only; the multi-guest extension to
-  // P3/P4 lives in Phase 7+ once main.js gains a state.players[] array.
-  if (slot !== 2) return;
+  if (slot < 2 || slot > 4) return;
   guestSlotByPlayerId.set(m.playerId, slot);
   setNetworkGuestCount(guestSlotByPlayerId.size);
+  if (slot === 2) { spawnSlot2(state, m); return; }
+  spawnExtraSlot(state, m, slot);
+}
+
+function spawnSlot2(state, m) {
   if (state.player2) {
-    // Same slot reused on a reconnect: just rebind the playerId.
     state.player2.playerId = m.playerId;
-    state.player2.slot = slot;
+    state.player2.slot = 2;
     return;
   }
   if (!p2Factory) return;
-  const p2 = p2Factory(state.player, state.zone);
+  const p2 = p2Factory(state.player, state.zone, { index: 1 });
   p2.playerId = m.playerId;
-  p2.slot = slot;
+  p2.slot = 2;
   state.player2 = p2;
   state.lastTile2 = { x: p2.tileX, y: p2.tileY };
+}
+
+function spawnExtraSlot(state, m, slot) {
+  if (!state.players) state.players = [];
+  const existing = state.players.find((s) => s.slot === slot);
+  if (existing) {
+    existing.playerId = m.playerId;
+    existing.player.playerId = m.playerId;
+    existing.player.slot = slot;
+    return;
+  }
+  if (!p2Factory) return;
+  const p = p2Factory(state.player, state.zone, { index: slot - 1 });
+  p.playerId = m.playerId;
+  p.slot = slot;
+  state.players.push({
+    player: p,
+    slot,
+    playerId: m.playerId,
+    lastTile: { x: p.tileX, y: p.tileY },
+  });
 }
 
 function onPeerLeft(m) {
@@ -90,6 +116,10 @@ function onPeerLeft(m) {
   if (slot === 2) {
     state.player2 = null;
     state.lastTile2 = null;
+    return;
+  }
+  if (Array.isArray(state.players)) {
+    state.players = state.players.filter((s) => s.slot !== slot);
   }
 }
 

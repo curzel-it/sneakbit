@@ -43,6 +43,10 @@ export function createNet({
   let intentionallyClosed = false;
   let pingTimer = null;
   let reconnectTimer = null;
+  // Optional send-side hook: returning true short-circuits the WS send.
+  // Used by webrtcTransport to lift game traffic onto a DataChannel once
+  // one is open. Receive-side, the transport calls `emitOp` directly.
+  let sendInterceptor = null;
   // After a 4002 (idle close) we get exactly one auto-retry — typical
   // cause is a transient network blip. If that retry also closes 4002,
   // there's something wrong with the path and we stop fighting; the
@@ -73,10 +77,18 @@ export function createNet({
   }
 
   function send(frame) {
+    if (sendInterceptor) {
+      try {
+        if (sendInterceptor(frame) === true) return true;
+      } catch (e) { console.error("net send interceptor", e); }
+    }
     if (!ws || ws.readyState !== 1) return false;
     try { ws.send(JSON.stringify(frame)); return true; }
     catch (e) { console.error("net send error", e); return false; }
   }
+
+  function setSendInterceptor(fn) { sendInterceptor = fn || null; }
+  function emitOp(op, msg) { emit(op, msg); }
 
   function startPing() {
     stopPing();
@@ -163,6 +175,8 @@ export function createNet({
     close,
     send,
     on,
+    setSendInterceptor,
+    emitOp,
     getUuid: () => resolvedUuid,
     getUrl: () => resolvedUrl,
     isConnected: () => !!ws && ws.readyState === 1,

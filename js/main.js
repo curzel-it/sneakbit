@@ -54,7 +54,7 @@ import { runMigrations } from "./migrations.js";
 import { installMapEditor } from "./mapEditor.js";
 import { bootstrapOnline, getNetRole, getNet } from "./onlineBootstrap.js";
 import { installSnapshotBroadcaster } from "./snapshotBroadcaster.js";
-import { installMirrorWorld, getMirrorZone, getMirrorPlayers, isMirrorReady } from "./mirrorWorld.js";
+import { installMirrorWorld, getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead } from "./mirrorWorld.js";
 import { installHostGuests } from "./hostGuests.js";
 import { installGuestInputForwarder } from "./guestInputForwarder.js";
 import { installPredictedSelf, tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js";
@@ -138,6 +138,9 @@ async function main() {
     rawZone: zoneRaw,
     player,
     player2,
+    // Extra network-guest slots beyond P2. hostGuests pushes { player,
+    // slot, playerId, lastTile } entries here for slots 3 and 4.
+    players: [],
     camera: createCamera(),
     lastTile: { x: player.tileX, y: player.tileY },
     lastTile2: player2 ? { x: player2.tileX, y: player2.tileY } : null,
@@ -178,6 +181,21 @@ async function main() {
   markVisited(state.zone.id);
   if (state.zone.soundtrack) playTrack(state.zone.soundtrack);
 
+  // Tag the host's own avatar with its server-side playerId once the
+  // welcome arrives, so entities.js's drawPlayer can look up the display
+  // name. Offline/guest don't need this — guest renders its own avatar
+  // from predictedSelf (which carries playerId already).
+  if (getNetRole() === "host") {
+    const net = getNet();
+    if (net) {
+      const seedSelfId = getSelfPlayerId();
+      if (seedSelfId) state.player.playerId = seedSelfId;
+      net.on("welcome", (m) => {
+        if (m?.playerId) state.player.playerId = m.playerId;
+      });
+    }
+  }
+
   // In host mode this samples the live world at 20 Hz and emits sparse
   // deltas to every guest, plus a full snapshot whenever a guest joins.
   // No-op in offline / guest mode.
@@ -206,6 +224,10 @@ async function main() {
       if (state.player2) {
         const input2 = pollInput(2);
         updatePlayer(state.player2, input2, dt, state.zone);
+      }
+      for (const s of state.players) {
+        const inputN = pollInput(s.slot);
+        updatePlayer(s.player, inputN, dt, state.zone);
       }
       maybeTeleport(state);
       // Camera averages every live player so co-op players stay on screen.
@@ -258,6 +280,23 @@ async function main() {
   });
 }
 
+let mirrorDeathHandled = false;
+function maybeFallBackToOffline() {
+  if (mirrorDeathHandled) return;
+  if (!isMirrorDead()) return;
+  mirrorDeathHandled = true;
+  showToast("Lost host — going offline", "longHint");
+  // Strip the ?join so the next page lands in offline mode. Replace
+  // (not assign) so the back button doesn't dump the user right back
+  // into a dead session.
+  setTimeout(() => {
+    const url = new URL(location.href);
+    url.searchParams.delete("join");
+    url.searchParams.delete("host");
+    location.replace(url.toString());
+  }, 1200);
+}
+
 // Guest-mode tick: skips simulation entirely (the host owns the world)
 // and renders from the mirror. The mirror's zone arrives with the first
 // snapshot; until then the canvas stays blank with the loading-screen
@@ -265,6 +304,7 @@ async function main() {
 // guest's own avatar moves locally with zero perceived latency; on
 // snapshot/delta we snap it back to whatever the host says.
 function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
+  maybeFallBackToOffline();
   const mZone = getMirrorZone();
   tickBiomeAnimation(biomeAnim, dt);
   tickEntities(dt);
@@ -327,8 +367,8 @@ const DIR_DELTA = {
   right: [ 1,  0],
 };
 
-function makeCoopP2(p1, zone) {
-  const p2 = createPlayer({ index: 1 });
+function makeCoopP2(p1, zone, opts = {}) {
+  const p2 = createPlayer({ index: opts.index ?? 1 });
   const [dx, dy] = DIR_DELTA[p1.direction] ?? DIR_DELTA.down;
   const candX = p1.tileX + dx;
   const candY = p1.tileY + dy;
@@ -431,6 +471,11 @@ function allPlayers(state) {
   const out = [];
   if (state.player && !isPlayerDead(state.player.index | 0)) out.push(state.player);
   if (state.player2 && !isPlayerDead(state.player2.index | 0)) out.push(state.player2);
+  if (Array.isArray(state.players)) {
+    for (const s of state.players) {
+      if (s.player && !isPlayerDead(s.player.index | 0)) out.push(s.player);
+    }
+  }
   return out;
 }
 
@@ -448,7 +493,18 @@ function maybeTeleport(state) {
   const p1Moved = player.tileX !== lastTile.x || player.tileY !== lastTile.y;
   const p2Moved = player2 && lastTile2
     && (player2.tileX !== lastTile2.x || player2.tileY !== lastTile2.y);
-  if (!p1Moved && !p2Moved) return;
+  // Track movement for any slot-3/4 network guest; entries carry their
+  // own lastTile so the trigger logic doesn't have to special-case them.
+  const extras = [];
+  if (Array.isArray(state.players)) {
+    for (const s of state.players) {
+      if (!s.lastTile) s.lastTile = { x: s.player.tileX, y: s.player.tileY };
+      if (s.player.tileX !== s.lastTile.x || s.player.tileY !== s.lastTile.y) {
+        extras.push(s);
+      }
+    }
+  }
+  if (!p1Moved && !p2Moved && extras.length === 0) return;
   if (p1Moved) {
     lastTile.x = player.tileX;
     lastTile.y = player.tileY;
@@ -457,19 +513,30 @@ function maybeTeleport(state) {
     lastTile2.x = player2.tileX;
     lastTile2.y = player2.tileY;
   }
+  for (const s of extras) {
+    s.lastTile.x = s.player.tileX;
+    s.lastTile.y = s.player.tileY;
+  }
   // Pickups: scan once with both players in play so whichever player
   // stepped onto the pickup tile wins it.
   checkPickup(state);
   // Teleporters: P1 always triggers; an online guest (P2 with a
-  // playerId) also triggers so the spec's "guest steps on teleporter →
-  // both move to the new zone" works. Local-only P2 (no playerId) still
-  // follows P1 like before, so local co-op behaves the same.
+  // playerId, or any slot-3/4 entry) also triggers so the spec's "guest
+  // steps on teleporter → both move to the new zone" works. Local-only
+  // P2 (no playerId) still follows P1 like before, so local co-op
+  // behaves the same.
   let teleEntity = null;
   if (p1Moved) {
     teleEntity = findTeleporterAt(zone, player.tileX, player.tileY);
   }
   if (!teleEntity && p2Moved && player2?.playerId) {
     teleEntity = findTeleporterAt(zone, player2.tileX, player2.tileY);
+  }
+  if (!teleEntity) {
+    for (const s of extras) {
+      teleEntity = findTeleporterAt(zone, s.player.tileX, s.player.tileY);
+      if (teleEntity) break;
+    }
   }
   const tele = teleEntity;
   if (tele) {

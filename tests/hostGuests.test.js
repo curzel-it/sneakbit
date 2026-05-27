@@ -38,8 +38,7 @@ function makeFakeNet() {
 function setup({ guestSlot = 2 } = {}) {
   _resetOnlineBootstrapForTesting();
   _setOnlineModeForTesting({ mode: "host", uuid: "uuid-host" });
-  inputModule.clearInputState(2);
-  inputModule.clearInputState(3);
+  for (const s of [2, 3, 4]) inputModule.clearInputState(s);
   _uninstallHostGuestsForTesting();
   const fakeNet = makeFakeNet();
   bootstrapOnline({ netFactory: () => fakeNet });
@@ -50,9 +49,10 @@ function setup({ guestSlot = 2 } = {}) {
     zone: { cols: 30, rows: 30, entities: [] },
     player2: null,
     lastTile2: null,
+    players: [],
   };
-  const makeCoopP2 = (p1, _zone) => ({
-    index: 1,
+  const makeCoopP2 = (p1, _zone, opts = {}) => ({
+    index: opts.index ?? 1,
     tileX: p1.tileX + 1, tileY: p1.tileY,
     x: p1.tileX + 1, y: p1.tileY,
     direction: "down",
@@ -65,8 +65,7 @@ function teardown() {
   _uninstallHostGuestsForTesting();
   _resetOnlineBootstrapForTesting();
   _resetOnlineModeForTesting();
-  inputModule.clearInputState(2);
-  inputModule.clearInputState(3);
+  for (const s of [2, 3, 4]) inputModule.clearInputState(s);
 }
 
 test("peer.joined slot=2 spawns state.player2 carrying the guest's playerId", () => {
@@ -154,5 +153,46 @@ test("peer.rejoined rebinds the playerId without respawning", () => {
   const beforeRef = state.player2;
   fakeNet.emit("peer.rejoined", { op: "peer.rejoined", playerId: "p_g1", slot: 2 });
   assert.equal(state.player2, beforeRef);
+  teardown();
+});
+
+test("slot 3 spawn populates state.players with index=2", () => {
+  const { fakeNet, state } = setup();
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g3", slot: 3 });
+  assert.equal(state.players.length, 1);
+  assert.equal(state.players[0].slot, 3);
+  assert.equal(state.players[0].playerId, "p_g3");
+  assert.equal(state.players[0].player.index, 2);
+  assert.equal(state.players[0].player.slot, 3);
+  teardown();
+});
+
+test("slot 4 spawn coexists with slot 3", () => {
+  const { fakeNet, state } = setup();
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g3", slot: 3 });
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g4", slot: 4 });
+  assert.equal(state.players.length, 2);
+  const slots = state.players.map((s) => s.slot).sort();
+  assert.deepEqual(slots, [3, 4]);
+  teardown();
+});
+
+test("peer.left for slot 3 removes only that entry", () => {
+  const { fakeNet, state } = setup();
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g3", slot: 3 });
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g4", slot: 4 });
+  fakeNet.emit("peer.left", { op: "peer.left", playerId: "p_g3", reason: "leave" });
+  assert.equal(state.players.length, 1);
+  assert.equal(state.players[0].slot, 4);
+  teardown();
+});
+
+test("input from slot 3 guest routes into slot 3 input state", () => {
+  const { fakeNet } = setup();
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g3", slot: 3 });
+  fakeNet.emit("input", { op: "input", seq: 1, from: "p_g3", intent: "moveRight" });
+  const { events, held } = inputModule.pollInput(3);
+  assert.deepEqual(events, ["right"]);
+  assert.ok(held.has("right"));
   teardown();
 });

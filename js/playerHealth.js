@@ -33,9 +33,8 @@ const RECOVERY_PER_SEC = 3;
 const REGEN_DELAY_AFTER_HIT = 1.5;
 const INVULN_AFTER_BURST = 0.4;
 
-// Up to 2 players for now (co-op cap). Adding more is a one-line change
-// when gamepad routing lands.
-const MAX_PLAYERS = 2;
+// Up to 4 players (online co-op cap: host + 3 network guests).
+const MAX_PLAYERS = 4;
 
 function makeRecord() {
   return { hp: MAX_HP, invuln: 0, regenDelay: 0 };

@@ -1,28 +1,35 @@
 // Minimal WebSocket client for tests. Speaks just enough of RFC 6455 to
 // drive the relay: HTTP upgrade, masked text frames, recv parsing, close.
+// Optionally opts in to permessage-deflate via { deflate: true }.
 
 import { connect } from "node:net";
 import { createHash, randomBytes } from "node:crypto";
+import { deflateRawSync, inflateRawSync, constants as zlibConstants } from "node:zlib";
 import { encodeFrame, parseFrames, OP } from "../../server/wsFrames.js";
+import { stripTrailer, appendTrailer } from "../../server/wsExtensions.js";
 
 const MAGIC = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-export function openWsClient(host, port, path = "/ws") {
+export function openWsClient(host, port, path = "/ws", { deflate = false } = {}) {
   return new Promise((resolve, reject) => {
     const socket = connect({ host, port }, () => {
       const key = randomBytes(16).toString("base64");
       const expected = createHash("sha1").update(key + MAGIC).digest("base64");
+      const extHeader = deflate ? "Sec-WebSocket-Extensions: permessage-deflate\r\n" : "";
       const req =
         `GET ${path} HTTP/1.1\r\n` +
         `Host: ${host}:${port}\r\n` +
         `Upgrade: websocket\r\n` +
         `Connection: Upgrade\r\n` +
         `Sec-WebSocket-Key: ${key}\r\n` +
-        `Sec-WebSocket-Version: 13\r\n\r\n`;
+        `Sec-WebSocket-Version: 13\r\n` +
+        extHeader +
+        `\r\n`;
       socket.write(req);
 
       let buf = Buffer.alloc(0);
       let handshakeDone = false;
+      let negotiatedDeflate = false;
       const queue = [];
       const waiters = [];
       let closed = false;
@@ -60,6 +67,10 @@ export function openWsClient(host, port, path = "/ws") {
             socket.destroy();
             return;
           }
+          // The relay echoes back Sec-WebSocket-Extensions when it accepts
+          // permessage-deflate. We always strip+append the trailer ourselves
+          // — both sides negotiate no_context_takeover.
+          negotiatedDeflate = /sec-websocket-extensions:.*permessage-deflate/i.test(head);
           buf = buf.slice(idx + 4);
           handshakeDone = true;
           resolve(client);
@@ -70,7 +81,12 @@ export function openWsClient(host, port, path = "/ws") {
         buf = parsed.rest;
         for (const f of parsed.frames) {
           if (f.opcode === OP.TEXT) {
-            try { deliver(JSON.parse(f.payload.toString("utf8"))); }
+            let payload = f.payload;
+            if (f.rsv1 && negotiatedDeflate) {
+              try { payload = inflateRawSync(appendTrailer(payload)); }
+              catch { finishClose(1007); return; }
+            }
+            try { deliver(JSON.parse(payload.toString("utf8"))); }
             catch { /* malformed JSON, drop */ }
           } else if (f.opcode === OP.CLOSE) {
             const code = f.payload.length >= 2 ? f.payload.readUInt16BE(0) : 1005;
@@ -85,9 +101,17 @@ export function openWsClient(host, port, path = "/ws") {
       const client = {
         send(obj) {
           if (closed) throw new Error("closed");
-          const frame = encodeFrame(OP.TEXT, JSON.stringify(obj), { mask: true });
-          socket.write(frame);
+          const json = JSON.stringify(obj);
+          if (negotiatedDeflate) {
+            const compressed = stripTrailer(
+              deflateRawSync(Buffer.from(json, "utf8"), { flush: zlibConstants.Z_SYNC_FLUSH })
+            );
+            socket.write(encodeFrame(OP.TEXT, compressed, { mask: true, rsv1: true }));
+            return;
+          }
+          socket.write(encodeFrame(OP.TEXT, json, { mask: true }));
         },
+        get negotiatedDeflate() { return negotiatedDeflate; },
         recv(timeout = 1500) {
           if (queue.length) return Promise.resolve(queue.shift());
           if (closed) return Promise.reject(new Error("closed " + closeCode));

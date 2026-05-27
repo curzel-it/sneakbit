@@ -59,10 +59,21 @@ function broadcastDelta(net) {
   if (!net?.isConnected?.()) return;
   const state = stateGetter?.();
   if (!state?.zone) return;
-  // Zone changed under us (travelTo completed). Reset diff state and
-  // ship a fresh full snapshot — the diff machinery isn't useful when
-  // the entity set has been wholesale replaced.
+  // Zone changed under us (travelTo completed). Send event:zoneChange
+  // first so guests can fade their own overlay, THEN ship a fresh full
+  // snapshot — the diff machinery isn't useful when the entity set has
+  // been wholesale replaced.
   if (lastZoneId !== state.zone.id) {
+    // Order matters: emit event:zoneChange first so guests can start
+    // their fade-out overlay BEFORE the new-zone snapshot arrives and
+    // mirrorWorld swaps zones underneath them. Otherwise the guest sees
+    // an unblended mid-frame jump as the world is replaced.
+    net.send({
+      op: "event",
+      kind: "zoneChange",
+      zoneId: state.zone.id,
+      fromZoneId: lastZoneId,
+    });
     sendFullSnapshot(net);
     return;
   }

@@ -20,7 +20,7 @@ const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
 const BULLET_LIFESPAN = 1.6;      // fallback when species lifespan missing
 const COOLDOWN = 0.35;            // fallback when weapon.cooldown_after_use==0
-const MAX_PLAYERS = 2;
+const MAX_PLAYERS = 4;
 
 // Maps Rust EquipmentUsageSoundEffect → audio.js sfx names.
 const SFX_FOR_USAGE = {
@@ -83,9 +83,20 @@ function pickShooter(state, code) {
   if (isCoopActive()) {
     if (code === COOP_KEYMAPS[1].shoot) return state.player;
     if (code === COOP_KEYMAPS[2].shoot) return state.player2 || state.player;
+    for (const slot of [3, 4]) {
+      if (code === COOP_KEYMAPS[slot]?.shoot) {
+        return playerForSlot(state, slot) || state.player;
+      }
+    }
     return null;
   }
   return matchesAction("shoot", code) ? state.player : null;
+}
+
+function playerForSlot(state, slot) {
+  if (!Array.isArray(state.players)) return null;
+  const s = state.players.find((e) => e.slot === slot);
+  return s ? s.player : null;
 }
 
 function shoot(state, shooter) {

@@ -8,6 +8,10 @@ Js port replaces Rust codebase in production via Electron or similar, across all
 - [ ] Probably other things I don't remember rn
 - [ ] Game remains playable completely offline, like it always was
 
+Miscellanea
+- [ ] When on mobile the 4 direction buttons work great, but they require me to lift the finger to switch from on direction to the next. Ideally we want users to be able to "drag the finger over the next button" to change direction.
+- [ ] Sometimes audio does not start muted on mobile
+
 New game mode: online co-op (spec: host-authoritative-server.md)
 
 Phases shipped
@@ -37,16 +41,36 @@ Phase 7 events end-to-end
 - [ ] Hook event:dialogueOpen/Advance/Close — and decide what the guest does while the host is in a dialogue modal (host pauses tick, guest stays running; predicted self will lurch)
 - [ ] Hook event:cutsceneStart/End with the same dialogue concern
 
-Significant gaps
-- [ ] "Close to friends" button in party panel (host-side runtime close, not just URL navigation)
-- [ ] "Open to friends" button in party panel (host runtime open from inside an offline session)
-- [ ] "Leave session" button for guests
-- [ ] Dedicated event:zoneChange frame with fade — today guests teleport mid-frame to the new zone
-- [ ] isMirrorDead (>5 s no frames) → auto-fallback to offline mode
-- [ ] Resume-host path: relay.findByUuid returning a guest-session collides; gate by role before falling through to createSession
-- [ ] Extend hostGuests beyond slot 2 (P3 / P4) once main.js gains state.players[]
-- [ ] Slot reassignment on guest reconnect-after-grace: test coverage for A-drops, B-takes-slot, A-returns
-- [ ] Display name rendering above player heads (spec promises Player-a3f9 labels, never wired)
+Significant gaps 
+- [x] Dedicated event:zoneChange frame with fade — today guests teleport mid-frame to the new zone
+- [x] isMirrorDead (>5 s no frames) → auto-fallback to offline mode
+- [x] Resume-host path: relay.findByUuid returning a guest-session collides; gate by role before falling through to createSession
+- [x] Extend hostGuests beyond slot 2 (P3 / P4) once main.js gains state.players[]
+- [x] Slot reassignment on guest reconnect-after-grace: test coverage for A-drops, B-takes-slot, A-returns
+- [x] Display name rendering above player heads (spec promises Player-a3f9 labels, never wired)
+
+Party UI redesign (single shot — UI + runtime role switching together)
+Design decisions:
+  · Code generation is lazy: `host.open` is sent only after the user clicks "Start hosting", not on opening the panel — opening settings doesn't claim a session.
+  · Role is a runtime piece of state, not a URL contract. Switching offline ↔ host ↔ guest happens in-place; no page reload. `?host=1` / `?join=CODE` stay supported as deep-link entry points but are not the only path.
+UI:
+- [ ] Move party info/management out of the always-on top-right overlay into a dedicated panel reached from the settings/pause menu
+- [ ] Replace the overlay with a small status chip ("Hosting · 2/4" / "Guest · slot 2" / nothing when offline) that opens the dedicated panel on click
+- [ ] Offline view: "Start hosting" button (lazy host.open) + "Join with code" input
+- [ ] Hosting view: invite code with copy-to-clipboard + share-link buttons, peer list with per-peer Kick, "End co-op" button
+- [ ] Guest view: host name + slot + "Leave co-op" button
+- [ ] Reuse DOM nodes (no innerHTML rebuild) on state changes — keep focus / scroll
+- [ ] Responsive layout + touch-friendly for the new party screen
+Protocol:
+- [ ] New op `host.kick { playerId }` — relay closes the guest's WS (new close code 4005) and emits `peer.left { reason: "kicked" }` to the host + all remaining guests
+Runtime role switching:
+- [ ] Pair every install with a real teardown: snapshotBroadcaster, hostGuests, mirrorWorld, predictedSelf, guestInputForwarder, guestEvents
+- [ ] Audit module-level singletons for reset on role change (predictedSelf's `predicted` / `installed` / `lastAckedSeq`; hostGuests' `guestSlotByPlayerId`, etc.)
+- [ ] Single `switchRole(role, opts)` entry point that drains the current role and brings up the next one in the right order
+- [ ] Role becomes a runtime piece of `onlineMode` state with subscribers; `getNetRole()` reads it, partyPanel + status chip subscribe to changes
+- [ ] Reset `state.player` / `state.zone` / save namespace on host ↔ guest transitions (currently set once at boot)
+- [ ] Party-panel buttons call `switchRole` directly — no `location.replace`
+- [ ] On boot, honor `?host=1` / `?join=CODE` once by calling `switchRole` after the initial offline boot completes (URL stays a deep-link entry point, not the role contract)
 
 Polish — server
 - [ ] WS frame size cap ~1 MB in parseFrames (currently > 2 GB before throwing)
@@ -77,13 +101,6 @@ Polish — client
 - [ ] dev-warn when serializeEntity drops an entity for missing id
 - [ ] friendlyReason: generic "Couldn't connect" fallback instead of raw reason string
 
-Polish — party panel
-- [ ] Copy-to-clipboard for the invite code
-- [ ] Share-link button (https://curzel.it/sneakbit-html/?join=CODE)
-- [ ] Stop nuking innerHTML on every state change; reuse elements (keeps focus / scroll)
-- [ ] Responsive layout for small screens
-- [ ] Touch / mobile pass on the party panel and join form
-
 Polish — guest mode role gates
 - [ ] Suppress saveProgress beforeunload for guests (today the local save accumulates stale state.player data)
 - [ ] Gate fastTravel install by role
@@ -103,19 +120,27 @@ Ops / deploy
 - [ ] Check nginx config for /ws into the repo
 - [ ] Check systemd unit sneakbit-server into the repo
 - [ ] Production smoke test: run tests/server.session.test.js against wss://sneakbit.curzel.it/ws after deploy
+- [ ] Production smoke test: restartborgo.it remains reachable and serves a static webiste like before
 
 Spec deviations to reconcile
-- [ ] Update host-authoritative-server.md: snapshot no longer carries zone data (host and guest share level files; mirror loads locally)
-- [ ] Snapshot's `t` is a broadcaster counter, not a game tick — either fix code to ship the real tick, or update spec
-- [ ] Spec mentions event:zoneChange with embedded snapshot — implement or remove from spec
+- [x] Update host-authoritative-server.md: snapshot no longer carries zone data (host and guest share level files; mirror loads locally)
+- [x] Spec aligned with Phase 8: event:zoneChange is a heads-up frame `{zoneId, fromZoneId}` followed by a separate snapshot, not inline-payload
 
 Future work (spec already defers)
-- [ ] WebRTC data channel for snapshots + inputs; relay handles signaling only
-- [ ] STUN (free public) + TURN (self-host on same VPS) for NAT traversal
-- [ ] Per-message deflate compression
-- [ ] Host save resumption: remember last friend list for one-tap re-invite
-- [ ] Real accounts (email / OAuth) binding to existing UUID
+- [x] WebRTC data channel for snapshots + inputs; relay handles signaling only
+      (signaling routed via `webrtc.signal` op; per-peer DataChannel; game
+      ops auto-lift off WS once all DCs are open — js/webrtcChannel.js +
+      js/webrtcTransport.js)
+- [x] STUN (free public) + TURN (self-host on same VPS) for NAT traversal
+      (STUN list shipped in webrtcChannel.DEFAULT_STUN_SERVERS; relay's
+      /turn-credentials endpoint serves ephemeral REST-API creds when
+      TURN_SECRET + TURN_URLS env vars are set. Operator runbook lives in
+      deploy.py beside the systemd unit template.)
+- [x] Per-message deflate compression (RFC 7692, no_context_takeover both
+      sides — server/wsExtensions.js)
+- [ ] Real accounts (email / OAuth), uuids to be used as primary key
 - [ ] Voice / text chat (separate scope, moderation concern)
+- [ ] Snapshot's `t` is a broadcaster counter today — ship the host's real game tick (or wall-clock) for time-based interpolation; would let the mirror render at host-time `t` instead of receive-time, smoothing over dropped frames
 
 Cleanup / minor
 - [ ] zoneCache: don't leak old bakes across mirror zone changes

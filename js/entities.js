@@ -18,6 +18,7 @@ import { getMeleeSwingProgress } from "./melee.js";
 import { pushableRenderOffset } from "./pushables.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
+import { getNameForPlayerId } from "./onlineBootstrap.js";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
@@ -110,6 +111,34 @@ function drawPlayer(ctx, player, camera) {
     drawEquipment(ctx, player, camera, getEquipped(SLOT_RANGED, idx), SLOT_RANGED);
     drawEquipment(ctx, player, camera, getEquipped(SLOT_MELEE, idx), SLOT_MELEE);
   }
+
+  drawPlayerNameLabel(ctx, player, camera, px, py);
+}
+
+// Renders the "Player-xxxx" tag above an online player's head. Only fires
+// when a name is registered for the player (online-mode host's own avatar
+// + state.player2 with a network playerId + state.players[] entries +
+// guest's mirror world peers). Local-only co-op and offline play don't
+// have a name registered so the label stays off, matching today's look.
+function drawPlayerNameLabel(ctx, player, camera, screenX, screenY) {
+  const name = getNameForPlayerId(player.playerId);
+  if (!name) return;
+  ctx.save();
+  ctx.font = "8px monospace";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "bottom";
+  const cx = screenX + (TILE_SIZE / 2);
+  const cy = screenY - 2;
+  const metrics = ctx.measureText(name);
+  const padX = 3;
+  const padY = 2;
+  const w = Math.ceil(metrics.width) + padX * 2;
+  const h = 10 + padY;
+  ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+  ctx.fillRect(Math.round(cx - w / 2), Math.round(cy - h), w, h);
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(name, Math.round(cx), Math.round(cy - padY));
+  ctx.restore();
 }
 
 // Absolute sprite-sheet rows used by Rust's

@@ -101,6 +101,11 @@ export async function travelTo(state, destination) {
     if (state.player2) {
       state.lastTile2 = { x: state.player2.tileX, y: state.player2.tileY };
     }
+    if (Array.isArray(state.players)) {
+      for (const s of state.players) {
+        s.lastTile = { x: s.player.tileX, y: s.player.tileY };
+      }
+    }
     if (zone.soundtrack) playTrack(zone.soundtrack);
     const [spawnX, spawnY] = resolveSpawn(zone, destination, sourceZoneId);
     // Mirror Rust zone.spawn_point: remember the entry tile so that death
@@ -117,6 +122,14 @@ export async function travelTo(state, destination) {
       const wasDead = isPlayerDead(state.player2.index | 0);
       repositionCoopP2(state.player2, state.player, zone);
       if (wasDead) resetPlayerHealth(state.player2.index | 0);
+    }
+    if (Array.isArray(state.players)) {
+      for (const s of state.players) {
+        const wasDead = isPlayerDead(s.player.index | 0);
+        repositionCoopP2(s.player, state.player, zone);
+        s.lastTile = { x: s.player.tileX, y: s.player.tileY };
+        if (wasDead) resetPlayerHealth(s.player.index | 0);
+      }
     }
     await fadeIn();
   } finally {
@@ -231,6 +244,13 @@ function movePlayerTo(player, tileX, tileY, direction) {
 
 function fadeOut() { return setFade(1); }
 function fadeIn() { return setFade(0); }
+
+// Exposed so guestEvents.js can drive the same fade overlay on
+// host-initiated zone changes — the guest doesn't own the transition,
+// the host's event:zoneChange tells the guest to fade.
+export function fadeOverlayOut() { return fadeOut(); }
+export function fadeOverlayIn() { return fadeIn(); }
+export const FADE_OVERLAY_MS = FADE_DURATION_MS;
 
 function setFade(target) {
   return new Promise((resolve) => {

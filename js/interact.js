@@ -53,9 +53,20 @@ function pickInitiator(state, code) {
   if (isCoopActive()) {
     if (code === COOP_KEYMAPS[1].interact) return state.player;
     if (code === COOP_KEYMAPS[2].interact) return state.player2 || state.player;
+    for (const slot of [3, 4]) {
+      if (code === COOP_KEYMAPS[slot]?.interact) {
+        return playerForSlot(state, slot) || state.player;
+      }
+    }
     return null;
   }
   return matchesAction("interact", code) ? state.player : null;
+}
+
+function playerForSlot(state, slot) {
+  if (!Array.isArray(state.players)) return null;
+  const s = state.players.find((e) => e.slot === slot);
+  return s ? s.player : null;
 }
 
 export function tickInteract() {

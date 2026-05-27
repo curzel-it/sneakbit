@@ -3,6 +3,8 @@ import { fileURLToPath } from "node:url";
 import { acceptKey } from "./wsFrames.js";
 import { WsConnection } from "./wsConnection.js";
 import { createRelay } from "./relay.js";
+import { negotiate as negotiateExtensions, formatResponse as formatExtResponse } from "./wsExtensions.js";
+import { handleTurnRequest } from "./turnCredentials.js";
 
 const PORT = Number(process.env.PORT) || 8090;
 const HOST = process.env.HOST || "127.0.0.1";
@@ -19,6 +21,10 @@ export function startServer({ port = PORT, host = HOST, graceMs, idleTimeoutMs, 
     if (req.method === "GET" && req.url === "/") {
       res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
       res.end("hello from sneakbit server\n");
+      return;
+    }
+    if (req.url === "/turn-credentials") {
+      handleTurnRequest(req, res);
       return;
     }
     res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
@@ -39,17 +45,20 @@ export function startServer({ port = PORT, host = HOST, graceMs, idleTimeoutMs, 
       return;
     }
     const accept = acceptKey(wsKey);
+    const ext = negotiateExtensions(req.headers["sec-websocket-extensions"]);
+    const extHeader = formatExtResponse(ext);
     socket.write(
       "HTTP/1.1 101 Switching Protocols\r\n" +
       "Upgrade: websocket\r\n" +
       "Connection: Upgrade\r\n" +
       `Sec-WebSocket-Accept: ${accept}\r\n` +
+      (extHeader ? `Sec-WebSocket-Extensions: ${extHeader}\r\n` : "") +
       "\r\n"
     );
     socket.setNoDelay(true);
     upgradedSockets.add(socket);
     socket.on("close", () => upgradedSockets.delete(socket));
-    const ws = new WsConnection(socket);
+    const ws = new WsConnection(socket, { deflate: ext ? true : false });
     relay.attach(ws);
   });
 

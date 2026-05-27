@@ -163,6 +163,31 @@ test("peer.joined triggers a full snapshot send", () => {
   stopSnapshotBroadcaster();
 });
 
+test("zone change broadcasts event:zoneChange before the full snapshot", () => {
+  const fakeNet = setupBootstrapWithFakeNet();
+  const state = makeState(1001);
+  const ok = installSnapshotBroadcaster(() => state, { intervalMs: 5, net: fakeNet });
+  assert.equal(ok, true);
+  // Drive a tick to capture the baseline.
+  return new Promise((resolve) => setTimeout(resolve, 25)).then(() => {
+    fakeNet.sent.length = 0;
+    state.zone = {
+      id: 1002,
+      entities: [{ id: 200, species_id: 70, frame: { x: 1, y: 1, w: 1, h: 1 } }],
+    };
+    return new Promise((resolve) => setTimeout(resolve, 25));
+  }).then(() => {
+    const eventIdx = fakeNet.sent.findIndex((m) =>
+      m.op === "event" && m.kind === "zoneChange" && m.zoneId === 1002);
+    const snapIdx = fakeNet.sent.findIndex((m) =>
+      m.op === "snapshot" && m.zoneId === 1002);
+    assert.ok(eventIdx >= 0, "event:zoneChange must be sent");
+    assert.ok(snapIdx >= 0, "snapshot must be sent");
+    assert.ok(eventIdx < snapIdx, "event:zoneChange must precede the snapshot");
+    stopSnapshotBroadcaster();
+  });
+});
+
 test("zone id change forces the next delta to be a full snapshot", () => {
   setupBootstrapWithFakeNet();
   const state = makeState(1001);

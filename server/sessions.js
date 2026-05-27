@@ -10,13 +10,11 @@ import { randomBytes } from "node:crypto";
 
 const CODE_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const CODE_LEN = 5;
-// Spec allows up to 3 guests (4-player co-op), but hostGuests.js only
-// spawns a slot-2 avatar today — anyone past slot 2 gets a peer.joined
-// frame and then is silently ignored. Cap at 1 here so the server's
-// advertised maxGuests matches what the host can actually render.
-// Lift this back to 3 once main.js gains state.players[] and
-// hostGuests.js handles slots 3/4.
-export const MAX_GUESTS = 1;
+// Up to 3 guests (4-player co-op total). hostGuests spawns avatars for
+// slot 2 (state.player2) and slots 3/4 (state.players[]); the matching
+// MAX_PLAYERS=4 bump in inventory/playerHealth/melee/shooting keeps the
+// per-slot bookkeeping aligned.
+export const MAX_GUESTS = 3;
 export const DEFAULT_GRACE_MS = 30000;
 
 export function generateCode() {
@@ -108,7 +106,11 @@ export class SessionStore {
 
   removeGuest(session, uuid) {
     session.guests.delete(uuid);
-    this.uuidIndex.delete(uuid);
+    // Defensive: only clear uuidIndex if it still points at THIS session.
+    // A guest who re-opened as host has already overwritten the index;
+    // unconditionally deleting here would orphan the new host entry.
+    const idx = this.uuidIndex.get(uuid);
+    if (idx && idx.sessionId === session.id) this.uuidIndex.delete(uuid);
   }
 
   ghostGuest(session, uuid) {

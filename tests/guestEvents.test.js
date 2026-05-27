@@ -55,6 +55,17 @@ test("installGuestEvents wires net.on('event') -> dispatch", () => {
   _uninstallGuestEventsForTesting();
 });
 
+test("zoneChange kind is routable through the override seam", () => {
+  _uninstallGuestEventsForTesting();
+  let got = null;
+  setGuestEventHandler("zoneChange", (m) => { got = m; });
+  dispatch({ kind: "zoneChange", zoneId: 1002, fromZoneId: 1001 });
+  assert.ok(got);
+  assert.equal(got.zoneId, 1002);
+  assert.equal(got.fromZoneId, 1001);
+  _uninstallGuestEventsForTesting();
+});
+
 test("malformed events are ignored", () => {
   _uninstallGuestEventsForTesting();
   let count = 0;

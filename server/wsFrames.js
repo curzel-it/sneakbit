@@ -2,6 +2,7 @@
 //   - HTTP upgrade accept-key computation
 //   - text / close / ping / pong frames (single-frame and continuation)
 //   - server-to-client unmasked, client-to-server masked
+//   - RSV1 bit for permessage-deflate (RFC 7692)
 //
 // No npm deps. Keeps the relay portable for the native wrapper bundle.
 
@@ -18,12 +19,17 @@ export const OP = {
   PONG: 0xa,
 };
 
+// RSV1 flag in byte 0. Set on the first frame of a permessage-deflate-
+// compressed message; continuation frames inherit it via the assembler.
+export const RSV1 = 0x40;
+
 export function acceptKey(clientKey) {
   return createHash("sha1").update(clientKey + MAGIC).digest("base64");
 }
 
-// Server-to-client frames are never masked.
-export function encodeFrame(opcode, payload, { mask = false } = {}) {
+// Server-to-client frames are never masked. `rsv1` opt-in lets the deflate
+// path mark a compressed payload — RFC 7692 §6.
+export function encodeFrame(opcode, payload, { mask = false, rsv1 = false } = {}) {
   const data = Buffer.isBuffer(payload)
     ? payload
     : Buffer.from(payload || "", "utf8");
@@ -42,6 +48,7 @@ export function encodeFrame(opcode, payload, { mask = false } = {}) {
     header.writeBigUInt64BE(BigInt(len), 2);
   }
   header[0] = 0x80 | (opcode & 0x0f);
+  if (rsv1) header[0] |= RSV1;
   if (!mask) return Buffer.concat([header, data]);
   header[1] |= 0x80;
   const maskKey = Buffer.alloc(4);
@@ -69,6 +76,7 @@ export function parseFrames(buf) {
     const b0 = buf[offset];
     const b1 = buf[offset + 1];
     const fin = (b0 & 0x80) !== 0;
+    const rsv1 = (b0 & RSV1) !== 0;
     const opcode = b0 & 0x0f;
     const masked = (b1 & 0x80) !== 0;
     let len = b1 & 0x7f;
@@ -98,7 +106,7 @@ export function parseFrames(buf) {
     if (masked) {
       for (let i = 0; i < len; i++) payload[i] ^= maskKey[i % 4];
     }
-    frames.push({ fin, opcode, payload });
+    frames.push({ fin, rsv1, opcode, payload });
     offset += headerLen + len;
   }
   return { frames, rest: buf.slice(offset) };
