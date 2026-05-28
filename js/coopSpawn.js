@@ -9,7 +9,7 @@
 // case while only widening the search when the immediate neighbours
 // are unavailable.
 
-import { isWalkable, isEntityBlocked } from "./zone.js?v=20260528";
+import { isWalkable, isEntityBlocked } from "./zone.js?v=20260528b";
 
 const DIR_DELTA = {
   up:    [ 0, -1],

@@ -8,11 +8,11 @@
 // The renderer is updated separately to draw the predicted self in
 // place of the mirror's lagged copy for the guest's own slot.
 
-import { createPlayer, updatePlayer } from "./player.js?v=20260528";
-import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528";
-import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528";
-import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js?v=20260528";
+import { createPlayer, updatePlayer } from "./player.js?v=20260528b";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528b";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528b";
+import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528b";
+import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js?v=20260528b";
 
 let predicted = null;
 let installed = false;

@@ -5,12 +5,12 @@
 // Also draws an on-screen hint when an interactable is in front of the
 // player, so the action is discoverable without reading the README.
 
-import { showDialogue, resolveEntityDialogue, isDialogueOpen } from "./dialogue.js?v=20260528";
-import { handleAfterDialogue } from "./afterDialogue.js?v=20260528";
-import { matchesAction } from "./keyBindings.js?v=20260528";
-import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260528";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260528";
-import { getNetRole } from "./onlineBootstrap.js?v=20260528";
+import { showDialogue, resolveEntityDialogue, isDialogueOpen } from "./dialogue.js?v=20260528b";
+import { handleAfterDialogue } from "./afterDialogue.js?v=20260528b";
+import { matchesAction } from "./keyBindings.js?v=20260528b";
+import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260528b";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260528b";
+import { getNetRole } from "./onlineBootstrap.js?v=20260528b";
 
 const DIR_DELTA = {
   up:    [ 0, -1],

@@ -11,7 +11,7 @@
 // DC(s) and the WS bypass returns `true`; otherwise it returns `false`
 // and net.js falls through to the WS path.
 
-import { createWebrtcChannel, DEFAULT_STUN_SERVERS, STATE } from "./webrtcChannel.js?v=20260528";
+import { createWebrtcChannel, DEFAULT_STUN_SERVERS, STATE } from "./webrtcChannel.js?v=20260528b";
 
 const GAME_OPS = new Set(["snapshot", "delta", "event", "input"]);
 
@@ -50,13 +50,21 @@ export function installWebrtcTransport({
         // DataChannel ferries the same JSON frames the WS would. We just
         // re-emit through the existing net handlers so the rest of the
         // app (mirrorWorld, snapshotApply, etc.) is unaware of transport.
+        // The relay stamps `from` on every WS-forwarded frame; the DC
+        // bypasses the relay, so we stamp it here using the channel's
+        // remotePlayerId. Without this, host's onInput (which requires
+        // `from` to map intent→slot) silently drops every guest input
+        // arriving via DC.
         let msg = null;
         if (typeof data === "string") {
           try { msg = JSON.parse(data); } catch { return; }
         } else if (data instanceof ArrayBuffer) {
           try { msg = JSON.parse(new TextDecoder().decode(data)); } catch { return; }
         }
-        if (msg && typeof msg.op === "string") net.emitOp?.(msg.op, msg);
+        if (msg && typeof msg.op === "string") {
+          if (!msg.from) msg.from = remotePlayerId;
+          net.emitOp?.(msg.op, msg);
+        }
       },
       onClose: () => {
         channels.delete(remotePlayerId);

@@ -10,7 +10,7 @@
 // data never actually spawns anything. Leaving the hook ready for when
 // future content turns it on.
 
-import { getSpecies } from "./species.js?v=20260528";
+import { getSpecies } from "./species.js?v=20260528b";
 
 const SPECIES_MONSTER_SMALL      = 4003;
 const SPECIES_MONSTER            = 4004;

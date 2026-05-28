@@ -11,7 +11,7 @@
 import {
   getRuntimeRole,
   setRuntimeRole,
-} from "./onlineMode.js?v=20260528";
+} from "./onlineMode.js?v=20260528b";
 import {
   ensureNet,
   closeNet,
@@ -21,21 +21,21 @@ import {
   setPendingGuestCode,
   getInviteCode,
   getNet,
-} from "./onlineBootstrap.js?v=20260528";
-import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotBroadcaster.js?v=20260528";
-import { installHostGuests, uninstallHostGuests } from "./hostGuests.js?v=20260528";
-import { installHostPauseBroadcaster, uninstallHostPauseBroadcaster } from "./hostPauseState.js?v=20260528";
-import { installHostLoadoutSync, uninstallHostLoadoutSync } from "./hostLoadoutSync.js?v=20260528";
-import { installGuestLoadoutSync, uninstallGuestLoadoutSync } from "./guestLoadoutSync.js?v=20260528";
-import { installGuestSelfHpSync, uninstallGuestSelfHpSync } from "./guestSelfHpSync.js?v=20260528";
-import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js?v=20260528";
-import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js?v=20260528";
-import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js?v=20260528";
-import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js?v=20260528";
-import { reapplyAutoZoom } from "./zoom.js?v=20260528";
-import { hideGameOver, isGameOverOpen } from "./gameOver.js?v=20260528";
-import { closeNetworkDialogue } from "./dialogue.js?v=20260528";
-import { setHostPausedRemote } from "./guestHostPause.js?v=20260528";
+} from "./onlineBootstrap.js?v=20260528b";
+import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotBroadcaster.js?v=20260528b";
+import { installHostGuests, uninstallHostGuests } from "./hostGuests.js?v=20260528b";
+import { installHostPauseBroadcaster, uninstallHostPauseBroadcaster } from "./hostPauseState.js?v=20260528b";
+import { installHostLoadoutSync, uninstallHostLoadoutSync } from "./hostLoadoutSync.js?v=20260528b";
+import { installGuestLoadoutSync, uninstallGuestLoadoutSync } from "./guestLoadoutSync.js?v=20260528b";
+import { installGuestSelfHpSync, uninstallGuestSelfHpSync } from "./guestSelfHpSync.js?v=20260528b";
+import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js?v=20260528b";
+import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js?v=20260528b";
+import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js?v=20260528b";
+import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js?v=20260528b";
+import { reapplyAutoZoom } from "./zoom.js?v=20260528b";
+import { hideGameOver, isGameOverOpen } from "./gameOver.js?v=20260528b";
+import { closeNetworkDialogue } from "./dialogue.js?v=20260528b";
+import { setHostPausedRemote } from "./guestHostPause.js?v=20260528b";
 
 // Callbacks main.js installs at boot. switchRole calls them to rebuild /
 // wipe the live `state` object that lives in main.js's closure.

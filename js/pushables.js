@@ -4,9 +4,9 @@
 // is interpolated by tickPushables so the rock visually keeps pace with
 // the player's step animation instead of teleporting one tile per press.
 
-import { getSpecies } from "./species.js?v=20260528";
-import { isWalkable, isEntityBlocked } from "./zone.js?v=20260528";
-import { isCreativeMode } from "./creativeMode.js?v=20260528";
+import { getSpecies } from "./species.js?v=20260528b";
+import { isWalkable, isEntityBlocked } from "./zone.js?v=20260528b";
+import { isCreativeMode } from "./creativeMode.js?v=20260528b";
 
 const SLIDE_DURATION = 0.22; // matches player STEP_DURATION in player.js
 

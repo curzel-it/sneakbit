@@ -7,11 +7,11 @@
 // handshake to issue (host.open / guest.join), so a reconnect after
 // grace re-issues the right frame automatically.
 
-import { getMode, getJoinCode, getRuntimeRole, isValidJoinCode } from "./onlineMode.js?v=20260528";
-import { createNet } from "./net.js?v=20260528";
-import { installWebrtcTransport } from "./webrtcTransport.js?v=20260528";
-import { getIceServers, primeIceServers } from "./iceConfig.js?v=20260528";
-import { flushOnReconnect } from "./guestInputForwarder.js?v=20260528";
+import { getMode, getJoinCode, getRuntimeRole, isValidJoinCode } from "./onlineMode.js?v=20260528b";
+import { createNet } from "./net.js?v=20260528b";
+import { installWebrtcTransport } from "./webrtcTransport.js?v=20260528b";
+import { getIceServers, primeIceServers } from "./iceConfig.js?v=20260528b";
+import { flushOnReconnect } from "./guestInputForwarder.js?v=20260528b";
 
 let net = null;
 let inviteCode = null;
@@ -80,27 +80,47 @@ export function getNameForPlayerId(pid) {
 export function setPendingGuestCode(code) { pendingGuestCode = code || null; }
 export function getPendingGuestCode() { return pendingGuestCode; }
 
-// Lazy net factory used by switchRole. Idempotent: returns the existing
-// net if one is alive, otherwise creates a fresh one, wires handlers and
-// kicks off the WebRTC transport.
+// Lazy net factory used by switchRole. Idempotent on net (returns the
+// existing one if alive), but the WebRTC transport is (re-)installed
+// whenever the runtime role transitions into host/guest with a role
+// that differs from the last install. This matters for deep-link entry
+// (?host=1 / ?join=CODE): bootstrapOnline calls ensureNet *before*
+// switchRole sets the runtime role, so the first install would
+// otherwise be done with role=null — webrtcTransport short-circuits in
+// that case and the channel-creation handlers never get wired. The
+// later switchRole call hits the `if (net)` short-circuit, so without
+// this lazy re-install the entire session would run on the WS-relay
+// fallback. Tracked via lastTransportRole; the transport itself is
+// cheap to close + recreate (no network round-trip).
+let lastTransportRole = null;
 export function ensureNet({ netFactory = createNet } = {}) {
-  if (net) return net;
-  net = netFactory();
-  welcomed = false;
-  wireNetHandlers(net);
-  net.connect();
+  if (!net) {
+    net = netFactory();
+    welcomed = false;
+    wireNetHandlers(net);
+    net.connect();
 
-  // Fire-and-forget: fetch TURN credentials so WebRTC can fall back to
-  // TURN when STUN can't punch through. STUN defaults are always
-  // present, so the absence of a TURN server is not fatal.
-  primeIceServers(net.getUrl?.()).catch(() => { /* ignore — STUN-only */ });
+    // Fire-and-forget: fetch TURN credentials so WebRTC can fall back to
+    // TURN when STUN can't punch through. STUN defaults are always
+    // present, so the absence of a TURN server is not fatal.
+    primeIceServers(net.getUrl?.()).catch(() => { /* ignore — STUN-only */ });
+  }
 
-  rtcTransport = installWebrtcTransport({
-    net,
-    role: getRuntimeRole(),
-    iceServers: getIceServers(),
-    log: (...args) => console.log("[webrtc]", ...args),
-  });
+  const currentRole = getRuntimeRole();
+  const canInstall = currentRole === "host" || currentRole === "guest";
+  if (canInstall && currentRole !== lastTransportRole) {
+    if (rtcTransport) {
+      try { rtcTransport.close(); } catch { /* ignore */ }
+      rtcTransport = null;
+    }
+    rtcTransport = installWebrtcTransport({
+      net,
+      role: currentRole,
+      iceServers: getIceServers(),
+      log: (...args) => console.log("[webrtc]", ...args),
+    });
+    lastTransportRole = currentRole;
+  }
 
   return net;
 }
@@ -113,6 +133,7 @@ export function closeNet() {
     try { rtcTransport.close(); } catch { /* ignore */ }
   }
   rtcTransport = null;
+  lastTransportRole = null;
   if (net) {
     try { net.close(); } catch { /* ignore */ }
   }
@@ -285,6 +306,7 @@ export function _resetOnlineBootstrapForTesting() {
     try { rtcTransport.close(); } catch { /* ignore */ }
   }
   rtcTransport = null;
+  lastTransportRole = null;
   net = null;
   welcomed = false;
   pendingGuestCode = null;
