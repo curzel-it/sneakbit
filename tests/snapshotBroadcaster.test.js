@@ -333,6 +333,39 @@ test("a fresh snapshot seeds hp baseline without re-emitting death", async () =>
   stopSnapshotBroadcaster();
 });
 
+test("zone change emits event:respawn for players whose hp was 0 in the prior zone", async () => {
+  const fakeNet = setupBootstrapWithFakeNet();
+  const ph = await import("../js/playerHealth.js?v=20260528");
+  const state = makeState(1001);
+  // Host dies in the old zone. Install first (with the dead baseline)
+  // so a baseline broadcaster tick records hp=0 in lastHpByPlayerId.
+  ph.resetPlayerHealth();
+  ph.applyPlayerDamage(999, 0);
+  const ok = installSnapshotBroadcaster(() => state, { intervalMs: 5, net: fakeNet });
+  assert.equal(ok, true);
+  await new Promise((resolve) => setTimeout(resolve, 25));
+  // Now travelTo() runs: revive the dead host, swap zones. The next
+  // broadcaster tick must emit event:respawn BEFORE sendFullSnapshot
+  // wipes the hp baseline, otherwise the guest's "Waiting for the
+  // host…" overlay never dismisses on the new zone.
+  ph.resetPlayerHealth(0);
+  state.zone = {
+    id: 1002,
+    entities: [{ id: 200, species_id: 70, frame: { x: 1, y: 1, w: 1, h: 1 } }],
+  };
+  fakeNet.sent.length = 0;
+  await new Promise((resolve) => setTimeout(resolve, 25));
+  const resps = fakeNet.sent.filter((m) => m.op === "event" && m.kind === "respawn");
+  const zoneChanges = fakeNet.sent.filter((m) => m.op === "event" && m.kind === "zoneChange");
+  const snaps = fakeNet.sent.filter((m) => m.op === "snapshot");
+  assert.equal(zoneChanges.length, 1, "expected the zoneChange event");
+  assert.ok(snaps.length >= 1, "expected the full snapshot");
+  assert.equal(resps.length, 1, "expected event:respawn for the revived host");
+  assert.equal(resps[0].playerId, "p_host01");
+  stopSnapshotBroadcaster();
+  ph.resetPlayerHealth();
+});
+
 test("zone id change forces the next delta to be a full snapshot", () => {
   setupBootstrapWithFakeNet();
   const state = makeState(1001);

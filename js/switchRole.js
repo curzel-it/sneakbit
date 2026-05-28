@@ -33,6 +33,9 @@ import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js
 import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js?v=20260528";
 import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js?v=20260528";
 import { reapplyAutoZoom } from "./zoom.js?v=20260528";
+import { hideGameOver, isGameOverOpen } from "./gameOver.js?v=20260528";
+import { closeNetworkDialogue } from "./dialogue.js?v=20260528";
+import { setHostPausedRemote } from "./guestHostPause.js?v=20260528";
 
 // Callbacks main.js installs at boot. switchRole calls them to rebuild /
 // wipe the live `state` object that lives in main.js's closure.
@@ -117,6 +120,16 @@ async function teardownRole(role) {
     uninstallGuestEvents();
     uninstallGuestLoadoutSync();
     uninstallGuestSelfHpSync();
+    // Dismiss any host-driven overlays that would otherwise stay up after
+    // the session ends. The "Waiting for the host…" gameOver (no Continue
+    // button) is the load-bearing case — without this it freezes the next
+    // offline tick (paused gates every system), so the player sees the
+    // overlay, can't move, can't shoot, can't dismiss it, and reload is
+    // the only out. closeNetworkDialogue + setHostPausedRemote(false)
+    // are defensive companions for the same shape of bug.
+    if (isGameOverOpen()) hideGameOver();
+    closeNetworkDialogue();
+    setHostPausedRemote(false);
   }
   if (role === "host" || role === "guest") {
     resetOnlineState();

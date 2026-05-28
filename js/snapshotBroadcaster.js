@@ -87,6 +87,12 @@ function broadcastDelta(net) {
       zoneId: state.zone.id,
       fromZoneId: lastZoneId,
     });
+    // travelTo() revives every dead guest as part of zone entry (mirror
+    // of offline coop's revive-on-zone-change). Emit event:respawn for
+    // them BEFORE sendFullSnapshot — buildSnapshot wipes lastHpByPlayerId,
+    // so the 0→nonzero edge would otherwise be lost and the guest's
+    // "Waiting for the host…" overlay would stay up in the new zone.
+    emitRespawnsForRevivedPlayers(state);
     sendFullSnapshot(net);
     return;
   }
@@ -164,6 +170,23 @@ function playerDeltas(state) {
   }
   emitHpTransitions(allPlayers);
   return changed;
+}
+
+// Zone-change path companion to emitHpTransitions. Walks current
+// players, fires event:respawn for any who were dead in the previous
+// zone and are alive now (transitions.js resets HP on entry). Called
+// BEFORE buildSnapshot, which clears lastHpByPlayerId — without this
+// the rising edge would be lost across zone boundaries and the guest's
+// "Waiting for the host…" overlay would never dismiss.
+function emitRespawnsForRevivedPlayers(state) {
+  const players = playersOf(state).map(serializePlayer).filter(Boolean);
+  for (const p of players) {
+    const prev = lastHpByPlayerId.get(p.playerId);
+    const cur = typeof p.hp === "number" ? p.hp : 100;
+    if (prev !== undefined && prev <= 0 && cur > 0) {
+      broadcastHostEvent("respawn", { playerId: p.playerId });
+    }
+  }
 }
 
 // Watch each tracked player's hp for a 0-crossing and emit a one-shot
