@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const fwd = await import("../js/guestInputForwarder.js?v=20260528h");
+const fwd = await import("../js/guestInputForwarder.js?v=20260528i");
 
 function makeFakeNet() {
   const sent = [];
@@ -53,14 +53,32 @@ test("a second direction press replaces the held direction on the wire", () => {
   fwd._resetForwarderForTesting();
 });
 
-test("releasing one direction with another still held sends the remaining direction", () => {
+test("releasing one direction with another still held syncs held without a fresh press", () => {
   const net = setup();
   fwd._injectKeyDownForTesting("KeyS"); // down
   fwd._injectKeyDownForTesting("KeyA"); // left
   fwd._injectKeyUpForTesting("KeyA");   // release left, down still held
   const intents = net.sent.map((m) => m.intent);
-  // moveDown, moveLeft, moveDown
-  assert.equal(intents[intents.length - 1], "moveDown");
+  // moveDown, moveLeft, holdSync(held=[down])
+  assert.deepEqual(intents, ["moveDown", "moveLeft", "holdSync"]);
+  // The holdSync carries the post-release held set so the host can mirror
+  // it; without held the host has no way to know which key was released.
+  assert.deepEqual(net.sent[2].held, ["down"]);
+  fwd._resetForwarderForTesting();
+});
+
+test("a multi-key press ships the full held set so the host's HOLD_PRIORITY chains correctly", () => {
+  const net = setup();
+  fwd._injectKeyDownForTesting("KeyW"); // up
+  fwd._injectKeyDownForTesting("KeyA"); // left, still holding up
+  // First message: just up held.
+  assert.deepEqual(net.sent[0].intent, "moveUp");
+  assert.deepEqual(net.sent[0].held, ["up"]);
+  // Second message: both keys held — host needs to know about up too,
+  // otherwise its HOLD_PRIORITY chain would pick left while predicted
+  // picks up.
+  assert.deepEqual(net.sent[1].intent, "moveLeft");
+  assert.deepEqual(net.sent[1].held.slice().sort(), ["left", "up"]);
   fwd._resetForwarderForTesting();
 });
 

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CONSTRUCTION } from "../js/constructions.js?v=20260528h";
-import { constructionTextureRow } from "../js/constructionTiles.js?v=20260528h";
+import { CONSTRUCTION } from "../js/constructions.js?v=20260528i";
+import { constructionTextureRow } from "../js/constructionTiles.js?v=20260528i";
 
 const ANY = CONSTRUCTION.NOTHING;
 

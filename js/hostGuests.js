@@ -10,13 +10,13 @@
 // state.players[] alongside player/player2 so all four slots move and
 // participate in pickups/combat.
 
-import { getNetRole, getNet } from "./onlineBootstrap.js?v=20260528h";
-import { pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528h";
-import { setNetworkGuestCount } from "./coopMode.js?v=20260528h";
-import { tryShootForSlot } from "./shooting.js?v=20260528h";
-import { tryMeleeForSlot } from "./melee.js?v=20260528h";
-import { tryInteractForSlot } from "./interact.js?v=20260528h";
-import { isPlayerDead } from "./playerHealth.js?v=20260528h";
+import { getNetRole, getNet } from "./onlineBootstrap.js?v=20260528i";
+import { pushInputPress, clearInputHeld, clearInputState, setNetworkHeld, pushPressEvent } from "./input.js?v=20260528i";
+import { setNetworkGuestCount } from "./coopMode.js?v=20260528i";
+import { tryShootForSlot } from "./shooting.js?v=20260528i";
+import { tryMeleeForSlot } from "./melee.js?v=20260528i";
+import { tryInteractForSlot } from "./interact.js?v=20260528i";
+import { isPlayerDead } from "./playerHealth.js?v=20260528i";
 
 const INTENT_TO_DIR = {
   moveUp: "up",
@@ -183,18 +183,36 @@ function onInput(m) {
     const prev = lastSeqOut[from] ?? 0;
     if (m.seq > prev) lastSeqOut[from] = m.seq;
   }
-  applyIntent(slot, m.intent, from);
+  applyIntent(slot, m.intent, from, m);
 }
 
-function applyIntent(slot, intent, from) {
+function applyIntent(slot, intent, from, msg) {
+  const held = Array.isArray(msg?.held) ? msg.held : null;
   const dir = INTENT_TO_DIR[intent];
   if (dir) {
-    // Movement intents are absolute "I'm now pressing X only": wipe the
-    // slot's keyboard state and synthesise a fresh press. Otherwise a
-    // moveDown→moveLeft transition would leave the host's tick chasing
-    // "down" forever because the HOLD_PRIORITY in player.js prefers up/down.
-    clearInputState(slot);
-    pushInputPress(slot, dir);
+    if (held) {
+      // New wire (forwarder ≥ 20260528i): the guest ships its full held
+      // set with every movement intent. Mirror it exactly so the host's
+      // HOLD_PRIORITY chains via the same direction the guest's
+      // predicted self picks locally. The intent is queued as a fresh
+      // press event so rotate / queuedDir timing matches a real keydown.
+      setNetworkHeld(slot, held);
+      pushPressEvent(slot, dir);
+    } else {
+      // Legacy wire (no held field): preserve the old absolute-press
+      // semantics. Without `held` we can't reconstruct multi-key state,
+      // so the safest fallback is "this is the only direction held."
+      clearInputState(slot);
+      pushInputPress(slot, dir);
+    }
+    return;
+  }
+  if (intent === "holdSync") {
+    // Held set shrank but isn't empty (user released one of multiple
+    // held keys). Update the host's view without pushing a press event
+    // — the user didn't press anything new. Skip silently if the wire
+    // didn't include held; an empty holdSync would be ambiguous.
+    if (held) setNetworkHeld(slot, held);
     return;
   }
   if (intent === "stopMove") { clearInputHeld(slot); return; }

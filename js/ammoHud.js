@@ -9,10 +9,10 @@
 // local hero's chip only — the host's HUD doesn't try to show guests'
 // counts.
 
-import { TILE_SIZE } from "./constants.js?v=20260528h";
-import { getSprite } from "./assets.js?v=20260528h";
-import { getAmmo, onInventoryChange } from "./inventory.js?v=20260528h";
-import { getSpecies } from "./species.js?v=20260528h";
+import { TILE_SIZE } from "./constants.js?v=20260528i";
+import { getSprite } from "./assets.js?v=20260528i";
+import { getAmmo, onInventoryChange } from "./inventory.js?v=20260528i";
+import { getSpecies } from "./species.js?v=20260528i";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
 

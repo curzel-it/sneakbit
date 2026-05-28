@@ -3,7 +3,7 @@
 // the same channel and land in Phase 7. Each frame carries a monotonic
 // seq for the reconciliation logic that arrives in Phase 6.
 
-import { actionForCode } from "./keyBindings.js?v=20260528h";
+import { actionForCode } from "./keyBindings.js?v=20260528i";
 
 const ACTION_TO_INTENT = {
   moveUp: "moveUp",
@@ -22,6 +22,14 @@ const MOVE_INTENTS = new Set(["moveUp", "moveDown", "moveLeft", "moveRight"]);
 // buffering; buffering them would actually be wrong because the player
 // likely released the key during the blip.
 const ACTION_INTENTS = new Set(["shoot", "melee", "interact"]);
+
+// Must match player.js HOLD_PRIORITY. Used to predict which direction
+// the chain-fallback in advanceStep will pick on the host so the
+// forwarder can stamp lastSentDir to the same value the host's chain
+// will choose. Wrong order here would still be self-consistent (host
+// gets the full held set so chains correctly), but would cause
+// spurious resends since lastSentDir wouldn't match the host's view.
+const HOLD_PRIORITY = ["up", "down", "left", "right"];
 
 let net = null;
 let seq = 0;
@@ -123,14 +131,15 @@ export function flushOnReconnect(now = Date.now()) {
   // doesn't run mid-blip, but a fresh welcome means the host's view
   // of our heading is unset).
   if (held.size > 0) {
-    const dir = lastSentDir ?? [...held][0];
+    const dir = lastSentDir ?? effectiveDir(held) ?? [...held][0];
     lastSentDir = dir;
     const intent = dirToIntent(dir);
     if (intent) {
+      const heldSnapshot = [...held];
       seq++;
-      inputLog.push({ seq, intent });
+      inputLog.push({ seq, intent, held: heldSnapshot });
       if (inputLog.length > INPUT_LOG_CAP) inputLog.shift();
-      net.send({ op: "input", seq, t: now, intent });
+      net.send({ op: "input", seq, t: now, intent, held: heldSnapshot });
     }
   }
 }
@@ -161,11 +170,10 @@ function onKeyDown(e) {
   if (!intent) return;
   const dir = intentToDir(intent);
   if (dir) {
+    if (held.has(dir)) return;
     held.add(dir);
-    if (dir !== lastSentDir) {
-      lastSentDir = dir;
-      send(intent);
-    }
+    lastSentDir = dir;
+    send(intent, { held: [...held] });
     return;
   }
   send(intent);
@@ -176,6 +184,7 @@ function onKeyUp(e) {
   const intent = action && ACTION_TO_INTENT[action];
   if (!intent || !MOVE_INTENTS.has(intent)) return;
   const dir = intentToDir(intent);
+  if (!held.has(dir)) return;
   held.delete(dir);
   if (held.size === 0) {
     if (lastSentDir !== null) {
@@ -184,11 +193,23 @@ function onKeyUp(e) {
     }
     return;
   }
-  const next = [...held][0];
-  if (next !== lastSentDir) {
-    lastSentDir = next;
-    send(dirToIntent(next));
+  // The user released one key but others are still held. We can't drop
+  // this on the floor (host wouldn't know held shrank, and would keep
+  // chaining via the released key — the multi-key divergence that
+  // motivated this whole change). Emit `holdSync` so the host updates
+  // its held set without pushing a spurious press event into the slot's
+  // events queue. Updating lastSentDir to the new chain-winner means a
+  // future keydown of that same direction won't re-fire a redundant
+  // moveX intent.
+  lastSentDir = effectiveDir(held);
+  send("holdSync", { held: [...held] });
+}
+
+function effectiveDir(heldSet) {
+  for (const d of HOLD_PRIORITY) {
+    if (heldSet.has(d)) return d;
   }
+  return null;
 }
 
 function onBlur() {
@@ -199,7 +220,7 @@ function onBlur() {
   }
 }
 
-function send(intent) {
+function send(intent, extras) {
   if (!net?.isConnected?.()) {
     // Movement intents are state-derived; on reconnect, the still-held
     // key is re-emitted from flushOnReconnect. Buffering a moveLeft
@@ -212,7 +233,11 @@ function send(intent) {
     return;
   }
   seq++;
-  inputLog.push({ seq, intent });
+  // Carry held into the inputLog so predictedSelf.replayUnackedInputs
+  // can restore the actual held set after a snap, not just the most
+  // recent press direction.
+  const heldSnapshot = Array.isArray(extras?.held) ? extras.held.slice() : null;
+  inputLog.push(heldSnapshot ? { seq, intent, held: heldSnapshot } : { seq, intent });
   if (inputLog.length > INPUT_LOG_CAP) inputLog.shift();
-  net.send({ op: "input", seq, t: Date.now(), intent });
+  net.send({ op: "input", seq, t: Date.now(), intent, ...(extras || {}) });
 }

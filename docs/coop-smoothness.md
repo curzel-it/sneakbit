@@ -1,12 +1,83 @@
 # Co-op Motion Smoothness — Design Doc
 
-Status: **shipped, residual unrelated bug observed** (2026-05-28).
+Status: **shipped + multi-key host-input divergence fix landed**
+(2026-05-28, awaiting morning verification).
 Scope: guest's perceived smoothness of the host's world (and the
 guest's own avatar). Host is unchanged.
 Bar: *"never see stutters unless stuff is actually bad"* — i.e. on a
 healthy network, the guest's view of the host's world must be
 pixel-smooth at 60 fps. Visible chop is allowed only when the network is
 genuinely degraded (real packet loss, real jitter, real RTT spikes).
+
+## Tomorrow-you: start here
+
+Read this section first; the rest is history.
+
+**What was wrong** (from a `?debug=snap` capture, `/Users/curzel/Desktop/log.json`
+from the 2026-05-28 evening session): the post-stutter-fix bug
+("guest sees P2 stuck on host, then teleports back") was *not* the
+storage-flag visibility split we initially suspected. The dump showed:
+
+- `currentSeq === lastAckedSeq` every entry → transport / input loss
+  ruled out, host is acking every input.
+- `authFront.entities` either empty or carrying non-rigid entities the
+  auth walked through next tick → no blocker.
+- Auth was *moving* the whole window (10 tile-steps in 2.75 s, matching
+  predicted's 10 steps). Same rate, **different turn-direction
+  choices**: predicted did 9 up + 1 left, auth did 7 up + 4 lateral.
+
+**Root cause**: `hostGuests.applyIntent` collapsed both the press-event
+queue and the held set to a single direction with
+`clearInputState(slot); pushInputPress(slot, dir)`. So when the user
+held Up+Left simultaneously, the guest's predicted (running on slot 1's
+real local input) saw `held = {up, left}` and chained via
+`HOLD_PRIORITY = ["up", "down", "left", "right"]` → **up**. The host's
+slot 2 only had the most recently pressed direction in held = `{left}`
+→ chained **left**. Same step rate, perpendicular paths, divergence
+grew until the 5-tile snap fired and yanked the user back.
+
+**Fix shipped** (cache-bust `20260528i`, files:
+`js/input.js`, `js/guestInputForwarder.js`, `js/hostGuests.js`,
+`js/predictedSelf.js`):
+
+1. **Wire**: every movement intent now carries the full guest-side held
+   set as `held: ["up", "left"]`.
+2. **New intent `holdSync`**: emitted by the forwarder when the user
+   releases a key while others remain held — host updates its held set
+   without queuing a spurious press event. This closes the previously
+   silent gap where `if (next !== lastSentDir) send(...)` dropped the
+   "held set shrank" event entirely.
+3. **Host (`hostGuests.applyIntent`)**: when `msg.held` is present,
+   uses `setNetworkHeld(slot, held)` + `pushPressEvent(slot, dir)` to
+   mirror the guest's authoritative held + queue the press. Legacy
+   path (no `held` field) preserved for old tests / other tools.
+4. **Predicted-self replay** (`replayUnackedInputs`): after replaying
+   press events, re-anchors slot 1's held to the latest log entry's
+   `held` so a multi-key hold survives a snap-back (previously
+   `pushInputPress` could only add, never reflect a release).
+
+`?debug=snap` is still wired in, so reproducing should give a fresh
+log. If `__sbSnapDebug` stays empty on tomorrow's session: the fix
+worked, delete the debug capture in a follow-up. If captures keep
+appearing: read the new entries — `localHeld` isn't in the schema yet,
+but `authFront.entities` + the `auth`/`predicted` direction columns
+will still tell us whether it's the same multi-key story (in which
+case the fix didn't take), or a fresh issue (in which case re-diagnose
+from scratch — *don't* assume the doc above is still load-bearing).
+
+**Test coverage added**:
+- `tests/guestInputForwarder.test.js`: holdSync emitted on keyup-with-
+  others-held, full held set shipped on every press.
+- `tests/hostGuests.test.js`: multi-key held mirrored on slot 2;
+  holdSync updates held without queuing a press; legacy wire still
+  honored.
+- Unit suite 440/440, e2e 6/6 (snap events 0 on both transports — no
+  regression).
+
+**Revert recipe** (if morning testing finds new issues): one commit
+covers the fix (cache-bust + wire + four files). `git revert <sha>`
+reverts cleanly; the `?debug=snap` capture commit is separate
+(landed earlier today) and can stay live.
 
 ## TL;DR — what shipped today (2026-05-28)
 

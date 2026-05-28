@@ -5,12 +5,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260528h");
+  await import("../js/onlineMode.js?v=20260528i");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js?v=20260528h");
+  await import("../js/onlineBootstrap.js?v=20260528i");
 const { installHostGuests, _uninstallHostGuestsForTesting } =
-  await import("../js/hostGuests.js?v=20260528h");
-const inputModule = await import("../js/input.js?v=20260528h");
+  await import("../js/hostGuests.js?v=20260528i");
+const inputModule = await import("../js/input.js?v=20260528i");
 
 function makeFakeNet() {
   const handlers = new Map();
@@ -115,7 +115,7 @@ test("stopMove clears the slot's held set", () => {
   teardown();
 });
 
-test("moveLeft after moveDown replaces the held direction", () => {
+test("moveLeft after moveDown (legacy wire, no held field) replaces the held direction", () => {
   const { fakeNet } = setup();
   fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
   fakeNet.emit("input", { op: "input", seq: 1, from: "p_g1", intent: "moveDown" });
@@ -123,6 +123,35 @@ test("moveLeft after moveDown replaces the held direction", () => {
   const { held } = inputModule.pollInput(2);
   assert.equal(held.size, 1);
   assert.ok(held.has("left"));
+  teardown();
+});
+
+test("movement intent with held=[up,left] mirrors guest's multi-key state on the host", () => {
+  const { fakeNet } = setup();
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
+  fakeNet.emit("input", { op: "input", seq: 1, from: "p_g1", intent: "moveUp", held: ["up"] });
+  fakeNet.emit("input", { op: "input", seq: 2, from: "p_g1", intent: "moveLeft", held: ["up", "left"] });
+  const { events, held } = inputModule.pollInput(2);
+  // events drains the press queue for the new keypresses; held mirrors
+  // the guest's authoritative state, not just the latest press.
+  assert.deepEqual(events, ["up", "left"]);
+  assert.equal(held.size, 2);
+  assert.ok(held.has("up"));
+  assert.ok(held.has("left"));
+  teardown();
+});
+
+test("holdSync updates the slot's held set without queuing a fresh press event", () => {
+  const { fakeNet } = setup();
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
+  fakeNet.emit("input", { op: "input", seq: 1, from: "p_g1", intent: "moveUp", held: ["up"] });
+  fakeNet.emit("input", { op: "input", seq: 2, from: "p_g1", intent: "moveLeft", held: ["up", "left"] });
+  inputModule.pollInput(2); // drain initial events so we can isolate holdSync's effect
+  fakeNet.emit("input", { op: "input", seq: 3, from: "p_g1", intent: "holdSync", held: ["up"] });
+  const { events, held } = inputModule.pollInput(2);
+  assert.deepEqual(events, [], "holdSync must not queue a press event");
+  assert.equal(held.size, 1);
+  assert.ok(held.has("up"));
   teardown();
 });
 
@@ -207,7 +236,7 @@ async function installDispatchSpies() {
   const calls = [];
   const stub = (action) => (slot) => calls.push({ action, slot });
   const { _setActionDispatchForTesting, _resetActionCooldownsForTesting } =
-    await import("../js/hostGuests.js?v=20260528h");
+    await import("../js/hostGuests.js?v=20260528i");
   _setActionDispatchForTesting({
     shoot: stub("shoot"),
     melee: stub("melee"),
@@ -350,7 +379,7 @@ test("action intent is dropped when the slot's avatar has been despawned (range 
 test("action intent is dropped when the slot's avatar is dead (range gate)", async () => {
   const { calls, restore } = await installDispatchSpies();
   const { applyPlayerDamage, resetPlayerHealth } =
-    await import("../js/playerHealth.js?v=20260528h");
+    await import("../js/playerHealth.js?v=20260528i");
   try {
     const { fakeNet } = setup();
     fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });

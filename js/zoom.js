@@ -9,7 +9,7 @@
 // works the same on a 1x desktop, a 1.5x Windows display, a 2x Retina
 // laptop and a 3x phone.
 
-import { TILE_SIZE } from "./constants.js?v=20260528h";
+import { TILE_SIZE } from "./constants.js?v=20260528i";
 
 const MIN_TILES_W = 16;
 const MAX_TILES_W = 36;

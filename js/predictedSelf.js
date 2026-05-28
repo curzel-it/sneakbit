@@ -8,13 +8,13 @@
 // The renderer is updated separately to draw the predicted self in
 // place of the mirror's lagged copy for the guest's own slot.
 
-import { createPlayer, updatePlayer } from "./player.js?v=20260528h";
-import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528h";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528h";
-import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528h";
-import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js?v=20260528h";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260528h";
-import { getValue } from "./storage.js?v=20260528h";
+import { createPlayer, updatePlayer } from "./player.js?v=20260528i";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState, setNetworkHeld } from "./input.js?v=20260528i";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528i";
+import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528i";
+import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js?v=20260528i";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260528i";
+import { getValue } from "./storage.js?v=20260528i";
 
 let predicted = null;
 let installed = false;
@@ -186,19 +186,28 @@ function replayUnackedInputs() {
   // user is *still* holding, which we want to preserve at the end.
   // Walk the log in order so the final state matches the last intent.
   clearInputState(1);
-  for (const { intent } of log) {
+  let lastHeld = null;
+  for (const { intent, held } of log) {
+    if (Array.isArray(held)) lastHeld = held;
     switch (intent) {
       case "moveUp":    pushInputPress(1, "up"); break;
       case "moveDown":  pushInputPress(1, "down"); break;
       case "moveLeft":  pushInputPress(1, "left"); break;
       case "moveRight": pushInputPress(1, "right"); break;
       case "stopMove":  clearInputHeld(1); break;
+      // holdSync carries the new held set on the wire and was already
+      // captured into lastHeld above; the events queue is unaffected.
       // Action intents (shoot/melee/interact) aren't predicted — the
       // host owns those side effects, so dropping them on replay is
       // correct: the originals were already sent to the host.
       default: break;
     }
   }
+  // Without this, a multi-key hold (e.g. user holding Up+Left) would
+  // collapse to whatever the last moveX touched, because pushInputPress
+  // only ever adds — never reflects a release. Re-anchoring to the
+  // latest authoritative held set restores the actual two-key state.
+  if (lastHeld) setNetworkHeld(1, lastHeld);
 }
 
 function captureDivergence(predicted, auth, msg) {

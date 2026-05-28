@@ -8,9 +8,9 @@
 // d-pad fan into the same directional channel; action buttons go
 // through their own callback registry (see gamepad.setGamepadAction).
 
-import { pollGamepadDirections } from "./gamepad.js?v=20260528h";
-import { resolveAction } from "./keyBindings.js?v=20260528h";
-import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js?v=20260528h";
+import { pollGamepadDirections } from "./gamepad.js?v=20260528i";
+import { resolveAction } from "./keyBindings.js?v=20260528i";
+import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js?v=20260528i";
 
 const ACTION_TO_DIR = {
   moveUp: "up",
@@ -67,6 +67,29 @@ export function clearInputState(playerIndex) {
   if (!s) return;
   s.held.clear();
   s.pressEvents.length = 0;
+}
+
+// Network injection: replace the slot's held set with `dirs`, leaving the
+// pending press events untouched. Used by hostGuests when a guest input
+// frame carries the full authoritative held set: the host needs to mirror
+// the guest's `held` so HOLD_PRIORITY chains pick the same direction on
+// both sides. Without this, a multi-key hold (e.g. user holding Up+Left)
+// makes the guest's predicted self chain Up (HOLD_PRIORITY) while the
+// host chains Left (last-pressed key) — they walk in different directions
+// and divergence grows until the snap-back fires.
+export function setNetworkHeld(playerIndex, dirs) {
+  const s = ensureSlot(playerIndex);
+  s.held.clear();
+  for (const d of dirs || []) s.held.add(d);
+}
+
+// Network injection: append a press event without touching held. Pairs
+// with setNetworkHeld for the press-with-known-held case so the slot's
+// events queue gets the new press (for rotate / queuedDir timing)
+// without redundantly mutating the held set we just synced from the wire.
+export function pushPressEvent(playerIndex, direction) {
+  const s = ensureSlot(playerIndex);
+  s.pressEvents.push(direction);
 }
 
 // Returns { playerIndex, direction } (1-based slot) for a key event, or

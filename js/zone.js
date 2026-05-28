@@ -2,13 +2,13 @@
 // sprite-sheet coordinates (with neighbor-aware tile selection), and a
 // collision mask. Heavy work happens here so the render loop stays simple.
 
-import { biomeFromChar, biomeIsObstacle, BIOME, isSlippery } from "./biomes.js?v=20260528h";
-import { constructionFromChar, constructionIsObstacle, constructionIsBridge, constructionIsVisible, CONSTRUCTION } from "./constructions.js?v=20260528h";
-import { biomeTextureCol } from "./biomeTiles.js?v=20260528h";
-import { constructionTextureRow } from "./constructionTiles.js?v=20260528h";
-import { getSpecies } from "./species.js?v=20260528h";
-import { shouldBeVisible, entityHittableFrame, rectOverlapsTile } from "./entityVisibility.js?v=20260528h";
-import { isCreativeMode } from "./creativeMode.js?v=20260528h";
+import { biomeFromChar, biomeIsObstacle, BIOME, isSlippery } from "./biomes.js?v=20260528i";
+import { constructionFromChar, constructionIsObstacle, constructionIsBridge, constructionIsVisible, CONSTRUCTION } from "./constructions.js?v=20260528i";
+import { biomeTextureCol } from "./biomeTiles.js?v=20260528i";
+import { constructionTextureRow } from "./constructionTiles.js?v=20260528i";
+import { getSpecies } from "./species.js?v=20260528i";
+import { shouldBeVisible, entityHittableFrame, rectOverlapsTile } from "./entityVisibility.js?v=20260528i";
+import { isCreativeMode } from "./creativeMode.js?v=20260528i";
 
 // Entity types that go through Rust's setup_generic — they all have
 // is_rigid forced to false in creative mode. Plus Gate / InverseGate get
