@@ -1,12 +1,140 @@
 # Co-op Motion Smoothness — Design Doc
 
-Status: **draft for review**, post-comprehensive-audit, post-symptom-report.
+Status: **shipped, residual unrelated bug observed** (2026-05-28).
 Scope: guest's perceived smoothness of the host's world (and the
 guest's own avatar). Host is unchanged.
 Bar: *"never see stutters unless stuff is actually bad"* — i.e. on a
 healthy network, the guest's view of the host's world must be
 pixel-smooth at 60 fps. Visible chop is allowed only when the network is
 genuinely degraded (real packet loss, real jitter, real RTT spikes).
+
+## TL;DR — what shipped today (2026-05-28)
+
+Seven commits, all on `main`, cache-bust ended at `?v=20260528g`. The
+co-op stutter the user originally reported ("guest's own avatar jumps
+and skips the walk animation") is gone. A different, unrelated
+"bizarre" symptom is being investigated separately.
+
+| Commit  | Subject                                                              | Why                                                                                                             |
+| ------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| bdec30a | online co-op: actually wire up WebRTC DataChannel                    | WebRTC transport was installed with `role=null` and short-circuited; every session was WS-relayed.              |
+| 00fb558 | tests: add headless-Chrome e2e suite + co-op smoothness doc          | Adds `tests/e2e/` fixtures + first 4 tests, this doc.                                                           |
+| 6cce086 | tests: e2e dynamic imports use `./` not `/`; add perfPublic.mjs      | Origin-relative imports broke against `/sneakbit-html/` base; first prod numbers (WebRTC −197 ms vs WS).        |
+| 08f349a | online co-op: stop self-amplifying snap cascade on predicted self    | `shouldSnap` snapped on `behind <= 0` → host-ahead cascade on WebRTC (5 snaps every down-press on prod).        |
+| 2c58bb1 | online co-op: widen predictedSelf snap tolerance for WS-RTT jitter   | `MAX_BEHIND 3→5`, `MAX_AHEAD 1→3` to absorb WS-relay jitter spikes that were still cascading.                   |
+| fc5e625 | online co-op: drop time-based grace check + interp mirror entities   | `LATENCY_GRACE_MS = 500` jolted on any pause >500 ms; removed entirely. Also lerps mob/pushable/projectile.     |
+| d3cf22e | online co-op: drop direction-cross-product in predictedSelf snap     | Cross check fired on every turn (1-tile RTT lag on old axis became orthogonal to new direction).                |
+
+Net effect on prod (`tests/e2e/perfPublicLong.mjs` against
+`curzel.it/sneakbit-html` + `wss://sneakbit.curzel.it`):
+
+- WebRTC first-step RTT **304 ms** (was 521 ms via WS-relay; 38% win
+  from getting WebRTC actually online).
+- Stutter events in 90 s of continuous up/down cycles: **0** on
+  WebRTC, **0** on WS-only (was 5 / 0 before the cascade fix; 39 / 0
+  before the tolerance bump; persistent direction-change snaps before
+  the cross-product removal).
+
+`predictedSelf.shouldSnap` is now a single per-axis tile-distance
+bound (5 tiles); orthogonal disagreement and direction-based
+projection are gone. See "Final shape of the predicted-self
+reconciliation" below.
+
+## Status of original proposals
+
+| #   | Title                                                          | Status                                                                                                             |
+| --- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| −1  | Fix WebRTC transport init (not in original audit)              | ✅ shipped — `bdec30a`. `ensureNet` re-installs transport when runtime role transitions; DC `from` stamping fixed. |
+| 0   | Stop `predictedSelf.shouldSnap` from killing the walk animation| ✅ shipped — across `08f349a` → `d3cf22e`. Now a 5-tile-box bound; no direction projection.                       |
+| 1   | Interpolate entities the same way as players                   | ✅ shipped — `fc5e625`. `refreshMirrorEntities()` lerps `frame.x/y` per render frame.                              |
+| 2   | Bump `INTERP_DELAY_MS` to 150 ms                               | Not done. Still at 100 ms. No longer pressing now that snap cascades are gone; revisit if jitter resurfaces.       |
+| 3   | Host-time clocking                                             | Not done. Even more clearly belt-and-braces now that #0/#1 absorb the visible issues. Defer.                       |
+| 4   | Unreliable + unordered DataChannel                             | Not done. Now actually evaluable (DC is up). No reported lossy-network symptom on prod; defer.                     |
+| 5   | rAF-driven broadcaster                                         | Not done. Only relevant to backgrounded-tab strobing; no symptom reported.                                         |
+| 6   | Ship `moving` flag on entities                                 | Partially obsolete — entity interp (#1) didn't need the flag for steady-state lerp; mob sprite-row issue may       |
+|     |                                                                | still exist but was not separately confirmed in testing.                                                           |
+| 7   | DC `from` stamping                                             | ✅ shipped — `bdec30a` (folded into #−1).                                                                          |
+
+## Final shape of the predicted-self reconciliation
+
+After three rounds of iteration the snap check is now:
+
+```js
+const MAX_DIVERGENCE_TILES = 5;
+
+function shouldSnap(predicted, auth) {
+  if (predicted.tileX === auth.tileX && predicted.tileY === auth.tileY) return false;
+  const ddx = Math.abs(auth.tileX - predicted.tileX);
+  const ddy = Math.abs(auth.tileY - predicted.tileY);
+  if (ddx > MAX_DIVERGENCE_TILES) return true;
+  if (ddy > MAX_DIVERGENCE_TILES) return true;
+  return false;
+}
+```
+
+What the iteration looked like:
+
+1. **Original code** projected `(auth - predicted)` onto
+   `predicted.direction`. Tolerated `0 < behind <= 3` only (host
+   behind us along direction). Anything else, including the host
+   being a single tile ahead, snapped.
+2. **`08f349a`** added symmetric tolerance: `MAX_AHEAD_TILES = 1` so
+   the chained-step race on a fast transport (WebRTC ~10 ms RTT)
+   stopped cascading. Stopped the 5-snap-cascade-per-key-press
+   observed on prod.
+3. **`2c58bb1`** widened the bounds to `5 / 3` to absorb WS-relay
+   jitter spikes that were still cascading on the WS path. Cut the
+   90-second prod burst count from 39 → 18.
+4. **`fc5e625`** removed `LATENCY_GRACE_MS` blanket-snap. The 500 ms
+   "if idle too long, any disagreement is real divergence" heuristic
+   jolted the avatar on every pause. The tile-distance bound handles
+   real divergence by itself.
+5. **`d3cf22e`** removed the cross-product/direction projection
+   entirely. The check was firing on every turn because the old
+   along-axis lag (1-tile RTT shape) became orthogonal to the new
+   direction the moment `predicted.direction` flipped. Final form
+   bounds each axis independently — L-shaped lag from turns is
+   absorbed; only real desync beyond 5 tiles on either axis snaps.
+
+The remaining trade-off: small knockbacks (1-2 tiles orthogonal to
+the player's motion) aren't auto-corrected by this path anymore. If
+that ever becomes a visible symptom, the right fix is a host-side
+`event` op explicitly signalling "snap to this tile" rather than
+reintroducing the direction heuristic.
+
+## E2E test framework summary
+
+Built during the diagnosis; everything in `tests/e2e/`:
+
+- `fixtures/chrome.mjs` — Chrome launcher, CDP `Session`, `evalExpr`,
+  `waitFor`, `navigate`. Tests self-skip when no Chrome found (set
+  `CHROME_PATH` to override).
+- `fixtures/servers.mjs` — relay + static-server lifecycle (python3
+  with Node-only fallback).
+- `fixtures/coopSession.mjs` — `startCoopSession({appUrl, relayWs,
+  zone, entry: "deeplink" | "menu", disableWebrtc})`. Two Chrome
+  instances (separate `--user-data-dir`s; one Chrome two-tab freezes
+  the non-foreground rAF entirely on `--headless=new`). Also exports
+  `runStutterWorkload` and `runStutterLongWorkload`.
+- `webrtcLifts.test.mjs` — 3 tests guarding the WebRTC init fix.
+- `inputLatency.test.mjs` — WS vs WebRTC first-step RTT comparison.
+- `predictedSelfStutter.test.mjs` — runs up/down cycles, counts snap
+  events via per-frame x/y delta > 0.15 tile.
+- `perfPublic.mjs` — one-shot script against the public deployment.
+- `perfPublicLong.mjs` — 90-second variant with per-burst context.
+
+`npm test` runs both unit + e2e sequentially (~28 s on a quiet
+laptop). `npm run test:unit` for fast inner loop (~2 s).
+
+---
+
+(The rest of this document — the original audit, the proposal write-
+ups #0 through #7, and the open-questions section — is preserved
+below as historical context. Proposals that have shipped are marked
+with their commit; proposals that haven't are still candidates for
+future work.)
+
+---
 
 ## Reported symptoms (2026-05-28)
 
@@ -495,7 +623,7 @@ Single commit. **Highest impact per LOC of any proposal in this doc.**
 
 ---
 
-## Proposal 1 — Interpolate entities the same way as players
+## Proposal 1 — ✅ FIXED 2026-05-28 — Interpolate entities the same way as players
 
 ### What changes
 
