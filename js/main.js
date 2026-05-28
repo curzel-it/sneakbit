@@ -165,13 +165,20 @@ async function main() {
   // inventory in lockstep, so the HUDs render the right numbers.
   installAmmoHud();
   installHealthHud();
-  if (!bootGuest) {
-    installMapEditor(() => state);
-    installInteract(() => state);
-    installShooting(() => state);
-    installMelee(() => state);
-    installFastTravel(() => state);
-  }
+  // These listeners stay installed for the lifetime of the page,
+  // including during guest sessions — every install fn either gates
+  // internally on getNetRole === "guest" or only acts via a tick path
+  // that the guest loop never calls. The old `if (!bootGuest)` gate
+  // broke deep-link guests on leave: a ?join=CODE tab that switched
+  // back to offline via Leave Coop had no shoot/melee/interact/
+  // fast-travel/map-editor listeners attached, so those inputs
+  // silently did nothing until the page was reloaded into offline
+  // (which itself requires manually clearing ?join= from the URL).
+  installMapEditor(() => state);
+  installInteract(() => state);
+  installShooting(() => state);
+  installMelee(() => state);
+  installFastTravel(() => state);
   setGamepadAction("shoot", () => tryShoot());
   setGamepadAction("melee", () => tryMelee());
   setGamepadAction("interact", () => {

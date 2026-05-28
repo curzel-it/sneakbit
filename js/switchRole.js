@@ -140,6 +140,7 @@ async function setupRole(target, opts) {
   if (target === "offline") {
     closeNet();
     if (stateHandlers.onEnterOffline) await stateHandlers.onEnterOffline();
+    clearOnlineUrlParams();
     return;
   }
 
@@ -190,6 +191,24 @@ async function setupRole(target, opts) {
     if (isWelcomed()) dispatchHandshake();
     return;
   }
+}
+
+// Strip ?host / ?join / ?server from the URL when transitioning back to
+// offline. Without this a deep-link guest (?join=CODE) who left the
+// session would land in offline runtime-role-wise, but a manual reload
+// would bounce them back into guest mode via getMode() reading the
+// stale URL — the same trap that produced the "can't shoot after
+// terminating co-op" bug (the boot-time bootGuest gate hung off this).
+function clearOnlineUrlParams() {
+  if (typeof window === "undefined" || !window.history?.replaceState) return;
+  try {
+    const url = new URL(window.location.href);
+    let changed = false;
+    for (const k of ["host", "join", "server"]) {
+      if (url.searchParams.has(k)) { url.searchParams.delete(k); changed = true; }
+    }
+    if (changed) window.history.replaceState(null, "", url.toString());
+  } catch { /* ignore — non-fatal cosmetic step */ }
 }
 
 // Test seam — exposed so unit tests can verify the state-handler
