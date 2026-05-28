@@ -216,20 +216,42 @@ A representative localhost run, post-fix:
 [latency] first-step delta 23 ms (positive = WebRTC wins)
 ```
 
+And the same comparison against the production deployment
+(curzel.it/sneakbit-html + wss://sneakbit.curzel.it):
+
+```
+WS     first-step RTT 521 ms  inter-step median 235 ms  tiles 15
+WebRTC first-step RTT 324 ms  inter-step median 250 ms  tiles 15
+Delta  197 ms (positive = WebRTC wins)
+```
+
+DC stats from the WebRTC production run:
+
+```
+channels: [{label:"sneakbit", state:"open",
+            msgSent:4, msgRecv:105,
+            bytesSent:241, bytesRecv:29578}]
+transport: {bytesSent:4164, bytesRecv:36322,
+            packetsSent:64, packetsRecv:114, dtlsState:"connected"}
+selectedPair: {currentRoundTripTime: 0.001}
+```
+
 Observations:
 
-- **First-step RTT is ~300 ms on either path** on localhost. That's
-  dominated by `ROTATE_COMMIT_DELAY` (60 ms) + step duration (220 ms)
-  + broadcast interval (≤50 ms). Transport contributes single-digit
-  ms here — the comparison only gets meaningful with real internet
-  RTT in the path.
-- **Inter-step cadence is ~233–250 ms**, alternating between 200 and
-  250 — that's the broadcaster ticking every 50 ms aliased against
-  220 ms step durations. Same on both transports.
-- **The 11–25 ms WebRTC lead** on the first-step RTT is consistent
-  across runs but small relative to noise on localhost. The harness
-  is the load-bearing piece: re-point it at a remote relay (with real
-  ~80 ms RTT) and the delta should jump to ~70 ms.
+- **Localhost** first-step RTT is ~300 ms on either path, dominated by
+  `ROTATE_COMMIT_DELAY` (60 ms) + step duration (220 ms) + broadcast
+  interval (≤50 ms). Transport contributes single-digit ms here.
+- **Production** first-step RTT diverges sharply: WS adds ~200 ms
+  because every input round-trips through the relay; WebRTC stays
+  near the localhost number because the DC is peer-to-peer
+  (`selectedPair.currentRoundTripTime: 0.001`).
+- **Inter-step cadence is ~235–250 ms** in both environments, on both
+  transports — that's host-bound (broadcaster ticking every 50 ms
+  aliased against 220 ms step durations), independent of transport.
+- **The 197 ms WebRTC lead** on production first-step RTT is a 38%
+  reduction in input-to-confirmation latency. That's the user-felt
+  win — every key press that triggers a host-side step (shoot, melee,
+  interact, direction change) feels nearly twice as snappy.
 
 What this means for the design proposals:
 
