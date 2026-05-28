@@ -20,6 +20,27 @@ let lastAckedSeq = 0;
 let lastAckedX = null;
 let lastAckedY = null;
 let unsubs = [];
+let lastMovingAt = 0;
+
+// Reconciliation tolerance for "host hasn't caught up to me yet" lag.
+// During continuous motion the guest's local prediction is naturally
+// ~1 tile ahead of auth (input RTT + ~50 ms broadcaster wait), so a
+// strict tile-match snap fires on every step boundary and rubber-bands
+// the guest's own avatar visibly. We accept up to MAX_BEHIND_TILES of
+// "auth is behind us along the direction we're moving" without
+// snapping — that's expected latency, not a divergence. Orthogonal
+// disagreements, auth being AHEAD of us, or large gaps (>MAX) still
+// snap. After we stop moving, we keep tolerating latency for
+// LATENCY_GRACE_MS so the host's remaining lag deltas can land
+// without a backward teleport on the user's "just stopped" frame.
+const MAX_BEHIND_TILES = 3;
+const LATENCY_GRACE_MS = 500;
+const DIR_VEC = {
+  up:    { dx:  0, dy: -1 },
+  down:  { dx:  0, dy:  1 },
+  left:  { dx: -1, dy:  0 },
+  right: { dx:  1, dy:  0 },
+};
 
 export function installPredictedSelf(net) {
   if (installed) return;
@@ -39,6 +60,7 @@ export function uninstallPredictedSelf() {
   lastAckedSeq = 0;
   lastAckedX = null;
   lastAckedY = null;
+  lastMovingAt = 0;
 }
 
 export const _uninstallPredictedSelfForTesting = uninstallPredictedSelf;
@@ -58,6 +80,43 @@ export function tickPredictedSelf(dt) {
   }
   const input = pollInput(1);
   updatePlayer(predicted, input, dt, zone);
+  if (predicted.step) lastMovingAt = nowMs();
+}
+
+function nowMs() {
+  return typeof performance !== "undefined" && performance?.now
+    ? performance.now()
+    : Date.now();
+}
+
+export function _shouldSnapForTesting(predicted, auth, now) {
+  return shouldSnap(predicted, auth, now);
+}
+
+// Returns true when the guest must hard-snap to auth, false when the
+// disagreement is consistent with normal latency (predicted is ahead
+// of auth along the move direction) and should be left to resolve on
+// the next snapshot.
+function shouldSnap(predicted, auth, now = nowMs()) {
+  if (predicted.tileX === auth.tileX && predicted.tileY === auth.tileY) return false;
+  const dir = DIR_VEC[(predicted.direction || "").toLowerCase()];
+  if (!dir) return true;
+  // Tolerate the lag only while moving or briefly after the last step.
+  const recentlyMoving = !!predicted.step || (now - lastMovingAt) <= LATENCY_GRACE_MS;
+  if (!recentlyMoving) return true;
+  const ddx = auth.tileX - predicted.tileX;
+  const ddy = auth.tileY - predicted.tileY;
+  // Project auth relative to predicted onto our REVERSE direction.
+  // Positive = host is behind us in the direction we're moving (the
+  // expected RTT-delay shape). Zero or negative = host is ahead of us
+  // (we missed inputs) — snap forward.
+  const behind = -(ddx * dir.dx + ddy * dir.dy);
+  if (behind <= 0 || behind > MAX_BEHIND_TILES) return true;
+  // Orthogonal disagreement (cross product nonzero) means we predicted
+  // into a different lane than the host — a real divergence, snap.
+  const cross = Math.abs(ddx * dir.dy - ddy * dir.dx);
+  if (cross !== 0) return true;
+  return false;
 }
 
 function makeFromMirror() {
@@ -92,9 +151,12 @@ function onAuth(msg) {
     predicted = makeFromMirror();
     return;
   }
-  // Reconciliation: if the host's tile disagrees with our predicted tile
-  // (within rounding tolerance), snap. Tile-locked: there's no smoothing.
-  if (predicted.tileX !== auth.tileX || predicted.tileY !== auth.tileY) {
+  // Reconciliation: snap when the host's tile differs from ours AND
+  // the gap isn't just expected RTT lag along our move direction.
+  // shouldSnap() decides; see its docstring for the latency-tolerance
+  // shape. Without this filter, continuous motion rubber-bands the
+  // guest's own avatar on every step boundary the host hasn't acked.
+  if (shouldSnap(predicted, auth)) {
     predicted.tileX = auth.tileX;
     predicted.tileY = auth.tileY;
     predicted.x = auth.x;

@@ -12,6 +12,7 @@ const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
 const {
   installPredictedSelf, _uninstallPredictedSelfForTesting,
   tickPredictedSelf, getPredictedSelf, getLastAckedSeq,
+  _shouldSnapForTesting,
 } = await import("../js/predictedSelf.js?v=20260528");
 const {
   installMirrorWorld, uninstallMirrorWorld, handleSnapshot,
@@ -107,24 +108,68 @@ test("local input advances predictedSelf within one tick", async () => {
   teardown();
 });
 
-test("authoritative delta snaps predictedSelf back on disagreement", async () => {
+test("authoritative delta snaps predictedSelf on orthogonal disagreement (host knockback)", async () => {
   const net = await setup();
   tickPredictedSelf(0.016);
   inputModule.pushInputPress(1, "down");
   for (let i = 0; i < 20; i++) tickPredictedSelf(0.016);
   assert.ok(getPredictedSelf().tileY > 5);
-  // Host says "no, you're still at (5,5)" — wall in front
+  // Orthogonal disagreement: predicted moved down, auth says we're
+  // off to the side (e.g. host-side knockback the guest didn't predict).
+  // The latency-tolerance heuristic must NOT swallow this — it's a
+  // real divergence, not RTT lag along the move axis.
   net.emit("delta", {
     op: "delta", zoneId: 1001,
-    players: [{ playerId: "p_g1", slot: 2, index: 1, x: 5, y: 5, tileX: 5, tileY: 5, direction: "down" }],
+    players: [{ playerId: "p_g1", slot: 2, index: 1, x: 7, y: 5, tileX: 7, tileY: 5, direction: "right" }],
     entities: [],
     lastSeq: { "p_g1": 1 },
   });
   const p = getPredictedSelf();
-  assert.equal(p.tileX, 5);
+  assert.equal(p.tileX, 7);
   assert.equal(p.tileY, 5);
   assert.equal(getLastAckedSeq(), 1);
   teardown();
+});
+
+test("shouldSnap: matching tiles never snap", () => {
+  const predicted = { tileX: 5, tileY: 5, direction: "right", step: null };
+  const auth = { tileX: 5, tileY: 5 };
+  assert.equal(_shouldSnapForTesting(predicted, auth, 0), false);
+});
+
+test("shouldSnap: auth 1 tile behind us in our move direction is tolerated (RTT lag)", () => {
+  // Predicted moving right at tileX=7; auth still at tileX=6. Common
+  // continuous-motion case — host is one boundary behind us.
+  const predicted = { tileX: 7, tileY: 5, direction: "right", step: { progress: 0.3 } };
+  const auth = { tileX: 6, tileY: 5 };
+  assert.equal(_shouldSnapForTesting(predicted, auth, 0), false);
+});
+
+test("shouldSnap: auth more than MAX_BEHIND tiles behind triggers a snap", () => {
+  const predicted = { tileX: 10, tileY: 5, direction: "right", step: { progress: 0.1 } };
+  const auth = { tileX: 5, tileY: 5 };
+  assert.equal(_shouldSnapForTesting(predicted, auth, 0), true);
+});
+
+test("shouldSnap: auth ahead of predicted snaps (we missed inputs)", () => {
+  const predicted = { tileX: 5, tileY: 5, direction: "right", step: { progress: 0.4 } };
+  const auth = { tileX: 6, tileY: 5 };
+  assert.equal(_shouldSnapForTesting(predicted, auth, 0), true);
+});
+
+test("shouldSnap: orthogonal disagreement snaps even mid-step", () => {
+  // Predicted moving right, auth says we shifted up — not lag, a divergence.
+  const predicted = { tileX: 7, tileY: 5, direction: "right", step: { progress: 0.5 } };
+  const auth = { tileX: 6, tileY: 4 };
+  assert.equal(_shouldSnapForTesting(predicted, auth, 0), true);
+});
+
+test("shouldSnap: idle and long-stopped → snap on any disagreement", () => {
+  // No step, no recent movement (now far past the grace window) — the
+  // host has had ample time to catch up; a remaining mismatch is real.
+  const predicted = { tileX: 7, tileY: 5, direction: "right", step: null };
+  const auth = { tileX: 6, tileY: 5 };
+  assert.equal(_shouldSnapForTesting(predicted, auth, 10_000), true);
 });
 
 test("matching authoritative delta does not jostle the predicted position", async () => {
