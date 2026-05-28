@@ -4,6 +4,13 @@ The online co-op design. One player is the **host** and runs the existing single
 
 This document is the authoritative spec for online co-op. If `README.md`, `CLAUDE.md`, or code comments disagree, this wins.
 
+> **Contributors:** every operational example below uses `sneakbit.curzel.it`
+> — that's the maintainer's production relay. **Swap it for your own
+> hostname** if you're running a fork; do not rely on `sneakbit.curzel.it`
+> being reachable, having spare capacity, or matching your client build.
+> Origin allowlist + `ALLOWED_ORIGINS` env are how you wire a client
+> origin to your own relay.
+
 ---
 
 ## Design tenets
@@ -418,6 +425,7 @@ Heartbeat. Server expects a `ping` at least every 30 s; missing pings for 60 s c
 | `4003` | UUID conflict | Show "Already playing in another tab" |
 | `4004` | Rate-limit ban | Show "Disconnected — too many messages" |
 | `4005` | Kicked by host | Show "You were removed from the session"; **do not** auto-reconnect; `switchRole("offline")` |
+| `4006` | Server at capacity (MAX_CONNECTIONS / MAX_SESSIONS reached) | Show "Server is full — try again later"; back off ≥ 30 s before retry |
 | `4500` | Internal server error / restart | Show "Server error — reconnecting…" + auto-reconnect after 3 s |
 
 ## Rate limits

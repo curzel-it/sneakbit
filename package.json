@@ -1,0 +1,12 @@
+{
+  "name": "sneakbit-html",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "serve": "python3 -m http.server 8000"
+  }
+}

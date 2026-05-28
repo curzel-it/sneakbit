@@ -84,13 +84,28 @@ test("handleTurnRequest: 405 on non-GET", () => {
 test("HTTP route /turn-credentials is wired end-to-end (503 without env)", async () => {
   const s = await startServer({ port: 0, host: "127.0.0.1" });
   try {
-    const res = await fetch(`http://${s.host}:${s.port}/turn-credentials`);
+    // Browser path: Origin header is on the allowlist → CORS is echoed.
+    // Browsers always send Origin on cross-origin fetches, so the error
+    // path still needs CORS or the console logs a misleading "blocked
+    // by CORS policy" alongside the actual 503.
+    const res = await fetch(`http://${s.host}:${s.port}/turn-credentials`, {
+      headers: { Origin: "https://curzel.it" },
+    });
     assert.equal(res.status, 503);
-    // CORS must be present on the error path too — otherwise the browser
-    // logs a misleading "blocked by CORS policy" alongside the actual
-    // 503, even though primeIceServers's catch already handles the
-    // failure cleanly with a STUN-only fallback.
-    assert.equal(res.headers.get("access-control-allow-origin"), "*");
+    assert.equal(res.headers.get("access-control-allow-origin"), "https://curzel.it");
+    // Tooling path: no Origin header → no ACAO header (no browser to
+    // confuse). curl/native clients ignore CORS anyway.
+    const resNoOrigin = await fetch(`http://${s.host}:${s.port}/turn-credentials`);
+    assert.equal(resNoOrigin.status, 503);
+    assert.equal(resNoOrigin.headers.get("access-control-allow-origin"), null);
+    // Third-party page: Origin off the allowlist → no ACAO header so
+    // the browser refuses to expose the response. This is the S5 fix
+    // from CODE_REVIEW.md — TURN bandwidth is a finite resource.
+    const resBadOrigin = await fetch(`http://${s.host}:${s.port}/turn-credentials`, {
+      headers: { Origin: "https://attacker.example" },
+    });
+    assert.equal(resBadOrigin.status, 503);
+    assert.equal(resBadOrigin.headers.get("access-control-allow-origin"), null);
   } finally {
     await s.close();
   }

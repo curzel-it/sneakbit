@@ -35,6 +35,17 @@ export class WsConnection extends EventEmitter {
   }
 
   _onData(chunk) {
+    // Pathological-peer guard. `parseFrames` already enforces
+    // MAX_FRAME_PAYLOAD per frame, but a slow reader could still drip
+    // bytes into `this.buf` faster than we parse them — each `concat`
+    // copies the running accumulator, so a 1 MB buffer that grows by a
+    // byte per chunk degenerates to O(n^2). Cap the unparsed buffer at
+    // 2× the frame limit (one in-progress frame plus a worst-case
+    // queued one) and drop the connection past that.
+    if (this.buf.length + chunk.length > 2 * MAX_FRAME_PAYLOAD) {
+      this.close(1009, "buffer overrun");
+      return;
+    }
     this.buf = Buffer.concat([this.buf, chunk]);
     let parsed;
     try { parsed = parseFrames(this.buf); }

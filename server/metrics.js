@@ -23,7 +23,7 @@ export function createMetrics({ now = () => Date.now() } = {}) {
     },
     frames: { input: 0, snapshot: 0, delta: 0, event: 0, webrtcSignal: 0 },
     bytesRelayed: 0,
-    drops: { perOp: 0, severeClose: 0, idleClose: 0 },
+    drops: { perOp: 0, severeClose: 0, idleClose: 0, capacityClose: 0 },
   };
 
   function connOpened() { state.connections.current++; state.connections.total++; }
@@ -53,6 +53,7 @@ export function createMetrics({ now = () => Date.now() } = {}) {
   function dropPerOp() { state.drops.perOp++; }
   function dropSevere() { state.drops.severeClose++; }
   function dropIdle() { state.drops.idleClose++; }
+  function dropCapacity() { state.drops.capacityClose++; }
 
   function snapshot() {
     return {
@@ -67,7 +68,7 @@ export function createMetrics({ now = () => Date.now() } = {}) {
     sessionOpened, sessionClosed,
     peerJoined, peerLeft,
     frameRelayed,
-    dropPerOp, dropSevere, dropIdle,
+    dropPerOp, dropSevere, dropIdle, dropCapacity,
     snapshot,
   };
 }

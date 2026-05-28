@@ -29,10 +29,19 @@ export function isValidUuidV4(s) {
 
 // Per-spec close codes. 4002 = idle (no pings for the timeout window);
 // 4004 = severe rate violation — the client gets banned for a minute;
-// 4005 = kicked by host (host.kick op) — no auto-reconnect on the client.
+// 4005 = kicked by host (host.kick op) — no auto-reconnect on the client;
+// 4006 = server at capacity (MAX_CONNECTIONS / MAX_SESSIONS reached).
 export const CLOSE_IDLE = 4002;
 export const CLOSE_RATE = 4004;
 export const CLOSE_KICKED = 4005;
+export const CLOSE_CAPACITY = 4006;
+
+// Defense-in-depth caps. Numbers are generous for a single-VPS hobby
+// relay but bound the worst case: a persistent attacker (or a popular
+// launch) cannot exhaust RAM by opening unbounded sockets or sessions.
+// Both can be tuned via env without code changes.
+export const DEFAULT_MAX_CONNECTIONS = 500;
+export const DEFAULT_MAX_SESSIONS = 100;
 
 // Per-spec rate limits (docs/server.md §Rate limits).
 // Burst-friendly: input + snapshot/delta can hit 30/s, everything else
@@ -57,12 +66,29 @@ export function createRelay({
   graceMs = DEFAULT_GRACE_MS,
   idleTimeoutMs = IDLE_TIMEOUT_MS,
   idleCheckMs = IDLE_CHECK_MS,
+  maxConnections = DEFAULT_MAX_CONNECTIONS,
+  maxSessions = DEFAULT_MAX_SESSIONS,
   log = defaultLog,
   metrics = createMetrics(),
 } = {}) {
   const conns = new Set();
+  // Track ghost-grace timers so drain()/shutdown() can clear them; an
+  // un-cleared timer keeps the event loop alive past SIGTERM and can
+  // fire against torn-down metrics. Cleared on session destroy, too.
+  const graceTimers = new Set();
+  // Set by drain(): once true, onDisconnect skips arming fresh grace
+  // timers. Without this, the upgradedSockets.destroy() call that
+  // follows drain() triggers onDisconnect → setTimeout(graceMs),
+  // which keeps the event loop alive past SIGTERM.
+  let draining = false;
 
   function attach(ws) {
+    if (conns.size >= maxConnections) {
+      metrics.dropCapacity?.();
+      log.warn("conn.capacity", { open: conns.size, cap: maxConnections });
+      try { ws.close(CLOSE_CAPACITY, "capacity"); } catch { /* ignore */ }
+      return null;
+    }
     const ctx = {
       ws,
       uuid: null,
@@ -153,6 +179,14 @@ export function createRelay({
     ctx.uuid = msg.uuid;
     ctx.playerId = makePlayerId(msg.uuid);
     ctx.name = makeName(msg.uuid);
+    // Validate the optional client tag (e.g. "sneakbit-html"). Capped at
+    // 32 chars so a verbose client string can't bloat every log line, and
+    // stashed on the ctx so session.open / peer.join can include it —
+    // useful for "stuck client" triage without forcing the client to
+    // re-identify on every frame.
+    if (typeof msg.client === "string" && msg.client.length <= 32) {
+      ctx.client = msg.client;
+    }
     ctx.authed = true;
     ctx.ws.sendJSON({
       op: "welcome",
@@ -190,11 +224,17 @@ export function createRelay({
     if (existing && prevRole === "guest") {
       ejectStaleGuest(existing, ctx);
     }
+    if (store.sessionsById.size >= maxSessions) {
+      metrics.dropCapacity?.();
+      log.warn("session.capacity", { open: store.sessionsById.size, cap: maxSessions });
+      ctx.ws.close(CLOSE_CAPACITY, "capacity");
+      return;
+    }
     const session = store.createSession(ctx.uuid, ctx.ws);
     ctx.role = "host";
     ctx.sessionId = session.id;
     metrics.sessionOpened();
-    log.info("session.open", { sessionId: session.id, code: session.code, hostUuid: ctx.uuid });
+    log.info("session.open", { sessionId: session.id, code: session.code, hostUuid: ctx.uuid, client: ctx.client });
     ctx.ws.sendJSON({
       op: "host.opened",
       sessionId: session.id,
@@ -310,9 +350,9 @@ export function createRelay({
     });
     if (!isReconnect) {
       metrics.peerJoined();
-      log.info("peer.join", { sessionId: session.id, playerId: ctx.playerId, slot: guest.slot });
+      log.info("peer.join", { sessionId: session.id, playerId: ctx.playerId, slot: guest.slot, client: ctx.client });
     } else {
-      log.info("peer.rejoin", { sessionId: session.id, playerId: ctx.playerId, slot: guest.slot });
+      log.info("peer.rejoin", { sessionId: session.id, playerId: ctx.playerId, slot: guest.slot, client: ctx.client });
     }
     const peerFrame = {
       op: isReconnect ? "peer.rejoined" : "peer.joined",
@@ -355,7 +395,17 @@ export function createRelay({
     if (ctx.role !== "guest") return;
     const session = store.sessionsById.get(ctx.sessionId);
     if (!session || !session.hostConn) return;
-    const out = { ...msg, from: ctx.playerId };
+    // Whitelist what we relay. A guest that appends a giant `payload` to
+    // an `input` frame would otherwise have the server fan their bytes
+    // out at the host's bandwidth cost.
+    const out = {
+      op: "input",
+      from: ctx.playerId,
+      seq: typeof msg.seq === "number" ? msg.seq : 0,
+      intent: typeof msg.intent === "string" ? msg.intent : "",
+    };
+    if (typeof msg.dir === "string") out.dir = msg.dir;
+    if (typeof msg.t === "number") out.t = msg.t;
     session.hostConn.sendJSON(out);
     metrics.frameRelayed("input", jsonByteLength(out));
   }
@@ -423,6 +473,7 @@ export function createRelay({
   }
 
   function onDisconnect(ctx) {
+    if (draining) return;
     if (!ctx.sessionId) return;
     const session = store.sessionsById.get(ctx.sessionId);
     if (!session) return;
@@ -432,11 +483,13 @@ export function createRelay({
       for (const g of session.guests.values()) {
         if (g.conn) g.conn.sendJSON({ op: "host.ghosted" });
       }
-      setTimeout(() => {
+      const t = setTimeout(() => {
+        graceTimers.delete(t);
         const s = store.sessionsById.get(ctx.sessionId);
         if (!s || s.hostConn) return;
         closeSession(s, "host_timeout");
       }, graceMs);
+      graceTimers.add(t);
       return;
     }
     if (ctx.role === "guest") {
@@ -448,7 +501,8 @@ export function createRelay({
       for (const g of session.guests.values()) {
         if (g.uuid !== ctx.uuid && g.conn) g.conn.sendJSON(ghostFrame);
       }
-      setTimeout(() => {
+      const t = setTimeout(() => {
+        graceTimers.delete(t);
         const s = store.sessionsById.get(ctx.sessionId);
         if (!s) return;
         const g = s.guests.get(ctx.uuid);
@@ -466,6 +520,7 @@ export function createRelay({
         metrics.peerLeft("timeout");
         log.info("peer.left", { sessionId: ctx.sessionId, playerId: ctx.playerId, reason: "timeout" });
       }, graceMs);
+      graceTimers.add(t);
     }
   }
 
@@ -516,7 +571,10 @@ export function createRelay({
   // and lets its own teardown drop the upgraded TCP sockets so the
   // OS doesn't half-close in the middle of a flushing frame.
   function drain({ flushMs = 100 } = {}) {
+    draining = true;
     clearInterval(idleTimer);
+    for (const t of graceTimers) clearTimeout(t);
+    graceTimers.clear();
     const frame = { op: "session.closed", reason: "server_restart" };
     for (const session of store.sessionsById.values()) {
       if (session.hostConn) {
@@ -535,6 +593,8 @@ export function createRelay({
 
   function shutdown() {
     clearInterval(idleTimer);
+    for (const t of graceTimers) clearTimeout(t);
+    graceTimers.clear();
   }
 
   return { attach, store, shutdown, drain, metrics };

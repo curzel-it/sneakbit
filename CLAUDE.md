@@ -15,7 +15,7 @@ The original game's source lives at `../dev/sneakbit`. Treat it as read-only ref
 ## Testing, committing, shipping
 - **Unit tests** use Node's built-in test runner — no framework, no devDependencies. Tests live in `tests/` and end in `.test.js`. Run them with:
   ```bash
-  node --test tests/
+  npm test
   ```
   Run them often — at minimum before each commit. They're fast; there's no excuse not to.
 - **Commit often.** Small focused commits beat large ones. Each commit should leave the game in a runnable state (`node --test` green, page loads without console errors).
@@ -23,10 +23,8 @@ The original game's source lives at `../dev/sneakbit`. Treat it as read-only ref
 
 ## Server (`server/`)
 - The Node server lives in `server/` — vanilla `node:http`, no deps, ES modules, same "one feature one file" rule as the client. Run locally with `node server/index.js` (defaults: `127.0.0.1:8090`). `GET /health` returns 200 "ok" — keep that endpoint cheap.
-- Production lives at <https://sneakbit.curzel.it> on the shared VPS (`195.181.240.96`, Ubuntu). systemd unit `sneakbit-server`, nginx reverse proxy, TLS via certbot.
-- Deploy with `python3 deploy.py` (paramiko-based, idempotent). `--commit "msg"` to commit + push + deploy in one shot. `--install-hook` enables a `.githooks/post-commit` hook that auto-deploys when `server/` or `deploy.py` change (detached, logs to `/tmp/sneakbit-deploy.log`).
-- **The same VPS hosts `restartborgo.it` — a paying customer's static page. Keep it up.** `deploy.py` re-pushes the static site and re-validates its TLS cert every run, and the final health check fails the deploy if `https://restartborgo.it/` doesn't return 200. Before changing anything nginx-, DNS-, or certbot-related, confirm restartborgo still serves. Don't disable its vhost or `certbot delete` it.
-- The previous tenant on this VPS was `blabbers.curzel.it` (a Rust app). `deploy.py`'s purge step removes its systemd unit, files, user, and nginx vhost — idempotent, gated on existence checks. The cert is left in place (harmless).
+- Production lives at <https://sneakbit.curzel.it> on a shared Ubuntu VPS (IP in `.env` as `IP_ADDRESS`). systemd unit `sneakbit-server`, nginx reverse proxy, TLS via certbot.
+- Deploy with `python3 deploy.py` (paramiko-based, idempotent). `--commit "msg"` to commit + push + deploy in one shot.
 
 ## Style and Guidelines
 - **No build step.** Open `index.html` (or serve the folder with any static server) and reload.
@@ -35,7 +33,7 @@ The original game's source lives at `../dev/sneakbit`. Treat it as read-only ref
 - **Pixel art:** disable image smoothing on the 2D context (`ctx.imageSmoothingEnabled = false`) and round draw coordinates to integers before blitting.
 - **Naming:** files in `js/` are camelCase, matching the feature name. Exports are named, never default.
 - **One feature one file**
-- if it's an UI thing, don't implement it in the canvas (buttons, icons, conuters, dialogues, ...)
+- if it's a UI thing, don't implement it in the canvas (buttons, icons, counters, dialogues, ...)
 
 ## Architecture — one feature, one file
 Each feature lives in exactly one file. A "feature" is a single, self-contained responsibility — input handling, the player, the camera, the renderer, the game loop, etc. If a file starts handling more than one feature, split it. If two features keep reaching into each other, push the shared bit into its own file rather than fusing them.

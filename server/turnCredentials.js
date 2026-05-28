@@ -63,9 +63,10 @@ export function handleTurnRequest(req, res, env = process.env) {
     // The credentials carry their own expiry; allow the browser to cache
     // for a fraction of the TTL but always revalidate on a new session.
     "cache-control": "public, max-age=300",
-    // GitHub Pages + the relay are on different origins, so the browser
-    // needs CORS to fetch this. Same-origin (native wrapper) also works.
-    "access-control-allow-origin": "*",
   });
+  // Note: CORS Access-Control-Allow-Origin is set by the caller (index.js
+  // applyGatedCors) against the relay's origin allowlist — see S5 in
+  // CODE_REVIEW.md. TURN credentials are HMAC tokens; any third-party
+  // page that could fetch them with `*` could spend our TURN bandwidth.
   res.end(JSON.stringify(creds) + "\n");
 }

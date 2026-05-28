@@ -28,61 +28,144 @@ function resolveGitSha() {
 const GIT_SHA = resolveGitSha();
 const STARTED_AT = new Date().toISOString();
 
-// Always-on CORS: the client lives on curzel.it (GitHub Pages) and the
-// relay is at sneakbit.curzel.it — cross-origin by definition. Every HTTP
-// response gets the same permissive headers so error/empty responses
-// (503 when TURN is unset, 404 fallbacks, etc.) don't spam the browser
-// console with CORS errors. The WS upgrade has no CORS — the
-// `Sec-WebSocket-Origin` check is a separate mechanism we don't use.
-const CORS_HEADERS = {
+// Cross-origin policy. The client lives on curzel.it (GitHub Pages) and
+// the relay is at sneakbit.curzel.it — cross-origin by definition. We
+// echo the request's Origin if it's on the allowlist; otherwise no
+// Access-Control-Allow-Origin header is emitted and the browser refuses
+// the response. Tooling (no Origin) gets through unchanged — same posture
+// as the WS upgrade in originAllowlist.js. /health, /version, /, OPTIONS
+// stay wildcard because they leak nothing sensitive; /metrics and
+// /turn-credentials are origin-gated to protect their respective
+// resources (metric leakage, TURN bandwidth).
+const SAFE_CORS_HEADERS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, HEAD, OPTIONS",
-  "access-control-allow-headers": "content-type",
+  "access-control-allow-headers": "content-type, authorization",
   "access-control-max-age": "86400",
 };
 
-function applyCors(res) {
-  for (const [k, v] of Object.entries(CORS_HEADERS)) res.setHeader(k, v);
+function applySafeCors(res) {
+  for (const [k, v] of Object.entries(SAFE_CORS_HEADERS)) res.setHeader(k, v);
 }
 
-export function startServer({ port = PORT, host = HOST, graceMs, idleTimeoutMs, idleCheckMs, allowedOrigins } = {}) {
-  const relay = createRelay({ graceMs, idleTimeoutMs, idleCheckMs });
+function applyGatedCors(res, originHeader, allowedHosts) {
+  res.setHeader("access-control-allow-methods", "GET, HEAD, OPTIONS");
+  res.setHeader("access-control-allow-headers", "content-type, authorization");
+  res.setHeader("access-control-max-age", "86400");
+  res.setHeader("vary", "origin");
+  if (!originHeader) return; // non-browser tooling — no ACAO needed.
+  if (!isOriginAllowed(originHeader, allowedHosts)) return;
+  res.setHeader("access-control-allow-origin", originHeader);
+}
+
+export function startServer({
+  port = PORT,
+  host = HOST,
+  graceMs,
+  idleTimeoutMs,
+  idleCheckMs,
+  allowedOrigins,
+  maxConnections,
+  maxSessions,
+  metricsToken = process.env.METRICS_TOKEN,
+} = {}) {
+  const relay = createRelay({ graceMs, idleTimeoutMs, idleCheckMs, maxConnections, maxSessions });
   const allowedHosts = parseAllowedHosts(allowedOrigins ?? process.env.ALLOWED_ORIGINS);
   const upgradedSockets = new Set();
+  // /metrics rate limiter: at most METRICS_RPS_PER_IP requests per
+  // second per source IP. Cheap dictionary keyed by remoteAddress; the
+  // map is reset each second so the worst-case memory footprint is
+  // O(unique-IPs-per-second). Defense-in-depth — the endpoint is also
+  // gated by an optional bearer token (METRICS_TOKEN).
+  const metricsRl = new Map();
+  let metricsRlEpoch = 0;
   const server = createServer((req, res) => {
-    applyCors(res);
     if (req.method === "OPTIONS") {
+      applySafeCors(res);
       res.writeHead(204);
       res.end();
       return;
     }
     if (req.method === "GET" && req.url === "/health") {
+      applySafeCors(res);
       res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
       res.end("ok\n");
       return;
     }
     if (req.method === "GET" && req.url === "/version") {
+      applySafeCors(res);
       res.writeHead(200, { "content-type": "application/json; charset=utf-8" });
       res.end(JSON.stringify({ git: GIT_SHA, startedAt: STARTED_AT }) + "\n");
       return;
     }
     if (req.method === "GET" && req.url === "/metrics") {
+      applyGatedCors(res, req.headers.origin, allowedHosts);
+      if (!checkMetricsAuth(req)) {
+        res.writeHead(401, {
+          "content-type": "text/plain; charset=utf-8",
+          "www-authenticate": "Bearer realm=\"metrics\"",
+        });
+        res.end("unauthorized\n");
+        return;
+      }
+      if (!checkMetricsRate(req)) {
+        res.writeHead(429, { "content-type": "text/plain; charset=utf-8" });
+        res.end("rate limited\n");
+        return;
+      }
       res.writeHead(200, { "content-type": "application/json; charset=utf-8" });
       res.end(JSON.stringify(relay.metrics.snapshot()) + "\n");
       return;
     }
     if (req.method === "GET" && req.url === "/") {
+      applySafeCors(res);
       res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
       res.end("hello from sneakbit server\n");
       return;
     }
     if (req.url === "/turn-credentials") {
+      applyGatedCors(res, req.headers.origin, allowedHosts);
       handleTurnRequest(req, res);
       return;
     }
+    applySafeCors(res);
     res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
     res.end("not found\n");
   });
+
+  // Bearer-token gate on /metrics. Disabled (open) by default for
+  // backward compatibility; once METRICS_TOKEN is set in the systemd
+  // env, scrapers must send `Authorization: Bearer <token>`.
+  function checkMetricsAuth(req) {
+    if (!metricsToken) return true;
+    const h = req.headers.authorization;
+    if (typeof h !== "string") return false;
+    const prefix = "bearer ";
+    if (h.length < prefix.length || h.slice(0, prefix.length).toLowerCase() !== prefix) {
+      return false;
+    }
+    return h.slice(prefix.length).trim() === metricsToken;
+  }
+
+  // Per-IP rate limit on /metrics: 10 req/s/IP. Snapshot is cheap (a
+  // few dozen integers serialised) but unauthenticated scraping at
+  // 1000 rps is still wasted CPU + a soft DoS amplifier. Trusts
+  // remoteAddress directly — there's no proxy in front advertising
+  // X-Forwarded-For at this hop; nginx is the only upstream and lives
+  // on 127.0.0.1.
+  function checkMetricsRate(req) {
+    const METRICS_RPS_PER_IP = 10;
+    const now = Date.now();
+    const epoch = Math.floor(now / 1000);
+    if (epoch !== metricsRlEpoch) {
+      metricsRl.clear();
+      metricsRlEpoch = epoch;
+    }
+    const ip = req.socket?.remoteAddress || "unknown";
+    const n = (metricsRl.get(ip) || 0) + 1;
+    metricsRl.set(ip, n);
+    return n <= METRICS_RPS_PER_IP;
+  }
 
   server.on("upgrade", (req, socket) => {
     const upgrade = (req.headers.upgrade || "").toLowerCase();

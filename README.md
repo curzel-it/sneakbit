@@ -21,14 +21,24 @@ Up to four players (one host + three guests) can share the host's world. The hos
 No build step. Serve the folder with any static HTTP server (browsers block `fetch` on `file://`):
 
 ```bash
-# Python
-python3 -m http.server 8000
-
-# or Node
+npm run serve            # python3 -m http.server 8000
+# or
 npx http-server -p 8000
 ```
 
 Then open <http://localhost:8000>.
+
+## Tests
+
+```bash
+npm test                 # node --test tests/*.test.js
+```
+
+No devDependencies — uses Node's built-in test runner.
+
+## Server
+
+Online co-op is brokered by a tiny Node relay in [`server/`](./server) (vanilla `node:http`, no deps). Run locally with `node server/index.js`. Full protocol spec in [docs/server.md](./docs/server.md).
 
 ## Controls (phase 1)
 
@@ -64,4 +74,15 @@ Level data in `data/` is copied verbatim from `../dev/sneakbit/data/`.
 
 ## Credits
 
-All art, music, design, and original code by [Federico Curzel](https://github.com/curzel-it). See the [original repo](https://github.com/curzel-it/sneakbit) for the full credits.
+* Art, design, and original code by [Federico Curzel](https://github.com/curzel-it)
+* Music by [Filippo Vicarelli](https://www.filippovicarelli.com/8bit-game-background-music)
+* Sound effects by [SubspaceAudio](https://opengameart.org/content/512-sound-effects-8-bit-style)
+* Font by [HarvettFox96](https://dl.dafont.com/dl/?f=pixel_operator)
+
+## Contributing
+
+PRs welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
+
+## License
+
+[MIT](./LICENSE) for the code in this repo. Third-party assets keep their original licenses (see Credits above).
