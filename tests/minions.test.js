@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { loadSpeciesData } = await import("../js/species.js?v=20260528g");
+const { loadSpeciesData } = await import("../js/species.js?v=20260528h");
 
 // Boss 4008 ("grapevine") spawns minion 4009 ("grapeberry") when the
 // player is in line of sight but out of melee range. Minion is a normal
@@ -16,7 +16,7 @@ loadSpeciesData([
     sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
 ]);
 
-const { tickMinionSpawning, _resetMinionsForTesting } = await import("../js/minions.js?v=20260528g");
+const { tickMinionSpawning, _resetMinionsForTesting } = await import("../js/minions.js?v=20260528h");
 
 function makeZone(entities) {
   return { id: 1, cols: 30, rows: 30, entities };

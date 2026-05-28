@@ -3,7 +3,7 @@
 // future drift between the two ports is caught here.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { sortingKey } from "../js/entities.js?v=20260528g";
+import { sortingKey } from "../js/entities.js?v=20260528h";
 
 const OVERLAY = 99;
 const UNDERLAY = -1;

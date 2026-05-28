@@ -4,7 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { loadSpeciesData } = await import("../js/species.js?v=20260528g");
+const { loadSpeciesData } = await import("../js/species.js?v=20260528h");
 
 // Minimal species: the shield (used by playerHealth damage reduction) +
 // the kunai launcher default + a kunai bullet.
@@ -21,12 +21,12 @@ loadSpeciesData([
     sprite_frame: { x: 4, y: 0, w: 1, h: 1 } },
 ]);
 
-const playerHealth = await import("../js/playerHealth.js?v=20260528g");
-const inventory = await import("../js/inventory.js?v=20260528g");
-const equipment = await import("../js/equipment.js?v=20260528g");
-const storage = await import("../js/storage.js?v=20260528g");
-const coopMode = await import("../js/coopMode.js?v=20260528g");
-const { updateCamera, createCamera } = await import("../js/camera.js?v=20260528g");
+const playerHealth = await import("../js/playerHealth.js?v=20260528h");
+const inventory = await import("../js/inventory.js?v=20260528h");
+const equipment = await import("../js/equipment.js?v=20260528h");
+const storage = await import("../js/storage.js?v=20260528h");
+const coopMode = await import("../js/coopMode.js?v=20260528h");
+const { updateCamera, createCamera } = await import("../js/camera.js?v=20260528h");
 
 function freshAll() {
   storage._resetStorageForTesting();

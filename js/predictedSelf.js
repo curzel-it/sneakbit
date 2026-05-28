@@ -8,11 +8,13 @@
 // The renderer is updated separately to draw the predicted self in
 // place of the mirror's lagged copy for the guest's own slot.
 
-import { createPlayer, updatePlayer } from "./player.js?v=20260528g";
-import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528g";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528g";
-import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528g";
-import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js?v=20260528g";
+import { createPlayer, updatePlayer } from "./player.js?v=20260528h";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528h";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528h";
+import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528h";
+import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js?v=20260528h";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260528h";
+import { getValue } from "./storage.js?v=20260528h";
 
 let predicted = null;
 let installed = false;
@@ -44,6 +46,25 @@ let unsubs = [];
 // anymore — they'd need a host-side event op to trigger an explicit
 // snap if we ever observe the bug.
 const MAX_DIVERGENCE_TILES = 5;
+
+// Debug capture for "guest stuck on host" diagnosis. Activated by adding
+// `?debug=snap` to the URL. When the predicted/auth gap reaches the
+// pre-snap threshold, snapshots both views' state into a rolling buffer
+// on window.__sbSnapDebug. Lets us tell whether the host is stuck because
+// of (a) a mirror-vs-host blocker disagreement (storage-flag-gated
+// visibility), (b) a gate-key inventory disagreement, or (c) inputs not
+// reaching the host at all (input-seq vs last-acked-seq).
+const DEBUG_SNAP = typeof window !== "undefined"
+  && /[?&]debug=snap\b/.test(window.location?.search || "");
+const SNAP_DEBUG_CAPTURE_THRESHOLD = 3;
+const SNAP_DEBUG_BUFFER_CAP = 16;
+
+const DEBUG_DIR_VEC = {
+  up:    { dx:  0, dy: -1 },
+  down:  { dx:  0, dy:  1 },
+  left:  { dx: -1, dy:  0 },
+  right: { dx:  1, dy:  0 },
+};
 
 export function installPredictedSelf(net) {
   if (installed) return;
@@ -133,6 +154,7 @@ function onAuth(msg) {
     predicted = makeFromMirror();
     return;
   }
+  if (DEBUG_SNAP) captureDivergence(predicted, auth, msg);
   // Reconciliation: snap when the host's tile differs from ours AND
   // the gap isn't just expected RTT lag along our move direction.
   // shouldSnap() decides; see its docstring for the latency-tolerance
@@ -177,4 +199,124 @@ function replayUnackedInputs() {
       default: break;
     }
   }
+}
+
+function captureDivergence(predicted, auth, msg) {
+  try {
+    const ddx = Math.abs(auth.tileX - predicted.tileX);
+    const ddy = Math.abs(auth.tileY - predicted.tileY);
+    if (ddx < SNAP_DEBUG_CAPTURE_THRESHOLD && ddy < SNAP_DEBUG_CAPTURE_THRESHOLD) return;
+    const buf = ensureDebugBuffer();
+    const last = buf[buf.length - 1];
+    if (last
+      && last.auth.tileX === auth.tileX && last.auth.tileY === auth.tileY
+      && last.predicted.tileX === predicted.tileX && last.predicted.tileY === predicted.tileY) return;
+
+    const mirror = getMirrorZone();
+    const authDir = (auth.direction || predicted.direction || "down").toLowerCase();
+    const predDir = (predicted.direction || "down").toLowerCase();
+    const authVec = DEBUG_DIR_VEC[authDir] || { dx: 0, dy: 0 };
+    const predVec = DEBUG_DIR_VEC[predDir] || { dx: 0, dy: 0 };
+    const authFrontX = auth.tileX + authVec.dx;
+    const authFrontY = auth.tileY + authVec.dy;
+    const predFrontX = predicted.tileX + predVec.dx;
+    const predFrontY = predicted.tileY + predVec.dy;
+
+    const entry = {
+      t: Date.now(),
+      ddx, ddy,
+      msgOp: msg?.op,
+      msgZoneId: msg?.zoneId,
+      mirrorZoneId: mirror?.id,
+      auth: { tileX: auth.tileX, tileY: auth.tileY, direction: auth.direction },
+      predicted: {
+        tileX: predicted.tileX,
+        tileY: predicted.tileY,
+        direction: predicted.direction,
+        hasStep: !!predicted.step,
+      },
+      authFront: {
+        x: authFrontX,
+        y: authFrontY,
+        entities: describeEntitiesAt(mirror, authFrontX, authFrontY),
+      },
+      predictedFront: {
+        x: predFrontX,
+        y: predFrontY,
+        entities: describeEntitiesAt(mirror, predFrontX, predFrontY),
+      },
+      input: {
+        currentSeq: getSeq(),
+        lastAckedSeq,
+        unackedCount: getInputLog().length,
+      },
+      storageHints: collectStorageHints(mirror, authFrontX, authFrontY),
+    };
+    buf.push(entry);
+    while (buf.length > SNAP_DEBUG_BUFFER_CAP) buf.shift();
+    if (typeof console !== "undefined") {
+      console.warn(`[sbSnap] divergence ddx=${ddx} ddy=${ddy}`
+        + ` authFront=(${authFrontX},${authFrontY})`
+        + ` blockers=${entry.authFront.entities.length}`
+        + ` unacked=${entry.input.unackedCount}`,
+        entry);
+    }
+  } catch (e) {
+    if (typeof console !== "undefined") console.warn("[sbSnap] capture failed", e);
+  }
+}
+
+function ensureDebugBuffer() {
+  if (typeof window === "undefined") return [];
+  if (!Array.isArray(window.__sbSnapDebug)) window.__sbSnapDebug = [];
+  return window.__sbSnapDebug;
+}
+
+function describeEntitiesAt(zone, tx, ty) {
+  if (!zone?.entities) return [];
+  const out = [];
+  for (const e of zone.entities) {
+    const f = e.frame;
+    if (!f) continue;
+    if (tx < f.x || tx >= f.x + f.w) continue;
+    if (ty < f.y || ty >= f.y + f.h) continue;
+    let visible = null;
+    try { visible = shouldBeVisible(e); } catch { visible = "throw"; }
+    out.push({
+      id: e.id,
+      species_id: e.species_id,
+      frame: { x: f.x, y: f.y, w: f.w, h: f.h },
+      direction: e.direction,
+      _open: e._open,
+      _dead: e._dead,
+      _spawned: e._spawned,
+      _invisible: e._invisible,
+      lock_type: e.lock_type,
+      display_conditions: e.display_conditions,
+      shouldBeVisible: visible,
+    });
+  }
+  return out;
+}
+
+function collectStorageHints(zone, tx, ty) {
+  const out = {};
+  if (!zone?.entities) return out;
+  for (const e of zone.entities) {
+    const f = e.frame;
+    if (!f) continue;
+    if (tx < f.x || tx >= f.x + f.w) continue;
+    if (ty < f.y || ty >= f.y + f.h) continue;
+    if (e.id != null) {
+      const k = `item_collected.${e.id}`;
+      out[k] = getValue(k);
+    }
+    const conds = e.display_conditions;
+    if (Array.isArray(conds)) {
+      for (const c of conds) {
+        if (c?.key && !(c.key in out)) out[c.key] = getValue(c.key);
+      }
+    }
+  }
+  return out;
 }
