@@ -6,19 +6,19 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260528f");
+  await import("../js/onlineMode.js?v=20260528g");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js?v=20260528f");
+  await import("../js/onlineBootstrap.js?v=20260528g");
 const {
   installPredictedSelf, _uninstallPredictedSelfForTesting,
   tickPredictedSelf, getPredictedSelf, getLastAckedSeq,
   _shouldSnapForTesting,
-} = await import("../js/predictedSelf.js?v=20260528f");
+} = await import("../js/predictedSelf.js?v=20260528g");
 const {
   installMirrorWorld, uninstallMirrorWorld, handleSnapshot,
-} = await import("../js/mirrorWorld.js?v=20260528f");
-const inputModule = await import("../js/input.js?v=20260528f");
-const { loadSpeciesData } = await import("../js/species.js?v=20260528f");
+} = await import("../js/mirrorWorld.js?v=20260528g");
+const inputModule = await import("../js/input.js?v=20260528g");
+const { loadSpeciesData } = await import("../js/species.js?v=20260528g");
 
 function makeFakeZone(id) {
   return {
@@ -108,24 +108,24 @@ test("local input advances predictedSelf within one tick", async () => {
   teardown();
 });
 
-test("authoritative delta snaps predictedSelf on orthogonal disagreement (host knockback)", async () => {
+test("authoritative delta snaps predictedSelf on far divergence (host knockback or warp)", async () => {
   const net = await setup();
   tickPredictedSelf(0.016);
   inputModule.pushInputPress(1, "down");
   for (let i = 0; i < 20; i++) tickPredictedSelf(0.016);
   assert.ok(getPredictedSelf().tileY > 5);
-  // Orthogonal disagreement: predicted moved down, auth says we're
-  // off to the side (e.g. host-side knockback the guest didn't predict).
-  // The latency-tolerance heuristic must NOT swallow this — it's a
-  // real divergence, not RTT lag along the move axis.
+  // Auth says we're 7 tiles right of where predicted thinks — beyond
+  // MAX_DIVERGENCE_TILES. Snap. (Small orthogonal disagreement is
+  // tolerated now to absorb direction-change L-shapes; >5 tiles on
+  // either axis is still treated as real desync.)
   net.emit("delta", {
     op: "delta", zoneId: 1001,
-    players: [{ playerId: "p_g1", slot: 2, index: 1, x: 7, y: 5, tileX: 7, tileY: 5, direction: "right" }],
+    players: [{ playerId: "p_g1", slot: 2, index: 1, x: 12, y: 5, tileX: 12, tileY: 5, direction: "right" }],
     entities: [],
     lastSeq: { "p_g1": 1 },
   });
   const p = getPredictedSelf();
-  assert.equal(p.tileX, 7);
+  assert.equal(p.tileX, 12);
   assert.equal(p.tileY, 5);
   assert.equal(getLastAckedSeq(), 1);
   teardown();
@@ -168,20 +168,31 @@ test("shouldSnap: auth 1 tile ahead along direction is tolerated (chained-step r
   assert.equal(_shouldSnapForTesting(predicted, auth, 0), false);
 });
 
-test("shouldSnap: auth more than MAX_AHEAD tiles ahead snaps (real divergence)", () => {
-  // 4+ tiles ahead exceeds MAX_AHEAD_TILES = 3. Below that, treat as
-  // post-direction-change ghost lag (the WS-relay path can leave the
-  // guest 2-3 tiles behind the host after a direction change before
-  // the system stabilises).
+test("shouldSnap: auth ahead by 4 tiles along direction is tolerated (jitter spike)", () => {
+  // <= MAX_DIVERGENCE_TILES on either axis is tolerated regardless of
+  // direction. Single-axis lag from a long uninterrupted walk falls
+  // here. Snap only fires when one axis exceeds the box.
   const predicted = { tileX: 5, tileY: 5, direction: "right", step: { progress: 0.4 } };
   const auth = { tileX: 9, tileY: 5 };
-  assert.equal(_shouldSnapForTesting(predicted, auth, 0), true);
+  assert.equal(_shouldSnapForTesting(predicted, auth, 0), false);
 });
 
-test("shouldSnap: orthogonal disagreement snaps even mid-step", () => {
-  // Predicted moving right, auth says we shifted up — not lag, a divergence.
+test("shouldSnap: small orthogonal disagreement is tolerated (L-shape from a turn)", () => {
+  // Predicted moving right, auth still on the down leg of a turn
+  // we just took. ddx=1, ddy=1 — orthogonal in the old code, snapped.
+  // Now treated as plausible L-shape RTT lag (within the 5-tile box)
+  // so we don't jolt the avatar every time the user rapidly changes
+  // direction.
   const predicted = { tileX: 7, tileY: 5, direction: "right", step: { progress: 0.5 } };
   const auth = { tileX: 6, tileY: 4 };
+  assert.equal(_shouldSnapForTesting(predicted, auth, 0), false);
+});
+
+test("shouldSnap: divergence beyond the per-axis bound still snaps", () => {
+  // ddx=1 (small), ddy=8 (large). Even if it's L-shape from a turn,
+  // 8 tiles of catch-up is past the bound — treat as real desync.
+  const predicted = { tileX: 7, tileY: 5, direction: "right", step: null };
+  const auth = { tileX: 6, tileY: 13 };
   assert.equal(_shouldSnapForTesting(predicted, auth, 0), true);
 });
 
@@ -190,22 +201,11 @@ test("shouldSnap: idle and 1 tile behind along direction is tolerated indefinite
   // of idleness, on the theory "after enough time the host has caught
   // up so any mismatch must be real divergence." In practice that
   // jolted the avatar every time the user paused to read text or
-  // solve a puzzle — and the symmetric tile-distance tolerances
-  // handle real divergence on their own (orthogonal mismatch snaps,
-  // >5/3-tile along-axis gap snaps). Small idle gaps now stay parked.
+  // solve a puzzle. The per-axis tile bound handles real divergence
+  // on its own; small idle gaps now stay parked.
   const predicted = { tileX: 7, tileY: 5, direction: "right", step: null };
   const auth = { tileX: 6, tileY: 5 };
   assert.equal(_shouldSnapForTesting(predicted, auth, 10_000), false);
-});
-
-test("shouldSnap: idle and orthogonally displaced still snaps", () => {
-  // Same idle predicted, but auth says we shifted to a different
-  // column — host-side event the guest didn't predict. Still a
-  // divergence; the cross-product check catches it regardless of
-  // idleness.
-  const predicted = { tileX: 7, tileY: 5, direction: "right", step: null };
-  const auth = { tileX: 7, tileY: 8 };
-  assert.equal(_shouldSnapForTesting(predicted, auth, 10_000), true);
 });
 
 test("matching authoritative delta does not jostle the predicted position", async () => {

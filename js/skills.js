@@ -12,7 +12,7 @@
 // localStorage; an override pins the skill on/off regardless of the
 // dialogue state. Useful for testing.
 
-import { getValue, setValue } from "./storage.js?v=20260528f";
+import { getValue, setValue } from "./storage.js?v=20260528g";
 
 const DIALOGUE_KEYS = {
   piercing:  "dialogue.answer.quest.ninja_skills.red_ninja.gain_piercing_knife_skill",

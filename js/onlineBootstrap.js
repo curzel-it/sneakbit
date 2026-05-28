@@ -7,11 +7,11 @@
 // handshake to issue (host.open / guest.join), so a reconnect after
 // grace re-issues the right frame automatically.
 
-import { getMode, getJoinCode, getRuntimeRole, isValidJoinCode } from "./onlineMode.js?v=20260528f";
-import { createNet } from "./net.js?v=20260528f";
-import { installWebrtcTransport } from "./webrtcTransport.js?v=20260528f";
-import { getIceServers, primeIceServers } from "./iceConfig.js?v=20260528f";
-import { flushOnReconnect } from "./guestInputForwarder.js?v=20260528f";
+import { getMode, getJoinCode, getRuntimeRole, isValidJoinCode } from "./onlineMode.js?v=20260528g";
+import { createNet } from "./net.js?v=20260528g";
+import { installWebrtcTransport } from "./webrtcTransport.js?v=20260528g";
+import { getIceServers, primeIceServers } from "./iceConfig.js?v=20260528g";
+import { flushOnReconnect } from "./guestInputForwarder.js?v=20260528g";
 
 let net = null;
 let inviteCode = null;

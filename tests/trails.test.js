@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { BIOME } = await import("../js/biomes.js?v=20260528f");
-const { tickTrails } = await import("../js/trails.js?v=20260528f");
+const { BIOME } = await import("../js/biomes.js?v=20260528g");
+const { tickTrails } = await import("../js/trails.js?v=20260528g");
 
 function makeZone(biomeCell) {
   const rows = 5, cols = 5;

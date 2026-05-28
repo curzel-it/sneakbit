@@ -1,7 +1,7 @@
 // Cycles through the 4 biome animation frames at TILE_VARIATIONS_FPS.
 // The renderer reads `.frame` each tick to know which strip to sample.
 
-import { BIOME_NUMBER_OF_FRAMES, TILE_VARIATIONS_FPS } from "./constants.js?v=20260528f";
+import { BIOME_NUMBER_OF_FRAMES, TILE_VARIATIONS_FPS } from "./constants.js?v=20260528g";
 
 export function createBiomeAnimation() {
   return { frame: 0, _t: 0 };

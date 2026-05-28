@@ -8,11 +8,11 @@
 // The renderer is updated separately to draw the predicted self in
 // place of the mirror's lagged copy for the guest's own slot.
 
-import { createPlayer, updatePlayer } from "./player.js?v=20260528f";
-import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528f";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528f";
-import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528f";
-import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js?v=20260528f";
+import { createPlayer, updatePlayer } from "./player.js?v=20260528g";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528g";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528g";
+import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528g";
+import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js?v=20260528g";
 
 let predicted = null;
 let installed = false;
@@ -21,50 +21,29 @@ let lastAckedX = null;
 let lastAckedY = null;
 let unsubs = [];
 
-// Reconciliation tolerance for normal RTT lag along the direction we're
-// walking. During continuous chained motion the guest and host step at
-// the same rate; either can briefly lead the other by a few tiles
-// depending on jitter, direction changes, and which side hit a step
-// boundary first. We tolerate asymmetrically along the move axis:
+// Reconciliation tolerance: per-axis tile distance between predicted
+// and auth that we accept as "normal RTT shape." Anything beyond this
+// box snaps; anything inside it stays.
 //
-//   * Host BEHIND us along direction (predicted ran ahead): up to
-//     MAX_BEHIND_TILES (5). On a high-RTT transport (WS-relay through
-//     a remote VPS) predicted can naturally run a few tiles ahead
-//     during a fast walk before auth catches up; the previous limit
-//     of 3 was too tight and produced visible "snap back" bursts on
-//     prod when network jitter spiked. See the WS-only run of
-//     tests/e2e/perfPublicLong.mjs — 13- and 16-snap cascades that
-//     all start with `behind > 3 → snap back`. 5 absorbs typical
-//     consumer-Wi-Fi spikes; >5 tiles is still treated as real desync.
+// We don't project onto predicted.direction anymore. Earlier versions
+// computed a cross-product against the current direction so any
+// "orthogonal" disagreement (predicted on a different lane than auth)
+// snapped immediately. That looked clean in the steady-state walking
+// case but exploded on direction changes: while you're walking down,
+// auth naturally lags by ~1 tile *on the down axis* (RTT shape, well
+// within tolerance). The moment you turn right, predicted.direction
+// flips to "right" — and that same 1-tile down-axis lag suddenly
+// reads as a cross-product hit (orthogonal to right) and snaps.
+// Every direction change triggered a snap, because every direction
+// change happened during the small window of natural along-axis lag.
 //
-//   * Host AHEAD of us along direction: up to MAX_AHEAD_TILES (3).
-//     This is the chained-step race case — predicted finishes step,
-//     step briefly null, host's next chained auth arrives. The
-//     original snap-fix used 1 here (sufficient for WebRTC's ~10 ms
-//     RTT) but the WS-relay path can leave us 2-3 tiles "behind" the
-//     host post-direction-change. 3 covers both.
-//
-// Orthogonal disagreement (cross != 0) is still a real divergence
-// (predicted into a different lane than the host) and always snaps,
-// regardless of along-axis distance. There used to be a
-// LATENCY_GRACE_MS check that blanket-snapped any disagreement once
-// the user had been idle for ~500 ms, on the theory that "long after
-// the last step, any remaining mismatch is real divergence." In
-// practice that wrecked the experience of pausing to read text or
-// solve a puzzle — the very next auth frame after the grace expiry
-// jolted the avatar. The tile-distance tolerances above are
-// sufficient on their own: a real divergence shows up as either an
-// orthogonal mismatch (snapped by the cross check) or as a >5/3-tile
-// along-axis gap (snapped by the bounds), neither of which need a
-// time-based heuristic.
-const MAX_BEHIND_TILES = 5;
-const MAX_AHEAD_TILES = 3;
-const DIR_VEC = {
-  up:    { dx:  0, dy: -1 },
-  down:  { dx:  0, dy:  1 },
-  left:  { dx: -1, dy:  0 },
-  right: { dx:  1, dy:  0 },
-};
+// New rule: just bound |ddx| and |ddy| each by MAX_DIVERGENCE_TILES.
+// L-shaped lag from a turn (small on both axes) is absorbed. A real
+// desync (predicted off by more than 5 tiles on either axis) still
+// snaps. Knockbacks of <5 tiles aren't auto-corrected by this path
+// anymore — they'd need a host-side event op to trigger an explicit
+// snap if we ever observe the bug.
+const MAX_DIVERGENCE_TILES = 5;
 
 export function installPredictedSelf(net) {
   if (installed) return;
@@ -115,23 +94,10 @@ export function _shouldSnapForTesting(predicted, auth, _now) {
 // the next snapshot.
 function shouldSnap(predicted, auth) {
   if (predicted.tileX === auth.tileX && predicted.tileY === auth.tileY) return false;
-  const dir = DIR_VEC[(predicted.direction || "").toLowerCase()];
-  if (!dir) return true;
-  const ddx = auth.tileX - predicted.tileX;
-  const ddy = auth.tileY - predicted.tileY;
-  // Orthogonal disagreement (cross product nonzero) means we predicted
-  // into a different lane than the host — a real divergence, always
-  // snap regardless of along-direction distance.
-  const cross = Math.abs(ddx * dir.dy - ddy * dir.dx);
-  if (cross !== 0) return true;
-  // Project auth-relative-to-predicted onto the reverse of our direction.
-  // Positive  = host is behind us along direction (we ran ahead).
-  // Negative  = host is ahead of us along direction (we briefly lag).
-  // Both are normal RTT shapes within a small window; only large gaps
-  // mean we genuinely diverged.
-  const behind = -(ddx * dir.dx + ddy * dir.dy);
-  if (behind > MAX_BEHIND_TILES) return true;
-  if (behind < -MAX_AHEAD_TILES) return true;
+  const ddx = Math.abs(auth.tileX - predicted.tileX);
+  const ddy = Math.abs(auth.tileY - predicted.tileY);
+  if (ddx > MAX_DIVERGENCE_TILES) return true;
+  if (ddy > MAX_DIVERGENCE_TILES) return true;
   return false;
 }
 
