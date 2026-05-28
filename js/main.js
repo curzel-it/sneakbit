@@ -412,11 +412,11 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
     updateHud(hud, { zoneId: mZone.id, fps: 1 / dt, showFps: getSettings().showFps });
     return;
   }
-  // Each guest plays on their own device — centre on their own avatar
-  // rather than averaging across every mirrored player (which would
-  // drag the view halfway to the host).
-  const cameraTarget = pickGuestCameraTarget(renderPlayers);
-  updateCamera(state.camera, cameraTarget, mZone);
+  // Shared-camera rule, same as host/local co-op: average every mirrored
+  // player so they all stay on screen. Earlier we picked just the self
+  // here, but a guest who walked off-screen could drift into regions
+  // the host wasn't simulating in view.
+  updateCamera(state.camera, renderPlayers, mZone);
   updateVisibleEntities(mZone, state.camera);
   render(renderer, mZone, state.camera, renderPlayers, biomeAnim.frame);
   updateHud(hud, {
@@ -424,19 +424,6 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
     fps: 1 / dt,
     showFps: getSettings().showFps,
   });
-}
-
-// Picks which mirror player the camera should follow on the guest side
-// — the predicted-self entry if it's in the render list, otherwise the
-// first mirrored player (only the host has joined, etc.). Returning a
-// single player keeps updateCamera off the "average every coord" path.
-function pickGuestCameraTarget(renderPlayers) {
-  const selfId = getSelfPlayerId();
-  if (selfId) {
-    const self = renderPlayers.find((p) => p.playerId === selfId);
-    if (self) return self;
-  }
-  return renderPlayers[0];
 }
 
 // Swap the mirror's copy of the guest's own avatar with predictedSelf so
@@ -622,32 +609,20 @@ function allPlayers(state) {
 }
 
 // Camera follows live players (dead P2 doesn't drag the centre off).
-// In local co-op both players share one screen so we average over every
-// live player to keep them both in view. In online co-op the host and
-// each guest see the world on separate devices, so the camera should
-// stay centred on the local player — averaging would push the host's
-// view halfway to wherever the guest is standing.
+// Both local and online co-op share the same averaging rule: keep every
+// live player on screen. Online tried a per-device "follow self" camera
+// at first, but a guest who wandered off the host's view could move into
+// regions that aren't being updated (entities, mobs, pickups) — sharing
+// one camera prevents that drift.
 function livePlayersForCamera(state) {
-  if (getRuntimeRole() === "host") {
-    // Online host: only follow the host's own avatar. Guests render the
-    // world from their own mirror with predictedSelf at the centre.
-    return state.player ? [state.player] : [];
-  }
   const live = allPlayers(state);
   // If everyone's dead the camera freezes on P1's last position so the
   // Game Over overlay doesn't snap to (0, 0).
   return live.length ? live : (state.player ? [state.player] : []);
 }
 
-// What the renderer draws on the host/offline screen. Distinct from the
-// camera helper because the host's camera deliberately ignores guests
-// (so the view doesn't slide to wherever they walk) but the host must
-// still see them on-screen as fellow avatars. Earlier this reused
-// livePlayersForCamera for both, which meant the host's screen drew
-// only itself even though state.player2/state.players were being
-// simulated and broadcast — guests saw the host but the host saw an
-// empty world. Dead avatars are filtered out so a downed co-op player
-// vanishes until the next revive (same rule as before for offline).
+// What the renderer draws on the host/offline screen. Dead avatars are
+// filtered out so a downed co-op player vanishes until the next revive.
 function livePlayersForRender(state) {
   return allPlayers(state);
 }
