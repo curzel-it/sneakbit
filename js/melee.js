@@ -6,7 +6,7 @@
 // resolution path.
 
 import { getSpecies } from "./species.js?v=20260528";
-import { getEquipped, SLOT_MELEE } from "./equipment.js?v=20260528";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260528";
 import { playSfx } from "./audio.js?v=20260528";
 import { matchesAction } from "./keyBindings.js?v=20260528";
 import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260528";
@@ -143,7 +143,7 @@ export function performMeleeSwing(state, opts = {}) {
   const swinger = opts.swinger || state.player;
   const idx = (swinger?.index | 0) || 0;
   if (cooldown[idx] > 0 && !opts.ignoreCooldown) return false;
-  const weaponId = getEquipped(SLOT_MELEE, idx);
+  const weaponId = resolveLoadout(swinger).melee;
   if (!weaponId) return false;
   const weapon = getSpecies(weaponId);
   if (!weapon || weapon.entity_type !== "WeaponMelee") return false;

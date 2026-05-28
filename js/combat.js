@@ -114,7 +114,7 @@ function resolveBullets(zone, players, dt) {
           const dps = (b._dpsOverride != null ? b._dpsOverride : bsp.dps) || 0;
           // Bullets hit briefly and pass through — treat them as a burst
           // (with invuln gate) rather than a sustained continuous tick.
-          applyPlayerDamage(dps * damageMultiplier(b) * dt, victimIdx);
+          applyPlayerDamage(dps * damageMultiplier(b) * dt, victim);
           if (!tryBounce(b, bsp)) ents.splice(i, 1);
           continue;
         }
@@ -217,7 +217,7 @@ function resolveMeleeMonsters(zone, players, dt) {
       const px = p.x + 0.5;
       const py = p.y + 0.5;
       if (!withinMeleeRange(e, sp, px, py)) continue;
-      applyPlayerContinuousDamage(dps * dt, p.index | 0);
+      applyPlayerContinuousDamage(dps * dt, p);
     }
   }
 }

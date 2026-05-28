@@ -14,9 +14,13 @@ import { resolveEntityDialogue, dialogueLines } from "./dialogue.js?v=20260528";
 import { showToast } from "./toast.js?v=20260528";
 import { playSfx } from "./audio.js?v=20260528";
 import { getSpecies } from "./species.js?v=20260528";
-import { addAmmo } from "./inventory.js?v=20260528";
+import { addAmmo, getAmmo } from "./inventory.js?v=20260528";
 import { getValue, setValue } from "./storage.js?v=20260528";
 import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260528";
+import {
+  setSessionLoadout,
+  getSessionLoadout,
+} from "./sessionLoadouts.js?v=20260528";
 import { tr } from "./strings.js?v=20260528";
 import { shouldBeVisible } from "./entityVisibility.js?v=20260528";
 import { isCreativeMode } from "./creativeMode.js?v=20260528";
@@ -63,7 +67,7 @@ export function checkPickup(state) {
       if (e.id != null && !zone.ephemeralState) {
         setValue(`item_collected.${e.id}`, 1);
       }
-      trigger(e, kind, picker.index | 0);
+      trigger(e, kind, picker);
     }
     return;
   }
@@ -91,11 +95,12 @@ function classify(e) {
   return null;
 }
 
-function trigger(e, kind, playerIndex) {
+function trigger(e, kind, picker) {
   if (kind === "hint") {
     triggerHint(e, /* persist */ false);
     return;
   }
+  const playerIndex = picker?.index | 0;
   const sp = getSpecies(e.species_id);
   const items = [];
   if (sp?.bundle_contents?.length) {
@@ -110,12 +115,21 @@ function trigger(e, kind, playerIndex) {
     items.push({ speciesId: e.species_id, amount: 1 });
   }
   playSfx("ammoCollected");
-  maybeEquipWeapon(sp, playerIndex);
-  // Online co-op shares the inventory pool — broadcast the items so each
-  // guest can mirror the addAmmo into their own counts[0] (host already
-  // applied it locally above). Without this the kunai vanishes on the
-  // guest's screen but their HUD never ticks up.
-  broadcastHostEvent("pickup", { items });
+  maybeEquipWeapon(sp, picker);
+  // Per-player inventory in online co-op: the picker.playerId tag lets
+  // the matching guest's handler addAmmo into their own counts; other
+  // clients see the event but skip the inventory side-effect.
+  broadcastHostEvent("pickup", { playerId: picker?.playerId ?? null, items });
+  // Also push absolute counts via ammoSet so the picker's HUD adopts the
+  // host's authoritative pool (covers any drift between pickup deltas
+  // and shoot consumptions the guest may have missed).
+  if (picker?.playerId) {
+    const after = items.map(({ speciesId }) => ({
+      speciesId,
+      count: getAmmo(speciesId, picker.index | 0),
+    }));
+    broadcastHostEvent("ammoSet", { playerId: picker.playerId, items: after });
+  }
 }
 
 // When a pickup is associated with a weapon (sword pickup → sword,
@@ -124,7 +138,18 @@ function trigger(e, kind, playerIndex) {
 // Mirrors how `available_weapons` in Rust surfaces a weapon as soon as
 // its pickup species lands in the inventory, with the JS twist that
 // we equip it directly instead of opening a chooser (no inventory UI yet).
-function maybeEquipWeapon(pickupSp, playerIndex) {
+//
+// In online co-op:
+//   * For the host's own pickups (picker is local index 0) we still hit
+//     setEquipped(0), which writes to the host's save AND drives the
+//     onEquipmentChange path in hostLoadoutSync that fans event:loadout.
+//   * For a guest's pickup we update the session map for the picker's
+//     playerId and broadcast event:loadout directly — the guest's local
+//     equipment store is the authoritative save for the guest, not the
+//     host's, so we don't touch setEquipped here. guestLoadoutSync
+//     writes the new id into the guest's local storage when the event
+//     arrives, so the pickup persists past the session.
+function maybeEquipWeapon(pickupSp, picker) {
   if (!pickupSp) return;
   const weaponId = pickupSp.associated_weapon;
   if (!weaponId) return;
@@ -135,11 +160,33 @@ function maybeEquipWeapon(pickupSp, playerIndex) {
   if (weaponSp.entity_type === "WeaponMelee")  { slot = SLOT_MELEE;  hint = "Press G to swing"; }
   if (weaponSp.entity_type === "WeaponRanged") { slot = SLOT_RANGED; hint = "Press F to shoot"; }
   if (!slot) return;
-  setEquipped(slot, weaponId, playerIndex);
+  const playerIndex = picker?.index | 0;
+  const pickerId = picker?.playerId || null;
+  if (playerIndex === 0 || !pickerId) {
+    setEquipped(slot, weaponId, playerIndex);
+  } else {
+    const prev = getSessionLoadout(pickerId) || { melee: null, ranged: null };
+    const next = {
+      melee: slot === SLOT_MELEE ? weaponId : prev.melee,
+      ranged: slot === SLOT_RANGED ? weaponId : prev.ranged,
+    };
+    setSessionLoadout(pickerId, next.melee, next.ranged);
+    broadcastHostEvent("loadout", {
+      playerId: pickerId,
+      melee: next.melee,
+      ranged: next.ranged,
+    });
+  }
   const name = tr(weaponSp.name) || weaponSp.name || "weapon";
-  showToast(`Equipped: ${name}\n${hint}`, "longHint", {
-    image: inventoryIconFor(weaponSp),
-  });
+  // Local "you got a weapon" toast only fires on the host's machine for
+  // the host's own pickup — a guest's auto-equip surfaces on the guest's
+  // own client via guestLoadoutSync's write-through (which is what their
+  // user is looking at).
+  if (playerIndex === 0) {
+    showToast(`Equipped: ${name}\n${hint}`, "longHint", {
+      image: inventoryIconFor(weaponSp),
+    });
+  }
 }
 
 // Builds the ToastImage payload for a species' inventory icon. Returns

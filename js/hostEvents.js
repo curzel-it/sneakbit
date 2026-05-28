@@ -26,6 +26,9 @@ const ALLOWED_KINDS = new Set([
   "cutsceneEnd",
   "zoneChange",
   "toast",
+  "hostPause",
+  "loadout",
+  "ammoSet",
 ]);
 const ALLOWED_TOAST_TYPES = new Set(["regular", "hint", "longHint"]);
 

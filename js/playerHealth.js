@@ -20,8 +20,8 @@
 // API continues to operate on index 0 by default so existing call sites
 // keep working until they thread a playerIndex.
 
-import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260528";
 import { getSpecies } from "./species.js?v=20260528";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260528";
 
 const MAX_HP = 100;
 // Intentional divergence from Rust HERO_RECOVERY_PS=1.0. Block-A playtests
@@ -69,12 +69,30 @@ export function getPlayerMaxHp()                  { return MAX_HP; }
 export function isPlayerInvulnerable(index = 0)   { return recordFor(index).invuln > 0; }
 export function isPlayerDead(index = 0)           { return recordFor(index).hp <= 0; }
 
+// Push an authoritative HP value into the local record. The host's
+// snapshot/delta carries each player's hp; the guest mirrors theirs in
+// here so getPlayerHp(0) is a single source of truth for the HUD
+// regardless of role. No-op on identical values to avoid flooding
+// onPlayerHealthChange listeners.
+export function setPlayerHp(hp, index = 0) {
+  const rec = recordFor(index);
+  const next = Math.max(0, Math.min(MAX_HP, +hp));
+  if (rec.hp === next) return;
+  rec.hp = next;
+  notify();
+}
+
 // Burst damage (bullets). Sets a brief invuln window.
-// Returns "hurt" | "died" | "ignored".
-export function applyPlayerDamage(amount, index = 0) {
+// Returns "hurt" | "died" | "ignored". Accepts either an index (legacy
+// callers, tests) or a player object — the latter lets damage reduction
+// consult sessionLoadouts by playerId in online co-op instead of folding
+// to local index 0 (which would otherwise have the host's shield protect
+// every guest).
+export function applyPlayerDamage(amount, victim = 0) {
+  const index = indexOf(victim);
   const rec = recordFor(index);
   if (rec.invuln > 0 || rec.hp <= 0 || amount <= 0) return "ignored";
-  const reduced = applyDamageReductions(amount, index);
+  const reduced = applyDamageReductions(amount, victim);
   if (reduced <= 0) return "ignored";
   rec.hp = Math.max(0, rec.hp - reduced);
   rec.invuln = INVULN_AFTER_BURST;
@@ -85,10 +103,11 @@ export function applyPlayerDamage(amount, index = 0) {
 
 // Continuous damage (melee monster in range). No invuln gating — this
 // is meant to be ticked many times per second at dps * dt.
-export function applyPlayerContinuousDamage(amount, index = 0) {
+export function applyPlayerContinuousDamage(amount, victim = 0) {
+  const index = indexOf(victim);
   const rec = recordFor(index);
   if (rec.hp <= 0 || amount <= 0) return "ignored";
-  const reduced = applyDamageReductions(amount, index);
+  const reduced = applyDamageReductions(amount, victim);
   if (reduced <= 0) return "ignored";
   rec.hp = Math.max(0, rec.hp - reduced);
   rec.regenDelay = REGEN_DELAY_AFTER_HIT;
@@ -96,14 +115,23 @@ export function applyPlayerContinuousDamage(amount, index = 0) {
   return rec.hp <= 0 ? "died" : "hurt";
 }
 
+function indexOf(victim) {
+  if (typeof victim === "number") return victim;
+  if (victim && typeof victim === "object") return victim.index | 0;
+  return 0;
+}
+
 // Multiplies `amount` by (1 - reduction) for every equipped weapon that
-// carries a `received_damage_reduction`. Each slot is queried
-// independently; missing equipment or unknown species id contributes a
-// neutral 1.0 factor.
-function applyDamageReductions(amount, index) {
+// carries a `received_damage_reduction`. The victim argument is either
+// an index (single-player / tests) or the full player object; the
+// object form goes through sessionLoadouts so a guest's shield protects
+// THEM and not whoever's local index it lines up with.
+function applyDamageReductions(amount, victim) {
   let out = amount;
-  for (const slot of [SLOT_MELEE, SLOT_RANGED]) {
-    const id = getEquipped(slot, index);
+  const { melee, ranged } = victim && typeof victim === "object"
+    ? resolveLoadout(victim)
+    : resolveLoadout({ index: indexOf(victim) });
+  for (const id of [melee, ranged]) {
     if (!id) continue;
     const sp = getSpecies(id);
     const r = sp?.received_damage_reduction || 0;

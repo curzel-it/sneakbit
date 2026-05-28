@@ -7,7 +7,7 @@
 // Exposes `window.equipment` for devtools (parity with window.skills).
 
 import { getValue, setValue } from "./storage.js?v=20260528";
-import { isCoopActive } from "./coopMode.js?v=20260528";
+import { isCoopMode } from "./coopMode.js?v=20260528";
 
 export const SLOT_RANGED = "ranged";
 export const SLOT_MELEE  = "melee";
@@ -21,9 +21,15 @@ function keyFor(slot, index) {
   return `player.${i}.equipped.${slot}`;
 }
 
+// Local co-op folds P2 (index 1) onto P1 (index 0) so a single save slot
+// holds the shared loadout. Network co-op must NOT fold — each guest is
+// a distinct player with their own equipment (sourced from their client's
+// localStorage and synced via sessionLoadouts). isCoopMode() is true only
+// for the local case; isCoopActive() would also catch network co-op,
+// which we deliberately exclude.
 function effectiveIndex(index) {
   const i = index | 0;
-  if (i > 0 && isCoopActive()) return 0;
+  if (i > 0 && isCoopMode()) return 0;
   return i;
 }
 

@@ -296,12 +296,13 @@ test("E2E: snapshot sent in response to peer.joined includes the joining guest",
 //
 // Step-by-step: send moveDown intents at the start of each tile and
 // repeat until state.player2 lands on the bundle. The host's pickup loop
-// then resolves the bundle and credits 10 kunai into counts[0] (online
-// co-op folds index>0 onto 0 via effectiveIndex / isCoopActive). The
-// matching event:pickup frame goes onto the wire so a real guest can
-// mirror the addAmmo on their side.
+// then resolves the bundle and credits 10 kunai into the picker's own
+// inventory slot — per-player in network co-op (effectiveIndex only
+// folds for isCoopMode, not network). The matching event:pickup frame
+// goes onto the wire tagged with the picker's playerId so only that
+// guest's HUD ticks up; other clients ignore the pickup payload.
 
-test("E2E: guest walks down onto a 10× kunai bundle → host credits 10 kunai + broadcasts event:pickup", () => {
+test("E2E: guest walks down onto a 10× kunai bundle → host credits 10 kunai to slot 1 + broadcasts event:pickup", () => {
   const { state, fn } = setupHostWorld({ bundleAt: { x: 6, y: 8 } });
   try {
     fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest", slot: 2 });
@@ -312,7 +313,7 @@ test("E2E: guest walks down onto a 10× kunai bundle → host credits 10 kunai +
       { x: 6, y: 5 },
     );
 
-    const ammoBefore = getAmmo(KUNAI, 0);
+    const ammoBefore = getAmmo(KUNAI, 1);
 
     // Hold moveDown for 3 tile-steps — the avatar's chained stepping
     // (HOLD_PRIORITY) walks tile-by-tile while the key is held.
@@ -323,12 +324,17 @@ test("E2E: guest walks down onto a 10× kunai bundle → host credits 10 kunai +
       `guest must walk to y=8 (got ${state.player2.tileY})`,
     );
     assert.equal(
-      getAmmo(KUNAI, 0), ammoBefore + 10,
-      "10× kunai bundle should credit exactly 10 to counts[0]",
+      getAmmo(KUNAI, 1), ammoBefore + 10,
+      "10× kunai bundle should credit exactly 10 to the picker's slot (index 1)",
+    );
+    assert.equal(
+      getAmmo(KUNAI, 0), 0,
+      "host's own ammo pool must not change when the guest picks up",
     );
 
     const pickupFrames = fn.sent.filter((f) => f.op === "event" && f.kind === "pickup");
     assert.equal(pickupFrames.length, 1, "exactly one event:pickup should fan out");
+    assert.equal(pickupFrames[0].playerId, "p_guest", "pickup event must be tagged with the picker's playerId");
     const total = pickupFrames[0].items.reduce((acc, it) => acc + (it.amount | 0), 0);
     assert.equal(total, 10, "broadcast payload should sum to 10");
 
@@ -372,7 +378,7 @@ test("E2E: shoot intent from the guest spawns a bullet at the guest's tile and d
     fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest", slot: 2 });
 
     walkIntent(state, fn, "p_guest", "moveDown", 3);
-    assert.equal(getAmmo(KUNAI, 0), 10, "precondition: 10 kunai available");
+    assert.equal(getAmmo(KUNAI, 1), 10, "precondition: 10 kunai available in the guest's slot");
     const expectedDir = "down";
     assert.equal(state.player2.direction, expectedDir);
 
@@ -382,7 +388,7 @@ test("E2E: shoot intent from the guest spawns a bullet at the guest's tile and d
     // No tick needed — host's onInput dispatch is synchronous through
     // tryShootForSlot, which immediately mutates state.zone.entities.
 
-    assert.equal(getAmmo(KUNAI, 0), 9, "shoot must consume one kunai");
+    assert.equal(getAmmo(KUNAI, 1), 9, "shoot must consume one kunai from the guest's slot");
     assert.equal(
       state.zone.entities.length, entitiesBefore + 1,
       "shoot must spawn exactly one new entity",

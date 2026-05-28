@@ -153,6 +153,7 @@ export function createRelay({
       case "guest.leave": return onGuestLeave(ctx);
       case "input": return onInput(ctx, msg);
       case "guest.resync": return onGuestResync(ctx);
+      case "guest.loadout": return onGuestLoadout(ctx, msg);
       case "snapshot":
       case "delta":
       case "event":
@@ -423,6 +424,26 @@ export function createRelay({
     const session = store.sessionsById.get(ctx.sessionId);
     if (!session || !session.hostConn) return;
     session.hostConn.sendJSON({ op: "guest.resync", from: ctx.playerId });
+  }
+
+  // Guest tells the host what they have equipped (melee + ranged species
+  // ids, null when unequipped). Forwarded host-bound and whitelisted to
+  // just the fields we expect, mirroring the input/guest.resync pattern.
+  // The host updates its sessionLoadouts entry for this guest and fans
+  // event:loadout to the other guests so every client renders the right
+  // gear on every avatar.
+  function onGuestLoadout(ctx, msg) {
+    if (ctx.role !== "guest") return;
+    const session = store.sessionsById.get(ctx.sessionId);
+    if (!session || !session.hostConn) return;
+    const out = {
+      op: "guest.loadout",
+      from: ctx.playerId,
+      melee: typeof msg.melee === "number" ? msg.melee : null,
+      ranged: typeof msg.ranged === "number" ? msg.ranged : null,
+    };
+    session.hostConn.sendJSON(out);
+    metrics.frameRelayed("guest.loadout", jsonByteLength(out));
   }
 
   function onHostBroadcast(ctx, msg) {

@@ -8,7 +8,8 @@ import { installDialogue, isDialogueOpen } from "./dialogue.js?v=20260528";
 import { installInteract, tickInteract } from "./interact.js?v=20260528";
 import { loadSpeciesData } from "./species.js?v=20260528";
 import { composeBiomeSheet } from "./biomeSheet.js?v=20260528";
-import { buildZone, isWalkable, isEntityBlocked } from "./zone.js?v=20260528";
+import { buildZone } from "./zone.js?v=20260528";
+import { pickCoopSpawn } from "./coopSpawn.js?v=20260528";
 import { initInput, pollInput } from "./input.js?v=20260528";
 import { createPlayer, updatePlayer } from "./player.js?v=20260528";
 import { createCamera, updateCamera } from "./camera.js?v=20260528";
@@ -58,6 +59,7 @@ import { tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js?v=202605
 import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528";
 import { installPartyPanel } from "./partyPanel.js?v=20260528";
 import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js?v=20260528";
+import { setHostPaused } from "./hostPauseState.js?v=20260528";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js?v=20260528";
 import { switchRole, setStateHandlers } from "./switchRole.js?v=20260528";
 import { installUiTokens } from "./uiTokens.js?v=20260528";
@@ -155,20 +157,19 @@ async function main() {
     };
   }
   installAutoZoom(canvas, state.camera, hud.el);
-  // Guests don't own the world, the inventory, or the warp graph — and
-  // their local HUD would render against the wrong data source if it
-  // were installed (HP from playerHealth.js's local state, ammo from
-  // inventory.js's local store, neither of which match the host's
-  // view). The mapEditor gate is also defense-in-depth: today only
-  // creative mode opens it, but that creative-mode check shouldn't be
-  // load-bearing for "is this person allowed to edit the host's zones."
+  // Guests don't own the world, world-mutating logic, or the warp graph
+  // — so the simulation modules (mapEditor, interact, shooting/melee,
+  // fastTravel) stay gated. The HUDs (HP + ammo) DO run on guests: the
+  // guestSelfHpSync module mirrors the host's authoritative HP into
+  // playerHealth.records[0] and the per-player ammoSet events keep the
+  // inventory in lockstep, so the HUDs render the right numbers.
+  installAmmoHud();
+  installHealthHud();
   if (!bootGuest) {
     installMapEditor(() => state);
     installInteract(() => state);
     installShooting(() => state);
     installMelee(() => state);
-    installAmmoHud();
-    installHealthHud();
     installFastTravel(() => state);
   }
   setGamepadAction("shoot", () => tryShoot());
@@ -222,6 +223,11 @@ async function main() {
       return;
     }
     const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen();
+    // Tell guests when our local sim is frozen so their overlay can
+    // show "Host paused the game" instead of the generic "Host
+    // lagging…" — the no-op-when-not-host gate in setHostPaused keeps
+    // this cheap in offline / local-coop.
+    setHostPaused(paused);
     const input = pollInput();
     if (!paused) {
       updatePlayer(state.player, input, dt, state.zone);
@@ -424,6 +430,11 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
     fps: 1 / dt,
     showFps: getSettings().showFps,
   });
+  // The chip's count is driven by onInventoryChange, but the icon is
+  // lazy-painted on the first updateAmmoHud after the inventory sprite
+  // sheet loads. Without this call the chip on the guest path renders
+  // its number but never gets its icon.
+  updateAmmoHud();
 }
 
 // Swap the mirror's copy of the guest's own avatar with predictedSelf so
@@ -448,41 +459,13 @@ function buildGuestRenderPlayers(mPlayers) {
 }
 
 // Build the co-op second player. Mirrors Rust world_setup.rs's
-// spawn_coop_players_around_hero: P2 spawns one tile in P1's facing
-// direction so the two players don't overlap, falling back to the same
-// tile when the offset is blocked. createPlayer({ index: 1 }) selects
-// the second hero column from the heroes sheet so P2 is visually
-// distinct from P1.
-const DIR_DELTA = {
-  up:    [ 0, -1],
-  down:  [ 0,  1],
-  left:  [-1,  0],
-  right: [ 1,  0],
-};
-
-// Spawn-tile search: try the tile in front of P1 first, then the other
-// three cardinals, finally fall back to P1's own tile if every neighbor
-// is walled / occupied. Walking the four neighbors (instead of just the
-// front tile) keeps hot-toggle from dropping P2 on top of P1 in tight
-// corridors where the front tile happens to be solid.
-function pickP2Spawn(p1, zone) {
-  const dirs = ["up", "down", "left", "right"];
-  const order = [p1.direction, ...dirs.filter((d) => d !== p1.direction)];
-  for (const d of order) {
-    const [dx, dy] = DIR_DELTA[d] ?? [0, 0];
-    const x = p1.tileX + dx;
-    const y = p1.tileY + dy;
-    if (x < 0 || x >= zone.cols || y < 0 || y >= zone.rows) continue;
-    if (!isWalkable(zone, x, y)) continue;
-    if (isEntityBlocked(zone, x, y)) continue;
-    return { x, y };
-  }
-  return { x: p1.tileX, y: p1.tileY };
-}
-
+// spawn_coop_players_around_hero: pickCoopSpawn places P2 on the
+// nearest walkable tile to P1, preferring P1's facing direction.
+// createPlayer({ index: 1 }) selects the second hero column from the
+// heroes sheet so P2 is visually distinct from P1.
 function makeCoopP2(p1, zone, opts = {}) {
   const p2 = createPlayer({ index: opts.index ?? 1 });
-  const { x: sx, y: sy } = pickP2Spawn(p1, zone);
+  const { x: sx, y: sy } = pickCoopSpawn(p1, zone);
   p2.tileX = sx;
   p2.tileY = sy;
   p2.x = sx;

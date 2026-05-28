@@ -24,6 +24,10 @@ import {
 } from "./onlineBootstrap.js?v=20260528";
 import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotBroadcaster.js?v=20260528";
 import { installHostGuests, uninstallHostGuests } from "./hostGuests.js?v=20260528";
+import { installHostPauseBroadcaster, uninstallHostPauseBroadcaster } from "./hostPauseState.js?v=20260528";
+import { installHostLoadoutSync, uninstallHostLoadoutSync } from "./hostLoadoutSync.js?v=20260528";
+import { installGuestLoadoutSync, uninstallGuestLoadoutSync } from "./guestLoadoutSync.js?v=20260528";
+import { installGuestSelfHpSync, uninstallGuestSelfHpSync } from "./guestSelfHpSync.js?v=20260528";
 import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js?v=20260528";
 import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js?v=20260528";
 import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js?v=20260528";
@@ -103,12 +107,16 @@ async function teardownRole(role) {
     try { getNet()?.send({ op: "host.close" }); } catch { /* ignore */ }
     stopSnapshotBroadcaster();
     uninstallHostGuests();
+    uninstallHostPauseBroadcaster();
+    uninstallHostLoadoutSync();
   } else if (role === "guest") {
     try { getNet()?.send({ op: "guest.leave" }); } catch { /* ignore */ }
     uninstallMirrorWorld();
     uninstallPredictedSelf();
     uninstallGuestInputForwarder();
     uninstallGuestEvents();
+    uninstallGuestLoadoutSync();
+    uninstallGuestSelfHpSync();
   }
   if (role === "host" || role === "guest") {
     resetOnlineState();
@@ -149,6 +157,8 @@ async function setupRole(target, opts) {
     // delta (~50 ms later).
     installHostGuests(stateHandlers.stateGetter, { makeCoopP2: stateHandlers.p2Factory });
     installSnapshotBroadcaster(stateHandlers.stateGetter);
+    installHostPauseBroadcaster();
+    installHostLoadoutSync();
     return;
   }
 
@@ -162,6 +172,8 @@ async function setupRole(target, opts) {
     installGuestInputForwarder(n);
     installPredictedSelf(n);
     installGuestEvents(n);
+    installGuestLoadoutSync({ net: n });
+    installGuestSelfHpSync({ net: n });
     if (isWelcomed()) dispatchHandshake();
     return;
   }

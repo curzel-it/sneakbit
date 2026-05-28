@@ -1,13 +1,20 @@
-// Guest-only HUD overlay shown while the mirror world has gone stale
-// (>STALE_MS without a delta from the host). Sits above the canvas in
-// the top-centre. Decoupled from the discrete `host.ghosted` frame:
-// the overlay reads `isMirrorStale()` every frame, so it lights up on
-// any delta drought — including the common "delta-flow paused but no
-// disconnect yet" case where the relay hasn't fanned a ghost frame —
-// and clears the instant fresh state lands.
+// Guest-only HUD overlay shown while the host's stream is interrupted.
+// Two distinct reasons fold into one element so we don't stack toasts:
+//   * the host has explicitly paused (event:hostPause) → "Host paused
+//     the game" — a calm message, the world will resume when they do
+//   * the mirror world has gone stale (>STALE_MS without a delta and
+//     no pause signal) → "Host lagging…" — the network/peer is the
+//     suspect
+// Pause is checked first so a paused host doesn't transiently flash
+// "Host lagging…" once the broadcaster's delta stream falls quiet.
+// Sits above the canvas in the top-centre.
 
 import { isMirrorStale } from "./mirrorWorld.js?v=20260528";
 import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260528";
+import { isHostPausedRemote } from "./guestHostPause.js?v=20260528";
+
+const PAUSED_TEXT = "Host paused the game";
+const LAGGING_TEXT = "Host lagging…";
 
 let overlay = null;
 let installed = false;
@@ -19,7 +26,7 @@ export function installHostLaggingOverlay() {
   overlay = document.createElement("div");
   overlay.id = "host-lagging-overlay";
   overlay.style.display = "none";
-  overlay.textContent = "Host lagging…";
+  overlay.textContent = LAGGING_TEXT;
   document.body.appendChild(overlay);
   // Force-hide on any guest → offline / host transition. tickGuestFrame
   // is the only caller of updateHostLaggingOverlay(), so without this
@@ -29,19 +36,32 @@ export function installHostLaggingOverlay() {
     if (role !== "guest" && overlay) {
       overlay.style.display = "none";
       lastShown = false;
+      lastText = "";
     }
   });
 }
 
 // Called every guest tick from main.js. Avoids a per-frame DOM read by
-// caching the last applied display state; the tick is at requestAnimationFrame
-// cadence so a write per stale-transition is the upper bound.
+// caching the last applied display state and text; the tick is at
+// requestAnimationFrame cadence so a write per state transition is the
+// upper bound.
 let lastShown = false;
+let lastText = "";
 export function updateHostLaggingOverlay() {
   if (!overlay) return;
-  const shouldShow = getRuntimeRole() === "guest" && isMirrorStale();
-  if (shouldShow === lastShown) return;
+  const isGuest = getRuntimeRole() === "guest";
+  const isPaused = isGuest && isHostPausedRemote();
+  // While paused we don't gate on staleness — the paused signal is
+  // explicit and we want the overlay up immediately, not after the
+  // 300 ms staleness threshold.
+  const shouldShow = isGuest && (isPaused || isMirrorStale());
+  const text = isPaused ? PAUSED_TEXT : LAGGING_TEXT;
+  if (shouldShow === lastShown && text === lastText) return;
   lastShown = shouldShow;
+  if (text !== lastText) {
+    overlay.textContent = text;
+    lastText = text;
+  }
   overlay.style.display = shouldShow ? "block" : "none";
 }
 
@@ -50,6 +70,7 @@ export function _resetHostLaggingOverlayForTesting() {
   overlay = null;
   installed = false;
   lastShown = false;
+  lastText = "";
 }
 
 function injectStyles() {

@@ -66,6 +66,84 @@ test("zoneChange kind is routable through the override seam", () => {
   _uninstallGuestEventsForTesting();
 });
 
+test("pickup event only updates local inventory when playerId matches self", async () => {
+  _uninstallGuestEventsForTesting();
+  const { getAmmo, clearInventory } = await import("../js/inventory.js?v=20260528");
+  const onlineMode = await import("../js/onlineMode.js?v=20260528");
+  const bootstrap = await import("../js/onlineBootstrap.js?v=20260528");
+  bootstrap._resetOnlineBootstrapForTesting();
+  onlineMode._setOnlineModeForTesting({ mode: "guest", uuid: "uuid-x", joinCode: "ABCDE" });
+  const net = makeFakeNet();
+  bootstrap.bootstrapOnline({ netFactory: () => ({ ...net, connect: () => {}, send: () => true, close: () => {}, isConnected: () => true, getUuid: () => "u", getUrl: () => "ws://x" }) });
+  net.emit("welcome", { op: "welcome", protocol: 1, playerId: "p_self", name: "Me" });
+
+  const KUNAI = 7000;
+  clearInventory();
+  // Pickup tagged for another player → no local change.
+  dispatch({ kind: "pickup", playerId: "p_other", items: [{ speciesId: KUNAI, amount: 5 }] });
+  assert.equal(getAmmo(KUNAI, 0), 0);
+
+  // Pickup tagged for self → addAmmo.
+  dispatch({ kind: "pickup", playerId: "p_self", items: [{ speciesId: KUNAI, amount: 5 }] });
+  assert.equal(getAmmo(KUNAI, 0), 5);
+
+  // Legacy payload (no playerId) preserved as "for me" so old fixtures
+  // still apply.
+  dispatch({ kind: "pickup", items: [{ speciesId: KUNAI, amount: 2 }] });
+  assert.equal(getAmmo(KUNAI, 0), 7);
+
+  bootstrap._resetOnlineBootstrapForTesting();
+  onlineMode._resetOnlineModeForTesting();
+  _uninstallGuestEventsForTesting();
+});
+
+test("ammoSet event overwrites local counts to the absolute value for self", async () => {
+  _uninstallGuestEventsForTesting();
+  const { getAmmo, addAmmo, clearInventory } = await import("../js/inventory.js?v=20260528");
+  const onlineMode = await import("../js/onlineMode.js?v=20260528");
+  const bootstrap = await import("../js/onlineBootstrap.js?v=20260528");
+  bootstrap._resetOnlineBootstrapForTesting();
+  onlineMode._setOnlineModeForTesting({ mode: "guest", uuid: "uuid-x", joinCode: "ABCDE" });
+  const net = makeFakeNet();
+  bootstrap.bootstrapOnline({ netFactory: () => ({ ...net, connect: () => {}, send: () => true, close: () => {}, isConnected: () => true, getUuid: () => "u", getUrl: () => "ws://x" }) });
+  net.emit("welcome", { op: "welcome", protocol: 1, playerId: "p_self", name: "Me" });
+
+  const KUNAI = 7000;
+  clearInventory();
+  addAmmo(KUNAI, 4, 0);
+  // For another player → ignored.
+  dispatch({ kind: "ammoSet", playerId: "p_other", items: [{ speciesId: KUNAI, count: 99 }] });
+  assert.equal(getAmmo(KUNAI, 0), 4);
+  // For self, lower → removeAmmo down to target.
+  dispatch({ kind: "ammoSet", playerId: "p_self", items: [{ speciesId: KUNAI, count: 2 }] });
+  assert.equal(getAmmo(KUNAI, 0), 2);
+  // For self, higher → addAmmo up to target.
+  dispatch({ kind: "ammoSet", playerId: "p_self", items: [{ speciesId: KUNAI, count: 10 }] });
+  assert.equal(getAmmo(KUNAI, 0), 10);
+
+  bootstrap._resetOnlineBootstrapForTesting();
+  onlineMode._resetOnlineModeForTesting();
+  _uninstallGuestEventsForTesting();
+});
+
+test("hostPause events drive the guest-side isHostPausedRemote flag", async () => {
+  _uninstallGuestEventsForTesting();
+  const { isHostPausedRemote, _resetGuestHostPauseForTesting } =
+    await import("../js/guestHostPause.js?v=20260528");
+  _resetGuestHostPauseForTesting();
+  assert.equal(isHostPausedRemote(), false);
+  dispatch({ kind: "hostPause", paused: true });
+  assert.equal(isHostPausedRemote(), true);
+  dispatch({ kind: "hostPause", paused: false });
+  assert.equal(isHostPausedRemote(), false);
+  // uninstallGuestEvents resets the cached flag so a re-join doesn't
+  // inherit a stale "paused" state from a previous session.
+  dispatch({ kind: "hostPause", paused: true });
+  assert.equal(isHostPausedRemote(), true);
+  _uninstallGuestEventsForTesting();
+  assert.equal(isHostPausedRemote(), false);
+});
+
 test("pickup events feed addAmmo so the guest's HUD updates", async () => {
   _uninstallGuestEventsForTesting();
   const { getAmmo } = await import("../js/inventory.js?v=20260528");

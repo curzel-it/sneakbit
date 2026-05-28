@@ -7,7 +7,7 @@
 
 import { showToast } from "./toast.js?v=20260528";
 import { fadeOverlayOut, fadeOverlayIn, FADE_OVERLAY_MS } from "./transitions.js?v=20260528";
-import { addAmmo } from "./inventory.js?v=20260528";
+import { addAmmo, getAmmo, removeAmmo } from "./inventory.js?v=20260528";
 import { showGameOver, hideGameOver, isGameOverOpen } from "./gameOver.js?v=20260528";
 import { getSelfPlayerId, getNameForPlayerId } from "./onlineBootstrap.js?v=20260528";
 import { tr } from "./strings.js?v=20260528";
@@ -18,6 +18,7 @@ import {
 } from "./dialogue.js?v=20260528";
 import { startCutsceneByKey, endCutsceneByKey } from "./cutscenes.js?v=20260528";
 import { getMirrorZone } from "./mirrorWorld.js?v=20260528";
+import { setHostPausedRemote } from "./guestHostPause.js?v=20260528";
 
 let installed = false;
 let unsub = null;
@@ -35,6 +36,10 @@ export function uninstallGuestEvents() {
   unsub = null;
   installed = false;
   customHandlers.clear();
+  // Drop the cached host-pause flag so a future re-join doesn't show
+  // a stale "Host paused" overlay before the new host has sent its
+  // first hostPause event.
+  setHostPausedRemote(false);
 }
 
 export const _uninstallGuestEventsForTesting = uninstallGuestEvents;
@@ -62,6 +67,9 @@ export function dispatch(msg) {
     case "pickup":
       handlePickup(msg);
       return;
+    case "ammoSet":
+      handleAmmoSet(msg);
+      return;
     case "death":
       handleDeath(msg);
       return;
@@ -83,17 +91,23 @@ export function dispatch(msg) {
     case "cutsceneEnd":
       if (typeof msg.key === "string") endCutsceneByKey(getMirrorZone(), msg.key);
       return;
+    case "hostPause":
+      setHostPausedRemote(!!msg.paused);
+      return;
     default:
       return;
   }
 }
 
-// Mirror the host's inventory.addAmmo into the guest's local counts.
-// Pickups are resolved authoritatively on the host; we run addAmmo here
-// just so the guest's ammo HUD reflects the result. Inventory is shared
-// in online co-op (isCoopActive → effectiveIndex folds to 0), so the
-// playerIndex argument is irrelevant.
+// Mirror the host's addAmmo into the guest's local counts — but only
+// when the host says THIS guest is the picker. Per-player inventory in
+// online co-op means the matching guest's HUD ticks up; other guests
+// receive the same event for SFX / future feedback hooks but skip the
+// inventory side-effect. The legacy single-arg shape (no playerId) is
+// treated as "for me" so single-player tests and older fixtures still
+// addAmmo as before.
 function handlePickup(msg) {
+  if (msg?.playerId != null && msg.playerId !== getSelfPlayerId()) return;
   const items = Array.isArray(msg?.items) ? msg.items : [];
   for (const it of items) {
     if (!it) continue;
@@ -101,6 +115,25 @@ function handlePickup(msg) {
     const amount = it.amount | 0;
     if (!sid || amount <= 0) continue;
     addAmmo(sid, amount, 0);
+  }
+}
+
+// Authoritative absolute-count update from the host. Used for shoot
+// consumption (no pickup event) and as a follow-up after pickups to
+// keep the HUD in lockstep with the host's pool. Only acts when the
+// frame is addressed to this client.
+function handleAmmoSet(msg) {
+  if (!msg || msg.playerId !== getSelfPlayerId()) return;
+  const items = Array.isArray(msg.items) ? msg.items : [];
+  for (const it of items) {
+    if (!it) continue;
+    const sid = it.speciesId | 0;
+    const target = Math.max(0, it.count | 0);
+    if (!sid) continue;
+    const have = getAmmo(sid, 0);
+    if (target === have) continue;
+    if (target > have) addAmmo(sid, target - have, 0);
+    else removeAmmo(sid, have - target, 0);
   }
 }
 

@@ -13,7 +13,8 @@ import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js?v=20260528";
 import { getEntitySheet, getSpecies } from "./species.js?v=20260528";
 import { getSprite } from "./assets.js?v=20260528";
 import { getPlayerSpriteFrame } from "./player.js?v=20260528";
-import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260528";
+import { SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260528";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260528";
 import { getMeleeSwingProgress } from "./melee.js?v=20260528";
 import { pushableRenderOffset } from "./pushables.js?v=20260528";
 import { shouldBeVisible } from "./entityVisibility.js?v=20260528";
@@ -89,11 +90,16 @@ function drawPlayer(ctx, player, camera) {
   // facing Up draws weapons in front of the hero (handle/barrel visible past
   // the shoulder); facing Left/Right/Down draws them behind so the hero's
   // body occludes the part of the weapon that should be on the far side.
+  //
+  // Loadout sourced via resolveLoadout(player), so online co-op renders
+  // each guest's actual gear instead of the local user's. In single-player
+  // and local-coop the lookup falls back to local equipment by index.
   const idx = player.index | 0;
+  const { melee, ranged } = resolveLoadout(player);
   const equipInFront = player.direction === "up" || getMeleeSwingProgress(idx) != null;
   if (!equipInFront) {
-    drawEquipment(ctx, player, camera, getEquipped(SLOT_RANGED, idx), SLOT_RANGED);
-    drawEquipment(ctx, player, camera, getEquipped(SLOT_MELEE, idx), SLOT_MELEE);
+    drawEquipment(ctx, player, camera, ranged, SLOT_RANGED);
+    drawEquipment(ctx, player, camera, melee, SLOT_MELEE);
   }
 
   const sheet = getSprite("heroes");
@@ -107,8 +113,8 @@ function drawPlayer(ctx, player, camera) {
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 
   if (equipInFront) {
-    drawEquipment(ctx, player, camera, getEquipped(SLOT_RANGED, idx), SLOT_RANGED);
-    drawEquipment(ctx, player, camera, getEquipped(SLOT_MELEE, idx), SLOT_MELEE);
+    drawEquipment(ctx, player, camera, ranged, SLOT_RANGED);
+    drawEquipment(ctx, player, camera, melee, SLOT_MELEE);
   }
 }
 

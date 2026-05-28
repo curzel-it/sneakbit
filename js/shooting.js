@@ -11,7 +11,8 @@
 import { getSpecies } from "./species.js?v=20260528";
 import { getAmmo, removeAmmo } from "./inventory.js?v=20260528";
 import { playSfx } from "./audio.js?v=20260528";
-import { getEquipped, SLOT_RANGED } from "./equipment.js?v=20260528";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260528";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260528";
 import { matchesAction } from "./keyBindings.js?v=20260528";
 import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260528";
 import { getNetRole } from "./onlineBootstrap.js?v=20260528";
@@ -143,11 +144,22 @@ function playerForSlot(state, slot) {
 function shoot(state, shooter) {
   const idx = (shooter?.index | 0) || 0;
   if (cooldown[idx] > 0) return;
-  const { weapon, bulletId } = resolveRangedWeapon(idx);
+  const { weapon, bulletId } = resolveRangedWeapon(shooter);
   const bulletSp = getSpecies(bulletId);
   if (!bulletSp) return;
   if (getAmmo(bulletId, idx) <= 0) { playSfx("noAmmo"); return; }
   if (!removeAmmo(bulletId, 1, idx)) return;
+  // Per-player inventory in online co-op: tell the shooter's client about
+  // their new authoritative count so their AmmoHud ticks down. We send
+  // absolute counts (rather than -1 deltas) so a missed/reordered frame
+  // can't desync the HUD. No-op for the host's own shots (broadcastHostEvent
+  // doesn't echo to self) and for local-only play.
+  if (shooter?.playerId) {
+    broadcastHostEvent("ammoSet", {
+      playerId: shooter.playerId,
+      items: [{ speciesId: bulletId, count: getAmmo(bulletId, idx) }],
+    });
+  }
   cooldown[idx] = (weapon?.cooldown_after_use > 0) ? weapon.cooldown_after_use : COOLDOWN;
 
   const dir = shooter.direction;
@@ -180,9 +192,12 @@ function shoot(state, shooter) {
 
 // Picks the equipped ranged weapon's bullet species, falling back to the
 // kunai bullet so the game keeps working when no species data is loaded
-// (tests) or when equipment storage is empty in an unusual way.
-function resolveRangedWeapon(playerIndex) {
-  const weaponId = getEquipped(SLOT_RANGED, playerIndex);
+// (tests) or when equipment storage is empty in an unusual way. Takes the
+// shooter object (not just the index) so online co-op resolves through
+// sessionLoadouts by playerId — the host needs each guest's actual gear,
+// not the shared index-0 fold.
+function resolveRangedWeapon(shooter) {
+  const weaponId = resolveLoadout(shooter).ranged;
   const weapon = weaponId ? getSpecies(weaponId) : null;
   if (weapon && weapon.entity_type === "WeaponRanged" && weapon.bullet_species_id) {
     return { weapon, bulletId: weapon.bullet_species_id };
