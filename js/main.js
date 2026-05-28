@@ -237,14 +237,22 @@ async function main() {
     setHostPaused(paused);
     const input = pollInput();
     if (!paused) {
-      updatePlayer(state.player, input, dt, state.zone);
+      // Skip the per-player update for dead avatars — pollInput still
+      // drains their event queue, so a held key doesn't flood the
+      // player on revive. Without this gate a "dead-but-waiting" host
+      // would silently walk around invisibly while spectating guests.
+      if (!isPlayerDead(0)) updatePlayer(state.player, input, dt, state.zone);
       if (state.player2) {
         const input2 = pollInput(2);
-        updatePlayer(state.player2, input2, dt, state.zone);
+        if (!isPlayerDead(state.player2.index | 0)) {
+          updatePlayer(state.player2, input2, dt, state.zone);
+        }
       }
       for (const s of state.players) {
         const inputN = pollInput(s.slot);
-        updatePlayer(s.player, inputN, dt, state.zone);
+        if (!isPlayerDead(s.player.index | 0)) {
+          updatePlayer(s.player, inputN, dt, state.zone);
+        }
       }
       maybeTeleport(state);
       // Camera averages every live player so co-op players stay on screen.
@@ -274,7 +282,7 @@ async function main() {
       // P2 death is handled inline (toast + hide bar). Only P1 death
       // halts the game with the Game Over modal.
       handleCoopDeaths(state);
-      if (isPlayerDead(0)) handleDeath(state);
+      handleHostState(state);
     } else {
       // When paused, keep the camera tracking the player so on resume
       // there's no jolt, but don't bother re-running the visibility pass
@@ -541,10 +549,61 @@ function applySavedSpawn(player, zone, saved) {
   if (saved.direction) player.direction = saved.direction;
 }
 
-let dying = false;
-function handleDeath(state) {
-  if (dying) return;
-  dying = true;
+// Three flags model the host's death lifecycle:
+//   hostDying              — traditional gameOver flow is in motion
+//                            (overlay shown, awaiting Continue + travelTo).
+//   hostWaitingForRevive   — host is dead but online guests are alive,
+//                            so the sim keeps ticking and the host
+//                            spectates until a teleporter revives them
+//                            (mirror of offline P2's "wait for zone
+//                            change" rule, extended to the host).
+//   hostDeathToasted       — one-shot latch for the "you died"
+//                            notification so it doesn't spam every tick
+//                            that the host stays dead.
+let hostDying = false;
+let hostWaitingForRevive = false;
+let hostDeathToasted = false;
+
+// True when at least one online-guest avatar in the host's local world
+// is still alive. Local-coop P2 is excluded — local coop shares one
+// screen so the offline behavior (P1 death → full pause + Continue)
+// stays correct there.
+function hasLiveOnlineGuests(state) {
+  if (state.player2?.playerId && !isPlayerDead(state.player2.index | 0)) return true;
+  if (Array.isArray(state.players)) {
+    for (const s of state.players) {
+      if (s.player?.playerId && !isPlayerDead(s.player.index | 0)) return true;
+    }
+  }
+  return false;
+}
+
+function handleHostState(state) {
+  const hostDead = isPlayerDead(0);
+  if (!hostDead) {
+    // Clear latent waiting/toasted state so a future death re-toasts.
+    hostWaitingForRevive = false;
+    hostDeathToasted = false;
+    return;
+  }
+  // Online co-op: keep the sim running so live guests can keep playing
+  // and trigger the next zone change (which revives the host via
+  // transitions.js). The full-screen gameOver overlay would pause the
+  // host's local tick — and a paused host = no world updates = guests
+  // freeze. A toast announces the death without blocking the tick.
+  if (hasLiveOnlineGuests(state)) {
+    hostWaitingForRevive = true;
+    if (!hostDeathToasted) {
+      hostDeathToasted = true;
+      showToast("You died — waiting for a teammate to find a teleporter", "longHint");
+    }
+    return;
+  }
+  // Solo (or with local-coop P2 only): traditional gameOver — full
+  // overlay, Continue button, travelTo + revive everyone on commit.
+  hostWaitingForRevive = false;
+  if (hostDying) return;
+  hostDying = true;
   showGameOver(() => {
     // Mirror Rust engine.revive(): teleport to the current zone's
     // spawn_point (the door the player came in through), not the global
@@ -560,7 +619,8 @@ function handleDeath(state) {
       // co-op spawn rule re-applied inside travelTo).
       resetPlayerHealth();
       p2DeathToasted = false;
-      dying = false;
+      hostDeathToasted = false;
+      hostDying = false;
     });
   });
 }

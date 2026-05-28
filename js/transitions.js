@@ -118,6 +118,17 @@ export async function travelTo(state, destination) {
     // back to stacking on P1 if the offset tile is blocked. A dead P2
     // is brought back to life by the zone reload — matches Rust's
     // dead_players being cleared on every zone entry.
+    // P1 (host) revive-on-zone-change. The offline death flow already
+    // resets host HP via handleDeath's onContinue, but in online co-op
+    // we let the sim keep running while only the host is dead (guests
+    // can still play), and a guest stepping through a teleporter is
+    // the natural revival trigger. Without this the host would be
+    // teleported to the new zone's spawn but stay at hp=0 — still
+    // "dead", still invisible, still spectating.
+    {
+      const hostWasDead = isPlayerDead(state.player.index | 0);
+      if (hostWasDead) resetPlayerHealth(state.player.index | 0);
+    }
     if (state.player2) {
       const wasDead = isPlayerDead(state.player2.index | 0);
       repositionCoopP2(state.player2, state.player, zone);

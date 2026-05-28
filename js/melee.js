@@ -11,6 +11,7 @@ import { playSfx } from "./audio.js?v=20260528";
 import { matchesAction } from "./keyBindings.js?v=20260528";
 import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260528";
 import { getNetRole } from "./onlineBootstrap.js?v=20260528";
+import { isPlayerDead } from "./playerHealth.js?v=20260528";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -142,6 +143,7 @@ function playerForSlot(state, slot) {
 export function performMeleeSwing(state, opts = {}) {
   const swinger = opts.swinger || state.player;
   const idx = (swinger?.index | 0) || 0;
+  if (isPlayerDead(idx)) return false;
   if (cooldown[idx] > 0 && !opts.ignoreCooldown) return false;
   const weaponId = resolveLoadout(swinger).melee;
   if (!weaponId) return false;

@@ -16,6 +16,7 @@ import { broadcastHostEvent } from "./hostEvents.js?v=20260528";
 import { matchesAction } from "./keyBindings.js?v=20260528";
 import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260528";
 import { getNetRole } from "./onlineBootstrap.js?v=20260528";
+import { isPlayerDead } from "./playerHealth.js?v=20260528";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
@@ -143,6 +144,7 @@ function playerForSlot(state, slot) {
 
 function shoot(state, shooter) {
   const idx = (shooter?.index | 0) || 0;
+  if (isPlayerDead(idx)) return;
   if (cooldown[idx] > 0) return;
   const { weapon, bulletId } = resolveRangedWeapon(shooter);
   const bulletSp = getSpecies(bulletId);
