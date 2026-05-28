@@ -8,11 +8,11 @@
 // The renderer is updated separately to draw the predicted self in
 // place of the mirror's lagged copy for the guest's own slot.
 
-import { createPlayer, updatePlayer } from "./player.js?v=20260528b";
-import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528b";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528b";
-import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528b";
-import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js?v=20260528b";
+import { createPlayer, updatePlayer } from "./player.js?v=20260528c";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528c";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528c";
+import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528c";
+import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js?v=20260528c";
 
 let predicted = null;
 let installed = false;
@@ -22,18 +22,36 @@ let lastAckedY = null;
 let unsubs = [];
 let lastMovingAt = 0;
 
-// Reconciliation tolerance for "host hasn't caught up to me yet" lag.
-// During continuous motion the guest's local prediction is naturally
-// ~1 tile ahead of auth (input RTT + ~50 ms broadcaster wait), so a
-// strict tile-match snap fires on every step boundary and rubber-bands
-// the guest's own avatar visibly. We accept up to MAX_BEHIND_TILES of
-// "auth is behind us along the direction we're moving" without
-// snapping — that's expected latency, not a divergence. Orthogonal
-// disagreements, auth being AHEAD of us, or large gaps (>MAX) still
-// snap. After we stop moving, we keep tolerating latency for
-// LATENCY_GRACE_MS so the host's remaining lag deltas can land
-// without a backward teleport on the user's "just stopped" frame.
+// Reconciliation tolerance for normal RTT lag along the direction we're
+// walking. During continuous chained motion the guest and host are both
+// stepping at the same rate; either can briefly lead the other by a
+// tile or so depending on which side hit a step boundary first and
+// whether the broadcaster's tick fell before or after. We tolerate
+// asymmetrically:
+//
+//   * Host BEHIND us along direction (predicted ran ahead): up to
+//     MAX_BEHIND_TILES (3). This is the expected steady-state shape —
+//     predicted has zero input RTT, auth eats RTT/2 + 60 ms commit +
+//     220 ms step + ≤50 ms broadcaster + RTT/2.
+//
+//   * Host AHEAD of us along direction (predicted briefly lags after a
+//     snap-induced commit gap, OR auth chained while predicted is mid-
+//     step): up to MAX_AHEAD_TILES (1). Without this, every chained
+//     walk on a fast transport (WebRTC, RTT ~10 ms) eats a self-
+//     amplifying cascade: snap → step=null → 60 ms commit gap → host
+//     pulls 1 more tile ahead → snap again. Observed on production via
+//     tests/e2e/perfPublic.mjs: 5 consecutive snaps at the start of a
+//     down hold, all of the shape "predicted lands on N, auth=N+1,
+//     behind=-1, snap forces predicted to N+1+commit gap". The user-
+//     visible symptom is the guest's own avatar teleporting one tile
+//     and skipping the walk animation.
+//
+// Orthogonal disagreement (cross != 0) is still a real divergence
+// (predicted into a different lane than the host) and always snaps.
+// LATENCY_GRACE_MS keeps the same tolerance briefly after the user
+// stops moving so trailing deltas don't yank predicted backwards.
 const MAX_BEHIND_TILES = 3;
+const MAX_AHEAD_TILES = 1;
 const LATENCY_GRACE_MS = 500;
 const DIR_VEC = {
   up:    { dx:  0, dy: -1 },
@@ -101,21 +119,23 @@ function shouldSnap(predicted, auth, now = nowMs()) {
   if (predicted.tileX === auth.tileX && predicted.tileY === auth.tileY) return false;
   const dir = DIR_VEC[(predicted.direction || "").toLowerCase()];
   if (!dir) return true;
-  // Tolerate the lag only while moving or briefly after the last step.
   const recentlyMoving = !!predicted.step || (now - lastMovingAt) <= LATENCY_GRACE_MS;
   if (!recentlyMoving) return true;
   const ddx = auth.tileX - predicted.tileX;
   const ddy = auth.tileY - predicted.tileY;
-  // Project auth relative to predicted onto our REVERSE direction.
-  // Positive = host is behind us in the direction we're moving (the
-  // expected RTT-delay shape). Zero or negative = host is ahead of us
-  // (we missed inputs) — snap forward.
-  const behind = -(ddx * dir.dx + ddy * dir.dy);
-  if (behind <= 0 || behind > MAX_BEHIND_TILES) return true;
   // Orthogonal disagreement (cross product nonzero) means we predicted
-  // into a different lane than the host — a real divergence, snap.
+  // into a different lane than the host — a real divergence, always
+  // snap regardless of along-direction distance.
   const cross = Math.abs(ddx * dir.dy - ddy * dir.dx);
   if (cross !== 0) return true;
+  // Project auth-relative-to-predicted onto the reverse of our direction.
+  // Positive  = host is behind us along direction (we ran ahead).
+  // Negative  = host is ahead of us along direction (we briefly lag).
+  // Both are normal RTT shapes within a small window; only large gaps
+  // mean we genuinely diverged.
+  const behind = -(ddx * dir.dx + ddy * dir.dy);
+  if (behind > MAX_BEHIND_TILES) return true;
+  if (behind < -MAX_AHEAD_TILES) return true;
   return false;
 }
 

@@ -3,7 +3,7 @@
 // the same channel and land in Phase 7. Each frame carries a monotonic
 // seq for the reconciliation logic that arrives in Phase 6.
 
-import { actionForCode } from "./keyBindings.js?v=20260528b";
+import { actionForCode } from "./keyBindings.js?v=20260528c";
 
 const ACTION_TO_INTENT = {
   moveUp: "moveUp",

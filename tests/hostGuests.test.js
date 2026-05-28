@@ -5,12 +5,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260528b");
+  await import("../js/onlineMode.js?v=20260528c");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js?v=20260528b");
+  await import("../js/onlineBootstrap.js?v=20260528c");
 const { installHostGuests, _uninstallHostGuestsForTesting } =
-  await import("../js/hostGuests.js?v=20260528b");
-const inputModule = await import("../js/input.js?v=20260528b");
+  await import("../js/hostGuests.js?v=20260528c");
+const inputModule = await import("../js/input.js?v=20260528c");
 
 function makeFakeNet() {
   const handlers = new Map();
@@ -207,7 +207,7 @@ async function installDispatchSpies() {
   const calls = [];
   const stub = (action) => (slot) => calls.push({ action, slot });
   const { _setActionDispatchForTesting, _resetActionCooldownsForTesting } =
-    await import("../js/hostGuests.js?v=20260528b");
+    await import("../js/hostGuests.js?v=20260528c");
   _setActionDispatchForTesting({
     shoot: stub("shoot"),
     melee: stub("melee"),
@@ -350,7 +350,7 @@ test("action intent is dropped when the slot's avatar has been despawned (range 
 test("action intent is dropped when the slot's avatar is dead (range gate)", async () => {
   const { calls, restore } = await installDispatchSpies();
   const { applyPlayerDamage, resetPlayerHealth } =
-    await import("../js/playerHealth.js?v=20260528b");
+    await import("../js/playerHealth.js?v=20260528c");
   try {
     const { fakeNet } = setup();
     fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });

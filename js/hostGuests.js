@@ -10,13 +10,13 @@
 // state.players[] alongside player/player2 so all four slots move and
 // participate in pickups/combat.
 
-import { getNetRole, getNet } from "./onlineBootstrap.js?v=20260528b";
-import { pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528b";
-import { setNetworkGuestCount } from "./coopMode.js?v=20260528b";
-import { tryShootForSlot } from "./shooting.js?v=20260528b";
-import { tryMeleeForSlot } from "./melee.js?v=20260528b";
-import { tryInteractForSlot } from "./interact.js?v=20260528b";
-import { isPlayerDead } from "./playerHealth.js?v=20260528b";
+import { getNetRole, getNet } from "./onlineBootstrap.js?v=20260528c";
+import { pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528c";
+import { setNetworkGuestCount } from "./coopMode.js?v=20260528c";
+import { tryShootForSlot } from "./shooting.js?v=20260528c";
+import { tryMeleeForSlot } from "./melee.js?v=20260528c";
+import { tryInteractForSlot } from "./interact.js?v=20260528c";
+import { isPlayerDead } from "./playerHealth.js?v=20260528c";
 
 const INTENT_TO_DIR = {
   moveUp: "up",

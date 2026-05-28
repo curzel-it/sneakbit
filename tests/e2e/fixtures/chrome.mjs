@@ -47,7 +47,10 @@ export function skipIfNoChrome(t) {
 export async function launchChrome({ port, dataDir }) {
   const chrome = findChrome();
   if (!chrome) throw new Error("no Chrome binary available");
-  await rm(dataDir, { recursive: true, force: true });
+  // maxRetries handles the race where a previous Chrome on this dir
+  // hasn't fully released Cache_Data when we try to rm. Without it
+  // sequential tests sharing dataDir flake on ENOTEMPTY ~10% of runs.
+  await rm(dataDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
   const proc = spawn(chrome, [
     "--headless=new",
     `--remote-debugging-port=${port}`,

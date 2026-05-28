@@ -96,7 +96,7 @@ export async function startCoopSession({
   // Pick up the host's invite code via the existing getter.
   const inviteCode = await waitFor(host, `
     (async () => {
-      const o = await import('./js/onlineBootstrap.js?v=20260528b');
+      const o = await import('./js/onlineBootstrap.js?v=20260528c');
       return o.getInviteCode && o.getInviteCode();
     })()
   `, { timeoutMs: 30000 });
@@ -115,7 +115,7 @@ export async function startCoopSession({
     await waitFor(guest, `(typeof window !== 'undefined' && !!document.querySelector('#game'))`, { timeoutMs: 10000 });
     await evalExpr(guest, `
       (async () => {
-        const sr = await import('./js/switchRole.js?v=20260528b');
+        const sr = await import('./js/switchRole.js?v=20260528c');
         await sr.switchRole('guest', { code: ${JSON.stringify(inviteCode)} });
         return true;
       })()
@@ -127,9 +127,9 @@ export async function startCoopSession({
   // Wait until the guest's mirror and predicted-self both exist.
   await waitFor(guest, `
     (async () => {
-      const m = await import('./js/mirrorWorld.js?v=20260528b');
-      const p = await import('./js/predictedSelf.js?v=20260528b');
-      const o = await import('./js/onlineBootstrap.js?v=20260528b');
+      const m = await import('./js/mirrorWorld.js?v=20260528c');
+      const p = await import('./js/predictedSelf.js?v=20260528c');
+      const o = await import('./js/onlineBootstrap.js?v=20260528c');
       window.__sb = { m, p, o };
       const selfId = o.getSelfPlayerId && o.getSelfPlayerId();
       const mp = selfId && m.getMirrorPlayerById(selfId);
@@ -202,3 +202,98 @@ export const KEYS = {
   ArrowUp:    { key: "ArrowUp",    code: "ArrowUp",    vk: 38 },
   ArrowDown:  { key: "ArrowDown",  code: "ArrowDown",  vk: 40 },
 };
+
+// Drives the guest's predicted self through `cycles` of alternating
+// down/up holds (each `holdMs`) and captures every animation frame's
+// predicted position. Returns the raw samples plus a list of "snap"
+// events — frames where predicted x/y jumped more than `jumpThreshold`
+// tiles in a single frame. That's the signature of
+// `predictedSelf.shouldSnap` killing an in-flight step: normal step
+// motion is ~0.07 tile/frame at 60 fps, so a jump of >0.15 tile is at
+// least 2 frames of motion happening at once. Visually it's the
+// "avatar teleports to the next tile, skipping the walk animation"
+// symptom the user has been reporting on their guest client.
+//
+// Caller is responsible for ensuring the avatar is on a long open
+// stretch of road (zone 1001's spawn → one tile east → south road
+// works fine). The helper jogs east one tile first.
+export async function runStutterWorkload(session, { cycles = 4, holdMs = 2000, jumpThreshold = 0.15 } = {}) {
+  await evalExpr(session.guest, dispatchKey("keydown", KEYS.ArrowRight.key, KEYS.ArrowRight.code, KEYS.ArrowRight.vk));
+  await new Promise((r) => setTimeout(r, 400));
+  await evalExpr(session.guest, dispatchKey("keyup", KEYS.ArrowRight.key, KEYS.ArrowRight.code, KEYS.ArrowRight.vk));
+  await new Promise((r) => setTimeout(r, 400));
+
+  await evalExpr(session.guest, `
+    (() => {
+      const ps_mod = window.__sb.p;
+      const m = window.__sb.m;
+      const o = window.__sb.o;
+      const selfId = o.getSelfPlayerId();
+      const samples = [];
+      const snaps = [];
+      let prev = null;
+      window.__sb_stutter = { samples, snaps, running: true };
+      const thresh = ${jumpThreshold};
+      const tick = () => {
+        if (!window.__sb_stutter.running) return;
+        const ps = ps_mod.getPredictedSelf();
+        const mp = m.getMirrorPlayerById(selfId);
+        if (ps) {
+          const t = performance.now();
+          const sample = {
+            t,
+            x: +ps.x.toFixed(3), y: +ps.y.toFixed(3),
+            tx: ps.tileX, ty: ps.tileY,
+            step: !!ps.step,
+            dir: ps.direction,
+            aTx: mp ? mp.tileX : null,
+            aTy: mp ? mp.tileY : null,
+            aMoving: mp ? !!mp.moving : null,
+          };
+          samples.push(sample);
+          if (prev) {
+            const dx = ps.x - prev.x;
+            const dy = ps.y - prev.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > thresh) {
+              snaps.push({
+                t, dist: +dist.toFixed(3),
+                dx: +dx.toFixed(3), dy: +dy.toFixed(3),
+                from: { x: prev.x, y: prev.y, tx: prev.tx, ty: prev.ty, step: prev.step, dir: prev.dir },
+                to: { x: sample.x, y: sample.y, tx: sample.tx, ty: sample.ty, step: sample.step, dir: sample.dir },
+                auth: { tx: sample.aTx, ty: sample.aTy, moving: sample.aMoving },
+              });
+            }
+          }
+          prev = { x: ps.x, y: ps.y, tx: ps.tileX, ty: ps.tileY, step: !!ps.step, dir: ps.direction };
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      return true;
+    })()
+  `);
+
+  for (let i = 0; i < cycles; i++) {
+    await evalExpr(session.guest, dispatchKey("keydown", KEYS.ArrowDown.key, KEYS.ArrowDown.code, KEYS.ArrowDown.vk));
+    await new Promise((r) => setTimeout(r, holdMs));
+    await evalExpr(session.guest, dispatchKey("keyup", KEYS.ArrowDown.key, KEYS.ArrowDown.code, KEYS.ArrowDown.vk));
+    await new Promise((r) => setTimeout(r, 300));
+    await evalExpr(session.guest, dispatchKey("keydown", KEYS.ArrowUp.key, KEYS.ArrowUp.code, KEYS.ArrowUp.vk));
+    await new Promise((r) => setTimeout(r, holdMs));
+    await evalExpr(session.guest, dispatchKey("keyup", KEYS.ArrowUp.key, KEYS.ArrowUp.code, KEYS.ArrowUp.vk));
+    await new Promise((r) => setTimeout(r, 300));
+  }
+
+  await new Promise((r) => setTimeout(r, 500));
+
+  return evalExpr(session.guest, `
+    (() => {
+      window.__sb_stutter.running = false;
+      return {
+        samples: window.__sb_stutter.samples,
+        snaps: window.__sb_stutter.snaps,
+      };
+    })()
+  `);
+}

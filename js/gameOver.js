@@ -6,7 +6,7 @@
 // the starting spawn. The modal lives in the DOM (like menu.js) so we get
 // styling + a real button focusable by keyboard for free.
 
-import { playSfx } from "./audio.js?v=20260528b";
+import { playSfx } from "./audio.js?v=20260528c";
 
 let root = null;
 let open = false;

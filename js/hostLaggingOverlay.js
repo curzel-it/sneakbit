@@ -9,9 +9,9 @@
 // "Host lagging…" once the broadcaster's delta stream falls quiet.
 // Sits above the canvas in the top-centre.
 
-import { isMirrorStale } from "./mirrorWorld.js?v=20260528b";
-import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260528b";
-import { isHostPausedRemote } from "./guestHostPause.js?v=20260528b";
+import { isMirrorStale } from "./mirrorWorld.js?v=20260528c";
+import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260528c";
+import { isHostPausedRemote } from "./guestHostPause.js?v=20260528c";
 
 const PAUSED_TEXT = "Host paused the game";
 const LAGGING_TEXT = "Host lagging…";

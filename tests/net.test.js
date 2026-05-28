@@ -5,7 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { createNet, PROTOCOL, pickServerUrl } = await import("../js/net.js?v=20260528b");
+const { createNet, PROTOCOL, pickServerUrl } = await import("../js/net.js?v=20260528c");
 
 function makeFakeSocket() {
   const sock = {

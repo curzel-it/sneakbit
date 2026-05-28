@@ -6,19 +6,19 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260528b");
+  await import("../js/onlineMode.js?v=20260528c");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js?v=20260528b");
+  await import("../js/onlineBootstrap.js?v=20260528c");
 const {
   installPredictedSelf, _uninstallPredictedSelfForTesting,
   tickPredictedSelf, getPredictedSelf, getLastAckedSeq,
   _shouldSnapForTesting,
-} = await import("../js/predictedSelf.js?v=20260528b");
+} = await import("../js/predictedSelf.js?v=20260528c");
 const {
   installMirrorWorld, uninstallMirrorWorld, handleSnapshot,
-} = await import("../js/mirrorWorld.js?v=20260528b");
-const inputModule = await import("../js/input.js?v=20260528b");
-const { loadSpeciesData } = await import("../js/species.js?v=20260528b");
+} = await import("../js/mirrorWorld.js?v=20260528c");
+const inputModule = await import("../js/input.js?v=20260528c");
+const { loadSpeciesData } = await import("../js/species.js?v=20260528c");
 
 function makeFakeZone(id) {
   return {
@@ -151,9 +151,27 @@ test("shouldSnap: auth more than MAX_BEHIND tiles behind triggers a snap", () =>
   assert.equal(_shouldSnapForTesting(predicted, auth, 0), true);
 });
 
-test("shouldSnap: auth ahead of predicted snaps (we missed inputs)", () => {
+test("shouldSnap: auth 1 tile ahead along direction is tolerated (chained-step race)", () => {
+  // Symmetric to the "1 tile behind" case. With a fast transport (RTT
+  // ~10 ms on WebRTC) the host can briefly land 1 tile ahead of
+  // predicted: predicted finishes step → step=null briefly → host's
+  // next chained auth arrives → tiles differ → would snap. The snap
+  // itself causes a 60 ms commit gap that lets host pull further
+  // ahead, cascading. Tolerating "1 tile ahead along direction" stops
+  // the cascade and lets predicted's local step complete naturally.
+  // Reproduced on prod via tests/e2e/perfPublic.mjs before this fix.
   const predicted = { tileX: 5, tileY: 5, direction: "right", step: { progress: 0.4 } };
   const auth = { tileX: 6, tileY: 5 };
+  assert.equal(_shouldSnapForTesting(predicted, auth, 0), false);
+});
+
+test("shouldSnap: auth more than MAX_AHEAD tiles ahead snaps (real divergence)", () => {
+  // 2+ tiles ahead means predicted genuinely lost inputs or fell
+  // behind by more than one step's worth of race — at that point
+  // catching up locally would take multiple step durations and feel
+  // worse than snapping.
+  const predicted = { tileX: 5, tileY: 5, direction: "right", step: { progress: 0.4 } };
+  const auth = { tileX: 7, tileY: 5 };
   assert.equal(_shouldSnapForTesting(predicted, auth, 0), true);
 });
 

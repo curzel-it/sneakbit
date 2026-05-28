@@ -10,22 +10,22 @@
 // Co-op rule: iterate every live player and the first one whose tile
 // overlaps a pickup wins it. Single-player just passes one player.
 
-import { resolveEntityDialogue, dialogueLines } from "./dialogue.js?v=20260528b";
-import { showToast } from "./toast.js?v=20260528b";
-import { playSfx } from "./audio.js?v=20260528b";
-import { getSpecies } from "./species.js?v=20260528b";
-import { addAmmo, getAmmo } from "./inventory.js?v=20260528b";
-import { getValue, setValue } from "./storage.js?v=20260528b";
-import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260528b";
+import { resolveEntityDialogue, dialogueLines } from "./dialogue.js?v=20260528c";
+import { showToast } from "./toast.js?v=20260528c";
+import { playSfx } from "./audio.js?v=20260528c";
+import { getSpecies } from "./species.js?v=20260528c";
+import { addAmmo, getAmmo } from "./inventory.js?v=20260528c";
+import { getValue, setValue } from "./storage.js?v=20260528c";
+import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260528c";
 import {
   setSessionLoadout,
   getSessionLoadout,
-} from "./sessionLoadouts.js?v=20260528b";
-import { tr } from "./strings.js?v=20260528b";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260528b";
-import { isCreativeMode } from "./creativeMode.js?v=20260528b";
-import { isPlayerDead } from "./playerHealth.js?v=20260528b";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260528b";
+} from "./sessionLoadouts.js?v=20260528c";
+import { tr } from "./strings.js?v=20260528c";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260528c";
+import { isCreativeMode } from "./creativeMode.js?v=20260528c";
+import { isPlayerDead } from "./playerHealth.js?v=20260528c";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260528c";
 
 // Bullet is here because in zone data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles

@@ -3,8 +3,8 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadSpeciesData } from "../js/species.js?v=20260528b";
-import { tryBuildingPrefab } from "../js/prefabs.js?v=20260528b";
+import { loadSpeciesData } from "../js/species.js?v=20260528c";
+import { tryBuildingPrefab } from "../js/prefabs.js?v=20260528c";
 
 // Minimal species fixtures: the building entries the prefab map recognises,
 // plus the auxiliary species the interior populates (teleporter, table,

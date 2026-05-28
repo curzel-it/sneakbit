@@ -10,7 +10,7 @@
 // Usage:  node tests/e2e/perfPublic.mjs
 
 import { findChrome } from "./fixtures/chrome.mjs";
-import { startCoopSession, dispatchKey, KEYS } from "./fixtures/coopSession.mjs";
+import { startCoopSession, dispatchKey, KEYS, runStutterWorkload } from "./fixtures/coopSession.mjs";
 
 const APP_URL = process.env.SB_APP_URL || "https://curzel.it/sneakbit-html";
 const RELAY_WS = process.env.SB_RELAY_WS || "wss://sneakbit.curzel.it/ws";
@@ -152,10 +152,56 @@ async function main() {
     ws = await measureRoundTrips(wsSession, "ws");
   } finally { wsSession.stop(); }
 
-  console.log("\n========== SUMMARY ==========");
+  console.log("\n========== LATENCY SUMMARY ==========");
   console.log(`WS     first-step RTT ${ws.firstRtt.toFixed(0)} ms  inter-step median ${median(ws.interStep).toFixed(0)} ms  tiles ${ws.tilesMoved}`);
   console.log(`WebRTC first-step RTT ${rtc.firstRtt.toFixed(0)} ms  inter-step median ${median(rtc.interStep).toFixed(0)} ms  tiles ${rtc.tilesMoved}`);
   console.log(`Delta  ${(ws.firstRtt - rtc.firstRtt).toFixed(0)} ms (positive = WebRTC wins)`);
+
+  // --- Stutter workload: same drive on a fresh session per transport.
+  // We can't reuse the latency session because the avatar is now far
+  // down the road and probably blocked. Cycles of down/up exercise the
+  // chained-step flow where the user reports the guest-own-avatar
+  // jump.
+  await new Promise((r) => setTimeout(r, 1000));
+  console.log("\n[perf-public] === Stutter workload (WebRTC) ===");
+  const rtcStut = await startCoopSession({
+    appUrl: APP_URL, relayWs: RELAY_WS,
+    zone: 1001, entry: "deeplink", disableWebrtc: false,
+    hostPort: 9247, guestPort: 9248,
+    hostDir: "/tmp/sb-perf-host-stut-rtc", guestDir: "/tmp/sb-perf-guest-stut-rtc",
+  });
+  let rtcStutter;
+  try {
+    rtcStutter = await runStutterWorkload(rtcStut, { cycles: 4, holdMs: 1800 });
+  } finally { rtcStut.stop(); }
+  printStutter("rtc", rtcStutter);
+
+  await new Promise((r) => setTimeout(r, 1000));
+  console.log("\n[perf-public] === Stutter workload (WS-only) ===");
+  const wsStut = await startCoopSession({
+    appUrl: APP_URL, relayWs: RELAY_WS,
+    zone: 1001, entry: "deeplink", disableWebrtc: true,
+    hostPort: 9249, guestPort: 9250,
+    hostDir: "/tmp/sb-perf-host-stut-ws", guestDir: "/tmp/sb-perf-guest-stut-ws",
+  });
+  let wsStutter;
+  try {
+    wsStutter = await runStutterWorkload(wsStut, { cycles: 4, holdMs: 1800 });
+  } finally { wsStut.stop(); }
+  printStutter("ws", wsStutter);
+
+  console.log("\n========== STUTTER SUMMARY ==========");
+  console.log(`WebRTC snap events: ${rtcStutter.snaps.length}  samples: ${rtcStutter.samples.length}`);
+  console.log(`WS     snap events: ${wsStutter.snaps.length}  samples: ${wsStutter.samples.length}`);
+}
+
+function printStutter(label, result) {
+  const { samples, snaps } = result;
+  const span = samples.length > 1 ? (samples[samples.length - 1].t - samples[0].t) : 0;
+  console.log(`[stutter:${label}] samples=${samples.length} over ${span.toFixed(0)} ms, snap events=${snaps.length}`);
+  for (const s of snaps.slice(0, 10)) {
+    console.log(`  snap dist=${s.dist} dx=${s.dx} dy=${s.dy}  predicted (${s.from.tx},${s.from.ty}) step=${s.from.step} dir=${s.from.dir} → (${s.to.tx},${s.to.ty}) step=${s.to.step}  auth (${s.auth.tx},${s.auth.ty}) moving=${s.auth.moving}`);
+  }
 }
 
 main().catch((e) => { console.error("fatal:", e); process.exit(1); });

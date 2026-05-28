@@ -391,7 +391,7 @@ Host step duration = 220 ms.
 
 ---
 
-## Proposal 0 — Stop `predictedSelf.shouldSnap` from killing the walk animation
+## Proposal 0 — ✅ FIXED 2026-05-28 — Stop `predictedSelf.shouldSnap` from killing the walk animation
 
 ### What's happening
 
@@ -896,8 +896,11 @@ better than the previous:
    (2026-05-28). Two fixes: `ensureNet` re-installs transport on role
    change; `webrtcTransport.onMessage` stamps `from`. Guarded by
    `tests/e2e/webrtcLifts.test.mjs`.
-1. **#0 — Fix `predictedSelf.shouldSnap` host-ahead snap.** Highest
-   impact per LOC for the reported own-avatar jump. ~10 lines.
+1. ~~**#0 — Fix `predictedSelf.shouldSnap` host-ahead snap.**~~ **DONE**
+   (2026-05-28). Added symmetric `MAX_AHEAD_TILES = 1` tolerance so the
+   chained-step race on a fast transport (WebRTC) no longer cascades
+   into a snap-loop. Guarded by `tests/e2e/predictedSelfStutter.test.mjs`
+   + new shouldSnap unit tests.
 2. **#1 + #6 — Entity interpolation + `moving` flag.** Fixes the
    reported mob frame-skip. ~50 lines together.
 3. **Measure.** If the bar is met after (1) and (2) for typical
