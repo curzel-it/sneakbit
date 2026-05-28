@@ -6,19 +6,19 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260528d");
+  await import("../js/onlineMode.js?v=20260528f");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js?v=20260528d");
+  await import("../js/onlineBootstrap.js?v=20260528f");
 const {
   installPredictedSelf, _uninstallPredictedSelfForTesting,
   tickPredictedSelf, getPredictedSelf, getLastAckedSeq,
   _shouldSnapForTesting,
-} = await import("../js/predictedSelf.js?v=20260528d");
+} = await import("../js/predictedSelf.js?v=20260528f");
 const {
   installMirrorWorld, uninstallMirrorWorld, handleSnapshot,
-} = await import("../js/mirrorWorld.js?v=20260528d");
-const inputModule = await import("../js/input.js?v=20260528d");
-const { loadSpeciesData } = await import("../js/species.js?v=20260528d");
+} = await import("../js/mirrorWorld.js?v=20260528f");
+const inputModule = await import("../js/input.js?v=20260528f");
+const { loadSpeciesData } = await import("../js/species.js?v=20260528f");
 
 function makeFakeZone(id) {
   return {
@@ -185,11 +185,26 @@ test("shouldSnap: orthogonal disagreement snaps even mid-step", () => {
   assert.equal(_shouldSnapForTesting(predicted, auth, 0), true);
 });
 
-test("shouldSnap: idle and long-stopped → snap on any disagreement", () => {
-  // No step, no recent movement (now far past the grace window) — the
-  // host has had ample time to catch up; a remaining mismatch is real.
+test("shouldSnap: idle and 1 tile behind along direction is tolerated indefinitely", () => {
+  // The old behaviour blanket-snapped any disagreement after ~500 ms
+  // of idleness, on the theory "after enough time the host has caught
+  // up so any mismatch must be real divergence." In practice that
+  // jolted the avatar every time the user paused to read text or
+  // solve a puzzle — and the symmetric tile-distance tolerances
+  // handle real divergence on their own (orthogonal mismatch snaps,
+  // >5/3-tile along-axis gap snaps). Small idle gaps now stay parked.
   const predicted = { tileX: 7, tileY: 5, direction: "right", step: null };
   const auth = { tileX: 6, tileY: 5 };
+  assert.equal(_shouldSnapForTesting(predicted, auth, 10_000), false);
+});
+
+test("shouldSnap: idle and orthogonally displaced still snaps", () => {
+  // Same idle predicted, but auth says we shifted to a different
+  // column — host-side event the guest didn't predict. Still a
+  // divergence; the cross-product check catches it regardless of
+  // idleness.
+  const predicted = { tileX: 7, tileY: 5, direction: "right", step: null };
+  const auth = { tileX: 7, tileY: 8 };
   assert.equal(_shouldSnapForTesting(predicted, auth, 10_000), true);
 });
 

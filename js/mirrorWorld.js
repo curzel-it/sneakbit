@@ -9,11 +9,11 @@
 // loads them locally on the first snapshot or zone change and only
 // overwrites `zone.entities` from network frames.
 
-import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260528d";
-import { loadZone } from "./data.js?v=20260528d";
-import { buildZone } from "./zone.js?v=20260528d";
-import { setupCutscenes } from "./cutscenes.js?v=20260528d";
-import { evictZoneCache } from "./zoneCache.js?v=20260528d";
+import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260528f";
+import { loadZone } from "./data.js?v=20260528f";
+import { buildZone } from "./zone.js?v=20260528f";
+import { setupCutscenes } from "./cutscenes.js?v=20260528f";
+import { evictZoneCache } from "./zoneCache.js?v=20260528f";
 
 export const INTERP_DELAY_MS = 100;
 const STALE_MS = 300;
@@ -305,6 +305,47 @@ function rebuildZoneEntities() {
     if (snap.curr) list.push(snap.curr);
   }
   zone.entities = list;
+}
+
+// Interpolate every mirrored entity's frame.x / frame.y between its
+// last two snapshots and write the result to zone.entities. Called once
+// per render frame from tickGuestFrame so animated entities (mobs,
+// pushables, projectiles) slide smoothly instead of teleporting at the
+// broadcaster's 20 Hz tick rate. Static entities lerp from prev=curr
+// → no visible change, no cost beyond the per-frame alloc.
+//
+// renderTime is back-dated by INTERP_DELAY_MS so we're interpolating
+// inside the already-arrived sample window, never extrapolating beyond
+// the latest curr. (Forward extrapolation for "still moving past
+// currAt" needs a `moving` flag in serializeEntity — Proposal #6 — and
+// is parked for a follow-up.)
+export function refreshMirrorEntities(at = nowMs()) {
+  if (!zone) return;
+  const renderTime = at - INTERP_DELAY_MS;
+  const list = [];
+  for (const snap of entitySnaps.values()) {
+    if (!snap.curr) continue;
+    list.push(interpolateEntity(snap, renderTime));
+  }
+  zone.entities = list;
+}
+
+function interpolateEntity({ prev, curr, prevAt, currAt }, renderTime) {
+  const out = { ...curr };
+  if (curr.frame) out.frame = { ...curr.frame };
+  if (!prev || !prev.frame || !curr.frame) return out;
+  const span = currAt - prevAt;
+  if (span <= 0) return out;
+  let t = (renderTime - prevAt) / span;
+  if (t < 0) t = 0;
+  if (t > 1) t = 1;
+  const px = prev.frame.x ?? curr.frame.x;
+  const py = prev.frame.y ?? curr.frame.y;
+  const cx = curr.frame.x ?? px;
+  const cy = curr.frame.y ?? py;
+  out.frame.x = px + (cx - px) * t;
+  out.frame.y = py + (cy - py) * t;
+  return out;
 }
 
 function interpolatePlayer({ prev, curr, prevAt, currAt, stepStartedAt }, renderTime) {

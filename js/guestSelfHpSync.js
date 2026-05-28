@@ -4,8 +4,8 @@
 // reads getPlayerHp(0) and we don't want to teach it about the mirror.
 // Subscribing here means the HUD works for guests with zero changes.
 
-import { setPlayerHp } from "./playerHealth.js?v=20260528d";
-import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260528d";
+import { setPlayerHp } from "./playerHealth.js?v=20260528f";
+import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260528f";
 
 let unsubs = [];
 let installed = false;

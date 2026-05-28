@@ -7,19 +7,19 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260528d");
+  await import("../js/onlineMode.js?v=20260528f");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js?v=20260528d");
-const equipment = await import("../js/equipment.js?v=20260528d");
-const storage = await import("../js/storage.js?v=20260528d");
+  await import("../js/onlineBootstrap.js?v=20260528f");
+const equipment = await import("../js/equipment.js?v=20260528f");
+const storage = await import("../js/storage.js?v=20260528f");
 const {
   installHostLoadoutSync,
   _uninstallHostLoadoutSyncForTesting,
-} = await import("../js/hostLoadoutSync.js?v=20260528d");
+} = await import("../js/hostLoadoutSync.js?v=20260528f");
 const {
   getSessionLoadout,
   _resetSessionLoadoutsForTesting,
-} = await import("../js/sessionLoadouts.js?v=20260528d");
+} = await import("../js/sessionLoadouts.js?v=20260528f");
 
 function makeFakeNet() {
   const handlers = new Map();

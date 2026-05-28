@@ -15,21 +15,21 @@
 // onlineBootstrap fills in before the relay routes any guest frames our
 // way — so seedSelfFromLocal can rely on it during install.
 
-import { broadcastHostEvent } from "./hostEvents.js?v=20260528d";
-import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260528d";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260528f";
+import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260528f";
 import {
   getEquipped,
   onEquipmentChange,
   SLOT_MELEE,
   SLOT_RANGED,
-} from "./equipment.js?v=20260528d";
+} from "./equipment.js?v=20260528f";
 import {
   setSessionLoadout,
   getSessionLoadout,
   deleteSessionLoadout,
   clearSessionLoadouts,
   listSessionLoadouts,
-} from "./sessionLoadouts.js?v=20260528d";
+} from "./sessionLoadouts.js?v=20260528f";
 
 let unsubs = [];
 let installed = false;

@@ -8,11 +8,11 @@
 // The renderer is updated separately to draw the predicted self in
 // place of the mirror's lagged copy for the guest's own slot.
 
-import { createPlayer, updatePlayer } from "./player.js?v=20260528d";
-import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528d";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528d";
-import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528d";
-import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js?v=20260528d";
+import { createPlayer, updatePlayer } from "./player.js?v=20260528f";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528f";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528f";
+import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528f";
+import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js?v=20260528f";
 
 let predicted = null;
 let installed = false;
@@ -20,7 +20,6 @@ let lastAckedSeq = 0;
 let lastAckedX = null;
 let lastAckedY = null;
 let unsubs = [];
-let lastMovingAt = 0;
 
 // Reconciliation tolerance for normal RTT lag along the direction we're
 // walking. During continuous chained motion the guest and host step at
@@ -47,12 +46,19 @@ let lastMovingAt = 0;
 //
 // Orthogonal disagreement (cross != 0) is still a real divergence
 // (predicted into a different lane than the host) and always snaps,
-// regardless of along-axis distance. LATENCY_GRACE_MS keeps the same
-// tolerance briefly after the user stops moving so trailing deltas
-// don't yank predicted backwards.
+// regardless of along-axis distance. There used to be a
+// LATENCY_GRACE_MS check that blanket-snapped any disagreement once
+// the user had been idle for ~500 ms, on the theory that "long after
+// the last step, any remaining mismatch is real divergence." In
+// practice that wrecked the experience of pausing to read text or
+// solve a puzzle — the very next auth frame after the grace expiry
+// jolted the avatar. The tile-distance tolerances above are
+// sufficient on their own: a real divergence shows up as either an
+// orthogonal mismatch (snapped by the cross check) or as a >5/3-tile
+// along-axis gap (snapped by the bounds), neither of which need a
+// time-based heuristic.
 const MAX_BEHIND_TILES = 5;
 const MAX_AHEAD_TILES = 3;
-const LATENCY_GRACE_MS = 500;
 const DIR_VEC = {
   up:    { dx:  0, dy: -1 },
   down:  { dx:  0, dy:  1 },
@@ -78,7 +84,6 @@ export function uninstallPredictedSelf() {
   lastAckedSeq = 0;
   lastAckedX = null;
   lastAckedY = null;
-  lastMovingAt = 0;
 }
 
 export const _uninstallPredictedSelfForTesting = uninstallPredictedSelf;
@@ -98,29 +103,20 @@ export function tickPredictedSelf(dt) {
   }
   const input = pollInput(1);
   updatePlayer(predicted, input, dt, zone);
-  if (predicted.step) lastMovingAt = nowMs();
 }
 
-function nowMs() {
-  return typeof performance !== "undefined" && performance?.now
-    ? performance.now()
-    : Date.now();
-}
-
-export function _shouldSnapForTesting(predicted, auth, now) {
-  return shouldSnap(predicted, auth, now);
+export function _shouldSnapForTesting(predicted, auth, _now) {
+  return shouldSnap(predicted, auth);
 }
 
 // Returns true when the guest must hard-snap to auth, false when the
 // disagreement is consistent with normal latency (predicted is ahead
 // of auth along the move direction) and should be left to resolve on
 // the next snapshot.
-function shouldSnap(predicted, auth, now = nowMs()) {
+function shouldSnap(predicted, auth) {
   if (predicted.tileX === auth.tileX && predicted.tileY === auth.tileY) return false;
   const dir = DIR_VEC[(predicted.direction || "").toLowerCase()];
   if (!dir) return true;
-  const recentlyMoving = !!predicted.step || (now - lastMovingAt) <= LATENCY_GRACE_MS;
-  if (!recentlyMoving) return true;
   const ddx = auth.tileX - predicted.tileX;
   const ddy = auth.tileY - predicted.tileY;
   // Orthogonal disagreement (cross product nonzero) means we predicted

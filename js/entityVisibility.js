@@ -12,9 +12,9 @@
 // NPC sprite — matching the Rust core's collision model where a standing
 // NPC only blocks the floor tile they stand on.
 
-import { getValue, keyMatches } from "./storage.js?v=20260528d";
-import { getSpecies } from "./species.js?v=20260528d";
-import { isCreativeMode } from "./creativeMode.js?v=20260528d";
+import { getValue, keyMatches } from "./storage.js?v=20260528f";
+import { getSpecies } from "./species.js?v=20260528f";
+import { isCreativeMode } from "./creativeMode.js?v=20260528f";
 
 export function shouldBeVisible(entity) {
   if (!entity) return false;
