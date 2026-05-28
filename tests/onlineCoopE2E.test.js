@@ -270,6 +270,28 @@ test("E2E: peer.joined makes state.player2 appear in the host's outgoing snapsho
   } finally { teardown(); }
 });
 
+// Regression for "guest's own avatar is briefly invisible after connect".
+// Both hostGuests and snapshotBroadcaster listen on `peer.joined`. The
+// broadcaster's handler ships a snapshot; hostGuests's handler spawns
+// the guest in state. net dispatches handlers in registration order, so
+// if hostGuests is installed AFTER the broadcaster the snapshot fans
+// out before the guest exists in state — its mirror has no entry for
+// itself, predictedSelf can't be built, and the local avatar stays
+// invisible until the next delta (~50 ms). switchRole pins the order
+// to hostGuests-first; this test catches a swap-back.
+test("E2E: snapshot sent in response to peer.joined includes the joining guest", () => {
+  const { fn } = setupHostWorld();
+  try {
+    const sentBefore = fn.sent.length;
+    fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest", slot: 2 });
+    const snap = fn.sent.slice(sentBefore).find((f) => f.op === "snapshot");
+    assert.ok(snap, "broadcaster must send a snapshot on peer.joined");
+    const pids = snap.players.map((p) => p.playerId).sort();
+    assert.deepEqual(pids, ["p_guest", "p_host"],
+      "snapshot sent in the same peer.joined dispatch must include the joining guest");
+  } finally { teardown(); }
+});
+
 // --- 2. guest walks down onto the 10× kunai bundle --------------------------
 //
 // Step-by-step: send moveDown intents at the start of each tile and

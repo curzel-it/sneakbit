@@ -138,8 +138,17 @@ async function setupRole(target, opts) {
         if (stateHandlers.onEnterHost) stateHandlers.onEnterHost();
       });
     }
-    installSnapshotBroadcaster(stateHandlers.stateGetter);
+    // Order matters: hostGuests must subscribe to `peer.joined` BEFORE
+    // the broadcaster does. Both modules listen on `peer.joined`, and
+    // net.js dispatches handlers in registration order. The broadcaster's
+    // handler builds a snapshot from `state.player + state.player2 +
+    // state.players`, so if it fires first the just-joined guest hasn't
+    // been spawned yet and the snapshot ships without them — the new
+    // guest's mirror then has no entry for itself, predictedSelf can't
+    // be built, and their own avatar stays invisible until the next
+    // delta (~50 ms later).
     installHostGuests(stateHandlers.stateGetter, { makeCoopP2: stateHandlers.p2Factory });
+    installSnapshotBroadcaster(stateHandlers.stateGetter);
     return;
   }
 
