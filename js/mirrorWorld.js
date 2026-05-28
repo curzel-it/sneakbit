@@ -33,6 +33,28 @@ const HERO_FRAME_H = 2;
 const HERO_FRAME_COUNT = 4;
 const HERO_COLUMN_STRIDE = 4;
 
+// Forward extrapolation during continuous motion. The broadcaster's
+// sigPlayer omits x/y to save bandwidth, so a moving avatar only emits
+// ~2 deltas per 220 ms tile-step (start + end). Without extrapolation
+// the renderer (back-dated by INTERP_DELAY_MS) sat at curr for ~100 ms
+// between every step → the "buttery 50% + frozen 50%" choppiness.
+// When curr.moving=true and renderTime exceeds currAt, we project
+// forward at the host's step speed in curr.direction, capped at the
+// next-tile boundary so we never predict past one chained step.
+// A fresh delta arrives within ~200 ms in normal motion and the lerp
+// resumes from the extrapolated point (prev becomes the old curr, so
+// the handoff is continuous). The cap means a stop-after-running can
+// snap back at most one tile — in practice much less, because the
+// inter-delta gap is ~50 ms when sig flips.
+const STEP_DURATION_MS = 220;
+const STEP_TILES_PER_MS = 1 / STEP_DURATION_MS;
+const DIR_DELTA = {
+  up:    { x:  0, y: -1 },
+  down:  { x:  0, y:  1 },
+  left:  { x: -1, y:  0 },
+  right: { x:  1, y:  0 },
+};
+
 let zone = null;
 let zonePromise = null;
 let pendingZoneId = null;
@@ -292,6 +314,24 @@ function interpolatePlayer({ prev, curr, prevAt, currAt, stepStartedAt }, render
   if (t < 0) t = 0; if (t > 1) t = 1;
   const sx = (prev?.x ?? curr.x);
   const sy = (prev?.y ?? curr.y);
+  const cx = (curr.x ?? sx);
+  const cy = (curr.y ?? sy);
+  let x = sx + (cx - sx) * t;
+  let y = sy + (cy - sy) * t;
+  if (curr.moving && renderTime > currAt) {
+    const dir = DIR_DELTA[(curr.direction || "").toLowerCase()];
+    if (dir && (dir.x !== 0 || dir.y !== 0)) {
+      const ahead = (renderTime - currAt) * STEP_TILES_PER_MS;
+      const targetX = curr.tileX + dir.x;
+      const targetY = curr.tileY + dir.y;
+      x = cx + dir.x * ahead;
+      y = cy + dir.y * ahead;
+      if (dir.x > 0 && x > targetX) x = targetX;
+      else if (dir.x < 0 && x < targetX) x = targetX;
+      if (dir.y > 0 && y > targetY) y = targetY;
+      else if (dir.y < 0 && y < targetY) y = targetY;
+    }
+  }
   const animFrame = curr.moving
     ? Math.floor((renderTime - (stepStartedAt || 0)) * ANIMATIONS_FPS / 1000) % HERO_FRAME_COUNT
     : 0;
@@ -299,8 +339,8 @@ function interpolatePlayer({ prev, curr, prevAt, currAt, stepStartedAt }, render
     index: curr.index | 0,
     playerId: curr.playerId,
     slot: curr.slot,
-    x: sx + ((curr.x ?? sx) - sx) * t,
-    y: sy + ((curr.y ?? sy) - sy) * t,
+    x,
+    y,
     tileX: curr.tileX,
     tileY: curr.tileY,
     direction: curr.direction || "down",

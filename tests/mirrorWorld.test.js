@@ -189,9 +189,52 @@ test("endpoint-only step lerp: tile A → tile B over the receive interval recon
   const late = getMirrorPlayerById("p_w", stepStart + 290);
   assert.ok(late.x > mid.x,
     `x should advance monotonically: ${mid.x} -> ${late.x}`);
-  // After currAt elapses, lerp clamps t=1 → x lands exactly on 6.
+  // After currAt elapses while moving=true, the mirror extrapolates
+  // forward in curr.direction at the host's step speed. The cap kicks
+  // in at the next-tile boundary (7), so a long sample lands at the
+  // boundary, not past it.
   const after = getMirrorPlayerById("p_w", baseAt + 500);
-  assert.equal(after.x, 6, "after currAt the avatar must rest on the destination tile");
+  assert.ok(after.x > 6 && after.x <= 7,
+    `moving=true after currAt should extrapolate toward next tile, got ${after.x}`);
+  reset();
+});
+
+test("extrapolation: moving=true past currAt advances at step speed up to one tile", async () => {
+  reset();
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [{ playerId: "p_e", slot: 1, index: 0, x: 5, y: 3, tileX: 5, tileY: 3, direction: "right", moving: false }],
+    entities: [],
+  });
+  handleDelta({
+    op: "delta", zoneId: 1001,
+    players: [{ playerId: "p_e", x: 5, y: 3, tileX: 5, tileY: 3, direction: "right", moving: true }],
+  });
+  const t0 = performance.now();
+  // Render 100 ms past currAt (renderTime = currAt + 100, so at = currAt + 200).
+  // At STEP_DURATION 220 ms/tile that's ~0.45 tiles forward.
+  const e = getMirrorPlayerById("p_e", t0 + 200);
+  assert.ok(e.x > 5.3 && e.x < 5.6,
+    `expected ~0.45 tiles of forward extrapolation, got ${e.x}`);
+  // Render way past currAt (1 s out) — extrapolation caps at the next
+  // tile (6), it doesn't run away.
+  const capped = getMirrorPlayerById("p_e", t0 + 1100);
+  assert.equal(capped.x, 6, `extrapolation must cap at next tile, got ${capped.x}`);
+  reset();
+});
+
+test("extrapolation: moving=false does NOT extrapolate (rests at curr)", async () => {
+  reset();
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [{ playerId: "p_s", slot: 1, index: 0, x: 4, y: 2, tileX: 4, tileY: 2, direction: "down", moving: false }],
+    entities: [],
+  });
+  const t0 = performance.now();
+  // Idle player, far past currAt — must remain on its tile.
+  const p = getMirrorPlayerById("p_s", t0 + 500);
+  assert.equal(p.x, 4);
+  assert.equal(p.y, 2);
   reset();
 });
 
