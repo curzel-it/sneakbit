@@ -13,12 +13,16 @@ The original game's source lives at `../dev/sneakbit`. Treat it as read-only ref
 6. Enjoy!
 
 ## Testing, committing, shipping
-- **Unit tests** use Node's built-in test runner — no framework, no devDependencies. Tests live in `tests/` and end in `.test.js`. Run them with:
+- **Unit tests** use Node's built-in test runner — no framework, no devDependencies. Tests live in `tests/` and end in `.test.js`. They are pure node, no DOM, ~2 s to run.
+- **E2E tests** live in `tests/e2e/*.test.mjs`. They drive headless Chrome via raw CDP and exercise the live game end-to-end (co-op host + guest, snapshot flow, WebRTC DC, predicted-self timing). They self-skip if Chrome isn't on the path; set `CHROME_PATH` to point at a non-default install. Slower (~26 s total) — that's why they're a separate npm script.
+- Commands:
   ```bash
-  npm test
+  npm run test:unit   # fast inner loop (~2 s)
+  npm run test:e2e    # full e2e suite (~26 s; needs Chrome)
+  npm test            # both, sequential
   ```
-  Run them often — at minimum before each commit. They're fast; there's no excuse not to.
-- **Commit often.** Small focused commits beat large ones. Each commit should leave the game in a runnable state (`node --test` green, page loads without console errors).
+  Run `test:unit` often — at minimum before each commit. Run `test:e2e` before any push that touches `onlineBootstrap.js`, `webrtcTransport.js`, `webrtcChannel.js`, `predictedSelf.js`, `mirrorWorld.js`, or `snapshotBroadcaster.js`.
+- **Commit often.** Small focused commits beat large ones. Each commit should leave the game in a runnable state (`npm test` green, page loads without console errors).
 - **Push to main often.** Pushing to `main` deploys the *client* to <https://curzel.it/sneakbit-html>, so every push is a public release. After any change large enough to be visible to a user, push it — don't sit on local changes. The deploy is automatic; there's no staging.
 
 ## Server (`server/`)
