@@ -6,19 +6,19 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260528c");
+  await import("../js/onlineMode.js?v=20260528d");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js?v=20260528c");
+  await import("../js/onlineBootstrap.js?v=20260528d");
 const {
   installPredictedSelf, _uninstallPredictedSelfForTesting,
   tickPredictedSelf, getPredictedSelf, getLastAckedSeq,
   _shouldSnapForTesting,
-} = await import("../js/predictedSelf.js?v=20260528c");
+} = await import("../js/predictedSelf.js?v=20260528d");
 const {
   installMirrorWorld, uninstallMirrorWorld, handleSnapshot,
-} = await import("../js/mirrorWorld.js?v=20260528c");
-const inputModule = await import("../js/input.js?v=20260528c");
-const { loadSpeciesData } = await import("../js/species.js?v=20260528c");
+} = await import("../js/mirrorWorld.js?v=20260528d");
+const inputModule = await import("../js/input.js?v=20260528d");
+const { loadSpeciesData } = await import("../js/species.js?v=20260528d");
 
 function makeFakeZone(id) {
   return {
@@ -146,7 +146,10 @@ test("shouldSnap: auth 1 tile behind us in our move direction is tolerated (RTT 
 });
 
 test("shouldSnap: auth more than MAX_BEHIND tiles behind triggers a snap", () => {
-  const predicted = { tileX: 10, tileY: 5, direction: "right", step: { progress: 0.1 } };
+  // 6 tiles behind exceeds MAX_BEHIND_TILES = 5. Anything <= 5 stays
+  // tolerated as steady-state RTT shape (on a high-latency transport
+  // predicted can naturally run 3-5 tiles ahead during a chained walk).
+  const predicted = { tileX: 11, tileY: 5, direction: "right", step: { progress: 0.1 } };
   const auth = { tileX: 5, tileY: 5 };
   assert.equal(_shouldSnapForTesting(predicted, auth, 0), true);
 });
@@ -166,12 +169,12 @@ test("shouldSnap: auth 1 tile ahead along direction is tolerated (chained-step r
 });
 
 test("shouldSnap: auth more than MAX_AHEAD tiles ahead snaps (real divergence)", () => {
-  // 2+ tiles ahead means predicted genuinely lost inputs or fell
-  // behind by more than one step's worth of race — at that point
-  // catching up locally would take multiple step durations and feel
-  // worse than snapping.
+  // 4+ tiles ahead exceeds MAX_AHEAD_TILES = 3. Below that, treat as
+  // post-direction-change ghost lag (the WS-relay path can leave the
+  // guest 2-3 tiles behind the host after a direction change before
+  // the system stabilises).
   const predicted = { tileX: 5, tileY: 5, direction: "right", step: { progress: 0.4 } };
-  const auth = { tileX: 7, tileY: 5 };
+  const auth = { tileX: 9, tileY: 5 };
   assert.equal(_shouldSnapForTesting(predicted, auth, 0), true);
 });
 

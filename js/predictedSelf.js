@@ -8,11 +8,11 @@
 // The renderer is updated separately to draw the predicted self in
 // place of the mirror's lagged copy for the guest's own slot.
 
-import { createPlayer, updatePlayer } from "./player.js?v=20260528c";
-import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528c";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528c";
-import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528c";
-import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js?v=20260528c";
+import { createPlayer, updatePlayer } from "./player.js?v=20260528d";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState } from "./input.js?v=20260528d";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528d";
+import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528d";
+import { getInputLog, dropAckedInputs } from "./guestInputForwarder.js?v=20260528d";
 
 let predicted = null;
 let installed = false;
@@ -23,35 +23,35 @@ let unsubs = [];
 let lastMovingAt = 0;
 
 // Reconciliation tolerance for normal RTT lag along the direction we're
-// walking. During continuous chained motion the guest and host are both
-// stepping at the same rate; either can briefly lead the other by a
-// tile or so depending on which side hit a step boundary first and
-// whether the broadcaster's tick fell before or after. We tolerate
-// asymmetrically:
+// walking. During continuous chained motion the guest and host step at
+// the same rate; either can briefly lead the other by a few tiles
+// depending on jitter, direction changes, and which side hit a step
+// boundary first. We tolerate asymmetrically along the move axis:
 //
 //   * Host BEHIND us along direction (predicted ran ahead): up to
-//     MAX_BEHIND_TILES (3). This is the expected steady-state shape —
-//     predicted has zero input RTT, auth eats RTT/2 + 60 ms commit +
-//     220 ms step + ≤50 ms broadcaster + RTT/2.
+//     MAX_BEHIND_TILES (5). On a high-RTT transport (WS-relay through
+//     a remote VPS) predicted can naturally run a few tiles ahead
+//     during a fast walk before auth catches up; the previous limit
+//     of 3 was too tight and produced visible "snap back" bursts on
+//     prod when network jitter spiked. See the WS-only run of
+//     tests/e2e/perfPublicLong.mjs — 13- and 16-snap cascades that
+//     all start with `behind > 3 → snap back`. 5 absorbs typical
+//     consumer-Wi-Fi spikes; >5 tiles is still treated as real desync.
 //
-//   * Host AHEAD of us along direction (predicted briefly lags after a
-//     snap-induced commit gap, OR auth chained while predicted is mid-
-//     step): up to MAX_AHEAD_TILES (1). Without this, every chained
-//     walk on a fast transport (WebRTC, RTT ~10 ms) eats a self-
-//     amplifying cascade: snap → step=null → 60 ms commit gap → host
-//     pulls 1 more tile ahead → snap again. Observed on production via
-//     tests/e2e/perfPublic.mjs: 5 consecutive snaps at the start of a
-//     down hold, all of the shape "predicted lands on N, auth=N+1,
-//     behind=-1, snap forces predicted to N+1+commit gap". The user-
-//     visible symptom is the guest's own avatar teleporting one tile
-//     and skipping the walk animation.
+//   * Host AHEAD of us along direction: up to MAX_AHEAD_TILES (3).
+//     This is the chained-step race case — predicted finishes step,
+//     step briefly null, host's next chained auth arrives. The
+//     original snap-fix used 1 here (sufficient for WebRTC's ~10 ms
+//     RTT) but the WS-relay path can leave us 2-3 tiles "behind" the
+//     host post-direction-change. 3 covers both.
 //
 // Orthogonal disagreement (cross != 0) is still a real divergence
-// (predicted into a different lane than the host) and always snaps.
-// LATENCY_GRACE_MS keeps the same tolerance briefly after the user
-// stops moving so trailing deltas don't yank predicted backwards.
-const MAX_BEHIND_TILES = 3;
-const MAX_AHEAD_TILES = 1;
+// (predicted into a different lane than the host) and always snaps,
+// regardless of along-axis distance. LATENCY_GRACE_MS keeps the same
+// tolerance briefly after the user stops moving so trailing deltas
+// don't yank predicted backwards.
+const MAX_BEHIND_TILES = 5;
+const MAX_AHEAD_TILES = 3;
 const LATENCY_GRACE_MS = 500;
 const DIR_VEC = {
   up:    { dx:  0, dy: -1 },

@@ -4,7 +4,7 @@
 // the endpoint 404/503s we still have STUN, which works for the vast
 // majority of consumer connections.
 
-import { DEFAULT_STUN_SERVERS } from "./webrtcChannel.js?v=20260528c";
+import { DEFAULT_STUN_SERVERS } from "./webrtcChannel.js?v=20260528d";
 
 const TURN_ENDPOINT_PATH = "/turn-credentials";
 let cachedServers = DEFAULT_STUN_SERVERS.slice();

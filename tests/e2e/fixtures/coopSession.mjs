@@ -96,7 +96,7 @@ export async function startCoopSession({
   // Pick up the host's invite code via the existing getter.
   const inviteCode = await waitFor(host, `
     (async () => {
-      const o = await import('./js/onlineBootstrap.js?v=20260528c');
+      const o = await import('./js/onlineBootstrap.js?v=20260528d');
       return o.getInviteCode && o.getInviteCode();
     })()
   `, { timeoutMs: 30000 });
@@ -115,7 +115,7 @@ export async function startCoopSession({
     await waitFor(guest, `(typeof window !== 'undefined' && !!document.querySelector('#game'))`, { timeoutMs: 10000 });
     await evalExpr(guest, `
       (async () => {
-        const sr = await import('./js/switchRole.js?v=20260528c');
+        const sr = await import('./js/switchRole.js?v=20260528d');
         await sr.switchRole('guest', { code: ${JSON.stringify(inviteCode)} });
         return true;
       })()
@@ -127,9 +127,9 @@ export async function startCoopSession({
   // Wait until the guest's mirror and predicted-self both exist.
   await waitFor(guest, `
     (async () => {
-      const m = await import('./js/mirrorWorld.js?v=20260528c');
-      const p = await import('./js/predictedSelf.js?v=20260528c');
-      const o = await import('./js/onlineBootstrap.js?v=20260528c');
+      const m = await import('./js/mirrorWorld.js?v=20260528d');
+      const p = await import('./js/predictedSelf.js?v=20260528d');
+      const o = await import('./js/onlineBootstrap.js?v=20260528d');
       window.__sb = { m, p, o };
       const selfId = o.getSelfPlayerId && o.getSelfPlayerId();
       const mp = selfId && m.getMirrorPlayerById(selfId);
@@ -202,6 +202,107 @@ export const KEYS = {
   ArrowUp:    { key: "ArrowUp",    code: "ArrowUp",    vk: 38 },
   ArrowDown:  { key: "ArrowDown",  code: "ArrowDown",  vk: 40 },
 };
+
+// Variant of runStutterWorkload tuned for hunting the residual
+// jitter-driven stutter we still see on production after the
+// shouldSnap fix shipped. Runs longer (default ~90 s), mixes
+// continuous holds with short bursts to exercise the grace-window
+// boundary, and dumps a small ring of context samples around each
+// snap so we can read the pattern post-hoc instead of having to
+// re-instrument every time.
+export async function runStutterLongWorkload(session, { totalMs = 90_000, jumpThreshold = 0.15, contextFrames = 30 } = {}) {
+  await evalExpr(session.guest, dispatchKey("keydown", KEYS.ArrowRight.key, KEYS.ArrowRight.code, KEYS.ArrowRight.vk));
+  await new Promise((r) => setTimeout(r, 400));
+  await evalExpr(session.guest, dispatchKey("keyup", KEYS.ArrowRight.key, KEYS.ArrowRight.code, KEYS.ArrowRight.vk));
+  await new Promise((r) => setTimeout(r, 400));
+
+  await evalExpr(session.guest, `
+    (() => {
+      const ps_mod = window.__sb.p;
+      const m = window.__sb.m;
+      const o = window.__sb.o;
+      const selfId = o.getSelfPlayerId();
+      const ring = []; const ringCap = ${contextFrames * 2 + 1};
+      const snaps = [];
+      let prev = null;
+      let counter = 0;
+      window.__sb_stutter_long = { ring, snaps, running: true, totalFrames: 0 };
+      const thresh = ${jumpThreshold};
+      const tick = () => {
+        if (!window.__sb_stutter_long.running) return;
+        const ps = ps_mod.getPredictedSelf();
+        const mp = m.getMirrorPlayerById(selfId);
+        if (ps) {
+          window.__sb_stutter_long.totalFrames++;
+          const t = performance.now();
+          const sample = {
+            t, fi: counter++,
+            x: +ps.x.toFixed(3), y: +ps.y.toFixed(3),
+            tx: ps.tileX, ty: ps.tileY,
+            step: !!ps.step,
+            dir: ps.direction,
+            aTx: mp ? mp.tileX : null,
+            aTy: mp ? mp.tileY : null,
+            aX: mp ? +(mp.x ?? 0).toFixed(3) : null,
+            aY: mp ? +(mp.y ?? 0).toFixed(3) : null,
+            aMoving: mp ? !!mp.moving : null,
+          };
+          ring.push(sample);
+          if (ring.length > ringCap) ring.shift();
+          if (prev) {
+            const dx = ps.x - prev.x;
+            const dy = ps.y - prev.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > thresh) {
+              snaps.push({
+                t, fi: sample.fi, dist: +dist.toFixed(3),
+                dx: +dx.toFixed(3), dy: +dy.toFixed(3),
+                from: { x: prev.x, y: prev.y, tx: prev.tx, ty: prev.ty, step: prev.step, dir: prev.dir },
+                to: { x: sample.x, y: sample.y, tx: sample.tx, ty: sample.ty, step: sample.step, dir: sample.dir },
+                auth: { tx: sample.aTx, ty: sample.aTy, x: sample.aX, y: sample.aY, moving: sample.aMoving },
+                contextBefore: ring.slice(-${contextFrames + 1}, -1).map((s) => ({ fi: s.fi, x: s.x, y: s.y, tx: s.tx, ty: s.ty, step: s.step, dir: s.dir, aTx: s.aTx, aTy: s.aTy, aMoving: s.aMoving })),
+              });
+            }
+          }
+          prev = { x: ps.x, y: ps.y, tx: ps.tileX, ty: ps.tileY, step: !!ps.step, dir: ps.direction };
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      return true;
+    })()
+  `);
+
+  // Workload schedule. Mix of:
+  //   - long holds (10 s each) to exercise steady-state chaining
+  //   - shorter alternations (1.5-2 s) to exercise direction changes
+  //   - 800 ms pauses (longer than LATENCY_GRACE_MS=500) to exercise
+  //     the post-grace path
+  const start = Date.now();
+  let cycle = 0;
+  while (Date.now() - start < totalMs) {
+    const c = cycle++;
+    const dir = c % 2 === 0 ? KEYS.ArrowDown : KEYS.ArrowUp;
+    // Alternate between long and short holds.
+    const hold = (c % 4 < 2) ? 1800 : 4000;
+    const pause = (c % 3 === 2) ? 800 : 250;
+    await evalExpr(session.guest, dispatchKey("keydown", dir.key, dir.code, dir.vk));
+    await new Promise((r) => setTimeout(r, hold));
+    await evalExpr(session.guest, dispatchKey("keyup", dir.key, dir.code, dir.vk));
+    await new Promise((r) => setTimeout(r, pause));
+  }
+  await new Promise((r) => setTimeout(r, 500));
+
+  return evalExpr(session.guest, `
+    (() => {
+      window.__sb_stutter_long.running = false;
+      return {
+        snaps: window.__sb_stutter_long.snaps,
+        totalFrames: window.__sb_stutter_long.totalFrames,
+      };
+    })()
+  `);
+}
 
 // Drives the guest's predicted self through `cycles` of alternating
 // down/up holds (each `holdMs`) and captures every animation frame's

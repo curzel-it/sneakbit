@@ -6,7 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { getValue, setValue, keyMatches, _resetStorageForTesting } =
-  await import("../js/storage.js?v=20260528c");
+  await import("../js/storage.js?v=20260528d");
 
 test("keyMatches: 'always' matches anything", () => {
   _resetStorageForTesting();

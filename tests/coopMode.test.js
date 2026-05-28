@@ -6,7 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { isCoopMode, setCoopMode, COOP_KEYMAPS, _setCoopModeForTesting } =
-  await import("../js/coopMode.js?v=20260528c");
+  await import("../js/coopMode.js?v=20260528d");
 
 test("defaults to disabled", () => {
   _setCoopModeForTesting(false);

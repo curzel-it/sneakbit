@@ -8,7 +8,7 @@ import {
   biomeIsSame,
   isLiquid,
   isLightGrass,
-} from "../js/biomes.js?v=20260528c";
+} from "../js/biomes.js?v=20260528d";
 
 test("biomeFromChar maps known chars", () => {
   assert.equal(biomeFromChar("0"), BIOME.NOTHING);

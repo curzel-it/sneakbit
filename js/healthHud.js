@@ -4,8 +4,8 @@
 // In single-player a single bar sits top-left. In co-op an extra bar sits
 // below it — the second player's HP. A bar hides when its player is dead.
 
-import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange, isPlayerDead } from "./playerHealth.js?v=20260528c";
-import { isCoopMode } from "./coopMode.js?v=20260528c";
+import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange, isPlayerDead } from "./playerHealth.js?v=20260528d";
+import { isCoopMode } from "./coopMode.js?v=20260528d";
 
 const PLAYER_COLORS = [
   "linear-gradient(90deg, #b13 0%, #e54 100%)",
