@@ -15,11 +15,9 @@ Our guiding start is that the JS port will replace the Rust codebase in producti
 
 - [ ] Snapshot's `t` is a broadcaster counter today — ship the host's real game tick (or wall-clock) for time-based interpolation; would let the mirror render at host-time `t` instead of receive-time, smoothing over dropped frames
 
-## Stuff
+## To be verified
 
-- [x] "Copy link" button on desktop currently opens the share menu, should instead just copy the link (maytbe with a toast for feedback)
-- [x] When in online co-op the hosts cannot see guests (guests do see the host and can be attacked by monsters, both of which are good)
 - [ ] On the guest client during an online co-op the host avatar moves in a choppy way (both on local an prod server) — likely network jitter + small prediction snap-backs; needs browser-level investigation
 - [ ] On the guest client during an online co-op with a still host the game "jumps 1 tile up and down" at regular intervals (both on local an prod server) — suspected predictedSelf snap-back when host's auth lags guest's chained step by one tile; needs browser repro to confirm
-- [x] Guests cannot shoot kunai during online co-op (works in local co-op) — fixed by direct-call action dispatch (a8ddf2e) + host-can't-see-guests render fix; tests/onlineCoopE2E.test.js pins the host-side spawn path
-- [x] Guests cannot pickup objects during online co-op (works in local co-op) — verified by tests/onlineCoopE2E.test.js (host credits inventory + broadcasts event:pickup); host-can't-see-guests fix restores the visible "bundle disappears under guest" feedback
+
+## Stuff

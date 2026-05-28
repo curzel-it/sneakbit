@@ -13,7 +13,7 @@
 // keys, mirroring the Rust core. Across-zone persistence is intentional
 // so a puzzle's solution can gate access in a *different* zone.
 
-import { getSpecies } from "./species.js?v=20260527b";
+import { getSpecies } from "./species.js?v=20260528";
 import {
   canonicaliseLock,
   isPressurePlateDown,
@@ -21,8 +21,8 @@ import {
   LOCK_NONE,
   LOCK_PERMANENT,
   loadLockOverride,
-} from "./locks.js?v=20260527b";
-import { isPushable } from "./pushables.js?v=20260527b";
+} from "./locks.js?v=20260528";
+import { isPushable } from "./pushables.js?v=20260528";
 
 export function setupPuzzles(zone) {
   if (!zone?.entities) return;

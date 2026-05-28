@@ -6,8 +6,8 @@
 // disconnect yet" case where the relay hasn't fanned a ghost frame —
 // and clears the instant fresh state lands.
 
-import { isMirrorStale } from "./mirrorWorld.js?v=20260527b";
-import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260527b";
+import { isMirrorStale } from "./mirrorWorld.js?v=20260528";
+import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260528";
 
 let overlay = null;
 let installed = false;

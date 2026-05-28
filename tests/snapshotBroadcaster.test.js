@@ -6,23 +6,23 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260527b");
+  await import("../js/onlineMode.js?v=20260528");
 const { _resetOnlineBootstrapForTesting } =
-  await import("../js/onlineBootstrap.js?v=20260527b");
+  await import("../js/onlineBootstrap.js?v=20260528");
 
 // Force host mode + a fixed playerId before the broadcaster module
 // imports bootstrap.
 _resetOnlineBootstrapForTesting();
 _setOnlineModeForTesting({ mode: "host", uuid: "uuid-host-broadcaster" });
 
-const broadcaster = await import("../js/snapshotBroadcaster.js?v=20260527b");
+const broadcaster = await import("../js/snapshotBroadcaster.js?v=20260528");
 const { _snapshotForTesting, _broadcastDeltaForTesting,
   installSnapshotBroadcaster, stopSnapshotBroadcaster } = broadcaster;
 
 // We can't easily stub getSelfPlayerId from bootstrap without driving the
 // real WS handshake — instead we drive bootstrap directly with a fake net
 // that emits a welcome frame, so selfPlayerId gets set.
-const { bootstrapOnline, getNet } = await import("../js/onlineBootstrap.js?v=20260527b");
+const { bootstrapOnline, getNet } = await import("../js/onlineBootstrap.js?v=20260528");
 
 function makeFakeNet() {
   const handlers = new Map();
@@ -281,7 +281,7 @@ test("zone change broadcasts event:zoneChange before the full snapshot", () => {
 
 test("hp 0-crossing emits event:death; recovery emits event:respawn", async () => {
   const fakeNet = setupBootstrapWithFakeNet();
-  const ph = await import("../js/playerHealth.js?v=20260527b");
+  const ph = await import("../js/playerHealth.js?v=20260528");
   ph.resetPlayerHealth(); // baseline: all players at MAX_HP
   const state = makeState();
   // Seed baseline so the next delta has prev-hp to compare against.
@@ -314,7 +314,7 @@ test("hp 0-crossing emits event:death; recovery emits event:respawn", async () =
 
 test("a fresh snapshot seeds hp baseline without re-emitting death", async () => {
   const fakeNet = setupBootstrapWithFakeNet();
-  const ph = await import("../js/playerHealth.js?v=20260527b");
+  const ph = await import("../js/playerHealth.js?v=20260528");
   ph.resetPlayerHealth();
   // Pre-kill the host before the first snapshot — the joiner should not
   // be told the host is freshly dead; that already-dead state is encoded

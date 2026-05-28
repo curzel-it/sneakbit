@@ -1,0 +1,59 @@
+// Shared design tokens for the HTML UI layer. Every chrome surface (HUD
+// chips, touch buttons, modal cards, toasts) was historically growing
+// its own copy of "what's a dark translucent rectangle in this game"
+// — different rgba alphas, different border greys, different corner
+// radii. The drift was visible: a player saw five almost-but-not-quite-
+// matching boxes on screen at once.
+//
+// Tokens land as CSS custom properties on :root. Existing per-feature
+// stylesheets reference them via var(...), so adding a new chrome bit
+// stays a one-liner without re-introducing the ad-hoc constants.
+
+let installed = false;
+
+export function installUiTokens() {
+  if (installed) return;
+  installed = true;
+  if (typeof document === "undefined") return;
+  if (document.getElementById("sb-ui-tokens")) return;
+  const style = document.createElement("style");
+  style.id = "sb-ui-tokens";
+  style.textContent = `
+    :root {
+      /* Floating HUD chips, touch buttons, party chip. Translucent
+         enough to read the world underneath, opaque enough to read
+         the text on top. */
+      --sb-surface-bg: rgba(10, 10, 10, 0.72);
+      --sb-surface-border: 1px solid rgba(255, 255, 255, 0.18);
+      --sb-surface-radius: 6px;
+
+      /* Modal cards (menu, party panel, dialogue, message). Fully
+         opaque — they own the screen while open, and pretending to
+         see through them just makes the text harder to read. */
+      --sb-card-bg: #181818;
+      --sb-card-border: 1px solid #333;
+      --sb-card-radius: 8px;
+
+      /* Type. Monospace everywhere — matches the pixel-art aesthetic
+         and ships in every browser without a font download. */
+      --sb-font: monospace;
+      --sb-text: #eee;
+      --sb-text-muted: #8a92ad;
+      --sb-text-dim: #888;
+
+      /* Action accents — used as border tints for the touch action
+         buttons and the colored buttons inside modals (danger / etc).
+         The intent is "subtle hue cue" not "big colored fill"; the
+         icon does the heavy identification work. */
+      --sb-accent-attack: rgba(220, 90, 90, 0.6);
+      --sb-accent-positive: rgba(110, 200, 130, 0.6);
+      --sb-accent-danger-bg: #3a1f1f;
+      --sb-accent-danger-border: #6b3434;
+
+      /* Interactive feedback for buttons — kept consistent across
+         touch + DOM so a "pressed" state reads the same everywhere. */
+      --sb-surface-bg-active: rgba(60, 60, 60, 0.85);
+    }
+  `;
+  document.head.appendChild(style);
+}

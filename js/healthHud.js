@@ -4,8 +4,8 @@
 // In single-player a single bar sits top-left. In co-op an extra bar sits
 // below it — the second player's HP. A bar hides when its player is dead.
 
-import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange, isPlayerDead } from "./playerHealth.js?v=20260527b";
-import { isCoopMode } from "./coopMode.js?v=20260527b";
+import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange, isPlayerDead } from "./playerHealth.js?v=20260528";
+import { isCoopMode } from "./coopMode.js?v=20260528";
 
 const PLAYER_COLORS = [
   "linear-gradient(90deg, #b13 0%, #e54 100%)",
@@ -17,20 +17,9 @@ const bars = []; // [{ label, fill, index }]
 
 export function installHealthHud() {
   if (root) return root;
+  injectStyles();
   root = document.createElement("div");
   root.id = "health-hud";
-  Object.assign(root.style, {
-    position: "fixed",
-    top: "12px",
-    left: "12px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "6px",
-    zIndex: "11",
-    pointerEvents: "none",
-    userSelect: "none",
-    WebkitUserSelect: "none",
-  });
 
   const count = isCoopMode() ? 2 : 1;
   for (let i = 0; i < count; i++) bars.push(makeBar(i));
@@ -42,18 +31,35 @@ export function installHealthHud() {
   return root;
 }
 
+function injectStyles() {
+  if (typeof document === "undefined") return;
+  if (document.getElementById("health-hud-styles")) return;
+  const style = document.createElement("style");
+  style.id = "health-hud-styles";
+  style.textContent = `
+    #health-hud {
+      position: fixed; top: 12px; left: 12px;
+      display: flex; flex-direction: column; gap: 6px;
+      z-index: 11; pointer-events: none;
+      user-select: none; -webkit-user-select: none;
+    }
+    .hp-card {
+      width: 180px;
+      padding: 6px 10px;
+      background: var(--sb-surface-bg);
+      border: var(--sb-surface-border);
+      border-radius: var(--sb-surface-radius);
+      color: var(--sb-text);
+      font-family: var(--sb-font);
+      font-size: 12px;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 function makeBar(index) {
   const card = document.createElement("div");
-  Object.assign(card.style, {
-    width: "180px",
-    padding: "6px 10px",
-    background: "rgba(10, 10, 10, 0.7)",
-    border: "1px solid #333",
-    borderRadius: "6px",
-    color: "#eee",
-    fontFamily: "monospace",
-    fontSize: "12px",
-  });
+  card.className = "hp-card";
 
   const label = document.createElement("div");
   label.style.marginBottom = "4px";

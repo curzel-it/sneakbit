@@ -7,7 +7,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadSpeciesData } from "../js/species.js?v=20260527b";
+import { loadSpeciesData } from "../js/species.js?v=20260528";
 
 loadSpeciesData([
   { id: 7000, entity_type: "Bullet", sprite_sheet_id: 1014,
@@ -18,8 +18,8 @@ loadSpeciesData([
     sprite_frame: { x: 0, y: 0, w: 1, h: 2 } },
 ]);
 
-const combat = await import("../js/combat.js?v=20260527b");
-const playerHealth = await import("../js/playerHealth.js?v=20260527b");
+const combat = await import("../js/combat.js?v=20260528");
+const playerHealth = await import("../js/playerHealth.js?v=20260528");
 
 function makeZone() {
   // 20x20 all-walkable map.
@@ -162,7 +162,7 @@ test("friendly fire OFF: a P1-owned bullet flying through P2 does no damage", as
   const p2 = { index: 1, x: 5, y: 5, tileX: 5, tileY: 5 };
 
   // friendlyFire default is false → P2 takes no damage.
-  const { saveSettings } = await import("../js/settings.js?v=20260527b");
+  const { saveSettings } = await import("../js/settings.js?v=20260528");
   saveSettings({ friendlyFire: false });
   combat.tickCombat(zone, [p1, p2], 0.05);
   assert.equal(playerHealth.getPlayerHp(1), 100, "no friendly fire");
@@ -180,7 +180,7 @@ test("friendly fire ON: a P1-owned bullet damages P2 but not P1", async () => {
   const p1 = { index: 0, x: 1, y: 1, tileX: 1, tileY: 1 };
   const p2 = { index: 1, x: 5, y: 5, tileX: 5, tileY: 5 };
 
-  const { saveSettings } = await import("../js/settings.js?v=20260527b");
+  const { saveSettings } = await import("../js/settings.js?v=20260528");
   saveSettings({ friendlyFire: true });
   combat.tickCombat(zone, [p1, p2], 0.05);
   assert.ok(playerHealth.getPlayerHp(1) < 100, "P2 took friendly fire damage");

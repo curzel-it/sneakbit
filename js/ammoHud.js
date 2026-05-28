@@ -9,10 +9,10 @@
 // local hero's chip only — the host's HUD doesn't try to show guests'
 // counts.
 
-import { TILE_SIZE } from "./constants.js?v=20260527b";
-import { getSprite } from "./assets.js?v=20260527b";
-import { getAmmo, onInventoryChange } from "./inventory.js?v=20260527b";
-import { getSpecies } from "./species.js?v=20260527b";
+import { TILE_SIZE } from "./constants.js?v=20260528";
+import { getSprite } from "./assets.js?v=20260528";
+import { getAmmo, onInventoryChange } from "./inventory.js?v=20260528";
+import { getSpecies } from "./species.js?v=20260528";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
 
@@ -35,18 +35,7 @@ export function installAmmoHud() {
 
 function makeChip(index) {
   const card = document.createElement("div");
-  Object.assign(card.style, {
-    padding: "6px 10px",
-    background: "rgba(10, 10, 10, 0.7)",
-    border: "1px solid #333",
-    borderRadius: "6px",
-    color: "#eee",
-    fontFamily: "monospace",
-    fontSize: "14px",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  });
+  card.className = "ammo-chip";
 
   const icon = document.createElement("canvas");
   icon.width = TILE_SIZE;
@@ -100,6 +89,18 @@ function injectStyles() {
       pointer-events: none;
       user-select: none;
       -webkit-user-select: none;
+    }
+    .ammo-chip {
+      padding: 6px 10px;
+      background: var(--sb-surface-bg);
+      border: var(--sb-surface-border);
+      border-radius: var(--sb-surface-radius);
+      color: var(--sb-text);
+      font-family: var(--sb-font);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     /* Touch-mode shift clears the ☰ menu button at top-right. The menu
        button is 56px wide pinned at right:12px (its rendered size — the

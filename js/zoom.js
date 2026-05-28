@@ -9,15 +9,22 @@
 // works the same on a 1x desktop, a 1.5x Windows display, a 2x Retina
 // laptop and a 3x phone.
 
-import { TILE_SIZE } from "./constants.js?v=20260527b";
+import { TILE_SIZE } from "./constants.js?v=20260528";
 
 const MIN_TILES_W = 16;
 const MAX_TILES_W = 36;
 const TARGET_PHYS_TILE_PX = 32; // target tile size at DPR=1 (CSS px)
 
 export function applyAutoZoom(canvas, camera, hud) {
-  const vw = Math.max(1, window.innerWidth);
-  const vh = Math.max(1, window.innerHeight);
+  // Prefer visualViewport when present: window.innerWidth/Height is stale
+  // on mobile while the soft keyboard / address bar are mid-animation
+  // (especially on iOS Safari, where `resize` fires once on keyboard-up
+  // and not at all when the kbd is dismissed by losing focus). The
+  // visual viewport always reflects the *currently visible* area, which
+  // is what we want to size the canvas against.
+  const vv = (typeof window !== "undefined") ? window.visualViewport : null;
+  const vw = Math.max(1, vv?.width  ?? window.innerWidth);
+  const vh = Math.max(1, vv?.height ?? window.innerHeight);
   const dpr = Math.max(1, window.devicePixelRatio || 1);
   const pvW = vw * dpr; // viewport in physical pixels
   const pvH = vh * dpr;
@@ -74,6 +81,16 @@ export function installAutoZoom(canvas, camera, hud) {
   apply();
   window.addEventListener("resize", apply);
   window.addEventListener("orientationchange", apply);
+  // Mobile address bar / soft keyboard animations don't always trigger
+  // `resize`. visualViewport fires `resize` on every committed change to
+  // the visible region — including the iOS keyboard slide-up that
+  // shrinks the area, *and* the slide-down that grows it back. Without
+  // this listener the canvas can be left at a transient size (the case
+  // reported as "co-op shrinks the play area to a 3:4 box with bars on
+  // every side").
+  if (typeof window !== "undefined" && window.visualViewport) {
+    window.visualViewport.addEventListener("resize", apply);
+  }
   return apply;
 }
 

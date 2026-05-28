@@ -11,7 +11,7 @@
 // Actions are all switchRole(...) calls or net.send({op: "host.kick"}).
 // No location.replace anywhere — role transitions stay in-page.
 
-import { getRuntimeRole, onRoleChange, isValidJoinCode } from "./onlineMode.js?v=20260527b";
+import { getRuntimeRole, onRoleChange, isValidJoinCode } from "./onlineMode.js?v=20260528";
 import {
   getInviteCode,
   getKnownPeers,
@@ -21,12 +21,12 @@ import {
   getNameForPlayerId,
   getNet,
   onSessionState,
-} from "./onlineBootstrap.js?v=20260527b";
-import { switchRole } from "./switchRole.js?v=20260527b";
-import { showToast } from "./toast.js?v=20260527b";
-import { isCreativeMode } from "./creativeMode.js?v=20260527b";
-import { isCoopMode } from "./coopMode.js?v=20260527b";
-import { enableLocalCoop, disableLocalCoop } from "./main.js?v=20260527b";
+} from "./onlineBootstrap.js?v=20260528";
+import { switchRole } from "./switchRole.js?v=20260528";
+import { showToast } from "./toast.js?v=20260528";
+import { isCreativeMode } from "./creativeMode.js?v=20260528";
+import { isCoopMode } from "./coopMode.js?v=20260528";
+import { enableLocalCoop, disableLocalCoop } from "./main.js?v=20260528";
 
 let chip = null;
 let chipLabel = null;
@@ -38,8 +38,12 @@ let installed = false;
 // user re-opens it before leaving the session.
 let guestAutoClosedForSlot = null;
 
-// View subtrees — built once, toggled by display.
-let views = { offline: null, hosting: null, guest: null };
+// View subtrees — built once, toggled by display. `localCoop` is the
+// offline-role view shown when a local 2-player session is live: same
+// shape as the hosting view (title + End session button) so the user
+// sees a clear "you're in a co-op session, here's how to end it"
+// instead of the regular offline marketing for hosting/joining.
+let views = { offline: null, hosting: null, guest: null, localCoop: null };
 // Hosting view widgets we mutate on session-state updates.
 let hostingCodeEl = null;
 let hostingPeerList = null;
@@ -63,6 +67,10 @@ let offlineStartBtn = null;
 let offlineJoinInput = null;
 let offlineJoinBtn = null;
 let offlineErrorEl = null;
+// Local co-op view widgets — the "session is live" twin of the offline
+// view. Only the end button is interactive; the body text just reminds
+// the user which keys move P2.
+let localCoopEndBtn = null;
 
 export function installPartyPanel() {
   if (installed || typeof document === "undefined") return;
@@ -128,9 +136,11 @@ function buildOverlay() {
   views.offline = buildOfflineView();
   views.hosting = buildHostingView();
   views.guest = buildGuestView();
+  views.localCoop = buildLocalCoopView();
   card.appendChild(views.offline);
   card.appendChild(views.hosting);
   card.appendChild(views.guest);
+  card.appendChild(views.localCoop);
   card.appendChild(buildCloseRow());
   // Click outside the card dismisses the overlay (offline play is one
   // tap from re-opening anyway).
@@ -159,11 +169,13 @@ function buildOfflineView() {
 
   offlineLocalBtn = document.createElement("button");
   offlineLocalBtn.id = "party-local-coop";
+  offlineLocalBtn.textContent = "Play on this device (2-player)";
   offlineLocalBtn.addEventListener("click", onLocalCoopClick);
   root.appendChild(offlineLocalBtn);
 
   offlineLocalHint = document.createElement("p");
   offlineLocalHint.className = "party-hint";
+  offlineLocalHint.textContent = "Share one keyboard. P2 uses IJKL to move, B interact, N kunai, M melee.";
   root.appendChild(offlineLocalHint);
 
   offlineStartBtn = document.createElement("button");
@@ -260,6 +272,29 @@ function buildHostingView() {
   return root;
 }
 
+function buildLocalCoopView() {
+  const root = document.createElement("div");
+  root.className = "party-view";
+  root.dataset.view = "localCoop";
+
+  const title = document.createElement("h1");
+  title.textContent = "Local co-op";
+  root.appendChild(title);
+
+  const hint = document.createElement("p");
+  hint.className = "party-hint";
+  hint.textContent = "P2 is in the world. Press IJKL to move them, B / N / M to act.";
+  root.appendChild(hint);
+
+  localCoopEndBtn = document.createElement("button");
+  localCoopEndBtn.textContent = "End session (back to single player)";
+  localCoopEndBtn.className = "party-danger";
+  localCoopEndBtn.addEventListener("click", onLocalCoopClick);
+  root.appendChild(localCoopEndBtn);
+
+  return root;
+}
+
 function buildGuestView() {
   const root = document.createElement("div");
   root.className = "party-view";
@@ -333,6 +368,8 @@ function renderPanel() {
   } else if (role === "guest") {
     views.guest.style.display = "block";
     renderGuestView();
+  } else if (isCoopMode()) {
+    views.localCoop.style.display = "block";
   } else {
     views.offline.style.display = "block";
     renderOfflineView();
@@ -341,16 +378,6 @@ function renderPanel() {
 
 function renderOfflineView() {
   const creative = isCreativeMode();
-  const coopOn = isCoopMode();
-  if (offlineLocalBtn) {
-    offlineLocalBtn.textContent = coopOn ? "Stop local co-op" : "Play on this device (2-player)";
-    offlineLocalBtn.classList.toggle("party-danger", coopOn);
-  }
-  if (offlineLocalHint) {
-    offlineLocalHint.textContent = coopOn
-      ? "P2 is in the world. Press IJKL to move them, B / N / M to act. Reload to end."
-      : "Share one keyboard. P2 uses IJKL to move, B interact, N kunai, M melee. Reload to end.";
-  }
   offlineStartBtn.disabled = creative;
   offlineStartBtn.title = creative ? "Leave creative mode first." : "";
   offlineStartBtn.classList.toggle("party-disabled", creative);
@@ -585,12 +612,15 @@ function injectStyles() {
       position: fixed; top: 52px; left: 12px;
       display: none; align-items: center; gap: 8px;
       padding: 6px 10px;
-      background: rgba(10, 10, 10, 0.7);
-      border: 1px solid #333; border-radius: 6px;
-      color: #eee; font-family: monospace; font-size: 12px;
+      background: var(--sb-surface-bg);
+      border: var(--sb-surface-border);
+      border-radius: var(--sb-surface-radius);
+      color: var(--sb-text);
+      font-family: var(--sb-font);
+      font-size: 12px;
       z-index: 13; cursor: pointer; user-select: none;
     }
-    #party-chip:hover { background: rgba(30, 30, 30, 0.85); }
+    #party-chip:hover { background: var(--sb-surface-bg-active); }
     .party-chip-dot {
       width: 8px; height: 8px; border-radius: 50%;
       background: #5fd16a; box-shadow: 0 0 6px #5fd16a;
@@ -602,7 +632,9 @@ function injectStyles() {
       z-index: 21; color: #eee; font-family: monospace;
     }
     .party-card {
-      background: #181818; border: 1px solid #333; border-radius: 8px;
+      background: var(--sb-card-bg);
+      border: var(--sb-card-border);
+      border-radius: var(--sb-card-radius);
       padding: 24px 28px; min-width: 320px; max-width: 420px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
@@ -666,7 +698,7 @@ export function _resetPartyPanelForTesting() {
   overlay = null;
   card = null;
   installed = false;
-  views = { offline: null, hosting: null, guest: null };
+  views = { offline: null, hosting: null, guest: null, localCoop: null };
   hostingCodeEl = null;
   hostingPeerList = null;
   hostingCopyBtn = null;
@@ -681,6 +713,7 @@ export function _resetPartyPanelForTesting() {
   offlineJoinInput = null;
   offlineJoinBtn = null;
   offlineErrorEl = null;
+  localCoopEndBtn = null;
   peerRowsByPlayerId.clear();
   peerEmptyRow = null;
   guestAutoClosedForSlot = null;

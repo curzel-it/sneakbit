@@ -11,7 +11,7 @@
 import {
   getRuntimeRole,
   setRuntimeRole,
-} from "./onlineMode.js?v=20260527b";
+} from "./onlineMode.js?v=20260528";
 import {
   ensureNet,
   closeNet,
@@ -21,14 +21,14 @@ import {
   setPendingGuestCode,
   getInviteCode,
   getNet,
-} from "./onlineBootstrap.js?v=20260527b";
-import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotBroadcaster.js?v=20260527b";
-import { installHostGuests, uninstallHostGuests } from "./hostGuests.js?v=20260527b";
-import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js?v=20260527b";
-import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js?v=20260527b";
-import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js?v=20260527b";
-import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js?v=20260527b";
-import { reapplyAutoZoom } from "./zoom.js?v=20260527b";
+} from "./onlineBootstrap.js?v=20260528";
+import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotBroadcaster.js?v=20260528";
+import { installHostGuests, uninstallHostGuests } from "./hostGuests.js?v=20260528";
+import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js?v=20260528";
+import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js?v=20260528";
+import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js?v=20260528";
+import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js?v=20260528";
+import { reapplyAutoZoom } from "./zoom.js?v=20260528";
 
 // Callbacks main.js installs at boot. switchRole calls them to rebuild /
 // wipe the live `state` object that lives in main.js's closure.
@@ -81,14 +81,17 @@ export async function switchRole(target, opts = {}) {
   // keyboard / address bar settles after a role transition (e.g. closing
   // the party panel that asked for a join code). Without this re-apply,
   // the canvas can be left sized for the transient viewport, making the
-  // game look "zoomed in" until the next real resize. Symptom called out
-  // in todo.md: "resolution changes after starting a co-op (spotted on
-  // mobile)". Re-fire on the next frame too so we catch the viewport
-  // *after* the overlay has finished tearing down and the chrome has
-  // had a chance to redraw.
+  // game look "zoomed in" until the next real resize. Three re-fires:
+  //   * immediate, for the synchronous part of the transition
+  //   * next frame, to catch the overlay teardown's CSS effects
+  //   * +400ms, to catch the iOS soft-kbd slide-down, which animates
+  //     well past one frame and doesn't always fire window.resize
   reapplyAutoZoom();
   if (typeof requestAnimationFrame !== "undefined") {
     requestAnimationFrame(() => reapplyAutoZoom());
+  }
+  if (typeof setTimeout !== "undefined") {
+    setTimeout(() => reapplyAutoZoom(), 400);
   }
 }
 

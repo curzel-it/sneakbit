@@ -6,13 +6,43 @@
 // Hidden by default; show when a touch (or pointer with pointerType ===
 // "touch") is detected so we don't clutter desktop screens.
 
-import { tryShoot } from "./shooting.js?v=20260527b";
-import { tryMelee } from "./melee.js?v=20260527b";
-import { getEquipped, onEquipmentChange, SLOT_MELEE } from "./equipment.js?v=20260527b";
-import { getNetRole } from "./onlineBootstrap.js?v=20260527b";
-import { codesFor } from "./keyBindings.js?v=20260527b";
+import { tryShoot } from "./shooting.js?v=20260528";
+import { tryMelee } from "./melee.js?v=20260528";
+import { getEquipped, onEquipmentChange, SLOT_MELEE } from "./equipment.js?v=20260528";
+import { getNetRole } from "./onlineBootstrap.js?v=20260528";
+import { codesFor } from "./keyBindings.js?v=20260528";
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
+
+// Touch button icons. Inline SVG so there's no extra HTTP request and
+// no font dependency. `aria-hidden` keeps them out of the AT tree (the
+// button itself takes the label via data-action). `focusable="false"`
+// prevents IE/Edge legacy tabbing into the icon. Tile size is 22×22
+// inside a 56×56 button — leaves a clear margin around the pad so the
+// outer border reads even on small phones. Everything strokes from
+// currentColor so the icon picks up the button's color rule.
+function svg(content, size = 22) {
+  return `<span class="touch-icon"><svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${content}</svg></span>`;
+}
+
+// Direction arrows — chevron-style so the angle reads as "direction
+// you'll move" rather than a generic up/down play-button.
+const ICON_DIR_UP    = svg(`<polyline points="6,15 12,9 18,15"></polyline>`);
+const ICON_DIR_DOWN  = svg(`<polyline points="6,9 12,15 18,9"></polyline>`);
+const ICON_DIR_LEFT  = svg(`<polyline points="15,6 9,12 15,18"></polyline>`);
+const ICON_DIR_RIGHT = svg(`<polyline points="9,6 15,12 9,18"></polyline>`);
+
+// Action icons. Kept iconographic, not photorealistic — fewer points
+// = crisper at small sizes.
+//   Interact: speech-bubble + dot, signals "talk / use".
+//   Throw:    star-spark for kunai. Generic enough to still read if a
+//             different ranged weapon ever takes the slot.
+//   Melee:    a sword outline. Sized larger so the cross-guard reads.
+//   Menu:     three horizontal lines (hamburger), the platform norm.
+const ICON_INTERACT = svg(`<path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"></path><circle cx="12" cy="12" r="0.6" fill="currentColor"></circle>`, 24);
+const ICON_THROW    = svg(`<path d="M12 3 L13.4 9.4 L20 11 L13.4 12.6 L12 19 L10.6 12.6 L4 11 L10.6 9.4 Z" fill="currentColor" stroke="none"></path>`, 24);
+const ICON_MELEE    = svg(`<path d="M14 4 L20 4 L20 10 L9.5 20.5 L7 21 L3 17 L3.5 14.5 L14 4 Z"></path><line x1="9" y1="9" x2="15" y2="15"></line>`, 24);
+const ICON_MENU     = svg(`<line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line>`, 22);
 const heldBindings = new Map(); // dir -> pointerId
 
 // pointerId -> direction button currently "pressed" by that finger. Used
@@ -27,20 +57,28 @@ export function installTouchControls() {
   if (root) return root;
   root = document.createElement("div");
   root.id = "touch-controls";
+  // SVG icons (not text glyphs): the previous "▲ ◀ ▶ ▼ ⚔ ✦ E ☰"
+  // glyphs let iOS Safari pop the "magnifier loupe" on long-press
+  // even with -webkit-user-select: none + -webkit-touch-callout: none
+  // — those CSS rules suppress selection and the callout but not the
+  // loupe over text. SVG paths aren't text, so the loupe never fires.
+  // The SVGs themselves are wrapped in <span class="touch-icon"> with
+  // pointer-events: none so taps still hit the parent <button> and
+  // dispatch the keydown.
   root.innerHTML = `
     <div class="touch-pad" data-side="left">
-      <button class="touch-btn" data-dir="up">▲</button>
-      <button class="touch-btn" data-dir="left">◀</button>
-      <button class="touch-btn" data-dir="right">▶</button>
-      <button class="touch-btn" data-dir="down">▼</button>
+      <button class="touch-btn" data-dir="up">${ICON_DIR_UP}</button>
+      <button class="touch-btn" data-dir="left">${ICON_DIR_LEFT}</button>
+      <button class="touch-btn" data-dir="right">${ICON_DIR_RIGHT}</button>
+      <button class="touch-btn" data-dir="down">${ICON_DIR_DOWN}</button>
     </div>
     <div class="touch-pad" data-side="right">
-      <button class="touch-btn touch-action touch-melee"    data-action="melee">⚔</button>
-      <button class="touch-btn touch-action touch-throw"    data-action="throw">✦</button>
-      <button class="touch-btn touch-action touch-interact" data-action="interact">E</button>
+      <button class="touch-btn touch-action touch-melee"    data-action="melee">${ICON_MELEE}</button>
+      <button class="touch-btn touch-action touch-throw"    data-action="throw">${ICON_THROW}</button>
+      <button class="touch-btn touch-action touch-interact" data-action="interact">${ICON_INTERACT}</button>
     </div>
     <div class="touch-pad" data-side="top-right">
-      <button class="touch-btn touch-menu" data-action="menu">☰</button>
+      <button class="touch-btn touch-menu" data-action="menu">${ICON_MENU}</button>
     </div>
   `;
   Object.assign(root.style, {
@@ -279,19 +317,15 @@ function injectStyles() {
     #touch-controls .touch-menu {
       width: 44px;
       height: 44px;
-      font-size: 20px;
-      background: rgba(40, 40, 40, 0.6);
     }
     #touch-controls .touch-btn {
       pointer-events: auto;
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: rgba(40, 40, 40, 0.6);
-      color: #eee;
-      border: 1px solid rgba(180, 180, 180, 0.4);
-      font-size: 18px;
-      font-family: monospace;
+      background: var(--sb-surface-bg);
+      color: var(--sb-text);
+      border: var(--sb-surface-border);
       cursor: pointer;
       transition: background 80ms ease;
       user-select: none;
@@ -299,18 +333,34 @@ function injectStyles() {
       -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
       touch-action: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
     }
+    /* Action buttons share the neutral HUD surface but pick up a
+       colored border tint so players can still read the verb at a
+       glance (red = attack, green = positive/contact). The icon does
+       most of the heavy identification — the tint is the "accent" of
+       the design system, not a primary fill. */
     #touch-controls .touch-action {
       width: 64px;
       height: 64px;
-      font-size: 22px;
-      background: rgba(60, 100, 60, 0.7);
+      border-color: var(--sb-accent-positive);
     }
     #touch-controls .touch-throw {
-      background: rgba(120, 70, 70, 0.75);
+      border-color: var(--sb-accent-attack);
     }
     #touch-controls .touch-btn.active {
-      background: rgba(120, 120, 120, 0.85);
+      background: var(--sb-surface-bg-active);
+    }
+    /* Icon wrapper. pointer-events: none so taps that land on the SVG
+       still bubble to the button — without this the wrapper would
+       eat the pointerdown and onPress wouldn't fire on direct hits. */
+    #touch-controls .touch-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%;
+      pointer-events: none;
     }
     @media (min-width: 980px) and (pointer: fine) {
       #touch-controls { display: none !important; }

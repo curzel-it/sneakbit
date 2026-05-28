@@ -3,7 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <title>SneakBit</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <!-- maximum-scale=1, user-scalable=no clamps iOS Safari's auto-zoom
+         (the one that fires when a dialog or focused input appears in
+         the lower half of the screen and shrinks/zooms the whole page
+         to "fit" the chrome). The game canvas is sized to the viewport
+         by js/zoom.js; allowing native pinch-zoom on top of that just
+         fights the per-frame integer-scale math. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <style>
       html, body {
         margin: 0;
@@ -17,6 +23,16 @@
         -webkit-user-select: none;
         -webkit-touch-callout: none;
         -webkit-tap-highlight-color: transparent;
+        /* Belt-and-braces against iOS Safari auto-resizing text on
+           orientation change / dialog open. The viewport meta clamps
+           page zoom; this clamps the per-element text inflation Safari
+           still applies on top of that. */
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        /* Page-wide gesture suppression: no pinch-zoom, no double-tap-
+           to-zoom. Individual interactive controls still set their own
+           touch-action where they need finer-grained behavior. */
+        touch-action: manipulation;
       }
       body {
         display: flex;
@@ -53,6 +69,6 @@
   <body>
     <canvas id="game" width="960" height="640"></canvas>
     <div id="hud"></div>
-    <script type="module" src="./js/main.js?v=20260527b"></script>
+    <script type="module" src="./js/main.js?v=20260528"></script>
   </body>
 </html>

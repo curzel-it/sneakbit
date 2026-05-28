@@ -11,7 +11,7 @@
 // DC(s) and the WS bypass returns `true`; otherwise it returns `false`
 // and net.js falls through to the WS path.
 
-import { createWebrtcChannel, DEFAULT_STUN_SERVERS, STATE } from "./webrtcChannel.js?v=20260527b";
+import { createWebrtcChannel, DEFAULT_STUN_SERVERS, STATE } from "./webrtcChannel.js?v=20260528";
 
 const GAME_OPS = new Set(["snapshot", "delta", "event", "input"]);
 
@@ -76,7 +76,19 @@ export function installWebrtcTransport({
 
   if (role === "host") {
     unsubs.push(net.on("peer.joined", (m) => ensureChannel(m.playerId, false)));
-    unsubs.push(net.on("peer.rejoined", (m) => ensureChannel(m.playerId, false)));
+    // peer.rejoined fires when a previously-known guest's WS reconnects
+    // after a backoff (iOS background, captive portal, etc.). The old
+    // RTCPeerConnection on our side may still report `open` locally even
+    // though the guest's underlying ICE pair is dead — the remote
+    // suspended without ever closing the channel cleanly. Tear the old
+    // channel down so the guest's next offer creates a fresh one. We
+    // don't initiate ourselves (host is the answerer in this topology);
+    // the guest's transport sees its own guest.joined fan-in and re-
+    // issues the offer.
+    unsubs.push(net.on("peer.rejoined", (m) => {
+      removeChannel(m.playerId);
+      ensureChannel(m.playerId, false);
+    }));
     unsubs.push(net.on("peer.left", (m) => removeChannel(m.playerId)));
     // A guest reconnecting after the WS dropped may send a fresh offer
     // before peer.joined fires (or instead of it). Be defensive and
@@ -86,7 +98,13 @@ export function installWebrtcTransport({
     }));
   } else if (role === "guest") {
     unsubs.push(net.on("guest.joined", (m) => {
-      if (m.hostPlayerId) ensureChannel(m.hostPlayerId, true);
+      if (!m.hostPlayerId) return;
+      // Symmetric to the host's peer.rejoined handling — on a reconnect
+      // the relay re-fires guest.joined (with the same hostPlayerId).
+      // The old peer connection may be a zombie, so drop it before
+      // creating a fresh initiator channel that issues a new offer.
+      if (channels.has(m.hostPlayerId)) removeChannel(m.hostPlayerId);
+      ensureChannel(m.hostPlayerId, true);
     }));
     unsubs.push(net.on("host.resumed", () => {
       // After a host bounce the old DC is dead. Rebuild.

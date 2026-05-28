@@ -20,8 +20,8 @@
 // API continues to operate on index 0 by default so existing call sites
 // keep working until they thread a playerIndex.
 
-import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260527b";
-import { getSpecies } from "./species.js?v=20260527b";
+import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260528";
+import { getSpecies } from "./species.js?v=20260528";
 
 const MAX_HP = 100;
 // Intentional divergence from Rust HERO_RECOVERY_PS=1.0. Block-A playtests

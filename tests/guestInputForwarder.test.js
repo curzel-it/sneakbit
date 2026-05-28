@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const fwd = await import("../js/guestInputForwarder.js?v=20260527b");
+const fwd = await import("../js/guestInputForwarder.js?v=20260528");
 
 function makeFakeNet() {
   const sent = [];

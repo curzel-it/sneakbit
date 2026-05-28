@@ -7,11 +7,11 @@
 // handshake to issue (host.open / guest.join), so a reconnect after
 // grace re-issues the right frame automatically.
 
-import { getMode, getJoinCode, getRuntimeRole, isValidJoinCode } from "./onlineMode.js?v=20260527b";
-import { createNet } from "./net.js?v=20260527b";
-import { installWebrtcTransport } from "./webrtcTransport.js?v=20260527b";
-import { getIceServers, primeIceServers } from "./iceConfig.js?v=20260527b";
-import { flushOnReconnect } from "./guestInputForwarder.js?v=20260527b";
+import { getMode, getJoinCode, getRuntimeRole, isValidJoinCode } from "./onlineMode.js?v=20260528";
+import { createNet } from "./net.js?v=20260528";
+import { installWebrtcTransport } from "./webrtcTransport.js?v=20260528";
+import { getIceServers, primeIceServers } from "./iceConfig.js?v=20260528";
+import { flushOnReconnect } from "./guestInputForwarder.js?v=20260528";
 
 let net = null;
 let inviteCode = null;
@@ -186,7 +186,16 @@ function wireNetHandlers(n) {
     hostPlayerId = m.hostPlayerId;
     knownPeers = m.peers || [];
     lastJoinError = null;
-    pendingGuestCode = null;
+    // Intentionally NOT clearing pendingGuestCode here. net.js auto-
+    // reconnects on transient WS drops (iOS backgrounding the tab,
+    // captive portal blips), and on each reconnect the welcome handler
+    // re-dispatches the role handshake. For a guest that means another
+    // `guest.join` — which requires the original invite code. Clearing
+    // the code on first success made every later reconnect fail with
+    // "invalid_code" (silently, since the relay never sees the frame),
+    // so the host saw peer.ghosted, then peer.left at grace, with no
+    // recovery. The code is wiped legitimately by resetOnlineState() on
+    // role transition away from guest.
     if (m.hostPlayerId && m.hostName) nameByPlayerId.set(m.hostPlayerId, m.hostName);
     for (const p of knownPeers) {
       if (p.playerId && p.name) nameByPlayerId.set(p.playerId, p.name);
