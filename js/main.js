@@ -441,7 +441,13 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
   // player so they all stay on screen. Earlier we picked just the self
   // here, but a guest who walked off-screen could drift into regions
   // the host wasn't simulating in view.
-  updateCamera(state.camera, renderPlayers, mZone);
+  //
+  // Dead players are dropped from the camera average (the host does the
+  // same via livePlayersForCamera). A downed co-op player's avatar is
+  // still rendered as a tombstone, so we only filter the camera list —
+  // renderPlayers stays whole. The host ships per-player hp in every
+  // snapshot/delta; the mirror exposes it on each interpolated player.
+  updateCamera(state.camera, liveGuestCameraPlayers(renderPlayers, mPlayers), mZone);
   updateVisibleEntities(mZone, state.camera);
   render(renderer, mZone, state.camera, renderPlayers, biomeAnim.frame);
   updateHud(hud, {
@@ -475,6 +481,22 @@ function buildGuestRenderPlayers(mPlayers) {
   }
   if (!injected) out.push(predicted);
   return out;
+}
+
+// Camera input for the guest: the render list minus dead players, so a
+// downed co-op partner stops dragging the shared centre toward its
+// tombstone. Deadness comes from the mirror's per-player hp (synced by
+// the host). The predicted self carries no hp, so we read the self's hp
+// from the matching mirror entry by playerId. If everyone's dead we fall
+// back to the full list so the camera doesn't snap to nowhere.
+function liveGuestCameraPlayers(renderPlayers, mPlayers) {
+  const deadIds = new Set();
+  for (const p of mPlayers) {
+    if (typeof p.hp === "number" && p.hp <= 0) deadIds.add(p.playerId);
+  }
+  if (!deadIds.size) return renderPlayers;
+  const live = renderPlayers.filter((p) => !deadIds.has(p.playerId));
+  return live.length ? live : renderPlayers;
 }
 
 // Build the co-op second player. Mirrors Rust world_setup.rs's

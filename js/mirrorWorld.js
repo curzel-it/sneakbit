@@ -386,6 +386,7 @@ function interpolatePlayer({ prev, curr, prevAt, currAt, stepStartedAt }, render
     tileY: curr.tileY,
     direction: curr.direction || "down",
     moving: !!curr.moving,
+    hp: curr.hp,
     sheetId: SPRITE_SHEET_HEROES,
     baseFrame,
     frameCount: HERO_FRAME_COUNT,
