@@ -419,6 +419,15 @@ function wipeGuestState() {
 // label fallback is graceful in the meantime.
 function tagHostPlayerId() {
   if (!state?.player) return;
+  // Local co-op (P2-P4 on this machine) doesn't combine with online
+  // hosting — guests fill those slots. Reset to a single local player and
+  // drop any local-only avatars so they can't collide with guest slot
+  // assignment. (The UI already hides "Host" while local co-op is on; this
+  // is a defensive backstop.)
+  setLocalPlayerCount(1);
+  if (state.player2 && !state.player2.playerId) { state.player2 = null; state.lastTile2 = null; }
+  if (Array.isArray(state.players)) state.players = state.players.filter((e) => e.playerId != null);
+  refreshHealthHud();
   const pid = getSelfPlayerId();
   if (pid) state.player.playerId = pid;
 }
