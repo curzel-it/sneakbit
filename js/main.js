@@ -10,7 +10,7 @@ import { loadSpeciesData } from "./species.js?v=20260529a";
 import { composeBiomeSheet } from "./biomeSheet.js?v=20260529a";
 import { buildZone } from "./zone.js?v=20260529a";
 import { pickCoopSpawn } from "./coopSpawn.js?v=20260529a";
-import { initInput, pollInput } from "./input.js?v=20260529a";
+import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress } from "./input.js?v=20260529a";
 import { createPlayer, updatePlayer } from "./player.js?v=20260529a";
 import { createCamera, updateCamera } from "./camera.js?v=20260529a";
 import { createRenderer, render } from "./renderer.js?v=20260529a";
@@ -38,7 +38,7 @@ import { tickMinionSpawning } from "./minions.js?v=20260529a";
 import { tickCombat } from "./combat.js?v=20260529a";
 import { tickAfterDialogue } from "./afterDialogue.js?v=20260529a";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js?v=20260529a";
-import { installHealthHud } from "./healthHud.js?v=20260529a";
+import { installHealthHud, refreshHealthHud } from "./healthHud.js?v=20260529a";
 import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js?v=20260529a";
 import { installMessage, isMessageOpen } from "./message.js?v=20260529a";
 import { installFastTravel, isFastTravelOpen, tickFastTravel, markVisited } from "./fastTravel.js?v=20260529a";
@@ -50,7 +50,7 @@ import { setupCutscenes, tickCutscenes } from "./cutscenes.js?v=20260529a";
 import { tickTrails } from "./trails.js?v=20260529a";
 import { tickPushables } from "./pushables.js?v=20260529a";
 import { updateVisibleEntities } from "./zoneVisibility.js?v=20260529a";
-import { isCoopMode, setCoopMode } from "./coopMode.js?v=20260529a";
+import { isCoopMode, setCoopMode, setLocalPlayerCount, localPlayerCount } from "./coopMode.js?v=20260529a";
 import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js?v=20260529a";
 import { runMigrations } from "./migrations.js?v=20260529a";
 import { installMapEditor } from "./mapEditor.js?v=20260529a";
@@ -155,6 +155,24 @@ async function main() {
       // freshly-cleared save, so the page would reload right back into
       // the zone+tile the player just tried to leave.
       suppressUnloadSave: () => { suppressUnloadSave = true; },
+    };
+    // Local co-op test/debug hook (mirrors window.save/creative). Lets
+    // e2e set the local player count and drive each slot through the real
+    // input pipeline + read avatar positions.
+    window.coop = {
+      setLocalPlayers,
+      count: () => localPlayerCount(),
+      positions: () => {
+        const out = [];
+        const add = (p) => p && out.push({ index: p.index | 0, tileX: p.tileX, tileY: p.tileY, direction: p.direction });
+        add(state.player);
+        add(state.player2);
+        for (const s of state.players) add(s.player);
+        return out;
+      },
+      // Single-tile tap: queue one press then drop the held set, so the
+      // avatar takes exactly one step (no continuous walk).
+      tap: (slot, dir) => { pushInputPress(slot, dir); clearInputHeld(slot); },
     };
   }
   installAutoZoom(canvas, state.camera, hud.el);
@@ -512,23 +530,53 @@ function makeCoopP2(p1, zone, opts = {}) {
 // effect on the next tick without further wiring. travelTo re-applies
 // the coop spawn rule on zone transitions, so a hot-toggled P2 survives
 // teleporters.
-export function enableLocalCoop() {
+// Set the number of LOCAL players sharing this machine (1-4). Spawns or
+// despawns avatars to match: P2 stays in state.player2 (kept special);
+// P3/P4 are state.players[] entries with playerId:null (the same array
+// online guests use, so loop / camera / render / travel / per-slot combat
+// all work unchanged — local 4-player is offline-only, so it never shares
+// that array with guests). Newly spawned players get full HP; despawned
+// players have their input slot cleared.
+export function setLocalPlayers(n) {
   if (!state?.zone || !state.player) return;
-  if (state.player2) return;
-  setCoopMode(true);
-  state.player2 = makeCoopP2(state.player, state.zone);
-  state.lastTile2 = { x: state.player2.tileX, y: state.player2.tileY };
-  p2DeathToasted = false;
+  n = Math.min(4, Math.max(1, n | 0));
+  setLocalPlayerCount(n);
+
+  if (n >= 2 && !state.player2) {
+    state.player2 = makeCoopP2(state.player, state.zone, { index: 1 });
+    state.lastTile2 = { x: state.player2.tileX, y: state.player2.tileY };
+    resetPlayerHealth(1);
+  } else if (n < 2 && state.player2) {
+    state.player2 = null;
+    state.lastTile2 = null;
+    clearInputState(2);
+  }
+
+  ensureLocalExtra(3, n >= 3);
+  ensureLocalExtra(4, n >= 4);
+  deathToasted.clear();
+  refreshHealthHud();
 }
 
-export function disableLocalCoop() {
-  if (!state) return;
-  if (!state.player2 && !isCoopMode()) return;
-  setCoopMode(false);
-  state.player2 = null;
-  state.lastTile2 = null;
-  p2DeathToasted = false;
+// Spawn/despawn a local P3/P4 entry in state.players. Only ever touches
+// entries with playerId == null so online guests (which carry a playerId)
+// are never disturbed.
+function ensureLocalExtra(slot, want) {
+  const idx = slot - 1;
+  const existing = state.players.find((e) => e.slot === slot && e.playerId == null);
+  if (want && !existing) {
+    const p = makeCoopP2(state.player, state.zone, { index: idx });
+    state.players.push({ player: p, slot, playerId: null, lastTile: { x: p.tileX, y: p.tileY } });
+    resetPlayerHealth(idx);
+  } else if (!want && existing) {
+    state.players = state.players.filter((e) => !(e.slot === slot && e.playerId == null));
+    clearInputState(slot);
+  }
 }
+
+// Back-compat thin wrappers (party panel / any other callers).
+export function enableLocalCoop() { setLocalPlayers(2); }
+export function disableLocalCoop() { setLocalPlayers(1); }
 
 function snapToEntry(player, zone) {
   const tele = (zone.entities || []).find(e => e.species_id === 1019 && e.frame);
@@ -634,29 +682,35 @@ function handleHostState(state) {
       // — the next tick treats P2 as alive again next to P1 (the
       // co-op spawn rule re-applied inside travelTo).
       resetPlayerHealth();
-      p2DeathToasted = false;
+      deathToasted.clear();
       hostDeathToasted = false;
       hostDying = false;
     });
   });
 }
 
-// One-shot toast latch for P2 death — the game keeps running so the
-// per-frame death check would re-fire every tick without it.
-let p2DeathToasted = false;
+// One-shot toast latches keyed by player index — the game keeps running
+// so the per-frame death check would re-fire every tick without them.
+// Covers every co-op teammate (local P2-P4 and, when hosting, guests).
+const deathToasted = new Set();
 function handleCoopDeaths(state) {
-  if (!state.player2) return;
-  const p2Dead = isPlayerDead(state.player2.index | 0);
-  if (p2Dead && !p2DeathToasted) {
-    p2DeathToasted = true;
-    const tmpl = tr("notification.player.died");
-    const msg = tmpl.replace("%PLAYER_NAME%", "2");
-    showToast(msg, "longHint");
+  const mates = [];
+  if (state.player2) mates.push(state.player2);
+  if (Array.isArray(state.players)) {
+    for (const s of state.players) if (s.player) mates.push(s.player);
   }
-  if (!p2Dead && p2DeathToasted) {
-    // Defensive: a heal somewhere brought P2 back to life mid-zone.
-    // Drop the latch so a future death re-toasts.
-    p2DeathToasted = false;
+  for (const p of mates) {
+    const idx = p.index | 0;
+    const dead = isPlayerDead(idx);
+    if (dead && !deathToasted.has(idx)) {
+      deathToasted.add(idx);
+      const msg = tr("notification.player.died").replace("%PLAYER_NAME%", String(idx + 1));
+      showToast(msg, "longHint");
+    } else if (!dead && deathToasted.has(idx)) {
+      // Defensive: a heal brought them back mid-zone. Drop the latch so a
+      // future death re-toasts.
+      deathToasted.delete(idx);
+    }
   }
 }
 

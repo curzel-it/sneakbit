@@ -1,15 +1,19 @@
 // HP bars pinned to the top of the viewport. Lives in the DOM, not the
 // canvas, per the project's UI rule.
 //
-// In single-player a single bar sits top-left. In co-op an extra bar sits
-// below it — the second player's HP. A bar hides when its player is dead.
+// In single-player a single bar sits top-left. In local co-op (2-4
+// players) one bar per player stacks below it. A bar hides when its
+// player is dead, or when the local player count doesn't cover it.
 
 import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange, isPlayerDead } from "./playerHealth.js?v=20260529a";
-import { isCoopMode } from "./coopMode.js?v=20260529a";
+import { localPlayerCount } from "./coopMode.js?v=20260529a";
 
+const MAX_PLAYERS = 4;
 const PLAYER_COLORS = [
-  "linear-gradient(90deg, #b13 0%, #e54 100%)",
-  "linear-gradient(90deg, #168 0%, #4ad 100%)",
+  "linear-gradient(90deg, #b13 0%, #e54 100%)", // P1 red/orange
+  "linear-gradient(90deg, #168 0%, #4ad 100%)", // P2 blue/cyan
+  "linear-gradient(90deg, #2a2 0%, #6d6 100%)", // P3 green
+  "linear-gradient(90deg, #b82 0%, #ed4 100%)", // P4 amber
 ];
 
 let root = null;
@@ -21,8 +25,10 @@ export function installHealthHud() {
   root = document.createElement("div");
   root.id = "health-hud";
 
-  const count = isCoopMode() ? 2 : 1;
-  for (let i = 0; i < count; i++) bars.push(makeBar(i));
+  // Build all four bars up front; redraw shows only the active ones. Local
+  // co-op count is hot-toggled (always 1 at boot), so we can't size the
+  // bar set at install time.
+  for (let i = 0; i < MAX_PLAYERS; i++) bars.push(makeBar(i));
   for (const b of bars) root.appendChild(b.root);
   document.body.appendChild(root);
 
@@ -30,6 +36,11 @@ export function installHealthHud() {
   redraw();
   return root;
 }
+
+// Called after the local player count changes (main.setLocalPlayers) so
+// added/removed players' bars appear/disappear without waiting for a
+// health-change event.
+export function refreshHealthHud() { if (root) redraw(); }
 
 function injectStyles() {
   if (typeof document === "undefined") return;
@@ -88,12 +99,15 @@ function makeBar(index) {
 }
 
 function redraw() {
+  const count = localPlayerCount();
   for (const b of bars) {
+    // Hide bars beyond the active local player count.
+    if (b.index >= count) { b.root.style.display = "none"; continue; }
     const hp = getPlayerHp(b.index);
     const max = getPlayerMaxHp();
     const dead = isPlayerDead(b.index);
-    // P2 hides while dead (matches Rust: dead co-op player drops out of
-    // play until the zone reloads). P1 stays visible even at 0 — the
+    // Co-op teammates hide while dead (matches Rust: dead co-op player
+    // drops out until the zone reloads). P1 stays visible even at 0 — the
     // game-over modal takes over.
     if (b.index > 0 && dead) {
       b.root.style.display = "none";
@@ -101,7 +115,7 @@ function redraw() {
     }
     b.root.style.display = "";
     const pct = Math.max(0, Math.min(100, (hp / max) * 100));
-    const tag = bars.length > 1 ? `P${b.index + 1} ` : "";
+    const tag = count > 1 ? `P${b.index + 1} ` : "";
     b.label.textContent = `${tag}HP ${Math.ceil(hp)} / ${max}`;
     b.fill.style.width = `${pct}%`;
   }
