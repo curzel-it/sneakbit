@@ -28,6 +28,8 @@
 
 import { buttonFor, menuButton } from "./gamepadBindings.js?v=20260529a";
 import { markInputDevice } from "./activeInputDevice.js?v=20260529a";
+import * as menuNav from "./menuNav.js?v=20260529a";
+import { isMenuNavActive } from "./menuNav.js?v=20260529a";
 
 const ACTION_NAMES = ["interact", "shoot", "melee"];
 
@@ -160,31 +162,45 @@ function scanPad(pad, slot) {
     if (!st.prevHeld.has(dir)) events.push(dir);
   }
 
-  // Action buttons — resolve each via this player's bindings and fire the
-  // slot's callback on the rising edge. playerIndex: slot 1 → P1, 2 → P2.
   const playerIndex = slot - 1;
-  for (const name of ACTION_NAMES) {
-    const idx = buttonFor(name, playerIndex);
-    if (idx < 0) continue;
-    fireEdge(st, pad, idx, () => {
-      if (capturing) return;
-      const cb = actionCallbacks[slot]?.[name];
-      if (cb) {
-        try { cb(); } catch (e) { console.error(`gamepad ${name} cb:`, e); }
-      }
-    });
-  }
-  // The (global, P1-owned) menu button dispatches a synthetic Esc keydown
-  // so menu.js's existing listener wires through without a parallel API.
-  // Any assigned pad can toggle the menu.
-  const mbtn = menuButton();
-  if (mbtn >= 0) {
-    fireEdge(st, pad, mbtn, () => {
-      if (capturing) return;
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
-      }
-    });
+  if (!capturing && isMenuNavActive()) {
+    // Menu mode: the pad drives roving navigation instead of gameplay.
+    // Uses the FIXED convention (A = confirm, B / Start = back) regardless
+    // of the rebindable gameplay bindings.
+    for (const dir of events) {
+      if (dir === "up") menuNav.move(-1);
+      else if (dir === "down") menuNav.move(1);
+      else if (dir === "left") menuNav.moveHorizontal(-1);
+      else if (dir === "right") menuNav.moveHorizontal(1);
+    }
+    fireEdge(st, pad, 0, () => menuNav.confirm());
+    fireEdge(st, pad, 1, () => menuNav.back());
+    fireEdge(st, pad, START_BUTTON, () => menuNav.back());
+  } else {
+    // Gameplay: action buttons resolve via this player's bindings and fire
+    // the slot's callback on the rising edge.
+    for (const name of ACTION_NAMES) {
+      const idx = buttonFor(name, playerIndex);
+      if (idx < 0) continue;
+      fireEdge(st, pad, idx, () => {
+        if (capturing) return;
+        const cb = actionCallbacks[slot]?.[name];
+        if (cb) {
+          try { cb(); } catch (e) { console.error(`gamepad ${name} cb:`, e); }
+        }
+      });
+    }
+    // The (global, P1-owned) menu button dispatches a synthetic Esc keydown
+    // so menu.js's existing listener wires through without a parallel API.
+    const mbtn = menuButton();
+    if (mbtn >= 0) {
+      fireEdge(st, pad, mbtn, () => {
+        if (capturing) return;
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+        }
+      });
+    }
   }
 
   st.prevHeld = held;
