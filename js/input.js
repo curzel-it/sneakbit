@@ -8,7 +8,7 @@
 // d-pad fan into the same directional channel; action buttons go
 // through their own callback registry (see gamepad.setGamepadAction).
 
-import { pollGamepadDirections } from "./gamepad.js?v=20260529a";
+import { pollGamepadForSlot } from "./gamepad.js?v=20260529a";
 import { resolveAction } from "./keyBindings.js?v=20260529a";
 import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
 
@@ -157,15 +157,18 @@ export function peekInputState(playerIndex = 1) {
 }
 
 // Returns { events, held } for the requested player and drains the
-// press queue. Player 1 also folds in gamepad input so a single-player
-// session with a gamepad keeps working.
+// press queue. Slot 1 always folds in its gamepad (single-player / host);
+// slot 2 folds its gamepad only when local co-op is active, so a lone pad
+// can't drive a non-existent P2. Online guest slots (3 / 4) are
+// network-driven and never poll a local pad here.
 export function pollInput(playerIndex = 1) {
   const s = state[playerIndex] || state[1];
   const events = s.pressEvents.slice();
   s.pressEvents.length = 0;
   const held = new Set(s.held);
-  if (playerIndex === 1) {
-    const gp = pollGamepadDirections();
+  const foldGamepad = playerIndex === 1 || (playerIndex === 2 && isCoopMode());
+  if (foldGamepad) {
+    const gp = pollGamepadForSlot(playerIndex);
     for (const e of gp.events) events.push(e);
     for (const d of gp.held) held.add(d);
   }

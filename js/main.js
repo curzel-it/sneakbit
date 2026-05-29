@@ -5,7 +5,7 @@ import { loadAssets } from "./assets.js?v=20260529a";
 import { loadSpecies, loadStrings, loadZone } from "./data.js?v=20260529a";
 import { loadStringsData, tr } from "./strings.js?v=20260529a";
 import { installDialogue, isDialogueOpen } from "./dialogue.js?v=20260529a";
-import { installInteract, tickInteract } from "./interact.js?v=20260529a";
+import { installInteract, tickInteract, tryInteractForSlot } from "./interact.js?v=20260529a";
 import { loadSpeciesData } from "./species.js?v=20260529a";
 import { composeBiomeSheet } from "./biomeSheet.js?v=20260529a";
 import { buildZone } from "./zone.js?v=20260529a";
@@ -27,8 +27,8 @@ import { checkPickup } from "./pickups.js?v=20260529a";
 import { installMusic, playTrack } from "./music.js?v=20260529a";
 import { installTouchControls } from "./touch.js?v=20260529a";
 import { installToast, showToast } from "./toast.js?v=20260529a";
-import { installShooting, tickShooting, tryShoot } from "./shooting.js?v=20260529a";
-import { installMelee, tickMelee, tryMelee } from "./melee.js?v=20260529a";
+import { installShooting, tickShooting, tryShoot, tryShootForSlot } from "./shooting.js?v=20260529a";
+import { installMelee, tickMelee, tryMelee, tryMeleeForSlot } from "./melee.js?v=20260529a";
 import { setGamepadAction } from "./gamepad.js?v=20260529a";
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js?v=20260529a";
 import { tickMobs } from "./mobs.js?v=20260529a";
@@ -186,6 +186,12 @@ async function main() {
     // without us having to duplicate its "find entity in front" logic.
     window.dispatchEvent(new KeyboardEvent("keydown", { code: "KeyE" }));
   });
+  // Local co-op P2's pad drives slot 2 through the same per-slot action
+  // seams the network guests use, so a second physical controller fights
+  // and interacts as player 2.
+  setGamepadAction("shoot", () => tryShootForSlot(2), 2);
+  setGamepadAction("melee", () => tryMeleeForSlot(2), 2);
+  setGamepadAction("interact", () => tryInteractForSlot(2), 2);
   if (state.zone) {
     markVisited(state.zone.id);
     if (state.zone.soundtrack) playTrack(state.zone.soundtrack);
