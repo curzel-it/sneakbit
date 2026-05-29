@@ -43,7 +43,10 @@ export function installActiveInputDevice() {
   if (typeof matchMedia !== "undefined" && matchMedia("(pointer: coarse)").matches) {
     active = "touch";
   }
-  window.addEventListener("keydown", () => markInputDevice("keyboard"), true);
+  // Only real keystrokes count — synthetic keydowns (e.g. the Escape that
+  // gamepad "back" dispatches) must not flip the active device away from
+  // the controller.
+  window.addEventListener("keydown", (e) => { if (e.isTrusted) markInputDevice("keyboard"); }, true);
   window.addEventListener("touchstart", () => markInputDevice("touch"), { capture: true, passive: true });
   // Debug/e2e hook (harmless, like window.save / window.coop).
   window.__activeInputDevice = getActiveInputDevice;

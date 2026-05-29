@@ -17,6 +17,7 @@ import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, rese
 import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js?v=20260529a";
 import { formatKeyCode, formatPadButton, glyphForAction } from "./inputGlyphs.js?v=20260529a";
 import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDevice.js?v=20260529a";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260529a";
 import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js?v=20260529a";
 import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260529a";
 import { invalidateZoneCache } from "./data.js?v=20260529a";
@@ -205,6 +206,9 @@ export function installMenu(stateGetter) {
   // Keep the pause hint's glyphs in sync if the player switches device
   // while the menu is open.
   onActiveInputDeviceChange(() => { if (open) renderPauseHint(); });
+  // Roving focus / controller navigation: the active card is whichever
+  // screen is showing.
+  registerMenuSurface({ root: activeCard, isOpen: () => open });
 
   window.addEventListener("keydown", (e) => {
     // Settings screen is doing live key capture for rebinding; don't
@@ -266,12 +270,19 @@ function applyRoleVisibility() {
   });
 }
 
+// The currently visible menu card — the root menuNav focuses within.
+function activeCard() {
+  return root?.querySelector(`.menu-card[data-screen="${screen}"]`);
+}
+
 function openMenu() {
   open = true;
-  showScreen("pause");
-  applyRoleVisibility();
-  renderPauseHint();
+  // Show + apply role gating before focusing so the first highlight lands
+  // on a genuinely visible item.
   root.style.display = "flex";
+  applyRoleVisibility();
+  showScreen("pause");
+  renderPauseHint();
   playSfx("hintReceived", { volume: 0.5 });
 }
 
@@ -304,6 +315,9 @@ function showScreen(next) {
   if (next === "inventory") renderInventoryInto(root.querySelector("#menu-inventory-body"));
   if (next === "controls") renderControlsList();
   if (next !== "controls") { cancelRebindCapture(); cancelPadCapture(); }
+  // Highlight the first item of the now-visible screen for keyboard /
+  // controller navigation.
+  if (open) focusFirstIn(activeCard);
 }
 
 function renderControlsList() {
