@@ -12,6 +12,7 @@ import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=2026
 import { getPlayerHp } from "./playerHealth.js?v=20260529d";
 import { getLastSeqMap } from "./hostGuests.js?v=20260529d";
 import { broadcastHostEvent } from "./hostEvents.js?v=20260529d";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260529d";
 
 export const BROADCAST_INTERVAL_MS = 50;
 
@@ -350,6 +351,18 @@ export const _serializeEntityResetWarningsForTesting = serializeEntityResetWarni
 
 function serializeEntity(e) {
   if (!e || e.id == null) { warnMissingId(e); return null; }
+  // Host-authoritative visibility. An entity the host hides — a pickup
+  // already collected (item_collected.<id>) or a story-flag-gated NPC
+  // (display_conditions) — must not reach guests. That hidden state lives
+  // in the host's own localStorage and isn't shipped, so the guest can't
+  // reproduce it: without this gate the host would broadcast a kunai it
+  // picked up in an earlier session (buildZone keeps collected entities in
+  // zone.entities, hidden only at render/pickup time), and the guest —
+  // lacking the host's item_collected flag — would render it. This is the
+  // same gate the renderer/pickup/collision paths use, so the wire set is
+  // exactly what the host sees. An entity that flips to hidden mid-session
+  // drops out of `seen` in entityDeltas and rides out via removed.entities.
+  if (!shouldBeVisible(e)) return null;
   const out = { id: e.id };
   if (e.species_id != null) out.species_id = e.species_id;
   if (e.frame) {

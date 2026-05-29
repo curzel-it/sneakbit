@@ -54,6 +54,7 @@ export async function startCoopSession({
   zone,
   entry = "deeplink",      // "deeplink" or "menu"
   disableWebrtc = false,   // force WS-only path
+  hostSeedKv = null,       // { "item_collected.123": 1 } seeded into the host's storage.js KV before its boot
   hostPort = 9223,
   guestPort = 9224,
   hostDir = "/tmp/sb-e2e-host",
@@ -88,6 +89,16 @@ export async function startCoopSession({
   // *guest* deep-link vs menu paths.
   await navigate(host, `${appUrl}/`);
   await evalExpr(host, `localStorage.setItem("sneakbit.online.uuid", ${JSON.stringify(hostUuid)})`);
+  // Seed the host's persistent KV (storage.js) before the host boot so
+  // initOfflineState's buildZone hydrates with these flags already set —
+  // e.g. item_collected.<id>=1 models "the host picked this up in an
+  // earlier single-player session, then started hosting". storage.js
+  // namespaces every key under the "sneakbit.kv.v1." prefix.
+  if (hostSeedKv) {
+    for (const [k, v] of Object.entries(hostSeedKv)) {
+      await evalExpr(host, `localStorage.setItem(${JSON.stringify("sneakbit.kv.v1." + k)}, ${JSON.stringify(String(v))})`);
+    }
+  }
   const hostUrl = zone != null
     ? `${appUrl}/?host=1&zone=${zone}&server=${encodeURIComponent(relayWs)}`
     : `${appUrl}/?host=1&server=${encodeURIComponent(relayWs)}`;
