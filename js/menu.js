@@ -15,6 +15,7 @@ import { isCreativeMode } from "./creativeMode.js?v=20260529a";
 import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260529a";
 import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, resetGamepadBindings } from "./gamepadBindings.js?v=20260529a";
 import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js?v=20260529a";
+import { formatKeyCode, formatPadButton } from "./inputGlyphs.js?v=20260529a";
 import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js?v=20260529a";
 import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260529a";
 import { invalidateZoneCache } from "./data.js?v=20260529a";
@@ -54,16 +55,6 @@ let rebindCapture = null; // { action, slot, playerIndex } | null
 // via a requestAnimationFrame poll of the player's pad.
 let padCapture = null; // { action, playerIndex, btn, prev, raf } | null
 
-// Standard-Mapping button labels for the controller bindings UI.
-const PAD_BUTTON_LABELS = {
-  0: "A", 1: "B", 2: "X", 3: "Y", 4: "LB", 5: "RB", 6: "LT", 7: "RT",
-  8: "Back", 9: "Start", 10: "LS", 11: "RS",
-  12: "D-Up", 13: "D-Down", 14: "D-Left", 15: "D-Right", 16: "Guide",
-};
-function padButtonLabel(idx) {
-  if (idx == null || idx < 0) return "—";
-  return PAD_BUTTON_LABELS[idx] || `Button ${idx}`;
-}
 // Optional getter the host wires in at install time. Provides access to
 // the live game state (rawZone + current zone id) without coupling the
 // menu module to main.js. Returns null when no state is wired or when
@@ -340,8 +331,8 @@ function renderKeyboardList() {
     const codes = codesFor(a.id, controlsPlayer);
     return `<li>
       <span class="menu-controls-label">${a.label}</span>
-      <button class="menu-controls-key" data-action="${a.id}" data-slot="0">${formatCode(codes[0])}</button>
-      <button class="menu-controls-key" data-action="${a.id}" data-slot="1">${formatCode(codes[1])}</button>
+      <button class="menu-controls-key" data-action="${a.id}" data-slot="0">${formatKeyCode(codes[0])}</button>
+      <button class="menu-controls-key" data-action="${a.id}" data-slot="1">${formatKeyCode(codes[1])}</button>
     </li>`;
   }).join("");
   for (const btn of list.querySelectorAll(".menu-controls-key")) {
@@ -357,21 +348,12 @@ function renderControllerList() {
     const idx = buttonFor(a.id, controlsPlayer);
     return `<li>
       <span class="menu-controls-label">${a.label}</span>
-      <button class="menu-controls-key" data-action="${a.id}">${padButtonLabel(idx)}</button>
+      <button class="menu-controls-key" data-action="${a.id}">${formatPadButton(idx)}</button>
     </li>`;
   }).join("");
   for (const btn of list.querySelectorAll(".menu-controls-key")) {
     btn.addEventListener("click", () => beginPadCapture(btn));
   }
-}
-
-function formatCode(code) {
-  if (!code) return "—";
-  // Browser KeyboardEvent.code values like "KeyA", "ArrowUp", "Digit1".
-  if (code.startsWith("Key")) return code.slice(3);
-  if (code.startsWith("Digit")) return code.slice(5);
-  if (code.startsWith("Numpad")) return "Num " + code.slice(6);
-  return code;
 }
 
 function beginRebindCapture(btn) {

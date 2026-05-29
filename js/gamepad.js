@@ -27,6 +27,7 @@
 // D-pad: 12 up / 13 down / 14 left / 15 right.
 
 import { buttonFor, menuButton } from "./gamepadBindings.js?v=20260529a";
+import { markInputDevice } from "./activeInputDevice.js?v=20260529a";
 
 const ACTION_NAMES = ["interact", "shoot", "melee"];
 
@@ -71,6 +72,14 @@ function connectedPadsByIndex() {
 export function getPadIndexForSlot(slot) {
   const pad = connectedPadsByIndex()[slot - 1];
   return pad ? pad.index : -1;
+}
+
+// Reverse of getPadIndexForSlot: which 1-based slot a hardware pad.index
+// currently drives (by connection order), or -1 if it isn't connected.
+// Used by controllerPresence to name the player on connect/disconnect.
+export function slotForPadIndex(padIndex) {
+  const pos = connectedPadsByIndex().findIndex((p) => p.index === padIndex);
+  return pos < 0 ? -1 : pos + 1;
 }
 
 // Returns { events, held } for the pad assigned to `slot`, draining its
@@ -179,6 +188,10 @@ function scanPad(pad, slot) {
   }
 
   st.prevHeld = held;
+  // Any real pad input this frame makes the gamepad the active device, so
+  // prompts switch to controller glyphs (idle pads with centered sticks
+  // and no buttons don't hijack a keyboard player).
+  if (held.size > 0 || pad.buttons.some((b) => b?.pressed)) markInputDevice("gamepad");
   return { events, held: new Set(held) };
 }
 
