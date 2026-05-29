@@ -5,6 +5,8 @@ Our guiding start is that the JS port will replace the Rust codebase in producti
 - [ ] Do a complete playthrough for testing
 - [ ] Add translation support and italian localization
 - [ ] Gamepad/controller support (P1 works; online guests not wired)
+  - [ ] Controllers on mobile
+  - [ ] UX for connecting and disconnecting controllers
 - [ ] Native wrapper (needs to be an actual app for mobile, single binary for Steam, ...)
 - [ ] Full screen support
 - [ ] Probably other things I don't remember rn
