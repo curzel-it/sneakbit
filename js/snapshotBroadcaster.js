@@ -8,10 +8,10 @@
 // stop after one delta, fitting the 50–100 KB/s budget called out in
 // docs/server.md at the snapshot section.
 
-import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260528i";
-import { getPlayerHp } from "./playerHealth.js?v=20260528i";
-import { getLastSeqMap } from "./hostGuests.js?v=20260528i";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260528i";
+import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260529a";
+import { getPlayerHp } from "./playerHealth.js?v=20260529a";
+import { getLastSeqMap } from "./hostGuests.js?v=20260529a";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260529a";
 
 export const BROADCAST_INTERVAL_MS = 50;
 

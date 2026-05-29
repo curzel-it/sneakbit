@@ -10,9 +10,9 @@
 // progress 0..1) so its sprite slides smoothly between integer tiles,
 // matching the player's movement model in player.js.
 
-import { getSpecies } from "./species.js?v=20260528i";
-import { isWalkable } from "./zone.js?v=20260528i";
-import { isCreativeMode } from "./creativeMode.js?v=20260528i";
+import { getSpecies } from "./species.js?v=20260529a";
+import { isWalkable } from "./zone.js?v=20260529a";
+import { isCreativeMode } from "./creativeMode.js?v=20260529a";
 
 const VISION_TILES = 6;            // chase trigger range (Manhattan)
 const WANDER_PAUSE = 0.9;          // sec idle between wander steps

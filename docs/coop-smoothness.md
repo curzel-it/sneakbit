@@ -1,7 +1,8 @@
 # Co-op Motion Smoothness — Design Doc
 
-Status: **shipped + multi-key host-input divergence fix landed**
-(2026-05-28, awaiting morning verification).
+Status: **multi-key fix shipped 2026-05-28; new bug shape surfaced
+2026-05-29; ?debug=snap capture enriched to disambiguate** (cache-bust
+`20260529a`).
 Scope: guest's perceived smoothness of the host's world (and the
 guest's own avatar). Host is unchanged.
 Bar: *"never see stutters unless stuff is actually bad"* — i.e. on a
@@ -12,6 +13,124 @@ genuinely degraded (real packet loss, real jitter, real RTT spikes).
 ## Tomorrow-you: start here
 
 Read this section first; the rest is history.
+
+### 2026-05-29 morning — multi-key fix verified, NEW bug shape
+
+The user re-tested with `?debug=snap` after the 2026-05-28 multi-key
+fix shipped. The fresh `/Users/curzel/Desktop/log.json` shows **the
+multi-key bug is gone** (no "same step rate, perpendicular paths"
+captures), but **two new divergence shapes** showed up. They are not
+the symptom the previous fix was targeted at.
+
+The user confirmed: **no menu / dialogue / pause was open on either
+client** during the session — so any "predicted is frozen" theory
+that relies on a stale local dialogue/pause flag is out.
+
+**Event 1** (seq=6, near spawn):
+- predicted at (69, 42) facing down, no step.
+- auth at (68, 24) facing down — still at spawn.
+- ddx=1, ddy=18; unackedCount=0; lastAckedSeq=6.
+- authFront entity is species 11000 (`magic_circle.summoning`,
+  `is_rigid: false`) — not a blocker.
+- Shape: **host's auth never advanced** while predicted chained
+  ~18 steps locally. Yesterday's "same rate, different direction"
+  shape this is not — auth's tile rate is *zero*.
+
+**Events 2-5** (seq=73-74, t=613xxx, 4 captures spanning ~700 ms):
+- predicted **frozen at (69, 41)** facing **"right"**, no step,
+  identical across all 4 entries.
+- auth steadily advancing south: (69, 44) → (45) → (46) → (47).
+- Only 1 input sent in the window (seq 73→74) — host is chaining via
+  its held set; the player pressed Down exactly once in this window.
+- Shape: **guest's predicted never ticked the Down press**, even
+  though the host clearly received it (auth chains south on slot 2
+  from a held=[down] set).
+
+These are *opposite* bug shapes: one has auth frozen with predicted
+running, the other has predicted frozen with auth running.
+
+### The handleIdle chain-restart gap (working hypothesis)
+
+`player.handleIdle` only starts a step when a NEW press event is in
+`input.events` (or via a `pendingDir` commit). It does **not** start a
+step from a pure `held` set alone — the chain-from-held logic lives in
+`advanceStep`, which runs only while a step is in progress. So:
+
+1. Player presses Down → `events=[down]`, `held={down}`.
+2. `handleIdle` consumes the event, `startStep` south.
+3. `advanceStep` chains south via held while steps keep landing.
+4. If a step ever fails to land (`canEnter` returns false in
+   `startStep`, e.g. the mirror has a blocker the host doesn't, or
+   pendingDir commit aimed at a non-walkable tile), `player.step`
+   stays null.
+5. Next tick: `handleIdle`, `events=[]` (drained), `pendingDir=null`,
+   `held={down}`. **Nothing happens.** Predicted sits there forever
+   until the user lifts and re-presses Down.
+
+This matches the events 2-5 shape exactly: predicted at (69, 41)
+facing "right" with no step, held probably still has "down" but no
+new event ever fires to restart the chain. Auth doesn't have this
+problem because on the host slot 2 receives a fresh `pushPressEvent`
+on every wire frame — the host's handleIdle gets a new event each time
+the guest sends moveDown, even if the held set already had it.
+
+To prove this, the `?debug=snap` capture is now enriched (see below).
+
+### Enriched ?debug=snap capture (cache-bust `20260529a`)
+
+`predictedSelf.captureDivergence` now also records, per entry:
+
+- `predicted.queuedDir`, `pendingDir`, `pendingTimer` — to see whether
+  a rotation/commit was mid-flight when capture fired.
+- `predictedNextStep[up|down|left|right]` — entities at every
+  candidate next tile (not just the front for the current direction),
+  so a "predicted's south tile has a blocker the host doesn't" theory
+  is directly visible.
+- `input.localSlot1.held` and `input.localSlot1.pressEvents` —
+  exposed via the new `peekInputState(1)` in `input.js`. If `held`
+  doesn't include the key the user is holding, the local keyboard
+  listener never received the keydown (focus/IME/overlay eating it).
+  If `held` has the key but `pressEvents` is empty, we're in the
+  chain-restart gap above.
+- `gating.dialogueOpen` and `gating.hostPausedRemote` — to rule out
+  the dialogue/pause hypothesis with hard evidence (the user reports
+  neither was open, but capturing the actual gate state makes the
+  ruling permanent).
+- `hostMirrorSlot1.{tileX,tileY,direction}` — mirror's view of the
+  host's avatar. If the host's player1 is sitting on slot 2's front
+  tile on the host, slot 2 can't step there — event-1 has auth at
+  (68, 24) trying to walk down; if this field shows slot1 at (68, 25),
+  that's the cause.
+
+### Next session checklist
+
+Reproduce on the live build (`?debug=snap` is shipped), grab a fresh
+log, and read it bottom-up:
+
+- If event-2-5-style entries (predicted frozen, auth advancing) show
+  `localSlot1.held` containing the held direction AND `pressEvents`
+  empty → handleIdle chain-restart gap is confirmed. Fix: chain
+  from held in handleIdle when no events are pending and no step is
+  running (carefully — don't break tap-to-turn).
+- If `localSlot1.held` is empty when the user reports holding a key
+  → keydown didn't reach `input.js` (likely a focused UI element
+  eating it; check whether something on guest steals focus).
+- If event-1-style entries show `hostMirrorSlot1` on the auth's
+  front tile → host's player1 is blocking slot 2's path on host.
+  Fix: choose `pickCoopSpawn` more carefully or detach slot 2's
+  blocking model from slot 1.
+- If `gating.dialogueOpen=true` while `gating.hostPausedRemote=false`
+  → the dialogue/pause desync theory IS the issue after all;
+  consider switching the predicted-tick gate to
+  `!isHostPausedRemote()`.
+
+The previous "tomorrow-you" section (about the 2026-05-28 multi-key
+fix) is preserved below for historical context — that fix shipped and
+the doc says it's verified.
+
+---
+
+### 2026-05-28 — multi-key host-input divergence (historical)
 
 **What was wrong** (from a `?debug=snap` capture, `/Users/curzel/Desktop/log.json`
 from the 2026-05-28 evening session): the post-stutter-fix bug

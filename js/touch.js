@@ -6,11 +6,11 @@
 // Hidden by default; show when a touch (or pointer with pointerType ===
 // "touch") is detected so we don't clutter desktop screens.
 
-import { tryShoot } from "./shooting.js?v=20260528i";
-import { tryMelee } from "./melee.js?v=20260528i";
-import { getEquipped, onEquipmentChange, SLOT_MELEE } from "./equipment.js?v=20260528i";
-import { getNetRole } from "./onlineBootstrap.js?v=20260528i";
-import { codesFor } from "./keyBindings.js?v=20260528i";
+import { tryShoot } from "./shooting.js?v=20260529a";
+import { tryMelee } from "./melee.js?v=20260529a";
+import { getEquipped, onEquipmentChange, SLOT_MELEE } from "./equipment.js?v=20260529a";
+import { getNetRole } from "./onlineBootstrap.js?v=20260529a";
+import { codesFor } from "./keyBindings.js?v=20260529a";
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 

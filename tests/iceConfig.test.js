@@ -8,8 +8,8 @@ import {
   primeIceServers,
   _resetIceConfigForTesting,
   _getCachedExpiresAtForTesting,
-} from "../js/iceConfig.js?v=20260528i";
-import { DEFAULT_STUN_SERVERS } from "../js/webrtcChannel.js?v=20260528i";
+} from "../js/iceConfig.js?v=20260529a";
+import { DEFAULT_STUN_SERVERS } from "../js/webrtcChannel.js?v=20260529a";
 
 function fakeFetch(response) {
   return async () => response;

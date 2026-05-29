@@ -13,7 +13,7 @@
 //   1. Bump BUILD_NUMBER below.
 //   2. Push a `{ to, run }` entry to MIGRATIONS describing the upgrade.
 
-import { getValue, setValue } from "./storage.js?v=20260528i";
+import { getValue, setValue } from "./storage.js?v=20260529a";
 
 // Bump on every breaking storage-shape change. Mirror the Rust constant.
 export const BUILD_NUMBER = 3;

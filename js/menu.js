@@ -5,23 +5,23 @@
 // screen. isMenuOpen() reports either screen as "open" so the game stays
 // paused while the player tweaks audio.
 
-import { getSettings, saveSettings } from "./settings.js?v=20260528i";
-import { playSfx } from "./audio.js?v=20260528i";
-import { APP_VERSION } from "./constants.js?v=20260528i";
-import { clearProgress } from "./save.js?v=20260528i";
-import { getSkills } from "./skills.js?v=20260528i";
-import { renderInventoryInto } from "./inventoryScreen.js?v=20260528i";
-import { isCreativeMode } from "./creativeMode.js?v=20260528i";
-import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260528i";
-import { isCoopMode, isCoopActive } from "./coopMode.js?v=20260528i";
-import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260528i";
-import { invalidateZoneCache } from "./data.js?v=20260528i";
-import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260528i";
-import { isGameOverOpen } from "./gameOver.js?v=20260528i";
-import { isFastTravelOpen } from "./fastTravel.js?v=20260528i";
-import { isMessageOpen } from "./message.js?v=20260528i";
-import { isDialogueOpen } from "./dialogue.js?v=20260528i";
-import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260528i";
+import { getSettings, saveSettings } from "./settings.js?v=20260529a";
+import { playSfx } from "./audio.js?v=20260529a";
+import { APP_VERSION } from "./constants.js?v=20260529a";
+import { clearProgress } from "./save.js?v=20260529a";
+import { getSkills } from "./skills.js?v=20260529a";
+import { renderInventoryInto } from "./inventoryScreen.js?v=20260529a";
+import { isCreativeMode } from "./creativeMode.js?v=20260529a";
+import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260529a";
+import { isCoopMode, isCoopActive } from "./coopMode.js?v=20260529a";
+import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260529a";
+import { invalidateZoneCache } from "./data.js?v=20260529a";
+import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260529a";
+import { isGameOverOpen } from "./gameOver.js?v=20260529a";
+import { isFastTravelOpen } from "./fastTravel.js?v=20260529a";
+import { isMessageOpen } from "./message.js?v=20260529a";
+import { isDialogueOpen } from "./dialogue.js?v=20260529a";
+import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260529a";
 
 // Modals that own the keyboard while they're up. If any is open we treat
 // Esc / the menu key as "dismiss the active modal" — owned by that modal's

@@ -8,13 +8,15 @@
 // The renderer is updated separately to draw the predicted self in
 // place of the mirror's lagged copy for the guest's own slot.
 
-import { createPlayer, updatePlayer } from "./player.js?v=20260528i";
-import { pollInput, pushInputPress, clearInputHeld, clearInputState, setNetworkHeld } from "./input.js?v=20260528i";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260528i";
-import { getMirrorZone, getMirrorPlayerById } from "./mirrorWorld.js?v=20260528i";
-import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js?v=20260528i";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260528i";
-import { getValue } from "./storage.js?v=20260528i";
+import { createPlayer, updatePlayer } from "./player.js?v=20260529a";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState, setNetworkHeld, peekInputState } from "./input.js?v=20260529a";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260529a";
+import { getMirrorZone, getMirrorPlayerById, getMirrorPlayers } from "./mirrorWorld.js?v=20260529a";
+import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js?v=20260529a";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260529a";
+import { getValue } from "./storage.js?v=20260529a";
+import { isDialogueOpen } from "./dialogue.js?v=20260529a";
+import { isHostPausedRemote } from "./guestHostPause.js?v=20260529a";
 
 let predicted = null;
 let installed = false;
@@ -243,6 +245,9 @@ function captureDivergence(predicted, auth, msg) {
         tileY: predicted.tileY,
         direction: predicted.direction,
         hasStep: !!predicted.step,
+        queuedDir: predicted.queuedDir ?? null,
+        pendingDir: predicted.pendingDir ?? null,
+        pendingTimer: predicted.pendingTimer ?? 0,
       },
       authFront: {
         x: authFrontX,
@@ -254,11 +259,37 @@ function captureDivergence(predicted, auth, msg) {
         y: predFrontY,
         entities: describeEntitiesAt(mirror, predFrontX, predFrontY),
       },
+      // Tile predicted would step into next on a held=down/up/left/right
+      // press. If that tile shows blockers/non-walkable when the host's
+      // tile is clear, predicted's chain-break sticks even while auth
+      // keeps moving — exactly the "predicted frozen, auth advancing"
+      // shape we're chasing.
+      predictedNextStep: describeStepTargets(mirror, predicted),
       input: {
         currentSeq: getSeq(),
         lastAckedSeq,
         unackedCount: getInputLog().length,
+        // Slot 1 = guest's own predicted self. If the guest is holding
+        // a key but `held` here doesn't include it, the local keydown
+        // never reached input.js (e.g. focus on another element, OS-
+        // level interception, or an event-eating overlay).
+        localSlot1: peekInputState(1),
       },
+      // The predicted tick is gated on isDialogueOpen() in main.js.
+      // If a stale dialogue/pause flag is what's freezing predicted,
+      // this proves it. hostPaused is the authoritative signal —
+      // the host broadcasts it as event:hostPause on every edge.
+      gating: {
+        dialogueOpen: safeBool(isDialogueOpen),
+        hostPausedRemote: safeBool(isHostPausedRemote),
+      },
+      // Mirror's view of the host's own avatar (slot 1 in mirror
+      // coords). When auth is at (X, Y) and we want to know whether
+      // the host's player1 is sitting in slot 2's path on host, this
+      // is the only signal the guest has — it's lagged by interp
+      // delay but still close enough for the "is P1 blocking P2"
+      // diagnosis.
+      hostMirrorSlot1: describeMirrorSlot1(),
       storageHints: collectStorageHints(mirror, authFrontX, authFrontY),
     };
     buf.push(entry);
@@ -306,6 +337,41 @@ function describeEntitiesAt(zone, tx, ty) {
     });
   }
   return out;
+}
+
+function safeBool(fn) {
+  try { return !!fn(); } catch { return null; }
+}
+
+function describeStepTargets(zone, predicted) {
+  const out = {};
+  if (!predicted) return out;
+  for (const [dir, vec] of Object.entries(DEBUG_DIR_VEC)) {
+    const tx = predicted.tileX + vec.dx;
+    const ty = predicted.tileY + vec.dy;
+    out[dir] = {
+      x: tx,
+      y: ty,
+      entities: describeEntitiesAt(zone, tx, ty),
+    };
+  }
+  return out;
+}
+
+function describeMirrorSlot1() {
+  try {
+    const players = getMirrorPlayers();
+    const slot1 = (players || []).find((p) => (p?.slot | 0) === 1);
+    if (!slot1) return null;
+    return {
+      tileX: slot1.tileX,
+      tileY: slot1.tileY,
+      direction: slot1.direction,
+      playerId: slot1.playerId,
+    };
+  } catch {
+    return null;
+  }
 }
 
 function collectStorageHints(zone, tx, ty) {

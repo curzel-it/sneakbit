@@ -8,9 +8,9 @@
 // d-pad fan into the same directional channel; action buttons go
 // through their own callback registry (see gamepad.setGamepadAction).
 
-import { pollGamepadDirections } from "./gamepad.js?v=20260528i";
-import { resolveAction } from "./keyBindings.js?v=20260528i";
-import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js?v=20260528i";
+import { pollGamepadDirections } from "./gamepad.js?v=20260529a";
+import { resolveAction } from "./keyBindings.js?v=20260529a";
+import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
 
 const ACTION_TO_DIR = {
   moveUp: "up",
@@ -143,6 +143,17 @@ export function initInput() {
   });
   window.addEventListener("blur", clearAll);
   document.addEventListener("visibilitychange", () => { if (document.hidden) clearAll(); });
+}
+
+// Non-draining snapshot of a slot's input state. For debug captures
+// only — predictedSelf.captureDivergence reads this to record exactly
+// what the local input pipeline was holding at the moment of a
+// snap-back. Returning arrays (not Sets) keeps the snapshot
+// JSON-serialisable for the rolling buffer on window.__sbSnapDebug.
+export function peekInputState(playerIndex = 1) {
+  const s = state[playerIndex];
+  if (!s) return { held: [], pressEvents: [] };
+  return { held: [...s.held], pressEvents: s.pressEvents.slice() };
 }
 
 // Returns { events, held } for the requested player and drains the

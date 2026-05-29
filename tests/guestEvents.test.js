@@ -10,7 +10,7 @@ const {
   _uninstallGuestEventsForTesting,
   setGuestEventHandler,
   dispatch,
-} = await import("../js/guestEvents.js?v=20260528i");
+} = await import("../js/guestEvents.js?v=20260529a");
 
 function makeFakeNet() {
   const handlers = new Map();
@@ -68,9 +68,9 @@ test("zoneChange kind is routable through the override seam", () => {
 
 test("pickup event only updates local inventory when playerId matches self", async () => {
   _uninstallGuestEventsForTesting();
-  const { getAmmo, clearInventory } = await import("../js/inventory.js?v=20260528i");
-  const onlineMode = await import("../js/onlineMode.js?v=20260528i");
-  const bootstrap = await import("../js/onlineBootstrap.js?v=20260528i");
+  const { getAmmo, clearInventory } = await import("../js/inventory.js?v=20260529a");
+  const onlineMode = await import("../js/onlineMode.js?v=20260529a");
+  const bootstrap = await import("../js/onlineBootstrap.js?v=20260529a");
   bootstrap._resetOnlineBootstrapForTesting();
   onlineMode._setOnlineModeForTesting({ mode: "guest", uuid: "uuid-x", joinCode: "ABCDE" });
   const net = makeFakeNet();
@@ -99,9 +99,9 @@ test("pickup event only updates local inventory when playerId matches self", asy
 
 test("ammoSet event overwrites local counts to the absolute value for self", async () => {
   _uninstallGuestEventsForTesting();
-  const { getAmmo, addAmmo, clearInventory } = await import("../js/inventory.js?v=20260528i");
-  const onlineMode = await import("../js/onlineMode.js?v=20260528i");
-  const bootstrap = await import("../js/onlineBootstrap.js?v=20260528i");
+  const { getAmmo, addAmmo, clearInventory } = await import("../js/inventory.js?v=20260529a");
+  const onlineMode = await import("../js/onlineMode.js?v=20260529a");
+  const bootstrap = await import("../js/onlineBootstrap.js?v=20260529a");
   bootstrap._resetOnlineBootstrapForTesting();
   onlineMode._setOnlineModeForTesting({ mode: "guest", uuid: "uuid-x", joinCode: "ABCDE" });
   const net = makeFakeNet();
@@ -129,7 +129,7 @@ test("ammoSet event overwrites local counts to the absolute value for self", asy
 test("hostPause events drive the guest-side isHostPausedRemote flag", async () => {
   _uninstallGuestEventsForTesting();
   const { isHostPausedRemote, _resetGuestHostPauseForTesting } =
-    await import("../js/guestHostPause.js?v=20260528i");
+    await import("../js/guestHostPause.js?v=20260529a");
   _resetGuestHostPauseForTesting();
   assert.equal(isHostPausedRemote(), false);
   dispatch({ kind: "hostPause", paused: true });
@@ -146,7 +146,7 @@ test("hostPause events drive the guest-side isHostPausedRemote flag", async () =
 
 test("pickup events feed addAmmo so the guest's HUD updates", async () => {
   _uninstallGuestEventsForTesting();
-  const { getAmmo } = await import("../js/inventory.js?v=20260528i");
+  const { getAmmo } = await import("../js/inventory.js?v=20260529a");
   // Snapshot starting counts because other tests in the suite may have
   // hydrated inventory with non-zero values for the same species ids.
   const KUNAI = 7000;

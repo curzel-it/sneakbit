@@ -1,7 +1,7 @@
 // Loads and caches JSON data (levels, species). Pure I/O — no game logic.
 
-import { isCreativeMode } from "./creativeMode.js?v=20260528i";
-import { getBufferedZone } from "./zoneBuffer.js?v=20260528i";
+import { isCreativeMode } from "./creativeMode.js?v=20260529a";
+import { getBufferedZone } from "./zoneBuffer.js?v=20260529a";
 
 const cache = new Map();
 
