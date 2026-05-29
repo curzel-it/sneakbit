@@ -22,6 +22,7 @@
 
 import { getSpecies } from "./species.js?v=20260529a";
 import { resolveLoadout } from "./sessionLoadouts.js?v=20260529a";
+import { rumble } from "./rumble.js?v=20260529a";
 
 const MAX_HP = 100;
 // Intentional divergence from Rust HERO_RECOVERY_PS=1.0. Block-A playtests
@@ -98,6 +99,7 @@ export function applyPlayerDamage(amount, victim = 0) {
   rec.invuln = INVULN_AFTER_BURST;
   rec.regenDelay = REGEN_DELAY_AFTER_HIT;
   notify();
+  rumble(index + 1, "hurt");
   return rec.hp <= 0 ? "died" : "hurt";
 }
 
@@ -112,6 +114,7 @@ export function applyPlayerContinuousDamage(amount, victim = 0) {
   rec.hp = Math.max(0, rec.hp - reduced);
   rec.regenDelay = REGEN_DELAY_AFTER_HIT;
   notify();
+  rumble(index + 1, "hurt");
   return rec.hp <= 0 ? "died" : "hurt";
 }
 

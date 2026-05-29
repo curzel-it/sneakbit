@@ -6,9 +6,15 @@
 
 import { setPlayerHp } from "./playerHealth.js?v=20260529a";
 import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260529a";
+import { rumble } from "./rumble.js?v=20260529a";
 
 let unsubs = [];
 let installed = false;
+// Tracks the last authoritative HP so we can rumble the guest's own pad
+// when it drops. The host rumbles its local players directly via
+// playerHealth; a guest only learns of its own damage through these
+// auth frames, so the detection lives here.
+let lastSelfHp = null;
 
 export function installGuestSelfHpSync(opts = {}) {
   uninstallGuestSelfHpSync();
@@ -25,6 +31,7 @@ export function uninstallGuestSelfHpSync() {
   for (const u of unsubs) { try { u(); } catch { /* ignore */ } }
   unsubs = [];
   installed = false;
+  lastSelfHp = null;
 }
 
 export const _uninstallGuestSelfHpSyncForTesting = uninstallGuestSelfHpSync;
@@ -34,6 +41,10 @@ function onAuth(msg) {
   if (!selfId) return;
   const self = (msg?.players || []).find((p) => p.playerId === selfId);
   if (!self || typeof self.hp !== "number") return;
+  // A drop means the host docked our HP this frame — rumble our own pad
+  // (slot 1 on the guest's machine). Respawns/heals raise hp, no rumble.
+  if (lastSelfHp !== null && self.hp < lastSelfHp) rumble(1, "hurt");
+  lastSelfHp = self.hp;
   setPlayerHp(self.hp, 0);
 }
 

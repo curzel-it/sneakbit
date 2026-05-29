@@ -17,6 +17,7 @@ import { matchesAction } from "./keyBindings.js?v=20260529a";
 import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
 import { getNetRole } from "./onlineBootstrap.js?v=20260529a";
 import { isPlayerDead } from "./playerHealth.js?v=20260529a";
+import { rumble } from "./rumble.js?v=20260529a";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
@@ -149,7 +150,7 @@ function shoot(state, shooter) {
   const { weapon, bulletId } = resolveRangedWeapon(shooter);
   const bulletSp = getSpecies(bulletId);
   if (!bulletSp) return;
-  if (getAmmo(bulletId, idx) <= 0) { playSfx("noAmmo"); return; }
+  if (getAmmo(bulletId, idx) <= 0) { playSfx("noAmmo"); rumble(idx + 1, "noAmmo"); return; }
   if (!removeAmmo(bulletId, 1, idx)) return;
   // Per-player inventory in online co-op: tell the shooter's client about
   // their new authoritative count so their AmmoHud ticks down. We send
