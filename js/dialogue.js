@@ -14,6 +14,7 @@ import { addAmmo } from "./inventory.js?v=20260529a";
 import { showToast } from "./toast.js?v=20260529a";
 import { getSpecies } from "./species.js?v=20260529a";
 import { matchesAction } from "./keyBindings.js?v=20260529a";
+import { registerMenuSurface } from "./menuNav.js?v=20260529a";
 import { broadcastHostEvent } from "./hostEvents.js?v=20260529a";
 
 let root = null;
@@ -76,6 +77,13 @@ export function installDialogue() {
   root.addEventListener("click", () => {
     if (active?.isNetwork) return;
     advance();
+  });
+  // Controller A advances the dialogue (keyboard Space/interact already do).
+  // No focus list — it's advance-only — so register an explicit onConfirm.
+  registerMenuSurface({
+    isOpen: isDialogueOpen,
+    onConfirm: () => { if (!active?.isNetwork) advance(); },
+    priority: 20,
   });
   return root;
 }

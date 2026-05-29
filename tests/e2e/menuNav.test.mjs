@@ -65,3 +65,35 @@ test("keyboard + controller navigate the pause menu", async (t) => {
   await sleep(50);
   assert.equal(await menuOpen(s), false, "back again closed the menu");
 });
+
+test("navigation carries into a second surface (party panel)", async (t) => {
+  if (!skipIfNoChrome(t)) return;
+  const chrome = await launchChrome({ port: 9282, dataDir: "/tmp/sb-e2e-menunav2" });
+  t.after(() => chrome.kill());
+  const page = (await getTargets(9282)).find((x) => x.type === "page");
+  const s = await connectSession(page.webSocketDebuggerUrl);
+  t.after(() => s.close());
+
+  await navigate(s, `${servers.appUrl}/index.html`);
+  await waitFor(s, "!!window.__menuNav");
+
+  // Open the pause menu, navigate to "Party / Co-op", activate it.
+  await key(s, "Escape");
+  await sleep(50);
+  let guard = 0;
+  while ((await focusedId(s)) !== "menu-open-party" && guard++ < 15) await key(s, "ArrowDown");
+  assert.equal(await focusedId(s), "menu-open-party", "reached Party / Co-op");
+  await evalExpr(s, "window.__menuNav.confirm()");
+  await sleep(50);
+
+  // The party panel is now the active surface with its own highlight, and
+  // arrows move within it.
+  const partyOpen = await evalExpr(s, `(() => { const v = document.querySelector('.party-view'); return !!v && v.offsetParent !== null; })()`);
+  assert.equal(partyOpen, true, "party panel opened");
+  assert.equal(await focusedCount(s), 1, "party panel has a single highlight");
+  const before = await focusedId(s);
+  await key(s, "ArrowDown");
+  // Focus stays within the party panel (highlight is on a party element).
+  const within = await evalExpr(s, `!!document.querySelector('.party-view .nav-focused')`);
+  assert.equal(within, true, "ArrowDown keeps focus inside the party panel");
+});

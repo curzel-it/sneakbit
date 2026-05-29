@@ -45,7 +45,10 @@ test("controller connect/disconnect drives device + pause overlay", async (t) =>
   assert.equal(await overlayVisible(s), true, "disconnect should raise the pause overlay");
 
   // Any key resumes (keyboard is always valid) and reverts the device.
-  await evalExpr(s, `window.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyW' }))`);
+  // A trusted key event (via CDP) — synthetic keydowns are intentionally
+  // ignored for device tracking so gamepad's synthetic Escape can't flip it.
+  await s.send("Input.dispatchKeyEvent", { type: "keyDown", code: "KeyW", key: "w", windowsVirtualKeyCode: 87 });
+  await s.send("Input.dispatchKeyEvent", { type: "keyUp", code: "KeyW", key: "w", windowsVirtualKeyCode: 87 });
   await sleep(50);
   assert.equal(await overlayVisible(s), false, "a key press should dismiss the overlay");
   assert.equal(await evalExpr(s, "window.__activeInputDevice()"), "keyboard");

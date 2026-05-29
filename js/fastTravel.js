@@ -13,6 +13,7 @@
 
 import { getValue, setValue } from "./storage.js?v=20260529a";
 import { travelTo } from "./transitions.js?v=20260529a";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260529a";
 
 const FAST_TRAVEL_SPECIES_ID = 1185;
 const UNLOCK_THRESHOLD = 4;
@@ -38,6 +39,7 @@ export function installFastTravel(getState) {
   stateRef = getState;
   ensureRoot();
   markVisited(getState()?.zone?.id);
+  registerMenuSurface({ root: () => root, isOpen: isFastTravelOpen, priority: 5 });
 }
 
 export function isFastTravelOpen() { return open; }
@@ -152,6 +154,7 @@ function showFastTravelMenu(state) {
       pickDestination(state, zoneId);
     });
   }
+  focusFirstIn(root);
 }
 
 function closeMenu() {

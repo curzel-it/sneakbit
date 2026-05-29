@@ -8,6 +8,7 @@
 // main.js so the game loop stops ticking while the message is up.
 
 import { playSfx } from "./audio.js?v=20260529a";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260529a";
 
 let root = null;
 let open = false;
@@ -42,6 +43,7 @@ export function installMessage() {
   injectStyles();
   root.querySelector("#msg-ok").addEventListener("click", dismiss);
   window.addEventListener("keydown", onKeydown);
+  registerMenuSurface({ root: () => root, isOpen: isMessageOpen, priority: 20 });
   return root;
 }
 
@@ -57,7 +59,7 @@ export function showMessage(title, text, onDismiss) {
   root.style.display = "flex";
   const btn = root.querySelector("#msg-ok");
   btn.disabled = true;
-  setTimeout(() => { btn.disabled = false; btn.focus(); }, 200);
+  setTimeout(() => { btn.disabled = false; focusFirstIn(root); }, 200);
   try { playSfx("hintReceived", { volume: 0.5 }); } catch {}
 }
 

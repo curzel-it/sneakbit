@@ -7,6 +7,7 @@
 // styling + a real button focusable by keyboard for free.
 
 import { playSfx } from "./audio.js?v=20260529a";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260529a";
 
 let root = null;
 let open = false;
@@ -38,6 +39,7 @@ export function installGameOver() {
   injectStyles();
   root.querySelector("#go-continue").addEventListener("click", commitContinue);
   window.addEventListener("keydown", onKeydown);
+  registerMenuSurface({ root: () => root, isOpen: isGameOverOpen, priority: 20 });
   return root;
 }
 
@@ -62,7 +64,7 @@ export function showGameOver(onContinue, opts = {}) {
     btn.disabled = true;
     // Brief delay before the button accepts a press so the player can't
     // skip the screen with a stale Enter from in-game input.
-    setTimeout(() => { btn.disabled = false; btn.focus(); }, 350);
+    setTimeout(() => { btn.disabled = false; focusFirstIn(root); }, 350);
   }
   playSfx("gameOver");
 }

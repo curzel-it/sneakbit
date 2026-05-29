@@ -27,6 +27,7 @@ import { showToast } from "./toast.js?v=20260529a";
 import { isCreativeMode } from "./creativeMode.js?v=20260529a";
 import { isCoopMode, localPlayerCount } from "./coopMode.js?v=20260529a";
 import { setLocalPlayers } from "./main.js?v=20260529a";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260529a";
 
 let chip = null;
 let chipLabel = null;
@@ -72,6 +73,7 @@ let offlineErrorEl = null;
 // the user which keys move P2.
 let localCoopEndBtn = null;
 let localCoopCountEl = null;
+let lastFocusedView = null;
 
 export function installPartyPanel() {
   if (installed || typeof document === "undefined") return;
@@ -83,6 +85,7 @@ export function installPartyPanel() {
   document.body.appendChild(overlay);
   onRoleChange(() => renderAll());
   onSessionState(() => renderAll());
+  registerMenuSurface({ root: visiblePartyView, isOpen: isPartyPanelOpen, priority: 5 });
   window.addEventListener("keydown", (e) => {
     if (e.code !== "Escape") return;
     if (!isPartyPanelOpen()) return;
@@ -101,14 +104,20 @@ export function openPartyPanel() {
   if (!installed) installPartyPanel();
   if (!overlay) return;
   overlay.style.display = "flex";
+  // renderAll highlights the first item of the visible view (keyboard +
+  // controller navigation).
   renderAll();
-  // Focus the most-likely-clicked control for keyboard users.
-  const role = getRuntimeRole();
-  if (role === "offline") offlineJoinInput?.focus();
 }
 
 export function closePartyPanel() {
   if (overlay) overlay.style.display = "none";
+  lastFocusedView = null;
+}
+
+// The currently shown view subtree — the root menuNav navigates within.
+function visiblePartyView() {
+  return [views.offline, views.hosting, views.guest, views.localCoop]
+    .find((v) => v && v.style.display !== "none") || null;
 }
 
 export function isPartyPanelOpen() {
@@ -353,6 +362,14 @@ function renderAll() {
   // has changed (peer list patches in place, etc.).
   renderPanel();
   maybeAutoCloseAfterGuestJoin();
+  // Re-highlight the first item only when the visible view changes (not on
+  // every patch), so navigating within a view isn't reset by a re-render.
+  if (isPartyPanelOpen()) {
+    const v = visiblePartyView();
+    if (v && v !== lastFocusedView) { lastFocusedView = v; focusFirstIn(v); }
+  } else {
+    lastFocusedView = null;
+  }
 }
 
 // Once a guest has been assigned a slot, the "In session with…" view has
