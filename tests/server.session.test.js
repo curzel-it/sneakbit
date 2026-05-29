@@ -287,7 +287,7 @@ test("guest disconnect: host gets peer.ghosted, then peer.left after grace", asy
 
 test("slot reassignment: A drops, B joins slot 3, A reconnects keeps slot 2", async () => {
   // Sanity check the slot-allocation rule documented under "Slot
-  // reassignment on guest reconnect" in docs/server.md:
+  // reassignment on guest reconnect" in docs/online-coop.md:
   // a ghosted guest still owns their slot during the grace window, so
   // the next arrival takes the lowest *free* slot. When the original
   // returns within grace, addOrResumeGuest finds the existing entry by

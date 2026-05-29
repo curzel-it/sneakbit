@@ -9,7 +9,7 @@
 import { getNetRole, getNet } from "./onlineBootstrap.js?v=20260529d";
 
 // Allowlist of `kind` values the host may push through. Matches
-// docs/server.md §`event` — guests already silently ignore unknown
+// docs/online-coop.md §`event` — guests already silently ignore unknown
 // kinds (forward-compat), but bouncing them here too keeps a typo at a
 // fresh call site (`"toats"`) from hitting the wire and costing
 // every guest a parse + dispatch cycle. Toast events also pin

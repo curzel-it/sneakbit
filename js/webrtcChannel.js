@@ -5,7 +5,7 @@
 // Once `open`, app code calls `send(str)` and receives via `onMessage`. The
 // signaling protocol — offer/answer/ICE candidates — rides on the existing
 // WS via `webrtc.signal` frames the relay forwards between host and a
-// named peer. See docs/server.md §"WebRTC upgrade path".
+// named peer. See docs/online-coop.md §"WebRTC upgrade path".
 //
 // We try a small handful of free public STUN servers by default. TURN
 // credentials are injected via `iceServers`; the credentials endpoint

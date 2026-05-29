@@ -6,7 +6,7 @@
 //
 // The broadcaster also keeps a per-entity signature so unchanged things
 // stop after one delta, fitting the 50–100 KB/s budget called out in
-// docs/server.md at the snapshot section.
+// docs/online-coop.md at the snapshot section.
 
 import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260529d";
 import { getPlayerHp } from "./playerHealth.js?v=20260529d";

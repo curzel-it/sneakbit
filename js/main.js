@@ -204,7 +204,7 @@ async function main() {
 
   // 4005 = "kicked by host". net.js already suppresses auto-reconnect on
   // this code; here we surface the UX side (toast + drop back to
-  // offline). Per docs/server.md §Close codes.
+  // offline). Per docs/online-coop.md §Close codes.
   onAnyClose(({ code }) => {
     if (code !== 4005) return;
     showToast("You were removed from the session", "longHint");

@@ -1,5 +1,5 @@
 // Thin WebSocket client. Speaks the relay's JSON-over-WS protocol described
-// in docs/server.md: hello on every open, app-level ping
+// in docs/online-coop.md: hello on every open, app-level ping
 // every 20 s, automatic reconnect with backoff on unexpected close (codes
 // 4001 obsolete and 4003 uuid-conflict bail out). One instance per tab —
 // host and guest share the same module.
