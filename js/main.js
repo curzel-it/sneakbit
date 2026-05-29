@@ -229,19 +229,38 @@ async function main() {
       tickGuestFrame(dt, state, renderer, hud, biomeAnim);
       return;
     }
-    const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen();
+    // Pause is a single-player luxury. Offline / local co-op (role null)
+    // freezes the sim on any overlay — menu, inventory, the co-op dialog —
+    // and blurs behind it. But once we're hosting online, freezing the
+    // world because the host opened a menu would strand every guest in a
+    // dead zone (the lobby case: host sits on the Hosting panel, a guest
+    // joins, and lands in a frozen void). Real co-op games never pause the
+    // shared world for a local menu, so when role === "host" we keep the
+    // overlay's blur + input gating but let mobs / physics / the broadcaster
+    // run. The guest path returns above, so this gate is host/offline only.
+    const overlayOpen = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen();
+    const paused = overlayOpen && getRuntimeRole() !== "host";
     // Tell guests when our local sim is frozen so their overlay can
     // show "Host paused the game" instead of the generic "Host
     // lagging…" — the no-op-when-not-host gate in setHostPaused keeps
-    // this cheap in offline / local-coop.
+    // this cheap in offline / local-coop. With the host-online carve-out
+    // above this only fires now on a genuine host stall, not a menu.
     setHostPaused(paused);
     const input = pollInput();
     if (!paused) {
+      // Online-host + overlay open: the sim keeps running (so guests
+      // aren't stranded in a frozen zone), but the host's OWN avatar must
+      // not wander off behind the dialog — feed it a neutral input. The
+      // network-driven guest slots below keep their live wire input, so
+      // guests can still move around while the host sits in a menu.
+      // Offline / local co-op never reaches here with an overlay open
+      // (that's `paused` → the else branch), so this is host-online only.
+      const hostInput = overlayOpen ? { events: [], held: new Set() } : input;
       // Skip the per-player update for dead avatars — pollInput still
       // drains their event queue, so a held key doesn't flood the
       // player on revive. Without this gate a "dead-but-waiting" host
       // would silently walk around invisibly while spectating guests.
-      if (!isPlayerDead(0)) updatePlayer(state.player, input, dt, state.zone);
+      if (!isPlayerDead(0)) updatePlayer(state.player, hostInput, dt, state.zone);
       if (state.player2) {
         const input2 = pollInput(2);
         if (!isPlayerDead(state.player2.index | 0)) {
