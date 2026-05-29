@@ -187,12 +187,14 @@ async function main() {
     // without us having to duplicate its "find entity in front" logic.
     window.dispatchEvent(new KeyboardEvent("keydown", { code: "KeyE" }));
   });
-  // Local co-op P2's pad drives slot 2 through the same per-slot action
-  // seams the network guests use, so a second physical controller fights
-  // and interacts as player 2.
-  setGamepadAction("shoot", () => tryShootForSlot(2), 2);
-  setGamepadAction("melee", () => tryMeleeForSlot(2), 2);
-  setGamepadAction("interact", () => tryInteractForSlot(2), 2);
+  // Local co-op P2-P4 pads drive slots 2-4 through the same per-slot
+  // action seams the network guests use, so a 2nd/3rd/4th physical
+  // controller fights and interacts as its own player.
+  for (const slot of [2, 3, 4]) {
+    setGamepadAction("shoot", () => tryShootForSlot(slot), slot);
+    setGamepadAction("melee", () => tryMeleeForSlot(slot), slot);
+    setGamepadAction("interact", () => tryInteractForSlot(slot), slot);
+  }
   if (state.zone) {
     markVisited(state.zone.id);
     if (state.zone.soundtrack) playTrack(state.zone.soundtrack);

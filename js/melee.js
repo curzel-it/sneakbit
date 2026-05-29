@@ -9,7 +9,7 @@ import { getSpecies } from "./species.js?v=20260529a";
 import { resolveLoadout } from "./sessionLoadouts.js?v=20260529a";
 import { playSfx } from "./audio.js?v=20260529a";
 import { matchesAction } from "./keyBindings.js?v=20260529a";
-import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
+import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
 import { getNetRole } from "./onlineBootstrap.js?v=20260529a";
 import { isPlayerDead } from "./playerHealth.js?v=20260529a";
 
@@ -119,6 +119,9 @@ function pickSwinger(state, code) {
   if (isCoopMode() && matchesAction("melee", code, 1)) {
     return state.player2 || state.player;
   }
+  // Local P3 / P4 keyboard (empty by default) once the count covers them.
+  if (localPlayerCount() >= 3 && matchesAction("melee", code, 2)) return playerForSlot(state, 3);
+  if (localPlayerCount() >= 4 && matchesAction("melee", code, 3)) return playerForSlot(state, 4);
   if (isCoopActive()) {
     if (code === COOP_KEYMAPS[2]?.melee && state.player2?.playerId) {
       return state.player2;

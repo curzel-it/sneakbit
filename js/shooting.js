@@ -14,7 +14,7 @@ import { playSfx } from "./audio.js?v=20260529a";
 import { resolveLoadout } from "./sessionLoadouts.js?v=20260529a";
 import { broadcastHostEvent } from "./hostEvents.js?v=20260529a";
 import { matchesAction } from "./keyBindings.js?v=20260529a";
-import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
+import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
 import { getNetRole } from "./onlineBootstrap.js?v=20260529a";
 import { isPlayerDead } from "./playerHealth.js?v=20260529a";
 import { rumble } from "./rumble.js?v=20260529a";
@@ -119,6 +119,11 @@ function pickShooter(state, code) {
   if (isCoopMode() && matchesAction("shoot", code, 1)) {
     return state.player2 || state.player;
   }
+  // Local P3 / P4 (4-player co-op) live in state.players[] with no
+  // playerId. Their keyboard keys (empty by default) route here once the
+  // local player count covers them.
+  if (localPlayerCount() >= 3 && matchesAction("shoot", code, 2)) return playerForSlot(state, 3);
+  if (localPlayerCount() >= 4 && matchesAction("shoot", code, 3)) return playerForSlot(state, 4);
   // Online guests fire through hostGuests.dispatchActionForSlot, which
   // synthesises a keydown with the matching slot's COOP_KEYMAPS code.
   // Slot 2 lives in state.player2 (network guest); slots 3/4 in

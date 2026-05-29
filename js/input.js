@@ -10,7 +10,7 @@
 
 import { pollGamepadForSlot } from "./gamepad.js?v=20260529a";
 import { resolveAction } from "./keyBindings.js?v=20260529a";
-import { isCoopMode, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
+import { localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
 
 const ACTION_TO_DIR = {
   moveUp: "up",
@@ -99,7 +99,9 @@ function resolveDirection(code) {
   // co-op is on) P2.
   const r = resolveAction(code);
   if (r && ACTION_TO_DIR[r.action]) {
-    if (r.playerIndex === 1 && !isCoopMode()) return null;
+    // Only route to a local player slot that's actually active. P1 is
+    // always active; P2/P3/P4 only when the local player count covers them.
+    if (r.playerIndex >= 1 && (r.playerIndex + 1) > localPlayerCount()) return null;
     return { playerIndex: r.playerIndex + 1, direction: ACTION_TO_DIR[r.action] };
   }
   // Online guests (slots 3 / 4) — hostGuests synthesises keydowns with
@@ -156,21 +158,27 @@ export function peekInputState(playerIndex = 1) {
   return { held: [...s.held], pressEvents: s.pressEvents.slice() };
 }
 
-// Returns { events, held } for the requested player and drains the
-// press queue. Slot 1 always folds in its gamepad (single-player / host);
-// slot 2 folds its gamepad only when local co-op is active, so a lone pad
-// can't drive a non-existent P2. Online guest slots (3 / 4) are
-// network-driven and never poll a local pad here.
+// Returns { events, held } for the requested player and drains the press
+// queue. Folds in the slot's gamepad for every ACTIVE local slot (1 …
+// localPlayerCount), so each of up to four local players can use a pad
+// (assigned by connection order). When hosting online, guest slots are
+// network-driven; the host's own local count stays low so this doesn't
+// fold a pad into a guest's slot.
 export function pollInput(playerIndex = 1) {
   const s = state[playerIndex] || state[1];
   const events = s.pressEvents.slice();
   s.pressEvents.length = 0;
   const held = new Set(s.held);
-  const foldGamepad = playerIndex === 1 || (playerIndex === 2 && isCoopMode());
-  if (foldGamepad) {
+  if (playerIndex <= localPlayerCount()) {
     const gp = pollGamepadForSlot(playerIndex);
     for (const e of gp.events) events.push(e);
     for (const d of gp.held) held.add(d);
   }
   return { events, held };
+}
+
+// Test seam — exposes the keyboard code → { playerIndex, direction }
+// routing (count-gated) without needing a DOM keydown listener.
+export function _resolveDirectionForTesting(code) {
+  return resolveDirection(code);
 }

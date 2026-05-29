@@ -8,7 +8,7 @@
 import { showDialogue, resolveEntityDialogue, isDialogueOpen } from "./dialogue.js?v=20260529a";
 import { handleAfterDialogue } from "./afterDialogue.js?v=20260529a";
 import { matchesAction } from "./keyBindings.js?v=20260529a";
-import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
+import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
 import { shouldBeVisible } from "./entityVisibility.js?v=20260529a";
 import { getNetRole } from "./onlineBootstrap.js?v=20260529a";
 
@@ -84,6 +84,9 @@ function pickInitiator(state, code) {
   if (isCoopMode() && matchesAction("interact", code, 1)) {
     return state.player2 || state.player;
   }
+  // Local P3 / P4 keyboard (empty by default) once the count covers them.
+  if (localPlayerCount() >= 3 && matchesAction("interact", code, 2)) return playerForSlot(state, 3);
+  if (localPlayerCount() >= 4 && matchesAction("interact", code, 3)) return playerForSlot(state, 4);
   if (isCoopActive()) {
     if (code === COOP_KEYMAPS[2]?.interact && state.player2?.playerId) {
       return state.player2;
