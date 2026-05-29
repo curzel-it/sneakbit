@@ -4,7 +4,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadSpeciesData } from "../js/species.js?v=20260529b";
+import { loadSpeciesData } from "../js/species.js?v=20260529c";
 
 loadSpeciesData([
   { id: 7000, entity_type: "Bullet", sprite_sheet_id: 1014,
@@ -20,9 +20,9 @@ loadSpeciesData([
     sprite_frame: { x: 0, y: 0, w: 1, h: 2 } },
 ]);
 
-const combat = await import("../js/combat.js?v=20260529b");
-const skills = await import("../js/skills.js?v=20260529b");
-const inventory = await import("../js/inventory.js?v=20260529b");
+const combat = await import("../js/combat.js?v=20260529c");
+const skills = await import("../js/skills.js?v=20260529c");
+const inventory = await import("../js/inventory.js?v=20260529c");
 
 function makeZone() {
   const collision = [];
@@ -107,7 +107,7 @@ test("bounced bullet caught by player refunds ammo with catcher skill", () => {
 });
 
 test("unlockSkillFromGameplay flips the read flag", async () => {
-  const storage = await import("../js/storage.js?v=20260529b");
+  const storage = await import("../js/storage.js?v=20260529c");
   storage._resetStorageForTesting();
   skills.setSkill("piercing", null);
   assert.equal(skills.hasPiercingKnifeSkill(), false);
@@ -116,7 +116,7 @@ test("unlockSkillFromGameplay flips the read flag", async () => {
 });
 
 test("devtools override pins skill on regardless of dialogue state", async () => {
-  const storage = await import("../js/storage.js?v=20260529b");
+  const storage = await import("../js/storage.js?v=20260529c");
   storage._resetStorageForTesting();
   skills.setSkill("boomerang", true);
   assert.equal(skills.hasBoomerangSkill(), true);

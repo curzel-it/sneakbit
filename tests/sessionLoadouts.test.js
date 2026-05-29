@@ -5,15 +5,15 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const equipment = await import("../js/equipment.js?v=20260529b");
-const storage = await import("../js/storage.js?v=20260529b");
+const equipment = await import("../js/equipment.js?v=20260529c");
+const storage = await import("../js/storage.js?v=20260529c");
 const {
   setSessionLoadout,
   getSessionLoadout,
   deleteSessionLoadout,
   resolveLoadout,
   _resetSessionLoadoutsForTesting,
-} = await import("../js/sessionLoadouts.js?v=20260529b");
+} = await import("../js/sessionLoadouts.js?v=20260529c");
 
 function reset() {
   storage._resetStorageForTesting();

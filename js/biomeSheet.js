@@ -10,10 +10,10 @@
 //   column n·15+i+1   = base biome composited with overlay from neighbor n,
 //                       combo i (see biomeTiles.js for combo ids).
 
-import { TILE_SIZE } from "./constants.js?v=20260529b";
-import { NUM_BIOMES } from "./biomes.js?v=20260529b";
-import { NUM_COMBOS, NUM_BIOME_FRAMES } from "./biomeTiles.js?v=20260529b";
-import { getSprite } from "./assets.js?v=20260529b";
+import { TILE_SIZE } from "./constants.js?v=20260529c";
+import { NUM_BIOMES } from "./biomes.js?v=20260529c";
+import { NUM_COMBOS, NUM_BIOME_FRAMES } from "./biomeTiles.js?v=20260529c";
+import { getSprite } from "./assets.js?v=20260529c";
 
 // combo idx → [sourceColumn, [rotationDegrees, ...]].
 // Rotations are applied around the cell centre; multiple rotations are

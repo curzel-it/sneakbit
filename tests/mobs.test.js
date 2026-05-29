@@ -3,8 +3,8 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadSpeciesData } from "../js/species.js?v=20260529b";
-import { tickMobs, chaseDirections } from "../js/mobs.js?v=20260529b";
+import { loadSpeciesData } from "../js/species.js?v=20260529c";
+import { tickMobs, chaseDirections } from "../js/mobs.js?v=20260529c";
 
 // Minimal species table: one chase monster, one wandering NPC, one wall.
 loadSpeciesData([

@@ -5,7 +5,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createWebrtcChannel, STATE } from "../js/webrtcChannel.js?v=20260529b";
+import { createWebrtcChannel, STATE } from "../js/webrtcChannel.js?v=20260529c";
 
 // --- mocks -----------------------------------------------------------------
 

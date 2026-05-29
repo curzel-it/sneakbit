@@ -8,11 +8,11 @@
 // Cache lives in a WeakMap keyed on the zone object, so unloaded
 // zones (via teleport) drop their canvases when GC'd.
 
-import { TILE_SIZE, BIOME_NUMBER_OF_FRAMES } from "./constants.js?v=20260529b";
-import { getSprite } from "./assets.js?v=20260529b";
-import { getBiomeSheet } from "./biomeSheet.js?v=20260529b";
-import { NUM_BIOMES } from "./biomes.js?v=20260529b";
-import { CONSTRUCTION } from "./constructions.js?v=20260529b";
+import { TILE_SIZE, BIOME_NUMBER_OF_FRAMES } from "./constants.js?v=20260529c";
+import { getSprite } from "./assets.js?v=20260529c";
+import { getBiomeSheet } from "./biomeSheet.js?v=20260529c";
+import { NUM_BIOMES } from "./biomes.js?v=20260529c";
+import { CONSTRUCTION } from "./constructions.js?v=20260529c";
 
 const cache = new WeakMap();
 

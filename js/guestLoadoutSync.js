@@ -6,7 +6,7 @@
 // the guest's local equipment store — so an auto-equip the host pushed
 // after a pickup persists past the session.
 
-import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260529b";
+import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260529c";
 import {
   getEquipped,
   setEquipped,
@@ -14,11 +14,11 @@ import {
   onEquipmentChange,
   SLOT_MELEE,
   SLOT_RANGED,
-} from "./equipment.js?v=20260529b";
+} from "./equipment.js?v=20260529c";
 import {
   setSessionLoadout,
   clearSessionLoadouts,
-} from "./sessionLoadouts.js?v=20260529b";
+} from "./sessionLoadouts.js?v=20260529c";
 
 let unsubs = [];
 let installed = false;

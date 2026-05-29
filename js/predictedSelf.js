@@ -8,15 +8,15 @@
 // The renderer is updated separately to draw the predicted self in
 // place of the mirror's lagged copy for the guest's own slot.
 
-import { createPlayer, updatePlayer } from "./player.js?v=20260529b";
-import { pollInput, pushInputPress, clearInputHeld, clearInputState, setNetworkHeld, peekInputState } from "./input.js?v=20260529b";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260529b";
-import { getMirrorZone, getMirrorPlayerById, getMirrorPlayers } from "./mirrorWorld.js?v=20260529b";
-import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js?v=20260529b";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260529b";
-import { getValue } from "./storage.js?v=20260529b";
-import { isDialogueOpen } from "./dialogue.js?v=20260529b";
-import { isHostPausedRemote } from "./guestHostPause.js?v=20260529b";
+import { createPlayer, updatePlayer } from "./player.js?v=20260529c";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState, setNetworkHeld, peekInputState } from "./input.js?v=20260529c";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260529c";
+import { getMirrorZone, getMirrorPlayerById, getMirrorPlayers } from "./mirrorWorld.js?v=20260529c";
+import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js?v=20260529c";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260529c";
+import { getValue } from "./storage.js?v=20260529c";
+import { isDialogueOpen } from "./dialogue.js?v=20260529c";
+import { isHostPausedRemote } from "./guestHostPause.js?v=20260529c";
 
 let predicted = null;
 let installed = false;
@@ -69,6 +69,12 @@ const SNAP_DEBUG_BUFFER_CAP = 16;
 // 80 samples covers ~12 s at the normal delta cadence (keepalive deltas
 // keep it sampling even when the host's world is otherwise quiet).
 const SNAP_TRAJECTORY_CAP = 80;
+// Wire-event ring: one entry per incoming snapshot/delta regardless of
+// whether P2 is in it. Reveals message cadence + payload during a stall
+// (keepalive with players:[] vs a real delta carrying only P1). Bigger
+// cap than the trajectory because keepalives fire ~5 Hz during quiet
+// windows and we want the whole stall.
+const SNAP_WIRE_CAP = 160;
 
 const DEBUG_DIR_VEC = {
   up:    { dx:  0, dy: -1 },
@@ -151,6 +157,12 @@ function makeFromMirror() {
 function onAuth(msg) {
   const selfId = getSelfPlayerId();
   if (!selfId) return;
+  // Record EVERY incoming snapshot/delta — before the !auth early return —
+  // so a stall where the host ships keepalives (or P1-only deltas) with no
+  // P2 position is visible. Without this the trajectory goes silent during
+  // exactly the window we most need to see (the 5.3 s gap that grew the
+  // divergence to 21 tiles), because those messages early-return here.
+  if (DEBUG_SNAP) recordWireEvent(msg, selfId);
   const auth = (msg?.players || []).find((p) => p.playerId === selfId);
   if (!auth) return;
   const ackedSeq = (msg?.lastSeq && msg.lastSeq[selfId]) ?? lastAckedSeq;
@@ -234,12 +246,29 @@ function recordTrajectory(predicted, auth, msg) {
   if (typeof window === "undefined") return;
   let buf = window.__sbSnapTrajectory;
   if (!Array.isArray(buf)) buf = window.__sbSnapTrajectory = [];
+  // Local slot-1 input state — the guest's own keyboard. Compared against
+  // auth.direction this shows whether, at a turn, predicted's held set +
+  // direction-choice match what the host ended up doing. If they pick the
+  // same direction but land on different tiles, the offset is pure
+  // prediction-lead (expected); if held/choice differ, it's a forwarding
+  // bug. qd/pend/pt expose the rotate-commit machinery mid-turn.
+  const slot1 = peekInputState(1);
+  const h1 = describeMirrorSlot1();
   buf.push({
     t: Date.now(),
     op: msg?.op,
     ax: auth.tileX, ay: auth.tileY, ad: auth.direction,
     px: predicted.tileX, py: predicted.tileY, pd: predicted.direction,
     step: predicted.step ? 1 : 0,
+    qd: predicted.queuedDir ?? null,
+    pend: predicted.pendingDir ?? null,
+    pt: predicted.pendingTimer ?? 0,
+    hl: slot1.held,
+    pe: slot1.pressEvents,
+    // Host's own avatar (mirror slot 1). If P1 keeps moving through a
+    // stall, real deltas were flowing (P2 sig-filtered out); if P1 is
+    // also frozen, the host was emitting empty keepalives.
+    hx: h1?.tileX ?? null, hy: h1?.tileY ?? null, hd: h1?.direction ?? null,
     ddx: Math.abs(auth.tileX - predicted.tileX),
     ddy: Math.abs(auth.tileY - predicted.tileY),
     dlg: safeBool(isDialogueOpen) ? 1 : 0,
@@ -249,6 +278,28 @@ function recordTrajectory(predicted, auth, msg) {
     un: getInputLog().length,
   });
   while (buf.length > SNAP_TRAJECTORY_CAP) buf.shift();
+}
+
+// One entry per incoming snapshot/delta, recorded before onAuth's
+// !auth early return. `self` is whether P2 was in this message at all;
+// `ids` lists who was. During the stall we expect a run of entries with
+// self=false (keepalive players:[] → np:0, or P1-only delta → np:1,
+// self:false) — that run is the host failing to tell the guest where
+// its avatar is while predicted runs on.
+function recordWireEvent(msg, selfId) {
+  if (typeof window === "undefined") return;
+  let buf = window.__sbSnapWire;
+  if (!Array.isArray(buf)) buf = window.__sbSnapWire = [];
+  const players = Array.isArray(msg?.players) ? msg.players : [];
+  buf.push({
+    t: Date.now(),
+    op: msg?.op,
+    np: players.length,
+    ids: players.map((p) => p.playerId),
+    self: players.some((p) => p.playerId === selfId),
+    lseq: (msg?.lastSeq && selfId) ? (msg.lastSeq[selfId] ?? null) : null,
+  });
+  while (buf.length > SNAP_WIRE_CAP) buf.shift();
 }
 
 function captureDivergence(predicted, auth, msg) {
@@ -313,6 +364,11 @@ function captureDivergence(predicted, auth, msg) {
         // never reached input.js (e.g. focus on another element, OS-
         // level interception, or an event-eating overlay).
         localSlot1: peekInputState(1),
+        // Full unacked log contents (not just the count) — the exact
+        // intents + held sets the host hasn't applied yet. At a turn this
+        // shows precisely which press is mid-flight and what held set it
+        // carried, so the commit-tile offset can be tied to a real input.
+        unacked: getInputLog(),
       },
       // The predicted tick is gated on isDialogueOpen() in main.js.
       // If a stale dialogue/pause flag is what's freezing predicted,

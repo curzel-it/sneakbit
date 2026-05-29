@@ -3,7 +3,7 @@
 // the same channel and land in Phase 7. Each frame carries a monotonic
 // seq for the reconciliation logic that arrives in Phase 6.
 
-import { actionForCode } from "./keyBindings.js?v=20260529b";
+import { actionForCode } from "./keyBindings.js?v=20260529c";
 
 const ACTION_TO_INTENT = {
   moveUp: "moveUp",
@@ -30,6 +30,21 @@ const ACTION_INTENTS = new Set(["shoot", "melee", "interact"]);
 // gets the full held set so chains correctly), but would cause
 // spurious resends since lastSentDir wouldn't match the host's view.
 const HOLD_PRIORITY = ["up", "down", "left", "right"];
+
+// Debug-only ring of every forwarded intent (?debug=snap). Lets the
+// divergence analysis reconstruct the exact input sequence + held set the
+// guest sent around a turn, and time it against when the host applied it
+// (auth.direction changes in the trajectory). Inert without the flag.
+const SNAP_INPUT_DEBUG = typeof window !== "undefined"
+  && /[?&]debug=snap\b/.test(window.location?.search || "");
+const SNAP_INPUT_CAP = 96;
+function recordSentInput(seq, intent, held, t) {
+  if (!SNAP_INPUT_DEBUG) return;
+  let buf = window.__sbSnapInput;
+  if (!Array.isArray(buf)) buf = window.__sbSnapInput = [];
+  buf.push({ t, seq, intent, held: Array.isArray(held) ? held.slice() : null });
+  while (buf.length > SNAP_INPUT_CAP) buf.shift();
+}
 
 let net = null;
 let seq = 0;
@@ -139,6 +154,7 @@ export function flushOnReconnect(now = Date.now()) {
       seq++;
       inputLog.push({ seq, intent, held: heldSnapshot });
       if (inputLog.length > INPUT_LOG_CAP) inputLog.shift();
+      recordSentInput(seq, intent, heldSnapshot, now);
       net.send({ op: "input", seq, t: now, intent, held: heldSnapshot });
     }
   }
@@ -239,5 +255,7 @@ function send(intent, extras) {
   const heldSnapshot = Array.isArray(extras?.held) ? extras.held.slice() : null;
   inputLog.push(heldSnapshot ? { seq, intent, held: heldSnapshot } : { seq, intent });
   if (inputLog.length > INPUT_LOG_CAP) inputLog.shift();
-  net.send({ op: "input", seq, t: Date.now(), intent, ...(extras || {}) });
+  const now = Date.now();
+  recordSentInput(seq, intent, heldSnapshot, now);
+  net.send({ op: "input", seq, t: now, intent, ...(extras || {}) });
 }

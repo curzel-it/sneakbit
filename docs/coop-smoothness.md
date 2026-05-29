@@ -10,8 +10,8 @@ healthy network, the guest's view of the host's world must be
 pixel-smooth at 60 fps. Visible chop is allowed only when the network is
 genuinely degraded (real packet loss, real jitter, real RTT spikes).
 
-To grab a log (both buffers in one copy):
-`copy(JSON.stringify({captures: window.__sbSnapDebug, trajectory: window.__sbSnapTrajectory}, null, 2))`
+To grab a log (all four buffers in one copy):
+`copy(JSON.stringify({captures: window.__sbSnapDebug, trajectory: window.__sbSnapTrajectory, wire: window.__sbSnapWire, input: window.__sbSnapInput}, null, 2))`
 
 ## Tomorrow-you: start here
 

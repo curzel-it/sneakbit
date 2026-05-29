@@ -7,7 +7,7 @@
 // One modal at a time. `isMessageOpen()` reports the pause state to
 // main.js so the game loop stops ticking while the message is up.
 
-import { playSfx } from "./audio.js?v=20260529b";
+import { playSfx } from "./audio.js?v=20260529c";
 
 let root = null;
 let open = false;

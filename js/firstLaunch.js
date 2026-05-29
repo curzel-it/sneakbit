@@ -3,8 +3,8 @@
 // the menu (Esc, or the on-screen ☰ button on touch) where they can
 // re-enable sound.
 
-import { isFirstLaunch, saveSettings } from "./settings.js?v=20260529b";
-import { showToast } from "./toast.js?v=20260529b";
+import { isFirstLaunch, saveSettings } from "./settings.js?v=20260529c";
+import { showToast } from "./toast.js?v=20260529c";
 
 export function applyFirstLaunch() {
   if (!isFirstLaunch()) return;
