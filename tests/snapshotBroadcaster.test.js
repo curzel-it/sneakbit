@@ -6,23 +6,23 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260529c");
+  await import("../js/onlineMode.js?v=20260529d");
 const { _resetOnlineBootstrapForTesting } =
-  await import("../js/onlineBootstrap.js?v=20260529c");
+  await import("../js/onlineBootstrap.js?v=20260529d");
 
 // Force host mode + a fixed playerId before the broadcaster module
 // imports bootstrap.
 _resetOnlineBootstrapForTesting();
 _setOnlineModeForTesting({ mode: "host", uuid: "uuid-host-broadcaster" });
 
-const broadcaster = await import("../js/snapshotBroadcaster.js?v=20260529c");
+const broadcaster = await import("../js/snapshotBroadcaster.js?v=20260529d");
 const { _snapshotForTesting, _broadcastDeltaForTesting,
   installSnapshotBroadcaster, stopSnapshotBroadcaster } = broadcaster;
 
 // We can't easily stub getSelfPlayerId from bootstrap without driving the
 // real WS handshake — instead we drive bootstrap directly with a fake net
 // that emits a welcome frame, so selfPlayerId gets set.
-const { bootstrapOnline, getNet } = await import("../js/onlineBootstrap.js?v=20260529c");
+const { bootstrapOnline, getNet } = await import("../js/onlineBootstrap.js?v=20260529d");
 
 function makeFakeNet() {
   const handlers = new Map();
@@ -114,7 +114,11 @@ test("delta carries only the changed entity", () => {
   assert.equal(d.entities.length, 1);
   assert.equal(d.entities[0].id, 100);
   assert.equal(d.entities[0].hp, 20);
-  assert.equal(d.players.length, 0);
+  // Only the entity changed, but the delta still carries the (unchanged)
+  // player so the guest can reconcile even when its own avatar's sig is
+  // frozen. Bandwidth: entities stay changed-only; players ride along.
+  assert.equal(d.players.length, 1);
+  assert.equal(d.players[0].tileX, 7);
   stopSnapshotBroadcaster();
 });
 
@@ -281,7 +285,7 @@ test("zone change broadcasts event:zoneChange before the full snapshot", () => {
 
 test("hp 0-crossing emits event:death; recovery emits event:respawn", async () => {
   const fakeNet = setupBootstrapWithFakeNet();
-  const ph = await import("../js/playerHealth.js?v=20260529c");
+  const ph = await import("../js/playerHealth.js?v=20260529d");
   ph.resetPlayerHealth(); // baseline: all players at MAX_HP
   const state = makeState();
   // Seed baseline so the next delta has prev-hp to compare against.
@@ -314,7 +318,7 @@ test("hp 0-crossing emits event:death; recovery emits event:respawn", async () =
 
 test("a fresh snapshot seeds hp baseline without re-emitting death", async () => {
   const fakeNet = setupBootstrapWithFakeNet();
-  const ph = await import("../js/playerHealth.js?v=20260529c");
+  const ph = await import("../js/playerHealth.js?v=20260529d");
   ph.resetPlayerHealth();
   // Pre-kill the host before the first snapshot — the joiner should not
   // be told the host is freshly dead; that already-dead state is encoded
@@ -335,7 +339,7 @@ test("a fresh snapshot seeds hp baseline without re-emitting death", async () =>
 
 test("zone change emits event:respawn for players whose hp was 0 in the prior zone", async () => {
   const fakeNet = setupBootstrapWithFakeNet();
-  const ph = await import("../js/playerHealth.js?v=20260529c");
+  const ph = await import("../js/playerHealth.js?v=20260529d");
   const state = makeState(1001);
   // Host dies in the old zone. Install first (with the dead baseline)
   // so a baseline broadcaster tick records hp=0 in lastHpByPlayerId.
@@ -366,7 +370,7 @@ test("zone change emits event:respawn for players whose hp was 0 in the prior zo
   ph.resetPlayerHealth();
 });
 
-test("a quiescent world emits a periodic empty-delta keepalive", async () => {
+test("a quiescent world emits a periodic keepalive carrying player positions", async () => {
   const fakeNet = setupBootstrapWithFakeNet();
   const state = makeState();
   // 50 ms ticks; KEEPALIVE_TICKS=4 → a keepalive ~every 200 ms. Nothing
@@ -380,11 +384,42 @@ test("a quiescent world emits a periodic empty-delta keepalive", async () => {
   assert.ok(deltas.length >= 1, "expected at least one keepalive delta while quiescent");
   const ka = deltas[0];
   assert.equal(ka.zoneId, 1001);
-  assert.equal(ka.players.length, 0, "keepalive carries no player changes");
+  // The keepalive now carries the player's authoritative position even
+  // though nothing changed — this is what lets the guest reconcile a
+  // stuck avatar instead of letting predicted run away. Entities stay
+  // empty (the bandwidth bulk).
+  assert.equal(ka.players.length, 1, "keepalive carries the player position");
+  assert.equal(ka.players[0].playerId, "p_host01");
+  assert.equal(ka.players[0].tileX, 7);
   assert.equal(ka.entities.length, 0, "keepalive carries no entity changes");
   // A keepalive must not fire every tick — only once per KEEPALIVE_TICKS.
   // Over ~120 ms / 10 ms = ~12 ticks we expect roughly 3, definitely < 12.
   assert.ok(deltas.length < 10, "keepalive must be throttled, not every tick");
+});
+
+test("a stuck guest avatar rides along while the host avatar moves", async () => {
+  // The tree/loop repro: guest's avatar (player2) is jammed against a
+  // blocker on the host (frozen tile/dir → sig unchanged), while the
+  // host's own avatar (player1) keeps moving. The moving player1 fires a
+  // delta every step; player2 must ride along in that delta so the guest
+  // can reconcile and not run away. Pre-fix, player2 was sig-filtered out.
+  setupBootstrapWithFakeNet();
+  const state = makeState();
+  state.player2 = {
+    playerId: "p_guest02", slot: 2,
+    x: 67, y: 25, tileX: 67, tileY: 25, direction: "down", moving: false,
+  };
+  _snapshotForTesting(state);
+  // Only player1 advances; player2 stays jammed at (67,25).
+  state.player.tileX = 8; state.player.x = 8;
+  const d = _broadcastDeltaForTesting(null, state);
+  assert.ok(d, "moving host avatar produces a delta");
+  const ids = d.players.map((p) => p.playerId).sort();
+  assert.deepEqual(ids, ["p_guest02", "p_host01"], "both players ride the delta");
+  const guest = d.players.find((p) => p.playerId === "p_guest02");
+  assert.equal(guest.tileX, 67, "stuck guest avatar carries its frozen position");
+  assert.equal(guest.tileY, 25);
+  stopSnapshotBroadcaster();
 });
 
 test("a busy world sends real deltas, not keepalives, every tick", async () => {

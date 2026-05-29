@@ -96,7 +96,7 @@ export async function startCoopSession({
   // Pick up the host's invite code via the existing getter.
   const inviteCode = await waitFor(host, `
     (async () => {
-      const o = await import('./js/onlineBootstrap.js?v=20260529c');
+      const o = await import('./js/onlineBootstrap.js?v=20260529d');
       return o.getInviteCode && o.getInviteCode();
     })()
   `, { timeoutMs: 30000 });
@@ -115,7 +115,7 @@ export async function startCoopSession({
     await waitFor(guest, `(typeof window !== 'undefined' && !!document.querySelector('#game'))`, { timeoutMs: 10000 });
     await evalExpr(guest, `
       (async () => {
-        const sr = await import('./js/switchRole.js?v=20260529c');
+        const sr = await import('./js/switchRole.js?v=20260529d');
         await sr.switchRole('guest', { code: ${JSON.stringify(inviteCode)} });
         return true;
       })()
@@ -127,9 +127,9 @@ export async function startCoopSession({
   // Wait until the guest's mirror and predicted-self both exist.
   await waitFor(guest, `
     (async () => {
-      const m = await import('./js/mirrorWorld.js?v=20260529c');
-      const p = await import('./js/predictedSelf.js?v=20260529c');
-      const o = await import('./js/onlineBootstrap.js?v=20260529c');
+      const m = await import('./js/mirrorWorld.js?v=20260529d');
+      const p = await import('./js/predictedSelf.js?v=20260529d');
+      const o = await import('./js/onlineBootstrap.js?v=20260529d');
       window.__sb = { m, p, o };
       const selfId = o.getSelfPlayerId && o.getSelfPlayerId();
       const mp = selfId && m.getMirrorPlayerById(selfId);

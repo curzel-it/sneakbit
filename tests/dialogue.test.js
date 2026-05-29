@@ -4,8 +4,8 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadSpeciesData } from "../js/species.js?v=20260529c";
-import { loadStringsData } from "../js/strings.js?v=20260529c";
+import { loadSpeciesData } from "../js/species.js?v=20260529d";
+import { loadStringsData } from "../js/strings.js?v=20260529d";
 
 loadSpeciesData([
   { id: 1, entity_type: "Bullet", sprite_sheet_id: 1014,
@@ -17,8 +17,8 @@ loadStringsData({
   "dialogue.reward_received": "You received `%s`!",
 });
 
-const { resolveEntityDialogue } = await import("../js/dialogue.js?v=20260529c");
-const storage = await import("../js/storage.js?v=20260529c");
+const { resolveEntityDialogue } = await import("../js/dialogue.js?v=20260529d");
+const storage = await import("../js/storage.js?v=20260529d");
 
 test("resolveEntityDialogue: null on empty entity", () => {
   storage._resetStorageForTesting();

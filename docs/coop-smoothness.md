@@ -1,8 +1,9 @@
 # Co-op Motion Smoothness — Design Doc
 
-Status: **multi-key fix shipped 2026-05-28; new bug shape surfaced
-2026-05-29; ?debug=snap capture enriched again with a continuous
-trajectory ring to catch the buildup** (cache-bust `20260529b`).
+Status: **stuck-avatar runaway fixed 2026-05-29 — the host now ships
+every player's position in deltas + keepalives so the guest reconciles
+a blocked avatar instead of letting predicted run 24 tiles** (cache-bust
+`20260529d`). Diagnosis history below kept for context.
 Scope: guest's perceived smoothness of the host's world (and the
 guest's own avatar). Host is unchanged.
 Bar: *"never see stutters unless stuff is actually bad"* — i.e. on a
@@ -16,6 +17,49 @@ To grab a log (all four buffers in one copy):
 ## Tomorrow-you: start here
 
 Read this section first; the rest is history.
+
+### 2026-05-29 evening — stuck-avatar runaway FIXED (cache-bust `20260529d`)
+
+The tree/loop repro was diagnosed conclusively from the enriched log
+(`captures` + `trajectory` + `wire` + `input`). Two independent things:
+
+1. **Seed (lateral offset) — prediction-lead at turns, NOT a bug.**
+   Verified in code *and* in the log: forwarder ships the full held set,
+   `hostGuests.applyIntent` mirrors it (`setNetworkHeld` + `pushPressEvent`),
+   both run the same `HOLD_PRIORITY`. Host and predicted pick the *same*
+   direction; predicted just commits the turn ~1 tile further along the
+   old axis because it runs ahead of the host's RTT-lagged avatar. The
+   turn freezes that lead into a lateral offset (1–2 tiles). Structural
+   to client-side prediction; the 5-tile box tolerates it. Left as-is.
+
+2. **Blowup (1–2 tiles → 24) — broadcast *content* gap. FIXED.**
+   The `wire` buffer was decisive: 160 msgs / 8 s, **zero gaps >400 ms**,
+   but **156/160 were empty keepalives** (`players:[]`) and only 4 carried
+   P2. The host was alive and broadcasting the whole "stall" — it just
+   never told the guest where its stuck avatar was. Mechanism: a player
+   jammed on a blocker has a frozen `sigPlayer` (tile+dir), so it's
+   filtered out of `buildDelta`; with the host's own avatar also idle,
+   `buildDelta` returns null → empty keepalive. The guest's `onAuth`
+   early-returns on every P2-less message → reconciliation never runs →
+   predicted walks 24 tiles down a clear column while auth is stuck →
+   snap when P2 finally reappears.
+
+   **Fix** (`snapshotBroadcaster.js`): the keepalive and every delta now
+   carry *all* players' positions (the sig-diff still gates *whether* a
+   delta fires; `entities` keep their changed-only treatment — they're
+   the bandwidth bulk). The guest now reconciles at keepalive cadence
+   (~200 ms), so a stuck avatar is corrected within ~1 tile past the
+   5-tile tolerance: worst-case snap drops from **24 tiles to ~6**, and
+   only when the avatar is genuinely stuck on the host ("stuff is bad").
+   Tests: `snapshotBroadcaster.test.js` (keepalive carries player;
+   delta carries unchanged + stuck-guest-rides-along); `mirrorWorld.test.js`
+   (repeated identical-position ingest doesn't perturb interp). Unit
+   444/0, e2e 6/6 (snap events 0 both transports).
+
+   `?debug=snap` is still live — re-run the tree loop to confirm the
+   `wire` buffer now shows `self:true` keepalives and the snap (if any)
+   is ≤6 tiles. Once confirmed in the wild, the debug capture can be
+   removed in a follow-up.
 
 ### 2026-05-29 afternoon — frozen-gap log read; trajectory ring added
 

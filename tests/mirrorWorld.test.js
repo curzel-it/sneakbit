@@ -15,7 +15,7 @@ const {
   getMirrorPlayerById,
   isMirrorReady,
   INTERP_DELAY_MS,
-} = await import("../js/mirrorWorld.js?v=20260529c");
+} = await import("../js/mirrorWorld.js?v=20260529d");
 
 function makeFakeZone(id) {
   return { id, rows: 10, cols: 10, entities: [] };
@@ -140,6 +140,38 @@ test("two deltas for the same player produce an interpolated position", async ()
   const p = getMirrorPlayerById("p_h", at);
   assert.ok(p);
   assert.ok(p.x > 0 && p.x < 10, `expected interpolated x in (0,10), got ${p.x}`);
+  reset();
+});
+
+test("repeated identical-position deltas (keepalive-carried stuck avatar) don't perturb interpolation", async () => {
+  // The keepalive now ships every player's position, so an avatar jammed
+  // on a blocker arrives repeatedly with the SAME tile + moving:false.
+  // ingestPlayer sets prev=curr=identical and lerps between equal points,
+  // which must read as "stationary" — no jitter, no drift, no spurious
+  // step animation — exactly as if the keepalive had stayed empty.
+  reset();
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [{ playerId: "p_s", slot: 1, index: 0, x: 67, y: 25, tileX: 67, tileY: 25, direction: "down", moving: false }],
+    entities: [],
+  });
+  for (let i = 0; i < 5; i++) {
+    await new Promise((r) => setTimeout(r, 20));
+    handleDelta({
+      op: "delta", zoneId: 1001,
+      players: [{ playerId: "p_s", slot: 1, index: 0, x: 67, y: 25, tileX: 67, tileY: 25, direction: "down", moving: false }],
+      entities: [],
+    });
+  }
+  const now = performance.now();
+  // Sample across a span (including past currAt): position pinned, never moving.
+  for (const dt of [-50, 0, 50, 200]) {
+    const p = getMirrorPlayerById("p_s", now + dt);
+    assert.equal(p.x, 67, `x must stay pinned, got ${p.x} at +${dt}`);
+    assert.equal(p.y, 25, `y must stay pinned, got ${p.y} at +${dt}`);
+    assert.equal(p.moving, false, "a stuck avatar must not render as moving");
+    assert.equal(p.step, null, "a stuck avatar must have no step");
+  }
   reset();
 });
 
@@ -340,7 +372,7 @@ test("requestResync sends {op:guest.resync} and throttles within MIN_INTERVAL", 
     send(frame) { sent.push(frame); },
   };
   const { installMirrorWorld, requestResync, uninstallMirrorWorld } =
-    await import("../js/mirrorWorld.js?v=20260529c");
+    await import("../js/mirrorWorld.js?v=20260529d");
   installMirrorWorld(fakeNet);
   assert.equal(requestResync(0), true);
   assert.deepEqual(sent[sent.length - 1], { op: "guest.resync" });
@@ -362,7 +394,7 @@ test("requestResync no-ops when the net is disconnected", async () => {
     send(frame) { sent.push(frame); },
   };
   const { installMirrorWorld, requestResync, uninstallMirrorWorld } =
-    await import("../js/mirrorWorld.js?v=20260529c");
+    await import("../js/mirrorWorld.js?v=20260529d");
   installMirrorWorld(fakeNet);
   assert.equal(requestResync(), false);
   assert.equal(sent.length, 0);

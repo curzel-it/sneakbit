@@ -8,10 +8,10 @@
 // stop after one delta, fitting the 50–100 KB/s budget called out in
 // docs/server.md at the snapshot section.
 
-import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260529c";
-import { getPlayerHp } from "./playerHealth.js?v=20260529c";
-import { getLastSeqMap } from "./hostGuests.js?v=20260529c";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260529c";
+import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260529d";
+import { getPlayerHp } from "./playerHealth.js?v=20260529d";
+import { getLastSeqMap } from "./hostGuests.js?v=20260529d";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260529d";
 
 export const BROADCAST_INTERVAL_MS = 50;
 
@@ -124,16 +124,24 @@ function broadcastDelta(net) {
   net.send(msg);
 }
 
-// Empty delta used as a keepalive during quiescence. Shaped like a real
-// delta (op, t, zoneId, lastSeq) with no player/entity changes so every
-// existing `delta` listener no-ops on it while the mirror still bumps
-// lastFrameAt.
+// Keepalive sent during quiescence (buildDelta found nothing changed).
+// Carries every player's authoritative position — cheap, a handful of
+// bytes per player — so the guest's predicted-self reconciliation keeps
+// running even when no sig changed. This is the load-bearing half of the
+// stuck-avatar fix: a player jammed against a blocker has a frozen
+// tile/direction, so it's filtered out of buildDelta and, with both
+// avatars otherwise quiescent, the host would emit only empty keepalives.
+// Without its position here the guest can't tell its avatar diverged and
+// predicted runs away unbounded (the 24-tile snap from the tree/loop
+// repro). Entities stay empty — they're the bandwidth bulk and a
+// genuinely static entity needs no refresh. The mirror ingests these
+// positions; for a non-moving avatar that's a no-op lerp (same tile).
 function buildKeepalive(state) {
   return {
     op: "delta",
     t: tickCount++,
     zoneId: state.zone.id,
-    players: [],
+    players: playersOf(state).map(serializePlayer).filter(Boolean),
     entities: [],
     lastSeq: getLastSeqMap(),
   };
@@ -148,14 +156,18 @@ function sendFullSnapshot(net) {
 }
 
 function buildDelta(state) {
-  const players = playerDeltas(state);
+  const { changed, all } = playerDeltas(state);
   const { changed: entities, removed } = entityDeltas(state);
-  if (!players.length && !entities.length && !removed.length) return null;
+  // Decision to send is still sig-gated (changed players / entities), but
+  // the payload carries ALL players so an unchanged-but-present avatar
+  // (e.g. one stuck on a blocker while the host's own avatar moves) still
+  // reaches the guest for reconciliation.
+  if (!changed.length && !entities.length && !removed.length) return null;
   const msg = {
     op: "delta",
     t: tickCount++,
     zoneId: state.zone.id,
-    players,
+    players: all,
     entities,
     lastSeq: getLastSeqMap(),
   };
@@ -193,21 +205,28 @@ function buildSnapshot(state) {
   };
 }
 
+// Returns { changed, all }. `changed` drives whether a delta fires at all
+// (the sig-diff that keeps bandwidth down); `all` is what actually ships.
+// We send every player's position whenever we send anything, because a
+// player stuck against a blocker on the host has a frozen sig and would
+// otherwise never reach the guest — leaving the guest's predicted self to
+// run away unbounded until the player finally moves. Players are a handful
+// of bytes each; entities (the bulk) keep their changed-only treatment.
 function playerDeltas(state) {
   const changed = [];
-  const allPlayers = [];
+  const all = [];
   for (const slot of playersOf(state)) {
     const p = serializePlayer(slot);
     if (!p) continue;
-    allPlayers.push(p);
+    all.push(p);
     const sig = sigPlayer(p);
     if (lastPlayerSigs.get(p.playerId) !== sig) {
       lastPlayerSigs.set(p.playerId, sig);
       changed.push(p);
     }
   }
-  emitHpTransitions(allPlayers);
-  return changed;
+  emitHpTransitions(all);
+  return { changed, all };
 }
 
 // Zone-change path companion to emitHpTransitions. Walks current
