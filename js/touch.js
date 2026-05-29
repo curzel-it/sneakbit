@@ -11,6 +11,7 @@ import { tryMelee } from "./melee.js?v=20260529a";
 import { getEquipped, onEquipmentChange, SLOT_MELEE } from "./equipment.js?v=20260529a";
 import { getNetRole } from "./onlineBootstrap.js?v=20260529a";
 import { codesFor } from "./keyBindings.js?v=20260529a";
+import { onActiveInputDeviceChange } from "./activeInputDevice.js?v=20260529a";
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 
@@ -129,6 +130,12 @@ export function installTouchControls() {
 
   if (matchMedia("(pointer: coarse)").matches) show();
 
+  // Fold into the active-device model: the on-screen pad belongs to touch,
+  // so hide it the moment a key or controller is used and bring it back on
+  // touch. Keeps a desktop player who taps once from being stuck with the
+  // overlay, and vice-versa.
+  onActiveInputDeviceChange((d) => { if (d === "touch") show(); else hide(); });
+
   syncMeleeVisibility();
   onEquipmentChange((slot) => { if (slot === SLOT_MELEE) syncMeleeVisibility(); });
 
@@ -147,6 +154,13 @@ function show() {
   visible = true;
   root.style.display = "block";
   document.body.classList.add("touch-mode");
+}
+
+function hide() {
+  if (!visible) return;
+  visible = false;
+  root.style.display = "none";
+  document.body.classList.remove("touch-mode");
 }
 
 function onPress(e, btn) {

@@ -31,6 +31,8 @@ import { installShooting, tickShooting, tryShoot, tryShootForSlot } from "./shoo
 import { installMelee, tickMelee, tryMelee, tryMeleeForSlot } from "./melee.js?v=20260529a";
 import { setGamepadAction } from "./gamepad.js?v=20260529a";
 import { pollGuestGamepad } from "./guestInputForwarder.js?v=20260529a";
+import { installActiveInputDevice } from "./activeInputDevice.js?v=20260529a";
+import { installControllerPresence, isControllerPaused } from "./controllerPresence.js?v=20260529a";
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js?v=20260529a";
 import { tickMobs } from "./mobs.js?v=20260529a";
 import { tickMonsterFusion } from "./monsters.js?v=20260529a";
@@ -184,6 +186,8 @@ async function main() {
   // inventory in lockstep, so the HUDs render the right numbers.
   installAmmoHud();
   installHealthHud();
+  installActiveInputDevice();
+  installControllerPresence();
   // These listeners stay installed for the lifetime of the page,
   // including during guest sessions — every install fn either gates
   // internally on getNetRole === "guest" or only acts via a tick path
@@ -256,7 +260,7 @@ async function main() {
       tickGuestFrame(dt, state, renderer, hud, biomeAnim);
       return;
     }
-    const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen();
+    const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen() || isControllerPaused();
     // Tell guests when our local sim is frozen so their overlay can
     // show "Host paused the game" instead of the generic "Host
     // lagging…" — the no-op-when-not-host gate in setHostPaused keeps

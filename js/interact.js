@@ -9,6 +9,7 @@ import { showDialogue, resolveEntityDialogue, isDialogueOpen } from "./dialogue.
 import { handleAfterDialogue } from "./afterDialogue.js?v=20260529a";
 import { matchesAction } from "./keyBindings.js?v=20260529a";
 import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
+import { glyphForAction } from "./inputGlyphs.js?v=20260529a";
 import { shouldBeVisible } from "./entityVisibility.js?v=20260529a";
 import { getNetRole } from "./onlineBootstrap.js?v=20260529a";
 
@@ -111,7 +112,14 @@ export function tickInteract() {
   if (isDialogueOpen()) { hintEl.style.display = "none"; return; }
   const state = stateRef();
   const target = state ? findFacingEntity(state.zone, state.player) : null;
-  hintEl.style.display = target ? "block" : "none";
+  if (target) {
+    // Show the prompt with the active device's glyph (e.g. "Press E" /
+    // "Press Ⓐ"). Recomputed while visible so it tracks device switches.
+    hintEl.textContent = `Press ${glyphForAction("interact", 0)} to talk`;
+    hintEl.style.display = "block";
+  } else {
+    hintEl.style.display = "none";
+  }
 }
 
 function makeHint() {

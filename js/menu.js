@@ -15,7 +15,8 @@ import { isCreativeMode } from "./creativeMode.js?v=20260529a";
 import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260529a";
 import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, resetGamepadBindings } from "./gamepadBindings.js?v=20260529a";
 import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js?v=20260529a";
-import { formatKeyCode, formatPadButton } from "./inputGlyphs.js?v=20260529a";
+import { formatKeyCode, formatPadButton, glyphForAction } from "./inputGlyphs.js?v=20260529a";
+import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDevice.js?v=20260529a";
 import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js?v=20260529a";
 import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260529a";
 import { invalidateZoneCache } from "./data.js?v=20260529a";
@@ -93,10 +94,7 @@ export function installMenu(stateGetter) {
         <button id="menu-new-game" data-guest-hidden>New game (wipe save)</button>
         <button id="menu-clear-cache" data-guest-hidden>Clear cache &amp; reload</button>
       </div>
-      <p class="menu-hint">
-        WASD / arrows to move &middot; E or Enter to interact<br>
-        F to throw a kunai &middot; G to swing melee &middot; Esc to toggle menu
-      </p>
+      <p class="menu-hint" id="menu-pause-hint"></p>
       <p class="menu-version">v${APP_VERSION}</p>
     </div>
     <div class="menu-card" data-screen="settings">
@@ -204,6 +202,9 @@ export function installMenu(stateGetter) {
   // already open when the user joins a session, the buttons should
   // disappear without waiting for a close/reopen.
   onRoleChange(() => { if (root) applyRoleVisibility(); });
+  // Keep the pause hint's glyphs in sync if the player switches device
+  // while the menu is open.
+  onActiveInputDeviceChange(() => { if (open) renderPauseHint(); });
 
   window.addEventListener("keydown", (e) => {
     // Settings screen is doing live key capture for rebinding; don't
@@ -269,8 +270,21 @@ function openMenu() {
   open = true;
   showScreen("pause");
   applyRoleVisibility();
+  renderPauseHint();
   root.style.display = "flex";
   playSfx("hintReceived", { volume: 0.5 });
+}
+
+// The pause-screen control hint, in the active device's glyphs. Keyboard
+// shows the player's bound keys; a pad shows A/B/X/Start.
+function renderPauseHint() {
+  const el = root?.querySelector("#menu-pause-hint");
+  if (!el) return;
+  const move = getActiveInputDevice() === "gamepad" ? "Stick / D-pad" : "WASD / arrows";
+  el.innerHTML =
+    `${move} to move &middot; ${glyphForAction("interact")} to interact<br>` +
+    `${glyphForAction("shoot")} to throw a kunai &middot; ${glyphForAction("melee")} to melee ` +
+    `&middot; ${glyphForAction("menu")} to toggle menu`;
 }
 
 function closeMenu() {

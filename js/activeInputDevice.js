@@ -45,6 +45,8 @@ export function installActiveInputDevice() {
   }
   window.addEventListener("keydown", () => markInputDevice("keyboard"), true);
   window.addEventListener("touchstart", () => markInputDevice("touch"), { capture: true, passive: true });
+  // Debug/e2e hook (harmless, like window.save / window.coop).
+  window.__activeInputDevice = getActiveInputDevice;
 }
 
 // Test seam.
