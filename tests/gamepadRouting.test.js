@@ -6,6 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const gp = await import("../js/gamepad.js?v=20260529a");
+const binds = await import("../js/gamepadBindings.js?v=20260529a");
 
 // Build a Standard-Mapping pad. `buttons` is a sparse {index: true} map;
 // axes default to neutral. The same object is returned on every
@@ -82,6 +83,35 @@ test("action callbacks fire on the rising edge for the matching slot only", () =
   assert.equal(p2shoot, 0, "slot 2 pad did not");
   gp.pollGamepadForSlot(1); // button still held — no repeat
   assert.equal(p1shoot, 1);
+});
+
+test("rebinding shoot to a different button reroutes the action", () => {
+  gp._resetGamepadForTesting();
+  binds._resetGamepadBindingsForTesting();
+  let shoots = 0;
+  gp.setGamepadAction("shoot", () => shoots++, 1);
+  binds.setGamepadBinding("shoot", 3, 0); // P1 shoot now on button 3 (Y)
+
+  setPads(pad(0, { buttons: { 3: true } })); // press Y
+  gp.pollGamepadForSlot(1);
+  assert.equal(shoots, 1, "Y now fires shoot");
+
+  gp._resetGamepadForTesting();
+  setPads(pad(0, { buttons: { 1: true } })); // press B (old shoot)
+  gp.pollGamepadForSlot(1);
+  assert.equal(shoots, 1, "B no longer fires shoot");
+  binds._resetGamepadBindingsForTesting();
+});
+
+test("readPadSnapshotForSlot honours rebound action buttons", () => {
+  gp._resetGamepadForTesting();
+  binds._resetGamepadBindingsForTesting();
+  binds.setGamepadBinding("melee", 5, 0); // melee now on button 5
+  setPads(pad(0, { buttons: { 5: true } }));
+  const snap = gp.readPadSnapshotForSlot(1);
+  assert.equal(snap.melee, true);
+  assert.equal(snap.shoot, false);
+  binds._resetGamepadBindingsForTesting();
 });
 
 test("polling a slot with no assigned pad returns empty", () => {

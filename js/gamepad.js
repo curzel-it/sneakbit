@@ -19,14 +19,16 @@
 // (STICK_DEADZONE) only decides "is the stick being pushed at all" so a
 // thumb resting on a noisy stick doesn't drift the hero.
 //
-// Buttons follow the Standard Mapping for an Xbox-style controller:
-//   0 = A    → interact (E)
-//   1 = B    → shoot    (F)
-//   2 = X    → melee    (G)
-//   3 = Y    → unused
-//   9 = Start → menu     (Esc) — dispatched as a real keydown so menu.js
-//                                wires through unchanged.
+// Action buttons (interact / shoot / melee) and the menu button are
+// rebindable per player — gamepadBindings.js owns the action→button map
+// and its Standard-Mapping defaults (A / B / X / Start). The menu button
+// is global: any pad's bound menu button toggles the overlay, mirroring
+// keyBindings treating Esc as global. D-pad + stick stay fixed cardinal.
 // D-pad: 12 up / 13 down / 14 left / 15 right.
+
+import { buttonFor, menuButton } from "./gamepadBindings.js?v=20260529a";
+
+const ACTION_NAMES = ["interact", "shoot", "melee"];
 
 // Minimum stick deflection before it registers at all — just enough to
 // reject rest-state jitter/drift, not a per-direction activation
@@ -34,8 +36,13 @@
 const STICK_DEADZONE = 0.25;
 
 const DIR_BUTTONS = { 12: "up", 13: "down", 14: "left", 15: "right" };
-const ACTION_BUTTONS = { 0: "interact", 1: "shoot", 2: "melee" };
-const START_BUTTON = 9;
+
+// While true (the menu's controller-rebind capture is open) scanPad still
+// tracks button edges but fires no action/menu callbacks — so binding a
+// button doesn't also shoot or pop the menu.
+let capturing = false;
+
+export function setGamepadCapturing(v) { capturing = !!v; }
 
 // Per-slot action callbacks. Slot 1 keeps the historical single-player /
 // host wiring; slot 2 is wired for local co-op P2 in main.js.
@@ -81,6 +88,19 @@ export function pollGamepadDirections() {
   return pollGamepadForSlot(1);
 }
 
+// Side-effect-free set of button indices currently pressed on the pad
+// assigned to `slot`. The menu's rebind capture polls this to detect the
+// next button press without going through scanPad's callbacks.
+export function pressedButtonsForSlot(slot) {
+  const pad = connectedPadsByIndex()[slot - 1];
+  const out = new Set();
+  if (!pad) return out;
+  for (let i = 0; i < pad.buttons.length; i++) {
+    if (pad.buttons[i]?.pressed) out.add(i);
+  }
+  return out;
+}
+
 // Side-effect-free read of the pad assigned to `slot`: its held
 // directions + action-button pressed state, with no edge tracking and no
 // callbacks fired. The guest forwarder uses this to do its own edge
@@ -88,11 +108,16 @@ export function pollGamepadDirections() {
 export function readPadSnapshotForSlot(slot) {
   const pad = connectedPadsByIndex()[slot - 1];
   if (!pad) return null;
+  const playerIndex = slot - 1;
+  const pressed = (action) => {
+    const idx = buttonFor(action, playerIndex);
+    return idx >= 0 && !!pad.buttons[idx]?.pressed;
+  };
   return {
     held: buildHeld(pad),
-    interact: !!pad.buttons[0]?.pressed,
-    shoot:    !!pad.buttons[1]?.pressed,
-    melee:    !!pad.buttons[2]?.pressed,
+    interact: pressed("interact"),
+    shoot:    pressed("shoot"),
+    melee:    pressed("melee"),
   };
 }
 
@@ -126,23 +151,32 @@ function scanPad(pad, slot) {
     if (!st.prevHeld.has(dir)) events.push(dir);
   }
 
-  // Action buttons — fire this slot's callback on the rising edge.
-  for (const [idx, name] of Object.entries(ACTION_BUTTONS)) {
+  // Action buttons — resolve each via this player's bindings and fire the
+  // slot's callback on the rising edge. playerIndex: slot 1 → P1, 2 → P2.
+  const playerIndex = slot - 1;
+  for (const name of ACTION_NAMES) {
+    const idx = buttonFor(name, playerIndex);
+    if (idx < 0) continue;
     fireEdge(st, pad, idx, () => {
+      if (capturing) return;
       const cb = actionCallbacks[slot]?.[name];
       if (cb) {
         try { cb(); } catch (e) { console.error(`gamepad ${name} cb:`, e); }
       }
     });
   }
-  // Start dispatches a synthetic Esc keydown so menu.js's existing
-  // listener wires through without a parallel API. Any assigned pad can
-  // toggle the menu.
-  fireEdge(st, pad, START_BUTTON, () => {
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
-    }
-  });
+  // The (global, P1-owned) menu button dispatches a synthetic Esc keydown
+  // so menu.js's existing listener wires through without a parallel API.
+  // Any assigned pad can toggle the menu.
+  const mbtn = menuButton();
+  if (mbtn >= 0) {
+    fireEdge(st, pad, mbtn, () => {
+      if (capturing) return;
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape" }));
+      }
+    });
+  }
 
   st.prevHeld = held;
   return { events, held: new Set(held) };
