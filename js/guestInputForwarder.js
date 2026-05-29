@@ -4,6 +4,7 @@
 // seq for the reconciliation logic that arrives in Phase 6.
 
 import { actionForCode } from "./keyBindings.js?v=20260529a";
+import { readPadSnapshotForSlot } from "./gamepad.js?v=20260529a";
 
 const ACTION_TO_INTENT = {
   moveUp: "moveUp",
@@ -108,6 +109,8 @@ export function uninstallGuestInputForwarder() {
   lastSentDir = null;
   inputLog.length = 0;
   pendingActions.length = 0;
+  gpHeld.clear();
+  gpButtons.interact = gpButtons.shoot = gpButtons.melee = false;
 }
 
 // Called by onlineBootstrap on every `welcome`. Drains action intents
@@ -161,29 +164,31 @@ export function dropAckedInputs(ackedSeq) {
 // Test seams.
 export function _injectKeyDownForTesting(code) { onKeyDown({ code }); }
 export function _injectKeyUpForTesting(code) { onKeyUp({ code }); }
+// Feeds a synthetic pad frame straight into the edge logic, bypassing
+// navigator.getGamepads (absent in node). `dirs` is the held-direction
+// list, `buttons` an optional { interact, shoot, melee } pressed map.
+export function _injectGamepadFrameForTesting(dirs = [], buttons = {}) {
+  applyGamepadSnapshot({
+    held: new Set(dirs),
+    interact: !!buttons.interact,
+    shoot: !!buttons.shoot,
+    melee: !!buttons.melee,
+  });
+}
 export const _resetForwarderForTesting = uninstallGuestInputForwarder;
 
-function onKeyDown(e) {
-  if (e.repeat) return;
-  const action = actionForCode(e.code);
-  const intent = action && ACTION_TO_INTENT[action];
-  if (!intent) return;
-  const dir = intentToDir(intent);
-  if (dir) {
-    if (held.has(dir)) return;
-    held.add(dir);
-    lastSentDir = dir;
-    send(intent, { held: [...held] });
-    return;
-  }
-  send(intent);
+// Core movement transitions, shared by the keyboard listeners and the
+// per-frame gamepad poll. Both sources mutate the one `held` set keyed by
+// direction, so a press already covered by the other source is a no-op
+// and a release only stops motion once nothing holds that direction.
+function pressDir(dir) {
+  if (held.has(dir)) return;
+  held.add(dir);
+  lastSentDir = dir;
+  send(dirToIntent(dir), { held: [...held] });
 }
 
-function onKeyUp(e) {
-  const action = actionForCode(e.code);
-  const intent = action && ACTION_TO_INTENT[action];
-  if (!intent || !MOVE_INTENTS.has(intent)) return;
-  const dir = intentToDir(intent);
+function releaseDir(dir) {
   if (!held.has(dir)) return;
   held.delete(dir);
   if (held.size === 0) {
@@ -193,16 +198,61 @@ function onKeyUp(e) {
     }
     return;
   }
-  // The user released one key but others are still held. We can't drop
-  // this on the floor (host wouldn't know held shrank, and would keep
-  // chaining via the released key — the multi-key divergence that
-  // motivated this whole change). Emit `holdSync` so the host updates
-  // its held set without pushing a spurious press event into the slot's
-  // events queue. Updating lastSentDir to the new chain-winner means a
-  // future keydown of that same direction won't re-fire a redundant
-  // moveX intent.
+  // One direction released but others still held. We can't drop this on
+  // the floor (host wouldn't know held shrank, and would keep chaining
+  // via the released direction — the multi-key divergence that motivated
+  // this whole change). Emit `holdSync` so the host updates its held set
+  // without pushing a spurious press event. Updating lastSentDir to the
+  // new chain-winner means a future press of that same direction won't
+  // re-fire a redundant moveX intent.
   lastSentDir = effectiveDir(held);
   send("holdSync", { held: [...held] });
+}
+
+function onKeyDown(e) {
+  if (e.repeat) return;
+  const action = actionForCode(e.code);
+  const intent = action && ACTION_TO_INTENT[action];
+  if (!intent) return;
+  const dir = intentToDir(intent);
+  if (dir) { pressDir(dir); return; }
+  send(intent);
+}
+
+function onKeyUp(e) {
+  const action = actionForCode(e.code);
+  const intent = action && ACTION_TO_INTENT[action];
+  if (!intent || !MOVE_INTENTS.has(intent)) return;
+  releaseDir(intentToDir(intent));
+}
+
+// Previous-frame gamepad state for edge detection. Kept separate from the
+// keyboard listeners (which are event-driven) since the pad has no events
+// — we diff snapshots each frame.
+const gpHeld = new Set();
+const gpButtons = { interact: false, shoot: false, melee: false };
+
+// Called once per frame from the guest loop. Reads the guest's own pad
+// and forwards direction/action edges to the host through the same send
+// path the keyboard uses — so a guest plays with a controller exactly
+// like with the keyboard, with no wire-format change.
+export function pollGuestGamepad() {
+  if (!installed) return;
+  applyGamepadSnapshot(readPadSnapshotForSlot(1));
+}
+
+function applyGamepadSnapshot(snap) {
+  const heldNow = snap ? snap.held : new Set();
+  for (const d of heldNow) if (!gpHeld.has(d)) pressDir(d);
+  for (const d of [...gpHeld]) if (!heldNow.has(d)) releaseDir(d);
+  gpHeld.clear();
+  for (const d of heldNow) gpHeld.add(d);
+
+  for (const name of ["interact", "shoot", "melee"]) {
+    const pressedNow = !!(snap && snap[name]);
+    if (pressedNow && !gpButtons[name]) send(name);
+    gpButtons[name] = pressedNow;
+  }
 }
 
 function effectiveDir(heldSet) {

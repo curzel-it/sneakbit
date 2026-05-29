@@ -212,3 +212,50 @@ test("flushOnReconnect re-emits a still-held movement direction", () => {
   assert.equal(net.sent[0].intent, "moveRight");
   fwd._resetForwarderForTesting();
 });
+
+// --- Gamepad forwarding (guest plays with a controller) -----------------
+// Driven via _injectGamepadFrameForTesting, which feeds a synthetic pad
+// snapshot straight into the same edge logic the per-frame poll uses
+// (navigator.getGamepads is absent in node).
+
+test("a held gamepad direction emits moveX once, then holds", () => {
+  const net = setup();
+  fwd._injectGamepadFrameForTesting(["down"]); // press
+  fwd._injectGamepadFrameForTesting(["down"]); // still held — no new edge
+  const intents = net.sent.map((m) => m.intent);
+  assert.deepEqual(intents, ["moveDown"]);
+  assert.deepEqual(net.sent[0].held, ["down"]);
+  fwd._resetForwarderForTesting();
+});
+
+test("releasing the only-held gamepad direction sends stopMove", () => {
+  const net = setup();
+  fwd._injectGamepadFrameForTesting(["right"]);
+  fwd._injectGamepadFrameForTesting([]); // released
+  const intents = net.sent.map((m) => m.intent);
+  assert.deepEqual(intents, ["moveRight", "stopMove"]);
+  fwd._resetForwarderForTesting();
+});
+
+test("gamepad action buttons emit one intent on the rising edge", () => {
+  const net = setup();
+  fwd._injectGamepadFrameForTesting([], { shoot: true });
+  fwd._injectGamepadFrameForTesting([], { shoot: true }); // held — no repeat
+  fwd._injectGamepadFrameForTesting([], { shoot: false, melee: true });
+  const intents = net.sent.map((m) => m.intent);
+  assert.deepEqual(intents, ["shoot", "melee"]);
+  fwd._resetForwarderForTesting();
+});
+
+test("a gamepad direction and a keyboard direction coexist without a spurious stopMove", () => {
+  const net = setup();
+  fwd._injectKeyDownForTesting("KeyW");        // keyboard up
+  fwd._injectGamepadFrameForTesting(["left"]); // gamepad left, up still held
+  fwd._injectKeyUpForTesting("KeyW");          // release keyboard up; left still held by pad
+  const intents = net.sent.map((m) => m.intent);
+  // up press, left press, then a holdSync (NOT stopMove) because the pad
+  // still holds left.
+  assert.deepEqual(intents, ["moveUp", "moveLeft", "holdSync"]);
+  assert.deepEqual(net.sent[2].held, ["left"]);
+  fwd._resetForwarderForTesting();
+});

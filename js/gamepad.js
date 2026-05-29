@@ -75,10 +75,22 @@ export function pollGamepadDirections() {
   return pollGamepadForSlot(1);
 }
 
-function scanPad(pad, slot) {
-  let st = padState.get(pad.index);
-  if (!st) { st = { prevHeld: new Set(), prevButtons: new Map() }; padState.set(pad.index, st); }
+// Side-effect-free read of the pad assigned to `slot`: its held
+// directions + action-button pressed state, with no edge tracking and no
+// callbacks fired. The guest forwarder uses this to do its own edge
+// detection and forward intents to the host, instead of acting locally.
+export function readPadSnapshotForSlot(slot) {
+  const pad = connectedPadsByIndex()[slot - 1];
+  if (!pad) return null;
+  return {
+    held: buildHeld(pad),
+    interact: !!pad.buttons[0]?.pressed,
+    shoot:    !!pad.buttons[1]?.pressed,
+    melee:    !!pad.buttons[2]?.pressed,
+  };
+}
 
+function buildHeld(pad) {
   const held = new Set();
   const [ax, ay] = readAxes(pad);
   if (ax < -STICK_THRESHOLD) held.add("left");
@@ -88,6 +100,14 @@ function scanPad(pad, slot) {
   for (const [idx, dir] of Object.entries(DIR_BUTTONS)) {
     if (pad.buttons[idx]?.pressed) held.add(dir);
   }
+  return held;
+}
+
+function scanPad(pad, slot) {
+  let st = padState.get(pad.index);
+  if (!st) { st = { prevHeld: new Set(), prevButtons: new Map() }; padState.set(pad.index, st); }
+
+  const held = buildHeld(pad);
 
   // Press events: directions newly held since last scan of this pad.
   const events = [];

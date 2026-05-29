@@ -30,6 +30,7 @@ import { installToast, showToast } from "./toast.js?v=20260529a";
 import { installShooting, tickShooting, tryShoot, tryShootForSlot } from "./shooting.js?v=20260529a";
 import { installMelee, tickMelee, tryMelee, tryMeleeForSlot } from "./melee.js?v=20260529a";
 import { setGamepadAction } from "./gamepad.js?v=20260529a";
+import { pollGuestGamepad } from "./guestInputForwarder.js?v=20260529a";
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js?v=20260529a";
 import { tickMobs } from "./mobs.js?v=20260529a";
 import { tickMonsterFusion } from "./monsters.js?v=20260529a";
@@ -409,6 +410,9 @@ function tagHostPlayerId() {
 // guest's own avatar moves locally with zero perceived latency; on
 // snapshot/delta we snap it back to whatever the host says.
 function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
+  // Forward this guest's own controller input to the host each frame
+  // (no-op when the forwarder isn't installed or no pad is connected).
+  pollGuestGamepad();
   maybeFallBackToOffline();
   updateHostLaggingOverlay();
   const mZone = getMirrorZone();
