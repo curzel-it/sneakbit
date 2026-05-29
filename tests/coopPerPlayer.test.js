@@ -26,7 +26,7 @@ const inventory = await import("../js/inventory.js?v=20260529d");
 const equipment = await import("../js/equipment.js?v=20260529d");
 const storage = await import("../js/storage.js?v=20260529d");
 const coopMode = await import("../js/coopMode.js?v=20260529d");
-const { updateCamera, createCamera } = await import("../js/camera.js?v=20260529d");
+const { updateCamera, createCamera, cameraRectFor } = await import("../js/camera.js?v=20260529d");
 
 function freshAll() {
   storage._resetStorageForTesting();
@@ -143,6 +143,20 @@ test("local co-op folds P2 equipment onto P1 (shared loadout)", () => {
   assert.equal(equipment.getEquipped(equipment.SLOT_RANGED, 0), 1154);
   assert.equal(equipment.getEquipped(equipment.SLOT_RANGED, 1), 1154);
   coopMode._setCoopModeForTesting(false);
+});
+
+test("cameraRectFor centers an unclamped viewport on the player", () => {
+  // Online co-op's per-player simulation viewport. Same +0.5 - w/2
+  // centering as updateCamera, but never clamped to zone bounds — we
+  // want the true region around a wandered player.
+  const rect = cameraRectFor({ x: 100, y: 100 }, 30, 20);
+  assert.equal(rect.w, 30);
+  assert.equal(rect.h, 20);
+  assert.ok(Math.abs((rect.x + rect.w / 2) - 100.5) < 0.001, `centerX=${rect.x + rect.w / 2}`);
+  assert.ok(Math.abs((rect.y + rect.h / 2) - 100.5) < 0.001, `centerY=${rect.y + rect.h / 2}`);
+  // Negative origin allowed (no clamp) when the player is near (0,0).
+  const edge = cameraRectFor({ x: 2, y: 2 }, 30, 20);
+  assert.ok(edge.x < 0 && edge.y < 0);
 });
 
 test("camera ignores dead players (caller filters them) — empty array is a no-op", () => {

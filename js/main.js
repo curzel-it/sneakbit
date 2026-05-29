@@ -12,7 +12,7 @@ import { buildZone } from "./zone.js?v=20260529d";
 import { pickCoopSpawn } from "./coopSpawn.js?v=20260529d";
 import { initInput, pollInput } from "./input.js?v=20260529d";
 import { createPlayer, updatePlayer } from "./player.js?v=20260529d";
-import { createCamera, updateCamera } from "./camera.js?v=20260529d";
+import { createCamera, updateCamera, cameraRectFor } from "./camera.js?v=20260529d";
 import { createRenderer, render } from "./renderer.js?v=20260529d";
 import { startGameLoop } from "./gameLoop.js?v=20260529d";
 import { createBiomeAnimation, tickBiomeAnimation } from "./biomeAnimation.js?v=20260529d";
@@ -255,14 +255,14 @@ async function main() {
         }
       }
       maybeTeleport(state);
-      // Camera averages every live player so co-op players stay on screen.
-      // Dead co-op players drop out of the average so the camera doesn't
-      // anchor to where they fell. Single-player still passes one target.
-      // For online hosts the camera only follows the host (each guest has
-      // their own viewport via their mirror).
-      const liveForCamera = livePlayersForCamera(state);
-      updateCamera(state.camera, liveForCamera, state.zone);
-      updateVisibleEntities(state.zone, state.camera);
+      // Offline / local co-op: the camera averages every live player so
+      // co-op players stay on one shared screen (dead players drop out of
+      // the average). Online hosts instead follow only the host avatar —
+      // each guest renders an independent window centred on themselves, so
+      // the host's own window tracks the host. simulationViewports keeps
+      // every off-camera guest's region alive (see below).
+      updateCamera(state.camera, hostCameraTarget(state), state.zone);
+      updateVisibleEntities(state.zone, simulationViewports(state));
       tickShooting(dt);
       tickMelee(dt);
       tickMobs(state.zone, allPlayers(state), dt);
@@ -287,7 +287,8 @@ async function main() {
       // When paused, keep the camera tracking the player so on resume
       // there's no jolt, but don't bother re-running the visibility pass
       // (the entity ticks are gated by `paused` above and won't read it).
-      updateCamera(state.camera, livePlayersForCamera(state), state.zone);
+      // Same follow-self-vs-averaged rule as the unpaused branch.
+      updateCamera(state.camera, hostCameraTarget(state), state.zone);
     }
     tickBiomeAnimation(biomeAnim, dt);
     tickEntities(dt);
@@ -437,17 +438,16 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
     updateHud(hud, { zoneId: mZone.id, fps: 1 / dt, showFps: getSettings().showFps });
     return;
   }
-  // Shared-camera rule, same as host/local co-op: average every mirrored
-  // player so they all stay on screen. Earlier we picked just the self
-  // here, but a guest who walked off-screen could drift into regions
-  // the host wasn't simulating in view.
-  //
-  // Dead players are dropped from the camera average (the host does the
-  // same via livePlayersForCamera). A downed co-op player's avatar is
-  // still rendered as a tombstone, so we only filter the camera list —
-  // renderPlayers stays whole. The host ships per-player hp in every
-  // snapshot/delta; the mirror exposes it on each interpolated player.
-  updateCamera(state.camera, liveGuestCameraPlayers(renderPlayers, mPlayers), mZone);
+  // Follow-self camera: the guest's window tracks the guest's own avatar,
+  // so two players can explore different parts of the same zone. This was
+  // unsafe before — a guest wandering off-screen drifted into regions the
+  // host wasn't simulating — but the host now simulates a viewport per
+  // player (simulationViewports), so the guest's surroundings stay live.
+  // Falls back to the averaged-live list until the predicted self exists
+  // (early session) so the camera never snaps to nowhere.
+  const self = getPredictedSelf();
+  const camTarget = self ? [self] : liveGuestCameraPlayers(renderPlayers, mPlayers);
+  updateCamera(state.camera, camTarget, mZone);
   updateVisibleEntities(mZone, state.camera);
   render(renderer, mZone, state.camera, renderPlayers, biomeAnim.frame);
   updateHud(hud, {
@@ -464,22 +464,18 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
 
 // Swap the mirror's copy of the guest's own avatar with predictedSelf so
 // the local input → render path is round-trip-free. Everyone else stays
-// interpolated.
+// interpolated. The self is placed FIRST so it lands at player[0], which
+// render() uses as the deterministic centre for the CantSeeShit light
+// cone — with a follow-self camera the cone must track the self, not
+// whichever player happened to come first in mirror order.
 function buildGuestRenderPlayers(mPlayers) {
   const selfId = getSelfPlayerId();
   const predicted = getPredictedSelf();
   if (!selfId || !predicted) return mPlayers;
-  const out = [];
-  let injected = false;
+  const out = [predicted];
   for (const p of mPlayers) {
-    if (p.playerId === selfId) {
-      out.push(predicted);
-      injected = true;
-    } else {
-      out.push(p);
-    }
+    if (p.playerId !== selfId) out.push(p);
   }
-  if (!injected) out.push(predicted);
   return out;
 }
 
@@ -695,6 +691,32 @@ function livePlayersForCamera(state) {
   // If everyone's dead the camera freezes on P1's last position so the
   // Game Over overlay doesn't snap to (0, 0).
   return live.length ? live : (state.player ? [state.player] : []);
+}
+
+// Who the host's window follows. Online hosts track only their own
+// avatar (guests have their own independent windows); offline / local
+// co-op keep the shared averaged camera so split-keyboard partners stay
+// on one screen.
+function hostCameraTarget(state) {
+  if (getRuntimeRole() === "host") return state.player;
+  return livePlayersForCamera(state);
+}
+
+// Which viewports the host simulates. Offline / local co-op gate entity
+// ticks to the single shared camera, exactly as before. Online hosts
+// also union a camera-sized rect centred on each off-camera guest, so a
+// guest who wandered away from the host doesn't walk into frozen mobs /
+// pickups the host wasn't ticking. Returns a single camera (legacy path)
+// or an array; updateVisibleEntities accepts both.
+function simulationViewports(state) {
+  if (getRuntimeRole() !== "host") return state.camera;
+  const cams = [state.camera];
+  const { w, h } = state.camera;
+  for (const p of allPlayers(state)) {
+    if (p === state.player) continue;
+    cams.push(cameraRectFor(p, w, h));
+  }
+  return cams;
 }
 
 // What the renderer draws on the host/offline screen. Dead avatars are

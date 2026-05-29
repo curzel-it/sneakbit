@@ -15,8 +15,14 @@ const ALWAYS_VISIBLE_TYPES = new Set([
   "PushableObject",
 ]);
 
-export function updateVisibleEntities(zone, camera) {
+// `cameras` may be a single camera rect or an array of them. An entity
+// is visible if it overlaps ANY of them. Online co-op passes one viewport
+// per player so a guest who wandered away from the host still has live
+// mobs/pickups around them; offline / local co-op pass the single shared
+// camera, exactly as before.
+export function updateVisibleEntities(zone, cameras) {
   if (!zone) return;
+  const cams = Array.isArray(cameras) ? cameras : [cameras];
   const out = [];
   const ents = zone.entities || [];
   for (let i = 0; i < ents.length; i++) {
@@ -27,12 +33,19 @@ export function updateVisibleEntities(zone, camera) {
     } else {
       const sp = getSpecies(e.species_id);
       const et = sp?.entity_type;
-      visible = ALWAYS_VISIBLE_TYPES.has(et) || overlapsViewport(camera, e.frame);
+      visible = ALWAYS_VISIBLE_TYPES.has(et) || overlapsAnyViewport(cams, e.frame);
     }
     e._visible = visible;
     if (visible) out.push(e);
   }
   zone.visibleEntities = out;
+}
+
+function overlapsAnyViewport(cams, f) {
+  for (let i = 0; i < cams.length; i++) {
+    if (overlapsViewport(cams[i], f)) return true;
+  }
+  return false;
 }
 
 // Camera + entity-frame overlap check, edges inclusive. Matches Rust
