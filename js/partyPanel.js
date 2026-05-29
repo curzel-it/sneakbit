@@ -25,8 +25,8 @@ import {
 import { switchRole } from "./switchRole.js?v=20260529a";
 import { showToast } from "./toast.js?v=20260529a";
 import { isCreativeMode } from "./creativeMode.js?v=20260529a";
-import { isCoopMode } from "./coopMode.js?v=20260529a";
-import { enableLocalCoop, disableLocalCoop } from "./main.js?v=20260529a";
+import { isCoopMode, localPlayerCount } from "./coopMode.js?v=20260529a";
+import { setLocalPlayers } from "./main.js?v=20260529a";
 
 let chip = null;
 let chipLabel = null;
@@ -71,6 +71,7 @@ let offlineErrorEl = null;
 // view. Only the end button is interactive; the body text just reminds
 // the user which keys move P2.
 let localCoopEndBtn = null;
+let localCoopCountEl = null;
 
 export function installPartyPanel() {
   if (installed || typeof document === "undefined") return;
@@ -169,13 +170,13 @@ function buildOfflineView() {
 
   offlineLocalBtn = document.createElement("button");
   offlineLocalBtn.id = "party-local-coop";
-  offlineLocalBtn.textContent = "Play on this device (2-player)";
+  offlineLocalBtn.textContent = "Play on this device (co-op)";
   offlineLocalBtn.addEventListener("click", onLocalCoopClick);
   root.appendChild(offlineLocalBtn);
 
   offlineLocalHint = document.createElement("p");
   offlineLocalHint.className = "party-hint";
-  offlineLocalHint.textContent = "Share one keyboard. P2 uses IJKL to move, B interact, N kunai, M melee.";
+  offlineLocalHint.textContent = "Up to 4 players share this device. P2 uses IJKL + B/N/M; P3/P4 need keys bound in Settings → Key Bindings, or a controller each.";
   root.appendChild(offlineLocalHint);
 
   offlineStartBtn = document.createElement("button");
@@ -281,18 +282,45 @@ function buildLocalCoopView() {
   title.textContent = "Local co-op";
   root.appendChild(title);
 
+  // Player-count stepper: 2-4 players on this device.
+  const stepper = document.createElement("div");
+  stepper.className = "party-stepper";
+  const minus = document.createElement("button");
+  minus.textContent = "−";
+  minus.setAttribute("aria-label", "Fewer players");
+  minus.addEventListener("click", () => changeLocalPlayers(-1));
+  localCoopCountEl = document.createElement("span");
+  localCoopCountEl.className = "party-stepper-count";
+  const plus = document.createElement("button");
+  plus.textContent = "+";
+  plus.setAttribute("aria-label", "More players");
+  plus.addEventListener("click", () => changeLocalPlayers(1));
+  stepper.appendChild(minus);
+  stepper.appendChild(localCoopCountEl);
+  stepper.appendChild(plus);
+  root.appendChild(stepper);
+
   const hint = document.createElement("p");
   hint.className = "party-hint";
-  hint.textContent = "P2 is in the world. Press IJKL to move them, B / N / M to act.";
+  hint.textContent = "P2 uses IJKL + B/N/M. P3/P4 start with no keyboard keys — bind them in Settings → Key Bindings, or give each a controller (pads map to players by connection order).";
   root.appendChild(hint);
 
   localCoopEndBtn = document.createElement("button");
   localCoopEndBtn.textContent = "End session (back to single player)";
   localCoopEndBtn.className = "party-danger";
-  localCoopEndBtn.addEventListener("click", onLocalCoopClick);
+  localCoopEndBtn.addEventListener("click", () => setLocalPlayersAndRender(1));
   root.appendChild(localCoopEndBtn);
 
   return root;
+}
+
+function changeLocalPlayers(delta) {
+  setLocalPlayersAndRender(localPlayerCount() + delta);
+}
+
+function setLocalPlayersAndRender(n) {
+  setLocalPlayers(n);
+  renderAll();
 }
 
 function buildGuestView() {
@@ -370,10 +398,15 @@ function renderPanel() {
     renderGuestView();
   } else if (isCoopMode()) {
     views.localCoop.style.display = "block";
+    renderLocalCoopView();
   } else {
     views.offline.style.display = "block";
     renderOfflineView();
   }
+}
+
+function renderLocalCoopView() {
+  if (localCoopCountEl) localCoopCountEl.textContent = `${localPlayerCount()} players`;
 }
 
 function renderOfflineView() {
@@ -474,15 +507,11 @@ function renderGuestView() {
 // — Click handlers ——————————————————————————————————————————————————————
 
 function onLocalCoopClick() {
-  if (isCoopMode()) {
-    disableLocalCoop();
-    renderAll();
-    showToast("Local co-op ended", "hint");
-    return;
-  }
-  enableLocalCoop();
-  closePartyPanel();
-  showToast("Local co-op on — P2 uses IJKL", "longHint");
+  // Enter local co-op at 2 players; the localCoop view's stepper bumps to
+  // 3/4. Keep the panel open so the player can add more.
+  setLocalPlayers(2);
+  renderAll();
+  showToast("Local co-op on — add players with +", "longHint");
 }
 
 function onStartHostingClick() {
@@ -643,6 +672,12 @@ function injectStyles() {
     .party-controls { justify-content: flex-end; margin-top: 18px; }
     .party-hint { color: #888; font-size: 11px; margin: 12px 0 6px; }
     .party-error { color: #e88; font-size: 12px; margin: 8px 0 0; }
+    .party-stepper { display: flex; align-items: center; gap: 12px; margin: 8px 0 4px; }
+    .party-stepper button {
+      width: 36px; height: 36px; font-size: 18px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .party-stepper-count { font-size: 14px; min-width: 84px; text-align: center; letter-spacing: 1px; }
     .party-card button {
       background: #2a2a2a; color: #eee; border: 1px solid #444;
       padding: 8px 12px; border-radius: 4px; cursor: pointer;

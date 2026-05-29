@@ -15,7 +15,7 @@ import { isCreativeMode } from "./creativeMode.js?v=20260529a";
 import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260529a";
 import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, resetGamepadBindings } from "./gamepadBindings.js?v=20260529a";
 import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js?v=20260529a";
-import { isCoopMode, isCoopActive } from "./coopMode.js?v=20260529a";
+import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js?v=20260529a";
 import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260529a";
 import { invalidateZoneCache } from "./data.js?v=20260529a";
 import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260529a";
@@ -143,6 +143,8 @@ export function installMenu(stateGetter) {
       <div class="menu-tabs" id="menu-controls-tabs">
         <button class="menu-tab" data-player="0">Player 1</button>
         <button class="menu-tab" data-player="1">Player 2</button>
+        <button class="menu-tab" data-player="2">Player 3</button>
+        <button class="menu-tab" data-player="3">Player 4</button>
       </div>
       <ul class="menu-controls-list" id="menu-controls-list"></ul>
       <p class="menu-hint" id="menu-controls-hint">
@@ -308,14 +310,15 @@ function renderControlsList() {
   }
   const tabs = root.querySelector("#menu-controls-tabs");
   if (tabs) {
-    // Hide the P2 tab outside of local co-op — when there's no second
-    // player avatar, rebinding their controls would just persist defaults
-    // nobody can trigger.
-    const coop = isCoopMode();
-    tabs.style.display = coop ? "" : "none";
-    if (!coop) controlsPlayer = 0;
+    // Show a player's tab only when the local player count covers them —
+    // rebinding a player with no avatar would just persist controls
+    // nobody can trigger. The whole row hides in single-player.
+    const count = localPlayerCount();
+    tabs.style.display = count >= 2 ? "" : "none";
+    if (controlsPlayer >= count) controlsPlayer = 0;
     for (const b of tabs.querySelectorAll(".menu-tab")) {
       const idx = parseInt(b.dataset.player, 10) | 0;
+      b.style.display = idx < count ? "" : "none";
       b.classList.toggle("active", idx === controlsPlayer);
     }
   }
@@ -332,7 +335,7 @@ function renderControlsList() {
 function renderKeyboardList() {
   const list = root.querySelector("#menu-controls-list");
   if (!list) return;
-  const actions = controlsPlayer === 1 ? ACTIONS_P2 : ACTIONS;
+  const actions = controlsPlayer === 0 ? ACTIONS : ACTIONS_P2;
   list.innerHTML = actions.map((a) => {
     const codes = codesFor(a.id, controlsPlayer);
     return `<li>
@@ -349,7 +352,7 @@ function renderKeyboardList() {
 function renderControllerList() {
   const list = root.querySelector("#menu-controls-list");
   if (!list) return;
-  const actions = controlsPlayer === 1 ? GAMEPAD_ACTIONS_P2 : GAMEPAD_ACTIONS;
+  const actions = controlsPlayer === 0 ? GAMEPAD_ACTIONS : GAMEPAD_ACTIONS_P2;
   list.innerHTML = actions.map((a) => {
     const idx = buttonFor(a.id, controlsPlayer);
     return `<li>
