@@ -5,7 +5,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { isCoopMode, setCoopMode, COOP_KEYMAPS, _setCoopModeForTesting } =
+const { isCoopMode, setCoopMode, COOP_KEYMAPS, _setCoopModeForTesting,
+  localPlayerCount, setLocalPlayerCount, isCoopActive, setNetworkGuestCount } =
   await import("../js/coopMode.js?v=20260529a");
 
 test("defaults to disabled", () => {
@@ -18,6 +19,43 @@ test("setCoopMode toggles in-memory flag", () => {
   assert.equal(isCoopMode(), true);
   setCoopMode(false);
   assert.equal(isCoopMode(), false);
+});
+
+test("local player count: 1 = single-player, 2+ = co-op", () => {
+  setLocalPlayerCount(1);
+  assert.equal(localPlayerCount(), 1);
+  assert.equal(isCoopMode(), false);
+  for (const n of [2, 3, 4]) {
+    setLocalPlayerCount(n);
+    assert.equal(localPlayerCount(), n);
+    assert.equal(isCoopMode(), true, `count ${n} is co-op`);
+  }
+});
+
+test("setLocalPlayerCount clamps to 1..4", () => {
+  setLocalPlayerCount(0);
+  assert.equal(localPlayerCount(), 1);
+  setLocalPlayerCount(9);
+  assert.equal(localPlayerCount(), 4);
+});
+
+test("setCoopMode stays compatible (on→>=2, off→1)", () => {
+  setLocalPlayerCount(1);
+  setCoopMode(true);
+  assert.equal(localPlayerCount(), 2);
+  setLocalPlayerCount(4);
+  setCoopMode(true); // already co-op — keep the higher count
+  assert.equal(localPlayerCount(), 4);
+  setCoopMode(false);
+  assert.equal(localPlayerCount(), 1);
+});
+
+test("isCoopActive also covers network guests with no local co-op", () => {
+  setLocalPlayerCount(1);
+  setNetworkGuestCount(1);
+  assert.equal(isCoopActive(), true);
+  setNetworkGuestCount(0);
+  assert.equal(isCoopActive(), false);
 });
 
 test("COOP_KEYMAPS assigns P1 WASD+ZXC and P2 IJKL+BNM", () => {

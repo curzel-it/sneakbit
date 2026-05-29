@@ -134,3 +134,39 @@ test("resetBindings can target a single player", () => {
   assert.equal(matchesAction("shoot", "KeyZ", 1), false);
   assert.equal(matchesAction("shoot", "KeyN", 1), true);
 });
+
+// --- Local 4-player: P3 / P4 -------------------------------------------
+
+test("P3 and P4 default to empty keyboard bindings (no collisions)", () => {
+  _resetBindingsForTesting();
+  for (const pi of [2, 3]) {
+    for (const a of ["moveUp","moveDown","moveLeft","moveRight","interact","shoot","melee"]) {
+      assert.deepEqual(codesFor(a, pi), ["", ""], `P${pi+1} ${a} should be unbound`);
+    }
+  }
+});
+
+test("binding then resolving keys for P3 and P4 routes to the right player", () => {
+  _resetBindingsForTesting();
+  setBinding("moveUp", 0, "Numpad8", 2); // P3
+  setBinding("shoot",  0, "Numpad0", 3); // P4
+  assert.deepEqual(resolveAction("Numpad8"), { playerIndex: 2, action: "moveUp" });
+  assert.deepEqual(resolveAction("Numpad0"), { playerIndex: 3, action: "shoot" });
+  assert.equal(matchesAction("moveUp", "Numpad8", 2), true);
+  assert.equal(actionForCode("Numpad0", 3), "shoot");
+});
+
+test("a code binds to one player only — cross-clears across all four", () => {
+  _resetBindingsForTesting();
+  setBinding("moveUp", 0, "KeyT", 2); // P3 takes KeyT
+  setBinding("moveUp", 0, "KeyT", 3); // P4 takes KeyT → P3 must lose it
+  assert.equal(matchesAction("moveUp", "KeyT", 2), false);
+  assert.equal(matchesAction("moveUp", "KeyT", 3), true);
+});
+
+test("P3/P4 have no menu action", () => {
+  _resetBindingsForTesting();
+  setBinding("moveUp", 0, "KeyT", 2);
+  // actionForCode for P3 uses the menu-less list; menu is never returned.
+  assert.notEqual(actionForCode("KeyT", 2), "menu");
+});

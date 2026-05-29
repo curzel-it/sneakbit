@@ -14,10 +14,17 @@
 // hot: partyPanel calls main.enableLocalCoop / disableLocalCoop, which
 // spawn or null out state.player2 without rebuilding the world.
 
-let cached = false;
+// Number of LOCAL players sharing this machine: 1 (single-player) … 4.
+// Local co-op = 2+. P3/P4 are added as state.players[] entries; see main.js
+// setLocalPlayers. Online guests are tracked separately (networkGuestCount).
+let localCount = 1;
 let networkGuestCount = 0;
 
-export function isCoopMode() { return cached; }
+export function isCoopMode() { return localCount >= 2; }
+export function localPlayerCount() { return localCount; }
+export function setLocalPlayerCount(n) {
+  localCount = Math.min(4, Math.max(1, n | 0));
+}
 
 // Host network co-op uses the same per-slot input + render infrastructure
 // as local co-op, but flipping the persisted localStorage flag would
@@ -27,10 +34,12 @@ export function isCoopMode() { return cached; }
 // isCoopActive() to cover both cases.
 export function setNetworkGuestCount(n) { networkGuestCount = Math.max(0, n | 0); }
 export function getNetworkGuestCount() { return networkGuestCount; }
-export function isCoopActive() { return cached || networkGuestCount > 0; }
+export function isCoopActive() { return localCount >= 2 || networkGuestCount > 0; }
 
+// Back-compat boolean toggle: on → 2 local players, off → 1. Callers that
+// want a specific count use setLocalPlayerCount.
 export function setCoopMode(on) {
-  cached = !!on;
+  localCount = on ? Math.max(2, localCount) : 1;
 }
 
 // Fixed per-player keymaps for co-op. Slots 1/2 used to be the live
@@ -82,4 +91,4 @@ export const COOP_KEYMAPS = {
 };
 
 // Test-only seam.
-export function _setCoopModeForTesting(on) { cached = !!on; }
+export function _setCoopModeForTesting(on) { localCount = on ? 2 : 1; }

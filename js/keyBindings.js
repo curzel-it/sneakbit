@@ -60,7 +60,26 @@ const DEFAULT_P2 = {
   melee:     ["KeyM",       ""],
 };
 
-let bindings = { p1: clonePlayer(DEFAULT_P1), p2: clonePlayer(DEFAULT_P2) };
+// P3 / P4 (local 4-player co-op) ship with NO keyboard defaults — there
+// are no spare conflict-free keys, and most 3-4 player sessions use
+// controllers anyway. Players assign keys in Settings → Key Bindings.
+function emptyBindings() {
+  return {
+    moveUp: ["", ""], moveDown: ["", ""], moveLeft: ["", ""], moveRight: ["", ""],
+    interact: ["", ""], shoot: ["", ""], melee: ["", ""],
+  };
+}
+const DEFAULT_P3 = emptyBindings();
+const DEFAULT_P4 = emptyBindings();
+
+// playerIndex (0-3) → storage key and default layout.
+const SLOT_KEYS = ["p1", "p2", "p3", "p4"];
+const DEFAULTS = [DEFAULT_P1, DEFAULT_P2, DEFAULT_P3, DEFAULT_P4];
+
+let bindings = {
+  p1: clonePlayer(DEFAULT_P1), p2: clonePlayer(DEFAULT_P2),
+  p3: clonePlayer(DEFAULT_P3), p4: clonePlayer(DEFAULT_P4),
+};
 let loaded = false;
 const listeners = new Set();
 
@@ -78,8 +97,11 @@ function load() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed?.p1) overlayPlayer(bindings.p1, parsed.p1);
-      if (parsed?.p2) overlayPlayer(bindings.p2, parsed.p2);
+      if (parsed) {
+        for (const key of SLOT_KEYS) {
+          if (parsed[key]) overlayPlayer(bindings[key], parsed[key]);
+        }
+      }
       return;
     }
     // First load on this profile: try to inherit v1 (P1 only).
@@ -111,7 +133,7 @@ function persist() {
 }
 
 function slotFor(playerIndex) {
-  return (playerIndex | 0) === 1 ? bindings.p2 : bindings.p1;
+  return bindings[SLOT_KEYS[playerIndex | 0]] || bindings.p1;
 }
 
 // Returns the [primary, secondary] codes a given player has bound to
@@ -135,7 +157,8 @@ export function matchesAction(action, code, playerIndex = 0) {
 export function actionForCode(code, playerIndex = 0) {
   load();
   const slot = slotFor(playerIndex);
-  const list = (playerIndex | 0) === 1 ? ACTIONS_P2 : ACTIONS;
+  // Only P1 owns the menu action; P2/P3/P4 use the menu-less list.
+  const list = (playerIndex | 0) === 0 ? ACTIONS : ACTIONS_P2;
   for (const a of list) {
     if ((slot[a.id] || []).includes(code)) return a.id;
   }
@@ -148,11 +171,12 @@ export function actionForCode(code, playerIndex = 0) {
 // hand-rolled COOP_KEYMAPS comparisons each feature used to do.
 export function resolveAction(code) {
   load();
-  for (const a of ACTIONS) {
-    if ((bindings.p1[a.id] || []).includes(code)) return { playerIndex: 0, action: a.id };
-  }
-  for (const a of ACTIONS_P2) {
-    if ((bindings.p2[a.id] || []).includes(code)) return { playerIndex: 1, action: a.id };
+  for (let pi = 0; pi < SLOT_KEYS.length; pi++) {
+    const slot = bindings[SLOT_KEYS[pi]];
+    const list = pi === 0 ? ACTIONS : ACTIONS_P2;
+    for (const a of list) {
+      if ((slot[a.id] || []).includes(code)) return { playerIndex: pi, action: a.id };
+    }
   }
   return null;
 }
@@ -165,16 +189,22 @@ export function resolveAction(code) {
 // whoever owns it first.
 export function setBinding(action, slot, code, playerIndex = 0) {
   load();
-  const player = (playerIndex | 0) === 1 ? "p2" : "p1";
-  const other  = (playerIndex | 0) === 1 ? "p1" : "p2";
+  const player = SLOT_KEYS[playerIndex | 0] || "p1";
   if (!bindings[player][action]) bindings[player][action] = [];
+  // A physical key maps to one action for this player…
   for (const id of Object.keys(bindings[player])) {
     if (id === action) continue;
     bindings[player][id] = bindings[player][id].filter(c => c !== code);
   }
+  // …and to one player overall — two players can't share a key, since
+  // input.js fans the press into whoever owns it first. Clear it off
+  // every OTHER player's bindings.
   if (code) {
-    for (const id of Object.keys(bindings[other])) {
-      bindings[other][id] = bindings[other][id].filter(c => c !== code);
+    for (const key of SLOT_KEYS) {
+      if (key === player) continue;
+      for (const id of Object.keys(bindings[key])) {
+        bindings[key][id] = bindings[key][id].filter(c => c !== code);
+      }
     }
   }
   bindings[player][action][slot] = code;
@@ -185,11 +215,12 @@ export function setBinding(action, slot, code, playerIndex = 0) {
 export function resetBindings(playerIndex) {
   load();
   if (playerIndex == null) {
-    bindings = { p1: clonePlayer(DEFAULT_P1), p2: clonePlayer(DEFAULT_P2) };
-  } else if ((playerIndex | 0) === 1) {
-    bindings.p2 = clonePlayer(DEFAULT_P2);
+    for (let pi = 0; pi < SLOT_KEYS.length; pi++) {
+      bindings[SLOT_KEYS[pi]] = clonePlayer(DEFAULTS[pi]);
+    }
   } else {
-    bindings.p1 = clonePlayer(DEFAULT_P1);
+    const pi = playerIndex | 0;
+    bindings[SLOT_KEYS[pi]] = clonePlayer(DEFAULTS[pi]);
   }
   persist();
   notify();
@@ -208,6 +239,9 @@ function notify() {
 
 // Test-only seam.
 export function _resetBindingsForTesting() {
-  bindings = { p1: clonePlayer(DEFAULT_P1), p2: clonePlayer(DEFAULT_P2) };
+  bindings = {
+    p1: clonePlayer(DEFAULT_P1), p2: clonePlayer(DEFAULT_P2),
+    p3: clonePlayer(DEFAULT_P3), p4: clonePlayer(DEFAULT_P4),
+  };
   loaded = true;
 }

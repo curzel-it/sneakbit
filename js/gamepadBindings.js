@@ -31,8 +31,19 @@ export const GAMEPAD_ACTIONS_P2 = GAMEPAD_ACTIONS.filter(a => a.id !== "menu");
 
 const DEFAULT_P1 = { interact: 0, shoot: 1, melee: 2, menu: 9 };
 const DEFAULT_P2 = { interact: 0, shoot: 1, melee: 2 };
+// P3 / P4 (local 4-player co-op): same A/B/X layout as P2 so a 3rd/4th
+// controller works out of the box (pads map to slots by connection order).
+const DEFAULT_P3 = { interact: 0, shoot: 1, melee: 2 };
+const DEFAULT_P4 = { interact: 0, shoot: 1, melee: 2 };
 
-let bindings = { p1: { ...DEFAULT_P1 }, p2: { ...DEFAULT_P2 } };
+// playerIndex (0-3) → storage key and default layout.
+const SLOT_KEYS = ["p1", "p2", "p3", "p4"];
+const DEFAULTS = [DEFAULT_P1, DEFAULT_P2, DEFAULT_P3, DEFAULT_P4];
+
+let bindings = {
+  p1: { ...DEFAULT_P1 }, p2: { ...DEFAULT_P2 },
+  p3: { ...DEFAULT_P3 }, p4: { ...DEFAULT_P4 },
+};
 let loaded = false;
 const listeners = new Set();
 
@@ -44,8 +55,11 @@ function load() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
     const parsed = JSON.parse(raw);
-    if (parsed?.p1) overlayPlayer(bindings.p1, parsed.p1);
-    if (parsed?.p2) overlayPlayer(bindings.p2, parsed.p2);
+    if (parsed) {
+      for (const key of SLOT_KEYS) {
+        if (parsed[key]) overlayPlayer(bindings[key], parsed[key]);
+      }
+    }
   } catch {}
 }
 
@@ -62,7 +76,7 @@ function persist() {
 }
 
 function slotFor(playerIndex) {
-  return (playerIndex | 0) === 1 ? bindings.p2 : bindings.p1;
+  return bindings[SLOT_KEYS[playerIndex | 0]] || bindings.p1;
 }
 
 // Button index bound to `action` for the given player (0 = P1, 1 = P2),
@@ -79,7 +93,7 @@ export function actionForButton(buttonIndex, playerIndex = 0) {
   load();
   if (buttonIndex < 0) return null;
   const slot = slotFor(playerIndex);
-  const list = (playerIndex | 0) === 1 ? GAMEPAD_ACTIONS_P2 : GAMEPAD_ACTIONS;
+  const list = (playerIndex | 0) === 0 ? GAMEPAD_ACTIONS : GAMEPAD_ACTIONS_P2;
   for (const a of list) {
     if (slot[a.id] === buttonIndex) return a.id;
   }
@@ -116,11 +130,10 @@ export function setGamepadBinding(action, buttonIndex, playerIndex = 0) {
 export function resetGamepadBindings(playerIndex) {
   load();
   if (playerIndex == null) {
-    bindings = { p1: { ...DEFAULT_P1 }, p2: { ...DEFAULT_P2 } };
-  } else if ((playerIndex | 0) === 1) {
-    bindings.p2 = { ...DEFAULT_P2 };
+    for (let pi = 0; pi < SLOT_KEYS.length; pi++) bindings[SLOT_KEYS[pi]] = { ...DEFAULTS[pi] };
   } else {
-    bindings.p1 = { ...DEFAULT_P1 };
+    const pi = playerIndex | 0;
+    bindings[SLOT_KEYS[pi]] = { ...DEFAULTS[pi] };
   }
   persist();
   notify();
@@ -139,6 +152,9 @@ function notify() {
 
 // Test-only seam.
 export function _resetGamepadBindingsForTesting() {
-  bindings = { p1: { ...DEFAULT_P1 }, p2: { ...DEFAULT_P2 } };
+  bindings = {
+    p1: { ...DEFAULT_P1 }, p2: { ...DEFAULT_P2 },
+    p3: { ...DEFAULT_P3 }, p4: { ...DEFAULT_P4 },
+  };
   loaded = true;
 }

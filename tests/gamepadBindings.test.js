@@ -82,6 +82,25 @@ test("reset restores defaults for the given player", () => {
   assert.equal(buttonFor("shoot", 0), 1);
 });
 
+test("P3 and P4 default to the A/B/X layout (no menu) so a 3rd/4th pad works", () => {
+  _resetGamepadBindingsForTesting();
+  for (const pi of [2, 3]) {
+    assert.equal(buttonFor("interact", pi), 0);
+    assert.equal(buttonFor("shoot", pi), 1);
+    assert.equal(buttonFor("melee", pi), 2);
+    assert.equal(buttonFor("menu", pi), -1, `P${pi+1} has no menu`);
+  }
+});
+
+test("controller bindings are independent across all four players", () => {
+  _resetGamepadBindingsForTesting();
+  setGamepadBinding("shoot", 3, 2); // P3 shoot → Y
+  assert.equal(buttonFor("shoot", 2), 3);
+  assert.equal(buttonFor("shoot", 0), 1, "P1 unchanged");
+  assert.equal(buttonFor("shoot", 1), 1, "P2 unchanged");
+  assert.equal(buttonFor("shoot", 3), 1, "P4 unchanged");
+});
+
 test("changes persist across a reload (localStorage round-trip)", async () => {
   _resetGamepadBindingsForTesting();
   setGamepadBinding("shoot", 3, 0);
