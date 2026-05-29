@@ -7,14 +7,14 @@
 //     On close, marks dialogue_read.<text>=1 and (if reward set + not yet
 //     collected) adds the reward to inventory and shows a toast.
 
-import { tr } from "./strings.js?v=20260529a";
-import { playSfx } from "./audio.js?v=20260529a";
-import { getValue, setValue, keyMatches } from "./storage.js?v=20260529a";
-import { addAmmo } from "./inventory.js?v=20260529a";
-import { showToast } from "./toast.js?v=20260529a";
-import { getSpecies } from "./species.js?v=20260529a";
-import { matchesAction } from "./keyBindings.js?v=20260529a";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260529a";
+import { tr } from "./strings.js?v=20260529b";
+import { playSfx } from "./audio.js?v=20260529b";
+import { getValue, setValue, keyMatches } from "./storage.js?v=20260529b";
+import { addAmmo } from "./inventory.js?v=20260529b";
+import { showToast } from "./toast.js?v=20260529b";
+import { getSpecies } from "./species.js?v=20260529b";
+import { matchesAction } from "./keyBindings.js?v=20260529b";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260529b";
 
 let root = null;
 let active = null; // { lines, idx, resolve, dialogue }

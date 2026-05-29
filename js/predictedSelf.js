@@ -8,15 +8,15 @@
 // The renderer is updated separately to draw the predicted self in
 // place of the mirror's lagged copy for the guest's own slot.
 
-import { createPlayer, updatePlayer } from "./player.js?v=20260529a";
-import { pollInput, pushInputPress, clearInputHeld, clearInputState, setNetworkHeld, peekInputState } from "./input.js?v=20260529a";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260529a";
-import { getMirrorZone, getMirrorPlayerById, getMirrorPlayers } from "./mirrorWorld.js?v=20260529a";
-import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js?v=20260529a";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260529a";
-import { getValue } from "./storage.js?v=20260529a";
-import { isDialogueOpen } from "./dialogue.js?v=20260529a";
-import { isHostPausedRemote } from "./guestHostPause.js?v=20260529a";
+import { createPlayer, updatePlayer } from "./player.js?v=20260529b";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState, setNetworkHeld, peekInputState } from "./input.js?v=20260529b";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260529b";
+import { getMirrorZone, getMirrorPlayerById, getMirrorPlayers } from "./mirrorWorld.js?v=20260529b";
+import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js?v=20260529b";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260529b";
+import { getValue } from "./storage.js?v=20260529b";
+import { isDialogueOpen } from "./dialogue.js?v=20260529b";
+import { isHostPausedRemote } from "./guestHostPause.js?v=20260529b";
 
 let predicted = null;
 let installed = false;
@@ -60,6 +60,15 @@ const DEBUG_SNAP = typeof window !== "undefined"
   && /[?&]debug=snap\b/.test(window.location?.search || "");
 const SNAP_DEBUG_CAPTURE_THRESHOLD = 3;
 const SNAP_DEBUG_BUFFER_CAP = 16;
+// Continuous trajectory ring. Unlike __sbSnapDebug (which only records
+// once the gap is already >= 3 tiles), this samples EVERY auth message —
+// so the log shows how the divergence *built up*, not just its frozen
+// end-state. The gap between consecutive `t` values is the key tell: a
+// ~1 s jump with no samples in between means deltas stopped arriving
+// (host pause / tab-background / network stall) while predicted ran on.
+// 80 samples covers ~12 s at the normal delta cadence (keepalive deltas
+// keep it sampling even when the host's world is otherwise quiet).
+const SNAP_TRAJECTORY_CAP = 80;
 
 const DEBUG_DIR_VEC = {
   up:    { dx:  0, dy: -1 },
@@ -156,7 +165,10 @@ function onAuth(msg) {
     predicted = makeFromMirror();
     return;
   }
-  if (DEBUG_SNAP) captureDivergence(predicted, auth, msg);
+  if (DEBUG_SNAP) {
+    recordTrajectory(predicted, auth, msg);
+    captureDivergence(predicted, auth, msg);
+  }
   // Reconciliation: snap when the host's tile differs from ours AND
   // the gap isn't just expected RTT lag along our move direction.
   // shouldSnap() decides; see its docstring for the latency-tolerance
@@ -210,6 +222,33 @@ function replayUnackedInputs() {
   // only ever adds — never reflects a release. Re-anchoring to the
   // latest authoritative held set restores the actual two-key state.
   if (lastHeld) setNetworkHeld(1, lastHeld);
+}
+
+// Compact per-auth-message sample appended to window.__sbSnapTrajectory.
+// Keys are terse on purpose — this fires on every delta, so the buffer
+// stays small enough to copy whole. Read it bottom-up alongside
+// __sbSnapDebug: the trajectory shows the lead-up, the captures show the
+// snap. `un` is the unacked-input count; `dlg`/`hp` are the gate flags
+// at sample time so a pause that cleared before the snap is still visible.
+function recordTrajectory(predicted, auth, msg) {
+  if (typeof window === "undefined") return;
+  let buf = window.__sbSnapTrajectory;
+  if (!Array.isArray(buf)) buf = window.__sbSnapTrajectory = [];
+  buf.push({
+    t: Date.now(),
+    op: msg?.op,
+    ax: auth.tileX, ay: auth.tileY, ad: auth.direction,
+    px: predicted.tileX, py: predicted.tileY, pd: predicted.direction,
+    step: predicted.step ? 1 : 0,
+    ddx: Math.abs(auth.tileX - predicted.tileX),
+    ddy: Math.abs(auth.tileY - predicted.tileY),
+    dlg: safeBool(isDialogueOpen) ? 1 : 0,
+    hp: safeBool(isHostPausedRemote) ? 1 : 0,
+    seq: getSeq(),
+    ack: lastAckedSeq,
+    un: getInputLog().length,
+  });
+  while (buf.length > SNAP_TRAJECTORY_CAP) buf.shift();
 }
 
 function captureDivergence(predicted, auth, msg) {

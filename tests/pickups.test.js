@@ -6,7 +6,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadSpeciesData, getSpecies } from "../js/species.js?v=20260529a";
+import { loadSpeciesData, getSpecies } from "../js/species.js?v=20260529b";
 
 const AUTO_PICKUP_TYPES = new Set(["Bundle", "PickableObject", "Bullet"]);
 

@@ -8,15 +8,15 @@
 // runs out of lifespan or leaves the zone bounds; combat.js removes
 // bullets that hit walls or kill targets.
 
-import { getSpecies } from "./species.js?v=20260529a";
-import { getAmmo, removeAmmo } from "./inventory.js?v=20260529a";
-import { playSfx } from "./audio.js?v=20260529a";
-import { resolveLoadout } from "./sessionLoadouts.js?v=20260529a";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260529a";
-import { matchesAction } from "./keyBindings.js?v=20260529a";
-import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
-import { getNetRole } from "./onlineBootstrap.js?v=20260529a";
-import { isPlayerDead } from "./playerHealth.js?v=20260529a";
+import { getSpecies } from "./species.js?v=20260529b";
+import { getAmmo, removeAmmo } from "./inventory.js?v=20260529b";
+import { playSfx } from "./audio.js?v=20260529b";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260529b";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260529b";
+import { matchesAction } from "./keyBindings.js?v=20260529b";
+import { isCoopMode, isCoopActive, COOP_KEYMAPS } from "./coopMode.js?v=20260529b";
+import { getNetRole } from "./onlineBootstrap.js?v=20260529b";
+import { isPlayerDead } from "./playerHealth.js?v=20260529b";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed

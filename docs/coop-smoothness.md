@@ -1,8 +1,8 @@
 # Co-op Motion Smoothness — Design Doc
 
 Status: **multi-key fix shipped 2026-05-28; new bug shape surfaced
-2026-05-29; ?debug=snap capture enriched to disambiguate** (cache-bust
-`20260529a`).
+2026-05-29; ?debug=snap capture enriched again with a continuous
+trajectory ring to catch the buildup** (cache-bust `20260529b`).
 Scope: guest's perceived smoothness of the host's world (and the
 guest's own avatar). Host is unchanged.
 Bar: *"never see stutters unless stuff is actually bad"* — i.e. on a
@@ -10,9 +10,82 @@ healthy network, the guest's view of the host's world must be
 pixel-smooth at 60 fps. Visible chop is allowed only when the network is
 genuinely degraded (real packet loss, real jitter, real RTT spikes).
 
+To grab a log (both buffers in one copy):
+`copy(JSON.stringify({captures: window.__sbSnapDebug, trajectory: window.__sbSnapTrajectory}, null, 2))`
+
 ## Tomorrow-you: start here
 
 Read this section first; the rest is history.
+
+### 2026-05-29 afternoon — frozen-gap log read; trajectory ring added
+
+A second `?debug=snap` log (`c/dev/log.json`, 2 captures from a single
+episode) was read against the doc. It does **not** match either prior
+hypothesis. Shape:
+
+| | auth | predicted | ddx | ddy | dir | hasStep |
+|---|---|---|---|---|---|---|
+| entry 1 | (76, 48) | (75, **43**) | 1 | 5 | both up | true |
+| entry 2 | (76, 48) | (75, **42**) | 1 | 6 | both up | true |
+
+`ddy=6` > `MAX_DIVERGENCE_TILES=5` → entry 2 is the frame that snapped.
+
+**Ruled out by hard evidence:**
+- *Not* the handleIdle chain-restart gap — predicted has `hasStep:true`
+  and advances 43→42. Auth is the one not moving, not predicted. This
+  is the inverse of the events-2-5 shape the gap theory targets.
+- *Not* a blocker — `authFront`'s entity is species **4004**
+  (blackberry monster, `is_rigid:false`); `isEntityBlocked`
+  (`zone.js:135`) skips all non-rigid entities. Melee is damage-only —
+  there is no host-side knockback or movement-stop in this port. The
+  monster is a **red herring**.
+- *Not* dialogue/host-pause at capture time — both `gating.dialogueOpen`
+  and `hostPausedRemote` are `false`.
+- *Not* P1 blocking P2 (`hostMirrorSlot1` at (53,54), far away) and
+  *not* input loss (`currentSeq===lastAckedSeq===261`, unacked 0).
+
+**The shape that remains (two independent offsets):**
+1. A **persistent 1-tile X offset** (predicted col 75, auth col 76)
+   while the player holds *only* "up". Same mirror zone → identical
+   walls → this can only be an **earlier lateral desync** that the
+   5-tile box tolerates. This is exactly the "<5-tile orthogonal
+   offsets aren't auto-corrected" tradeoff flagged at the bottom of
+   this doc.
+2. A **frozen ~5–6 tile Y gap**. With all inputs acked and no blocker,
+   5 tiles isn't RTT (~1 tile). Signature (gap stuck ~5, jittering to
+   6) fits **predicted getting a one-time head start during a ~1 s
+   host stall, then both resuming in lockstep with the gap frozen in**.
+   The stall had cleared by capture time, so the instantaneous captures
+   can't see its cause.
+
+**Why we couldn't close it:** the captures fire only *after* the gap is
+≥3 tiles and are single instants — they show the frozen end-state, not
+the buildup, and the X-offset seed happened off-camera entirely. Three
+stall causes remain indistinguishable from this data: host menu/pause
+(fixable — gate predicted on `!isHostPausedRemote()`, see `main.js:424`,
+which today gates only on `isDialogueOpen()`), host tab-backgrounding,
+or a network delta-gap (acceptable per the bar).
+
+**What shipped (cache-bust `20260529b`):** a continuous trajectory ring
+on `window.__sbSnapTrajectory` (`predictedSelf.recordTrajectory`). It
+samples **every** auth message (not just ≥3-tile gaps) with compact
+keys: `t, op, ax/ay/ad` (auth), `px/py/pd` (predicted), `step, ddx,
+ddy, dlg` (dialogueOpen), `hp` (hostPausedRemote), `seq, ack, un`
+(unacked). 80-sample cap (~12 s). **The gap between consecutive `t`
+values is the decisive tell** — a ~1 s jump with no samples between
+means deltas stopped arriving (host stall) while predicted ran on; a
+smooth `t` cadence the whole time means the gap built from differential
+*stepping* instead, which points back at the X-offset lane desync.
+
+**Next session:** reproduce, copy both buffers (command above), and read
+the trajectory bottom-up:
+- A `t` gap of ~1 s with `dlg`/`hp` flipping `1` then `0` around it →
+  host-pause stall → gate predicted on `!isHostPausedRemote()`.
+- A `t` gap of ~1 s with both flags `0` throughout → tab-background or
+  network stall (check whether "host lagging" overlay fired).
+- Smooth `t` cadence but `ddx` jumps 0→1 at a specific sample → that
+  sample is the lateral desync seed; inspect `ad`/`pd` there for a
+  turn that diverged.
 
 ### 2026-05-29 morning — multi-key fix verified, NEW bug shape
 

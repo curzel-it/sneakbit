@@ -16,12 +16,12 @@
 // (x, y) is the rendered float position. (tileX, tileY) is the canonical
 // integer tile and is the source of truth for collision and snapping.
 
-import { ANIMATIONS_FPS, SPRITE_SHEET_HEROES, STARTING_SPAWN } from "./constants.js?v=20260529a";
-import { isWalkable, isEntityBlocked, hasEnterableTeleporter, isTileSlippery } from "./zone.js?v=20260529a";
-import { playSfx } from "./audio.js?v=20260529a";
-import { findPushableAt, pushOneTile, startSlide } from "./pushables.js?v=20260529a";
-import { findGateAt, tryUnlockGate } from "./gateUnlock.js?v=20260529a";
-import { isCreativeMode } from "./creativeMode.js?v=20260529a";
+import { ANIMATIONS_FPS, SPRITE_SHEET_HEROES, STARTING_SPAWN } from "./constants.js?v=20260529b";
+import { isWalkable, isEntityBlocked, hasEnterableTeleporter, isTileSlippery } from "./zone.js?v=20260529b";
+import { playSfx } from "./audio.js?v=20260529b";
+import { findPushableAt, pushOneTile, startSlide } from "./pushables.js?v=20260529b";
+import { findGateAt, tryUnlockGate } from "./gateUnlock.js?v=20260529b";
+import { isCreativeMode } from "./creativeMode.js?v=20260529b";
 
 // Hero sprites live on the `heroes` sheet at columns (1, 5, 9, 13) — one
 // per player index. Mirrors Rust entities/hero.rs::setup_hero_with_player_index.

@@ -6,8 +6,8 @@
 // kunai pickups by either player feed a single shared pool. Network
 // co-op leaves indices independent — guests own their own inventory.
 
-import { getValue, setValue } from "./storage.js?v=20260529a";
-import { isCoopMode } from "./coopMode.js?v=20260529a";
+import { getValue, setValue } from "./storage.js?v=20260529b";
+import { isCoopMode } from "./coopMode.js?v=20260529b";
 
 // In-memory mirror per player. Lazy-loaded once from storage on first
 // access of any function. We snapshot from storage.js's cache rather

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { loadSpeciesData } = await import("../js/species.js?v=20260529a");
+const { loadSpeciesData } = await import("../js/species.js?v=20260529b");
 
 // Minimal species set: the kunai launcher default + the AR15 (1154 →
 // bullet 1169) and the cannon (1167 → bullet 1170). All four real
@@ -29,7 +29,7 @@ loadSpeciesData([
 
 const { setEquipped, clearEquipped, getEquipped, SLOT_RANGED,
         DEFAULT_RANGED_WEAPON_ID } =
-  await import("../js/equipment.js?v=20260529a");
+  await import("../js/equipment.js?v=20260529b");
 
 test("default ranged weapon is the kunai launcher", () => {
   clearEquipped(SLOT_RANGED);

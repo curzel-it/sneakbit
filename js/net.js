@@ -4,7 +4,7 @@
 // 4001 obsolete and 4003 uuid-conflict bail out). One instance per tab —
 // host and guest share the same module.
 
-import { getOnlineUuid } from "./onlineMode.js?v=20260529a";
+import { getOnlineUuid } from "./onlineMode.js?v=20260529b";
 
 export const PROTOCOL = 1;
 const DEFAULT_DEV_WS = "ws://localhost:8090/ws";

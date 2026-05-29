@@ -20,8 +20,8 @@
 // API continues to operate on index 0 by default so existing call sites
 // keep working until they thread a playerIndex.
 
-import { getSpecies } from "./species.js?v=20260529a";
-import { resolveLoadout } from "./sessionLoadouts.js?v=20260529a";
+import { getSpecies } from "./species.js?v=20260529b";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260529b";
 
 const MAX_HP = 100;
 // Intentional divergence from Rust HERO_RECOVERY_PS=1.0. Block-A playtests
