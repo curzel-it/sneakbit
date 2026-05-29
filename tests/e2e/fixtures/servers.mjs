@@ -1,11 +1,13 @@
-// Spins up the relay (node:http on 8090) and a static server (python3
-// on 8000) for the duration of an e2e test, then tears them down.
+// Spins up the relay (node:http on 8090) and a static server (python or
+// the Node fallback, on 8000) for the duration of an e2e test, then
+// tears them down.
 //
 // Static server: the app is no-build vanilla ES modules, so any static
-// http server can host it. We default to Python (it's on every Mac and
-// every CI image we care about) — but if `python3` isn't found we fall
-// back to a tiny built-in Node static server. The fallback is in
-// `nodeStaticServer.mjs`.
+// http server can host it. We prefer Python (it's on every Mac and every
+// CI image we care about) — trying `python3` then `python` (Windows
+// usually only has the unversioned name) — and fall back to a tiny
+// built-in Node static server if neither binds. The fallback lives in
+// `nodeStaticServer.mjs`. Set STATIC_SERVER=node to force it directly.
 //
 // Ports are configurable per call so multiple tests could in theory run
 // in parallel — though as of writing the test runner is serial.
@@ -30,24 +32,47 @@ async function isPortListening(port, timeoutMs = 4000) {
   return false;
 }
 
+// Resolves true as soon as `port` is listening, or false the moment the
+// process errors (ENOENT — binary missing) / exits / the timeout lapses.
+// The early-out on 'error' is what makes a missing `python3` fall through
+// to the next candidate quickly instead of blocking the full timeout.
+function settleSpawn(proc, port) {
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = (ok) => { if (!done) { done = true; resolve(ok); } };
+    proc.once("error", () => finish(false));
+    proc.once("exit", () => finish(false));
+    isPortListening(port).then(finish);
+  });
+}
+
+async function startStaticServer(staticPort) {
+  const nodeStaticPath = join(HERE, "nodeStaticServer.mjs");
+  const spawnNode = () => spawn(process.execPath, [nodeStaticPath, String(staticPort), REPO_ROOT], { stdio: "ignore" });
+
+  if (process.env.STATIC_SERVER === "node") {
+    if (!existsSync(nodeStaticPath)) throw new Error("STATIC_SERVER=node but nodeStaticServer.mjs is missing");
+    return spawnNode();
+  }
+
+  // Prefer python; fall through to the Node static server if no
+  // interpreter binds. Each candidate is killed before trying the next
+  // so we don't leak a half-started process.
+  for (const cmd of ["python3", "python"]) {
+    const proc = spawn(cmd, ["-m", "http.server", String(staticPort)], { cwd: REPO_ROOT, stdio: "ignore" });
+    proc.on("error", () => { /* swallow ENOENT; settleSpawn already saw it */ });
+    if (await settleSpawn(proc, staticPort)) return proc;
+    try { proc.kill("SIGTERM"); } catch { /* ignore */ }
+  }
+
+  if (!existsSync(nodeStaticPath)) throw new Error("no static server available (python not found, Node fallback missing)");
+  return spawnNode();
+}
+
 export async function startServers({ staticPort = 8000, relayPort = 8090 } = {}) {
   const procs = [];
 
-  // Static server. Prefer python3 (one-liner, no Node-script dance);
-  // fall back to a small Node static server if python is unavailable.
-  let staticProc;
-  if (process.env.STATIC_SERVER !== "node") {
-    try {
-      staticProc = spawn("python3", ["-m", "http.server", String(staticPort)], {
-        cwd: REPO_ROOT, stdio: "ignore",
-      });
-    } catch { /* will fall through */ }
-  }
-  if (!staticProc || staticProc.killed) {
-    const nodeStaticPath = join(HERE, "nodeStaticServer.mjs");
-    if (!existsSync(nodeStaticPath)) throw new Error("no static server available (python3 not found, fallback missing)");
-    staticProc = spawn(process.execPath, [nodeStaticPath, String(staticPort), REPO_ROOT], { stdio: "ignore" });
-  }
+  const staticProc = await startStaticServer(staticPort);
   procs.push(staticProc);
 
   // Relay.

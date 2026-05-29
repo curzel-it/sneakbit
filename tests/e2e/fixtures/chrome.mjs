@@ -1,6 +1,7 @@
 // Headless-Chrome launcher + CDP session helper used by the e2e tests.
 //
-// Chrome path: looks at $CHROME_PATH, then well-known macOS / Linux paths.
+// Chrome path: looks at $CHROME_PATH, then well-known macOS / Linux /
+// Windows paths (Windows also accepts Edge, which is Chromium + CDP).
 // If none resolves the helper returns null — tests use `skipIfNoChrome`
 // to gracefully turn themselves into skips on machines without Chrome
 // (typically CI without a browser). The real workhorse is the CDP
@@ -15,6 +16,19 @@
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { rm } from "node:fs/promises";
+import { join } from "node:path";
+
+// Windows installs Chrome/Edge under the Program Files / LocalAppData
+// roots. Edge is Chromium-based and speaks the same CDP protocol, so it
+// works as a last-resort fallback on machines that only ship Edge.
+function windowsCandidates() {
+  if (process.platform !== "win32") return [];
+  const roots = [process.env.ProgramFiles, process.env["ProgramFiles(x86)"], process.env.LOCALAPPDATA].filter(Boolean);
+  const out = [];
+  for (const r of roots) out.push(join(r, "Google", "Chrome", "Application", "chrome.exe"));
+  for (const r of roots) out.push(join(r, "Microsoft", "Edge", "Application", "msedge.exe"));
+  return out;
+}
 
 const CHROME_CANDIDATES = [
   process.env.CHROME_PATH,
@@ -23,6 +37,7 @@ const CHROME_CANDIDATES = [
   "/usr/bin/google-chrome",
   "/usr/bin/chromium",
   "/usr/bin/chromium-browser",
+  ...windowsCandidates(),
 ].filter(Boolean);
 
 export function findChrome() {
