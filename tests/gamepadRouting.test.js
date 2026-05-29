@@ -45,6 +45,24 @@ test("a held direction emits one press edge, then holds with no repeat", () => {
   assert.deepEqual([...r.held], ["left"]);
 });
 
+test("the stick maps to a single direction by 90° sector (dominant axis)", () => {
+  gp._resetGamepadForTesting();
+  // Pushed down-and-slightly-right: vertical dominates → only "down".
+  setPads(pad(0, { axes: [0.4, 0.9] }));
+  assert.deepEqual([...gp.pollGamepadForSlot(1).held], ["down"]);
+
+  gp._resetGamepadForTesting();
+  // Pushed right-and-slightly-up: horizontal dominates → only "right".
+  setPads(pad(0, { axes: [0.9, -0.4] }));
+  assert.deepEqual([...gp.pollGamepadForSlot(1).held], ["right"]);
+});
+
+test("a stick resting inside the deadzone registers nothing", () => {
+  gp._resetGamepadForTesting();
+  setPads(pad(0, { axes: [0.1, -0.15] })); // jitter, magnitude < 0.25
+  assert.equal(gp.pollGamepadForSlot(1).held.size, 0);
+});
+
 test("d-pad and stick both feed the held set", () => {
   gp._resetGamepadForTesting();
   setPads(pad(0, { buttons: { 13: true } })); // d-pad down

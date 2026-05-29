@@ -12,9 +12,12 @@
 // own client, so only slots 1–2 are ever assigned here.
 //
 // Stick layout: left stick OR d-pad. Either source counts as held; a
-// transition from neutral → direction emits a press event. The
-// horizontal/vertical thresholds match XInput's standard deadzone
-// (0.5) so a thumb resting on the stick doesn't drift the hero.
+// transition from neutral → direction emits a press event. The left
+// stick maps to a single cardinal direction by 90° sector (whichever
+// axis is dominant), so it reads as a clean 4-way pad with no ambiguous
+// diagonals — the right fit for tile-locked movement. A small rest gate
+// (STICK_DEADZONE) only decides "is the stick being pushed at all" so a
+// thumb resting on a noisy stick doesn't drift the hero.
 //
 // Buttons follow the Standard Mapping for an Xbox-style controller:
 //   0 = A    → interact (E)
@@ -25,7 +28,10 @@
 //                                wires through unchanged.
 // D-pad: 12 up / 13 down / 14 left / 15 right.
 
-const STICK_THRESHOLD = 0.5;
+// Minimum stick deflection before it registers at all — just enough to
+// reject rest-state jitter/drift, not a per-direction activation
+// threshold. Past it, the 90° sector (dominant axis) decides direction.
+const STICK_DEADZONE = 0.25;
 
 const DIR_BUTTONS = { 12: "up", 13: "down", 14: "left", 15: "right" };
 const ACTION_BUTTONS = { 0: "interact", 1: "shoot", 2: "melee" };
@@ -92,11 +98,16 @@ export function readPadSnapshotForSlot(slot) {
 
 function buildHeld(pad) {
   const held = new Set();
+  // Left stick → one cardinal direction by 90° sector. Once past the rest
+  // gate, the larger-magnitude axis wins (ties at the 45° diagonal go
+  // horizontal), so the stick never registers two directions at once.
   const [ax, ay] = readAxes(pad);
-  if (ax < -STICK_THRESHOLD) held.add("left");
-  if (ax >  STICK_THRESHOLD) held.add("right");
-  if (ay < -STICK_THRESHOLD) held.add("up");
-  if (ay >  STICK_THRESHOLD) held.add("down");
+  if (Math.hypot(ax, ay) >= STICK_DEADZONE) {
+    if (Math.abs(ax) >= Math.abs(ay)) held.add(ax < 0 ? "left" : "right");
+    else held.add(ay < 0 ? "up" : "down");
+  }
+  // D-pad — discrete buttons, added as-is (a deliberate two-button
+  // diagonal still resolves downstream via HOLD_PRIORITY).
   for (const [idx, dir] of Object.entries(DIR_BUTTONS)) {
     if (pad.buttons[idx]?.pressed) held.add(dir);
   }
