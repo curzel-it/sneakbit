@@ -13,6 +13,8 @@ import { getSkills } from "./skills.js?v=20260529a";
 import { renderInventoryInto } from "./inventoryScreen.js?v=20260529a";
 import { isCreativeMode } from "./creativeMode.js?v=20260529a";
 import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260529a";
+import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, resetGamepadBindings } from "./gamepadBindings.js?v=20260529a";
+import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js?v=20260529a";
 import { isCoopMode, isCoopActive } from "./coopMode.js?v=20260529a";
 import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260529a";
 import { invalidateZoneCache } from "./data.js?v=20260529a";
@@ -41,10 +43,27 @@ let screen = "pause"; // "pause" | "settings" | "skills" | "credits" | "inventor
 // tab is only visible when local co-op is on (no point rebinding P2 if
 // they're not spawned). 0 = P1, 1 = P2.
 let controlsPlayer = 0;
+// Which input device the Key Bindings screen is editing: "keyboard"
+// (keyBindings.js) or "controller" (gamepadBindings.js).
+let controlsDevice = "keyboard";
 // While non-null, we're listening for the next keypress to rebind an
 // action. The captured binding is written via setBinding(action, slot,
 // code, playerIndex).
 let rebindCapture = null; // { action, slot, playerIndex } | null
+// While non-null, a controller rebind is capturing the next button press
+// via a requestAnimationFrame poll of the player's pad.
+let padCapture = null; // { action, playerIndex, btn, prev, raf } | null
+
+// Standard-Mapping button labels for the controller bindings UI.
+const PAD_BUTTON_LABELS = {
+  0: "A", 1: "B", 2: "X", 3: "Y", 4: "LB", 5: "RB", 6: "LT", 7: "RT",
+  8: "Back", 9: "Start", 10: "LS", 11: "RS",
+  12: "D-Up", 13: "D-Down", 14: "D-Left", 15: "D-Right", 16: "Guide",
+};
+function padButtonLabel(idx) {
+  if (idx == null || idx < 0) return "—";
+  return PAD_BUTTON_LABELS[idx] || `Button ${idx}`;
+}
 // Optional getter the host wires in at install time. Provides access to
 // the live game state (rawZone + current zone id) without coupling the
 // menu module to main.js. Returns null when no state is wired or when
@@ -117,12 +136,16 @@ export function installMenu(stateGetter) {
     </div>
     <div class="menu-card" data-screen="controls">
       <h1>Key Bindings</h1>
+      <div class="menu-tabs" id="menu-controls-device">
+        <button class="menu-tab" data-device="keyboard">Keyboard</button>
+        <button class="menu-tab" data-device="controller">Controller</button>
+      </div>
       <div class="menu-tabs" id="menu-controls-tabs">
         <button class="menu-tab" data-player="0">Player 1</button>
         <button class="menu-tab" data-player="1">Player 2</button>
       </div>
       <ul class="menu-controls-list" id="menu-controls-list"></ul>
-      <p class="menu-hint">
+      <p class="menu-hint" id="menu-controls-hint">
         Click a binding and press the key you want to use. Esc cancels capture.
       </p>
       <div class="menu-row menu-controls">
@@ -194,6 +217,12 @@ export function installMenu(stateGetter) {
     // hijack the keystroke as a menu toggle. Esc still backs out of
     // the capture itself (handled in the rebinding flow below).
     if (rebindCapture) return;
+    // A controller rebind is waiting for a button — Esc cancels it
+    // (instead of toggling the menu), any other key is ignored.
+    if (padCapture) {
+      if (e.code === "Escape") { e.preventDefault(); cancelPadCapture(); renderControlsList(); }
+      return;
+    }
     if (!matchesAction("menu", e.code) && e.code !== "Escape") return;
     // If another modal already owns Esc (game over, fast travel, message,
     // dialogue, party panel) let that modal handle the keystroke. Without
@@ -253,6 +282,7 @@ function openMenu() {
 
 function closeMenu() {
   open = false;
+  cancelPadCapture();
   root.style.display = "none";
   playSfx("hintReceived", { volume: 0.5 });
 }
@@ -266,14 +296,20 @@ function showScreen(next) {
   if (next === "skills") syncSkillsWidgets();
   if (next === "inventory") renderInventoryInto(root.querySelector("#menu-inventory-body"));
   if (next === "controls") renderControlsList();
-  if (next !== "controls") cancelRebindCapture();
+  if (next !== "controls") { cancelRebindCapture(); cancelPadCapture(); }
 }
 
 function renderControlsList() {
+  const device = root.querySelector("#menu-controls-device");
+  if (device) {
+    for (const b of device.querySelectorAll(".menu-tab")) {
+      b.classList.toggle("active", b.dataset.device === controlsDevice);
+    }
+  }
   const tabs = root.querySelector("#menu-controls-tabs");
   if (tabs) {
     // Hide the P2 tab outside of local co-op — when there's no second
-    // player avatar, rebinding their keys would just persist defaults
+    // player avatar, rebinding their controls would just persist defaults
     // nobody can trigger.
     const coop = isCoopMode();
     tabs.style.display = coop ? "" : "none";
@@ -283,6 +319,17 @@ function renderControlsList() {
       b.classList.toggle("active", idx === controlsPlayer);
     }
   }
+  const hint = root.querySelector("#menu-controls-hint");
+  if (hint) {
+    hint.textContent = controlsDevice === "controller"
+      ? "Click a binding and press the controller button you want to use. Esc cancels. Movement stays on the stick / d-pad."
+      : "Click a binding and press the key you want to use. Esc cancels capture.";
+  }
+  if (controlsDevice === "controller") renderControllerList();
+  else renderKeyboardList();
+}
+
+function renderKeyboardList() {
   const list = root.querySelector("#menu-controls-list");
   if (!list) return;
   const actions = controlsPlayer === 1 ? ACTIONS_P2 : ACTIONS;
@@ -299,6 +346,22 @@ function renderControlsList() {
   }
 }
 
+function renderControllerList() {
+  const list = root.querySelector("#menu-controls-list");
+  if (!list) return;
+  const actions = controlsPlayer === 1 ? GAMEPAD_ACTIONS_P2 : GAMEPAD_ACTIONS;
+  list.innerHTML = actions.map((a) => {
+    const idx = buttonFor(a.id, controlsPlayer);
+    return `<li>
+      <span class="menu-controls-label">${a.label}</span>
+      <button class="menu-controls-key" data-action="${a.id}">${padButtonLabel(idx)}</button>
+    </li>`;
+  }).join("");
+  for (const btn of list.querySelectorAll(".menu-controls-key")) {
+    btn.addEventListener("click", () => beginPadCapture(btn));
+  }
+}
+
 function formatCode(code) {
   if (!code) return "—";
   // Browser KeyboardEvent.code values like "KeyA", "ArrowUp", "Digit1".
@@ -310,6 +373,7 @@ function formatCode(code) {
 
 function beginRebindCapture(btn) {
   cancelRebindCapture();
+  cancelPadCapture();
   rebindCapture = {
     action: btn.dataset.action,
     slot: parseInt(btn.dataset.slot, 10),
@@ -339,6 +403,51 @@ function cancelRebindCapture() {
   window.removeEventListener("keydown", onCaptureKeydown, true);
   // Re-render so a cancelled button reverts to its old label.
   if (screen === "controls") renderControlsList();
+}
+
+// Controller rebind: poll the player's pad for the next button press and
+// bind it. We snapshot the buttons held at click time and wait for one
+// that wasn't already down, so a button still pressed from navigating
+// here doesn't bind instantly. setGamepadCapturing(true) keeps that press
+// from also firing the action / popping the menu.
+function beginPadCapture(btn) {
+  cancelRebindCapture();
+  cancelPadCapture();
+  const slot = controlsPlayer + 1;
+  padCapture = {
+    action: btn.dataset.action,
+    playerIndex: controlsPlayer,
+    btn,
+    prev: pressedButtonsForSlot(slot),
+    raf: 0,
+  };
+  btn.classList.add("capturing");
+  btn.textContent = "Press a button…";
+  setGamepadCapturing(true);
+  const tick = () => {
+    if (!padCapture) return;
+    const now = pressedButtonsForSlot(padCapture.playerIndex + 1);
+    for (const b of now) {
+      if (!padCapture.prev.has(b)) {
+        const { action, playerIndex } = padCapture;
+        setGamepadBinding(action, b, playerIndex);
+        cancelPadCapture();
+        renderControlsList();
+        return;
+      }
+    }
+    padCapture.prev = now;
+    padCapture.raf = requestAnimationFrame(tick);
+  };
+  padCapture.raf = requestAnimationFrame(tick);
+}
+
+function cancelPadCapture() {
+  if (!padCapture) return;
+  if (padCapture.raf) cancelAnimationFrame(padCapture.raf);
+  padCapture.btn?.classList.remove("capturing");
+  padCapture = null;
+  setGamepadCapturing(false);
 }
 
 const SKILL_LABELS = [
@@ -377,16 +486,30 @@ function bindWidgets() {
   root.querySelector("#menu-controls-back").addEventListener("click", () => showScreen("settings"));
   root.querySelector("#menu-controls-reset").addEventListener("click", () => {
     const who = controlsPlayer === 1 ? "Player 2's" : "Player 1's";
-    if (!confirm(`Reset ${who} key bindings to their defaults?`)) return;
-    resetBindings(controlsPlayer);
+    const what = controlsDevice === "controller" ? "controller bindings" : "key bindings";
+    if (!confirm(`Reset ${who} ${what} to their defaults?`)) return;
+    if (controlsDevice === "controller") resetGamepadBindings(controlsPlayer);
+    else resetBindings(controlsPlayer);
     renderControlsList();
   });
+  const device = root.querySelector("#menu-controls-device");
+  if (device) {
+    for (const btn of device.querySelectorAll(".menu-tab")) {
+      btn.addEventListener("click", () => {
+        controlsDevice = btn.dataset.device === "controller" ? "controller" : "keyboard";
+        cancelRebindCapture();
+        cancelPadCapture();
+        renderControlsList();
+      });
+    }
+  }
   const tabs = root.querySelector("#menu-controls-tabs");
   if (tabs) {
     for (const btn of tabs.querySelectorAll(".menu-tab")) {
       btn.addEventListener("click", () => {
         controlsPlayer = parseInt(btn.dataset.player, 10) | 0;
         cancelRebindCapture();
+        cancelPadCapture();
         renderControlsList();
       });
     }
