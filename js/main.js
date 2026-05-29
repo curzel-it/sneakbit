@@ -57,7 +57,7 @@ import { bootstrapOnline, onAnyClose } from "./onlineBootstrap.js?v=20260529d";
 import { getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead, refreshMirrorEntities } from "./mirrorWorld.js?v=20260529d";
 import { tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js?v=20260529d";
 import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260529d";
-import { installPartyPanel } from "./partyPanel.js?v=20260529d";
+import { installPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260529d";
 import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js?v=20260529d";
 import { setHostPaused } from "./hostPauseState.js?v=20260529d";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js?v=20260529d";
@@ -229,7 +229,7 @@ async function main() {
       tickGuestFrame(dt, state, renderer, hud, biomeAnim);
       return;
     }
-    const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen();
+    const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen();
     // Tell guests when our local sim is frozen so their overlay can
     // show "Host paused the game" instead of the generic "Host
     // lagging…" — the no-op-when-not-host gate in setHostPaused keeps

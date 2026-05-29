@@ -629,6 +629,7 @@ function injectStyles() {
       position: fixed; inset: 0;
       display: none; align-items: center; justify-content: center;
       background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(2px);
       z-index: 21; color: #eee; font-family: monospace;
     }
     .party-card {
