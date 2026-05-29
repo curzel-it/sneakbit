@@ -9,7 +9,7 @@
 // This is the JS port of what the todo.md calls "ranged monsters" —
 // the only attack-from-range mechanic shipped in the Rust core's data.
 
-import { getSpecies } from "./species.js?v=20260529a";
+import { getSpecies } from "./species.js?v=20260529e";
 
 const BOSS_SPECIES_ID = 4008;
 const MIN_SPAWN_DISTANCE = 3.5;        // tiles between boss centre and player centre

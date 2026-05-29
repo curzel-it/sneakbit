@@ -9,7 +9,7 @@
 // can pass any slot freely: a remote guest's damage/no-ammo (resolved on
 // the host for slots 3/4) simply finds no host-local pad and stays quiet.
 
-import { getPadIndexForSlot } from "./gamepad.js?v=20260529a";
+import { getPadIndexForSlot } from "./gamepad.js?v=20260529e";
 
 const PRESETS = {
   hurt:   { duration: 200, strongMagnitude: 0.85, weakMagnitude: 0.6 },

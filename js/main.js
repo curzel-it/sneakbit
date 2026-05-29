@@ -1,71 +1,71 @@
 // Entry point. Wires features together; holds no game logic itself.
 
-import { STARTING_ZONE_ID, STARTING_SPAWN } from "./constants.js?v=20260529a";
-import { loadAssets } from "./assets.js?v=20260529a";
-import { loadSpecies, loadStrings, loadZone } from "./data.js?v=20260529a";
-import { loadStringsData, tr } from "./strings.js?v=20260529a";
-import { installDialogue, isDialogueOpen } from "./dialogue.js?v=20260529a";
-import { installInteract, tickInteract, tryInteractForSlot } from "./interact.js?v=20260529a";
-import { loadSpeciesData } from "./species.js?v=20260529a";
-import { composeBiomeSheet } from "./biomeSheet.js?v=20260529a";
-import { buildZone } from "./zone.js?v=20260529a";
-import { pickCoopSpawn } from "./coopSpawn.js?v=20260529a";
-import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress } from "./input.js?v=20260529a";
-import { createPlayer, updatePlayer } from "./player.js?v=20260529a";
-import { createCamera, updateCamera } from "./camera.js?v=20260529a";
-import { createRenderer, render } from "./renderer.js?v=20260529a";
-import { startGameLoop } from "./gameLoop.js?v=20260529a";
-import { createBiomeAnimation, tickBiomeAnimation } from "./biomeAnimation.js?v=20260529a";
-import { tickEntities } from "./entities.js?v=20260529a";
-import { installAutoZoom } from "./zoom.js?v=20260529a";
-import { installHud, updateHud } from "./hud.js?v=20260529a";
-import { loadAudio } from "./audio.js?v=20260529a";
-import { loadSettings, getSettings } from "./settings.js?v=20260529a";
-import { installMenu, isMenuOpen } from "./menu.js?v=20260529a";
-import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js?v=20260529a";
-import { checkPickup } from "./pickups.js?v=20260529a";
-import { installMusic, playTrack } from "./music.js?v=20260529a";
-import { installTouchControls } from "./touch.js?v=20260529a";
-import { installToast, showToast } from "./toast.js?v=20260529a";
-import { installShooting, tickShooting, tryShoot, tryShootForSlot } from "./shooting.js?v=20260529a";
-import { installMelee, tickMelee, tryMelee, tryMeleeForSlot } from "./melee.js?v=20260529a";
-import { setGamepadAction } from "./gamepad.js?v=20260529a";
-import { pollGuestGamepad } from "./guestInputForwarder.js?v=20260529a";
-import { installActiveInputDevice } from "./activeInputDevice.js?v=20260529a";
-import { installControllerPresence, isControllerPaused } from "./controllerPresence.js?v=20260529a";
-import { installAmmoHud, updateAmmoHud } from "./ammoHud.js?v=20260529a";
-import { tickMobs } from "./mobs.js?v=20260529a";
-import { tickMonsterFusion } from "./monsters.js?v=20260529a";
-import { tickMinionSpawning } from "./minions.js?v=20260529a";
-import { tickCombat } from "./combat.js?v=20260529a";
-import { tickAfterDialogue } from "./afterDialogue.js?v=20260529a";
-import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js?v=20260529a";
-import { installHealthHud, refreshHealthHud } from "./healthHud.js?v=20260529a";
-import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js?v=20260529a";
-import { installMessage, isMessageOpen } from "./message.js?v=20260529a";
-import { installFastTravel, isFastTravelOpen, tickFastTravel, markVisited } from "./fastTravel.js?v=20260529a";
-import { applyFirstLaunch } from "./firstLaunch.js?v=20260529a";
-import { loadProgress, saveProgress, clearProgress } from "./save.js?v=20260529a";
-import { getZoneCache } from "./zoneCache.js?v=20260529a";
-import { setupPuzzles, tickPuzzles } from "./puzzles.js?v=20260529a";
-import { setupCutscenes, tickCutscenes } from "./cutscenes.js?v=20260529a";
-import { tickTrails } from "./trails.js?v=20260529a";
-import { tickPushables } from "./pushables.js?v=20260529a";
-import { updateVisibleEntities } from "./zoneVisibility.js?v=20260529a";
-import { isCoopMode, setCoopMode, setLocalPlayerCount, localPlayerCount } from "./coopMode.js?v=20260529a";
-import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js?v=20260529a";
-import { runMigrations } from "./migrations.js?v=20260529a";
-import { installMapEditor } from "./mapEditor.js?v=20260529a";
-import { bootstrapOnline, onAnyClose } from "./onlineBootstrap.js?v=20260529a";
-import { getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead, refreshMirrorEntities } from "./mirrorWorld.js?v=20260529a";
-import { tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js?v=20260529a";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260529a";
-import { installPartyPanel } from "./partyPanel.js?v=20260529a";
-import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js?v=20260529a";
-import { setHostPaused } from "./hostPauseState.js?v=20260529a";
-import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js?v=20260529a";
-import { switchRole, setStateHandlers } from "./switchRole.js?v=20260529a";
-import { installUiTokens } from "./uiTokens.js?v=20260529a";
+import { STARTING_ZONE_ID, STARTING_SPAWN } from "./constants.js?v=20260529e";
+import { loadAssets } from "./assets.js?v=20260529e";
+import { loadSpecies, loadStrings, loadZone } from "./data.js?v=20260529e";
+import { loadStringsData, tr } from "./strings.js?v=20260529e";
+import { installDialogue, isDialogueOpen } from "./dialogue.js?v=20260529e";
+import { installInteract, tickInteract, tryInteractForSlot } from "./interact.js?v=20260529e";
+import { loadSpeciesData } from "./species.js?v=20260529e";
+import { composeBiomeSheet } from "./biomeSheet.js?v=20260529e";
+import { buildZone } from "./zone.js?v=20260529e";
+import { pickCoopSpawn } from "./coopSpawn.js?v=20260529e";
+import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress } from "./input.js?v=20260529e";
+import { createPlayer, updatePlayer } from "./player.js?v=20260529e";
+import { createCamera, updateCamera, cameraRectFor } from "./camera.js?v=20260529e";
+import { createRenderer, render } from "./renderer.js?v=20260529e";
+import { startGameLoop } from "./gameLoop.js?v=20260529e";
+import { createBiomeAnimation, tickBiomeAnimation } from "./biomeAnimation.js?v=20260529e";
+import { tickEntities } from "./entities.js?v=20260529e";
+import { installAutoZoom } from "./zoom.js?v=20260529e";
+import { installHud, updateHud } from "./hud.js?v=20260529e";
+import { loadAudio } from "./audio.js?v=20260529e";
+import { loadSettings, getSettings } from "./settings.js?v=20260529e";
+import { installMenu, isMenuOpen } from "./menu.js?v=20260529e";
+import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js?v=20260529e";
+import { checkPickup } from "./pickups.js?v=20260529e";
+import { installMusic, playTrack } from "./music.js?v=20260529e";
+import { installTouchControls } from "./touch.js?v=20260529e";
+import { installToast, showToast } from "./toast.js?v=20260529e";
+import { installShooting, tickShooting, tryShoot, tryShootForSlot } from "./shooting.js?v=20260529e";
+import { installMelee, tickMelee, tryMelee, tryMeleeForSlot } from "./melee.js?v=20260529e";
+import { setGamepadAction } from "./gamepad.js?v=20260529e";
+import { pollGuestGamepad } from "./guestInputForwarder.js?v=20260529e";
+import { installActiveInputDevice } from "./activeInputDevice.js?v=20260529e";
+import { installControllerPresence, isControllerPaused } from "./controllerPresence.js?v=20260529e";
+import { installAmmoHud, updateAmmoHud } from "./ammoHud.js?v=20260529e";
+import { tickMobs } from "./mobs.js?v=20260529e";
+import { tickMonsterFusion } from "./monsters.js?v=20260529e";
+import { tickMinionSpawning } from "./minions.js?v=20260529e";
+import { tickCombat } from "./combat.js?v=20260529e";
+import { tickAfterDialogue } from "./afterDialogue.js?v=20260529e";
+import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js?v=20260529e";
+import { installHealthHud, refreshHealthHud } from "./healthHud.js?v=20260529e";
+import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js?v=20260529e";
+import { installMessage, isMessageOpen } from "./message.js?v=20260529e";
+import { installFastTravel, isFastTravelOpen, tickFastTravel, markVisited } from "./fastTravel.js?v=20260529e";
+import { applyFirstLaunch } from "./firstLaunch.js?v=20260529e";
+import { loadProgress, saveProgress, clearProgress } from "./save.js?v=20260529e";
+import { getZoneCache } from "./zoneCache.js?v=20260529e";
+import { setupPuzzles, tickPuzzles } from "./puzzles.js?v=20260529e";
+import { setupCutscenes, tickCutscenes } from "./cutscenes.js?v=20260529e";
+import { tickTrails } from "./trails.js?v=20260529e";
+import { tickPushables } from "./pushables.js?v=20260529e";
+import { updateVisibleEntities } from "./zoneVisibility.js?v=20260529e";
+import { isCoopMode, setCoopMode, setLocalPlayerCount, localPlayerCount } from "./coopMode.js?v=20260529e";
+import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js?v=20260529e";
+import { runMigrations } from "./migrations.js?v=20260529e";
+import { installMapEditor } from "./mapEditor.js?v=20260529e";
+import { bootstrapOnline, onAnyClose } from "./onlineBootstrap.js?v=20260529e";
+import { getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead, refreshMirrorEntities } from "./mirrorWorld.js?v=20260529e";
+import { tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js?v=20260529e";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260529e";
+import { installPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260529e";
+import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js?v=20260529e";
+import { setHostPaused } from "./hostPauseState.js?v=20260529e";
+import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js?v=20260529e";
+import { switchRole, setStateHandlers } from "./switchRole.js?v=20260529e";
+import { installUiTokens } from "./uiTokens.js?v=20260529e";
 
 // Live game state. Module-level so switchRole's state-handlers (and the
 // beforeunload listener / window.save shim) can read and mutate it
@@ -235,7 +235,7 @@ async function main() {
 
   // 4005 = "kicked by host". net.js already suppresses auto-reconnect on
   // this code; here we surface the UX side (toast + drop back to
-  // offline). Per docs/server.md §Close codes.
+  // offline). Per docs/online-coop.md §Close codes.
   onAnyClose(({ code }) => {
     if (code !== 4005) return;
     showToast("You were removed from the session", "longHint");
@@ -260,19 +260,33 @@ async function main() {
       tickGuestFrame(dt, state, renderer, hud, biomeAnim);
       return;
     }
-    const paused = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen() || isControllerPaused();
+    // Pause is offline / local co-op only: freeze the sim on any overlay
+    // (menu, dialogue, party panel, …) or when the active controller drops.
+    // Hosting never freezes the shared world for a local overlay — that
+    // would strand guests in a dead zone — so the gate is role-aware.
+    const overlayOpen = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen();
+    const paused = (overlayOpen || isControllerPaused()) && getRuntimeRole() !== "host";
     // Tell guests when our local sim is frozen so their overlay can
     // show "Host paused the game" instead of the generic "Host
     // lagging…" — the no-op-when-not-host gate in setHostPaused keeps
-    // this cheap in offline / local-coop.
+    // this cheap in offline / local-coop. With the host-online carve-out
+    // above this only fires now on a genuine host stall, not a menu.
     setHostPaused(paused);
     const input = pollInput();
     if (!paused) {
+      // Online-host + overlay open: the sim keeps running (so guests
+      // aren't stranded in a frozen zone), but the host's OWN avatar must
+      // not wander off behind the dialog — feed it a neutral input. The
+      // network-driven guest slots below keep their live wire input, so
+      // guests can still move around while the host sits in a menu.
+      // Offline / local co-op never reaches here with an overlay open
+      // (that's `paused` → the else branch), so this is host-online only.
+      const hostInput = overlayOpen ? { events: [], held: new Set() } : input;
       // Skip the per-player update for dead avatars — pollInput still
       // drains their event queue, so a held key doesn't flood the
       // player on revive. Without this gate a "dead-but-waiting" host
       // would silently walk around invisibly while spectating guests.
-      if (!isPlayerDead(0)) updatePlayer(state.player, input, dt, state.zone);
+      if (!isPlayerDead(0)) updatePlayer(state.player, hostInput, dt, state.zone);
       if (state.player2) {
         const input2 = pollInput(2);
         if (!isPlayerDead(state.player2.index | 0)) {
@@ -286,14 +300,14 @@ async function main() {
         }
       }
       maybeTeleport(state);
-      // Camera averages every live player so co-op players stay on screen.
-      // Dead co-op players drop out of the average so the camera doesn't
-      // anchor to where they fell. Single-player still passes one target.
-      // For online hosts the camera only follows the host (each guest has
-      // their own viewport via their mirror).
-      const liveForCamera = livePlayersForCamera(state);
-      updateCamera(state.camera, liveForCamera, state.zone);
-      updateVisibleEntities(state.zone, state.camera);
+      // Offline / local co-op: the camera averages every live player so
+      // co-op players stay on one shared screen (dead players drop out of
+      // the average). Online hosts instead follow only the host avatar —
+      // each guest renders an independent window centred on themselves, so
+      // the host's own window tracks the host. simulationViewports keeps
+      // every off-camera guest's region alive (see below).
+      updateCamera(state.camera, hostCameraTarget(state), state.zone);
+      updateVisibleEntities(state.zone, simulationViewports(state));
       tickShooting(dt);
       tickMelee(dt);
       tickMobs(state.zone, allPlayers(state), dt);
@@ -318,7 +332,8 @@ async function main() {
       // When paused, keep the camera tracking the player so on resume
       // there's no jolt, but don't bother re-running the visibility pass
       // (the entity ticks are gated by `paused` above and won't read it).
-      updateCamera(state.camera, livePlayersForCamera(state), state.zone);
+      // Same follow-self-vs-averaged rule as the unpaused branch.
+      updateCamera(state.camera, hostCameraTarget(state), state.zone);
     }
     tickBiomeAnimation(biomeAnim, dt);
     tickEntities(dt);
@@ -480,11 +495,16 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
     updateHud(hud, { zoneId: mZone.id, fps: 1 / dt, showFps: getSettings().showFps });
     return;
   }
-  // Shared-camera rule, same as host/local co-op: average every mirrored
-  // player so they all stay on screen. Earlier we picked just the self
-  // here, but a guest who walked off-screen could drift into regions
-  // the host wasn't simulating in view.
-  updateCamera(state.camera, renderPlayers, mZone);
+  // Follow-self camera: the guest's window tracks the guest's own avatar,
+  // so two players can explore different parts of the same zone. This was
+  // unsafe before — a guest wandering off-screen drifted into regions the
+  // host wasn't simulating — but the host now simulates a viewport per
+  // player (simulationViewports), so the guest's surroundings stay live.
+  // Falls back to the averaged-live list until the predicted self exists
+  // (early session) so the camera never snaps to nowhere.
+  const self = getPredictedSelf();
+  const camTarget = self ? [self] : liveGuestCameraPlayers(renderPlayers, mPlayers);
+  updateCamera(state.camera, camTarget, mZone);
   updateVisibleEntities(mZone, state.camera);
   render(renderer, mZone, state.camera, renderPlayers, biomeAnim.frame);
   updateHud(hud, {
@@ -501,23 +521,35 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
 
 // Swap the mirror's copy of the guest's own avatar with predictedSelf so
 // the local input → render path is round-trip-free. Everyone else stays
-// interpolated.
+// interpolated. The self is placed FIRST so it lands at player[0], which
+// render() uses as the deterministic centre for the CantSeeShit light
+// cone — with a follow-self camera the cone must track the self, not
+// whichever player happened to come first in mirror order.
 function buildGuestRenderPlayers(mPlayers) {
   const selfId = getSelfPlayerId();
   const predicted = getPredictedSelf();
   if (!selfId || !predicted) return mPlayers;
-  const out = [];
-  let injected = false;
+  const out = [predicted];
   for (const p of mPlayers) {
-    if (p.playerId === selfId) {
-      out.push(predicted);
-      injected = true;
-    } else {
-      out.push(p);
-    }
+    if (p.playerId !== selfId) out.push(p);
   }
-  if (!injected) out.push(predicted);
   return out;
+}
+
+// Camera input for the guest: the render list minus dead players, so a
+// downed co-op partner stops dragging the shared centre toward its
+// tombstone. Deadness comes from the mirror's per-player hp (synced by
+// the host). The predicted self carries no hp, so we read the self's hp
+// from the matching mirror entry by playerId. If everyone's dead we fall
+// back to the full list so the camera doesn't snap to nowhere.
+function liveGuestCameraPlayers(renderPlayers, mPlayers) {
+  const deadIds = new Set();
+  for (const p of mPlayers) {
+    if (typeof p.hp === "number" && p.hp <= 0) deadIds.add(p.playerId);
+  }
+  if (!deadIds.size) return renderPlayers;
+  const live = renderPlayers.filter((p) => !deadIds.has(p.playerId));
+  return live.length ? live : renderPlayers;
 }
 
 // Build the co-op second player. Mirrors Rust world_setup.rs's
@@ -752,6 +784,32 @@ function livePlayersForCamera(state) {
   // If everyone's dead the camera freezes on P1's last position so the
   // Game Over overlay doesn't snap to (0, 0).
   return live.length ? live : (state.player ? [state.player] : []);
+}
+
+// Who the host's window follows. Online hosts track only their own
+// avatar (guests have their own independent windows); offline / local
+// co-op keep the shared averaged camera so split-keyboard partners stay
+// on one screen.
+function hostCameraTarget(state) {
+  if (getRuntimeRole() === "host") return state.player;
+  return livePlayersForCamera(state);
+}
+
+// Which viewports the host simulates. Offline / local co-op gate entity
+// ticks to the single shared camera, exactly as before. Online hosts
+// also union a camera-sized rect centred on each off-camera guest, so a
+// guest who wandered away from the host doesn't walk into frozen mobs /
+// pickups the host wasn't ticking. Returns a single camera (legacy path)
+// or an array; updateVisibleEntities accepts both.
+function simulationViewports(state) {
+  if (getRuntimeRole() !== "host") return state.camera;
+  const cams = [state.camera];
+  const { w, h } = state.camera;
+  for (const p of allPlayers(state)) {
+    if (p === state.player) continue;
+    cams.push(cameraRectFor(p, w, h));
+  }
+  return cams;
 }
 
 // What the renderer draws on the host/offline screen. Dead avatars are

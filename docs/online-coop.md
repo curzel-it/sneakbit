@@ -2,7 +2,7 @@
 
 The online co-op design. One player is the **host** and runs the existing single-player game unchanged; up to three **guests** join the host's world via a thin relay. The same architecture covers desktop split-screen via a native wrapper that bundles the relay on `127.0.0.1` — no special-case "local-only" code path.
 
-This document is the authoritative spec for online co-op. If `README.md`, `CLAUDE.md`, or code comments disagree, this wins.
+This document is the authoritative spec for online co-op — design, wire protocol, WebRTC transport, and the motion-smoothness / prediction model (final section). If `README.md`, `CLAUDE.md`, or code comments disagree, this wins.
 
 > **Contributors:** every operational example below uses `sneakbit.curzel.it`
 > — that's the maintainer's production relay. **Swap it for your own
@@ -523,6 +523,70 @@ H → snapshot (full, fresh)
 - **Ops:** relay live at `https://sneakbit.curzel.it/ws` (nginx reverse proxy, systemd unit `sneakbit-server`, TLS via certbot). Health endpoint `/health` returns "ok"; WS upgrade through nginx verified end-to-end; origin allowlist verified against prod. Restartborgo.it co-tenant protected by `deploy.py`'s final health gate.
 
 **Remaining:** see `todo.md` for the live punch list — server polish (structured logging, `/metrics`, `/version`, `LOG_LEVEL`, SIGTERM drain, full UUID validation, intent cheat-resistance), client polish (action-intent buffering on reconnect, snapshot delta signature tightening, mirror animation phase alignment, mirror resync op), and ops smoke tests (WS-upgrade health check inside `deploy.py`, full session suite against `wss://sneakbit.curzel.it/ws`).
+
+# Motion smoothness, prediction & reconciliation
+
+The bar: **on a healthy network the guest's view is pixel-smooth at 60 fps; visible chop is allowed only when the network (or the host's world) is genuinely degraded.** This section is the durable record of how that's achieved and the decisions behind it. (Originally a standalone `coop-smoothness.md`; folded in here. The full blow-by-blow diagnostic history lives in git.)
+
+## Wire-shape decisions that drive smoothness
+
+- **`sigPlayer` omits `x`/`y`** (`snapshotBroadcaster.js`). A player's change signature is `tileX|tileY|direction|moving|hp|slot`. During a 220 ms tile-step the floats slide every host tick but the tile doesn't, so signing on `x/y` would emit ~5 records/step. Omitting them means a moving avatar emits only **2 deltas per step** (moving=true at step start; new tile at step end) and the mirror reconstructs the float path by lerp + extrapolation. Do **not** re-add `x/y` to the sig — the receive-cadence approach is the deliberate bandwidth/smoothness trade.
+- **Every delta and keepalive carries *all* players' positions** (`playerDeltas` returns `{ changed, all }`; the sig-diff still gates *whether* a delta fires, the payload is always `all`). This is load-bearing: a player stuck against a blocker on the host has a frozen sig and would otherwise be filtered out of deltas, and during quiescence the host emits keepalives. Without the position in those frames the guest's reconciliation never runs and `predictedSelf` runs away unbounded (a 24-tile snap was observed before this fix). Players are a handful of bytes; **entities keep their changed-only treatment** — they're the bandwidth bulk.
+- **Keepalive cadence** = `KEEPALIVE_TICKS` (4) × `BROADCAST_INTERVAL_MS` (50 ms) = ~200 ms during a quiescent world. That's also the worst-case reconciliation interval, which bounds a stuck-avatar snap to ~1 tile past tolerance (~6 tiles).
+
+## Predicted-self reconciliation (final shape)
+
+`predictedSelf` is an in-process copy of the guest's own avatar that consumes local input immediately (zero perceived latency) and reconciles against the host's authoritative tile on every snapshot/delta.
+
+```js
+const MAX_DIVERGENCE_TILES = 5;
+function shouldSnap(predicted, auth) {
+  if (predicted.tileX === auth.tileX && predicted.tileY === auth.tileY) return false;
+  if (Math.abs(auth.tileX - predicted.tileX) > MAX_DIVERGENCE_TILES) return true;
+  if (Math.abs(auth.tileY - predicted.tileY) > MAX_DIVERGENCE_TILES) return true;
+  return false;
+}
+```
+
+- **Per-axis tile-distance box, nothing else.** Earlier versions projected `(auth − predicted)` onto `predicted.direction` (a cross-product orthogonality test). That snapped on *every turn*: while walking down, auth lags ~1 tile on the down axis (normal RTT shape); the instant you turn right, `predicted.direction` flips and that same lag reads as an orthogonal hit. Removed entirely. L-shaped lag from a turn (small on both axes) is now absorbed.
+- **On snap:** overwrite predicted tile/x/y/direction, null the step, then **replay the unacked input log** so the snap-back doesn't undo a key the user is still holding. The replay re-anchors slot 1's held set to the latest wire `held` array so a multi-key hold survives (a `pushInputPress`-only replay could add but never reflect a release).
+- **The structural "lateral offset" seed.** When the player turns (e.g. right→up) while `predictedSelf` is ~1 tile ahead of the host's RTT-lagged avatar along the old axis, the turn freezes that lead into a permanent *orthogonal* offset (predicted ends up one column over). It's intermittent (depends on where the press lands in the step phase) and inherent to client-side prediction — host and predicted pick the *same* direction (verified), they just commit the turn on different tiles. The 5-tile box tolerates it; the always-send-players fix above stops it from ever ballooning. A sub-5-tile orthogonal offset is *not* auto-corrected by design — if a real symptom ever needs it, add a host-side `event` op that signals an explicit snap rather than reintroducing the direction heuristic.
+
+## Entity & other-player interpolation
+
+- Other players, NPCs, mobs, pushables, projectiles render via `interpolatePlayer` / `interpolateEntity`: lerp `prev → curr` over `[prevAt, currAt]`, and when `curr.moving` and `renderTime > currAt`, **forward-extrapolate** in `curr.direction` at the host's step speed, capped at the next tile boundary. This killed the "buttery 50 % / frozen 50 %" pattern from the 2-samples-per-step wire shape.
+- `INTERP_DELAY_MS = 100` — everything except the predicted self renders at `now − 100 ms`. Other players have no ground-truth reference on the guest, so being 100 ms "in the past" is invisible while absorbing normal Wi-Fi jitter.
+- Staleness: `> STALE_MS` (300 ms) with no frame → freeze + "Host lagging…"; `> RESYNC_AFTER_STALE_MS` (1 s) → the guest fires `guest.resync`; ~5 s → auto-fallback to offline.
+
+## Multi-key input fidelity (host pick == predicted pick)
+
+The guest forwards the *actually-pressed* key as the intent **plus the full held set** (`held: ["up","left"]`); a partial release (one key up, others still held) emits `holdSync` carrying the shrunken set so the host's held set tracks without queuing a spurious press. `hostGuests.applyIntent` mirrors it exactly — `setNetworkHeld(slot, held)` + `pushPressEvent(slot, dir)` — and both the host's slot and the guest's `predictedSelf` run the *same* `updatePlayer`/`advanceStep` with the *same* `HOLD_PRIORITY = ["up","down","left","right"]`. So host and predicted always choose the same direction from the same held set; only commit-tile timing (the lateral seed above) can differ.
+
+## `?debug=snap` diagnostics
+
+Adding `?debug=snap` to the URL turns on a guest-side capture (`predictedSelf.js`, `guestInputForwarder.js`) used to diagnose divergence. Four `window` ring buffers, grabbed in one copy:
+
+```js
+copy(JSON.stringify({captures: window.__sbSnapDebug, trajectory: window.__sbSnapTrajectory, wire: window.__sbSnapWire, input: window.__sbSnapInput}, null, 2))
+```
+
+- `__sbSnapDebug` — full snapshots when the gap crosses ≥3 tiles (auth/predicted tiles, front-tile entities, gating flags, unacked log).
+- `__sbSnapTrajectory` — one compact sample per auth message (auth + predicted tile/dir, held set, `queuedDir`/`pendingDir`, host P1 tile, seq/ack). Shows *how* a divergence builds; the `t` gap between samples flags stalls.
+- `__sbSnapWire` — one entry per *incoming* snapshot/delta (recorded before the no-self early-return), so a stall's content is visible: `op`, player count, ids, `self`-present, `lastSeq`. This buffer is what proved the 24-tile bug was a broadcast-*content* gap (156/160 empty keepalives) and not a network stall.
+- `__sbSnapInput` — every forwarded intent with `seq`/`held`/`t`, to time the guest's input against when the host applied it.
+
+Debug-gated and inert without the flag; slated for removal once the smoothness work is confirmed stable in the wild.
+
+## Smoothness fixes — chronological
+
+| When | Fix | Why |
+|---|---|---|
+| 2026-05-28 | WebRTC transport actually installed (`ensureNet` re-installs on role change; DC stamps `from`) | Every session was silently WS-relayed; `role=null` at first init short-circuited the transport. −197 ms first-step RTT on prod. |
+| 2026-05-28 | `predictedSelf.shouldSnap` → 5-tile per-axis box; removed `behind<=0` snap, `LATENCY_GRACE_MS`, and direction cross-product | Killed the own-avatar "jump with no walk animation" and the per-turn snap cascade. |
+| 2026-05-28 | Entity interpolation (`interpolateEntity` lerps mob/pushable/projectile `frame.x/y`) | Mobs were snapping at the 20 Hz broadcaster tick instead of sliding. |
+| 2026-05-28 | Multi-key: ship full held set + `holdSync`; host mirrors via `setNetworkHeld`+`pushPressEvent`; replay re-anchors held | Up+Left holds diverged (predicted chained via `HOLD_PRIORITY`, host via most-recent key) → perpendicular paths. |
+| 2026-05-29 | Keepalive delta so a quiet world doesn't flash "Host lagging…" | Decoupled from the stuck-avatar fix below; keeps `lastFrameAt` fresh. |
+| 2026-05-29 | **Stuck-avatar runaway fixed** — deltas + keepalives carry *all* player positions | A blocked-on-host avatar (frozen sig) was filtered out of every frame for 5.3 s while predicted ran 24 tiles down a clear column, then snapped. Now reconciled at keepalive cadence; worst-case snap ~6 tiles. |
 
 # Out of scope
 

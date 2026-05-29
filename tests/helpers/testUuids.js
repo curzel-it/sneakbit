@@ -1,6 +1,6 @@
 // Map short test labels (e.g. "u-host-1") to deterministic UUIDv4-shaped
 // strings. The relay's onHello now strict-validates UUIDv4 shape per
-// docs/server.md §Identity, so tests can't use bare labels as uuids any
+// docs/online-coop.md §Identity, so tests can't use bare labels as uuids any
 // more. Hashing keeps each label stable across runs so reconnect/grace
 // scenarios still resolve to the same identity.
 

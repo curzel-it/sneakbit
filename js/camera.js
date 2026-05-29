@@ -6,10 +6,18 @@
 // on screen, with the zone-bounds clamp applied on top. Dead players
 // must not be passed in (they'd drag the centre off into nowhere).
 
-import { VIEWPORT_TILES_W, VIEWPORT_TILES_H } from "./constants.js?v=20260529a";
+import { VIEWPORT_TILES_W, VIEWPORT_TILES_H } from "./constants.js?v=20260529e";
 
 export function createCamera() {
   return { x: 0, y: 0, w: VIEWPORT_TILES_W, h: VIEWPORT_TILES_H };
+}
+
+// The unclamped viewport rect (in tiles) centred on a player. Single
+// source of the centering math used both here and by online co-op's
+// per-player simulation viewports. Deliberately unclamped: we want the
+// true region around a wandered player, not one snapped to zone bounds.
+export function cameraRectFor(player, w, h) {
+  return { x: player.x + 0.5 - w / 2, y: player.y + 0.5 - h / 2, w, h };
 }
 
 export function updateCamera(camera, target, zone) {

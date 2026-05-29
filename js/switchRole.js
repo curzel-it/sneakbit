@@ -3,7 +3,7 @@
 // one and lets the rest of the app reset its world state via the
 // state-handler registry.
 //
-// Per docs/server.md § Sessions and invites, a deep-link
+// Per docs/online-coop.md § Sessions and invites, a deep-link
 // `?join=CODE` while already in a session auto-leaves the current
 // session before joining the new one — switchRole's idempotency check
 // special-cases that "same role, different code" path.
@@ -11,7 +11,7 @@
 import {
   getRuntimeRole,
   setRuntimeRole,
-} from "./onlineMode.js?v=20260529a";
+} from "./onlineMode.js?v=20260529e";
 import {
   ensureNet,
   closeNet,
@@ -21,21 +21,21 @@ import {
   setPendingGuestCode,
   getInviteCode,
   getNet,
-} from "./onlineBootstrap.js?v=20260529a";
-import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotBroadcaster.js?v=20260529a";
-import { installHostGuests, uninstallHostGuests } from "./hostGuests.js?v=20260529a";
-import { installHostPauseBroadcaster, uninstallHostPauseBroadcaster } from "./hostPauseState.js?v=20260529a";
-import { installHostLoadoutSync, uninstallHostLoadoutSync } from "./hostLoadoutSync.js?v=20260529a";
-import { installGuestLoadoutSync, uninstallGuestLoadoutSync } from "./guestLoadoutSync.js?v=20260529a";
-import { installGuestSelfHpSync, uninstallGuestSelfHpSync } from "./guestSelfHpSync.js?v=20260529a";
-import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js?v=20260529a";
-import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js?v=20260529a";
-import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js?v=20260529a";
-import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js?v=20260529a";
-import { reapplyAutoZoom } from "./zoom.js?v=20260529a";
-import { hideGameOver, isGameOverOpen } from "./gameOver.js?v=20260529a";
-import { closeNetworkDialogue } from "./dialogue.js?v=20260529a";
-import { setHostPausedRemote } from "./guestHostPause.js?v=20260529a";
+} from "./onlineBootstrap.js?v=20260529e";
+import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotBroadcaster.js?v=20260529e";
+import { installHostGuests, uninstallHostGuests } from "./hostGuests.js?v=20260529e";
+import { installHostPauseBroadcaster, uninstallHostPauseBroadcaster } from "./hostPauseState.js?v=20260529e";
+import { installHostLoadoutSync, uninstallHostLoadoutSync } from "./hostLoadoutSync.js?v=20260529e";
+import { installGuestLoadoutSync, uninstallGuestLoadoutSync } from "./guestLoadoutSync.js?v=20260529e";
+import { installGuestSelfHpSync, uninstallGuestSelfHpSync } from "./guestSelfHpSync.js?v=20260529e";
+import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js?v=20260529e";
+import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js?v=20260529e";
+import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js?v=20260529e";
+import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js?v=20260529e";
+import { reapplyAutoZoom } from "./zoom.js?v=20260529e";
+import { hideGameOver, isGameOverOpen } from "./gameOver.js?v=20260529e";
+import { closeNetworkDialogue } from "./dialogue.js?v=20260529e";
+import { setHostPausedRemote } from "./guestHostPause.js?v=20260529e";
 
 // Callbacks main.js installs at boot. switchRole calls them to rebuild /
 // wipe the live `state` object that lives in main.js's closure.

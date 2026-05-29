@@ -1,8 +1,8 @@
 // User-tweakable settings persisted to localStorage. Tiny: just a few
 // knobs you'd want to flip without recompiling.
 
-import { setMuted, setSfxVolume } from "./audio.js?v=20260529a";
-import { refreshMusicVolume } from "./music.js?v=20260529a";
+import { setMuted, setSfxVolume } from "./audio.js?v=20260529e";
+import { refreshMusicVolume } from "./music.js?v=20260529e";
 
 const KEY = "sneakbit.settings.v1";
 

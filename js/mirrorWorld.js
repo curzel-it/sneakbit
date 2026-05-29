@@ -9,11 +9,11 @@
 // loads them locally on the first snapshot or zone change and only
 // overwrites `zone.entities` from network frames.
 
-import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260529a";
-import { loadZone } from "./data.js?v=20260529a";
-import { buildZone } from "./zone.js?v=20260529a";
-import { setupCutscenes } from "./cutscenes.js?v=20260529a";
-import { evictZoneCache } from "./zoneCache.js?v=20260529a";
+import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260529e";
+import { loadZone } from "./data.js?v=20260529e";
+import { buildZone } from "./zone.js?v=20260529e";
+import { setupCutscenes } from "./cutscenes.js?v=20260529e";
+import { evictZoneCache } from "./zoneCache.js?v=20260529e";
 
 export const INTERP_DELAY_MS = 100;
 const STALE_MS = 300;
@@ -386,6 +386,7 @@ function interpolatePlayer({ prev, curr, prevAt, currAt, stepStartedAt }, render
     tileY: curr.tileY,
     direction: curr.direction || "down",
     moving: !!curr.moving,
+    hp: curr.hp,
     sheetId: SPRITE_SHEET_HEROES,
     baseFrame,
     frameCount: HERO_FRAME_COUNT,

@@ -8,9 +8,9 @@
 // d-pad fan into the same directional channel; action buttons go
 // through their own callback registry (see gamepad.setGamepadAction).
 
-import { pollGamepadForSlot } from "./gamepad.js?v=20260529a";
-import { resolveAction } from "./keyBindings.js?v=20260529a";
-import { localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260529a";
+import { pollGamepadForSlot } from "./gamepad.js?v=20260529e";
+import { resolveAction } from "./keyBindings.js?v=20260529e";
+import { localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260529e";
 
 const ACTION_TO_DIR = {
   moveUp: "up",

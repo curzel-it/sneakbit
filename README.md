@@ -14,7 +14,7 @@ One feature, one file. See [CLAUDE.md](./CLAUDE.md) for the full guide and direc
 
 ## Online co-op
 
-Up to four players (one host + three guests) can share the host's world. The host runs the existing single-player game unchanged; guests render the host's snapshots and predict their own avatar for fluidity. A small Node relay pairs hosts and guests by 5-char invite code — see [docs/server.md](./docs/server.md) for the full protocol spec.
+Up to four players (one host + three guests) can share the host's world. The host runs the existing single-player game unchanged; guests render the host's snapshots and predict their own avatar for fluidity. A small Node relay pairs hosts and guests by 5-char invite code — see [docs/online-coop.md](./docs/online-coop.md) for the full protocol spec.
 
 ## Running it
 
@@ -38,7 +38,7 @@ No devDependencies — uses Node's built-in test runner.
 
 ## Server
 
-Online co-op is brokered by a tiny Node relay in [`server/`](./server) (vanilla `node:http`, no deps). Run locally with `node server/index.js`. Full protocol spec in [docs/server.md](./docs/server.md).
+Online co-op is brokered by a tiny Node relay in [`server/`](./server) (vanilla `node:http`, no deps). Run locally with `node server/index.js`. Full protocol spec in [docs/online-coop.md](./docs/online-coop.md).
 
 ## Controls (phase 1)
 

@@ -13,12 +13,12 @@
 // "open / close / Esc back out" wiring; this file just renders into a
 // host element passed by menu.js when the Inventory tab is shown.
 
-import { getSpecies } from "./species.js?v=20260529a";
-import { tr } from "./strings.js?v=20260529a";
+import { getSpecies } from "./species.js?v=20260529e";
+import { tr } from "./strings.js?v=20260529e";
 import { getEquipped, setEquipped, clearEquipped, SLOT_MELEE, SLOT_RANGED,
-         DEFAULT_RANGED_WEAPON_ID } from "./equipment.js?v=20260529a";
-import { snapshotInventory } from "./inventory.js?v=20260529a";
-import { isCoopMode } from "./coopMode.js?v=20260529a";
+         DEFAULT_RANGED_WEAPON_ID } from "./equipment.js?v=20260529e";
+import { snapshotInventory } from "./inventory.js?v=20260529e";
+import { isCoopMode } from "./coopMode.js?v=20260529e";
 
 export function renderInventoryInto(host) {
   if (!host) return;

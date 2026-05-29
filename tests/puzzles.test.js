@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { loadSpeciesData } = await import("../js/species.js?v=20260529a");
+const { loadSpeciesData } = await import("../js/species.js?v=20260529e");
 
 loadSpeciesData([
   { id: 1030, entity_type: "PushableObject", is_rigid: false, sprite_sheet_id: 1010,
@@ -14,14 +14,14 @@ loadSpeciesData([
     sprite_sheet_id: 1010, sprite_frame: { x: 8, y: 0, w: 1, h: 1 } },
 ]);
 
-const { isEntityBlocked } = await import("../js/zone.js?v=20260529a");
-const { findPushableAt, pushOneTile, pushableRenderOffset } = await import("../js/pushables.js?v=20260529a");
-const { createPlayer, updatePlayer } = await import("../js/player.js?v=20260529a");
-const { setupPuzzles, tickPuzzles } = await import("../js/puzzles.js?v=20260529a");
-const { tryUnlockGate, findGateAt } = await import("../js/gateUnlock.js?v=20260529a");
-const { isPressurePlateDown } = await import("../js/locks.js?v=20260529a");
-const storage = await import("../js/storage.js?v=20260529a");
-const inventory = await import("../js/inventory.js?v=20260529a");
+const { isEntityBlocked } = await import("../js/zone.js?v=20260529e");
+const { findPushableAt, pushOneTile, pushableRenderOffset } = await import("../js/pushables.js?v=20260529e");
+const { createPlayer, updatePlayer } = await import("../js/player.js?v=20260529e");
+const { setupPuzzles, tickPuzzles } = await import("../js/puzzles.js?v=20260529e");
+const { tryUnlockGate, findGateAt } = await import("../js/gateUnlock.js?v=20260529e");
+const { isPressurePlateDown } = await import("../js/locks.js?v=20260529e");
+const storage = await import("../js/storage.js?v=20260529e");
+const inventory = await import("../js/inventory.js?v=20260529e");
 
 function makeZone(extras = {}) {
   const rows = 6, cols = 6;

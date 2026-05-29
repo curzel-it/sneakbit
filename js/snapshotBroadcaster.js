@@ -6,18 +6,30 @@
 //
 // The broadcaster also keeps a per-entity signature so unchanged things
 // stop after one delta, fitting the 50–100 KB/s budget called out in
-// docs/server.md at the snapshot section.
+// docs/online-coop.md at the snapshot section.
 
-import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260529a";
-import { getPlayerHp } from "./playerHealth.js?v=20260529a";
-import { getLastSeqMap } from "./hostGuests.js?v=20260529a";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260529a";
+import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260529e";
+import { getPlayerHp } from "./playerHealth.js?v=20260529e";
+import { getLastSeqMap } from "./hostGuests.js?v=20260529e";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260529e";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260529e";
 
 export const BROADCAST_INTERVAL_MS = 50;
+
+// Quiescent-world keepalive. When buildDelta finds nothing changed the
+// host would otherwise fall silent, and the guest's mirror crosses
+// STALE_MS (mirrorWorld, 300 ms) and falsely flashes "Host lagging…".
+// After this many consecutive empty ticks we ship an empty `delta` so
+// the mirror's lastFrameAt keeps advancing. 4 * 50 ms = 200 ms, well
+// inside the staleness window. Reusing the `delta` op means it rides the
+// existing DataChannel/relay path with no new wire op and the mirror's
+// handleDelta refreshes lastFrameAt with zero state churn.
+const KEEPALIVE_TICKS = 4;
 
 let timer = null;
 let stateGetter = null;
 let tickCount = 0;
+let quietTicks = 0;
 let lastPlayerSigs = new Map();
 let lastEntitySigs = new Map();
 let knownEntityIds = new Set();
@@ -57,6 +69,7 @@ export function stopSnapshotBroadcaster() {
   knownEntityIds = new Set();
   lastHpByPlayerId.clear();
   tickCount = 0;
+  quietTicks = 0;
   lastZoneId = null;
 }
 
@@ -94,11 +107,45 @@ function broadcastDelta(net) {
     // "Waiting for the host…" overlay would stay up in the new zone.
     emitRespawnsForRevivedPlayers(state);
     sendFullSnapshot(net);
+    quietTicks = 0;
     return;
   }
   const msg = buildDelta(state);
-  if (!msg) return;
+  if (!msg) {
+    // Nothing changed this tick. Keep the guest's mirror fresh with a
+    // periodic empty delta (see KEEPALIVE_TICKS) so it doesn't flash
+    // "Host lagging…" whenever the world goes quiet.
+    if (++quietTicks >= KEEPALIVE_TICKS) {
+      net.send(buildKeepalive(state));
+      quietTicks = 0;
+    }
+    return;
+  }
+  quietTicks = 0;
   net.send(msg);
+}
+
+// Keepalive sent during quiescence (buildDelta found nothing changed).
+// Carries every player's authoritative position — cheap, a handful of
+// bytes per player — so the guest's predicted-self reconciliation keeps
+// running even when no sig changed. This is the load-bearing half of the
+// stuck-avatar fix: a player jammed against a blocker has a frozen
+// tile/direction, so it's filtered out of buildDelta and, with both
+// avatars otherwise quiescent, the host would emit only empty keepalives.
+// Without its position here the guest can't tell its avatar diverged and
+// predicted runs away unbounded (the 24-tile snap from the tree/loop
+// repro). Entities stay empty — they're the bandwidth bulk and a
+// genuinely static entity needs no refresh. The mirror ingests these
+// positions; for a non-moving avatar that's a no-op lerp (same tile).
+function buildKeepalive(state) {
+  return {
+    op: "delta",
+    t: tickCount++,
+    zoneId: state.zone.id,
+    players: playersOf(state).map(serializePlayer).filter(Boolean),
+    entities: [],
+    lastSeq: getLastSeqMap(),
+  };
 }
 
 function sendFullSnapshot(net) {
@@ -110,14 +157,18 @@ function sendFullSnapshot(net) {
 }
 
 function buildDelta(state) {
-  const players = playerDeltas(state);
+  const { changed, all } = playerDeltas(state);
   const { changed: entities, removed } = entityDeltas(state);
-  if (!players.length && !entities.length && !removed.length) return null;
+  // Decision to send is still sig-gated (changed players / entities), but
+  // the payload carries ALL players so an unchanged-but-present avatar
+  // (e.g. one stuck on a blocker while the host's own avatar moves) still
+  // reaches the guest for reconciliation.
+  if (!changed.length && !entities.length && !removed.length) return null;
   const msg = {
     op: "delta",
     t: tickCount++,
     zoneId: state.zone.id,
-    players,
+    players: all,
     entities,
     lastSeq: getLastSeqMap(),
   };
@@ -155,21 +206,28 @@ function buildSnapshot(state) {
   };
 }
 
+// Returns { changed, all }. `changed` drives whether a delta fires at all
+// (the sig-diff that keeps bandwidth down); `all` is what actually ships.
+// We send every player's position whenever we send anything, because a
+// player stuck against a blocker on the host has a frozen sig and would
+// otherwise never reach the guest — leaving the guest's predicted self to
+// run away unbounded until the player finally moves. Players are a handful
+// of bytes each; entities (the bulk) keep their changed-only treatment.
 function playerDeltas(state) {
   const changed = [];
-  const allPlayers = [];
+  const all = [];
   for (const slot of playersOf(state)) {
     const p = serializePlayer(slot);
     if (!p) continue;
-    allPlayers.push(p);
+    all.push(p);
     const sig = sigPlayer(p);
     if (lastPlayerSigs.get(p.playerId) !== sig) {
       lastPlayerSigs.set(p.playerId, sig);
       changed.push(p);
     }
   }
-  emitHpTransitions(allPlayers);
-  return changed;
+  emitHpTransitions(all);
+  return { changed, all };
 }
 
 // Zone-change path companion to emitHpTransitions. Walks current
@@ -293,6 +351,18 @@ export const _serializeEntityResetWarningsForTesting = serializeEntityResetWarni
 
 function serializeEntity(e) {
   if (!e || e.id == null) { warnMissingId(e); return null; }
+  // Host-authoritative visibility. An entity the host hides — a pickup
+  // already collected (item_collected.<id>) or a story-flag-gated NPC
+  // (display_conditions) — must not reach guests. That hidden state lives
+  // in the host's own localStorage and isn't shipped, so the guest can't
+  // reproduce it: without this gate the host would broadcast a kunai it
+  // picked up in an earlier session (buildZone keeps collected entities in
+  // zone.entities, hidden only at render/pickup time), and the guest —
+  // lacking the host's item_collected flag — would render it. This is the
+  // same gate the renderer/pickup/collision paths use, so the wire set is
+  // exactly what the host sees. An entity that flips to hidden mid-session
+  // drops out of `seen` in entityDeltas and rides out via removed.entities.
+  if (!shouldBeVisible(e)) return null;
   const out = { id: e.id };
   if (e.species_id != null) out.species_id = e.species_id;
   if (e.frame) {
@@ -303,6 +373,11 @@ function serializeEntity(e) {
   if (e._dead) out._dead = true;
   if (e._spawned) out._spawned = true;
   if (e.direction) out.direction = e.direction;
+  // Mobs animate their walk cycle from a `moving` flag the guest can't
+  // derive (the host's `_ai.step` never crosses the wire). Ship an
+  // explicit boolean for AI entities — always present so a stop clears
+  // the previous merged `moving:true` rather than leaving it stale.
+  if (e._ai) out.moving = !!e._ai.step;
   return out;
 }
 
@@ -338,6 +413,7 @@ function sigEntity(e) {
     e._dead ? 1 : 0,
     e._spawned ? 1 : 0,
     e.direction ?? "",
+    e._ai?.step ? 1 : 0,
   ].join("|");
 }
 

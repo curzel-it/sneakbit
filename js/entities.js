@@ -9,16 +9,16 @@
 //   - z_index ===  99 (OVERLAY) → always on top;
 //   - otherwise sort by bottom row, then by z_index as a tiebreaker.
 
-import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js?v=20260529a";
-import { getEntitySheet, getSpecies } from "./species.js?v=20260529a";
-import { getSprite } from "./assets.js?v=20260529a";
-import { getPlayerSpriteFrame } from "./player.js?v=20260529a";
-import { SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260529a";
-import { resolveLoadout } from "./sessionLoadouts.js?v=20260529a";
-import { getMeleeSwingProgress } from "./melee.js?v=20260529a";
-import { pushableRenderOffset } from "./pushables.js?v=20260529a";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260529a";
-import { isCreativeMode } from "./creativeMode.js?v=20260529a";
+import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js?v=20260529e";
+import { getEntitySheet, getSpecies } from "./species.js?v=20260529e";
+import { getSprite } from "./assets.js?v=20260529e";
+import { getPlayerSpriteFrame } from "./player.js?v=20260529e";
+import { SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260529e";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260529e";
+import { getMeleeSwingProgress } from "./melee.js?v=20260529e";
+import { pushableRenderOffset } from "./pushables.js?v=20260529e";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260529e";
+import { isCreativeMode } from "./creativeMode.js?v=20260529e";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
@@ -51,9 +51,14 @@ export function drawEntities(ctx, zone, camera, player) {
 
 // Decides whether an entity should render its "moving" sprite row.
 // Each AI/owner system tags the entity with a small flag we read here.
+// On the host, mobs carry their live `_ai.step`. Guests never receive
+// `_ai` (it's host-internal), so the snapshot ships a plain `moving`
+// boolean instead — without it, mirrored mobs render frame 0 forever
+// even while sliding between tiles.
 function isEntityMoving(e, sp) {
   if (sp.entity_type === "Bullet") return !!e._spawned;
   if (e._ai?.step) return true;
+  if (e.moving) return true;
   return false;
 }
 
