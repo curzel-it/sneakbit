@@ -366,6 +366,44 @@ test("zone change emits event:respawn for players whose hp was 0 in the prior zo
   ph.resetPlayerHealth();
 });
 
+test("a quiescent world emits a periodic empty-delta keepalive", async () => {
+  const fakeNet = setupBootstrapWithFakeNet();
+  const state = makeState();
+  // 50 ms ticks; KEEPALIVE_TICKS=4 → a keepalive ~every 200 ms. Nothing
+  // in `state` changes, so every real delta is null.
+  const ok = installSnapshotBroadcaster(() => state, { intervalMs: 10, net: fakeNet });
+  assert.equal(ok, true);
+  // Let several keepalive windows elapse.
+  await new Promise((resolve) => setTimeout(resolve, 120));
+  stopSnapshotBroadcaster();
+  const deltas = fakeNet.sent.filter((m) => m.op === "delta");
+  assert.ok(deltas.length >= 1, "expected at least one keepalive delta while quiescent");
+  const ka = deltas[0];
+  assert.equal(ka.zoneId, 1001);
+  assert.equal(ka.players.length, 0, "keepalive carries no player changes");
+  assert.equal(ka.entities.length, 0, "keepalive carries no entity changes");
+  // A keepalive must not fire every tick — only once per KEEPALIVE_TICKS.
+  // Over ~120 ms / 10 ms = ~12 ticks we expect roughly 3, definitely < 12.
+  assert.ok(deltas.length < 10, "keepalive must be throttled, not every tick");
+});
+
+test("a busy world sends real deltas, not keepalives, every tick", async () => {
+  const fakeNet = setupBootstrapWithFakeNet();
+  let tx = 7;
+  const state = makeState();
+  // Mutate the player's tile every getter call so each tick has a real
+  // change — the keepalive counter must stay reset and never fire.
+  const ok = installSnapshotBroadcaster(() => { state.player.tileX = ++tx; state.player.x = tx; return state; },
+    { intervalMs: 10, net: fakeNet });
+  assert.equal(ok, true);
+  await new Promise((resolve) => setTimeout(resolve, 80));
+  stopSnapshotBroadcaster();
+  const deltas = fakeNet.sent.filter((m) => m.op === "delta");
+  assert.ok(deltas.length >= 1, "expected real deltas");
+  assert.ok(deltas.every((d) => d.players.length === 1),
+    "every delta should carry the moving player (no empty keepalives interleaved)");
+});
+
 test("zone id change forces the next delta to be a full snapshot", () => {
   setupBootstrapWithFakeNet();
   const state = makeState(1001);

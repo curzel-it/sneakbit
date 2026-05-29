@@ -15,9 +15,20 @@ import { broadcastHostEvent } from "./hostEvents.js?v=20260529a";
 
 export const BROADCAST_INTERVAL_MS = 50;
 
+// Quiescent-world keepalive. When buildDelta finds nothing changed the
+// host would otherwise fall silent, and the guest's mirror crosses
+// STALE_MS (mirrorWorld, 300 ms) and falsely flashes "Host lagging…".
+// After this many consecutive empty ticks we ship an empty `delta` so
+// the mirror's lastFrameAt keeps advancing. 4 * 50 ms = 200 ms, well
+// inside the staleness window. Reusing the `delta` op means it rides the
+// existing DataChannel/relay path with no new wire op and the mirror's
+// handleDelta refreshes lastFrameAt with zero state churn.
+const KEEPALIVE_TICKS = 4;
+
 let timer = null;
 let stateGetter = null;
 let tickCount = 0;
+let quietTicks = 0;
 let lastPlayerSigs = new Map();
 let lastEntitySigs = new Map();
 let knownEntityIds = new Set();
@@ -57,6 +68,7 @@ export function stopSnapshotBroadcaster() {
   knownEntityIds = new Set();
   lastHpByPlayerId.clear();
   tickCount = 0;
+  quietTicks = 0;
   lastZoneId = null;
 }
 
@@ -94,11 +106,37 @@ function broadcastDelta(net) {
     // "Waiting for the host…" overlay would stay up in the new zone.
     emitRespawnsForRevivedPlayers(state);
     sendFullSnapshot(net);
+    quietTicks = 0;
     return;
   }
   const msg = buildDelta(state);
-  if (!msg) return;
+  if (!msg) {
+    // Nothing changed this tick. Keep the guest's mirror fresh with a
+    // periodic empty delta (see KEEPALIVE_TICKS) so it doesn't flash
+    // "Host lagging…" whenever the world goes quiet.
+    if (++quietTicks >= KEEPALIVE_TICKS) {
+      net.send(buildKeepalive(state));
+      quietTicks = 0;
+    }
+    return;
+  }
+  quietTicks = 0;
   net.send(msg);
+}
+
+// Empty delta used as a keepalive during quiescence. Shaped like a real
+// delta (op, t, zoneId, lastSeq) with no player/entity changes so every
+// existing `delta` listener no-ops on it while the mirror still bumps
+// lastFrameAt.
+function buildKeepalive(state) {
+  return {
+    op: "delta",
+    t: tickCount++,
+    zoneId: state.zone.id,
+    players: [],
+    entities: [],
+    lastSeq: getLastSeqMap(),
+  };
 }
 
 function sendFullSnapshot(net) {
