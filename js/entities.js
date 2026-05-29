@@ -51,9 +51,14 @@ export function drawEntities(ctx, zone, camera, player) {
 
 // Decides whether an entity should render its "moving" sprite row.
 // Each AI/owner system tags the entity with a small flag we read here.
+// On the host, mobs carry their live `_ai.step`. Guests never receive
+// `_ai` (it's host-internal), so the snapshot ships a plain `moving`
+// boolean instead — without it, mirrored mobs render frame 0 forever
+// even while sliding between tiles.
 function isEntityMoving(e, sp) {
   if (sp.entity_type === "Bullet") return !!e._spawned;
   if (e._ai?.step) return true;
+  if (e.moving) return true;
   return false;
 }
 

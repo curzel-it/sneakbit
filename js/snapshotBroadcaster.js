@@ -373,6 +373,11 @@ function serializeEntity(e) {
   if (e._dead) out._dead = true;
   if (e._spawned) out._spawned = true;
   if (e.direction) out.direction = e.direction;
+  // Mobs animate their walk cycle from a `moving` flag the guest can't
+  // derive (the host's `_ai.step` never crosses the wire). Ship an
+  // explicit boolean for AI entities — always present so a stop clears
+  // the previous merged `moving:true` rather than leaving it stale.
+  if (e._ai) out.moving = !!e._ai.step;
   return out;
 }
 
@@ -408,6 +413,7 @@ function sigEntity(e) {
     e._dead ? 1 : 0,
     e._spawned ? 1 : 0,
     e.direction ?? "",
+    e._ai?.step ? 1 : 0,
   ].join("|");
 }
 
