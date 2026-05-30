@@ -12,7 +12,7 @@ import {
   firstTurn, updatedTurn, turnAfterPlayerDamage, updatedTurnForDeathOfPlayer,
   handleWinLose, currentPlayerIndex,
 } from "./turns.js?v=20260530a";
-import { isPvp } from "./gameMode.js?v=20260530a";
+import { isPvp, isTurnBasedPvp } from "./gameMode.js?v=20260530a";
 import { onPlayerVsPlayerHit } from "./combat.js?v=20260530a";
 import { resetPvpLoadout } from "./pvpLoadout.js?v=20260530a";
 
@@ -20,25 +20,28 @@ let numberOfPlayers = 1;
 let turn = firstTurn(false);              // realtime until a match starts
 let dead = new Set();
 let result = { kind: "inProgress" };
+let matchTurnBased = true;                // remembered so rematch re-arms the same way
 
 function inProgress() {
   return result.kind === "inProgress";
 }
 
-// Begin a fresh N-player match: P1's prep turn, nobody dead, in progress.
-// Caller (main) handles spawns and HP. N is clamped to a sane range.
-export function startMatch(n) {
+// Begin a fresh N-player match, nobody dead, in progress. Turn-based starts on
+// P1's prep; realtime (turnBased=false) has no turn — everyone acts at once.
+// Caller (controller) handles spawns and HP. N clamped to a sane range.
+export function startMatch(n, turnBased = true) {
   numberOfPlayers = Math.max(2, Math.min(4, n | 0));
-  turn = firstTurn(true);
+  matchTurnBased = !!turnBased;
+  turn = firstTurn(matchTurnBased);
   dead = new Set();
   result = { kind: "inProgress" };
   resetPvpLoadout();
   return result;
 }
 
-// Re-arm the same N players for another round (Rust revive()).
+// Re-arm the same N players for another round (Rust revive()), same variant.
 export function rematch() {
-  return startMatch(numberOfPlayers);
+  return startMatch(numberOfPlayers, matchTurnBased);
 }
 
 // Tear the match down when leaving PvP: park the machine in realtime and
@@ -89,10 +92,11 @@ export function cameraPlayerIndex() {
   return turn && turn.kind !== "realtime" ? turn.playerIndex : null;
 }
 
-// Input gate: a 1-based input slot may act when we're not in PvP, or when
-// it owns the current active turn. During prep nobody acts.
+// Input gate: a 1-based input slot may act when we're not in turn-based PvP
+// (co-op and realtime PvP let everyone act), or when it owns the current active
+// turn. During prep nobody acts.
 export function pvpSlotCanAct(slotOneBased) {
-  if (!isPvp()) return true;
+  if (!isTurnBasedPvp()) return true;
   const live = currentLiveIndex();
   return live !== null && (slotOneBased | 0) - 1 === live;
 }

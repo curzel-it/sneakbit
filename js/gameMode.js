@@ -18,21 +18,39 @@ export const GAME_MODE = {
 export const PVP_PLAYER_HP = 1000;
 
 let current = GAME_MODE.coop;
+// PvP has two delivery variants that share all the PvP knobs (1000 HP, forced
+// friendly fire, scavenge): the local TURN-BASED arena, and an online REALTIME
+// deathmatch where everyone acts at once. `realtime` distinguishes them; it's
+// only meaningful while the mode is pvp.
+let realtime = false;
 
 export function getGameMode() {
   return current;
 }
 
-export function setGameMode(mode) {
+// setGameMode("pvp", { realtime: true }) selects the realtime variant. The flag
+// is cleared whenever we leave pvp (or enter turn-based pvp) so it can't leak.
+export function setGameMode(mode, opts = {}) {
   if (mode === GAME_MODE.coop || mode === GAME_MODE.creative || mode === GAME_MODE.pvp) {
     current = mode;
+    realtime = mode === GAME_MODE.pvp ? !!opts.realtime : false;
   }
   return current;
 }
 
-// Rust `allows_pvp()` / `is_turn_based()` — both true only for TurnBasedPvp.
+// Rust `allows_pvp()` — true for both PvP variants (drives 1000 HP, FF, scavenge).
 export function isPvp() {
   return current === GAME_MODE.pvp;
+}
+
+// Online realtime deathmatch: no turns, every player acts simultaneously.
+export function isRealtimePvp() {
+  return current === GAME_MODE.pvp && realtime;
+}
+
+// Local turn-based arena: the turn machine + per-turn input gating + turn HUD.
+export function isTurnBasedPvp() {
+  return current === GAME_MODE.pvp && !realtime;
 }
 
 // Rust `player_hp()`.

@@ -84,6 +84,17 @@ test("tickMatch freezes once the match is over", () => {
   assert.deepEqual(getTurn(), before);
 });
 
+test("realtime match has no turn but still tracks deaths + win/lose", () => {
+  startMatch(2, false); // realtime variant
+  assert.equal(getTurn().kind, "realtime", "no prep/turn in realtime");
+  assert.equal(currentLiveIndex(), null);
+  assert.equal(cameraPlayerIndex(), null);
+  // tick does nothing to the turn, but a death still resolves the match
+  tickMatch(100);
+  assert.equal(getTurn().kind, "realtime");
+  assert.deepEqual(notifyPlayerDied(1), { kind: "winner", playerIndex: 0 });
+});
+
 test("endMatch parks the machine in realtime (no stale turn after exit)", () => {
   startMatch(3);
   tickMatch(3); // into P1's active turn

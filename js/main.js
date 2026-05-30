@@ -66,7 +66,7 @@ import { setHostPaused } from "./hostPauseState.js?v=20260530a";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js?v=20260530a";
 import { switchRole, setStateHandlers } from "./switchRole.js?v=20260530a";
 import { installUiTokens } from "./uiTokens.js?v=20260530a";
-import { isPvp } from "./gameMode.js?v=20260530a";
+import { isPvp, isTurnBasedPvp, isRealtimePvp } from "./gameMode.js?v=20260530a";
 import { getTurn, isMatchOver } from "./pvpMatch.js?v=20260530a";
 import { installTurnHud, updateTurnHud, hideTurnHud } from "./turnHud.js?v=20260530a";
 import {
@@ -378,7 +378,8 @@ async function main() {
     // Turn HUD: live during a PvP match, hidden during the result screen
     // and outside PvP. Runs outside the pause gate so the countdown is
     // always in sync.
-    if (isPvp() && !isMatchOver()) updateTurnHud(getTurn());
+    // Turn HUD is turn-based-PvP only; realtime deathmatch has no turns.
+    if (isTurnBasedPvp() && !isMatchOver()) updateTurnHud(getTurn());
     else hideTurnHud();
   });
 }
