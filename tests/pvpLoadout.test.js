@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 const {
   PVP_DEFAULT_RANGED, KUNAI_BULLET_ID, resetPvpLoadout, getPvpRangedWeapon, setPvpRangedWeapon,
   getPvpAmmo, hasPvpAmmo, addPvpAmmo, spendPvpAmmo, onPvpLoadoutChange, bulletOfWeapon,
-} = await import("../js/pvpLoadout.js?v=20260530e");
+} = await import("../js/pvpLoadout.js?v=20260530f");
 
 const KUNAI = 7000, AR15 = 1169; // bullet species
 

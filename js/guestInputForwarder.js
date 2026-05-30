@@ -3,8 +3,8 @@
 // the same channel and land in Phase 7. Each frame carries a monotonic
 // seq for the reconciliation logic that arrives in Phase 6.
 
-import { actionForCode } from "./keyBindings.js?v=20260530e";
-import { readPadSnapshotForSlot } from "./gamepad.js?v=20260530e";
+import { actionForCode } from "./keyBindings.js?v=20260530f";
+import { readPadSnapshotForSlot } from "./gamepad.js?v=20260530f";
 
 const ACTION_TO_INTENT = {
   moveUp: "moveUp",

@@ -8,13 +8,13 @@
 // stop after one delta, fitting the 50–100 KB/s budget called out in
 // docs/online-coop.md at the snapshot section.
 
-import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260530e";
-import { getPlayerHp } from "./playerHealth.js?v=20260530e";
-import { isPvp, getGameMode, isRealtimePvp } from "./gameMode.js?v=20260530e";
-import { getPvpRangedWeapon, getPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js?v=20260530e";
-import { getLastSeqMap } from "./hostGuests.js?v=20260530e";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260530e";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260530e";
+import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260530f";
+import { getPlayerHp } from "./playerHealth.js?v=20260530f";
+import { isPvp, getGameMode, isRealtimePvp } from "./gameMode.js?v=20260530f";
+import { getPvpRangedWeapon, getPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js?v=20260530f";
+import { getLastSeqMap } from "./hostGuests.js?v=20260530f";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260530f";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260530f";
 
 export const BROADCAST_INTERVAL_MS = 50;
 

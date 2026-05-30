@@ -8,16 +8,16 @@
 // the canvas — that keeps the renderer ignorant and gives us free
 // CSS transitions.
 
-import { loadZone } from "./data.js?v=20260530e";
-import { buildZone, isWalkable, isEntityBlocked } from "./zone.js?v=20260530e";
-import { playSfx } from "./audio.js?v=20260530e";
-import { playTrack } from "./music.js?v=20260530e";
-import { getZoneCache } from "./zoneCache.js?v=20260530e";
-import { setupPuzzles } from "./puzzles.js?v=20260530e";
-import { setupCutscenes } from "./cutscenes.js?v=20260530e";
-import { isCreativeMode } from "./creativeMode.js?v=20260530e";
-import { putBufferedZone } from "./zoneBuffer.js?v=20260530e";
-import { resetPlayerHealth, isPlayerDead } from "./playerHealth.js?v=20260530e";
+import { loadZone } from "./data.js?v=20260530f";
+import { buildZone, isWalkable, isEntityBlocked } from "./zone.js?v=20260530f";
+import { playSfx } from "./audio.js?v=20260530f";
+import { playTrack } from "./music.js?v=20260530f";
+import { getZoneCache } from "./zoneCache.js?v=20260530f";
+import { setupPuzzles } from "./puzzles.js?v=20260530f";
+import { setupCutscenes } from "./cutscenes.js?v=20260530f";
+import { isCreativeMode } from "./creativeMode.js?v=20260530f";
+import { putBufferedZone } from "./zoneBuffer.js?v=20260530f";
+import { resetPlayerHealth, isPlayerDead } from "./playerHealth.js?v=20260530f";
 
 const TELEPORTER_SPECIES_ID = 1019;
 const FADE_DURATION_MS = 220;

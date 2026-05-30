@@ -7,14 +7,14 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260530e");
+  await import("../js/onlineMode.js?v=20260530f");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js?v=20260530e");
+  await import("../js/onlineBootstrap.js?v=20260530f");
 const {
   setHostPaused,
   installHostPauseBroadcaster,
   _resetHostPauseStateForTesting,
-} = await import("../js/hostPauseState.js?v=20260530e");
+} = await import("../js/hostPauseState.js?v=20260530f");
 
 function makeFakeNet() {
   const handlers = new Map();

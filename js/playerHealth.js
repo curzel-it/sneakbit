@@ -20,10 +20,10 @@
 // API continues to operate on index 0 by default so existing call sites
 // keep working until they thread a playerIndex.
 
-import { getSpecies } from "./species.js?v=20260530e";
-import { resolveLoadout } from "./sessionLoadouts.js?v=20260530e";
-import { rumble } from "./rumble.js?v=20260530e";
-import { isPvp, pvpPlayerHp } from "./gameMode.js?v=20260530e";
+import { getSpecies } from "./species.js?v=20260530f";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260530f";
+import { rumble } from "./rumble.js?v=20260530f";
+import { isPvp, pvpPlayerHp } from "./gameMode.js?v=20260530f";
 
 const MAX_HP = 100;
 

@@ -6,7 +6,7 @@
 // In offline / guest mode this no-ops, so call sites don't have to gate
 // themselves — `showToast("hello")` works the same in single-player.
 
-import { getNetRole, getNet } from "./onlineBootstrap.js?v=20260530e";
+import { getNetRole, getNet } from "./onlineBootstrap.js?v=20260530f";
 
 // Allowlist of `kind` values the host may push through. Matches
 // docs/online-coop.md §`event` — guests already silently ignore unknown

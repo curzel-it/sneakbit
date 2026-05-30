@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 
 const { isCoopMode, setCoopMode, COOP_KEYMAPS, _setCoopModeForTesting,
   localPlayerCount, setLocalPlayerCount, isCoopActive, setNetworkGuestCount } =
-  await import("../js/coopMode.js?v=20260530e");
+  await import("../js/coopMode.js?v=20260530f");
 
 test("defaults to disabled", () => {
   _setCoopModeForTesting(false);

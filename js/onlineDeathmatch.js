@@ -8,20 +8,20 @@
 // Reaches game state through an injected getState() (installOnlineDeathmatch),
 // mirroring pvpController so there's no import back into main.js.
 
-import { setGameMode, getGameMode, GAME_MODE } from "./gameMode.js?v=20260530e";
-import { getNetRole } from "./onlineBootstrap.js?v=20260530e";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260530e";
-import { showToast } from "./toast.js?v=20260530e";
-import { travelTo, fadeOverlayIn } from "./transitions.js?v=20260530e";
-import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260530e";
+import { setGameMode, getGameMode, GAME_MODE } from "./gameMode.js?v=20260530f";
+import { getNetRole } from "./onlineBootstrap.js?v=20260530f";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260530f";
+import { showToast } from "./toast.js?v=20260530f";
+import { travelTo, fadeOverlayIn } from "./transitions.js?v=20260530f";
+import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260530f";
 import {
   startMatch as startPvpLogic, rematch as rematchPvpLogic, endMatch as endPvpMatch,
   notifyPlayerDied, getMatchResult, isMatchOver,
-} from "./pvpMatch.js?v=20260530e";
-import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530e";
-import { showMatchResult, isGameOverOpen, hideGameOver } from "./gameOver.js?v=20260530e";
-import { refreshHealthHud } from "./healthHud.js?v=20260530e";
-import { updateCamera } from "./camera.js?v=20260530e";
+} from "./pvpMatch.js?v=20260530f";
+import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530f";
+import { showMatchResult, isGameOverOpen, hideGameOver } from "./gameOver.js?v=20260530f";
+import { refreshHealthHud } from "./healthHud.js?v=20260530f";
+import { updateCamera } from "./camera.js?v=20260530f";
 
 const PVP_ARENA_ZONE_ID = 1301;
 const DUSKHAVEN_ZONE_ID = 1011;

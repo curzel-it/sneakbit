@@ -16,11 +16,11 @@
 // Returns null when the building species isn't a known prefab — the caller
 // should fall back to single-entity placement.
 
-import { getSpecies } from "./species.js?v=20260530e";
+import { getSpecies } from "./species.js?v=20260530f";
 import {
   SPRITE_SHEET_BIOME_TILES,
   SPRITE_SHEET_CONSTRUCTION_TILES,
-} from "./constants.js?v=20260530e";
+} from "./constants.js?v=20260530f";
 
 const SPECIES_TELEPORTER = 1019;
 const SPECIES_TABLE = 1016;

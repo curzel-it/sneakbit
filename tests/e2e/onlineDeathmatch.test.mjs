@@ -36,12 +36,29 @@ test("realtime online PvP: arena, 1000 HP, kill → result on both clients", asy
   const hostErrors = [];
   session.host.on("Runtime.exceptionThrown", (p) => hostErrors.push(p.exceptionDetails?.exception?.description || p.exceptionDetails?.text));
 
-  // Host starts the deathmatch (the party-panel button's action).
+  // Host starts the deathmatch (the party-panel button's action). Sample P1's
+  // tile at frame cadence across the arena entry first: the arena has no
+  // teleporters, so travelTo's spawn fallback is the map centre — players must
+  // never be *shown* there (they're scattered to corners while the screen is
+  // still black), so no arena frame should read centre (45,45).
   await waitFor(session.host, "!!window.deathmatch");
+  await evalExpr(session.host, `
+    window.__dmTrail = [];
+    window.__dmSample = setInterval(() => {
+      const s = window.deathmatch.state();
+      const p = s.players && s.players[0];
+      window.__dmTrail.push({ zone: s.zoneId, x: p && p.tileX, y: p && p.tileY });
+    }, 16);
+  `);
   await evalExpr(session.host, "window.deathmatch.start()");
 
   // Host: in PvP, arena 1301, both players at 1000 HP, distinct corners.
   const hs = await waitFor(session.host, "(() => { const s = window.deathmatch.state(); return s.mode === 'pvp' && s.zoneId === 1301 && s.players.length >= 2 ? s : null; })()");
+
+  // No "spawn at centre then jump to a corner" flash during arena entry.
+  await evalExpr(session.host, "clearInterval(window.__dmSample)");
+  const centerFrames = await evalExpr(session.host, "window.__dmTrail.filter((s) => s.zone === 1301 && s.x === 45 && s.y === 45).length");
+  assert.equal(centerFrames, 0, "host is never shown at the arena centre during entry");
   assert.equal(hs.hp[0], 1000, "host starts at 1000 HP");
   assert.equal(hs.hp[1], 1000, "guest starts at 1000 HP (host-side)");
   const [a, b] = hs.players;
@@ -73,7 +90,7 @@ test("realtime online PvP: arena, 1000 HP, kill → result on both clients", asy
   await evalExpr(session.host, "window.deathmatch.exit()");
   const guestModalGone = await waitFor(session.guest, "(() => { const e = document.getElementById('gameover'); return (!e || e.style.display === 'none') ? true : null; })()");
   assert.equal(guestModalGone, true, "guest result modal dismissed on host exit (pvpEnd)");
-  const guestMode = await waitFor(session.guest, "(async () => { const g = await import('./js/gameMode.js?v=20260530e'); return g.getGameMode() === 'coop' ? 'coop' : null; })()");
+  const guestMode = await waitFor(session.guest, "(async () => { const g = await import('./js/gameMode.js?v=20260530f'); return g.getGameMode() === 'coop' ? 'coop' : null; })()");
   assert.equal(guestMode, "coop", "guest game mode self-heals to coop via snapshot");
 
   await sleep(100);

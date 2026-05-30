@@ -9,17 +9,17 @@
 //   - z_index ===  99 (OVERLAY) → always on top;
 //   - otherwise sort by bottom row, then by z_index as a tiebreaker.
 
-import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js?v=20260530e";
-import { getEntitySheet, getSpecies } from "./species.js?v=20260530e";
-import { getSprite } from "./assets.js?v=20260530e";
-import { getPlayerSpriteFrame } from "./player.js?v=20260530e";
-import { SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260530e";
-import { resolveLoadout } from "./sessionLoadouts.js?v=20260530e";
-import { getMeleeSwingProgress } from "./melee.js?v=20260530e";
-import { pushableRenderOffset } from "./pushables.js?v=20260530e";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260530e";
-import { isCreativeMode } from "./creativeMode.js?v=20260530e";
-import { isDying, DEATH_SPRITE } from "./deathAnimation.js?v=20260530e";
+import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js?v=20260530f";
+import { getEntitySheet, getSpecies } from "./species.js?v=20260530f";
+import { getSprite } from "./assets.js?v=20260530f";
+import { getPlayerSpriteFrame } from "./player.js?v=20260530f";
+import { SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260530f";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260530f";
+import { getMeleeSwingProgress } from "./melee.js?v=20260530f";
+import { pushableRenderOffset } from "./pushables.js?v=20260530f";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260530f";
+import { isCreativeMode } from "./creativeMode.js?v=20260530f";
+import { isDying, DEATH_SPRITE } from "./deathAnimation.js?v=20260530f";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
