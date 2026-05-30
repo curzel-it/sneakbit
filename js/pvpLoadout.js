@@ -8,7 +8,7 @@
 // equipped weapon (see pickups.js). Each caliber (kunai 7000, .223 1169,
 // cannon 1170, …) is tracked independently by its bullet species id.
 
-import { getSpecies } from "./species.js?v=20260530b";
+import { getSpecies } from "./species.js?v=20260530c";
 
 const MAX_PLAYERS = 4;
 

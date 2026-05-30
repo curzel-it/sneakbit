@@ -7,7 +7,7 @@
 // the camera. Spawned bullets (_spawned) always tick so they keep moving
 // even when they leave the viewport for a few frames before despawning.
 
-import { getSpecies } from "./species.js?v=20260530b";
+import { getSpecies } from "./species.js?v=20260530c";
 
 const ALWAYS_VISIBLE_TYPES = new Set([
   "Hero",

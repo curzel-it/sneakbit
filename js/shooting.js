@@ -8,19 +8,19 @@
 // runs out of lifespan or leaves the zone bounds; combat.js removes
 // bullets that hit walls or kill targets.
 
-import { getSpecies } from "./species.js?v=20260530b";
-import { getAmmo, removeAmmo } from "./inventory.js?v=20260530b";
-import { playSfx } from "./audio.js?v=20260530b";
-import { resolveLoadout } from "./sessionLoadouts.js?v=20260530b";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260530b";
-import { matchesAction } from "./keyBindings.js?v=20260530b";
-import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260530b";
-import { getNetRole } from "./onlineBootstrap.js?v=20260530b";
-import { isPlayerDead } from "./playerHealth.js?v=20260530b";
-import { rumble } from "./rumble.js?v=20260530b";
-import { pvpSlotCanAct } from "./pvpMatch.js?v=20260530b";
-import { isPvp } from "./gameMode.js?v=20260530b";
-import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260530b";
+import { getSpecies } from "./species.js?v=20260530c";
+import { getAmmo, removeAmmo } from "./inventory.js?v=20260530c";
+import { playSfx } from "./audio.js?v=20260530c";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260530c";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260530c";
+import { matchesAction } from "./keyBindings.js?v=20260530c";
+import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260530c";
+import { getNetRole } from "./onlineBootstrap.js?v=20260530c";
+import { isPlayerDead } from "./playerHealth.js?v=20260530c";
+import { rumble } from "./rumble.js?v=20260530c";
+import { pvpSlotCanAct } from "./pvpMatch.js?v=20260530c";
+import { isPvp } from "./gameMode.js?v=20260530c";
+import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260530c";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed

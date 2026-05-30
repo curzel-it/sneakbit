@@ -2,8 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { setupCutscenes, tickCutscenes, startCutsceneByKey, endCutsceneByKey } =
-  await import("../js/cutscenes.js?v=20260530b");
-const storage = await import("../js/storage.js?v=20260530b");
+  await import("../js/cutscenes.js?v=20260530c");
+const storage = await import("../js/storage.js?v=20260530c");
 
 function makeRaw() {
   return {

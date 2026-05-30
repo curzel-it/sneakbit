@@ -11,7 +11,7 @@
 // DC(s) and the WS bypass returns `true`; otherwise it returns `false`
 // and net.js falls through to the WS path.
 
-import { createWebrtcChannel, DEFAULT_STUN_SERVERS, STATE } from "./webrtcChannel.js?v=20260530b";
+import { createWebrtcChannel, DEFAULT_STUN_SERVERS, STATE } from "./webrtcChannel.js?v=20260530c";
 
 const GAME_OPS = new Set(["snapshot", "delta", "event", "input"]);
 

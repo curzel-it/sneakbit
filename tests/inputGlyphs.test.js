@@ -18,13 +18,13 @@ globalThis.localStorage = (() => {
 })();
 
 const { glyphForAction, formatKeyCode, formatPadButton, confirmGlyph, backGlyph } =
-  await import("../js/inputGlyphs.js?v=20260530b");
+  await import("../js/inputGlyphs.js?v=20260530c");
 const { markInputDevice, _resetActiveInputDeviceForTesting } =
-  await import("../js/activeInputDevice.js?v=20260530b");
+  await import("../js/activeInputDevice.js?v=20260530c");
 const { setBinding, _resetBindingsForTesting } =
-  await import("../js/keyBindings.js?v=20260530b");
+  await import("../js/keyBindings.js?v=20260530c");
 const { setGamepadBinding, _resetGamepadBindingsForTesting } =
-  await import("../js/gamepadBindings.js?v=20260530b");
+  await import("../js/gamepadBindings.js?v=20260530c");
 
 test("formatKeyCode trims the common code prefixes", () => {
   assert.equal(formatKeyCode("KeyE"), "E");

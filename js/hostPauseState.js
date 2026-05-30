@@ -9,8 +9,8 @@
 // peer.joined / peer.rejoined so a guest who connects mid-pause sees
 // the right overlay rather than having to wait for the next unpause.
 
-import { broadcastHostEvent } from "./hostEvents.js?v=20260530b";
-import { getNet, getNetRole } from "./onlineBootstrap.js?v=20260530b";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260530c";
+import { getNet, getNetRole } from "./onlineBootstrap.js?v=20260530c";
 
 let paused = false;
 let unsubs = [];

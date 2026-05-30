@@ -5,31 +5,31 @@
 // screen. isMenuOpen() reports either screen as "open" so the game stays
 // paused while the player tweaks audio.
 
-import { getSettings, saveSettings } from "./settings.js?v=20260530b";
-import { playSfx } from "./audio.js?v=20260530b";
-import { APP_VERSION } from "./constants.js?v=20260530b";
-import { clearProgress } from "./save.js?v=20260530b";
-import { getSkills } from "./skills.js?v=20260530b";
-import { renderInventoryInto } from "./inventoryScreen.js?v=20260530b";
-import { isCreativeMode } from "./creativeMode.js?v=20260530b";
-import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260530b";
-import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, resetGamepadBindings } from "./gamepadBindings.js?v=20260530b";
-import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js?v=20260530b";
-import { formatKeyCode, formatPadButton, glyphForAction } from "./inputGlyphs.js?v=20260530b";
-import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDevice.js?v=20260530b";
-import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530b";
-import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js?v=20260530b";
-import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260530b";
-import { invalidateZoneCache } from "./data.js?v=20260530b";
-import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260530b";
-import { isGameOverOpen } from "./gameOver.js?v=20260530b";
-import { isFastTravelOpen } from "./fastTravel.js?v=20260530b";
-import { isMessageOpen } from "./message.js?v=20260530b";
-import { isDialogueOpen } from "./dialogue.js?v=20260530b";
-import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260530b";
-import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js?v=20260530b";
-import { tr } from "./strings.js?v=20260530b";
-import { startPvpMatch, exitPvp, isPvpActive } from "./pvpController.js?v=20260530b";
+import { getSettings, saveSettings } from "./settings.js?v=20260530c";
+import { playSfx } from "./audio.js?v=20260530c";
+import { APP_VERSION } from "./constants.js?v=20260530c";
+import { clearProgress } from "./save.js?v=20260530c";
+import { getSkills } from "./skills.js?v=20260530c";
+import { renderInventoryInto } from "./inventoryScreen.js?v=20260530c";
+import { isCreativeMode } from "./creativeMode.js?v=20260530c";
+import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260530c";
+import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, resetGamepadBindings } from "./gamepadBindings.js?v=20260530c";
+import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js?v=20260530c";
+import { formatKeyCode, formatPadButton, glyphForAction } from "./inputGlyphs.js?v=20260530c";
+import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDevice.js?v=20260530c";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530c";
+import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js?v=20260530c";
+import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260530c";
+import { invalidateZoneCache } from "./data.js?v=20260530c";
+import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260530c";
+import { isGameOverOpen } from "./gameOver.js?v=20260530c";
+import { isFastTravelOpen } from "./fastTravel.js?v=20260530c";
+import { isMessageOpen } from "./message.js?v=20260530c";
+import { isDialogueOpen } from "./dialogue.js?v=20260530c";
+import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260530c";
+import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js?v=20260530c";
+import { tr } from "./strings.js?v=20260530c";
+import { startPvpMatch, exitPvp, isPvpActive } from "./pvpController.js?v=20260530c";
 
 // Modals that own the keyboard while they're up. If any is open we treat
 // Esc / the menu key as "dismiss the active modal" — owned by that modal's

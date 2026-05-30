@@ -5,7 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { pickCoopSpawn } = await import("../js/coopSpawn.js?v=20260530b");
+const { pickCoopSpawn } = await import("../js/coopSpawn.js?v=20260530c");
 
 // Builds a zone whose collision matrix is given as a string grid:
 // "." → walkable, "#" → blocked. The optional entities array is

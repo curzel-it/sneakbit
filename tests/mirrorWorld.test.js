@@ -15,7 +15,7 @@ const {
   getMirrorPlayerById,
   isMirrorReady,
   INTERP_DELAY_MS,
-} = await import("../js/mirrorWorld.js?v=20260530b");
+} = await import("../js/mirrorWorld.js?v=20260530c");
 
 function makeFakeZone(id) {
   return { id, rows: 10, cols: 10, entities: [] };
@@ -372,7 +372,7 @@ test("requestResync sends {op:guest.resync} and throttles within MIN_INTERVAL", 
     send(frame) { sent.push(frame); },
   };
   const { installMirrorWorld, requestResync, uninstallMirrorWorld } =
-    await import("../js/mirrorWorld.js?v=20260530b");
+    await import("../js/mirrorWorld.js?v=20260530c");
   installMirrorWorld(fakeNet);
   assert.equal(requestResync(0), true);
   assert.deepEqual(sent[sent.length - 1], { op: "guest.resync" });
@@ -394,7 +394,7 @@ test("requestResync no-ops when the net is disconnected", async () => {
     send(frame) { sent.push(frame); },
   };
   const { installMirrorWorld, requestResync, uninstallMirrorWorld } =
-    await import("../js/mirrorWorld.js?v=20260530b");
+    await import("../js/mirrorWorld.js?v=20260530c");
   installMirrorWorld(fakeNet);
   assert.equal(requestResync(), false);
   assert.equal(sent.length, 0);

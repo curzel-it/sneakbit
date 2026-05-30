@@ -9,7 +9,7 @@
 // renderSize (default 32px) is the CSS size of the icon shown left of
 // the text.
 
-import { broadcastHostEvent } from "./hostEvents.js?v=20260530b";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260530c";
 
 const DURATIONS = { regular: 1.0, hint: 2.0, longHint: 3.0 };
 const FADE_OUT = 0.25; // seconds

@@ -10,24 +10,24 @@
 // Co-op rule: iterate every live player and the first one whose tile
 // overlaps a pickup wins it. Single-player just passes one player.
 
-import { resolveEntityDialogue, dialogueLines } from "./dialogue.js?v=20260530b";
-import { showToast } from "./toast.js?v=20260530b";
-import { playSfx } from "./audio.js?v=20260530b";
-import { getSpecies } from "./species.js?v=20260530b";
-import { addAmmo, getAmmo } from "./inventory.js?v=20260530b";
-import { getValue, setValue } from "./storage.js?v=20260530b";
-import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260530b";
+import { resolveEntityDialogue, dialogueLines } from "./dialogue.js?v=20260530c";
+import { showToast } from "./toast.js?v=20260530c";
+import { playSfx } from "./audio.js?v=20260530c";
+import { getSpecies } from "./species.js?v=20260530c";
+import { addAmmo, getAmmo } from "./inventory.js?v=20260530c";
+import { getValue, setValue } from "./storage.js?v=20260530c";
+import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260530c";
 import {
   setSessionLoadout,
   getSessionLoadout,
-} from "./sessionLoadouts.js?v=20260530b";
-import { tr } from "./strings.js?v=20260530b";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260530b";
-import { isCreativeMode } from "./creativeMode.js?v=20260530b";
-import { isPlayerDead } from "./playerHealth.js?v=20260530b";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260530b";
-import { isPvp } from "./gameMode.js?v=20260530b";
-import { addPvpAmmo, setPvpRangedWeapon } from "./pvpLoadout.js?v=20260530b";
+} from "./sessionLoadouts.js?v=20260530c";
+import { tr } from "./strings.js?v=20260530c";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260530c";
+import { isCreativeMode } from "./creativeMode.js?v=20260530c";
+import { isPlayerDead } from "./playerHealth.js?v=20260530c";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260530c";
+import { isPvp } from "./gameMode.js?v=20260530c";
+import { addPvpAmmo, setPvpRangedWeapon } from "./pvpLoadout.js?v=20260530c";
 
 // Bullet is here because in zone data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles
