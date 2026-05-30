@@ -23,8 +23,16 @@
 import { getSpecies } from "./species.js?v=20260530a";
 import { resolveLoadout } from "./sessionLoadouts.js?v=20260530a";
 import { rumble } from "./rumble.js?v=20260530a";
+import { isPvp, pvpPlayerHp } from "./gameMode.js?v=20260530a";
 
 const MAX_HP = 100;
+
+// Max HP depends on the game mode: PvP runs at 1000 (Rust
+// GameMode::player_hp) so matches actually last; co-op/creative stay at
+// 100. Every runtime cap (regen, clamp, reset, HUD) goes through here.
+function maxHp() {
+  return isPvp() ? pvpPlayerHp() : MAX_HP;
+}
 // Intentional divergence from Rust HERO_RECOVERY_PS=1.0. Block-A playtests
 // found 1 HP/s left the player chip-damage-locked when crossing biome
 // edges with low health — the web build also has no inventory consumables
@@ -38,7 +46,7 @@ const INVULN_AFTER_BURST = 0.4;
 const MAX_PLAYERS = 4;
 
 function makeRecord() {
-  return { hp: MAX_HP, invuln: 0, regenDelay: 0 };
+  return { hp: maxHp(), invuln: 0, regenDelay: 0 };
 }
 
 const records = Array.from({ length: MAX_PLAYERS }, makeRecord);
@@ -57,8 +65,9 @@ export function tickPlayerHealth(dt) {
       rec.regenDelay = Math.max(0, rec.regenDelay - dt);
       continue;
     }
-    if (rec.hp > 0 && rec.hp < MAX_HP) {
-      rec.hp = Math.min(MAX_HP, rec.hp + RECOVERY_PER_SEC * dt);
+    const cap = maxHp();
+    if (rec.hp > 0 && rec.hp < cap) {
+      rec.hp = Math.min(cap, rec.hp + RECOVERY_PER_SEC * dt);
       changed = true;
     }
   }
@@ -66,7 +75,7 @@ export function tickPlayerHealth(dt) {
 }
 
 export function getPlayerHp(index = 0)            { return recordFor(index).hp; }
-export function getPlayerMaxHp()                  { return MAX_HP; }
+export function getPlayerMaxHp()                  { return maxHp(); }
 export function isPlayerInvulnerable(index = 0)   { return recordFor(index).invuln > 0; }
 export function isPlayerDead(index = 0)           { return recordFor(index).hp <= 0; }
 
@@ -77,7 +86,7 @@ export function isPlayerDead(index = 0)           { return recordFor(index).hp <
 // onPlayerHealthChange listeners.
 export function setPlayerHp(hp, index = 0) {
   const rec = recordFor(index);
-  const next = Math.max(0, Math.min(MAX_HP, +hp));
+  const next = Math.max(0, Math.min(maxHp(), +hp));
   if (rec.hp === next) return;
   rec.hp = next;
   notify();
@@ -146,13 +155,14 @@ function applyDamageReductions(amount, victim) {
 // Reset HP for a given player (default both). Used by death/respawn and
 // by tests.
 export function resetPlayerHealth(index) {
+  const full = maxHp();
   if (index == null) {
     for (const rec of records) {
-      rec.hp = MAX_HP; rec.invuln = 0; rec.regenDelay = 0;
+      rec.hp = full; rec.invuln = 0; rec.regenDelay = 0;
     }
   } else {
     const rec = recordFor(index);
-    rec.hp = MAX_HP; rec.invuln = 0; rec.regenDelay = 0;
+    rec.hp = full; rec.invuln = 0; rec.regenDelay = 0;
   }
   notify();
 }
@@ -163,5 +173,5 @@ export function onPlayerHealthChange(fn) {
 }
 
 function notify() {
-  for (const fn of listeners) fn(records[0].hp, MAX_HP);
+  for (const fn of listeners) fn(records[0].hp, maxHp());
 }

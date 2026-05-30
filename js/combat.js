@@ -17,6 +17,19 @@ import { isExplosive } from "./explosives.js?v=20260530a";
 import { isCreativeMode } from "./creativeMode.js?v=20260530a";
 import { getSettings } from "./settings.js?v=20260530a";
 import { startDeathAnimation, tickDeathAnimations } from "./deathAnimation.js?v=20260530a";
+import { isPvp } from "./gameMode.js?v=20260530a";
+
+// Player-vs-player hit listeners. pvpMatch.js subscribes to apply the
+// turn clamp ("hit and the clock cuts") without combat.js importing it —
+// same registry shape as onPlayerHealthChange. (victimIndex, ownerIndex).
+const pvpHitListeners = new Set();
+export function onPlayerVsPlayerHit(fn) {
+  pvpHitListeners.add(fn);
+  return () => pvpHitListeners.delete(fn);
+}
+function emitPlayerVsPlayerHit(victimIdx, ownerIdx) {
+  for (const fn of pvpHitListeners) fn(victimIdx, ownerIdx);
+}
 
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;
@@ -81,7 +94,9 @@ function spawnDamageIndicator(zone, hittable, parentId) {
 
 function resolveBullets(zone, players, dt) {
   const ents = zone.entities;
-  const friendlyFire = !!getSettings().friendlyFire;
+  // PvP forces friendly fire on regardless of the user setting (Rust
+  // allows_pvp() gates the player-bullet-hits-player path).
+  const friendlyFire = !!getSettings().friendlyFire || isPvp();
   for (let i = ents.length - 1; i >= 0; i--) {
     const b = ents[i];
     if (!b._spawned) continue;
@@ -116,7 +131,9 @@ function resolveBullets(zone, players, dt) {
           const dps = (b._dpsOverride != null ? b._dpsOverride : bsp.dps) || 0;
           // Bullets hit briefly and pass through — treat them as a burst
           // (with invuln gate) rather than a sustained continuous tick.
-          applyPlayerDamage(dps * damageMultiplier(b) * dt, victim);
+          const result = applyPlayerDamage(dps * damageMultiplier(b) * dt, victim);
+          // In PvP, a landed hit cuts the shooter's turn to ≤2s.
+          if (isPvp() && result !== "ignored") emitPlayerVsPlayerHit(victimIdx, ownerIdx);
           if (!tryBounce(b, bsp)) ents.splice(i, 1);
           continue;
         }
