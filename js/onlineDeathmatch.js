@@ -8,17 +8,18 @@
 // Reaches game state through an injected getState() (installOnlineDeathmatch),
 // mirroring pvpController so there's no import back into main.js.
 
-import { setGameMode, GAME_MODE } from "./gameMode.js?v=20260530a";
+import { setGameMode, getGameMode, GAME_MODE } from "./gameMode.js?v=20260530a";
 import { getNetRole } from "./onlineBootstrap.js?v=20260530a";
 import { getNetworkGuestCount } from "./coopMode.js?v=20260530a";
 import { broadcastHostEvent } from "./hostEvents.js?v=20260530a";
+import { showToast } from "./toast.js?v=20260530a";
 import { travelTo } from "./transitions.js?v=20260530a";
 import { cornerSpawnTile } from "./pvpSpawn.js?v=20260530a";
 import {
   startMatch as startPvpLogic, rematch as rematchPvpLogic, endMatch as endPvpMatch,
   notifyPlayerDied, getMatchResult, isMatchOver,
 } from "./pvpMatch.js?v=20260530a";
-import { resetPlayerHealth, isPlayerDead } from "./playerHealth.js?v=20260530a";
+import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530a";
 import { showMatchResult, isGameOverOpen } from "./gameOver.js?v=20260530a";
 import { refreshHealthHud } from "./healthHud.js?v=20260530a";
 import { updateCamera } from "./camera.js?v=20260530a";
@@ -34,6 +35,31 @@ const dmDeadToasted = new Set();
 
 export function installOnlineDeathmatch(stateGetter) {
   getState = stateGetter || (() => null);
+  installDebugHook();
+}
+
+// Host-side test/debug hook (mirrors window.pvp/window.coop). Lets the e2e
+// start a match and read host match state.
+function installDebugHook() {
+  if (typeof window === "undefined") return;
+  window.deathmatch = {
+    start: () => startMatch(),
+    exit: () => exit(),
+    kill: (index) => setPlayerHp(0, index),
+    state: () => {
+      const state = getState();
+      return {
+        mode: getGameMode(),
+        zoneId: state?.zone?.id,
+        over: isMatchOver(),
+        result: getMatchResult(),
+        hp: [0, 1, 2, 3].map((i) => getPlayerHp(i)),
+        players: orderedPlayers(state).map((p) => ({
+          index: p.index | 0, tileX: p.tileX, tileY: p.tileY, hp: getPlayerHp(p.index | 0),
+        })),
+      };
+    },
+  };
 }
 
 export function isOnlineDeathmatchHost() {
@@ -97,7 +123,7 @@ export async function startMatch() {
   const state = getState();
   if (!state?.zone || !state.player) return;
   const n = playerCount(state);
-  if (n < 2) return; // need at least one guest to fight
+  if (n < 2) { showToast("Wait for a friend to join before starting PvP.", "hint"); return; }
   setGameMode(GAME_MODE.pvp, { realtime: true });
   broadcastHostEvent("pvpStart", {});
   startPvpLogic(n, /* turnBased */ false);

@@ -28,6 +28,7 @@ import { isCreativeMode } from "./creativeMode.js?v=20260530a";
 import { isCoopMode, localPlayerCount } from "./coopMode.js?v=20260530a";
 import { setLocalPlayers } from "./main.js?v=20260530a";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530a";
+import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js?v=20260530a";
 
 let chip = null;
 let chipLabel = null;
@@ -273,6 +274,21 @@ function buildHostingView() {
   hostingPeerList.className = "party-peer-list";
   root.appendChild(hostingPeerList);
 
+  // Realtime PvP (deathmatch): host-only, needs at least one guest. Travels
+  // everyone to the arena and fights last-player-standing. End PvP returns
+  // the host to the story world.
+  const pvpStartBtn = document.createElement("button");
+  pvpStartBtn.id = "party-start-pvp";
+  pvpStartBtn.textContent = "Realtime PvP (Beta)";
+  pvpStartBtn.addEventListener("click", onStartPvpClick);
+  root.appendChild(pvpStartBtn);
+
+  const pvpEndBtn = document.createElement("button");
+  pvpEndBtn.id = "party-end-pvp";
+  pvpEndBtn.textContent = "End PvP";
+  pvpEndBtn.addEventListener("click", () => { exitDeathmatch(); closePartyPanel(); });
+  root.appendChild(pvpEndBtn);
+
   hostingEndBtn = document.createElement("button");
   hostingEndBtn.textContent = "End co-op";
   hostingEndBtn.className = "party-danger";
@@ -280,6 +296,15 @@ function buildHostingView() {
   root.appendChild(hostingEndBtn);
 
   return root;
+}
+
+function onStartPvpClick() {
+  if (getKnownPeers().length < 1) {
+    showToast("Wait for a friend to join before starting PvP.", "hint");
+    return;
+  }
+  closePartyPanel();
+  startDeathmatch();
 }
 
 function buildLocalCoopView() {
