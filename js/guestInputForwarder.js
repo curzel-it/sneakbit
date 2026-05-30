@@ -3,8 +3,10 @@
 // the same channel and land in Phase 7. Each frame carries a monotonic
 // seq for the reconciliation logic that arrives in Phase 6.
 
-import { actionForCode } from "./keyBindings.js?v=20260530g";
-import { readPadSnapshotForSlot } from "./gamepad.js?v=20260530g";
+import { actionForCode } from "./keyBindings.js?v=20260531a";
+import { readPadSnapshotForSlot } from "./gamepad.js?v=20260531a";
+import { predictGuestSwing } from "./melee.js?v=20260531a";
+import { getPredictedSelf } from "./predictedSelf.js?v=20260531a";
 
 const ACTION_TO_INTENT = {
   moveUp: "moveUp",
@@ -287,6 +289,12 @@ function onBlur() {
 }
 
 function send(intent, extras) {
+  // Local prediction: animate the guest's own swing the instant they press
+  // melee, rather than waiting a full RTT for the host's snapshot to echo
+  // the cooldown back. The host still owns the authoritative swing via the
+  // forwarded intent; this is cosmetic. Runs even when the link is down so
+  // a buffered swing still looks responsive.
+  if (intent === "melee") predictGuestSwing(getPredictedSelf());
   if (!net?.isConnected?.()) {
     // Movement intents are state-derived; on reconnect, the still-held
     // key is re-emitted from flushOnReconnect. Buffering a moveLeft

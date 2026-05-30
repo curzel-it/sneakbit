@@ -5,14 +5,14 @@
 // weapon.melee_dps_multiplier, applied via combat.js's normal bullet
 // resolution path.
 
-import { getSpecies } from "./species.js?v=20260530g";
-import { resolveLoadout } from "./sessionLoadouts.js?v=20260530g";
-import { playSfx } from "./audio.js?v=20260530g";
-import { matchesAction } from "./keyBindings.js?v=20260530g";
-import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260530g";
-import { getNetRole } from "./onlineBootstrap.js?v=20260530g";
-import { isPlayerDead } from "./playerHealth.js?v=20260530g";
-import { pvpSlotCanAct } from "./pvpMatch.js?v=20260530g";
+import { getSpecies } from "./species.js?v=20260531a";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260531a";
+import { playSfx } from "./audio.js?v=20260531a";
+import { matchesAction } from "./keyBindings.js?v=20260531a";
+import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260531a";
+import { getNetRole } from "./onlineBootstrap.js?v=20260531a";
+import { isPlayerDead } from "./playerHealth.js?v=20260531a";
+import { pvpSlotCanAct } from "./pvpMatch.js?v=20260531a";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -60,6 +60,42 @@ export function getMeleeSwingProgress(playerIndex = 0) {
   const dur = cooldownDuration[i] ?? 0;
   if (cd <= 0 || dur <= 0) return null;
   return Math.max(0, Math.min(1, cd / dur));
+}
+
+// Raw cooldown state for a player index. The host ships this in snapshots
+// (snapshotBroadcaster.serializePlayer) so guests can drive the swing
+// animation for the host + other guests, whose local sim never runs.
+export function getMeleeCooldown(playerIndex = 0) {
+  const i = playerIndex | 0;
+  return { cd: cooldown[i] ?? 0, dur: cooldownDuration[i] ?? 0 };
+}
+
+// Cosmetic-only swing trigger. Unlike performMeleeSwing it spawns no
+// bullets and plays no SFX — the host owns the authoritative hit + sound.
+// Used by the guest paths: local prediction for the guest's own avatar
+// (predictGuestSwing) and snapshot ingestion for everyone else
+// (mirrorWorld). Drives the equipment overlay via getMeleeSwingProgress.
+export function setSwingAnimation(playerIndex, remaining, duration) {
+  const i = playerIndex | 0;
+  if (i < 0 || i >= MAX_PLAYERS) return;
+  const dur = duration > 0 ? duration : DEFAULT_COOLDOWN;
+  const cd = remaining > 0 ? Math.min(remaining, dur) : dur;
+  cooldown[i] = cd;
+  cooldownDuration[i] = dur;
+}
+
+// Guest-side local prediction: start the swing animation for the guest's
+// own avatar the instant they press melee, instead of waiting a full RTT
+// for the host's snapshot to echo it back. Cosmetic; the host still owns
+// the actual swing (bullets, damage, SFX) via the forwarded intent.
+export function predictGuestSwing(player) {
+  if (!player) return;
+  const weaponId = resolveLoadout(player).melee;
+  if (!weaponId) return;
+  const weapon = getSpecies(weaponId);
+  if (!weapon || weapon.entity_type !== "WeaponMelee") return;
+  const cd = weapon.cooldown_after_use > 0 ? weapon.cooldown_after_use : DEFAULT_COOLDOWN;
+  setSwingAnimation(player.index | 0, cd, cd);
 }
 
 export function installMelee(getState) {

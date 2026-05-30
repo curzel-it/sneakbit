@@ -8,13 +8,14 @@
 // stop after one delta, fitting the 50–100 KB/s budget called out in
 // docs/online-coop.md at the snapshot section.
 
-import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260530g";
-import { getPlayerHp } from "./playerHealth.js?v=20260530g";
-import { isPvp, getGameMode, isRealtimePvp } from "./gameMode.js?v=20260530g";
-import { getPvpRangedWeapon, getPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js?v=20260530g";
-import { getLastSeqMap } from "./hostGuests.js?v=20260530g";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260530g";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260530g";
+import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260531a";
+import { getPlayerHp } from "./playerHealth.js?v=20260531a";
+import { isPvp, getGameMode, isRealtimePvp } from "./gameMode.js?v=20260531a";
+import { getPvpRangedWeapon, getPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js?v=20260531a";
+import { getLastSeqMap } from "./hostGuests.js?v=20260531a";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260531a";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260531a";
+import { getMeleeSwingProgress, getMeleeCooldown } from "./melee.js?v=20260531a";
 
 export const BROADCAST_INTERVAL_MS = 50;
 
@@ -340,6 +341,17 @@ function serializePlayer({ player, slot, playerId }) {
     moving: !!player.moving,
     hp: round3(getPlayerHp(idx)),
   };
+  // Melee swing state. Guests can't derive this — their local sim never
+  // runs the swing — so ship the live cooldown (sw) + its full duration
+  // (swd) while a swing animates. mirrorWorld.ingestPlayer feeds it back
+  // into melee.setSwingAnimation so the equipment overlay swings for the
+  // host + other guests. Omitted when idle to stay off the wire budget.
+  const swing = getMeleeSwingProgress(idx);
+  if (swing != null) {
+    const { cd, dur } = getMeleeCooldown(idx);
+    out.sw = round3(cd);
+    out.swd = round3(dur);
+  }
   // PvP: the host owns each player's per-caliber ammo (pvpLoadout). Ship the
   // equipped weapon (pw) + its current ammo (pa) so a guest's own HUD is right.
   if (isPvp()) {
@@ -420,6 +432,11 @@ function sigPlayer(p) {
     p.moving ? 1 : 0,
     p.hp,
     p.slot,
+    // Swing edge: 0→1 forces a delta at swing start (so a stationary swing,
+    // which changes no position, still reaches the guest), 1→0 at swing end.
+    // Only the edge needs to ship — the guest decays the cooldown locally
+    // via tickMelee between deltas.
+    p.swd ? 1 : 0,
   ].join("|");
 }
 
