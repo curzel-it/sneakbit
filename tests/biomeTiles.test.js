@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { BIOME } from "../js/biomes.js?v=20260530f";
-import { biomeTextureCol, NUM_COMBOS } from "../js/biomeTiles.js?v=20260530f";
+import { BIOME } from "../js/biomes.js?v=20260530g";
+import { biomeTextureCol, NUM_COMBOS } from "../js/biomeTiles.js?v=20260530g";
 
 const N = BIOME.NOTHING;
 

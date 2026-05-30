@@ -6,19 +6,19 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260530f");
+  await import("../js/onlineMode.js?v=20260530g");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js?v=20260530f");
+  await import("../js/onlineBootstrap.js?v=20260530g");
 const {
   installPredictedSelf, _uninstallPredictedSelfForTesting,
   tickPredictedSelf, getPredictedSelf, getLastAckedSeq,
   _shouldSnapForTesting,
-} = await import("../js/predictedSelf.js?v=20260530f");
+} = await import("../js/predictedSelf.js?v=20260530g");
 const {
   installMirrorWorld, uninstallMirrorWorld, handleSnapshot,
-} = await import("../js/mirrorWorld.js?v=20260530f");
-const inputModule = await import("../js/input.js?v=20260530f");
-const { loadSpeciesData } = await import("../js/species.js?v=20260530f");
+} = await import("../js/mirrorWorld.js?v=20260530g");
+const inputModule = await import("../js/input.js?v=20260530g");
+const { loadSpeciesData } = await import("../js/species.js?v=20260530g");
 
 function makeFakeZone(id) {
   return {

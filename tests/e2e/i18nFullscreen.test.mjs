@@ -26,7 +26,7 @@ test("localization loads English by default and Italian when selected; fullscree
   // Default load: tr() resolves a known key to its English value.
   await navigate(s, `${servers.appUrl}/index.html`);
   await waitFor(s, "!!window.__menuNav");
-  const enWeapons = await evalExpr(s, `import('./js/strings.js?v=20260530f').then(m => m.tr('weapons_selection.title'))`);
+  const enWeapons = await evalExpr(s, `import('./js/strings.js?v=20260530g').then(m => m.tr('weapons_selection.title'))`);
   assert.equal(enWeapons, "Weapons", "English string table is active by default");
 
   // The fullscreen toggle is wired into the pause menu.
@@ -45,10 +45,10 @@ test("localization loads English by default and Italian when selected; fullscree
   })()`);
   await navigate(s, `${servers.appUrl}/index.html`);
   await waitFor(s, "!!window.__menuNav");
-  const itWeapons = await evalExpr(s, `import('./js/strings.js?v=20260530f').then(m => m.tr('weapons_selection.title'))`);
+  const itWeapons = await evalExpr(s, `import('./js/strings.js?v=20260530g').then(m => m.tr('weapons_selection.title'))`);
   assert.equal(itWeapons, "Armi", "Italian string table is active after selecting 'it'");
 
   // A key only present in English still falls back rather than showing raw.
-  const fallback = await evalExpr(s, `import('./js/strings.js?v=20260530f').then(m => m.tr('ok'))`);
+  const fallback = await evalExpr(s, `import('./js/strings.js?v=20260530g').then(m => m.tr('ok'))`);
   assert.equal(fallback, "Ok", "shared key resolves under Italian too");
 });

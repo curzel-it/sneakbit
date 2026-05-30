@@ -9,13 +9,13 @@
 // local hero's chip only — the host's HUD doesn't try to show guests'
 // counts.
 
-import { TILE_SIZE } from "./constants.js?v=20260530f";
-import { getSprite } from "./assets.js?v=20260530f";
-import { getAmmo, onInventoryChange } from "./inventory.js?v=20260530f";
-import { getSpecies } from "./species.js?v=20260530f";
-import { isPvp } from "./gameMode.js?v=20260530f";
-import { cameraPlayerIndex } from "./pvpMatch.js?v=20260530f";
-import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260530f";
+import { TILE_SIZE } from "./constants.js?v=20260530g";
+import { getSprite } from "./assets.js?v=20260530g";
+import { getAmmo, onInventoryChange } from "./inventory.js?v=20260530g";
+import { getSpecies } from "./species.js?v=20260530g";
+import { isPvp } from "./gameMode.js?v=20260530g";
+import { cameraPlayerIndex } from "./pvpMatch.js?v=20260530g";
+import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260530g";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
 

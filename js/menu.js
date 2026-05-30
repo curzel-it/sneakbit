@@ -5,29 +5,29 @@
 // screen. isMenuOpen() reports either screen as "open" so the game stays
 // paused while the player tweaks audio.
 
-import { getSettings, saveSettings } from "./settings.js?v=20260530f";
-import { playSfx } from "./audio.js?v=20260530f";
-import { APP_VERSION } from "./constants.js?v=20260530f";
-import { clearProgress } from "./save.js?v=20260530f";
-import { getSkills } from "./skills.js?v=20260530f";
-import { renderInventoryInto } from "./inventoryScreen.js?v=20260530f";
-import { isCreativeMode } from "./creativeMode.js?v=20260530f";
-import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260530f";
-import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, resetGamepadBindings } from "./gamepadBindings.js?v=20260530f";
-import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js?v=20260530f";
-import { formatKeyCode, formatPadButton, glyphForAction } from "./inputGlyphs.js?v=20260530f";
-import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDevice.js?v=20260530f";
-import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530f";
-import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js?v=20260530f";
-import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260530f";
-import { invalidateZoneCache } from "./data.js?v=20260530f";
-import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260530f";
-import { isGameOverOpen } from "./gameOver.js?v=20260530f";
-import { isFastTravelOpen } from "./fastTravel.js?v=20260530f";
-import { isMessageOpen } from "./message.js?v=20260530f";
-import { isDialogueOpen } from "./dialogue.js?v=20260530f";
-import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260530f";
-import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js?v=20260530f";
+import { getSettings, saveSettings } from "./settings.js?v=20260530g";
+import { playSfx } from "./audio.js?v=20260530g";
+import { APP_VERSION } from "./constants.js?v=20260530g";
+import { clearProgress } from "./save.js?v=20260530g";
+import { getSkills } from "./skills.js?v=20260530g";
+import { renderInventoryInto } from "./inventoryScreen.js?v=20260530g";
+import { isCreativeMode } from "./creativeMode.js?v=20260530g";
+import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260530g";
+import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, resetGamepadBindings } from "./gamepadBindings.js?v=20260530g";
+import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js?v=20260530g";
+import { formatKeyCode, formatPadButton, glyphForAction } from "./inputGlyphs.js?v=20260530g";
+import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDevice.js?v=20260530g";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530g";
+import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js?v=20260530g";
+import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260530g";
+import { invalidateZoneCache } from "./data.js?v=20260530g";
+import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260530g";
+import { isGameOverOpen } from "./gameOver.js?v=20260530g";
+import { isFastTravelOpen } from "./fastTravel.js?v=20260530g";
+import { isMessageOpen } from "./message.js?v=20260530g";
+import { isDialogueOpen } from "./dialogue.js?v=20260530g";
+import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260530g";
+import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js?v=20260530g";
 
 // Modals that own the keyboard while they're up. If any is open we treat
 // Esc / the menu key as "dismiss the active modal" — owned by that modal's

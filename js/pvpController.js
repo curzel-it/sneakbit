@@ -8,25 +8,25 @@
 // spawns/despawns local avatars — is injected the same way, so there's no
 // import back into main.js.
 
-import { updateCamera, panCameraTo } from "./camera.js?v=20260530f";
-import { travelTo, fadeOverlayIn } from "./transitions.js?v=20260530f";
-import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260530f";
-import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530f";
-import { setGameMode, getGameMode, GAME_MODE, isPvp } from "./gameMode.js?v=20260530f";
-import { showToast } from "./toast.js?v=20260530f";
-import { tr } from "./strings.js?v=20260530f";
-import { showMatchResult, isGameOverOpen } from "./gameOver.js?v=20260530f";
-import { hideTurnHud } from "./turnHud.js?v=20260530f";
-import { refreshHealthHud } from "./healthHud.js?v=20260530f";
-import { getRuntimeRole } from "./onlineMode.js?v=20260530f";
-import { tryShootForSlot } from "./shooting.js?v=20260530f";
+import { updateCamera, panCameraTo } from "./camera.js?v=20260530g";
+import { travelTo, fadeOverlayIn } from "./transitions.js?v=20260530g";
+import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260530g";
+import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530g";
+import { setGameMode, getGameMode, GAME_MODE, isPvp } from "./gameMode.js?v=20260530g";
+import { showToast } from "./toast.js?v=20260530g";
+import { tr } from "./strings.js?v=20260530g";
+import { showMatchResult, isGameOverOpen } from "./gameOver.js?v=20260530g";
+import { hideTurnHud } from "./turnHud.js?v=20260530g";
+import { refreshHealthHud } from "./healthHud.js?v=20260530g";
+import { getRuntimeRole } from "./onlineMode.js?v=20260530g";
+import { tryShootForSlot } from "./shooting.js?v=20260530g";
 import {
   startMatch as startPvpLogic, rematch as rematchPvpLogic, tickMatch as tickPvpMatch,
   endMatch as endPvpMatch, notifyPlayerDied, cameraPlayerIndex, getMatchResult,
   isMatchOver, playerCount as pvpPlayerCount, getTurn, pvpSlotCanAct,
-} from "./pvpMatch.js?v=20260530f";
-import { getPvpAmmo, addPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260530f";
-import { PVP_ARENA_ZONE_ID } from "./constants.js?v=20260530f";
+} from "./pvpMatch.js?v=20260530g";
+import { getPvpAmmo, addPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260530g";
+import { PVP_ARENA_ZONE_ID } from "./constants.js?v=20260530g";
 
 // Where to drop the player when PvP ends if we have no record of where the
 // match was started from (Rust default: Duskhaven 1011 @ 59,57). Normally

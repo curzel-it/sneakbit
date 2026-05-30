@@ -3,11 +3,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { setGameMode, GAME_MODE } = await import("../js/gameMode.js?v=20260530f");
+const { setGameMode, GAME_MODE } = await import("../js/gameMode.js?v=20260530g");
 const {
   startMatch, rematch, endMatch, tickMatch, notifyPlayerDied, getTurn, getMatchResult,
   isMatchOver, currentLiveIndex, cameraPlayerIndex, pvpSlotCanAct, playerCount,
-} = await import("../js/pvpMatch.js?v=20260530f");
+} = await import("../js/pvpMatch.js?v=20260530g");
 
 test("startMatch begins at P1 prep, nobody dead, in progress", () => {
   startMatch(2);

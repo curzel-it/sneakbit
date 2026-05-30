@@ -3,9 +3,9 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadSpeciesData } from "../js/species.js?v=20260530f";
-import { shouldBeVisible, entityHittableFrame, rectOverlapsTile } from "../js/entityVisibility.js?v=20260530f";
-import { _setCreativeModeForTesting } from "../js/creativeMode.js?v=20260530f";
+import { loadSpeciesData } from "../js/species.js?v=20260530g";
+import { shouldBeVisible, entityHittableFrame, rectOverlapsTile } from "../js/entityVisibility.js?v=20260530g";
+import { _setCreativeModeForTesting } from "../js/creativeMode.js?v=20260530g";
 
 loadSpeciesData([
   { id: 3007, entity_type: "Npc",  is_rigid: true, sprite_sheet_id: 1009,
@@ -14,7 +14,7 @@ loadSpeciesData([
     sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
 ]);
 
-const storage = await import("../js/storage.js?v=20260530f");
+const storage = await import("../js/storage.js?v=20260530g");
 
 test("shouldBeVisible: no conditions → visible by default", () => {
   storage._resetStorageForTesting();

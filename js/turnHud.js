@@ -6,7 +6,7 @@
 //   active → "Player N's turn" + a big seconds counter; flashes the
 //            "Hit! Turn ending…" note when the turn was clamped to ≤2s.
 
-import { tr } from "./strings.js?v=20260530f";
+import { tr } from "./strings.js?v=20260530g";
 
 let root = null;
 let labelEl = null;

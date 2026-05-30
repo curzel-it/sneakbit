@@ -26,10 +26,10 @@
 // keyBindings treating Esc as global. D-pad + stick stay fixed cardinal.
 // D-pad: 12 up / 13 down / 14 left / 15 right.
 
-import { buttonFor, menuButton } from "./gamepadBindings.js?v=20260530f";
-import { markInputDevice } from "./activeInputDevice.js?v=20260530f";
-import * as menuNav from "./menuNav.js?v=20260530f";
-import { isMenuNavActive } from "./menuNav.js?v=20260530f";
+import { buttonFor, menuButton } from "./gamepadBindings.js?v=20260530g";
+import { markInputDevice } from "./activeInputDevice.js?v=20260530g";
+import * as menuNav from "./menuNav.js?v=20260530g";
+import { isMenuNavActive } from "./menuNav.js?v=20260530g";
 
 const ACTION_NAMES = ["interact", "shoot", "melee"];
 
