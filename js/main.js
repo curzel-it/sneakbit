@@ -1,78 +1,78 @@
 // Entry point. Wires features together; holds no game logic itself.
 
-import { STARTING_ZONE_ID, STARTING_SPAWN, PVP_ARENA_ZONE_ID } from "./constants.js?v=20260530g";
-import { loadAssets } from "./assets.js?v=20260530g";
-import { loadSpecies, loadStrings, loadZone } from "./data.js?v=20260530g";
-import { loadStringsData, tr } from "./strings.js?v=20260530g";
-import { installDialogue, isDialogueOpen } from "./dialogue.js?v=20260530g";
-import { installInteract, tickInteract, tryInteractForSlot } from "./interact.js?v=20260530g";
-import { loadSpeciesData } from "./species.js?v=20260530g";
-import { composeBiomeSheet } from "./biomeSheet.js?v=20260530g";
-import { buildZone } from "./zone.js?v=20260530g";
-import { pickCoopSpawn } from "./coopSpawn.js?v=20260530g";
-import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress } from "./input.js?v=20260530g";
-import { createPlayer, updatePlayer } from "./player.js?v=20260530g";
-import { createCamera, updateCamera, panCameraTo, cameraRectFor } from "./camera.js?v=20260530g";
-import { createRenderer, render } from "./renderer.js?v=20260530g";
-import { startGameLoop } from "./gameLoop.js?v=20260530g";
-import { createBiomeAnimation, tickBiomeAnimation } from "./biomeAnimation.js?v=20260530g";
-import { tickEntities } from "./entities.js?v=20260530g";
-import { installAutoZoom } from "./zoom.js?v=20260530g";
-import { installHud, updateHud } from "./hud.js?v=20260530g";
-import { loadAudio } from "./audio.js?v=20260530g";
-import { loadSettings, getSettings, resolveLanguage } from "./settings.js?v=20260530g";
-import { installMenu, isMenuOpen } from "./menu.js?v=20260530g";
-import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js?v=20260530g";
-import { checkPickup } from "./pickups.js?v=20260530g";
-import { installMusic, playTrack } from "./music.js?v=20260530g";
-import { installTouchControls } from "./touch.js?v=20260530g";
-import { installToast, showToast } from "./toast.js?v=20260530g";
-import { installShooting, tickShooting, tryShoot, tryShootForSlot } from "./shooting.js?v=20260530g";
-import { installMelee, tickMelee, tryMelee, tryMeleeForSlot } from "./melee.js?v=20260530g";
-import { setGamepadAction } from "./gamepad.js?v=20260530g";
-import { pollGuestGamepad } from "./guestInputForwarder.js?v=20260530g";
-import { installActiveInputDevice } from "./activeInputDevice.js?v=20260530g";
-import { installControllerPresence, isControllerPaused } from "./controllerPresence.js?v=20260530g";
-import { installAmmoHud, updateAmmoHud } from "./ammoHud.js?v=20260530g";
-import { tickMobs } from "./mobs.js?v=20260530g";
-import { tickMonsterFusion } from "./monsters.js?v=20260530g";
-import { tickMinionSpawning } from "./minions.js?v=20260530g";
-import { tickCombat } from "./combat.js?v=20260530g";
-import { tickAfterDialogue } from "./afterDialogue.js?v=20260530g";
-import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js?v=20260530g";
-import { installHealthHud, refreshHealthHud } from "./healthHud.js?v=20260530g";
-import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js?v=20260530g";
-import { installMessage, isMessageOpen } from "./message.js?v=20260530g";
-import { installFastTravel, isFastTravelOpen, tickFastTravel, markVisited } from "./fastTravel.js?v=20260530g";
-import { applyFirstLaunch } from "./firstLaunch.js?v=20260530g";
-import { loadProgress, saveProgress, clearProgress } from "./save.js?v=20260530g";
-import { getZoneCache } from "./zoneCache.js?v=20260530g";
-import { setupPuzzles, tickPuzzles } from "./puzzles.js?v=20260530g";
-import { setupCutscenes, tickCutscenes } from "./cutscenes.js?v=20260530g";
-import { tickTrails } from "./trails.js?v=20260530g";
-import { tickPushables } from "./pushables.js?v=20260530g";
-import { updateVisibleEntities } from "./zoneVisibility.js?v=20260530g";
-import { isCoopMode, setCoopMode, setLocalPlayerCount, localPlayerCount } from "./coopMode.js?v=20260530g";
-import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js?v=20260530g";
-import { runMigrations } from "./migrations.js?v=20260530g";
-import { installMapEditor } from "./mapEditor.js?v=20260530g";
-import { bootstrapOnline, onAnyClose } from "./onlineBootstrap.js?v=20260530g";
-import { getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead, refreshMirrorEntities } from "./mirrorWorld.js?v=20260530g";
-import { tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js?v=20260530g";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260530g";
-import { installPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260530g";
-import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js?v=20260530g";
-import { setHostPaused } from "./hostPauseState.js?v=20260530g";
-import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js?v=20260530g";
-import { switchRole, setStateHandlers } from "./switchRole.js?v=20260530g";
-import { installUiTokens } from "./uiTokens.js?v=20260530g";
-import { isPvp, isTurnBasedPvp, isRealtimePvp, isPvpHostSetup } from "./gameMode.js?v=20260530g";
-import { getTurn, isMatchOver } from "./pvpMatch.js?v=20260530g";
-import { installTurnHud, updateTurnHud, hideTurnHud } from "./turnHud.js?v=20260530g";
+import { STARTING_ZONE_ID, STARTING_SPAWN, PVP_ARENA_ZONE_ID } from "./constants.js?v=20260531a";
+import { loadAssets } from "./assets.js?v=20260531a";
+import { loadSpecies, loadStrings, loadZone } from "./data.js?v=20260531a";
+import { loadStringsData, tr } from "./strings.js?v=20260531a";
+import { installDialogue, isDialogueOpen } from "./dialogue.js?v=20260531a";
+import { installInteract, tickInteract, tryInteractForSlot } from "./interact.js?v=20260531a";
+import { loadSpeciesData } from "./species.js?v=20260531a";
+import { composeBiomeSheet } from "./biomeSheet.js?v=20260531a";
+import { buildZone } from "./zone.js?v=20260531a";
+import { pickCoopSpawn } from "./coopSpawn.js?v=20260531a";
+import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress } from "./input.js?v=20260531a";
+import { createPlayer, updatePlayer } from "./player.js?v=20260531a";
+import { createCamera, updateCamera, panCameraTo, cameraRectFor } from "./camera.js?v=20260531a";
+import { createRenderer, render } from "./renderer.js?v=20260531a";
+import { startGameLoop } from "./gameLoop.js?v=20260531a";
+import { createBiomeAnimation, tickBiomeAnimation } from "./biomeAnimation.js?v=20260531a";
+import { tickEntities } from "./entities.js?v=20260531a";
+import { installAutoZoom } from "./zoom.js?v=20260531a";
+import { installHud, updateHud } from "./hud.js?v=20260531a";
+import { loadAudio } from "./audio.js?v=20260531a";
+import { loadSettings, getSettings, resolveLanguage } from "./settings.js?v=20260531a";
+import { installMenu, isMenuOpen } from "./menu.js?v=20260531a";
+import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js?v=20260531a";
+import { checkPickup } from "./pickups.js?v=20260531a";
+import { installMusic, playTrack } from "./music.js?v=20260531a";
+import { installTouchControls } from "./touch.js?v=20260531a";
+import { installToast, showToast } from "./toast.js?v=20260531a";
+import { installShooting, tickShooting, tryShoot, tryShootForSlot } from "./shooting.js?v=20260531a";
+import { installMelee, tickMelee, tryMelee, tryMeleeForSlot } from "./melee.js?v=20260531a";
+import { setGamepadAction } from "./gamepad.js?v=20260531a";
+import { pollGuestGamepad } from "./guestInputForwarder.js?v=20260531a";
+import { installActiveInputDevice } from "./activeInputDevice.js?v=20260531a";
+import { installControllerPresence, isControllerPaused } from "./controllerPresence.js?v=20260531a";
+import { installAmmoHud, updateAmmoHud } from "./ammoHud.js?v=20260531a";
+import { tickMobs } from "./mobs.js?v=20260531a";
+import { tickMonsterFusion } from "./monsters.js?v=20260531a";
+import { tickMinionSpawning } from "./minions.js?v=20260531a";
+import { tickCombat } from "./combat.js?v=20260531a";
+import { tickAfterDialogue } from "./afterDialogue.js?v=20260531a";
+import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js?v=20260531a";
+import { installHealthHud, refreshHealthHud } from "./healthHud.js?v=20260531a";
+import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js?v=20260531a";
+import { installMessage, isMessageOpen } from "./message.js?v=20260531a";
+import { installFastTravel, isFastTravelOpen, tickFastTravel, markVisited } from "./fastTravel.js?v=20260531a";
+import { applyFirstLaunch } from "./firstLaunch.js?v=20260531a";
+import { loadProgress, saveProgress, clearProgress } from "./save.js?v=20260531a";
+import { getZoneCache } from "./zoneCache.js?v=20260531a";
+import { setupPuzzles, tickPuzzles } from "./puzzles.js?v=20260531a";
+import { setupCutscenes, tickCutscenes } from "./cutscenes.js?v=20260531a";
+import { tickTrails } from "./trails.js?v=20260531a";
+import { tickPushables } from "./pushables.js?v=20260531a";
+import { updateVisibleEntities } from "./zoneVisibility.js?v=20260531a";
+import { isCoopMode, setCoopMode, setLocalPlayerCount, localPlayerCount } from "./coopMode.js?v=20260531a";
+import { showLoadingScreen, bumpLoadingProgress, hideLoadingScreen } from "./loadingScreen.js?v=20260531a";
+import { runMigrations } from "./migrations.js?v=20260531a";
+import { installMapEditor } from "./mapEditor.js?v=20260531a";
+import { bootstrapOnline, onAnyClose } from "./onlineBootstrap.js?v=20260531a";
+import { getMirrorZone, getMirrorPlayers, isMirrorReady, isMirrorDead, refreshMirrorEntities } from "./mirrorWorld.js?v=20260531a";
+import { tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js?v=20260531a";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260531a";
+import { installPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260531a";
+import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js?v=20260531a";
+import { setHostPaused } from "./hostPauseState.js?v=20260531a";
+import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js?v=20260531a";
+import { switchRole, setStateHandlers } from "./switchRole.js?v=20260531a";
+import { installUiTokens } from "./uiTokens.js?v=20260531a";
+import { isPvp, isTurnBasedPvp, isRealtimePvp, isPvpHostSetup } from "./gameMode.js?v=20260531a";
+import { getTurn, isMatchOver } from "./pvpMatch.js?v=20260531a";
+import { installTurnHud, updateTurnHud, hideTurnHud } from "./turnHud.js?v=20260531a";
 import {
   installPvpController, pvpGateInput, pvpCameraTarget, tickPvpFrame,
-} from "./pvpController.js?v=20260530g";
-import { installOnlineDeathmatch, tickHostFrame as tickOnlineDeathmatch } from "./onlineDeathmatch.js?v=20260530g";
+} from "./pvpController.js?v=20260531a";
+import { installOnlineDeathmatch, tickHostFrame as tickOnlineDeathmatch } from "./onlineDeathmatch.js?v=20260531a";
 
 // Live game state. Module-level so switchRole's state-handlers (and the
 // beforeunload listener / window.save shim) can read and mutate it
@@ -508,6 +508,12 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
   const mZone = getMirrorZone();
   tickBiomeAnimation(biomeAnim, dt);
   tickEntities(dt);
+  // Decay melee swing cooldowns on the guest too. The guest's own swing is
+  // predicted locally (predictGuestSwing) and remote swings arrive via the
+  // mirror (snapshot sw/swd → melee.setSwingAnimation); without this tick
+  // the cooldown never drains, so the swing animation would freeze at its
+  // first frame and never finish.
+  tickMelee(dt);
   if (!isMirrorReady() || !mZone) {
     updateHud(hud, {
       zoneId: mZone?.id ?? null,

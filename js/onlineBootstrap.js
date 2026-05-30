@@ -7,11 +7,11 @@
 // handshake to issue (host.open / guest.join), so a reconnect after
 // grace re-issues the right frame automatically.
 
-import { getMode, getJoinCode, getRuntimeRole, isValidJoinCode } from "./onlineMode.js?v=20260530g";
-import { createNet } from "./net.js?v=20260530g";
-import { installWebrtcTransport } from "./webrtcTransport.js?v=20260530g";
-import { getIceServers, primeIceServers } from "./iceConfig.js?v=20260530g";
-import { flushOnReconnect } from "./guestInputForwarder.js?v=20260530g";
+import { getMode, getJoinCode, getRuntimeRole, isValidJoinCode } from "./onlineMode.js?v=20260531a";
+import { createNet } from "./net.js?v=20260531a";
+import { installWebrtcTransport } from "./webrtcTransport.js?v=20260531a";
+import { getIceServers, primeIceServers } from "./iceConfig.js?v=20260531a";
+import { flushOnReconnect } from "./guestInputForwarder.js?v=20260531a";
 
 let net = null;
 let inviteCode = null;
@@ -38,10 +38,35 @@ const nameByPlayerId = new Map();
 // role switch, etc.). Net `on("_close", ...)` is per-net, so we proxy
 // here. Used for things like "show toast + switchRole on 4005".
 const closeListeners = new Set();
+// Session-end subscribers + a once-per-session guard. A kick arrives as a
+// `kicked` op AND a 4005 close; a host quit as `session.closed` AND a 1000
+// close — the guard collapses each pair to a single onSessionEnded. Reset on
+// (re)join via the welcome handler.
+const sessionEndedListeners = new Set();
+let sessionEnded = false;
 
 export function onAnyClose(fn) {
   closeListeners.add(fn);
   return () => closeListeners.delete(fn);
+}
+
+// Fired once when the host deliberately ends the guest's session — either a
+// kick (`kicked` op / 4005 close) or a host quit (`session.closed` op / 1000
+// /1001 close). Subscribers (main.js) drop the guest back to offline so its
+// own saved world is restored. NOT fired on transient drops (1006 etc.) —
+// those are handled by net.js reconnect + the mirror's lagging fallback.
+export function onSessionEnded(fn) {
+  sessionEndedListeners.add(fn);
+  return () => sessionEndedListeners.delete(fn);
+}
+
+function notifySessionEnded(reason) {
+  if (sessionEnded) return;
+  sessionEnded = true;
+  for (const fn of [...sessionEndedListeners]) {
+    try { fn({ reason }); }
+    catch (e) { console.error("session-ended listener", e); }
+  }
 }
 
 // Net-agnostic session-state listeners. Fired whenever something the UI
@@ -185,6 +210,9 @@ function wireNetHandlers(n) {
     selfPlayerId = m.playerId || selfPlayerId;
     if (m.playerId && m.name) nameByPlayerId.set(m.playerId, m.name);
     welcomed = true;
+    // New session in flight — re-arm the once-per-session end guard so a
+    // reconnect/rejoin after a prior end can fire onSessionEnded again.
+    sessionEnded = false;
     dispatchHandshake();
     // Drain any shoot/melee/interact intents that were buffered while
     // the link was down, and re-emit the current movement direction so
@@ -266,8 +294,14 @@ function wireNetHandlers(n) {
     notifySessionState();
   });
 
+  n.on("kicked", (m) => {
+    console.warn("[online] kicked by host:", m?.reason ?? "kicked");
+    notifySessionEnded("kicked");
+  });
+
   n.on("session.closed", (m) => {
     console.warn("[online] session closed:", m.reason);
+    notifySessionEnded(m?.reason || "host_ended");
     notifySessionState();
   });
 
@@ -277,6 +311,12 @@ function wireNetHandlers(n) {
     const code = m?.code;
     const reason = m?.reason;
     console.warn("[online] ws closed", code, reason);
+    // Authoritative host-intent close codes. The matching op (kicked /
+    // session.closed) usually arrives first and already fired this — the
+    // `sessionEnded` guard makes the second call a no-op — but if the socket
+    // dies before the op is processed, the close code is the backstop.
+    if (code === 4005) notifySessionEnded("kicked");
+    else if (code === 1000 || code === 1001) notifySessionEnded("host_ended");
     for (const fn of [...closeListeners]) {
       try { fn({ code, reason }); }
       catch (e) { console.error("onAnyClose handler", e); }
@@ -317,4 +357,6 @@ export function _resetOnlineBootstrapForTesting() {
   knownPeers = [];
   lastJoinError = null;
   nameByPlayerId.clear();
+  sessionEndedListeners.clear();
+  sessionEnded = false;
 }

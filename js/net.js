@@ -4,7 +4,7 @@
 // 4001 obsolete and 4003 uuid-conflict bail out). One instance per tab —
 // host and guest share the same module.
 
-import { getOnlineUuid } from "./onlineMode.js?v=20260530g";
+import { getOnlineUuid } from "./onlineMode.js?v=20260531a";
 
 export const PROTOCOL = 1;
 const DEFAULT_DEV_WS = "ws://localhost:8090/ws";
@@ -172,6 +172,8 @@ export function createNet({
       if (code === 4004) return; // rate-limit ban — see spec, 60s lockout
       if (code === 4005) return; // kicked by host — coming back uninvited is hostile
       if (code === 4006) return; // server at capacity — don't pile on; user can manually retry
+      if (code === 1000) return; // host ended the session — it's gone server-side, nothing to rejoin
+      if (code === 1001) return; // host/server going away — same; the guest falls back to offline
       if (code === 4002) {
         // Idle / ping-timeout. Give the link one chance to recover,
         // then give up. Blindly reconnecting forever turns a wedged
