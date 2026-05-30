@@ -18,6 +18,7 @@ import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coop
 import { getNetRole } from "./onlineBootstrap.js?v=20260530a";
 import { isPlayerDead } from "./playerHealth.js?v=20260530a";
 import { rumble } from "./rumble.js?v=20260530a";
+import { pvpSlotCanAct } from "./pvpMatch.js?v=20260530a";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
@@ -151,6 +152,8 @@ function playerForSlot(state, slot) {
 function shoot(state, shooter) {
   const idx = (shooter?.index | 0) || 0;
   if (isPlayerDead(idx)) return;
+  // PvP: only the player whose turn is active may fire (no-op otherwise).
+  if (!pvpSlotCanAct(idx + 1)) return;
   if (cooldown[idx] > 0) return;
   const { weapon, bulletId } = resolveRangedWeapon(shooter);
   const bulletSp = getSpecies(bulletId);

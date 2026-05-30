@@ -8,6 +8,10 @@
 
 import { playSfx } from "./audio.js?v=20260530a";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530a";
+import { tr } from "./strings.js?v=20260530a";
+
+const DEFAULT_TITLE = "You died";
+const DEFAULT_SUB = "The shadows have taken you.";
 
 let root = null;
 let open = false;
@@ -47,6 +51,7 @@ export function isGameOverOpen() { return open; }
 
 export function showGameOver(onContinue, opts = {}) {
   if (open) return;
+  setCard(DEFAULT_TITLE, DEFAULT_SUB, "Continue");
   open = true;
   pendingContinue = typeof onContinue === "function" ? onContinue : null;
   root.style.display = "flex";
@@ -67,6 +72,37 @@ export function showGameOver(onContinue, opts = {}) {
     setTimeout(() => { btn.disabled = false; focusFirstIn(root); }, 350);
   }
   playSfx("gameOver");
+}
+
+// PvP end-of-match screen. Mirrors Rust's death-screen reading of
+// MatchResult: a winner (death_screen.player_won) or an unknown result
+// (death_screen.unknown_result), both inviting a rematch
+// (death_screen.start_new_match). Confirm runs onRematch. Reuses the same
+// modal as the co-op death overlay; setCard restores the text each time.
+export function showMatchResult(result, onRematch) {
+  if (open) return;
+  const won = result?.kind === "winner";
+  const title = won
+    ? tr("death_screen.player_won").replace("%PLAYER_NAME%", String((result.playerIndex | 0) + 1))
+    : tr("death_screen.unknown_result");
+  setCard(title, tr("death_screen.start_new_match"), "Rematch");
+  open = true;
+  pendingContinue = typeof onRematch === "function" ? onRematch : null;
+  root.style.display = "flex";
+  const btn = root.querySelector("#go-continue");
+  btn.style.display = "";
+  btn.disabled = true;
+  setTimeout(() => { btn.disabled = false; focusFirstIn(root); }, 350);
+  playSfx("gameOver");
+}
+
+function setCard(title, sub, buttonLabel) {
+  const h1 = root.querySelector("h1");
+  const subEl = root.querySelector(".go-sub");
+  const btn = root.querySelector("#go-continue");
+  if (h1) h1.textContent = title;
+  if (subEl) subEl.textContent = sub;
+  if (btn) btn.textContent = buttonLabel;
 }
 
 // Programmatic dismiss used by the guest's event:respawn handler. Does

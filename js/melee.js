@@ -12,6 +12,7 @@ import { matchesAction } from "./keyBindings.js?v=20260530a";
 import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260530a";
 import { getNetRole } from "./onlineBootstrap.js?v=20260530a";
 import { isPlayerDead } from "./playerHealth.js?v=20260530a";
+import { pvpSlotCanAct } from "./pvpMatch.js?v=20260530a";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -147,6 +148,8 @@ export function performMeleeSwing(state, opts = {}) {
   const swinger = opts.swinger || state.player;
   const idx = (swinger?.index | 0) || 0;
   if (isPlayerDead(idx)) return false;
+  // PvP: only the active player's turn may swing (no-op outside PvP).
+  if (!pvpSlotCanAct(idx + 1)) return false;
   if (cooldown[idx] > 0 && !opts.ignoreCooldown) return false;
   const weaponId = resolveLoadout(swinger).melee;
   if (!weaponId) return false;

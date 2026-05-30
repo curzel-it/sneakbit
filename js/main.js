@@ -41,7 +41,7 @@ import { tickCombat } from "./combat.js?v=20260530a";
 import { tickAfterDialogue } from "./afterDialogue.js?v=20260530a";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js?v=20260530a";
 import { installHealthHud, refreshHealthHud } from "./healthHud.js?v=20260530a";
-import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js?v=20260530a";
+import { installGameOver, isGameOverOpen, showGameOver, showMatchResult } from "./gameOver.js?v=20260530a";
 import { installMessage, isMessageOpen } from "./message.js?v=20260530a";
 import { installFastTravel, isFastTravelOpen, tickFastTravel, markVisited } from "./fastTravel.js?v=20260530a";
 import { applyFirstLaunch } from "./firstLaunch.js?v=20260530a";
@@ -66,6 +66,18 @@ import { setHostPaused } from "./hostPauseState.js?v=20260530a";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js?v=20260530a";
 import { switchRole, setStateHandlers } from "./switchRole.js?v=20260530a";
 import { installUiTokens } from "./uiTokens.js?v=20260530a";
+import { isPvp, setGameMode, GAME_MODE } from "./gameMode.js?v=20260530a";
+import {
+  startMatch as startPvpLogic, rematch as rematchPvpLogic, tickMatch as tickPvpMatch,
+  notifyPlayerDied, cameraPlayerIndex, getMatchResult, isMatchOver, playerCount as pvpPlayerCount,
+  getTurn, pvpSlotCanAct,
+} from "./pvpMatch.js?v=20260530a";
+import { cornerSpawnTile } from "./pvpSpawn.js?v=20260530a";
+import { installTurnHud, updateTurnHud, hideTurnHud } from "./turnHud.js?v=20260530a";
+
+// PvP world ids (Rust: arena 1301, exit to Duskhaven 1011 @ 59,57).
+const PVP_ARENA_ZONE_ID = 1301;
+const DUSKHAVEN_ZONE_ID = 1011;
 
 // Live game state. Module-level so switchRole's state-handlers (and the
 // beforeunload listener / window.save shim) can read and mutate it
@@ -112,6 +124,7 @@ async function main() {
   installToast();
   installTouchControls();
   installGameOver();
+  installTurnHud();
   installMessage();
   if (!bootGuest) applyFirstLaunch();
 
@@ -291,17 +304,17 @@ async function main() {
       // drains their event queue, so a held key doesn't flood the
       // player on revive. Without this gate a "dead-but-waiting" host
       // would silently walk around invisibly while spectating guests.
-      if (!isPlayerDead(0)) updatePlayer(state.player, hostInput, dt, state.zone);
+      if (!isPlayerDead(0)) updatePlayer(state.player, pvpGateInput(0, hostInput), dt, state.zone);
       if (state.player2) {
         const input2 = pollInput(2);
         if (!isPlayerDead(state.player2.index | 0)) {
-          updatePlayer(state.player2, input2, dt, state.zone);
+          updatePlayer(state.player2, pvpGateInput(1, input2), dt, state.zone);
         }
       }
       for (const s of state.players) {
         const inputN = pollInput(s.slot);
         if (!isPlayerDead(s.player.index | 0)) {
-          updatePlayer(s.player, inputN, dt, state.zone);
+          updatePlayer(s.player, pvpGateInput(s.player.index | 0, inputN), dt, state.zone);
         }
       }
       maybeTeleport(state);
@@ -311,7 +324,7 @@ async function main() {
       // each guest renders an independent window centred on themselves, so
       // the host's own window tracks the host. simulationViewports keeps
       // every off-camera guest's region alive (see below).
-      updateCamera(state.camera, hostCameraTarget(state), state.zone);
+      updateCamera(state.camera, cameraTarget(state), state.zone);
       updateVisibleEntities(state.zone, simulationViewports(state));
       tickShooting(dt);
       tickMelee(dt);
@@ -329,16 +342,22 @@ async function main() {
       tickPushables(state.zone, dt);
       tickPlayerHealth(dt);
       tickFastTravel(dt);
-      // P2 death is handled inline (toast + hide bar). Only P1 death
-      // halts the game with the Game Over modal.
-      handleCoopDeaths(state);
-      handleHostState(state);
+      // PvP runs its own turn + death + win/lose path; co-op keeps the
+      // inline-toast / P1-game-over path.
+      if (isPvp()) {
+        tickPvpFrame(dt);
+      } else {
+        // P2 death is handled inline (toast + hide bar). Only P1 death
+        // halts the game with the Game Over modal.
+        handleCoopDeaths(state);
+        handleHostState(state);
+      }
     } else {
       // When paused, keep the camera tracking the player so on resume
       // there's no jolt, but don't bother re-running the visibility pass
       // (the entity ticks are gated by `paused` above and won't read it).
       // Same follow-self-vs-averaged rule as the unpaused branch.
-      updateCamera(state.camera, hostCameraTarget(state), state.zone);
+      updateCamera(state.camera, cameraTarget(state), state.zone);
     }
     tickBiomeAnimation(biomeAnim, dt);
     tickEntities(dt);
@@ -358,6 +377,11 @@ async function main() {
       showFps: getSettings().showFps,
     });
     updateAmmoHud();
+    // Turn HUD: live during a PvP match, hidden during the result screen
+    // and outside PvP. Runs outside the pause gate so the countdown is
+    // always in sync.
+    if (isPvp() && !isMatchOver()) updateTurnHud(getTurn());
+    else hideTurnHud();
   });
 }
 
@@ -822,6 +846,131 @@ function simulationViewports(state) {
 function livePlayersForRender(state) {
   return allPlayers(state);
 }
+
+// ── PvP (local) ────────────────────────────────────────────────────────
+// One-shot death toasts for the active match (cleared on start/rematch).
+const pvpDeadToasted = new Set();
+
+// The player object for a 0-based slot index (0→P1, 1→P2, 2/3→local
+// extras). Mirrors the slot layout setLocalPlayers builds.
+function playerByIndex(state, idx0) {
+  if (idx0 === 0) return state.player || null;
+  if (idx0 === 1) return state.player2 || null;
+  if (Array.isArray(state.players)) {
+    const s = state.players.find((e) => e.slot === idx0 + 1 && e.playerId == null);
+    if (s) return s.player;
+  }
+  return null;
+}
+
+// Every player object regardless of alive/dead — PvP needs to notice the
+// frame a player dies (allPlayers filters the dead out).
+function allPlayerObjects(state) {
+  const out = [];
+  if (state.player) out.push(state.player);
+  if (state.player2) out.push(state.player2);
+  if (Array.isArray(state.players)) {
+    for (const s of state.players) if (s.player) out.push(s.player);
+  }
+  return out;
+}
+
+// Mask a slot's input to nothing when it isn't that player's turn (no-op
+// outside PvP — pvpSlotCanAct returns true). pollInput is still called by
+// the caller first, so the off-turn slot's event queue is drained.
+function pvpGateInput(idx0, raw) {
+  return pvpSlotCanAct(idx0 + 1) ? raw : { events: [], held: new Set() };
+}
+
+// PvP follows the current/upcoming player; everything else keeps the
+// shared averaged (or host-self) camera.
+function cameraTarget(state) {
+  if (isPvp()) {
+    const idx = cameraPlayerIndex();
+    const p = idx != null ? playerByIndex(state, idx) : null;
+    if (p) return p;
+  }
+  return hostCameraTarget(state);
+}
+
+// Drop a player onto a tile and resync the teleport bookkeeping so
+// maybeTeleport doesn't immediately fire on the jump.
+function placePvpPlayer(state, idx0, tile) {
+  const p = playerByIndex(state, idx0);
+  if (!p || !tile) return;
+  p.tileX = tile.x; p.tileY = tile.y; p.x = tile.x; p.y = tile.y;
+  p.step = null; p.queuedDir = null; p.pendingDir = null; p.pendingTimer = 0;
+  p._sliding = false;
+  p.direction = "down";
+  if (idx0 === 0) state.lastTile = { x: tile.x, y: tile.y };
+  else if (idx0 === 1 && state.lastTile2) state.lastTile2 = { x: tile.x, y: tile.y };
+  else {
+    const s = state.players?.find((e) => e.slot === idx0 + 1 && e.playerId == null);
+    if (s) s.lastTile = { x: tile.x, y: tile.y };
+  }
+}
+
+// Per-frame PvP step (offline/local only): advance the turn machine, toast
+// + report any new death, and raise the result screen once resolved.
+function tickPvpFrame(dt) {
+  tickPvpMatch(dt);
+  for (const p of allPlayerObjects(state)) {
+    const idx = p.index | 0;
+    if (isPlayerDead(idx) && !pvpDeadToasted.has(idx)) {
+      pvpDeadToasted.add(idx);
+      showToast(tr("notification.player.died").replace("%PLAYER_NAME%", String(idx + 1)), "longHint");
+      notifyPlayerDied(idx);
+    }
+  }
+  if (isMatchOver() && !isGameOverOpen()) {
+    showMatchResult(getMatchResult(), onPvpRematch);
+  }
+}
+
+// Rematch: re-arm the turn machine, full-heal, re-spawn at corners.
+function onPvpRematch() {
+  rematchPvpLogic();
+  pvpDeadToasted.clear();
+  const n = pvpPlayerCount();
+  for (let i = 0; i < n; i++) {
+    resetPlayerHealth(i);
+    placePvpPlayer(state, i, cornerSpawnTile(state.zone, i));
+  }
+  refreshHealthHud();
+}
+
+// Start a local N-player PvP match: switch mode, spawn the players, travel
+// to the arena (world 1301), then scatter them to the corners at full HP.
+export async function startPvpMatch(n) {
+  if (!state?.zone || !state.player) return;
+  n = Math.max(2, Math.min(4, n | 0));
+  setGameMode(GAME_MODE.pvp);
+  setLocalPlayers(n);
+  await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" });
+  pvpDeadToasted.clear();
+  for (let i = 0; i < n; i++) {
+    resetPlayerHealth(i);
+    placePvpPlayer(state, i, cornerSpawnTile(state.zone, i));
+  }
+  startPvpLogic(n);
+  refreshHealthHud();
+}
+
+// Leave PvP: back to co-op single-player at Duskhaven.
+export async function exitPvp() {
+  if (!state?.zone) return;
+  setGameMode(GAME_MODE.coop);
+  setLocalPlayers(1);
+  hideTurnHud();
+  pvpDeadToasted.clear();
+  await travelTo(state, { zone: DUSKHAVEN_ZONE_ID, x: 59, y: 57, direction: "Down" });
+  resetPlayerHealth(0);
+  refreshHealthHud();
+}
+
+// Whether a PvP match is currently active (menu uses it to swap entry/exit
+// items).
+export function isPvpActive() { return isPvp(); }
 
 function maybeTeleport(state) {
   const { player, player2, zone, lastTile, lastTile2 } = state;

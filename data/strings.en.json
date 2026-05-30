@@ -391,6 +391,8 @@
   "ok_action": ">> Ok",
   "picked_up_item": "Picked up `%s`!",
   "prep_for_next_turn": "Player %PLAYER_NAME%'s turn in %TIME%...",
+  "turn.player_turn": "Player %PLAYER_NAME%'s turn",
+  "turn.after_hit": "Hit! Turn ending…",
   "pvp_arena.menu.text": "* All players will be using this computer\n* One controller per player required\n* Turn-based combat\n* Only one map for now\nHappy new year!",
   "pvp_arena.menu.title": "PvP Arena (Beta)",
   "quest.crazy_conspiracy.girl.black_ninja_i_knew_it": "So you saw him, didn’t you? You talked to him? Oh, I knew it!\nBut don’t you see now? Don’t you see what I’ve been saying?\nHe’s not just *hiding*, he’s *placed*.\nEverything in here, everyone in here... They’re puppets...",
