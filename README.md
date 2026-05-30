@@ -1,20 +1,48 @@
-# SneakBit HTML
+# SneakBit (HTML)
 
 > This thing is entirely vibe coded and prompts itself based on snapshot tests.
 
 > Do with this information what you will...
 
-HTML5 / Canvas / vanilla JS port of [SneakBit](https://github.com/curzel-it/sneakbit) — a top-down adventure-action game originally written in Rust and shipped on Steam, iOS and Android.
+SneakBit is a top-down adventure-action game with close- and long-range combat, a
+hand-drawn Gameboy-style world, and a story to wander through. This repository is
+the **HTML5 / Canvas / vanilla JS** build of it — it runs in any browser, no
+install, no plugins.
 
-The original game uses a Rust core (`game_core`) with platform-specific renderers (raylib on desktop, CoreGraphics on iOS, Compose on Android). This project re-implements the renderer and runtime in plain JavaScript on top of an HTML canvas, reusing the original art and level data.
+A previous version of the game was written in **Rust** (a `game_core` crate with
+platform-specific renderers — raylib on desktop, CoreGraphics on iOS, Compose on
+Android) and shipped on Steam, the App Store and Google Play. That earlier release
+still lives at [curzel-it/sneakbit](https://github.com/curzel-it/sneakbit). This
+HTML build re-implements the runtime and renderer in plain JavaScript on top of an
+HTML canvas, reusing the same art and level data, with the longer-term goal of
+becoming the single codebase behind every platform (wrapped in Electron or similar).
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Overworld](docs/screenshots/overworld.png) | ![Lava caves](docs/screenshots/caves-lava.png) |
+| ![Water caves](docs/screenshots/caves-water.png) | |
+
+> These show the same world the HTML build renders. A small tool to regenerate them
+> straight from the live canvas — given a world id, camera position and viewport
+> size in tiles — is planned.
+
+## Features
+
+* Adventure-action gameplay with melee (sword) and ranged (kunai) combat
+* Pre-rendered dual-layer tiling system — biomes, constructions, animated objects
+* Tile-locked, Gameboy-style movement (see [Movement model](#movement-model))
+* **Online co-op** — up to four players share one world over WebRTC ([docs/online-coop.md](docs/online-coop.md))
+* **Local co-op** — up to four players on one machine, one controller each
+* **Turn-based PvP** — last bit standing (in progress, see [docs/pvp.md](docs/pvp.md))
+* Keyboard and gamepad/controller support
+* Localization via `tr()` (English + Italian)
+* Fullscreen toggle
 
 ## Architecture
 
 One feature, one file. See [CLAUDE.md](./CLAUDE.md) for the full guide and directory layout.
-
-## Online co-op
-
-Up to four players (one host + three guests) can share the host's world. The host runs the existing single-player game unchanged; guests render the host's snapshots and predict their own avatar for fluidity. A small Node relay pairs hosts and guests by 5-char invite code — see [docs/online-coop.md](./docs/online-coop.md) for the full protocol spec.
 
 ## Running it
 
@@ -26,32 +54,45 @@ npm run serve            # python3 -m http.server 8000
 npx http-server -p 8000
 ```
 
-Then open <http://localhost:8000>.
+Then open <http://localhost:8000>. The public build is deployed at
+<https://curzel.it/sneakbit-html>.
 
 ## Tests
 
 ```bash
-npm test                 # node --test tests/*.test.js
+npm run test:unit        # fast inner loop (~2 s) — node --test
+npm run test:e2e         # full e2e suite (~26 s; needs Chrome)
+npm test                 # both, sequential
 ```
 
-No devDependencies — uses Node's built-in test runner.
+No devDependencies — unit tests use Node's built-in test runner. E2E tests drive
+headless Chrome via raw CDP and self-skip if Chrome isn't on the path.
 
 ## Server
 
-Online co-op is brokered by a tiny Node relay in [`server/`](./server) (vanilla `node:http`, no deps). Run locally with `node server/index.js`. Full protocol spec in [docs/online-coop.md](./docs/online-coop.md).
+Online co-op is brokered by a tiny Node relay in [`server/`](./server) (vanilla
+`node:http`, no deps). Run locally with `node server/index.js`. Full protocol spec
+in [docs/online-coop.md](docs/online-coop.md).
 
-## Controls (phase 1)
+## Controls
 
 | Action | Keys |
 |---|---|
-| Move up    | `W` / `↑` |
-| Move down  | `S` / `↓` |
-| Move left  | `A` / `←` |
-| Move right | `D` / `→` |
+| Move | `W` `A` `S` `D` / arrow keys |
+| Ranged attack | `F` / `J` |
+| Close attack | `R` / `Q` |
+| Weapon selection | `TAB` |
+| Confirm | `E` / `K` / `SPACE` |
+| Menu | `X` / `ENTER` |
+| Back | `ESCAPE` |
+
+Gamepads are supported on desktop; local co-op requires one controller per extra player.
 
 ## Movement model
 
-Gameboy-/Pokémon-style tile-locked stepping, implemented in `js/player.js`. This is an intentional deviation from the original game (which uses free-axis movement) and will shape how other features get ported.
+Gameboy-/Pokémon-style tile-locked stepping, implemented in `js/player.js`. This is
+an intentional deviation from the earlier Rust release (which uses free-axis
+movement) and shapes how other features get ported.
 
 - The player always has a canonical integer tile (`tileX`, `tileY`). The rendered float position (`x`, `y`) only differs from it while a step is interpolating.
 - **Tap to rotate.** A fresh press of a direction the player is NOT already facing rotates the sprite and starts a short commit timer (`ROTATE_COMMIT_DELAY`, 0.06 s). Release before the timer fires = pure rotate, no step.
