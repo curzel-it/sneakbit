@@ -588,6 +588,38 @@ Debug-gated and inert without the flag; slated for removal once the smoothness w
 | 2026-05-29 | Keepalive delta so a quiet world doesn't flash "Host lagging…" | Decoupled from the stuck-avatar fix below; keeps `lastFrameAt` fresh. |
 | 2026-05-29 | **Stuck-avatar runaway fixed** — deltas + keepalives carry *all* player positions | A blocked-on-host avatar (frozen sig) was filtered out of every frame for 5.3 s while predicted ran 24 tiles down a clear column, then snapped. Now reconciled at keepalive cadence; worst-case snap ~6 tiles. |
 
+# PvP
+
+PvP ships in two variants that share all the PvP knobs (1000 HP, forced friendly
+fire, last-player-standing, the per-caliber arena scavenge in `pvpLoadout.js`,
+the result screen + rematch) — all gated on `isPvp()`:
+
+- **Local turn-based** (offline hotseat) — the turn machine + per-turn input
+  gating + turn HUD. Owned by `pvpController.js`. Spec below.
+- **Online realtime deathmatch** — no turns, everyone acts at once, each client
+  follows its own avatar over the host-authoritative stack. Host-only controller
+  `onlineDeathmatch.js`; `isRealtimePvp()`/`isTurnBasedPvp()` split the variants
+  (`setGameMode("pvp", { realtime: true })`).
+
+### Realtime online deathmatch
+
+"Current PvP, but realtime + online." The host picks **Realtime PvP (Beta)** in
+the party panel (needs ≥1 guest). On start the host: sets the realtime PvP mode,
+broadcasts a **`pvpStart`** event (guests enter PvP rendering — 1000-HP bar, PvP
+ammo HUD), travels everyone to arena 1301 (the existing `zoneChange` + full
+snapshot carry the guests), corner-spawns host + every guest at 1000 HP, and
+runs `pvpMatch.startMatch(n, /*turnBased*/ false)` (no turn). Each frame the host
+(`tickHostFrame`) notices deaths → `notifyPlayerDied` → `handleWinLose`; the
+terminal result is broadcast as **`pvpResult`** and shown via the shared
+`gameOver.showMatchResult` on every client. Combat, damage, HP and positions all
+ride the unchanged co-op sync; **follow-self camera is already what online co-op
+does** (host → own avatar, guest → `predictedSelf`). The one bespoke sync: each
+player's equipped weapon (`pw`) + current ammo (`pa`) ride the snapshot player
+record so a guest's own scavenge ammo HUD is correct (`guestSelfHpSync` applies
+the self values into the guest's `pvpLoadout`). New events are in the
+`hostEvents` ALLOWED_KINDS + the `guestEvents` dispatch. Deferred: frags/respawn
+scoring, spectator host, mixed local+online, a richer end-of-match lobby return.
+
 # PvP (turn-based)
 
 Turn-based, last-player-standing PvP. This section is the authoritative spec,
