@@ -10,7 +10,7 @@
 
 import { updateCamera, panCameraTo } from "./camera.js?v=20260530a";
 import { travelTo } from "./transitions.js?v=20260530a";
-import { cornerSpawnTile } from "./pvpSpawn.js?v=20260530a";
+import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260530a";
 import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530a";
 import { setGameMode, getGameMode, GAME_MODE, isPvp } from "./gameMode.js?v=20260530a";
 import { showToast } from "./toast.js?v=20260530a";
@@ -19,14 +19,13 @@ import { showMatchResult, isGameOverOpen } from "./gameOver.js?v=20260530a";
 import { hideTurnHud } from "./turnHud.js?v=20260530a";
 import { refreshHealthHud } from "./healthHud.js?v=20260530a";
 import { getRuntimeRole } from "./onlineMode.js?v=20260530a";
-import { getSpecies } from "./species.js?v=20260530a";
 import { tryShootForSlot } from "./shooting.js?v=20260530a";
 import {
   startMatch as startPvpLogic, rematch as rematchPvpLogic, tickMatch as tickPvpMatch,
   endMatch as endPvpMatch, notifyPlayerDied, cameraPlayerIndex, getMatchResult,
   isMatchOver, playerCount as pvpPlayerCount, getTurn, pvpSlotCanAct,
 } from "./pvpMatch.js?v=20260530a";
-import { getPvpAmmo, addPvpAmmo, getPvpRangedWeapon } from "./pvpLoadout.js?v=20260530a";
+import { getPvpAmmo, addPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260530a";
 
 // PvP world ids (Rust: arena 1301, exit to Duskhaven 1011 @ 59,57).
 const PVP_ARENA_ZONE_ID = 1301;
@@ -90,24 +89,6 @@ export function pvpCameraTarget() {
   return idx != null ? playerByIndex(idx) : null;
 }
 
-// Drop a player onto a tile and resync the teleport bookkeeping so
-// maybeTeleport doesn't immediately fire on the jump.
-function placePvpPlayer(idx0, tile) {
-  const state = getState();
-  const p = playerByIndex(idx0);
-  if (!state || !p || !tile) return;
-  p.tileX = tile.x; p.tileY = tile.y; p.x = tile.x; p.y = tile.y;
-  p.step = null; p.queuedDir = null; p.pendingDir = null; p.pendingTimer = 0;
-  p._sliding = false;
-  p.direction = "down";
-  if (idx0 === 0) state.lastTile = { x: tile.x, y: tile.y };
-  else if (idx0 === 1 && state.lastTile2) state.lastTile2 = { x: tile.x, y: tile.y };
-  else {
-    const s = state.players?.find((e) => e.slot === idx0 + 1 && e.playerId == null);
-    if (s) s.lastTile = { x: tile.x, y: tile.y };
-  }
-}
-
 // Per-frame PvP step (offline/local only): advance the turn machine, toast
 // + report any new death, and raise the result screen once resolved.
 export function tickPvpFrame(dt) {
@@ -145,7 +126,7 @@ async function enterArena(n) {
     pvpDeadToasted.clear();
     for (let i = 0; i < n; i++) {
       resetPlayerHealth(i);
-      placePvpPlayer(i, cornerSpawnTile(state.zone, i));
+      placePvpPlayer(state, playerByIndex(i), cornerSpawnTile(state.zone, i));
     }
     // Snap to P1's corner so the first frame doesn't pan from the old zone.
     updateCamera(state.camera, playerByIndex(0), state.zone);
@@ -234,10 +215,7 @@ function installDebugHook() {
         hp: [0, 1, 2, 3].map((i) => getPlayerHp(i)),
         weapon: [0, 1, 2, 3].map((i) => getPvpRangedWeapon(i)),
         // Ammo for each player's currently equipped weapon (what the HUD shows).
-        ammo: [0, 1, 2, 3].map((i) => {
-          const w = getSpecies(getPvpRangedWeapon(i));
-          return getPvpAmmo(i, w?.bullet_species_id || 7000);
-        }),
+        ammo: [0, 1, 2, 3].map((i) => getPvpAmmo(i, bulletOfWeapon(getPvpRangedWeapon(i)))),
         bullets: (state?.zone?.entities || []).filter((e) => e._spawned).length,
       };
     },

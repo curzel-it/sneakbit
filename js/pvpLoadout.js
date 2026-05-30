@@ -8,10 +8,22 @@
 // equipped weapon (see pickups.js). Each caliber (kunai 7000, .223 1169,
 // cannon 1170, …) is tracked independently by its bullet species id.
 
+import { getSpecies } from "./species.js?v=20260530a";
+
 const MAX_PLAYERS = 4;
 
 // Everyone starts with the kunai launcher equipped (its bullet is 7000).
 export const PVP_DEFAULT_RANGED = 1160;
+
+// The kunai launcher's bullet — the default caliber and the fallback when a
+// weapon species is unknown or missing its bullet (the PvP default weapon is
+// the kunai launcher). Centralized so the lookup + fallback live in one place.
+export const KUNAI_BULLET_ID = 7000;
+
+// The bullet caliber a ranged weapon fires (its per-player ammo pool key).
+export function bulletOfWeapon(weaponId) {
+  return getSpecies(weaponId)?.bullet_species_id || KUNAI_BULLET_ID;
+}
 
 // ammo[playerIndex] = { [bulletSpeciesId]: count }
 const ammo = Array.from({ length: MAX_PLAYERS }, () => Object.create(null));

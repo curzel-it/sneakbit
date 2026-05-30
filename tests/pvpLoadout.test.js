@@ -4,11 +4,19 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const {
-  PVP_DEFAULT_RANGED, resetPvpLoadout, getPvpRangedWeapon, setPvpRangedWeapon,
-  getPvpAmmo, hasPvpAmmo, addPvpAmmo, spendPvpAmmo, onPvpLoadoutChange,
+  PVP_DEFAULT_RANGED, KUNAI_BULLET_ID, resetPvpLoadout, getPvpRangedWeapon, setPvpRangedWeapon,
+  getPvpAmmo, hasPvpAmmo, addPvpAmmo, spendPvpAmmo, onPvpLoadoutChange, bulletOfWeapon,
 } = await import("../js/pvpLoadout.js?v=20260530a");
 
 const KUNAI = 7000, AR15 = 1169; // bullet species
+
+test("bulletOfWeapon falls back to the kunai caliber for an unknown weapon", () => {
+  // Species data isn't loaded in unit tests, so getSpecies() returns nothing →
+  // the helper returns the shared kunai default rather than undefined.
+  assert.equal(KUNAI_BULLET_ID, 7000);
+  assert.equal(bulletOfWeapon(999999), KUNAI_BULLET_ID);
+  assert.equal(bulletOfWeapon(undefined), KUNAI_BULLET_ID);
+});
 
 test("reset: kunai launcher equipped, no ammo", () => {
   resetPvpLoadout();

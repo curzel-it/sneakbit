@@ -11,8 +11,7 @@
 import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260530a";
 import { getPlayerHp } from "./playerHealth.js?v=20260530a";
 import { isPvp, getGameMode, isRealtimePvp } from "./gameMode.js?v=20260530a";
-import { getPvpRangedWeapon, getPvpAmmo } from "./pvpLoadout.js?v=20260530a";
-import { getSpecies } from "./species.js?v=20260530a";
+import { getPvpRangedWeapon, getPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js?v=20260530a";
 import { getLastSeqMap } from "./hostGuests.js?v=20260530a";
 import { broadcastHostEvent } from "./hostEvents.js?v=20260530a";
 import { shouldBeVisible } from "./entityVisibility.js?v=20260530a";
@@ -345,8 +344,7 @@ function serializePlayer({ player, slot, playerId }) {
   // equipped weapon (pw) + its current ammo (pa) so a guest's own HUD is right.
   if (isPvp()) {
     out.pw = getPvpRangedWeapon(idx);
-    const bulletId = getSpecies(out.pw)?.bullet_species_id || 7000;
-    out.pa = getPvpAmmo(idx, bulletId);
+    out.pa = getPvpAmmo(idx, bulletOfWeapon(out.pw));
   }
   return out;
 }

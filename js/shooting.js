@@ -20,7 +20,7 @@ import { isPlayerDead } from "./playerHealth.js?v=20260530a";
 import { rumble } from "./rumble.js?v=20260530a";
 import { pvpSlotCanAct } from "./pvpMatch.js?v=20260530a";
 import { isPvp } from "./gameMode.js?v=20260530a";
-import { spendPvpAmmo, getPvpRangedWeapon } from "./pvpLoadout.js?v=20260530a";
+import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260530a";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
@@ -220,8 +220,8 @@ function resolveRangedWeapon(shooter) {
   // PvP: the weapon comes from the per-player PvP loadout (starts as the
   // kunai launcher; weapon crates swap it), never the saved story loadout.
   if (isPvp()) {
-    const weapon = getSpecies(getPvpRangedWeapon(shooter?.index | 0));
-    return { weapon, bulletId: weapon?.bullet_species_id || KUNAI_BULLET_SPECIES_ID };
+    const weaponId = getPvpRangedWeapon(shooter?.index | 0);
+    return { weapon: getSpecies(weaponId), bulletId: bulletOfWeapon(weaponId) };
   }
   const weaponId = resolveLoadout(shooter).ranged;
   const weapon = weaponId ? getSpecies(weaponId) : null;

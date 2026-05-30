@@ -13,7 +13,7 @@ import { getNetRole } from "./onlineBootstrap.js?v=20260530a";
 import { broadcastHostEvent } from "./hostEvents.js?v=20260530a";
 import { showToast } from "./toast.js?v=20260530a";
 import { travelTo } from "./transitions.js?v=20260530a";
-import { cornerSpawnTile } from "./pvpSpawn.js?v=20260530a";
+import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260530a";
 import {
   startMatch as startPvpLogic, rematch as rematchPvpLogic, endMatch as endPvpMatch,
   notifyPlayerDied, getMatchResult, isMatchOver,
@@ -71,19 +71,6 @@ function orderedPlayers(state) {
   return out;
 }
 
-function placeAt(state, player, tile) {
-  player.tileX = tile.x; player.tileY = tile.y; player.x = tile.x; player.y = tile.y;
-  player.step = null; player.queuedDir = null; player.pendingDir = null;
-  player.pendingTimer = 0; player._sliding = false;
-  player.direction = "down";
-  if (player === state.player) state.lastTile = { x: tile.x, y: tile.y };
-  else if (player === state.player2) state.lastTile2 = { x: tile.x, y: tile.y };
-  else {
-    const s = state.players?.find((e) => e.player === player);
-    if (s) s.lastTile = { x: tile.x, y: tile.y };
-  }
-}
-
 // (Re)load the arena and scatter every player to a corner at full HP. Reloading
 // each round restores the scavenge pickups; ephemeralState keeps the arena from
 // persisting collection into the host's save. zoneChange + the fresh snapshot
@@ -103,7 +90,7 @@ async function setupArena() {
     for (const p of orderedPlayers(state)) {
       const idx = p.index | 0;
       resetPlayerHealth(idx);
-      placeAt(state, p, cornerSpawnTile(state.zone, idx));
+      placePvpPlayer(state, p, cornerSpawnTile(state.zone, idx));
     }
     updateCamera(state.camera, state.player, state.zone); // host follows own avatar
     refreshHealthHud();

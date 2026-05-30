@@ -47,3 +47,21 @@ export function cornerSpawnTile(zone, cornerIndex) {
   }
   return { x: Math.floor(zone.cols / 2), y: Math.floor(zone.rows / 2) };
 }
+
+// Drop a player onto a tile and resync the per-player teleport bookkeeping
+// (lastTile / lastTile2 / players[].lastTile) so maybeTeleport doesn't fire on
+// the jump. Shared by the local (pvpController) and online (onlineDeathmatch)
+// arenas — keyed by object identity so it works for any player slot.
+export function placePvpPlayer(state, player, tile) {
+  if (!state || !player || !tile) return;
+  player.tileX = tile.x; player.tileY = tile.y; player.x = tile.x; player.y = tile.y;
+  player.step = null; player.queuedDir = null; player.pendingDir = null;
+  player.pendingTimer = 0; player._sliding = false;
+  player.direction = "down";
+  if (player === state.player) state.lastTile = { x: tile.x, y: tile.y };
+  else if (player === state.player2) state.lastTile2 = { x: tile.x, y: tile.y };
+  else {
+    const s = state.players?.find((e) => e.player === player);
+    if (s) s.lastTile = { x: tile.x, y: tile.y };
+  }
+}

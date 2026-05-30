@@ -7,8 +7,7 @@
 import { setPlayerHp } from "./playerHealth.js?v=20260530a";
 import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260530a";
 import { rumble } from "./rumble.js?v=20260530a";
-import { setPvpRangedWeapon, setPvpAmmo } from "./pvpLoadout.js?v=20260530a";
-import { getSpecies } from "./species.js?v=20260530a";
+import { setPvpRangedWeapon, setPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js?v=20260530a";
 
 let unsubs = [];
 let installed = false;
@@ -52,8 +51,7 @@ function onAuth(msg) {
   // pvpLoadout slot (index 0) so the ammo HUD shows the right caliber/count.
   if (typeof self.pw === "number") {
     setPvpRangedWeapon(0, self.pw);
-    const bulletId = getSpecies(self.pw)?.bullet_species_id || 7000;
-    setPvpAmmo(0, bulletId, self.pa | 0);
+    setPvpAmmo(0, bulletOfWeapon(self.pw), self.pa | 0);
   }
 }
 
