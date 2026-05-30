@@ -70,7 +70,7 @@ import { isPvp, setGameMode, getGameMode, GAME_MODE } from "./gameMode.js?v=2026
 import {
   startMatch as startPvpLogic, rematch as rematchPvpLogic, tickMatch as tickPvpMatch,
   notifyPlayerDied, cameraPlayerIndex, getMatchResult, isMatchOver, playerCount as pvpPlayerCount,
-  getTurn, pvpSlotCanAct,
+  getTurn, pvpSlotCanAct, endMatch as endPvpMatch,
 } from "./pvpMatch.js?v=20260530a";
 import { cornerSpawnTile } from "./pvpSpawn.js?v=20260530a";
 import { getPvpAmmo, addPvpAmmo, getPvpRangedWeapon } from "./pvpLoadout.js?v=20260530a";
@@ -890,6 +890,10 @@ function livePlayersForRender(state) {
 // ── PvP (local) ────────────────────────────────────────────────────────
 // One-shot death toasts for the active match (cleared on start/rematch).
 const pvpDeadToasted = new Set();
+// True while the arena is loading (travelTo fade): re-entrancy guard for
+// enterArena, and a gate so the per-frame PvP logic doesn't run against the
+// not-yet-placed players / old zone.
+let pvpEntering = false;
 
 // The player object for a 0-based slot index (0→P1, 1→P2, 2/3→local
 // extras). Mirrors the slot layout setLocalPlayers builds.
@@ -961,6 +965,9 @@ function placePvpPlayer(state, idx0, tile) {
 // Per-frame PvP step (offline/local only): advance the turn machine, toast
 // + report any new death, and raise the result screen once resolved.
 function tickPvpFrame(dt) {
+  // Arena still loading: players aren't at their corners and HP isn't reset,
+  // so don't advance the turn or evaluate deaths against the old zone.
+  if (pvpEntering) return;
   tickPvpMatch(dt);
   for (const p of allPlayerObjects(state)) {
     const idx = p.index | 0;
@@ -980,16 +987,25 @@ function tickPvpFrame(dt) {
 // pickups (and monsters) that were consumed; ephemeralState keeps the arena
 // from persisting "item collected" flags into the player's save.
 async function enterArena(n) {
-  await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" });
-  state.zone.ephemeralState = true;
-  pvpDeadToasted.clear();
-  for (let i = 0; i < n; i++) {
-    resetPlayerHealth(i);
-    placePvpPlayer(state, i, cornerSpawnTile(state.zone, i));
+  // Re-entrancy guard: a second trigger (rapid rematch, gamepad confirm)
+  // while a load is in flight would otherwise sail past travelTo's `busy`
+  // guard and corner-place players against the not-yet-swapped zone.
+  if (pvpEntering) return;
+  pvpEntering = true;
+  try {
+    await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" });
+    state.zone.ephemeralState = true;
+    pvpDeadToasted.clear();
+    for (let i = 0; i < n; i++) {
+      resetPlayerHealth(i);
+      placePvpPlayer(state, i, cornerSpawnTile(state.zone, i));
+    }
+    // Snap to P1's corner so the first frame doesn't pan from the old zone.
+    updateCamera(state.camera, playerByIndex(state, 0), state.zone);
+    refreshHealthHud();
+  } finally {
+    pvpEntering = false;
   }
-  // Snap to P1's corner so the first frame doesn't pan from the old zone.
-  updateCamera(state.camera, playerByIndex(state, 0), state.zone);
-  refreshHealthHud();
 }
 
 // Rematch: re-arm the turn machine + loadout, then reload the arena fresh.
@@ -1020,11 +1036,12 @@ export async function startPvpMatch(n) {
 export async function exitPvp() {
   if (!state?.zone) return;
   setGameMode(GAME_MODE.coop);
+  endPvpMatch();            // park the turn machine + clear loadout
   setLocalPlayers(1);
   hideTurnHud();
   pvpDeadToasted.clear();
   await travelTo(state, { zone: DUSKHAVEN_ZONE_ID, x: 59, y: 57, direction: "Down" });
-  resetPlayerHealth(0);
+  resetPlayerHealth();     // all records back to the coop cap (clears stale P2-4)
   refreshHealthHud();
 }
 

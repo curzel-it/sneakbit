@@ -41,6 +41,16 @@ export function rematch() {
   return startMatch(numberOfPlayers);
 }
 
+// Tear the match down when leaving PvP: park the machine in realtime and
+// clear ammo/loadout so stale turn/result/ammo values don't linger past exit.
+export function endMatch() {
+  numberOfPlayers = 1;
+  turn = firstTurn(false);
+  dead = new Set();
+  result = { kind: "inProgress" };
+  resetPvpLoadout();
+}
+
 // Advance the countdowns one frame. No-op once the match has resolved so
 // the winner screen's countdown doesn't keep rotating turns.
 export function tickMatch(dt) {

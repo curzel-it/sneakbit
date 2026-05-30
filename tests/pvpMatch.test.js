@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 
 const { setGameMode, GAME_MODE } = await import("../js/gameMode.js?v=20260530a");
 const {
-  startMatch, rematch, tickMatch, notifyPlayerDied, getTurn, getMatchResult,
+  startMatch, rematch, endMatch, tickMatch, notifyPlayerDied, getTurn, getMatchResult,
   isMatchOver, currentLiveIndex, cameraPlayerIndex, pvpSlotCanAct, playerCount,
 } = await import("../js/pvpMatch.js?v=20260530a");
 
@@ -82,6 +82,18 @@ test("tickMatch freezes once the match is over", () => {
   const before = getTurn();
   tickMatch(100);
   assert.deepEqual(getTurn(), before);
+});
+
+test("endMatch parks the machine in realtime (no stale turn after exit)", () => {
+  startMatch(3);
+  tickMatch(3); // into P1's active turn
+  assert.equal(getTurn().kind, "player");
+  endMatch();
+  assert.equal(getTurn().kind, "realtime");
+  assert.equal(currentLiveIndex(), null);
+  assert.equal(cameraPlayerIndex(), null);
+  assert.equal(playerCount(), 1);
+  assert.deepEqual(getMatchResult(), { kind: "inProgress" });
 });
 
 test("rematch re-arms the same player count", () => {
