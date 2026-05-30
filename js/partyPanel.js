@@ -44,7 +44,7 @@ import { setLocalPlayers } from "./main.js?v=20260530g";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530g";
 import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js?v=20260530g";
 import { startPvpMatch, exitPvp } from "./pvpController.js?v=20260530g";
-import { isPvp, isRealtimePvp, setPvpHostSetup } from "./gameMode.js?v=20260530g";
+import { isPvp, isRealtimePvp, isPvpHostSetup, setPvpHostSetup } from "./gameMode.js?v=20260530g";
 
 let chip = null;
 let chipLabel = null;
@@ -114,7 +114,7 @@ export function installPartyPanel() {
     // listener still runs after, sees the panel already closed, and pops
     // the pause overlay on top — defeating the dismissal.
     e.stopImmediatePropagation();
-    closePartyPanel();
+    dismissPartyPanel();
   });
   renderAll();
 }
@@ -133,28 +133,12 @@ export function closePartyPanel() {
   lastFocusedView = null;
 }
 
-// User-initiated dismiss (Close button, Escape/Backspace, backdrop click).
-// While hosting an Online PvP setup the dialog is the lobby: dismissing it
-// lifts the host-world freeze and, if a friend has already joined, starts the
-// deathmatch (which teleports everyone into the arena). With no peer yet we
-// just unfreeze so the host isn't stranded in a frozen world while waiting.
-// Every other view (and all programmatic closes elsewhere) just close.
-function dismissPartyPanel() {
-  if (isPvpHostSetup()) {
-    setPvpHostSetup(false);
-    closePartyPanel();
-    if (getKnownPeers().length >= 1) startDeathmatch();
-    return;
-  }
-  closePartyPanel();
-}
-
-// User-initiated dismiss (Close button, Escape/Backspace, backdrop click).
-// While hosting an Online PvP setup the dialog is the lobby: dismissing it
-// lifts the host-world freeze and, if a friend has already joined, starts the
-// deathmatch (which teleports everyone into the arena). With no peer yet we
-// just unfreeze so the host isn't stranded in a frozen world while waiting.
-// Every other view (and all programmatic closes elsewhere) just close.
+// User-initiated dismiss (Close button, Escape, backdrop click). While
+// hosting an Online PvP setup the dialog is the lobby: dismissing it lifts the
+// host-world freeze and, if a friend has already joined, starts the deathmatch
+// (which teleports everyone into the arena). With no peer yet we just unfreeze
+// so the host isn't stranded in a frozen world while waiting. Every other view
+// (and all programmatic closes elsewhere) just close.
 function dismissPartyPanel() {
   if (isPvpHostSetup()) {
     setPvpHostSetup(false);
