@@ -80,6 +80,13 @@ Flow per match (driven by `updated_turn(turn, N, dt)` each frame):
 2. **`PlayerPrep`** counts `TURN_PREP_DURATION` down. The HUD shows
    `prep_for_next_turn` ("Player %PLAYER_NAME%'s turn in %TIME%..."). At ≤0 it
    becomes **`Player`** with `time_remaining = TURN_DURATION`.
+   - **Prep is a pure pause — nobody acts.** `currently_active_players()`
+     returns `vec![]` during `PlayerPrep` (`lib.rs`), so no slot is live: it is
+     the "oh god, it's my turn, where's the controller?!" breather between one
+     player's turn and the next. Movement and aim begin only when the state
+     flips to `Player`. (`world.rs::update_players` would route input to the
+     prep player, but with no active slot the platform sends none — the port
+     should simply gate all input off during prep.)
 3. **`Player`** counts `TURN_DURATION` down. At ≤0 the turn advances to the
    next player index (wrapping `last → P1`) and re-enters that player's
    `PlayerPrep`.
@@ -102,6 +109,17 @@ only when `!shooter_is_player || pvp_allowed`. So in co-op players can't shoot
 each other (the port adds an optional `friendlyFire` toggle on top), but in
 PvP every player bullet is live. `player_hp = 1000` makes matches last.
 
+**Weapons.** All weapons are available to every player in PvP — there is no
+PvP-specific loadout or weapon restriction. The only thing the mode changes is
+the player-vs-player damage gate above; weapon selection, ammo, and pickups on
+the arena map behave exactly as in normal play.
+
+**In-flight bullets at a turn boundary.** When a turn ends with a player's
+bullet still travelling, the port may do whichever is simpler — despawn it, or
+freeze it and resume on the next active turn. This is not gameplay-critical
+(it's an edge case worth at most a couple of frames of a bullet); don't build
+machinery for it. The Rust core doesn't special-case it.
+
 ### 1.5 Death, win/lose, rematch
 
 - On `PlayerDied(index)`: push to `dead_players`; a toast
@@ -111,7 +129,10 @@ PvP every player bullet is live. `player_hp = 1000` makes matches last.
   `handle_win_lose`.
 - `handle_win_lose` for PvP: when `dead_players.len() >= N - 1` (one or zero
   left standing) → `Winner(the surviving index)`, or `UnknownWinner` if none
-  resolve (simultaneous death). Otherwise `InProgress`.
+  resolve (simultaneous death). Otherwise `InProgress`. (The fourth
+  `MatchResult` variant, `GameOver`, is **co-op-only** — it's returned when P1
+  dies in `RealTimeCoOp`. PvP never produces it, so the port's existing
+  co-op game-over path is untouched; PvP only adds the winner/unknown screens.)
 - The death screen reads `match_result()`:
   - `Winner(i)` → title `death_screen.player_won` (`%PLAYER_NAME%` = `i+1`),
     subtitle `death_screen.start_new_match`.
@@ -157,9 +178,10 @@ enum through them.
    `turns_use_case.rs` with the same three constants. It is the single source
    of "whose turn, how long left, prep vs active." Pure and unit-testable
    (the Rust file already has tests to mirror).
-3. **Input gating.** The frame loop forwards real input only to
-   `currentPlayerIndex()`; off-turn slots get the empty input. This reuses the
-   existing per-slot routing — it just masks all-but-one each frame.
+3. **Input gating.** During an active `Player` turn the frame loop forwards real
+   input only to `currentPlayerIndex()`; off-turn slots get empty input. During
+   `PlayerPrep` **every** slot gets empty input (the pause window — see §1.3).
+   This reuses the existing per-slot routing — it just masks slots each frame.
 4. **Corner spawns.** A PvP spawn layout placing `0..N` at map corners
    (port of `spawn_players_at_map_corners`), instead of co-op's "around P1."
 5. **PvP-aware camera.** In PvP the camera follows the **current player**, not
@@ -185,6 +207,10 @@ enum through them.
 World **1301** is the canonical arena (already in `data/`). Ship it as the
 single map for the beta, matching `pvp_arena.menu.text` ("Only one map for
 now"). Additional arenas are a later content drop, not a code change.
+
+**Soundtrack.** A dedicated arena soundtrack is planned but lands later; for the
+beta the arena reuses the existing music. The audio swap is a content/asset
+follow-up, not part of the core PvP wiring.
 
 ---
 
