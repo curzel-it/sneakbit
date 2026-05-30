@@ -71,14 +71,20 @@ test("local PvP: arena, corners, turns, gating, win/lose", async (t) => {
   assert.equal(posOf(afterTap, 0).direction, target, "active P1 turned to face the tap");
   assert.equal(posOf(afterTap, 1).direction, p2dir, "off-turn P2 ignored its tap");
 
-  // Weapons are unlimited in PvP: the active player fires with no story
-  // ammo; off-turn slots are blocked by the turn gate. Measured
-  // synchronously — a corner player faces a wall, so the bullet despawns
-  // within a frame or two of flight.
+  // PvP ammo is per-player (own non-persisted pool, fresh save can fight).
+  // Both players start with the same stock; the active player fires and
+  // only THEIR pool decrements; off-turn slots are blocked by the turn gate.
+  // Bullet count is read synchronously (a corner player faces a wall, so the
+  // bullet despawns within a frame or two of flight).
+  const startAmmo = await evalExpr(s, "window.pvp.state().ammo");
+  assert.ok(startAmmo[0] > 0 && startAmmo[0] === startAmmo[1], "both players start with equal ammo");
   const offTurnDelta = await evalExpr(s, "(() => { const b0 = window.pvp.state().bullets; window.pvp.shoot(2); return window.pvp.state().bullets - b0; })()");
   assert.equal(offTurnDelta, 0, "off-turn P2 cannot shoot");
   const onTurnDelta = await evalExpr(s, "(() => { const b0 = window.pvp.state().bullets; window.pvp.shoot(1); return window.pvp.state().bullets - b0; })()");
-  assert.ok(onTurnDelta >= 1, "active P1 fires with unlimited PvP ammo");
+  assert.ok(onTurnDelta >= 1, "active P1 fires from their own pool");
+  const afterAmmo = await evalExpr(s, "window.pvp.state().ammo");
+  assert.equal(afterAmmo[0], startAmmo[0] - 1, "P1's pool decremented by one");
+  assert.equal(afterAmmo[1], startAmmo[1], "P2's pool untouched");
 
   // Win/lose: kill P2 → P1 is the lone survivor; the match resolves and the
   // result modal appears.

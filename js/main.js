@@ -73,6 +73,7 @@ import {
   getTurn, pvpSlotCanAct,
 } from "./pvpMatch.js?v=20260530a";
 import { cornerSpawnTile } from "./pvpSpawn.js?v=20260530a";
+import { getPvpAmmo } from "./pvpAmmo.js?v=20260530a";
 import { installTurnHud, updateTurnHud, hideTurnHud } from "./turnHud.js?v=20260530a";
 
 // PvP world ids (Rust: arena 1301, exit to Duskhaven 1011 @ 59,57).
@@ -211,6 +212,7 @@ async function main() {
         result: getMatchResult(),
         over: isMatchOver(),
         hp: [0, 1, 2, 3].map((i) => getPlayerHp(i)),
+        ammo: [0, 1, 2, 3].map((i) => getPvpAmmo(i)),
         bullets: (state.zone?.entities || []).filter((e) => e._spawned).length,
       }),
     };

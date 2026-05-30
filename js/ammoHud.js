@@ -13,6 +13,9 @@ import { TILE_SIZE } from "./constants.js?v=20260530a";
 import { getSprite } from "./assets.js?v=20260530a";
 import { getAmmo, onInventoryChange } from "./inventory.js?v=20260530a";
 import { getSpecies } from "./species.js?v=20260530a";
+import { isPvp } from "./gameMode.js?v=20260530a";
+import { cameraPlayerIndex } from "./pvpMatch.js?v=20260530a";
+import { getPvpAmmo } from "./pvpAmmo.js?v=20260530a";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
 
@@ -51,16 +54,23 @@ function makeChip(index) {
 
   card.appendChild(icon);
   card.appendChild(count);
-  return { root: card, icon, count, lastDrawn: -1, index };
+  return { root: card, icon, count, lastLabel: null, index };
 }
 
 export function updateAmmoHud() {
   if (!root) return;
+  // PvP repurposes the single chip to show the *active* player's own pool
+  // (it changes hands every turn), tagged with the player number so the
+  // count "resetting" between turns reads correctly. Outside PvP it's the
+  // local hero's shared/persisted count as before.
+  const pvp = isPvp();
+  const activeIdx = pvp ? (cameraPlayerIndex() ?? 0) : 0;
   for (const c of chips) {
-    const n = getAmmo(KUNAI_SPECIES_ID, c.index);
-    if (n !== c.lastDrawn) {
-      c.count.textContent = `x${n}`;
-      c.lastDrawn = n;
+    const n = pvp ? getPvpAmmo(activeIdx) : getAmmo(KUNAI_SPECIES_ID, c.index);
+    const label = pvp ? `P${activeIdx + 1}  x${n}` : `x${n}`;
+    if (label !== c.lastLabel) {
+      c.count.textContent = label;
+      c.lastLabel = label;
     }
     // Lazy-draw the icon the first time the sprite sheet is available
     // (it's loaded async at startup, so the first frames may not have it).
