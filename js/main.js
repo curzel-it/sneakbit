@@ -72,6 +72,7 @@ import { installTurnHud, updateTurnHud, hideTurnHud } from "./turnHud.js?v=20260
 import {
   installPvpController, pvpGateInput, pvpCameraTarget, tickPvpFrame,
 } from "./pvpController.js?v=20260530a";
+import { installOnlineDeathmatch, tickHostFrame as tickOnlineDeathmatch } from "./onlineDeathmatch.js?v=20260530a";
 
 // Live game state. Module-level so switchRole's state-handlers (and the
 // beforeunload listener / window.save shim) can read and mutate it
@@ -193,6 +194,7 @@ async function main() {
   // its own window.pvp debug hook). Wire it to the live state and the local
   // avatar spawner here.
   installPvpController(() => state, { setLocalPlayers });
+  installOnlineDeathmatch(() => state);
   installAutoZoom(canvas, state.camera, hud.el);
   // Guests don't own the world, world-mutating logic, or the warp graph
   // — so the simulation modules (mapEditor, interact, shooting/melee,
@@ -340,10 +342,12 @@ async function main() {
       tickPushables(state.zone, dt);
       tickPlayerHealth(dt);
       tickFastTravel(dt);
-      // PvP runs its own turn + death + win/lose path; co-op keeps the
-      // inline-toast / P1-game-over path.
+      // PvP runs its own death + win/lose path; co-op keeps the inline-toast /
+      // P1-game-over path. Realtime PvP is host-authoritative (onlineDeathmatch);
+      // the local turn-based arena uses pvpController.
       if (isPvp()) {
-        tickPvpFrame(dt);
+        if (isRealtimePvp()) tickOnlineDeathmatch(dt);
+        else tickPvpFrame(dt);
       } else {
         // P2 death is handled inline (toast + hide bar). Only P1 death
         // halts the game with the Game Over modal.

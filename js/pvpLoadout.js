@@ -48,6 +48,16 @@ export function hasPvpAmmo(index, bulletId) {
   return getPvpAmmo(index, bulletId) > 0;
 }
 
+// Set a player's count for one caliber to an absolute value (guests mirror
+// the host's authoritative pool over the wire — see guestSelfHpSync).
+export function setPvpAmmo(index, bulletId, count) {
+  const i = index | 0;
+  const b = bulletId | 0;
+  if (i < 0 || i >= MAX_PLAYERS || !b) return;
+  ammo[i][b] = Math.max(0, count | 0);
+  notify();
+}
+
 // Grant ammo of one caliber to a player (map pickups).
 export function addPvpAmmo(index, bulletId, amount) {
   const i = index | 0;

@@ -7,6 +7,8 @@
 import { setPlayerHp } from "./playerHealth.js?v=20260530a";
 import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260530a";
 import { rumble } from "./rumble.js?v=20260530a";
+import { setPvpRangedWeapon, setPvpAmmo } from "./pvpLoadout.js?v=20260530a";
+import { getSpecies } from "./species.js?v=20260530a";
 
 let unsubs = [];
 let installed = false;
@@ -46,6 +48,13 @@ function onAuth(msg) {
   if (lastSelfHp !== null && self.hp < lastSelfHp) rumble(1, "hurt");
   lastSelfHp = self.hp;
   setPlayerHp(self.hp, 0);
+  // PvP: mirror the host's authoritative equipped weapon + ammo into our own
+  // pvpLoadout slot (index 0) so the ammo HUD shows the right caliber/count.
+  if (typeof self.pw === "number") {
+    setPvpRangedWeapon(0, self.pw);
+    const bulletId = getSpecies(self.pw)?.bullet_species_id || 7000;
+    setPvpAmmo(0, bulletId, self.pa | 0);
+  }
 }
 
 export function _isInstalledForTesting() { return installed; }

@@ -10,6 +10,9 @@
 
 import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260530a";
 import { getPlayerHp } from "./playerHealth.js?v=20260530a";
+import { isPvp } from "./gameMode.js?v=20260530a";
+import { getPvpRangedWeapon, getPvpAmmo } from "./pvpLoadout.js?v=20260530a";
+import { getSpecies } from "./species.js?v=20260530a";
 import { getLastSeqMap } from "./hostGuests.js?v=20260530a";
 import { broadcastHostEvent } from "./hostEvents.js?v=20260530a";
 import { shouldBeVisible } from "./entityVisibility.js?v=20260530a";
@@ -319,18 +322,27 @@ function playersOf(state) {
 
 function serializePlayer({ player, slot, playerId }) {
   if (!playerId || !player) return null;
-  return {
+  const idx = player.index | 0;
+  const out = {
     playerId,
     slot,
-    index: player.index | 0,
+    index: idx,
     x: round3(player.x),
     y: round3(player.y),
     tileX: player.tileX,
     tileY: player.tileY,
     direction: player.direction,
     moving: !!player.moving,
-    hp: round3(getPlayerHp(player.index | 0)),
+    hp: round3(getPlayerHp(idx)),
   };
+  // PvP: the host owns each player's per-caliber ammo (pvpLoadout). Ship the
+  // equipped weapon (pw) + its current ammo (pa) so a guest's own HUD is right.
+  if (isPvp()) {
+    out.pw = getPvpRangedWeapon(idx);
+    const bulletId = getSpecies(out.pw)?.bullet_species_id || 7000;
+    out.pa = getPvpAmmo(idx, bulletId);
+  }
+  return out;
 }
 
 // Dev-only warn ledger so we don't spam the console once per delta
