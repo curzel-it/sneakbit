@@ -129,5 +129,11 @@ test("local PvP: arena, corners, turns, gating, win/lose", async (t) => {
   const modalShown = await evalExpr(s, "(() => { const el = document.getElementById('gameover'); return !!el && el.style.display === 'flex'; })()");
   assert.equal(modalShown, true, "match-result modal is visible");
 
+  // Exit returns to the zone the match was started from (1001 on a fresh
+  // save), back in co-op mode — never the arena, never the old Duskhaven hub.
+  await evalExpr(s, "window.pvp.exit()");
+  const exited = await waitFor(s, "(() => { const st = window.pvp.state(); return st.mode === 'coop' && st.zoneId === 1001 ? st : null; })()");
+  assert.equal(exited.zoneId, 1001, "exit returns to the pre-PvP zone, not the arena/Duskhaven");
+
   assert.deepEqual(errors, [], "page threw no exceptions");
 });

@@ -22,13 +22,20 @@ import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./pla
 import { showMatchResult, isGameOverOpen, hideGameOver } from "./gameOver.js?v=20260530f";
 import { refreshHealthHud } from "./healthHud.js?v=20260530f";
 import { updateCamera } from "./camera.js?v=20260530f";
+import { PVP_ARENA_ZONE_ID } from "./constants.js?v=20260530f";
 
-const PVP_ARENA_ZONE_ID = 1301;
+// Fallback exit destination if we have no record of the pre-match zone
+// (Rust default: Duskhaven 1011 @ 59,57). Normally exit() returns to the
+// captured co-op zone instead — see returnDest.
 const DUSKHAVEN_ZONE_ID = 1011;
 
 let getState = () => null;
 // True while the arena is loading: gate the per-frame logic (like pvpController).
 let dmEntering = false;
+// The host's zone/tile when the match started, so exit() returns the party
+// to the co-op world they left rather than a fixed hub. Guests follow via
+// the zoneChange + snapshot stream. Null until a match begins.
+let returnDest = null;
 // One-shot death bookkeeping per match (cleared on each setup).
 const dmDeadToasted = new Set();
 
@@ -119,6 +126,13 @@ export async function startMatch() {
   const n = orderedPlayers(state).length;
   if (n < 2) { showToast("Wait for a friend to join before starting PvP.", "hint"); return; }
   if (isGameOverOpen()) hideGameOver(); // clear any lingering overlay before arming
+  // Remember the co-op zone so exit() returns everyone here, not a fixed hub.
+  returnDest = {
+    zone: state.zone.id,
+    x: state.player.tileX | 0,
+    y: state.player.tileY | 0,
+    direction: state.player.direction,
+  };
   setGameMode(GAME_MODE.pvp, { realtime: true });
   broadcastHostEvent("pvpStart", {});
   startPvpLogic(n, /* turnBased */ false);
@@ -165,7 +179,9 @@ export async function exit() {
   broadcastHostEvent("pvpEnd", {});
   const state = getState();
   if (!state?.zone) return;
-  await travelTo(state, { zone: DUSKHAVEN_ZONE_ID, x: 59, y: 57, direction: "Down" });
+  const dest = returnDest ?? { zone: DUSKHAVEN_ZONE_ID, x: 59, y: 57, direction: "Down" };
+  returnDest = null;
+  await travelTo(state, dest);
   resetPlayerHealth();
   refreshHealthHud();
 }

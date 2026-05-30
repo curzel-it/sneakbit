@@ -26,9 +26,11 @@ import {
   isMatchOver, playerCount as pvpPlayerCount, getTurn, pvpSlotCanAct,
 } from "./pvpMatch.js?v=20260530f";
 import { getPvpAmmo, addPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260530f";
+import { PVP_ARENA_ZONE_ID } from "./constants.js?v=20260530f";
 
-// PvP world ids (Rust: arena 1301, exit to Duskhaven 1011 @ 59,57).
-const PVP_ARENA_ZONE_ID = 1301;
+// Where to drop the player when PvP ends if we have no record of where the
+// match was started from (Rust default: Duskhaven 1011 @ 59,57). Normally
+// exitPvp returns to the captured pre-match spot instead — see pvpReturnDest.
 const DUSKHAVEN_ZONE_ID = 1011;
 
 // Injected at install time.
@@ -41,6 +43,10 @@ const pvpDeadToasted = new Set();
 // enterArena, and a gate so the per-frame PvP logic doesn't run against the
 // not-yet-placed players / old zone.
 let pvpEntering = false;
+// The zone/tile the player was standing on when the match started, so
+// exitPvp can put them back exactly where they came from instead of a fixed
+// hub. Null until a match begins (exitPvp then falls back to Duskhaven).
+let pvpReturnDest = null;
 
 export function installPvpController(stateGetter, deps = {}) {
   getState = stateGetter || (() => null);
@@ -163,13 +169,21 @@ export async function startPvpMatch(n) {
     return;
   }
   n = Math.max(2, Math.min(4, n | 0));
+  // Remember where we came from so exitPvp can return here, not a fixed hub.
+  pvpReturnDest = {
+    zone: state.zone.id,
+    x: state.player.tileX | 0,
+    y: state.player.tileY | 0,
+    direction: state.player.direction,
+  };
   setGameMode(GAME_MODE.pvp);
   setLocalPlayers(n);
   startPvpLogic(n);
   await enterArena(n);
 }
 
-// Leave PvP: back to co-op single-player at Duskhaven.
+// Leave PvP: back to co-op single-player, returning to where the match was
+// started from (Duskhaven only if we somehow have no record).
 export async function exitPvp() {
   const state = getState();
   if (!state?.zone) return;
@@ -178,7 +192,9 @@ export async function exitPvp() {
   setLocalPlayers(1);
   hideTurnHud();
   pvpDeadToasted.clear();
-  await travelTo(state, { zone: DUSKHAVEN_ZONE_ID, x: 59, y: 57, direction: "Down" });
+  const dest = pvpReturnDest ?? { zone: DUSKHAVEN_ZONE_ID, x: 59, y: 57, direction: "Down" };
+  pvpReturnDest = null;
+  await travelTo(state, dest);
   resetPlayerHealth();     // all records back to the coop cap (clears stale P2-4)
   refreshHealthHud();
 }

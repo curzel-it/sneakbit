@@ -93,6 +93,13 @@ test("realtime online PvP: arena, 1000 HP, kill → result on both clients", asy
   const guestMode = await waitFor(session.guest, "(async () => { const g = await import('./js/gameMode.js?v=20260530f'); return g.getGameMode() === 'coop' ? 'coop' : null; })()");
   assert.equal(guestMode, "coop", "guest game mode self-heals to coop via snapshot");
 
+  // Exit returns the party to the pre-match co-op zone (1001 here), not a
+  // fixed hub — the host and the guest's mirror both leave the arena.
+  const hostZone = await waitFor(session.host, "(() => { const s = window.deathmatch.state(); return s.zoneId === 1001 ? s.zoneId : null; })()");
+  assert.equal(hostZone, 1001, "host returns to the pre-PvP co-op zone, not Duskhaven");
+  const guestMirrorZone = await waitFor(session.guest, "(window.__sb.m.getMirrorZone() && window.__sb.m.getMirrorZone().id === 1001) ? 1001 : null");
+  assert.equal(guestMirrorZone, 1001, "guest mirror follows the host back to the co-op zone");
+
   await sleep(100);
   assert.deepEqual(hostErrors, [], "host threw no exceptions");
 });

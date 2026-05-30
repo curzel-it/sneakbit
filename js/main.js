@@ -1,6 +1,6 @@
 // Entry point. Wires features together; holds no game logic itself.
 
-import { STARTING_ZONE_ID, STARTING_SPAWN } from "./constants.js?v=20260530f";
+import { STARTING_ZONE_ID, STARTING_SPAWN, PVP_ARENA_ZONE_ID } from "./constants.js?v=20260530f";
 import { loadAssets } from "./assets.js?v=20260530f";
 import { loadSpecies, loadStrings, loadZone } from "./data.js?v=20260530f";
 import { loadStringsData, tr } from "./strings.js?v=20260530f";
@@ -158,7 +158,7 @@ async function main() {
   let suppressUnloadSave = false;
   window.addEventListener("beforeunload", () => {
     if (suppressUnloadSave) return;
-    saveProgress(state);
+    persistProgress();
   });
   if (typeof window !== "undefined") {
     window.save = {
@@ -411,7 +411,11 @@ function maybeFallBackToOffline() {
 // => state` keep working because they read the binding lazily.
 async function initOfflineState() {
   const urlZone = parseInt(new URLSearchParams(location.search).get("zone"), 10);
-  const saved = Number.isFinite(urlZone) ? null : loadProgress();
+  let saved = Number.isFinite(urlZone) ? null : loadProgress();
+  // Guard against a save polluted by an older build that persisted the PvP
+  // arena: never boot into it. Drop the save so we fall back to the starting
+  // zone, as if no progress existed. (An explicit ?zone=1301 still works.)
+  if (saved?.zoneId === PVP_ARENA_ZONE_ID) saved = null;
   const startId = Number.isFinite(urlZone) ? urlZone : (saved?.zoneId ?? STARTING_ZONE_ID);
   const zoneRaw = await loadZone(startId).then(r => { bumpLoadingProgress("Zone loaded"); return r; });
   const zone = buildZone(zoneRaw);
@@ -936,11 +940,24 @@ function maybeTeleport(state) {
       : { ...d, y: dy + 1 };
     travelTo(state, dest).then(() => {
       markVisited(state.zone.id);
-      saveProgress(state);
+      persistProgress();
     });
   } else {
-    saveProgress(state);
+    persistProgress();
   }
+}
+
+// Persist the player's "home" position — but never while in a PvP match.
+// The arena (zone 1301) is transient: persisting it would boot the next
+// page load straight into the arena instead of the world the player
+// actually lives in. PvP exit travels back to the captured pre-match spot
+// (pvpController / onlineDeathmatch), so the save can stay frozen at the
+// real world through the whole match. Online guests don't reach here (their
+// state is wiped); online co-op hosts DO save, so a host keeps the zone they
+// walked to during a session.
+function persistProgress() {
+  if (isPvp()) return;
+  saveProgress(state);
 }
 
 main().catch((err) => {
