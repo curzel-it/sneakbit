@@ -30,22 +30,37 @@ function isSpawnableTile(zone, x, y) {
   return true;
 }
 
-// First spawnable tile scanning inward from corner `cornerIndex` toward
-// the map centre (column-major, matching Rust). Falls back to the map
-// centre if the whole quarter is blocked.
+// Spawnable tile nearest the corner `cornerIndex`, searching its quarter of
+// the map. Rust scans column-major and takes the *first* hit, but on a maze
+// arena (world 1301) that latches onto stray 1-2 tile openings part-way down
+// an outer column — players end up mid-edge instead of in the corner pocket.
+// Picking the closest spawnable tile to the corner (Chebyshev distance, then
+// Manhattan, then column-major order as the final tie-break) realises the same
+// "spread players as far apart as the map allows" intent robustly. Falls back
+// to the map centre if the whole quarter is blocked.
 export function cornerSpawnTile(zone, cornerIndex) {
   if (!zone || !zone.cols || !zone.rows) return { x: 0, y: 0 };
   const { sx, sy, dx, dy } = cornerScan(zone, cornerIndex);
   const xSteps = Math.ceil(zone.cols / 2);
   const ySteps = Math.ceil(zone.rows / 2);
+  let best = null;
+  let bestCheb = Infinity;
+  let bestMan = Infinity;
   for (let xi = 0; xi < xSteps; xi++) {
     const x = sx + xi * dx;
     for (let yi = 0; yi < ySteps; yi++) {
       const y = sy + yi * dy;
-      if (isSpawnableTile(zone, x, y)) return { x, y };
+      if (!isSpawnableTile(zone, x, y)) continue;
+      const cheb = Math.max(Math.abs(x - sx), Math.abs(y - sy));
+      const man = Math.abs(x - sx) + Math.abs(y - sy);
+      if (cheb < bestCheb || (cheb === bestCheb && man < bestMan)) {
+        bestCheb = cheb;
+        bestMan = man;
+        best = { x, y };
+      }
     }
   }
-  return { x: Math.floor(zone.cols / 2), y: Math.floor(zone.rows / 2) };
+  return best || { x: Math.floor(zone.cols / 2), y: Math.floor(zone.rows / 2) };
 }
 
 // Drop a player onto a tile and resync the per-player teleport bookkeeping

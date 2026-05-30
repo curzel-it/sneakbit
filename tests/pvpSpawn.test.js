@@ -54,6 +54,26 @@ test("falls back to map centre when the quarter is walled off", () => {
   assert.deepEqual(cornerSpawnTile(zone, 0), { x: 3, y: 3 });
 });
 
+test("prefers the corner pocket over a stray opening deeper in an outer column", () => {
+  // Regression for world 1301: a maze arena where the outer columns are walls
+  // except for one stray walkable cell part-way down. A column-major "first
+  // hit" scan latches onto that stray cell (mid-edge); the nearest-to-corner
+  // scan must instead pick the real top-left pocket at (2,2).
+  const zone = mkZone([
+    "########",
+    "########",
+    "##..####", // top-left pocket at (2,2),(3,2)
+    ".#######", // stray opening at (0,3) — outer column, farther from the corner
+    "########",
+    "########",
+    "########",
+    "########",
+  ]);
+  // Column-major first-hit would return the stray (0,3); nearest-to-corner
+  // returns the pocket (2,2).
+  assert.deepEqual(cornerSpawnTile(zone, 0), { x: 2, y: 2 });
+});
+
 test("corner index wraps mod 4", () => {
   const zone = mkZone(Array(4).fill("...."));
   assert.deepEqual(cornerSpawnTile(zone, 4), cornerSpawnTile(zone, 0));

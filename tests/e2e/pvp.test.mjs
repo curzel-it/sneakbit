@@ -48,6 +48,17 @@ test("local PvP: arena, corners, turns, gating, win/lose", async (t) => {
   const manhattan = Math.abs(a.tileX - b.tileX) + Math.abs(a.tileY - b.tileY);
   assert.ok(manhattan > 20, `players spawn far apart (manhattan=${manhattan})`);
 
+  // ...and in corners, not on the sides. The arena (1301) is 90×90 with its
+  // centre near (45,45); a corner pocket sits far from centre on BOTH axes,
+  // whereas a mid-edge "side" spawn (the bug) is near-centre on one axis.
+  const CX = 45, CY = 45, EDGE = 20;
+  for (const p of [a, b]) {
+    assert.ok(
+      Math.abs(p.tileX - CX) > EDGE && Math.abs(p.tileY - CY) > EDGE,
+      `player ${p.index} spawns in a corner, not a side (tile ${p.tileX},${p.tileY})`,
+    );
+  }
+
   // Match opens on P1's prep (nobody acts), then flips to P1's active turn.
   const prep = await evalExpr(s, "window.pvp.state().turn");
   assert.equal(prep.kind, "prep", "match opens in prep");
