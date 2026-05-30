@@ -39,7 +39,7 @@ import { tickMonsterFusion } from "./monsters.js?v=20260530a";
 import { tickMinionSpawning } from "./minions.js?v=20260530a";
 import { tickCombat } from "./combat.js?v=20260530a";
 import { tickAfterDialogue } from "./afterDialogue.js?v=20260530a";
-import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js?v=20260530a";
+import { tickPlayerHealth, isPlayerDead, resetPlayerHealth, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530a";
 import { installHealthHud, refreshHealthHud } from "./healthHud.js?v=20260530a";
 import { installGameOver, isGameOverOpen, showGameOver, showMatchResult } from "./gameOver.js?v=20260530a";
 import { installMessage, isMessageOpen } from "./message.js?v=20260530a";
@@ -66,7 +66,7 @@ import { setHostPaused } from "./hostPauseState.js?v=20260530a";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js?v=20260530a";
 import { switchRole, setStateHandlers } from "./switchRole.js?v=20260530a";
 import { installUiTokens } from "./uiTokens.js?v=20260530a";
-import { isPvp, setGameMode, GAME_MODE } from "./gameMode.js?v=20260530a";
+import { isPvp, setGameMode, getGameMode, GAME_MODE } from "./gameMode.js?v=20260530a";
 import {
   startMatch as startPvpLogic, rematch as rematchPvpLogic, tickMatch as tickPvpMatch,
   notifyPlayerDied, cameraPlayerIndex, getMatchResult, isMatchOver, playerCount as pvpPlayerCount,
@@ -193,6 +193,23 @@ async function main() {
       // Single-tile tap: queue one press then drop the held set, so the
       // avatar takes exactly one step (no continuous walk).
       tap: (slot, dir) => { pushInputPress(slot, dir); clearInputHeld(slot); },
+    };
+    // PvP test/debug hook: start/exit a local match and read the turn +
+    // match state the e2e suite asserts on.
+    window.pvp = {
+      start: (n) => startPvpMatch(n),
+      exit: () => exitPvp(),
+      // Force a player's death for win/lose tests (HP straight to 0).
+      kill: (index) => setPlayerHp(0, index),
+      state: () => ({
+        mode: getGameMode(),
+        zoneId: state.zone?.id,
+        turn: getTurn(),
+        liveIndex: cameraPlayerIndex(),
+        result: getMatchResult(),
+        over: isMatchOver(),
+        hp: [0, 1, 2, 3].map((i) => getPlayerHp(i)),
+      }),
     };
   }
   installAutoZoom(canvas, state.camera, hud.el);
