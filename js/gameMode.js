@@ -23,6 +23,18 @@ let current = GAME_MODE.coop;
 // deathmatch where everyone acts at once. `realtime` distinguishes them; it's
 // only meaningful while the mode is pvp.
 let realtime = false;
+// Host-local freeze for the Online PvP setup phase: true while the host is
+// sending out invite links, before clicking "Start match". Cleared when the
+// match starts or the session ends. Never broadcast to guests.
+let pvpHostSetup = false;
+
+export function setPvpHostSetup(active) {
+  pvpHostSetup = !!active;
+}
+
+export function isPvpHostSetup() {
+  return pvpHostSetup;
+}
 
 export function getGameMode() {
   return current;

@@ -9,7 +9,7 @@
 // import back into main.js.
 
 import { updateCamera, panCameraTo } from "./camera.js?v=20260530e";
-import { travelTo } from "./transitions.js?v=20260530e";
+import { travelTo, fadeOverlayIn } from "./transitions.js?v=20260530e";
 import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260530e";
 import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530e";
 import { setGameMode, getGameMode, GAME_MODE, isPvp } from "./gameMode.js?v=20260530e";
@@ -119,9 +119,16 @@ async function enterArena(n) {
   // guard and corner-place players against the not-yet-swapped zone.
   if (pvpEntering) return;
   pvpEntering = true;
+  // Set once the arena has loaded — gates the fade-in so a no-op travelTo
+  // (busy guard) isn't revealed by us, but a successful load always is.
+  let revealArena = false;
   try {
     const state = getState();
-    await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" });
+    // skipFadeIn: stay black through the corner scatter so players aren't
+    // shown at travelTo's centre fallback before they jump to their corners.
+    await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" }, { skipFadeIn: true });
+    if (state.zone?.id !== PVP_ARENA_ZONE_ID) return;
+    revealArena = true;
     state.zone.ephemeralState = true;
     pvpDeadToasted.clear();
     for (let i = 0; i < n; i++) {
@@ -133,6 +140,7 @@ async function enterArena(n) {
     refreshHealthHud();
   } finally {
     pvpEntering = false;
+    if (revealArena) fadeOverlayIn();
   }
 }
 

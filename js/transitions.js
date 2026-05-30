@@ -68,7 +68,14 @@ export function findTeleporterAt(zone, tileX, tileY) {
 
 // `state` is the game-state container from main.js — at minimum
 // `{ zone, player }`. We mutate `state.zone` and the player position.
-export async function travelTo(state, destination) {
+//
+// opts.skipFadeIn keeps the screen black after the load+placement instead
+// of fading back in. The caller then repositions players (e.g. PvP corner
+// scatter) and fades in itself via fadeOverlayIn(). Without this the arena
+// fades in showing everyone at the resolveSpawn fallback (map centre, since
+// the arena has no teleporters) for the fade duration before the scatter
+// runs — a visible "spawn at the centre, then jump to a corner" flash.
+export async function travelTo(state, destination, opts = {}) {
   if (busy) return;
   busy = true;
   try {
@@ -142,7 +149,7 @@ export async function travelTo(state, destination) {
         if (wasDead) resetPlayerHealth(s.player.index | 0);
       }
     }
-    await fadeIn();
+    if (!opts.skipFadeIn) await fadeIn();
   } finally {
     busy = false;
   }

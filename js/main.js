@@ -66,7 +66,7 @@ import { setHostPaused } from "./hostPauseState.js?v=20260530e";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js?v=20260530e";
 import { switchRole, setStateHandlers } from "./switchRole.js?v=20260530e";
 import { installUiTokens } from "./uiTokens.js?v=20260530e";
-import { isPvp, isTurnBasedPvp, isRealtimePvp } from "./gameMode.js?v=20260530e";
+import { isPvp, isTurnBasedPvp, isRealtimePvp, isPvpHostSetup } from "./gameMode.js?v=20260530e";
 import { getTurn, isMatchOver } from "./pvpMatch.js?v=20260530e";
 import { installTurnHud, updateTurnHud, hideTurnHud } from "./turnHud.js?v=20260530e";
 import {
@@ -283,13 +283,19 @@ async function main() {
     // Hosting never freezes the shared world for a local overlay — that
     // would strand guests in a dead zone — so the gate is role-aware.
     const overlayOpen = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen();
-    const paused = (overlayOpen || isControllerPaused()) && getRuntimeRole() !== "host";
+    const localPause = (overlayOpen || isControllerPaused()) && getRuntimeRole() !== "host";
+    // While a host is still setting up an Online PvP match (sending invite
+    // links, before "Start match"), freeze the host's own world so monsters
+    // don't roam during setup. This is host-local: setHostPaused stays tied to
+    // localPause so we don't flash a spurious "host paused" overlay to guests
+    // (who haven't joined the arena yet anyway).
+    const paused = localPause || isPvpHostSetup();
     // Tell guests when our local sim is frozen so their overlay can
     // show "Host paused the game" instead of the generic "Host
     // lagging…" — the no-op-when-not-host gate in setHostPaused keeps
     // this cheap in offline / local-coop. With the host-online carve-out
     // above this only fires now on a genuine host stall, not a menu.
-    setHostPaused(paused);
+    setHostPaused(localPause);
     const input = pollInput();
     if (!paused) {
       // Online-host + overlay open: the sim keeps running (so guests

@@ -44,7 +44,7 @@ import { setLocalPlayers } from "./main.js?v=20260530e";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530e";
 import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js?v=20260530e";
 import { startPvpMatch, exitPvp } from "./pvpController.js?v=20260530e";
-import { isPvp, isRealtimePvp } from "./gameMode.js?v=20260530e";
+import { isPvp, isRealtimePvp, setPvpHostSetup } from "./gameMode.js?v=20260530e";
 
 let chip = null;
 let chipLabel = null;
@@ -408,6 +408,7 @@ function onStartMatchClick() {
     showToast("Wait for a friend to join before starting PvP.", "hint");
     return;
   }
+  setPvpHostSetup(false);
   closePartyPanel();
   startDeathmatch();
 }
@@ -421,6 +422,7 @@ async function endOnlineSession() {
     try { await exitDeathmatch(); } catch (e) { console.error("[party] exitDeathmatch", e); }
   }
   onlineHostMode = null;
+  setPvpHostSetup(false);
   switchRole("offline")
     .then(() => showToast("Session ended", "hint"))
     .catch((e) => console.error("[party] switchRole(offline) from host", e));
@@ -674,7 +676,8 @@ function onHostOnlineClick(mode) {
     showToast("Leave creative mode first.", "hint");
     return;
   }
-  onlineHostMode = mode;
+  onlineHostMode = mode === "pvp" ? "pvp" : "coop";
+  setPvpHostSetup(onlineHostMode === "pvp");
   switchRole("host").catch((e) => console.error("[party] switchRole(host)", e));
 }
 

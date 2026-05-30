@@ -12,7 +12,7 @@ import { setGameMode, getGameMode, GAME_MODE } from "./gameMode.js?v=20260530e";
 import { getNetRole } from "./onlineBootstrap.js?v=20260530e";
 import { broadcastHostEvent } from "./hostEvents.js?v=20260530e";
 import { showToast } from "./toast.js?v=20260530e";
-import { travelTo } from "./transitions.js?v=20260530e";
+import { travelTo, fadeOverlayIn } from "./transitions.js?v=20260530e";
 import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260530e";
 import {
   startMatch as startPvpLogic, rematch as rematchPvpLogic, endMatch as endPvpMatch,
@@ -78,13 +78,21 @@ function orderedPlayers(state) {
 async function setupArena() {
   if (dmEntering) return;
   dmEntering = true;
+  // Set once we've actually loaded the arena: gates the fade-in so a no-op
+  // travelTo (busy guard, screen owned by another transition) isn't revealed
+  // by us, while a load that placed players at their corners always is.
+  let revealArena = false;
   try {
     const state = getState();
-    await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" });
+    // skipFadeIn: keep the screen black through the corner scatter below so
+    // players are never shown at travelTo's centre fallback before they jump
+    // to their corners. We fade in ourselves once everyone is placed.
+    await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" }, { skipFadeIn: true });
     // travelTo silently no-ops if a transition is already in flight (its
     // `busy` guard). Bail rather than arm the match on — and mark ephemeral —
     // the wrong (story) zone.
     if (state.zone?.id !== PVP_ARENA_ZONE_ID) return;
+    revealArena = true;
     state.zone.ephemeralState = true;
     dmDeadToasted.clear();
     for (const p of orderedPlayers(state)) {
@@ -96,6 +104,7 @@ async function setupArena() {
     refreshHealthHud();
   } finally {
     dmEntering = false;
+    if (revealArena) fadeOverlayIn();
   }
 }
 
