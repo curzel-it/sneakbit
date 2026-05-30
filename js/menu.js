@@ -5,28 +5,29 @@
 // screen. isMenuOpen() reports either screen as "open" so the game stays
 // paused while the player tweaks audio.
 
-import { getSettings, saveSettings } from "./settings.js?v=20260529e";
-import { playSfx } from "./audio.js?v=20260529e";
-import { APP_VERSION } from "./constants.js?v=20260529e";
-import { clearProgress } from "./save.js?v=20260529e";
-import { getSkills } from "./skills.js?v=20260529e";
-import { renderInventoryInto } from "./inventoryScreen.js?v=20260529e";
-import { isCreativeMode } from "./creativeMode.js?v=20260529e";
-import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260529e";
-import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, resetGamepadBindings } from "./gamepadBindings.js?v=20260529e";
-import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js?v=20260529e";
-import { formatKeyCode, formatPadButton, glyphForAction } from "./inputGlyphs.js?v=20260529e";
-import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDevice.js?v=20260529e";
-import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260529e";
-import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js?v=20260529e";
-import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260529e";
-import { invalidateZoneCache } from "./data.js?v=20260529e";
-import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260529e";
-import { isGameOverOpen } from "./gameOver.js?v=20260529e";
-import { isFastTravelOpen } from "./fastTravel.js?v=20260529e";
-import { isMessageOpen } from "./message.js?v=20260529e";
-import { isDialogueOpen } from "./dialogue.js?v=20260529e";
-import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260529e";
+import { getSettings, saveSettings } from "./settings.js?v=20260530a";
+import { playSfx } from "./audio.js?v=20260530a";
+import { APP_VERSION } from "./constants.js?v=20260530a";
+import { clearProgress } from "./save.js?v=20260530a";
+import { getSkills } from "./skills.js?v=20260530a";
+import { renderInventoryInto } from "./inventoryScreen.js?v=20260530a";
+import { isCreativeMode } from "./creativeMode.js?v=20260530a";
+import { ACTIONS, ACTIONS_P2, codesFor, setBinding, resetBindings, onBindingsChange, matchesAction } from "./keyBindings.js?v=20260530a";
+import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, resetGamepadBindings } from "./gamepadBindings.js?v=20260530a";
+import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js?v=20260530a";
+import { formatKeyCode, formatPadButton, glyphForAction } from "./inputGlyphs.js?v=20260530a";
+import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDevice.js?v=20260530a";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530a";
+import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js?v=20260530a";
+import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js?v=20260530a";
+import { invalidateZoneCache } from "./data.js?v=20260530a";
+import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js?v=20260530a";
+import { isGameOverOpen } from "./gameOver.js?v=20260530a";
+import { isFastTravelOpen } from "./fastTravel.js?v=20260530a";
+import { isMessageOpen } from "./message.js?v=20260530a";
+import { isDialogueOpen } from "./dialogue.js?v=20260530a";
+import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260530a";
+import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js?v=20260530a";
 
 // Modals that own the keyboard while they're up. If any is open we treat
 // Esc / the menu key as "dismiss the active modal" — owned by that modal's
@@ -85,6 +86,7 @@ export function installMenu(stateGetter) {
         <button id="menu-open-inventory">Inventory &amp; Equipment</button>
         <button id="menu-open-skills">Skills</button>
         <button id="menu-open-settings">Settings</button>
+        <button id="menu-fullscreen">Fullscreen</button>
         <button id="menu-export-save" data-creative-only>Export save (copy JSON)</button>
         <button id="menu-import-save" data-creative-only>Import save (paste JSON)</button>
         <button id="menu-save-zone" data-creative-only data-desktop-only>Save zone (flush to buffer)</button>
@@ -115,6 +117,14 @@ export function installMenu(stateGetter) {
       </div>
       <div class="menu-row">
         <label for="opt-fps"><input id="opt-fps" type="checkbox" /> Show FPS</label>
+      </div>
+      <div class="menu-row">
+        <label for="opt-language">Language / Lingua</label>
+        <select id="opt-language">
+          <option value="auto">Auto</option>
+          <option value="en">English</option>
+          <option value="it">Italiano</option>
+        </select>
       </div>
       <div class="menu-row" id="opt-friendly-fire-row">
         <label for="opt-friendly-fire"><input id="opt-friendly-fire" type="checkbox" /> Friendly fire (co-op)</label>
@@ -491,6 +501,17 @@ function bindWidgets() {
     openPartyPanel();
   });
   root.querySelector("#menu-open-settings").addEventListener("click", () => showScreen("settings"));
+  const fullscreenBtn = root.querySelector("#menu-fullscreen");
+  if (!isFullscreenSupported()) {
+    // No element fullscreen here (e.g. iOS Safari) — don't show a dead button.
+    fullscreenBtn.style.display = "none";
+  } else {
+    fullscreenBtn.addEventListener("click", () => toggleFullscreen());
+    // Keep the label honest whether the player toggles from the menu, a
+    // keyboard shortcut (F11), or the browser chrome.
+    onFullscreenChange(syncFullscreenLabel);
+    syncFullscreenLabel();
+  }
   root.querySelector("#menu-open-skills").addEventListener("click", () => showScreen("skills"));
   root.querySelector("#menu-open-credits").addEventListener("click", () => showScreen("credits"));
   root.querySelector("#menu-open-inventory").addEventListener("click", () => showScreen("inventory"));
@@ -580,6 +601,22 @@ function bindWidgets() {
 
   const ff = root.querySelector("#opt-friendly-fire");
   ff.addEventListener("change", () => saveSettings({ friendlyFire: ff.checked }));
+
+  // The string table is fetched once at startup, so a language change only
+  // takes effect after a reload. Persist the choice, then reload — mirroring
+  // the "Clear cache & reload" flow so we don't re-save stale state on the
+  // way out.
+  const language = root.querySelector("#opt-language");
+  language.addEventListener("change", () => {
+    saveSettings({ language: language.value });
+    try { window.save?.suppressUnloadSave?.(); } catch {}
+    location.reload();
+  });
+}
+
+function syncFullscreenLabel() {
+  const btn = root?.querySelector("#menu-fullscreen");
+  if (btn) btn.textContent = isFullscreen() ? "Exit fullscreen" : "Fullscreen";
 }
 
 function syncSettingsWidgets() {
@@ -593,6 +630,7 @@ function syncSettingsWidgets() {
   root.querySelector("#opt-muted").checked = !!s.muted;
   root.querySelector("#opt-fps").checked = !!s.showFps;
   root.querySelector("#opt-friendly-fire").checked = !!s.friendlyFire;
+  root.querySelector("#opt-language").value = s.language ?? "auto";
   // Friendly fire is meaningless without a second hero in the world —
   // hide the row entirely unless local co-op is on or a network guest
   // is connected. `isCoopActive()` covers both.
@@ -730,6 +768,11 @@ function injectStyles() {
     #menu .menu-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
     #menu .menu-stack { flex-direction: column; align-items: stretch; gap: 8px; }
     #menu label { color: #ddd; cursor: pointer; }
+    #menu select {
+      background: #2a2a2a; color: #eee; border: 1px solid #444;
+      padding: 6px 10px; border-radius: 4px; cursor: pointer;
+      font-family: inherit; font-size: 12px;
+    }
     #menu input[type="range"] { flex: 1; }
     #menu button {
       background: #2a2a2a; color: #eee; border: 1px solid #444;
