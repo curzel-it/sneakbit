@@ -79,20 +79,28 @@ export function showGameOver(onContinue, opts = {}) {
 // (death_screen.unknown_result), both inviting a rematch
 // (death_screen.start_new_match). Confirm runs onRematch. Reuses the same
 // modal as the co-op death overlay; setCard restores the text each time.
-export function showMatchResult(result, onRematch) {
+// opts.waitingForHost hides the Rematch button (online guests can't drive their
+// own rematch — only the host's pvpStart/pvpEnd dismisses it), so a guest can't
+// dead-end the modal into a bare arena.
+export function showMatchResult(result, onRematch, opts = {}) {
   if (open) return;
   const won = result?.kind === "winner";
   const title = won
     ? tr("death_screen.player_won").replace("%PLAYER_NAME%", String((result.playerIndex | 0) + 1))
     : tr("death_screen.unknown_result");
-  setCard(title, tr("death_screen.start_new_match"), "Rematch");
+  const waiting = !!opts.waitingForHost;
+  setCard(title, waiting ? "Waiting for the host…" : tr("death_screen.start_new_match"), "Rematch");
   open = true;
-  pendingContinue = typeof onRematch === "function" ? onRematch : null;
+  pendingContinue = (!waiting && typeof onRematch === "function") ? onRematch : null;
   root.style.display = "flex";
   const btn = root.querySelector("#go-continue");
-  btn.style.display = "";
-  btn.disabled = true;
-  setTimeout(() => { btn.disabled = false; focusFirstIn(root); }, 350);
+  if (waiting) {
+    btn.style.display = "none";
+  } else {
+    btn.style.display = "";
+    btn.disabled = true;
+    setTimeout(() => { btn.disabled = false; focusFirstIn(root); }, 350);
+  }
   playSfx("gameOver");
 }
 

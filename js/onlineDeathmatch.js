@@ -10,7 +10,6 @@
 
 import { setGameMode, getGameMode, GAME_MODE } from "./gameMode.js?v=20260530a";
 import { getNetRole } from "./onlineBootstrap.js?v=20260530a";
-import { getNetworkGuestCount } from "./coopMode.js?v=20260530a";
 import { broadcastHostEvent } from "./hostEvents.js?v=20260530a";
 import { showToast } from "./toast.js?v=20260530a";
 import { travelTo } from "./transitions.js?v=20260530a";
@@ -20,7 +19,7 @@ import {
   notifyPlayerDied, getMatchResult, isMatchOver,
 } from "./pvpMatch.js?v=20260530a";
 import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530a";
-import { showMatchResult, isGameOverOpen } from "./gameOver.js?v=20260530a";
+import { showMatchResult, isGameOverOpen, hideGameOver } from "./gameOver.js?v=20260530a";
 import { refreshHealthHud } from "./healthHud.js?v=20260530a";
 import { updateCamera } from "./camera.js?v=20260530a";
 
@@ -62,9 +61,6 @@ function installDebugHook() {
   };
 }
 
-export function isOnlineDeathmatchHost() {
-  return getNetRole() === "host";
-}
 
 // Every local player avatar in index order (host=0, then guest slots).
 function orderedPlayers(state) {
@@ -98,6 +94,10 @@ async function setupArena() {
   try {
     const state = getState();
     await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" });
+    // travelTo silently no-ops if a transition is already in flight (its
+    // `busy` guard). Bail rather than arm the match on — and mark ephemeral —
+    // the wrong (story) zone.
+    if (state.zone?.id !== PVP_ARENA_ZONE_ID) return;
     state.zone.ephemeralState = true;
     dmDeadToasted.clear();
     for (const p of orderedPlayers(state)) {
@@ -112,18 +112,17 @@ async function setupArena() {
   }
 }
 
-function playerCount(state) {
-  // Host + connected guests (each guest owns one avatar slot).
-  return 1 + getNetworkGuestCount();
-}
-
 // Host action: start a realtime deathmatch with everyone currently connected.
 export async function startMatch() {
   if (getNetRole() !== "host") return;
   const state = getState();
   if (!state?.zone || !state.player) return;
-  const n = playerCount(state);
+  // Size the match from the avatars actually present (host + spawned guests),
+  // not the network guest counter — they can disagree mid-join, and a phantom
+  // player would make last-player-standing unresolvable.
+  const n = orderedPlayers(state).length;
   if (n < 2) { showToast("Wait for a friend to join before starting PvP.", "hint"); return; }
+  if (isGameOverOpen()) hideGameOver(); // clear any lingering overlay before arming
   setGameMode(GAME_MODE.pvp, { realtime: true });
   broadcastHostEvent("pvpStart", {});
   startPvpLogic(n, /* turnBased */ false);
@@ -133,13 +132,17 @@ export async function startMatch() {
 // Per-frame (host only): notice deaths, resolve last-player-standing, and on a
 // terminal result broadcast it + show the local result screen.
 export function tickHostFrame() {
-  if (dmEntering || !isRealtimeMatchRunning()) return;
+  if (dmEntering || getNetRole() !== "host") return;
   const state = getState();
-  for (const p of orderedPlayers(state)) {
-    const idx = p.index | 0;
-    if (isPlayerDead(idx) && !dmDeadToasted.has(idx)) {
-      dmDeadToasted.add(idx);
-      notifyPlayerDied(idx); // snapshotBroadcaster already emits the death event
+  // Stop scanning deaths once the match is over so a post-resolution kill (the
+  // host isn't paused, so combat keeps ticking) can't drift the result.
+  if (!isMatchOver()) {
+    for (const p of orderedPlayers(state)) {
+      const idx = p.index | 0;
+      if (isPlayerDead(idx) && !dmDeadToasted.has(idx)) {
+        dmDeadToasted.add(idx);
+        notifyPlayerDied(idx); // snapshotBroadcaster already emits the death event
+      }
     }
   }
   if (isMatchOver() && !isGameOverOpen()) {
@@ -149,10 +152,6 @@ export function tickHostFrame() {
   }
 }
 
-function isRealtimeMatchRunning() {
-  return getNetRole() === "host";
-}
-
 // Host rematch: re-arm + re-broadcast pvpStart, then reload the arena fresh.
 function onRematch() {
   rematchPvpLogic();
@@ -160,12 +159,14 @@ function onRematch() {
   setupArena();
 }
 
-// Host ends the match: back to co-op. (Minimal — guests resync via the next
-// snapshot; a richer "return to lobby" flow is a later polish.)
+// Host ends the match: back to co-op. Broadcasts pvpEnd so guests dismiss the
+// result/death overlay; their game mode self-heals to coop via the snapshot.
 export async function exit() {
   setGameMode(GAME_MODE.coop);
   endPvpMatch();
   dmDeadToasted.clear();
+  if (isGameOverOpen()) hideGameOver(); // close the host's own result screen
+  broadcastHostEvent("pvpEnd", {});
   const state = getState();
   if (!state?.zone) return;
   await travelTo(state, { zone: DUSKHAVEN_ZONE_ID, x: 59, y: 57, direction: "Down" });

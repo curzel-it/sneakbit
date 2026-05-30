@@ -17,8 +17,9 @@ import { tryShootForSlot } from "./shooting.js?v=20260530a";
 import { tryMeleeForSlot } from "./melee.js?v=20260530a";
 import { tryInteractForSlot } from "./interact.js?v=20260530a";
 import { isPlayerDead } from "./playerHealth.js?v=20260530a";
-import { isPvp } from "./gameMode.js?v=20260530a";
+import { isPvp, isRealtimePvp } from "./gameMode.js?v=20260530a";
 import { cornerSpawnTile } from "./pvpSpawn.js?v=20260530a";
+import { notifyPlayerDied } from "./pvpMatch.js?v=20260530a";
 
 const INTENT_TO_DIR = {
   moveUp: "up",
@@ -161,6 +162,9 @@ function onPeerLeft(m) {
   if (slot == null) return;
   clearInputState(slot);
   delete lastSeqOut[m.playerId];
+  // Realtime PvP: a mid-match drop counts as a death so last-player-standing
+  // can still resolve (otherwise numberOfPlayers stays N and the match hangs).
+  if (isRealtimePvp()) notifyPlayerDied(slot - 1);
   const state = stateGetter?.();
   if (!state) return;
   if (slot === 2) {

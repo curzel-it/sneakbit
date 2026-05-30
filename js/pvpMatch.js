@@ -12,7 +12,7 @@ import {
   firstTurn, updatedTurn, turnAfterPlayerDamage, updatedTurnForDeathOfPlayer,
   handleWinLose, currentPlayerIndex,
 } from "./turns.js?v=20260530a";
-import { isPvp, isTurnBasedPvp } from "./gameMode.js?v=20260530a";
+import { isPvp, isTurnBasedPvp, isRealtimePvp } from "./gameMode.js?v=20260530a";
 import { onPlayerVsPlayerHit } from "./combat.js?v=20260530a";
 import { resetPvpLoadout } from "./pvpLoadout.js?v=20260530a";
 
@@ -94,8 +94,10 @@ export function cameraPlayerIndex() {
 
 // Input gate: a 1-based input slot may act when we're not in turn-based PvP
 // (co-op and realtime PvP let everyone act), or when it owns the current active
-// turn. During prep nobody acts.
+// turn. During prep nobody acts. Realtime freezes everyone once the match is
+// over (the online host isn't paused, so this stops post-match combat).
 export function pvpSlotCanAct(slotOneBased) {
+  if (isRealtimePvp()) return !isMatchOver();
   if (!isTurnBasedPvp()) return true;
   const live = currentLiveIndex();
   return live !== null && (slotOneBased | 0) - 1 === live;

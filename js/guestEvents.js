@@ -8,7 +8,8 @@
 import { showToast } from "./toast.js?v=20260530a";
 import { fadeOverlayOut, fadeOverlayIn, FADE_OVERLAY_MS } from "./transitions.js?v=20260530a";
 import { addAmmo, getAmmo, removeAmmo } from "./inventory.js?v=20260530a";
-import { showGameOver, hideGameOver, isGameOverOpen } from "./gameOver.js?v=20260530a";
+import { showGameOver, hideGameOver, isGameOverOpen, showMatchResult } from "./gameOver.js?v=20260530a";
+import { setGameMode, GAME_MODE } from "./gameMode.js?v=20260530a";
 import { getSelfPlayerId, getNameForPlayerId } from "./onlineBootstrap.js?v=20260530a";
 import { tr } from "./strings.js?v=20260530a";
 import {
@@ -94,9 +95,36 @@ export function dispatch(msg) {
     case "hostPause":
       setHostPausedRemote(!!msg.paused);
       return;
+    case "pvpStart":
+      handlePvpStart();
+      return;
+    case "pvpResult":
+      handlePvpResult(msg);
+      return;
+    case "pvpEnd":
+      if (isGameOverOpen()) hideGameOver();
+      return;
     default:
       return;
   }
+}
+
+// Host opened (or restarted) a realtime PvP match. Enter PvP rendering so the
+// guest's HP bar scales to 1000 and the ammo HUD shows the PvP pool, and clear
+// any leftover overlay (e.g. a previous round's result/death screen) so a
+// rematch resets cleanly. The zoneChange event fades the guest into the arena.
+function handlePvpStart() {
+  setGameMode(GAME_MODE.pvp, { realtime: true });
+  if (isGameOverOpen()) hideGameOver();
+}
+
+// Realtime PvP resolved — show the winner/unknown screen. Clear any waiting-for-
+// host death overlay first so a dead guest still sees the result. The guest
+// can't drive its own rematch, so the modal is waiting-style (no button) and is
+// dismissed by the host's next pvpStart (rematch) or pvpEnd (left PvP).
+function handlePvpResult(msg) {
+  if (isGameOverOpen()) hideGameOver();
+  showMatchResult({ kind: msg?.kind, playerIndex: msg?.playerIndex | 0 }, null, { waitingForHost: true });
 }
 
 // Mirror the host's addAmmo into the guest's local counts — but only

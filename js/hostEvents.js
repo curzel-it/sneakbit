@@ -29,6 +29,9 @@ const ALLOWED_KINDS = new Set([
   "hostPause",
   "loadout",
   "ammoSet",
+  "pvpStart",   // host opened a realtime PvP match — guests enter PvP rendering
+  "pvpResult",  // realtime PvP resolved — guests show the winner/result screen
+  "pvpEnd",     // host left PvP — guests dismiss the result/death overlay
 ]);
 const ALLOWED_TOAST_TYPES = new Set(["regular", "hint", "longHint"]);
 

@@ -10,6 +10,7 @@
 // overwrites `zone.entities` from network frames.
 
 import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260530a";
+import { setGameMode } from "./gameMode.js?v=20260530a";
 import { loadZone } from "./data.js?v=20260530a";
 import { buildZone } from "./zone.js?v=20260530a";
 import { setupCutscenes } from "./cutscenes.js?v=20260530a";
@@ -167,8 +168,18 @@ export function getMirrorPlayerById(playerId, at = nowMs()) {
 // Internal: synchronously apply a snapshot. Loads the zone first if
 // needed; reads of getMirrorZone()/isMirrorReady() flip to true once the
 // loader resolves and the snapshot is replayed.
+// Mirror the host's game mode (co-op / pvp / realtime-pvp) from every frame so
+// a guest's HP-bar scale, ammo HUD and PvP gating follow the host — and stay
+// correct across late-join, rematch and the host leaving PvP (self-healing,
+// unlike the one-shot pvpStart event).
+function applyMode(msg) {
+  if (typeof msg.mode !== "string") return;
+  setGameMode(msg.mode, { realtime: !!msg.rt });
+}
+
 export function handleSnapshot(msg, opts = {}) {
   if (!msg || msg.zoneId == null) return;
+  applyMode(msg);
   if (!zone || zone.id !== msg.zoneId) {
     return loadZoneAndApplySnapshot(msg, opts);
   }
@@ -181,7 +192,9 @@ export function handlePeerLeft(msg) {
 }
 
 export function handleDelta(msg) {
-  if (!msg || !zone || zone.id !== msg.zoneId) return;
+  if (!msg) return;
+  applyMode(msg);
+  if (!zone || zone.id !== msg.zoneId) return;
   const t = nowMs();
   for (const p of msg.players || []) ingestPlayer(p, t);
   for (const e of msg.entities || []) ingestEntity(e, t);

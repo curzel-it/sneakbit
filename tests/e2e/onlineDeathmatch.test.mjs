@@ -64,6 +64,17 @@ test("realtime online PvP: arena, 1000 HP, kill → result on both clients", asy
   assert.equal(hostModal, true, "host shows the result screen");
   const guestModal = await waitFor(session.guest, "(() => { const e = document.getElementById('gameover'); return e && e.style.display === 'flex'; })() || null");
   assert.equal(guestModal, true, "guest shows the result screen (pvpResult)");
+  // Guest's result screen is waiting-style (host-driven) — no dead-end button.
+  const guestBtnHidden = await evalExpr(session.guest, "(() => { const b = document.getElementById('go-continue'); return !!b && b.style.display === 'none'; })()");
+  assert.equal(guestBtnHidden, true, "guest result modal hides the Rematch button");
+
+  // Host ends PvP → pvpEnd dismisses the guest's overlay and the guest's game
+  // mode self-heals back to coop via the snapshot mode field.
+  await evalExpr(session.host, "window.deathmatch.exit()");
+  const guestModalGone = await waitFor(session.guest, "(() => { const e = document.getElementById('gameover'); return (!e || e.style.display === 'none') ? true : null; })()");
+  assert.equal(guestModalGone, true, "guest result modal dismissed on host exit (pvpEnd)");
+  const guestMode = await waitFor(session.guest, "(async () => { const g = await import('./js/gameMode.js?v=20260530a'); return g.getGameMode() === 'coop' ? 'coop' : null; })()");
+  assert.equal(guestMode, "coop", "guest game mode self-heals to coop via snapshot");
 
   await sleep(100);
   assert.deepEqual(hostErrors, [], "host threw no exceptions");
