@@ -8,10 +8,10 @@
 // asset map (the PNGs aren't shipped with the HTML port yet), so when
 // the lookup fails we still tick the logic but skip painting.
 
-import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js?v=20260530g";
-import { getValue, setValue } from "./storage.js?v=20260530g";
-import { getSprite } from "./assets.js?v=20260530g";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260530g";
+import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js?v=20260531a";
+import { getValue, setValue } from "./storage.js?v=20260531a";
+import { getSprite } from "./assets.js?v=20260531a";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260531a";
 
 const CUTSCENE_Z = 20_000_000; // mirrors Rust's 2_000_000_000 / 100 bucket
 

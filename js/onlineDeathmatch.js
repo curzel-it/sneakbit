@@ -8,21 +8,21 @@
 // Reaches game state through an injected getState() (installOnlineDeathmatch),
 // mirroring pvpController so there's no import back into main.js.
 
-import { setGameMode, getGameMode, GAME_MODE } from "./gameMode.js?v=20260530g";
-import { getNetRole } from "./onlineBootstrap.js?v=20260530g";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260530g";
-import { showToast } from "./toast.js?v=20260530g";
-import { travelTo, fadeOverlayIn } from "./transitions.js?v=20260530g";
-import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260530g";
+import { setGameMode, getGameMode, GAME_MODE } from "./gameMode.js?v=20260531a";
+import { getNetRole } from "./onlineBootstrap.js?v=20260531a";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260531a";
+import { showToast } from "./toast.js?v=20260531a";
+import { travelTo, fadeOverlayIn } from "./transitions.js?v=20260531a";
+import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260531a";
 import {
   startMatch as startPvpLogic, rematch as rematchPvpLogic, endMatch as endPvpMatch,
   notifyPlayerDied, getMatchResult, isMatchOver,
-} from "./pvpMatch.js?v=20260530g";
-import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530g";
-import { showMatchResult, isGameOverOpen, hideGameOver } from "./gameOver.js?v=20260530g";
-import { refreshHealthHud } from "./healthHud.js?v=20260530g";
-import { updateCamera } from "./camera.js?v=20260530g";
-import { PVP_ARENA_ZONE_ID } from "./constants.js?v=20260530g";
+} from "./pvpMatch.js?v=20260531a";
+import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260531a";
+import { showMatchResult, isGameOverOpen, hideGameOver } from "./gameOver.js?v=20260531a";
+import { refreshHealthHud } from "./healthHud.js?v=20260531a";
+import { updateCamera } from "./camera.js?v=20260531a";
+import { PVP_ARENA_ZONE_ID } from "./constants.js?v=20260531a";
 
 // Fallback exit destination if we have no record of the pre-match zone
 // (Rust default: Duskhaven 1011 @ 59,57). Normally exit() returns to the

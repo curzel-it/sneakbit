@@ -19,7 +19,7 @@ globalThis.localStorage = (() => {
   };
 })();
 
-const mod = await import("../js/gamepadBindings.js?v=20260530g");
+const mod = await import("../js/gamepadBindings.js?v=20260531a");
 const {
   GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2,
   buttonFor, actionForButton, menuButton,

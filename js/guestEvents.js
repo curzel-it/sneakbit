@@ -5,21 +5,21 @@
 // Pickup / death / respawn / dialogue / cutscene flesh out over time as
 // the matching host-side hooks land.
 
-import { showToast } from "./toast.js?v=20260530g";
-import { fadeOverlayOut, fadeOverlayIn, FADE_OVERLAY_MS } from "./transitions.js?v=20260530g";
-import { addAmmo, getAmmo, removeAmmo } from "./inventory.js?v=20260530g";
-import { showGameOver, hideGameOver, isGameOverOpen, showMatchResult } from "./gameOver.js?v=20260530g";
-import { setGameMode, GAME_MODE } from "./gameMode.js?v=20260530g";
-import { getSelfPlayerId, getNameForPlayerId } from "./onlineBootstrap.js?v=20260530g";
-import { tr } from "./strings.js?v=20260530g";
+import { showToast } from "./toast.js?v=20260531a";
+import { fadeOverlayOut, fadeOverlayIn, FADE_OVERLAY_MS } from "./transitions.js?v=20260531a";
+import { addAmmo, getAmmo, removeAmmo } from "./inventory.js?v=20260531a";
+import { showGameOver, hideGameOver, isGameOverOpen, showMatchResult } from "./gameOver.js?v=20260531a";
+import { setGameMode, GAME_MODE } from "./gameMode.js?v=20260531a";
+import { getSelfPlayerId, getNameForPlayerId } from "./onlineBootstrap.js?v=20260531a";
+import { tr } from "./strings.js?v=20260531a";
 import {
   showNetworkDialogue,
   advanceNetworkDialogue,
   closeNetworkDialogue,
-} from "./dialogue.js?v=20260530g";
-import { startCutsceneByKey, endCutsceneByKey } from "./cutscenes.js?v=20260530g";
-import { getMirrorZone } from "./mirrorWorld.js?v=20260530g";
-import { setHostPausedRemote } from "./guestHostPause.js?v=20260530g";
+} from "./dialogue.js?v=20260531a";
+import { startCutsceneByKey, endCutsceneByKey } from "./cutscenes.js?v=20260531a";
+import { getMirrorZone } from "./mirrorWorld.js?v=20260531a";
+import { setHostPausedRemote } from "./guestHostPause.js?v=20260531a";
 
 let installed = false;
 let unsub = null;

@@ -6,9 +6,9 @@
 // the starting spawn. The modal lives in the DOM (like menu.js) so we get
 // styling + a real button focusable by keyboard for free.
 
-import { playSfx } from "./audio.js?v=20260530g";
-import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530g";
-import { tr } from "./strings.js?v=20260530g";
+import { playSfx } from "./audio.js?v=20260531a";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260531a";
+import { tr } from "./strings.js?v=20260531a";
 
 const DEFAULT_TITLE = "You died";
 const DEFAULT_SUB = "The shadows have taken you.";

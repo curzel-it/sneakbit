@@ -11,7 +11,7 @@
 // Row formula:
 //   row = selfBiomeIndex + animationFrame * NUM_BIOMES
 
-import { BIOME, NUM_BIOMES, isLiquid, isLightGrass, isDarkGrass, biomeIsSame } from "./biomes.js?v=20260530g";
+import { BIOME, NUM_BIOMES, isLiquid, isLightGrass, isDarkGrass, biomeIsSame } from "./biomes.js?v=20260531a";
 
 export const NUM_COMBOS = 15;
 export const NUM_BIOME_FRAMES = 4;

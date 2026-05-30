@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { loadSpeciesData } = await import("../js/species.js?v=20260530g");
+const { loadSpeciesData } = await import("../js/species.js?v=20260531a");
 
 loadSpeciesData([
   { id: 1171, entity_type: "WeaponMelee", sprite_sheet_id: 1022,
@@ -10,9 +10,9 @@ loadSpeciesData([
 ]);
 
 const { setEquipped, clearEquipped, SLOT_MELEE, SLOT_RANGED } =
-  await import("../js/equipment.js?v=20260530g");
+  await import("../js/equipment.js?v=20260531a");
 const { applyPlayerContinuousDamage, applyPlayerDamage, getPlayerHp,
-        resetPlayerHealth } = await import("../js/playerHealth.js?v=20260530g");
+        resetPlayerHealth } = await import("../js/playerHealth.js?v=20260531a");
 
 function freshHealthAndUnequipped() {
   clearEquipped(SLOT_MELEE);

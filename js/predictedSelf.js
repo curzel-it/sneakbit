@@ -8,15 +8,15 @@
 // The renderer is updated separately to draw the predicted self in
 // place of the mirror's lagged copy for the guest's own slot.
 
-import { createPlayer, updatePlayer } from "./player.js?v=20260530g";
-import { pollInput, pushInputPress, clearInputHeld, clearInputState, setNetworkHeld, peekInputState } from "./input.js?v=20260530g";
-import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260530g";
-import { getMirrorZone, getMirrorPlayerById, getMirrorPlayers } from "./mirrorWorld.js?v=20260530g";
-import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js?v=20260530g";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260530g";
-import { getValue } from "./storage.js?v=20260530g";
-import { isDialogueOpen } from "./dialogue.js?v=20260530g";
-import { isHostPausedRemote } from "./guestHostPause.js?v=20260530g";
+import { createPlayer, updatePlayer } from "./player.js?v=20260531a";
+import { pollInput, pushInputPress, clearInputHeld, clearInputState, setNetworkHeld, peekInputState } from "./input.js?v=20260531a";
+import { getSelfPlayerId } from "./onlineBootstrap.js?v=20260531a";
+import { getMirrorZone, getMirrorPlayerById, getMirrorPlayers } from "./mirrorWorld.js?v=20260531a";
+import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js?v=20260531a";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260531a";
+import { getValue } from "./storage.js?v=20260531a";
+import { isDialogueOpen } from "./dialogue.js?v=20260531a";
+import { isHostPausedRemote } from "./guestHostPause.js?v=20260531a";
 
 let predicted = null;
 let installed = false;

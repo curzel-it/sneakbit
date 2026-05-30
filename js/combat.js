@@ -7,17 +7,17 @@
 // Damage model mirrors the original: damage = dps * dt while overlapping.
 // Bullets pass through targets they don't kill in the same frame.
 
-import { getSpecies } from "./species.js?v=20260530g";
-import { isWalkable } from "./zone.js?v=20260530g";
-import { playSfx } from "./audio.js?v=20260530g";
-import { applyPlayerContinuousDamage, applyPlayerDamage, isPlayerDead } from "./playerHealth.js?v=20260530g";
-import { hasPiercingKnifeSkill, hasBoomerangSkill, hasBulletCatcherSkill } from "./skills.js?v=20260530g";
-import { addAmmo } from "./inventory.js?v=20260530g";
-import { isExplosive } from "./explosives.js?v=20260530g";
-import { isCreativeMode } from "./creativeMode.js?v=20260530g";
-import { getSettings } from "./settings.js?v=20260530g";
-import { startDeathAnimation, tickDeathAnimations } from "./deathAnimation.js?v=20260530g";
-import { isPvp } from "./gameMode.js?v=20260530g";
+import { getSpecies } from "./species.js?v=20260531a";
+import { isWalkable } from "./zone.js?v=20260531a";
+import { playSfx } from "./audio.js?v=20260531a";
+import { applyPlayerContinuousDamage, applyPlayerDamage, isPlayerDead } from "./playerHealth.js?v=20260531a";
+import { hasPiercingKnifeSkill, hasBoomerangSkill, hasBulletCatcherSkill } from "./skills.js?v=20260531a";
+import { addAmmo } from "./inventory.js?v=20260531a";
+import { isExplosive } from "./explosives.js?v=20260531a";
+import { isCreativeMode } from "./creativeMode.js?v=20260531a";
+import { getSettings } from "./settings.js?v=20260531a";
+import { startDeathAnimation, tickDeathAnimations } from "./deathAnimation.js?v=20260531a";
+import { isPvp } from "./gameMode.js?v=20260531a";
 
 // Player-vs-player hit listeners. pvpMatch.js subscribes to apply the
 // turn clamp ("hit and the clock cuts") without combat.js importing it —

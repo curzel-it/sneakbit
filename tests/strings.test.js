@@ -5,7 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { loadStringsData, tr } = await import("../js/strings.js?v=20260530g");
+const { loadStringsData, tr } = await import("../js/strings.js?v=20260531a");
 
 test("empty key returns empty string", () => {
   loadStringsData({}, {});
