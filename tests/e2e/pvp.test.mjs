@@ -71,20 +71,30 @@ test("local PvP: arena, corners, turns, gating, win/lose", async (t) => {
   assert.equal(posOf(afterTap, 0).direction, target, "active P1 turned to face the tap");
   assert.equal(posOf(afterTap, 1).direction, p2dir, "off-turn P2 ignored its tap");
 
-  // PvP ammo is per-player (own non-persisted pool, fresh save can fight).
-  // Both players start with the same stock; the active player fires and
-  // only THEIR pool decrements; off-turn slots are blocked by the turn gate.
-  // Bullet count is read synchronously (a corner player faces a wall, so the
-  // bullet despawns within a frame or two of flight).
-  const startAmmo = await evalExpr(s, "window.pvp.state().ammo");
-  assert.ok(startAmmo[0] > 0 && startAmmo[0] === startAmmo[1], "both players start with equal ammo");
+  // Scavenge model: players spawn empty (kunai launcher, 0 ammo) and must
+  // pick ammo up from the map. With no ammo the active player can't fire.
+  assert.deepEqual(await evalExpr(s, "window.pvp.state().ammo"), [0, 0, 0, 0], "everyone starts empty");
+  const dryDelta = await evalExpr(s, "(() => { const b0 = window.pvp.state().bullets; window.pvp.shoot(1); return window.pvp.state().bullets - b0; })()");
+  assert.equal(dryDelta, 0, "no ammo → no shot");
+
+  // Real map pickup: warp P1 onto a known kunai.x10 bundle tile (from
+  // data/1301.json); the next frame registers it as movement and the
+  // per-frame checkPickup collects it.
+  await evalExpr(s, "window.pvp.warp(0, 14, 17)");
+  await sleep(250);
+  const grabbed = await evalExpr(s, "window.pvp.state().ammo");
+  assert.ok(grabbed[0] >= 10, `picked up kunai from the map (ammo=${grabbed[0]})`);
+  assert.equal(grabbed[1], 0, "only the picker gained ammo");
+
+  // Now P1 can fire, and only their pool decrements; off-turn P2 stays blocked
+  // even after being handed ammo.
+  await evalExpr(s, "window.pvp.giveAmmo(1, 5)");
   const offTurnDelta = await evalExpr(s, "(() => { const b0 = window.pvp.state().bullets; window.pvp.shoot(2); return window.pvp.state().bullets - b0; })()");
-  assert.equal(offTurnDelta, 0, "off-turn P2 cannot shoot");
+  assert.equal(offTurnDelta, 0, "off-turn P2 cannot shoot even with ammo");
+  const before1 = (await evalExpr(s, "window.pvp.state().ammo"))[0];
   const onTurnDelta = await evalExpr(s, "(() => { const b0 = window.pvp.state().bullets; window.pvp.shoot(1); return window.pvp.state().bullets - b0; })()");
   assert.ok(onTurnDelta >= 1, "active P1 fires from their own pool");
-  const afterAmmo = await evalExpr(s, "window.pvp.state().ammo");
-  assert.equal(afterAmmo[0], startAmmo[0] - 1, "P1's pool decremented by one");
-  assert.equal(afterAmmo[1], startAmmo[1], "P2's pool untouched");
+  assert.equal((await evalExpr(s, "window.pvp.state().ammo"))[0], before1 - 1, "P1's pool decremented by one");
 
   // Win/lose: kill P2 → P1 is the lone survivor; the match resolves and the
   // result modal appears.

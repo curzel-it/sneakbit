@@ -665,10 +665,13 @@ The Rust model above is ported across:
 - `js/pvpSpawn.js` — corner spawns. `js/pvpMatch.js` — match orchestrator
   (turn state, dead set, win/lose, `pvpSlotCanAct` input gate; subscribes to
   combat's `onPlayerVsPlayerHit` for the clamp). `js/turnHud.js` — DOM countdown.
-- `js/pvpAmmo.js` — per-player, non-persisted ammo for the match (each player
-  starts with the same kunai stock; melee is the no-ammo fallback). Kept out
-  of `inventory.js` so PvP never touches P1's saved story ammo; local co-op
-  (shared fold) and online (per-`playerId`) inventory are untouched.
+- `js/pvpAmmo.js` — per-player, non-persisted ammo for the match. Players
+  spawn with **only the kunai launcher and zero ammo** and **scavenge kunai
+  from the arena** (the 8 `kunai.x10` bundles in world 1301); `pickups.js`
+  routes PvP pickups into this pool. Kept out of `inventory.js` so PvP never
+  touches P1's saved story ammo; local co-op (shared fold) and online
+  (per-`playerId`) inventory are untouched. In PvP `shooting.js` forces the
+  kunai launcher as the only weapon and there is no melee.
 - Edits: `playerHealth.js` (1000 HP in PvP), `combat.js` (forced friendly fire +
   hit event), `shooting.js`/`melee.js` (gate on the active slot), `main.js`
   (loop wiring, current-player camera, `startPvpMatch`/`exitPvp`), `gameOver.js`

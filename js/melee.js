@@ -13,11 +13,6 @@ import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coop
 import { getNetRole } from "./onlineBootstrap.js?v=20260530a";
 import { isPlayerDead } from "./playerHealth.js?v=20260530a";
 import { pvpSlotCanAct } from "./pvpMatch.js?v=20260530a";
-import { isPvp } from "./gameMode.js?v=20260530a";
-
-// Default melee weapon handed to every PvP player who hasn't equipped one
-// (sword, species 1159) so a fresh save can still melee in the arena.
-const PVP_DEFAULT_MELEE_ID = 1159;
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -156,9 +151,7 @@ export function performMeleeSwing(state, opts = {}) {
   // PvP: only the active player's turn may swing (no-op outside PvP).
   if (!pvpSlotCanAct(idx + 1)) return false;
   if (cooldown[idx] > 0 && !opts.ignoreCooldown) return false;
-  // PvP gives everyone a melee weapon so a fresh save can still fight; a
-  // player who equipped one in story keeps theirs.
-  const weaponId = resolveLoadout(swinger).melee || (isPvp() ? PVP_DEFAULT_MELEE_ID : null);
+  const weaponId = resolveLoadout(swinger).melee;
   if (!weaponId) return false;
   const weapon = getSpecies(weaponId);
   if (!weapon || weapon.entity_type !== "WeaponMelee") return false;

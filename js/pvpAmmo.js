@@ -11,18 +11,27 @@
 
 const MAX_PLAYERS = 4;
 
-// Kunai per player at the start of a match. Finite so ranged is a managed
-// resource; melee (no ammo) is the fallback when a player runs dry.
-export const PVP_STARTING_AMMO = 30;
+// Players spawn empty and scavenge kunai from the arena (pickups feed this
+// pool — see pickups.js). Ranged is therefore a managed resource you have
+// to go grab; there's no melee fallback (kunai launcher is the only weapon).
+export const PVP_STARTING_AMMO = 0;
 
 const ammo = new Array(MAX_PLAYERS).fill(0);
 const listeners = new Set();
 
-// Seed players 0..n-1 with the starting stock; clear the rest. Called on
-// match start and on rematch.
+// Clear everyone to the starting stock at match start / rematch.
 export function resetPvpAmmo(n) {
   const count = Math.max(0, Math.min(MAX_PLAYERS, n | 0));
   for (let i = 0; i < MAX_PLAYERS; i++) ammo[i] = i < count ? PVP_STARTING_AMMO : 0;
+  notify();
+}
+
+// Grant ammo to a player (map pickups). No-op for a non-positive amount.
+export function addPvpAmmo(index, amount) {
+  const i = index | 0;
+  const n = amount | 0;
+  if (i < 0 || i >= MAX_PLAYERS || n <= 0) return;
+  ammo[i] = (ammo[i] | 0) + n;
   notify();
 }
 

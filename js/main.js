@@ -73,7 +73,7 @@ import {
   getTurn, pvpSlotCanAct,
 } from "./pvpMatch.js?v=20260530a";
 import { cornerSpawnTile } from "./pvpSpawn.js?v=20260530a";
-import { getPvpAmmo } from "./pvpAmmo.js?v=20260530a";
+import { getPvpAmmo, addPvpAmmo } from "./pvpAmmo.js?v=20260530a";
 import { installTurnHud, updateTurnHud, hideTurnHud } from "./turnHud.js?v=20260530a";
 
 // PvP world ids (Rust: arena 1301, exit to Duskhaven 1011 @ 59,57).
@@ -204,6 +204,17 @@ async function main() {
       kill: (index) => setPlayerHp(0, index),
       // Fire a shot for the given 1-based slot through the real path.
       shoot: (slot) => tryShootForSlot(slot),
+      // Grant PvP ammo to a 0-based player index (tests).
+      giveAmmo: (index, n) => addPvpAmmo(index, n),
+      // Drop a 0-based player onto a tile (tests — e.g. onto a pickup).
+      // Leaves lastTile stale on purpose so the next frame registers it as
+      // movement and runs the pickup check (real play walks onto pickups).
+      warp: (index, x, y) => {
+        const p = playerByIndex(state, index);
+        if (!p) return;
+        p.tileX = x; p.tileY = y; p.x = x; p.y = y;
+        p.step = null; p.queuedDir = null; p.pendingDir = null;
+      },
       state: () => ({
         mode: getGameMode(),
         zoneId: state.zone?.id,
