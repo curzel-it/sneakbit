@@ -62,7 +62,14 @@ test("bullet damages and kills an overlapping monster, then despawns", () => {
   const player = { x: 1, y: 1, tileX: 1, tileY: 1 };
   // One large dt to deal lethal damage in one go (dps 1800 × 0.2 = 360 > 200 hp).
   combat.tickCombat(zone, player, 0.2);
-  assert.equal(zone.entities.length, 0, "both monster and bullet removed");
+  // The bullet despawns immediately; the monster lingers as a dying
+  // fireball (flagged _dying) until its ~1s lifespan runs out.
+  assert.ok(!zone.entities.includes(bullet), "bullet removed");
+  assert.ok(zone.entities.includes(monster), "monster lingers as fireball");
+  assert.equal(monster._dying, true, "killed monster is dying");
+  // Age past the death lifespan (1.0s) → the fireball is removed.
+  combat.tickCombat(zone, player, 1.1);
+  assert.equal(zone.entities.length, 0, "fireball removed after lifespan");
 });
 
 test("bullet hitting a wall is consumed without applying damage", () => {

@@ -127,6 +127,7 @@ export function isEntityBlocked(zone, tileX, tileY, opts) {
   for (const e of zone.entities) {
     if (e === ignore) continue;
     if (e._spawned) continue;
+    if (e._dying) continue;
     const sp = getSpecies(e.species_id);
     if (!sp) continue;
     if (sp.entity_type === "Teleporter") continue;

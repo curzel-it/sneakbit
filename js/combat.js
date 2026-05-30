@@ -16,6 +16,7 @@ import { addAmmo } from "./inventory.js?v=20260529e";
 import { isExplosive } from "./explosives.js?v=20260529e";
 import { isCreativeMode } from "./creativeMode.js?v=20260529e";
 import { getSettings } from "./settings.js?v=20260529e";
+import { startDeathAnimation, tickDeathAnimations } from "./deathAnimation.js?v=20260529e";
 
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;
@@ -43,6 +44,7 @@ export function tickCombat(zone, player, dt) {
   resolveBullets(zone, players, dt);
   resolveMeleeMonsters(zone, players, dt);
   tickDamageIndicators(zone, dt);
+  tickDeathAnimations(zone, dt);
 }
 
 function toLivePlayers(player) {
@@ -135,6 +137,9 @@ function resolveBullets(zone, players, dt) {
       if (j === i) continue;
       const t = ents[j];
       if (t._spawned) continue;
+      // A dying entity is already a fireball — bullets pass through it
+      // instead of re-triggering its death (which would reset the timer).
+      if (t._dying) continue;
       // Off-screen targets don't take bullet damage. Matches Rust's hitmap
       // gating — a kunai launched towards a tile the player can no longer
       // see passes harmlessly through it.
@@ -147,8 +152,10 @@ function resolveBullets(zone, players, dt) {
       t._hp = (t._hp ?? tsp.hp ?? 100) - dps * dmgMul * dt;
       if (t._hp <= 0) {
         playSfx(isExplosive(t.species_id) ? "smallExplosion" : "deathMonster");
-        ents.splice(j, 1);
-        if (j < i) i -= 1;
+        // Don't splice: turn the target into a fireball that lingers for a
+        // beat before tickDeathAnimations removes it. It's flagged `_dying`
+        // so it stops blocking, fusing, attacking and taking further hits.
+        startDeathAnimation(t);
         consumed = true;
       } else {
         spawnDamageIndicator(zone, entityHittable(t, tsp), b.parent_id ?? b.id);
@@ -208,6 +215,7 @@ function resolveMeleeMonsters(zone, players, dt) {
   const list = zone.visibleEntities ?? zone.entities;
   for (const e of list) {
     if (e._spawned) continue;
+    if (e._dying) continue;
     const sp = getSpecies(e.species_id);
     if (!sp) continue;
     if (sp.entity_type !== "CloseCombatMonster") continue;
@@ -245,6 +253,7 @@ function bulletHitsWall(b, zone) {
   for (const o of zone.entities) {
     if (o === b) continue;
     if (o._spawned) continue;
+    if (o._dying) continue;
     const sp = getSpecies(o.species_id);
     if (!sp || !sp.is_rigid) continue;
     if (sp.entity_type === "Teleporter") continue;

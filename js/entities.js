@@ -19,6 +19,7 @@ import { getMeleeSwingProgress } from "./melee.js?v=20260529e";
 import { pushableRenderOffset } from "./pushables.js?v=20260529e";
 import { shouldBeVisible } from "./entityVisibility.js?v=20260529e";
 import { isCreativeMode } from "./creativeMode.js?v=20260529e";
+import { isDying, DEATH_SPRITE } from "./deathAnimation.js?v=20260529e";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
@@ -218,6 +219,12 @@ export function sortingKey(bottom, zIndex, isPushable) {
 function draw(ctx, e, camera) {
   const sp = e._species;
 
+  // A dying entity renders the looping fireball strip instead of its own
+  // sprite (set up by deathAnimation.startDeathAnimation). The frame index
+  // rides the shared animClock so host and guest stay in lockstep without
+  // needing the per-entity lifespan in the snapshot.
+  if (isDying(e)) { drawDeath(ctx, e, camera); return; }
+
   // Creative-mode hint re-skin: in the Rust core hint signs render from
   // the inventory sheet at their `inventory_texture_offset` instead of
   // the placed-sign sprite on static_objects. Same one-off override here.
@@ -266,4 +273,18 @@ function draw(ctx, e, camera) {
   const px = Math.round((rx - camera.x) * TILE_SIZE);
   const py = Math.round((ry - camera.y) * TILE_SIZE);
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+}
+
+// Renders the death fireball: a 1×1 animated strip from the animated_objects
+// sheet, cycling DEATH_SPRITE.frames at ANIMATIONS_FPS off the shared clock.
+function drawDeath(ctx, e, camera) {
+  const sheet = getSprite(DEATH_SPRITE.sheet);
+  if (!sheet) return;
+  const { x, y } = e.frame;
+  const frame = Math.floor(animClock * ANIMATIONS_FPS) % DEATH_SPRITE.frames;
+  const sx = (DEATH_SPRITE.texX + frame) * TILE_SIZE;
+  const sy = DEATH_SPRITE.texY * TILE_SIZE;
+  const px = Math.round((x - camera.x) * TILE_SIZE);
+  const py = Math.round((y - camera.y) * TILE_SIZE);
+  ctx.drawImage(sheet, sx, sy, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
 }

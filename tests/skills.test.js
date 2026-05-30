@@ -60,7 +60,9 @@ test("piercing skill doubles kunai damage", () => {
     frame: { x: 5, y: 6, w: 1, h: 1 }, direction: "Right" };
   world2.entities.push(m2, b2);
   combat.tickCombat(world2, null, 0.05);
-  assert.ok(!world2.entities.includes(m2), "piercing should one-shot the monster");
+  // A killed monster lingers as a dying fireball rather than vanishing, so
+  // the one-shot is observed via the _dying flag instead of removal.
+  assert.equal(m2._dying, true, "piercing should one-shot the monster");
 });
 
 test("boomerang reverses kunai direction on wall hit", () => {

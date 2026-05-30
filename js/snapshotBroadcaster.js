@@ -371,6 +371,10 @@ function serializeEntity(e) {
   if (e.hp != null) out.hp = e.hp;
   if (e._open != null) out._open = !!e._open;
   if (e._dead) out._dead = true;
+  // A dying entity is a fireball mid-burnout. Ship the flag so guests
+  // render the death animation; the host removes it ~1s later, which the
+  // guest picks up as a normal removed.entities delta.
+  if (e._dying) out._dying = true;
   if (e._spawned) out._spawned = true;
   if (e.direction) out.direction = e.direction;
   // Mobs animate their walk cycle from a `moving` flag the guest can't
@@ -411,6 +415,7 @@ function sigEntity(e) {
     e.hp ?? "",
     e._open ? 1 : 0,
     e._dead ? 1 : 0,
+    e._dying ? 1 : 0,
     e._spawned ? 1 : 0,
     e.direction ?? "",
     e._ai?.step ? 1 : 0,

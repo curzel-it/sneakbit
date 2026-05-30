@@ -53,6 +53,7 @@ export function tickMobs(zone, player, dt) {
   const list = zone.visibleEntities ?? zone.entities;
   for (const e of list) {
     if (e._spawned) continue;
+    if (e._dying) continue;
     const sp = getSpecies(e.species_id);
     if (!sp) continue;
     if (!isMobAi(sp)) continue;
@@ -187,6 +188,7 @@ function canEnter(zone, self, tileX, tileY) {
   for (const other of zone.entities) {
     if (other === self) continue;
     if (other._spawned) continue;
+    if (other._dying) continue;
     const sp = getSpecies(other.species_id);
     if (!sp) continue;
     // Open gates are walkable just like in zone.isEntityBlocked. Without
