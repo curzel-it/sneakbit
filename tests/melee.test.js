@@ -4,7 +4,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadSpeciesData } from "../js/species.js?v=20260530d";
+import { loadSpeciesData } from "../js/species.js?v=20260530e";
 
 function loadSword(meleeDpsMultiplier = 1, bulletDps = 450) {
   loadSpeciesData([
@@ -21,9 +21,9 @@ function loadSword(meleeDpsMultiplier = 1, bulletDps = 450) {
 
 loadSword();
 
-const melee = await import("../js/melee.js?v=20260530d");
-const equipment = await import("../js/equipment.js?v=20260530d");
-const storage = await import("../js/storage.js?v=20260530d");
+const melee = await import("../js/melee.js?v=20260530e");
+const equipment = await import("../js/equipment.js?v=20260530e");
+const storage = await import("../js/storage.js?v=20260530e");
 
 function fakeState() {
   return {

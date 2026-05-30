@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildZone, isWalkable, isEntityBlocked } from "../js/zone.js?v=20260530d";
-import { loadSpeciesData } from "../js/species.js?v=20260530d";
-import { _setCreativeModeForTesting } from "../js/creativeMode.js?v=20260530d";
+import { buildZone, isWalkable, isEntityBlocked } from "../js/zone.js?v=20260530e";
+import { loadSpeciesData } from "../js/species.js?v=20260530e";
+import { _setCreativeModeForTesting } from "../js/creativeMode.js?v=20260530e";
 
 loadSpeciesData([
   { id: 1006, entity_type: "Building", is_rigid: true, sprite_sheet_id: 1010,
@@ -15,7 +15,7 @@ loadSpeciesData([
     sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
 ]);
 
-const storage = await import("../js/storage.js?v=20260530d");
+const storage = await import("../js/storage.js?v=20260530e");
 
 const TINY = {
   id: 9999,

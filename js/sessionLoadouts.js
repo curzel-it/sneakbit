@@ -15,7 +15,7 @@
 // transparently via the no-entry fallback, so the seam is also safe to
 // use in single-player paths.
 
-import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260530d";
+import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260530e";
 
 const loadouts = new Map(); // playerId -> { melee, ranged }
 

@@ -8,24 +8,24 @@
 // spawns/despawns local avatars — is injected the same way, so there's no
 // import back into main.js.
 
-import { updateCamera, panCameraTo } from "./camera.js?v=20260530d";
-import { travelTo } from "./transitions.js?v=20260530d";
-import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260530d";
-import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530d";
-import { setGameMode, getGameMode, GAME_MODE, isPvp } from "./gameMode.js?v=20260530d";
-import { showToast } from "./toast.js?v=20260530d";
-import { tr } from "./strings.js?v=20260530d";
-import { showMatchResult, isGameOverOpen } from "./gameOver.js?v=20260530d";
-import { hideTurnHud } from "./turnHud.js?v=20260530d";
-import { refreshHealthHud } from "./healthHud.js?v=20260530d";
-import { getRuntimeRole } from "./onlineMode.js?v=20260530d";
-import { tryShootForSlot } from "./shooting.js?v=20260530d";
+import { updateCamera, panCameraTo } from "./camera.js?v=20260530e";
+import { travelTo } from "./transitions.js?v=20260530e";
+import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js?v=20260530e";
+import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js?v=20260530e";
+import { setGameMode, getGameMode, GAME_MODE, isPvp } from "./gameMode.js?v=20260530e";
+import { showToast } from "./toast.js?v=20260530e";
+import { tr } from "./strings.js?v=20260530e";
+import { showMatchResult, isGameOverOpen } from "./gameOver.js?v=20260530e";
+import { hideTurnHud } from "./turnHud.js?v=20260530e";
+import { refreshHealthHud } from "./healthHud.js?v=20260530e";
+import { getRuntimeRole } from "./onlineMode.js?v=20260530e";
+import { tryShootForSlot } from "./shooting.js?v=20260530e";
 import {
   startMatch as startPvpLogic, rematch as rematchPvpLogic, tickMatch as tickPvpMatch,
   endMatch as endPvpMatch, notifyPlayerDied, cameraPlayerIndex, getMatchResult,
   isMatchOver, playerCount as pvpPlayerCount, getTurn, pvpSlotCanAct,
-} from "./pvpMatch.js?v=20260530d";
-import { getPvpAmmo, addPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260530d";
+} from "./pvpMatch.js?v=20260530e";
+import { getPvpAmmo, addPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260530e";
 
 // PvP world ids (Rust: arena 1301, exit to Duskhaven 1011 @ 59,57).
 const PVP_ARENA_ZONE_ID = 1301;

@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 const {
   getActiveInputDevice, onActiveInputDeviceChange, markInputDevice,
   _resetActiveInputDeviceForTesting,
-} = await import("../js/activeInputDevice.js?v=20260530d");
+} = await import("../js/activeInputDevice.js?v=20260530e");
 
 test("defaults to keyboard", () => {
   _resetActiveInputDeviceForTesting();

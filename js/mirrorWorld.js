@@ -9,12 +9,12 @@
 // loads them locally on the first snapshot or zone change and only
 // overwrites `zone.entities` from network frames.
 
-import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260530d";
-import { setGameMode } from "./gameMode.js?v=20260530d";
-import { loadZone } from "./data.js?v=20260530d";
-import { buildZone } from "./zone.js?v=20260530d";
-import { setupCutscenes } from "./cutscenes.js?v=20260530d";
-import { evictZoneCache } from "./zoneCache.js?v=20260530d";
+import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260530e";
+import { setGameMode } from "./gameMode.js?v=20260530e";
+import { loadZone } from "./data.js?v=20260530e";
+import { buildZone } from "./zone.js?v=20260530e";
+import { setupCutscenes } from "./cutscenes.js?v=20260530e";
+import { evictZoneCache } from "./zoneCache.js?v=20260530e";
 
 export const INTERP_DELAY_MS = 100;
 const STALE_MS = 300;

@@ -37,26 +37,26 @@ if (typeof globalThis.window === "undefined") {
 }
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260530d");
+  await import("../js/onlineMode.js?v=20260530e");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js?v=20260530d");
+  await import("../js/onlineBootstrap.js?v=20260530e");
 const { installHostGuests, _uninstallHostGuestsForTesting } =
-  await import("../js/hostGuests.js?v=20260530d");
+  await import("../js/hostGuests.js?v=20260530e");
 const {
   installSnapshotBroadcaster,
   stopSnapshotBroadcaster,
   _snapshotForTesting,
   _broadcastDeltaForTesting,
-} = await import("../js/snapshotBroadcaster.js?v=20260530d");
-const { createPlayer, updatePlayer } = await import("../js/player.js?v=20260530d");
-const { installShooting, tickShooting, tryShootForSlot } = await import("../js/shooting.js?v=20260530d");
-const { checkPickup } = await import("../js/pickups.js?v=20260530d");
-const { loadSpeciesData } = await import("../js/species.js?v=20260530d");
-const { addAmmo, getAmmo, clearInventory } = await import("../js/inventory.js?v=20260530d");
-const { resetPlayerHealth } = await import("../js/playerHealth.js?v=20260530d");
-const { setNetworkGuestCount } = await import("../js/coopMode.js?v=20260530d");
-const { _resetStorageForTesting } = await import("../js/storage.js?v=20260530d");
-const inputModule = await import("../js/input.js?v=20260530d");
+} = await import("../js/snapshotBroadcaster.js?v=20260530e");
+const { createPlayer, updatePlayer } = await import("../js/player.js?v=20260530e");
+const { installShooting, tickShooting, tryShootForSlot } = await import("../js/shooting.js?v=20260530e");
+const { checkPickup } = await import("../js/pickups.js?v=20260530e");
+const { loadSpeciesData } = await import("../js/species.js?v=20260530e");
+const { addAmmo, getAmmo, clearInventory } = await import("../js/inventory.js?v=20260530e");
+const { resetPlayerHealth } = await import("../js/playerHealth.js?v=20260530e");
+const { setNetworkGuestCount } = await import("../js/coopMode.js?v=20260530e");
+const { _resetStorageForTesting } = await import("../js/storage.js?v=20260530e");
+const inputModule = await import("../js/input.js?v=20260530e");
 
 // Real species blob from disk — saves us hand-rolling kunai / bundle /
 // launcher records and accidentally drifting from the live game's data.

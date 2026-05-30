@@ -5,7 +5,7 @@
 // First playback waits for a user gesture (keypress / click) to satisfy
 // browser autoplay rules; we listen once and start whatever's queued.
 
-import { getSettings } from "./settings.js?v=20260530d";
+import { getSettings } from "./settings.js?v=20260530e";
 
 const cache = new Map();
 let current = null;       // { name, audio }

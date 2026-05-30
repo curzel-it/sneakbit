@@ -7,7 +7,7 @@
 // unlocks, equipment, etc.) already lives in storage.js — this module
 // only handles the bits the engine actively pushes back on zone change.
 
-import { getValue, setValue } from "./storage.js?v=20260530d";
+import { getValue, setValue } from "./storage.js?v=20260530e";
 
 const KEY_LATEST_ZONE = "latest_zone";
 const KEY_PLAYER_X = "player.0.spawn.tileX";

@@ -8,9 +8,9 @@
 // come later via the Steam Input API (Electron shell) — only this module
 // changes when that source is added.
 
-import { getActiveInputDevice } from "./activeInputDevice.js?v=20260530d";
-import { codesFor } from "./keyBindings.js?v=20260530d";
-import { buttonFor } from "./gamepadBindings.js?v=20260530d";
+import { getActiveInputDevice } from "./activeInputDevice.js?v=20260530e";
+import { codesFor } from "./keyBindings.js?v=20260530e";
+import { buttonFor } from "./gamepadBindings.js?v=20260530e";
 
 // Standard-Mapping button index → label.
 const PAD_BUTTON_LABELS = {

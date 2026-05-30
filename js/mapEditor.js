@@ -17,19 +17,19 @@
 // stray window.creative.openMapEditor() calls don't pop a picker no one
 // can dismiss.
 
-import { isCreativeMode } from "./creativeMode.js?v=20260530d";
-import { TILE_SIZE } from "./constants.js?v=20260530d";
-import { allSpecies, getSpecies, getEntitySheet } from "./species.js?v=20260530d";
-import { BIOME, biomeToChar } from "./biomes.js?v=20260530d";
-import { CONSTRUCTION, constructionToChar } from "./constructions.js?v=20260530d";
-import { buildZone } from "./zone.js?v=20260530d";
-import { setupPuzzles } from "./puzzles.js?v=20260530d";
-import { setupCutscenes } from "./cutscenes.js?v=20260530d";
-import { invalidateZoneCache } from "./data.js?v=20260530d";
-import { putBufferedZone } from "./zoneBuffer.js?v=20260530d";
-import { getBiomeSheet } from "./biomeSheet.js?v=20260530d";
-import { getSprite } from "./assets.js?v=20260530d";
-import { tryBuildingPrefab } from "./prefabs.js?v=20260530d";
+import { isCreativeMode } from "./creativeMode.js?v=20260530e";
+import { TILE_SIZE } from "./constants.js?v=20260530e";
+import { allSpecies, getSpecies, getEntitySheet } from "./species.js?v=20260530e";
+import { BIOME, biomeToChar } from "./biomes.js?v=20260530e";
+import { CONSTRUCTION, constructionToChar } from "./constructions.js?v=20260530e";
+import { buildZone } from "./zone.js?v=20260530e";
+import { setupPuzzles } from "./puzzles.js?v=20260530e";
+import { setupCutscenes } from "./cutscenes.js?v=20260530e";
+import { invalidateZoneCache } from "./data.js?v=20260530e";
+import { putBufferedZone } from "./zoneBuffer.js?v=20260530e";
+import { getBiomeSheet } from "./biomeSheet.js?v=20260530e";
+import { getSprite } from "./assets.js?v=20260530e";
+import { tryBuildingPrefab } from "./prefabs.js?v=20260530e";
 
 let stateGetter = () => null;
 let canvasEl = null;
