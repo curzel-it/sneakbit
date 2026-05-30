@@ -29,6 +29,7 @@ import { isCoopMode, localPlayerCount } from "./coopMode.js?v=20260530b";
 import { setLocalPlayers } from "./main.js?v=20260530b";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530b";
 import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js?v=20260530b";
+import { isRealtimePvp } from "./gameMode.js?v=20260530b";
 
 let chip = null;
 let chipLabel = null;
@@ -52,6 +53,10 @@ let hostingPeerList = null;
 let hostingCopyBtn = null;
 let hostingShareBtn = null;
 let hostingEndBtn = null;
+// PvP start/stop are mutually exclusive — only one is shown, picked in
+// renderHostingView by whether a realtime deathmatch is currently live.
+let hostingPvpStartBtn = null;
+let hostingPvpEndBtn = null;
 // playerId → { row, nameEl, slotEl } so we can patch peer rows in place
 // instead of tearing out the entire <ul> on every session-state update.
 // Preserves the hover/active state of the Kick button when a different
@@ -274,26 +279,34 @@ function buildHostingView() {
   hostingPeerList.className = "party-peer-list";
   root.appendChild(hostingPeerList);
 
-  // Realtime PvP (deathmatch): host-only, needs at least one guest. Travels
-  // everyone to the arena and fights last-player-standing. End PvP returns
-  // the host to the story world.
-  const pvpStartBtn = document.createElement("button");
-  pvpStartBtn.id = "party-start-pvp";
-  pvpStartBtn.textContent = "Realtime PvP (Beta)";
-  pvpStartBtn.addEventListener("click", onStartPvpClick);
-  root.appendChild(pvpStartBtn);
+  // Mode controls. Exactly one of {Start PvP, End PvP} is visible, chosen in
+  // renderHostingView by whether a realtime deathmatch is live. "End session"
+  // (leave co-op entirely) only shows in co-op — during a match the only exit
+  // shown is "End PvP", which drops everyone back to the co-op world.
+  const modeRow = document.createElement("div");
+  modeRow.className = "party-row party-mode-row";
 
-  const pvpEndBtn = document.createElement("button");
-  pvpEndBtn.id = "party-end-pvp";
-  pvpEndBtn.textContent = "End PvP";
-  pvpEndBtn.addEventListener("click", () => { exitDeathmatch(); closePartyPanel(); });
-  root.appendChild(pvpEndBtn);
+  hostingPvpStartBtn = document.createElement("button");
+  hostingPvpStartBtn.id = "party-start-pvp";
+  hostingPvpStartBtn.textContent = "Start Realtime PvP (Beta)";
+  hostingPvpStartBtn.addEventListener("click", onStartPvpClick);
+  modeRow.appendChild(hostingPvpStartBtn);
+
+  hostingPvpEndBtn = document.createElement("button");
+  hostingPvpEndBtn.id = "party-end-pvp";
+  hostingPvpEndBtn.textContent = "End PvP (back to co-op)";
+  hostingPvpEndBtn.className = "party-danger";
+  hostingPvpEndBtn.addEventListener("click", () => { exitDeathmatch(); closePartyPanel(); });
+  modeRow.appendChild(hostingPvpEndBtn);
 
   hostingEndBtn = document.createElement("button");
-  hostingEndBtn.textContent = "End co-op";
+  hostingEndBtn.id = "party-end-coop";
+  hostingEndBtn.textContent = "End session";
   hostingEndBtn.className = "party-danger";
   hostingEndBtn.addEventListener("click", onEndCoopClick);
-  root.appendChild(hostingEndBtn);
+  modeRow.appendChild(hostingEndBtn);
+
+  root.appendChild(modeRow);
 
   return root;
 }
@@ -472,7 +485,20 @@ function renderHostingView() {
   const hasCode = !!code;
   hostingCopyBtn.disabled = !hasCode;
   hostingShareBtn.disabled = !hasCode;
-  patchPeerList(getKnownPeers());
+  const peers = getKnownPeers();
+  patchPeerList(peers);
+
+  // PvP is host-vs-guest, so the start button needs at least one peer. While a
+  // match is live, swap the start + "End session" pair for a single "End PvP".
+  const inPvp = isRealtimePvp();
+  hostingPvpStartBtn.style.display = inPvp ? "none" : "";
+  hostingEndBtn.style.display = inPvp ? "none" : "";
+  hostingPvpEndBtn.style.display = inPvp ? "" : "none";
+
+  const canStartPvp = peers.length >= 1;
+  hostingPvpStartBtn.disabled = !canStartPvp;
+  hostingPvpStartBtn.classList.toggle("party-disabled", !canStartPvp);
+  hostingPvpStartBtn.title = canStartPvp ? "" : "Wait for a friend to join first.";
 }
 
 // Diff the rendered <ul> against the incoming peer list: keep existing
@@ -713,6 +739,7 @@ function injectStyles() {
     .party-card h1 { margin: 0 0 16px; font-size: 18px; letter-spacing: 1px; }
     .party-row { display: flex; align-items: center; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
     .party-controls { justify-content: flex-end; margin-top: 18px; }
+    .party-mode-row { margin-top: 16px; }
     .party-hint { color: #888; font-size: 11px; margin: 12px 0 6px; }
     .party-error { color: #e88; font-size: 12px; margin: 8px 0 0; }
     .party-stepper { display: flex; align-items: center; gap: 12px; margin: 8px 0 4px; }
@@ -782,6 +809,8 @@ export function _resetPartyPanelForTesting() {
   hostingCopyBtn = null;
   hostingShareBtn = null;
   hostingEndBtn = null;
+  hostingPvpStartBtn = null;
+  hostingPvpEndBtn = null;
   guestTitleEl = null;
   guestSlotEl = null;
   guestLeaveBtn = null;
