@@ -8,11 +8,11 @@
 // stop after one delta, fitting the 50–100 KB/s budget called out in
 // docs/online-coop.md at the snapshot section.
 
-import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260529e";
-import { getPlayerHp } from "./playerHealth.js?v=20260529e";
-import { getLastSeqMap } from "./hostGuests.js?v=20260529e";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260529e";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260529e";
+import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260530a";
+import { getPlayerHp } from "./playerHealth.js?v=20260530a";
+import { getLastSeqMap } from "./hostGuests.js?v=20260530a";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260530a";
+import { shouldBeVisible } from "./entityVisibility.js?v=20260530a";
 
 export const BROADCAST_INTERVAL_MS = 50;
 

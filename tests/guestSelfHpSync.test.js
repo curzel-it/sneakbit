@@ -7,15 +7,15 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260529e");
+  await import("../js/onlineMode.js?v=20260530a");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
-  await import("../js/onlineBootstrap.js?v=20260529e");
+  await import("../js/onlineBootstrap.js?v=20260530a");
 const { getPlayerHp, resetPlayerHealth } =
-  await import("../js/playerHealth.js?v=20260529e");
+  await import("../js/playerHealth.js?v=20260530a");
 const {
   installGuestSelfHpSync,
   _uninstallGuestSelfHpSyncForTesting,
-} = await import("../js/guestSelfHpSync.js?v=20260529e");
+} = await import("../js/guestSelfHpSync.js?v=20260530a");
 
 function makeFakeNet() {
   const handlers = new Map();

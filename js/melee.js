@@ -5,13 +5,13 @@
 // weapon.melee_dps_multiplier, applied via combat.js's normal bullet
 // resolution path.
 
-import { getSpecies } from "./species.js?v=20260529e";
-import { resolveLoadout } from "./sessionLoadouts.js?v=20260529e";
-import { playSfx } from "./audio.js?v=20260529e";
-import { matchesAction } from "./keyBindings.js?v=20260529e";
-import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260529e";
-import { getNetRole } from "./onlineBootstrap.js?v=20260529e";
-import { isPlayerDead } from "./playerHealth.js?v=20260529e";
+import { getSpecies } from "./species.js?v=20260530a";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260530a";
+import { playSfx } from "./audio.js?v=20260530a";
+import { matchesAction } from "./keyBindings.js?v=20260530a";
+import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260530a";
+import { getNetRole } from "./onlineBootstrap.js?v=20260530a";
+import { isPlayerDead } from "./playerHealth.js?v=20260530a";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;

@@ -7,9 +7,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { _resolveDirectionForTesting } = await import("../js/input.js?v=20260529e");
-const { setBinding, _resetBindingsForTesting } = await import("../js/keyBindings.js?v=20260529e");
-const { setLocalPlayerCount } = await import("../js/coopMode.js?v=20260529e");
+const { _resolveDirectionForTesting } = await import("../js/input.js?v=20260530a");
+const { setBinding, _resetBindingsForTesting } = await import("../js/keyBindings.js?v=20260530a");
+const { setLocalPlayerCount } = await import("../js/coopMode.js?v=20260530a");
 
 // P1/P2 have keyboard defaults (KeyW / KeyI for moveUp); P3/P4 start empty,
 // so we assign distinct keys for them.

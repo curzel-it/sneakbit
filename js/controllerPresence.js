@@ -6,10 +6,10 @@
 // expectation). Switching keyboard↔pad never pauses — only losing the pad
 // you're using does.
 
-import { markInputDevice, getActiveInputDevice } from "./activeInputDevice.js?v=20260529e";
-import { slotForPadIndex } from "./gamepad.js?v=20260529e";
-import { showToast } from "./toast.js?v=20260529e";
-import { getNetRole } from "./onlineBootstrap.js?v=20260529e";
+import { markInputDevice, getActiveInputDevice } from "./activeInputDevice.js?v=20260530a";
+import { slotForPadIndex } from "./gamepad.js?v=20260530a";
+import { showToast } from "./toast.js?v=20260530a";
+import { getNetRole } from "./onlineBootstrap.js?v=20260530a";
 
 let overlay = null;
 let paused = false;

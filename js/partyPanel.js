@@ -11,7 +11,7 @@
 // Actions are all switchRole(...) calls or net.send({op: "host.kick"}).
 // No location.replace anywhere — role transitions stay in-page.
 
-import { getRuntimeRole, onRoleChange, isValidJoinCode } from "./onlineMode.js?v=20260529e";
+import { getRuntimeRole, onRoleChange, isValidJoinCode } from "./onlineMode.js?v=20260530a";
 import {
   getInviteCode,
   getKnownPeers,
@@ -21,13 +21,13 @@ import {
   getNameForPlayerId,
   getNet,
   onSessionState,
-} from "./onlineBootstrap.js?v=20260529e";
-import { switchRole } from "./switchRole.js?v=20260529e";
-import { showToast } from "./toast.js?v=20260529e";
-import { isCreativeMode } from "./creativeMode.js?v=20260529e";
-import { isCoopMode, localPlayerCount } from "./coopMode.js?v=20260529e";
-import { setLocalPlayers } from "./main.js?v=20260529e";
-import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260529e";
+} from "./onlineBootstrap.js?v=20260530a";
+import { switchRole } from "./switchRole.js?v=20260530a";
+import { showToast } from "./toast.js?v=20260530a";
+import { isCreativeMode } from "./creativeMode.js?v=20260530a";
+import { isCoopMode, localPlayerCount } from "./coopMode.js?v=20260530a";
+import { setLocalPlayers } from "./main.js?v=20260530a";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530a";
 
 let chip = null;
 let chipLabel = null;

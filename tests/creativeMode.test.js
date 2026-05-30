@@ -4,7 +4,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { isCreativeMode, _setCreativeModeForTesting } from "../js/creativeMode.js?v=20260529e";
+import { isCreativeMode, _setCreativeModeForTesting } from "../js/creativeMode.js?v=20260530a";
 
 test("defaults to false in a non-browser test environment", () => {
   _setCreativeModeForTesting(false);

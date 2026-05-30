@@ -9,7 +9,7 @@
 // it — see the `_dying` guards in combat.js, zone.js, mobs.js, monsters.js
 // and minions.js. The renderer reads DEATH_SPRITE for the fireball art.
 
-import { ANIMATIONS_FPS } from "./constants.js?v=20260529e";
+import { ANIMATIONS_FPS } from "./constants.js?v=20260530a";
 
 // Rust: `remaining_lifespan = 10.0 / ANIMATIONS_FPS` → 1.0s at 10fps.
 const DEATH_LIFESPAN = 10 / ANIMATIONS_FPS;

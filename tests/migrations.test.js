@@ -2,8 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _resetStorageForTesting, getValue, setValue } =
-  await import("../js/storage.js?v=20260529e");
-const { runMigrations, BUILD_NUMBER } = await import("../js/migrations.js?v=20260529e");
+  await import("../js/storage.js?v=20260530a");
+const { runMigrations, BUILD_NUMBER } = await import("../js/migrations.js?v=20260530a");
 
 test("first-ever launch: stamps BUILD_NUMBER and reports applied=0", () => {
   _resetStorageForTesting();
