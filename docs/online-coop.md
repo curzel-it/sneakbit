@@ -665,13 +665,18 @@ The Rust model above is ported across:
 - `js/pvpSpawn.js` — corner spawns. `js/pvpMatch.js` — match orchestrator
   (turn state, dead set, win/lose, `pvpSlotCanAct` input gate; subscribes to
   combat's `onPlayerVsPlayerHit` for the clamp). `js/turnHud.js` — DOM countdown.
-- `js/pvpAmmo.js` — per-player, non-persisted ammo for the match. Players
-  spawn with **only the kunai launcher and zero ammo** and **scavenge kunai
-  from the arena** (the 8 `kunai.x10` bundles in world 1301); `pickups.js`
-  routes PvP pickups into this pool. Kept out of `inventory.js` so PvP never
-  touches P1's saved story ammo; local co-op (shared fold) and online
-  (per-`playerId`) inventory are untouched. In PvP `shooting.js` forces the
-  kunai launcher as the only weapon and there is no melee.
+- `js/pvpLoadout.js` — per-player, non-persisted **loadout**: the equipped
+  ranged weapon plus a **per-caliber** ammo count (kunai 7000, .223 1169,
+  cannon 1170, …), tracked by bullet species. Players spawn with the kunai
+  launcher and zero ammo and **scavenge the arena** (world 1301 ships kunai /
+  AR15 / cannon ammo crates and weapon crates): `pickups.js` routes PvP ammo
+  crates into the matching caliber and weapon crates swap the equipped weapon,
+  per player. `shooting.js` fires the equipped weapon and spends its caliber;
+  the ammo HUD shows the active player's count + icon for their *equipped*
+  weapon. Kept out of `inventory.js` so PvP never touches P1's saved story
+  inventory; local co-op (shared fold) and online (per-`playerId`) are
+  untouched. The arena is reloaded each match/rematch (with `ephemeralState`
+  set) so pickups respawn and nothing leaks into the save. No melee in PvP.
 - Edits: `playerHealth.js` (1000 HP in PvP), `combat.js` (forced friendly fire +
   hit event), `shooting.js`/`melee.js` (gate on the active slot), `main.js`
   (loop wiring, current-player camera, `startPvpMatch`/`exitPvp`), `gameOver.js`

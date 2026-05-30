@@ -14,7 +14,7 @@ import {
 } from "./turns.js?v=20260530a";
 import { isPvp } from "./gameMode.js?v=20260530a";
 import { onPlayerVsPlayerHit } from "./combat.js?v=20260530a";
-import { resetPvpAmmo } from "./pvpAmmo.js?v=20260530a";
+import { resetPvpLoadout } from "./pvpLoadout.js?v=20260530a";
 
 let numberOfPlayers = 1;
 let turn = firstTurn(false);              // realtime until a match starts
@@ -32,7 +32,7 @@ export function startMatch(n) {
   turn = firstTurn(true);
   dead = new Set();
   result = { kind: "inProgress" };
-  resetPvpAmmo(numberOfPlayers);
+  resetPvpLoadout();
   return result;
 }
 

@@ -6,7 +6,7 @@ import { loadSpecies, loadStrings, loadZone } from "./data.js?v=20260530a";
 import { loadStringsData, tr } from "./strings.js?v=20260530a";
 import { installDialogue, isDialogueOpen } from "./dialogue.js?v=20260530a";
 import { installInteract, tickInteract, tryInteractForSlot } from "./interact.js?v=20260530a";
-import { loadSpeciesData } from "./species.js?v=20260530a";
+import { loadSpeciesData, getSpecies } from "./species.js?v=20260530a";
 import { composeBiomeSheet } from "./biomeSheet.js?v=20260530a";
 import { buildZone } from "./zone.js?v=20260530a";
 import { pickCoopSpawn } from "./coopSpawn.js?v=20260530a";
@@ -73,7 +73,7 @@ import {
   getTurn, pvpSlotCanAct,
 } from "./pvpMatch.js?v=20260530a";
 import { cornerSpawnTile } from "./pvpSpawn.js?v=20260530a";
-import { getPvpAmmo, addPvpAmmo } from "./pvpAmmo.js?v=20260530a";
+import { getPvpAmmo, addPvpAmmo, getPvpRangedWeapon } from "./pvpLoadout.js?v=20260530a";
 import { installTurnHud, updateTurnHud, hideTurnHud } from "./turnHud.js?v=20260530a";
 
 // PvP world ids (Rust: arena 1301, exit to Duskhaven 1011 @ 59,57).
@@ -204,8 +204,10 @@ async function main() {
       kill: (index) => setPlayerHp(0, index),
       // Fire a shot for the given 1-based slot through the real path.
       shoot: (slot) => tryShootForSlot(slot),
-      // Grant PvP ammo to a 0-based player index (tests).
-      giveAmmo: (index, n) => addPvpAmmo(index, n),
+      // Grant PvP ammo of a caliber to a 0-based player index (tests).
+      giveAmmo: (index, bulletId, n) => addPvpAmmo(index, bulletId, n),
+      // Read a player's count for a specific caliber (tests).
+      ammoOf: (index, bulletId) => getPvpAmmo(index, bulletId),
       // Drop a 0-based player onto a tile (tests — e.g. onto a pickup).
       // Leaves lastTile stale on purpose so the next frame registers it as
       // movement and runs the pickup check (real play walks onto pickups).
@@ -223,7 +225,12 @@ async function main() {
         result: getMatchResult(),
         over: isMatchOver(),
         hp: [0, 1, 2, 3].map((i) => getPlayerHp(i)),
-        ammo: [0, 1, 2, 3].map((i) => getPvpAmmo(i)),
+        weapon: [0, 1, 2, 3].map((i) => getPvpRangedWeapon(i)),
+        // Ammo for each player's currently equipped weapon (what the HUD shows).
+        ammo: [0, 1, 2, 3].map((i) => {
+          const w = getSpecies(getPvpRangedWeapon(i));
+          return getPvpAmmo(i, w?.bullet_species_id || 7000);
+        }),
         bullets: (state.zone?.entities || []).filter((e) => e._spawned).length,
       }),
     };
@@ -968,16 +975,27 @@ function tickPvpFrame(dt) {
   }
 }
 
-// Rematch: re-arm the turn machine, full-heal, re-spawn at corners.
-function onPvpRematch() {
-  rematchPvpLogic();
+// (Re)load the arena, scatter N players to the corners at full HP, and snap
+// the camera to P1. Reloading on every match/rematch restores the scavenge
+// pickups (and monsters) that were consumed; ephemeralState keeps the arena
+// from persisting "item collected" flags into the player's save.
+async function enterArena(n) {
+  await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" });
+  state.zone.ephemeralState = true;
   pvpDeadToasted.clear();
-  const n = pvpPlayerCount();
   for (let i = 0; i < n; i++) {
     resetPlayerHealth(i);
     placePvpPlayer(state, i, cornerSpawnTile(state.zone, i));
   }
+  // Snap to P1's corner so the first frame doesn't pan from the old zone.
+  updateCamera(state.camera, playerByIndex(state, 0), state.zone);
   refreshHealthHud();
+}
+
+// Rematch: re-arm the turn machine + loadout, then reload the arena fresh.
+function onPvpRematch() {
+  rematchPvpLogic();
+  enterArena(pvpPlayerCount());
 }
 
 // Start a local N-player PvP match: switch mode, spawn the players, travel
@@ -994,16 +1012,8 @@ export async function startPvpMatch(n) {
   n = Math.max(2, Math.min(4, n | 0));
   setGameMode(GAME_MODE.pvp);
   setLocalPlayers(n);
-  await travelTo(state, { zone: PVP_ARENA_ZONE_ID, x: 0, y: 0, direction: "Down" });
-  pvpDeadToasted.clear();
-  for (let i = 0; i < n; i++) {
-    resetPlayerHealth(i);
-    placePvpPlayer(state, i, cornerSpawnTile(state.zone, i));
-  }
   startPvpLogic(n);
-  // Snap to P1's corner so the first frame doesn't pan from the old zone.
-  updateCamera(state.camera, playerByIndex(state, 0), state.zone);
-  refreshHealthHud();
+  await enterArena(n);
 }
 
 // Leave PvP: back to co-op single-player at Duskhaven.

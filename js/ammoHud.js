@@ -15,7 +15,7 @@ import { getAmmo, onInventoryChange } from "./inventory.js?v=20260530a";
 import { getSpecies } from "./species.js?v=20260530a";
 import { isPvp } from "./gameMode.js?v=20260530a";
 import { cameraPlayerIndex } from "./pvpMatch.js?v=20260530a";
-import { getPvpAmmo } from "./pvpAmmo.js?v=20260530a";
+import { getPvpAmmo, getPvpRangedWeapon } from "./pvpLoadout.js?v=20260530a";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
 
@@ -54,27 +54,37 @@ function makeChip(index) {
 
   card.appendChild(icon);
   card.appendChild(count);
-  return { root: card, icon, count, lastLabel: null, index };
+  return { root: card, icon, count, lastLabel: null, iconSpecies: -1, index };
 }
 
 export function updateAmmoHud() {
   if (!root) return;
-  // PvP repurposes the single chip to show the *active* player's own pool
-  // (it changes hands every turn), tagged with the player number so the
-  // count "resetting" between turns reads correctly. Outside PvP it's the
-  // local hero's shared/persisted count as before.
+  // PvP repurposes the single chip to show the *active* player's ammo for
+  // their *currently equipped* ranged weapon — tagged with the player
+  // number, with the icon following the equipped caliber. Outside PvP it's
+  // the local hero's shared/persisted kunai count as before.
   const pvp = isPvp();
   const activeIdx = pvp ? (cameraPlayerIndex() ?? 0) : 0;
+  let bulletId = KUNAI_SPECIES_ID;
+  if (pvp) {
+    const weapon = getSpecies(getPvpRangedWeapon(activeIdx));
+    bulletId = weapon?.bullet_species_id || KUNAI_SPECIES_ID;
+  }
   for (const c of chips) {
-    const n = pvp ? getPvpAmmo(activeIdx) : getAmmo(KUNAI_SPECIES_ID, c.index);
+    const n = pvp ? getPvpAmmo(activeIdx, bulletId) : getAmmo(KUNAI_SPECIES_ID, c.index);
     const label = pvp ? `P${activeIdx + 1}  x${n}` : `x${n}`;
     if (label !== c.lastLabel) {
       c.count.textContent = label;
       c.lastLabel = label;
     }
+    // Re-paint the icon when the displayed caliber changes (weapon swap).
+    if (c.iconSpecies !== bulletId) {
+      c.iconSpecies = bulletId;
+      c.icon.dataset.painted = "";
+    }
     // Lazy-draw the icon the first time the sprite sheet is available
     // (it's loaded async at startup, so the first frames may not have it).
-    if (!c.icon.dataset.painted) paintIcon(c.icon);
+    if (!c.icon.dataset.painted) paintIcon(c.icon, bulletId);
   }
 }
 
@@ -121,8 +131,8 @@ function injectStyles() {
   document.head.appendChild(style);
 }
 
-function paintIcon(iconCanvas) {
-  const sp = getSpecies(KUNAI_SPECIES_ID);
+function paintIcon(iconCanvas, speciesId = KUNAI_SPECIES_ID) {
+  const sp = getSpecies(speciesId);
   if (!sp || !sp.inventory_texture_offset) return;
   let sheet;
   try { sheet = getSprite("inventory"); } catch { return; }
