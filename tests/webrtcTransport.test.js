@@ -7,7 +7,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { installWebrtcTransport } from "../js/webrtcTransport.js?v=20260530c";
+import { installWebrtcTransport } from "../js/webrtcTransport.js?v=20260530d";
 
 class MockDC {
   constructor(label) {
