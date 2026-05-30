@@ -687,11 +687,13 @@ function onOfflineCoopClick() {
 }
 
 function onOfflinePvpClick() {
-  // Travels to the arena behind a fade — close the dialog so the player isn't
-  // staring at a modal over the transition. Reopening shows the offline view
-  // with the player-count toggle.
-  closePartyPanel();
+  // Mirror onOfflineCoopClick: enter at 2 players and keep the panel open on
+  // the hosting-offline view so PvP and co-op present the same 2/3/4 settings.
+  // startPvpMatch sets the mode + player count synchronously before it awaits
+  // the arena travel, so renderAll already sees the pvp view.
   startPvpMatch(2);
+  renderAll();
+  showToast("Local PvP on — change players with the 2/3/4 toggle", "longHint");
 }
 
 async function onCopyClick() {
