@@ -298,12 +298,14 @@ function applyRoleVisibility() {
 // Swap the pause-menu PvP entry between "start" and "Exit PvP" depending
 // on whether a match is running.
 function applyPvpVisibility() {
+  // PvP (Phase A) is offline-only — hide the whole entry while online.
+  const offline = getRuntimeRole() === "offline";
   const active = isPvpActive();
   const openBtn = root.querySelector("#menu-open-pvp");
   const exitBtn = root.querySelector("#menu-exit-pvp");
-  if (openBtn) openBtn.style.display = active ? "none" : "";
+  if (openBtn) openBtn.style.display = offline && !active ? "" : "none";
   if (exitBtn) {
-    exitBtn.style.display = active ? "" : "none";
+    exitBtn.style.display = offline && active ? "" : "none";
     exitBtn.textContent = tr("game.menu.exit_pvp");
   }
 }

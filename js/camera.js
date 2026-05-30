@@ -20,9 +20,11 @@ export function cameraRectFor(player, w, h) {
   return { x: player.x + 0.5 - w / 2, y: player.y + 0.5 - h / 2, w, h };
 }
 
-export function updateCamera(camera, target, zone) {
+// The clamped top-left the camera should sit at to centre `target` (a
+// player or array of live players). Returns null when there's no target.
+function cameraDestination(camera, target, zone) {
   const arr = Array.isArray(target) ? target : (target ? [target] : []);
-  if (!arr.length) return;
+  if (!arr.length) return null;
   let sx = 0, sy = 0;
   for (const p of arr) { sx += p.x; sy += p.y; }
   const ax = sx / arr.length;
@@ -37,9 +39,29 @@ export function updateCamera(camera, target, zone) {
     cx = Math.max(0, Math.min(cx, zone.cols - camera.w));
     cy = Math.max(0, Math.min(cy, zone.rows - camera.h));
   }
+  return { x: cx, y: cy };
+}
 
-  camera.x = cx;
-  camera.y = cy;
+export function updateCamera(camera, target, zone) {
+  const dest = cameraDestination(camera, target, zone);
+  if (!dest) return;
+  camera.x = dest.x;
+  camera.y = dest.y;
+}
+
+// Like updateCamera but eases toward the destination instead of snapping.
+// Used by PvP so the hand-off between far-apart corners reads as a pan
+// rather than a teleport. Exponential smoothing → framerate-independent.
+const PAN_SPEED = 6;
+export function panCameraTo(camera, target, zone, dt) {
+  const dest = cameraDestination(camera, target, zone);
+  if (!dest) return;
+  const t = 1 - Math.exp(-PAN_SPEED * Math.max(0, dt));
+  camera.x += (dest.x - camera.x) * t;
+  camera.y += (dest.y - camera.y) * t;
+  // Settle exactly once we're within a hair, so we don't creep forever.
+  if (Math.abs(dest.x - camera.x) < 0.01) camera.x = dest.x;
+  if (Math.abs(dest.y - camera.y) < 0.01) camera.y = dest.y;
 }
 
 function isInteriorZone(zone) {

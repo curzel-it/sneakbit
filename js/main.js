@@ -12,7 +12,7 @@ import { buildZone } from "./zone.js?v=20260530a";
 import { pickCoopSpawn } from "./coopSpawn.js?v=20260530a";
 import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress } from "./input.js?v=20260530a";
 import { createPlayer, updatePlayer } from "./player.js?v=20260530a";
-import { createCamera, updateCamera, cameraRectFor } from "./camera.js?v=20260530a";
+import { createCamera, updateCamera, panCameraTo, cameraRectFor } from "./camera.js?v=20260530a";
 import { createRenderer, render } from "./renderer.js?v=20260530a";
 import { startGameLoop } from "./gameLoop.js?v=20260530a";
 import { createBiomeAnimation, tickBiomeAnimation } from "./biomeAnimation.js?v=20260530a";
@@ -201,6 +201,8 @@ async function main() {
       exit: () => exitPvp(),
       // Force a player's death for win/lose tests (HP straight to 0).
       kill: (index) => setPlayerHp(0, index),
+      // Fire a shot for the given 1-based slot through the real path.
+      shoot: (slot) => tryShootForSlot(slot),
       state: () => ({
         mode: getGameMode(),
         zoneId: state.zone?.id,
@@ -209,6 +211,7 @@ async function main() {
         result: getMatchResult(),
         over: isMatchOver(),
         hp: [0, 1, 2, 3].map((i) => getPlayerHp(i)),
+        bullets: (state.zone?.entities || []).filter((e) => e._spawned).length,
       }),
     };
   }
@@ -341,7 +344,7 @@ async function main() {
       // each guest renders an independent window centred on themselves, so
       // the host's own window tracks the host. simulationViewports keeps
       // every off-camera guest's region alive (see below).
-      updateCamera(state.camera, cameraTarget(state), state.zone);
+      applyCamera(dt);
       updateVisibleEntities(state.zone, simulationViewports(state));
       tickShooting(dt);
       tickMelee(dt);
@@ -374,7 +377,7 @@ async function main() {
       // there's no jolt, but don't bother re-running the visibility pass
       // (the entity ticks are gated by `paused` above and won't read it).
       // Same follow-self-vs-averaged rule as the unpaused branch.
-      updateCamera(state.camera, cameraTarget(state), state.zone);
+      applyCamera(dt);
     }
     tickBiomeAnimation(biomeAnim, dt);
     tickEntities(dt);
@@ -910,6 +913,14 @@ function cameraTarget(state) {
   return hostCameraTarget(state);
 }
 
+// PvP eases the camera between far-apart corners; everything else snaps
+// (the followed player moves slowly, so a snap-follow reads as smooth).
+function applyCamera(dt) {
+  const target = cameraTarget(state);
+  if (isPvp()) panCameraTo(state.camera, target, state.zone, dt);
+  else updateCamera(state.camera, target, state.zone);
+}
+
 // Drop a player onto a tile and resync the teleport bookkeeping so
 // maybeTeleport doesn't immediately fire on the jump.
 function placePvpPlayer(state, idx0, tile) {
@@ -960,6 +971,13 @@ function onPvpRematch() {
 // to the arena (world 1301), then scatter them to the corners at full HP.
 export async function startPvpMatch(n) {
   if (!state?.zone || !state.player) return;
+  // Phase A is offline-only: starting PvP while hosting/guesting would
+  // teleport the host into the arena and strand the guests. The menu
+  // already hides the entry off-offline; this guards the programmatic path.
+  if (getRuntimeRole() !== "offline") {
+    showToast("Leave the online session before starting PvP", "longHint");
+    return;
+  }
   n = Math.max(2, Math.min(4, n | 0));
   setGameMode(GAME_MODE.pvp);
   setLocalPlayers(n);
@@ -970,6 +988,8 @@ export async function startPvpMatch(n) {
     placePvpPlayer(state, i, cornerSpawnTile(state.zone, i));
   }
   startPvpLogic(n);
+  // Snap to P1's corner so the first frame doesn't pan from the old zone.
+  updateCamera(state.camera, playerByIndex(state, 0), state.zone);
   refreshHealthHud();
 }
 
