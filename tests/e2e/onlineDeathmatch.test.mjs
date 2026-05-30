@@ -73,7 +73,7 @@ test("realtime online PvP: arena, 1000 HP, kill → result on both clients", asy
   await evalExpr(session.host, "window.deathmatch.exit()");
   const guestModalGone = await waitFor(session.guest, "(() => { const e = document.getElementById('gameover'); return (!e || e.style.display === 'none') ? true : null; })()");
   assert.equal(guestModalGone, true, "guest result modal dismissed on host exit (pvpEnd)");
-  const guestMode = await waitFor(session.guest, "(async () => { const g = await import('./js/gameMode.js?v=20260530a'); return g.getGameMode() === 'coop' ? 'coop' : null; })()");
+  const guestMode = await waitFor(session.guest, "(async () => { const g = await import('./js/gameMode.js?v=20260530b'); return g.getGameMode() === 'coop' ? 'coop' : null; })()");
   assert.equal(guestMode, "coop", "guest game mode self-heals to coop via snapshot");
 
   await sleep(100);

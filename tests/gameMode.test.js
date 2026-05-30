@@ -4,7 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { GAME_MODE, PVP_PLAYER_HP, getGameMode, setGameMode, isPvp, isRealtimePvp, isTurnBasedPvp, pvpPlayerHp } =
-  await import("../js/gameMode.js?v=20260530a");
+  await import("../js/gameMode.js?v=20260530b");
 
 test("defaults to coop, not pvp", () => {
   setGameMode(GAME_MODE.coop);

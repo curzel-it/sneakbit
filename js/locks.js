@@ -2,7 +2,7 @@
 // Lock-type strings match the data files (case-insensitive); pressure-plate
 // storage keys match the Rust core's `pressure_plate_down_<color>`.
 
-import { getValue, setValue } from "./storage.js?v=20260530a";
+import { getValue, setValue } from "./storage.js?v=20260530b";
 
 export const LOCK_NONE      = "None";
 export const LOCK_YELLOW    = "Yellow";

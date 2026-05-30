@@ -19,7 +19,7 @@ globalThis.localStorage = (() => {
 })();
 
 const { saveSettings, resolveLanguage, SUPPORTED_LANGUAGES } =
-  await import("../js/settings.js?v=20260530a");
+  await import("../js/settings.js?v=20260530b");
 
 test("ships English and Italian tables", () => {
   assert.deepEqual(SUPPORTED_LANGUAGES, ["en", "it"]);

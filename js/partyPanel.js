@@ -11,7 +11,7 @@
 // Actions are all switchRole(...) calls or net.send({op: "host.kick"}).
 // No location.replace anywhere — role transitions stay in-page.
 
-import { getRuntimeRole, onRoleChange, isValidJoinCode } from "./onlineMode.js?v=20260530a";
+import { getRuntimeRole, onRoleChange, isValidJoinCode } from "./onlineMode.js?v=20260530b";
 import {
   getInviteCode,
   getKnownPeers,
@@ -21,14 +21,14 @@ import {
   getNameForPlayerId,
   getNet,
   onSessionState,
-} from "./onlineBootstrap.js?v=20260530a";
-import { switchRole } from "./switchRole.js?v=20260530a";
-import { showToast } from "./toast.js?v=20260530a";
-import { isCreativeMode } from "./creativeMode.js?v=20260530a";
-import { isCoopMode, localPlayerCount } from "./coopMode.js?v=20260530a";
-import { setLocalPlayers } from "./main.js?v=20260530a";
-import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530a";
-import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js?v=20260530a";
+} from "./onlineBootstrap.js?v=20260530b";
+import { switchRole } from "./switchRole.js?v=20260530b";
+import { showToast } from "./toast.js?v=20260530b";
+import { isCreativeMode } from "./creativeMode.js?v=20260530b";
+import { isCoopMode, localPlayerCount } from "./coopMode.js?v=20260530b";
+import { setLocalPlayers } from "./main.js?v=20260530b";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530b";
+import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js?v=20260530b";
 
 let chip = null;
 let chipLabel = null;

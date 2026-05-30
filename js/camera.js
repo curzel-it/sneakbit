@@ -6,7 +6,7 @@
 // on screen, with the zone-bounds clamp applied on top. Dead players
 // must not be passed in (they'd drag the centre off into nowhere).
 
-import { VIEWPORT_TILES_W, VIEWPORT_TILES_H } from "./constants.js?v=20260530a";
+import { VIEWPORT_TILES_W, VIEWPORT_TILES_H } from "./constants.js?v=20260530b";
 
 export function createCamera() {
   return { x: 0, y: 0, w: VIEWPORT_TILES_W, h: VIEWPORT_TILES_H };

@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { rumble, _resetRumbleForTesting } = await import("../js/rumble.js?v=20260530a");
+const { rumble, _resetRumbleForTesting } = await import("../js/rumble.js?v=20260530b");
 
 // A pad with a vibrationActuator that records playEffect calls.
 function padWithActuator(index, calls) {
