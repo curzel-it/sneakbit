@@ -133,6 +133,38 @@ export function closePartyPanel() {
   lastFocusedView = null;
 }
 
+// User-initiated dismiss (Close button, Escape/Backspace, backdrop click).
+// While hosting an Online PvP setup the dialog is the lobby: dismissing it
+// lifts the host-world freeze and, if a friend has already joined, starts the
+// deathmatch (which teleports everyone into the arena). With no peer yet we
+// just unfreeze so the host isn't stranded in a frozen world while waiting.
+// Every other view (and all programmatic closes elsewhere) just close.
+function dismissPartyPanel() {
+  if (isPvpHostSetup()) {
+    setPvpHostSetup(false);
+    closePartyPanel();
+    if (getKnownPeers().length >= 1) startDeathmatch();
+    return;
+  }
+  closePartyPanel();
+}
+
+// User-initiated dismiss (Close button, Escape/Backspace, backdrop click).
+// While hosting an Online PvP setup the dialog is the lobby: dismissing it
+// lifts the host-world freeze and, if a friend has already joined, starts the
+// deathmatch (which teleports everyone into the arena). With no peer yet we
+// just unfreeze so the host isn't stranded in a frozen world while waiting.
+// Every other view (and all programmatic closes elsewhere) just close.
+function dismissPartyPanel() {
+  if (isPvpHostSetup()) {
+    setPvpHostSetup(false);
+    closePartyPanel();
+    if (getKnownPeers().length >= 1) startDeathmatch();
+    return;
+  }
+  closePartyPanel();
+}
+
 // The currently shown view subtree — the root menuNav navigates within.
 function visiblePartyView() {
   return [views.single, views.hostingOnline, views.hostingOffline, views.guest]
@@ -174,7 +206,7 @@ function buildOverlay() {
   // Click outside the card dismisses the overlay (offline play is one
   // tap from re-opening anyway).
   overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) closePartyPanel();
+    if (e.target === overlay) dismissPartyPanel();
   });
 }
 
@@ -183,7 +215,7 @@ function buildCloseRow() {
   row.className = "party-row party-controls";
   const btn = document.createElement("button");
   btn.textContent = "Close";
-  btn.addEventListener("click", closePartyPanel);
+  btn.addEventListener("click", dismissPartyPanel);
   row.appendChild(btn);
   return row;
 }
