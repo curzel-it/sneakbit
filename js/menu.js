@@ -29,7 +29,7 @@ import { isDialogueOpen } from "./dialogue.js?v=20260530a";
 import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260530a";
 import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js?v=20260530a";
 import { tr } from "./strings.js?v=20260530a";
-import { startPvpMatch, exitPvp, isPvpActive } from "./main.js?v=20260530a";
+import { startPvpMatch, exitPvp, isPvpActive } from "./pvpController.js?v=20260530a";
 
 // Modals that own the keyboard while they're up. If any is open we treat
 // Esc / the menu key as "dismiss the active modal" — owned by that modal's
