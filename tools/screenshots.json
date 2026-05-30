@@ -1,0 +1,8 @@
+{
+  "defaults": { "w": 30, "h": 20, "direction": "down", "settle": 700 },
+  "shots": [
+    { "out": "overworld.png", "zone": 1001, "x": 68, "y": 23 },
+    { "out": "duskwood.png", "zone": 1011, "x": 40, "y": 40 },
+    { "out": "farmland.png", "zone": 1012, "x": 50, "y": 40 }
+  ]
+}

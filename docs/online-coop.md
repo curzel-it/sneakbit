@@ -588,9 +588,154 @@ Debug-gated and inert without the flag; slated for removal once the smoothness w
 | 2026-05-29 | Keepalive delta so a quiet world doesn't flash "Host lagging…" | Decoupled from the stuck-avatar fix below; keeps `lastFrameAt` fresh. |
 | 2026-05-29 | **Stuck-avatar runaway fixed** — deltas + keepalives carry *all* player positions | A blocked-on-host avatar (frozen sig) was filtered out of every frame for 5.3 s while predicted ran 24 tiles down a clear column, then snapped. Now reconciled at keepalive cadence; worst-case snap ~6 tiles. |
 
+# PvP (turn-based)
+
+Turn-based, last-player-standing PvP. This section is the authoritative spec,
+merged from the retired `docs/pvp.md`. It records the **canonical turn model**
+(copied faithfully from `../sneakbit/game_core`, the shared source of truth for
+both delivery modes), then the **local** mode (implemented) and the **online**
+mode (a delta on the co-op design above — not yet built). Same trust model as
+co-op: "friends playing together," cheating prevention out of scope.
+
+## Canonical model (Rust, as shipped)
+
+PvP is one of three game modes (`game_core/src/multiplayer/modes.rs`):
+`RealTimeCoOp = 0` (the normal game; player bullets don't hurt players),
+`Creative = 1` (editor), `TurnBasedPvp = 2`. Mode-dependent knobs:
+
+| Knob | Co-op / Creative | TurnBasedPvp |
+|------|------------------|--------------|
+| `player_hp()` | 100 | **1000** |
+| `allows_pvp()` | false | **true** |
+| `is_turn_based()` | false | **true** |
+| players controlled per frame | all | **only the current player** |
+| spawn layout | hero + co-op around them | **one per map corner** |
+| camera | union of living players | **follows the current player** |
+
+**Turn machine** (`multiplayer/turns.rs` + `turns_use_case.rs`). Constants
+(`constants.rs`): `TURN_PREP_DURATION = 3.0`, `TURN_DURATION = 10.0`,
+`TURN_DURATION_AFTER_ENEMY_PLAYER_DAMAGE = 2.0`, `MAX_PLAYERS = 4`. States:
+`RealTime` (co-op), `PlayerPrep(info)`, `Player(info)`, each carrying
+`{ player_index, time_remaining, did_reduce_due_to_ranged_weapon_usage }`.
+
+- **`number_of_players == 1` freezes the machine** — a one-participant match idles.
+- **`PlayerPrep`** counts down `TURN_PREP_DURATION`; HUD shows
+  `prep_for_next_turn`. **Prep is a pure pause — nobody acts** (Rust
+  `currently_active_players()` returns `[]`), the breather between turns. At ≤0
+  it flips to **`Player`** with `time_remaining = TURN_DURATION`.
+- **`Player`** counts down `TURN_DURATION`, then advances to the next index
+  (wrapping last→P1) and re-enters that player's `PlayerPrep`. **Only the current
+  player's input is live**; everyone else gets `NO_KEYBOARD_EVENTS`.
+- **Hit-and-the-clock-cuts**: when the active player damages an *enemy* player
+  (`damaged_index ≠ current`), `update_turn_after_player_damage` clamps the turn
+  to `min(remaining, 2.0)` and flags the reduction. Land a hit → ~2s to follow
+  up → turn passes. Stops poke-and-stall.
+- **Rotation does NOT skip dead players** (faithful to Rust): a dead slot still
+  gets an idle prep+turn. The *only* early skip is the **active** player's own
+  death — `updated_turn_for_death_of_player` advances past the corpse (Rust runs
+  `updated_turn` with `dt = TURN_DURATION * 2`).
+- **Win/lose** (`handle_win_lose`): PvP resolves to `Winner(survivor)` once
+  `dead.len() >= N - 1`, or `UnknownWinner` on a simultaneous wipe. The
+  `GameOver` variant is **co-op-only** (P1 dies in `RealTimeCoOp`); PvP never
+  produces it. Death screen reads `death_screen.player_won` /
+  `death_screen.unknown_result`; confirm → `revive()` clears the dead set and
+  resets the match.
+- **Combat gate** (`hits_handling_use_case.rs`): a player bullet damages a
+  player only when `!shooter_is_player || pvp_allowed`. PvP forces it on; `1000`
+  HP makes matches last. All weapons available to all players — PvP changes only
+  the player-vs-player damage gate, not loadouts/ammo/pickups.
+- **Spawns** (`spawn_players_at_map_corners`): players `0..N` in TopLeft /
+  TopRight / BottomLeft / BottomRight quarters, facing `Down`, immobilized 0.2s.
+- **Exit**: `exit_pvp_arena()` → `RealTimeCoOp`, `number_of_players = 1`,
+  teleport to Duskhaven `(1011, 59, 57)`. Arena is world **1301** (the only map
+  for now). In-flight bullets at a turn boundary aren't special-cased.
+
+All player-facing strings ship in `data/strings.{en,it}.json` (`pvp_arena.*`,
+`prep_for_next_turn`, `death_screen.*`, `game.menu.*pvp*`,
+`game.menu.number_of_players.*`, `notification.player.died`).
+
+## Local PvP — implemented
+
+Everyone on one machine, one controller per player. Entry is **menu-driven**
+(pause menu → "PvP (Beta)" → 2–4 player count); "Exit PvP" returns to Duskhaven.
+The Rust model above is ported across:
+
+- `js/gameMode.js` — runtime coop/creative/pvp flag (`isPvp`, `pvpPlayerHp`).
+- `js/turns.js` — pure turn machine (port of `turns.rs`/`turns_use_case.rs`).
+- `js/pvpSpawn.js` — corner spawns. `js/pvpMatch.js` — match orchestrator
+  (turn state, dead set, win/lose, `pvpSlotCanAct` input gate; subscribes to
+  combat's `onPlayerVsPlayerHit` for the clamp). `js/turnHud.js` — DOM countdown.
+- Edits: `playerHealth.js` (1000 HP in PvP), `combat.js` (forced friendly fire +
+  hit event), `shooting.js`/`melee.js` (gate on the active slot), `main.js`
+  (loop wiring, current-player camera, `startPvpMatch`/`exitPvp`), `gameOver.js`
+  (`showMatchResult`), `menu.js` (entry/exit).
+- Tests: unit (`turns`, `gameMode`, `pvpSpawn`, `pvpMatch`) + `tests/e2e/pvp.test.mjs`.
+  Debug hook `window.pvp` (start/exit/kill/state) mirrors `window.coop`.
+
+Deferred (content, not code): dedicated arena soundtrack, more arenas.
+
+## Online PvP — delta on the co-op design (not yet built)
+
+Online PvP **reuses the host-authoritative model verbatim** — host simulates
+(including the turn machine and hit resolution), guests forward input and render
+the mirror world; PvP is a different *game mode running on the host*, not a new
+transport. What carries over unchanged: lobby/invite/identity/session lifetime,
+WebRTC + WS-relay transport, snapshot broadcast + interpolation, predicted-self.
+What changes:
+
+1. **Mode is chosen in the lobby**, not by walking into a link. The host selects
+   "PvP" + player count when opening the session; on start the host sets
+   `GameMode = pvp`, runs corner spawns, teleports everyone into world 1301.
+2. **One guest = one fixed `player_index`.** Host is P1 (simplest model; a
+   spectator host is a later option).
+3. **Friendly fire is always on** — `allows_pvp()` true, no setting consulted.
+4. **Turn ownership is host-enforced.** The host **drops forwarded input unless
+   that guest owns the current turn** (lag/cheat/mash-proof). Client-side, an
+   off-turn guest's prediction is disabled — they spectate.
+5. **Turn state is on the wire**, host→all, broadcast on every change (phase
+   flip, player advance, hit-clamp) plus a low-rate heartbeat so a
+   late/reconnecting guest resyncs the countdown. It is **authoritative** —
+   guests render it, never compute it.
+6. **Camera follows the active player for everyone** (including off-turn guests)
+   — the match reads as a shared spectator view with control passing around.
+7. **Match result is host-authoritative**: the host computes `handle_win_lose`
+   and broadcasts a terminal `matchResult`. *Rematch* is a host action; a guest's
+   confirm is a request the host may honor, not a local restart.
+8. **Disconnect = death**: a guest who drops mid-match counts as dead for
+   `handle_win_lose` (so the match can still resolve) and their turn is skipped.
+   The 30s grace still applies before the slot is finalized, but the turn machine
+   must not stall waiting on an absent player.
+
+Protocol additions (delta on the message catalogue above — no new transport, the
+relay keeps forwarding opaque frames):
+
+| Direction | Message | Purpose |
+|-----------|---------|---------|
+| host → all | `mode: "pvp"` in the session/start frame | clients enter PvP rendering (turn HUD, spectator camera, FF on) |
+| host → all | `turn { phase: "prep"\|"active", playerIndex, timeRemaining, reducedAfterHit }` | authoritative turn state (on change + heartbeat) |
+| host → all | `matchResult { kind: "winner"\|"unknown", playerIndex? }` | end-of-match screen |
+| guest → host | existing input frames | host **ignores** unless guest owns the current turn |
+| guest → host | `rematchRequest` | host may honor to restart |
+
+## Open questions / product decisions
+
+1. **Host as player vs neutral referee.** Simplest: host is P1. A spectator host
+   is cleaner for odd-player matches and streaming, at the cost of "host doesn't
+   play."
+2. **Local + online mixed** (couch 2v2 online): the slot model allows it, but
+   input gating must key on `(peer, localSlot)`, not just peer.
+3. **Turn-length tuning** (10s/3s/2s straight from Rust) may feel long online
+   with interpolation latency — kept configurable in the turn machine.
+4. **Reconnect mid-turn**: if the *current* player reconnects within grace, do
+   they resume or forfeit? Spec'd default: forfeit (turn already advanced on
+   drop).
+5. **More maps** — beta ships world 1301 only; map vote in the lobby is a
+   later content/UI follow-up.
+
 # Out of scope
 
-- **PvP.** Same as offline.
+- **PvP.** Local PvP is shipped and online PvP is specced above (a delta on this
+  design); this list covers everything *else* still out of scope.
 - **Chat (text or voice).** Moderation concern; separate scope.
 - **Real accounts (email/OAuth).** UUID can bind to an account layer later.
 - **Persistent shared worlds.** Each session is one host's world; quitting ends it.

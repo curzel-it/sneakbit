@@ -21,12 +21,13 @@ becoming the single codebase behind every platform (wrapped in Electron or simil
 
 | | |
 |---|---|
-| ![Overworld](docs/screenshots/overworld.png) | ![Lava caves](docs/screenshots/caves-lava.png) |
-| ![Water caves](docs/screenshots/caves-water.png) | |
+| ![Overworld](docs/screenshots/overworld.png) | ![Enchanted woods](docs/screenshots/duskwood.png) |
+| ![Village farmland](docs/screenshots/farmland.png) | |
 
-> These show the same world the HTML build renders. A small tool to regenerate them
-> straight from the live canvas — given a world id, camera position and viewport
-> size in tiles — is planned.
+> Captured straight from the live HTML build by `tools/screenshot.mjs` — give it a
+> world id, a player tile and a viewport size in tiles and it boots the game to that
+> spot and screenshots the canvas. See [docs/screenshot-tool.md](docs/screenshot-tool.md);
+> the spec lives in [tools/screenshots.json](tools/screenshots.json).
 
 ## Features
 
@@ -35,7 +36,7 @@ becoming the single codebase behind every platform (wrapped in Electron or simil
 * Tile-locked, Gameboy-style movement (see [Movement model](#movement-model))
 * **Online co-op** — up to four players share one world over WebRTC ([docs/online-coop.md](docs/online-coop.md))
 * **Local co-op** — up to four players on one machine, one controller each
-* **Turn-based PvP** — last bit standing (in progress, see [docs/pvp.md](docs/pvp.md))
+* **Turn-based PvP** — last bit standing; local play shipped, online specced ([docs/online-coop.md](docs/online-coop.md#pvp-turn-based))
 * Keyboard and gamepad/controller support
 * Localization via `tr()` (English + Italian)
 * Fullscreen toggle
