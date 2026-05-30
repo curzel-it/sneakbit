@@ -1,15 +1,29 @@
-// Party / co-op UI: a small status chip pinned to the top-right while a
-// session is live, plus a dedicated panel (reachable from the pause menu
-// or by clicking the chip) with three role-aware views. The chip stays
-// hidden offline; the panel works in every role.
+// Multiplayer UI: a small status chip pinned to the top-left while a
+// session is live, plus a single role-aware dialog (reachable from the
+// pause menu's "Multiplayer" entry or by clicking the chip). The chip
+// stays hidden offline; the dialog works in every role.
+//
+// Four states, picked by role + game mode in renderPanel():
+//   single        — offline & single player: join field + four host
+//                   buttons (online co-op / online pvp / offline co-op /
+//                   offline pvp)
+//   hostingOnline — runtime role "host": mode description, invite code +
+//                   copy/link, peer list, and a start-match (online pvp,
+//                   not yet started) / end-session control
+//   hostingOffline— offline & local multi-player (co-op or pvp): mode
+//                   description, a 2|3|4 player toggle, end-session
+//   guest         — runtime role "guest": mode description + leave
 //
 // State sources:
 //   onlineMode.getRuntimeRole / onRoleChange — which view to show
+//   gameMode.isPvp / isRealtimePvp — co-op vs pvp flavor
+//   coopMode.isCoopMode / localPlayerCount — local multi-player
 //   onlineBootstrap getters + onSessionState — code, peers, slot, etc.
-//   creativeMode.isCreativeMode — disables "Start hosting" while editing
 //
-// Actions are all switchRole(...) calls or net.send({op: "host.kick"}).
-// No location.replace anywhere — role transitions stay in-page.
+// Actions are switchRole(...) (offline ↔ host ↔ guest), setLocalPlayers,
+// startPvpMatch/exitPvp (local pvp), startDeathmatch/exitDeathmatch
+// (online pvp), and net.send({op: "host.kick"}). No location.replace
+// anywhere — role transitions stay in-page.
 
 import { getRuntimeRole, onRoleChange, isValidJoinCode } from "./onlineMode.js?v=20260530c";
 import {
@@ -29,7 +43,8 @@ import { isCoopMode, localPlayerCount } from "./coopMode.js?v=20260530c";
 import { setLocalPlayers } from "./main.js?v=20260530c";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260530c";
 import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js?v=20260530c";
-import { isRealtimePvp } from "./gameMode.js?v=20260530c";
+import { startPvpMatch, exitPvp } from "./pvpController.js?v=20260530c";
+import { isPvp, isRealtimePvp } from "./gameMode.js?v=20260530c";
 
 let chip = null;
 let chipLabel = null;
@@ -40,45 +55,43 @@ let installed = false;
 // Without it a stray render after closing could re-close the panel if the
 // user re-opens it before leaving the session.
 let guestAutoClosedForSlot = null;
+// Which flavor the host picked on the way in ("coop" | "pvp"). Chosen by
+// the single-player view's Online co-op / Online PvP buttons, read by the
+// hosting-online view to pick its description and whether a "Start match"
+// button is offered. Reset to null whenever we drop back to offline. A
+// deep-link host (?host=1) never sets it — the view defaults to co-op.
+let onlineHostMode = null;
 
-// View subtrees — built once, toggled by display. `localCoop` is the
-// offline-role view shown when a local 2-player session is live: same
-// shape as the hosting view (title + End session button) so the user
-// sees a clear "you're in a co-op session, here's how to end it"
-// instead of the regular offline marketing for hosting/joining.
-let views = { offline: null, hosting: null, guest: null, localCoop: null };
-// Hosting view widgets we mutate on session-state updates.
-let hostingCodeEl = null;
-let hostingPeerList = null;
-let hostingCopyBtn = null;
-let hostingShareBtn = null;
-let hostingEndBtn = null;
-// PvP start/stop are mutually exclusive — only one is shown, picked in
-// renderHostingView by whether a realtime deathmatch is currently live.
-let hostingPvpStartBtn = null;
-let hostingPvpEndBtn = null;
+// View subtrees — built once, toggled by display.
+let views = { single: null, hostingOnline: null, hostingOffline: null, guest: null };
+
+// Single-player view widgets.
+let spJoinInput = null;
+let spErrorEl = null;
+let spOnlineHostBtns = null; // [coop, pvp] — disabled in creative mode
+
+// Hosting-online widgets we mutate on session-state updates.
+let hoDescEl = null;
+let hoCodeEl = null;
+let hoCopyBtn = null;
+let hoShareBtn = null;
+let hoPeerList = null;
+let hoStartBtn = null;
+let hoEndControl = null; // inline-confirm "End session"
 // playerId → { row, nameEl, slotEl } so we can patch peer rows in place
 // instead of tearing out the entire <ul> on every session-state update.
-// Preserves the hover/active state of the Kick button when a different
-// peer joins or leaves mid-click. Cleared when the view rebuilds.
 const peerRowsByPlayerId = new Map();
 let peerEmptyRow = null;
-// Guest view widgets we mutate on session-state updates.
-let guestTitleEl = null;
-let guestSlotEl = null;
-let guestLeaveBtn = null;
-// Offline view widgets — the start button gates on creative mode.
-let offlineLocalBtn = null;
-let offlineLocalHint = null;
-let offlineStartBtn = null;
-let offlineJoinInput = null;
-let offlineJoinBtn = null;
-let offlineErrorEl = null;
-// Local co-op view widgets — the "session is live" twin of the offline
-// view. Only the end button is interactive; the body text just reminds
-// the user which keys move P2.
-let localCoopEndBtn = null;
-let localCoopCountEl = null;
+
+// Hosting-offline widgets.
+let offDescEl = null;
+let offToggleBtns = null; // [2,3,4] segmented buttons
+let offEndControl = null;
+
+// Guest widgets.
+let guestDescEl = null;
+let guestLeaveControl = null;
+
 let lastFocusedView = null;
 
 export function installPartyPanel() {
@@ -122,7 +135,7 @@ export function closePartyPanel() {
 
 // The currently shown view subtree — the root menuNav navigates within.
 function visiblePartyView() {
-  return [views.offline, views.hosting, views.guest, views.localCoop]
+  return [views.single, views.hostingOnline, views.hostingOffline, views.guest]
     .find((v) => v && v.style.display !== "none") || null;
 }
 
@@ -149,14 +162,14 @@ function buildOverlay() {
   card = document.createElement("div");
   card.className = "party-card";
   overlay.appendChild(card);
-  views.offline = buildOfflineView();
-  views.hosting = buildHostingView();
+  views.single = buildSingleView();
+  views.hostingOnline = buildHostingOnlineView();
+  views.hostingOffline = buildHostingOfflineView();
   views.guest = buildGuestView();
-  views.localCoop = buildLocalCoopView();
-  card.appendChild(views.offline);
-  card.appendChild(views.hosting);
+  card.appendChild(views.single);
+  card.appendChild(views.hostingOnline);
+  card.appendChild(views.hostingOffline);
   card.appendChild(views.guest);
-  card.appendChild(views.localCoop);
   card.appendChild(buildCloseRow());
   // Click outside the card dismisses the overlay (offline play is one
   // tap from re-opening anyway).
@@ -175,143 +188,222 @@ function buildCloseRow() {
   return row;
 }
 
-function buildOfflineView() {
+// — Inline confirm ————————————————————————————————————————————————————————
+// A danger button that, on first click, swaps itself for an "Are you sure?
+// [Cancel] [Yes]" row instead of popping a browser confirm(). Keeps the
+// styled dialog self-contained. onConfirm is read at click time so the
+// caller can branch on live state (co-op vs pvp, etc.).
+function makeConfirmControl(label, onConfirm) {
+  const root = document.createElement("div");
+  root.className = "party-confirm";
+  const danger = document.createElement("button");
+  danger.className = "party-danger";
+  danger.textContent = label;
+  const confirmRow = document.createElement("div");
+  confirmRow.className = "party-row party-confirm-row";
+  confirmRow.style.display = "none";
+  const q = document.createElement("span");
+  q.className = "party-confirm-q";
+  q.textContent = "Are you sure?";
+  const cancel = document.createElement("button");
+  cancel.textContent = "Cancel";
+  const yes = document.createElement("button");
+  yes.className = "party-danger";
+  yes.textContent = "Yes";
+  confirmRow.append(q, cancel, yes);
+  root.append(danger, confirmRow);
+  function arm(on) {
+    danger.style.display = on ? "none" : "";
+    confirmRow.style.display = on ? "flex" : "none";
+    // Move the keyboard/controller highlight onto the just-revealed row so
+    // the hidden danger button isn't left as the focused (invisible) item.
+    if (on && isPartyPanelOpen()) focusFirstIn(confirmRow);
+  }
+  danger.addEventListener("click", () => arm(true));
+  cancel.addEventListener("click", () => arm(false));
+  yes.addEventListener("click", () => { arm(false); onConfirm(); });
+  return { root, reset: () => arm(false) };
+}
+
+// — Single-player view ————————————————————————————————————————————————————
+function buildSingleView() {
   const root = document.createElement("div");
   root.className = "party-view";
-  root.dataset.view = "offline";
+  root.dataset.view = "single";
+
   const title = document.createElement("h1");
-  title.textContent = "Play co-op";
+  title.textContent = "Multiplayer";
   root.appendChild(title);
-
-  offlineLocalBtn = document.createElement("button");
-  offlineLocalBtn.id = "party-local-coop";
-  offlineLocalBtn.textContent = "Play on this device (co-op)";
-  offlineLocalBtn.addEventListener("click", onLocalCoopClick);
-  root.appendChild(offlineLocalBtn);
-
-  offlineLocalHint = document.createElement("p");
-  offlineLocalHint.className = "party-hint";
-  offlineLocalHint.textContent = "Up to 4 players share this device. P2 uses IJKL + B/N/M; P3/P4 need keys bound in Settings → Key Bindings, or a controller each.";
-  root.appendChild(offlineLocalHint);
-
-  offlineStartBtn = document.createElement("button");
-  offlineStartBtn.id = "party-start-hosting";
-  offlineStartBtn.textContent = "Host online";
-  offlineStartBtn.addEventListener("click", onStartHostingClick);
-  root.appendChild(offlineStartBtn);
-
-  const hostHint = document.createElement("p");
-  hostHint.className = "party-hint";
-  hostHint.textContent = "Get an invite code to share. Friends join from another browser, up to 4 total.";
-  root.appendChild(hostHint);
 
   const joinLabel = document.createElement("p");
   joinLabel.className = "party-hint";
-  joinLabel.textContent = "Or join with an invite code from a friend:";
+  joinLabel.textContent = "Join an online game with an invite code from a friend:";
   root.appendChild(joinLabel);
 
   const joinRow = document.createElement("div");
   joinRow.className = "party-row";
-  offlineJoinInput = document.createElement("input");
-  offlineJoinInput.maxLength = 5;
-  offlineJoinInput.placeholder = "ABC12";
-  offlineJoinInput.className = "party-code-input";
-  offlineJoinInput.addEventListener("keydown", (e) => {
+  spJoinInput = document.createElement("input");
+  spJoinInput.id = "party-join-code";
+  spJoinInput.maxLength = 5;
+  spJoinInput.placeholder = "ABC12";
+  spJoinInput.className = "party-code-input";
+  spJoinInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") { e.preventDefault(); onJoinClick(); }
   });
-  offlineJoinBtn = document.createElement("button");
-  offlineJoinBtn.textContent = "Join";
-  offlineJoinBtn.addEventListener("click", onJoinClick);
-  joinRow.appendChild(offlineJoinInput);
-  joinRow.appendChild(offlineJoinBtn);
+  const joinBtn = document.createElement("button");
+  joinBtn.id = "party-join";
+  joinBtn.textContent = "Join";
+  joinBtn.addEventListener("click", onJoinClick);
+  joinRow.append(spJoinInput, joinBtn);
   root.appendChild(joinRow);
 
-  offlineErrorEl = document.createElement("p");
-  offlineErrorEl.className = "party-error";
-  offlineErrorEl.style.display = "none";
-  root.appendChild(offlineErrorEl);
+  spErrorEl = document.createElement("p");
+  spErrorEl.className = "party-error";
+  spErrorEl.style.display = "none";
+  root.appendChild(spErrorEl);
+
+  const hostLabel = document.createElement("p");
+  hostLabel.className = "party-hint";
+  hostLabel.textContent = "…or host a match:";
+  root.appendChild(hostLabel);
+
+  const stack = document.createElement("div");
+  stack.className = "party-stack";
+  const onlineCoop = hostButton("party-online-coop", "Online co-op", () => onHostOnlineClick("coop"));
+  const onlinePvp = hostButton("party-online-pvp", "Online PvP", () => onHostOnlineClick("pvp"));
+  spOnlineHostBtns = [onlineCoop, onlinePvp];
+  stack.appendChild(onlineCoop);
+  stack.appendChild(onlinePvp);
+  stack.appendChild(hostButton("party-offline-coop", "Offline co-op", onOfflineCoopClick));
+  stack.appendChild(hostButton("party-offline-pvp", "Offline PvP", onOfflinePvpClick));
+  root.appendChild(stack);
 
   return root;
 }
 
-function buildHostingView() {
+function hostButton(id, label, handler) {
+  const btn = document.createElement("button");
+  btn.id = id;
+  btn.textContent = label;
+  btn.addEventListener("click", handler);
+  return btn;
+}
+
+function renderSingleView() {
+  const creative = isCreativeMode();
+  for (const btn of spOnlineHostBtns) {
+    btn.disabled = creative;
+    btn.title = creative ? "Leave creative mode first." : "";
+    btn.classList.toggle("party-disabled", creative);
+  }
+  const err = getLastJoinError();
+  if (err) {
+    spErrorEl.textContent = friendlyReason(err);
+    spErrorEl.style.display = "block";
+  } else {
+    spErrorEl.textContent = "";
+    spErrorEl.style.display = "none";
+  }
+}
+
+// — Hosting-online view ————————————————————————————————————————————————————
+function buildHostingOnlineView() {
   const root = document.createElement("div");
   root.className = "party-view";
-  root.dataset.view = "hosting";
+  root.dataset.view = "hostingOnline";
 
   const title = document.createElement("h1");
-  title.textContent = "Hosting";
+  title.textContent = "Hosting online";
   root.appendChild(title);
+
+  hoDescEl = document.createElement("p");
+  hoDescEl.className = "party-hint";
+  root.appendChild(hoDescEl);
 
   const codeWrap = document.createElement("div");
   codeWrap.className = "party-code-wrap";
   const codeLabel = document.createElement("div");
   codeLabel.className = "party-code-label";
   codeLabel.textContent = "Invite code";
-  hostingCodeEl = document.createElement("div");
-  hostingCodeEl.className = "party-code";
-  hostingCodeEl.textContent = "…";
-  codeWrap.appendChild(codeLabel);
-  codeWrap.appendChild(hostingCodeEl);
+  hoCodeEl = document.createElement("div");
+  hoCodeEl.className = "party-code";
+  hoCodeEl.textContent = "…";
+  codeWrap.append(codeLabel, hoCodeEl);
   root.appendChild(codeWrap);
 
   const codeBtns = document.createElement("div");
   codeBtns.className = "party-row";
-  hostingCopyBtn = document.createElement("button");
-  hostingCopyBtn.textContent = "Copy code";
-  hostingCopyBtn.addEventListener("click", onCopyClick);
-  hostingShareBtn = document.createElement("button");
+  hoCopyBtn = document.createElement("button");
+  hoCopyBtn.textContent = "Copy code";
+  hoCopyBtn.addEventListener("click", onCopyClick);
+  hoShareBtn = document.createElement("button");
   // Desktop has no native share sheet, so the button just copies the
   // join URL to the clipboard. Calling it "Share link" there suggests an
   // action the browser can't actually take — keep the label honest.
-  hostingShareBtn.textContent = canNativeShare() ? "Share link" : "Copy link";
-  hostingShareBtn.addEventListener("click", onShareClick);
-  codeBtns.appendChild(hostingCopyBtn);
-  codeBtns.appendChild(hostingShareBtn);
+  hoShareBtn.textContent = canNativeShare() ? "Share link" : "Copy link";
+  hoShareBtn.addEventListener("click", onShareClick);
+  codeBtns.append(hoCopyBtn, hoShareBtn);
   root.appendChild(codeBtns);
+
+  const usage = document.createElement("p");
+  usage.className = "party-hint";
+  usage.textContent = "Friends open Multiplayer, paste this code, and Join. Up to 4 players total.";
+  root.appendChild(usage);
 
   const peersTitle = document.createElement("p");
   peersTitle.className = "party-hint";
   peersTitle.textContent = "Friends in your session:";
   root.appendChild(peersTitle);
 
-  hostingPeerList = document.createElement("ul");
-  hostingPeerList.className = "party-peer-list";
-  root.appendChild(hostingPeerList);
+  hoPeerList = document.createElement("ul");
+  hoPeerList.className = "party-peer-list";
+  root.appendChild(hoPeerList);
 
-  // Mode controls. Exactly one of {Start PvP, End PvP} is visible, chosen in
-  // renderHostingView by whether a realtime deathmatch is live. "End session"
-  // (leave co-op entirely) only shows in co-op — during a match the only exit
-  // shown is "End PvP", which drops everyone back to the co-op world.
-  const modeRow = document.createElement("div");
-  modeRow.className = "party-row party-mode-row";
+  // Start (online pvp, before the match) / End session (otherwise) — exactly
+  // one is shown, picked in renderHostingOnlineView.
+  hoStartBtn = document.createElement("button");
+  hoStartBtn.id = "party-start-match";
+  hoStartBtn.textContent = "Start match";
+  hoStartBtn.addEventListener("click", onStartMatchClick);
+  root.appendChild(hoStartBtn);
 
-  hostingPvpStartBtn = document.createElement("button");
-  hostingPvpStartBtn.id = "party-start-pvp";
-  hostingPvpStartBtn.textContent = "Start Realtime PvP (Beta)";
-  hostingPvpStartBtn.addEventListener("click", onStartPvpClick);
-  modeRow.appendChild(hostingPvpStartBtn);
-
-  hostingPvpEndBtn = document.createElement("button");
-  hostingPvpEndBtn.id = "party-end-pvp";
-  hostingPvpEndBtn.textContent = "End PvP (back to co-op)";
-  hostingPvpEndBtn.className = "party-danger";
-  hostingPvpEndBtn.addEventListener("click", () => { exitDeathmatch(); closePartyPanel(); });
-  modeRow.appendChild(hostingPvpEndBtn);
-
-  hostingEndBtn = document.createElement("button");
-  hostingEndBtn.id = "party-end-coop";
-  hostingEndBtn.textContent = "End session";
-  hostingEndBtn.className = "party-danger";
-  hostingEndBtn.addEventListener("click", onEndCoopClick);
-  modeRow.appendChild(hostingEndBtn);
-
-  root.appendChild(modeRow);
+  hoEndControl = makeConfirmControl("End session", endOnlineSession);
+  root.appendChild(hoEndControl.root);
 
   return root;
 }
 
-function onStartPvpClick() {
+function renderHostingOnlineView() {
+  const mode = onlineHostMode || "coop";
+  hoDescEl.textContent = mode === "pvp"
+    ? "Online PvP — a realtime deathmatch. Share the code, then start the match once a friend has joined."
+    : "Online co-op — friends drop into your world and play alongside you.";
+
+  const code = getInviteCode();
+  hoCodeEl.textContent = code || "…";
+  const hasCode = !!code;
+  hoCopyBtn.disabled = !hasCode;
+  hoShareBtn.disabled = !hasCode;
+
+  const peers = getKnownPeers();
+  patchPeerList(peers);
+
+  // "Start match" only exists for online pvp, and only before a match runs.
+  // While a deathmatch is live (or for plain co-op) we show "End session".
+  const showStart = mode === "pvp" && !isRealtimePvp();
+  hoStartBtn.style.display = showStart ? "" : "none";
+  hoEndControl.root.style.display = showStart ? "none" : "";
+  if (showStart) hoEndControl.reset();
+
+  if (showStart) {
+    const canStart = peers.length >= 1;
+    hoStartBtn.disabled = !canStart;
+    hoStartBtn.classList.toggle("party-disabled", !canStart);
+    hoStartBtn.title = canStart ? "" : "Wait for a friend to join first.";
+  }
+}
+
+function onStartMatchClick() {
   if (getKnownPeers().length < 1) {
     showToast("Wait for a friend to join before starting PvP.", "hint");
     return;
@@ -320,79 +412,117 @@ function onStartPvpClick() {
   startDeathmatch();
 }
 
-function buildLocalCoopView() {
+async function endOnlineSession() {
+  // During a live deathmatch, tear the match down first (resets game mode to
+  // co-op, clears the arena + overlays, tells guests) before leaving the
+  // session entirely — otherwise the rebuilt offline state would still be in
+  // pvp mode.
+  if (isRealtimePvp()) {
+    try { await exitDeathmatch(); } catch (e) { console.error("[party] exitDeathmatch", e); }
+  }
+  onlineHostMode = null;
+  switchRole("offline")
+    .then(() => showToast("Session ended", "hint"))
+    .catch((e) => console.error("[party] switchRole(offline) from host", e));
+}
+
+// — Hosting-offline view ——————————————————————————————————————————————————
+function buildHostingOfflineView() {
   const root = document.createElement("div");
   root.className = "party-view";
-  root.dataset.view = "localCoop";
+  root.dataset.view = "hostingOffline";
 
   const title = document.createElement("h1");
-  title.textContent = "Local co-op";
+  title.textContent = "Local game";
   root.appendChild(title);
 
-  // Player-count stepper: 2-4 players on this device.
-  const stepper = document.createElement("div");
-  stepper.className = "party-stepper";
-  const minus = document.createElement("button");
-  minus.textContent = "−";
-  minus.setAttribute("aria-label", "Fewer players");
-  minus.addEventListener("click", () => changeLocalPlayers(-1));
-  localCoopCountEl = document.createElement("span");
-  localCoopCountEl.className = "party-stepper-count";
-  const plus = document.createElement("button");
-  plus.textContent = "+";
-  plus.setAttribute("aria-label", "More players");
-  plus.addEventListener("click", () => changeLocalPlayers(1));
-  stepper.appendChild(minus);
-  stepper.appendChild(localCoopCountEl);
-  stepper.appendChild(plus);
-  root.appendChild(stepper);
+  offDescEl = document.createElement("p");
+  offDescEl.className = "party-hint";
+  root.appendChild(offDescEl);
+
+  // Player-count toggle: 2 | 3 | 4 on this device.
+  const toggle = document.createElement("div");
+  toggle.className = "party-toggle";
+  offToggleBtns = [2, 3, 4].map((n) => {
+    const btn = document.createElement("button");
+    btn.dataset.count = String(n);
+    btn.textContent = String(n);
+    btn.addEventListener("click", () => onCountToggle(n));
+    toggle.appendChild(btn);
+    return btn;
+  });
+  root.appendChild(toggle);
 
   const hint = document.createElement("p");
   hint.className = "party-hint";
-  hint.textContent = "P2 uses IJKL + B/N/M. P3/P4 start with no keyboard keys — bind them in Settings → Key Bindings, or give each a controller (pads map to players by connection order).";
+  hint.textContent = "P2 uses IJKL + B/N/M. P3/P4 start with no keys — bind them in Settings → Key Bindings, or give each a controller (pads map by connection order).";
   root.appendChild(hint);
 
-  localCoopEndBtn = document.createElement("button");
-  localCoopEndBtn.textContent = "End session (back to single player)";
-  localCoopEndBtn.className = "party-danger";
-  localCoopEndBtn.addEventListener("click", () => setLocalPlayersAndRender(1));
-  root.appendChild(localCoopEndBtn);
+  offEndControl = makeConfirmControl("End session (back to single player)", endOfflineSession);
+  root.appendChild(offEndControl.root);
 
   return root;
 }
 
-function changeLocalPlayers(delta) {
-  setLocalPlayersAndRender(localPlayerCount() + delta);
+function renderHostingOfflineView() {
+  const pvp = isPvp();
+  offDescEl.textContent = pvp
+    ? "Local PvP — last ninja standing in the arena. One controller per player recommended."
+    : "Local co-op — up to 4 players share this device.";
+  const count = localPlayerCount();
+  for (const btn of offToggleBtns) {
+    btn.classList.toggle("active", parseInt(btn.dataset.count, 10) === count);
+  }
 }
 
-function setLocalPlayersAndRender(n) {
-  setLocalPlayers(n);
+function onCountToggle(n) {
+  if (isPvp()) {
+    // Re-arm the arena with n players (reloads the map, scatters everyone).
+    startPvpMatch(n);
+  } else {
+    setLocalPlayers(n);
+  }
   renderAll();
 }
 
+function endOfflineSession() {
+  if (isPvp()) exitPvp();
+  else setLocalPlayers(1);
+  renderAll();
+}
+
+// — Guest view ————————————————————————————————————————————————————————————
 function buildGuestView() {
   const root = document.createElement("div");
   root.className = "party-view";
   root.dataset.view = "guest";
 
-  guestTitleEl = document.createElement("h1");
-  guestTitleEl.textContent = "Guest";
-  root.appendChild(guestTitleEl);
+  const title = document.createElement("h1");
+  title.textContent = "Connected";
+  root.appendChild(title);
 
-  guestSlotEl = document.createElement("p");
-  guestSlotEl.className = "party-hint";
-  guestSlotEl.textContent = "";
-  root.appendChild(guestSlotEl);
+  guestDescEl = document.createElement("p");
+  guestDescEl.className = "party-hint";
+  root.appendChild(guestDescEl);
 
-  guestLeaveBtn = document.createElement("button");
-  guestLeaveBtn.textContent = "Leave co-op";
-  guestLeaveBtn.className = "party-danger";
-  guestLeaveBtn.addEventListener("click", onLeaveCoopClick);
-  root.appendChild(guestLeaveBtn);
+  guestLeaveControl = makeConfirmControl("Leave session", onLeaveCoopClick);
+  root.appendChild(guestLeaveControl.root);
 
   return root;
 }
 
+function renderGuestView() {
+  const hostPid = getHostPlayerId();
+  const hostName = (hostPid && getNameForPlayerId(hostPid)) || "the host";
+  const slot = getMySlot();
+  const flavor = isPvp() ? "PvP deathmatch" : "co-op session";
+  const where = slot != null
+    ? `You're in ${hostName}'s ${flavor} (slot ${slot}).`
+    : `Joining ${hostName}'s ${flavor}…`;
+  guestDescEl.textContent = where;
+}
+
+// — Render orchestration ——————————————————————————————————————————————————
 function renderAll() {
   renderChip();
   // Always patch the panel so opening is instant — the per-view render
@@ -410,10 +540,10 @@ function renderAll() {
   }
 }
 
-// Once a guest has been assigned a slot, the "In session with…" view has
-// nothing actionable on it — the player just wants to start playing. Drop
-// the overlay so they're not stuck on the dialog. Latched per-slot so we
-// don't fight a user re-opening the panel after we closed it.
+// Once a guest has been assigned a slot, the connected view has nothing
+// actionable on it — the player just wants to start playing. Drop the
+// overlay so they're not stuck on the dialog. Latched per-slot so we don't
+// fight a user re-opening the panel after we closed it.
 function maybeAutoCloseAfterGuestJoin() {
   const role = getRuntimeRole();
   if (role !== "guest") { guestAutoClosedForSlot = null; return; }
@@ -429,7 +559,8 @@ function renderChip() {
   const role = getRuntimeRole();
   if (role === "host") {
     const peers = getKnownPeers();
-    chipLabel.textContent = `Hosting · ${peers.length + 1}/4`;
+    const flavor = isRealtimePvp() ? "PvP" : "Hosting";
+    chipLabel.textContent = `${flavor} · ${peers.length + 1}/4`;
     chip.style.display = "flex";
   } else if (role === "guest") {
     const slot = getMySlot();
@@ -441,64 +572,29 @@ function renderChip() {
 }
 
 function renderPanel() {
-  const role = getRuntimeRole();
+  // Clear any armed inline-confirm so a re-render / reopen never lands on a
+  // half-confirmed "Are you sure?".
+  hoEndControl?.reset();
+  offEndControl?.reset();
+  guestLeaveControl?.reset();
+
   for (const view of Object.values(views)) {
     if (view) view.style.display = "none";
   }
+  const role = getRuntimeRole();
   if (role === "host") {
-    views.hosting.style.display = "block";
-    renderHostingView();
+    views.hostingOnline.style.display = "block";
+    renderHostingOnlineView();
   } else if (role === "guest") {
     views.guest.style.display = "block";
     renderGuestView();
-  } else if (isCoopMode()) {
-    views.localCoop.style.display = "block";
-    renderLocalCoopView();
+  } else if (isCoopMode() || isPvp()) {
+    views.hostingOffline.style.display = "block";
+    renderHostingOfflineView();
   } else {
-    views.offline.style.display = "block";
-    renderOfflineView();
+    views.single.style.display = "block";
+    renderSingleView();
   }
-}
-
-function renderLocalCoopView() {
-  if (localCoopCountEl) localCoopCountEl.textContent = `${localPlayerCount()} players`;
-}
-
-function renderOfflineView() {
-  const creative = isCreativeMode();
-  offlineStartBtn.disabled = creative;
-  offlineStartBtn.title = creative ? "Leave creative mode first." : "";
-  offlineStartBtn.classList.toggle("party-disabled", creative);
-  const err = getLastJoinError();
-  if (err) {
-    offlineErrorEl.textContent = friendlyReason(err);
-    offlineErrorEl.style.display = "block";
-  } else {
-    offlineErrorEl.textContent = "";
-    offlineErrorEl.style.display = "none";
-  }
-}
-
-function renderHostingView() {
-  const code = getInviteCode();
-  hostingCodeEl.textContent = code || "…";
-  const hasCode = !!code;
-  hostingCopyBtn.disabled = !hasCode;
-  hostingShareBtn.disabled = !hasCode;
-  const peers = getKnownPeers();
-  patchPeerList(peers);
-
-  // PvP is host-vs-guest, so the start button needs at least one peer. While a
-  // match is live, swap the start + "End session" pair for a single "End PvP".
-  const inPvp = isRealtimePvp();
-  hostingPvpStartBtn.style.display = inPvp ? "none" : "";
-  hostingEndBtn.style.display = inPvp ? "none" : "";
-  hostingPvpEndBtn.style.display = inPvp ? "" : "none";
-
-  const canStartPvp = peers.length >= 1;
-  hostingPvpStartBtn.disabled = !canStartPvp;
-  hostingPvpStartBtn.classList.toggle("party-disabled", !canStartPvp);
-  hostingPvpStartBtn.title = canStartPvp ? "" : "Wait for a friend to join first.";
 }
 
 // Diff the rendered <ul> against the incoming peer list: keep existing
@@ -522,7 +618,7 @@ function patchPeerList(peers) {
     }
     const built = buildPeerRow(p);
     peerRowsByPlayerId.set(p.playerId, built);
-    hostingPeerList.appendChild(built.row);
+    hoPeerList.appendChild(built.row);
   }
   for (const [pid, entry] of [...peerRowsByPlayerId]) {
     if (seen.has(pid)) continue;
@@ -535,7 +631,7 @@ function patchPeerList(peers) {
       peerEmptyRow.className = "party-peer-empty";
       peerEmptyRow.textContent = "Waiting for friends…";
     }
-    if (!peerEmptyRow.isConnected) hostingPeerList.appendChild(peerEmptyRow);
+    if (!peerEmptyRow.isConnected) hoPeerList.appendChild(peerEmptyRow);
   } else if (peerEmptyRow && peerEmptyRow.isConnected) {
     peerEmptyRow.remove();
   }
@@ -558,45 +654,44 @@ function buildPeerRow(peer) {
   // identified by playerId alone.
   const playerId = peer.playerId;
   kick.addEventListener("click", () => onKickClick({ playerId }));
-  row.appendChild(nameEl);
-  row.appendChild(slotEl);
-  row.appendChild(kick);
+  row.append(nameEl, slotEl, kick);
   return { row, nameEl, slotEl };
-}
-
-function renderGuestView() {
-  const hostPid = getHostPlayerId();
-  const hostName = (hostPid && getNameForPlayerId(hostPid)) || "Host";
-  guestTitleEl.textContent = `In session with ${hostName}`;
-  const slot = getMySlot();
-  guestSlotEl.textContent = slot != null ? `You are slot ${slot}.` : "Joining…";
 }
 
 // — Click handlers ——————————————————————————————————————————————————————
 
-function onLocalCoopClick() {
-  // Enter local co-op at 2 players; the localCoop view's stepper bumps to
-  // 3/4. Keep the panel open so the player can add more.
-  setLocalPlayers(2);
-  renderAll();
-  showToast("Local co-op on — add players with +", "longHint");
-}
-
-function onStartHostingClick() {
-  if (isCreativeMode()) {
-    showToast("Leave creative mode first.", "hint");
-    return;
-  }
-  switchRole("host").catch((e) => console.error("[party] switchRole(host)", e));
-}
-
 function onJoinClick() {
-  const raw = (offlineJoinInput?.value || "").trim().toUpperCase();
+  const raw = (spJoinInput?.value || "").trim().toUpperCase();
   if (!isValidJoinCode(raw)) {
     showToast("Code is 5 letters or digits.", "hint");
     return;
   }
   switchRole("guest", { code: raw }).catch((e) => console.error("[party] switchRole(guest)", e));
+}
+
+function onHostOnlineClick(mode) {
+  if (isCreativeMode()) {
+    showToast("Leave creative mode first.", "hint");
+    return;
+  }
+  onlineHostMode = mode;
+  switchRole("host").catch((e) => console.error("[party] switchRole(host)", e));
+}
+
+function onOfflineCoopClick() {
+  // Enter local co-op at 2 players; the hosting-offline view's toggle bumps
+  // to 3/4. Keep the panel open so the player can add more.
+  setLocalPlayers(2);
+  renderAll();
+  showToast("Local co-op on — add players with the 2/3/4 toggle", "longHint");
+}
+
+function onOfflinePvpClick() {
+  // Travels to the arena behind a fade — close the dialog so the player isn't
+  // staring at a modal over the transition. Reopening shows the offline view
+  // with the player-count toggle.
+  closePartyPanel();
+  startPvpMatch(2);
 }
 
 async function onCopyClick() {
@@ -632,13 +727,8 @@ async function onShareClick() {
   }
 }
 
-function onEndCoopClick() {
-  switchRole("offline")
-    .then(() => showToast("Co-op ended", "hint"))
-    .catch((e) => console.error("[party] switchRole(offline) from host", e));
-}
-
 function onLeaveCoopClick() {
+  onlineHostMode = null;
   switchRole("offline").catch((e) => console.error("[party] switchRole(offline) from guest", e));
 }
 
@@ -739,15 +829,16 @@ function injectStyles() {
     .party-card h1 { margin: 0 0 16px; font-size: 18px; letter-spacing: 1px; }
     .party-row { display: flex; align-items: center; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
     .party-controls { justify-content: flex-end; margin-top: 18px; }
-    .party-mode-row { margin-top: 16px; }
     .party-hint { color: #888; font-size: 11px; margin: 12px 0 6px; }
     .party-error { color: #e88; font-size: 12px; margin: 8px 0 0; }
-    .party-stepper { display: flex; align-items: center; gap: 12px; margin: 8px 0 4px; }
-    .party-stepper button {
-      width: 36px; height: 36px; font-size: 18px; line-height: 1;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .party-stepper-count { font-size: 14px; min-width: 84px; text-align: center; letter-spacing: 1px; }
+    .party-stack { display: flex; flex-direction: column; gap: 8px; margin: 8px 0; }
+    .party-stack button { width: 100%; text-align: center; }
+    .party-toggle { display: flex; gap: 6px; margin: 8px 0 4px; }
+    .party-toggle button { flex: 1; text-align: center; }
+    .party-toggle button.active { background: #2a3a55; border-color: #4a5a88; color: #fff; }
+    .party-confirm { margin-top: 6px; }
+    .party-confirm-row { margin: 6px 0 0; }
+    .party-confirm-q { color: #e88; font-size: 12px; align-self: center; }
     .party-card button {
       background: #2a2a2a; color: #eee; border: 1px solid #444;
       padding: 8px 12px; border-radius: 4px; cursor: pointer;
@@ -803,25 +894,25 @@ export function _resetPartyPanelForTesting() {
   overlay = null;
   card = null;
   installed = false;
-  views = { offline: null, hosting: null, guest: null, localCoop: null };
-  hostingCodeEl = null;
-  hostingPeerList = null;
-  hostingCopyBtn = null;
-  hostingShareBtn = null;
-  hostingEndBtn = null;
-  hostingPvpStartBtn = null;
-  hostingPvpEndBtn = null;
-  guestTitleEl = null;
-  guestSlotEl = null;
-  guestLeaveBtn = null;
-  offlineLocalBtn = null;
-  offlineLocalHint = null;
-  offlineStartBtn = null;
-  offlineJoinInput = null;
-  offlineJoinBtn = null;
-  offlineErrorEl = null;
-  localCoopEndBtn = null;
+  onlineHostMode = null;
+  views = { single: null, hostingOnline: null, hostingOffline: null, guest: null };
+  spJoinInput = null;
+  spErrorEl = null;
+  spOnlineHostBtns = null;
+  hoDescEl = null;
+  hoCodeEl = null;
+  hoCopyBtn = null;
+  hoShareBtn = null;
+  hoPeerList = null;
+  hoStartBtn = null;
+  hoEndControl = null;
+  offDescEl = null;
+  offToggleBtns = null;
+  offEndControl = null;
+  guestDescEl = null;
+  guestLeaveControl = null;
   peerRowsByPlayerId.clear();
   peerEmptyRow = null;
   guestAutoClosedForSlot = null;
+  lastFocusedView = null;
 }

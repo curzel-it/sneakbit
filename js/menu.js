@@ -28,8 +28,6 @@ import { isMessageOpen } from "./message.js?v=20260530c";
 import { isDialogueOpen } from "./dialogue.js?v=20260530c";
 import { getRuntimeRole, onRoleChange } from "./onlineMode.js?v=20260530c";
 import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js?v=20260530c";
-import { tr } from "./strings.js?v=20260530c";
-import { startPvpMatch, exitPvp, isPvpActive } from "./pvpController.js?v=20260530c";
 
 // Modals that own the keyboard while they're up. If any is open we treat
 // Esc / the menu key as "dismiss the active modal" — owned by that modal's
@@ -84,9 +82,7 @@ export function installMenu(stateGetter) {
       <h1>SneakBit</h1>
       <div class="menu-row menu-controls menu-stack">
         <button id="menu-resume">Resume (Esc)</button>
-        <button id="menu-open-party">Party / Co-op</button>
-        <button id="menu-open-pvp" data-guest-hidden>PvP (Beta)</button>
-        <button id="menu-exit-pvp" data-guest-hidden>Exit PvP</button>
+        <button id="menu-open-multiplayer">Multiplayer</button>
         <button id="menu-open-inventory">Inventory &amp; Equipment</button>
         <button id="menu-open-skills">Skills</button>
         <button id="menu-open-settings">Settings</button>
@@ -105,16 +101,6 @@ export function installMenu(stateGetter) {
       <p class="menu-version">v${APP_VERSION}</p>
     </div>
 
-    <div class="menu-card" data-screen="pvp">
-      <h2 id="menu-pvp-title">PvP</h2>
-      <p class="menu-hint" id="menu-pvp-text"></p>
-      <div class="menu-row menu-controls menu-stack">
-        <button data-pvp-count="2"></button>
-        <button data-pvp-count="3"></button>
-        <button data-pvp-count="4"></button>
-        <button id="menu-pvp-back">Back</button>
-      </div>
-    </div>
     <div class="menu-card" data-screen="settings">
       <h1>Settings</h1>
       <div class="menu-row">
@@ -295,32 +281,6 @@ function applyRoleVisibility() {
   });
 }
 
-// Swap the pause-menu PvP entry between "start" and "Exit PvP" depending
-// on whether a match is running.
-function applyPvpVisibility() {
-  // PvP (Phase A) is offline-only — hide the whole entry while online.
-  const offline = getRuntimeRole() === "offline";
-  const active = isPvpActive();
-  const openBtn = root.querySelector("#menu-open-pvp");
-  const exitBtn = root.querySelector("#menu-exit-pvp");
-  if (openBtn) openBtn.style.display = offline && !active ? "" : "none";
-  if (exitBtn) {
-    exitBtn.style.display = offline && active ? "" : "none";
-    exitBtn.textContent = tr("game.menu.exit_pvp");
-  }
-}
-
-// Fill the player-count screen from the shipped PvP strings.
-function renderPvpScreen() {
-  const title = root.querySelector("#menu-pvp-title");
-  const text = root.querySelector("#menu-pvp-text");
-  if (title) title.textContent = tr("pvp_arena.menu.title");
-  if (text) text.textContent = tr("pvp_arena.menu.text");
-  for (const btn of root.querySelectorAll("[data-pvp-count]")) {
-    btn.textContent = tr(`game.menu.number_of_players.${btn.dataset.pvpCount}`);
-  }
-}
-
 // The currently visible menu card — the root menuNav focuses within.
 function activeCard() {
   return root?.querySelector(`.menu-card[data-screen="${screen}"]`);
@@ -332,7 +292,6 @@ function openMenu() {
   // on a genuinely visible item.
   root.style.display = "flex";
   applyRoleVisibility();
-  applyPvpVisibility();
   showScreen("pause");
   renderPauseHint();
   playSfx("hintReceived", { volume: 0.5 });
@@ -362,7 +321,6 @@ function showScreen(next) {
   root.querySelectorAll(".menu-card").forEach(card => {
     card.style.display = card.dataset.screen === next ? "block" : "none";
   });
-  if (next === "pvp") renderPvpScreen();
   if (next === "settings") syncSettingsWidgets();
   if (next === "skills") syncSkillsWidgets();
   if (next === "inventory") renderInventoryInto(root.querySelector("#menu-inventory-body"));
@@ -539,23 +497,9 @@ function syncSkillsWidgets() {
 
 function bindWidgets() {
   root.querySelector("#menu-resume").addEventListener("click", closeMenu);
-  root.querySelector("#menu-open-party").addEventListener("click", () => {
+  root.querySelector("#menu-open-multiplayer").addEventListener("click", () => {
     closeMenu();
     openPartyPanel();
-  });
-  root.querySelector("#menu-open-pvp").addEventListener("click", () => showScreen("pvp"));
-  root.querySelector("#menu-pvp-back").addEventListener("click", () => showScreen("pause"));
-  for (const btn of root.querySelectorAll("[data-pvp-count]")) {
-    btn.addEventListener("click", () => {
-      const n = parseInt(btn.dataset.pvpCount, 10) | 0;
-      closeMenu();
-      startPvpMatch(n);
-    });
-  }
-  root.querySelector("#menu-exit-pvp").addEventListener("click", () => {
-    if (!confirm(tr("game.menu.exit_pvp_are_you_sure").replace(/\\n/g, "\n"))) return;
-    closeMenu();
-    exitPvp();
   });
   root.querySelector("#menu-open-settings").addEventListener("click", () => showScreen("settings"));
   const fullscreenBtn = root.querySelector("#menu-fullscreen");

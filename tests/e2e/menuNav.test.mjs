@@ -77,12 +77,12 @@ test("navigation carries into a second surface (party panel)", async (t) => {
   await navigate(s, `${servers.appUrl}/index.html`);
   await waitFor(s, "!!window.__menuNav");
 
-  // Open the pause menu, navigate to "Party / Co-op", activate it.
+  // Open the pause menu, navigate to "Multiplayer", activate it.
   await key(s, "Escape");
   await sleep(50);
   let guard = 0;
-  while ((await focusedId(s)) !== "menu-open-party" && guard++ < 15) await key(s, "ArrowDown");
-  assert.equal(await focusedId(s), "menu-open-party", "reached Party / Co-op");
+  while ((await focusedId(s)) !== "menu-open-multiplayer" && guard++ < 15) await key(s, "ArrowDown");
+  assert.equal(await focusedId(s), "menu-open-multiplayer", "reached Multiplayer");
   await evalExpr(s, "window.__menuNav.confirm()");
   await sleep(50);
 
