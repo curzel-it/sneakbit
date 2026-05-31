@@ -218,6 +218,7 @@ export function performMeleeSwing(state, opts = {}) {
       _vy: vy * speed,
       _lifespan: lifespan,
       _dpsOverride: dps,
+      _melee: true,
       _playerIndex: idx,
       species_id: bulletId,
       is_consumable: false,

@@ -130,13 +130,25 @@ function resolveBullets(zone, players, dt) {
         const ownerIdx = b._playerIndex | 0;
         if (victimIdx !== ownerIdx) {
           const dps = (b._dpsOverride != null ? b._dpsOverride : bsp.dps) || 0;
-          // Bullets hit briefly and pass through — treat them as a burst
-          // (with invuln gate) rather than a sustained continuous tick.
-          const result = applyPlayerDamage(dps * damageMultiplier(b) * dt, victim);
-          // In PvP, a landed hit cuts the shooter's turn to ≤2s.
-          if (isPvp() && result !== "ignored") emitPlayerVsPlayerHit(victimIdx, ownerIdx);
-          if (!tryBounce(b, bsp)) ents.splice(i, 1);
-          continue;
+          if (b._melee) {
+            // Melee swing: a short-lived cross of bullets around the hero.
+            // It must keep damaging while it overlaps, mirroring the Rust core
+            // where melee is plain dt-scaled continuous damage with no i-frame
+            // gate. The single-hit burst path below would let a sword chip only
+            // one frame (~dps*dt ≈ 7.5) off a 1000-HP PvP player and then
+            // despawn — i.e. no damage. Tick continuously and pass through (the
+            // entity loop + wall check below still stop it on barrels/walls).
+            const result = applyPlayerContinuousDamage(dps * damageMultiplier(b) * dt, victim);
+            if (isPvp() && result !== "ignored") emitPlayerVsPlayerHit(victimIdx, ownerIdx);
+          } else {
+            // Bullets hit briefly and pass through — treat them as a burst
+            // (with invuln gate) rather than a sustained continuous tick.
+            const result = applyPlayerDamage(dps * damageMultiplier(b) * dt, victim);
+            // In PvP, a landed hit cuts the shooter's turn to ≤2s.
+            if (isPvp() && result !== "ignored") emitPlayerVsPlayerHit(victimIdx, ownerIdx);
+            if (!tryBounce(b, bsp)) ents.splice(i, 1);
+            continue;
+          }
         }
       }
     }

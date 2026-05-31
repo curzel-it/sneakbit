@@ -23,6 +23,9 @@ loadSpeciesData([
   // combat default of 100 applies.
   { id: 1038, entity_type: "StaticObject", sprite_sheet_id: 1014,
     is_rigid: true, sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
+  // Sword melee bullet (the cross of bullets a swing spawns carries this id).
+  { id: 1166, entity_type: "Bullet", sprite_sheet_id: 1022,
+    dps: 450, base_speed: 2, sprite_frame: { x: 1, y: 61, w: 1, h: 1 } },
 ]);
 
 const combat = await import("../js/combat.js");
@@ -270,4 +273,40 @@ test("friendly fire ON: a P1-owned bullet damages P2 but not P1", async () => {
   assert.equal(playerHealth.getPlayerHp(0), 100, "shooter (P1) untouched");
   // Restore default so other tests run with friendly fire off.
   saveSettings({ friendlyFire: false });
+});
+
+test("PvP melee hits an enemy player continuously and passes through (not a one-frame burst)", async () => {
+  // Regression: in PvP players have 1000 HP and the bullet-vs-player path is a
+  // single dt-scaled burst that despawns the bullet + sets a 0.4s invuln. A
+  // sword swing (5 short-lived bullets, dps 450) would chip only ~one frame
+  // (~7.5) and then be gone — i.e. "no damage". Melee bullets must instead
+  // deal continuous dps*dt every frame and pass through (mirrors the Rust core).
+  const gm = await import("../js/gameMode.js");
+  gm.setGameMode(gm.GAME_MODE.pvp, { realtime: true });
+  playerHealth.resetPlayerHealth();
+  const zone = makeZone();
+  const attacker = { index: 0, x: 0, y: 0, tileX: 0, tileY: 0 };
+  const victim = { index: 1, x: 5, y: 5, tileX: 5, tileY: 5 };
+  // A stationary melee bullet sitting on the victim, owned by the attacker.
+  const bullet = {
+    id: -1, species_id: 1166, _spawned: true, _melee: true,
+    _dpsOverride: 450, _playerIndex: 0, _vx: 0, _vy: 0, _lifespan: 1.0,
+    direction: "Down", frame: { x: 5, y: 5, w: 1, h: 1 },
+  };
+  zone.entities.push(bullet);
+
+  const hp0 = playerHealth.getPlayerHp(1);
+  combat.tickCombat(zone, [attacker, victim], 1 / 60);
+  const hp1 = playerHealth.getPlayerHp(1);
+  assert.ok(hp1 < hp0, "melee damages the enemy player");
+  assert.ok(zone.entities.includes(bullet), "melee bullet passes through (not despawned on a player hit)");
+
+  // Continuous: a second frame keeps biting — the burst path's 0.4s invuln
+  // would have made this a no-op.
+  combat.tickCombat(zone, [attacker, victim], 1 / 60);
+  assert.ok(playerHealth.getPlayerHp(1) < hp1, "melee keeps damaging frame over frame (no i-frame gate)");
+
+  // ...and it never touches the swinger.
+  assert.equal(playerHealth.getPlayerHp(0), playerHealth.getPlayerMaxHp(), "swinger is unharmed");
+  gm.setGameMode(gm.GAME_MODE.coop);
 });
