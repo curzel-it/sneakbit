@@ -23,7 +23,7 @@ const MIN_TILES_W = 10;
 const MAX_TILES_W = 36;
 const TARGET_PHYS_TILE_PX = 32; // target tile size at DPR=1 (CSS px)
 
-export function applyAutoZoom(canvas, camera, hud) {
+export function applyAutoZoom(canvas, camera, hud, onApply) {
   // Prefer visualViewport when present: window.innerWidth/Height is stale
   // on mobile while the soft keyboard / address bar are mid-animation
   // (especially on iOS Safari, where `resize` fires once on keyboard-up
@@ -79,12 +79,16 @@ export function applyAutoZoom(canvas, camera, hud) {
   if (hud) {
     hud.dataset.tiles = `${tilesW}×${tilesH} ${scale}× dpr=${dpr.toFixed(2)}`;
   }
+
+  // Split-screen recomputes its per-slice cameras + geometry from the new
+  // canvas size. Runs after camera.w/h are set so single-slice values match.
+  if (onApply) onApply();
 }
 
 let activeApply = null;
 
-export function installAutoZoom(canvas, camera, hud) {
-  const apply = () => applyAutoZoom(canvas, camera, hud);
+export function installAutoZoom(canvas, camera, hud, onApply) {
+  const apply = () => applyAutoZoom(canvas, camera, hud, onApply);
   activeApply = apply;
   apply();
   window.addEventListener("resize", apply);
