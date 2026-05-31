@@ -16,6 +16,11 @@ loadSpeciesData([
   { id: 4004, entity_type: "CloseCombatMonster", sprite_sheet_id: 1023,
     movement_directions: "FindHero", dps: 100, hp: 200,
     sprite_frame: { x: 0, y: 0, w: 1, h: 2 } },
+  // Explosive barrel: a rigid StaticObject bullets can destroy (id 1038 is
+  // one of the explosive ids hard-coded in explosives.js). hp omitted → the
+  // combat default of 100 applies.
+  { id: 1038, entity_type: "StaticObject", sprite_sheet_id: 1014,
+    is_rigid: true, sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
 ]);
 
 const combat = await import("../js/combat.js");
@@ -70,6 +75,29 @@ test("bullet damages and kills an overlapping monster, then despawns", () => {
   // Age past the death lifespan (1.0s) → the fireball is removed.
   combat.tickCombat(zone, player, 1.1);
   assert.equal(zone.entities.length, 0, "fireball removed after lifespan");
+});
+
+test("point-blank bullet destroys a rigid barrel instead of being eaten by the wall check", () => {
+  // Regression: the bullet spawns one tile ahead of the shooter, so when the
+  // player is adjacent to a barrel it starts on the barrel's own (rigid,
+  // non-walkable) tile. The damage pass must run before bulletHitsWall, or the
+  // bullet despawns against the rigid tile having dealt no damage (ammo spent,
+  // barrel intact).
+  const zone = makeZone();
+  zone.collision[5][5] = true;            // barrels block their tile
+  const barrel = {
+    species_id: 1038, frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Down",
+  };
+  const bullet = {
+    species_id: 7000, _spawned: true, _vx: 0, _vy: 0, _lifespan: 1.0,
+    frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Right",
+  };
+  zone.entities.push(barrel, bullet);
+  const player = { x: 4, y: 5, tileX: 4, tileY: 5 };
+  // dps 1800 × 0.2 = 360 > 100 default hp → destroyed in one tick.
+  combat.tickCombat(zone, player, 0.2);
+  assert.ok(!zone.entities.includes(bullet), "bullet consumed by the hit");
+  assert.equal(barrel._dying, true, "barrel destroyed point-blank");
 });
 
 test("bullet hitting a wall is consumed without applying damage", () => {

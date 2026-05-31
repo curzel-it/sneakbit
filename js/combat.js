@@ -140,13 +140,14 @@ function resolveBullets(zone, players, dt) {
       }
     }
 
-    // Wall / impassable construction → bullet stops (or bounces).
-    if (bulletHitsWall(b, zone)) {
-      if (!tryBounce(b, bsp)) ents.splice(i, 1);
-      continue;
-    }
-
     // Damage every overlapping target (bullets pass through if none die).
+    // Runs *before* the wall check so a bullet spawned point-blank against a
+    // rigid destructible lands its hit: the bullet spawns one tile ahead of
+    // the shooter (shooting.js), so when the player is adjacent to a barrel it
+    // starts on the barrel's own tile — which is rigid and non-walkable, so
+    // bulletHitsWall would despawn it before any damage. Checking damage first
+    // means the barrel takes the hit; if it survives, the wall check below
+    // still stops the bullet on the same frame.
     let consumed = false;
     const hitbox = bulletHitbox(b);
     const dmgMul = damageMultiplier(b);
@@ -180,6 +181,13 @@ function resolveBullets(zone, players, dt) {
     }
     if (consumed) {
       if (!tryBounce(b, bsp)) ents.splice(i, 1);
+      continue;
+    }
+
+    // Wall / impassable construction → bullet stops (or bounces).
+    if (bulletHitsWall(b, zone)) {
+      if (!tryBounce(b, bsp)) ents.splice(i, 1);
+      continue;
     }
   }
 }
