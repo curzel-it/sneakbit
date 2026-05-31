@@ -126,17 +126,17 @@ test("two deltas for the same player produce an interpolated position", async ()
     entities: [],
   });
   // Snapshot and delta need a measurable gap for the lerp denominator
-  // to be nonzero. 30 ms is plenty given the 100 ms interp delay.
+  // to be nonzero. 30 ms is plenty.
   await new Promise((r) => setTimeout(r, 30));
   handleDelta({
     op: "delta", zoneId: 1001,
     players: [{ playerId: "p_h", slot: 1, index: 0, x: 10, y: 0, tileX: 10, tileY: 0, direction: "right", moving: true }],
     entities: [],
   });
-  // Aim renderTime ~halfway between prev and curr.
-  // currAt ≈ now; prevAt ≈ now - 30. We want renderTime ≈ prevAt + 15
-  // → at ≈ prevAt + 15 + 100 = now - 30 + 15 + 100 = now + 85.
-  const at = performance.now() + 85;
+  // Aim renderTime ~halfway between prev and curr. currAt ≈ now; prevAt ≈
+  // now - 30. We want renderTime ≈ prevAt + 15 = now - 15; getMirrorPlayerById
+  // back-dates by INTERP_DELAY_MS, so at = renderTime + INTERP_DELAY_MS.
+  const at = performance.now() - 15 + INTERP_DELAY_MS;
   const p = getMirrorPlayerById("p_h", at);
   assert.ok(p);
   assert.ok(p.x > 0 && p.x < 10, `expected interpolated x in (0,10), got ${p.x}`);
@@ -243,14 +243,15 @@ test("extrapolation: moving=true past currAt advances at step speed up to one ti
     players: [{ playerId: "p_e", x: 5, y: 3, tileX: 5, tileY: 3, direction: "right", moving: true }],
   });
   const t0 = performance.now();
-  // Render 100 ms past currAt (renderTime = currAt + 100, so at = currAt + 200).
+  // Render 100 ms past currAt (renderTime = currAt + 100). getMirrorPlayerById
+  // back-dates by INTERP_DELAY_MS, so at = currAt + 100 + INTERP_DELAY_MS.
   // At STEP_DURATION 220 ms/tile that's ~0.45 tiles forward.
-  const e = getMirrorPlayerById("p_e", t0 + 200);
+  const e = getMirrorPlayerById("p_e", t0 + 100 + INTERP_DELAY_MS);
   assert.ok(e.x > 5.3 && e.x < 5.6,
     `expected ~0.45 tiles of forward extrapolation, got ${e.x}`);
-  // Render way past currAt (1 s out) — extrapolation caps at the next
+  // Render way past currAt (~1 s out) — extrapolation caps at the next
   // tile (6), it doesn't run away.
-  const capped = getMirrorPlayerById("p_e", t0 + 1100);
+  const capped = getMirrorPlayerById("p_e", t0 + 1000 + INTERP_DELAY_MS);
   assert.equal(capped.x, 6, `extrapolation must cap at next tile, got ${capped.x}`);
   reset();
 });
