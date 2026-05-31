@@ -29,6 +29,24 @@
   },
   "entities": [
     {
+      "after_dialogue": "Nothing",
+      "demands_attention": false,
+      "destination": null,
+      "dialogues": [],
+      "direction": "Down",
+      "display_conditions": [],
+      "frame": {
+        "h": 2,
+        "w": 1,
+        "x": 5,
+        "y": 5
+      },
+      "id": 11190399,
+      "is_consumable": false,
+      "lock_type": "None",
+      "species_id": 1162
+    },
+    {
       "contents": null,
       "demands_attention": false,
       "destination": {
