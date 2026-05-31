@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { loadSpeciesData } = await import("../js/species.js?v=20260531c");
+const { loadSpeciesData } = await import("../js/species.js");
 
 loadSpeciesData([
   { id: 4003, entity_type: "CloseCombatMonster", sprite_sheet_id: 1023,
@@ -16,7 +16,7 @@ loadSpeciesData([
     hp: 800, sprite_frame: { x: 0, y: 0, w: 2, h: 3 } },
 ]);
 
-const { tickMonsterFusion, isMonsterSpecies } = await import("../js/monsters.js?v=20260531c");
+const { tickMonsterFusion, isMonsterSpecies } = await import("../js/monsters.js");
 
 function makeZone(entities) {
   return { id: 1, cols: 30, rows: 30, entities, collision: [] };

@@ -5,8 +5,8 @@
 // players) one bar per player stacks below it. A bar hides when its
 // player is dead, or when the local player count doesn't cover it.
 
-import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange, isPlayerDead } from "./playerHealth.js?v=20260531c";
-import { localPlayerCount } from "./coopMode.js?v=20260531c";
+import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange, isPlayerDead } from "./playerHealth.js";
+import { localPlayerCount } from "./coopMode.js";
 
 const MAX_PLAYERS = 4;
 const PLAYER_COLORS = [

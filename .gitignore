@@ -4,6 +4,7 @@
 __pycache__/
 venv/
 node_modules/
+_site/
 .idea/
 .vscode/
 .claude/

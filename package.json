@@ -10,6 +10,11 @@
     "test:unit": "node --test tests/*.test.js",
     "test:e2e": "node --test --test-timeout=120000 --test-concurrency=1 tests/e2e/*.test.mjs",
     "shots": "node tools/screenshot.mjs",
-    "serve": "python3 -m http.server 8000"
+    "build": "node tools/build.mjs",
+    "serve": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
   }
 }

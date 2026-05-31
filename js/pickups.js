@@ -10,24 +10,24 @@
 // Co-op rule: iterate every live player and the first one whose tile
 // overlaps a pickup wins it. Single-player just passes one player.
 
-import { resolveEntityDialogue, dialogueLines } from "./dialogue.js?v=20260531c";
-import { showToast } from "./toast.js?v=20260531c";
-import { playSfx } from "./audio.js?v=20260531c";
-import { getSpecies } from "./species.js?v=20260531c";
-import { addAmmo, getAmmo } from "./inventory.js?v=20260531c";
-import { getValue, setValue } from "./storage.js?v=20260531c";
-import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js?v=20260531c";
+import { resolveEntityDialogue, dialogueLines } from "./dialogue.js";
+import { showToast } from "./toast.js";
+import { playSfx } from "./audio.js";
+import { getSpecies } from "./species.js";
+import { addAmmo, getAmmo } from "./inventory.js";
+import { getValue, setValue } from "./storage.js";
+import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import {
   setSessionLoadout,
   getSessionLoadout,
-} from "./sessionLoadouts.js?v=20260531c";
-import { tr } from "./strings.js?v=20260531c";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260531c";
-import { isCreativeMode } from "./creativeMode.js?v=20260531c";
-import { isPlayerDead } from "./playerHealth.js?v=20260531c";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260531c";
-import { isPvp } from "./gameMode.js?v=20260531c";
-import { addPvpAmmo, setPvpRangedWeapon } from "./pvpLoadout.js?v=20260531c";
+} from "./sessionLoadouts.js";
+import { tr } from "./strings.js";
+import { shouldBeVisible } from "./entityVisibility.js";
+import { isCreativeMode } from "./creativeMode.js";
+import { isPlayerDead } from "./playerHealth.js";
+import { broadcastHostEvent } from "./hostEvents.js";
+import { isPvp } from "./gameMode.js";
+import { addPvpAmmo, setPvpRangedWeapon } from "./pvpLoadout.js";
 
 // Bullet is here because in zone data, placed Bullets (speed=0) act as
 // stationary collectibles — same rule as the original Rust core. Bundles

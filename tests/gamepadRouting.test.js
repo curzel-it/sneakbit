@@ -5,8 +5,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const gp = await import("../js/gamepad.js?v=20260531c");
-const binds = await import("../js/gamepadBindings.js?v=20260531c");
+const gp = await import("../js/gamepad.js");
+const binds = await import("../js/gamepadBindings.js");
 
 // Build a Standard-Mapping pad. `buttons` is a sparse {index: true} map;
 // axes default to neutral. The same object is returned on every

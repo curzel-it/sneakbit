@@ -19,7 +19,7 @@ globalThis.localStorage = (() => {
   };
 })();
 
-const mod = await import("../js/gamepadBindings.js?v=20260531c");
+const mod = await import("../js/gamepadBindings.js");
 const {
   GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2,
   buttonFor, actionForButton, menuButton,
@@ -106,7 +106,7 @@ test("changes persist across a reload (localStorage round-trip)", async () => {
   setGamepadBinding("shoot", 3, 0);
   setGamepadBinding("menu", 8, 0);
   // Fresh module instance reads the persisted blob.
-  const fresh = await import("../js/gamepadBindings.js?v=roundtrip");
+  const fresh = await import("../js/gamepadBindings.js");
   assert.equal(fresh.buttonFor("shoot", 0), 3);
   assert.equal(fresh.menuButton(), 8);
 });

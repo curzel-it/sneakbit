@@ -90,7 +90,7 @@ test("realtime online PvP: arena, 1000 HP, kill → result on both clients", asy
   await evalExpr(session.host, "window.deathmatch.exit()");
   const guestModalGone = await waitFor(session.guest, "(() => { const e = document.getElementById('gameover'); return (!e || e.style.display === 'none') ? true : null; })()");
   assert.equal(guestModalGone, true, "guest result modal dismissed on host exit (pvpEnd)");
-  const guestMode = await waitFor(session.guest, "(async () => { const g = await import('./js/gameMode.js?v=20260531c'); return g.getGameMode() === 'coop' ? 'coop' : null; })()");
+  const guestMode = await waitFor(session.guest, "(async () => { const g = await import('./js/gameMode.js'); return g.getGameMode() === 'coop' ? 'coop' : null; })()");
   assert.equal(guestMode, "coop", "guest game mode self-heals to coop via snapshot");
 
   // Exit returns the party to the pre-match co-op zone (1001 here), not a
@@ -145,7 +145,7 @@ test("realtime online PvP: 'Back to single player' drops the host to offline", a
 
   // Host drops to offline single player: out of the arena, runtime role offline,
   // result modal gone, no longer in pvp mode.
-  const hostRole = await waitFor(session.host, "(async () => { const o = await import('./js/onlineMode.js?v=20260531c'); return o.getRuntimeRole() === 'offline' ? 'offline' : null; })()");
+  const hostRole = await waitFor(session.host, "(async () => { const o = await import('./js/onlineMode.js'); return o.getRuntimeRole() === 'offline' ? 'offline' : null; })()");
   assert.equal(hostRole, "offline", "host runtime role is offline");
   const hostLeftArena = await waitFor(session.host, "(() => { const s = window.deathmatch.state(); return (s.zoneId && s.zoneId !== 1301) ? s.zoneId : null; })()");
   assert.notEqual(hostLeftArena, 1301, "host is teleported out of the PvP arena");
@@ -153,7 +153,7 @@ test("realtime online PvP: 'Back to single player' drops the host to offline", a
   assert.equal(hostModalGone, true, "host result modal is dismissed");
 
   // Guest follows host.close → falls back to offline single player.
-  const guestRole = await waitFor(session.guest, "(async () => { const o = await import('./js/onlineMode.js?v=20260531c'); return o.getRuntimeRole() === 'offline' ? 'offline' : null; })()", { timeoutMs: 15000 });
+  const guestRole = await waitFor(session.guest, "(async () => { const o = await import('./js/onlineMode.js'); return o.getRuntimeRole() === 'offline' ? 'offline' : null; })()", { timeoutMs: 15000 });
   assert.equal(guestRole, "offline", "guest falls back to offline after the host leaves");
 
   await sleep(100);

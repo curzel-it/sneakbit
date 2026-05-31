@@ -25,7 +25,7 @@
 // (online pvp), and net.send({op: "host.kick"}). No location.replace
 // anywhere — role transitions stay in-page.
 
-import { getRuntimeRole, onRoleChange, isValidJoinCode } from "./onlineMode.js?v=20260531c";
+import { getRuntimeRole, onRoleChange, isValidJoinCode } from "./onlineMode.js";
 import {
   getInviteCode,
   getKnownPeers,
@@ -35,16 +35,16 @@ import {
   getNameForPlayerId,
   getNet,
   onSessionState,
-} from "./onlineBootstrap.js?v=20260531c";
-import { switchRole } from "./switchRole.js?v=20260531c";
-import { showToast } from "./toast.js?v=20260531c";
-import { isCreativeMode } from "./creativeMode.js?v=20260531c";
-import { isCoopMode, localPlayerCount } from "./coopMode.js?v=20260531c";
-import { setLocalPlayers } from "./main.js?v=20260531c";
-import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260531c";
-import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js?v=20260531c";
-import { startPvpMatch, exitPvp } from "./pvpController.js?v=20260531c";
-import { isPvp, isRealtimePvp, isPvpHostSetup, setPvpHostSetup } from "./gameMode.js?v=20260531c";
+} from "./onlineBootstrap.js";
+import { switchRole } from "./switchRole.js";
+import { showToast } from "./toast.js";
+import { isCreativeMode } from "./creativeMode.js";
+import { isCoopMode, localPlayerCount } from "./coopMode.js";
+import { setLocalPlayers } from "./main.js";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
+import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js";
+import { startPvpMatch, exitPvp } from "./pvpController.js";
+import { isPvp, isRealtimePvp, isPvpHostSetup, setPvpHostSetup } from "./gameMode.js";
 
 let chip = null;
 let chipLabel = null;

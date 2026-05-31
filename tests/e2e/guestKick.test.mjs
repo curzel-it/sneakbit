@@ -47,7 +47,7 @@ test("host kicks guest → guest drops to offline and stays playable", async (t)
   // Grab its server-assigned playerId — that's what host.kick matches on.
   const guestPlayerId = await evalExpr(session.guest, `
     (async () => {
-      const o = await import('./js/onlineBootstrap.js?v=20260531c');
+      const o = await import('./js/onlineBootstrap.js');
       return o.getSelfPlayerId && o.getSelfPlayerId();
     })()
   `);
@@ -58,7 +58,7 @@ test("host kicks guest → guest drops to offline and stays playable", async (t)
   // code 4005 to the kicked guest.
   await evalExpr(session.host, `
     (async () => {
-      const o = await import('./js/onlineBootstrap.js?v=20260531c');
+      const o = await import('./js/onlineBootstrap.js');
       o.getNet().send({ op: 'host.kick', playerId: ${JSON.stringify(guestPlayerId)} });
       return true;
     })()
@@ -68,7 +68,7 @@ test("host kicks guest → guest drops to offline and stays playable", async (t)
   // throw regressed, the role would stay "guest" forever and this times out.
   await waitFor(session.guest, `
     (async () => {
-      const m = await import('./js/onlineMode.js?v=20260531c');
+      const m = await import('./js/onlineMode.js');
       return m.getRuntimeRole() === 'offline' || null;
     })()
   `, { timeoutMs: 15000 });

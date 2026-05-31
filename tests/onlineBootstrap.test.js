@@ -7,9 +7,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { _setOnlineModeForTesting, _resetOnlineModeForTesting } =
-  await import("../js/onlineMode.js?v=20260531c");
+  await import("../js/onlineMode.js");
 const { _resetOnlineBootstrapForTesting, bootstrapOnline, onSessionEnded } =
-  await import("../js/onlineBootstrap.js?v=20260531c");
+  await import("../js/onlineBootstrap.js");
 
 function makeFakeNet() {
   const handlers = new Map();

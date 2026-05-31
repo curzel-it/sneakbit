@@ -9,8 +9,8 @@
 // They auto-expire by age; the guest ticks them and the renderer draws them as
 // their own layer.
 
-import { TILE_SIZE } from "./constants.js?v=20260531c";
-import { getSpecies, getEntitySheet } from "./species.js?v=20260531c";
+import { TILE_SIZE } from "./constants.js";
+import { getSpecies, getEntitySheet } from "./species.js";
 
 const DEFAULT_FLASH_LIFESPAN = 0.12; // seconds — a brief blip, not a lingering sprite
 

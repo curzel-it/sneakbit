@@ -10,16 +10,16 @@
 // state.players[] alongside player/player2 so all four slots move and
 // participate in pickups/combat.
 
-import { getNetRole, getNet } from "./onlineBootstrap.js?v=20260531c";
-import { pushInputPress, clearInputHeld, clearInputState, setNetworkHeld, pushPressEvent } from "./input.js?v=20260531c";
-import { setNetworkGuestCount } from "./coopMode.js?v=20260531c";
-import { tryShootForSlot } from "./shooting.js?v=20260531c";
-import { tryMeleeForSlot } from "./melee.js?v=20260531c";
-import { tryInteractForSlot } from "./interact.js?v=20260531c";
-import { isPlayerDead } from "./playerHealth.js?v=20260531c";
-import { isPvp, isRealtimePvp } from "./gameMode.js?v=20260531c";
-import { cornerSpawnTile } from "./pvpSpawn.js?v=20260531c";
-import { notifyPlayerDied } from "./pvpMatch.js?v=20260531c";
+import { getNetRole, getNet } from "./onlineBootstrap.js";
+import { pushInputPress, clearInputHeld, clearInputState, setNetworkHeld, pushPressEvent } from "./input.js";
+import { setNetworkGuestCount } from "./coopMode.js";
+import { tryShootForSlot } from "./shooting.js";
+import { tryMeleeForSlot } from "./melee.js";
+import { tryInteractForSlot } from "./interact.js";
+import { isPlayerDead } from "./playerHealth.js";
+import { isPvp, isRealtimePvp } from "./gameMode.js";
+import { cornerSpawnTile } from "./pvpSpawn.js";
+import { notifyPlayerDied } from "./pvpMatch.js";
 
 const INTENT_TO_DIR = {
   moveUp: "up",

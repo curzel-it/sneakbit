@@ -4,10 +4,10 @@
 // reads getPlayerHp(0) and we don't want to teach it about the mirror.
 // Subscribing here means the HUD works for guests with zero changes.
 
-import { setPlayerHp } from "./playerHealth.js?v=20260531c";
-import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260531c";
-import { rumble } from "./rumble.js?v=20260531c";
-import { setPvpRangedWeapon, setPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js?v=20260531c";
+import { setPlayerHp } from "./playerHealth.js";
+import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js";
+import { rumble } from "./rumble.js";
+import { setPvpRangedWeapon, setPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js";
 
 let unsubs = [];
 let installed = false;

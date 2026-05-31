@@ -8,14 +8,14 @@
 // stop after one delta, fitting the 50–100 KB/s budget called out in
 // docs/online-coop.md at the snapshot section.
 
-import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js?v=20260531c";
-import { getPlayerHp } from "./playerHealth.js?v=20260531c";
-import { isPvp, getGameMode, isRealtimePvp } from "./gameMode.js?v=20260531c";
-import { getPvpRangedWeapon, getPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js?v=20260531c";
-import { getLastSeqMap } from "./hostGuests.js?v=20260531c";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260531c";
-import { shouldBeVisible } from "./entityVisibility.js?v=20260531c";
-import { getMeleeSwingProgress, getMeleeCooldown } from "./melee.js?v=20260531c";
+import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js";
+import { getPlayerHp } from "./playerHealth.js";
+import { isPvp, getGameMode, isRealtimePvp } from "./gameMode.js";
+import { getPvpRangedWeapon, getPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js";
+import { getLastSeqMap } from "./hostGuests.js";
+import { broadcastHostEvent } from "./hostEvents.js";
+import { shouldBeVisible } from "./entityVisibility.js";
+import { getMeleeSwingProgress, getMeleeCooldown } from "./melee.js";
 
 export const BROADCAST_INTERVAL_MS = 50;
 
