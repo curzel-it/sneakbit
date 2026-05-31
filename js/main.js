@@ -13,11 +13,12 @@ import { pickCoopSpawn } from "./coopSpawn.js";
 import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress } from "./input.js";
 import { createPlayer, updatePlayer } from "./player.js";
 import { createCamera, updateCamera, panCameraTo, cameraRectFor } from "./camera.js";
-import { createRenderer, render } from "./renderer.js";
+import { createRenderer, render, renderViewports } from "./renderer.js";
 import { startGameLoop } from "./gameLoop.js";
 import { createBiomeAnimation, tickBiomeAnimation } from "./biomeAnimation.js";
 import { tickEntities } from "./entities.js";
-import { installAutoZoom } from "./zoom.js";
+import { installAutoZoom, reapplyAutoZoom } from "./zoom.js";
+import { sliceCount, recomputeSlices, getSlices } from "./splitScreen.js";
 import { installHud, updateHud } from "./hud.js";
 import { loadAudio } from "./audio.js";
 import { loadSettings, getSettings, resolveLanguage } from "./settings.js";
@@ -146,7 +147,8 @@ async function main() {
   // bare stub with just a camera so installAutoZoom has something to
   // bind to.
   if (bootGuest) {
-    state = { zone: null, rawZone: null, player: null, player2: null, players: [], camera: createCamera() };
+    const cam = createCamera();
+    state = { zone: null, rawZone: null, player: null, player2: null, players: [], camera: cam, cameras: [cam] };
   } else {
     await initOfflineState();
   }
@@ -196,7 +198,7 @@ async function main() {
   // avatar spawner here.
   installPvpController(() => state, { setLocalPlayers });
   installOnlineDeathmatch(() => state);
-  installAutoZoom(canvas, state.camera, hud.el);
+  installAutoZoom(canvas, state.camera, hud.el, () => recomputeSlices(canvas, state));
   // Guests don't own the world, world-mutating logic, or the warp graph
   // — so the simulation modules (mapEditor, interact, shooting/melee,
   // fastTravel) stay gated. The HUDs (HP + ammo) DO run on guests: the
@@ -379,7 +381,11 @@ async function main() {
     // target down to the host themselves, but the host's screen still
     // needs to render the guests (or "host can't see guests" lingers).
     const renderPlayers = livePlayersForRender(state);
-    render(renderer, state.zone, state.camera, renderPlayers, biomeAnim.frame);
+    if (sliceCount() > 1) {
+      renderViewports(renderer, state.zone, buildViewports(state), renderPlayers, biomeAnim.frame);
+    } else {
+      render(renderer, state.zone, state.camera, renderPlayers, biomeAnim.frame);
+    }
     updateHud(hud, {
       zoneId: state.zone.id,
       fps: 1 / dt,
@@ -433,7 +439,11 @@ async function initOfflineState() {
   const player2 = isCoopMode() ? makeCoopP2(player, zone) : null;
   // Preserve camera across role switches — the existing camera object
   // captured by installAutoZoom etc. must remain referentially stable.
+  // The slice-camera array is preserved too, with cameras[0] kept as the
+  // alias of the stable camera (recomputeSlices re-derives the rest).
   const camera = state?.camera ?? createCamera();
+  const cameras = Array.isArray(state?.cameras) ? state.cameras : [camera];
+  cameras[0] = camera;
   state = {
     zone,
     rawZone: zoneRaw,
@@ -441,6 +451,7 @@ async function initOfflineState() {
     player2,
     players: [],
     camera,
+    cameras,
     lastTile: { x: player.tileX, y: player.tileY },
     lastTile2: player2 ? { x: player2.tileX, y: player2.tileY } : null,
   };
@@ -651,6 +662,10 @@ export function setLocalPlayers(n) {
   ensureLocalExtra(3, n >= 3);
   ensureLocalExtra(4, n >= 4);
   deathToasted.clear();
+  // Re-derive the split-screen slices + per-slice cameras for the new count
+  // (reapplyAutoZoom re-runs the zoom apply, whose onApply calls
+  // recomputeSlices) before the HUD re-anchors its bars to the slices.
+  reapplyAutoZoom();
   refreshHealthHud();
 }
 
@@ -824,6 +839,36 @@ function allPlayers(state) {
   return out;
 }
 
+// Local players in slot order (P1, P2, P3, P4), INCLUDING dead ones —
+// split-screen maps slice i to player i and keeps a downed player's slice
+// on their corpse rather than re-flowing the grid. Online guests
+// (playerId != null) are excluded; split-screen is local-only.
+function orderedLocalPlayers(state) {
+  const out = [];
+  if (state.player) out.push(state.player);
+  if (state.player2) out.push(state.player2);
+  if (Array.isArray(state.players)) {
+    const extras = state.players
+      .filter((e) => e.playerId == null && e.player)
+      .sort((a, b) => a.slot - b.slot);
+    for (const e of extras) out.push(e.player);
+  }
+  return out;
+}
+
+// Per-slice draw descriptors for renderViewports: each slice's pixel rect, its
+// own camera, and the player its darkness cone tracks. The full live-player
+// list is drawn into every slice by the renderer, so partners still appear.
+function buildViewports(state) {
+  const slices = getSlices();
+  const players = orderedLocalPlayers(state);
+  return slices.map((s, i) => ({
+    rectPx: s.rectPx,
+    camera: state.cameras[i] ?? state.camera,
+    focusPlayer: players[i] ?? state.player,
+  }));
+}
+
 // Camera follows live players (dead P2 doesn't drag the centre off).
 // Both local and online co-op share the same averaging rule: keep every
 // live player on screen. Online tried a per-device "follow self" camera
@@ -853,6 +898,9 @@ function hostCameraTarget(state) {
 // pickups the host wasn't ticking. Returns a single camera (legacy path)
 // or an array; updateVisibleEntities accepts both.
 function simulationViewports(state) {
+  // Split-screen local co-op: tick entities visible to ANY slice so a
+  // partner who wandered into their own slice keeps live mobs / pickups.
+  if (sliceCount() > 1) return state.cameras;
   if (getRuntimeRole() !== "host") return state.camera;
   const cams = [state.camera];
   const { w, h } = state.camera;
@@ -873,6 +921,16 @@ function livePlayersForRender(state) {
 // followed player moves slowly, so a snap-follow reads as smooth). The PvP
 // target comes from the controller; co-op/online keep the shared camera.
 function applyCamera(dt) {
+  // Split-screen local co-op: each slice's camera snap-follows its own
+  // player (dead included — the slice holds on the corpse). Never reached
+  // in PvP / online, where sliceCount() is 1.
+  if (sliceCount() > 1) {
+    const players = orderedLocalPlayers(state);
+    for (let i = 0; i < state.cameras.length; i++) {
+      updateCamera(state.cameras[i], players[i] ?? state.player, state.zone);
+    }
+    return;
+  }
   if (isPvp()) {
     const target = pvpCameraTarget() ?? hostCameraTarget(state);
     panCameraTo(state.camera, target, state.zone, dt);
