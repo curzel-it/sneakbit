@@ -844,6 +844,17 @@ function injectStyles() {
     #menu .inv-equipped-tag { color: #b8c6ff; font-size: 10px; letter-spacing: 1px; }
     #menu .inv-player { margin: 8px 0 6px; font-size: 13px; color: #b8c6ff; letter-spacing: 1px; }
     #menu .inv-sep { border: none; border-top: 1px dashed #2e2e2e; margin: 14px 0; }
+    #menu .inv-slot { margin-bottom: 12px; min-width: 340px; }
+    #menu .inv-slot-title { margin: 0 0 6px; font-size: 12px; color: #8090b0; letter-spacing: 1px; text-transform: uppercase; }
+    #menu .inv-slot-list { list-style: none; padding: 0; margin: 0; }
+    #menu .inv-slot-list li { margin: 4px 0; }
+    #menu .inv-slot-row { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 7px 10px; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: 3px; color: #eee; font: inherit; font-size: 12px; cursor: pointer; }
+    #menu .inv-slot-row:hover { background: #292929; }
+    #menu .inv-slot-row.is-active { background: #1d2440; border-color: #3a4a80; }
+    #menu .inv-slot-row .inv-radio { color: #6678b0; }
+    #menu .inv-slot-row.is-active .inv-radio { color: #b8c6ff; }
+    #menu .inv-slot-row .inv-name { flex: 1; }
+    #menu .inv-slot-row .inv-count { color: #aaa; font-size: 11px; min-width: 36px; text-align: right; }
     #menu .menu-controls-list { list-style: none; padding: 0; margin: 0 0 12px; min-width: 360px; }
     #menu .menu-controls-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 4px 0; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: 3px; }
     #menu .menu-controls-label { flex: 1; font-size: 12px; color: #ccc; }

@@ -1,137 +1,161 @@
-// Inventory + equipment-swap panel for the pause menu.
+// Inventory + equipment panel for the pause menu.
 //
-// Lists every species the player has picked up (with its localized name
-// + count), highlights what's currently equipped in the melee/ranged
-// slot, and offers an inline Equip button on weapon-associated items
-// so the player can swap loadouts without dropping to devtools.
+// Organised around the two equipment slots: a Ranged panel and a Melee
+// panel, each a single-select (radio) list of the weapons you own for that
+// slot, with the active one marked. Picking a row equips it — the same
+// per-slot model as the in-play quick-switch ribbon (both read
+// weaponSlots.weaponsInSlot, so they never disagree). Non-weapon pickups
+// are listed plainly below.
 //
-// Local co-op shares one save slot (P1 / P2 fold to index 0 in
-// inventory.js + equipment.js), so we render a single section even when
-// co-op is on — duplicating it would just show the same numbers twice.
+// Equipping is a bare setEquipped/clearEquipped: host/guest loadout sync
+// both listen on onEquipmentChange, so a menu equip propagates in every
+// mode without extra wiring here.
 //
-// Pure DOM, like the rest of the pause menu. The pause menu owns the
-// "open / close / Esc back out" wiring; this file just renders into a
-// host element passed by menu.js when the Inventory tab is shown.
+// Local co-op shares one save slot (P1 / P2 fold to index 0), so we render
+// a single section even when co-op is on. Pure DOM; menu.js owns open/close.
 
 import { getSpecies } from "./species.js";
 import { tr } from "./strings.js";
-import { getEquipped, setEquipped, clearEquipped, SLOT_MELEE, SLOT_RANGED,
-         DEFAULT_RANGED_WEAPON_ID } from "./equipment.js";
-import { snapshotInventory } from "./inventory.js";
+import {
+  setEquipped, clearEquipped, getEquipped,
+  SLOT_MELEE, SLOT_RANGED, onEquipmentChange,
+} from "./equipment.js";
+import { snapshotInventory, onInventoryChange } from "./inventory.js";
+import { weaponsInSlot } from "./weaponSlots.js";
 import { isCoopMode } from "./coopMode.js";
+
+let unsubscribers = [];
 
 export function renderInventoryInto(host) {
   if (!host) return;
-  // P1 backs the shared local-coop inventory; in network coop we only
-  // ever render the local player's loadout from this screen.
-  host.innerHTML = playerSectionHtml(0);
-  bindInventoryButtons(host);
+  teardown();
+  draw(host);
+  // Re-render live so the panel reflects a quick-switch / pickup that
+  // changed a slot while the menu is open. Lazily tears down once the
+  // host leaves the DOM (menu closed) — there's no explicit hide hook.
+  const rerender = () => { if (host.isConnected) draw(host); else teardown(); };
+  unsubscribers.push(onEquipmentChange(rerender));
+  unsubscribers.push(onInventoryChange(rerender));
 }
 
-function playerSectionHtml(playerIndex) {
-  const counts = snapshotInventory(playerIndex);
-  const equippedMelee  = getEquipped(SLOT_MELEE, playerIndex);
-  const equippedRanged = getEquipped(SLOT_RANGED, playerIndex);
+function teardown() {
+  for (const u of unsubscribers) { try { u(); } catch { /* ignore */ } }
+  unsubscribers = [];
+}
 
-  const rows = Object.entries(counts)
-    .map(([id, n]) => ({ id: Number(id), count: n | 0 }))
-    .filter(r => r.count > 0)
-    .map(r => ({ ...r, sp: getSpecies(r.id) }))
-    .filter(r => r.sp)
-    .sort(byKindThenName);
+function draw(host) {
+  host.innerHTML = sectionsHtml(0);
+  bindButtons(host, 0);
+}
 
+function sectionsHtml(playerIndex) {
   const header = isCoopMode() ? `<h2 class="inv-player">Shared</h2>` : "";
-
-  if (rows.length === 0) {
-    return `${header}
-      <div class="inv-equipped">
-        <div><span class="inv-label">Melee:</span>  ${equipName(equippedMelee, playerIndex)}</div>
-        <div><span class="inv-label">Ranged:</span> ${equipName(equippedRanged, playerIndex)}</div>
-      </div>
-      <p class="inv-empty">Inventory is empty.</p>`;
-  }
-
   return `${header}
-    <div class="inv-equipped">
-      <div><span class="inv-label">Melee:</span>  ${equipName(equippedMelee, playerIndex)}</div>
-      <div><span class="inv-label">Ranged:</span> ${equipName(equippedRanged, playerIndex)}</div>
-    </div>
-    <ul class="inv-list">
-      ${rows.map(r => itemRow(r, equippedMelee, equippedRanged, playerIndex)).join("")}
-    </ul>
-  `;
+    ${slotPanelHtml("Ranged", SLOT_RANGED, playerIndex, false)}
+    ${slotPanelHtml("Melee",  SLOT_MELEE,  playerIndex, true)}
+    <hr class="inv-sep" />
+    ${itemsHtml(playerIndex)}`;
 }
 
-function itemRow(r, equippedMelee, equippedRanged, playerIndex) {
-  const name = tr(r.sp.name) || r.sp.name || `Species ${r.id}`;
-  const weaponId = r.sp.associated_weapon;
-  let action = "";
-  if (weaponId) {
-    const weaponSp = getSpecies(weaponId);
-    const isMelee  = weaponSp?.entity_type === "WeaponMelee";
-    const isRanged = weaponSp?.entity_type === "WeaponRanged";
-    const equippedNow = (isMelee  && equippedMelee  === weaponId) ||
-                        (isRanged && equippedRanged === weaponId);
-    if (equippedNow) {
-      action = `<span class="inv-equipped-tag">Equipped</span>`;
-    } else if (isMelee || isRanged) {
-      action = `<button data-equip="${weaponId}" data-slot="${isMelee ? "melee" : "ranged"}" data-player="${playerIndex}">Equip</button>`;
-    }
+function slotPanelHtml(title, slot, playerIndex, withUnarmed) {
+  const list = weaponsInSlot(slot, playerIndex);
+  const anyEquipped = list.some((e) => e.isEquipped);
+  const rows = [];
+
+  if (withUnarmed) {
+    rows.push(rowHtml({
+      active: !anyEquipped,
+      name: "Unarmed",
+      attrs: `data-unequip-melee="${playerIndex | 0}"`,
+    }));
   }
+
+  for (const e of list) {
+    const name = tr(e.species?.name) || e.species?.name || `Species ${e.id}`;
+    const label = e.isDefault
+      ? `${escapeHtml(name)} <span class="inv-equipped-default">(default)</span>`
+      : escapeHtml(name);
+    rows.push(rowHtml({
+      active: e.isEquipped,
+      name: label,
+      ammo: slot === SLOT_RANGED ? (e.ammo | 0) : null,
+      attrs: `data-equip="${e.id}" data-slot="${slot}" data-player="${playerIndex | 0}"`,
+      raw: true,
+    }));
+  }
+
+  return `<div class="inv-slot">
+    <h2 class="inv-slot-title">${title}</h2>
+    <ul class="inv-slot-list">${rows.join("")}</ul>
+  </div>`;
+}
+
+function rowHtml({ active, name, ammo = null, attrs, raw = false }) {
+  const nameHtml = raw ? name : escapeHtml(name);
+  const ammoHtml = ammo != null ? `<span class="inv-count">x${ammo}</span>` : "";
   return `<li>
-    <span class="inv-name">${escapeHtml(name)}</span>
-    <span class="inv-count">×${r.count}</span>
-    <span class="inv-action">${action}</span>
+    <button class="inv-slot-row${active ? " is-active" : ""}" ${attrs}>
+      <span class="inv-radio">${active ? "◉" : "◯"}</span>
+      <span class="inv-name">${nameHtml}</span>
+      ${ammoHtml}
+    </button>
   </li>`;
 }
 
-function bindInventoryButtons(host) {
+// Non-weapon pickups — weapons live in the slot panels above.
+function itemsHtml(playerIndex) {
+  const counts = snapshotInventory(playerIndex);
+  const rows = Object.entries(counts)
+    .map(([id, n]) => ({ id: Number(id), count: n | 0 }))
+    .filter((r) => r.count > 0)
+    .map((r) => ({ ...r, sp: getSpecies(r.id) }))
+    .filter((r) => r.sp && !isWeaponItem(r.sp))
+    .sort(byName);
+
+  if (rows.length === 0) return `<p class="inv-empty">No other items.</p>`;
+
+  return `<ul class="inv-list">${rows.map((r) => {
+    const name = tr(r.sp.name) || r.sp.name || `Species ${r.id}`;
+    return `<li>
+      <span class="inv-name">${escapeHtml(name)}</span>
+      <span class="inv-count">×${r.count}</span>
+    </li>`;
+  }).join("")}</ul>`;
+}
+
+function isWeaponItem(sp) {
+  const w = sp.associated_weapon;
+  if (!w) return false;
+  const wsp = getSpecies(w);
+  return wsp?.entity_type === "WeaponMelee" || wsp?.entity_type === "WeaponRanged";
+}
+
+function bindButtons(host, playerIndex) {
   for (const btn of host.querySelectorAll("[data-equip]")) {
     btn.addEventListener("click", () => {
       const id = parseInt(btn.dataset.equip, 10);
-      const slot = btn.dataset.slot === "melee" ? SLOT_MELEE : SLOT_RANGED;
+      const slot = btn.dataset.slot === SLOT_MELEE ? SLOT_MELEE : SLOT_RANGED;
       const idx = parseInt(btn.dataset.player, 10) | 0;
-      setEquipped(slot, id, idx);
-      renderInventoryInto(host); // re-render so labels flip
+      if (getEquipped(slot, idx) === id) return; // already active
+      setEquipped(slot, id, idx); // re-render rides onEquipmentChange
     });
   }
   for (const btn of host.querySelectorAll("[data-unequip-melee]")) {
     btn.addEventListener("click", () => {
       const idx = parseInt(btn.dataset.unequipMelee, 10) | 0;
       clearEquipped(SLOT_MELEE, idx);
-      renderInventoryInto(host);
     });
   }
 }
 
-function equipName(weaponId, playerIndex) {
-  if (!weaponId) return `<em>none</em>`;
-  const sp = getSpecies(weaponId);
-  const name = sp ? (tr(sp.name) || sp.name) : `Species ${weaponId}`;
-  if (weaponId === DEFAULT_RANGED_WEAPON_ID) {
-    return `${escapeHtml(name)} <span class="inv-equipped-default">(default)</span>`;
-  }
-  // Melee can be cleared back to nothing; ranged falls back to the kunai
-  // launcher anyway, so the only meaningful unequip button is for melee.
-  const sl = sp?.entity_type === "WeaponMelee"
-    ? ` <button data-unequip-melee="${playerIndex | 0}">Unequip</button>`
-    : "";
-  return `${escapeHtml(name)}${sl}`;
-}
-
-// Group weapons first (so the equip controls are at the top), then
-// alphabetical by name. Stable enough for a small inventory.
-function byKindThenName(a, b) {
-  const aw = a.sp.associated_weapon ? 0 : 1;
-  const bw = b.sp.associated_weapon ? 0 : 1;
-  if (aw !== bw) return aw - bw;
+function byName(a, b) {
   const an = tr(a.sp.name) || a.sp.name || "";
   const bn = tr(b.sp.name) || b.sp.name || "";
   return an.localeCompare(bn);
 }
 
 function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => (
+  return String(s).replace(/[&<>"']/g, (c) => (
     { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
   ));
 }
