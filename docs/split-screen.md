@@ -1,6 +1,15 @@
 # Split-screen local multiplayer — spec
 
-Status: **proposed** · Owner: TBD · Last updated: 2026-05-31
+Status: **implemented** · Owner: Federico · Last updated: 2026-05-31
+
+Live: `js/splitScreen.js` owns layout + per-slice cameras; `renderer.js`
+`renderViewports()` draws the slices; `main.js` wires `state.cameras`
+(`cameras[0]` aliases `state.camera`) and per-slice `applyCamera`; `healthHud.js`
+anchors bars per slice. Coverage: `tests/splitScreen.test.js` (pure layout
+math) + `tests/e2e/splitScreenLayout.test.js` (live grid across window-size ×
+player-count). One deviation from the spec below: `camera.js`'s array-averaging
+is **kept** (the online guest path still uses it); only local co-op's use of the
+shared averaged camera was removed.
 
 Local co-op (`coopMode.js`) today puts 2–4 players in one shared world driven
 from one keyboard, but renders a **single camera that averages every live
