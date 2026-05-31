@@ -12,7 +12,7 @@ const { _resetOnlineBootstrapForTesting, bootstrapOnline } =
 const {
   installPredictedSelf, _uninstallPredictedSelfForTesting,
   tickPredictedSelf, getPredictedSelf, getLastAckedSeq,
-  _shouldSnapForTesting,
+  _shouldSnapForTesting, _predictionZoneForTesting,
 } = await import("../js/predictedSelf.js");
 const {
   installMirrorWorld, uninstallMirrorWorld, handleSnapshot,
@@ -224,3 +224,45 @@ test("matching authoritative delta does not jostle the predicted position", asyn
   assert.equal(p.tileY, beforeY);
   teardown();
 });
+
+// --- Mob-free collision view for prediction (the "movement stalls near
+// enemies" fix). predictionZone strips self-driven mobs so a lagged mob
+// position can't freeze the guest's own predicted step; static rigids stay.
+
+test("predictionZone strips self-driven mobs but keeps static rigids", () => {
+  loadSpeciesData([
+    { id: 1001, entity_type: "Hero", z_index: 15 },
+    { id: 2001, entity_type: "CloseCombatMonster", movement_directions: "FindHero", is_rigid: true },
+    { id: 2002, entity_type: "Free wanderer", movement_directions: "Free", is_rigid: true },
+    { id: 2003, entity_type: "StaticObject", is_rigid: true },
+  ]);
+  const zone = {
+    id: 1, rows: 10, cols: 10,
+    entities: [
+      { id: 10, species_id: 2001, frame: { x: 1, y: 1, w: 1, h: 1 } },  // chase mob
+      { id: 11, species_id: 2002, frame: { x: 2, y: 2, w: 1, h: 1 } },  // wander mob
+      { id: 12, species_id: 2003, frame: { x: 3, y: 3, w: 1, h: 1 } },  // static rock
+    ],
+  };
+  const pz = _predictionZoneForTesting(zone);
+  const ids = pz.entities.map((e) => e.id).sort();
+  assert.deepEqual(ids, [12], "only the static rigid survives");
+  assert.equal(zone.entities.length, 3, "original zone is not mutated");
+});
+
+test("predictionZone returns the same object when there are no mobs (no alloc)", () => {
+  loadSpeciesData([
+    { id: 1001, entity_type: "Hero", z_index: 15 },
+    { id: 2003, entity_type: "StaticObject", is_rigid: true },
+  ]);
+  const zone = { id: 1, rows: 10, cols: 10, entities: [{ id: 12, species_id: 2003, frame: { x: 3, y: 3, w: 1, h: 1 } }] };
+  assert.equal(_predictionZoneForTesting(zone), zone, "no mobs → identity, no clone");
+  const empty = { id: 1, rows: 10, cols: 10, entities: [] };
+  assert.equal(_predictionZoneForTesting(empty), empty);
+});
+
+// Integration of predictionZone with the full updatePlayer + mirror +
+// input stack (does a lagged mob actually stop blocking the guest's own
+// step?) is covered end-to-end by tests/e2e — the synthetic-delta unit
+// harness here can't faithfully reproduce mirror entity visibility. The
+// filter logic itself is proven by the two predictionZone tests above.

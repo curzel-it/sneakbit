@@ -14,6 +14,7 @@ import { getSelfPlayerId } from "./onlineBootstrap.js";
 import { getMirrorZone, getMirrorPlayerById, getMirrorPlayers } from "./mirrorWorld.js";
 import { getInputLog, dropAckedInputs, getSeq } from "./guestInputForwarder.js";
 import { shouldBeVisible } from "./entityVisibility.js";
+import { getSpecies } from "./species.js";
 import { getValue } from "./storage.js";
 import { isDialogueOpen } from "./dialogue.js";
 import { isHostPausedRemote } from "./guestHostPause.js";
@@ -108,6 +109,42 @@ export const _uninstallPredictedSelfForTesting = uninstallPredictedSelf;
 export function getPredictedSelf() { return predicted; }
 export function getLastAckedSeq() { return lastAckedSeq; }
 
+// A self-driven mob (mirror of mobs.js::isMobAi). These are the only
+// entries in the mirror's zone.entities that are BOTH lagged AND moving,
+// so they're the sole cause of false collision stalls for the predicted
+// self. Static rigids (buildings, rocks, closed gates) have stable
+// positions and must stay as blockers.
+function isMobSpecies(sp) {
+  return !!sp && (sp.movement_directions === "FindHero" || sp.movement_directions === "Free");
+}
+
+// Collision view for the predicted self: the mirror zone with self-driven
+// mobs stripped from the entity set. Movement is predicted against static
+// geometry — walls (the local collision grid), buildings, rocks, gates —
+// all of which the guest knows correctly, but NOT against lagged mob
+// positions. A mob the host has already walked away from would otherwise
+// keep the guest's own next step frozen for a full RTT (the "my movement
+// feels delayed near enemies" report). If the guest instead predicts
+// through a mob that IS still there, the host rejects the step and
+// reconciliation snaps it back — the standard optimistic-predict tradeoff,
+// and snap-back is cheap for tile-locked stepping.
+//
+// Returns the zone unchanged (no allocation) when there are no mobs, which
+// is the common case. The clone is shallow: the collision grid, biome, and
+// surviving entity objects are shared by reference (read-only on this path).
+function predictionZone(zone) {
+  const ents = zone.entities;
+  if (!ents || ents.length === 0) return zone;
+  let hasMob = false;
+  for (const e of ents) {
+    if (isMobSpecies(getSpecies(e.species_id))) { hasMob = true; break; }
+  }
+  if (!hasMob) return zone;
+  return { ...zone, entities: ents.filter((e) => !isMobSpecies(getSpecies(e.species_id))) };
+}
+
+export const _predictionZoneForTesting = predictionZone;
+
 // Each render frame. Drains local input, advances predicted via the
 // existing player update so the model stays bit-for-bit identical to
 // what the host will eventually compute.
@@ -119,7 +156,9 @@ export function tickPredictedSelf(dt) {
     if (!predicted) return;
   }
   const input = pollInput(1);
-  updatePlayer(predicted, input, dt, zone);
+  // Predict against a mob-free collision view so a lagged mob position can't
+  // stall the guest's own step; the host stays authoritative and reconciles.
+  updatePlayer(predicted, input, dt, predictionZone(zone));
 }
 
 export function _shouldSnapForTesting(predicted, auth, _now) {
