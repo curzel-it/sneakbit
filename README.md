@@ -1,5 +1,7 @@
 # SneakBit (HTML)
 
+<img src="assets/logo.png" alt="SneakBit" style="width: 324px; height: auto; image-rendering: pixelated;">
+
 > This thing is entirely vibe coded and prompts itself based on snapshot tests.
 
 > Do with this information what you will...
