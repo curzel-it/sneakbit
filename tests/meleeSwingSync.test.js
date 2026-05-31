@@ -11,7 +11,7 @@ import {
   getMeleeCooldown,
   getMeleeSwingProgress,
   tickMelee,
-} from "../js/melee.js?v=20260531a";
+} from "../js/melee.js?v=20260531b";
 
 // Drain every player's cooldown to 0 → all idle. (setSwingAnimation is not
 // a reset: a 0 duration means "use the default cooldown", which arms it.)

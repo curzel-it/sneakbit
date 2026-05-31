@@ -9,7 +9,7 @@ const {
   realTimeTurn, prepTurn, playerTurn, firstTurn, updatedTurn,
   turnAfterPlayerDamage, updatedTurnForDeathOfPlayer, handleWinLose,
   currentPlayerIndex,
-} = await import("../js/turns.js?v=20260531a");
+} = await import("../js/turns.js?v=20260531b");
 
 test("constants match the Rust core", () => {
   assert.equal(TURN_DURATION, 10.0);

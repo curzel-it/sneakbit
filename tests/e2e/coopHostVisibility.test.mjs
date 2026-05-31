@@ -38,7 +38,7 @@ after(() => { if (servers) servers.stop(); });
 function sees(target, id) {
   return evalExpr(target, `
     (async () => {
-      const ev = await import('./js/entityVisibility.js?v=20260531a');
+      const ev = await import('./js/entityVisibility.js?v=20260531b');
       return ev.shouldBeVisible({ id: ${id} });
     })()
   `);
@@ -48,7 +48,7 @@ function sees(target, id) {
 function mirrorHasEntity(guest, id) {
   return evalExpr(guest, `
     (async () => {
-      const m = await import('./js/mirrorWorld.js?v=20260531a');
+      const m = await import('./js/mirrorWorld.js?v=20260531b');
       const z = m.getMirrorZone();
       if (!z || !z.entities) return null;
       return z.entities.some((e) => e.id === ${id});
@@ -85,7 +85,7 @@ test("guest never mirrors an object the host has already collected", async (t) =
   // on an empty zone) and that the host does broadcast visible pickups.
   await waitFor(session.guest, `
     (async () => {
-      const m = await import('./js/mirrorWorld.js?v=20260531a');
+      const m = await import('./js/mirrorWorld.js?v=20260531b');
       const z = m.getMirrorZone();
       return (z && z.entities && z.entities.some((e) => e.id === ${CONTROL_KUNAI_ID})) || null;
     })()

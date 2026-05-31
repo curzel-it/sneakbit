@@ -11,10 +11,10 @@
 import {
   firstTurn, updatedTurn, turnAfterPlayerDamage, updatedTurnForDeathOfPlayer,
   handleWinLose, currentPlayerIndex,
-} from "./turns.js?v=20260531a";
-import { isPvp, isTurnBasedPvp, isRealtimePvp } from "./gameMode.js?v=20260531a";
-import { onPlayerVsPlayerHit } from "./combat.js?v=20260531a";
-import { resetPvpLoadout } from "./pvpLoadout.js?v=20260531a";
+} from "./turns.js?v=20260531b";
+import { isPvp, isTurnBasedPvp, isRealtimePvp } from "./gameMode.js?v=20260531b";
+import { onPlayerVsPlayerHit } from "./combat.js?v=20260531b";
+import { resetPvpLoadout } from "./pvpLoadout.js?v=20260531b";
 
 let numberOfPlayers = 1;
 let turn = firstTurn(false);              // realtime until a match starts
