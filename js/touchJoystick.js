@@ -16,7 +16,10 @@ const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right
 // touch screens. All tunable.
 const BASE_RADIUS = 52;      // visible ring radius
 const KNOB_RADIUS = 26;      // thumb knob radius
-const MAX_KNOB_DIST = 42;    // how far the knob travels from the centre
+const MAX_KNOB_DIST = 26;    // how far the knob travels from the centre.
+                             // Matches the original (maxDistance == leverRadius)
+                             // so the lever's edge stops at the base ring instead
+                             // of spilling outside it.
 const MAX_FINGER_DIST = 70;  // beyond this the stick centre follows the finger
 const DEADZONE = 16;         // no direction until the thumb leaves this radius
 
@@ -160,26 +163,33 @@ function injectStyles() {
       pointer-events: auto;
       touch-action: none;
     }
+    /* Pixel-art sprites ported straight from the original game
+       (ios/android joystick.png + joystick_lever.png): a dark base ring
+       and a red lever ball. image-rendering: pixelated keeps the chunky
+       pixels crisp when scaled up to finger size, matching the rest of
+       the game's art. No border/background fill — the sprites carry their
+       own outline and shading. */
     #touch-controls .touch-joystick-base,
     #touch-controls .touch-joystick-knob {
       position: absolute;
       transform: translate(-50%, -50%);
-      border-radius: 50%;
       pointer-events: none;
       touch-action: none;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
     }
     #touch-controls .touch-joystick-base {
       width: ${BASE_RADIUS * 2}px;
       height: ${BASE_RADIUS * 2}px;
-      background: var(--sb-surface-bg);
-      border: var(--sb-surface-border);
-      opacity: 0.7;
+      background-image: url("./assets/joystick.png");
+      opacity: 0.85;
     }
     #touch-controls .touch-joystick-knob {
       width: ${KNOB_RADIUS * 2}px;
       height: ${KNOB_RADIUS * 2}px;
-      background: var(--sb-surface-bg-active);
-      border: var(--sb-surface-border);
+      background-image: url("./assets/joystick_lever.png");
     }
   `;
   document.head.appendChild(style);
