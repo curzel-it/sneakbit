@@ -29,6 +29,10 @@ const DEFAULTS = {
   // Co-op friendly fire — off by default. When on, a bullet whose
   // playerIndex doesn't match the player it overlaps applies damage.
   friendlyFire: false,
+  // On-screen mobile movement input: "buttons" (the 4-way d-pad) or
+  // "joystick" (the floating analog stick ported from the original).
+  // Touch-only; ignored on desktop. Buttons by default.
+  touchControls: "buttons",
 };
 
 let current = { ...DEFAULTS };

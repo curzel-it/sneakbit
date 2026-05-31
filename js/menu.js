@@ -28,6 +28,7 @@ import { isMessageOpen } from "./message.js";
 import { isDialogueOpen } from "./dialogue.js";
 import { getRuntimeRole, onRoleChange } from "./onlineMode.js";
 import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js";
+import { setTouchControlStyle } from "./touch.js";
 
 // Modals that own the keyboard while they're up. If any is open we treat
 // Esc / the menu key as "dismiss the active modal" — owned by that modal's
@@ -118,6 +119,13 @@ export function installMenu(stateGetter) {
       </div>
       <div class="menu-row">
         <label for="opt-fps"><input id="opt-fps" type="checkbox" /> Show FPS</label>
+      </div>
+      <div class="menu-row" id="opt-touch-controls-row">
+        <label for="opt-touch-controls">Touch controls</label>
+        <select id="opt-touch-controls">
+          <option value="buttons">Buttons</option>
+          <option value="joystick">Joystick</option>
+        </select>
       </div>
       <div class="menu-row">
         <label for="opt-language">Language / Lingua</label>
@@ -603,6 +611,12 @@ function bindWidgets() {
   const ff = root.querySelector("#opt-friendly-fire");
   ff.addEventListener("change", () => saveSettings({ friendlyFire: ff.checked }));
 
+  const touchControls = root.querySelector("#opt-touch-controls");
+  touchControls.addEventListener("change", () => {
+    saveSettings({ touchControls: touchControls.value });
+    setTouchControlStyle(touchControls.value);
+  });
+
   // The string table is fetched once at startup, so a language change only
   // takes effect after a reload. Persist the choice, then reload — mirroring
   // the "Clear cache & reload" flow so we don't re-save stale state on the
@@ -631,7 +645,17 @@ function syncSettingsWidgets() {
   root.querySelector("#opt-muted").checked = !!s.muted;
   root.querySelector("#opt-fps").checked = !!s.showFps;
   root.querySelector("#opt-friendly-fire").checked = !!s.friendlyFire;
+  root.querySelector("#opt-touch-controls").value = s.touchControls === "joystick" ? "joystick" : "buttons";
   root.querySelector("#opt-language").value = s.language ?? "auto";
+  // Touch-control style only matters on a touch device — hide the row on
+  // desktop, but keep it visible when `?touch=1` forces the overlay on so
+  // the choice can be tuned with a mouse.
+  const tcRow = root.querySelector("#opt-touch-controls-row");
+  if (tcRow) {
+    let forced = false;
+    try { forced = new URLSearchParams(location.search).has("touch"); } catch { /* ignore */ }
+    tcRow.style.display = (!isDesktop() || forced) ? "" : "none";
+  }
   // Friendly fire is meaningless without a second hero in the world —
   // hide the row entirely unless local co-op is on or a network guest
   // is connected. `isCoopActive()` covers both.

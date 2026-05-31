@@ -12,6 +12,8 @@ import { getEquipped, onEquipmentChange, SLOT_MELEE } from "./equipment.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { codesFor } from "./keyBindings.js";
 import { onActiveInputDeviceChange } from "./activeInputDevice.js";
+import { getSettings } from "./settings.js";
+import { mountJoystick, unmountJoystick } from "./touchJoystick.js";
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 
@@ -53,6 +55,13 @@ const dirPointerHeld = new Map();
 
 let root = null;
 let visible = false;
+// "buttons" = 4-way d-pad, "joystick" = floating analog stick. Read from
+// settings at install; changeable live from the settings panel.
+let controlStyle = "buttons";
+// Desktop dev flag: `?touch=1` forces the overlay visible on a fine
+// pointer so the joystick can be tuned with a mouse (and so the e2e /
+// remote-verify harness can drive it). Off in normal play.
+let forcedTouch = false;
 
 export function installTouchControls() {
   if (root) return root;
@@ -91,6 +100,9 @@ export function installTouchControls() {
     userSelect: "none",
     touchAction: "none",
   });
+  controlStyle = getSettings().touchControls === "joystick" ? "joystick" : "buttons";
+  try { forcedTouch = new URLSearchParams(location.search).has("touch"); } catch { /* ignore */ }
+  if (forcedTouch) root.classList.add("force-touch");
   document.body.appendChild(root);
   injectStyles();
 
@@ -128,18 +140,44 @@ export function installTouchControls() {
     if (e.pointerType === "touch") show();
   }, { capture: true });
 
-  if (matchMedia("(pointer: coarse)").matches) show();
+  if (forcedTouch || matchMedia("(pointer: coarse)").matches) show();
 
   // Fold into the active-device model: the on-screen pad belongs to touch,
   // so hide it the moment a key or controller is used and bring it back on
   // touch. Keeps a desktop player who taps once from being stuck with the
   // overlay, and vice-versa.
-  onActiveInputDeviceChange((d) => { if (d === "touch") show(); else hide(); });
+  onActiveInputDeviceChange((d) => {
+    // While forced on for desktop testing, ignore device changes so a
+    // stray mouse/keyboard event doesn't yank the overlay away.
+    if (forcedTouch) return;
+    if (d === "touch") show(); else hide();
+  });
 
   syncMeleeVisibility();
   onEquipmentChange((slot) => { if (slot === SLOT_MELEE) syncMeleeVisibility(); });
 
+  applyControlStyle();
   return root;
+}
+
+// Show the d-pad or the floating joystick for movement, depending on the
+// current style. The action buttons + menu are shared and untouched.
+function applyControlStyle() {
+  if (!root) return;
+  const leftPad = root.querySelector('.touch-pad[data-side="left"]');
+  if (controlStyle === "joystick") {
+    if (leftPad) leftPad.style.display = "none";
+    mountJoystick(root);
+  } else {
+    unmountJoystick();
+    if (leftPad) leftPad.style.display = "";
+  }
+}
+
+// Switch movement input live from the settings panel.
+export function setTouchControlStyle(style) {
+  controlStyle = style === "joystick" ? "joystick" : "buttons";
+  applyControlStyle();
 }
 
 function syncMeleeVisibility() {
@@ -378,6 +416,10 @@ function injectStyles() {
     }
     @media (min-width: 980px) and (pointer: fine) {
       #touch-controls { display: none !important; }
+      /* The ?touch=1 flag keeps the overlay up on desktop for tuning
+         the joystick with a mouse. Higher specificity (id+class) plus
+         !important beats the hide rule above. */
+      #touch-controls.force-touch { display: block !important; }
     }
   `;
   document.head.appendChild(style);
