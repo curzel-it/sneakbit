@@ -16,8 +16,16 @@
 // use in single-player paths.
 
 import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
+import { isPvp } from "./gameMode.js";
 
 const loadouts = new Map(); // playerId -> { melee, ranged }
+
+// In PvP everyone fights with at least a melee weapon: a player who walks
+// into the arena without a melee equipped is handed the sword, so a match is
+// never a ranged-only stalemate (and the melee button always has something to
+// swing). Players who already brought their own melee keep it. Non-PvP play is
+// untouched — a missing melee stays null. Sword = objects.name.sword.weapon.
+const PVP_DEFAULT_MELEE = 1159;
 
 export function setSessionLoadout(playerId, melee, ranged) {
   if (!playerId) return;
@@ -54,16 +62,20 @@ export function listSessionLoadouts() {
 // still get the right answer without a session entry.
 export function resolveLoadout(player) {
   if (!player) return { melee: null, ranged: null };
+  let melee = null;
+  let ranged = null;
   const sid = player.playerId;
-  if (sid) {
-    const e = loadouts.get(sid);
-    if (e) return { melee: e.melee ?? null, ranged: e.ranged ?? null };
+  const e = sid ? loadouts.get(sid) : null;
+  if (e) {
+    melee = e.melee ?? null;
+    ranged = e.ranged ?? null;
+  } else {
+    const idx = player.index | 0;
+    melee = getEquipped(SLOT_MELEE, idx) ?? null;
+    ranged = getEquipped(SLOT_RANGED, idx) ?? null;
   }
-  const idx = player.index | 0;
-  return {
-    melee: getEquipped(SLOT_MELEE, idx) ?? null,
-    ranged: getEquipped(SLOT_RANGED, idx) ?? null,
-  };
+  if (melee == null && isPvp()) melee = PVP_DEFAULT_MELEE;
+  return { melee, ranged };
 }
 
 export function _resetSessionLoadoutsForTesting() { loadouts.clear(); }
