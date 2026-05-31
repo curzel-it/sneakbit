@@ -11,7 +11,15 @@
 
 import { TILE_SIZE } from "./constants.js";
 
-const MIN_TILES_W = 16;
+// Lower bound on how many tiles span the viewport width. Kept deliberately
+// low so narrow phones keep the original app's tile size: the iOS build
+// (RenderingScaleUseCase) used a fixed renderingScale of 2 on phones — i.e.
+// 32 CSS px per tile — and simply let the tile count fall out of the screen
+// width (~11.7 across on an iPhone 13 mini). A higher minimum here would
+// force the scale loop below to shrink the scale to cram more tiles in,
+// making every tile smaller than on the original. 10 preserves the target
+// scale on phones down to 320 CSS px wide while still guarding tiny windows.
+const MIN_TILES_W = 10;
 const MAX_TILES_W = 36;
 const TARGET_PHYS_TILE_PX = 32; // target tile size at DPR=1 (CSS px)
 
