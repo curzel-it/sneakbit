@@ -159,6 +159,24 @@ test("cameraRectFor centers an unclamped viewport on the player", () => {
   assert.ok(edge.x < 0 && edge.y < 0);
 });
 
+test("camera clamps to bounds only in exterior zones, not dungeons", () => {
+  // A small zone with the player pressed into the top-left corner. In an
+  // exterior zone the camera clamps so it can't drift off the map; in an
+  // interior zone (house or dungeon) it always centers on the player,
+  // matching Rust — the bug was dungeons being treated as exterior.
+  const player = { x: 1, y: 1 };
+  const exterior = createCamera();
+  updateCamera(exterior, player, { cols: 30, rows: 20, zoneType: "Exterior" });
+  assert.equal(exterior.x, 0, "exterior clamps left edge to 0");
+  assert.equal(exterior.y, 0, "exterior clamps top edge to 0");
+
+  const dungeon = createCamera();
+  updateCamera(dungeon, player, { cols: 30, rows: 20, zoneType: "Dungeon" });
+  assert.ok(Math.abs((dungeon.x + dungeon.w / 2) - 1.5) < 0.001, `dungeon centerX=${dungeon.x + dungeon.w / 2}`);
+  assert.ok(Math.abs((dungeon.y + dungeon.h / 2) - 1.5) < 0.001, `dungeon centerY=${dungeon.y + dungeon.h / 2}`);
+  assert.ok(dungeon.x < 0 && dungeon.y < 0, "dungeon does not clamp at the corner");
+});
+
 test("camera ignores dead players (caller filters them) — empty array is a no-op", () => {
   const camera = createCamera();
   camera.x = 42; camera.y = 99;

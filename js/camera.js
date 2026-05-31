@@ -32,9 +32,10 @@ function cameraDestination(camera, target, zone) {
   let cx = ax + 0.5 - camera.w / 2;
   let cy = ay + 0.5 - camera.h / 2;
 
-  // Interior zones match Rust: the camera always centers on the player,
-  // no clamping. Anything outside the zone bounds is just empty space.
-  // Exterior zones still clamp so the camera can't drift off the map.
+  // Interior zones (houses, dungeons) match Rust: the camera always
+  // centers on the player, no clamping. Anything outside the zone bounds
+  // is just empty space. Only exterior zones clamp so the camera can't
+  // drift off the map.
   if (zone && !isInteriorZone(zone)) {
     cx = Math.max(0, Math.min(cx, zone.cols - camera.w));
     cy = Math.max(0, Math.min(cy, zone.rows - camera.h));
@@ -65,5 +66,5 @@ export function panCameraTo(camera, target, zone, dt) {
 }
 
 function isInteriorZone(zone) {
-  return zone.zoneType === "HouseInterior";
+  return zone.zoneType === "HouseInterior" || zone.zoneType === "Dungeon";
 }
