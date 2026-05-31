@@ -1,10 +1,6 @@
-# SneakBit (HTML)
-
 <img src="assets/logo.png" alt="SneakBit" style="width: 324px; height: auto; image-rendering: pixelated;">
 
-> This thing is entirely vibe coded and prompts itself based on snapshot tests.
-
-> Do with this information what you will...
+> Vibe-coded port of a game I wrote in Rust a couple of years ago
 
 SneakBit is a top-down adventure-action game with close- and long-range combat, a
 hand-drawn Gameboy-style world, and a story to wander through. This repository is
