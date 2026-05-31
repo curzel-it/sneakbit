@@ -2,7 +2,7 @@
 // sprite_sheet_id (matching the rust core) to one of the asset names
 // loaded by assets.js.
 
-import { getSprite } from "./assets.js?v=20260531b";
+import { getSprite } from "./assets.js?v=20260531c";
 import {
   SPRITE_SHEET_BUILDINGS,
   SPRITE_SHEET_HUMANOIDS_1X2,
@@ -14,7 +14,7 @@ import {
   SPRITE_SHEET_MONSTERS,
   SPRITE_SHEET_HEROES,
   SPRITE_SHEET_INVENTORY,
-} from "./constants.js?v=20260531b";
+} from "./constants.js?v=20260531c";
 
 const SHEET_NAMES = {
   [SPRITE_SHEET_HEROES]: "heroes",

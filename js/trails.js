@@ -4,9 +4,9 @@
 // per-zone list separate from `zone.entities` so they don't show up
 // in collision / AI logic.
 
-import { TILE_SIZE } from "./constants.js?v=20260531b";
-import { BIOME } from "./biomes.js?v=20260531b";
-import { getSprite } from "./assets.js?v=20260531b";
+import { TILE_SIZE } from "./constants.js?v=20260531c";
+import { BIOME } from "./biomes.js?v=20260531c";
+import { getSprite } from "./assets.js?v=20260531c";
 
 const TRAIL_SHEET = "humanoids_1x1"; // sheet 1014, same as Rust
 const TRAIL_TEXTURE_X = 20;          // sprite_frame in species 1136

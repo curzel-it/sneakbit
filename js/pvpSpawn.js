@@ -9,7 +9,7 @@
 // Pure tile math: returns a { x, y } feet-tile. pvpMatch/main own the
 // actual player placement (position + lastTile bookkeeping).
 
-import { isWalkable, isEntityBlocked } from "./zone.js?v=20260531b";
+import { isWalkable, isEntityBlocked } from "./zone.js?v=20260531c";
 
 // Corner i: where its inward scan starts and which way it walks.
 function cornerScan(zone, cornerIndex) {

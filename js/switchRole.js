@@ -11,7 +11,7 @@
 import {
   getRuntimeRole,
   setRuntimeRole,
-} from "./onlineMode.js?v=20260531b";
+} from "./onlineMode.js?v=20260531c";
 import {
   ensureNet,
   closeNet,
@@ -21,22 +21,22 @@ import {
   setPendingGuestCode,
   getInviteCode,
   getNet,
-} from "./onlineBootstrap.js?v=20260531b";
-import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotBroadcaster.js?v=20260531b";
-import { installHostGuests, uninstallHostGuests } from "./hostGuests.js?v=20260531b";
-import { installHostPauseBroadcaster, uninstallHostPauseBroadcaster } from "./hostPauseState.js?v=20260531b";
-import { installHostLoadoutSync, uninstallHostLoadoutSync } from "./hostLoadoutSync.js?v=20260531b";
-import { installGuestLoadoutSync, uninstallGuestLoadoutSync } from "./guestLoadoutSync.js?v=20260531b";
-import { installGuestSelfHpSync, uninstallGuestSelfHpSync } from "./guestSelfHpSync.js?v=20260531b";
-import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js?v=20260531b";
-import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js?v=20260531b";
-import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js?v=20260531b";
-import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js?v=20260531b";
-import { reapplyAutoZoom } from "./zoom.js?v=20260531b";
-import { hideGameOver, isGameOverOpen } from "./gameOver.js?v=20260531b";
-import { closeNetworkDialogue } from "./dialogue.js?v=20260531b";
-import { setHostPausedRemote } from "./guestHostPause.js?v=20260531b";
-import { clearLocalEffects } from "./localEffects.js?v=20260531b";
+} from "./onlineBootstrap.js?v=20260531c";
+import { installSnapshotBroadcaster, stopSnapshotBroadcaster } from "./snapshotBroadcaster.js?v=20260531c";
+import { installHostGuests, uninstallHostGuests } from "./hostGuests.js?v=20260531c";
+import { installHostPauseBroadcaster, uninstallHostPauseBroadcaster } from "./hostPauseState.js?v=20260531c";
+import { installHostLoadoutSync, uninstallHostLoadoutSync } from "./hostLoadoutSync.js?v=20260531c";
+import { installGuestLoadoutSync, uninstallGuestLoadoutSync } from "./guestLoadoutSync.js?v=20260531c";
+import { installGuestSelfHpSync, uninstallGuestSelfHpSync } from "./guestSelfHpSync.js?v=20260531c";
+import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js?v=20260531c";
+import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js?v=20260531c";
+import { installGuestInputForwarder, uninstallGuestInputForwarder } from "./guestInputForwarder.js?v=20260531c";
+import { installGuestEvents, uninstallGuestEvents } from "./guestEvents.js?v=20260531c";
+import { reapplyAutoZoom } from "./zoom.js?v=20260531c";
+import { hideGameOver, isGameOverOpen } from "./gameOver.js?v=20260531c";
+import { closeNetworkDialogue } from "./dialogue.js?v=20260531c";
+import { setHostPausedRemote } from "./guestHostPause.js?v=20260531c";
+import { clearLocalEffects } from "./localEffects.js?v=20260531c";
 
 // Callbacks main.js installs at boot. switchRole calls them to rebuild /
 // wipe the live `state` object that lives in main.js's closure.
@@ -103,27 +103,40 @@ export async function switchRole(target, opts = {}) {
   }
 }
 
+// Teardown is best-effort cleanup, never a gate on the transition.
+// switchRole awaits teardownRole *before* it flips the runtime role
+// (setRuntimeRole, above), so if any single step throws, the role is
+// never flipped and the game loop keeps ticking a half-torn-down world —
+// the guest freezes with no way out but a reload. (That is exactly how a
+// missing clearLocalEffects import once stranded kicked guests in the
+// "guest" role.) Isolate every step so one failure logs and the rest —
+// and the role flip — still happen.
+function safe(label, fn) {
+  try { fn(); }
+  catch (e) { console.error(`[switchRole] teardown step "${label}" failed`, e); }
+}
+
 async function teardownRole(role) {
   if (role === "host") {
     // Tell the relay the session is over BEFORE we drop the WS, so it
     // can fan session.closed to guests with a clean reason instead of
     // the 30 s ghost grace.
-    try { getNet()?.send({ op: "host.close" }); } catch { /* ignore */ }
-    stopSnapshotBroadcaster();
-    uninstallHostGuests();
-    uninstallHostPauseBroadcaster();
-    uninstallHostLoadoutSync();
+    safe("host.close", () => getNet()?.send({ op: "host.close" }));
+    safe("stopSnapshotBroadcaster", stopSnapshotBroadcaster);
+    safe("uninstallHostGuests", uninstallHostGuests);
+    safe("uninstallHostPauseBroadcaster", uninstallHostPauseBroadcaster);
+    safe("uninstallHostLoadoutSync", uninstallHostLoadoutSync);
   } else if (role === "guest") {
-    try { getNet()?.send({ op: "guest.leave" }); } catch { /* ignore */ }
-    uninstallMirrorWorld();
-    uninstallPredictedSelf();
-    uninstallGuestInputForwarder();
-    uninstallGuestEvents();
-    uninstallGuestLoadoutSync();
-    uninstallGuestSelfHpSync();
+    safe("guest.leave", () => getNet()?.send({ op: "guest.leave" }));
+    safe("uninstallMirrorWorld", uninstallMirrorWorld);
+    safe("uninstallPredictedSelf", uninstallPredictedSelf);
+    safe("uninstallGuestInputForwarder", uninstallGuestInputForwarder);
+    safe("uninstallGuestEvents", uninstallGuestEvents);
+    safe("uninstallGuestLoadoutSync", uninstallGuestLoadoutSync);
+    safe("uninstallGuestSelfHpSync", uninstallGuestSelfHpSync);
     // Drop any in-flight local cosmetic flashes so a stale one can't paint
     // into the next world after the guest leaves.
-    clearLocalEffects();
+    safe("clearLocalEffects", clearLocalEffects);
     // Dismiss any host-driven overlays that would otherwise stay up after
     // the session ends. The "Waiting for the host…" gameOver (no Continue
     // button) is the load-bearing case — without this it freezes the next
@@ -131,12 +144,12 @@ async function teardownRole(role) {
     // overlay, can't move, can't shoot, can't dismiss it, and reload is
     // the only out. closeNetworkDialogue + setHostPausedRemote(false)
     // are defensive companions for the same shape of bug.
-    if (isGameOverOpen()) hideGameOver();
-    closeNetworkDialogue();
-    setHostPausedRemote(false);
+    safe("hideGameOver", () => { if (isGameOverOpen()) hideGameOver(); });
+    safe("closeNetworkDialogue", closeNetworkDialogue);
+    safe("setHostPausedRemote", () => setHostPausedRemote(false));
   }
   if (role === "host" || role === "guest") {
-    resetOnlineState();
+    safe("resetOnlineState", resetOnlineState);
   }
 }
 

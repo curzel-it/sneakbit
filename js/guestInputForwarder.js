@@ -3,11 +3,11 @@
 // the same channel and land in Phase 7. Each frame carries a monotonic
 // seq for the reconciliation logic that arrives in Phase 6.
 
-import { actionForCode } from "./keyBindings.js?v=20260531b";
-import { readPadSnapshotForSlot } from "./gamepad.js?v=20260531b";
-import { predictGuestSwing } from "./melee.js?v=20260531b";
-import { predictGuestShoot } from "./shooting.js?v=20260531b";
-import { getPredictedSelf } from "./predictedSelf.js?v=20260531b";
+import { actionForCode } from "./keyBindings.js?v=20260531c";
+import { readPadSnapshotForSlot } from "./gamepad.js?v=20260531c";
+import { predictGuestSwing } from "./melee.js?v=20260531c";
+import { predictGuestShoot } from "./shooting.js?v=20260531c";
+import { getPredictedSelf } from "./predictedSelf.js?v=20260531c";
 
 const ACTION_TO_INTENT = {
   moveUp: "moveUp",

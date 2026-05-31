@@ -6,9 +6,9 @@
 // the starting spawn. The modal lives in the DOM (like menu.js) so we get
 // styling + a real button focusable by keyboard for free.
 
-import { playSfx } from "./audio.js?v=20260531b";
-import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260531b";
-import { tr } from "./strings.js?v=20260531b";
+import { playSfx } from "./audio.js?v=20260531c";
+import { registerMenuSurface, focusFirstIn } from "./menuNav.js?v=20260531c";
+import { tr } from "./strings.js?v=20260531c";
 
 const DEFAULT_TITLE = "You died";
 const DEFAULT_SUB = "The shadows have taken you.";
@@ -16,6 +16,10 @@ const DEFAULT_SUB = "The shadows have taken you.";
 let root = null;
 let open = false;
 let pendingContinue = null;
+// Set by showMatchResult when the host can leave the match. Drives the
+// secondary "Back to single player" button and the Escape accelerator.
+// Null for the co-op death screen and the guest's waiting-for-host view.
+let pendingLeave = null;
 
 export function installGameOver() {
   if (root) return root;
@@ -26,6 +30,7 @@ export function installGameOver() {
       <h1>You died</h1>
       <p class="go-sub">The shadows have taken you.</p>
       <button id="go-continue">Continue</button>
+      <button id="go-leave" style="display:none">Back to single player</button>
     </div>
   `;
   Object.assign(root.style, {
@@ -42,6 +47,7 @@ export function installGameOver() {
   document.body.appendChild(root);
   injectStyles();
   root.querySelector("#go-continue").addEventListener("click", commitContinue);
+  root.querySelector("#go-leave").addEventListener("click", commitLeave);
   window.addEventListener("keydown", onKeydown);
   registerMenuSurface({ root: () => root, isOpen: isGameOverOpen, priority: 20 });
   return root;
@@ -54,6 +60,8 @@ export function showGameOver(onContinue, opts = {}) {
   setCard(DEFAULT_TITLE, DEFAULT_SUB, "Continue");
   open = true;
   pendingContinue = typeof onContinue === "function" ? onContinue : null;
+  pendingLeave = null;
+  root.querySelector("#go-leave").style.display = "none";
   root.style.display = "flex";
   const btn = root.querySelector("#go-continue");
   // Online co-op guests can't drive their own respawn — only the host
@@ -92,14 +100,28 @@ export function showMatchResult(result, onRematch, opts = {}) {
   setCard(title, waiting ? "Waiting for the host…" : tr("death_screen.start_new_match"), "Rematch");
   open = true;
   pendingContinue = (!waiting && typeof onRematch === "function") ? onRematch : null;
+  // Host-only: a secondary action to leave the match and drop back to
+  // single player. Esc triggers it too (see onKeydown). Guests waiting on
+  // the host can't drive it, so the button stays hidden for them.
+  pendingLeave = (!waiting && typeof opts.onExit === "function") ? opts.onExit : null;
   root.style.display = "flex";
   const btn = root.querySelector("#go-continue");
+  const leaveBtn = root.querySelector("#go-leave");
   if (waiting) {
     btn.style.display = "none";
+    leaveBtn.style.display = "none";
   } else {
     btn.style.display = "";
     btn.disabled = true;
-    setTimeout(() => { btn.disabled = false; focusFirstIn(root); }, 350);
+    leaveBtn.style.display = pendingLeave ? "" : "none";
+    leaveBtn.disabled = true;
+    // Brief delay before either button accepts a press so a stale in-game
+    // keystroke can't skip the screen the moment it appears.
+    setTimeout(() => {
+      btn.disabled = false;
+      leaveBtn.disabled = false;
+      focusFirstIn(root);
+    }, 350);
   }
   playSfx("gameOver");
 }
@@ -120,31 +142,56 @@ export function hideGameOver() {
   if (!open) return;
   open = false;
   pendingContinue = null;
+  pendingLeave = null;
   root.style.display = "none";
   const sub = root.querySelector(".go-sub");
   if (sub) sub.textContent = "The shadows have taken you.";
   const btn = root.querySelector("#go-continue");
   if (btn) btn.style.display = "";
+  const leaveBtn = root.querySelector("#go-leave");
+  if (leaveBtn) leaveBtn.style.display = "none";
 }
 
 function onKeydown(e) {
   if (!open) return;
   if (e.code !== "Enter" && e.code !== "Space" && e.code !== "Escape") return;
   const btn = root.querySelector("#go-continue");
-  // Guest "waiting for host" mode hides the button — swallow the key so
-  // a stray Enter doesn't accidentally trigger a no-op pendingContinue.
-  if (btn?.style.display === "none") { e.preventDefault(); return; }
+  const leaveBtn = root.querySelector("#go-leave");
+  const contHidden = btn?.style.display === "none";
+  const leaveHidden = leaveBtn?.style.display === "none";
+  // Guest "waiting for host" mode hides both buttons — swallow the key so
+  // a stray Enter doesn't accidentally trigger a no-op callback.
+  if (contHidden && leaveHidden) { e.preventDefault(); return; }
   e.preventDefault();
-  if (btn?.disabled) return;
+  // Escape backs out to single player when a leave action is offered (the
+  // host's match-result screen). Everywhere else it falls through to the
+  // primary action, preserving the co-op death screen's Esc-to-continue.
+  if (e.code === "Escape" && pendingLeave) {
+    if (leaveBtn?.disabled) return;
+    commitLeave();
+    return;
+  }
+  if (btn?.disabled || contHidden) return;
   commitContinue();
 }
 
 function commitContinue() {
   if (!open) return;
   open = false;
+  pendingLeave = null;
   root.style.display = "none";
   const cb = pendingContinue;
   pendingContinue = null;
+  if (cb) cb();
+}
+
+function commitLeave() {
+  if (!open) return;
+  open = false;
+  pendingContinue = null;
+  root.style.display = "none";
+  const cb = pendingLeave;
+  pendingLeave = null;
   if (cb) cb();
 }
 
@@ -169,6 +216,14 @@ function injectStyles() {
     }
     #gameover button:hover:enabled { background: #4d2222; }
     #gameover button:disabled { opacity: 0.5; cursor: default; }
+    /* Secondary "leave the match" action: block-level under the primary
+       button, quieter styling so Rematch reads as the default. */
+    #gameover #go-leave {
+      display: block; margin: 12px auto 0;
+      background: transparent; border-color: #4a2424; color: #ad8a8a;
+      font-size: 12px; padding: 7px 16px; letter-spacing: 0.5px;
+    }
+    #gameover #go-leave:hover:enabled { background: #2a1414; color: #f1d4d4; }
   `;
   const style = document.createElement("style");
   style.id = "gameover-styles";

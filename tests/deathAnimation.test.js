@@ -8,7 +8,7 @@ import {
   startDeathAnimation,
   tickDeathAnimations,
   isDying,
-} from "../js/deathAnimation.js?v=20260531b";
+} from "../js/deathAnimation.js?v=20260531c";
 
 test("startDeathAnimation centres a 1×1 fireball and flags the entity", () => {
   // A 1×2 monster occupying tiles (5,5)-(5,6); centre is (5.5, 6).

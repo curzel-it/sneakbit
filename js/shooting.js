@@ -8,20 +8,20 @@
 // runs out of lifespan or leaves the zone bounds; combat.js removes
 // bullets that hit walls or kill targets.
 
-import { getSpecies } from "./species.js?v=20260531b";
-import { getAmmo, removeAmmo } from "./inventory.js?v=20260531b";
-import { playSfx } from "./audio.js?v=20260531b";
-import { resolveLoadout } from "./sessionLoadouts.js?v=20260531b";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260531b";
-import { matchesAction } from "./keyBindings.js?v=20260531b";
-import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260531b";
-import { getNetRole } from "./onlineBootstrap.js?v=20260531b";
-import { isPlayerDead } from "./playerHealth.js?v=20260531b";
-import { rumble } from "./rumble.js?v=20260531b";
-import { pvpSlotCanAct } from "./pvpMatch.js?v=20260531b";
-import { isPvp } from "./gameMode.js?v=20260531b";
-import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260531b";
-import { spawnLocalFlash } from "./localEffects.js?v=20260531b";
+import { getSpecies } from "./species.js?v=20260531c";
+import { getAmmo, removeAmmo } from "./inventory.js?v=20260531c";
+import { playSfx } from "./audio.js?v=20260531c";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260531c";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260531c";
+import { matchesAction } from "./keyBindings.js?v=20260531c";
+import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260531c";
+import { getNetRole } from "./onlineBootstrap.js?v=20260531c";
+import { isPlayerDead } from "./playerHealth.js?v=20260531c";
+import { rumble } from "./rumble.js?v=20260531c";
+import { pvpSlotCanAct } from "./pvpMatch.js?v=20260531c";
+import { isPvp } from "./gameMode.js?v=20260531c";
+import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260531c";
+import { spawnLocalFlash } from "./localEffects.js?v=20260531c";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed

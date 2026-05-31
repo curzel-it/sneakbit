@@ -11,7 +11,7 @@ import {
   tickLocalEffects,
   clearLocalEffects,
   _getLocalEffectsForTesting,
-} from "../js/localEffects.js?v=20260531b";
+} from "../js/localEffects.js?v=20260531c";
 
 function reset() { clearLocalEffects(); }
 

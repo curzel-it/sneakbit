@@ -9,12 +9,12 @@
 // loads them locally on the first snapshot or zone change and only
 // overwrites `zone.entities` from network frames.
 
-import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260531b";
-import { setGameMode } from "./gameMode.js?v=20260531b";
-import { loadZone } from "./data.js?v=20260531b";
-import { buildZone } from "./zone.js?v=20260531b";
-import { setupCutscenes } from "./cutscenes.js?v=20260531b";
-import { evictZoneCache } from "./zoneCache.js?v=20260531b";
+import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260531c";
+import { setGameMode } from "./gameMode.js?v=20260531c";
+import { loadZone } from "./data.js?v=20260531c";
+import { buildZone } from "./zone.js?v=20260531c";
+import { setupCutscenes } from "./cutscenes.js?v=20260531c";
+import { evictZoneCache } from "./zoneCache.js?v=20260531c";
 
 // Render remote players/entities this far in the past so interpolation
 // always has two real samples to blend between (the host broadcasts at

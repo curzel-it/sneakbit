@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { cornerSpawnTile } = await import("../js/pvpSpawn.js?v=20260531b");
+const { cornerSpawnTile } = await import("../js/pvpSpawn.js?v=20260531c");
 
 // "." walkable, "#" blocked (same shape as coopSpawn.test.js).
 function mkZone(grid, entities = []) {
