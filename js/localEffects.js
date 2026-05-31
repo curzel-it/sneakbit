@@ -10,8 +10,7 @@
 // their own layer.
 
 import { TILE_SIZE } from "./constants.js?v=20260531b";
-import { getSpecies } from "./species.js?v=20260531b";
-import { getEntitySheet } from "./biomeSheet.js?v=20260531b";
+import { getSpecies, getEntitySheet } from "./species.js?v=20260531b";
 
 const DEFAULT_FLASH_LIFESPAN = 0.12; // seconds — a brief blip, not a lingering sprite
 
