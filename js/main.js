@@ -1,6 +1,6 @@
 // Entry point. Wires features together; holds no game logic itself.
 
-import { STARTING_ZONE_ID, STARTING_SPAWN, PVP_ARENA_ZONE_ID } from "./constants.js";
+import { STARTING_ZONE_ID, STARTING_SPAWN, PVP_ARENA_ZONE_ID, TILE_SIZE } from "./constants.js";
 import { loadAssets } from "./assets.js";
 import { loadSpecies, loadStrings, loadZone } from "./data.js";
 import { loadStringsData, tr } from "./strings.js";
@@ -233,9 +233,29 @@ async function main() {
   installShooting(() => state);
   installMelee(() => state);
   installFastTravel(() => state);
-  installWeaponSelect(() =>
-    isMenuOpen() || isDialogueOpen() || isGameOverOpen() ||
-    isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen());
+  installWeaponSelect({
+    isBlocked: () =>
+      isMenuOpen() || isDialogueOpen() || isGameOverOpen() ||
+      isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen(),
+    // Anchor the ribbon above the local player's head. Single-camera only —
+    // split-screen has no single "the player", so fall back to centered.
+    anchorFor: (playerIndex) => {
+      if (!state || !canvas || sliceCount() > 1) return null;
+      const cam = state.camera;
+      const ply = playerIndex === 0 ? state.player
+        : playerIndex === 1 ? state.player2
+        : state.players?.find((s) => (s.player?.index | 0) === playerIndex)?.player;
+      if (!cam || !ply) return null;
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !canvas.width) return null;
+      const sx = rect.width / canvas.width;
+      const sy = rect.height / canvas.height;
+      return {
+        x: rect.left + (ply.x + 0.5 - cam.x) * TILE_SIZE * sx,
+        y: rect.top + (ply.y - cam.y) * TILE_SIZE * sy,
+      };
+    },
+  });
   setGamepadAction("shoot", () => tryShoot());
   setGamepadAction("melee", () => tryMelee());
   setGamepadAction("interact", () => {

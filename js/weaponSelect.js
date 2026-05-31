@@ -37,6 +37,12 @@ const FADE_MS = 200;
 // already owns that set, so this feature doesn't reach into six UI modules.
 let isBlocked = () => false;
 
+// Screen position (viewport px) to anchor the ribbon above, for the given
+// local player — { x, y } at the player's head, or null to fall back to a
+// screen-centered ribbon (split-screen / no camera). Injected by main.js,
+// which owns the canvas + camera.
+let anchorFor = () => null;
+
 // Equip the next/previous weapon in `slot` for the given local player.
 // No-op in PvP, while dead, while an overlay is open, or when the slot has
 // fewer than 2 weapons.
@@ -52,9 +58,11 @@ export function cycleWeapon(slot, playerIndex = 0, dir = +1) {
 
 let installed = false;
 
-// blockedFn: () => boolean — true while a blocking overlay is open.
-export function installWeaponSelect(blockedFn) {
-  if (typeof blockedFn === "function") isBlocked = blockedFn;
+// opts.isBlocked: () => boolean — true while a blocking overlay is open.
+// opts.anchorFor: (playerIndex) => {x,y}|null — ribbon anchor (player head).
+export function installWeaponSelect(opts = {}) {
+  if (typeof opts.isBlocked === "function") isBlocked = opts.isBlocked;
+  if (typeof opts.anchorFor === "function") anchorFor = opts.anchorFor;
   if (installed) return;
   installed = true;
   if (typeof window === "undefined") return;
@@ -121,12 +129,35 @@ function showWeaponRibbon(slot, playerIndex) {
 
   clearTimers();
   root.style.display = "flex";
+  positionRibbon(playerIndex); // measures offsetWidth/Height, so after display
   void root.offsetWidth; // reflow so the fade-in starts from opacity 0
   root.style.opacity = "1";
   hideTimer = setTimeout(() => {
     root.style.opacity = "0";
     fadeTimer = setTimeout(() => { root.style.display = "none"; }, FADE_MS);
   }, RIBBON_MS);
+}
+
+// Anchor the ribbon just above the player's head, clamped to the viewport.
+// Falls back to screen-centered when there's no anchor (split-screen / boot).
+function positionRibbon(playerIndex) {
+  const a = anchorFor(playerIndex);
+  if (!a) {
+    root.style.left = "50%";
+    root.style.top = "50%";
+    root.style.transform = "translate(-50%, -50%)";
+    return;
+  }
+  const w = root.offsetWidth || 0;
+  const h = root.offsetHeight || 0;
+  const vw = typeof window !== "undefined" ? window.innerWidth : 0;
+  const half = w / 2 + 8;
+  const x = vw ? Math.max(half, Math.min(a.x, vw - half)) : a.x;
+  let top = a.y - 16 - h;          // above the head
+  if (top < 8) top = a.y + 24;     // no room above → drop just below
+  root.style.left = `${Math.round(x)}px`;
+  root.style.top = `${Math.round(top)}px`;
+  root.style.transform = "translateX(-50%)";
 }
 
 function clearTimers() {

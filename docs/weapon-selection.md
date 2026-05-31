@@ -199,13 +199,13 @@ Notes:
 
 ### HUD registration
 
-The ribbon (`#weapon-switch`, owned by `weaponSelect.js`) is a transient,
-**screen-centered** flash: the slot's weapons in a horizontal strip, active one
-highlighted, fading after ~1.5 s (refreshed on each press). Dead-center is currently
-uncontested — the crowded regions in [`hud-inventory.md`](hud-inventory.md) are the top
-corners/top-center, not the middle — so it won't collide with the HP/ammo/toast/turn
-HUD. Add a row + z-index entry to that doc; the toast/dialogue band (~14–16) is right,
-and it never needs to sit over the pause menu.
+The ribbon (`#weapon-switch`, owned by `weaponSelect.js`) is a transient flash: the
+slot's weapons in a horizontal strip, active one highlighted, fading after ~1.5 s
+(refreshed on each press). It's anchored **just above the player's head** — `main.js`
+injects an `anchorFor(playerIndex)` that maps the player's world position to screen px
+(via the live camera + canvas rect), clamped to the viewport; split-screen (no single
+"the player") falls back to screen-centered. Sits in the toast/dialogue band (z-index
+15) and never needs to cover the pause menu.
 
 ---
 
@@ -318,7 +318,7 @@ because it equips a **remote** player host-side, which none of these surfaces do
   RB/LB) and `melee{Next,Prev}` (unbound), each gated on `≥2` owned weapons of that
   kind. Mechanism is built now; melee bindings are dormant until a second melee weapon
   exists. ✅
-- **Ribbon** — yes, a transient **screen-centered** strip highlighting the new
+- **Ribbon** — yes, a transient strip **above the player** highlighting the new
   selection, fading after ~1.5 s. ✅
 - **PvP** — disabled in v1. ✅
 
@@ -341,7 +341,7 @@ Everything is decided; no open questions remain.
   guest's switch reaches the host; add/extend a co-op test asserting the host sees it,
   from **both** the cycle and the inventory panel.
 - **Manual** — controller: RB/LB cycle ranged weapon forward/back, ammo HUD + on-sprite
-  weapon resync, centered ribbon flashes the new weapon; holding the button doesn't
+  weapon resync, ribbon flashes the new weapon above the player; holding the button doesn't
   spin; nothing happens with only the kunai launcher owned; disabled in a PvP match.
   Keyboard: `Tab` next, `` ` `` prev. Inventory tab: ranged/melee slot panels show
   radio-select, *Unarmed* clears melee, selection flips live if the ribbon changes it.
@@ -353,7 +353,7 @@ Everything is decided; no open questions remain.
 | File | Change |
 |---|---|
 | `js/weaponSlots.js` | **New.** Shared `weaponsInSlot` + `nextWeaponInSlot` enumeration — single source of truth for both UIs. Pure, unit-tested. |
-| `js/weaponSelect.js` | **New.** `cycleWeapon(slot, index, dir)` + own keydown listener (edge-trigger, `Tab` `preventDefault`) + transient centered ribbon. Overlay-block predicate injected by `main.js`. |
+| `js/weaponSelect.js` | **New.** `cycleWeapon(slot, index, dir)` + own keydown listener (edge-trigger, `Tab` `preventDefault`) + transient ribbon above the player. Overlay-block + anchor predicates injected by `main.js`. |
 | `js/keyBindings.js` | Add `rangedNext`/`rangedPrev` (default `Tab`/`` ` ``) + `meleeNext`/`meleePrev` (unbound). |
 | `js/gamepadBindings.js` | Add `rangedNext`/`rangedPrev` (default RB/LB = btn 5/4) + `meleeNext`/`meleePrev` (unbound). |
 | `js/gamepad.js` | Extend `ACTION_NAMES` (+ `setGamepadAction` whitelist) with the four cycle actions. |
