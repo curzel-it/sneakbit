@@ -8,6 +8,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadSpeciesData } from "../js/species.js";
+import { BIOME } from "../js/biomes.js";
+import { CONSTRUCTION } from "../js/constructions.js";
 
 loadSpeciesData([
   { id: 7000, entity_type: "Bullet", sprite_sheet_id: 1014,
@@ -27,13 +29,18 @@ const combat = await import("../js/combat.js");
 const playerHealth = await import("../js/playerHealth.js");
 
 function makeZone() {
-  // 20x20 all-walkable map.
-  const collision = [];
+  // 20x20 all-walkable grass map, no constructions.
+  const collision = [], biome = [], construction = [];
   for (let r = 0; r < 20; r++) {
-    const row = []; for (let c = 0; c < 20; c++) row.push(false);
-    collision.push(row);
+    const cRow = [], bRow = [], kRow = [];
+    for (let c = 0; c < 20; c++) {
+      cRow.push(false);
+      bRow.push(BIOME.GRASS);
+      kRow.push(CONSTRUCTION.NOTHING);
+    }
+    collision.push(cRow); biome.push(bRow); construction.push(kRow);
   }
-  return { cols: 20, rows: 20, entities: [], collision };
+  return { cols: 20, rows: 20, entities: [], collision, biome, construction };
 }
 
 test("rectsOverlap detects intersection and gap", () => {
@@ -84,7 +91,6 @@ test("point-blank bullet destroys a rigid barrel instead of being eaten by the w
   // bullet despawns against the rigid tile having dealt no damage (ammo spent,
   // barrel intact).
   const zone = makeZone();
-  zone.collision[5][5] = true;            // barrels block their tile
   const barrel = {
     species_id: 1038, frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Down",
   };
@@ -102,7 +108,7 @@ test("point-blank bullet destroys a rigid barrel instead of being eaten by the w
 
 test("bullet hitting a wall is consumed without applying damage", () => {
   const zone = makeZone();
-  zone.collision[5][5] = true;            // wall at (5,5)
+  zone.construction[5][5] = CONSTRUCTION.STONE_WALL; // solid wall at (5,5)
   const bullet = {
     species_id: 7000, _spawned: true, _vx: 0, _vy: 0, _lifespan: 1.0,
     frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Right",
@@ -111,6 +117,48 @@ test("bullet hitting a wall is consumed without applying damage", () => {
   const player = { x: 1, y: 1, tileX: 1, tileY: 1 };
   combat.tickCombat(zone, player, 0.05);
   assert.equal(zone.entities.length, 0);
+});
+
+test("bullet flies over water and lava instead of stopping", () => {
+  // Regression: water/lava block walking but must not stop a thrown kunai.
+  // The old check used the walk-collision mask, so a bullet died on the
+  // first liquid tile.
+  for (const liquid of [BIOME.WATER, BIOME.LAVA, BIOME.DARK_WATER]) {
+    const zone = makeZone();
+    zone.biome[5][5] = liquid;
+    zone.collision[5][5] = true;          // liquids are walk-blocking
+    const bullet = {
+      species_id: 7000, _spawned: true, _vx: 7, _vy: 0, _lifespan: 1.0,
+      frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Right",
+    };
+    zone.entities.push(bullet);
+    const player = { x: 1, y: 1, tileX: 1, tileY: 1 };
+    combat.tickCombat(zone, player, 0.02);
+    assert.ok(zone.entities.includes(bullet), `bullet survives over ${liquid}`);
+  }
+});
+
+test("bullet flies over a wooden fence but stops at a forest", () => {
+  // Both block walking; only the forest stops bullets in the original.
+  const fenceZone = makeZone();
+  fenceZone.construction[5][5] = CONSTRUCTION.WOODEN_FENCE;
+  const overFence = {
+    species_id: 7000, _spawned: true, _vx: 0, _vy: 0, _lifespan: 1.0,
+    frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Right",
+  };
+  fenceZone.entities.push(overFence);
+  combat.tickCombat(fenceZone, { x: 1, y: 1, tileX: 1, tileY: 1 }, 0.02);
+  assert.ok(fenceZone.entities.includes(overFence), "bullet clears a wooden fence");
+
+  const forestZone = makeZone();
+  forestZone.construction[5][5] = CONSTRUCTION.FOREST;
+  const atForest = {
+    species_id: 7000, _spawned: true, _vx: 0, _vy: 0, _lifespan: 1.0,
+    frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Right",
+  };
+  forestZone.entities.push(atForest);
+  combat.tickCombat(forestZone, { x: 1, y: 1, tileX: 1, tileY: 1 }, 0.02);
+  assert.ok(!forestZone.entities.includes(atForest), "bullet stops at a forest");
 });
 
 test("melee monster overlapping the player applies damage", () => {

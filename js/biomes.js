@@ -69,6 +69,13 @@ export function biomeIsObstacle(b) {
   return b === BIOME.WATER || b === BIOME.NOTHING || b === BIOME.LAVA || b === BIOME.DARK_WATER;
 }
 
+// Mirrors Rust Biome::stops_bullets — only the Nothing (void) biome stops a
+// bullet. Liquids block walking but a thrown kunai sails over water and lava,
+// so this is deliberately narrower than biomeIsObstacle.
+export function biomeStopsBullets(b) {
+  return b === BIOME.NOTHING;
+}
+
 export function biomeIsSame(a, b) {
   return a === b || (isLightGrass(a) && isLightGrass(b));
 }

@@ -8,7 +8,8 @@
 // Bullets pass through targets they don't kill in the same frame.
 
 import { getSpecies } from "./species.js";
-import { isWalkable } from "./zone.js";
+import { biomeStopsBullets } from "./biomes.js";
+import { constructionStopsBullets } from "./constructions.js";
 import { playSfx } from "./audio.js";
 import { applyPlayerContinuousDamage, applyPlayerDamage, isPlayerDead } from "./playerHealth.js";
 import { hasPiercingKnifeSkill, hasBoomerangSkill, hasBulletCatcherSkill } from "./skills.js";
@@ -274,7 +275,15 @@ function bulletHitsWall(b, zone) {
   const cy = f.y + f.h * 0.5;
   const tx = Math.floor(cx);
   const ty = Math.floor(cy);
-  if (!isWalkable(zone, tx, ty)) return true;
+  // Terrain stops bullets only where the original does: the void biome and
+  // solid constructions (walls/rocks/forests/boxes/slopes). Crucially, water
+  // and lava are walk-blocking but NOT bullet-blocking — a kunai flies over
+  // them — so we check the biome/construction tables, not the walk-collision
+  // mask. (Out-of-bounds reads as a stop; advanceBullets also culls bullets
+  // that leave the zone.)
+  if (tx < 0 || ty < 0 || tx >= zone.cols || ty >= zone.rows) return true;
+  if (biomeStopsBullets(zone.biome[ty][tx])) return true;
+  if (constructionStopsBullets(zone.construction[ty][tx])) return true;
   for (const o of zone.entities) {
     if (o === b) continue;
     if (o._spawned) continue;

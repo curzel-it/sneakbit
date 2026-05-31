@@ -5,6 +5,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadSpeciesData } from "../js/species.js";
+import { BIOME } from "../js/biomes.js";
+import { CONSTRUCTION } from "../js/constructions.js";
 
 loadSpeciesData([
   { id: 7000, entity_type: "Bullet", sprite_sheet_id: 1014,
@@ -25,12 +27,17 @@ const skills = await import("../js/skills.js");
 const inventory = await import("../js/inventory.js");
 
 function makeZone() {
-  const collision = [];
+  const collision = [], biome = [], construction = [];
   for (let r = 0; r < 20; r++) {
-    const row = []; for (let c = 0; c < 20; c++) row.push(false);
-    collision.push(row);
+    const cRow = [], bRow = [], kRow = [];
+    for (let c = 0; c < 20; c++) {
+      cRow.push(false);
+      bRow.push(BIOME.GRASS);
+      kRow.push(CONSTRUCTION.NOTHING);
+    }
+    collision.push(cRow); biome.push(bRow); construction.push(kRow);
   }
-  return { cols: 20, rows: 20, entities: [], collision };
+  return { cols: 20, rows: 20, entities: [], collision, biome, construction };
 }
 
 function resetAllSkills() {
@@ -69,7 +76,7 @@ test("boomerang reverses kunai direction on wall hit", () => {
   resetAllSkills();
   skills.setSkill("boomerang", true);
   const zone = makeZone();
-  zone.collision[5][5] = true; // wall directly in front
+  zone.construction[5][5] = CONSTRUCTION.STONE_WALL; // wall directly in front
   const b = { species_id: 7000, _spawned: true, _vx: 7, _vy: 0, _lifespan: 0.5,
     frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Right" };
   zone.entities.push(b);
@@ -84,7 +91,7 @@ test("boomerang does NOT apply if bullet species lacks support", () => {
   resetAllSkills();
   skills.setSkill("boomerang", true);
   const zone = makeZone();
-  zone.collision[5][5] = true;
+  zone.construction[5][5] = CONSTRUCTION.STONE_WALL;
   const b = { species_id: 1170, _spawned: true, _vx: 7, _vy: 0, _lifespan: 0.5,
     frame: { x: 5, y: 5, w: 1, h: 1 }, direction: "Right" };
   zone.entities.push(b);

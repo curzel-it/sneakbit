@@ -165,6 +165,32 @@ export function constructionIsObstacle(c) {
   return !NON_OBSTACLE.has(c);
 }
 
+// Mirrors Rust Construction::stops_bullets. This is NOT the same as
+// constructionIsObstacle: wooden fences, bamboo, counters, thin trees
+// (spoiled/wine), pipes, solar panels and snow piles all block walking but
+// let a thrown kunai fly over them. Only solid walls, rocks, dense forests,
+// boxes and the (rigid) slopes stop a bullet.
+const STOPS_BULLETS = new Set([
+  CONSTRUCTION.METAL_FENCE,
+  CONSTRUCTION.DARK_ROCK,
+  CONSTRUCTION.LIGHT_WALL,
+  CONSTRUCTION.LIBRARY,
+  CONSTRUCTION.FOREST,
+  CONSTRUCTION.BOX,
+  CONSTRUCTION.STONE_WALL,
+  CONSTRUCTION.BROADLEAF,
+  CONSTRUCTION.STONE_BOX,
+  CONSTRUCTION.BROADLEAF_PURPLE,
+  CONSTRUCTION.WOODEN_WALL,
+  CONSTRUCTION.SNOWY_FOREST,
+]);
+
+export function constructionStopsBullets(c) {
+  // Slopes (ids 29..60) are all rigid and stop bullets in the original.
+  if (c >= CONSTRUCTION.SLOPE_GREEN_TL && c <= CONSTRUCTION.SLOPE_DARKROCK_R) return true;
+  return STOPS_BULLETS.has(c);
+}
+
 export function constructionIsBridge(c) {
   return c === CONSTRUCTION.BRIDGE;
 }
