@@ -191,6 +191,14 @@ async function main() {
       // Single-tile tap: queue one press then drop the held set, so the
       // avatar takes exactly one step (no continuous walk).
       tap: (slot, dir) => { pushInputPress(slot, dir); clearInputHeld(slot); },
+      // Live split-screen geometry: one entry per slice with its backing-pixel
+      // rect and its camera's tile dimensions. Lets e2e assert the layout
+      // (count + arrangement) for a given window size + player count.
+      slices: () => getSlices().map((s, i) => ({
+        rectPx: s.rectPx,
+        camW: state.cameras[i]?.w ?? null,
+        camH: state.cameras[i]?.h ?? null,
+      })),
     };
   }
   // PvP controller owns the match lifecycle + per-frame glue (and installs

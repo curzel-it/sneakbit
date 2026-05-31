@@ -7,6 +7,7 @@
 
 import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange, isPlayerDead } from "./playerHealth.js";
 import { localPlayerCount } from "./coopMode.js";
+import { sliceCount, getSlices } from "./splitScreen.js";
 
 const MAX_PLAYERS = 4;
 const PLAYER_COLORS = [
@@ -33,6 +34,10 @@ export function installHealthHud() {
   document.body.appendChild(root);
 
   onPlayerHealthChange(redraw);
+  // Re-anchor each bar to its slice when the window resizes (the slice
+  // geometry changes). zoom.js recomputes the slices first (its listener is
+  // installed earlier), so getSlices() is fresh by the time we read it.
+  if (typeof window !== "undefined") window.addEventListener("resize", redraw);
   redraw();
   return root;
 }
@@ -100,6 +105,9 @@ function makeBar(index) {
 
 function redraw() {
   const count = localPlayerCount();
+  // In split-screen, anchor each player's bar to the top-left of THEIR slice
+  // instead of stacking all bars in the shared top-left container.
+  const slices = sliceCount() > 1 ? getSlices() : null;
   for (const b of bars) {
     // Hide bars beyond the active local player count.
     if (b.index >= count) { b.root.style.display = "none"; continue; }
@@ -114,9 +122,26 @@ function redraw() {
       continue;
     }
     b.root.style.display = "";
+    anchorBar(b, slices);
     const pct = Math.max(0, Math.min(100, (hp / max) * 100));
     const tag = count > 1 ? `P${b.index + 1} ` : "";
     b.label.textContent = `${tag}HP ${Math.ceil(hp)} / ${max}`;
     b.fill.style.width = `${pct}%`;
+  }
+}
+
+// Position one bar: fixed to its slice corner in split-screen, or reset to the
+// stacked flex flow (single-slice). Falls back to stacked if slice geometry
+// isn't available yet (e.g. cssRect computed in a non-DOM context).
+function anchorBar(b, slices) {
+  const css = slices?.[b.index]?.cssRect;
+  if (css) {
+    Object.assign(b.root.style, {
+      position: "fixed",
+      left: `${Math.round(css.left + 12)}px`,
+      top: `${Math.round(css.top + 12)}px`,
+    });
+  } else {
+    Object.assign(b.root.style, { position: "", left: "", top: "" });
   }
 }
