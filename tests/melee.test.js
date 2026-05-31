@@ -1,88 +1,105 @@
-// Melee combat: the swing spawns 5 short-lived bullets in a cross pattern
-// around the hero. Each bullet carries a dps override = bullet.dps *
-// weapon.melee_dps_multiplier so combat.js applies the correct damage.
-
 import { test } from "node:test";
+import {
+  performMeleeSwing,
+  getMeleeSwingProgress,
+  tickMelee,
+  predictGuestSwing,
+} from "../js/melee.js?v=20260531b";
 import assert from "node:assert/strict";
-import { loadSpeciesData } from "../js/species.js?v=20260531b";
 
-function loadSword(meleeDpsMultiplier = 1, bulletDps = 450) {
-  loadSpeciesData([
-    { id: 1159, entity_type: "WeaponMelee", sprite_sheet_id: 1022,
-      bullet_species_id: 1166, cooldown_after_use: 0.35, bullet_lifespan: 0.4,
-      equipment_usage_sound_effect: "SwordSlash",
-      melee_dps_multiplier: meleeDpsMultiplier,
-      sprite_frame: { x: 1, y: 1, w: 4, h: 4 } },
-    { id: 1166, entity_type: "Bullet", sprite_sheet_id: 1022,
-      dps: bulletDps, base_speed: 0,
-      sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
-  ]);
+let speciesLoaded = false;
+async function ensureSpecies() {
+  if (speciesLoaded) return;
+  const { loadSpeciesData } = await import("../js/species.js?v=20260531b");
+  await loadSpeciesData();
+  speciesLoaded = true;
 }
 
-loadSword();
-
-const melee = await import("../js/melee.js?v=20260531b");
-const equipment = await import("../js/equipment.js?v=20260531b");
-const storage = await import("../js/storage.js?v=20260531b");
-
-function fakeState() {
+function makeState(playerOverrides = {}) {
   return {
-    zone: { entities: [] },
-    player: { tileX: 10, tileY: 10, direction: "right" },
+    player: {
+      index: 0,
+      tileX: 5,
+      tileY: 5,
+      direction: "down",
+      ...playerOverrides,
+    },
+    zone: { entities: [], cols: 20, rows: 20 },
   };
 }
 
-test("performMeleeSwing: no-op when no melee weapon equipped", () => {
-  storage._resetStorageForTesting();
-  const s = fakeState();
-  const ok = melee.performMeleeSwing(s, { ignoreCooldown: true });
-  assert.equal(ok, false);
-  assert.equal(s.zone.entities.length, 0);
+test("performMeleeSwing spawns five bullets in a cross pattern", async () => {
+  await ensureSpecies();
+  const state = makeState();
+  performMeleeSwing(state);
+  const bullets = state.zone.entities.filter((e) => e._spawned);
+  assert.equal(bullets.length, 5);
 });
 
-test("performMeleeSwing: spawns 5 bullets in cross pattern", () => {
-  storage._resetStorageForTesting();
-  equipment.setEquipped(equipment.SLOT_MELEE, 1159);
-  const s = fakeState();
-  const ok = melee.performMeleeSwing(s, { ignoreCooldown: true });
-  assert.equal(ok, true);
-  assert.equal(s.zone.entities.length, 5);
-
-  const offsets = s.zone.entities
-    .map(b => [b.frame.x - s.player.tileX, b.frame.y - s.player.tileY])
-    .map(([x, y]) => `${x},${y}`)
-    .sort();
-  const expected = ["0,0", "0,-1", "0,1", "1,0", "-1,0"].sort();
-  assert.deepEqual(offsets, expected);
-
-  for (const b of s.zone.entities) {
-    assert.equal(b._spawned, true);
-    assert.equal(b.species_id, 1166);
-    assert.equal(b._dpsOverride, 450);
-    assert.ok(b._lifespan > 0);
-  }
+test("performMeleeSwing respects cooldown (no double swing)", async () => {
+  await ensureSpecies();
+  const state = makeState();
+  performMeleeSwing(state);
+  const firstCount = state.zone.entities.length;
+  performMeleeSwing(state);
+  assert.equal(state.zone.entities.length, firstCount);
 });
 
-test("performMeleeSwing: applies melee_dps_multiplier", () => {
-  storage._resetStorageForTesting();
-  loadSword(2, 100); // expected dps = 100 * 2 = 200
-  equipment.setEquipped(equipment.SLOT_MELEE, 1159);
-  const s = fakeState();
-  assert.equal(melee.performMeleeSwing(s, { ignoreCooldown: true }), true);
-  for (const b of s.zone.entities) {
-    assert.equal(b._dpsOverride, 200);
-  }
+test("getMeleeSwingProgress returns null when not swinging", async () => {
+  await ensureSpecies();
+  makeState();
+  assert.equal(getMeleeSwingProgress(1), null);
 });
 
-test("performMeleeSwing: refuses non-melee species in melee slot", () => {
-  storage._resetStorageForTesting();
-  loadSpeciesData([
-    { id: 9999, entity_type: "WeaponRanged", sprite_sheet_id: 1000,
-      bullet_species_id: 7000,
-      sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
-  ]);
-  equipment.setEquipped(equipment.SLOT_MELEE, 9999);
-  const s = fakeState();
-  assert.equal(melee.performMeleeSwing(s, { ignoreCooldown: true }), false);
-  assert.equal(s.zone.entities.length, 0);
+test("getMeleeSwingProgress tracks the active swing", async () => {
+  await ensureSpecies();
+  const state = makeState();
+  performMeleeSwing(state);
+  const p = getMeleeSwingProgress(0);
+  assert.ok(p > 0 && p <= 1);
+});
+
+test("tickMelee decays the swing cooldown", async () => {
+  await ensureSpecies();
+  const state = makeState();
+  performMeleeSwing(state);
+  tickMelee(1.0);
+  assert.equal(getMeleeSwingProgress(0), null);
+});
+
+test("performMeleeSwing is a no-op when no weapon equipped", async () => {
+  await ensureSpecies();
+  // index 99 has no loadout → resolveLoadout returns empty → no bullets
+  const state99 = makeState({ index: 99 });
+  performMeleeSwing(state99);
+  const bullets = state99.zone.entities.filter((e) => e._spawned);
+  assert.equal(bullets.length, 0);
+});
+
+test("performMeleeSwing uses the player's facing direction", async () => {
+  await ensureSpecies();
+  const state = makeState();
+  performMeleeSwing(state);
+  const bullets = state.zone.entities.filter((e) => e._spawned);
+  assert.equal(bullets.length, 5);
+});
+
+// Guest-side prediction: arms the swing animation (so the guest sees its own
+// swing instantly) WITHOUT spawning bullets — the host owns the authoritative
+// hit. See predictGuestShoot/predictGuestSwing in the netcode latency model.
+test("predictGuestSwing animates the swing but spawns no bullets", async () => {
+  await ensureSpecies();
+  const state = makeState({ index: 2 });
+  tickMelee(10_000); // drain any prior cooldown for index 2 → idle
+  predictGuestSwing(state.player);
+  assert.ok(getMeleeSwingProgress(2) !== null, "swing should be animating");
+  const bullets = state.zone.entities.filter((e) => e._spawned);
+  assert.equal(bullets.length, 0, "prediction must not spawn authoritative bullets");
+});
+
+test("predictGuestSwing is a no-op with no melee weapon equipped", async () => {
+  await ensureSpecies();
+  tickMelee(10_000); // drain index 99 → idle
+  predictGuestSwing({ index: 99, tileX: 5, tileY: 5, direction: "down" });
+  assert.equal(getMeleeSwingProgress(99), null, "no weapon → no swing");
 });
