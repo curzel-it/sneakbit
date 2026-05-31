@@ -9,14 +9,20 @@
 // loads them locally on the first snapshot or zone change and only
 // overwrites `zone.entities` from network frames.
 
-import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260531a";
-import { setGameMode } from "./gameMode.js?v=20260531a";
-import { loadZone } from "./data.js?v=20260531a";
-import { buildZone } from "./zone.js?v=20260531a";
-import { setupCutscenes } from "./cutscenes.js?v=20260531a";
-import { evictZoneCache } from "./zoneCache.js?v=20260531a";
+import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js?v=20260531b";
+import { setGameMode } from "./gameMode.js?v=20260531b";
+import { loadZone } from "./data.js?v=20260531b";
+import { buildZone } from "./zone.js?v=20260531b";
+import { setupCutscenes } from "./cutscenes.js?v=20260531b";
+import { evictZoneCache } from "./zoneCache.js?v=20260531b";
 
-export const INTERP_DELAY_MS = 100;
+// Render remote players/entities this far in the past so interpolation
+// always has two real samples to blend between (the host broadcasts at
+// 20 Hz = 50 ms, so this must stay above 50 ms + jitter). 60 ms keeps that
+// guarantee while shaving 40 ms off how late teammates/mobs appear vs the
+// old 100 ms. Does NOT affect the guest's own avatar — that's predictedSelf,
+// which is RTT-independent.
+export const INTERP_DELAY_MS = 60;
 const STALE_MS = 300;
 const DEAD_MS = 5000;
 // Auto-resync: after the mirror has been stale for this long, ask the
