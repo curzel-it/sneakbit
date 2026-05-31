@@ -30,6 +30,8 @@ import { installTouchControls } from "./touch.js";
 import { installToast, showToast } from "./toast.js";
 import { installShooting, tickShooting, tryShoot, tryShootForSlot } from "./shooting.js";
 import { installMelee, tickMelee, tryMelee, tryMeleeForSlot } from "./melee.js";
+import { installWeaponSelect, cycleWeapon } from "./weaponSelect.js";
+import { SLOT_RANGED, SLOT_MELEE } from "./equipment.js";
 import { setGamepadAction } from "./gamepad.js";
 import { pollGuestGamepad } from "./guestInputForwarder.js";
 import { installActiveInputDevice } from "./activeInputDevice.js";
@@ -231,6 +233,9 @@ async function main() {
   installShooting(() => state);
   installMelee(() => state);
   installFastTravel(() => state);
+  installWeaponSelect(() =>
+    isMenuOpen() || isDialogueOpen() || isGameOverOpen() ||
+    isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen());
   setGamepadAction("shoot", () => tryShoot());
   setGamepadAction("melee", () => tryMelee());
   setGamepadAction("interact", () => {
@@ -245,6 +250,15 @@ async function main() {
     setGamepadAction("shoot", () => tryShootForSlot(slot), slot);
     setGamepadAction("melee", () => tryMeleeForSlot(slot), slot);
     setGamepadAction("interact", () => tryInteractForSlot(slot), slot);
+  }
+  // Weapon-cycle pads, one per local slot (melee wired but unbound by
+  // default). cycleWeapon takes the 0-based local player index.
+  for (const slot of [1, 2, 3, 4]) {
+    const idx = slot - 1;
+    setGamepadAction("rangedNext", () => cycleWeapon(SLOT_RANGED, idx, +1), slot);
+    setGamepadAction("rangedPrev", () => cycleWeapon(SLOT_RANGED, idx, -1), slot);
+    setGamepadAction("meleeNext",  () => cycleWeapon(SLOT_MELEE,  idx, +1), slot);
+    setGamepadAction("meleePrev",  () => cycleWeapon(SLOT_MELEE,  idx, -1), slot);
   }
   if (state.zone) {
     markVisited(state.zone.id);

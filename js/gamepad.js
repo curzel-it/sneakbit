@@ -31,7 +31,7 @@ import { markInputDevice } from "./activeInputDevice.js";
 import * as menuNav from "./menuNav.js";
 import { isMenuNavActive } from "./menuNav.js";
 
-const ACTION_NAMES = ["interact", "shoot", "melee"];
+const ACTION_NAMES = ["interact", "shoot", "melee", "rangedNext", "rangedPrev", "meleeNext", "meleePrev"];
 
 // Minimum stick deflection before it registers at all — just enough to
 // reject rest-state jitter/drift, not a per-direction activation
@@ -57,7 +57,7 @@ const padState = new Map();
 
 export function setGamepadAction(name, fn, slot = 1) {
   const slotCbs = actionCallbacks[slot] || (actionCallbacks[slot] = {});
-  if (["interact", "shoot", "melee"].includes(name)) slotCbs[name] = fn;
+  if (ACTION_NAMES.includes(name)) slotCbs[name] = fn;
 }
 
 // Connected pads sorted by their hardware index, holes removed. The
