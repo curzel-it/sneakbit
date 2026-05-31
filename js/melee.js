@@ -5,14 +5,14 @@
 // weapon.melee_dps_multiplier, applied via combat.js's normal bullet
 // resolution path.
 
-import { getSpecies } from "./species.js?v=20260531a";
-import { resolveLoadout } from "./sessionLoadouts.js?v=20260531a";
-import { playSfx } from "./audio.js?v=20260531a";
-import { matchesAction } from "./keyBindings.js?v=20260531a";
-import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260531a";
-import { getNetRole } from "./onlineBootstrap.js?v=20260531a";
-import { isPlayerDead } from "./playerHealth.js?v=20260531a";
-import { pvpSlotCanAct } from "./pvpMatch.js?v=20260531a";
+import { getSpecies } from "./species.js?v=20260531b";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260531b";
+import { playSfx } from "./audio.js?v=20260531b";
+import { matchesAction } from "./keyBindings.js?v=20260531b";
+import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260531b";
+import { getNetRole } from "./onlineBootstrap.js?v=20260531b";
+import { isPlayerDead } from "./playerHealth.js?v=20260531b";
+import { pvpSlotCanAct } from "./pvpMatch.js?v=20260531b";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -84,10 +84,12 @@ export function setSwingAnimation(playerIndex, remaining, duration) {
   cooldownDuration[i] = dur;
 }
 
-// Guest-side local prediction: start the swing animation for the guest's
-// own avatar the instant they press melee, instead of waiting a full RTT
-// for the host's snapshot to echo it back. Cosmetic; the host still owns
-// the actual swing (bullets, damage, SFX) via the forwarded intent.
+// Guest-side local prediction: start the swing animation AND play the swing
+// SFX for the guest's own avatar the instant they press melee, instead of
+// waiting a full RTT for the host's snapshot to echo it back. The host still
+// owns the authoritative swing — bullets and damage — via the forwarded
+// intent; SFX is local-only (never networked) so playing it here is the only
+// way the guest ever hears its own swing, and it can't double up.
 export function predictGuestSwing(player) {
   if (!player) return;
   const weaponId = resolveLoadout(player).melee;
@@ -96,6 +98,7 @@ export function predictGuestSwing(player) {
   if (!weapon || weapon.entity_type !== "WeaponMelee") return;
   const cd = weapon.cooldown_after_use > 0 ? weapon.cooldown_after_use : DEFAULT_COOLDOWN;
   setSwingAnimation(player.index | 0, cd, cd);
+  playSfx(SFX_FOR_USAGE[weapon.equipment_usage_sound_effect] || "swordSlash");
 }
 
 export function installMelee(getState) {

@@ -1,12 +1,13 @@
 // Draws the zone and player into a 2D canvas context.
 // Layer order: biome → construction → entities → player.
 
-import { TILE_SIZE } from "./constants.js?v=20260531a";
-import { drawEntities } from "./entities.js?v=20260531a";
-import { getZoneCache } from "./zoneCache.js?v=20260531a";
-import { drawCutscenes } from "./cutscenes.js?v=20260531a";
-import { drawTrails } from "./trails.js?v=20260531a";
-import { isCreativeMode } from "./creativeMode.js?v=20260531a";
+import { TILE_SIZE } from "./constants.js?v=20260531b";
+import { drawEntities } from "./entities.js?v=20260531b";
+import { getZoneCache } from "./zoneCache.js?v=20260531b";
+import { drawCutscenes } from "./cutscenes.js?v=20260531b";
+import { drawTrails } from "./trails.js?v=20260531b";
+import { drawLocalEffects } from "./localEffects.js?v=20260531b";
+import { isCreativeMode } from "./creativeMode.js?v=20260531b";
 
 export function createRenderer(canvas) {
   const ctx = canvas.getContext("2d");
@@ -29,6 +30,10 @@ export function render(renderer, zone, camera, player, biomeFrame) {
   drawZoneLayers(ctx, zone, camera, biomeFrame | 0);
   drawTrails(ctx, zone, camera);
   drawEntities(ctx, zone, camera, player);
+  // Guest-local cosmetic flashes (e.g. the muzzle flash for the guest's own
+  // predicted shot). Empty/no-op on the host. Above entities so it reads as a
+  // flash over the world.
+  drawLocalEffects(ctx, camera);
   drawCutscenes(ctx, zone, camera);
   drawDarkness(ctx, canvas, zone, camera, primary);
 }

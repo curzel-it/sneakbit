@@ -8,19 +8,20 @@
 // runs out of lifespan or leaves the zone bounds; combat.js removes
 // bullets that hit walls or kill targets.
 
-import { getSpecies } from "./species.js?v=20260531a";
-import { getAmmo, removeAmmo } from "./inventory.js?v=20260531a";
-import { playSfx } from "./audio.js?v=20260531a";
-import { resolveLoadout } from "./sessionLoadouts.js?v=20260531a";
-import { broadcastHostEvent } from "./hostEvents.js?v=20260531a";
-import { matchesAction } from "./keyBindings.js?v=20260531a";
-import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260531a";
-import { getNetRole } from "./onlineBootstrap.js?v=20260531a";
-import { isPlayerDead } from "./playerHealth.js?v=20260531a";
-import { rumble } from "./rumble.js?v=20260531a";
-import { pvpSlotCanAct } from "./pvpMatch.js?v=20260531a";
-import { isPvp } from "./gameMode.js?v=20260531a";
-import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260531a";
+import { getSpecies } from "./species.js?v=20260531b";
+import { getAmmo, removeAmmo } from "./inventory.js?v=20260531b";
+import { playSfx } from "./audio.js?v=20260531b";
+import { resolveLoadout } from "./sessionLoadouts.js?v=20260531b";
+import { broadcastHostEvent } from "./hostEvents.js?v=20260531b";
+import { matchesAction } from "./keyBindings.js?v=20260531b";
+import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js?v=20260531b";
+import { getNetRole } from "./onlineBootstrap.js?v=20260531b";
+import { isPlayerDead } from "./playerHealth.js?v=20260531b";
+import { rumble } from "./rumble.js?v=20260531b";
+import { pvpSlotCanAct } from "./pvpMatch.js?v=20260531b";
+import { isPvp } from "./gameMode.js?v=20260531b";
+import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js?v=20260531b";
+import { spawnLocalFlash } from "./localEffects.js?v=20260531b";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
@@ -89,6 +90,45 @@ export function tryShootForSlot(slot) {
   const shooter = playerForSlotInState(state, slot);
   if (!shooter) return;
   shoot(state, shooter);
+}
+
+// Guest-side local prediction: the instant the guest presses shoot, play the
+// gunshot SFX and pop a brief muzzle flash one tile ahead — instead of waiting
+// a full RTT for the host's authoritative bullet to echo back in a snapshot.
+// The host still owns the real bullet, ammo, and damage via the forwarded
+// intent. We deliberately do NOT spawn a moving projectile here (that would
+// risk a visual double-bullet against the host's authoritative one); just the
+// flash + sound, which is where "feels instant" comes from.
+//
+// SFX is local-only and never networked, so this is the only way the guest
+// hears its own shot, and it can't double up. A timestamp throttle stands in
+// for the host's cooldown array (the guest never runs tickShooting, so that
+// array would never decay here).
+let lastPredictAt = 0;
+export function predictGuestShoot(player) {
+  if (!player) return;
+  const weaponId = isPvp()
+    ? getPvpRangedWeapon(player.index | 0)
+    : resolveLoadout(player).ranged;
+  const weapon = weaponId ? getSpecies(weaponId) : null;
+  // Mirror resolveRangedWeapon's fallback so the flash/sound still fire with
+  // the default kunai when no ranged weapon is equipped/loaded.
+  const bulletId = (weapon && weapon.entity_type === "WeaponRanged" && weapon.bullet_species_id)
+    ? weapon.bullet_species_id
+    : (isPvp() ? bulletOfWeapon(weaponId) : KUNAI_BULLET_SPECIES_ID);
+  const cd = (weapon?.cooldown_after_use > 0) ? weapon.cooldown_after_use : COOLDOWN;
+  const now = Date.now();
+  if (now - lastPredictAt < cd * 1000) return; // throttle to the weapon's rate
+  lastPredictAt = now;
+
+  playSfx(SFX_FOR_USAGE[weapon?.equipment_usage_sound_effect] || "knifeThrown");
+  const [dx, dy] = DIR_DELTA[player.direction] ?? DIR_DELTA.down;
+  spawnLocalFlash({
+    speciesId: bulletId,
+    x: player.tileX + dx,
+    y: player.tileY + dy,
+    direction: player.direction,
+  });
 }
 
 function playerForSlotInState(state, slot) {

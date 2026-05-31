@@ -3,10 +3,11 @@
 // the same channel and land in Phase 7. Each frame carries a monotonic
 // seq for the reconciliation logic that arrives in Phase 6.
 
-import { actionForCode } from "./keyBindings.js?v=20260531a";
-import { readPadSnapshotForSlot } from "./gamepad.js?v=20260531a";
-import { predictGuestSwing } from "./melee.js?v=20260531a";
-import { getPredictedSelf } from "./predictedSelf.js?v=20260531a";
+import { actionForCode } from "./keyBindings.js?v=20260531b";
+import { readPadSnapshotForSlot } from "./gamepad.js?v=20260531b";
+import { predictGuestSwing } from "./melee.js?v=20260531b";
+import { predictGuestShoot } from "./shooting.js?v=20260531b";
+import { getPredictedSelf } from "./predictedSelf.js?v=20260531b";
 
 const ACTION_TO_INTENT = {
   moveUp: "moveUp",
@@ -295,6 +296,9 @@ function send(intent, extras) {
   // forwarded intent; this is cosmetic. Runs even when the link is down so
   // a buffered swing still looks responsive.
   if (intent === "melee") predictGuestSwing(getPredictedSelf());
+  // Same idea for shooting: instant gunshot SFX + muzzle flash, host still
+  // owns the real bullet/ammo/damage via the forwarded intent.
+  if (intent === "shoot") predictGuestShoot(getPredictedSelf());
   if (!net?.isConnected?.()) {
     // Movement intents are state-derived; on reconnect, the still-held
     // key is re-emitted from flushOnReconnect. Buffering a moveLeft
