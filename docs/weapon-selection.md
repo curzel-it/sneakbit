@@ -6,7 +6,7 @@ melee/ranged weapon without diving into the pause menu. It exists mostly for
 **controller play** — on a gamepad there's no fast way to re-equip today (the only
 path is Esc → menu → Inventory tab → click *Equip*), which is clumsy mid-fight.
 
-Status: **spec / not implemented.**
+Status: **implemented.**
 
 ---
 
@@ -184,12 +184,14 @@ Notes:
    and the ranged cycle silent until you've picked up a second gun.
 3. **Advance** — find the currently-equipped weapon for the slot, step by `dir`
    (`+1` next / `-1` prev), wrapping at both ends, and equip that weapon.
-4. **Commit** — equipping routes through the **same path pickups use** so all modes
-   stay in sync: set the slot via `setEquipped(slot, weaponId, index)`, and in network
-   co-op also update the session map + broadcast `event:loadout` (factor the shared bit
-   out of `pickups.js` if it isn't already reusable). `onEquipmentChange` then resyncs
-   the ammo HUD, the on-sprite equipment overlay, and the touch melee-button visibility
-   automatically.
+4. **Commit** — a plain `setEquipped(slot, weaponId, index)`. That alone syncs in every
+   mode: `hostLoadoutSync`/`guestLoadoutSync` both listen on `onEquipmentChange` for the
+   local player and propagate (host broadcasts `event:loadout`; guest sends
+   `guest.loadout`, host fans it back). No shared helper, no manual broadcast — and
+   `onEquipmentChange` also resyncs the ammo HUD, the on-sprite equipment overlay, and
+   the touch melee-button visibility for free. *(pickups.js special-cases a session-map
+   write only because it runs host-side for a remote player; the cycle always edits the
+   local player, so it doesn't need that path.)*
 5. **Feedback** — show the transient ribbon (the slot's weapons, active one highlighted,
    name + ammo for ranged) for ~1.5 s, refreshed on each press so rapid presses keep it
    visible. The ammo HUD also updates live via its existing `onEquipmentChange`
@@ -244,20 +246,19 @@ ITEMS
   menu always shows the slot and lets you pick whatever you own (including re-selecting
   the only option). The gate is a quick-switch nicety, not a model rule.
 
-### Commit path — unified
+### Commit path — already unified by `onEquipmentChange`
 
-All three equip surfaces (pickup auto-equip, quick-switch cycle, inventory panel) must
-run the **same commit** so co-op stays in sync. Factor it into one helper — the natural
-home is `equipment.js` or a thin `equipWeapon(slot, id, playerIndex)` that:
-1. `setEquipped(slot, id, playerIndex)`, and
-2. in network co-op, updates the session map + broadcasts `event:loadout`
-   (`sessionLoadouts.js` / the path `pickups.js` already uses).
+All three equip surfaces (pickup auto-equip, quick-switch cycle, inventory panel) just
+call `setEquipped`/`clearEquipped`. No shared helper is needed: both loadout-sync modules
+subscribe to `onEquipmentChange` for the local player, so any local equip propagates in
+every mode (host → `event:loadout`; guest → `guest.loadout` → host fans back). The panel
+re-renders on `onEquipmentChange` too, so the radio state flips live when the *ribbon* or
+a *pickup* changes the slot while the menu is open.
 
-`inventoryScreen.js` currently calls bare `setEquipped`/`clearEquipped` — that's a
-latent co-op bug (equipping from the menu in network co-op may not broadcast). Routing
-it through the shared helper fixes that as a side effect of this work. The panel
-re-renders on `onEquipmentChange` so the radio state flips live, including when the
-*ribbon* or a *pickup* changes the slot while the menu is open.
+*(An earlier draft proposed a shared `equipWeapon` helper to fix a supposed co-op gap in
+the inventory screen — that was a false premise. `inventoryScreen.js`'s bare `setEquipped`
+already syncs via `onEquipmentChange`. `pickups.js` only writes the session map directly
+because it equips a **remote** player host-side, which none of these surfaces do.)*
 
 ### Out of scope / unchanged
 
@@ -276,10 +277,9 @@ re-renders on `onEquipmentChange` so the radio state flips live, including when 
   the inventory screen does today. Routed to the pressing player via `resolveAction`,
   but the slot is shared. Since nothing is modal, both players keep playing — no
   freeze, no screen ownership problem.
-- **Network co-op** — must go through the session-map + `event:loadout` path
-  (`sessionLoadouts.js`), not a bare `setEquipped`, or the host's view of the guest's
-  loadout won't update. The guest applies locally (write-through to localStorage) just
-  like pickups do.
+- **Network co-op** — a bare `setEquipped` on the guest's own client is enough:
+  `guestLoadoutSync` listens on `onEquipmentChange` and forwards `guest.loadout` to the
+  host, which fans `event:loadout` back to everyone. No special path in this feature.
 - **PvP** — loadouts live in `pvpLoadout.js` (non-persisted, per-match pool). PvP
   weapon assignment is its own system; **disable the cycle in PvP for v1** (early return
   in `cycleWeapon` when `isPvp()`), revisit later if mid-match switching is wanted.
@@ -337,10 +337,9 @@ Everything is decided; no open questions remain.
   modules (`weaponSelect.js`, `inventoryScreen.js`) passes `test:unit` green. Validate
   both with `node --check`, and since the equip path now broadcasts, run an e2e check
   before pushing.
-- **E2E** (`tests/e2e/`) — the shared commit path broadcasts `event:loadout`, so
-  add/extend a co-op test asserting the host sees a guest's switch — exercise it from
-  **both** the cycle and the inventory panel (the latter is the path that historically
-  used a bare `setEquipped` and may not have broadcast).
+- **E2E** (`tests/e2e/`) — `setEquipped` → `onEquipmentChange` → `guest.loadout`, so a
+  guest's switch reaches the host; add/extend a co-op test asserting the host sees it,
+  from **both** the cycle and the inventory panel.
 - **Manual** — controller: RB/LB cycle ranged weapon forward/back, ammo HUD + on-sprite
   weapon resync, centered ribbon flashes the new weapon; holding the button doesn't
   spin; nothing happens with only the kunai launcher owned; disabled in a PvP match.
@@ -353,13 +352,16 @@ Everything is decided; no open questions remain.
 
 | File | Change |
 |---|---|
-| `js/weaponSlots.js` | **New.** Shared `weaponsInSlot(slot, index)` enumeration — single source of truth for both UIs. Pure, unit-tested. |
-| `js/weaponSelect.js` | **New.** `cycleWeapon(slot, index, dir)` + transient ribbon DOM. |
+| `js/weaponSlots.js` | **New.** Shared `weaponsInSlot` + `nextWeaponInSlot` enumeration — single source of truth for both UIs. Pure, unit-tested. |
+| `js/weaponSelect.js` | **New.** `cycleWeapon(slot, index, dir)` + own keydown listener (edge-trigger, `Tab` `preventDefault`) + transient centered ribbon. Overlay-block predicate injected by `main.js`. |
 | `js/keyBindings.js` | Add `rangedNext`/`rangedPrev` (default `Tab`/`` ` ``) + `meleeNext`/`meleePrev` (unbound). |
 | `js/gamepadBindings.js` | Add `rangedNext`/`rangedPrev` (default RB/LB = btn 5/4) + `meleeNext`/`meleePrev` (unbound). |
-| `js/input.js` | Route the four new actions to `cycleWeapon(slot,…,dir)`; `preventDefault` on `Tab`. |
-| `js/gamepad.js` | Route the four new gamepad actions to `cycleWeapon(slot,…,dir)`. |
-| `js/inventoryScreen.js` | Redesign to slot panels (radio-select per slot, *Unarmed* for melee, items list below). |
-| `js/equipment.js` *(or new helper)* | Shared `equipWeapon(slot, id, index)` commit used by cycle, inventory, and pickups (fixes the inventory-menu co-op broadcast gap). |
-| `js/pickups.js` | Point auto-equip at the shared commit helper. |
-| `docs/hud-inventory.md` | Add the ribbon row + z-index; note the inventory tab now renders slot panels. |
+| `js/gamepad.js` | Extend `ACTION_NAMES` (+ `setGamepadAction` whitelist) with the four cycle actions. |
+| `js/main.js` | `installWeaponSelect(blockedFn)` + per-slot gamepad callbacks → `cycleWeapon`. |
+| `js/inventoryScreen.js` | Redesign to slot panels (radio-select per slot, *Unarmed* for melee, items list below); live re-render on `onEquipmentChange`. Bare `setEquipped` (no helper). |
+| `js/ammoHud.js` | Chip follows the equipped ranged weapon's bullet (subscribes `onEquipmentChange`). |
+| `js/menu.js` | Slot-panel CSS. |
+| `docs/hud-inventory.md` | Ribbon row + z-index 15; inventory tab renders slot panels. |
+
+> The listener lives in `weaponSelect.js`, **not** `input.js` (which only routes
+> movement) — matching how `shooting.js`/`melee.js` each own their keydown handler.

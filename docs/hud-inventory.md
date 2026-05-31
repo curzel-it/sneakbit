@@ -22,6 +22,7 @@ for a future HUD-layout pass — see [Known structural issues](#known-structural
 | Element | DOM id | File | When |
 |---|---|---|---|
 | Toast | `#toast` | `toast.js` | Pickups / hints, auto-dismiss (regular 1s, hint 2s, longHint 3s). Optional sprite icon, optional network broadcast. Top-center. |
+| Weapon-switch ribbon | `#weapon-switch` | `weaponSelect.js` | Quick weapon-cycle feedback (Tab / `` ` `` / gamepad RB·LB). Screen-centered, fades ~1.5s; shows the slot's weapons with the active one highlighted + its name/ammo. |
 | Dialogue box | `#dialogue` | `dialogue.js` | NPC conversations, advance with Space/Enter/Click. Bottom-center on desktop, **top-center on touch** (`pointer: coarse`). Host-driven; guests mirror read-only. |
 | Message modal | `#message` | `message.js` | Full-screen story beats / chapter intros. |
 | Fast travel menu | `#fast-travel` | `fastTravel.js` | At a fast-travel pylon (≥4 zones visited). |
@@ -30,7 +31,7 @@ for a future HUD-layout pass — see [Known structural issues](#known-structural
 
 | Element | DOM id | File | When |
 |---|---|---|---|
-| Main / pause menu | `#menu` | `menu.js` | Esc / menu button. Screens: pause, settings, key-bindings, skills, inventory, credits, **PvP setup** (`data-screen="pvp"`, player-count buttons). Inventory body rendered by `inventoryScreen.js`. |
+| Main / pause menu | `#menu` | `menu.js` | Esc / menu button. Screens: pause, settings, key-bindings, skills, inventory, credits, **PvP setup** (`data-screen="pvp"`, player-count buttons). Inventory body rendered by `inventoryScreen.js` as per-slot (Ranged / Melee) radio panels + an items list. |
 | Game over / match result | `#gameover` | `gameOver.js` | On death; reused for PvP winner/draw screens via `showMatchResult()`. |
 
 Notable gated menu items:
@@ -81,6 +82,7 @@ All under `#touch-controls`, owned by `touch.js`. Shown on first touch or
 | Health / Ammo | `#health-hud`, `#ammo-hud` | 11 |
 | Touch controls | `#touch-controls` | 12 |
 | Toast | `#toast` | 14 |
+| Weapon-switch ribbon | `#weapon-switch` | 15 |
 | Dialogue | `#dialogue` | 15 |
 | Menu | `#menu` | 20 |
 | Fast travel | `#fast-travel` | 22 |
