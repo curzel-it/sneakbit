@@ -79,6 +79,10 @@ function tickDamageIndicators(zone, dt) {
   }
 }
 
+// Spawned at the target's hittable frame — for a 1×2 monster or barrel that
+// is the inset bottom-tile box, so the 1×1 indicator sprite (sheet 1012)
+// renders as a single spark over the foot of the target. Mirrors Rust
+// hits_handling_use_case.rs: `damage_indicator.frame = target.hittable_frame()`.
 function spawnDamageIndicator(zone, hittable, parentId) {
   zone.entities.push({
     id: nextIndicatorId--,
@@ -343,7 +347,19 @@ export function entityHittable(e, sp) {
       h: f.h - (f.h > 1 ? 1.35 : 0.2),
     };
   }
-  return { x: f.x, y: f.y, w: f.w, h: f.h };
+  // Rust Entity::hittable_frame generic arm (entity.rs): explosive barrels —
+  // the other bullet target, a 1×2 static sprite — shrink to the inset
+  // bottom-tile box, exactly like monsters. Returning the full 1×2 footprint
+  // here stretched the 1×1 damage-indicator sprite over both tiles (the stray
+  // "Tesla coil" under the spark) and let bullets register on the empty top
+  // tile instead of the barrel itself.
+  const yOff = f.h > 1 ? 1.15 : 0.15;
+  return {
+    x: f.x + 0.15,
+    y: f.y + yOff,
+    w: f.w - 0.3,
+    h: f.h - (f.h > 1 ? 1.3 : 0.3),
+  };
 }
 
 export function playerHittable(player) {
