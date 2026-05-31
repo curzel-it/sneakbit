@@ -36,6 +36,7 @@ import { reapplyAutoZoom } from "./zoom.js?v=20260531b";
 import { hideGameOver, isGameOverOpen } from "./gameOver.js?v=20260531b";
 import { closeNetworkDialogue } from "./dialogue.js?v=20260531b";
 import { setHostPausedRemote } from "./guestHostPause.js?v=20260531b";
+import { clearLocalEffects } from "./localEffects.js?v=20260531b";
 
 // Callbacks main.js installs at boot. switchRole calls them to rebuild /
 // wipe the live `state` object that lives in main.js's closure.
