@@ -15,17 +15,29 @@ export function createRenderer(canvas) {
   return { canvas, ctx };
 }
 
-export function render(renderer, zone, camera, player, biomeFrame) {
+// Draw the world for one camera. `opts.viewport` (a backing-pixel rect)
+// confines the draw to a sub-region of the canvas — split-screen passes one
+// slice per local player; everything else omits it and draws the whole canvas.
+// Because every drawer is camera-relative ((x - camera.x) * TILE_SIZE), a
+// clip + translate to the slice origin lets the existing chain draw slice-local
+// with no other changes.
+export function render(renderer, zone, camera, player, biomeFrame, opts = {}) {
   const { ctx, canvas } = renderer;
+  const vp = opts.viewport ?? { x: 0, y: 0, w: canvas.width, h: canvas.height };
+
+  // `player` may be a single object (single-player) or an array (co-op). The
+  // darkness cone tracks a single focus player — the slice's own player in
+  // split-screen, else the first player (co-op partners share one cone).
+  const focus = opts.focusPlayer ?? (Array.isArray(player) ? player[0] : player);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(vp.x, vp.y, vp.w, vp.h);
+  ctx.clip();
+  ctx.translate(vp.x, vp.y);
 
   ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // `player` may be a single object (single-player) or an array (co-op).
-  // The darkness overlay always tracks the first player so it has a
-  // single, deterministic centre — co-op players need to stay close
-  // enough to share the same cone of light.
-  const primary = Array.isArray(player) ? player[0] : player;
+  ctx.fillRect(0, 0, vp.w, vp.h);
 
   drawZoneLayers(ctx, zone, camera, biomeFrame | 0);
   drawTrails(ctx, zone, camera);
@@ -35,7 +47,37 @@ export function render(renderer, zone, camera, player, biomeFrame) {
   // flash over the world.
   drawLocalEffects(ctx, camera);
   drawCutscenes(ctx, zone, camera);
-  drawDarkness(ctx, canvas, zone, camera, primary);
+  drawDarkness(ctx, vp, zone, camera, focus);
+
+  ctx.restore();
+}
+
+// Split-screen entry point: clear the whole canvas (so any empty cell — the
+// 3-up near-square blank — stays black), draw each slice, then the seams.
+// `viewports` is [{ rectPx, camera, focusPlayer }]; `renderPlayers` is the full
+// live-player list drawn into every slice so partners appear in each other's view.
+export function renderViewports(renderer, zone, viewports, renderPlayers, biomeFrame) {
+  const { ctx, canvas } = renderer;
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  for (const vp of viewports) {
+    render(renderer, zone, vp.camera, renderPlayers, biomeFrame, {
+      viewport: vp.rectPx,
+      focusPlayer: vp.focusPlayer,
+    });
+  }
+  drawDividers(ctx, canvas, viewports);
+}
+
+// 2px seams along interior slice edges (right/bottom of each slice that isn't
+// the canvas edge). Drawn in absolute canvas pixels, after all slices.
+const DIVIDER_PX = 2;
+function drawDividers(ctx, canvas, viewports) {
+  ctx.fillStyle = "#000";
+  for (const { rectPx: r } of viewports) {
+    if (r.x + r.w < canvas.width) ctx.fillRect(r.x + r.w - DIVIDER_PX, r.y, DIVIDER_PX, r.h);
+    if (r.y + r.h < canvas.height) ctx.fillRect(r.x, r.y + r.h - DIVIDER_PX, r.w, DIVIDER_PX);
+  }
 }
 
 // Blit the pre-baked biome + construction layers. The cache is built
@@ -54,7 +96,9 @@ function drawZoneLayers(ctx, zone, camera, frame) {
 // LightConditions variants: Day is a no-op (verified — Rust ships no
 // daylight tint or shader), Night washes the viewport flat blue, and
 // CantSeeShit clamps the player into a small radial cone of vision.
-function drawDarkness(ctx, canvas, zone, camera, player) {
+// `vp` is the viewport rect ({ w, h }) in slice-local pixels — the ctx is
+// already translated to the slice origin, so overlays fill from (0, 0).
+function drawDarkness(ctx, vp, zone, camera, player) {
   // Creative mode disables limited visibility entirely — the level
   // designer needs to see everything regardless of CantSeeShit / Night.
   // Mirrors Rust lib.rs::is_limited_visibility returning false in creative.
@@ -69,7 +113,7 @@ function drawDarkness(ctx, canvas, zone, camera, player) {
     grad.addColorStop(0.6, "rgba(0,0,0,0.85)");
     grad.addColorStop(1, "rgba(0,0,0,0.985)");
     ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, vp.w, vp.h);
     return;
   }
   if (zone.lightConditions === "Night") {
@@ -77,6 +121,6 @@ function drawDarkness(ctx, canvas, zone, camera, player) {
     // than CantSeeShit (no radial mask) — the player can still see the
     // whole viewport, just with a cool tint.
     ctx.fillStyle = "rgba(15, 25, 70, 0.45)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, vp.w, vp.h);
   }
 }
