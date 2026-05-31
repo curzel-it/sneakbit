@@ -19,7 +19,7 @@ export function showLoadingScreen(steps = 1) {
   root.id = "loading";
   root.innerHTML = `
     <div class="ld-card">
-      <div class="ld-title">SneakBit</div>
+      <img class="ld-logo" src="assets/logo.png?v=20260531c" alt="SneakBit" />
       <div class="ld-track"><div class="ld-fill"></div></div>
       <div class="ld-sub">Loading…</div>
     </div>
@@ -68,7 +68,14 @@ function injectStyles() {
   if (document.getElementById("loading-styles")) return;
   const css = `
     #loading .ld-card { text-align: center; }
-    #loading .ld-title { font-size: 24px; letter-spacing: 3px; color: #e6ecff; margin-bottom: 20px; }
+    #loading .ld-logo {
+      display: block;
+      width: min(360px, 70vw);
+      height: auto;
+      margin: 0 auto 22px;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
     #loading .ld-track {
       width: min(320px, 70vw); height: 6px;
       background: #1a1d26; border: 1px solid #2a2f3e;

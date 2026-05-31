@@ -79,7 +79,7 @@ export function installMenu(stateGetter) {
   root.id = "menu";
   root.innerHTML = `
     <div class="menu-card" data-screen="pause">
-      <h1>SneakBit</h1>
+      <img class="menu-logo" src="assets/logo.png?v=20260531c" alt="SneakBit" />
       <div class="menu-row menu-controls menu-stack">
         <button id="menu-resume">Resume (Esc)</button>
         <button id="menu-open-multiplayer">Multiplayer</button>
@@ -766,6 +766,14 @@ function injectStyles() {
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
     #menu h1 { margin: 0 0 16px; font-size: 18px; letter-spacing: 1px; }
+    #menu .menu-logo {
+      display: block;
+      width: min(280px, 60vw);
+      height: auto;
+      margin: 0 auto 18px;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
     #menu .menu-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
     #menu .menu-stack { flex-direction: column; align-items: stretch; gap: 8px; }
     #menu label { color: #ddd; cursor: pointer; }
