@@ -109,6 +109,36 @@ test("point-blank bullet destroys a rigid barrel instead of being eaten by the w
   assert.equal(barrel._dying, true, "barrel destroyed point-blank");
 });
 
+test("point-blank kunai passes through a barrel over many small frames and kills it", () => {
+  // Regression (the real-world bug): at 60fps each frame deals only
+  // dps*dt ≈ 1800/60 = 30 of the barrel's 100 hp. The old bulletHitsWall
+  // stopped the bullet on the rigid barrel after one frame, so it dealt ~30
+  // damage then despawned — the barrel survived and took ~4-5 throws. The
+  // bullet must instead fly THROUGH the barrel (Rust check_stoppers only stops
+  // on buildings) and accumulate damage until the barrel dies in one pass.
+  const zone = makeZone();
+  const barrel = {
+    species_id: 1038, frame: { x: 6, y: 5, w: 1, h: 1 }, direction: "Down",
+  };
+  // Bullet starts on the barrel's own tile (point-blank), moving right at the
+  // kunai's real speed, stepped one render frame at a time.
+  const bullet = {
+    species_id: 7000, _spawned: true, _vx: 7, _vy: 0, _lifespan: 1.0,
+    frame: { x: 6, y: 5, w: 1, h: 1 }, direction: "Right",
+  };
+  zone.entities.push(barrel, bullet);
+  const player = { x: 5, y: 5, tileX: 5, tileY: 5 };
+  const dt = 1 / 60;
+  let killed = false;
+  for (let i = 0; i < 30 && !killed; i++) {
+    // advance flight physics (shooting.js owns this in-game) then resolve combat
+    bullet.frame.x += bullet._vx * dt;
+    combat.tickCombat(zone, player, dt);
+    if (barrel._dying) killed = true;
+  }
+  assert.ok(killed, "barrel destroyed by a single point-blank pass");
+});
+
 test("bullet hitting a wall is consumed without applying damage", () => {
   const zone = makeZone();
   zone.construction[5][5] = CONSTRUCTION.STONE_WALL; // solid wall at (5,5)

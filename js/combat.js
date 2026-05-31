@@ -158,13 +158,11 @@ function resolveBullets(zone, players, dt) {
     }
 
     // Damage every overlapping target (bullets pass through if none die).
-    // Runs *before* the wall check so a bullet spawned point-blank against a
-    // rigid destructible lands its hit: the bullet spawns one tile ahead of
-    // the shooter (shooting.js), so when the player is adjacent to a barrel it
-    // starts on the barrel's own tile — which is rigid and non-walkable, so
-    // bulletHitsWall would despawn it before any damage. Checking damage first
-    // means the barrel takes the hit; if it survives, the wall check below
-    // still stops the bullet on the same frame.
+    // Barrels and monsters no longer stop the bullet (see bulletHitsWall), so
+    // the kunai keeps flying through them, dealing dps*dt every frame until the
+    // target dies — that's what lets a single point-blank pass destroy a barrel
+    // instead of chipping one frame's worth. The wall check below still stops
+    // the bullet on real walls/buildings.
     let consumed = false;
     const hitbox = bulletHitbox(b);
     const dmgMul = damageMultiplier(b);
@@ -300,13 +298,20 @@ function bulletHitsWall(b, zone) {
   if (tx < 0 || ty < 0 || tx >= zone.cols || ty >= zone.rows) return true;
   if (biomeStopsBullets(zone.biome[ty][tx])) return true;
   if (constructionStopsBullets(zone.construction[ty][tx])) return true;
+  // Only *buildings* stop a bullet at the entity level — mirrors Rust
+  // check_stoppers (bullets.rs), which stops on is_building() entities only.
+  // Barrels, monsters, NPCs and pushables are `is_rigid` for walk-collision
+  // but a bullet flies THROUGH them, dealing dps*dt every frame until the
+  // target dies. Stopping on every rigid entity (the old behavior) despawned
+  // the kunai after a single frame against a point-blank barrel/monster, so it
+  // dealt ~one frame of damage (~30 of 100 hp) and took ~5 throws to kill what
+  // a single pass should destroy.
   for (const o of zone.entities) {
     if (o === b) continue;
     if (o._spawned) continue;
     if (o._dying) continue;
     const sp = getSpecies(o.species_id);
-    if (!sp || !sp.is_rigid) continue;
-    if (sp.entity_type === "Teleporter") continue;
+    if (!sp || sp.entity_type !== "Building") continue;
     const of = o.frame;
     if (!of) continue;
     if (cx < of.x || cx > of.x + of.w) continue;
