@@ -12,6 +12,7 @@
 import { TILE_SIZE } from "./constants.js";
 import { getSprite } from "./assets.js";
 import { getAmmo, onInventoryChange } from "./inventory.js";
+import { getEquipped, SLOT_RANGED, onEquipmentChange } from "./equipment.js";
 import { getSpecies } from "./species.js";
 import { isPvp } from "./gameMode.js";
 import { cameraPlayerIndex } from "./pvpMatch.js";
@@ -33,7 +34,15 @@ export function installAmmoHud() {
   document.body.appendChild(root);
 
   onInventoryChange(updateAmmoHud);
+  onEquipmentChange(updateAmmoHud); // chip follows the equipped ranged weapon
   return root;
+}
+
+// The bullet the player's equipped ranged weapon fires (story/co-op).
+// Falls back to the kunai when no weapon resolves (default loadout / tests).
+function rangedBulletFor(playerIndex) {
+  const sp = getSpecies(getEquipped(SLOT_RANGED, playerIndex));
+  return sp?.bullet_species_id || KUNAI_SPECIES_ID;
 }
 
 function makeChip(index) {
@@ -65,9 +74,11 @@ export function updateAmmoHud() {
   // the local hero's shared/persisted kunai count as before.
   const pvp = isPvp();
   const activeIdx = pvp ? (cameraPlayerIndex() ?? 0) : 0;
-  const bulletId = pvp ? bulletOfWeapon(getPvpRangedWeapon(activeIdx)) : KUNAI_SPECIES_ID;
   for (const c of chips) {
-    const n = pvp ? getPvpAmmo(activeIdx, bulletId) : getAmmo(KUNAI_SPECIES_ID, c.index);
+    const bulletId = pvp
+      ? bulletOfWeapon(getPvpRangedWeapon(activeIdx))
+      : rangedBulletFor(c.index);
+    const n = pvp ? getPvpAmmo(activeIdx, bulletId) : getAmmo(bulletId, c.index);
     const label = pvp ? `P${activeIdx + 1}  x${n}` : `x${n}`;
     if (label !== c.lastLabel) {
       c.count.textContent = label;
