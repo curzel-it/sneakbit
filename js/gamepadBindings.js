@@ -20,21 +20,28 @@ const UNBOUND = -1;
 // Display order in the controller bindings UI. Mirrors keyBindings.ACTIONS
 // minus the movement rows (stick / d-pad are fixed).
 export const GAMEPAD_ACTIONS = [
-  { id: "interact", label: "Interact" },
-  { id: "shoot",    label: "Throw kunai" },
-  { id: "melee",    label: "Melee swing" },
-  { id: "menu",     label: "Open / close menu" },
+  { id: "interact",   label: "Interact" },
+  { id: "shoot",      label: "Throw kunai" },
+  { id: "melee",      label: "Melee swing" },
+  { id: "rangedNext", label: "Next ranged weapon" },
+  { id: "rangedPrev", label: "Prev ranged weapon" },
+  { id: "meleeNext",  label: "Next melee weapon" },
+  { id: "meleePrev",  label: "Prev melee weapon" },
+  { id: "menu",       label: "Open / close menu" },
 ];
 
 // P2 has no menu action — the menu button is global and only P1 owns it.
 export const GAMEPAD_ACTIONS_P2 = GAMEPAD_ACTIONS.filter(a => a.id !== "menu");
 
-const DEFAULT_P1 = { interact: 0, shoot: 1, melee: 2, menu: 9 };
-const DEFAULT_P2 = { interact: 0, shoot: 1, melee: 2 };
+// RB (5) / LB (4) cycle the ranged weapon — the shoulder pair is the
+// genre-standard for weapon cycling and naturally bidirectional. Melee
+// cycling is wired but unbound (-1): only one melee weapon exists today.
+const DEFAULT_P1 = { interact: 0, shoot: 1, melee: 2, rangedNext: 5, rangedPrev: 4, meleeNext: -1, meleePrev: -1, menu: 9 };
+const DEFAULT_P2 = { interact: 0, shoot: 1, melee: 2, rangedNext: -1, rangedPrev: -1, meleeNext: -1, meleePrev: -1 };
 // P3 / P4 (local 4-player co-op): same A/B/X layout as P2 so a 3rd/4th
 // controller works out of the box (pads map to slots by connection order).
-const DEFAULT_P3 = { interact: 0, shoot: 1, melee: 2 };
-const DEFAULT_P4 = { interact: 0, shoot: 1, melee: 2 };
+const DEFAULT_P3 = { interact: 0, shoot: 1, melee: 2, rangedNext: -1, rangedPrev: -1, meleeNext: -1, meleePrev: -1 };
+const DEFAULT_P4 = { interact: 0, shoot: 1, melee: 2, rangedNext: -1, rangedPrev: -1, meleeNext: -1, meleePrev: -1 };
 
 // playerIndex (0-3) → storage key and default layout.
 const SLOT_KEYS = ["p1", "p2", "p3", "p4"];

@@ -23,10 +23,14 @@ export const ACTIONS = [
   { id: "moveDown",  label: "Move down" },
   { id: "moveLeft",  label: "Move left" },
   { id: "moveRight", label: "Move right" },
-  { id: "interact",  label: "Interact" },
-  { id: "shoot",     label: "Throw kunai" },
-  { id: "melee",     label: "Melee swing" },
-  { id: "menu",      label: "Open / close menu" },
+  { id: "interact",   label: "Interact" },
+  { id: "shoot",      label: "Throw kunai" },
+  { id: "melee",      label: "Melee swing" },
+  { id: "rangedNext", label: "Next ranged weapon" },
+  { id: "rangedPrev", label: "Prev ranged weapon" },
+  { id: "meleeNext",  label: "Next melee weapon" },
+  { id: "meleePrev",  label: "Prev melee weapon" },
+  { id: "menu",       label: "Open / close menu" },
 ];
 
 // P2 has no menu action — Esc is global and only P1 owns the rebindable
@@ -44,10 +48,14 @@ const DEFAULT_P1 = {
   moveDown:  ["ArrowDown",  "KeyS"],
   moveLeft:  ["ArrowLeft",  "KeyA"],
   moveRight: ["ArrowRight", "KeyD"],
-  interact:  ["KeyE",       "Enter"],
-  shoot:     ["KeyF",       ""],
-  melee:     ["KeyG",       ""],
-  menu:      ["Escape",     ""],
+  interact:   ["KeyE",       "Enter"],
+  shoot:      ["KeyF",       ""],
+  melee:      ["KeyG",       ""],
+  rangedNext: ["Tab",        ""],
+  rangedPrev: ["Backquote",  ""],
+  meleeNext:  ["",           ""],
+  meleePrev:  ["",           ""],
+  menu:       ["Escape",     ""],
 };
 
 const DEFAULT_P2 = {
@@ -55,9 +63,13 @@ const DEFAULT_P2 = {
   moveDown:  ["KeyK",       ""],
   moveLeft:  ["KeyJ",       ""],
   moveRight: ["KeyL",       ""],
-  interact:  ["KeyB",       ""],
-  shoot:     ["KeyN",       ""],
-  melee:     ["KeyM",       ""],
+  interact:   ["KeyB",       ""],
+  shoot:      ["KeyN",       ""],
+  melee:      ["KeyM",       ""],
+  rangedNext: ["",           ""],
+  rangedPrev: ["",           ""],
+  meleeNext:  ["",           ""],
+  meleePrev:  ["",           ""],
 };
 
 // P3 / P4 (local 4-player co-op) ship with NO keyboard defaults — there
@@ -67,6 +79,7 @@ function emptyBindings() {
   return {
     moveUp: ["", ""], moveDown: ["", ""], moveLeft: ["", ""], moveRight: ["", ""],
     interact: ["", ""], shoot: ["", ""], melee: ["", ""],
+    rangedNext: ["", ""], rangedPrev: ["", ""], meleeNext: ["", ""], meleePrev: ["", ""],
   };
 }
 const DEFAULT_P3 = emptyBindings();
