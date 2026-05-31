@@ -1,7 +1,8 @@
 // Floating on-screen joystick for touch movement — an alternative to the
 // 4-button d-pad in touch.js. Ported from the original Rust game's iOS /
 // Android JoystickView: the stick appears wherever the thumb first lands in
-// the left zone, follows the finger when it drags past the edge (auto-pan),
+// the capture zone (left 75% of the screen), follows the finger when it drags
+// past the edge (auto-pan),
 // and maps the thumb angle to one of four cardinal directions. Like the
 // d-pad it synthesises the same Arrow keydown/keyup events input.js already
 // listens for, so nothing downstream knows the input came from a joystick.
@@ -33,7 +34,7 @@ export function directionForVector(dx, dy, deadzone = DEADZONE) {
   return dy >= 0 ? "down" : "up";
 }
 
-let zone = null;       // transparent left-side capture region
+let zone = null;       // transparent capture region (left 75% of screen)
 let base = null;       // the ring drawn at the touch point
 let knob = null;       // the thumb knob
 let activePointer = null; // pointerId currently driving the stick
@@ -158,7 +159,7 @@ function injectStyles() {
       position: absolute;
       left: 0;
       top: 0;
-      width: 50vw;
+      width: 75vw;
       height: 100%;
       pointer-events: auto;
       touch-action: none;
