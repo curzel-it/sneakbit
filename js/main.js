@@ -12,7 +12,7 @@ import { buildZone } from "./zone.js";
 import { pickCoopSpawn } from "./coopSpawn.js";
 import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress } from "./input.js";
 import { createPlayer, updatePlayer } from "./player.js";
-import { createCamera, updateCamera, panCameraTo, cameraRectFor } from "./camera.js";
+import { createCamera, updateCamera, cameraRectFor } from "./camera.js";
 import { createRenderer, render, renderViewports } from "./renderer.js";
 import { startGameLoop } from "./gameLoop.js";
 import { createBiomeAnimation, tickBiomeAnimation } from "./biomeAnimation.js";
@@ -372,7 +372,7 @@ async function main() {
       // each guest renders an independent window centred on themselves, so
       // the host's own window tracks the host. simulationViewports keeps
       // every off-camera guest's region alive (see below).
-      applyCamera(dt);
+      applyCamera();
       updateVisibleEntities(state.zone, simulationViewports(state));
       tickShooting(dt);
       tickMelee(dt);
@@ -406,8 +406,7 @@ async function main() {
       // When paused, keep the camera tracking the player so on resume
       // there's no jolt, but don't bother re-running the visibility pass
       // (the entity ticks are gated by `paused` above and won't read it).
-      // Same follow-self-vs-averaged rule as the unpaused branch.
-      applyCamera(dt);
+      applyCamera();
     }
     tickBiomeAnimation(biomeAnim, dt);
     tickEntities(dt);
@@ -416,9 +415,9 @@ async function main() {
     // entity z-stack and not just on top as a separate draw call. Dead
     // co-op players are filtered out so they vanish from the screen
     // until the next zone transition respawns them. Online hosts include
-    // every guest avatar here — livePlayersForCamera narrows the camera
-    // target down to the host themselves, but the host's screen still
-    // needs to render the guests (or "host can't see guests" lingers).
+    // every guest avatar here — the host's camera follows only its own
+    // avatar, but the host's screen still needs to render the guests (or
+    // "host can't see guests" lingers).
     const renderPlayers = livePlayersForRender(state);
     if (sliceCount() > 1) {
       renderViewports(renderer, state.zone, buildViewports(state), renderPlayers, biomeAnim.frame);
@@ -902,28 +901,6 @@ function buildViewports(state) {
   }));
 }
 
-// Camera follows live players (dead P2 doesn't drag the centre off).
-// Both local and online co-op share the same averaging rule: keep every
-// live player on screen. Online tried a per-device "follow self" camera
-// at first, but a guest who wandered off the host's view could move into
-// regions that aren't being updated (entities, mobs, pickups) — sharing
-// one camera prevents that drift.
-function livePlayersForCamera(state) {
-  const live = allPlayers(state);
-  // If everyone's dead the camera freezes on P1's last position so the
-  // Game Over overlay doesn't snap to (0, 0).
-  return live.length ? live : (state.player ? [state.player] : []);
-}
-
-// Who the host's window follows. Online hosts track only their own
-// avatar (guests have their own independent windows); offline / local
-// co-op keep the shared averaged camera so split-keyboard partners stay
-// on one screen.
-function hostCameraTarget(state) {
-  if (getRuntimeRole() === "host") return state.player;
-  return livePlayersForCamera(state);
-}
-
 // Which viewports the host simulates. Offline / local co-op gate entity
 // ticks to the single shared camera, exactly as before. Online hosts
 // also union a camera-sized rect centred on each off-camera guest, so a
@@ -950,13 +927,11 @@ function livePlayersForRender(state) {
   return allPlayers(state);
 }
 
-// PvP eases the camera so it tracks players spread across far-apart corners
-// smoothly; everything else snaps (the followed player moves slowly, so a
-// snap-follow reads as smooth). All targets come from hostCameraTarget.
-function applyCamera(dt) {
-  // Split-screen local co-op: each slice's camera snap-follows its own
-  // player (dead included — the slice holds on the corpse). Never reached
-  // in PvP / online, where sliceCount() is 1.
+// Snap the camera(s) to follow the player(s). The followed player moves
+// slowly, so a snap-follow reads as smooth.
+function applyCamera() {
+  // Split-screen local multiplayer (co-op or PvP): each slice's camera
+  // follows its own player (dead included — the slice holds on the corpse).
   if (sliceCount() > 1) {
     const players = orderedLocalPlayers(state);
     for (let i = 0; i < state.cameras.length; i++) {
@@ -964,14 +939,9 @@ function applyCamera(dt) {
     }
     return;
   }
-  if (isPvp()) {
-    // Realtime PvP: everyone acts at once. Offline keeps the averaged camera
-    // (all live players on one screen); online hosts follow their own avatar —
-    // both supplied by hostCameraTarget.
-    panCameraTo(state.camera, hostCameraTarget(state), state.zone, dt);
-  } else {
-    updateCamera(state.camera, hostCameraTarget(state), state.zone);
-  }
+  // Single slice: online host and offline single-player both follow their
+  // own avatar. (Online guests run their own camera in tickGuestFrame.)
+  updateCamera(state.camera, state.player, state.zone);
 }
 
 function maybeTeleport(state) {

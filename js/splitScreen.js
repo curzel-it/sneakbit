@@ -1,11 +1,12 @@
-// Split-screen layout for local co-op. Replaces the shared averaged camera
-// (one viewport that tries to keep every player on screen) with one viewport
-// slice per local player, laid out to fit the current window.
+// Split-screen layout for local multiplayer. Replaces the shared averaged
+// camera (one viewport that tried to keep every player on screen) with one
+// viewport slice per local player, laid out to fit the current window.
 //
-// Split-screen is a LOCAL-co-op-only concern: online (each client already
-// renders its own follow-self window) and PvP (current-player camera) stay
-// single-slice, so this module reports a slice count of 1 for them and the
-// rest of the engine renders exactly as before.
+// Split-screen is a LOCAL concern, for both co-op and PvP: every player on
+// this device gets their own follow-self slice. Online stays single-slice —
+// each client already renders its own follow-self window — so this module
+// reports a slice count of 1 for online and the rest of the engine renders
+// exactly as before.
 //
 // Responsibilities, and nothing else:
 //   - computeLayout()  : grid shape (cols/rows + per-player cell) from the
@@ -19,7 +20,6 @@
 
 import { TILE_SIZE } from "./constants.js";
 import { localPlayerCount } from "./coopMode.js";
-import { isPvp } from "./gameMode.js";
 import { getRuntimeRole } from "./onlineMode.js";
 import { createCamera } from "./camera.js";
 
@@ -28,10 +28,10 @@ import { createCamera } from "./camera.js";
 const WIDE = 4 / 3;
 const TALL = 3 / 4;
 
-// How many slices to draw. Online + PvP are always a single follow-self /
-// current-player window; only offline local co-op fans out per player.
+// How many slices to draw. Online is always a single follow-self window;
+// local play (co-op or PvP) fans out one slice per player on this device.
 export function sliceCount() {
-  if (isPvp() || isOnline()) return 1;
+  if (isOnline()) return 1;
   return clampCount(localPlayerCount());
 }
 

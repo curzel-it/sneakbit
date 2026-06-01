@@ -2,9 +2,10 @@
 // Coordinates are in tile units; the renderer converts to pixels.
 //
 // `target` may be a single player object or an array of live players —
-// in co-op the camera averages all live positions so both players stay
-// on screen, with the zone-bounds clamp applied on top. Dead players
-// must not be passed in (they'd drag the centre off into nowhere).
+// given an array the camera averages all positions (with the zone-bounds
+// clamp on top); the online-guest mirror uses this as a fallback before
+// its predicted-self exists. Dead players must not be passed in (they'd
+// drag the centre off into nowhere).
 
 import { VIEWPORT_TILES_W, VIEWPORT_TILES_H } from "./constants.js";
 
@@ -48,21 +49,6 @@ export function updateCamera(camera, target, zone) {
   if (!dest) return;
   camera.x = dest.x;
   camera.y = dest.y;
-}
-
-// Like updateCamera but eases toward the destination instead of snapping.
-// Used by PvP so the hand-off between far-apart corners reads as a pan
-// rather than a teleport. Exponential smoothing → framerate-independent.
-const PAN_SPEED = 6;
-export function panCameraTo(camera, target, zone, dt) {
-  const dest = cameraDestination(camera, target, zone);
-  if (!dest) return;
-  const t = 1 - Math.exp(-PAN_SPEED * Math.max(0, dt));
-  camera.x += (dest.x - camera.x) * t;
-  camera.y += (dest.y - camera.y) * t;
-  // Settle exactly once we're within a hair, so we don't creep forever.
-  if (Math.abs(dest.x - camera.x) < 0.01) camera.x = dest.x;
-  if (Math.abs(dest.y - camera.y) < 0.01) camera.y = dest.y;
 }
 
 function isInteriorZone(zone) {

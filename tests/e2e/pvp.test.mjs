@@ -1,9 +1,10 @@
 // E2E: local realtime PvP. Starts a 2-player match through the real
 // startPvpMatch path (window.pvp debug hook), then asserts the whole loop:
-// mode + arena + 1000 HP, corner spawns, simultaneous input (both players
-// act at once — no turns), scavenge ammo pickups, firing, and win/lose
-// (killing one player resolves the match to the survivor, raises the result
-// modal, and freezes the winner). Self-skips when Chrome isn't installed.
+// mode + arena + 1000 HP, corner spawns, split-screen (one slice per player),
+// simultaneous input (both players act at once — no turns), scavenge ammo
+// pickups, firing, and win/lose (killing one player resolves the match to the
+// survivor, raises the result modal, and freezes the winner). Self-skips when
+// Chrome isn't installed.
 
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
@@ -58,6 +59,11 @@ test("local realtime PvP: arena, corners, simultaneous input, scavenge, win/lose
       `player ${p.index} spawns in a corner, not a side (tile ${p.tileX},${p.tileY})`,
     );
   }
+
+  // Local PvP is split-screen: one viewport slice per player on this device
+  // (the same layout local co-op uses), not a single shared/averaged camera.
+  const slices = await evalExpr(s, "window.coop.slices()");
+  assert.equal(slices.length, 2, "2-player local PvP carves the canvas into 2 slices");
 
   // Realtime: both players act at once. Tap each to a distinct facing and
   // assert BOTH rotate the same frame — there's no turn gate.

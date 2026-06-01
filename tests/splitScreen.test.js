@@ -80,7 +80,7 @@ test("sliceRectsPx tiles the surface with no gaps or overlaps", () => {
   }
 });
 
-test("sliceCount: offline co-op fans out; pvp + online stay single", () => {
+test("sliceCount: local play (co-op or pvp) fans out; online stays single", () => {
   onlineMode._resetOnlineModeForTesting(); // runtime role null → offline
   gameMode.setGameMode("coop");
   coopMode.setLocalPlayerCount(3);
@@ -89,15 +89,19 @@ test("sliceCount: offline co-op fans out; pvp + online stay single", () => {
   coopMode.setLocalPlayerCount(1);
   assert.equal(sliceCount(), 1);
 
-  // PvP is always a single current-player window.
+  // Local PvP fans out per player too — one slice per ninja on this device.
   coopMode.setLocalPlayerCount(4);
+  gameMode.setGameMode("pvp");
+  assert.equal(sliceCount(), 4);
+  gameMode.setGameMode("coop");
+
+  // Online (host/guest) is always a single follow-self window, regardless of
+  // mode or local player count.
+  onlineMode._setOnlineModeForTesting({ mode: "host" });
+  assert.equal(sliceCount(), 1);
   gameMode.setGameMode("pvp");
   assert.equal(sliceCount(), 1);
   gameMode.setGameMode("coop");
-
-  // Online (host/guest) is always a single follow-self window.
-  onlineMode._setOnlineModeForTesting({ mode: "host" });
-  assert.equal(sliceCount(), 1);
   onlineMode._resetOnlineModeForTesting();
   coopMode.setLocalPlayerCount(1);
 });
