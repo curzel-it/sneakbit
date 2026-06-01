@@ -65,6 +65,7 @@ import { tickPredictedSelf, getPredictedSelf } from "./predictedSelf.js";
 import { tickLocalEffects } from "./localEffects.js";
 import { getSelfPlayerId } from "./onlineBootstrap.js";
 import { installPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
+import { installAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
 import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js";
 import { setHostPaused } from "./hostPauseState.js";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js";
@@ -88,6 +89,10 @@ async function main() {
   installUiTokens();
   bootstrapOnline();             // seeds runtime role from URL; doesn't install role modules
   installPartyPanel();
+  // Account UI is lazy + offline-tolerant: it installs here (so the pause
+  // menu's "Account" row and the ?reset=… deep link work) but makes no
+  // blocking network call at boot.
+  installAccountPanel();
   installHostLaggingOverlay();
   // `?join=CODE` tabs with a *well-formed* code are guests for the
   // lifetime of the page — they never own a local save and shouldn't
@@ -233,7 +238,7 @@ async function main() {
   installWeaponSelect({
     isBlocked: () =>
       isMenuOpen() || isDialogueOpen() || isGameOverOpen() ||
-      isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen(),
+      isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen() || isAccountPanelOpen(),
     // Anchor the ribbon above the local player's head. Single-camera only —
     // split-screen has no single "the player", so fall back to centered.
     anchorFor: (playerIndex) => {
@@ -324,7 +329,7 @@ async function main() {
     // (menu, dialogue, party panel, …) or when the active controller drops.
     // Hosting never freezes the shared world for a local overlay — that
     // would strand guests in a dead zone — so the gate is role-aware.
-    const overlayOpen = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen();
+    const overlayOpen = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen() || isAccountPanelOpen();
     const localPause = (overlayOpen || isControllerPaused()) && getRuntimeRole() !== "host";
     // While a host is still setting up an Online PvP match (sending invite
     // links, before "Start match"), freeze the host's own world so monsters

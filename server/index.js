@@ -5,6 +5,8 @@ import { WsConnection } from "./wsConnection.js";
 import { createRelay } from "./relay.js";
 import { negotiate as negotiateExtensions, formatResponse as formatExtResponse } from "./wsExtensions.js";
 import { handleTurnRequest } from "./turnCredentials.js";
+import { createAuthHandler } from "./authRoutes.js";
+import { openDb } from "./db.js";
 import { parseAllowedHosts, isOriginAllowed } from "./originAllowlist.js";
 import { log } from "./logger.js";
 import { execSync } from "node:child_process";
@@ -58,6 +60,21 @@ function applyGatedCors(res, originHeader, allowedHosts) {
   res.setHeader("access-control-allow-origin", originHeader);
 }
 
+// Auth endpoints take POST/PATCH (not just GET), so they need a wider
+// methods list than applyGatedCors. Same origin allowlist — the client may
+// be cross-origin (GitHub Pages on curzel.it, local dev on :8000), so the
+// browser needs the echoed ACAO. Bearer tokens, not cookies, so no
+// allow-credentials is required.
+function applyAuthCors(res, originHeader, allowedHosts) {
+  res.setHeader("access-control-allow-methods", "GET, POST, PATCH, OPTIONS");
+  res.setHeader("access-control-allow-headers", "content-type, authorization");
+  res.setHeader("access-control-max-age", "86400");
+  res.setHeader("vary", "origin");
+  if (!originHeader) return;
+  if (!isOriginAllowed(originHeader, allowedHosts)) return;
+  res.setHeader("access-control-allow-origin", originHeader);
+}
+
 export function startServer({
   port = PORT,
   host = HOST,
@@ -79,9 +96,33 @@ export function startServer({
   // gated by an optional bearer token (METRICS_TOKEN).
   const metricsRl = new Map();
   let metricsRlEpoch = 0;
+
+  // Auth is optional and lazy: the db is opened (and data.db created) only
+  // on the first /auth/* request, and only when JWT_SECRET is configured.
+  // With no secret the endpoints return 503 and the rest of the server
+  // (relay, health, turn) runs unchanged — the offline-first guarantee.
+  let authHandler = null;
+  let authInit = false;
+  function getAuthHandler() {
+    if (authInit) return authHandler;
+    authInit = true;
+    if (!process.env.JWT_SECRET) return null;
+    try {
+      authHandler = createAuthHandler({ db: openDb() });
+    } catch (err) {
+      log.error("auth.initFailed", { err: err?.message || String(err) });
+      authHandler = null;
+    }
+    return authHandler;
+  }
+
   const server = createServer((req, res) => {
     if (req.method === "OPTIONS") {
-      applySafeCors(res);
+      if (req.url && req.url.startsWith("/auth/")) {
+        applyAuthCors(res, req.headers.origin, allowedHosts);
+      } else {
+        applySafeCors(res);
+      }
       res.writeHead(204);
       res.end();
       return;
@@ -126,6 +167,25 @@ export function startServer({
     if (req.url === "/turn-credentials") {
       applyGatedCors(res, req.headers.origin, allowedHosts);
       handleTurnRequest(req, res);
+      return;
+    }
+    if (req.url && req.url.startsWith("/auth/")) {
+      applyAuthCors(res, req.headers.origin, allowedHosts);
+      const handler = getAuthHandler();
+      if (!handler) {
+        res.writeHead(503, { "content-type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify({ error: "auth_unavailable" }) + "\n");
+        return;
+      }
+      // The handler is async and owns its own response; surface a 500 if it
+      // rejects before writing anything.
+      handler(req, res).catch((err) => {
+        log.error("auth.unhandled", { err: err?.message || String(err) });
+        if (!res.headersSent) {
+          res.writeHead(500, { "content-type": "application/json; charset=utf-8" });
+          res.end(JSON.stringify({ error: "server_error" }) + "\n");
+        }
+      });
       return;
     }
     applySafeCors(res);

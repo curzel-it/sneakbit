@@ -5,7 +5,7 @@ Paramiko-based SSH, tar+SSH file push, SFTP for small config files, streaming
 stdout/stderr to the local terminal. Idempotent.
 
 What this does on the server:
-  - Install nginx + certbot + Node.js (NodeSource 22.x) if missing.
+  - Install nginx + certbot + Node.js (NodeSource 24.x) if missing.
   - Create a system user `sneakbit` and /opt/sneakbit-server/.
   - Push the server/ tree (index.js, package.json, ...) to /opt/sneakbit-server/.
   - Build the client (esbuild → _site/) and push it to /var/www/sneakbit.
@@ -89,9 +89,21 @@ SERVER_SYNC_PATHS = [
     "originAllowlist.js",
     "logger.js",
     "metrics.js",
+    # Accounts / auth feature. The SQLite DB (data.db) is created at runtime
+    # under REMOTE_DIR and is NOT in this whitelist, so push_tree
+    # (wipe_dirs=False) leaves it untouched across deploys.
+    "db.js",
+    "jwt.js",
+    "passwords.js",
+    "email.js",
+    "httpBody.js",
+    "authRoutes.js",
+    "rateLimitHttp.js",
 ]
 
-NODE_MAJOR = "22"
+# node:sqlite (used by db.js) is stable/unflagged only on Node 24+. A redeploy
+# after this bump re-runs the NodeSource setup_24.x step and restarts the unit.
+NODE_MAJOR = "24"
 
 # /etc/sneakbit-server.env — TURN env vars live here so the secret stays
 # out of the repo. Format is a systemd EnvironmentFile (KEY=value, one per
@@ -142,8 +154,19 @@ Environment=HOST={APP_BIND_HOST}
 Environment=PORT={APP_BIND_PORT}
 Environment=LOG_LEVEL=info
 Environment=GIT_SHA={git_sha}
-# Optional: TURN_SECRET + TURN_URLS live here once the operator wires
-# coturn. Missing file is harmless — relay falls back to STUN-only.
+# Accounts/auth: data.db lives in the app dir (survives deploys — not in
+# SERVER_SYNC_PATHS) and reset emails link to the public site. These two are
+# non-secret, so they live inline; the secrets (JWT_SECRET, SMTP2GO_API_KEY,
+# SMTP_FROM) go in the EnvironmentFile below so they stay out of the repo.
+Environment=DATABASE_PATH={REMOTE_DIR}/data.db
+Environment=APP_BASE_URL=https://{SERVER_NAME}
+# Optional secrets live here (gitignored, hand-managed on the box):
+#   TURN_SECRET + TURN_URLS  — coturn; missing → relay falls back to STUN-only.
+#   JWT_SECRET               — REQUIRED to enable accounts; absent → /auth/*
+#                              returns 503 and the rest of the server runs
+#                              unchanged (offline-first guarantee).
+#   SMTP2GO_API_KEY+SMTP_FROM— forgot-password email; absent → the link is
+#                              only logged, no email sent.
 # LOG_LEVEL can be overridden here too if a live tweak is needed.
 EnvironmentFile=-{TURN_ENV_FILE}
 ExecStart=/usr/bin/node {REMOTE_DIR}/index.js
@@ -185,7 +208,9 @@ server {{
     }}
 
     # Relay backend: WS upgrade + JSON endpoints. Regex beats the `/` prefix.
-    location ~ ^/(ws|health|version|metrics|turn-credentials)$ {{
+    # `auth/...` has a sub-path (/auth/register etc.), so it gets its own
+    # prefix alternative rather than the `$`-anchored exact-match group.
+    location ~ ^/(ws|health|version|metrics|turn-credentials|auth/) {{
         proxy_pass http://{APP_BIND};
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -387,7 +412,7 @@ def step_sanity(env):
 
 
 def step_apt(env):
-    print("[2] apt install nginx + certbot + node 22.x")
+    print(f"[2] apt install nginx + certbot + node {NODE_MAJOR}.x")
     ssh(env,
         "DEBIAN_FRONTEND=noninteractive apt-get update -qq && "
         "DEBIAN_FRONTEND=noninteractive apt-get install -qq -y "

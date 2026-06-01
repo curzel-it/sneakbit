@@ -22,6 +22,8 @@ import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js";
 import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js";
 import { invalidateZoneCache } from "./data.js";
 import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
+import { openAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
+import { onAccountChange, getUser } from "./accountSession.js";
 import { isGameOverOpen } from "./gameOver.js";
 import { isFastTravelOpen } from "./fastTravel.js";
 import { isMessageOpen } from "./message.js";
@@ -38,7 +40,8 @@ function isAnotherModalOpen() {
     || isFastTravelOpen()
     || isMessageOpen()
     || isDialogueOpen()
-    || isPartyPanelOpen();
+    || isPartyPanelOpen()
+    || isAccountPanelOpen();
 }
 
 let root = null;
@@ -84,6 +87,7 @@ export function installMenu(stateGetter) {
       <div class="menu-row menu-controls menu-stack">
         <button id="menu-resume">Resume (Esc)</button>
         <button id="menu-open-multiplayer">Multiplayer</button>
+        <button id="menu-open-account">Account</button>
         <button id="menu-open-inventory">Inventory &amp; Equipment</button>
         <button id="menu-open-skills">Skills</button>
         <button id="menu-open-settings">Settings</button>
@@ -509,6 +513,18 @@ function bindWidgets() {
     closeMenu();
     openPartyPanel();
   });
+  const accountBtn = root.querySelector("#menu-open-account");
+  accountBtn.addEventListener("click", () => {
+    closeMenu();
+    openAccountPanel();
+  });
+  // Reflect sign-in state in the row label ("Account" → the signed-in
+  // display name / email). Fires immediately with the current user.
+  const syncAccountLabel = (user) => {
+    accountBtn.textContent = user ? `Account · ${user.displayName || user.email}` : "Account";
+  };
+  onAccountChange(syncAccountLabel);
+  syncAccountLabel(getUser());
   root.querySelector("#menu-open-settings").addEventListener("click", () => showScreen("settings"));
   const fullscreenBtn = root.querySelector("#menu-fullscreen");
   if (!isFullscreenSupported()) {
