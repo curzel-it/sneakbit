@@ -74,6 +74,17 @@ test("local realtime PvP: arena, corners, simultaneous input, scavenge, win/lose
   assert.equal(posOf(afterTap, 0).direction, "up", "P1 turned to face its tap");
   assert.equal(posOf(afterTap, 1).direction, "down", "P2 turned to face its tap simultaneously");
 
+  // Ammo HUD is per-slice: one chip per player, each tagged and anchored into
+  // its own slice (distinct x), instead of a single P1 chip floating top-right.
+  const chips = await evalExpr(s, `(() => {
+    return [...document.querySelectorAll('#ammo-hud .ammo-chip')]
+      .filter((c) => c.style.display !== 'none')
+      .map((c) => { const r = c.getBoundingClientRect(); return { text: c.textContent.trim(), left: Math.round(r.left) }; });
+  })()`);
+  assert.equal(chips.length, 2, "one ammo chip per player in split-screen PvP");
+  assert.ok(chips.every((c) => /^P[12]\b/.test(c.text)), `each chip tagged with its player (${JSON.stringify(chips.map((c) => c.text))})`);
+  assert.notEqual(chips[0].left, chips[1].left, "chips anchored to different slices (distinct x)");
+
   // Scavenge model: players spawn with only the kunai launcher and no ammo,
   // so nobody can fire until they pick some up.
   assert.deepEqual(await evalExpr(s, "window.pvp.state().weapon"), [1160, 1160, 1160, 1160], "everyone starts on the kunai launcher");

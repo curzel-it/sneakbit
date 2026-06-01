@@ -1,13 +1,13 @@
-// Ammo HUD: small chip in the top-right showing the kunai inventory icon
-// and the player's current count. Pins to the corner so it doesn't fight
-// the on-screen joystick (bottom) or the HP HUD (top-left). The icon is
-// drawn from the dedicated inventory sprite sheet at the species'
-// `inventory_texture_offset`, matching the original game's HUD.
+// Ammo HUD: small chip in the top-right showing the inventory icon and the
+// player's current count. Pins to the corner so it doesn't fight the on-screen
+// joystick (bottom) or the HP HUD (top-left). The icon is drawn from the
+// dedicated inventory sprite sheet at the species' `inventory_texture_offset`,
+// matching the original game's HUD.
 //
-// Local co-op shares the kunai pool (inventory.js folds P2 onto P1), so
-// a single chip covers both players. Network co-op also renders the
-// local hero's chip only — the host's HUD doesn't try to show guests'
-// counts.
+// Single-slice (single-player / online): one chip, top-right, for the local
+// hero. In split-screen local play (co-op or PvP) one chip per player is
+// anchored to the top-right of THAT player's slice — mirroring the per-slice
+// HP bars — each showing that player's own count.
 
 import { TILE_SIZE } from "./constants.js";
 import { getSprite } from "./assets.js";
@@ -15,12 +15,15 @@ import { getAmmo, onInventoryChange } from "./inventory.js";
 import { getEquipped, SLOT_RANGED, onEquipmentChange } from "./equipment.js";
 import { getSpecies } from "./species.js";
 import { isPvp } from "./gameMode.js";
+import { localPlayerCount } from "./coopMode.js";
+import { sliceCount, getSlices } from "./splitScreen.js";
 import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
+const MAX_PLAYERS = 4;
 
 let root = null;
-const chips = []; // [{ icon, count, lastDrawn, index }]
+const chips = []; // [{ root, icon, count, lastLabel, iconSpecies, index }]
 
 export function installAmmoHud() {
   if (root) return root;
@@ -28,7 +31,9 @@ export function installAmmoHud() {
   root = document.createElement("div");
   root.id = "ammo-hud";
 
-  chips.push(makeChip(0));
+  // Build all four chips up front; updateAmmoHud shows only the active ones
+  // (the local player count is hot-toggled, so we can't size the set here).
+  for (let i = 0; i < MAX_PLAYERS; i++) chips.push(makeChip(i));
   for (const c of chips) root.appendChild(c.root);
   document.body.appendChild(root);
 
@@ -67,18 +72,26 @@ function makeChip(index) {
 
 export function updateAmmoHud() {
   if (!root) return;
-  // PvP repurposes the single chip to show P1's (the local hero / host's)
-  // ammo for their *currently equipped* ranged weapon — tagged with the
-  // player number, with the icon following the equipped caliber. Outside PvP
-  // it's the local hero's shared/persisted kunai count as before.
   const pvp = isPvp();
-  const activeIdx = 0;
+  // Split-screen local play shows one chip per player, each anchored to its
+  // own slice and reading its own count. Single-slice (single-player / online)
+  // shows just the local hero's chip in the shared top-right corner.
+  const split = sliceCount() > 1;
+  const slices = split ? getSlices() : null;
+  const count = split ? localPlayerCount() : 1;
+  // Tag with the player number when more than one chip is on screen, or in
+  // PvP (where the chip tracks a specific player's scavenged loadout).
+  const tagged = pvp || count > 1;
   for (const c of chips) {
+    if (c.index >= count) { c.root.style.display = "none"; continue; }
+    c.root.style.display = "";
+    // PvP draws from the per-player scavenge loadout and follows that player's
+    // equipped caliber; outside PvP it's the persisted inventory pool.
     const bulletId = pvp
-      ? bulletOfWeapon(getPvpRangedWeapon(activeIdx))
+      ? bulletOfWeapon(getPvpRangedWeapon(c.index))
       : rangedBulletFor(c.index);
-    const n = pvp ? getPvpAmmo(activeIdx, bulletId) : getAmmo(bulletId, c.index);
-    const label = pvp ? `P${activeIdx + 1}  x${n}` : `x${n}`;
+    const n = pvp ? getPvpAmmo(c.index, bulletId) : getAmmo(bulletId, c.index);
+    const label = tagged ? `P${c.index + 1}  x${n}` : `x${n}`;
     if (label !== c.lastLabel) {
       c.count.textContent = label;
       c.lastLabel = label;
@@ -91,6 +104,24 @@ export function updateAmmoHud() {
     // Lazy-draw the icon the first time the sprite sheet is available
     // (it's loaded async at startup, so the first frames may not have it).
     if (!c.icon.dataset.painted) paintIcon(c.icon, bulletId);
+    anchorChip(c, slices);
+  }
+}
+
+// Position one chip: fixed to the top-right of its slice in split-screen, or
+// reset to the shared top-right container flow (single-slice). Mirrors
+// healthHud.anchorBar, but right-aligned (translateX) since ammo pins right.
+function anchorChip(c, slices) {
+  const css = slices?.[c.index]?.cssRect;
+  if (css) {
+    Object.assign(c.root.style, {
+      position: "fixed",
+      left: `${Math.round(css.left + css.width - 12)}px`,
+      top: `${Math.round(css.top + 12)}px`,
+      transform: "translateX(-100%)",
+    });
+  } else {
+    Object.assign(c.root.style, { position: "", left: "", top: "", transform: "" });
   }
 }
 
