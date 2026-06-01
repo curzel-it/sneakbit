@@ -6,14 +6,15 @@
 // Endpoints:
 //   POST  /auth/register         {email, password, displayName?} -> {token, user}
 //   POST  /auth/login            {email, password}               -> {token, user}
-//   GET   /auth/me               (Bearer)                        -> {user}
-//   PATCH /auth/me               (Bearer) {displayName?, password?, currentPassword?}
+//   GET    /auth/me              (Bearer)                        -> {user}
+//   PATCH  /auth/me              (Bearer) {displayName?, password?, currentPassword?}
+//   DELETE /auth/me              (Bearer) {password}             -> {ok:true}
 //   POST  /auth/forgot-password  {email}                         -> always 200
 //   POST  /auth/reset-password   {token, password}               -> {token, user}
 
 import { randomBytes, createHash } from "node:crypto";
 import {
-  createUser, findUserByEmail, findUserById, updateUser,
+  createUser, findUserByEmail, findUserById, updateUser, deleteUser,
   createPasswordReset, findPasswordReset, markPasswordResetUsed,
 } from "./db.js";
 import { signToken, verifyToken } from "./jwt.js";
@@ -45,6 +46,7 @@ export function createAuthHandler({ db, env = process.env } = {}) {
       if (method === "POST" && path === "/auth/login") return await login(req, res);
       if (method === "GET" && path === "/auth/me") return await me(req, res);
       if (method === "PATCH" && path === "/auth/me") return await patchMe(req, res);
+      if (method === "DELETE" && path === "/auth/me") return await deleteMe(req, res);
       if (method === "POST" && path === "/auth/forgot-password") return await forgot(req, res);
       if (method === "POST" && path === "/auth/reset-password") return await reset(req, res);
       return json(res, 404, { error: "not_found" });
@@ -118,6 +120,19 @@ export function createAuthHandler({ db, env = process.env } = {}) {
     }
     const updated = updateUser(db, user.id, patch);
     return json(res, 200, { user: publicUser(updated) });
+  }
+
+  async function deleteMe(req, res) {
+    const user = userFromBearer(req);
+    if (!user) return json(res, 401, { error: "unauthorized" });
+    // Re-confirm the password so a leaked token alone can't nuke an account.
+    const body = await readJsonBody(req);
+    const password = String(body.password ?? "");
+    if (!(await verifyPassword(password, user.password_hash))) {
+      return json(res, 403, { error: "wrong_password" });
+    }
+    deleteUser(db, user.id); // also drops the cloud save + reset tokens
+    return json(res, 200, { ok: true });
   }
 
   async function forgot(req, res) {

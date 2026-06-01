@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { createHash } from "node:crypto";
-import { openDb, createPasswordReset } from "../server/db.js";
+import { openDb, createPasswordReset, getSave, putSave, findUserByEmail } from "../server/db.js";
 import { createAuthHandler } from "../server/authRoutes.js";
 
 const env = { JWT_SECRET: "test-secret", APP_BASE_URL: "https://example.test" };
@@ -30,6 +30,7 @@ function headers(token) {
 const post = (base, path, body, token) => fetch(base + path, { method: "POST", headers: headers(token), body: JSON.stringify(body) });
 const patch = (base, path, body, token) => fetch(base + path, { method: "PATCH", headers: headers(token), body: JSON.stringify(body) });
 const get = (base, path, token) => fetch(base + path, { headers: headers(token) });
+const del = (base, path, body, token) => fetch(base + path, { method: "DELETE", headers: headers(token), body: JSON.stringify(body) });
 
 test("register -> login -> me happy path", async () => {
   await withServer(async (base) => {
@@ -121,6 +122,31 @@ test("an expired reset token is rejected", async () => {
 test("forgot-password is enumeration-safe (200 for an unknown email)", async () => {
   await withServer(async (base) => {
     assert.equal((await post(base, "/auth/forgot-password", { email: "nobody@nowhere.com" })).status, 200);
+  });
+});
+
+test("DELETE /auth/me removes the account (and its cloud save) after a password check", async () => {
+  await withServer(async (base, db) => {
+    const reg = await (await post(base, "/auth/register", { email: "del@b.com", password: "password1" })).json();
+    const token = reg.token;
+    // Give the user a cloud save so we can confirm the cascade.
+    putSave(db, { userId: reg.user.id, blob: JSON.stringify({ v: 1 }), rev: 1, updatedAt: 1 });
+    assert.ok(getSave(db, reg.user.id));
+
+    // Unauthorized + wrong-password are rejected.
+    assert.equal((await del(base, "/auth/me", { password: "password1" })).status, 401);
+    assert.equal((await del(base, "/auth/me", { password: "wrong" }, token)).status, 403);
+    assert.ok(findUserByEmail(db, "del@b.com"), "still present after a failed delete");
+
+    // Correct password deletes the user and cascades to the save.
+    assert.equal((await del(base, "/auth/me", { password: "password1" }, token)).status, 200);
+    assert.equal(findUserByEmail(db, "del@b.com"), null);
+    assert.equal(getSave(db, reg.user.id), null);
+
+    // The email is free to register again, and the old token no longer resolves.
+    assert.equal((await post(base, "/auth/register", { email: "del@b.com", password: "password2" })).status, 201);
+    // (old token now points at a deleted user → me is 401)
+    assert.equal((await get(base, "/auth/me", token)).status, 401);
   });
 });
 

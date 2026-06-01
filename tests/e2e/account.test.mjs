@@ -109,3 +109,46 @@ test("register, persist across reload, sign out, sign in, and stay playable offl
   );
   assert.match(errText, /offline/i);
 });
+
+test("delete account removes it server-side and signs the user out", async (t) => {
+  if (!skipIfNoChrome(t)) return;
+  const chrome = await launchChrome({ port: 9266, dataDir: "/tmp/sb-e2e-account-del" });
+  t.after(() => chrome.kill());
+  const targets = await getTargets(9266);
+  const page = targets.find((x) => x.type === "page");
+  const s = await connectSession(page.webSocketDebuggerUrl);
+  t.after(() => s.close());
+
+  const email = "e2e-del@sneakbit.test";
+  const liveUrl = `${servers.appUrl}/index.html?api=http://127.0.0.1:${RELAY_PORT}`;
+  const clickText = (scope, text) =>
+    evalExpr(s, `(()=>{const el=[...document.querySelectorAll(${q(scope)})].find(e=>e.textContent.trim()===${q(text)});if(!el)return false;el.click();return true;})()`);
+
+  await navigate(s, liveUrl);
+  await waitFor(s, "!!window.account && !!window.coop");
+
+  // Register.
+  await evalExpr(s, "window.account.open('register')");
+  await setVal(s, '[data-view="register"] input[type="email"]', email);
+  await setVal(s, '[data-view="register"] input[type="password"]', PASS);
+  await clickSel(s, '[data-view="register"] button.account-primary');
+  await waitFor(s, "window.account.isSignedIn()");
+
+  // Delete: open account → reveal danger zone → confirm with password.
+  await evalExpr(s, "window.account.open('account')");
+  await clickText('[data-view="account"] button', "Delete account");
+  await setVal(s, '[data-view="account"] .account-delete-confirm input[type="password"]', PASS);
+  await clickText('[data-view="account"] button', "Permanently delete");
+  await waitFor(s, "(!window.account.isSignedIn()) && window.account.user() === null", { timeoutMs: 20000 });
+
+  // Server-side gone: signing in again fails with invalid credentials.
+  await evalExpr(s, "window.account.open('signin')");
+  await setVal(s, '[data-view="signin"] input[type="email"]', email);
+  await setVal(s, '[data-view="signin"] input[type="password"]', PASS);
+  await clickSel(s, '[data-view="signin"] button.account-primary');
+  const err = await waitFor(
+    s,
+    `(()=>{const e=document.querySelector('[data-view="signin"] .account-error');return e&&e.style.display!=='none'?e.textContent:null;})()`,
+  );
+  assert.match(err, /wrong email or password/i);
+});

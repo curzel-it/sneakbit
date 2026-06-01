@@ -70,6 +70,15 @@ export function findUserById(db, id) {
 
 // Patch display_name and/or password_hash. Only the provided fields change;
 // updated_at always bumps.
+// Delete the user and everything tied to them (cloud save + any reset
+// tokens). Sequential deletes — SQLite FK cascade isn't enabled by default
+// in node:sqlite, so we clean up dependents explicitly.
+export function deleteUser(db, id) {
+  db.prepare(`DELETE FROM saves WHERE user_id = ?`).run(id);
+  db.prepare(`DELETE FROM password_resets WHERE user_id = ?`).run(id);
+  db.prepare(`DELETE FROM users WHERE id = ?`).run(id);
+}
+
 export function updateUser(db, id, { displayName, passwordHash, now }) {
   const sets = [];
   const params = [];

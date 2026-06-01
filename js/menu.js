@@ -202,6 +202,10 @@ export function installMenu(stateGetter) {
         Sound effects by <a href="https://opengameart.org/content/512-sound-effects-8-bit-style" target="_blank" rel="noopener">SubspaceAudio</a><br>
         Font by <a href="https://dl.dafont.com/dl/?f=pixel_operator" target="_blank" rel="noopener">HarvettFox96</a>
       </p>
+      <p class="menu-credits">
+        <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> &middot;
+        <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a>
+      </p>
       <div class="menu-row menu-controls">
         <button id="menu-credits-back">Back</button>
       </div>

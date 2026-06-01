@@ -16,7 +16,7 @@ import {
   onAccountChange, revalidate, resolveResetToken,
 } from "./accountSession.js";
 import {
-  registerAccount, loginAccount, updateMe, forgotPassword, resetPassword,
+  registerAccount, loginAccount, updateMe, forgotPassword, resetPassword, deleteAccount,
 } from "./accountApi.js";
 
 let overlay = null;
@@ -201,7 +201,19 @@ function buildRegisterView() {
   w.regError = errorEl(root);
   w.regBtn = primaryButton(root, "Create account", onRegister);
   linkRow(root, [{ label: "Already have an account? Sign in", view: "signin" }]);
+  root.appendChild(buildLegalFooter("By creating an account you agree to the"));
   return root;
+}
+
+// Small print linking the legal pages (also satisfies store/GDPR
+// requirements that the policy be reachable at sign-up).
+function buildLegalFooter(lead) {
+  const p = document.createElement("p");
+  p.className = "account-legal";
+  p.innerHTML = `${lead} ` +
+    `<a href="terms.html" target="_blank" rel="noopener">Terms</a> and ` +
+    `<a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.`;
+  return p;
 }
 
 function buildForgotView() {
@@ -253,7 +265,54 @@ function buildAccountView() {
   signOutBtn.textContent = "Sign out";
   signOutBtn.addEventListener("click", onSignOut);
   root.appendChild(signOutBtn);
+
+  // Danger zone: delete account. Hidden behind a reveal + password confirm so
+  // it can't be hit by accident (or by a stolen token).
+  const dzLabel = document.createElement("p");
+  dzLabel.className = "account-hint account-danger-label";
+  dzLabel.textContent = "Danger zone";
+  root.appendChild(dzLabel);
+
+  w.accountDeleteBtn = document.createElement("button");
+  w.accountDeleteBtn.className = "account-danger";
+  w.accountDeleteBtn.textContent = "Delete account";
+  w.accountDeleteBtn.addEventListener("click", () => showDeleteConfirm(true));
+  root.appendChild(w.accountDeleteBtn);
+
+  w.accountDeleteConfirm = document.createElement("div");
+  w.accountDeleteConfirm.className = "account-delete-confirm";
+  w.accountDeleteConfirm.style.display = "none";
+  const warn = document.createElement("p");
+  warn.className = "account-error";
+  warn.style.display = "block";
+  warn.textContent = "This permanently deletes your account and cloud save. This cannot be undone.";
+  w.accountDeletePw = document.createElement("input");
+  w.accountDeletePw.className = "account-input";
+  w.accountDeletePw.type = "password";
+  w.accountDeletePw.placeholder = "Enter your password to confirm";
+  w.accountDeletePw.autocomplete = "current-password";
+  w.accountDeletePw.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); onDeleteAccount(); } });
+  const confirmDel = document.createElement("button");
+  confirmDel.className = "account-danger";
+  confirmDel.textContent = "Permanently delete";
+  confirmDel.addEventListener("click", onDeleteAccount);
+  w.accountDeleteConfirmBtn = confirmDel;
+  const cancelDel = document.createElement("button");
+  cancelDel.textContent = "Cancel";
+  cancelDel.addEventListener("click", () => showDeleteConfirm(false));
+  w.accountDeleteConfirm.append(warn, w.accountDeletePw, confirmDel, cancelDel);
+  root.appendChild(w.accountDeleteConfirm);
+
+  root.appendChild(buildLegalFooter("See our"));
   return root;
+}
+
+function showDeleteConfirm(on) {
+  if (!w.accountDeleteConfirm) return;
+  w.accountDeleteConfirm.style.display = on ? "block" : "none";
+  w.accountDeleteBtn.style.display = on ? "none" : "block";
+  if (!on && w.accountDeletePw) w.accountDeletePw.value = "";
+  if (on && isAccountPanelOpen()) focusFirstIn(w.accountDeleteConfirm);
 }
 
 function buildCloseRow() {
@@ -287,6 +346,7 @@ function renderAccountView() {
   if (!user) { showView("signin"); return; }
   w.accountEmail.textContent = user.email;
   w.accountName.value = user.displayName || "";
+  showDeleteConfirm(false);
 }
 
 // — Handlers ————————————————————————————————————————————————————————————
@@ -375,6 +435,23 @@ function onSignOut() {
   signOut();
   showToast("Signed out", "hint");
   showView("signin");
+}
+
+async function onDeleteAccount() {
+  const password = w.accountDeletePw.value;
+  if (!password) { setError(w.accountError, "Enter your password to confirm deletion."); return; }
+  await withBusy(w.accountDeleteConfirmBtn, async () => {
+    const r = await deleteAccount(getTokenOrNull(), { password });
+    if (r.offline) { setError(w.accountError, OFFLINE_MSG); return; }
+    if (r.status === 401) { handleExpired(); return; }
+    if (r.status === 403) { setError(w.accountError, "That password is incorrect."); return; }
+    if (!r.ok) { setError(w.accountError, messageFor(r.error, "Couldn't delete the account.")); return; }
+    // Account (and its cloud save) are gone. Sign out locally; local game
+    // progress on this device is left intact so play continues offline.
+    signOut();
+    showToast("Your account has been deleted", "longHint");
+    closeAccountPanel();
+  });
 }
 
 // — Helpers ————————————————————————————————————————————————————————————
@@ -503,6 +580,12 @@ function injectStyles() {
       font-size: 11px; text-align: left; cursor: pointer;
     }
     .account-card button.account-link:hover { text-decoration: underline; background: none; }
+    .account-danger-label { color: #c98; margin-top: 18px; }
+    .account-delete-confirm { margin-top: 8px; }
+    .account-delete-confirm button { margin: 4px 6px 0 0; }
+    .account-legal { color: var(--sb-text-dim); font-size: 10px; margin: 16px 0 0; }
+    .account-legal a { color: #9ab1ff; text-decoration: none; }
+    .account-legal a:hover { text-decoration: underline; }
     .account-close-row { display: flex; justify-content: flex-end; margin-top: 18px; }
   `;
   document.head.appendChild(style);

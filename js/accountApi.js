@@ -37,3 +37,4 @@ export const fetchMe = (token) => request("/auth/me", { token });
 export const updateMe = (token, body) => request("/auth/me", { method: "PATCH", body, token });
 export const forgotPassword = (body) => request("/auth/forgot-password", { method: "POST", body });
 export const resetPassword = (body) => request("/auth/reset-password", { method: "POST", body });
+export const deleteAccount = (token, body) => request("/auth/me", { method: "DELETE", body, token });
