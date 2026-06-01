@@ -35,9 +35,8 @@ Then open <http://localhost:8000>.
 Production *is* bundled: `npm run build` (esbuild, the only devDependency) writes
 a content-hashed single-file bundle into `_site/`. That's what ships - the public
 build at <https://sneakbit.curzel.it> is deployed from the VPS via
-`python3 deploy.py`, and the same `_site/` is mirrored to GitHub Pages by
-[`.github/workflows`](./.github/workflows). Dev and the e2e harness never touch
-the bundle; only deploys do.
+`python3 deploy.py`. Dev and the e2e harness never touch the bundle; only deploys
+do.
 
 ## Tests
 

@@ -1,5 +1,5 @@
 // Production build — bundles the module graph into one content-hashed file
-// and assembles a self-contained publish dir (_site/) for GitHub Pages.
+// and assembles a self-contained publish dir (_site/) for the VPS deploy.
 //
 // Why a build at all: dev and the e2e harness load raw ES modules straight
 // from js/ (no build), but production used to cache-bust by pinning
