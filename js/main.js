@@ -66,6 +66,7 @@ import { tickLocalEffects } from "./localEffects.js";
 import { getSelfPlayerId } from "./onlineBootstrap.js";
 import { installPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
 import { installAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
+import { installCloudSave } from "./cloudSave.js";
 import { installHostLaggingOverlay, updateHostLaggingOverlay } from "./hostLaggingOverlay.js";
 import { setHostPaused } from "./hostPauseState.js";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js";
@@ -93,6 +94,9 @@ async function main() {
   // menu's "Account" row and the ?reset=… deep link work) but makes no
   // blocking network call at boot.
   installAccountPanel();
+  // Cloud saves: lazy + offline-tolerant. Pulls on sign-in, debounced-pushes
+  // on progress change. No-op while signed out; never blocks boot.
+  installCloudSave();
   installHostLaggingOverlay();
   // `?join=CODE` tabs with a *well-formed* code are guests for the
   // lifetime of the page — they never own a local save and shouldn't

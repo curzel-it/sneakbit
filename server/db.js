@@ -37,9 +37,17 @@ function migrate(db) {
       used_at    INTEGER
     );
   `);
-  // Cloud saves (next milestone) slot in here as a third table, keyed by
-  // user_id with a monotonic `rev` for last-writer-wins — purely additive,
-  // no rework of the above. Left uncreated until that feature lands.
+  // Cloud saves: one row per user holding the serialized progress blob.
+  // `rev` is monotonic (optimistic-concurrency token for PUT); `updated_at`
+  // is the authority for newest-wins conflict resolution on the client.
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS saves (
+      user_id    TEXT PRIMARY KEY REFERENCES users(id),
+      blob       TEXT NOT NULL,
+      rev        INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+  `);
 }
 
 // — Users ———————————————————————————————————————————————————————————————
@@ -88,4 +96,25 @@ export function findPasswordReset(db, tokenHash) {
 
 export function markPasswordResetUsed(db, tokenHash, now) {
   db.prepare(`UPDATE password_resets SET used_at = ? WHERE token_hash = ?`).run(now, tokenHash);
+}
+
+// — Cloud saves ——————————————————————————————————————————————————————————
+
+export function getSave(db, userId) {
+  return db.prepare(`SELECT * FROM saves WHERE user_id = ?`).get(userId) ?? null;
+}
+
+// Upsert the blob, stamping the caller-provided rev + updated_at. The route
+// layer computes the next rev and decides whether the write is allowed
+// (optimistic concurrency); this helper just persists.
+export function putSave(db, { userId, blob, rev, updatedAt }) {
+  db.prepare(`
+    INSERT INTO saves (user_id, blob, rev, updated_at) VALUES (?, ?, ?, ?)
+    ON CONFLICT(user_id) DO UPDATE SET blob = excluded.blob, rev = excluded.rev, updated_at = excluded.updated_at
+  `).run(userId, blob, rev, updatedAt);
+  return getSave(db, userId);
+}
+
+export function deleteSave(db, userId) {
+  db.prepare(`DELETE FROM saves WHERE user_id = ?`).run(userId);
 }

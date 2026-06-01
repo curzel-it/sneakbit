@@ -6,6 +6,7 @@ import { createRelay } from "./relay.js";
 import { negotiate as negotiateExtensions, formatResponse as formatExtResponse } from "./wsExtensions.js";
 import { handleTurnRequest } from "./turnCredentials.js";
 import { createAuthHandler } from "./authRoutes.js";
+import { createSavesHandler } from "./savesRoutes.js";
 import { openDb } from "./db.js";
 import { parseAllowedHosts, isOriginAllowed } from "./originAllowlist.js";
 import { log } from "./logger.js";
@@ -60,19 +61,25 @@ function applyGatedCors(res, originHeader, allowedHosts) {
   res.setHeader("access-control-allow-origin", originHeader);
 }
 
-// Auth endpoints take POST/PATCH (not just GET), so they need a wider
-// methods list than applyGatedCors. Same origin allowlist — the client may
-// be cross-origin (GitHub Pages on curzel.it, local dev on :8000), so the
-// browser needs the echoed ACAO. Bearer tokens, not cookies, so no
-// allow-credentials is required.
+// Auth + cloud-save endpoints take POST/PUT/PATCH/DELETE (not just GET), so
+// they need a wider methods list than applyGatedCors. Same origin allowlist —
+// the client may be cross-origin (GitHub Pages on curzel.it, local dev on
+// :8000), so the browser needs the echoed ACAO. Bearer tokens, not cookies,
+// so no allow-credentials is required.
 function applyAuthCors(res, originHeader, allowedHosts) {
-  res.setHeader("access-control-allow-methods", "GET, POST, PATCH, OPTIONS");
+  res.setHeader("access-control-allow-methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
   res.setHeader("access-control-allow-headers", "content-type, authorization");
   res.setHeader("access-control-max-age", "86400");
   res.setHeader("vary", "origin");
   if (!originHeader) return;
   if (!isOriginAllowed(originHeader, allowedHosts)) return;
   res.setHeader("access-control-allow-origin", originHeader);
+}
+
+// Endpoints behind bearer auth (account + cloud saves) share the wide CORS
+// + lazy-db treatment.
+function isAuthScoped(url) {
+  return !!url && (url.startsWith("/auth/") || url === "/saves" || url.startsWith("/saves?"));
 }
 
 export function startServer({
@@ -97,28 +104,39 @@ export function startServer({
   const metricsRl = new Map();
   let metricsRlEpoch = 0;
 
-  // Auth is optional and lazy: the db is opened (and data.db created) only
-  // on the first /auth/* request, and only when JWT_SECRET is configured.
-  // With no secret the endpoints return 503 and the rest of the server
-  // (relay, health, turn) runs unchanged — the offline-first guarantee.
-  let authHandler = null;
-  let authInit = false;
-  function getAuthHandler() {
-    if (authInit) return authHandler;
-    authInit = true;
+  // Auth + cloud saves are optional and lazy: the db is opened (and data.db
+  // created) only on the first bearer-scoped request, and only when
+  // JWT_SECRET is configured. With no secret the endpoints return 503 and the
+  // rest of the server (relay, health, turn) runs unchanged — the
+  // offline-first guarantee. Auth and saves share one db connection.
+  let db = null;
+  let dbInit = false;
+  function getDb() {
+    if (dbInit) return db;
+    dbInit = true;
     if (!process.env.JWT_SECRET) return null;
     try {
-      authHandler = createAuthHandler({ db: openDb() });
+      db = openDb();
     } catch (err) {
-      log.error("auth.initFailed", { err: err?.message || String(err) });
-      authHandler = null;
+      log.error("db.initFailed", { err: err?.message || String(err) });
+      db = null;
     }
+    return db;
+  }
+  let authHandler = null;
+  function getAuthHandler() {
+    if (!authHandler) { const d = getDb(); if (d) authHandler = createAuthHandler({ db: d }); }
     return authHandler;
+  }
+  let savesHandler = null;
+  function getSavesHandler() {
+    if (!savesHandler) { const d = getDb(); if (d) savesHandler = createSavesHandler({ db: d }); }
+    return savesHandler;
   }
 
   const server = createServer((req, res) => {
     if (req.method === "OPTIONS") {
-      if (req.url && req.url.startsWith("/auth/")) {
+      if (isAuthScoped(req.url)) {
         applyAuthCors(res, req.headers.origin, allowedHosts);
       } else {
         applySafeCors(res);
@@ -169,9 +187,9 @@ export function startServer({
       handleTurnRequest(req, res);
       return;
     }
-    if (req.url && req.url.startsWith("/auth/")) {
+    if (isAuthScoped(req.url)) {
       applyAuthCors(res, req.headers.origin, allowedHosts);
-      const handler = getAuthHandler();
+      const handler = req.url.startsWith("/saves") ? getSavesHandler() : getAuthHandler();
       if (!handler) {
         res.writeHead(503, { "content-type": "application/json; charset=utf-8" });
         res.end(JSON.stringify({ error: "auth_unavailable" }) + "\n");

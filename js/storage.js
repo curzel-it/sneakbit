@@ -11,6 +11,21 @@ const hasLS = typeof localStorage !== "undefined";
 
 const cache = new Map();
 let hydrated = false;
+// Change subscribers — cloudSave listens here to know when progress (the
+// kv.v1 namespace) changed, so it can debounce a cloud push. Kept as a
+// passive notify so storage.js takes on no dependency on the sync layer.
+const changeSubscribers = new Set();
+
+export function onStorageChange(fn) {
+  changeSubscribers.add(fn);
+  return () => changeSubscribers.delete(fn);
+}
+
+function notifyChange(key) {
+  for (const fn of changeSubscribers) {
+    try { fn(key); } catch (e) { console.error("onStorageChange handler", e); }
+  }
+}
 
 function hydrate() {
   if (hydrated) return;
@@ -38,11 +53,13 @@ export function setValue(key, value) {
   if (value == null) {
     cache.delete(key);
     if (hasLS) { try { localStorage.removeItem(PREFIX + key); } catch {} }
+    notifyChange(key);
     return;
   }
   const v = value | 0;
   cache.set(key, v);
   if (hasLS) { try { localStorage.setItem(PREFIX + key, String(v)); } catch {} }
+  notifyChange(key);
 }
 
 // True if `key` matches `expectedValue` under the Rust core's rule:

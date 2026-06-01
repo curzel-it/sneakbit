@@ -23,7 +23,9 @@ import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js";
 import { invalidateZoneCache } from "./data.js";
 import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
 import { openAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
-import { onAccountChange, getUser } from "./accountSession.js";
+import { onAccountChange, getUser, getToken, isSignedIn } from "./accountSession.js";
+import { markDirty as markCloudSaveDirty } from "./cloudSave.js";
+import { deleteCloudSave } from "./saveApi.js";
 import { isGameOverOpen } from "./gameOver.js";
 import { isFastTravelOpen } from "./fastTravel.js";
 import { isMessageOpen } from "./message.js";
@@ -587,6 +589,11 @@ function bindWidgets() {
   });
   root.querySelector("#menu-new-game").addEventListener("click", () => {
     if (!confirm("Wipe save and start over? Inventory, dialogue progress and unlocked skills will be reset.")) return;
+    // A fresh start should be truly fresh: when signed in, delete the cloud
+    // save too (keepalive so it survives the imminent reload), otherwise it
+    // would just sync back down on the next sign-in. Best-effort — a failed
+    // delete never blocks the local wipe.
+    if (isSignedIn()) { try { deleteCloudSave(getToken(), { keepalive: true }); } catch {} }
     // Tell main.js's beforeunload listener to stand down — otherwise it
     // re-saves the player's current zone+tile on top of the cleared
     // payload during the reload, and we'd end up right back where we
@@ -640,6 +647,9 @@ function bindWidgets() {
   const language = root.querySelector("#opt-language");
   language.addEventListener("change", () => {
     saveSettings({ language: language.value });
+    // Language is account-scoped — flag the change so cloudSave pushes the
+    // new value (the timestamp bump survives the reload below).
+    try { markCloudSaveDirty(); } catch {}
     try { window.save?.suppressUnloadSave?.(); } catch {}
     location.reload();
   });

@@ -6,12 +6,18 @@
 export function readJsonBody(req, { maxBytes = 64 * 1024 } = {}) {
   return new Promise((resolve, reject) => {
     let size = 0;
+    let over = false;
     const chunks = [];
     req.on("data", (chunk) => {
+      if (over) return; // already rejected — draining the rest
       size += chunk.length;
       if (size > maxBytes) {
+        over = true;
+        chunks.length = 0;
+        // Drain (don't destroy) the remaining upload so the caller can still
+        // write a clean 413 response on the same connection.
+        req.resume();
         reject(Object.assign(new Error("request body too large"), { code: "BODY_TOO_LARGE" }));
-        req.destroy();
         return;
       }
       chunks.push(chunk);

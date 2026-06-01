@@ -99,6 +99,7 @@ SERVER_SYNC_PATHS = [
     "httpBody.js",
     "authRoutes.js",
     "rateLimitHttp.js",
+    "savesRoutes.js",
 ]
 
 # node:sqlite (used by db.js) is stable/unflagged only on Node 24+. A redeploy
@@ -224,7 +225,8 @@ server {{
     # Relay backend: WS upgrade + JSON endpoints. Regex beats the `/` prefix.
     # `auth/...` has a sub-path (/auth/register etc.), so it gets its own
     # prefix alternative rather than the `$`-anchored exact-match group.
-    location ~ ^/(ws|health|version|metrics|turn-credentials|auth/) {{
+    # `saves` is the cloud-save endpoint (GET/PUT/DELETE).
+    location ~ ^/(ws|health|version|metrics|turn-credentials|auth/|saves) {{
         proxy_pass http://{APP_BIND};
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
