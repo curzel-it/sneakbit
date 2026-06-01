@@ -132,6 +132,18 @@ NODE_MAJOR = "24"
 # their own ports.
 TURN_ENV_FILE = "/etc/sneakbit-server.env"
 
+# Server secrets propagated from the local .env into the systemd
+# EnvironmentFile (TURN_ENV_FILE). Local .env is the single source of truth —
+# keep server secrets there next to the deploy creds. Only keys actually
+# present in .env are written, so an unset TURN simply omits those lines.
+SERVER_ENV_KEYS = [
+    "JWT_SECRET",
+    "SMTP2GO_API_KEY",
+    "SMTP_FROM",
+    "TURN_SECRET",
+    "TURN_URLS",
+]
+
 def render_systemd_unit(git_sha: str) -> str:
     """Stamp the current git SHA into the unit at deploy time. The
     relay's /version endpoint reads $GIT_SHA at startup — baking it
@@ -156,11 +168,13 @@ Environment=LOG_LEVEL=info
 Environment=GIT_SHA={git_sha}
 # Accounts/auth: data.db lives in the app dir (survives deploys — not in
 # SERVER_SYNC_PATHS) and reset emails link to the public site. These two are
-# non-secret, so they live inline; the secrets (JWT_SECRET, SMTP2GO_API_KEY,
-# SMTP_FROM) go in the EnvironmentFile below so they stay out of the repo.
+# non-secret, so they live inline; the secrets go in the EnvironmentFile
+# below (written by step_server_env from the local .env) so they stay out of
+# the repo and the systemd unit.
 Environment=DATABASE_PATH={REMOTE_DIR}/data.db
 Environment=APP_BASE_URL=https://{SERVER_NAME}
-# Optional secrets live here (gitignored, hand-managed on the box):
+# Secrets written by deploy.py (step_server_env) from local .env — see
+# SERVER_ENV_KEYS. The leading '-' keeps a missing file non-fatal:
 #   TURN_SECRET + TURN_URLS  — coturn; missing → relay falls back to STUN-only.
 #   JWT_SECRET               — REQUIRED to enable accounts; absent → /auth/*
 #                              returns 503 and the rest of the server runs
@@ -480,6 +494,21 @@ def _local_git_sha() -> str:
         return "unknown"
 
 
+def step_server_env(env):
+    """Write the systemd EnvironmentFile (TURN_ENV_FILE) from the secrets in
+    local .env. Idempotent; runs before the service restart so the new
+    process picks the values up. Owner root / mode 0600 — systemd reads it as
+    root before dropping to the app user."""
+    print("[4b] write server env file")
+    lines = [f"{k}={env[k]}" for k in SERVER_ENV_KEYS if env.get(k)]
+    if not lines:
+        print("  no server secrets in .env, skipping (auth/email/TURN stay disabled)")
+        return
+    present = ", ".join(k for k in SERVER_ENV_KEYS if env.get(k))
+    print(f"  writing {len(lines)} keys: {present}")
+    write_remote_file(env, TURN_ENV_FILE, "\n".join(lines) + "\n", mode=0o600)
+
+
 def step_systemd(env):
     print("[5] systemd unit")
     sha = _local_git_sha()
@@ -633,6 +662,7 @@ def main(argv: list[str] | None = None) -> int:
     step_apt(env)
     step_user(env)
     step_push_server(env)
+    step_server_env(env)
     step_systemd(env)
     step_nginx_http(env)
     step_push_client(env)
