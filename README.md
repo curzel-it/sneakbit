@@ -1,11 +1,14 @@
 <img src="assets/logo.png" alt="SneakBit" style="width: 324px; height: auto; image-rendering: pixelated;">
 
-> Vibe-coded port of a game I wrote in Rust a couple of years ago
+> A game I wrote in Rust a couple of years ago, ported to JavaScript
+
+### ▶ [Play it now at sneakbit.curzel.it](https://sneakbit.curzel.it)
+
+No install, no plugins — runs in any browser.
 
 SneakBit is a top-down adventure-action game with close- and long-range combat, a
 hand-drawn Gameboy-style world, and a story to wander through. This repository is
-the **HTML5 / Canvas / vanilla JS** build of it — it runs in any browser, no
-install, no plugins.
+the **HTML5 / Canvas / vanilla JS** build of it.
 
 A previous version of the game was written in **Rust** (a `game_core` crate with
 platform-specific renderers — raylib on desktop, CoreGraphics on iOS, Compose on
