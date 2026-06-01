@@ -8,7 +8,7 @@
 // spawns/despawns local avatars — is injected the same way, so there's no
 // import back into main.js.
 
-import { updateCamera, panCameraTo } from "./camera.js";
+import { updateCamera } from "./camera.js";
 import { travelTo, fadeOverlayIn } from "./transitions.js";
 import { cornerSpawnTile, placePvpPlayer } from "./pvpSpawn.js";
 import { resetPlayerHealth, isPlayerDead, getPlayerHp, setPlayerHp } from "./playerHealth.js";
@@ -16,14 +16,13 @@ import { setGameMode, getGameMode, GAME_MODE, isPvp } from "./gameMode.js";
 import { showToast } from "./toast.js";
 import { tr } from "./strings.js";
 import { showMatchResult, isGameOverOpen } from "./gameOver.js";
-import { hideTurnHud } from "./turnHud.js";
 import { refreshHealthHud } from "./healthHud.js";
 import { getRuntimeRole } from "./onlineMode.js";
 import { tryShootForSlot } from "./shooting.js";
 import {
-  startMatch as startPvpLogic, rematch as rematchPvpLogic, tickMatch as tickPvpMatch,
-  endMatch as endPvpMatch, notifyPlayerDied, cameraPlayerIndex, getMatchResult,
-  isMatchOver, playerCount as pvpPlayerCount, getTurn, pvpSlotCanAct,
+  startMatch as startPvpLogic, rematch as rematchPvpLogic,
+  endMatch as endPvpMatch, notifyPlayerDied, getMatchResult,
+  isMatchOver, playerCount as pvpPlayerCount, pvpSlotCanAct,
 } from "./pvpMatch.js";
 import { getPvpAmmo, addPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 import { PVP_ARENA_ZONE_ID } from "./constants.js";
@@ -81,27 +80,20 @@ function allPlayerObjects() {
   return out;
 }
 
-// Mask a slot's input to nothing when it isn't that player's turn (no-op
-// outside PvP — pvpSlotCanAct returns true). pollInput is still called by
-// the caller first, so the off-turn slot's event queue is drained.
+// Mask a slot's input to nothing once the match is over (no-op outside PvP
+// and while the match is live — pvpSlotCanAct returns true). pollInput is
+// still called by the caller first, so the slot's event queue is drained.
 export function pvpGateInput(idx0, raw) {
   return pvpSlotCanAct(idx0 + 1) ? raw : { events: [], held: new Set() };
 }
 
-// Who the PvP camera follows: the current/upcoming player, or null when no
-// match is running (the caller falls back to the shared camera).
-export function pvpCameraTarget() {
-  const idx = cameraPlayerIndex();
-  return idx != null ? playerByIndex(idx) : null;
-}
-
-// Per-frame PvP step (offline/local only): advance the turn machine, toast
-// + report any new death, and raise the result screen once resolved.
-export function tickPvpFrame(dt) {
+// Per-frame PvP step (offline/local only): toast + report any new death, and
+// raise the result screen once resolved. Realtime — everyone acts at once, so
+// there's no turn to advance.
+export function tickPvpFrame() {
   // Arena still loading: players aren't at their corners and HP isn't reset,
-  // so don't advance the turn or evaluate deaths against the old zone.
+  // so don't evaluate deaths against the old zone.
   if (pvpEntering) return;
-  tickPvpMatch(dt);
   for (const p of allPlayerObjects()) {
     const idx = p.index | 0;
     if (isPlayerDead(idx) && !pvpDeadToasted.has(idx)) {
@@ -188,9 +180,8 @@ export async function exitPvp() {
   const state = getState();
   if (!state?.zone) return;
   setGameMode(GAME_MODE.coop);
-  endPvpMatch();            // park the turn machine + clear loadout
+  endPvpMatch();            // clear match state
   setLocalPlayers(1);
-  hideTurnHud();
   pvpDeadToasted.clear();
   const dest = pvpReturnDest ?? { zone: DUSKHAVEN_ZONE_ID, x: 59, y: 57, direction: "Down" };
   pvpReturnDest = null;
@@ -232,8 +223,6 @@ function installDebugHook() {
       return {
         mode: getGameMode(),
         zoneId: state?.zone?.id,
-        turn: getTurn(),
-        liveIndex: cameraPlayerIndex(),
         result: getMatchResult(),
         over: isMatchOver(),
         hp: [0, 1, 2, 3].map((i) => getPlayerHp(i)),

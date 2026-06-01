@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-const { GAME_MODE, PVP_PLAYER_HP, getGameMode, setGameMode, isPvp, isRealtimePvp, isTurnBasedPvp, pvpPlayerHp } =
+const { GAME_MODE, PVP_PLAYER_HP, getGameMode, setGameMode, isPvp, pvpPlayerHp } =
   await import("../js/gameMode.js");
 
 test("defaults to coop, not pvp", () => {
@@ -30,28 +30,4 @@ test("setGameMode ignores unknown values", () => {
 test("pvp player hp is 1000", () => {
   assert.equal(PVP_PLAYER_HP, 1000);
   assert.equal(pvpPlayerHp(), 1000);
-});
-
-test("pvp defaults to turn-based; realtime flag opts into the realtime variant", () => {
-  setGameMode(GAME_MODE.pvp);
-  assert.equal(isPvp(), true);
-  assert.equal(isTurnBasedPvp(), true);
-  assert.equal(isRealtimePvp(), false);
-
-  setGameMode(GAME_MODE.pvp, { realtime: true });
-  assert.equal(isPvp(), true, "both variants are PvP (1000 HP / FF / scavenge)");
-  assert.equal(isRealtimePvp(), true);
-  assert.equal(isTurnBasedPvp(), false);
-  setGameMode(GAME_MODE.coop);
-});
-
-test("realtime flag is cleared when leaving pvp", () => {
-  setGameMode(GAME_MODE.pvp, { realtime: true });
-  assert.equal(isRealtimePvp(), true);
-  setGameMode(GAME_MODE.coop);
-  assert.equal(isRealtimePvp(), false);
-  setGameMode(GAME_MODE.pvp); // turn-based, no opts → flag stays cleared
-  assert.equal(isRealtimePvp(), false);
-  assert.equal(isTurnBasedPvp(), true);
-  setGameMode(GAME_MODE.coop);
 });

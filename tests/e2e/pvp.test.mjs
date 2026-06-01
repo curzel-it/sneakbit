@@ -1,9 +1,9 @@
-// E2E: local turn-based PvP. Starts a 2-player match through the real
+// E2E: local realtime PvP. Starts a 2-player match through the real
 // startPvpMatch path (window.pvp debug hook), then asserts the whole loop:
-// mode + arena + 1000 HP, corner spawns, the prep→active turn flip, turn-
-// gated input (only the active player's slot reacts), and win/lose (killing
-// one player resolves the match to the survivor and raises the result
-// modal). Self-skips when Chrome isn't installed.
+// mode + arena + 1000 HP, corner spawns, simultaneous input (both players
+// act at once — no turns), scavenge ammo pickups, firing, and win/lose
+// (killing one player resolves the match to the survivor, raises the result
+// modal, and freezes the winner). Self-skips when Chrome isn't installed.
 
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
@@ -20,7 +20,7 @@ after(() => { if (servers) servers.stop(); });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const posOf = (list, index) => list.find((p) => p.index === index);
 
-test("local PvP: arena, corners, turns, gating, win/lose", async (t) => {
+test("local realtime PvP: arena, corners, simultaneous input, scavenge, win/lose", async (t) => {
   if (!skipIfNoChrome(t)) return;
   const chrome = await launchChrome({ port: 9262, dataDir: "/tmp/sb-e2e-pvp" });
   t.after(() => chrome.kill());
@@ -59,31 +59,17 @@ test("local PvP: arena, corners, turns, gating, win/lose", async (t) => {
     );
   }
 
-  // Match opens on P1's prep (nobody acts), then flips to P1's active turn.
-  const prep = await evalExpr(s, "window.pvp.state().turn");
-  assert.equal(prep.kind, "prep", "match opens in prep");
-  assert.equal(prep.playerIndex, 0, "prep is for P1");
-  await waitFor(s, "window.pvp.state().turn.kind === 'player'");
-  const active = await evalExpr(s, "window.pvp.state().turn");
-  assert.equal(active.playerIndex, 0, "P1 is the first active player");
-
-  // Turn-gated input: during P1's turn, only slot 1 reacts. Tap a facing
-  // the avatar isn't already at and assert P1 rotates while P2 is frozen.
-  const before = await evalExpr(s, "window.coop.positions()");
-  const p1dir = posOf(before, 0).direction;
-  const p2dir = posOf(before, 1).direction;
-  const target = p1dir === "up" ? "down" : "up";
-
-  await evalExpr(s, `window.coop.tap(2, ${JSON.stringify(target)})`); // off-turn
-  await evalExpr(s, `window.coop.tap(1, ${JSON.stringify(target)})`); // on-turn
+  // Realtime: both players act at once. Tap each to a distinct facing and
+  // assert BOTH rotate the same frame — there's no turn gate.
+  await evalExpr(s, `window.coop.tap(1, "up")`);
+  await evalExpr(s, `window.coop.tap(2, "down")`);
   await sleep(250);
-
   const afterTap = await evalExpr(s, "window.coop.positions()");
-  assert.equal(posOf(afterTap, 0).direction, target, "active P1 turned to face the tap");
-  assert.equal(posOf(afterTap, 1).direction, p2dir, "off-turn P2 ignored its tap");
+  assert.equal(posOf(afterTap, 0).direction, "up", "P1 turned to face its tap");
+  assert.equal(posOf(afterTap, 1).direction, "down", "P2 turned to face its tap simultaneously");
 
   // Scavenge model: players spawn with only the kunai launcher and no ammo,
-  // so the active player can't fire until they pick some up.
+  // so nobody can fire until they pick some up.
   assert.deepEqual(await evalExpr(s, "window.pvp.state().weapon"), [1160, 1160, 1160, 1160], "everyone starts on the kunai launcher");
   assert.deepEqual(await evalExpr(s, "window.pvp.state().ammo"), [0, 0, 0, 0], "everyone starts empty");
   const dryDelta = await evalExpr(s, "(() => { const b0 = window.pvp.state().bullets; window.pvp.shoot(1); return window.pvp.state().bullets - b0; })()");
@@ -112,12 +98,11 @@ test("local PvP: arena, corners, turns, gating, win/lose", async (t) => {
   assert.equal((await evalExpr(s, "window.pvp.state().weapon"))[0], 1154, "AR15 now equipped");
   assert.equal((await evalExpr(s, "window.pvp.state().ammo"))[0], 100, "HUD count follows to .223");
 
-  // Firing the AR15 spends .223, not kunai; off-turn P2 stays blocked.
-  await evalExpr(s, "window.pvp.giveAmmo(1, 7000, 5)");
-  const offTurnDelta = await evalExpr(s, "(() => { const b0 = window.pvp.state().bullets; window.pvp.shoot(2); return window.pvp.state().bullets - b0; })()");
-  assert.equal(offTurnDelta, 0, "off-turn P2 cannot shoot even with ammo");
-  const onTurnDelta = await evalExpr(s, "(() => { const b0 = window.pvp.state().bullets; window.pvp.shoot(1); return window.pvp.state().bullets - b0; })()");
-  assert.ok(onTurnDelta >= 1, "active P1 fires the AR15");
+  // Realtime: P1 can fire immediately — no prep/turn to wait out. (The
+  // simultaneous-tap above already proved the input gate is open for every
+  // slot at once; firing draws on that same gate.)
+  const p1Delta = await evalExpr(s, "(() => { const b0 = window.pvp.state().bullets; window.pvp.shoot(1); return window.pvp.state().bullets - b0; })()");
+  assert.ok(p1Delta >= 1, "P1 fires the AR15");
   assert.equal(await evalExpr(s, "window.pvp.ammoOf(0, 1169)"), 99, ".223 spent");
   assert.equal(await evalExpr(s, "window.pvp.ammoOf(0, 7000)"), 10, "kunai pool untouched");
 
@@ -128,6 +113,10 @@ test("local PvP: arena, corners, turns, gating, win/lose", async (t) => {
   assert.deepEqual(result, { kind: "winner", playerIndex: 0 }, "P1 wins the match");
   const modalShown = await evalExpr(s, "(() => { const el = document.getElementById('gameover'); return !!el && el.style.display === 'flex'; })()");
   assert.equal(modalShown, true, "match-result modal is visible");
+
+  // Match over freezes input: even the winner (with ammo to spare) can't fire.
+  const frozenDelta = await evalExpr(s, "(() => { const b0 = window.pvp.state().bullets; window.pvp.shoot(1); return window.pvp.state().bullets - b0; })()");
+  assert.equal(frozenDelta, 0, "no shots once the match is over");
 
   // Exit returns to the zone the match was started from (1001 on a fresh
   // save), back in co-op mode — never the arena, never the old Duskhaven hub.

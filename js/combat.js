@@ -20,18 +20,6 @@ import { getSettings } from "./settings.js";
 import { startDeathAnimation, tickDeathAnimations } from "./deathAnimation.js";
 import { isPvp } from "./gameMode.js";
 
-// Player-vs-player hit listeners. pvpMatch.js subscribes to apply the
-// turn clamp ("hit and the clock cuts") without combat.js importing it —
-// same registry shape as onPlayerHealthChange. (victimIndex, ownerIndex).
-const pvpHitListeners = new Set();
-export function onPlayerVsPlayerHit(fn) {
-  pvpHitListeners.add(fn);
-  return () => pvpHitListeners.delete(fn);
-}
-function emitPlayerVsPlayerHit(victimIdx, ownerIdx) {
-  for (const fn of pvpHitListeners) fn(victimIdx, ownerIdx);
-}
-
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;
 const BOUNCE_LIFESPAN_BONUS = 0.8;
@@ -142,14 +130,11 @@ function resolveBullets(zone, players, dt) {
             // one frame (~dps*dt ≈ 7.5) off a 1000-HP PvP player and then
             // despawn — i.e. no damage. Tick continuously and pass through (the
             // entity loop + wall check below still stop it on barrels/walls).
-            const result = applyPlayerContinuousDamage(dps * damageMultiplier(b) * dt, victim);
-            if (isPvp() && result !== "ignored") emitPlayerVsPlayerHit(victimIdx, ownerIdx);
+            applyPlayerContinuousDamage(dps * damageMultiplier(b) * dt, victim);
           } else {
             // Bullets hit briefly and pass through — treat them as a burst
             // (with invuln gate) rather than a sustained continuous tick.
-            const result = applyPlayerDamage(dps * damageMultiplier(b) * dt, victim);
-            // In PvP, a landed hit cuts the shooter's turn to ≤2s.
-            if (isPvp() && result !== "ignored") emitPlayerVsPlayerHit(victimIdx, ownerIdx);
+            applyPlayerDamage(dps * damageMultiplier(b) * dt, victim);
             if (!tryBounce(b, bsp)) ents.splice(i, 1);
             continue;
           }

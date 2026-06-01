@@ -16,7 +16,7 @@
 //
 // State sources:
 //   onlineMode.getRuntimeRole / onRoleChange — which view to show
-//   gameMode.isPvp / isRealtimePvp — co-op vs pvp flavor
+//   gameMode.isPvp — co-op vs pvp flavor
 //   coopMode.isCoopMode / localPlayerCount — local multi-player
 //   onlineBootstrap getters + onSessionState — code, peers, slot, etc.
 //
@@ -44,7 +44,7 @@ import { setLocalPlayers } from "./main.js";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js";
 import { startPvpMatch, exitPvp } from "./pvpController.js";
-import { isPvp, isRealtimePvp, isPvpHostSetup, setPvpHostSetup } from "./gameMode.js";
+import { isPvp, isPvpHostSetup, setPvpHostSetup } from "./gameMode.js";
 
 let chip = null;
 let chipLabel = null;
@@ -406,7 +406,10 @@ function renderHostingOnlineView() {
 
   // "Start match" only exists for online pvp, and only before a match runs.
   // While a deathmatch is live (or for plain co-op) we show "End session".
-  const showStart = mode === "pvp" && !isRealtimePvp();
+  // Before the match starts the game mode is still coop (set to pvp only when
+  // startDeathmatch runs), so isPvp() flips to true exactly when the match
+  // goes live — at which point we swap "Start match" for "End session".
+  const showStart = mode === "pvp" && !isPvp();
   hoStartBtn.style.display = showStart ? "" : "none";
   hoEndControl.root.style.display = showStart ? "none" : "";
   if (showStart) hoEndControl.reset();
@@ -434,7 +437,7 @@ async function endOnlineSession() {
   // co-op, clears the arena + overlays, tells guests) before leaving the
   // session entirely — otherwise the rebuilt offline state would still be in
   // pvp mode.
-  if (isRealtimePvp()) {
+  if (isPvp()) {
     try { await exitDeathmatch(); } catch (e) { console.error("[party] exitDeathmatch", e); }
   }
   onlineHostMode = null;
@@ -577,7 +580,7 @@ function renderChip() {
   const role = getRuntimeRole();
   if (role === "host") {
     const peers = getKnownPeers();
-    const flavor = isRealtimePvp() ? "PvP" : "Hosting";
+    const flavor = isPvp() ? "PvP" : "Hosting";
     chipLabel.textContent = `${flavor} · ${peers.length + 1}/4`;
     chip.style.display = "flex";
   } else if (role === "guest") {

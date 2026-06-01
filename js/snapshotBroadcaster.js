@@ -10,7 +10,7 @@
 
 import { getNet, getNetRole, getSelfPlayerId } from "./onlineBootstrap.js";
 import { getPlayerHp } from "./playerHealth.js";
-import { isPvp, getGameMode, isRealtimePvp } from "./gameMode.js";
+import { isPvp, getGameMode } from "./gameMode.js";
 import { getPvpRangedWeapon, getPvpAmmo, bulletOfWeapon } from "./pvpLoadout.js";
 import { getLastSeqMap } from "./hostGuests.js";
 import { broadcastHostEvent } from "./hostEvents.js";
@@ -146,7 +146,6 @@ function buildKeepalive(state) {
     t: tickCount++,
     zoneId: state.zone.id,
     mode: getGameMode(),
-    rt: isRealtimePvp(),
     players: playersOf(state).map(serializePlayer).filter(Boolean),
     entities: [],
     lastSeq: getLastSeqMap(),
@@ -174,7 +173,6 @@ function buildDelta(state) {
     t: tickCount++,
     zoneId: state.zone.id,
     mode: getGameMode(),
-    rt: isRealtimePvp(),
     players: all,
     entities,
     lastSeq: getLastSeqMap(),
@@ -208,7 +206,6 @@ function buildSnapshot(state) {
     t: tickCount++,
     zoneId: state.zone.id,
     mode: getGameMode(),
-    rt: isRealtimePvp(),
     players,
     entities,
     lastSeq: getLastSeqMap(),

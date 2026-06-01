@@ -70,11 +70,9 @@ import { setHostPaused } from "./hostPauseState.js";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js";
 import { switchRole, setStateHandlers } from "./switchRole.js";
 import { installUiTokens } from "./uiTokens.js";
-import { isPvp, isTurnBasedPvp, isRealtimePvp, isPvpHostSetup } from "./gameMode.js";
-import { getTurn, isMatchOver } from "./pvpMatch.js";
-import { installTurnHud, updateTurnHud, hideTurnHud } from "./turnHud.js";
+import { isPvp, isPvpHostSetup } from "./gameMode.js";
 import {
-  installPvpController, pvpGateInput, pvpCameraTarget, tickPvpFrame,
+  installPvpController, pvpGateInput, tickPvpFrame,
 } from "./pvpController.js";
 import { installOnlineDeathmatch, tickHostFrame as tickOnlineDeathmatch } from "./onlineDeathmatch.js";
 
@@ -123,7 +121,6 @@ async function main() {
   installToast();
   installTouchControls();
   installGameOver();
-  installTurnHud();
   installMessage();
   if (!bootGuest) applyFirstLaunch();
 
@@ -394,11 +391,11 @@ async function main() {
       tickPlayerHealth(dt);
       tickFastTravel(dt);
       // PvP runs its own death + win/lose path; co-op keeps the inline-toast /
-      // P1-game-over path. Realtime PvP is host-authoritative (onlineDeathmatch);
-      // the local turn-based arena uses pvpController.
+      // P1-game-over path. Online PvP is host-authoritative (onlineDeathmatch);
+      // the offline/local arena uses pvpController. Both are realtime.
       if (isPvp()) {
-        if (isRealtimePvp()) tickOnlineDeathmatch(dt);
-        else tickPvpFrame(dt);
+        if (getRuntimeRole() === "offline") tickPvpFrame();
+        else tickOnlineDeathmatch(dt);
       } else {
         // P2 death is handled inline (toast + hide bar). Only P1 death
         // halts the game with the Game Over modal.
@@ -434,12 +431,6 @@ async function main() {
       showFps: getSettings().showFps,
     });
     updateAmmoHud();
-    // Turn HUD: live during a PvP match, hidden during the result screen
-    // and outside PvP. Runs outside the pause gate so the countdown is
-    // always in sync.
-    // Turn HUD is turn-based-PvP only; realtime deathmatch has no turns.
-    if (isTurnBasedPvp() && !isMatchOver()) updateTurnHud(getTurn());
-    else hideTurnHud();
   });
 }
 
@@ -959,9 +950,9 @@ function livePlayersForRender(state) {
   return allPlayers(state);
 }
 
-// PvP eases the camera between far-apart corners; everything else snaps (the
-// followed player moves slowly, so a snap-follow reads as smooth). The PvP
-// target comes from the controller; co-op/online keep the shared camera.
+// PvP eases the camera so it tracks players spread across far-apart corners
+// smoothly; everything else snaps (the followed player moves slowly, so a
+// snap-follow reads as smooth). All targets come from hostCameraTarget.
 function applyCamera(dt) {
   // Split-screen local co-op: each slice's camera snap-follows its own
   // player (dead included — the slice holds on the corpse). Never reached
@@ -974,8 +965,10 @@ function applyCamera(dt) {
     return;
   }
   if (isPvp()) {
-    const target = pvpCameraTarget() ?? hostCameraTarget(state);
-    panCameraTo(state.camera, target, state.zone, dt);
+    // Realtime PvP: everyone acts at once. Offline keeps the averaged camera
+    // (all live players on one screen); online hosts follow their own avatar —
+    // both supplied by hostCameraTarget.
+    panCameraTo(state.camera, hostCameraTarget(state), state.zone, dt);
   } else {
     updateCamera(state.camera, hostCameraTarget(state), state.zone);
   }

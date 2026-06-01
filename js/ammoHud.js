@@ -15,7 +15,6 @@ import { getAmmo, onInventoryChange } from "./inventory.js";
 import { getEquipped, SLOT_RANGED, onEquipmentChange } from "./equipment.js";
 import { getSpecies } from "./species.js";
 import { isPvp } from "./gameMode.js";
-import { cameraPlayerIndex } from "./pvpMatch.js";
 import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
@@ -68,12 +67,12 @@ function makeChip(index) {
 
 export function updateAmmoHud() {
   if (!root) return;
-  // PvP repurposes the single chip to show the *active* player's ammo for
-  // their *currently equipped* ranged weapon — tagged with the player
-  // number, with the icon following the equipped caliber. Outside PvP it's
-  // the local hero's shared/persisted kunai count as before.
+  // PvP repurposes the single chip to show P1's (the local hero / host's)
+  // ammo for their *currently equipped* ranged weapon — tagged with the
+  // player number, with the icon following the equipped caliber. Outside PvP
+  // it's the local hero's shared/persisted kunai count as before.
   const pvp = isPvp();
-  const activeIdx = pvp ? (cameraPlayerIndex() ?? 0) : 0;
+  const activeIdx = 0;
   for (const c of chips) {
     const bulletId = pvp
       ? bulletOfWeapon(getPvpRangedWeapon(activeIdx))

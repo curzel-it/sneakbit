@@ -174,13 +174,13 @@ export function getMirrorPlayerById(playerId, at = nowMs()) {
 // Internal: synchronously apply a snapshot. Loads the zone first if
 // needed; reads of getMirrorZone()/isMirrorReady() flip to true once the
 // loader resolves and the snapshot is replayed.
-// Mirror the host's game mode (co-op / pvp / realtime-pvp) from every frame so
-// a guest's HP-bar scale, ammo HUD and PvP gating follow the host — and stay
-// correct across late-join, rematch and the host leaving PvP (self-healing,
-// unlike the one-shot pvpStart event).
+// Mirror the host's game mode (co-op / pvp) from every frame so a guest's
+// HP-bar scale, ammo HUD and PvP gating follow the host — and stay correct
+// across late-join, rematch and the host leaving PvP (self-healing, unlike
+// the one-shot pvpStart event).
 function applyMode(msg) {
   if (typeof msg.mode !== "string") return;
-  setGameMode(msg.mode, { realtime: !!msg.rt });
+  setGameMode(msg.mode);
 }
 
 export function handleSnapshot(msg, opts = {}) {

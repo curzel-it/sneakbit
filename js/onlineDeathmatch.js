@@ -134,9 +134,9 @@ export async function startMatch() {
     y: state.player.tileY | 0,
     direction: state.player.direction,
   };
-  setGameMode(GAME_MODE.pvp, { realtime: true });
+  setGameMode(GAME_MODE.pvp);
   broadcastHostEvent("pvpStart", {});
-  startPvpLogic(n, /* turnBased */ false);
+  startPvpLogic(n);
   await setupArena();
 }
 
