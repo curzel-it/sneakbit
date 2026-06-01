@@ -4,7 +4,7 @@ Thanks for considering a contribution!
 
 ## Setup
 
-No build step, no dependencies. Clone, then serve the folder with any static HTTP server:
+No build step for development. Clone, then serve the folder with any static HTTP server:
 
 ```bash
 python3 -m http.server 8000
@@ -12,7 +12,10 @@ python3 -m http.server 8000
 npx http-server -p 8000
 ```
 
-Open <http://localhost:8000>.
+Open <http://localhost:8000>. It loads the raw ES modules from `js/` — no install needed.
+
+Production is bundled with esbuild (`npm run build` → `_site/`); that's the only
+devDependency and you only need it to build a deploy, not to develop or run tests.
 
 ## Architecture
 

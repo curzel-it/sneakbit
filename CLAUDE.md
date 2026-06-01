@@ -13,7 +13,7 @@ This repo *is* that game. The original Rust source is preserved in this reposito
 6. Enjoy!
 
 ## Testing, committing, shipping
-- **Unit tests** use Node's built-in test runner — no framework, no devDependencies. Tests live in `tests/` and end in `.test.js`. They are pure node, no DOM, ~2 s to run.
+- **Unit tests** use Node's built-in test runner — no framework. Tests live in `tests/` and end in `.test.js`. They are pure node, no DOM, ~2 s to run, and need no install. (The repo's one devDependency, esbuild, is for the production build only — see "No build step" below.)
 - **E2E tests** live in `tests/e2e/*.test.mjs`. They drive headless Chrome via raw CDP and exercise the live game end-to-end (co-op host + guest, snapshot flow, WebRTC DC, predicted-self timing). They self-skip if Chrome isn't on the path; set `CHROME_PATH` to point at a non-default install. Slower (~26 s total) — that's why they're a separate npm script.
 - Commands:
   ```bash
@@ -31,9 +31,9 @@ This repo *is* that game. The original Rust source is preserved in this reposito
 - Deploy with `python3 deploy.py` (paramiko-based, idempotent). `--commit "msg"` to commit + push + deploy in one shot.
 
 ## Style and Guidelines
-- **No build step.** Open `index.html` (or serve the folder with any static server) and reload.
+- **No build step for development.** Open `index.html` (or serve the folder with any static server) and reload — dev and the e2e harness load the raw ES modules straight from `js/`. Production is the exception: `npm run build` (esbuild, the only devDependency) bundles the module graph into a content-hashed single file under `_site/` for deploy — see `tools/build.mjs`. Don't add a build dependency for the dev loop.
 - **Coordinate system:** world space is in tiles (floats). Screen space is in pixels. Conversion happens in the renderer only.
-- **No external libraries** unless we hit a real wall. Canvas 2D is enough for now.
+- **No external runtime libraries** unless we hit a real wall. Canvas 2D is enough for now. (esbuild is a build-time tool, not shipped to the browser; it doesn't count.)
 - **Pixel art:** disable image smoothing on the 2D context (`ctx.imageSmoothingEnabled = false`) and round draw coordinates to integers before blitting.
 - **Naming:** files in `js/` are camelCase, matching the feature name. Exports are named, never default.
 - **One feature one file**

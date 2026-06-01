@@ -46,7 +46,9 @@ One feature, one file. See [CLAUDE.md](./CLAUDE.md) for the full guide and direc
 
 ## Running it
 
-No build step. Serve the folder with any static HTTP server (browsers block `fetch` on `file://`):
+No build step for development — serve the folder with any static HTTP server
+(browsers block `fetch` on `file://`) and it loads the raw ES modules straight
+from `js/`:
 
 ```bash
 npm run serve            # python3 -m http.server 8000
@@ -54,8 +56,14 @@ npm run serve            # python3 -m http.server 8000
 npx http-server -p 8000
 ```
 
-Then open <http://localhost:8000>. The public build is deployed at
-<https://sneakbit.curzel.it>.
+Then open <http://localhost:8000>.
+
+Production *is* bundled: `npm run build` (esbuild, the only devDependency) writes
+a content-hashed single-file bundle into `_site/`. That's what ships — the public
+build at <https://sneakbit.curzel.it> is deployed from the VPS via
+`python3 deploy.py`, and the same `_site/` is mirrored to GitHub Pages by
+[`.github/workflows`](./.github/workflows). Dev and the e2e harness never touch
+the bundle; only deploys do.
 
 ## Tests
 
@@ -65,8 +73,10 @@ npm run test:e2e         # full e2e suite (~26 s; needs Chrome)
 npm test                 # both, sequential
 ```
 
-No devDependencies — unit tests use Node's built-in test runner. E2E tests drive
-headless Chrome via raw CDP and self-skip if Chrome isn't on the path.
+Tests have no dependencies of their own — unit tests use Node's built-in test
+runner. E2E tests drive headless Chrome via raw CDP and self-skip if Chrome isn't
+on the path. (The repo's one devDependency, esbuild, is for the production build
+only — `npm ci` is needed to build, not to test.)
 
 ## Server
 
