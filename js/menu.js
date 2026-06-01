@@ -185,11 +185,11 @@ export function installMenu(stateGetter) {
       <h1>Credits</h1>
       <p class="menu-credits">
         <strong>SneakBit</strong> · web port of the
-        <a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener">original Rust build</a>.
+        <a href="https://github.com/curzel-it/sneakbit/tree/rust-core-tip" target="_blank" rel="noopener">original Rust build</a>.
       </p>
       <p class="menu-credits">
-        Web port source:
-        <a href="https://github.com/curzel-it/sneakbit-html" target="_blank" rel="noopener">github.com/curzel-it/sneakbit-html</a>
+        Source:
+        <a href="https://github.com/curzel-it/sneakbit" target="_blank" rel="noopener">github.com/curzel-it/sneakbit</a>
       </p>
       <p class="menu-credits">
         Music by <a href="https://www.filippovicarelli.com/8bit-game-background-music" target="_blank" rel="noopener">Filippo Vicarelli</a><br>

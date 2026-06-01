@@ -10,8 +10,9 @@ install, no plugins.
 A previous version of the game was written in **Rust** (a `game_core` crate with
 platform-specific renderers — raylib on desktop, CoreGraphics on iOS, Compose on
 Android) and shipped on Steam, the App Store and Google Play. That earlier release
-still lives at [curzel-it/sneakbit](https://github.com/curzel-it/sneakbit). This
-HTML build re-implements the runtime and renderer in plain JavaScript on top of an
+is preserved in this repository's history under the **`rust-core-tip`** tag (it was
+a separate repo until the HTML build absorbed it). This HTML build
+re-implements the runtime and renderer in plain JavaScript on top of an
 HTML canvas, reusing the same art and level data, with the longer-term goal of
 becoming the single codebase behind every platform (wrapped in Electron or similar).
 
@@ -54,7 +55,7 @@ npx http-server -p 8000
 ```
 
 Then open <http://localhost:8000>. The public build is deployed at
-<https://curzel.it/sneakbit-html>.
+<https://sneakbit.curzel.it>.
 
 ## Tests
 
@@ -102,15 +103,16 @@ movement) and shapes how other features get ported.
 
 ## Assets
 
-Sprite sheets in `assets/` are exported from `../dev/sneakbit/aseprite/*.aseprite`. To re-export from the original repo:
+Sprite sheets in `assets/` and level data in `data/` are vendored into this repo.
+Their original sources — the `.aseprite` files and the canonical `data/` — live in
+this repository's pre-port history under the `rust-core-tip` tag. To re-export a
+sheet, pull the source out of the tag first:
 
 ```bash
+git show rust-core-tip:aseprite/heroes.aseprite > /tmp/heroes.aseprite
 /Applications/Aseprite.app/Contents/MacOS/aseprite \
-  -b ../dev/sneakbit/aseprite/heroes.aseprite \
-  --all-layers --sheet ./assets/heroes.png
+  -b /tmp/heroes.aseprite --all-layers --sheet ./assets/heroes.png
 ```
-
-Level data in `data/` is copied verbatim from `../dev/sneakbit/data/`.
 
 ## Credits
 

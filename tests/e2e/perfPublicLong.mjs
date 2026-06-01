@@ -9,7 +9,7 @@
 import { findChrome } from "./fixtures/chrome.mjs";
 import { startCoopSession, runStutterLongWorkload } from "./fixtures/coopSession.mjs";
 
-const APP_URL = process.env.SB_APP_URL || "https://curzel.it/sneakbit-html";
+const APP_URL = process.env.SB_APP_URL || "https://sneakbit.curzel.it";
 const RELAY_WS = process.env.SB_RELAY_WS || "wss://sneakbit.curzel.it/ws";
 const TOTAL_MS = Number(process.env.SB_LONG_MS || 90_000);
 

@@ -1,8 +1,8 @@
 # Hello Claude!
 
-HTML5 / Canvas / vanilla JS port of [SneakBit](https://github.com/curzel-it/sneakbit), originally a Rust-core game shipped on Steam (raylib desktop), iOS (CoreGraphics) and Android (Compose).
+HTML5 / Canvas / vanilla JS build of SneakBit, originally a Rust-core game shipped on Steam (raylib desktop), iOS (CoreGraphics) and Android (Compose).
 
-The original game's source lives at `../dev/sneakbit`. Treat it as read-only reference material — do not modify it.
+This repo *is* that game. The original Rust source is preserved in this repository's history, from before the HTML build absorbed it — see the `rust-core-tip` tag (e.g. `git show rust-core-tip:game_core/...`, or browse the tag on GitHub). Treat that history as read-only reference material; today's codebase is the HTML build.
 
 ## Handling a Task
 1. For non-trivial tasks, use the built-in plan mode to create a plan before implementing
@@ -23,7 +23,7 @@ The original game's source lives at `../dev/sneakbit`. Treat it as read-only ref
   ```
   Run `test:unit` often — at minimum before each commit. Run `test:e2e` before any push that touches `onlineBootstrap.js`, `webrtcTransport.js`, `webrtcChannel.js`, `predictedSelf.js`, `mirrorWorld.js`, or `snapshotBroadcaster.js`.
 - **Commit often.** Small focused commits beat large ones. Each commit should leave the game in a runnable state (`npm test` green, page loads without console errors).
-- **Push to main often.** Pushing to `main` deploys the *client* to <https://curzel.it/sneakbit-html>, so every push is a public release. After any change large enough to be visible to a user, push it — don't sit on local changes. The deploy is automatic; there's no staging.
+- **Push to main often.** Each push to `main` is a public release. Production is <https://sneakbit.curzel.it>, served from the VPS via `python3 deploy.py` (which also builds + ships the client). After any change large enough to be visible to a user, push it — don't sit on local changes; there's no staging.
 
 ## Server (`server/`)
 - The Node server lives in `server/` — vanilla `node:http`, no deps, ES modules, same "one feature one file" rule as the client. Run locally with `node server/index.js` (defaults: `127.0.0.1:8090`). `GET /health` returns 200 "ok" — keep that endpoint cheap.

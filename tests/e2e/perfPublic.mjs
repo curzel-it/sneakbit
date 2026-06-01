@@ -12,7 +12,7 @@
 import { findChrome } from "./fixtures/chrome.mjs";
 import { startCoopSession, dispatchKey, KEYS, runStutterWorkload } from "./fixtures/coopSession.mjs";
 
-const APP_URL = process.env.SB_APP_URL || "https://curzel.it/sneakbit-html";
+const APP_URL = process.env.SB_APP_URL || "https://sneakbit.curzel.it";
 const RELAY_WS = process.env.SB_RELAY_WS || "wss://sneakbit.curzel.it/ws";
 
 function median(arr) {

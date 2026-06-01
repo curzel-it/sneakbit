@@ -10,7 +10,7 @@ Status: **implemented.**
 
 ---
 
-## What the original does (reference: `../dev/sneakbit`)
+## What the original does (reference: the Rust core under the `rust-core-tip` tag)
 
 A read of the Rust source establishes the canonical behavior we're porting:
 
