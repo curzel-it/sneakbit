@@ -47,6 +47,7 @@ import { startPvpMatch, exitPvp } from "./pvpController.js";
 import { isPvp, isPvpHostSetup, setPvpHostSetup } from "./gameMode.js";
 import { el, showOnly } from "./dom.js";
 import { makeConfirmControl } from "./confirmControl.js";
+import { canNativeShare, buildShareUrl, promptCopy } from "./clipboard.js";
 
 let chip = null;
 let chipLabel = null;
@@ -621,34 +622,6 @@ function onKickClick(peer) {
   // bootstrap handler removes from knownPeers and re-renders us via
   // notifySessionState.
   net.send({ op: "host.kick", playerId: peer.playerId });
-}
-
-function canNativeShare() {
-  if (typeof navigator === "undefined" || typeof navigator.share !== "function") return false;
-  if (navigator.userAgentData && typeof navigator.userAgentData.mobile === "boolean") {
-    return navigator.userAgentData.mobile;
-  }
-  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
-}
-
-function buildShareUrl(code) {
-  if (typeof location === "undefined") return code;
-  const u = new URL(location.href);
-  u.searchParams.delete("host");
-  u.searchParams.set("join", code);
-  return u.toString();
-}
-
-// Last-resort copy: drop the value into a textarea, select it, and ask
-// the browser to execCommand("copy"). Skips the clipboard API entirely.
-function promptCopy(value) {
-  if (typeof document === "undefined") return;
-  const ta = el("textarea", { value, style: { position: "fixed", opacity: "0" } });
-  document.body.appendChild(ta);
-  ta.select();
-  try { document.execCommand("copy"); showToast("Copied", "hint"); }
-  catch { showToast(value, "longHint"); }
-  document.body.removeChild(ta);
 }
 
 function friendlyReason(reason) {
