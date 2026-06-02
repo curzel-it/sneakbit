@@ -1,7 +1,9 @@
 {
   "name": "sneakbit",
+  "version": "1.8.0",
   "private": true,
   "type": "module",
+  "main": "electron/main.js",
   "engines": {
     "node": ">=20"
   },
@@ -12,9 +14,38 @@
     "shots": "node tools/screenshot.mjs",
     "build": "node tools/build.mjs",
     "serve": "python3 -m http.server 8000",
-    "dev": "python3 -m http.server 8000"
+    "dev": "python3 -m http.server 8000",
+    "electron": "npm run build && electron .",
+    "dist": "npm run build && electron-builder --mac --win --linux --x64",
+    "steam": "python3 tools/steam_upload.py"
+  },
+  "build": {
+    "appId": "it.curzel.sneakbit",
+    "productName": "SneakBit",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**",
+      "_site/**",
+      "package.json"
+    ],
+    "asar": true,
+    "mac": {
+      "target": "dir",
+      "category": "public.app-category.games"
+    },
+    "win": {
+      "target": "dir"
+    },
+    "linux": {
+      "target": "dir",
+      "category": "Game"
+    }
   },
   "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8",
     "esbuild": "^0.28.0"
   }
 }

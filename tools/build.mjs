@@ -32,6 +32,8 @@ const DENYLIST = new Set([
   "js", "tests", "tools", "server", "node_modules", "docs",
   ".git", ".github", ".claude", "venv", "__pycache__", "_site",
   ".env", ".gitignore", "deploy.py", "package.json", "package-lock.json",
+  // Desktop (Electron/Steam) wrapper — built separately, never part of the web bundle.
+  "electron", "dist",
 ]);
 
 function isDenied(name) {

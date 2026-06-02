@@ -5,6 +5,8 @@ __pycache__/
 venv/
 node_modules/
 _site/
+dist/
+temp/
 .idea/
 .vscode/
 .claude/
