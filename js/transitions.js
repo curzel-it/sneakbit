@@ -10,6 +10,7 @@
 
 import { loadZone } from "./data.js";
 import { buildZone, isWalkable, isEntityBlocked } from "./zone.js";
+import { el } from "./dom.js";
 import { playSfx } from "./audio.js";
 import { playTrack } from "./music.js";
 import { getZoneCache } from "./zoneCache.js";
@@ -34,16 +35,17 @@ let busy = false;
 
 export function installTransitions() {
   if (fadeEl) return fadeEl;
-  fadeEl = document.createElement("div");
-  fadeEl.id = "fade";
-  Object.assign(fadeEl.style, {
-    position: "fixed",
-    inset: "0",
-    background: "#000",
-    opacity: "0",
-    pointerEvents: "none",
-    transition: `opacity ${FADE_DURATION_MS}ms ease`,
-    zIndex: "10",
+  fadeEl = el("div", {
+    id: "fade",
+    style: {
+      position: "fixed",
+      inset: "0",
+      background: "#000",
+      opacity: "0",
+      pointerEvents: "none",
+      transition: `opacity ${FADE_DURATION_MS}ms ease`,
+      zIndex: "10",
+    },
   });
   document.body.appendChild(fadeEl);
   return fadeEl;

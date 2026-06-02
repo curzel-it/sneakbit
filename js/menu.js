@@ -82,9 +82,9 @@ function isDesktop() {
 export function installMenu(stateGetter) {
   if (typeof stateGetter === "function") getState = stateGetter;
   if (root) return root;
-  root = document.createElement("div");
-  root.id = "menu";
-  root.innerHTML = `
+  root = el("div", {
+    id: "menu",
+    html: `
     <div class="menu-card" data-screen="pause">
       <img class="menu-logo" src="assets/logo.png?v=20260531c" alt="SneakBit" />
       <div class="menu-row menu-controls menu-stack">
@@ -222,18 +222,19 @@ export function installMenu(stateGetter) {
         <button id="menu-creative-back">Back</button>
       </div>
     </div>
-  `;
-  Object.assign(root.style, {
-    position: "fixed",
-    inset: "0",
-    display: "none",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "rgba(0,0,0,0.6)",
-    backdropFilter: "blur(2px)",
-    zIndex: "20",
-    color: "#eee",
-    fontFamily: "monospace",
+  `,
+    style: {
+      position: "fixed",
+      inset: "0",
+      display: "none",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "rgba(0,0,0,0.6)",
+      backdropFilter: "blur(2px)",
+      zIndex: "20",
+      color: "#eee",
+      fontFamily: "monospace",
+    },
   });
   document.body.appendChild(root);
   injectStyles();
@@ -749,9 +750,7 @@ function exportZone() {
   const json = JSON.stringify(raw, null, 2);
   const blob = new Blob([json], { type: "application/json" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${id}.json`;
+  const a = el("a", { href: url, download: `${id}.json` });
   document.body.appendChild(a);
   a.click();
   a.remove();

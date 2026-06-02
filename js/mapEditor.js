@@ -170,9 +170,9 @@ function onWindowKeyDown(e) {
 // sections: Biomes, Constructions, Entities. Clicking an entry sets
 // `selection` so the next canvas click places it.
 function buildPicker() {
-  pickerEl = document.createElement("div");
-  pickerEl.id = "map-editor";
-  pickerEl.innerHTML = `
+  pickerEl = el("div", {
+    id: "map-editor",
+    html: `
     <div class="me-head">
       <strong>Map editor</strong>
       <span class="me-hint">Click to place · Right-click to erase · Esc to close</span>
@@ -191,7 +191,8 @@ function buildPicker() {
       <h4>Entities</h4>
       <div class="me-grid" id="me-grid-entities"></div>
     </div>
-  `;
+  `,
+  });
   document.body.appendChild(pickerEl);
   pickerEl.querySelector("#me-close").addEventListener("click", closeMapEditor);
 }

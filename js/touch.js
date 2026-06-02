@@ -14,6 +14,7 @@ import { codesFor } from "./keyBindings.js";
 import { onActiveInputDeviceChange } from "./activeInputDevice.js";
 import { getSettings } from "./settings.js";
 import { mountJoystick, unmountJoystick } from "./touchJoystick.js";
+import { el } from "./dom.js";
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 
@@ -65,8 +66,6 @@ let forcedTouch = false;
 
 export function installTouchControls() {
   if (root) return root;
-  root = document.createElement("div");
-  root.id = "touch-controls";
   // SVG icons (not text glyphs): the previous "▲ ◀ ▶ ▼ ⚔ ✦ E ☰"
   // glyphs let iOS Safari pop the "magnifier loupe" on long-press
   // even with -webkit-user-select: none + -webkit-touch-callout: none
@@ -75,7 +74,9 @@ export function installTouchControls() {
   // The SVGs themselves are wrapped in <span class="touch-icon"> with
   // pointer-events: none so taps still hit the parent <button> and
   // dispatch the keydown.
-  root.innerHTML = `
+  root = el("div", {
+    id: "touch-controls",
+    html: `
     <div class="touch-pad" data-side="left">
       <button class="touch-btn" data-dir="up">${ICON_DIR_UP}</button>
       <button class="touch-btn" data-dir="left">${ICON_DIR_LEFT}</button>
@@ -90,15 +91,16 @@ export function installTouchControls() {
     <div class="touch-pad" data-side="top-right">
       <button class="touch-btn touch-menu" data-action="menu">${ICON_MENU}</button>
     </div>
-  `;
-  Object.assign(root.style, {
-    position: "fixed",
-    inset: "0",
-    pointerEvents: "none",
-    zIndex: "12",
-    display: "none",
-    userSelect: "none",
-    touchAction: "none",
+  `,
+    style: {
+      position: "fixed",
+      inset: "0",
+      pointerEvents: "none",
+      zIndex: "12",
+      display: "none",
+      userSelect: "none",
+      touchAction: "none",
+    },
   });
   controlStyle = getSettings().touchControls === "joystick" ? "joystick" : "buttons";
   try { forcedTouch = new URLSearchParams(location.search).has("touch"); } catch { /* ignore */ }
