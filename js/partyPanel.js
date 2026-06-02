@@ -46,6 +46,7 @@ import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineD
 import { startPvpMatch, exitPvp } from "./pvpController.js";
 import { isPvp, isPvpHostSetup, setPvpHostSetup } from "./gameMode.js";
 import { el, showOnly } from "./dom.js";
+import { makeConfirmControl } from "./confirmControl.js";
 
 let chip = null;
 let chipLabel = null;
@@ -196,33 +197,10 @@ function buildCloseRow() {
   ]);
 }
 
-// — Inline confirm ————————————————————————————————————————————————————————
-// A danger button that, on first click, swaps itself for an "Are you sure?
-// [Cancel] [Yes]" row instead of popping a browser confirm(). Keeps the
-// styled dialog self-contained. onConfirm is read at click time so the
-// caller can branch on live state (co-op vs pvp, etc.).
-function makeConfirmControl(label, onConfirm) {
-  const danger = el("button", {
-    class: "party-danger", text: label,
-    on: { click: () => arm(true) },
-  });
-  const confirmRow = el("div", {
-    class: "party-row party-confirm-row",
-    style: { display: "none" },
-  }, [
-    el("span", { class: "party-confirm-q", text: "Are you sure?" }),
-    el("button", { text: "Cancel", on: { click: () => arm(false) } }),
-    el("button", { class: "party-danger", text: "Yes", on: { click: () => { arm(false); onConfirm(); } } }),
-  ]);
-  const root = el("div", { class: "party-confirm" }, [danger, confirmRow]);
-  function arm(on) {
-    danger.style.display = on ? "none" : "";
-    confirmRow.style.display = on ? "flex" : "none";
-    // Move the keyboard/controller highlight onto the just-revealed row so
-    // the hidden danger button isn't left as the focused (invisible) item.
-    if (on && isPartyPanelOpen()) focusFirstIn(confirmRow);
-  }
-  return { root, reset: () => arm(false) };
+// Inline-confirm controls (End session / Leave) only steal focus while the
+// panel is actually open — see confirmControl.js.
+function partyConfirm(label, onConfirm) {
+  return makeConfirmControl(label, onConfirm, { shouldFocus: isPartyPanelOpen });
 }
 
 // — Single-player view ————————————————————————————————————————————————————
@@ -295,7 +273,7 @@ function buildHostingOnlineView() {
   // Start (online pvp, before the match) / End session (otherwise) — exactly
   // one is shown, picked in renderHostingOnlineView.
   hoStartBtn = el("button", { id: "party-start-match", text: "Start match", on: { click: onStartMatchClick } });
-  hoEndControl = makeConfirmControl("End session", endOnlineSession);
+  hoEndControl = partyConfirm("End session", endOnlineSession);
 
   return el("div", { class: "party-view", dataset: { view: "hostingOnline" } }, [
     el("h1", { text: "Hosting online" }),
@@ -377,7 +355,7 @@ function buildHostingOfflineView() {
   // Player-count toggle: 2 | 3 | 4 on this device.
   offToggleBtns = [2, 3, 4].map((n) =>
     el("button", { dataset: { count: String(n) }, text: String(n), on: { click: () => onCountToggle(n) } }));
-  offEndControl = makeConfirmControl("End session (back to single player)", endOfflineSession);
+  offEndControl = partyConfirm("End session (back to single player)", endOfflineSession);
 
   return el("div", { class: "party-view", dataset: { view: "hostingOffline" } }, [
     el("h1", { text: "Local game" }),
@@ -418,7 +396,7 @@ function endOfflineSession() {
 // — Guest view ————————————————————————————————————————————————————————————
 function buildGuestView() {
   guestDescEl = el("p", { class: "party-hint" });
-  guestLeaveControl = makeConfirmControl("Leave session", onLeaveCoopClick);
+  guestLeaveControl = partyConfirm("Leave session", onLeaveCoopClick);
   return el("div", { class: "party-view", dataset: { view: "guest" } }, [
     el("h1", { text: "Connected" }),
     guestDescEl,
