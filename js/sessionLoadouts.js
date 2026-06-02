@@ -16,9 +16,25 @@
 // use in single-player paths.
 
 import { getEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
-import { isPvp } from "./gameMode.js";
+import { isPvp, isTowerDefenseMode } from "./gameMode.js";
 
 const loadouts = new Map(); // playerId -> { melee, ranged }
+
+// Tower Defense hero archetypes, by 0-based squad slot. These are fixed for
+// the run and resolved purely in memory — TD never reads or writes the saved
+// equipment, so a run can't pollute the real game's loadout. Slot 0 is the
+// Ninja (kunai launcher), slot 1 the Barbarian (sword); recruited slots 2/3
+// default to ranged ninjas (stub archetype). Kunai launcher 1160, sword 1159.
+const TD_HERO_LOADOUTS = [
+  { melee: null, ranged: 1160 },  // Ninja
+  { melee: 1159, ranged: null },  // Barbarian
+  { melee: null, ranged: 1160 },  // recruit
+  { melee: null, ranged: 1160 },  // recruit
+];
+
+function tdHeroLoadout(index) {
+  return TD_HERO_LOADOUTS[index | 0] || TD_HERO_LOADOUTS[0];
+}
 
 // In PvP everyone fights with at least a melee weapon: a player who walks
 // into the arena without a melee equipped is handed the sword, so a match is
@@ -62,6 +78,10 @@ export function listSessionLoadouts() {
 // still get the right answer without a session entry.
 export function resolveLoadout(player) {
   if (!player) return { melee: null, ranged: null };
+  // Tower Defense: the squad's archetypes are fixed per slot and resolved in
+  // memory, never from saved equipment. Gated on the mode so the normal /
+  // co-op / PvP loadout resolution below is byte-identical when TD is absent.
+  if (isTowerDefenseMode()) return { ...tdHeroLoadout(player.index | 0) };
   let melee = null;
   let ranged = null;
   const sid = player.playerId;

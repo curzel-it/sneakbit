@@ -19,7 +19,7 @@ import { getNetRole } from "./onlineBootstrap.js";
 import { isPlayerDead } from "./playerHealth.js";
 import { rumble } from "./rumble.js";
 import { pvpSlotCanAct } from "./pvpMatch.js";
-import { isPvp } from "./gameMode.js";
+import { isPvp, isTowerDefenseMode } from "./gameMode.js";
 import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 import { spawnLocalFlash } from "./localEffects.js";
 
@@ -92,6 +92,16 @@ export function tryShootForSlot(slot) {
   shoot(state, shooter);
 }
 
+// Tower Defense seam: fire for a specific hero player object (the active hero
+// on a keypress, or any ally hero from allyAI), without the slot→player
+// resolution that gates online guest slots on a playerId. TD heroes are local
+// players with no playerId, so the slot path wouldn't find slots 2..4.
+export function tryShootForPlayer(player) {
+  const state = stateRef?.();
+  if (!state || !player) return;
+  shoot(state, player);
+}
+
 // Guest-side local prediction: the instant the guest presses shoot, play the
 // gunshot SFX and pop a brief muzzle flash one tile ahead — instead of waiting
 // a full RTT for the host's authoritative bullet to echo back in a snapshot.
@@ -141,6 +151,10 @@ function playerForSlotInState(state, slot) {
 
 function onKey(e) {
   if (e.repeat) return;
+  // Tower Defense routes the shoot key to the *active* hero (which may be any
+  // squad slot), so its own input handler owns the key — let it, and don't
+  // also fire P1 here. towerDefense.js calls tryShootForPlayer(activeHero).
+  if (isTowerDefenseMode()) return;
   // Guests must not drive the local sim — they forward the intent over
   // the wire and let the host decide. Without this gate the local zone
   // gets a bullet and the local ammo counter decrements on every press
@@ -205,6 +219,9 @@ function shoot(state, shooter) {
   // co-op / single-player / online keep the persisted inventory.
   if (isPvp()) {
     if (!spendPvpAmmo(idx, bulletId)) { playSfx("noAmmo"); rumble(idx + 1, "noAmmo"); return; }
+  } else if (isTowerDefenseMode()) {
+    // TD heroes have unlimited kunai — the run economy is gold, not ammo —
+    // and TD must never read or write the saved inventory.
   } else {
     if (getAmmo(bulletId, idx) <= 0) { playSfx("noAmmo"); rumble(idx + 1, "noAmmo"); return; }
     if (!removeAmmo(bulletId, 1, idx)) return;

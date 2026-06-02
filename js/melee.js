@@ -13,6 +13,7 @@ import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coop
 import { getNetRole } from "./onlineBootstrap.js";
 import { isPlayerDead } from "./playerHealth.js";
 import { pvpSlotCanAct } from "./pvpMatch.js";
+import { isTowerDefenseMode } from "./gameMode.js";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -142,6 +143,10 @@ function playerForSlotInState(state, slot) {
 
 function onKey(e) {
   if (e.repeat) return;
+  // Tower Defense routes the melee key to the *active* hero via its own input
+  // handler (performMeleeSwing with the active swinger), so don't also swing
+  // P1 here.
+  if (isTowerDefenseMode()) return;
   // Guests forward the melee intent over the wire — local sim is the
   // host's, so swinging into the dead local zone would just spawn an
   // orphan bullet entity and decrement nothing meaningful.
