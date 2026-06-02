@@ -18,6 +18,7 @@ import {
 import {
   registerAccount, loginAccount, updateMe, forgotPassword, resetPassword, deleteAccount,
 } from "./accountApi.js";
+import { el } from "./dom.js";
 
 let overlay = null;
 let card = null;
@@ -94,24 +95,17 @@ function visibleAccountView() {
 // — Build ——————————————————————————————————————————————————————————————
 
 function buildOverlay() {
-  overlay = document.createElement("div");
-  overlay.id = "account-overlay";
-  overlay.style.display = "none";
-  card = document.createElement("div");
-  card.className = "account-card";
-  overlay.appendChild(card);
-
   views.signin = buildSigninView();
   views.register = buildRegisterView();
   views.forgot = buildForgotView();
   views.reset = buildResetView();
   views.account = buildAccountView();
-  for (const v of Object.values(views)) card.appendChild(v);
-  card.appendChild(buildCloseRow());
-
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) closeAccountPanel();
-  });
+  card = el("div", { class: "account-card" }, [...Object.values(views), buildCloseRow()]);
+  overlay = el("div", {
+    id: "account-overlay",
+    style: { display: "none" },
+    on: { click: (e) => { if (e.target === overlay) closeAccountPanel(); } },
+  }, card);
 
   // Repaint the account view if sign-in state changes while it's the open
   // view (e.g. a revalidate updates the display name).
@@ -121,59 +115,38 @@ function buildOverlay() {
 }
 
 function viewRoot(name, title) {
-  const root = document.createElement("div");
-  root.className = "account-view";
-  root.dataset.view = name;
-  root.style.display = "none";
-  const h = document.createElement("h1");
-  h.textContent = title;
-  root.appendChild(h);
-  return root;
+  return el("div", { class: "account-view", dataset: { view: name }, style: { display: "none" } }, [
+    el("h1", { text: title }),
+  ]);
 }
 
 function field(root, { type = "text", placeholder, autocomplete, onEnter }) {
-  const input = document.createElement("input");
-  input.className = "account-input";
-  input.type = type;
-  if (placeholder) input.placeholder = placeholder;
-  if (autocomplete) input.autocomplete = autocomplete;
-  if (onEnter) {
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") { e.preventDefault(); onEnter(); }
-    });
-  }
+  const input = el("input", {
+    class: "account-input", type, placeholder, autocomplete,
+    on: onEnter
+      ? { keydown: (e) => { if (e.key === "Enter") { e.preventDefault(); onEnter(); } } }
+      : undefined,
+  });
   root.appendChild(input);
   return input;
 }
 
 function errorEl(root) {
-  const p = document.createElement("p");
-  p.className = "account-error";
-  p.style.display = "none";
+  const p = el("p", { class: "account-error", style: { display: "none" } });
   root.appendChild(p);
   return p;
 }
 
 function primaryButton(root, label, handler) {
-  const btn = document.createElement("button");
-  btn.className = "account-primary";
-  btn.textContent = label;
-  btn.addEventListener("click", handler);
+  const btn = el("button", { class: "account-primary", text: label, on: { click: handler } });
   root.appendChild(btn);
   return btn;
 }
 
 function linkRow(root, links) {
-  const row = document.createElement("div");
-  row.className = "account-links";
-  for (const { label, view } of links) {
-    const a = document.createElement("button");
-    a.className = "account-link";
-    a.textContent = label;
-    a.addEventListener("click", () => showView(view));
-    row.appendChild(a);
-  }
-  root.appendChild(row);
+  root.appendChild(el("div", { class: "account-links" },
+    links.map(({ label, view }) =>
+      el("button", { class: "account-link", text: label, on: { click: () => showView(view) } }))));
 }
 
 function buildSigninView() {
@@ -191,10 +164,8 @@ function buildSigninView() {
 
 function buildRegisterView() {
   const root = viewRoot("register", "Create account");
-  const hint = document.createElement("p");
-  hint.className = "account-hint";
-  hint.textContent = "An account is optional — it'll let you sync progress across devices once cloud saves land.";
-  root.appendChild(hint);
+  root.appendChild(el("p", { class: "account-hint",
+    text: "An account is optional — it'll let you sync progress across devices once cloud saves land." }));
   w.regEmail = field(root, { type: "email", placeholder: "Email", autocomplete: "email" });
   w.regName = field(root, { type: "text", placeholder: "Display name (optional)", autocomplete: "nickname" });
   w.regPassword = field(root, { type: "password", placeholder: "Password (min 8 characters)", autocomplete: "new-password", onEnter: onRegister });
@@ -208,20 +179,18 @@ function buildRegisterView() {
 // Small print linking the legal pages (also satisfies store/GDPR
 // requirements that the policy be reachable at sign-up).
 function buildLegalFooter(lead) {
-  const p = document.createElement("p");
-  p.className = "account-legal";
-  p.innerHTML = `${lead} ` +
-    `<a href="terms.html" target="_blank" rel="noopener">Terms</a> and ` +
-    `<a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.`;
-  return p;
+  return el("p", {
+    class: "account-legal",
+    html: `${lead} ` +
+      `<a href="terms.html" target="_blank" rel="noopener">Terms</a> and ` +
+      `<a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.`,
+  });
 }
 
 function buildForgotView() {
   const root = viewRoot("forgot", "Reset password");
-  const hint = document.createElement("p");
-  hint.className = "account-hint";
-  hint.textContent = "Enter your email and we'll send a link to choose a new password.";
-  root.appendChild(hint);
+  root.appendChild(el("p", { class: "account-hint",
+    text: "Enter your email and we'll send a link to choose a new password." }));
   w.forgotEmail = field(root, { type: "email", placeholder: "Email", autocomplete: "email", onEnter: onForgot });
   w.forgotError = errorEl(root);
   w.forgotBtn = primaryButton(root, "Send reset link", onForgot);
@@ -240,67 +209,47 @@ function buildResetView() {
 
 function buildAccountView() {
   const root = viewRoot("account", "Account");
-  w.accountEmail = document.createElement("p");
-  w.accountEmail.className = "account-email";
+  w.accountEmail = el("p", { class: "account-email" });
   root.appendChild(w.accountEmail);
 
-  const nameLabel = document.createElement("p");
-  nameLabel.className = "account-hint";
-  nameLabel.textContent = "Display name";
-  root.appendChild(nameLabel);
+  root.appendChild(el("p", { class: "account-hint", text: "Display name" }));
   w.accountName = field(root, { type: "text", placeholder: "Display name", autocomplete: "nickname" });
   w.accountError = errorEl(root);
   w.accountSaveBtn = primaryButton(root, "Save display name", onSaveProfile);
 
-  const pwLabel = document.createElement("p");
-  pwLabel.className = "account-hint";
-  pwLabel.textContent = "Change password";
-  root.appendChild(pwLabel);
+  root.appendChild(el("p", { class: "account-hint", text: "Change password" }));
   w.accountCurrentPw = field(root, { type: "password", placeholder: "Current password", autocomplete: "current-password" });
   w.accountNewPw = field(root, { type: "password", placeholder: "New password (min 8 characters)", autocomplete: "new-password", onEnter: onChangePassword });
   w.accountChangePwBtn = primaryButton(root, "Change password", onChangePassword);
 
-  const signOutBtn = document.createElement("button");
-  signOutBtn.className = "account-danger";
-  signOutBtn.textContent = "Sign out";
-  signOutBtn.addEventListener("click", onSignOut);
-  root.appendChild(signOutBtn);
+  root.appendChild(el("button", { class: "account-danger", text: "Sign out", on: { click: onSignOut } }));
 
   // Danger zone: delete account. Hidden behind a reveal + password confirm so
   // it can't be hit by accident (or by a stolen token).
-  const dzLabel = document.createElement("p");
-  dzLabel.className = "account-hint account-danger-label";
-  dzLabel.textContent = "Danger zone";
-  root.appendChild(dzLabel);
+  root.appendChild(el("p", { class: "account-hint account-danger-label", text: "Danger zone" }));
 
-  w.accountDeleteBtn = document.createElement("button");
-  w.accountDeleteBtn.className = "account-danger";
-  w.accountDeleteBtn.textContent = "Delete account";
-  w.accountDeleteBtn.addEventListener("click", () => showDeleteConfirm(true));
+  w.accountDeleteBtn = el("button", {
+    class: "account-danger", text: "Delete account",
+    on: { click: () => showDeleteConfirm(true) },
+  });
   root.appendChild(w.accountDeleteBtn);
 
-  w.accountDeleteConfirm = document.createElement("div");
-  w.accountDeleteConfirm.className = "account-delete-confirm";
-  w.accountDeleteConfirm.style.display = "none";
-  const warn = document.createElement("p");
-  warn.className = "account-error";
-  warn.style.display = "block";
-  warn.textContent = "This permanently deletes your account and cloud save. This cannot be undone.";
-  w.accountDeletePw = document.createElement("input");
-  w.accountDeletePw.className = "account-input";
-  w.accountDeletePw.type = "password";
-  w.accountDeletePw.placeholder = "Enter your password to confirm";
-  w.accountDeletePw.autocomplete = "current-password";
-  w.accountDeletePw.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); onDeleteAccount(); } });
-  const confirmDel = document.createElement("button");
-  confirmDel.className = "account-danger";
-  confirmDel.textContent = "Permanently delete";
-  confirmDel.addEventListener("click", onDeleteAccount);
-  w.accountDeleteConfirmBtn = confirmDel;
-  const cancelDel = document.createElement("button");
-  cancelDel.textContent = "Cancel";
-  cancelDel.addEventListener("click", () => showDeleteConfirm(false));
-  w.accountDeleteConfirm.append(warn, w.accountDeletePw, confirmDel, cancelDel);
+  w.accountDeletePw = el("input", {
+    class: "account-input", type: "password",
+    placeholder: "Enter your password to confirm", autocomplete: "current-password",
+    on: { keydown: (e) => { if (e.key === "Enter") { e.preventDefault(); onDeleteAccount(); } } },
+  });
+  w.accountDeleteConfirmBtn = el("button", {
+    class: "account-danger", text: "Permanently delete",
+    on: { click: onDeleteAccount },
+  });
+  w.accountDeleteConfirm = el("div", { class: "account-delete-confirm", style: { display: "none" } }, [
+    el("p", { class: "account-error", style: { display: "block" },
+      text: "This permanently deletes your account and cloud save. This cannot be undone." }),
+    w.accountDeletePw,
+    w.accountDeleteConfirmBtn,
+    el("button", { text: "Cancel", on: { click: () => showDeleteConfirm(false) } }),
+  ]);
   root.appendChild(w.accountDeleteConfirm);
 
   root.appendChild(buildLegalFooter("See our"));
@@ -316,13 +265,9 @@ function showDeleteConfirm(on) {
 }
 
 function buildCloseRow() {
-  const row = document.createElement("div");
-  row.className = "account-close-row";
-  const btn = document.createElement("button");
-  btn.textContent = "Close";
-  btn.addEventListener("click", closeAccountPanel);
-  row.appendChild(btn);
-  return row;
+  return el("div", { class: "account-close-row" }, [
+    el("button", { text: "Close", on: { click: closeAccountPanel } }),
+  ]);
 }
 
 // — View switching ——————————————————————————————————————————————————————
