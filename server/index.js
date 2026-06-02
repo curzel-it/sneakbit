@@ -41,40 +41,47 @@ const STARTED_AT = new Date().toISOString();
 // stay wildcard because they leak nothing sensitive; /metrics and
 // /turn-credentials are origin-gated to protect their respective
 // resources (metric leakage, TURN bandwidth).
-const SAFE_CORS_HEADERS = {
-  "access-control-allow-origin": "*",
-  "access-control-allow-methods": "GET, HEAD, OPTIONS",
-  "access-control-allow-headers": "content-type, authorization",
-  "access-control-max-age": "86400",
-};
-
-function applySafeCors(res) {
-  for (const [k, v] of Object.entries(SAFE_CORS_HEADERS)) res.setHeader(k, v);
-}
-
-function applyGatedCors(res, originHeader, allowedHosts) {
-  res.setHeader("access-control-allow-methods", "GET, HEAD, OPTIONS");
-  res.setHeader("access-control-allow-headers", "content-type, authorization");
-  res.setHeader("access-control-max-age", "86400");
-  res.setHeader("vary", "origin");
-  if (!originHeader) return; // non-browser tooling — no ACAO needed.
-  if (!isOriginAllowed(originHeader, allowedHosts)) return;
-  res.setHeader("access-control-allow-origin", originHeader);
-}
-
+const CORS_ALLOW_HEADERS = "content-type, authorization";
+const CORS_MAX_AGE = "86400";
+const CORS_SAFE_METHODS = "GET, HEAD, OPTIONS";
 // Auth + cloud-save endpoints take POST/PUT/PATCH/DELETE (not just GET), so
-// they need a wider methods list than applyGatedCors. Same origin allowlist —
-// the client may be cross-origin (GitHub Pages on curzel.it, local dev on
-// :8000), so the browser needs the echoed ACAO. Bearer tokens, not cookies,
-// so no allow-credentials is required.
-function applyAuthCors(res, originHeader, allowedHosts) {
-  res.setHeader("access-control-allow-methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-  res.setHeader("access-control-allow-headers", "content-type, authorization");
-  res.setHeader("access-control-max-age", "86400");
+// they advertise a wider methods list. Same origin allowlist — the client
+// may be cross-origin (GitHub Pages on curzel.it, local dev on :8000), so
+// the browser needs the echoed ACAO. Bearer tokens, not cookies, so no
+// allow-credentials is required.
+const CORS_AUTH_METHODS = "GET, POST, PUT, PATCH, DELETE, OPTIONS";
+
+// Core CORS applier shared by the three postures below. Always sets the
+// methods list + allowed-headers + max-age. Gating hinges on allowedHosts:
+//   - omitted → wildcard posture (ACAO: *) for endpoints that leak nothing
+//     (/health, /version, /, 404).
+//   - supplied → origin-gated: emit Vary: origin and echo the request
+//     Origin only when it's on the allowlist (browsers then accept it;
+//     non-browser tooling with no Origin is let through ungated).
+function applyCors(res, methods, originHeader, allowedHosts) {
+  res.setHeader("access-control-allow-methods", methods);
+  res.setHeader("access-control-allow-headers", CORS_ALLOW_HEADERS);
+  res.setHeader("access-control-max-age", CORS_MAX_AGE);
+  if (allowedHosts === undefined) {
+    res.setHeader("access-control-allow-origin", "*");
+    return;
+  }
   res.setHeader("vary", "origin");
   if (!originHeader) return;
   if (!isOriginAllowed(originHeader, allowedHosts)) return;
   res.setHeader("access-control-allow-origin", originHeader);
+}
+
+function applySafeCors(res) {
+  applyCors(res, CORS_SAFE_METHODS);
+}
+
+function applyGatedCors(res, originHeader, allowedHosts) {
+  applyCors(res, CORS_SAFE_METHODS, originHeader, allowedHosts);
+}
+
+function applyAuthCors(res, originHeader, allowedHosts) {
+  applyCors(res, CORS_AUTH_METHODS, originHeader, allowedHosts);
 }
 
 // Endpoints behind bearer auth (account + cloud saves + editor worlds) share the
