@@ -19,7 +19,7 @@ import { formatKeyCode, formatPadButton, glyphForAction } from "./inputGlyphs.js
 import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDevice.js";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { isCoopMode, isCoopActive, localPlayerCount } from "./coopMode.js";
-import { putBufferedZone, clearBufferedZone } from "./zoneBuffer.js";
+import { saveEditedWorld, revertEditedWorld } from "./editedWorlds.js";
 import { invalidateZoneCache } from "./data.js";
 import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
 import { openAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
@@ -212,10 +212,10 @@ export function installMenu(stateGetter) {
       <div class="menu-row menu-controls menu-stack">
         <button id="menu-export-save" data-creative-only>Export save (copy JSON)</button>
         <button id="menu-import-save" data-creative-only>Import save (paste JSON)</button>
-        <button id="menu-save-zone" data-creative-only data-desktop-only>Save zone (flush to buffer)</button>
+        <button id="menu-save-zone" data-creative-only data-desktop-only data-editor-only>Save zone (flush to server)</button>
         <button id="menu-export-zone" data-creative-only data-desktop-only>Export zone JSON…</button>
-        <button id="menu-reset-zone" data-creative-only data-desktop-only>Reset zone (revert to shipped)</button>
-        <button id="menu-open-map-editor" data-creative-only data-desktop-only>Map editor…</button>
+        <button id="menu-reset-zone" data-creative-only data-desktop-only data-editor-only>Reset zone (revert to shipped)</button>
+        <button id="menu-open-map-editor" data-creative-only data-desktop-only data-editor-only>Map editor…</button>
       </div>
       <div class="menu-row menu-controls">
         <button id="menu-creative-back">Back</button>
@@ -286,14 +286,19 @@ export function isMenuOpen() { return open; }
 function applyCreativeModeVisibility() {
   const creative = isCreativeMode();
   const desktop = isDesktop();
-  // Two attributes, ANDed: a [data-creative-only] entry hides outside
+  const editor = !!getUser()?.editor;
+  // Three attributes, ANDed: a [data-creative-only] entry hides outside
   // creative; [data-desktop-only] additionally hides on coarse-pointer
   // devices where the click-and-drag editor + Save/Export wouldn't be
-  // usable. Most existing entries only carry [data-creative-only]; the
-  // editor and zone-buffer actions carry both.
+  // usable; [data-editor-only] additionally hides for non-editor accounts
+  // (the server enforces this too — a non-editor PUT gets 403). The
+  // server-backed zone tools (Save/Reset/Map editor) carry all three.
   root.querySelectorAll("[data-creative-only]").forEach((el) => {
     const requiresDesktop = el.hasAttribute("data-desktop-only");
-    const show = creative && (!requiresDesktop || desktop);
+    const requiresEditor = el.hasAttribute("data-editor-only");
+    const show = creative
+      && (!requiresDesktop || desktop)
+      && (!requiresEditor || editor);
     el.style.display = show ? "" : "none";
   });
 }
@@ -540,7 +545,12 @@ function bindWidgets() {
   const syncAccountLabel = (user) => {
     accountBtn.textContent = user ? `Account · ${user.displayName || user.email}` : "Account";
   };
-  onAccountChange(syncAccountLabel);
+  onAccountChange((user) => {
+    syncAccountLabel(user);
+    // The editor-only zone tools depend on user.editor — re-sync visibility
+    // so they appear/disappear on sign-in/out without reopening the menu.
+    applyCreativeModeVisibility();
+  });
   syncAccountLabel(getUser());
   root.querySelector("#menu-open-settings").addEventListener("click", () => showScreen("settings"));
   const fullscreenBtn = root.querySelector("#menu-fullscreen");
@@ -717,9 +727,10 @@ async function saveZoneNow() {
   const raw = st?.rawZone;
   if (!id || !raw) { alert("No zone is loaded yet."); return; }
   try {
-    await putBufferedZone(id, raw);
+    const ok = await saveEditedWorld(id, raw);
     invalidateZoneCache(id);
-    alert(`Saved zone ${id} to the creative buffer.`);
+    if (ok) alert(`Saved zone ${id} to the server.`);
+    else alert(`Save failed: sign in as an editor first.`);
   } catch (e) {
     alert(`Save failed: ${e?.message ?? "unknown error"}`);
   }
@@ -747,17 +758,18 @@ function exportZone() {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-// Drop the IndexedDB override for the current zone. The next reload
-// (or teleport back) falls through to the shipped ./data/{id}.json.
+// Delete the server-side edited world for the current zone. The next
+// reload (or teleport back) falls through to the shipped ./data/{id}.json.
 async function resetZone() {
   const st = getState();
   const id = st?.zone?.id;
   if (!id) { alert("No zone is loaded yet."); return; }
-  if (!confirm(`Reset zone ${id} to the shipped version? Any buffered creative edits will be discarded on next reload.`)) return;
+  if (!confirm(`Reset zone ${id} to the shipped version? Any server-stored creative edits will be discarded.`)) return;
   try {
-    await clearBufferedZone(id);
+    const ok = await revertEditedWorld(id);
     invalidateZoneCache(id);
-    alert(`Cleared creative buffer for zone ${id}. Reload (or teleport in/out) to see the shipped version.`);
+    if (ok) alert(`Reverted zone ${id} to shipped. Reload (or teleport in/out) to see it.`);
+    else alert(`Reset failed: sign in as an editor first.`);
   } catch (e) {
     alert(`Reset failed: ${e?.message ?? "unknown error"}`);
   }

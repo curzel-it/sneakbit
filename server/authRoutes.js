@@ -16,12 +16,16 @@ import { randomBytes, createHash } from "node:crypto";
 import {
   createUser, findUserByEmail, findUserById, updateUser, deleteUser,
   createPasswordReset, findPasswordReset, markPasswordResetUsed,
+  invalidateUserResets, pruneStaleResets,
 } from "./db.js";
-import { signToken, verifyToken } from "./jwt.js";
+import { signToken } from "./jwt.js";
+import { authenticateUser } from "./bearerAuth.js";
 import { hashPassword, verifyPassword } from "./passwords.js";
 import { readJsonBody } from "./httpBody.js";
 import { sendEmail } from "./email.js";
+import { isEditor } from "./editors.js";
 import { createRateLimiter } from "./rateLimitHttp.js";
+import { log } from "./logger.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD = 8;
@@ -36,6 +40,9 @@ export function createAuthHandler({ db, env = process.env } = {}) {
   const resetLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 30 });
   const forgotIpLimiter = createRateLimiter({ windowMs: 60 * 60 * 1000, max: 20 });
   const forgotEmailLimiter = createRateLimiter({ windowMs: 60 * 60 * 1000, max: 5 });
+  // Registration runs a scrypt hash, so it's a CPU-cost abuse vector and an
+  // account-spam vector. Per-IP cap, generous enough for a shared NAT.
+  const registerLimiter = createRateLimiter({ windowMs: 60 * 60 * 1000, max: 20 });
 
   async function handle(req, res) {
     if (!env.JWT_SECRET) return json(res, 503, { error: "auth_unavailable" });
@@ -53,7 +60,7 @@ export function createAuthHandler({ db, env = process.env } = {}) {
     } catch (err) {
       if (err?.code === "BODY_TOO_LARGE") return json(res, 413, { error: "too_large" });
       if (err?.code === "BAD_JSON") return json(res, 400, { error: "bad_json" });
-      console.error("[auth] handler error", { path, err: err?.message || String(err) });
+      log.error("auth.handlerError", { path, err: err?.message || String(err) });
       return json(res, 500, { error: "server_error" });
     }
   }
@@ -61,6 +68,7 @@ export function createAuthHandler({ db, env = process.env } = {}) {
   // — Handlers ———————————————————————————————————————————————————————————
 
   async function register(req, res) {
+    if (!registerLimiter.check(clientIp(req))) return json(res, 429, { error: "rate_limited" });
     const body = await readJsonBody(req);
     const email = normalizeEmail(body.email);
     const password = String(body.password ?? "");
@@ -73,7 +81,7 @@ export function createAuthHandler({ db, env = process.env } = {}) {
     const passwordHash = await hashPassword(password);
     const now = Date.now();
     const user = createUser(db, { id, email, passwordHash, displayName, now });
-    return json(res, 201, { token: tokenFor(user), user: publicUser(user) });
+    return json(res, 201, { token: tokenFor(user, now), user: publicUser(user) });
   }
 
   async function login(req, res) {
@@ -101,7 +109,8 @@ export function createAuthHandler({ db, env = process.env } = {}) {
     const user = userFromBearer(req);
     if (!user) return json(res, 401, { error: "unauthorized" });
     const body = await readJsonBody(req);
-    const patch = { now: Date.now() };
+    const now = Date.now();
+    const patch = { now };
 
     if (body.displayName !== undefined) {
       patch.displayName = cleanDisplayName(body.displayName);
@@ -119,7 +128,12 @@ export function createAuthHandler({ db, env = process.env } = {}) {
       return json(res, 400, { error: "nothing_to_update" });
     }
     const updated = updateUser(db, user.id, patch);
-    return json(res, 200, { user: publicUser(updated) });
+    const out = { user: publicUser(updated) };
+    // A password change stamps password_changed_at = now, retiring the
+    // caller's current token too. Hand back a fresh one (minted with the same
+    // `now`) so the user who just changed their password isn't logged out.
+    if (patch.passwordHash !== undefined) out.token = tokenFor(updated, now);
+    return json(res, 200, out);
   }
 
   async function deleteMe(req, res) {
@@ -145,6 +159,7 @@ export function createAuthHandler({ db, env = process.env } = {}) {
     if (allowed && EMAIL_RE.test(email)) {
       const user = findUserByEmail(db, email);
       if (user) {
+        pruneStaleResets(db, Date.now()); // opportunistic housekeeping
         const token = randomBytes(32).toString("hex");
         const tokenHash = sha256(token);
         createPasswordReset(db, {
@@ -179,22 +194,19 @@ export function createAuthHandler({ db, env = process.env } = {}) {
     const now = Date.now();
     const updated = updateUser(db, user.id, { passwordHash: await hashPassword(password), now });
     markPasswordResetUsed(db, row.token_hash, now);
+    invalidateUserResets(db, user.id, now); // burn any other outstanding links
     // Sign them straight in — they just proved control of the inbox.
-    return json(res, 200, { token: tokenFor(updated), user: publicUser(updated) });
+    return json(res, 200, { token: tokenFor(updated, now), user: publicUser(updated) });
   }
 
   // — Helpers ————————————————————————————————————————————————————————————
 
-  function tokenFor(user) {
-    return signToken({ sub: user.id }, { secret: env.JWT_SECRET });
+  function tokenFor(user, now) {
+    return signToken({ sub: user.id }, { secret: env.JWT_SECRET, now });
   }
 
   function userFromBearer(req) {
-    const token = bearerToken(req);
-    if (!token) return null;
-    const payload = verifyToken(token, { secret: env.JWT_SECRET });
-    if (!payload?.sub) return null;
-    return findUserById(db, payload.sub);
+    return authenticateUser(req, { db, secret: env.JWT_SECRET });
   }
 
   function baseUrl() {
@@ -230,6 +242,12 @@ function validPassword(pw) {
   return typeof pw === "string" && pw.length >= MIN_PASSWORD && pw.length <= MAX_PASSWORD;
 }
 
+// NOTE: email verification is intentionally deferred. Registration accepts an
+// unverified address, so `email_verified` is always 0 today and `emailVerified`
+// is plumbed through (so a future verify flow needs no client change) but never
+// gated on. It's an optional, additive feature for a single-player game; the
+// only thing an unverified email blocks is forgot-password (which mails the
+// real owner regardless). Revisit if accounts ever gate anything sensitive.
 function publicUser(row) {
   return {
     id: row.id,
@@ -237,22 +255,28 @@ function publicUser(row) {
     displayName: row.display_name ?? null,
     emailVerified: !!row.email_verified,
     createdAt: row.created_at,
+    // Editor allowlist flag — gates the creative-mode world editor UI on the
+    // client. The /editing routes enforce it server-side regardless; this is
+    // purely so the client knows whether to show the tools.
+    editor: isEditor(row.email),
   };
 }
 
-function bearerToken(req) {
-  const h = req.headers?.authorization;
-  if (typeof h !== "string") return null;
-  const prefix = "bearer ";
-  if (h.length <= prefix.length || h.slice(0, prefix.length).toLowerCase() !== prefix) return null;
-  return h.slice(prefix.length).trim() || null;
-}
-
 function clientIp(req) {
-  // nginx sets X-Forwarded-For / X-Real-IP; take the first hop. Falls back
-  // to the socket address for direct (test / dev) connections.
+  // Prefer X-Real-IP: nginx sets it to $remote_addr and OVERWRITES any
+  // client-supplied value, so it can't be spoofed. X-Forwarded-For is
+  // $proxy_add_x_forwarded_for — the client's value with the real IP
+  // APPENDED — so the trustworthy hop is the LAST one, never the first
+  // (using the first would let an attacker mint a fresh rate-limit bucket
+  // per request by sending a bogus header). Socket address is the fallback
+  // for direct test/dev connections with no proxy.
+  const real = req.headers?.["x-real-ip"];
+  if (typeof real === "string" && real.trim()) return real.trim();
   const xff = req.headers?.["x-forwarded-for"];
-  if (typeof xff === "string" && xff.length) return xff.split(",")[0].trim();
+  if (typeof xff === "string" && xff.length) {
+    const hops = xff.split(",");
+    return hops[hops.length - 1].trim();
+  }
   return req.socket?.remoteAddress || "unknown";
 }
 

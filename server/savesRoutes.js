@@ -13,17 +13,24 @@
 // client can re-run newest-wins instead of silently clobbering.
 
 import { getSave, putSave, deleteSave } from "./db.js";
-import { verifyToken } from "./jwt.js";
+import { authenticateUser } from "./bearerAuth.js";
 import { readJsonBody } from "./httpBody.js";
+import { log } from "./logger.js";
 
 const MAX_BLOB_BYTES = 256 * 1024;
+// How far ahead of server time a client-supplied updatedAt may sit before we
+// distrust it. Newest-wins is resolved on the client's clock; this stops a
+// device with a badly-skewed (or malicious) future clock from stamping a
+// timestamp that wins every future conflict and clobbers good progress.
+const MAX_CLOCK_SKEW_MS = 5 * 60 * 1000;
 
 export function createSavesHandler({ db, env = process.env } = {}) {
   async function handle(req, res) {
     if (!env.JWT_SECRET) return json(res, 503, { error: "auth_unavailable" });
     if (pathOf(req.url) !== "/saves") return json(res, 404, { error: "not_found" });
-    const userId = userIdFromBearer(req, env);
-    if (!userId) return json(res, 401, { error: "unauthorized" });
+    const user = authenticateUser(req, { db, secret: env.JWT_SECRET });
+    if (!user) return json(res, 401, { error: "unauthorized" });
+    const userId = user.id;
     try {
       if (req.method === "GET") return getSaveHandler(res, userId);
       if (req.method === "PUT") return await putSaveHandler(req, res, userId);
@@ -32,7 +39,7 @@ export function createSavesHandler({ db, env = process.env } = {}) {
     } catch (err) {
       if (err?.code === "BODY_TOO_LARGE") return json(res, 413, { error: "too_large" });
       if (err?.code === "BAD_JSON") return json(res, 400, { error: "bad_json" });
-      console.error("[saves] handler error", { err: err?.message || String(err) });
+      log.error("saves.handlerError", { err: err?.message || String(err) });
       return json(res, 500, { error: "server_error" });
     }
   }
@@ -50,7 +57,11 @@ export function createSavesHandler({ db, env = process.env } = {}) {
     }
     const blobStr = JSON.stringify(body.blob);
     if (Buffer.byteLength(blobStr, "utf8") > MAX_BLOB_BYTES) return json(res, 413, { error: "too_large" });
-    const updatedAt = Number.isFinite(body.updatedAt) ? body.updatedAt : Date.now();
+    const now = Date.now();
+    // Trust the client's updatedAt (newest-wins is its clock's job) but cap a
+    // runaway future value to server-now so it can't win conflicts forever.
+    let updatedAt = Number.isFinite(body.updatedAt) ? body.updatedAt : now;
+    if (updatedAt > now + MAX_CLOCK_SKEW_MS) updatedAt = now;
     const baseRev = Number.isFinite(body.baseRev) ? body.baseRev : 0;
 
     const existing = getSave(db, userId);
@@ -69,13 +80,6 @@ export function createSavesHandler({ db, env = process.env } = {}) {
     return json(res, 200, { ok: true });
   }
 
-  function userIdFromBearer(req, env) {
-    const token = bearerToken(req);
-    if (!token) return null;
-    const payload = verifyToken(token, { secret: env.JWT_SECRET });
-    return payload?.sub || null;
-  }
-
   return handle;
 }
 
@@ -89,12 +93,4 @@ function json(res, status, obj) {
 function pathOf(url) {
   const q = url.indexOf("?");
   return q === -1 ? url : url.slice(0, q);
-}
-
-function bearerToken(req) {
-  const h = req.headers?.authorization;
-  if (typeof h !== "string") return null;
-  const prefix = "bearer ";
-  if (h.length <= prefix.length || h.slice(0, prefix.length).toLowerCase() !== prefix) return null;
-  return h.slice(prefix.length).trim() || null;
 }

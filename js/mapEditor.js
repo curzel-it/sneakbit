@@ -26,7 +26,7 @@ import { buildZone } from "./zone.js";
 import { setupPuzzles } from "./puzzles.js";
 import { setupCutscenes } from "./cutscenes.js";
 import { invalidateZoneCache } from "./data.js";
-import { putBufferedZone } from "./zoneBuffer.js";
+import { saveEditedWorld } from "./editedWorlds.js";
 import { getBiomeSheet } from "./biomeSheet.js";
 import { getSprite } from "./assets.js";
 import { tryBuildingPrefab } from "./prefabs.js";
@@ -433,13 +433,11 @@ function addEntity(raw, tileX, tileY, speciesId) {
     if (prefab) {
       raw.entities = raw.entities ?? [];
       for (const e of prefab.entities) raw.entities.push(e);
-      // Persist each generated interior zone to the override buffer so the
-      // door teleporter resolves on first crossing. Fire-and-forget — IDB
-      // writes are async, but the player can't reach the interior faster
-      // than the write commits.
+      // Persist each generated interior zone to the server so the door
+      // teleporter resolves on first crossing. Fire-and-forget.
       for (const interior of prefab.interiorZones ?? []) {
-        putBufferedZone(interior.id, interior).catch((err) => {
-          console.warn("prefabs: failed to buffer interior zone", err);
+        saveEditedWorld(interior.id, interior).catch((err) => {
+          console.warn("prefabs: failed to save interior zone", err);
         });
       }
       return;
@@ -481,8 +479,8 @@ function rebuildZone(state) {
   state.zone = next;
   invalidateZoneCache(state.zone?.id ?? state.rawZone.id);
   if (state.rawZone?.id != null) {
-    putBufferedZone(state.rawZone.id, state.rawZone).catch((err) => {
-      console.warn("creative: buffer flush failed", err);
+    saveEditedWorld(state.rawZone.id, state.rawZone).catch((err) => {
+      console.warn("creative: save flush failed", err);
     });
   }
 }

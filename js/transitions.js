@@ -16,7 +16,7 @@ import { getZoneCache } from "./zoneCache.js";
 import { setupPuzzles } from "./puzzles.js";
 import { setupCutscenes } from "./cutscenes.js";
 import { isCreativeMode } from "./creativeMode.js";
-import { putBufferedZone } from "./zoneBuffer.js";
+import { saveEditedWorld } from "./editedWorlds.js";
 import { resetPlayerHealth, isPlayerDead } from "./playerHealth.js";
 
 const TELEPORTER_SPECIES_ID = 1019;
@@ -86,8 +86,8 @@ export async function travelTo(state, destination, opts = {}) {
     // engine.save() runs on every teleport in creative). Awaited so the
     // write actually flushes before we lose the source reference.
     if (isCreativeMode() && sourceZoneId && state.rawZone) {
-      try { await putBufferedZone(sourceZoneId, state.rawZone); }
-      catch (e) { console.warn("creative: failed to buffer zone on teleport", e); }
+      try { await saveEditedWorld(sourceZoneId, state.rawZone); }
+      catch (e) { console.warn("creative: failed to save zone on teleport", e); }
     }
     playSfx("zoneChange");
     await fadeOut();

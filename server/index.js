@@ -7,6 +7,7 @@ import { negotiate as negotiateExtensions, formatResponse as formatExtResponse }
 import { handleTurnRequest } from "./turnCredentials.js";
 import { createAuthHandler } from "./authRoutes.js";
 import { createSavesHandler } from "./savesRoutes.js";
+import { createEditingHandler } from "./editingRoutes.js";
 import { openDb } from "./db.js";
 import { parseAllowedHosts, isOriginAllowed } from "./originAllowlist.js";
 import { log } from "./logger.js";
@@ -76,10 +77,13 @@ function applyAuthCors(res, originHeader, allowedHosts) {
   res.setHeader("access-control-allow-origin", originHeader);
 }
 
-// Endpoints behind bearer auth (account + cloud saves) share the wide CORS
-// + lazy-db treatment.
+// Endpoints behind bearer auth (account + cloud saves + editor worlds) share the
+// wide CORS + lazy-db treatment.
 function isAuthScoped(url) {
-  return !!url && (url.startsWith("/auth/") || url === "/saves" || url.startsWith("/saves?"));
+  if (!url) return false;
+  return url.startsWith("/auth/")
+    || url === "/saves" || url.startsWith("/saves?")
+    || url === "/editing" || url.startsWith("/editing/") || url.startsWith("/editing?");
 }
 
 export function startServer({
@@ -132,6 +136,11 @@ export function startServer({
   function getSavesHandler() {
     if (!savesHandler) { const d = getDb(); if (d) savesHandler = createSavesHandler({ db: d }); }
     return savesHandler;
+  }
+  let editingHandler = null;
+  function getEditingHandler() {
+    if (!editingHandler) { const d = getDb(); if (d) editingHandler = createEditingHandler({ db: d }); }
+    return editingHandler;
   }
 
   const server = createServer((req, res) => {
@@ -189,7 +198,9 @@ export function startServer({
     }
     if (isAuthScoped(req.url)) {
       applyAuthCors(res, req.headers.origin, allowedHosts);
-      const handler = req.url.startsWith("/saves") ? getSavesHandler() : getAuthHandler();
+      const handler = req.url.startsWith("/saves") ? getSavesHandler()
+        : req.url.startsWith("/editing") ? getEditingHandler()
+        : getAuthHandler();
       if (!handler) {
         res.writeHead(503, { "content-type": "application/json; charset=utf-8" });
         res.end(JSON.stringify({ error: "auth_unavailable" }) + "\n");

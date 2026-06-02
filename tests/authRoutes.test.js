@@ -4,6 +4,7 @@ import { createServer } from "node:http";
 import { createHash } from "node:crypto";
 import { openDb, createPasswordReset, getSave, putSave, findUserByEmail } from "../server/db.js";
 import { createAuthHandler } from "../server/authRoutes.js";
+import { signToken } from "../server/jwt.js";
 
 const env = { JWT_SECRET: "test-secret", APP_BASE_URL: "https://example.test" };
 
@@ -28,6 +29,9 @@ function headers(token) {
   return h;
 }
 const post = (base, path, body, token) => fetch(base + path, { method: "POST", headers: headers(token), body: JSON.stringify(body) });
+// POST with extra request headers (used to exercise the rate-limit IP keying).
+const postH = (base, path, body, extra) =>
+  fetch(base + path, { method: "POST", headers: { "content-type": "application/json", ...extra }, body: JSON.stringify(body) });
 const patch = (base, path, body, token) => fetch(base + path, { method: "PATCH", headers: headers(token), body: JSON.stringify(body) });
 const get = (base, path, token) => fetch(base + path, { headers: headers(token) });
 const del = (base, path, body, token) => fetch(base + path, { method: "DELETE", headers: headers(token), body: JSON.stringify(body) });
@@ -40,6 +44,7 @@ test("register -> login -> me happy path", async () => {
     assert.ok(regBody.token);
     assert.equal(regBody.user.email, "m@b.com"); // normalized lowercase
     assert.equal(regBody.user.displayName, "Neo");
+    assert.equal(regBody.user.editor, false); // not on the editor allowlist
 
     const login = await post(base, "/auth/login", { email: "m@b.com", password: "password1" });
     assert.equal(login.status, 200);
@@ -147,6 +152,85 @@ test("DELETE /auth/me removes the account (and its cloud save) after a password 
     assert.equal((await post(base, "/auth/register", { email: "del@b.com", password: "password2" })).status, 201);
     // (old token now points at a deleted user → me is 401)
     assert.equal((await get(base, "/auth/me", token)).status, 401);
+  });
+});
+
+test("password change retires old tokens and returns a fresh one", async () => {
+  await withServer(async (base) => {
+    const reg = await (await post(base, "/auth/register", { email: "pw@b.com", password: "password1" })).json();
+    // Simulate a session token minted before the change (5s earlier) — the
+    // realistic case for a token that's been sitting in another device.
+    const oldToken = signToken({ sub: reg.user.id }, { secret: env.JWT_SECRET, now: Date.now() - 5000 });
+
+    const res = await patch(base, "/auth/me", { password: "brandnew1", currentPassword: "password1" }, reg.token);
+    assert.equal(res.status, 200);
+    const body = await res.json();
+    assert.ok(body.token, "a fresh token is handed back");
+
+    // The pre-change token is now rejected; the fresh one works.
+    assert.equal((await get(base, "/auth/me", oldToken)).status, 401);
+    assert.equal((await get(base, "/auth/me", body.token)).status, 200);
+    assert.equal((await post(base, "/auth/login", { email: "pw@b.com", password: "brandnew1" })).status, 200);
+  });
+});
+
+test("a successful reset burns every other outstanding reset link", async () => {
+  await withServer(async (base) => {
+    await post(base, "/auth/register", { email: "multi@b.com", password: "password1" });
+    const grabToken = async () => {
+      let token = null;
+      const orig = console.warn;
+      console.warn = (...a) => { const m = a.map(String).join(" ").match(/reset=([a-f0-9]{64})/); if (m) token = m[1]; };
+      try { await post(base, "/auth/forgot-password", { email: "multi@b.com" }); }
+      finally { console.warn = orig; }
+      return token;
+    };
+    const tokenA = await grabToken();
+    const tokenB = await grabToken();
+    assert.ok(tokenA && tokenB && tokenA !== tokenB);
+
+    assert.equal((await post(base, "/auth/reset-password", { token: tokenA, password: "newpassword1" })).status, 200);
+    // tokenB was still pending but is invalidated by A's successful reset.
+    assert.equal((await post(base, "/auth/reset-password", { token: tokenB, password: "another1pw" })).status, 400);
+  });
+});
+
+test("reset-password rate-limits with 429 once the per-IP budget is spent", async () => {
+  await withServer(async (base) => {
+    // resetLimiter max is 30/window; an invalid token short-circuits before
+    // any hashing, so this is cheap. The 31st request trips the limiter.
+    for (let i = 0; i < 30; i++) {
+      assert.equal((await post(base, "/auth/reset-password", { token: "deadbeef", password: "password1" })).status, 400);
+    }
+    assert.equal((await post(base, "/auth/reset-password", { token: "deadbeef", password: "password1" })).status, 429);
+  });
+});
+
+test("register rate-limits with 429 once the per-IP budget is spent", async () => {
+  await withServer(async (base) => {
+    // registerLimiter max is 20; an invalid email fails after the limiter
+    // check but before hashing, keeping this fast.
+    for (let i = 0; i < 20; i++) {
+      assert.equal((await post(base, "/auth/register", { email: "notanemail", password: "password1" })).status, 400);
+    }
+    assert.equal((await post(base, "/auth/register", { email: "notanemail", password: "password1" })).status, 429);
+  });
+});
+
+test("rate limiting keys on X-Real-IP, not a spoofable X-Forwarded-For", async () => {
+  await withServer(async (base) => {
+    const body = { token: "deadbeef", password: "password1" };
+    // 30 requests sharing X-Real-IP but each carrying a *different* spoofed
+    // X-Forwarded-For first hop. If the limiter trusted XFF's first hop, each
+    // would land in its own bucket and never trip; keyed on X-Real-IP they
+    // share one bucket and the 31st is limited.
+    for (let i = 0; i < 30; i++) {
+      const r = await postH(base, "/auth/reset-password", body, { "x-real-ip": "9.9.9.9", "x-forwarded-for": `1.2.3.${i}` });
+      assert.equal(r.status, 400);
+    }
+    assert.equal((await postH(base, "/auth/reset-password", body, { "x-real-ip": "9.9.9.9", "x-forwarded-for": "1.2.3.250" })).status, 429);
+    // A different real IP still has its own fresh budget.
+    assert.equal((await postH(base, "/auth/reset-password", body, { "x-real-ip": "8.8.8.8" })).status, 400);
   });
 });
 

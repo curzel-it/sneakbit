@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { openDb, createUser } from "../server/db.js";
+import { openDb, createUser, updateUser } from "../server/db.js";
 import { signToken } from "../server/jwt.js";
 import { createSavesHandler } from "../server/savesRoutes.js";
 
@@ -82,6 +82,35 @@ test("an oversized blob is rejected with 413", async () => {
     const huge = "x".repeat(300 * 1024);
     const res = await put(base, token, { blob: { v: 1, kv: { huge } }, updatedAt: 1, baseRev: 0 });
     assert.equal(res.status, 413);
+  });
+});
+
+test("a far-future updatedAt is clamped to server time so it can't win forever", async () => {
+  await withServer(async ({ base, token }) => {
+    const future = Date.now() + 1_000_000_000; // ~11 days ahead, well past the skew cap
+    const res = await put(base, token, { blob: { v: 1, kv: {} }, updatedAt: future, baseRev: 0 });
+    assert.equal(res.status, 200);
+    const stored = (await res.json()).updatedAt;
+    assert.ok(stored < future, "the runaway future value was not stored verbatim");
+    assert.ok(stored <= Date.now() + 1000, "clamped to roughly server-now");
+
+    // A near-now timestamp (inside the skew window) is preserved as-is.
+    const ok = await put(base, token, { blob: { v: 1, kv: { a: "1" } }, updatedAt: 2000, baseRev: 1 });
+    assert.equal((await ok.json()).updatedAt, 2000);
+  });
+});
+
+test("a token minted before a password change is rejected on /saves", async () => {
+  await withServer(async ({ base, db }) => {
+    // A token valid now is retired once the password changes to a later
+    // second — proving cloud saves honor the same session-invalidation cutoff
+    // as the auth routes. (now is anchored to wall-clock so the JWT's exp,
+    // checked against Date.now(), stays in the future.)
+    const now = Date.now();
+    const stale = signToken({ sub: "usr_1" }, { secret: env.JWT_SECRET, now });
+    assert.equal((await get(base, stale)).status, 204);
+    updateUser(db, "usr_1", { passwordHash: "h2", now: now + 10_000 });
+    assert.equal((await get(base, stale)).status, 401);
   });
 });
 

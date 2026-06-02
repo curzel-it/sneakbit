@@ -100,6 +100,13 @@ SERVER_SYNC_PATHS = [
     "authRoutes.js",
     "rateLimitHttp.js",
     "savesRoutes.js",
+    "bearerAuth.js",
+    # Creative-mode edited worlds (editor-only). The editing/ dir is created at
+    # runtime under REMOTE_DIR and is NOT whitelisted here, so it survives
+    # deploys the same way data.db does.
+    "editors.js",
+    "editingStore.js",
+    "editingRoutes.js",
 ]
 
 # node:sqlite (used by db.js) is stable/unflagged only on Node 24+. A redeploy
@@ -143,6 +150,10 @@ SERVER_ENV_KEYS = [
     "SMTP_FROM",
     "TURN_SECRET",
     "TURN_URLS",
+    # Optional comma-separated extension of the editor allowlist. The
+    # hard-coded default (editors.js) already includes federico; this lets the
+    # set grow from the VPS .env without a code change.
+    "EDITOR_EMAILS",
 ]
 
 def render_systemd_unit(git_sha: str) -> str:
@@ -174,6 +185,9 @@ Environment=GIT_SHA={git_sha}
 # the repo and the systemd unit.
 Environment=DATABASE_PATH={REMOTE_DIR}/data.db
 Environment=APP_BASE_URL=https://{SERVER_NAME}
+# Creative-mode edited worlds (one JSON file per zone). Like data.db this lives
+# under the app dir and is NOT in SERVER_SYNC_PATHS, so edits survive deploys.
+Environment=EDITING_DIR={REMOTE_DIR}/editing
 # Secrets written by deploy.py (step_server_env) from local .env — see
 # SERVER_ENV_KEYS. The leading '-' keeps a missing file non-fatal:
 #   TURN_SECRET + TURN_URLS  — coturn; missing → relay falls back to STUN-only.

@@ -10,7 +10,7 @@
 //   { entities, interiorZones }
 // where `entities` are appended to the source zone's raw.entities and
 // every zone in `interiorZones` should be persisted via
-// putBufferedZone(id, raw) so the door teleporter's destination resolves
+// saveEditedWorld(id, raw) so the door teleporter's destination resolves
 // when the player walks through it.
 //
 // Returns null when the building species isn't a known prefab — the caller
