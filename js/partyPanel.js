@@ -45,6 +45,7 @@ import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js";
 import { startPvpMatch, exitPvp } from "./pvpController.js";
 import { isPvp, isPvpHostSetup, setPvpHostSetup } from "./gameMode.js";
+import { el } from "./dom.js";
 
 let chip = null;
 let chipLabel = null;
@@ -160,48 +161,39 @@ export function isPartyPanelOpen() {
 }
 
 function buildChip() {
-  chip = document.createElement("div");
-  chip.id = "party-chip";
-  chip.style.display = "none";
-  chip.addEventListener("click", openPartyPanel);
-  const dot = document.createElement("span");
-  dot.className = "party-chip-dot";
-  chipLabel = document.createElement("span");
-  chip.appendChild(dot);
-  chip.appendChild(chipLabel);
+  chipLabel = el("span");
+  chip = el("div", {
+    id: "party-chip",
+    style: { display: "none" },
+    on: { click: openPartyPanel },
+  }, [el("span", { class: "party-chip-dot" }), chipLabel]);
 }
 
 function buildOverlay() {
-  overlay = document.createElement("div");
-  overlay.id = "party-overlay";
-  overlay.style.display = "none";
-  card = document.createElement("div");
-  card.className = "party-card";
-  overlay.appendChild(card);
   views.single = buildSingleView();
   views.hostingOnline = buildHostingOnlineView();
   views.hostingOffline = buildHostingOfflineView();
   views.guest = buildGuestView();
-  card.appendChild(views.single);
-  card.appendChild(views.hostingOnline);
-  card.appendChild(views.hostingOffline);
-  card.appendChild(views.guest);
-  card.appendChild(buildCloseRow());
+  card = el("div", { class: "party-card" }, [
+    views.single,
+    views.hostingOnline,
+    views.hostingOffline,
+    views.guest,
+    buildCloseRow(),
+  ]);
   // Click outside the card dismisses the overlay (offline play is one
   // tap from re-opening anyway).
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) dismissPartyPanel();
-  });
+  overlay = el("div", {
+    id: "party-overlay",
+    style: { display: "none" },
+    on: { click: (e) => { if (e.target === overlay) dismissPartyPanel(); } },
+  }, card);
 }
 
 function buildCloseRow() {
-  const row = document.createElement("div");
-  row.className = "party-row party-controls";
-  const btn = document.createElement("button");
-  btn.textContent = "Close";
-  btn.addEventListener("click", dismissPartyPanel);
-  row.appendChild(btn);
-  return row;
+  return el("div", { class: "party-row party-controls" }, [
+    el("button", { text: "Close", on: { click: dismissPartyPanel } }),
+  ]);
 }
 
 // — Inline confirm ————————————————————————————————————————————————————————
@@ -210,24 +202,19 @@ function buildCloseRow() {
 // styled dialog self-contained. onConfirm is read at click time so the
 // caller can branch on live state (co-op vs pvp, etc.).
 function makeConfirmControl(label, onConfirm) {
-  const root = document.createElement("div");
-  root.className = "party-confirm";
-  const danger = document.createElement("button");
-  danger.className = "party-danger";
-  danger.textContent = label;
-  const confirmRow = document.createElement("div");
-  confirmRow.className = "party-row party-confirm-row";
-  confirmRow.style.display = "none";
-  const q = document.createElement("span");
-  q.className = "party-confirm-q";
-  q.textContent = "Are you sure?";
-  const cancel = document.createElement("button");
-  cancel.textContent = "Cancel";
-  const yes = document.createElement("button");
-  yes.className = "party-danger";
-  yes.textContent = "Yes";
-  confirmRow.append(q, cancel, yes);
-  root.append(danger, confirmRow);
+  const danger = el("button", {
+    class: "party-danger", text: label,
+    on: { click: () => arm(true) },
+  });
+  const confirmRow = el("div", {
+    class: "party-row party-confirm-row",
+    style: { display: "none" },
+  }, [
+    el("span", { class: "party-confirm-q", text: "Are you sure?" }),
+    el("button", { text: "Cancel", on: { click: () => arm(false) } }),
+    el("button", { class: "party-danger", text: "Yes", on: { click: () => { arm(false); onConfirm(); } } }),
+  ]);
+  const root = el("div", { class: "party-confirm" }, [danger, confirmRow]);
   function arm(on) {
     danger.style.display = on ? "none" : "";
     confirmRow.style.display = on ? "flex" : "none";
@@ -235,74 +222,44 @@ function makeConfirmControl(label, onConfirm) {
     // the hidden danger button isn't left as the focused (invisible) item.
     if (on && isPartyPanelOpen()) focusFirstIn(confirmRow);
   }
-  danger.addEventListener("click", () => arm(true));
-  cancel.addEventListener("click", () => arm(false));
-  yes.addEventListener("click", () => { arm(false); onConfirm(); });
   return { root, reset: () => arm(false) };
 }
 
 // — Single-player view ————————————————————————————————————————————————————
 function buildSingleView() {
-  const root = document.createElement("div");
-  root.className = "party-view";
-  root.dataset.view = "single";
-
-  const title = document.createElement("h1");
-  title.textContent = "Multiplayer";
-  root.appendChild(title);
-
-  const joinLabel = document.createElement("p");
-  joinLabel.className = "party-hint";
-  joinLabel.textContent = "Join an online game with an invite code from a friend:";
-  root.appendChild(joinLabel);
-
-  const joinRow = document.createElement("div");
-  joinRow.className = "party-row";
-  spJoinInput = document.createElement("input");
-  spJoinInput.id = "party-join-code";
-  spJoinInput.maxLength = 5;
-  spJoinInput.placeholder = "ABC12";
-  spJoinInput.className = "party-code-input";
-  spJoinInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") { e.preventDefault(); onJoinClick(); }
+  spJoinInput = el("input", {
+    id: "party-join-code",
+    maxLength: 5,
+    placeholder: "ABC12",
+    class: "party-code-input",
+    on: { keydown: (e) => { if (e.key === "Enter") { e.preventDefault(); onJoinClick(); } } },
   });
-  const joinBtn = document.createElement("button");
-  joinBtn.id = "party-join";
-  joinBtn.textContent = "Join";
-  joinBtn.addEventListener("click", onJoinClick);
-  joinRow.append(spJoinInput, joinBtn);
-  root.appendChild(joinRow);
+  spErrorEl = el("p", { class: "party-error", style: { display: "none" } });
 
-  spErrorEl = document.createElement("p");
-  spErrorEl.className = "party-error";
-  spErrorEl.style.display = "none";
-  root.appendChild(spErrorEl);
-
-  const hostLabel = document.createElement("p");
-  hostLabel.className = "party-hint";
-  hostLabel.textContent = "…or host a match:";
-  root.appendChild(hostLabel);
-
-  const stack = document.createElement("div");
-  stack.className = "party-stack";
   const onlineCoop = hostButton("party-online-coop", "Online co-op", () => onHostOnlineClick("coop"));
   const onlinePvp = hostButton("party-online-pvp", "Online PvP", () => onHostOnlineClick("pvp"));
   spOnlineHostBtns = [onlineCoop, onlinePvp];
-  stack.appendChild(onlineCoop);
-  stack.appendChild(onlinePvp);
-  stack.appendChild(hostButton("party-offline-coop", "Offline co-op", onOfflineCoopClick));
-  stack.appendChild(hostButton("party-offline-pvp", "Offline PvP", onOfflinePvpClick));
-  root.appendChild(stack);
 
-  return root;
+  return el("div", { class: "party-view", dataset: { view: "single" } }, [
+    el("h1", { text: "Multiplayer" }),
+    el("p", { class: "party-hint", text: "Join an online game with an invite code from a friend:" }),
+    el("div", { class: "party-row" }, [
+      spJoinInput,
+      el("button", { id: "party-join", text: "Join", on: { click: onJoinClick } }),
+    ]),
+    spErrorEl,
+    el("p", { class: "party-hint", text: "…or host a match:" }),
+    el("div", { class: "party-stack" }, [
+      onlineCoop,
+      onlinePvp,
+      hostButton("party-offline-coop", "Offline co-op", onOfflineCoopClick),
+      hostButton("party-offline-pvp", "Offline PvP", onOfflinePvpClick),
+    ]),
+  ]);
 }
 
 function hostButton(id, label, handler) {
-  const btn = document.createElement("button");
-  btn.id = id;
-  btn.textContent = label;
-  btn.addEventListener("click", handler);
-  return btn;
+  return el("button", { id, text: label, on: { click: handler } });
 }
 
 function renderSingleView() {
@@ -324,69 +281,36 @@ function renderSingleView() {
 
 // — Hosting-online view ————————————————————————————————————————————————————
 function buildHostingOnlineView() {
-  const root = document.createElement("div");
-  root.className = "party-view";
-  root.dataset.view = "hostingOnline";
-
-  const title = document.createElement("h1");
-  title.textContent = "Hosting online";
-  root.appendChild(title);
-
-  hoDescEl = document.createElement("p");
-  hoDescEl.className = "party-hint";
-  root.appendChild(hoDescEl);
-
-  const codeWrap = document.createElement("div");
-  codeWrap.className = "party-code-wrap";
-  const codeLabel = document.createElement("div");
-  codeLabel.className = "party-code-label";
-  codeLabel.textContent = "Invite code";
-  hoCodeEl = document.createElement("div");
-  hoCodeEl.className = "party-code";
-  hoCodeEl.textContent = "…";
-  codeWrap.append(codeLabel, hoCodeEl);
-  root.appendChild(codeWrap);
-
-  const codeBtns = document.createElement("div");
-  codeBtns.className = "party-row";
-  hoCopyBtn = document.createElement("button");
-  hoCopyBtn.textContent = "Copy code";
-  hoCopyBtn.addEventListener("click", onCopyClick);
-  hoShareBtn = document.createElement("button");
+  hoDescEl = el("p", { class: "party-hint" });
+  hoCodeEl = el("div", { class: "party-code", text: "…" });
+  hoCopyBtn = el("button", { text: "Copy code", on: { click: onCopyClick } });
   // Desktop has no native share sheet, so the button just copies the
   // join URL to the clipboard. Calling it "Share link" there suggests an
   // action the browser can't actually take — keep the label honest.
-  hoShareBtn.textContent = canNativeShare() ? "Share link" : "Copy link";
-  hoShareBtn.addEventListener("click", onShareClick);
-  codeBtns.append(hoCopyBtn, hoShareBtn);
-  root.appendChild(codeBtns);
-
-  const usage = document.createElement("p");
-  usage.className = "party-hint";
-  usage.textContent = "Friends open Multiplayer, paste this code, and Join. Up to 4 players total.";
-  root.appendChild(usage);
-
-  const peersTitle = document.createElement("p");
-  peersTitle.className = "party-hint";
-  peersTitle.textContent = "Friends in your session:";
-  root.appendChild(peersTitle);
-
-  hoPeerList = document.createElement("ul");
-  hoPeerList.className = "party-peer-list";
-  root.appendChild(hoPeerList);
-
+  hoShareBtn = el("button", {
+    text: canNativeShare() ? "Share link" : "Copy link",
+    on: { click: onShareClick },
+  });
+  hoPeerList = el("ul", { class: "party-peer-list" });
   // Start (online pvp, before the match) / End session (otherwise) — exactly
   // one is shown, picked in renderHostingOnlineView.
-  hoStartBtn = document.createElement("button");
-  hoStartBtn.id = "party-start-match";
-  hoStartBtn.textContent = "Start match";
-  hoStartBtn.addEventListener("click", onStartMatchClick);
-  root.appendChild(hoStartBtn);
-
+  hoStartBtn = el("button", { id: "party-start-match", text: "Start match", on: { click: onStartMatchClick } });
   hoEndControl = makeConfirmControl("End session", endOnlineSession);
-  root.appendChild(hoEndControl.root);
 
-  return root;
+  return el("div", { class: "party-view", dataset: { view: "hostingOnline" } }, [
+    el("h1", { text: "Hosting online" }),
+    hoDescEl,
+    el("div", { class: "party-code-wrap" }, [
+      el("div", { class: "party-code-label", text: "Invite code" }),
+      hoCodeEl,
+    ]),
+    el("div", { class: "party-row" }, [hoCopyBtn, hoShareBtn]),
+    el("p", { class: "party-hint", text: "Friends open Multiplayer, paste this code, and Join. Up to 4 players total." }),
+    el("p", { class: "party-hint", text: "Friends in your session:" }),
+    hoPeerList,
+    hoStartBtn,
+    hoEndControl.root,
+  ]);
 }
 
 function renderHostingOnlineView() {
@@ -449,40 +373,19 @@ async function endOnlineSession() {
 
 // — Hosting-offline view ——————————————————————————————————————————————————
 function buildHostingOfflineView() {
-  const root = document.createElement("div");
-  root.className = "party-view";
-  root.dataset.view = "hostingOffline";
-
-  const title = document.createElement("h1");
-  title.textContent = "Local game";
-  root.appendChild(title);
-
-  offDescEl = document.createElement("p");
-  offDescEl.className = "party-hint";
-  root.appendChild(offDescEl);
-
+  offDescEl = el("p", { class: "party-hint" });
   // Player-count toggle: 2 | 3 | 4 on this device.
-  const toggle = document.createElement("div");
-  toggle.className = "party-toggle";
-  offToggleBtns = [2, 3, 4].map((n) => {
-    const btn = document.createElement("button");
-    btn.dataset.count = String(n);
-    btn.textContent = String(n);
-    btn.addEventListener("click", () => onCountToggle(n));
-    toggle.appendChild(btn);
-    return btn;
-  });
-  root.appendChild(toggle);
-
-  const hint = document.createElement("p");
-  hint.className = "party-hint";
-  hint.textContent = "P2 uses IJKL + B/N/M. P3/P4 start with no keys — bind them in Settings → Key Bindings, or give each a controller (pads map by connection order).";
-  root.appendChild(hint);
-
+  offToggleBtns = [2, 3, 4].map((n) =>
+    el("button", { dataset: { count: String(n) }, text: String(n), on: { click: () => onCountToggle(n) } }));
   offEndControl = makeConfirmControl("End session (back to single player)", endOfflineSession);
-  root.appendChild(offEndControl.root);
 
-  return root;
+  return el("div", { class: "party-view", dataset: { view: "hostingOffline" } }, [
+    el("h1", { text: "Local game" }),
+    offDescEl,
+    el("div", { class: "party-toggle" }, offToggleBtns),
+    el("p", { class: "party-hint", text: "P2 uses IJKL + B/N/M. P3/P4 start with no keys — bind them in Settings → Key Bindings, or give each a controller (pads map by connection order)." }),
+    offEndControl.root,
+  ]);
 }
 
 function renderHostingOfflineView() {
@@ -514,22 +417,13 @@ function endOfflineSession() {
 
 // — Guest view ————————————————————————————————————————————————————————————
 function buildGuestView() {
-  const root = document.createElement("div");
-  root.className = "party-view";
-  root.dataset.view = "guest";
-
-  const title = document.createElement("h1");
-  title.textContent = "Connected";
-  root.appendChild(title);
-
-  guestDescEl = document.createElement("p");
-  guestDescEl.className = "party-hint";
-  root.appendChild(guestDescEl);
-
+  guestDescEl = el("p", { class: "party-hint" });
   guestLeaveControl = makeConfirmControl("Leave session", onLeaveCoopClick);
-  root.appendChild(guestLeaveControl.root);
-
-  return root;
+  return el("div", { class: "party-view", dataset: { view: "guest" } }, [
+    el("h1", { text: "Connected" }),
+    guestDescEl,
+    guestLeaveControl.root,
+  ]);
 }
 
 function renderGuestView() {
@@ -648,9 +542,7 @@ function patchPeerList(peers) {
   }
   if (peers.length === 0) {
     if (!peerEmptyRow) {
-      peerEmptyRow = document.createElement("li");
-      peerEmptyRow.className = "party-peer-empty";
-      peerEmptyRow.textContent = "Waiting for friends…";
+      peerEmptyRow = el("li", { class: "party-peer-empty", text: "Waiting for friends…" });
     }
     if (!peerEmptyRow.isConnected) hoPeerList.appendChild(peerEmptyRow);
   } else if (peerEmptyRow && peerEmptyRow.isConnected) {
@@ -659,23 +551,14 @@ function patchPeerList(peers) {
 }
 
 function buildPeerRow(peer) {
-  const row = document.createElement("li");
-  row.className = "party-peer";
-  const nameEl = document.createElement("span");
-  nameEl.className = "party-peer-name";
-  nameEl.textContent = peer.name || peer.playerId || "Player";
-  const slotEl = document.createElement("span");
-  slotEl.className = "party-peer-slot";
-  slotEl.textContent = `slot ${peer.slot}`;
-  const kick = document.createElement("button");
-  kick.textContent = "Kick";
-  kick.className = "party-kick";
+  const nameEl = el("span", { class: "party-peer-name", text: peer.name || peer.playerId || "Player" });
+  const slotEl = el("span", { class: "party-peer-slot", text: `slot ${peer.slot}` });
   // Capture playerId by value — the closure must not hold the whole peer
   // object since later patches mutate text under us; the kick target is
   // identified by playerId alone.
   const playerId = peer.playerId;
-  kick.addEventListener("click", () => onKickClick({ playerId }));
-  row.append(nameEl, slotEl, kick);
+  const kick = el("button", { class: "party-kick", text: "Kick", on: { click: () => onKickClick({ playerId }) } });
+  const row = el("li", { class: "party-peer" }, [nameEl, slotEl, kick]);
   return { row, nameEl, slotEl };
 }
 
@@ -785,10 +668,7 @@ function buildShareUrl(code) {
 // the browser to execCommand("copy"). Skips the clipboard API entirely.
 function promptCopy(value) {
   if (typeof document === "undefined") return;
-  const ta = document.createElement("textarea");
-  ta.value = value;
-  ta.style.position = "fixed";
-  ta.style.opacity = "0";
+  const ta = el("textarea", { value, style: { position: "fixed", opacity: "0" } });
   document.body.appendChild(ta);
   ta.select();
   try { document.execCommand("copy"); showToast("Copied", "hint"); }
