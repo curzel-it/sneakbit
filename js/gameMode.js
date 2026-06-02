@@ -12,6 +12,7 @@ export const GAME_MODE = {
   coop: "coop",       // RealTimeCoOp — the normal game
   creative: "creative",
   pvp: "pvp",         // realtime deathmatch (local or online)
+  td: "td",           // tower defense — solo/offline squad defense (?mode=td)
 };
 
 // Rust: GameMode PvP.player_hp() == 1000 (vs 100 elsewhere).
@@ -36,7 +37,8 @@ export function getGameMode() {
 }
 
 export function setGameMode(mode) {
-  if (mode === GAME_MODE.coop || mode === GAME_MODE.creative || mode === GAME_MODE.pvp) {
+  if (mode === GAME_MODE.coop || mode === GAME_MODE.creative ||
+      mode === GAME_MODE.pvp || mode === GAME_MODE.td) {
     current = mode;
   }
   return current;
@@ -51,4 +53,12 @@ export function isPvp() {
 // Rust `player_hp()`.
 export function pvpPlayerHp() {
   return PVP_PLAYER_HP;
+}
+
+// Tower Defense — a solo/offline squad-defense run reached via ?mode=td (or
+// the party panel's Tower Defense button). Like PvP it's an additive,
+// transient mode: every TD-only branch is gated behind this getter so the
+// normal game / co-op / creative paths are untouched when it's absent.
+export function isTowerDefenseMode() {
+  return current === GAME_MODE.td;
 }
