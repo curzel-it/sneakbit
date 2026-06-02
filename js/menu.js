@@ -33,6 +33,7 @@ import { isDialogueOpen } from "./dialogue.js";
 import { getRuntimeRole, onRoleChange } from "./onlineMode.js";
 import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js";
 import { setTouchControlStyle } from "./touch.js";
+import { el } from "./dom.js";
 
 // Modals that own the keyboard while they're up. If any is open we treat
 // Esc / the menu key as "dismiss the active modal" — owned by that modal's
@@ -400,14 +401,14 @@ function renderKeyboardList() {
   const list = root.querySelector("#menu-controls-list");
   if (!list) return;
   const actions = controlsPlayer === 0 ? ACTIONS : ACTIONS_P2;
-  list.innerHTML = actions.map((a) => {
+  list.replaceChildren(...actions.map((a) => {
     const codes = codesFor(a.id, controlsPlayer);
-    return `<li>
-      <span class="menu-controls-label">${a.label}</span>
-      <button class="menu-controls-key" data-action="${a.id}" data-slot="0">${formatKeyCode(codes[0])}</button>
-      <button class="menu-controls-key" data-action="${a.id}" data-slot="1">${formatKeyCode(codes[1])}</button>
-    </li>`;
-  }).join("");
+    return el("li", {}, [
+      el("span", { class: "menu-controls-label", text: a.label }),
+      el("button", { class: "menu-controls-key", dataset: { action: a.id, slot: "0" }, text: formatKeyCode(codes[0]) }),
+      el("button", { class: "menu-controls-key", dataset: { action: a.id, slot: "1" }, text: formatKeyCode(codes[1]) }),
+    ]);
+  }));
   for (const btn of list.querySelectorAll(".menu-controls-key")) {
     btn.addEventListener("click", () => beginRebindCapture(btn));
   }
@@ -417,13 +418,13 @@ function renderControllerList() {
   const list = root.querySelector("#menu-controls-list");
   if (!list) return;
   const actions = controlsPlayer === 0 ? GAMEPAD_ACTIONS : GAMEPAD_ACTIONS_P2;
-  list.innerHTML = actions.map((a) => {
+  list.replaceChildren(...actions.map((a) => {
     const idx = buttonFor(a.id, controlsPlayer);
-    return `<li>
-      <span class="menu-controls-label">${a.label}</span>
-      <button class="menu-controls-key" data-action="${a.id}">${formatPadButton(idx)}</button>
-    </li>`;
-  }).join("");
+    return el("li", {}, [
+      el("span", { class: "menu-controls-label", text: a.label }),
+      el("button", { class: "menu-controls-key", dataset: { action: a.id }, text: formatPadButton(idx) }),
+    ]);
+  }));
   for (const btn of list.querySelectorAll(".menu-controls-key")) {
     btn.addEventListener("click", () => beginPadCapture(btn));
   }
@@ -518,15 +519,16 @@ function syncSkillsWidgets() {
   const list = root.querySelector("#menu-skill-list");
   if (!list) return;
   const skills = getSkills();
-  list.innerHTML = SKILL_LABELS.map(s => {
+  list.replaceChildren(...SKILL_LABELS.map((s) => {
     const unlocked = !!skills[s.id];
-    const tag = unlocked ? `<span class="menu-skill-tag on">UNLOCKED</span>`
-                         : `<span class="menu-skill-tag off">LOCKED</span>`;
-    return `<li class="${unlocked ? "on" : "off"}">
-      <div class="menu-skill-head">${s.name} ${tag}</div>
-      <div class="menu-skill-desc">${s.desc}</div>
-    </li>`;
-  }).join("");
+    return el("li", { class: unlocked ? "on" : "off" }, [
+      el("div", { class: "menu-skill-head" }, [
+        `${s.name} `,
+        el("span", { class: `menu-skill-tag ${unlocked ? "on" : "off"}`, text: unlocked ? "UNLOCKED" : "LOCKED" }),
+      ]),
+      el("div", { class: "menu-skill-desc", text: s.desc }),
+    ]);
+  }));
 }
 
 function bindWidgets() {
