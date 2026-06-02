@@ -12,6 +12,7 @@
 import { isMirrorStale } from "./mirrorWorld.js";
 import { getRuntimeRole, onRoleChange } from "./onlineMode.js";
 import { isHostPausedRemote } from "./guestHostPause.js";
+import { el } from "./dom.js";
 
 const PAUSED_TEXT = "Host paused the game";
 const LAGGING_TEXT = "Host lagging…";
@@ -23,10 +24,11 @@ export function installHostLaggingOverlay() {
   if (installed || typeof document === "undefined") return;
   installed = true;
   injectStyles();
-  overlay = document.createElement("div");
-  overlay.id = "host-lagging-overlay";
-  overlay.style.display = "none";
-  overlay.textContent = LAGGING_TEXT;
+  overlay = el("div", {
+    id: "host-lagging-overlay",
+    text: LAGGING_TEXT,
+    style: { display: "none" },
+  });
   document.body.appendChild(overlay);
   // Force-hide on any guest → offline / host transition. tickGuestFrame
   // is the only caller of updateHostLaggingOverlay(), so without this

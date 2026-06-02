@@ -6,6 +6,8 @@
 // after each finished step. The exact ratio matters less than giving
 // the player a sign that something is happening on slow networks.
 
+import { el } from "./dom.js";
+
 let root = null;
 let bar = null;
 let total = 1;
@@ -15,25 +17,26 @@ export function showLoadingScreen(steps = 1) {
   total = Math.max(1, steps);
   done = 0;
   if (typeof document === "undefined") return;
-  root = document.createElement("div");
-  root.id = "loading";
-  root.innerHTML = `
+  root = el("div", {
+    id: "loading",
+    html: `
     <div class="ld-card">
       <img class="ld-logo" src="assets/logo.png?v=20260531c" alt="SneakBit" />
       <div class="ld-track"><div class="ld-fill"></div></div>
       <div class="ld-sub">Loading…</div>
     </div>
-  `;
-  Object.assign(root.style, {
-    position: "fixed",
-    inset: "0",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "#070707",
-    color: "#cfd6e8",
-    fontFamily: "monospace",
-    zIndex: "30",
+  `,
+    style: {
+      position: "fixed",
+      inset: "0",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "#070707",
+      color: "#cfd6e8",
+      fontFamily: "monospace",
+      zIndex: "30",
+    },
   });
   injectStyles();
   document.body.appendChild(root);

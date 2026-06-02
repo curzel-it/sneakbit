@@ -13,6 +13,7 @@ import { glyphForAction } from "./inputGlyphs.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { isDying } from "./deathAnimation.js";
+import { el } from "./dom.js";
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -125,36 +126,37 @@ export function tickInteract() {
 }
 
 function makeHint() {
-  const el = document.createElement("div");
-  el.id = "interact-hint";
-  el.textContent = "Press E to talk";
   // Styled to match toast.js exactly so the in-zone interact prompt and
   // pickup/hint toasts are visually consistent (top: 6% band, same
   // background, radius, padding, fontSize). Persistent while a
   // dialogue-bearing entity is in front of the player — main.js calls
   // tickInteract() once per frame to toggle the visibility.
-  Object.assign(el.style, {
-    position: "fixed",
-    top: "6%",
-    left: "50%",
-    transform: "translateX(-50%)",
-    maxWidth: "min(640px, 86vw)",
-    padding: "10px 16px",
-    background: "rgba(10, 10, 10, 0.92)",
-    border: "1px solid #444",
-    borderRadius: "6px",
-    color: "#eee",
-    fontFamily: "monospace",
-    fontSize: "14px",
-    lineHeight: "1.4",
-    textAlign: "center",
-    display: "none",
-    pointerEvents: "none",
-    zIndex: "13",
-    boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
+  const node = el("div", {
+    id: "interact-hint",
+    text: "Press E to talk",
+    style: {
+      position: "fixed",
+      top: "6%",
+      left: "50%",
+      transform: "translateX(-50%)",
+      maxWidth: "min(640px, 86vw)",
+      padding: "10px 16px",
+      background: "rgba(10, 10, 10, 0.92)",
+      border: "1px solid #444",
+      borderRadius: "6px",
+      color: "#eee",
+      fontFamily: "monospace",
+      fontSize: "14px",
+      lineHeight: "1.4",
+      textAlign: "center",
+      display: "none",
+      pointerEvents: "none",
+      zIndex: "13",
+      boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
+    },
   });
-  document.body.appendChild(el);
-  return el;
+  document.body.appendChild(node);
+  return node;
 }
 
 function findFacingEntity(zone, player) {

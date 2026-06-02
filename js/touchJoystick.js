@@ -10,6 +10,8 @@
 // Importable in Node (the geometry helper is pure and DOM-free at module
 // load) so directionForVector can be unit-tested without a browser.
 
+import { el } from "./dom.js";
+
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 
 // Geometry in CSS px. Scaled up from the original's point units
@@ -45,14 +47,9 @@ let onUp = null;
 
 export function mountJoystick(root) {
   if (zone) return;
-  zone = document.createElement("div");
-  zone.className = "touch-joystick-zone";
-  base = document.createElement("div");
-  base.className = "touch-joystick-base";
-  knob = document.createElement("div");
-  knob.className = "touch-joystick-knob";
-  base.style.display = "none";
-  knob.style.display = "none";
+  zone = el("div", { class: "touch-joystick-zone" });
+  base = el("div", { class: "touch-joystick-base", style: { display: "none" } });
+  knob = el("div", { class: "touch-joystick-knob", style: { display: "none" } });
   root.appendChild(zone);
   root.appendChild(base);
   root.appendChild(knob);
@@ -141,9 +138,9 @@ function releaseDir() {
   heldDir = null;
 }
 
-function placeAt(el, x, y) {
-  el.style.left = `${x}px`;
-  el.style.top = `${y}px`;
+function placeAt(node, x, y) {
+  node.style.left = `${x}px`;
+  node.style.top = `${y}px`;
 }
 
 function dispatchKey(type, code) {
