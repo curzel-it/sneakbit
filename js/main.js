@@ -72,11 +72,12 @@ import { setHostPaused } from "./hostPauseState.js";
 import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMode.js";
 import { switchRole, setStateHandlers } from "./switchRole.js";
 import { installUiTokens } from "./uiTokens.js";
-import { isPvp, isPvpHostSetup } from "./gameMode.js";
+import { isPvp, isPvpHostSetup, isTowerDefenseMode } from "./gameMode.js";
 import {
   installPvpController, pvpGateInput, tickPvpFrame,
 } from "./pvpController.js";
 import { installOnlineDeathmatch, tickHostFrame as tickOnlineDeathmatch } from "./onlineDeathmatch.js";
+import { installTowerDefense, startTowerDefense, isTowerDefenseUrl, tickTowerDefense } from "./towerDefense.js";
 
 // Live game state. Module-level so switchRole's state-handlers (and the
 // beforeunload listener / window.save shim) can read and mutate it
@@ -214,6 +215,10 @@ async function main() {
   // avatar spawner here.
   installPvpController(() => state, { setLocalPlayers });
   installOnlineDeathmatch(() => state);
+  // Tower Defense is offline-only and additive: it installs here (HUD,
+  // barricade placement, input routing, debug hook) but does nothing until a
+  // run boots via ?mode=td or the party panel.
+  installTowerDefense(() => state);
   installAutoZoom(canvas, state.camera, hud.el, () => recomputeSlices(canvas, state));
   // Guests don't own the world, world-mutating logic, or the warp graph
   // — so the simulation modules (mapEditor, interact, shooting/melee,
@@ -324,9 +329,21 @@ async function main() {
     setRuntimeRole("offline");
   }
 
+  // ?mode=td deep-link: boot straight into a Tower Defense run (offline only —
+  // never combines with a host/guest session). Replaces the loaded zone +
+  // player with the TD board + squad; the loop branch below drives it.
+  if (getRuntimeRole() === "offline" && isTowerDefenseUrl()) {
+    await startTowerDefense();
+  }
+
   startGameLoop((dt) => {
     if (getRuntimeRole() === "guest") {
       tickGuestFrame(dt, state, renderer, hud, biomeAnim);
+      return;
+    }
+    // Tower Defense owns its whole frame (sim + render) — like the guest path.
+    if (isTowerDefenseMode()) {
+      tickTowerDefense(dt, { renderer, hud, biomeAnim });
       return;
     }
     // Pause is offline / local co-op only: freeze the sim on any overlay

@@ -44,6 +44,7 @@ import { setLocalPlayers } from "./main.js";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js";
 import { startPvpMatch, exitPvp } from "./pvpController.js";
+import { startTowerDefense } from "./towerDefense.js";
 import { isPvp, isPvpHostSetup, setPvpHostSetup } from "./gameMode.js";
 import { el, showOnly } from "./dom.js";
 import { makeConfirmControl } from "./confirmControl.js";
@@ -233,6 +234,10 @@ function buildSingleView() {
       onlinePvp,
       hostButton("party-offline-coop", "Offline co-op", onOfflineCoopClick),
       hostButton("party-offline-pvp", "Offline PvP", onOfflinePvpClick),
+    ]),
+    el("p", { class: "party-hint", text: "…or play solo:" }),
+    el("div", { class: "party-stack" }, [
+      hostButton("party-tower-defense", "Tower Defense", onTowerDefenseClick),
     ]),
   ]);
 }
@@ -575,6 +580,15 @@ function onOfflinePvpClick() {
   startPvpMatch(2);
   renderAll();
   showToast("Local PvP on — change players with the 2/3/4 toggle", "longHint");
+}
+
+function onTowerDefenseClick() {
+  if (isCreativeMode()) {
+    showToast("Leave creative mode first.", "hint");
+    return;
+  }
+  closePartyPanel();
+  startTowerDefense();
 }
 
 async function onCopyClick() {
