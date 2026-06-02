@@ -45,7 +45,7 @@ import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { startMatch as startDeathmatch, exit as exitDeathmatch } from "./onlineDeathmatch.js";
 import { startPvpMatch, exitPvp } from "./pvpController.js";
 import { isPvp, isPvpHostSetup, setPvpHostSetup } from "./gameMode.js";
-import { el } from "./dom.js";
+import { el, showOnly } from "./dom.js";
 
 let chip = null;
 let chipLabel = null;
@@ -493,21 +493,18 @@ function renderPanel() {
   offEndControl?.reset();
   guestLeaveControl?.reset();
 
-  for (const view of Object.values(views)) {
-    if (view) view.style.display = "none";
-  }
   const role = getRuntimeRole();
   if (role === "host") {
-    views.hostingOnline.style.display = "block";
+    showOnly(views, "hostingOnline");
     renderHostingOnlineView();
   } else if (role === "guest") {
-    views.guest.style.display = "block";
+    showOnly(views, "guest");
     renderGuestView();
   } else if (isCoopMode() || isPvp()) {
-    views.hostingOffline.style.display = "block";
+    showOnly(views, "hostingOffline");
     renderHostingOfflineView();
   } else {
-    views.single.style.display = "block";
+    showOnly(views, "single");
     renderSingleView();
   }
 }

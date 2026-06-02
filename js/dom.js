@@ -45,6 +45,16 @@ export function el(tag, props = {}, children) {
   return node;
 }
 
+// Show exactly one node from a { key: node } map and hide the rest — the
+// "switch to view N" move panels kept hand-rolling as an Object.entries
+// loop. `shown` is the display value for the visible node (default
+// "block"; pass "flex" etc. when the view is a flex container).
+export function showOnly(map, key, shown = "block") {
+  for (const [k, node] of Object.entries(map)) {
+    if (node) node.style.display = k === key ? shown : "none";
+  }
+}
+
 function appendChildren(node, children) {
   if (children == null) return;
   const list = Array.isArray(children) ? children : [children];

@@ -18,7 +18,7 @@ import {
 import {
   registerAccount, loginAccount, updateMe, forgotPassword, resetPassword, deleteAccount,
 } from "./accountApi.js";
-import { el } from "./dom.js";
+import { el, showOnly } from "./dom.js";
 
 let overlay = null;
 let card = null;
@@ -274,9 +274,7 @@ function buildCloseRow() {
 
 function showView(name) {
   currentView = name;
-  for (const [key, v] of Object.entries(views)) {
-    v.style.display = key === name ? "block" : "none";
-  }
+  showOnly(views, name);
   clearErrors();
   if (name === "account") renderAccountView();
   const v = views[name];

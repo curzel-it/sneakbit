@@ -33,7 +33,7 @@ globalThis.document = {
   createElement: (tag) => new FakeElement(tag),
 };
 
-const { el } = await import("../js/dom.js");
+const { el, showOnly } = await import("../js/dom.js");
 
 test("class / text / html map to the right properties", () => {
   const node = el("div", { class: "card", text: "hi" });
@@ -116,4 +116,23 @@ test("props default to empty; el(tag) alone works", () => {
   const node = el("hr");
   assert.equal(node.tagName, "hr");
   assert.deepEqual(node.children, []);
+});
+
+test("showOnly displays the keyed node and hides the rest", () => {
+  const views = { a: el("div"), b: el("div"), c: el("div") };
+  showOnly(views, "b");
+  assert.equal(views.a.style.display, "none");
+  assert.equal(views.b.style.display, "block");
+  assert.equal(views.c.style.display, "none");
+
+  // Switching is exclusive — the previously shown node hides again.
+  showOnly(views, "a", "flex");
+  assert.equal(views.a.style.display, "flex");
+  assert.equal(views.b.style.display, "none");
+});
+
+test("showOnly tolerates null entries in the map", () => {
+  const views = { a: el("div"), b: null };
+  assert.doesNotThrow(() => showOnly(views, "a"));
+  assert.equal(views.a.style.display, "block");
 });
