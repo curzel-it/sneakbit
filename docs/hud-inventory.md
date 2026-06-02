@@ -31,22 +31,37 @@ for a future HUD-layout pass — see [Known structural issues](#known-structural
 
 | Element | DOM id | File | When |
 |---|---|---|---|
-| Main / pause menu | `#menu` | `menu.js` | Esc / menu button. Screens: pause, settings, key-bindings, skills, inventory, credits, **PvP setup** (`data-screen="pvp"`, player-count buttons). Inventory body rendered by `inventoryScreen.js` as per-slot (Ranged / Melee) radio panels + an items list. |
+| Main / pause menu | `#menu` | `menu.js` | Esc / menu button. Screens (`data-screen`): `pause`, `settings`, `controls` (key bindings), `skills`, `inventory`, `credits`, `creative`. The pause screen is a flat button stack; some buttons just hand off to a sibling overlay (**Multiplayer** → party panel, **Account** → account panel) rather than opening a sub-screen. Inventory body rendered by `inventoryScreen.js` as per-slot (Ranged / Melee) radio panels + an items list. |
 | Game over / match result | `#gameover` | `gameOver.js` | On death; reused for PvP winner/draw screens via `showMatchResult()`. |
 
+Pause-menu buttons, in order: Resume · **Multiplayer** (party panel) · **Account** (account panel; label reflects sign-in) · Inventory & Equipment · Skills · Settings · **Creative tools…** (creative-only; opens the `creative` sub-screen) · Credits · New game. The `creative` screen holds the six save/zone authoring tools (export/import save, save/export/reset zone, map editor), so they no longer sit in the pause stack.
+
+Settings screen options: SFX / Music / Mute · Show FPS · **Touch controls** style (buttons / joystick; touch devices only) · **Language** (auto / en / it) · Friendly fire (co-op only) · Key bindings… · **Fullscreen** (`fullscreen.js`, hidden where element-fullscreen is unsupported e.g. iOS Safari) · **Clear cache & reload** (guest-hidden). Fullscreen and Clear cache live here rather than the pause stack to keep the top level short.
+
+> **PvP/co-op setup moved out of the menu.** There is no longer a `data-screen="pvp"`
+> menu card — match setup (online/offline × co-op/PvP, invite code, Start match)
+> now lives entirely in the **party panel** (see below). The menu only links to it
+> via the Multiplayer button.
+
 Notable gated menu items:
-- **Guest-hidden** (`data-guest-hidden`): Open/Exit PvP, New Game, Clear Cache.
-- **Creative-mode-only** (desktop): export/import save, save/export/reset zone, map editor.
+- **Guest-hidden** (`data-guest-hidden`): New Game, Clear Cache.
+- **Creative-mode-only** (`data-creative-only`): export/import save. Plus `data-desktop-only` (creative **and** fine pointer): save/export/reset zone, map editor.
 - **Co-op-only**: friendly-fire toggle, P2–P4 key-binding tabs.
 
-## Network / co-op / PvP
+## Network / co-op / PvP / accounts
 
 | Element | DOM id | File | When |
 |---|---|---|---|
-| Party chip + panel | `#party-chip`, `#party-overlay` | `partyPanel.js` | Offline / hosting / guest / local-coop views. Invite code, copy/share, peer list with kick. **Host vs guest role indication lives here.** Chip hidden offline. |
+| Party chip + panel | `#party-chip`, `#party-overlay` | `partyPanel.js` | **Owns all match setup.** Views: `single` (Online co-op / Online PvP / Offline co-op / Offline PvP buttons), `hostingOnline` (invite code + copy/share + "Start match" lobby for online PvP), `hostingOffline` (local co-op/PvP), `guest` (peer list). Peer list with kick; **host vs guest role indication lives here.** Chip hidden offline. |
+| Account panel | `#account-overlay` | `accountPanel.js` | Opened from the menu's Account button. Full-screen overlay modal, views (`showView`): `signin`, `register`, `forgot`, `reset` (deep-linked via `?reset=` token), `account` (profile: display name, change password, sign out, **delete-account danger zone** behind a password confirm). |
 | Host lagging overlay | `#host-lagging-overlay` | `hostLaggingOverlay.js` | **Guest-only**; host stale >300ms or host paused. Top-center, pulsing. |
-| Turn HUD | `#turnhud` | `turnHud.js` | **PvP-only** — whose turn, prep countdown, "turn ending" flash. Updated per frame from `pvpMatch`. Top-center. |
 | Controller disconnect | `#controller-disconnect` | `controllerPresence.js` | Active gamepad unplugged mid-play. Center modal. |
+
+> **No Turn HUD yet.** A PvP turn indicator (`#turnhud` / `turnHud.js`) was sketched
+> in an earlier draft of this doc but **was never built** — no such file or element
+> exists. Online PvP is a realtime deathmatch, not turn-based, so there may be
+> nothing to add here. Logic-only modules with **no DOM**: `cloudSave.js`,
+> `accountSession.js`, `fullscreen.js`.
 
 ## Loading / transitions
 
@@ -78,15 +93,17 @@ All under `#touch-controls`, owned by `touch.js`. Shown on first touch or
 
 | Layer | id | z-index |
 |---|---|---|
-| Turn HUD | `#turnhud` | 8 |
 | Health / Ammo | `#health-hud`, `#ammo-hud` | 11 |
 | Touch controls | `#touch-controls` | 12 |
+| Party chip | `#party-chip` | 13 |
 | Toast | `#toast` | 14 |
 | Weapon-switch ribbon | `#weapon-switch` | 15 |
 | Dialogue | `#dialogue` | 15 |
 | Menu | `#menu` | 20 |
+| Party overlay | `#party-overlay` | 21 |
 | Fast travel | `#fast-travel` | 22 |
 | Host lagging | `#host-lagging-overlay` | 22 |
+| Account overlay | `#account-overlay` | 22 |
 | Message | `#message` | 24 |
 | Game over | `#gameover` | 25 |
 | Loading / controller-disconnect | `#loading`, `#controller-disconnect` | 30 |
@@ -95,10 +112,10 @@ All under `#touch-controls`, owned by `touch.js`. Shown on first touch or
 
 Surfaced while building this inventory; worth addressing in a future HUD-layout pass:
 
-1. **Top-center is contested.** Interact hint, toast, host-lagging overlay, and
-   turn HUD all anchor top-center with independent hardcoded offsets and no
-   awareness of each other — they can physically overlap (e.g. a toast during a
-   PvP turn, or a lagging guest reading an interact prompt). No managed stack.
+1. **Top-center is contested.** Interact hint, toast, and the host-lagging
+   overlay all anchor top-center with independent hardcoded offsets and no
+   awareness of each other — they can physically overlap (e.g. a toast while a
+   lagging guest reads an interact prompt). No managed stack.
 2. **Top-right collisions are handled by magic number.** Ammo HUD, party chip,
    and the touch menu button share the corner; touch mode hardcodes a `76px`
    shove on the ammo HUD to dodge the menu button.
@@ -109,3 +126,13 @@ Surfaced while building this inventory; worth addressing in a future HUD-layout 
 4. **No safe-area handling.** Nothing references `env(safe-area-inset-*)`; on
    mobile, HUD corners and the d-pad can collide with rounded screen corners and
    the home indicator.
+5. **The pause screen is a flat button stack** (mostly tamed). A normal player
+   now sees **8** buttons: Resume, Multiplayer, Account, Inventory, Skills,
+   Settings, Credits, New game. Two earlier trims got it there: the six creative
+   save/zone tools were folded behind the creative-only **Creative tools…** entry
+   into a `creative` sub-screen (creative-on-desktop dropped 16 → 11 at the top
+   level), and **Fullscreen** + **Clear cache & reload** moved into the Settings
+   screen. Still gated ad hoc by three mechanisms (`data-creative-only`,
+   `data-desktop-only`, `data-guest-hidden`). Remaining candidates if it needs to
+   shrink further: relocating New game, or grouping the overlay hand-offs
+   (Multiplayer / Account).

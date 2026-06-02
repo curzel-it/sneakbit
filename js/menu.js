@@ -48,7 +48,7 @@ function isAnotherModalOpen() {
 
 let root = null;
 let open = false;
-let screen = "pause"; // "pause" | "settings" | "skills" | "credits" | "inventory" | "controls"
+let screen = "pause"; // "pause" | "settings" | "skills" | "credits" | "inventory" | "controls" | "creative"
 // Which player's bindings are shown on the Key Bindings screen. The P2
 // tab is only visible when local co-op is on (no point rebinding P2 if
 // they're not spawned). 0 = P1, 1 = P2.
@@ -93,16 +93,9 @@ export function installMenu(stateGetter) {
         <button id="menu-open-inventory">Inventory &amp; Equipment</button>
         <button id="menu-open-skills">Skills</button>
         <button id="menu-open-settings">Settings</button>
-        <button id="menu-fullscreen">Fullscreen</button>
-        <button id="menu-export-save" data-creative-only>Export save (copy JSON)</button>
-        <button id="menu-import-save" data-creative-only>Import save (paste JSON)</button>
-        <button id="menu-save-zone" data-creative-only data-desktop-only>Save zone (flush to buffer)</button>
-        <button id="menu-export-zone" data-creative-only data-desktop-only>Export zone JSON…</button>
-        <button id="menu-reset-zone" data-creative-only data-desktop-only>Reset zone (revert to shipped)</button>
-        <button id="menu-open-map-editor" data-creative-only data-desktop-only>Map editor…</button>
+        <button id="menu-open-creative" data-creative-only>Creative tools…</button>
         <button id="menu-open-credits">Credits</button>
         <button id="menu-new-game" data-guest-hidden>New game (wipe save)</button>
-        <button id="menu-clear-cache" data-guest-hidden>Clear cache &amp; reload</button>
       </div>
       <p class="menu-hint" id="menu-pause-hint"></p>
       <p class="menu-version">v${APP_VERSION}</p>
@@ -144,8 +137,12 @@ export function installMenu(stateGetter) {
       <div class="menu-row" id="opt-friendly-fire-row">
         <label for="opt-friendly-fire"><input id="opt-friendly-fire" type="checkbox" /> Friendly fire (co-op)</label>
       </div>
-      <div class="menu-row menu-controls">
+      <div class="menu-row menu-controls menu-stack">
         <button id="menu-open-controls">Key bindings…</button>
+        <button id="menu-fullscreen">Fullscreen</button>
+        <button id="menu-clear-cache" data-guest-hidden>Clear cache &amp; reload</button>
+      </div>
+      <div class="menu-row menu-controls">
         <button id="menu-settings-back">Back</button>
       </div>
     </div>
@@ -208,6 +205,20 @@ export function installMenu(stateGetter) {
       </p>
       <div class="menu-row menu-controls">
         <button id="menu-credits-back">Back</button>
+      </div>
+    </div>
+    <div class="menu-card" data-screen="creative">
+      <h1>Creative tools</h1>
+      <div class="menu-row menu-controls menu-stack">
+        <button id="menu-export-save" data-creative-only>Export save (copy JSON)</button>
+        <button id="menu-import-save" data-creative-only>Import save (paste JSON)</button>
+        <button id="menu-save-zone" data-creative-only data-desktop-only>Save zone (flush to buffer)</button>
+        <button id="menu-export-zone" data-creative-only data-desktop-only>Export zone JSON…</button>
+        <button id="menu-reset-zone" data-creative-only data-desktop-only>Reset zone (revert to shipped)</button>
+        <button id="menu-open-map-editor" data-creative-only data-desktop-only>Map editor…</button>
+      </div>
+      <div class="menu-row menu-controls">
+        <button id="menu-creative-back">Back</button>
       </div>
     </div>
   `;
@@ -545,6 +556,7 @@ function bindWidgets() {
   }
   root.querySelector("#menu-open-skills").addEventListener("click", () => showScreen("skills"));
   root.querySelector("#menu-open-credits").addEventListener("click", () => showScreen("credits"));
+  root.querySelector("#menu-open-creative").addEventListener("click", () => showScreen("creative"));
   root.querySelector("#menu-open-inventory").addEventListener("click", () => showScreen("inventory"));
   root.querySelector("#menu-settings-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-open-controls").addEventListener("click", () => showScreen("controls"));
@@ -582,6 +594,7 @@ function bindWidgets() {
   root.querySelector("#menu-skills-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-credits-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-inventory-back").addEventListener("click", () => showScreen("pause"));
+  root.querySelector("#menu-creative-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-export-save").addEventListener("click", exportSave);
   root.querySelector("#menu-import-save").addEventListener("click", importSave);
   root.querySelector("#menu-save-zone").addEventListener("click", saveZoneNow);
