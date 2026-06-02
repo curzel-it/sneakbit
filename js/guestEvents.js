@@ -78,7 +78,7 @@ export function dispatch(msg) {
       handleRespawn(msg);
       return;
     case "dialogueOpen":
-      if (Array.isArray(msg.lines)) showNetworkDialogue(msg.lines);
+      if (Array.isArray(msg.lines)) showNetworkDialogue(msg.lines, msg.speaker || "");
       return;
     case "dialogueAdvance":
       if (typeof msg.idx === "number") advanceNetworkDialogue(msg.idx);

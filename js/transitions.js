@@ -66,6 +66,22 @@ export function findTeleporterAt(zone, tileX, tileY) {
   return null;
 }
 
+// Every usable exit in the zone, as the anchor (top-left) tile of each
+// teleporter that has a destination. Used by afterDialogue.js's
+// "WalkToNearestExit" as the goal set for path-finding. Teleporters with no
+// destination (decorative / unwired) are skipped.
+export function teleporterTiles(zone) {
+  const tiles = [];
+  if (!zone?.entities) return tiles;
+  for (const e of zone.entities) {
+    if (e.species_id !== TELEPORTER_SPECIES_ID) continue;
+    if (!e.destination) continue;
+    if (!e.frame) continue;
+    tiles.push({ x: e.frame.x, y: e.frame.y });
+  }
+  return tiles;
+}
+
 // `state` is the game-state container from main.js — at minimum
 // `{ zone, player }`. We mutate `state.zone` and the player position.
 //

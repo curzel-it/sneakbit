@@ -8,6 +8,7 @@ import {
   startDeathAnimation,
   tickDeathAnimations,
   isDying,
+  DEATH_SPRITE,
 } from "../js/deathAnimation.js";
 
 test("startDeathAnimation centres a 1×1 fireball and flags the entity", () => {
@@ -27,6 +28,29 @@ test("re-killing a dying entity doesn't reset its lifespan", () => {
   e._deathLifespan -= 0.3;
   startDeathAnimation(e);
   assert.ok(e._deathLifespan < lifespan, "lifespan kept counting down, not reset");
+});
+
+test("opts.sprite / opts.lifespan / opts.onRemove are honored", () => {
+  const e = { frame: { x: 0, y: 0, w: 1, h: 1 } };
+  const sprite = { sheet: "animated_objects", texX: 0, texY: 3, frames: 4 };
+  let removed = 0;
+  startDeathAnimation(e, { sprite, lifespan: 0.4, onRemove: () => removed++ });
+  assert.equal(e._deathSprite, sprite, "custom sprite stashed for the renderer");
+  assert.equal(e._deathLifespan, 0.4, "custom lifespan used");
+
+  const zone = { entities: [e] };
+  tickDeathAnimations(zone, 0.2);
+  assert.equal(removed, 0, "onRemove not called mid-burn");
+  tickDeathAnimations(zone, 0.3);
+  assert.ok(!zone.entities.includes(e), "removed once lifespan expires");
+  assert.equal(removed, 1, "onRemove fired exactly once on removal");
+});
+
+test("the default call still uses the fireball and no onRemove", () => {
+  const e = { frame: { x: 0, y: 0, w: 1, h: 1 } };
+  startDeathAnimation(e);
+  assert.deepEqual(e._deathSprite, DEATH_SPRITE);
+  assert.equal(e._onDeathRemove, null);
 });
 
 test("tickDeathAnimations removes the entity after its lifespan expires", () => {

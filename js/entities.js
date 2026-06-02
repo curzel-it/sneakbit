@@ -278,12 +278,15 @@ function draw(ctx, e, camera) {
 // Renders the death fireball: a 1×1 animated strip from the animated_objects
 // sheet, cycling DEATH_SPRITE.frames at ANIMATIONS_FPS off the shared clock.
 function drawDeath(ctx, e, camera) {
-  const sheet = getSprite(DEATH_SPRITE.sheet);
+  // Most dying entities use the shared fireball strip, but afterDialogue's
+  // vanish effects stash a per-entity sprite on _deathSprite (the art seam).
+  const sprite = e._deathSprite || DEATH_SPRITE;
+  const sheet = getSprite(sprite.sheet);
   if (!sheet) return;
   const { x, y } = e.frame;
-  const frame = Math.floor(animClock * ANIMATIONS_FPS) % DEATH_SPRITE.frames;
-  const sx = (DEATH_SPRITE.texX + frame) * TILE_SIZE;
-  const sy = DEATH_SPRITE.texY * TILE_SIZE;
+  const frame = Math.floor(animClock * ANIMATIONS_FPS) % sprite.frames;
+  const sx = (sprite.texX + frame) * TILE_SIZE;
+  const sy = sprite.texY * TILE_SIZE;
   const px = Math.round((x - camera.x) * TILE_SIZE);
   const py = Math.round((y - camera.y) * TILE_SIZE);
   ctx.drawImage(sheet, sx, sy, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);

@@ -16,41 +16,92 @@ import { getSpecies } from "./species.js";
 import { matchesAction } from "./keyBindings.js";
 import { registerMenuSurface } from "./menuNav.js";
 import { broadcastHostEvent } from "./hostEvents.js";
+import { parseRichText, richTextLength, richTextToHtml, formatBullets } from "./richText.js";
 
 let root = null;
-let active = null; // { lines, idx, resolve, dialogue }
+let nameEl = null;
+let textEl = null;
+let active = null; // { lines, idx, resolve, dialogue, speaker, segs, revealed, ... }
 let listener = null;
+let typingRaf = 0;        // requestAnimationFrame handle for the typewriter
+let lastRevealTs = 0;
+let reduceMotion = false;
+
+// Characters revealed per second by the typewriter.
+const REVEAL_CPS = 55;
 
 export function installDialogue() {
   if (root) return root;
+  reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
   root = document.createElement("div");
   root.id = "dialogue";
-  Object.assign(root.style, {
-    position: "fixed",
-    left: "50%",
-    transform: "translateX(-50%)",
-    bottom: "5%",
-    maxWidth: "min(720px, 90vw)",
-    minWidth: "min(400px, 80vw)",
-    padding: "16px 20px",
-    background: "rgba(10, 10, 10, 0.92)",
-    border: "1px solid #444",
-    borderRadius: "6px",
-    color: "#eee",
-    fontFamily: "monospace",
-    fontSize: "14px",
-    lineHeight: "1.4",
-    whiteSpace: "pre-wrap",
-    display: "none",
-    zIndex: "15",
-    boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
-    cursor: "pointer",
-  });
-  root.innerHTML = `<div id="dialogue-text"></div><div id="dialogue-hint">▾ space / enter / click</div>`;
+  // The visible panel and the name "tab" are children so the name can sit
+  // half-overlapping the panel's top edge.
+  root.innerHTML = `
+    <div id="dialogue-name"></div>
+    <div id="dialogue-panel">
+      <div id="dialogue-text"></div>
+      <div id="dialogue-caret">▾</div>
+    </div>`;
   document.body.appendChild(root);
+  nameEl = root.querySelector("#dialogue-name");
+  textEl = root.querySelector("#dialogue-text");
+
   const style = document.createElement("style");
   style.textContent = `
-    #dialogue-hint { color: #888; font-size: 11px; margin-top: 8px; text-align: right; }
+    #dialogue {
+      position: fixed; left: 50%; bottom: 5%;
+      transform: translateX(-50%) translateY(8px);
+      width: min(720px, 90vw); min-width: min(400px, 80vw);
+      display: none; opacity: 0; z-index: 15; cursor: pointer;
+      transition: opacity .14s ease-out, transform .14s ease-out;
+      -webkit-user-select: none; user-select: none;
+    }
+    #dialogue.is-open { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #dialogue-panel {
+      position: relative;
+      padding: 18px 20px 16px;
+      color: #f2f2f2;
+      font-family: monospace; font-size: 15px; line-height: 1.5;
+      white-space: pre-wrap; overflow-wrap: break-word;
+      background: linear-gradient(180deg, #20242e 0%, #14161c 100%);
+      border: 1px solid #3a4150;
+      border-top-color: #525d70;
+      border-radius: 8px;
+      box-shadow: 0 10px 34px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    #dialogue-text em { font-style: italic; color: #cfe0ff; }
+    #dialogue-text strong { font-weight: 700; color: #ffe9a8; }
+    #dialogue-name {
+      display: none;
+      position: relative; z-index: 1;
+      margin: 0 0 -7px 14px; padding: 4px 12px 9px;
+      width: fit-content; max-width: calc(100% - 28px);
+      font-family: monospace; font-size: 13px; font-weight: 700;
+      letter-spacing: .3px; color: #fff;
+      background: linear-gradient(180deg, #3a4d8a 0%, #2b3a6b 100%);
+      border: 1px solid #525d70; border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      box-shadow: 0 -2px 10px rgba(0,0,0,.35);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    #dialogue.has-name #dialogue-name { display: block; }
+    #dialogue-caret {
+      position: absolute; right: 12px; bottom: 8px;
+      color: #8fa3c8; font-size: 13px; opacity: 0;
+      transition: opacity .1s linear;
+      animation: dialogue-caret-bob .9s ease-in-out infinite;
+    }
+    #dialogue.is-ready #dialogue-caret { opacity: 1; }
+    @keyframes dialogue-caret-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(3px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #dialogue { transition: none; }
+      #dialogue-caret { animation: none; }
+    }
     /* On touch devices the on-screen joystick sits at the bottom; flip
        the modal dialogue to the top so it doesn't cover the controls. */
     @media (pointer: coarse) {
@@ -90,27 +141,38 @@ export function installDialogue() {
 
 export function isDialogueOpen() { return active !== null; }
 
-export function showDialogue(payload, playerIndex = 0) {
+export function showDialogue(payload, playerIndex = 0, speaker = "") {
   return new Promise((resolve) => {
     const dialogue = isDialogueObject(payload) ? payload : null;
     const rawLines = dialogue ? [dialogue.text] : (Array.isArray(payload) ? payload : [payload]);
     const lines = rawLines.flatMap(splitOnSeparator).map((s) => tr(s));
-    active = { lines, idx: 0, resolve, dialogue, playerIndex: playerIndex | 0 };
+    active = { lines, idx: 0, resolve, dialogue, playerIndex: playerIndex | 0, speaker: speaker || "" };
+    openPanel();
     paint();
-    root.style.display = "block";
     playSfx("hintReceived", { volume: 0.5 });
-    // Mirror to guests with the already-localized lines so they don't
-    // need their own dialogue/reward resolution. Idx starts at 0 to
+    // Mirror to guests with the already-localized lines + speaker so they
+    // don't need their own dialogue/reward resolution. Idx starts at 0 to
     // match the host's freshly-painted state.
-    broadcastHostEvent("dialogueOpen", { lines, idx: 0 });
+    broadcastHostEvent("dialogueOpen", { lines, idx: 0, speaker: active.speaker });
   });
+}
+
+// Resolve the speaker label for an entity, or "" if it shouldn't show one.
+// Only true characters (species named under `npc.name.*`) get a name tab;
+// hints, signs and other objects (`objects.name.*`) stay anonymous so we
+// don't surface internal labels like "Hint (One Time)".
+export function speakerNameForEntity(entity) {
+  const sp = getSpecies(entity?.species_id);
+  if (!sp || typeof sp.name !== "string" || !sp.name.startsWith("npc.name.")) return "";
+  const name = tr(sp.name);
+  return name && name !== sp.name ? name : "";
 }
 
 // Guest-side entry point. Driven by event:dialogueOpen from the host.
 // Reuses the same DOM but flags `isNetwork:true` so local keys/clicks
 // can't advance it — only event:dialogueAdvance/Close from the host
 // move the state forward.
-export function showNetworkDialogue(lines) {
+export function showNetworkDialogue(lines, speaker = "") {
   if (!root) return;
   if (!Array.isArray(lines) || lines.length === 0) return;
   active = {
@@ -119,10 +181,11 @@ export function showNetworkDialogue(lines) {
     resolve: null,
     dialogue: null,
     playerIndex: 0,
+    speaker: speaker || "",
     isNetwork: true,
   };
+  openPanel();
   paint();
-  root.style.display = "block";
   playSfx("hintReceived", { volume: 0.5 });
 }
 
@@ -142,7 +205,7 @@ export function advanceNetworkDialogue(idx) {
 export function closeNetworkDialogue() {
   if (!active || !active.isNetwork) return;
   active = null;
-  if (root) root.style.display = "none";
+  hidePanel();
 }
 
 function isDialogueObject(x) {
@@ -155,6 +218,12 @@ function splitOnSeparator(s) {
 
 function advance() {
   if (!active) return;
+  // First press while the line is still revealing snaps it to full instead
+  // of skipping ahead — the familiar JRPG "show it all now" beat.
+  if (!active.revealed) {
+    finishReveal();
+    return;
+  }
   active.idx++;
   if (active.idx >= active.lines.length) {
     close();
@@ -167,7 +236,69 @@ function advance() {
 
 function paint() {
   if (!active) return;
-  root.querySelector("#dialogue-text").textContent = active.lines[active.idx];
+  const speaker = active.speaker || "";
+  nameEl.textContent = speaker;
+  root.classList.toggle("has-name", !!speaker);
+
+  active.segs = parseRichText(formatBullets(active.lines[active.idx] ?? ""));
+  active.total = richTextLength(active.segs);
+  active.shown = 0;
+  active.revealed = false;
+  root.classList.remove("is-ready");
+  renderReveal();
+
+  // No motion (preference or empty line) → show it all immediately.
+  if (reduceMotion || active.total === 0) finishReveal();
+  else startTypewriter();
+}
+
+function renderReveal() {
+  if (!active) return;
+  textEl.innerHTML = richTextToHtml(active.segs, active.shown);
+}
+
+function startTypewriter() {
+  stopTypewriter();
+  lastRevealTs = 0;
+  const step = (ts) => {
+    if (!active) return;
+    if (!lastRevealTs) lastRevealTs = ts;
+    const add = Math.floor(((ts - lastRevealTs) / 1000) * REVEAL_CPS);
+    if (add > 0) {
+      active.shown = Math.min(active.total, active.shown + add);
+      lastRevealTs = ts;
+      renderReveal();
+    }
+    if (active.shown >= active.total) { finishReveal(); return; }
+    typingRaf = requestAnimationFrame(step);
+  };
+  typingRaf = requestAnimationFrame(step);
+}
+
+function finishReveal() {
+  stopTypewriter();
+  if (!active) return;
+  active.shown = active.total;
+  active.revealed = true;
+  renderReveal();
+  root.classList.add("is-ready"); // shows the bobbing continue caret
+}
+
+function stopTypewriter() {
+  if (typingRaf) { cancelAnimationFrame(typingRaf); typingRaf = 0; }
+}
+
+function openPanel() {
+  stopTypewriter();
+  root.style.display = "block";
+  void root.offsetWidth; // reflow so the open transition runs from hidden
+  root.classList.add("is-open");
+}
+
+function hidePanel() {
+  stopTypewriter();
+  root.classList.remove("is-open", "is-ready", "has-name");
+  root.style.display = "none";
 }
 
 function close() {
@@ -176,7 +307,7 @@ function close() {
   const dialogue = active.dialogue;
   const playerIndex = active.playerIndex | 0;
   active = null;
-  root.style.display = "none";
+  hidePanel();
   broadcastHostEvent("dialogueClose");
   if (dialogue) handleReward(dialogue, playerIndex);
   if (typeof resolve === "function") resolve(dialogue);

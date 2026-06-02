@@ -5,13 +5,14 @@
 // Also draws an on-screen hint when an interactable is in front of the
 // player, so the action is discoverable without reading the README.
 
-import { showDialogue, resolveEntityDialogue, isDialogueOpen } from "./dialogue.js";
+import { showDialogue, resolveEntityDialogue, isDialogueOpen, speakerNameForEntity } from "./dialogue.js";
 import { handleAfterDialogue } from "./afterDialogue.js";
 import { matchesAction } from "./keyBindings.js";
 import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js";
 import { glyphForAction } from "./inputGlyphs.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { getNetRole } from "./onlineBootstrap.js";
+import { isDying } from "./deathAnimation.js";
 
 const DIR_DELTA = {
   up:    [ 0, -1],
@@ -73,7 +74,8 @@ function performInteract(state, initiator) {
   if (!target) return false;
   const dialogue = resolveEntityDialogue(target);
   if (!dialogue) return false;
-  showDialogue(dialogue, initiator.index | 0).then(() => handleAfterDialogue(state.zone, target));
+  const speaker = speakerNameForEntity(target);
+  showDialogue(dialogue, initiator.index | 0, speaker).then(() => handleAfterDialogue(state.zone, target));
   return true;
 }
 
@@ -162,6 +164,9 @@ function findFacingEntity(zone, player) {
   for (const e of zone.entities) {
     if (!e.frame) continue;
     if (!shouldBeVisible(e)) continue;
+    // An NPC mid-vanish (death-anim effect) or walking to an exit shouldn't
+    // re-open its dialogue if the player faces it again before it's gone.
+    if (isDying(e) || e._walkAway) continue;
     const { x, y, w, h } = e.frame;
     if (tx >= x && tx < x + w && ty >= y && ty < y + h) {
       if ((e.dialogues || []).length > 0) return e;

@@ -25,7 +25,16 @@ export function isDying(entity) {
 // Turns a just-killed entity into its dying form: a 1×1 fireball centred on
 // the old footprint, no facing, short lifespan. Idempotent — re-killing a
 // dying entity is a no-op so a passing bullet can't reset the timer.
-export function startDeathAnimation(entity) {
+//
+// opts lets non-combat callers reuse the same "play a strip in place then
+// remove" lifecycle with their own art/timing (see afterDialogue.js's
+// VanishSmoke / VanishTeleport):
+//   - opts.sprite:   strip to draw instead of the fireball (drawDeath reads
+//                    entity._deathSprite). Defaults to DEATH_SPRITE.
+//   - opts.lifespan: seconds before removal. Defaults to DEATH_LIFESPAN.
+//   - opts.onRemove: called once, just before the entity is spliced out
+//                    (e.g. to persist "collected" state).
+export function startDeathAnimation(entity, opts = {}) {
   if (entity._dying) return;
   const f = entity.frame || { x: 0, y: 0, w: 1, h: 1 };
   const cx = f.x + (f.w || 1) * 0.5;
@@ -33,7 +42,9 @@ export function startDeathAnimation(entity) {
   entity.frame = { x: cx - 0.5, y: cy - 0.5, w: 1, h: 1 };
   entity.direction = "None";
   entity._dying = true;
-  entity._deathLifespan = DEATH_LIFESPAN;
+  entity._deathLifespan = opts.lifespan ?? DEATH_LIFESPAN;
+  entity._deathSprite = opts.sprite ?? DEATH_SPRITE;
+  entity._onDeathRemove = opts.onRemove ?? null;
 }
 
 // Ages dying entities and removes them when their fireball burns out. Runs
@@ -46,6 +57,9 @@ export function tickDeathAnimations(zone, dt) {
     const e = ents[i];
     if (!e._dying) continue;
     e._deathLifespan -= dt;
-    if (e._deathLifespan <= 0) ents.splice(i, 1);
+    if (e._deathLifespan <= 0) {
+      if (typeof e._onDeathRemove === "function") e._onDeathRemove();
+      ents.splice(i, 1);
+    }
   }
 }

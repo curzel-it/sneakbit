@@ -30,6 +30,10 @@ import { saveEditedWorld } from "./editedWorlds.js";
 import { getBiomeSheet } from "./biomeSheet.js";
 import { getSprite } from "./assets.js";
 import { tryBuildingPrefab } from "./prefabs.js";
+import {
+  entityAtTile, openEntityInspector, closeEntityInspector, isEntityInspectorOpen,
+  inspectedEntity,
+} from "./entityInspector.js";
 
 let stateGetter = () => null;
 let canvasEl = null;
@@ -142,6 +146,7 @@ export function closeMapEditor() {
   selection = null;
   painting = false;
   if (pickerEl) pickerEl.style.display = "none";
+  closeEntityInspector();
   stopGhostLoop();
   if (ghostCanvas) ghostCanvas.style.display = "none";
 }
@@ -153,7 +158,8 @@ export function isMapEditorOpen() {
 function onWindowKeyDown(e) {
   if (!openState) return;
   if (e.code === "Escape") {
-    if (selection) { selection = null; renderSelectionHint(); }
+    if (isEntityInspectorOpen()) closeEntityInspector();
+    else if (selection) { selection = null; renderSelectionHint(); }
     else closeMapEditor();
     e.preventDefault();
   }
@@ -193,7 +199,7 @@ function renderSelectionHint() {
   if (!pickerEl) return;
   const el = pickerEl.querySelector("#me-selection");
   if (!el) return;
-  if (!selection) { el.textContent = "No selection — click an item below."; return; }
+  if (!selection) { el.textContent = "No selection — click an item below, or click a placed entity to edit it."; return; }
   el.textContent = `Placing: ${selection.label}`;
 }
 
@@ -285,6 +291,9 @@ function constructionLabel(id) {
 }
 
 function highlightSelected(grid, btn) {
+  // Picking something to place takes over the cursor, so drop any open
+  // inspector — its entity is no longer what the next click targets.
+  closeEntityInspector();
   for (const c of grid.querySelectorAll(".me-cell")) c.classList.remove("selected");
   // Also clear highlights in OTHER grids so it's clear only one item is active.
   if (pickerEl) {
@@ -325,12 +334,38 @@ function onCanvasMouseDown(e) {
   const t = canvasEventToTile(e);
   if (!t) return;
   e.preventDefault();
+  // No placement selection → click acts as "inspect": open the entity
+  // inspector for whatever entity sits under the cursor so its
+  // after-dialogue behavior can be retagged.
+  if (!selection) {
+    inspectAt(t.tileX, t.tileY);
+    return;
+  }
   placeSelection(t.tileX, t.tileY);
   // Drag-paint only makes sense for tile selections; entities are
   // discrete placements, not strokes.
   if (selection && (selection.kind === "biome" || selection.kind === "construction")) {
     painting = true;
   }
+}
+
+// Open the inspector on the topmost entity covering (tileX, tileY). Edits
+// mutate the raw entity in place; the callback rebuilds + flushes the zone
+// so the new behavior takes effect and persists like any other edit.
+function inspectAt(tileX, tileY) {
+  const state = stateGetter();
+  const ent = entityAtTile(state?.rawZone?.entities, tileX, tileY);
+  if (!ent) { closeEntityInspector(); return; }
+  openEntityInspector(ent, {
+    title: entityTitle(ent),
+    onChange: () => rebuildZone(state),
+  });
+}
+
+function entityTitle(ent) {
+  const sp = getSpecies(ent.species_id);
+  if (!sp) return `#${ent.id}`;
+  return `${sp.entity_type}: ${sp.name ?? sp.id}`;
 }
 
 function onCanvasMouseMove(e) {
@@ -397,6 +432,10 @@ function eraseTile(tileX, tileY) {
                 && tileY >= f.y && tileY < f.y + f.h;
     return !within;
   });
+  // If we just erased the entity the inspector was editing, drop the panel
+  // so it can't mutate a detached object on the next dropdown change.
+  const inspected = inspectedEntity();
+  if (inspected && !raw.entities.includes(inspected)) closeEntityInspector();
   rebuildZone(state);
 }
 

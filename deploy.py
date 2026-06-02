@@ -22,12 +22,13 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import io
 import os
+import select
 import shlex
+import shutil
 import subprocess
 import sys
-import tarfile
+import threading
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -312,45 +313,75 @@ def _ssh_client(env: dict[str, str]) -> paramiko.SSHClient:
 
 def ssh(env: dict[str, str], cmd: str, *, check: bool = True,
         stdin_bytes: bytes | None = None) -> tuple[int, bytes, bytes]:
-    print(f"  ssh> {cmd}")
+    print(f"  ssh> {cmd}", flush=True)
     client = _ssh_client(env)
     transport = client.get_transport()
     channel = transport.open_session()
     channel.exec_command(cmd)
 
-    if stdin_bytes is not None:
-        mv = memoryview(stdin_bytes)
-        offset = 0
-        while offset < len(mv):
-            n = channel.send(mv[offset:offset + 65536])
-            if n == 0:
-                break
-            offset += n
-    channel.shutdown_write()
+    # Pump stdin on a background thread so the main thread can drain stdout/
+    # stderr at the same time. Sending the whole payload up-front while NOT
+    # reading output deadlocks once the remote writes back (or the SSH window
+    # fills): the remote blocks on its own write, stops reading our stdin, and
+    # our send() blocks forever. That's what left orphaned `tar -xzf -` procs
+    # on the VPS and made every client upload "get stuck". paramiko channels
+    # allow concurrent send/recv from different threads.
+    stdin_error: list[BaseException] = []
+
+    def _pump_stdin() -> None:
+        try:
+            if stdin_bytes:
+                mv = memoryview(stdin_bytes)
+                offset = 0
+                while offset < len(mv):
+                    n = channel.send(mv[offset:offset + 65536])
+                    if n == 0:
+                        break
+                    offset += n
+        except BaseException as exc:  # noqa: BLE001 — surfaced after join
+            stdin_error.append(exc)
+        finally:
+            channel.shutdown_write()
+
+    writer = threading.Thread(target=_pump_stdin, daemon=True)
+    writer.start()
 
     stdout_buf = bytearray()
     stderr_buf = bytearray()
-    while True:
-        if channel.recv_ready():
+
+    def _drain() -> None:
+        while channel.recv_ready():
             chunk = channel.recv(65536)
-            if chunk:
-                stdout_buf += chunk
-                sys.stdout.write(chunk.decode("utf-8", errors="replace"))
-                sys.stdout.flush()
-        if channel.recv_stderr_ready():
+            if not chunk:
+                break
+            stdout_buf.extend(chunk)
+            sys.stdout.write(chunk.decode("utf-8", errors="replace"))
+            sys.stdout.flush()
+        while channel.recv_stderr_ready():
             chunk = channel.recv_stderr(65536)
-            if chunk:
-                stderr_buf += chunk
-                sys.stderr.write(chunk.decode("utf-8", errors="replace"))
-                sys.stderr.flush()
+            if not chunk:
+                break
+            stderr_buf.extend(chunk)
+            sys.stderr.write(chunk.decode("utf-8", errors="replace"))
+            sys.stderr.flush()
+
+    # Block in select (no busy-wait, no pinned CPU) until there's output to
+    # read; the 0.5s cap guarantees we re-check exit status even when the
+    # remote goes quiet for a while (apt, certbot, npm).
+    while True:
+        select.select([channel], [], [], 0.5)
+        _drain()
         if channel.exit_status_ready() and not channel.recv_ready() and not channel.recv_stderr_ready():
             break
     exit_code = channel.recv_exit_status()
-    while channel.recv_ready():
-        stdout_buf += channel.recv(65536)
-    while channel.recv_stderr_ready():
-        stderr_buf += channel.recv_stderr(65536)
+    _drain()  # final flush — old code captured the trailing bytes but never printed them
+    writer.join(timeout=5)
     channel.close()
+
+    if stdin_error:
+        raise RuntimeError(
+            f"failed streaming stdin to remote: {cmd}"
+        ) from stdin_error[0]
 
     if check and exit_code != 0:
         raise RuntimeError(
@@ -360,37 +391,57 @@ def ssh(env: dict[str, str], cmd: str, *, check: bool = True,
     return exit_code, bytes(stdout_buf), bytes(stderr_buf)
 
 
-def _tarball(root: Path, paths: list[str]) -> bytes:
-    buf = io.BytesIO()
-    with tarfile.open(fileobj=buf, mode="w:gz") as tar:
-        for p in paths:
-            local = root / p
-            if not local.exists():
-                continue
-            tar.add(str(local), arcname=p, recursive=True)
-    return buf.getvalue()
+# Remote shell rsync uses for its transport. Matches the (password) auth model
+# of the paramiko side: host-key checking is off because the VPS gets reimaged
+# and its key legitimately rotates, and ConnectTimeout keeps a dead host from
+# hanging the whole deploy.
+RSYNC_SSH = ("ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "
+             "-o ConnectTimeout=15")
+
+
+def _rsync(env: dict[str, str], sources: list[str], dest: str, *,
+           delete: bool = False) -> None:
+    """Push local paths to user@host:dest over SSH with rsync.
+
+    Replaces the previous in-band `tar | ssh 'tar -xzf -'` push, which fed a
+    gzip stream into the remote's stdin over a paramiko channel and would
+    intermittently stall mid-transfer (the symptom: deploy hangs during
+    upload). rsync runs its own resilient, restartable transfer over a clean
+    ssh channel and only sends changed blocks, so it's both faster on
+    redeploys and doesn't share the stdin-window deadlock failure mode.
+
+    Password auth is handed to the spawned ssh via sshpass `-e`, which reads it
+    from $SSHPASS — so the secret never appears in argv or `ps`."""
+    if not sources:
+        return
+    if shutil.which("sshpass") is None:
+        sys.exit("sshpass not found on PATH — install it (brew install sshpass / "
+                 "apt-get install sshpass); rsync push needs it for password auth")
+    remote = f"{env['SSH_USERNAME']}@{env['IP_ADDRESS']}:{dest}"
+    cmd = ["sshpass", "-e", "rsync", "-rlptz", "--timeout=60", "-e", RSYNC_SSH]
+    if delete:
+        cmd.append("--delete")
+    cmd += [str(s) for s in sources]
+    cmd.append(remote)
+    proc_env = {**os.environ, "SSHPASS": env["SSH_PASSWORD"]}
+    result = subprocess.run(cmd, env=proc_env)
+    if result.returncode != 0:
+        raise RuntimeError(f"rsync push failed (exit {result.returncode}) -> {remote}")
 
 
 def push_tree(env: dict[str, str], root: Path, paths: list[str],
               remote_dir: str, *, wipe_dirs: bool = True) -> None:
-    existing = [p for p in paths if (root / p).exists()]
+    """rsync the whitelisted paths into remote_dir. No --delete: extra files
+    already on the remote (data.db, editing/) are left untouched, matching the
+    old wipe_dirs=False extract-on-top behaviour the callers rely on."""
+    existing = [root / p for p in paths if (root / p).exists()]
     if not existing:
         print(f"  push> nothing to send under {root}, skipping")
         return
-    archive = _tarball(root, existing)
-    dirs = [p for p in existing if (root / p).is_dir()]
-    rm_clause = ""
-    if wipe_dirs and dirs:
-        rm_clause = " && rm -rf " + " ".join(
-            shlex.quote(f"{remote_dir}/{p}") for p in dirs
-        )
-    remote_cmd = (
-        f"set -e; install -d {shlex.quote(remote_dir)}"
-        f"{rm_clause} && "
-        f"tar -xzf - -C {shlex.quote(remote_dir)}"
-    )
-    print(f"  push> {' '.join(existing)} -> {remote_dir}/ ({len(archive)} bytes)")
-    ssh(env, remote_cmd, stdin_bytes=archive)
+    ssh(env, f"install -d {shlex.quote(remote_dir)}")
+    names = " ".join(p.name for p in existing)
+    print(f"  push> {names} -> {remote_dir}/ (rsync)")
+    _rsync(env, existing, f"{remote_dir}/")
 
 
 def write_remote_file(env: dict[str, str], remote_path: str, content: str,
@@ -446,7 +497,7 @@ def step_apt(env):
     ssh(env,
         "DEBIAN_FRONTEND=noninteractive apt-get update -qq && "
         "DEBIAN_FRONTEND=noninteractive apt-get install -qq -y "
-        "nginx certbot python3-certbot-nginx ca-certificates curl gnupg")
+        "nginx certbot python3-certbot-nginx ca-certificates curl gnupg rsync")
     ssh(env, "systemctl enable --now nginx")
     # NodeSource: idempotent. If `node --version` already matches our major,
     # skip the setup script (it's slow and noisy on every deploy).
@@ -482,20 +533,19 @@ def step_push_server(env):
 
 def step_push_client(env):
     """Ship the built _site/ into WEBROOT. The bundle filename is content-
-    hashed, so wipe the whole web root and re-extract rather than syncing
-    named files — that drops stale app-*.js on every deploy."""
+    hashed, so rsync with --delete to mirror the tree exactly — that drops
+    stale app-*.js on every deploy without wiping and re-uploading the
+    unchanged assets/ and data/ each time."""
     print(f"[*] push client -> {WEBROOT}")
     out = ROOT / "_site"
     if not (out / "index.html").exists():
         sys.exit("client build missing: run `npm run build` (step_build_client)")
-    archive = _tarball(out, [p.name for p in out.iterdir()])
-    print(f"  push> _site/ -> {WEBROOT}/ ({len(archive)} bytes)")
-    ssh(env, (
-        f"set -e; rm -rf {shlex.quote(WEBROOT)} && "
-        f"install -d -o www-data -g www-data {shlex.quote(WEBROOT)} && "
-        f"tar -xzf - -C {shlex.quote(WEBROOT)} && "
-        f"chown -R www-data:www-data {shlex.quote(WEBROOT)}"
-    ), stdin_bytes=archive)
+    ssh(env, f"install -d -o www-data -g www-data {shlex.quote(WEBROOT)}")
+    print(f"  push> _site/ -> {WEBROOT}/ (rsync --delete)")
+    # Trailing slash on the source means "contents of _site/", not the dir
+    # itself — so files land directly under WEBROOT.
+    _rsync(env, [f"{out}/"], f"{WEBROOT}/", delete=True)
+    ssh(env, f"chown -R www-data:www-data {shlex.quote(WEBROOT)}")
 
 
 def _local_git_sha() -> str:
