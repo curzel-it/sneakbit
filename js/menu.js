@@ -18,8 +18,8 @@ import { initKeyBindingsScreen, renderControlsList, resetCaptures, consumeMenuKe
 import { getActiveInputDevice, onActiveInputDeviceChange } from "./activeInputDevice.js";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { isCoopActive } from "./coopMode.js";
-import { saveEditedWorld, revertEditedWorld } from "./editedWorlds.js";
-import { invalidateZoneCache } from "./data.js";
+import { exportSave, importSave } from "./saveBackup.js";
+import { initCreativeZoneTools, saveZoneNow, exportZone, resetZone } from "./creativeZoneTools.js";
 import { openPartyPanel, isPartyPanelOpen } from "./partyPanel.js";
 import { openAccountPanel, isAccountPanelOpen } from "./accountPanel.js";
 import { onAccountChange, getUser, getToken, isSignedIn } from "./accountSession.js";
@@ -225,6 +225,7 @@ export function installMenu(stateGetter) {
   injectStyles();
   bindWidgets();
   initKeyBindingsScreen(root);
+  initCreativeZoneTools(() => getState());
   applyCreativeModeVisibility();
   applyRoleVisibility();
   // Keep the role gates live across role transitions — if the menu is
@@ -526,121 +527,6 @@ function syncSettingsWidgets() {
   // is connected. `isCoopActive()` covers both.
   const ffRow = root.querySelector("#opt-friendly-fire-row");
   if (ffRow) ffRow.style.display = isCoopActive() ? "" : "none";
-}
-
-// Flush the in-memory raw zone JSON to the IndexedDB override buffer
-// without leaving the current zone. Mirrors the Rust desktop's "Save"
-// menu action — engine.save() writes the current zone to disk on
-// demand. Useful between teleports so creative work is durable even if
-// the tab is closed before the next zone transition.
-async function saveZoneNow() {
-  const st = getState();
-  const id = st?.zone?.id;
-  const raw = st?.rawZone;
-  if (!id || !raw) { alert("No zone is loaded yet."); return; }
-  try {
-    const ok = await saveEditedWorld(id, raw);
-    invalidateZoneCache(id);
-    if (ok) alert(`Saved zone ${id} to the server.`);
-    else alert(`Save failed: sign in as an editor first.`);
-  } catch (e) {
-    alert(`Save failed: ${e?.message ?? "unknown error"}`);
-  }
-}
-
-// Download the current zone's raw JSON as `{id}.json`. The author drops
-// the file into ./data/ and commits — that's the canonical "ship the
-// edit" path described in creative-mode-requirements.md.
-function exportZone() {
-  const st = getState();
-  const id = st?.zone?.id;
-  const raw = st?.rawZone;
-  if (!id || !raw) { alert("No zone is loaded yet."); return; }
-  const json = JSON.stringify(raw, null, 2);
-  const blob = new Blob([json], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = el("a", { href: url, download: `${id}.json` });
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  // Revoke after a tick — Firefox cancels the download if the URL is
-  // freed before the browser starts streaming the blob.
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
-// Delete the server-side edited world for the current zone. The next
-// reload (or teleport back) falls through to the shipped ./data/{id}.json.
-async function resetZone() {
-  const st = getState();
-  const id = st?.zone?.id;
-  if (!id) { alert("No zone is loaded yet."); return; }
-  if (!confirm(`Reset zone ${id} to the shipped version? Any server-stored creative edits will be discarded.`)) return;
-  try {
-    const ok = await revertEditedWorld(id);
-    invalidateZoneCache(id);
-    if (ok) alert(`Reverted zone ${id} to shipped. Reload (or teleport in/out) to see it.`);
-    else alert(`Reset failed: sign in as an editor first.`);
-  } catch (e) {
-    alert(`Reset failed: ${e?.message ?? "unknown error"}`);
-  }
-}
-
-// Snapshot every sneakbit.* localStorage key into a JSON blob and try to
-// copy it to the clipboard; on failure (clipboard API blocked, http
-// without secure-context) fall back to a textarea-and-Ctrl-C prompt so
-// the player can still grab it.
-async function exportSave() {
-  const payload = {};
-  try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (!k || !k.startsWith("sneakbit.")) continue;
-      payload[k] = localStorage.getItem(k);
-    }
-  } catch {}
-  const json = JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), entries: payload });
-  try {
-    await navigator.clipboard.writeText(json);
-    alert(`Save exported to clipboard (${Object.keys(payload).length} keys).`);
-  } catch {
-    prompt("Save export — copy the text below:", json);
-  }
-}
-
-// Replace the current sneakbit.* localStorage payload with the contents
-// of a pasted JSON blob (produced by exportSave). Reloads on success so
-// every module hydrates fresh from the restored values.
-function importSave() {
-  const json = prompt("Paste your previously-exported save JSON:");
-  if (!json) return;
-  let parsed;
-  try {
-    parsed = JSON.parse(json);
-  } catch {
-    alert("That doesn't look like valid JSON.");
-    return;
-  }
-  if (!parsed?.entries || typeof parsed.entries !== "object") {
-    alert("Missing 'entries' object in save payload.");
-    return;
-  }
-  if (!confirm("Importing will overwrite your current progress. Continue?")) return;
-  try { window.save?.suppressUnloadSave?.(); } catch {}
-  try {
-    for (let i = localStorage.length - 1; i >= 0; i--) {
-      const k = localStorage.key(i);
-      if (k && k.startsWith("sneakbit.")) localStorage.removeItem(k);
-    }
-    for (const [k, v] of Object.entries(parsed.entries)) {
-      if (typeof k === "string" && k.startsWith("sneakbit.") && typeof v === "string") {
-        localStorage.setItem(k, v);
-      }
-    }
-  } catch (e) {
-    alert(`Import failed: ${e?.message ?? "unknown error"}`);
-    return;
-  }
-  location.replace(location.pathname);
 }
 
 function injectStyles() {
