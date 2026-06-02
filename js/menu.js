@@ -294,13 +294,13 @@ function applyCreativeModeVisibility() {
   // usable; [data-editor-only] additionally hides for non-editor accounts
   // (the server enforces this too — a non-editor PUT gets 403). The
   // server-backed zone tools (Save/Reset/Map editor) carry all three.
-  root.querySelectorAll("[data-creative-only]").forEach((el) => {
-    const requiresDesktop = el.hasAttribute("data-desktop-only");
-    const requiresEditor = el.hasAttribute("data-editor-only");
+  root.querySelectorAll("[data-creative-only]").forEach((node) => {
+    const requiresDesktop = node.hasAttribute("data-desktop-only");
+    const requiresEditor = node.hasAttribute("data-editor-only");
     const show = creative
       && (!requiresDesktop || desktop)
       && (!requiresEditor || editor);
-    el.style.display = show ? "" : "none";
+    node.style.display = show ? "" : "none";
   });
 }
 
@@ -311,8 +311,8 @@ function applyCreativeModeVisibility() {
 // runtime role is guest, and re-show on every other role transition.
 function applyRoleVisibility() {
   const isGuest = getRuntimeRole() === "guest";
-  root.querySelectorAll("[data-guest-hidden]").forEach((el) => {
-    el.style.display = isGuest ? "none" : "";
+  root.querySelectorAll("[data-guest-hidden]").forEach((node) => {
+    node.style.display = isGuest ? "none" : "";
   });
 }
 
@@ -335,10 +335,10 @@ function openMenu() {
 // The pause-screen control hint, in the active device's glyphs. Keyboard
 // shows the player's bound keys; a pad shows A/B/X/Start.
 function renderPauseHint() {
-  const el = root?.querySelector("#menu-pause-hint");
-  if (!el) return;
+  const node = root?.querySelector("#menu-pause-hint");
+  if (!node) return;
   const move = getActiveInputDevice() === "gamepad" ? "Stick / D-pad" : "WASD / arrows";
-  el.innerHTML =
+  node.innerHTML =
     `${move} to move &middot; ${glyphForAction("interact")} to interact<br>` +
     `${glyphForAction("shoot")} to throw a kunai &middot; ${glyphForAction("melee")} to melee ` +
     `&middot; ${glyphForAction("menu")} to toggle menu`;
