@@ -9,6 +9,7 @@
 
 import { playSfx } from "./audio.js";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
+import { el } from "./dom.js";
 
 let root = null;
 let open = false;
@@ -17,9 +18,9 @@ let pendingDismiss = null;
 export function installMessage() {
   if (root) return root;
   if (typeof document === "undefined") return null;
-  root = document.createElement("div");
-  root.id = "message";
-  root.innerHTML = `
+  root = el("div", {
+    id: "message",
+    html: `
     <div class="msg-card">
       <h1 id="msg-title"></h1>
       <p  id="msg-text"></p>
@@ -27,17 +28,18 @@ export function installMessage() {
         <button id="msg-ok">OK</button>
       </div>
     </div>
-  `;
-  Object.assign(root.style, {
-    position: "fixed",
-    inset: "0",
-    display: "none",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "rgba(0,0,0,0.74)",
-    zIndex: "24",
-    color: "#e6ecff",
-    fontFamily: "monospace",
+  `,
+    style: {
+      position: "fixed",
+      inset: "0",
+      display: "none",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "rgba(0,0,0,0.74)",
+      zIndex: "24",
+      color: "#e6ecff",
+      fontFamily: "monospace",
+    },
   });
   document.body.appendChild(root);
   injectStyles();

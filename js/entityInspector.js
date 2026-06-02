@@ -11,6 +11,7 @@
 // module scope touches `document`.
 
 import { AFTER_DIALOGUE_BEHAVIORS } from "./afterDialogue.js";
+import { el } from "./dom.js";
 
 // Human-readable labels for the enum values. Keys should cover every value
 // in AFTER_DIALOGUE_BEHAVIORS; any unlisted value falls back to its raw name.
@@ -70,9 +71,9 @@ export function inspectedEntity() {
 }
 
 function buildPanel() {
-  panelEl = document.createElement("div");
-  panelEl.id = "entity-inspector";
-  panelEl.innerHTML = `
+  panelEl = el("div", {
+    id: "entity-inspector",
+    html: `
     <div class="ei-head">
       <strong>Entity</strong>
       <button id="ei-close" class="ei-close">×</button>
@@ -83,15 +84,13 @@ function buildPanel() {
       <select id="ei-after-dialogue"></select>
     </label>
     <div class="ei-hint">Plays once the player closes this entity's dialogue. No effect in creative mode.</div>
-  `;
+  `,
+  });
   document.body.appendChild(panelEl);
   panelEl.querySelector("#ei-close").addEventListener("click", closeEntityInspector);
   const select = panelEl.querySelector("#ei-after-dialogue");
   for (const beh of AFTER_DIALOGUE_BEHAVIORS) {
-    const opt = document.createElement("option");
-    opt.value = beh;
-    opt.textContent = BEHAVIOR_LABEL[beh] ?? beh;
-    select.appendChild(opt);
+    select.appendChild(el("option", { value: beh, text: BEHAVIOR_LABEL[beh] ?? beh }));
   }
   select.addEventListener("change", () => {
     if (!current?.entity) return;

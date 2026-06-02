@@ -14,6 +14,7 @@
 import { getValue, setValue } from "./storage.js";
 import { travelTo } from "./transitions.js";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
+import { el } from "./dom.js";
 
 const FAST_TRAVEL_SPECIES_ID = 1185;
 const UNLOCK_THRESHOLD = 4;
@@ -105,18 +106,19 @@ function facingToward(dir, dx, dy) {
 
 function ensureRoot() {
   if (root) return;
-  root = document.createElement("div");
-  root.id = "fast-travel";
-  Object.assign(root.style, {
-    position: "fixed",
-    inset: "0",
-    display: "none",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "rgba(0,0,0,0.7)",
-    zIndex: "22",
-    color: "#dfe7ff",
-    fontFamily: "monospace",
+  root = el("div", {
+    id: "fast-travel",
+    style: {
+      position: "fixed",
+      inset: "0",
+      display: "none",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "rgba(0,0,0,0.7)",
+      zIndex: "22",
+      color: "#dfe7ff",
+      fontFamily: "monospace",
+    },
   });
   document.body.appendChild(root);
   injectStyles();

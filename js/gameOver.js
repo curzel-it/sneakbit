@@ -9,6 +9,7 @@
 import { playSfx } from "./audio.js";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { tr } from "./strings.js";
+import { el } from "./dom.js";
 
 const DEFAULT_TITLE = "You died";
 const DEFAULT_SUB = "The shadows have taken you.";
@@ -23,26 +24,27 @@ let pendingLeave = null;
 
 export function installGameOver() {
   if (root) return root;
-  root = document.createElement("div");
-  root.id = "gameover";
-  root.innerHTML = `
+  root = el("div", {
+    id: "gameover",
+    html: `
     <div class="go-card">
       <h1>You died</h1>
       <p class="go-sub">The shadows have taken you.</p>
       <button id="go-continue">Continue</button>
       <button id="go-leave" style="display:none">Back to single player</button>
     </div>
-  `;
-  Object.assign(root.style, {
-    position: "fixed",
-    inset: "0",
-    display: "none",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "rgba(0,0,0,0.78)",
-    zIndex: "25",
-    color: "#f1d4d4",
-    fontFamily: "monospace",
+  `,
+    style: {
+      position: "fixed",
+      inset: "0",
+      display: "none",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "rgba(0,0,0,0.78)",
+      zIndex: "25",
+      color: "#f1d4d4",
+      fontFamily: "monospace",
+    },
   });
   document.body.appendChild(root);
   injectStyles();

@@ -10,6 +10,7 @@
 // the text.
 
 import { broadcastHostEvent } from "./hostEvents.js";
+import { el } from "./dom.js";
 
 const DURATIONS = { regular: 1.0, hint: 2.0, longHint: 3.0 };
 const FADE_OUT = 0.25; // seconds
@@ -23,49 +24,42 @@ let fadeTimer = null;
 export function installToast() {
   if (root) return root;
   if (typeof document === "undefined") return null;
-  root = document.createElement("div");
-  root.id = "toast";
-  iconEl = document.createElement("canvas");
-  iconEl.width = 16;
-  iconEl.height = 16;
-  textEl = document.createElement("div");
-  root.appendChild(iconEl);
-  root.appendChild(textEl);
-  Object.assign(root.style, {
-    position: "fixed",
-    top: "6%",
-    left: "50%",
-    transform: "translateX(-50%)",
-    maxWidth: "min(640px, 86vw)",
-    padding: "10px 16px",
-    background: "rgba(10, 10, 10, 0.92)",
-    border: "1px solid #444",
-    borderRadius: "6px",
-    color: "#eee",
-    fontFamily: "monospace",
-    fontSize: "14px",
-    lineHeight: "1.4",
-    display: "none",
-    zIndex: "14",
-    boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
-    pointerEvents: "none",
-    opacity: "0",
-    transition: `opacity ${FADE_OUT}s ease`,
-    userSelect: "none",
-    WebkitUserSelect: "none",
-    alignItems: "center",
-    gap: "12px",
+  iconEl = el("canvas", {
+    width: 16,
+    height: 16,
+    style: { flexShrink: "0", imageRendering: "pixelated", display: "none" },
   });
-  Object.assign(iconEl.style, {
-    flexShrink: "0",
-    imageRendering: "pixelated",
-    display: "none",
+  textEl = el("div", {
+    style: { whiteSpace: "pre-wrap", textAlign: "center", flex: "1" },
   });
-  Object.assign(textEl.style, {
-    whiteSpace: "pre-wrap",
-    textAlign: "center",
-    flex: "1",
-  });
+  root = el("div", {
+    id: "toast",
+    style: {
+      position: "fixed",
+      top: "6%",
+      left: "50%",
+      transform: "translateX(-50%)",
+      maxWidth: "min(640px, 86vw)",
+      padding: "10px 16px",
+      background: "rgba(10, 10, 10, 0.92)",
+      border: "1px solid #444",
+      borderRadius: "6px",
+      color: "#eee",
+      fontFamily: "monospace",
+      fontSize: "14px",
+      lineHeight: "1.4",
+      display: "none",
+      zIndex: "14",
+      boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
+      pointerEvents: "none",
+      opacity: "0",
+      transition: `opacity ${FADE_OUT}s ease`,
+      userSelect: "none",
+      WebkitUserSelect: "none",
+      alignItems: "center",
+      gap: "12px",
+    },
+  }, [iconEl, textEl]);
   document.body.appendChild(root);
   return root;
 }

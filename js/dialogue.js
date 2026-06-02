@@ -17,6 +17,7 @@ import { matchesAction } from "./keyBindings.js";
 import { registerMenuSurface } from "./menuNav.js";
 import { broadcastHostEvent } from "./hostEvents.js";
 import { parseRichText, richTextLength, richTextToHtml, formatBullets } from "./richText.js";
+import { el } from "./dom.js";
 
 let root = null;
 let nameEl = null;
@@ -34,16 +35,17 @@ export function installDialogue() {
   if (root) return root;
   reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
-  root = document.createElement("div");
-  root.id = "dialogue";
   // The visible panel and the name "tab" are children so the name can sit
   // half-overlapping the panel's top edge.
-  root.innerHTML = `
+  root = el("div", {
+    id: "dialogue",
+    html: `
     <div id="dialogue-name"></div>
     <div id="dialogue-panel">
       <div id="dialogue-text"></div>
       <div id="dialogue-caret">▾</div>
-    </div>`;
+    </div>`,
+  });
   document.body.appendChild(root);
   nameEl = root.querySelector("#dialogue-name");
   textEl = root.querySelector("#dialogue-text");
