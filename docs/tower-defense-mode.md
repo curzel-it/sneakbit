@@ -1,6 +1,19 @@
 # Tower Defense mode — concept
 
-Status: **v1 spec locked, unstarted** · Owner: Federico · Last updated: 2026-06-02
+Status: **v1 MVP implemented** · Owner: Federico · Last updated: 2026-06-03
+
+> **v1 shipped (2026-06-03).** The locked MVP slice below is built and reachable
+> at `?mode=td` (or the party panel's **Tower Defense** button). Files:
+> `towerDefense.js` (controller/state machine/score), `tdBoard.js` (goal/spawns
+> + flow-field cache), `flowField.js` (BFS gradient + anti-wall-off, unit
+> tested), `tdEnemies.js` (flow-field horde + kill/leak hooks), `tdWaves.js`
+> (spawn director, unit tested), `allyAI.js` (leashless Ninja/Barbarian),
+> `heroSwitch.js` (possession + cycle), `arcadeCurrency.js` (gold),
+> `tdBarricades.js` (build-phase walls), `tdHud.js` (DOM panel + game-over),
+> board `data/1401.json`. Mode-gated seams: `gameMode.js` (`GAME_MODE.td` +
+> `isTowerDefenseMode()`), `sessionLoadouts.js` / `shooting.js` / `melee.js`.
+> E2E: `tests/e2e/towerDefense.test.mjs`. Deferred (post-validation): the
+> global leaderboard, online co-op, multi-board growth, hero upgrades.
 
 > **Read this first:** the authoritative, build-ready slice is
 > [**v1 MVP — locked spec & implementation plan**](#v1-mvp--locked-spec--implementation-plan)
