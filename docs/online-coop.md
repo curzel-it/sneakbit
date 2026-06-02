@@ -258,7 +258,7 @@ Every message has an `op` discriminant. `C →` means client → server; `S →`
   "op": "hello",
   "protocol": 1,
   "uuid": "8a1c1d2e-3b4f-4c5d-9e6f-7a8b9c0d1e2f",
-  "client": "sneakbit-html"
+  "client": "sneakbit"
 }
 ```
 

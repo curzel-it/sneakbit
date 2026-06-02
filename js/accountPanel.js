@@ -424,7 +424,11 @@ async function onChangePassword() {
     if (r.offline) { setError(w.accountError, OFFLINE_MSG); return; }
     if (r.status === 401) { handleExpired(); return; }
     if (!r.ok) { setError(w.accountError, messageFor(r.error, "Couldn't change the password.")); return; }
-    updateUser(r.data.user);
+    // The server retires every token issued before the change (including the
+    // one we just used) and hands back a fresh one — adopt it so this session
+    // keeps working. Other devices' tokens are now invalid, as intended.
+    if (r.data.token) setSession(r.data.token, r.data.user);
+    else updateUser(r.data.user);
     w.accountCurrentPw.value = "";
     w.accountNewPw.value = "";
     showToast("Password changed", "hint");

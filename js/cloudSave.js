@@ -23,6 +23,7 @@ import { serializeBlob, applyBlob, hasLocalProgress } from "./saveBlob.js";
 import { onStorageChange } from "./storage.js";
 import { onBindingsChange } from "./keyBindings.js";
 import { onGamepadBindingsChange } from "./gamepadBindings.js";
+import { showToast } from "./toast.js";
 
 const META_KEY = "sneakbit.cloudsave.v1";
 const DEBOUNCE_MS = 4000;
@@ -80,32 +81,48 @@ async function reconcile() {
   if (syncing) return;
   const token = getToken();
   if (!token) return;
-  const r = await getCloudSave(token);
-  if (r.offline || r.status === 401) return;
-  const blob = safeSerialize();
-  if (!blob) return;
-  const local = { hash: hashBlob(blob), hasProgress: hasLocalProgress() };
-  const meta = readMeta();
-  const cloud = (r.status === 204 || !r.data) ? null
-    : { rev: r.data.rev, updatedAt: r.data.updatedAt, hash: hashBlob(r.data.blob), blob: r.data.blob };
+  // Hold the lock across the whole GET → decide → act so a debounced push
+  // can't interleave with the pull/seed decision and race the meta writes.
+  syncing = true;
+  try {
+    const r = await getCloudSave(token);
+    if (r.offline || r.status === 401) return;
+    const blob = safeSerialize();
+    if (!blob) return;
+    const local = { hash: hashBlob(blob), hasProgress: hasLocalProgress() };
+    const meta = readMeta();
+    const cloud = (r.status === 204 || !r.data) ? null
+      : { rev: r.data.rev, updatedAt: r.data.updatedAt, hash: hashBlob(r.data.blob), blob: r.data.blob };
 
-  switch (decideSync({ cloud, local, meta })) {
-    case "seed":
-    case "push":
-      await pushIfDirty();
-      break;
-    case "pull":
-      pull(cloud);
-      break;
-    case "insync":
-      adoptCloudMeta(cloud, local.hash);
-      break;
-    default: /* noop */ break;
+    switch (decideSync({ cloud, local, meta })) {
+      case "seed":
+      case "push":
+        await doPush();
+        break;
+      case "pull":
+        pull(cloud);
+        break;
+      case "insync":
+        adoptCloudMeta(cloud, local.hash);
+        break;
+      default: /* noop */ break;
+    }
+  } finally {
+    syncing = false;
   }
 }
 
 async function pushIfDirty() {
   if (syncing) return;
+  syncing = true;
+  try { await doPush(); }
+  finally { syncing = false; }
+}
+
+// The actual push, assuming the caller holds the `syncing` lock. Both the
+// debounced pushIfDirty and reconcile call this so the lock is never taken
+// twice (which would self-deadlock the guard).
+async function doPush() {
   const token = getToken();
   if (!token) return;
   const blob = safeSerialize();
@@ -113,18 +130,13 @@ async function pushIfDirty() {
   const localHash = hashBlob(blob);
   const meta = readMeta();
   if (localHash === meta.lastHash) return; // nothing to push
-  syncing = true;
-  try {
-    const updatedAt = meta.localUpdatedAt || Date.now();
-    const r = await putCloudSave(token, { blob, updatedAt, baseRev: meta.rev ?? 0 });
-    if (r.offline || r.status === 401) return;
-    if (r.status === 409 && r.data) { await resolveConflict(r.data, blob, localHash); return; }
-    if (r.ok && r.data) {
-      writeMeta({ rev: r.data.rev, updatedAt: r.data.updatedAt, lastHash: localHash, localUpdatedAt: r.data.updatedAt });
-      prevHash = localHash;
-    }
-  } finally {
-    syncing = false;
+  const updatedAt = meta.localUpdatedAt || Date.now();
+  const r = await putCloudSave(token, { blob, updatedAt, baseRev: meta.rev ?? 0 });
+  if (r.offline || r.status === 401) return;
+  if (r.status === 409 && r.data) { await resolveConflict(r.data, blob, localHash); return; }
+  if (r.ok && r.data) {
+    writeMeta({ rev: r.data.rev, updatedAt: r.data.updatedAt, lastHash: localHash, localUpdatedAt: r.data.updatedAt });
+    prevHash = localHash;
   }
 }
 
@@ -147,10 +159,29 @@ async function resolveConflict(cloud, localBlob, localHash) {
 
 function pull(cloud) {
   if (!cloud) return;
+  // Storage becomes cloud-authoritative immediately; the reload lets every
+  // module rehydrate from it. Applying-then-reloading is kept atomic-ish on
+  // purpose — if we let the running session keep going on stale in-memory
+  // state it could write it back over what we just pulled.
   applyBlob(cloud.blob);
   writeMeta({ rev: cloud.rev, updatedAt: cloud.updatedAt, lastHash: hashBlob(cloud.blob), localUpdatedAt: cloud.updatedAt });
   prevHash = null;
-  if (typeof location !== "undefined") location.reload();
+  reloadForPull();
+}
+
+// A pull replaces local progress with a newer copy from another device, which
+// means a page reload. Rather than a silent yank mid-play, explain it with a
+// toast and reload on the next safe moment: instantly if the tab is hidden
+// (the player is away — ideal), otherwise after a short beat so the message
+// paints. The window before reload is tiny, so the running session has no real
+// chance to write stale state back over the pulled save.
+function reloadForPull() {
+  if (typeof location === "undefined") return; // tests / non-browser
+  const doReload = () => { try { location.reload(); } catch { /* ignore */ } };
+  const hidden = typeof document !== "undefined" && document.visibilityState === "hidden";
+  try { showToast("Synced newer progress from another device.", "longHint"); } catch { /* ignore */ }
+  if (hidden) { doReload(); return; }
+  setTimeout(doReload, 1200);
 }
 
 function onSignedOut() {

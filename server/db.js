@@ -29,6 +29,12 @@ function migrate(db) {
       updated_at     INTEGER NOT NULL
     );
   `);
+  // Additive: tokens minted before this instant are rejected (see
+  // authenticateUser in bearerAuth.js), so changing/resetting a password
+  // logs out every other session even though the JWTs are stateless. NULL on
+  // pre-existing rows means "no cutoff" — their old tokens stay valid until
+  // exp, which is the correct backward-compatible behavior.
+  addColumnIfMissing(db, "users", "password_changed_at", "INTEGER");
   db.exec(`
     CREATE TABLE IF NOT EXISTS password_resets (
       token_hash TEXT PRIMARY KEY,
@@ -50,13 +56,21 @@ function migrate(db) {
   `);
 }
 
+// ALTER TABLE ADD COLUMN, but a no-op if the column already exists (node:sqlite
+// throws on a duplicate add). Keeps migrate() safe to run on every boot.
+function addColumnIfMissing(db, table, column, type) {
+  const cols = db.prepare(`PRAGMA table_info(${table})`).all();
+  if (cols.some((c) => c.name === column)) return;
+  db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${type}`);
+}
+
 // — Users ———————————————————————————————————————————————————————————————
 
 export function createUser(db, { id, email, passwordHash, displayName = null, now }) {
   db.prepare(`
-    INSERT INTO users (id, email, password_hash, display_name, email_verified, created_at, updated_at)
-    VALUES (?, ?, ?, ?, 0, ?, ?)
-  `).run(id, email, passwordHash, displayName, now, now);
+    INSERT INTO users (id, email, password_hash, display_name, email_verified, created_at, updated_at, password_changed_at)
+    VALUES (?, ?, ?, ?, 0, ?, ?, ?)
+  `).run(id, email, passwordHash, displayName, now, now, now);
   return findUserById(db, id);
 }
 
@@ -68,22 +82,34 @@ export function findUserById(db, id) {
   return db.prepare(`SELECT * FROM users WHERE id = ?`).get(id) ?? null;
 }
 
-// Patch display_name and/or password_hash. Only the provided fields change;
-// updated_at always bumps.
 // Delete the user and everything tied to them (cloud save + any reset
-// tokens). Sequential deletes — SQLite FK cascade isn't enabled by default
-// in node:sqlite, so we clean up dependents explicitly.
+// tokens). Wrapped in a transaction so a crash mid-delete can't orphan a
+// save or reset row — SQLite FK cascade isn't enabled by default in
+// node:sqlite, so we clean up dependents explicitly.
 export function deleteUser(db, id) {
-  db.prepare(`DELETE FROM saves WHERE user_id = ?`).run(id);
-  db.prepare(`DELETE FROM password_resets WHERE user_id = ?`).run(id);
-  db.prepare(`DELETE FROM users WHERE id = ?`).run(id);
+  db.exec("BEGIN");
+  try {
+    db.prepare(`DELETE FROM saves WHERE user_id = ?`).run(id);
+    db.prepare(`DELETE FROM password_resets WHERE user_id = ?`).run(id);
+    db.prepare(`DELETE FROM users WHERE id = ?`).run(id);
+    db.exec("COMMIT");
+  } catch (err) {
+    db.exec("ROLLBACK");
+    throw err;
+  }
 }
 
+// Patch display_name and/or password_hash. Only the provided fields change;
+// updated_at always bumps. A password change also stamps password_changed_at
+// to `now`, which retires every token issued before this moment.
 export function updateUser(db, id, { displayName, passwordHash, now }) {
   const sets = [];
   const params = [];
   if (displayName !== undefined) { sets.push("display_name = ?"); params.push(displayName); }
-  if (passwordHash !== undefined) { sets.push("password_hash = ?"); params.push(passwordHash); }
+  if (passwordHash !== undefined) {
+    sets.push("password_hash = ?"); params.push(passwordHash);
+    sets.push("password_changed_at = ?"); params.push(now);
+  }
   sets.push("updated_at = ?"); params.push(now);
   params.push(id);
   db.prepare(`UPDATE users SET ${sets.join(", ")} WHERE id = ?`).run(...params);
@@ -105,6 +131,18 @@ export function findPasswordReset(db, tokenHash) {
 
 export function markPasswordResetUsed(db, tokenHash, now) {
   db.prepare(`UPDATE password_resets SET used_at = ? WHERE token_hash = ?`).run(now, tokenHash);
+}
+
+// Burn every still-pending reset for a user — called after a successful reset
+// so a second outstanding link can't also be redeemed.
+export function invalidateUserResets(db, userId, now) {
+  db.prepare(`UPDATE password_resets SET used_at = ? WHERE user_id = ? AND used_at IS NULL`).run(now, userId);
+}
+
+// Opportunistic housekeeping: drop spent or long-expired reset rows so the
+// table doesn't grow without bound. Called from the forgot-password path.
+export function pruneStaleResets(db, now) {
+  db.prepare(`DELETE FROM password_resets WHERE used_at IS NOT NULL OR expires_at < ?`).run(now);
 }
 
 // — Cloud saves ——————————————————————————————————————————————————————————

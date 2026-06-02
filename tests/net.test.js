@@ -62,7 +62,7 @@ test("connect() sends hello after open", () => {
     op: "hello",
     protocol: PROTOCOL,
     uuid: "11111111-2222-3333-4444-555555555555",
-    client: "sneakbit-html",
+    client: "sneakbit",
   });
   net.close();
 });

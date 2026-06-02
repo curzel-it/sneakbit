@@ -11,13 +11,13 @@ const DEFAULT_DEV_WS = "ws://localhost:8090/ws";
 const DEFAULT_PROD_WS = "wss://sneakbit.curzel.it/ws";
 const BACKOFF_STEPS_MS = [1000, 2000, 4000, 8000, 16000, 30000];
 const PING_INTERVAL_MS = 20000;
-const CLIENT_TAG = "sneakbit-html";
+const CLIENT_TAG = "sneakbit";
 
 export function pickServerUrl(loc = typeof location !== "undefined" ? location : null) {
   // ?server=… is a dev-only escape hatch — it lets you point the page
   // at a local relay without editing source. In production it would be
   // a phishing primitive: a malicious link like
-  //   https://curzel.it/sneakbit-html?server=wss://attacker.example/ws
+  //   https://sneakbit.curzel.it?server=wss://attacker.example/ws
   // would silently re-route the player's session (and their session
   // code, which is enough to impersonate them) to a server the
   // attacker controls. We only honour the override when the page

@@ -180,7 +180,7 @@ export function createRelay({
     ctx.uuid = msg.uuid;
     ctx.playerId = makePlayerId(msg.uuid);
     ctx.name = makeName(msg.uuid);
-    // Validate the optional client tag (e.g. "sneakbit-html"). Capped at
+    // Validate the optional client tag (e.g. "sneakbit"). Capped at
     // 32 chars so a verbose client string can't bloat every log line, and
     // stashed on the ctx so session.open / peer.join can include it —
     // useful for "stuck client" triage without forcing the client to
