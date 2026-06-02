@@ -1,6 +1,14 @@
 # Tower Defense mode — concept
 
-Status: **concept locked, unstarted** · Owner: Federico · Last updated: 2026-06-01
+Status: **v1 spec locked, unstarted** · Owner: Federico · Last updated: 2026-06-02
+
+> **Read this first:** the authoritative, build-ready slice is
+> [**v1 MVP — locked spec & implementation plan**](#v1-mvp--locked-spec--implementation-plan)
+> below. It is grounded in the current codebase (file/line seams verified
+> 2026-06-02) and **overrides** the older conceptual sections where they
+> disagree — most notably it drops the post-anchored "moving towers" AI model in
+> favour of **leashless hero archetypes** for v1. The conceptual sections that
+> follow remain the longer-term vision and the *why*.
 
 A new arcade-style game mode for SneakBit: a **2D grid action mazing squad
 defense**. You assemble a **squad of heroes to defend a village**. Between waves
@@ -52,7 +60,13 @@ The defense is two layers, both already-present primitives:
   tiles, reshaping how monsters route to the village. Reuses placement +
   `constructionIsObstacle`.
 
-### Heroes behave like moving towers (the AI model — locked)
+### Heroes behave like moving towers (the AI model — post-v1 vision)
+
+> ⚠️ **Superseded for v1 (2026-06-02).** v1 ships **leashless archetypes with no
+> home posts** — see [Ally AI (v1)](#ally-ai-v1--leashless-no-posts). The
+> post-anchored state machine below is the *eventual* model, kept as the target
+> the leashless v1 behaviour should grow into; do not build the post-placement UX
+> for v1.
 
 Each hero is **anchored to a home post** placed during the build phase (same UX
 as barricades), and otherwise behaves like a parametric guard:
@@ -135,6 +149,11 @@ becomes "design the battlefield" — and where "non-lane 4-direction TD" sings.
 **Plan: build A to prove the loop, then graft B's flow-field on once it's fun.**
 A is throwaway-cheap and de-risks the whole idea; B is the destination.
 
+> ⚠️ **Superseded (2026-06-02).** v1 goes **straight to variant B** (flow-field
+> mazing from day one); the A-then-B staging is dropped. The A/B analysis above is
+> kept for the *why* — see the [v1 MVP spec](#v1-mvp--locked-spec--implementation-plan)
+> and Open question 1.
+
 ## The loop (shared by A and B)
 
 1. **Build phase** — currency in hand, place/upgrade barricades (and optional
@@ -157,57 +176,281 @@ multiplier + waves survived. Two boards on the score:
   a leaderboard endpoint — it is **not** netcode and is independent of online
   co-op.
 
-## MVP / v1 slice — what validates the concept
+## v1 MVP — locked spec & implementation plan
 
-The smallest thing worth building, to answer "is this fun?" before investing in
-depth:
+*Locked 2026-06-02. This is the build target. It supersedes the older "MVP / v1
+slice" wording and the post-anchored AI model wherever they disagree.*
 
-- **One hand-built board** (a generated placeholder is fine for early testing).
-- **Solo, offline.** No online, no split-screen.
-- **Start with 1 hero.** Begin a run with a pool of gold; **buy additional heroes
-  as you go**, each a **one-time fee** (no upgrade/refund economy yet).
-- **3 hero archetypes** to start (e.g. melee / ranged / tank — full roster TBD).
-  Heroes are post-anchored "moving towers" per the AI model above.
-- **Barricades** placed in the build phase — start as variant **A** (no blocking)
-  to prove the loop, then turn on variant **B** mazing (`flowField.js`).
-- **Endless escalating waves** from the 4 edges; **local high score** only at
-  first. (Global leaderboard + buy-panel polish come right after validation.)
-- **Lose** on village-down *or* squad-wipe.
+### Scope in one breath
 
-Everything past this line — upgrades/levels, per-account meta, deeper economy,
-global leaderboard, online co-op, a roster of distinct hero mechanics, multiple
-boards — is **post-validation** and intentionally deferred.
+Reach **`sneakbit.curzel.it?mode=td`** → drop into a **solo, offline** tower-defense
+run on a **dedicated empty-grass board**. You command a **squad of heroes** — by
+default **the Ninja** (ranged, throws kunai, holds position) and **the Barbarian**
+(melee, charges the nearest enemy with a sword). You **possess one hero at a time**
+and **cycle to the next** at will; the rest fight on **leashless AI**. Between
+waves you **spend gold** to **place barricades** (which **block** enemies and force
+them to **route around** — full mazing) and to **recruit more heroes** (up to 4).
+Enemies spawn at the board edge and **path to a goal tile**; the run is **endless
+and escalating**; it ends on **goal-reached** *or* **squad-wipe**. Score is a
+**local high score**.
+
+The four locked answers driving this slice:
+
+1. **Mazing = variant B from day one.** Barricades block; enemies route around via
+   a **flow-field**; an **anti-wall-off rule** forbids fully sealing the goal.
+2. **Economy = gold + recruiting.** Gold per kill + a per-level stipend; spend on
+   barricades, **recruiting heroes** (one-time fee, cap 4), and **revives**.
+3. **Heroes = leashless archetypes, no posts.** No home-post placement UX. The
+   Ninja roots where it stands and shoots; the Barbarian freely chases the nearest
+   enemy. (This *overrides* the post-anchored "moving towers" locked model — that
+   becomes the post-v1 target.)
+4. **Board = a new dedicated TD zone**, authored as **empty grass** to start
+   (spawn edge + goal tile + room to maze), camera-follow mandatory.
+
+### Hard constraint: the existing game is untouched
+
+`?mode=td` is a **new, additive latch**. No existing flow changes behaviour. The
+normal game, co-op, PvP, creative, and online paths must all load and play
+**byte-identically** when `?mode=td` is absent. Every TD branch is gated behind
+`isTowerDefenseMode()`; TD-only files are only imported on that path.
+
+### Mode entry & wiring (the seams, verified 2026-06-02)
+
+- **URL latch.** Parse `?mode=td` once at boot, alongside the existing `?zone=` /
+  `?creative=` parsing in `js/main.js` (zone resolution at `main.js:461-467`;
+  `?creative` cached in `creativeMode.js`; `?host`/`?join` in `onlineMode.js`).
+  Keep it a **cached one-shot read** like the others.
+- **Game mode enum.** `js/gameMode.js:11` defines `GAME_MODE = {coop, creative,
+  pvp}` and `setGameMode` (`gameMode.js:38`) **hard-rejects** anything else — add
+  `td` to both the enum and the allow-list, plus an `isTowerDefenseMode()` getter
+  mirroring `isPvp()` (`gameMode.js:47`).
+- **Boot decision.** In the startup decision tree (`main.js:318-325`), when the TD
+  latch is set: `setGameMode(GAME_MODE.td)`, load the **TD board** instead of the
+  saved/STARTING zone, and run the **TD spawn** (squad + goal + wave director)
+  instead of the normal player spawn.
+- **Loop branch.** The tick already branches by mode at `main.js:405-413`
+  (`tickPvpFrame` / `tickOnlineDeathmatch`). Add an `else if
+  (isTowerDefenseMode()) tickTowerDefense(dt)` that drives the run state machine,
+  ally AI, wave director, and lose-condition checks. World/mob/combat ticks
+  (`tickMobs`, `tickCombat`, `tickShooting`, `tickMelee`) are already mode-agnostic
+  and reused as-is.
+- **Menu entry.** Add a **Tower Defense** button to the single-player view in
+  `js/partyPanel.js` (alongside the offline co-op / offline PvP buttons,
+  `partyPanel.js:288-719`). Its handler sets the TD latch and boots the run —
+  same shape as `onOfflinePvpClick` (`partyPanel.js:711`) which calls
+  `startPvpMatch(2)`. The `?mode=td` URL is the deep-link equivalent of this
+  button.
+
+### The board
+
+- A **new zone**, e.g. `data/1401.json` (1301 is the PvP arena; 1401 is free —
+  add a `TD_ZONE_ID` constant in `js/constants.js` next to `PVP_ARENA_ZONE_ID`,
+  `constants.js:32`). Authored **empty grass** initially: a walkable field with
+  **one spawn edge** and **one goal tile** marked, sized at roughly one screen and
+  meant to **grow by level** later (camera-follow is mandatory; no fixed
+  single-screen — Open question 7).
+- Loaded through the **normal zone path** (`loadZone` → `buildZone`,
+  `data.js:21` / `zone.js:28`) — no special loader. Like the arena (`main.js:466`,
+  `main.js:1032`), the TD board is **transient**: never written to the save slot.
+- **Goal tile + spawn edge** are TD metadata (a tagged entity or a coords field in
+  the zone JSON), read by `tdCore.js` (goal) and `tdWaves.js` (spawn points).
+
+### The squad & the two starter heroes
+
+Heroes **are players** — reuse the co-op slot infra verbatim: `createPlayer({index})`
+(`player.js:68`) already gives each slot 0-3 a **distinct hero sprite column**
+(`heroFrameForIndex`, `player.js:33`), and HP / equipment / inventory are already
+per-index (`playerHealth.js:45`, `equipment.js:19`, `inventory.js:16`).
+
+| Hero | Slot | Weapons (existing species ids) | v1 AI behaviour |
+| --- | --- | --- | --- |
+| **Ninja** | 0 | ranged = **kunai launcher 1160** (already the per-player default, `equipment.js:15`), firing **kunai bullet 7000** | **Roots** roughly where it stands; throws kunai at the nearest enemy in range; only repositions if nothing is in range. |
+| **Barbarian** | 1 | melee = **sword 1159** (default melee is *none*, `equipment.js:4` — must be equipped explicitly on spawn) | **Charges** the nearest enemy and melee-swings; re-targets the next nearest on a kill. Leashless. |
+
+Squad starts with **both** heroes present (not the doc's older "start with 1").
+Slots 2-3 are **recruited with gold** (one-time fee), capped at the **4 co-op
+slots**. Archetypes beyond Ninja/Barbarian are authored incrementally (Open
+question 3); recruiting infra ships in v1 even if the recruit pool is initially
+just a third/fourth instance or a stub archetype.
+
+### Hero switching (possession)
+
+- **Cycle-to-next only** in v1 (no roster-click, no per-hero hotkeys — locked
+  2026-06-02 pass-2 Q7). One bound action advances the **active slot** to the next
+  living hero, wrapping around.
+- The seam is clean and already present: input is **per-slot** —
+  `pollInput(slot)` (`input.js:26-84`). v1 routes **real input to the active
+  slot** and **AI input to the others**; switching = changing `state.activeHeroSlot`.
+- **Camera** already supports a single follow target (`camera.js:26-44`,
+  `main.js:953`) — on switch, point it at the newly active hero (a quick ease is
+  nice-to-have, not required).
+- On switch, the vacated hero **hands back to `allyAI`** from wherever it stands;
+  the taken hero **drops its AI** mid-step cleanly.
+
+### Ally AI (v1) — leashless, no posts
+
+New file `js/allyAI.js`. For every **non-active, living** hero each frame, it
+synthesises an input in the **same `{events, held}` shape** `pollInput` returns,
+so `updatePlayer` (`main.js:364`) consumes it unchanged. **No home posts, no
+`AT_POST/RETURNING` states** — just two parametric behaviours:
+
+- **Ninja (rooted shooter).** Find nearest enemy (reuse the `pickClosestVisible`
+  pattern, `mobs.js:153`, inverted to scan enemies from a hero). If one is within
+  fire range, **face it and throw kunai** on the existing shoot cooldown
+  (`shooting.js:194`); otherwise idle. Only steps if it must to get *any* target
+  in range — it does **not** roam.
+- **Barbarian (charger).** Find nearest enemy; **walk toward it** (greedy cardinal
+  step, the same axis-dominant logic as `chaseDirections`, `mobs.js:170`) and
+  **melee-swing** when adjacent (`melee.js:186`). On a kill, re-target the next
+  nearest.
+
+> **Known leashless risk (tuning, not a blocker):** a fully leashless Barbarian
+> can over-extend toward spawn and leave the goal exposed. v1 mitigation options
+> (pick during feel-tuning, not now): a soft "don't chase past N tiles from the
+> goal" clamp, or simply rely on the player possessing it to reposition. Logged as
+> Open question 10.
+
+### Enemies & waves
+
+- **Reuse existing mobs + the fusion escalation curve** (locked pass-2 Q6) — no
+  TD-specific enemy stats yet. Fusion (small 4003 → 4005 → 4006 → 4007,
+  `monsters.js:41`) provides the difficulty ramp for free.
+- **New file `js/tdWaves.js`** — the spawn director: spawn points on the board's
+  **spawn edge**, a wave table, and per-level escalation (count + fusion tier).
+  Spawn by pushing mob entities into `zone.entities` (the minion spawner already
+  does exactly this with a negative-id pool, `minions.js:20`).
+- **Critical retarget — enemies must seek the GOAL, not the player.** Existing mob
+  AI only chases a player **within a 6-tile Manhattan vision** and **wanders
+  otherwise** (`mobs.js:17` `VISION_TILES=6`, `pickClosestVisible` at
+  `mobs.js:153`). TD enemies must march to the **goal tile** regardless of hero
+  proximity. So TD mobs use a **TD goal target** (the flow-field below), **not**
+  the player-chase path. Heroes/AI kill them en route; enemies don't path to
+  heroes. This is the single biggest behavioural change vs. the base game.
+- **Visibility-gating caveat.** Off-screen entities are **frozen** by
+  `updateVisibleEntities` (`zoneVisibility.js:23`) — AI, fusion, and combat only
+  tick for visible entities. On a board larger than one screen with camera-follow,
+  enemies marching off-camera would **freeze**. v1 must either keep the active
+  board within the viewport envelope or add enemies/goal to the always-visible set
+  (`ALWAYS_VISIBLE_TYPES`) — decide when the board first exceeds one screen.
+
+### Mazing & the flow-field (variant B)
+
+- **New file `js/flowField.js`.** A **BFS out from the goal tile** over the
+  walkable grid, producing a per-tile "next step toward goal" gradient. Build on
+  the existing BFS (`pathfinding.js:27` `findPathToNearest`, 4-neighbour, uses
+  `isWalkable`, ignores entities) — generalise it to a full field rather than a
+  single path.
+- Each TD enemy reads the **arrow on its current tile** and steps that way (slots
+  into the tile-stepping in `mobs.js`).
+- **Barricades block** because `canEnter`/`isWalkable` already respect
+  construction obstacles (`constructions.js:164` `constructionIsObstacle`); a
+  barricade is just a placed obstacle construction. Recompute the field **only on
+  placement** (cheap; runtime is a table read).
+- **Anti-wall-off rule.** Reject any barricade placement that leaves **no path**
+  from spawn to goal (standard Desktop-TD constraint). The BFS itself answers
+  this: if the goal can't reach a spawn tile, the placement is illegal.
+- **Pure & unit-testable** (BFS correctness, gradient direction, anti-wall-off
+  rejection, recompute-on-placement) — ideal for `tests/*.test.js`.
+
+### Build phase & barricades
+
+- **New file `js/tdBarricades.js`** — gates the existing placement primitives to
+  the **build phase** and to **legal tiles**. Reuse `mapEditor.js` placement
+  (`placeSelection` `mapEditor.js:400`, `addEntity` `mapEditor.js:466`,
+  `canvasEventToTile` `mapEditor.js:309`) but wrapped: a barricade is bought with
+  gold, placed only between waves, and rejected by the anti-wall-off check.
+- **Posts are NOT placed** in v1 (leashless heroes). The build phase places
+  **barricades only**; hero positioning is by walking/possession.
+
+### Economy
+
+- **New file `js/arcadeCurrency.js`** — a gold pool + a **DOM** build/buy panel
+  (never canvas, per CLAUDE.md). *No currency exists in the codebase today; this is
+  net-new.*
+- **Income:** gold **per kill** + a **per-level starting stipend** (locked pass-2
+  Q3).
+- **Spend:** barricade cost; **recruit hero** one-time fee (cap 4); **revive** a
+  downed hero — **build-phase price**, with a **~5× mid-wave** price (locked
+  pass-2 Q1/Q2). No upgrades, refunds, or per-account spend in v1.
+
+### Run state machine, lose & score
+
+- **New file `js/tdMode.js`** (or extend `gameMode.js`) — the run state machine:
+  **build → wave → clear → game-over**, with a **skippable ~30 s countdown**
+  between waves (auto-starts, or "Ready" to skip; placement is build-phase only —
+  locked pass-2 Q2).
+- **New file `js/tdCore.js`** — the **goal tile**: detect enemy-reaches-goal and
+  trigger the lose condition. The village is "just the end of the road," no HP
+  structure for now (locked pass-2 Q5).
+- **Lose** on **goal-reached** *or* **squad-wipe** (revive keeps a hero in play;
+  squad-wipe with no affordable revive ends the run).
+- **Score:** tiered kills + combo multiplier + waves survived, persisted as a
+  **local high score in `localStorage`**. Global leaderboard (`GET/POST /scores`)
+  is **deferred to right after validation**, not in this slice.
+
+### What is explicitly NOT in this slice
+
+Online co-op, split-screen, global leaderboard, hero upgrades/levels, per-account
+meta, deeper economy (refunds/upgrades), a multi-archetype roster beyond
+Ninja+Barbarian, multiple boards, and any new movement model. All deferred to
+post-validation.
+
+### Suggested build order (each step leaves the game runnable + tests green)
+
+1. **Mode latch + empty board.** `?mode=td` + `GAME_MODE.td` + the grass zone,
+   loading into an idle board. Existing game untouched (regression-check the
+   normal boot).
+2. **Squad spawn + switching.** Spawn Ninja (slot 0) + Barbarian (slot 1); wire
+   `activeHeroSlot` + cycle-to-next + camera follow. Other slot stands idle.
+3. **Ally AI.** `allyAI.js` leashless behaviours for the non-active hero.
+4. **Waves to goal + flow-field.** `flowField.js` (unit-tested) + `tdWaves.js`
+   spawning enemies that march the field to the goal; `tdCore.js` lose-on-reach.
+5. **Build phase + barricades + anti-wall-off.** `tdBarricades.js` placement
+   gated to build phase, recompute field, reject sealing.
+6. **Economy.** `arcadeCurrency.js` gold/recruit/revive + DOM panel.
+7. **Run loop + score.** `tdMode.js` state machine, countdown, squad-wipe,
+   local high score.
 
 ## New feature files (one feature, one file)
 
-- `tdCore.js` — the village objective entity: HP, damage-on-reach, lose
-  condition.
-- `allyAI.js` — drives an un-possessed hero as a **post-anchored "moving tower"**:
-  the `AT_POST → ENGAGING → RETURNING` state machine + a **per-hero rule-set**
-  (engage trigger, leash radius, return condition) layered over the existing
-  melee/kunai combat. The defining new behavior of this mode. A static turret is
-  the leash-0 archetype, so this subsumes `tdTowers.js`.
-- `heroSwitch.js` — possession: which slot the human input drives, camera-follow
-  on switch, clean hand-off to/from `allyAI` for the vacated/taken slot. A squad
-  roster UI (DOM) to see hero HP and pick who to jump to.
-- `tdBarricades.js` — barricade/obstacle species + the build/erase interaction
-  during the build phase (wraps the `mapEditor` placement primitives, gated to
-  the build phase and to legal tiles).
-- `tdWaves.js` — spawn director: 4-side edge portals, wave table, escalation.
+*v1 set, reconciled with the locked spec above. `tdTowers.js` and
+`tdLeaderboard.js` are out of v1; the post-anchored bits of `allyAI`/`heroSwitch`
+are deferred.*
 
-(No separate `tdTowers.js`: a turret is the leash-0 hero archetype, handled by
-`allyAI.js` + the hero behavior config.)
-- `flowField.js` — BFS-to-core + anti-wall-off validation. **Variant B only.**
-- `arcadeCurrency.js` — gold pool + a build/buy panel. **v1 scope is small:** a
-  starting pool, **one-time hero-purchase fees**, and barricade costs. Upgrades /
-  refunds / per-account spending are deferred. *No economy exists today*; this is
-  net-new. UI lives in the DOM, never the canvas (per CLAUDE.md).
-- `tdMode.js` *(or extend `gameMode.js`)* — the mode latch + run state machine
-  (build / wave / clear / game-over).
-- `tdLeaderboard.js` (client) + a `GET/POST /scores` endpoint in `server/` —
-  global high-score board (JSON store, no deps). Local high score needs no server.
-- Launch entry in `partyPanel.js` (single-player view) + an arena zone (clone
-  the PvP arena `1301` as a TD board template).
+- `tdCore.js` — the **goal tile**: detect enemy-reaches-goal → lose condition. No
+  village HP structure in v1 ("end of the road"); locked pass-2 Q5.
+- `allyAI.js` — drives an un-possessed hero with **leashless v1 behaviours**
+  (rooted shooter / free charger), synthesising the `pollInput` `{events, held}`
+  shape so `updatePlayer` consumes it unchanged. **No posts / no
+  `AT_POST→RETURNING` in v1** — the post-anchored "moving tower" model is the
+  post-v1 target. The defining new behaviour of this mode.
+- `heroSwitch.js` — possession: which slot human input drives (`activeHeroSlot`),
+  **cycle-to-next only** in v1, camera-follow on switch, clean hand-off to/from
+  `allyAI`. (Roster-click UI / hotkeys deferred.)
+- `tdBarricades.js` — barricade obstacle species + the build/erase interaction in
+  the build phase (wraps `mapEditor` placement, gated to build phase + legal tiles
+  + the anti-wall-off check).
+- `tdWaves.js` — spawn director: spawn points on the board's **spawn edge** (v1 is
+  directional/corridor, not 4-side; Open question 9), wave table, escalation via
+  the existing fusion curve.
+
+(No separate `tdTowers.js` in any version: a turret is the leash-0 hero archetype.)
+- `flowField.js` — BFS-out-from-goal gradient + anti-wall-off validation.
+  **In v1 scope** (variant B is locked from day one). Generalises
+  `pathfinding.js`'s BFS.
+- `arcadeCurrency.js` — gold pool + a DOM build/buy panel. **v1 scope:** per-kill
+  income + per-level stipend; spend on **barricades, recruiting heroes (one-time
+  fee, cap 4), and revives (~5× mid-wave)**. Upgrades / refunds / per-account
+  spend deferred. *No economy exists today*; net-new. UI in the DOM, never canvas.
+- `tdMode.js` *(or extend `gameMode.js`)* — the `GAME_MODE.td` latch + run state
+  machine (build / wave / clear / game-over) + the skippable ~30 s countdown +
+  local high score.
+- Mode entry: parse **`?mode=td`** at boot (next to `?zone=`/`?creative=` in
+  `main.js`) **and** a **Tower Defense** launch button in `partyPanel.js`
+  (single-player view). Board = a **new dedicated empty-grass zone** (`TD_ZONE_ID`,
+  e.g. 1401), *not* a clone of the PvP arena.
+- *(Deferred)* `tdLeaderboard.js` (client) + `GET/POST /scores` in `server/` —
+  global board, lands right after validation. Local high score needs no server.
 
 ## The four quadrants
 
@@ -242,13 +485,16 @@ The mode spans all four from day one *in principle*, in this build order:
   DOM-free.
 - **E2E (`tests/e2e/*.mjs`):** once online co-op lands, assert host-authoritative
   core HP + spawn sync across host/guest. Reuse the CDP harness.
-- Manual: feel-check variant A first (is the loop fun before the flow-field
-  exists?).
+- Manual: feel-check the loop in the build order above — squad + switching first
+  (step 2), then waves-to-goal, then mazing. Answer "is the squad + switching
+  fun?" before tuning the economy.
 
 ## Open questions
 
-1. **Variant A vs jump straight to B?** Locked answer: prototype A to settle
-   "is it fun", then build B. Revisit only if A already feels complete.
+1. **Variant A vs jump straight to B?** *Re-resolved (2026-06-02):* **go
+   straight to B** — barricades block and enemies route around (flow-field) from
+   day one. Variant A (no blocking) is dropped as a stepping stone. (Earlier plan
+   was A-then-B; superseded.)
 2. **Hero death mid-wave.** *Resolved (2026-06-02):* **revive for gold.** Reviving
    *mid-wave* costs ~**5×** the build-phase revive price. (Squad-wipe = run over is
    still the lose trigger regardless.)
@@ -278,6 +524,15 @@ The mode spans all four from day one *in principle*, in this build order:
    open-field "4 edges → central objective" framing is **not** the v1 shape — it
    stays on the table only as a possible later evolution. `tdWaves` spawn placement
    and `flowField` (variant B) should target the corridor model.
+10. **AI model: leashless vs post-anchored.** *Resolved for v1 (2026-06-02):*
+    **leashless, no posts** — Ninja roots & shoots, Barbarian freely charges. The
+    post-anchored `AT_POST→ENGAGING→RETURNING` "moving towers" model (previously
+    marked locked) becomes the **post-v1** target, not the v1 build.
+11. **Leashless Barbarian over-extension.** *Open (2026-06-02):* a fully leashless
+    charger can run toward spawn and leave the goal exposed. Mitigation (decide
+    during feel-tuning, not before): a soft "don't chase past N tiles from the
+    goal" clamp, or rely on player possession to reposition. This is the v1
+    leashless trade-off vs. the deferred post-anchored leash model.
 
 ## Decision log
 
@@ -331,3 +586,25 @@ The mode spans all four from day one *in principle*, in this build order:
   toward the end-of-road goal across a camera-followed, growing board. The
   open-field central-objective shape is demoted to a possible later evolution, not
   the v1 target.
+- **2026-06-02:** Third pass — pinned the **build-ready v1 slice** against the live
+  codebase (file/line seams verified) and the requested entry point
+  **`sneakbit.curzel.it?mode=td`**. Four choices locked: **(a)** mazing =
+  **variant B from day one** (barricades block, enemies route around via
+  `flowField`; variant A dropped as a stepping stone, Open question 1
+  re-resolved). **(b)** economy = **gold + recruiting** (per-kill + stipend income;
+  spend on barricades, recruit-hero one-time fee cap 4, revives ~5× mid-wave).
+  **(c)** AI = **leashless archetypes, no posts** — Ninja roots & throws kunai,
+  Barbarian freely charges with sword; this **overrides** the previously-"locked"
+  post-anchored "moving towers" model, which is now the **post-v1** target (Open
+  question 10/11). **(d)** board = a **new dedicated empty-grass zone**
+  (`TD_ZONE_ID`, e.g. 1401), *not* a clone of the PvP arena. Squad **starts with
+  both** the Ninja (slot 0, kunai launcher 1160 / bullet 7000 — already the default
+  ranged) and the Barbarian (slot 1, sword 1159 — must be equipped, default melee
+  is none), recruiting the 3rd/4th. Hard constraint re-affirmed: **the existing
+  game is untouched** — `?mode=td` is an additive latch (`GAME_MODE.td` added to
+  the `gameMode.js` enum + allow-list), every TD branch gated behind
+  `isTowerDefenseMode()`. **Big behavioural change flagged:** TD enemies must
+  target the **goal tile via the flow-field**, not chase players — the base mob AI
+  only chases within a 6-tile vision (`mobs.js:17`) and wanders otherwise.
+  **Caveat flagged:** off-screen entities freeze under visibility gating
+  (`zoneVisibility.js`), which must be handled once the board exceeds one screen.
