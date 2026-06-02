@@ -18,6 +18,7 @@ import { isPvp } from "./gameMode.js";
 import { localPlayerCount } from "./coopMode.js";
 import { sliceCount, getSlices } from "./splitScreen.js";
 import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
+import { el } from "./dom.js";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
 const MAX_PLAYERS = 4;
@@ -28,13 +29,10 @@ const chips = []; // [{ root, icon, count, lastLabel, iconSpecies, index }]
 export function installAmmoHud() {
   if (root) return root;
   injectStyles();
-  root = document.createElement("div");
-  root.id = "ammo-hud";
-
   // Build all four chips up front; updateAmmoHud shows only the active ones
   // (the local player count is hot-toggled, so we can't size the set here).
   for (let i = 0; i < MAX_PLAYERS; i++) chips.push(makeChip(i));
-  for (const c of chips) root.appendChild(c.root);
+  root = el("div", { id: "ammo-hud" }, chips.map((c) => c.root));
   document.body.appendChild(root);
 
   onInventoryChange(updateAmmoHud);
@@ -50,23 +48,13 @@ function rangedBulletFor(playerIndex) {
 }
 
 function makeChip(index) {
-  const card = document.createElement("div");
-  card.className = "ammo-chip";
-
-  const icon = document.createElement("canvas");
-  icon.width = TILE_SIZE;
-  icon.height = TILE_SIZE;
-  Object.assign(icon.style, {
-    width: `${ICON_PIXELS}px`,
-    height: `${ICON_PIXELS}px`,
-    imageRendering: "pixelated",
+  const icon = el("canvas", {
+    width: TILE_SIZE,
+    height: TILE_SIZE,
+    style: { width: `${ICON_PIXELS}px`, height: `${ICON_PIXELS}px`, imageRendering: "pixelated" },
   });
-
-  const count = document.createElement("span");
-  count.textContent = `x0`;
-
-  card.appendChild(icon);
-  card.appendChild(count);
+  const count = el("span", { text: "x0" });
+  const card = el("div", { class: "ammo-chip" }, [icon, count]);
   return { root: card, icon, count, lastLabel: null, iconSpecies: -1, index };
 }
 

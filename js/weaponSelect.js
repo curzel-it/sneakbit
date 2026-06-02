@@ -20,6 +20,7 @@ import { getSpecies } from "./species.js";
 import { tr } from "./strings.js";
 import { getSprite } from "./assets.js";
 import { TILE_SIZE } from "./constants.js";
+import { el } from "./dom.js";
 
 // action id → [slot, direction]
 const ACTION_MAP = {
@@ -93,14 +94,9 @@ let fadeTimer = null;
 function ensureRibbon() {
   if (root || typeof document === "undefined") return root;
   injectStyles();
-  root = document.createElement("div");
-  root.id = "weapon-switch";
-  stripEl = document.createElement("div");
-  stripEl.className = "ws-strip";
-  labelEl = document.createElement("div");
-  labelEl.className = "ws-label";
-  root.appendChild(stripEl);
-  root.appendChild(labelEl);
+  stripEl = el("div", { class: "ws-strip" });
+  labelEl = el("div", { class: "ws-label" });
+  root = el("div", { id: "weapon-switch" }, [stripEl, labelEl]);
   document.body.appendChild(root);
   return root;
 }
@@ -114,12 +110,8 @@ function showWeaponRibbon(slot, playerIndex) {
   let active = null;
   for (const entry of list) {
     if (entry.isEquipped) active = entry;
-    const cell = document.createElement("div");
-    cell.className = "ws-cell" + (entry.isEquipped ? " is-active" : "");
-    const icon = document.createElement("canvas");
-    icon.width = TILE_SIZE;
-    icon.height = TILE_SIZE;
-    cell.appendChild(icon);
+    const icon = el("canvas", { width: TILE_SIZE, height: TILE_SIZE });
+    const cell = el("div", { class: "ws-cell" + (entry.isEquipped ? " is-active" : "") }, icon);
     stripEl.appendChild(cell);
     paintIcon(icon, entry.species);
   }

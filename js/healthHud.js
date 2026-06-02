@@ -8,6 +8,7 @@
 import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange, isPlayerDead } from "./playerHealth.js";
 import { localPlayerCount } from "./coopMode.js";
 import { sliceCount, getSlices } from "./splitScreen.js";
+import { el } from "./dom.js";
 
 const MAX_PLAYERS = 4;
 const PLAYER_COLORS = [
@@ -23,14 +24,11 @@ const bars = []; // [{ label, fill, index }]
 export function installHealthHud() {
   if (root) return root;
   injectStyles();
-  root = document.createElement("div");
-  root.id = "health-hud";
-
   // Build all four bars up front; redraw shows only the active ones. Local
   // co-op count is hot-toggled (always 1 at boot), so we can't size the
   // bar set at install time.
   for (let i = 0; i < MAX_PLAYERS; i++) bars.push(makeBar(i));
-  for (const b of bars) root.appendChild(b.root);
+  root = el("div", { id: "health-hud" }, bars.map((b) => b.root));
   document.body.appendChild(root);
 
   onPlayerHealthChange(redraw);
@@ -74,32 +72,26 @@ function injectStyles() {
 }
 
 function makeBar(index) {
-  const card = document.createElement("div");
-  card.className = "hp-card";
-
-  const label = document.createElement("div");
-  label.style.marginBottom = "4px";
-
-  const bar = document.createElement("div");
-  Object.assign(bar.style, {
-    width: "100%",
-    height: "8px",
-    background: "#222",
-    border: "1px solid #444",
-    borderRadius: "3px",
-    overflow: "hidden",
+  const label = el("div", { style: { marginBottom: "4px" } });
+  const fill = el("div", {
+    style: {
+      width: "100%",
+      height: "100%",
+      background: PLAYER_COLORS[index] ?? PLAYER_COLORS[0],
+      transition: "width 120ms linear",
+    },
   });
-
-  const fill = document.createElement("div");
-  Object.assign(fill.style, {
-    width: "100%",
-    height: "100%",
-    background: PLAYER_COLORS[index] ?? PLAYER_COLORS[0],
-    transition: "width 120ms linear",
-  });
-  bar.appendChild(fill);
-  card.appendChild(label);
-  card.appendChild(bar);
+  const bar = el("div", {
+    style: {
+      width: "100%",
+      height: "8px",
+      background: "#222",
+      border: "1px solid #444",
+      borderRadius: "3px",
+      overflow: "hidden",
+    },
+  }, fill);
+  const card = el("div", { class: "hp-card" }, [label, bar]);
   return { root: card, label, fill, index };
 }
 
