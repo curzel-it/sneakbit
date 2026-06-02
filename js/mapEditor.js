@@ -34,6 +34,7 @@ import {
   entityAtTile, openEntityInspector, closeEntityInspector, isEntityInspectorOpen,
   inspectedEntity,
 } from "./entityInspector.js";
+import { el } from "./dom.js";
 
 let stateGetter = () => null;
 let canvasEl = null;
@@ -197,10 +198,10 @@ function buildPicker() {
 
 function renderSelectionHint() {
   if (!pickerEl) return;
-  const el = pickerEl.querySelector("#me-selection");
-  if (!el) return;
-  if (!selection) { el.textContent = "No selection — click an item below, or click a placed entity to edit it."; return; }
-  el.textContent = `Placing: ${selection.label}`;
+  const node = pickerEl.querySelector("#me-selection");
+  if (!node) return;
+  if (!selection) { node.textContent = "No selection — click an item below, or click a placed entity to edit it."; return; }
+  node.textContent = `Placing: ${selection.label}`;
 }
 
 function populatePicker() {
@@ -214,14 +215,15 @@ function populateBiomes() {
   const grid = pickerEl.querySelector("#me-grid-biomes");
   grid.innerHTML = "";
   for (const id of BIOME_STOCK_IDS) {
-    const btn = document.createElement("button");
-    btn.className = "me-cell me-cell-biome";
-    btn.textContent = BIOME_LABEL[id] ?? `B${id}`;
-    btn.title = BIOME_LABEL[id] ?? `Biome ${id}`;
-    btn.addEventListener("click", () => {
-      selection = { kind: "biome", id, label: `Biome: ${BIOME_LABEL[id]}`, char: biomeToChar(id) };
-      highlightSelected(grid, btn);
-      renderSelectionHint();
+    const btn = el("button", {
+      class: "me-cell me-cell-biome",
+      text: BIOME_LABEL[id] ?? `B${id}`,
+      title: BIOME_LABEL[id] ?? `Biome ${id}`,
+      on: { click: () => {
+        selection = { kind: "biome", id, label: `Biome: ${BIOME_LABEL[id]}`, char: biomeToChar(id) };
+        highlightSelected(grid, btn);
+        renderSelectionHint();
+      } },
     });
     grid.appendChild(btn);
   }
@@ -231,14 +233,15 @@ function populateConstructions() {
   const grid = pickerEl.querySelector("#me-grid-constructions");
   grid.innerHTML = "";
   for (const id of CONSTRUCTION_STOCK_IDS) {
-    const btn = document.createElement("button");
-    btn.className = "me-cell me-cell-construction";
-    btn.textContent = constructionLabel(id);
-    btn.title = constructionLabel(id);
-    btn.addEventListener("click", () => {
-      selection = { kind: "construction", id, label: `Construction: ${constructionLabel(id)}`, char: constructionToChar(id) };
-      highlightSelected(grid, btn);
-      renderSelectionHint();
+    const btn = el("button", {
+      class: "me-cell me-cell-construction",
+      text: constructionLabel(id),
+      title: constructionLabel(id),
+      on: { click: () => {
+        selection = { kind: "construction", id, label: `Construction: ${constructionLabel(id)}`, char: constructionToChar(id) };
+        highlightSelected(grid, btn);
+        renderSelectionHint();
+      } },
     });
     grid.appendChild(btn);
   }
@@ -256,27 +259,26 @@ function populateEntities() {
     .filter((sp) => sp.entity_type !== "Hero")
     .sort((a, b) => a.entity_type.localeCompare(b.entity_type) || a.id - b.id);
   for (const sp of stock) {
-    const btn = document.createElement("button");
-    btn.className = "me-cell me-cell-entity";
-    btn.title = `${sp.entity_type} · ${sp.name ?? sp.id}`;
     const [row, col] = sp.inventory_texture_offset;
-    const wrap = document.createElement("span");
-    wrap.className = "me-icon-wrap";
-    const icon = document.createElement("span");
-    icon.className = "me-icon";
-    icon.style.backgroundImage = "url('./assets/inventory.png')";
-    icon.style.backgroundPosition = `-${col * TILE_SIZE}px -${row * TILE_SIZE}px`;
-    wrap.appendChild(icon);
-    btn.appendChild(wrap);
-    btn.addEventListener("click", () => {
-      selection = {
-        kind: "species",
-        id: sp.id,
-        label: `${sp.entity_type}: ${sp.name ?? sp.id}`,
-      };
-      highlightSelected(grid, btn);
-      renderSelectionHint();
-    });
+    const btn = el("button", {
+      class: "me-cell me-cell-entity",
+      title: `${sp.entity_type} · ${sp.name ?? sp.id}`,
+      on: { click: () => {
+        selection = {
+          kind: "species",
+          id: sp.id,
+          label: `${sp.entity_type}: ${sp.name ?? sp.id}`,
+        };
+        highlightSelected(grid, btn);
+        renderSelectionHint();
+      } },
+    }, el("span", { class: "me-icon-wrap" }, el("span", {
+      class: "me-icon",
+      style: {
+        backgroundImage: "url('./assets/inventory.png')",
+        backgroundPosition: `-${col * TILE_SIZE}px -${row * TILE_SIZE}px`,
+      },
+    })));
     grid.appendChild(btn);
   }
 }
