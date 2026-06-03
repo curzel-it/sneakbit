@@ -54,8 +54,11 @@ import {
   installBuild, placeDefaultItem, placeSelected, eraseAt, setSelectedItem, getPaletteModel,
   buildHintText, resetBuild, getPlacedObstacleCount,
 } from "./tdBuild.js";
-import { tileInFront, drawPlacementPreview } from "./tdPlacementPreview.js";
+import {
+  resetBuildCursor, moveBuildCursor, getBuildCursor, drawPlacementPreview,
+} from "./tdPlacementPreview.js";
 import { refreshTouchActions } from "./touch.js";
+import { updateCamera } from "./camera.js";
 import {
   installTdHud, showTdHud, hideTdHud, updateTdHud, showTdGameOver,
 } from "./tdHud.js";
@@ -83,6 +86,10 @@ const LEAK_DAMAGE = { 4003: 1, 4004: 1, 4005: 1, 4006: 2, 4007: 3 };
 // Display names by squad slot. Must stay aligned with TD_HERO_LOADOUTS in
 // sessionLoadouts.js (that table decides each slot's weapon + archetype).
 const HERO_NAMES = ["Ninja", "Barbarian", "Bombardier", "Knight"];
+
+// Idle input for a hero that isn't being driven this frame (the active hero
+// during the build phase, while the human roams the placement cursor instead).
+const EMPTY_INPUT = { events: [], held: new Set() };
 
 // — State ————————————————————————————————————————————————————————————————
 let getState = () => null;
@@ -200,6 +207,10 @@ function placeHero(p, tile) {
 function enterBuild() {
   phase = "build";
   buildTimer = BUILD_TIME;
+  // Drop the build cursor on the active hero so each build phase starts
+  // somewhere sensible; the player roams it from there.
+  const hero = activeHero(getState());
+  resetBuildCursor(hero ? { x: hero.tileX, y: hero.tileY } : { x: 0, y: 0 });
 }
 
 function startNextWave({ early = false } = {}) {
@@ -323,7 +334,10 @@ export function tickTowerDefense(dt, frame) {
   if (!paused && phase !== "gameover") {
     simulate(state, dt);
   }
-  followActiveHero(state);
+  // The camera tracks the roaming build cursor while building (so you can
+  // place across the whole board), and the active hero otherwise.
+  if (phase === "build") updateCamera(state.camera, getBuildCursor(), state.zone);
+  else followActiveHero(state);
   tickBiomeAnimation(frame.biomeAnim, dt);
   tickEntities(dt);
   const heroes = livingHeroes(state);
@@ -333,11 +347,11 @@ export function tickTowerDefense(dt, frame) {
   // is sim-only and never draws an off-screen prop.
   updateVisibleEntities(state.zone, state.camera, { all: true });
   render(frame.renderer, state.zone, state.camera, heroes, frame.biomeAnim.frame);
-  // Build ghost: where the active hero will place/remove a barrel (build phase
-  // only). Drawn over the world, camera-relative — render() leaves the ctx at
-  // identity transform with no clip.
+  // Build ghost: the roaming cursor where a barrel will be placed/removed
+  // (build phase only). Drawn over the world, camera-relative — render()
+  // leaves the ctx at identity transform with no clip.
   if (phase === "build") {
-    drawPlacementPreview(frame.renderer.ctx, state, state.camera, activeHero(state));
+    drawPlacementPreview(frame.renderer.ctx, state, state.camera);
   }
   updateHud(frame.hud, { zoneId: state.zone.id, fps: 1 / dt, showFps: getSettings().showFps });
   updateTdHud(buildModel(state));
@@ -351,15 +365,20 @@ function simulate(state, dt) {
     if (buildTimer <= 0) startNextWave();
   }
 
-  // Heroes: real input to the active hero, allyAI to the rest.
+  // Heroes: real input to the active hero, allyAI to the rest. During the
+  // build phase the human input instead roams the placement cursor, so the
+  // active hero stands idle (allies still regroup via allyAI).
   ensureLiveActive(state, isPlayerDead);
   const enemies = getEnemies(state.zone);
   const goal = getGoal();
   const humanInput = pollInput(1);
+  if (phase === "build") moveBuildCursor(humanInput, dt, state.zone);
   for (const hero of squadPlayers(state)) {
     const idx = hero.index | 0;
     if (isPlayerDead(idx)) continue;
-    const input = isActiveHero(idx) ? humanInput : driveAlly(state, hero, { enemies, goal });
+    let input;
+    if (isActiveHero(idx)) input = phase === "build" ? EMPTY_INPUT : humanInput;
+    else input = driveAlly(state, hero, { enemies, goal });
     updatePlayer(hero, input, dt, state.zone);
   }
 
@@ -450,15 +469,15 @@ function onKey(e) {
   const hero = activeHero(state);
   if (!hero) return;
   // Build phase reuses the action keys as build verbs (no enemies to fight):
-  // Interact (E / Enter) places the selected barrel on the tile ahead, Melee
-  // (G) removes + refunds it. Starting the wave is the dock button only.
+  // Interact (E / Enter) places the selected barrel at the cursor, Melee (G)
+  // removes + refunds it. Starting the wave is the dock button only.
   if (phase === "build") {
     if (matchesAction("interact", code, 0)) {
       e.preventDefault();
-      placeInFront(hero);
+      placeAtCursor();
     } else if (matchesAction("melee", code, 0)) {
       e.preventDefault();
-      removeInFront(hero);
+      removeAtCursor();
     }
     return;
   }
@@ -472,14 +491,14 @@ function onKey(e) {
   }
 }
 
-// Place / remove the build item on the tile the active hero faces.
-function placeInFront(hero) {
-  const t = tileInFront(hero);
+// Place / remove the build item at the roaming cursor.
+function placeAtCursor() {
+  const t = getBuildCursor();
   placeSelected(t.x, t.y);
 }
 
-function removeInFront(hero) {
-  const t = tileInFront(hero);
+function removeAtCursor() {
+  const t = getBuildCursor();
   eraseAt(t.x, t.y);
 }
 

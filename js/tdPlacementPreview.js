@@ -1,13 +1,13 @@
-// Tower Defense build ghost: the in-world preview of where the active hero
-// will place (or remove) a barrel during the build phase. The player moves the
-// possessed hero around and this draws a translucent ghost of the selected
-// barrel on the tile the hero faces — green border when the tile is a legal,
-// affordable spot, red when it isn't. If a barrel already sits on that tile,
-// it draws a red "remove" outline instead (G refunds it).
+// Tower Defense build cursor + ghost: during the build phase the directional
+// input drives a free-roaming placement marker (decoupled from the hero), and
+// this draws a translucent ghost of the selected barrel under it — green
+// border when the tile is a legal, affordable spot, red when it isn't. If a
+// barrel already sits there it draws a red "remove" outline instead.
 //
-// Pure rendering: towerDefense.onKey owns the actual place/erase (E / G) via
-// tdBuild's placeSelected / eraseAt, both keyed off this same front tile.
-// Drawn after the world render, camera-relative like every other drawer.
+// The cursor is the build-phase camera target and the tile place/remove (E/G)
+// act on; towerDefense routes the human input here while building and back to
+// the active hero once a wave starts. Pure state + rendering: it owns no
+// placement logic (that's tdBuild's placeSelected / eraseAt).
 
 import { TILE_SIZE } from "./constants.js";
 import { getSprite } from "./assets.js";
@@ -21,24 +21,76 @@ const DIR_DELTA = {
   left:  [-1, 0],
   right: [ 1,  0],
 };
+const HOLD_PRIORITY = ["up", "down", "left", "right"];
 
-const BORDER_OK = "#8fe6a0";   // legal + affordable (matches HUD positive)
-const BORDER_NO = "#ff3b3b";   // illegal / unaffordable / remove highlight
+// Menu-style auto-repeat: a fresh press steps once, then holding repeats after
+// a short delay at a steady rate (tiles/press feel without a key per tile).
+const INITIAL_DELAY = 0.22;   // seconds held before auto-repeat kicks in
+const REPEAT_INTERVAL = 0.07; // seconds between repeats while held
 
-// The tile the hero faces, from its canonical tile (stable mid-step) plus the
-// facing direction. This is the tile place/erase act on.
-export function tileInFront(hero) {
-  const [dx, dy] = DIR_DELTA[hero.direction] ?? DIR_DELTA.down;
-  return { x: hero.tileX + dx, y: hero.tileY + dy };
+const BORDER_OK = "#8fe6a0";  // legal + affordable (matches HUD positive)
+const BORDER_NO = "#ff3b3b";  // illegal / unaffordable / remove highlight
+
+let cursor = { x: 0, y: 0 };
+let repeatDir = null;
+let repeatTimer = 0;
+
+// Drop the cursor onto a starting tile (the active hero's, when a build phase
+// opens) and disarm any in-flight repeat.
+export function resetBuildCursor(tile) {
+  cursor = { x: tile?.x | 0, y: tile?.y | 0 };
+  repeatDir = null;
+  repeatTimer = 0;
 }
 
-// Draw the build ghost for the active hero. `ctx` is the full-canvas context
-// after render() (identity transform, no clip); coords are camera-relative.
-export function drawPlacementPreview(ctx, state, camera, hero) {
-  if (!hero || !state?.zone) return;
-  const t = tileInFront(hero);
+export function getBuildCursor() {
+  return { x: cursor.x, y: cursor.y };
+}
 
-  // A barrel already occupies the faced tile → show the remove highlight.
+// Advance the cursor from this frame's input. Fresh presses step immediately;
+// a held direction auto-repeats. Clamped to the zone bounds (it may sit over
+// walls — the ghost just turns red there).
+export function moveBuildCursor(input, dt, zone) {
+  let stepped = null;
+  for (const dir of input.events) {
+    stepCursor(dir, zone);
+    stepped = dir;
+  }
+  if (stepped) {
+    repeatDir = stepped;
+    repeatTimer = INITIAL_DELAY;
+    return;
+  }
+  if (repeatDir && input.held.has(repeatDir)) {
+    repeatTimer -= dt;
+    if (repeatTimer <= 0) {
+      stepCursor(repeatDir, zone);
+      repeatTimer = REPEAT_INTERVAL;
+    }
+    return;
+  }
+  // The repeat direction was released — pick up another still-held one.
+  const held = HOLD_PRIORITY.find((d) => input.held.has(d));
+  if (held) { repeatDir = held; repeatTimer = INITIAL_DELAY; }
+  else repeatDir = null;
+}
+
+function stepCursor(dir, zone) {
+  const [dx, dy] = DIR_DELTA[dir] ?? [0, 0];
+  const nx = cursor.x + dx;
+  const ny = cursor.y + dy;
+  if (zone && (nx < 0 || ny < 0 || nx >= zone.cols || ny >= zone.rows)) return;
+  cursor.x = nx;
+  cursor.y = ny;
+}
+
+// Draw the build ghost at the cursor. `ctx` is the full-canvas context after
+// render() (identity transform, no clip); coords are camera-relative.
+export function drawPlacementPreview(ctx, state, camera) {
+  if (!state?.zone) return;
+  const t = cursor;
+
+  // A barrel already occupies the cursor tile → show the remove highlight.
   if (tdObstacleAt(state.zone, t.x, t.y)) {
     strokeTile(ctx, camera, t.x, t.y, 1, 1, BORDER_NO);
     return;

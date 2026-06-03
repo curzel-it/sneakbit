@@ -118,7 +118,7 @@ function iconFor(item) {
 // Short HUD hint naming the active item and the build controls.
 export function buildHintText() {
   const def = selectedDef();
-  return `Face a tile · E places ${def.label} (${def.cost}g) · G removes`;
+  return `Move the marker · E places ${def.label} (${def.cost}g) · G removes`;
 }
 
 // Source rect + footprint of the currently-selected build item, for the
