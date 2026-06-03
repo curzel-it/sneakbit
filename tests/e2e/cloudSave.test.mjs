@@ -31,7 +31,8 @@ let dbPath;
 before(async () => {
   if (!findChrome()) return;
   dbPath = join(tmpdir(), `sb-e2e-cloud-${process.pid}-${Date.now()}.db`);
-  process.env.JWT_SECRET = "e2e-cloud-secret";
+  // >=32 bytes so it clears the boot-time JWT_SECRET strength check.
+  process.env.JWT_SECRET = "e2e-cloud-secret-0123456789abcdef0123456789";
   process.env.DATABASE_PATH = dbPath;
   servers = await startServers({ staticPort: STATIC_PORT, relayPort: RELAY_PORT });
 });

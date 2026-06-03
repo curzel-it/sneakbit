@@ -27,8 +27,9 @@ let dbPath;
 before(async () => {
   if (!findChrome()) return;
   // Enable auth on the spawned relay: a test secret + a throwaway DB file.
+  // >=32 bytes so it clears the boot-time JWT_SECRET strength check.
   dbPath = join(tmpdir(), `sb-e2e-account-${process.pid}-${Date.now()}.db`);
-  process.env.JWT_SECRET = "e2e-test-secret";
+  process.env.JWT_SECRET = "e2e-test-secret-0123456789abcdef0123456789";
   process.env.DATABASE_PATH = dbPath;
   servers = await startServers({ staticPort: STATIC_PORT, relayPort: RELAY_PORT });
 });
