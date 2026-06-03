@@ -228,17 +228,22 @@ server-stamps `from` — `relay.js:405,432`). The remaining real gaps are one la
   Per-requester addressing skipped — `net.send` has no per-peer route and the broadcast is the
   intended "refresh other lagging mirrors" behaviour. Test in `snapshotBroadcaster.test.js`.)
 
-- [ ] **Don't let first sign-in adopt a stale cloud save over newer offline progress**
-  `js/cloudSave.js:42` returns `"pull"` whenever `meta.rev == null` and cloud differs, ignoring local
-  recency → `reloadForPull` wipes offline progress. **Fix:** compare local divergence/recency vs
-  `cloud.updatedAt` before the blind pull; prefer push or prompt.
-  > **Attempted 2026-06-03, reverted.** A pure timestamp/`hasLocalProgress` tweak can't resolve this
-  > safely: a fresh boot writes a starting-zone save, so on a brand-new device `hasLocalProgress` is
-  > already true and `localUpdatedAt` is boot-time-recent — newest-wins then *pushes* the fresh
-  > default over the account, clobbering it (caught by `tests/e2e/cloudSave.test.mjs` — first sign-in
-  > on a new device must adopt the account). The real fix needs a content-aware "which side has more
-  > progress" comparison or an interactive conflict prompt, not a one-line decision tweak. Left as-is
-  > (safe default: adopt the account) until that's built.
+- [x] **Don't let first sign-in adopt a stale cloud save over newer offline progress**
+  `js/cloudSave.js:42` returned `"pull"` whenever `meta.rev == null` and cloud differs, ignoring local
+  recency → `reloadForPull` wiped offline progress.
+  > **Attempted 2026-06-03, reverted (timestamp approach).** A pure timestamp/`hasLocalProgress` tweak
+  > can't resolve this safely: a fresh boot writes a starting-zone save, so on a brand-new device
+  > `hasLocalProgress` is already true and `localUpdatedAt` is boot-time-recent.
+  > **Built 2026-06-03 (content-aware + prompt).** `saveBlob.hasMeaningfulProgress()` is a conservative
+  > *allowlist* of progress markers (skill / dialogue answer / item_collected / equipped / inventory>0 /
+  > a non-starting zone) — a fresh boot (build_number, starting zone+spawn, `did_visit.<starting>`)
+  > matches nothing, so it still auto-adopts the account. When local IS meaningful and diverges from the
+  > account on first sign-in, `decideSync` returns a new `"conflict"`; `reconcile` shows a DOM prompt
+  > (`js/cloudConflictPrompt.js`) to *Keep this device* (push local over the account, stamping the
+  > cloud's rev as the base) or *Use account save* (pull). No DOM → safe default (adopt the account).
+  > The allowlist bias is deliberate: a missed category degrades to the old safe default, never a
+  > spurious prompt on a new device. Tests: `saveBlob.test.js`, `cloudSaveDecide.test.js`, and an e2e
+  > exercising the prompt + keep-this-device push (`tests/e2e/cloudSave.test.mjs`).
 
 - [x] **Don't wipe the kv namespace before a successful write** — `js/saveBlob.js:64-78` deletes all
   `sneakbit.kv.v1.*` then writes inside one `catch {}`; a mid-write quota throw leaves the store
@@ -287,18 +292,25 @@ server-stamps `from` — `relay.js:405,432`). The remaining real gaps are one la
 
 ## P3 — Hygiene / polish
 
-- [ ] **Rate-limit `/turn-credentials`** — `server/index.js:201` mints a valid 1-hour HMAC TURN
+- [x] **Rate-limit `/turn-credentials`** — `server/index.js:201` mints a valid 1-hour HMAC TURN
   credential per hit with no rate limit (unlike `/metrics`); scrapable by any non-browser client →
-  free coturn bandwidth. Apply the metrics-limiter pattern.
-- [ ] **Thread `keepalive` on the unload cloud flush** — `js/cloudSave.js:60` flush → `putCloudSave`
-  never sets `keepalive`, so the last push on tab close is usually killed by teardown (re-syncs next
-  load). Thread `keepalive:true` down the unload path.
-- [ ] **Harden the build denylist** — `tools/build.mjs:31-44` denies literal `.env` only; a `.env.*`
-  or the Steam `temp/` dir would ship into `_site/`. Deny any `.env*` and add `temp`/`build`; better,
-  switch to an allowlist.
-- [ ] **Tighten real-timer test windows** — `tests/net.test.js:156-163` (30/220ms vs 5/200ms backoff),
-  `tests/mirrorWorld.test.js:202`, `tests/snapshotBroadcaster.test.js:381,434` race the wall clock and
-  can flake under CI load. Inject a fake clock / deterministic backoff.
+  free coturn bandwidth. Apply the metrics-limiter pattern. (Done: per-IP 10 req/s `checkTurnRate`
+  mirroring the metrics limiter, runs before the credential is minted → `429`. Test in
+  `server.endpoints.test.js`.)
+- [x] **Thread `keepalive` on the unload cloud flush** — `js/cloudSave.js:60` flush → `putCloudSave`
+  never set `keepalive`, so the last push on tab close was usually killed by teardown. (Done: threaded
+  `keepalive:true` from the beforeunload `flush()` through `pushIfDirty`/`doPush`/`resolveConflict` to
+  `putCloudSave`; `saveApi` already supported the flag.)
+- [x] **Harden the build denylist** — `tools/build.mjs:31-44` denied literal `.env` only; a `.env.*` or
+  the Steam `temp/` dir would ship into `_site/`. (Done: deny any `.env`/`.env.*` and add `temp`/`build`
+  to the set. Note: `build/` held desktop-only icons that were previously shipped to the web bundle —
+  now excluded alongside `electron`/`dist`.)
+- [x] **Tighten real-timer test windows** — `tests/net.test.js`, `tests/mirrorWorld.test.js`,
+  `tests/snapshotBroadcaster.test.js` raced the wall clock. (Done: added backward-compatible DI seams —
+  `net.js` `setTimeoutFn`/`clearTimeoutFn` for reconnect backoff, `snapshotBroadcaster.js`
+  `setIntervalFn`/`clearIntervalFn` for the tick loop, `mirrorWorld.js` optional `opts.at` arrival
+  stamp on snapshot/delta. Production defaults to the real timers/clock; the tests now drive a fake
+  clock / manual ticker deterministically — the affected files dropped from ~120 ms waits to <1 ms.)
 - [ ] ~~Resolve the stray `.skip` (allyAI.test.js:54)~~ — **INVALID, removed.** `allyAI.test.js:54` is
   `test("selectTarget skips dying enemies", …)` — a test *name* containing "skips", not a skipped
   test. It runs and passes; there is no `.skip` anywhere in `tests/*.test.js` (the only skips are the
@@ -328,9 +340,9 @@ it (and tick its inline counterpart). Counts exclude the one struck-through inva
 |----------|------|-------|
 | P0 — Critical          | 7 | 7  |
 | P1 — High              | 11 | 11 |
-| P2 — Medium            | 8 | 9  |
-| P3 — Hygiene           | 0 | 4  |
-| **Total**              | **26** | **31** |
+| P2 — Medium            | 9 | 9  |
+| P3 — Hygiene           | 4 | 4  |
+| **Total**              | **31** | **31** |
 
 ### P0 — Critical (do first)
 - [x] Allowlist ops on the DataChannel *receive* path + always overwrite `from` — `js/webrtcTransport.js:64-66`
@@ -357,7 +369,7 @@ it (and tick its inline counterpart). Counts exclude the one struck-through inva
 ### P2 — Medium (robustness / recovery)
 - [x] Cap WebSocket upgrades per IP — `server/index.js:266`
 - [x] Throttle `guest.resync` (full-snapshot amplifier) — `js/snapshotBroadcaster.js:61`
-- [ ] Don't adopt stale cloud save over newer offline progress — `js/cloudSave.js:42` (attempted, reverted — needs content-aware compare or a prompt; see inline note)
+- [x] Don't adopt stale cloud save over newer offline progress — `js/cloudSave.js:42` (content-aware `hasMeaningfulProgress` allowlist + first-sign-in conflict prompt `js/cloudConflictPrompt.js`)
 - [x] Don't wipe the kv namespace before a successful write — `js/saveBlob.js:64-78`
 - [x] Refresh expired TURN credentials + add ICE restart — `js/iceConfig.js:13-15,45`
 - [x] Fix the `host.resumed` reconnect rebuild — `js/webrtcTransport.js:117-123`
@@ -366,10 +378,10 @@ it (and tick its inline counterpart). Counts exclude the one struck-through inva
 - [x] Add a deploy rollback / atomic release — `deploy.py:534-548`
 
 ### P3 — Hygiene / polish
-- [ ] Rate-limit `/turn-credentials` — `server/index.js:201`
-- [ ] Thread `keepalive` on the unload cloud flush — `js/cloudSave.js:60`
-- [ ] Harden the build denylist — `tools/build.mjs:31-44`
-- [ ] Tighten real-timer test windows — `tests/net.test.js:156-163`, `tests/mirrorWorld.test.js:202`, `tests/snapshotBroadcaster.test.js:381,434`
+- [x] Rate-limit `/turn-credentials` — `server/index.js` (`checkTurnRate`, 10 req/s/IP → 429)
+- [x] Thread `keepalive` on the unload cloud flush — `js/cloudSave.js` (flush → pushIfDirty → doPush → putCloudSave)
+- [x] Harden the build denylist — `tools/build.mjs` (deny `.env*`; add `temp`/`build`)
+- [x] Tighten real-timer test windows — DI timer/clock seams in `net.js`, `snapshotBroadcaster.js`, `mirrorWorld.js`; deterministic tests
 
 ### Highest-value test coverage (cross-cuts the above)
 - [x] WebRTC receive-path identity/op enforcement test (guards P0 #1) — `tests/webrtcTransport.test.js:200`
