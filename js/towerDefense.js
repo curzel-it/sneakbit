@@ -55,6 +55,7 @@ import {
   buildHintText, resetBuild, getPlacedObstacleCount,
 } from "./tdBuild.js";
 import { tileInFront, drawPlacementPreview } from "./tdPlacementPreview.js";
+import { refreshTouchActions } from "./touch.js";
 import {
   installTdHud, showTdHud, hideTdHud, updateTdHud, showTdGameOver,
 } from "./tdHud.js";
@@ -165,6 +166,9 @@ export async function startTowerDefense() {
     if (zone.soundtrack) playTrack(zone.soundtrack);
     enterBuild();
     showTdHud();
+    // On touch, surface the melee/remove action button — the squad may carry
+    // no melee weapon, which would otherwise keep it hidden.
+    refreshTouchActions();
     // The ammo chip is meaningless in TD (infinite kunai, no inventory) — hide
     // it so it doesn't show stray "x0" boxes. Restored on the exit reload.
     const ammo = typeof document !== "undefined" && document.getElementById("ammo-hud");

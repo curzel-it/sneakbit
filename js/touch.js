@@ -187,7 +187,17 @@ function syncMeleeVisibility() {
   if (!root) return;
   const btn = root.querySelector(".touch-melee");
   if (!btn) return;
-  btn.style.display = getEquipped(SLOT_MELEE) ? "" : "none";
+  // In Tower Defense the melee button is the build "remove" control (it
+  // refunds the barrel the active hero faces), so it must show regardless of
+  // whether a melee weapon is equipped.
+  btn.style.display = (isTowerDefenseMode() || getEquipped(SLOT_MELEE)) ? "" : "none";
+}
+
+// Re-evaluate which action buttons show — towerDefense calls this when a run
+// starts so the melee/remove button appears even if the squad carries no
+// melee weapon (and the mode flips after the overlay was first built).
+export function refreshTouchActions() {
+  syncMeleeVisibility();
 }
 
 function show() {
@@ -195,6 +205,9 @@ function show() {
   visible = true;
   root.style.display = "block";
   document.body.classList.add("touch-mode");
+  // The action set can depend on the live game mode (TD shows the remove
+  // button) — re-evaluate each time the overlay appears.
+  syncMeleeVisibility();
 }
 
 function hide() {

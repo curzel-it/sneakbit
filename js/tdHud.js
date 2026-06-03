@@ -376,10 +376,12 @@ function injectStyles() {
     #td-dock .td-revive { background: #4a2a2a; border-color: #6b3f3f; }
     #td-dock .td-btn:disabled, #td-dock .td-btn.td-disabled { opacity: 0.45; cursor: not-allowed; }
 
-    /* Touch: roomier tap targets, and lift the dock above the bottom-corner
-       d-pad / action clusters so all three stay reachable. */
+    /* Touch: dock under the top status bar — NOT centred — so the camera-
+       centred hero and the build ghost in front of it stay visible while you
+       move and place. Keeps clear of the bottom-corner d-pad / action
+       clusters too. Roomier tap targets for fingers. */
     @media (pointer: coarse) {
-      #td-dock { bottom: auto; top: 50%; transform: translate(-50%, -50%); width: min(94vw, 520px); }
+      #td-dock { bottom: auto; top: 120px; transform: translateX(-50%); width: min(94vw, 520px); }
       #td-dock .td-btn, #td-dock .td-start { min-height: 44px; }
       #td-dock .td-shop-item { min-height: 48px; }
     }
