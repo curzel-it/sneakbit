@@ -84,6 +84,33 @@ test("round-trip serialize → apply reproduces kv", () => {
   assert.equal(ls.getItem("sneakbit.kv.v1.dialogue.answer.foo"), "1");
 });
 
+test("apply rolls back kv on a mid-write quota throw (old progress survives)", () => {
+  const ls = globalThis.localStorage;
+  // Existing real progress on this device.
+  ls.setItem("sneakbit.kv.v1.latest_zone", "1010");
+  ls.setItem("sneakbit.kv.v1.skill.a", "1");
+
+  // Make the 2nd new-key write throw (quota), simulating a partial write.
+  const realSet = ls.setItem.bind(ls);
+  let writes = 0;
+  ls.setItem = (k, v) => {
+    if (k.startsWith("sneakbit.kv.v1.") && ++writes === 2) throw new Error("QuotaExceeded");
+    return realSet(k, v);
+  };
+  try {
+    applyBlob({ v: 1, kv: { latest_zone: "2020", "skill.b": "9", "skill.c": "9" } });
+  } finally {
+    ls.setItem = realSet;
+  }
+
+  // The pull failed, but the old progress must be intact — not wiped/half-written.
+  assert.equal(ls.getItem("sneakbit.kv.v1.latest_zone"), "1010", "old zone restored");
+  assert.equal(ls.getItem("sneakbit.kv.v1.skill.a"), "1", "old skill restored");
+  // No partial new keys left behind.
+  assert.equal(ls.getItem("sneakbit.kv.v1.skill.b"), null, "partial new key rolled back");
+  assert.equal(ls.getItem("sneakbit.kv.v1.skill.c"), null, "unwritten new key absent");
+});
+
 test("hasLocalProgress reflects a saved zone", () => {
   assert.equal(hasLocalProgress(), false);
   globalThis.localStorage.setItem("sneakbit.kv.v1.latest_zone", "1");

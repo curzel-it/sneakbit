@@ -60,21 +60,35 @@ function readKv() {
 }
 
 function writeKv(kv) {
+  const next = (kv && typeof kv === "object") ? kv : {};
+  // Snapshot the existing namespace BEFORE touching it. A pulled save is
+  // authoritative for the whole kv namespace, but the old code deleted every
+  // key first and only then wrote the new ones — a mid-write quota/private-mode
+  // throw left the store wiped or half-written, losing real progress. Instead:
+  // write the new set first, prune stale keys only after every write lands, and
+  // roll back to this snapshot if anything throws.
+  const prev = readKv();
+  const written = [];
   try {
-    // Replace wholesale: drop existing kv keys, then write the blob's. A
-    // pulled save is authoritative for the entire progress namespace.
-    const stale = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k && k.startsWith(KV_PREFIX)) stale.push(k);
+    for (const [k, v] of Object.entries(next)) {
+      if (typeof v !== "string") continue;
+      localStorage.setItem(KV_PREFIX + k, v);
+      written.push(k);
     }
-    for (const k of stale) localStorage.removeItem(k);
-    if (kv && typeof kv === "object") {
-      for (const [k, v] of Object.entries(kv)) {
-        if (typeof v === "string") localStorage.setItem(KV_PREFIX + k, v);
+    // Every new key landed — now drop the stale keys absent from the pull.
+    for (const k of Object.keys(prev)) {
+      if (!(k in next)) localStorage.removeItem(KV_PREFIX + k);
+    }
+  } catch {
+    // Best-effort rollback: drop the keys we added that weren't there before
+    // (frees the space the failed write consumed), then restore the snapshot.
+    try {
+      for (const k of written) {
+        if (!(k in prev)) localStorage.removeItem(KV_PREFIX + k);
       }
-    }
-  } catch { /* ignore */ }
+      for (const [k, v] of Object.entries(prev)) localStorage.setItem(KV_PREFIX + k, v);
+    } catch { /* ignore — nothing more we can safely do */ }
+  }
 }
 
 // — bindings ——————————————————————————————————————————————————————————————
