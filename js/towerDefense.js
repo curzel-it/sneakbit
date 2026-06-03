@@ -61,6 +61,7 @@ import {
 // — Tuning ————————————————————————————————————————————————————————————————
 const START_GOLD = 150;           // enough to recruit a third hero turn 1 if you skip walls
 const BUILD_TIME = 30;            // seconds of build phase before auto-start
+const EARLY_BONUS_PER_SEC = 2;    // gold for calling the wave early, per second saved
 const STIPEND_BASE = 40;          // per-wave starting income
 const STIPEND_PER_WAVE = 10;
 const WAVE_CLEAR_BONUS = 100;     // score per wave survived
@@ -110,7 +111,7 @@ export function isTowerDefenseUrl() {
 export function installTowerDefense(stateGetter) {
   getState = stateGetter || (() => null);
   installTdHud({
-    onReady: startNextWave,
+    onReady: () => startNextWave({ early: true }),
     onRecruit: recruitHero,
     onRevive: reviveHero,
     onSwitch: switchHero,
@@ -196,8 +197,14 @@ function enterBuild() {
   buildTimer = BUILD_TIME;
 }
 
-function startNextWave() {
+function startNextWave({ early = false } = {}) {
   if (phase !== "build") return;
+  // Calling the wave early banks the unused build time as gold (Kingdom Rush
+  // convention) — a real trade: more gold now, less time to maze.
+  if (early) {
+    const bonus = Math.round(Math.max(0, buildTimer) * EARLY_BONUS_PER_SEC);
+    if (bonus > 0) { addGold(bonus); showToast(`+${bonus}g early-call bonus`, "hint"); }
+  }
   wave += 1;
   startWave(wave);
   phase = "wave";
@@ -395,6 +402,8 @@ function buildModel(state) {
     maxLives: VILLAGE_LIVES,
     gold: getGold(),
     countdown: phase === "build" ? Math.max(0, buildTimer) : null,
+    countdownMax: BUILD_TIME,
+    earlyBonus: phase === "build" ? Math.round(Math.max(0, buildTimer) * EARLY_BONUS_PER_SEC) : 0,
     alive: aliveEnemyCount(state.zone),
     total: phase === "wave" ? totalThisWave() : 0,
     activeHeroName: active ? (HERO_NAMES[active.index | 0] || "Hero") : "—",
