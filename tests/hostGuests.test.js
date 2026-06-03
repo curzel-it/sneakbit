@@ -225,6 +225,30 @@ test("queued step: a commit arriving mid-step is consumed at the snap, acked the
   teardown();
 });
 
+test("netQueuedSteps is capped: a flood past the cap is rejected, not queued unbounded", () => {
+  const { fakeNet, state } = setup();
+  fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });
+  const a = state.player2; a.tileX = 5; a.tileY = 5; a.x = 5; a.y = 5;
+  seq = 0;
+
+  // First step executes (idle), then everything else queues mid-flight.
+  fakeNet.emit("move", stepMsg("p_g1", 5, 5, 5, 6, "down")); // seq 1, in flight
+  frame(a, state.zone); // mid-step so subsequent commits queue
+
+  // Stream a long chain of legal-but-undrained steps, each from the prior
+  // target. The queue should saturate at the cap and stop growing.
+  let fy = 6;
+  for (let i = 0; i < 20; i++, fy++) {
+    fakeNet.emit("move", stepMsg("p_g1", 5, fy, 5, fy + 1, "down"));
+  }
+  assert.ok(a.netQueuedSteps.length <= 6, "queue is bounded by the cap, not the flood length");
+  assert.equal(a.netQueuedSteps.length, 6, "queue saturates exactly at the cap");
+  // The rejected (over-cap) commits still advanced lastSeq so the guest
+  // reconciles via the next snap instead of walking a phantom corridor.
+  assert.equal(getLastSeqMap()["p_g1"], seq, "the last over-cap commit was acked (rejected)");
+  teardown();
+});
+
 test("no-displacement rejection: an illegal step advances lastSeq but leaves the tile put", () => {
   const { fakeNet, state } = setup();
   fakeNet.emit("peer.joined", { op: "peer.joined", playerId: "p_g1", slot: 2 });

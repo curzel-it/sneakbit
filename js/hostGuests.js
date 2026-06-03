@@ -45,6 +45,15 @@ const ACTION_COOLDOWN_MS = {
   melee:    180,
   interact: 250,
 };
+// Hard cap on a guest's pending step queue. The host consumes one queued
+// step per snap (~STEP_DURATION cadence) and an honest guest commits at the
+// same rate, so the queue normally holds 0–1 entries. A buggy or tampered
+// client streaming steps faster than the host drains them would otherwise
+// grow netQueuedSteps without bound — unbounded memory plus seconds of
+// "autopilot" replaying queued moves that ignore host displacement. Past
+// the cap we reject (ack so the guest's lastSeq advances and it resyncs)
+// instead of queueing.
+const MAX_NET_QUEUED_STEPS = 6;
 // playerId → { intent → lastAppliedMs }
 const lastActionAtByGuest = new Map();
 
@@ -255,6 +264,10 @@ function onStep(avatar, m, from, zone) {
   if (avatar.step) {
     // Mid-step: queue for consumption at the snap. lastSeq waits until it
     // resolves (accept→snap, or reject) in updateGuestAvatar.
+    if (avatar.netQueuedSteps.length >= MAX_NET_QUEUED_STEPS) {
+      ackStep(from, seq);   // reject: queue full (flood) — don't grow unbounded
+      return;
+    }
     avatar.netQueuedSteps.push({ d, tx, ty, seq });
     return;
   }
