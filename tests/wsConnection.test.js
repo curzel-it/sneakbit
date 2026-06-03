@@ -6,10 +6,19 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
+import { deflateRawSync, constants as zlibConstants } from "node:zlib";
 
 const { WsConnection } = await import("../server/wsConnection.js");
 const { OP, MAX_FRAME_PAYLOAD } = await import("../server/wsFrames.js");
 const { encodeMaskedFrame } = await import("./helpers/clientFrames.js");
+const { stripTrailer } = await import("../server/wsExtensions.js");
+
+// Build the compressed payload a browser would put in an RSV1 frame: raw
+// deflate with the SYNC_FLUSH ending, trailer stripped (the server appends
+// it back before inflating). Returns the bytes that go on the wire.
+function deflateForWire(raw) {
+  return stripTrailer(deflateRawSync(raw, { finishFlush: zlibConstants.Z_SYNC_FLUSH }));
+}
 
 // A net.Socket stand-in: records bytes written so we can read back the close
 // frame the connection sends, and the RFC 6455 close code inside it.
@@ -76,6 +85,39 @@ test("an assembled message larger than the cap is rejected (1009)", () => {
   sock.emit("data", fragment(OP.CONT, half, true));
   assert.equal(conn.closed, true);
   assert.equal(lastCloseCode(sock), 1009);
+});
+
+test("a compressed (RSV1) text frame inflates and emits", () => {
+  const sock = makeFakeSocket();
+  const conn = new WsConnection(sock);
+  const messages = [];
+  conn.on("message", (m) => messages.push(m));
+
+  const payload = deflateForWire(Buffer.from("hello deflate", "utf8"));
+  sock.emit("data", encodeMaskedFrame(OP.TEXT, payload, { rsv1: true }));
+
+  assert.deepEqual(messages, ["hello deflate"]);
+  assert.equal(conn.closed, false);
+});
+
+test("a decompression-bomb RSV1 frame is rejected (1007), not OOM", () => {
+  const sock = makeFakeSocket();
+  const conn = new WsConnection(sock);
+  const messages = [];
+  conn.on("message", (m) => messages.push(m));
+
+  // ~4 MiB of repetitive data deflates to a few KB — well under the 1 MiB
+  // compressed-input cap, so it sails past the input guard. Inflating it
+  // would blow past MAX_FRAME_PAYLOAD; maxOutputLength makes zlib throw
+  // ERR_BUFFER_TOO_LARGE, which the connection turns into a clean 1007
+  // instead of allocating ~4 MiB (a real bomb: ~1 GB) and OOM-killing the VPS.
+  const payload = deflateForWire(Buffer.alloc(4 * MAX_FRAME_PAYLOAD, 0x41));
+  assert.ok(payload.length <= MAX_FRAME_PAYLOAD, "bomb must fit under the input cap");
+  sock.emit("data", encodeMaskedFrame(OP.TEXT, payload, { rsv1: true }));
+
+  assert.equal(conn.closed, true);
+  assert.equal(lastCloseCode(sock), 1007);
+  assert.deepEqual(messages, []); // never emitted a multi-MB string
 });
 
 test("after a clean fragmented message the connection accepts the next one", () => {
