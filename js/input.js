@@ -123,23 +123,44 @@ export function initInput() {
   document.addEventListener("visibilitychange", () => { if (document.hidden) clearAll(); });
 }
 
+// One reusable { events, held } per slot. pollInput is on the hot path (once
+// per active player per frame); a fresh array + `new Set` each call was real
+// heap churn (the Set especially — it escapes into updatePlayer, so V8 can't
+// scalar-replace it). Reuse is safe: updatePlayer consumes events/held
+// synchronously in the same frame and never retains the object, and each slot
+// is polled at most once per frame, so a slot's buffer is always fully read
+// before it's refilled next frame.
+const pollBuffers = {};
+function pollBufferFor(idx) {
+  let b = pollBuffers[idx];
+  if (!b) { b = { events: [], held: new Set() }; pollBuffers[idx] = b; }
+  return b;
+}
+
 // Returns { events, held } for the requested player and drains the press
 // queue. Folds in the slot's gamepad for every ACTIVE local slot (1 …
 // localPlayerCount), so each of up to four local players can use a pad
 // (assigned by connection order). When hosting online, guest slots are
 // network-driven; the host's own local count stays low so this doesn't
-// fold a pad into a guest's slot.
+// fold a pad into a guest's slot. The returned object is a per-slot scratch
+// buffer (see pollBufferFor) — read it before the next same-slot poll; don't
+// stash it across frames.
 export function pollInput(playerIndex = 1) {
   const s = state[playerIndex] || state[1];
-  const events = s.pressEvents.slice();
+  const out = pollBufferFor(playerIndex);
+  const events = out.events;
+  events.length = 0;
+  for (const e of s.pressEvents) events.push(e);
   s.pressEvents.length = 0;
-  const held = new Set(s.held);
+  const held = out.held;
+  held.clear();
+  for (const d of s.held) held.add(d);
   if (playerIndex <= localPlayerCount()) {
     const gp = pollGamepadForSlot(playerIndex);
     for (const e of gp.events) events.push(e);
     for (const d of gp.held) held.add(d);
   }
-  return { events, held };
+  return out;
 }
 
 // Test seam — exposes the keyboard code → { playerIndex, direction }

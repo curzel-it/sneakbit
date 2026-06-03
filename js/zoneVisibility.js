@@ -29,8 +29,14 @@ const ALWAYS_VISIBLE_TYPES = new Set([
 // that read `_visible` / `visibleEntities`; it never draws an off-screen prop.
 export function updateVisibleEntities(zone, cameras, { all = false } = {}) {
   if (!zone) return;
-  const cams = Array.isArray(cameras) ? cameras : [cameras];
-  const out = [];
+  // Reuse the zone's existing visibleEntities array (clear + refill) instead of
+  // allocating a fresh one each frame: it's stored on the zone and read later
+  // the same frame by combat/mobs/monsters/minions, so it escapes the frame and
+  // is a real per-frame heap allocation sized by the visible-entity count.
+  let out = zone.visibleEntities;
+  if (!Array.isArray(out)) { out = []; zone.visibleEntities = out; }
+  out.length = 0;
+  const isArr = Array.isArray(cameras);
   const ents = zone.entities || [];
   for (let i = 0; i < ents.length; i++) {
     const e = ents[i];
@@ -40,17 +46,19 @@ export function updateVisibleEntities(zone, cameras, { all = false } = {}) {
     } else {
       const sp = getSpecies(e.species_id);
       const et = sp?.entity_type;
-      visible = ALWAYS_VISIBLE_TYPES.has(et) || overlapsAnyViewport(cams, e.frame);
+      visible = ALWAYS_VISIBLE_TYPES.has(et) || overlapsCameras(cameras, isArr, e.frame);
     }
     e._visible = visible;
     if (visible) out.push(e);
   }
-  zone.visibleEntities = out;
 }
 
-function overlapsAnyViewport(cams, f) {
-  for (let i = 0; i < cams.length; i++) {
-    if (overlapsViewport(cams[i], f)) return true;
+// `cameras` may be a single camera rect or an array of them — handled without
+// wrapping a lone camera in a throwaway array (this runs every frame).
+function overlapsCameras(cameras, isArr, f) {
+  if (!isArr) return overlapsViewport(cameras, f);
+  for (let i = 0; i < cameras.length; i++) {
+    if (overlapsViewport(cameras[i], f)) return true;
   }
   return false;
 }
