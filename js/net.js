@@ -59,6 +59,12 @@ export function createNet({
   wsFactory,
   pingIntervalMs = PING_INTERVAL_MS,
   backoffSteps = BACKOFF_STEPS_MS,
+  // Injectable timer for the reconnect backoff. Production uses the real
+  // setTimeout; tests pass a controllable fake so they can advance the clock
+  // deterministically instead of racing wall-clock windows against the
+  // backoff steps (which flakes under CI load).
+  setTimeoutFn = (fn, ms) => setTimeout(fn, ms),
+  clearTimeoutFn = (id) => clearTimeout(id),
 } = {}) {
   const resolvedUrl = url || pickServerUrl();
   const resolvedUuid = uuid || getOnlineUuid();
@@ -128,7 +134,7 @@ export function createNet({
     if (reconnectTimer) return;
     const delay = backoffSteps[Math.min(attempts, backoffSteps.length - 1)];
     attempts++;
-    reconnectTimer = setTimeout(() => { reconnectTimer = null; connect(); }, delay);
+    reconnectTimer = setTimeoutFn(() => { reconnectTimer = null; connect(); }, delay);
   }
 
   function connect() {
@@ -200,7 +206,7 @@ export function createNet({
   function close() {
     intentionallyClosed = true;
     stopPing();
-    if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+    if (reconnectTimer) { clearTimeoutFn(reconnectTimer); reconnectTimer = null; }
     if (ws) {
       try { ws.close(1000, "client closing"); } catch { /* ignore */ }
       ws = null;

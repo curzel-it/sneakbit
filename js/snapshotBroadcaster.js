@@ -40,6 +40,7 @@ const KEEPALIVE_TICKS = 4;
 const RESYNC_MIN_INTERVAL_MS = 1000;
 
 let timer = null;
+let stopTimer = null; // closure that clears `timer` with the injected clearer
 let stateGetter = null;
 let tickCount = 0;
 let quietTicks = 0;
@@ -72,12 +73,18 @@ export function installSnapshotBroadcaster(getState, opts = {}) {
   // snapshot fans out to every guest — refreshing other lagging
   // mirrors at no extra cost.
   unsubs.push(net.on("guest.resync", (msg) => onGuestResync(net, msg)));
-  timer = setInterval(() => broadcastDelta(net), intervalMs);
+  // Injectable interval (defaults to the real one). Tests pass a manual driver
+  // so they can fire exactly N ticks deterministically instead of awaiting a
+  // real setInterval and racing the wall clock.
+  const setIntervalFn = opts.setIntervalFn ?? ((fn, ms) => setInterval(fn, ms));
+  const clearIntervalFn = opts.clearIntervalFn ?? ((id) => clearInterval(id));
+  timer = setIntervalFn(() => broadcastDelta(net), intervalMs);
+  stopTimer = () => clearIntervalFn(timer);
   return true;
 }
 
 export function stopSnapshotBroadcaster() {
-  if (timer) { clearInterval(timer); timer = null; }
+  if (timer) { (stopTimer || ((id) => clearInterval(id)))(timer); timer = null; stopTimer = null; }
   for (const u of unsubs) { try { u(); } catch { /* ignore */ } }
   unsubs = [];
   lastPlayerSigs.clear();

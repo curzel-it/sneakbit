@@ -47,6 +47,48 @@ function makeFactory() {
   return factory;
 }
 
+// Controllable timer injected into createNet's reconnect backoff. The
+// reconnect tests used to race a real setTimeout against the backoff steps
+// (assert "happened by 30 ms" / "not by 30 ms"), which flakes under CI load.
+// Driving a fake clock makes the exact firing boundary deterministic.
+function makeFakeTimers() {
+  let nextId = 1;
+  let now = 0;
+  const pending = new Map(); // id -> { fn, time }
+  return {
+    setTimeoutFn: (fn, ms) => { const id = nextId++; pending.set(id, { fn, time: now + ms }); return id; },
+    clearTimeoutFn: (id) => { pending.delete(id); },
+    // Advance the clock by `ms`, firing every timer due at or before the new
+    // time in chronological order (a timer rescheduled during a fire is
+    // honoured against the same clock).
+    advance(ms) {
+      now += ms;
+      for (;;) {
+        let next = null;
+        for (const [id, t] of pending) {
+          if (t.time <= now && (!next || t.time < next.t.time)) next = { id, t };
+        }
+        if (!next) break;
+        pending.delete(next.id);
+        next.t.fn();
+      }
+    },
+    pendingCount: () => pending.size,
+  };
+}
+
+// createNet wired to a fake-timer pair, returning both so the test can drive
+// the clock. Shares the same wsFactory the caller already built.
+function netWithFakeTimers(factory, opts = {}) {
+  const timers = makeFakeTimers();
+  const net = createNet({
+    url: "ws://test/ws", uuid: "u", wsFactory: factory,
+    setTimeoutFn: timers.setTimeoutFn, clearTimeoutFn: timers.clearTimeoutFn,
+    ...opts,
+  });
+  return { net, timers };
+}
+
 test("connect() sends hello after open", () => {
   const factory = makeFactory();
   const net = createNet({
@@ -105,102 +147,81 @@ test("send() returns false when not connected", () => {
   net.close();
 });
 
-test("close code 4003 (uuid conflict) does NOT schedule reconnect", async () => {
+test("close code 4003 (uuid conflict) does NOT schedule reconnect", () => {
   const factory = makeFactory();
-  const net = createNet({
-    url: "ws://test/ws",
-    uuid: "u",
-    wsFactory: factory,
-    backoffSteps: [10],
-  });
+  const { net, timers } = netWithFakeTimers(factory, { backoffSteps: [10] });
   net.connect();
   factory.last()._open();
   factory.last()._serverClose(4003, "uuid conflict");
-  await new Promise((r) => setTimeout(r, 40));
+  assert.equal(timers.pendingCount(), 0, "no reconnect should be scheduled");
+  timers.advance(1000);
   assert.equal(factory.sockets.length, 1); // no second connection attempt
   net.close();
 });
 
-test("unexpected close (1006) triggers a reconnect", async () => {
+test("unexpected close (1006) triggers a reconnect", () => {
   const factory = makeFactory();
-  const net = createNet({
-    url: "ws://test/ws",
-    uuid: "u",
-    wsFactory: factory,
-    backoffSteps: [5],
-  });
+  const { net, timers } = netWithFakeTimers(factory, { backoffSteps: [5] });
   net.connect();
   factory.last()._open();
   factory.last()._serverClose(1006);
-  await new Promise((r) => setTimeout(r, 30));
+  assert.equal(factory.sockets.length, 1, "no reconnect before the backoff fires");
+  timers.advance(5);
   assert.equal(factory.sockets.length, 2);
   net.close();
 });
 
-test("handshake-fail reconnects escalate backoff (no fast-loop before welcome)", async () => {
+test("handshake-fail reconnects escalate backoff (no fast-loop before welcome)", () => {
   // Each socket opens fine, then the server closes 1006 before sending
   // welcome — same shape as a bad-hello / protocol-mismatch rejection.
   // The first close should schedule at step[0], the second at step[1],
   // proving attempts isn't reset by onopen.
   const factory = makeFactory();
-  const net = createNet({
-    url: "ws://test/ws",
-    uuid: "u",
-    wsFactory: factory,
-    backoffSteps: [5, 200],
-  });
+  const { net, timers } = netWithFakeTimers(factory, { backoffSteps: [5, 200] });
   net.connect();
   factory.last()._open();
   factory.last()._serverClose(1006);
-  // First retry uses step[0] = 5 ms; show up within ~30 ms.
-  await new Promise((r) => setTimeout(r, 30));
-  assert.equal(factory.sockets.length, 2, "first retry should have happened");
+  // First retry is scheduled at step[0] = 5 ms — not a tick before.
+  timers.advance(4);
+  assert.equal(factory.sockets.length, 1, "first retry must wait for step[0]");
+  timers.advance(1);
+  assert.equal(factory.sockets.length, 2, "first retry fires at step[0]");
   factory.last()._open();
   factory.last()._serverClose(1006);
-  // Second retry uses step[1] = 200 ms; must NOT have happened at 30 ms.
-  await new Promise((r) => setTimeout(r, 30));
-  assert.equal(factory.sockets.length, 2, "second retry must wait for backoff step[1], not fast-loop at step[0]");
-  await new Promise((r) => setTimeout(r, 220));
-  assert.equal(factory.sockets.length, 3);
+  // Second retry uses step[1] = 200 ms; step[0] must NOT fast-loop it.
+  timers.advance(199);
+  assert.equal(factory.sockets.length, 2, "second retry must wait for step[1], not fast-loop at step[0]");
+  timers.advance(1);
+  assert.equal(factory.sockets.length, 3, "second retry fires at step[1]");
   net.close();
 });
 
-test("welcome resets backoff: a close after welcome retries at step[0] again", async () => {
+test("welcome resets backoff: a close after welcome retries at step[0] again", () => {
   const factory = makeFactory();
-  const net = createNet({
-    url: "ws://test/ws",
-    uuid: "u",
-    wsFactory: factory,
-    backoffSteps: [5, 200],
-  });
+  const { net, timers } = netWithFakeTimers(factory, { backoffSteps: [5, 200] });
   net.connect();
   // First connection: open but no welcome, server drops → attempts=1.
   factory.last()._open();
   factory.last()._serverClose(1006);
-  await new Promise((r) => setTimeout(r, 30));
+  timers.advance(5);
   assert.equal(factory.sockets.length, 2);
   // Second connection: open + welcome → attempts must reset.
   factory.last()._open();
   factory.last()._serverMsg({ op: "welcome", protocol: 1, playerId: "p", name: "P" });
   factory.last()._serverClose(1006);
-  // Next retry should fire fast (step[0] = 5 ms), not slow.
-  await new Promise((r) => setTimeout(r, 30));
+  // Next retry should fire at step[0] = 5 ms again, not the escalated step[1].
+  timers.advance(5);
   assert.equal(factory.sockets.length, 3, "post-welcome close should retry at step[0]");
   net.close();
 });
 
-test("explicit close() prevents reconnect", async () => {
+test("explicit close() prevents reconnect", () => {
   const factory = makeFactory();
-  const net = createNet({
-    url: "ws://test/ws",
-    uuid: "u",
-    wsFactory: factory,
-    backoffSteps: [5],
-  });
+  const { net, timers } = netWithFakeTimers(factory, { backoffSteps: [5] });
   net.connect();
   factory.last()._open();
   net.close();
-  await new Promise((r) => setTimeout(r, 30));
+  timers.advance(1000);
   assert.equal(factory.sockets.length, 1);
 });
 

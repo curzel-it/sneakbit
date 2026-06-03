@@ -196,6 +196,9 @@ function schemaMatches(msg) {
   return v === GAME_FRAME_SCHEMA;
 }
 
+// opts.at overrides the arrival timestamp (defaults to nowMs()). Production
+// never passes it; tests use it to stamp samples deterministically instead of
+// sleeping a real interval between snapshot and delta (which races the clock).
 export function handleSnapshot(msg, opts = {}) {
   if (!msg || msg.zoneId == null) return;
   if (!schemaMatches(msg)) return;
@@ -203,7 +206,7 @@ export function handleSnapshot(msg, opts = {}) {
   if (!zone || zone.id !== msg.zoneId) {
     return loadZoneAndApplySnapshot(msg, opts);
   }
-  applySnapshotToCurrentZone(msg);
+  applySnapshotToCurrentZone(msg, opts.at ?? nowMs());
 }
 
 export function handlePeerLeft(msg) {
@@ -211,12 +214,12 @@ export function handlePeerLeft(msg) {
   players.delete(msg.playerId);
 }
 
-export function handleDelta(msg) {
+export function handleDelta(msg, opts = {}) {
   if (!msg) return;
   if (!schemaMatches(msg)) return;
   applyMode(msg);
   if (!zone || zone.id !== msg.zoneId) return;
-  const t = nowMs();
+  const t = opts.at ?? nowMs();
   for (const p of msg.players || []) ingestPlayer(p, t);
   for (const e of msg.entities || []) ingestEntity(e, t);
   if (msg.removed?.entities) {
@@ -230,7 +233,7 @@ async function loadZoneAndApplySnapshot(msg, opts) {
   const zoneId = msg.zoneId;
   if (pendingZoneId === zoneId && zonePromise) {
     await zonePromise;
-    if (zone?.id === zoneId) applySnapshotToCurrentZone(msg);
+    if (zone?.id === zoneId) applySnapshotToCurrentZone(msg, opts.at ?? nowMs());
     return;
   }
   pendingZoneId = zoneId;
@@ -252,7 +255,7 @@ async function loadZoneAndApplySnapshot(msg, opts) {
     setupCutscenes(zone);
     pendingZoneId = null;
     zonePromise = null;
-    applySnapshotToCurrentZone(msg);
+    applySnapshotToCurrentZone(msg, opts.at ?? nowMs());
   } catch (e) {
     console.error("mirror: zone load failed", zoneId, e);
     pendingZoneId = null;
@@ -260,8 +263,7 @@ async function loadZoneAndApplySnapshot(msg, opts) {
   }
 }
 
-function applySnapshotToCurrentZone(msg) {
-  const t = nowMs();
+function applySnapshotToCurrentZone(msg, t = nowMs()) {
   // A snapshot is authoritative: drop any state we'd been holding.
   players.clear();
   entitySnaps.clear();

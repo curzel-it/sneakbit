@@ -21,9 +21,10 @@ function makeFakeZone(id) {
   return { id, rows: 10, cols: 10, entities: [] };
 }
 
-async function applySnapshot(msg) {
+async function applySnapshot(msg, opts = {}) {
   await handleSnapshot(msg, {
     zoneLoader: async (id) => makeFakeZone(id),
+    ...opts,
   });
 }
 
@@ -145,24 +146,22 @@ test("getMirrorPlayerById returns null for unknown id", async () => {
 
 test("two deltas for the same player produce an interpolated position", async () => {
   reset();
+  // Stamp the two samples at explicit times (prevAt=1000, currAt=1030) so the
+  // lerp denominator is a fixed 30 ms — no real sleep, no wall-clock race.
   await applySnapshot({
     op: "snapshot", zoneId: 1001,
     players: [{ playerId: "p_h", slot: 1, index: 0, x: 0, y: 0, tileX: 0, tileY: 0, direction: "right" }],
     entities: [],
-  });
-  // Snapshot and delta need a measurable gap for the lerp denominator
-  // to be nonzero. 30 ms is plenty.
-  await new Promise((r) => setTimeout(r, 30));
+  }, { at: 1000 });
   handleDelta({
     op: "delta", zoneId: 1001,
     players: [{ playerId: "p_h", slot: 1, index: 0, x: 10, y: 0, tileX: 10, tileY: 0, direction: "right", moving: true }],
     entities: [],
-  });
-  // Aim renderTime ~halfway between prev and curr. currAt ≈ now; prevAt ≈
-  // now - 30. We want renderTime ≈ prevAt + 15 = now - 15; getMirrorPlayerById
-  // back-dates by INTERP_DELAY_MS, so at = renderTime + INTERP_DELAY_MS.
-  const at = performance.now() - 15 + INTERP_DELAY_MS;
-  const p = getMirrorPlayerById("p_h", at);
+  }, { at: 1030 });
+  // Aim renderTime exactly halfway: prevAt=1000, currAt=1030 → renderTime=1015.
+  // getMirrorPlayerById back-dates by INTERP_DELAY_MS, so pass at = renderTime
+  // + INTERP_DELAY_MS to land on the midpoint (x=5).
+  const p = getMirrorPlayerById("p_h", 1015 + INTERP_DELAY_MS);
   assert.ok(p);
   assert.ok(p.x > 0 && p.x < 10, `expected interpolated x in (0,10), got ${p.x}`);
   reset();
@@ -179,16 +178,16 @@ test("repeated identical-position deltas (keepalive-carried stuck avatar) don't 
     op: "snapshot", zoneId: 1001,
     players: [{ playerId: "p_s", slot: 1, index: 0, x: 67, y: 25, tileX: 67, tileY: 25, direction: "down", moving: false }],
     entities: [],
-  });
+  }, { at: 1000 });
+  // Five identical-position keepalives at fixed 20 ms spacing — no real sleep.
   for (let i = 0; i < 5; i++) {
-    await new Promise((r) => setTimeout(r, 20));
     handleDelta({
       op: "delta", zoneId: 1001,
       players: [{ playerId: "p_s", slot: 1, index: 0, x: 67, y: 25, tileX: 67, tileY: 25, direction: "down", moving: false }],
       entities: [],
-    });
+    }, { at: 1020 + i * 20 });
   }
-  const now = performance.now();
+  const now = 1120; // just past the last sample's currAt
   // Sample across a span (including past currAt): position pinned, never moving.
   for (const dt of [-50, 0, 50, 200]) {
     const p = getMirrorPlayerById("p_s", now + dt);
@@ -209,48 +208,40 @@ test("endpoint-only step lerp: tile A → tile B over the receive interval recon
   // test ever fails after the sig change, the float reconstruction
   // is broken and the guest will see avatars teleporting.
   reset();
+  // Explicit sample stamps: snapshot@800, step-start delta@1000, step-end
+  // delta@1220 → a fixed 220 ms lerp window [1000,1220] for x:5→6, with no
+  // real sleep racing the wall clock.
   await applySnapshot({
     op: "snapshot", zoneId: 1001,
     players: [{ playerId: "p_w", slot: 1, index: 0, x: 5, y: 3, tileX: 5, tileY: 3, direction: "right", moving: false }],
     entities: [],
-  });
+  }, { at: 800 });
   // Step START delta — same tile, moving flips true. This is the
   // "old endpoint" — the host still has x=5,y=3 because the step has
   // only just begun.
   handleDelta({
     op: "delta", zoneId: 1001,
     players: [{ playerId: "p_w", x: 5, y: 3, tileX: 5, tileY: 3, direction: "right", moving: true }],
-  });
-  const stepStart = performance.now();
-  // ~220 ms later the step completes and the host emits the end
-  // delta with the new tile floats.
-  await new Promise((r) => setTimeout(r, 220));
+  }, { at: 1000 });
+  // The step completes 220 ms later; the host emits the end delta with the
+  // new tile floats.
   handleDelta({
     op: "delta", zoneId: 1001,
     players: [{ playerId: "p_w", x: 6, y: 3, tileX: 6, tileY: 3, direction: "right", moving: true }],
-  });
-  // The lerp uses receive-time intervals; renderTime is back-dated
-  // by INTERP_DELAY_MS. Sample three points across the step and
-  // confirm x advances strictly between the two endpoints.
-  // stepStart was the END delta's receive moment relative to the
-  // start delta's; rendering at start+50ms (with the 100ms back-date,
-  // so renderTime≈stepStart-50ms = halfway through the lerp window)
-  // should land x roughly between 5 and 6.
-  const baseAt = performance.now();
-  // We want renderTime = stepStart + ~110ms (halfway through 220ms
-  // step). renderTime = at - 100, so at = stepStart + 210.
-  const mid = getMirrorPlayerById("p_w", stepStart + 210);
+  }, { at: 1220 });
+  // The lerp window is [1000,1220]; renderTime is back-dated by INTERP_DELAY_MS,
+  // so query at = renderTime + INTERP_DELAY_MS. renderTime 1110 = halfway → x≈5.5.
+  const mid = getMirrorPlayerById("p_w", 1110 + INTERP_DELAY_MS);
   assert.ok(mid.x > 5 && mid.x < 6,
     `mid-step x should lerp between 5 and 6, got ${mid.x}`);
-  // Late in the step: x should be closer to 6.
-  const late = getMirrorPlayerById("p_w", stepStart + 290);
+  // Late in the step (renderTime 1180): x should be closer to 6.
+  const late = getMirrorPlayerById("p_w", 1180 + INTERP_DELAY_MS);
   assert.ok(late.x > mid.x,
     `x should advance monotonically: ${mid.x} -> ${late.x}`);
-  // After currAt elapses while moving=true, the mirror extrapolates
-  // forward in curr.direction at the host's step speed. The cap kicks
-  // in at the next-tile boundary (7), so a long sample lands at the
-  // boundary, not past it.
-  const after = getMirrorPlayerById("p_w", baseAt + 500);
+  // After currAt (1220) elapses while moving=true, the mirror extrapolates
+  // forward in curr.direction at the host's step speed. The cap kicks in at
+  // the next-tile boundary (7), so a far sample lands at the boundary, not past.
+  const after = getMirrorPlayerById("p_w", 1720 + INTERP_DELAY_MS);
   assert.ok(after.x > 6 && after.x <= 7,
     `moving=true after currAt should extrapolate toward next tile, got ${after.x}`);
   reset();
@@ -367,14 +358,14 @@ test("animation phase: idle→moving transition rewinds phase; moving→moving k
     players: [{ playerId: "p_x", slot: 1, index: 0, x: 0, y: 0, tileX: 0, tileY: 0, direction: "right", moving: false }],
     entities: [],
   });
-  // Wait a touch so a free-running clock would have advanced.
-  await new Promise((r) => setTimeout(r, 50));
-  // First delta flips to moving — stepStartedAt resets to "now".
+  // First delta flips to moving at an explicit t=1000 — stepStartedAt resets
+  // to that stamp, so the animation phase is anchored deterministically rather
+  // than to a free-running performance.now().
+  const tMoveStart = 1000;
   handleDelta({
     op: "delta", zoneId: 1001,
     players: [{ playerId: "p_x", x: 1, y: 0, tileX: 1, tileY: 0, direction: "right", moving: true }],
-  });
-  const tMoveStart = performance.now();
+  }, { at: tMoveStart });
   const startFrame = getMirrorPlayerById("p_x", tMoveStart + INTERP_DELAY_MS + 5);
   assert.equal(startFrame.frameIndex, 0, "idle→moving must reset to frame 0");
 
@@ -383,7 +374,7 @@ test("animation phase: idle→moving transition rewinds phase; moving→moving k
   handleDelta({
     op: "delta", zoneId: 1001,
     players: [{ playerId: "p_x", x: 2, y: 0, tileX: 2, tileY: 0, direction: "right", moving: true }],
-  });
+  }, { at: tMoveStart + 110 });
   const laterFrame = getMirrorPlayerById("p_x", tMoveStart + INTERP_DELAY_MS + 110);
   assert.equal(laterFrame.frameIndex, 1, "moving→moving must keep the phase running");
   reset();

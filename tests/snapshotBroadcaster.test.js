@@ -80,6 +80,20 @@ function makeState(zoneId = 1001) {
   };
 }
 
+// Manual interval driver injected into installSnapshotBroadcaster, so the
+// interval-driven tests fire exactly N ticks on demand instead of awaiting a
+// real setInterval over a wall-clock window (which flakes under CI load).
+function makeManualInterval() {
+  let fn = null;
+  return {
+    opts: {
+      setIntervalFn: (f) => { fn = f; return 1; },
+      clearIntervalFn: () => { fn = null; },
+    },
+    tick(n = 1) { for (let i = 0; i < n; i++) if (fn) fn(); },
+  };
+}
+
 test("snapshot includes self player and every entity", () => {
   setupBootstrapWithFakeNet();
   const state = makeState();
@@ -285,26 +299,24 @@ test("guest.resync is throttled per-guest (rapid repeats collapse to one snapsho
 test("zone change broadcasts event:zoneChange before the full snapshot", () => {
   const fakeNet = setupBootstrapWithFakeNet();
   const state = makeState(1001);
-  const ok = installSnapshotBroadcaster(() => state, { intervalMs: 5, net: fakeNet });
+  const clock = makeManualInterval();
+  const ok = installSnapshotBroadcaster(() => state, { intervalMs: 5, net: fakeNet, ...clock.opts });
   assert.equal(ok, true);
-  // Drive a tick to capture the baseline.
-  return new Promise((resolve) => setTimeout(resolve, 25)).then(() => {
-    fakeNet.sent.length = 0;
-    state.zone = {
-      id: 1002,
-      entities: [{ id: 200, species_id: 70, frame: { x: 1, y: 1, w: 1, h: 1 } }],
-    };
-    return new Promise((resolve) => setTimeout(resolve, 25));
-  }).then(() => {
-    const eventIdx = fakeNet.sent.findIndex((m) =>
-      m.op === "event" && m.kind === "zoneChange" && m.zoneId === 1002);
-    const snapIdx = fakeNet.sent.findIndex((m) =>
-      m.op === "snapshot" && m.zoneId === 1002);
-    assert.ok(eventIdx >= 0, "event:zoneChange must be sent");
-    assert.ok(snapIdx >= 0, "snapshot must be sent");
-    assert.ok(eventIdx < snapIdx, "event:zoneChange must precede the snapshot");
-    stopSnapshotBroadcaster();
-  });
+  clock.tick(); // baseline tick — establishes lastZoneId = 1001
+  fakeNet.sent.length = 0;
+  state.zone = {
+    id: 1002,
+    entities: [{ id: 200, species_id: 70, frame: { x: 1, y: 1, w: 1, h: 1 } }],
+  };
+  clock.tick(); // tick after the zone swap
+  const eventIdx = fakeNet.sent.findIndex((m) =>
+    m.op === "event" && m.kind === "zoneChange" && m.zoneId === 1002);
+  const snapIdx = fakeNet.sent.findIndex((m) =>
+    m.op === "snapshot" && m.zoneId === 1002);
+  assert.ok(eventIdx >= 0, "event:zoneChange must be sent");
+  assert.ok(snapIdx >= 0, "snapshot must be sent");
+  assert.ok(eventIdx < snapIdx, "event:zoneChange must precede the snapshot");
+  stopSnapshotBroadcaster();
 });
 
 test("hp 0-crossing emits event:death; recovery emits event:respawn", async () => {
@@ -369,9 +381,10 @@ test("zone change emits event:respawn for players whose hp was 0 in the prior zo
   // so a baseline broadcaster tick records hp=0 in lastHpByPlayerId.
   ph.resetPlayerHealth();
   ph.applyPlayerDamage(999, 0);
-  const ok = installSnapshotBroadcaster(() => state, { intervalMs: 5, net: fakeNet });
+  const clock = makeManualInterval();
+  const ok = installSnapshotBroadcaster(() => state, { intervalMs: 5, net: fakeNet, ...clock.opts });
   assert.equal(ok, true);
-  await new Promise((resolve) => setTimeout(resolve, 25));
+  clock.tick(); // baseline tick records the host's hp=0 in lastHpByPlayerId
   // Now travelTo() runs: revive the dead host, swap zones. The next
   // broadcaster tick must emit event:respawn BEFORE sendFullSnapshot
   // wipes the hp baseline, otherwise the guest's "Waiting for the
@@ -382,7 +395,7 @@ test("zone change emits event:respawn for players whose hp was 0 in the prior zo
     entities: [{ id: 200, species_id: 70, frame: { x: 1, y: 1, w: 1, h: 1 } }],
   };
   fakeNet.sent.length = 0;
-  await new Promise((resolve) => setTimeout(resolve, 25));
+  clock.tick(); // post-revive, post-zone-swap tick
   const resps = fakeNet.sent.filter((m) => m.op === "event" && m.kind === "respawn");
   const zoneChanges = fakeNet.sent.filter((m) => m.op === "event" && m.kind === "zoneChange");
   const snaps = fakeNet.sent.filter((m) => m.op === "snapshot");
@@ -394,15 +407,17 @@ test("zone change emits event:respawn for players whose hp was 0 in the prior zo
   ph.resetPlayerHealth();
 });
 
-test("a quiescent world emits a periodic keepalive carrying player positions", async () => {
+test("a quiescent world emits a periodic keepalive carrying player positions", () => {
   const fakeNet = setupBootstrapWithFakeNet();
   const state = makeState();
-  // 50 ms ticks; KEEPALIVE_TICKS=4 → a keepalive ~every 200 ms. Nothing
-  // in `state` changes, so every real delta is null.
-  const ok = installSnapshotBroadcaster(() => state, { intervalMs: 10, net: fakeNet });
+  // KEEPALIVE_TICKS=4 → a keepalive every 4th quiescent tick. Nothing in
+  // `state` changes, so every real delta is null.
+  const clock = makeManualInterval();
+  const ok = installSnapshotBroadcaster(() => state, { intervalMs: 10, net: fakeNet, ...clock.opts });
   assert.equal(ok, true);
-  // Let several keepalive windows elapse.
-  await new Promise((resolve) => setTimeout(resolve, 120));
+  // 13 ticks: the 1st is the null→1001 zoneChange+snapshot (resets the quiet
+  // counter), then 12 quiescent ticks → a keepalive every 4th → ~3 keepalives.
+  clock.tick(13);
   stopSnapshotBroadcaster();
   const deltas = fakeNet.sent.filter((m) => m.op === "delta");
   assert.ok(deltas.length >= 1, "expected at least one keepalive delta while quiescent");
@@ -446,16 +461,19 @@ test("a stuck guest avatar rides along while the host avatar moves", async () =>
   stopSnapshotBroadcaster();
 });
 
-test("a busy world sends real deltas, not keepalives, every tick", async () => {
+test("a busy world sends real deltas, not keepalives, every tick", () => {
   const fakeNet = setupBootstrapWithFakeNet();
   let tx = 7;
   const state = makeState();
   // Mutate the player's tile every getter call so each tick has a real
   // change — the keepalive counter must stay reset and never fire.
+  const clock = makeManualInterval();
   const ok = installSnapshotBroadcaster(() => { state.player.tileX = ++tx; state.player.x = tx; return state; },
-    { intervalMs: 10, net: fakeNet });
+    { intervalMs: 10, net: fakeNet, ...clock.opts });
   assert.equal(ok, true);
-  await new Promise((resolve) => setTimeout(resolve, 80));
+  // 1st tick is the null→1001 zoneChange+snapshot; the next 7 each carry a
+  // real position change.
+  clock.tick(8);
   stopSnapshotBroadcaster();
   const deltas = fakeNet.sent.filter((m) => m.op === "delta");
   assert.ok(deltas.length >= 1, "expected real deltas");
