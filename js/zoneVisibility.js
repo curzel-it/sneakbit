@@ -41,6 +41,20 @@ export function updateVisibleEntities(zone, cameras) {
   zone.visibleEntities = out;
 }
 
+// Mark every entity visible, bypassing the viewport filter. Tower Defense uses
+// this: its camera follows one hero across a large board, but the whole
+// battlefield must keep simulating — off-screen enemies still take fire, deal
+// melee damage and fuse, and off-screen allies still fight. Rendering culls on
+// its own (entities.js::collect), so flagging everything visible never draws an
+// off-screen prop; it only opens the combat/fusion gates that read `_visible`
+// and `visibleEntities`.
+export function markAllEntitiesVisible(zone) {
+  if (!zone) return;
+  const ents = zone.entities || [];
+  for (let i = 0; i < ents.length; i++) ents[i]._visible = true;
+  zone.visibleEntities = ents.slice();
+}
+
 function overlapsAnyViewport(cams, f) {
   for (let i = 0; i < cams.length; i++) {
     if (overlapsViewport(cams[i], f)) return true;

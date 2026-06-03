@@ -24,7 +24,7 @@ import { render } from "./renderer.js";
 import { updateHud } from "./hud.js";
 import { tickBiomeAnimation } from "./biomeAnimation.js";
 import { tickEntities } from "./entities.js";
-import { updateVisibleEntities } from "./zoneVisibility.js";
+import { markAllEntitiesVisible } from "./zoneVisibility.js";
 import { tickShooting, tryShootForPlayer } from "./shooting.js";
 import { tickMelee, performMeleeSwing } from "./melee.js";
 import { tickCombat } from "./combat.js";
@@ -316,7 +316,10 @@ export function tickTowerDefense(dt, frame) {
   tickBiomeAnimation(frame.biomeAnim, dt);
   tickEntities(dt);
   const heroes = livingHeroes(state);
-  updateVisibleEntities(state.zone, state.camera);
+  // TD simulates the whole board, not just what's on camera: off-screen enemies
+  // must still take fire, deal damage and fuse (the camera follows one hero
+  // across a large arena). Rendering culls independently, so this is sim-only.
+  markAllEntitiesVisible(state.zone);
   render(frame.renderer, state.zone, state.camera, heroes, frame.biomeAnim.frame);
   updateHud(frame.hud, { zoneId: state.zone.id, fps: 1 / dt, showFps: getSettings().showFps });
   updateTdHud(buildModel(state));
