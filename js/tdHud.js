@@ -15,9 +15,9 @@ let root = null;
 let installed = false;
 
 // Live element refs we patch each frame.
-let waveEl, phaseEl, goldEl, scoreEl, bestEl, heroEl, statusEl, countdownEl;
+let waveEl, phaseEl, goldEl, scoreEl, bestEl, livesEl, heroEl, statusEl, countdownEl;
 let readyBtn, recruitBtn, switchBtn, reviveWrap;
-let gameOver = null, goWaveEl, goScoreEl, goBestEl, goNewBest = null;
+let gameOver = null, goTitleEl, goWaveEl, goScoreEl, goBestEl, goNewBest = null;
 
 export function installTdHud(handlers = {}) {
   api = handlers;
@@ -40,8 +40,8 @@ export function hideTdHud() {
   if (gameOver) gameOver.style.display = "none";
 }
 
-// model: { wave, phase, score, highScore, countdown, alive, total,
-//          activeHeroName, canSwitch, recruit:{cost,can,label},
+// model: { wave, phase, score, highScore, lives, maxLives, countdown, alive,
+//          total, activeHeroName, canSwitch, recruit:{cost,can,label},
 //          revives:[{index,name,cost}], buildHint }
 export function updateTdHud(model) {
   if (!root) return;
@@ -51,6 +51,11 @@ export function updateTdHud(model) {
   scoreEl.textContent = String(model.score | 0);
   bestEl.textContent = String(model.highScore | 0);
   heroEl.textContent = model.activeHeroName || "—";
+
+  const lv = model.lives | 0;
+  const mx = model.maxLives | 0;
+  livesEl.textContent = mx ? `♥ ${lv} / ${mx}` : `♥ ${lv}`;
+  livesEl.classList.toggle("td-lives-low", mx > 0 && lv <= Math.ceil(mx * 0.25));
   switchBtn.style.display = model.canSwitch ? "" : "none";
 
   const build = model.phase === "Build";
@@ -80,6 +85,7 @@ export function updateTdHud(model) {
 
 export function showTdGameOver(result) {
   if (!gameOver) return;
+  goTitleEl.textContent = result.title || "Squad defeated";
   goWaveEl.textContent = `You reached wave ${result.wave}`;
   goScoreEl.textContent = `Score: ${result.score | 0}`;
   goBestEl.textContent = `Best: ${result.highScore | 0}`;
@@ -104,6 +110,7 @@ function buildPanel() {
   goldEl = el("span", { class: "td-gold-val", text: "0" });
   scoreEl = el("span", { class: "td-score-val", text: "0" });
   bestEl = el("span", { class: "td-best-val", text: "0" });
+  livesEl = el("span", { class: "td-lives-val", text: "♥ —" });
   heroEl = el("span", { class: "td-hero-val", text: "—" });
   statusEl = el("p", { class: "td-status" });
   countdownEl = el("div", { class: "td-countdown" });
@@ -116,6 +123,9 @@ function buildPanel() {
   root = el("div", { id: "td-hud", style: { display: "none" } }, [
     el("div", { class: "td-row td-top" }, [
       waveEl, el("span", { class: "td-sep", text: "·" }), phaseEl,
+    ]),
+    el("div", { class: "td-row td-village" }, [
+      el("span", { class: "td-label", text: "Village " }), livesEl,
     ]),
     el("div", { class: "td-row td-stats" }, [
       el("span", { class: "td-stat" }, [el("span", { class: "td-label", text: "Gold " }), goldEl]),
@@ -137,9 +147,10 @@ function buildGameOver() {
   goScoreEl = el("p", { class: "td-go-score" });
   goBestEl = el("p", { class: "td-go-best" });
   goNewBest = el("p", { class: "td-go-newbest", text: "New best!", style: { display: "none" } });
+  goTitleEl = el("h1", { text: "Squad defeated" });
   gameOver = el("div", { id: "td-gameover", style: { display: "none" } }, [
     el("div", { class: "td-go-card" }, [
-      el("h1", { text: "Squad defeated" }),
+      goTitleEl,
       goWaveEl, goScoreEl, goBestEl, goNewBest,
       el("div", { class: "td-row td-actions" }, [
         el("button", { class: "td-btn td-primary", text: "Play again", on: { click: () => api.onRestart?.() } }),
@@ -172,6 +183,9 @@ function injectStyles() {
     #td-hud .td-label { color: #8a8a96; }
     #td-hud .td-gold-val { color: #ffd966; font-weight: bold; }
     #td-hud .td-score-val, #td-hud .td-best-val { color: #eee; }
+    #td-hud .td-village { font-size: 13px; }
+    #td-hud .td-lives-val { color: #ff8a8a; font-weight: bold; }
+    #td-hud .td-lives-val.td-lives-low { color: #ff3b3b; }
     #td-hud .td-hero-val { color: #9fe6a0; font-weight: bold; }
     #td-hud .td-countdown { color: #ffd966; font-size: 12px; }
     #td-hud .td-status { margin: 2px 0; color: #aaa; font-size: 11px; line-height: 1.4; }

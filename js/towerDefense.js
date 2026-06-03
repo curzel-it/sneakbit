@@ -67,11 +67,17 @@ const REVIVE_BASE_COST = 60;      // ×5 mid-wave (locked spec)
 const MID_WAVE_REVIVE_MULT = 5;
 const COMBO_WINDOW = 3;           // seconds a kill streak survives without a kill
 const HIGH_SCORE_KEY = "td.highScore";
+const VILLAGE_LIVES = 20;         // breaches the village absorbs before it falls
 
 // Per-tier gold + score (the fusion chain the waves use).
 const GOLD_FOR = { 4003: 5, 4004: 7, 4005: 10, 4006: 16, 4007: 24 };
 const POINTS_FOR = { 4003: 10, 4004: 14, 4005: 25, 4006: 45, 4007: 70 };
-const HERO_NAMES = ["Ninja", "Barbarian", "Ranger", "Ranger"];
+// Lives lost when an enemy of each tier reaches the goal — a fused brute
+// breaching costs more than a chokeberry slipping through.
+const LEAK_DAMAGE = { 4003: 1, 4004: 1, 4005: 1, 4006: 2, 4007: 3 };
+// Display names by squad slot. Must stay aligned with TD_HERO_LOADOUTS in
+// sessionLoadouts.js (that table decides each slot's weapon + archetype).
+const HERO_NAMES = ["Ninja", "Barbarian", "Bombardier", "Knight"];
 
 // — State ————————————————————————————————————————————————————————————————
 let getState = () => null;
@@ -82,6 +88,7 @@ let score = 0;
 let highScore = 0;
 let combo = 0;
 let comboTimer = 0;
+let lives = VILLAGE_LIVES;
 let recruitedCount = 0;
 let booting = false;
 
@@ -145,6 +152,7 @@ export async function startTowerDefense() {
     score = 0;
     combo = 0;
     comboTimer = 0;
+    lives = VILLAGE_LIVES;
     highScore = getValue(HIGH_SCORE_KEY) | 0;
 
     followActiveHero(state);
@@ -197,12 +205,13 @@ function clearWave() {
   enterBuild();
 }
 
-function gameOver() {
+function gameOver(reason = "squad") {
   if (phase === "gameover") return;
   phase = "gameover";
   const isNewBest = score > highScore;
   if (isNewBest) { highScore = score; setValue(HIGH_SCORE_KEY, score | 0); }
-  showTdGameOver({ wave, score, highScore, isNewBest });
+  const title = reason === "village" ? "Village overrun" : "Squad defeated";
+  showTdGameOver({ wave, score, highScore, isNewBest, title });
 }
 
 // — Enemy hooks ——————————————————————————————————————————————————————————
@@ -213,9 +222,18 @@ function onKill(speciesId) {
   score += Math.round((POINTS_FOR[speciesId] || 10) * comboMultiplier());
 }
 
-function onLeak() {
-  // An enemy reached the goal — "the end of the road". Run over.
-  gameOver();
+function onLeak(speciesId) {
+  // An enemy reached the village. It costs lives (more for fused brutes) and
+  // breaks the kill streak; the run only ends once the village is overrun.
+  combo = 0;
+  comboTimer = 0;
+  lives -= LEAK_DAMAGE[speciesId] || 1;
+  if (lives <= 0) {
+    lives = 0;
+    gameOver("village");
+    return;
+  }
+  showToast(`Village breached — ${lives} ${lives === 1 ? "life" : "lives"} left`, "hint");
 }
 
 function comboMultiplier() {
@@ -332,7 +350,7 @@ function simulate(state, dt) {
   tickPlayerHealth(dt);
 
   // Lose checks. Leak is handled by the onLeak hook inside tickTdEnemies.
-  if (squadWiped(state)) gameOver();
+  if (squadWiped(state)) gameOver("squad");
 
   // Wave clear.
   if (phase === "wave" && isWaveSpawningDone() && aliveEnemyCount(state.zone) === 0) {
@@ -363,6 +381,8 @@ function buildModel(state) {
     phase: phaseLabel(),
     score,
     highScore,
+    lives,
+    maxLives: VILLAGE_LIVES,
     gold: getGold(),
     countdown: phase === "build" ? Math.max(0, buildTimer) : null,
     alive: aliveEnemyCount(state.zone),
@@ -431,7 +451,7 @@ function exitRun() {
 
 function resetTdState() {
   phase = "idle";
-  wave = 0; score = 0; combo = 0; comboTimer = 0; recruitedCount = 0;
+  wave = 0; score = 0; combo = 0; comboTimer = 0; lives = VILLAGE_LIVES; recruitedCount = 0;
   for (const slot of [1, 2, 3, 4]) clearInputState(slot);
   resetTdEnemies();
   resetWaves();
@@ -444,7 +464,7 @@ function installDebugHook() {
   window.td = {
     start: () => startTowerDefense(),
     startWave: () => startNextWave(),
-    state: () => ({ phase, wave, score, highScore, gold: getGold(), combo }),
+    state: () => ({ phase, wave, score, highScore, lives, gold: getGold(), combo }),
     gold: (n) => addGold(n | 0),
     addWaves: (n) => { wave += (n | 0); },
     enemies: () => { const s = getState(); return s?.zone ? getEnemies(s.zone).length : 0; },

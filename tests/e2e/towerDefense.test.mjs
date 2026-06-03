@@ -42,6 +42,12 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   assert.equal(await evalExpr(s, "window.td.squad()"), 2, "Ninja + Barbarian present");
   assert.ok(await evalExpr(s, "window.td.state().gold > 0"), "starting gold granted");
   assert.ok(await evalExpr(s, "!!document.getElementById('td-hud') && getComputedStyle(document.getElementById('td-hud')).display !== 'none'"), "HUD visible");
+  assert.ok(await evalExpr(s, "window.td.state().lives > 0"), "village starts with lives, not instant-loss");
+
+  // — Recruiting grows the squad with a real third hero ————————————————————
+  await evalExpr(s, "window.td.gold(500)");
+  await evalExpr(s, "window.td.recruit()");
+  assert.equal(await evalExpr(s, "window.td.squad()"), 3, "recruited a third hero");
 
   // — Wave: enemies spawn and the horde populates ————————————————————————
   await evalExpr(s, "window.td.startWave()");

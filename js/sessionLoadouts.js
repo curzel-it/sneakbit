@@ -22,14 +22,25 @@ const loadouts = new Map(); // playerId -> { melee, ranged }
 
 // Tower Defense hero archetypes, by 0-based squad slot. These are fixed for
 // the run and resolved purely in memory — TD never reads or writes the saved
-// equipment, so a run can't pollute the real game's loadout. Slot 0 is the
-// Ninja (kunai launcher), slot 1 the Barbarian (sword); recruited slots 2/3
-// default to ranged ninjas (stub archetype). Kunai launcher 1160, sword 1159.
+// equipment, so a run can't pollute the real game's loadout. Each slot is a
+// distinct hero (its 0-based index also picks the sprite column, P1..P4) with
+// a real weapon, so recruits play differently rather than being kunai clones:
+//   0 Ninja      — kunai launcher 1160 (ranged, fast  → rooted shooter)
+//   1 Barbarian  — sword 1159          (melee         → charger)
+//   2 Bombardier — cannon 1167         (ranged, heavy → rooted shooter)
+//   3 Knight     — darkblade 1179      (melee         → charger)
+// allyAI keys archetype off the loadout (melee && !ranged === charger), so the
+// two ranged slots hold and shoot while the two melee slots charge. Weapons are
+// chosen to read differently under infinite TD ammo: the Ninja's kunai is a
+// fast 0.15s patter, the Bombardier's cannon a slow 0.5s heavy shell (the
+// AR-15's 0.005s rate would be a firehose without an ammo cap). The display
+// names live next to the squad logic in towerDefense.js (HERO_NAMES) and must
+// stay aligned with this table.
 const TD_HERO_LOADOUTS = [
-  { melee: null, ranged: 1160 },  // Ninja
-  { melee: 1159, ranged: null },  // Barbarian
-  { melee: null, ranged: 1160 },  // recruit
-  { melee: null, ranged: 1160 },  // recruit
+  { melee: null, ranged: 1160 },  // Ninja      — kunai launcher
+  { melee: 1159, ranged: null },  // Barbarian  — sword
+  { melee: null, ranged: 1167 },  // Bombardier — cannon
+  { melee: 1179, ranged: null },  // Knight      — darkblade
 ];
 
 function tdHeroLoadout(index) {

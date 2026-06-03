@@ -15,6 +15,22 @@ Status: **v1 MVP implemented** · Owner: Federico · Last updated: 2026-06-03
 > E2E: `tests/e2e/towerDefense.test.mjs`. Deferred (post-validation): the
 > global leaderboard, online co-op, multi-board growth, hero upgrades.
 
+> **Post-MVP feel tweaks (2026-06-03).** Two changes from the locked spec, made
+> after the first review pass:
+> - **The village has a lives pool, not instant-loss.** A single leak no longer
+>   ends the run — the village absorbs **20 lives** (`VILLAGE_LIVES` in
+>   `towerDefense.js`), each leak costing **tier-weighted** damage (a fused brute
+>   breaching hurts more than a chokeberry) and **breaking the kill combo**. The
+>   run ends on **lives → 0** *or* **squad-wipe**; the game-over screen names
+>   which ("Village overrun" vs "Squad defeated"). This supersedes the "end of
+>   the road, no HP structure" locked answer (pass-2 Q5).
+> - **The recruit pool is four distinct heroes, not stubs.** Each squad slot is a
+>   real archetype on its own P1–P4 sprite + weapon (`TD_HERO_LOADOUTS` /
+>   `HERO_NAMES`): **Ninja** (kunai, fast ranged), **Barbarian** (sword, melee),
+>   **Bombardier** (cannon, slow-heavy ranged), **Knight** (darkblade, melee).
+>   `allyAI` keys charger-vs-shooter off the loadout, so the two recruits (slots
+>   2/3) play differently from the starters rather than being kunai clones.
+
 > **Read this first:** the authoritative, build-ready slice is
 > [**v1 MVP — locked spec & implementation plan**](#v1-mvp--locked-spec--implementation-plan)
 > below. It is grounded in the current codebase (file/line seams verified
