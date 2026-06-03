@@ -96,7 +96,19 @@ export class WsConnection extends EventEmitter {
         // stream that ends with the SYNC_FLUSH marker (RFC 7692) instead
         // of demanding a BFINAL block. Real browsers send SYNC_FLUSH —
         // without this, inflateRawSync throws "unexpected end of file".
-        try { decoded = inflateRawSync(appendTrailer(full), { finishFlush: zlibConstants.Z_SYNC_FLUSH }); }
+        //
+        // `maxOutputLength` bounds the *decompressed* size. Without it a
+        // ~1 MB RSV1 frame of repetitive data inflates to ~1 GB
+        // synchronously (raw deflate hits ~1000:1), blocking the event
+        // loop and OOM-killing the single VPS — bypassing the compressed-
+        // input cap above. zlib throws ERR_BUFFER_TOO_LARGE past the cap,
+        // which the catch turns into a clean close(1007).
+        try {
+          decoded = inflateRawSync(appendTrailer(full), {
+            finishFlush: zlibConstants.Z_SYNC_FLUSH,
+            maxOutputLength: MAX_FRAME_PAYLOAD,
+          });
+        }
         catch (e) { this.close(1007, "inflate failed"); return; }
       }
       if (op === OP.TEXT) this.emit("message", decoded.toString("utf8"));
