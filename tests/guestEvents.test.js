@@ -97,6 +97,33 @@ test("pickup event only updates local inventory when playerId matches self", asy
   _uninstallGuestEventsForTesting();
 });
 
+test("a duplicate pickup (same eid) is applied once; a new eid applies again", async () => {
+  _uninstallGuestEventsForTesting();
+  const { getAmmo, clearInventory } = await import("../js/inventory.js");
+  const onlineMode = await import("../js/onlineMode.js");
+  const bootstrap = await import("../js/onlineBootstrap.js");
+  bootstrap._resetOnlineBootstrapForTesting();
+  onlineMode._setOnlineModeForTesting({ mode: "guest", uuid: "uuid-x", joinCode: "ABCDE" });
+  const net = makeFakeNet();
+  bootstrap.bootstrapOnline({ netFactory: () => ({ ...net, connect: () => {}, send: () => true, close: () => {}, isConnected: () => true, getUuid: () => "u", getUrl: () => "ws://x" }) });
+  net.emit("welcome", { op: "welcome", protocol: 1, playerId: "p_self", name: "Me" });
+
+  const KUNAI = 7000;
+  clearInventory();
+  dispatch({ kind: "pickup", playerId: "p_self", eid: 1, items: [{ speciesId: KUNAI, amount: 5 }] });
+  assert.equal(getAmmo(KUNAI, 0), 5);
+  // Same eid redelivered (path switch / replay) — must NOT stack.
+  dispatch({ kind: "pickup", playerId: "p_self", eid: 1, items: [{ speciesId: KUNAI, amount: 5 }] });
+  assert.equal(getAmmo(KUNAI, 0), 5);
+  // A genuinely new pickup (new eid) applies.
+  dispatch({ kind: "pickup", playerId: "p_self", eid: 2, items: [{ speciesId: KUNAI, amount: 3 }] });
+  assert.equal(getAmmo(KUNAI, 0), 8);
+
+  bootstrap._resetOnlineBootstrapForTesting();
+  onlineMode._resetOnlineModeForTesting();
+  _uninstallGuestEventsForTesting();
+});
+
 test("ammoSet event overwrites local counts to the absolute value for self", async () => {
   _uninstallGuestEventsForTesting();
   const { getAmmo, addAmmo, clearInventory } = await import("../js/inventory.js");

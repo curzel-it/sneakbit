@@ -35,6 +35,12 @@ const ALLOWED_KINDS = new Set([
 ]);
 const ALLOWED_TOAST_TYPES = new Set(["regular", "hint", "longHint"]);
 
+// Monotonic per-host event id. Stamped on every event frame so the guest can
+// drop a duplicate delivery (path switch, reconnect replay) of an *additive*
+// event (pickup) instead of double-applying it. Idempotent events (ammoSet,
+// dialogue, UI toggles) carry it too but don't need to act on it.
+let nextEid = 1;
+
 export function broadcastHostEvent(kind, payload = {}) {
   if (getNetRole() !== "host") return;
   if (!ALLOWED_KINDS.has(kind)) {
@@ -49,5 +55,8 @@ export function broadcastHostEvent(kind, payload = {}) {
   }
   const net = getNet();
   if (!net || !net.isConnected?.()) return;
-  net.send({ op: "event", kind, ...payload });
+  // eid last so a caller's payload can't accidentally (or maliciously) override
+  // the authoritative id. onHostBroadcast forwards the frame whole, so the eid
+  // survives both the relay and DataChannel paths.
+  net.send({ op: "event", kind, ...payload, eid: nextEid++ });
 }

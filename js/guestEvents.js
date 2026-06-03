@@ -25,6 +25,25 @@ let installed = false;
 let unsub = null;
 const customHandlers = new Map();
 
+// Idempotency guard for *additive* events (pickup → addAmmo). The host stamps
+// every event with a monotonic `eid`; if the same pickup arrives twice (path
+// switch, reconnect replay) we apply it once. Bounded ring so it can't grow
+// without limit over a long session. Absolute/idempotent events (ammoSet,
+// dialogue, UI toggles) don't need this.
+const MAX_SEEN_EIDS = 256;
+const seenPickupEids = new Set();
+
+function alreadyApplied(eid) {
+  if (typeof eid !== "number") return false; // legacy host without eids — can't dedupe
+  if (seenPickupEids.has(eid)) return true;
+  seenPickupEids.add(eid);
+  if (seenPickupEids.size > MAX_SEEN_EIDS) {
+    // Sets preserve insertion order — evict the oldest.
+    seenPickupEids.delete(seenPickupEids.values().next().value);
+  }
+  return false;
+}
+
 export function installGuestEvents(net) {
   if (installed) return;
   installed = true;
@@ -37,6 +56,7 @@ export function uninstallGuestEvents() {
   unsub = null;
   installed = false;
   customHandlers.clear();
+  seenPickupEids.clear();
   // Drop the cached host-pause flag so a future re-join doesn't show
   // a stale "Host paused" overlay before the new host has sent its
   // first hostPause event.
@@ -136,6 +156,10 @@ function handlePvpResult(msg) {
 // addAmmo as before.
 function handlePickup(msg) {
   if (msg?.playerId != null && msg.playerId !== getSelfPlayerId()) return;
+  // Dedupe by event id *after* the addressed-to-me check (a not-for-me pickup
+  // is a no-op anyway and shouldn't consume a slot). A duplicate delivery of an
+  // additive pickup must not stack ammo.
+  if (alreadyApplied(msg?.eid)) return;
   const items = Array.isArray(msg?.items) ? msg.items : [];
   for (const it of items) {
     if (!it) continue;
