@@ -57,7 +57,7 @@ import {
 } from "./tdHud.js";
 
 // — Tuning ————————————————————————————————————————————————————————————————
-const START_GOLD = 140;
+const START_GOLD = 150;           // enough to recruit a third hero turn 1 if you skip walls
 const BUILD_TIME = 30;            // seconds of build phase before auto-start
 const STIPEND_BASE = 40;          // per-wave starting income
 const STIPEND_PER_WAVE = 10;

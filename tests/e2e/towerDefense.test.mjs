@@ -75,6 +75,17 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   const placed = await evalExpr(s, "window.td.place(20, 20)");
   assert.equal(placed, true, "a wall on an open tile places");
 
+  // Box the goal (56,20) in: three sides place fine, but the fourth would
+  // seal the village off from every spawn — it must be refused and cost no
+  // gold (the placement reverts before spending).
+  await evalExpr(s, "window.td.gold(500)");
+  assert.equal(await evalExpr(s, "window.td.place(55, 20)"), true, "goal-adjacent wall 1 places");
+  assert.equal(await evalExpr(s, "window.td.place(56, 19)"), true, "goal-adjacent wall 2 places");
+  assert.equal(await evalExpr(s, "window.td.place(56, 21)"), true, "goal-adjacent wall 3 places");
+  const goldBeforeSeal = await evalExpr(s, "window.td.state().gold");
+  assert.equal(await evalExpr(s, "window.td.place(57, 20)"), false, "the wall that seals the goal is refused");
+  assert.equal(await evalExpr(s, "window.td.state().gold"), goldBeforeSeal, "a refused wall spends no gold");
+
   // — A leak ends the run and raises the game-over screen ————————————————
   await evalExpr(s, "window.td.lose()");
   await waitFor(s, "getComputedStyle(document.getElementById('td-gameover')).display !== 'none'");
