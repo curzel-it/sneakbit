@@ -11,6 +11,7 @@ import { tryMelee } from "./melee.js";
 import { getEquipped, onEquipmentChange, SLOT_MELEE } from "./equipment.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { codesFor } from "./keyBindings.js";
+import { isTowerDefenseMode } from "./gameMode.js";
 import { onActiveInputDeviceChange } from "./activeInputDevice.js";
 import { getSettings } from "./settings.js";
 import { mountJoystick, unmountJoystick } from "./touchJoystick.js";
@@ -231,7 +232,12 @@ function onPress(e, btn) {
       tryShoot();
     }
   } else if (action === "melee") {
-    if (getNetRole() === "guest") {
+    if (isTowerDefenseMode()) {
+      // TD build phase: Melee removes the barrel in front of the active hero.
+      // Synthesise the key so towerDefense.onKey routes it to the active hero
+      // (interact already does this for placing via the KeyE branch above).
+      dispatchKey("keydown", codesFor("melee")[0] || "KeyG");
+    } else if (getNetRole() === "guest") {
       dispatchKey("keydown", codesFor("melee")[0] || "KeyG");
     } else {
       tryMelee();

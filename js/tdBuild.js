@@ -53,19 +53,18 @@ let selectedId = DEFAULT_ITEM_ID;
 let getState = () => null;
 let isBuildPhase = () => false;
 let onChange = () => {};
-let canvasEl = null;
 let installed = false;
 
+// Build placement is driven by the active hero (towerDefense.onKey calls
+// placeSelected/eraseAt with the tile in front of the hero) — there's no
+// mouse path. installBuild just wires the state/phase getters the placement
+// helpers read.
 export function installBuild(stateGetter, opts = {}) {
   getState = stateGetter || (() => null);
   if (typeof opts.isBuildPhase === "function") isBuildPhase = opts.isBuildPhase;
   if (typeof opts.onChange === "function") onChange = opts.onChange;
   if (installed) return;
   installed = true;
-  canvasEl = document.getElementById("game");
-  if (!canvasEl) return;
-  canvasEl.addEventListener("mousedown", onMouseDown);
-  canvasEl.addEventListener("contextmenu", onContextMenu);
 }
 
 // Reset per-run build state: selection back to default, placement tracking
@@ -116,27 +115,24 @@ function iconFor(item) {
   };
 }
 
-// Short HUD hint naming the active item.
+// Short HUD hint naming the active item and the build controls.
 export function buildHintText() {
   const def = selectedDef();
-  return `Click a tile to place ${def.label} (${def.cost}g)`;
+  return `Face a tile · E places ${def.label} (${def.cost}g) · G removes`;
 }
 
-function onMouseDown(e) {
-  if (!isBuildPhase()) return;
-  if (e.button === 2) return; // right-click handled by contextmenu
-  const t = eventToTile(e);
-  if (!t) return;
-  e.preventDefault();
-  placeSelected(t.x, t.y);
-}
-
-function onContextMenu(e) {
-  if (!isBuildPhase()) return;
-  const t = eventToTile(e);
-  if (!t) return;
-  e.preventDefault();
-  eraseAt(t.x, t.y);
+// Source rect + footprint of the currently-selected build item, for the
+// in-world placement ghost (tdPlacementPreview). Mirrors iconFor but also
+// reports the tile footprint and cost the preview needs.
+export function getSelectedBuildSprite() {
+  const def = selectedDef();
+  const sp = getSpecies(def.species);
+  return {
+    ...iconFor(def),
+    w: Math.max(1, sp?.width || 1),
+    h: Math.max(1, sp?.height || 1),
+    cost: def.cost,
+  };
 }
 
 export function placeSelected(x, y) {
@@ -255,23 +251,4 @@ function rebuild(state) {
   // lose, and buildZone clones raw.entities afresh (placed barrels persist).
   state.zone = buildZone(state.rawZone);
   recomputeField(state.zone);
-}
-
-// Convert a canvas mouse event into a zone tile. Mirrors mapEditor's
-// canvasEventToTile inverse of the renderer's camera offset.
-function eventToTile(e) {
-  const state = getState();
-  if (!state?.zone || !canvasEl) return null;
-  const rect = canvasEl.getBoundingClientRect();
-  const cssX = e.clientX - rect.left;
-  const cssY = e.clientY - rect.top;
-  if (cssX < 0 || cssY < 0 || cssX >= rect.width || cssY >= rect.height) return null;
-  const bx = (cssX / rect.width) * canvasEl.width;
-  const by = (cssY / rect.height) * canvasEl.height;
-  const ox = Math.round(-state.camera.x * TILE_SIZE);
-  const oy = Math.round(-state.camera.y * TILE_SIZE);
-  const x = Math.floor((bx - ox) / TILE_SIZE);
-  const y = Math.floor((by - oy) / TILE_SIZE);
-  if (x < 0 || y < 0 || x >= state.zone.cols || y >= state.zone.rows) return null;
-  return { x, y };
 }

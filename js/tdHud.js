@@ -110,7 +110,7 @@ export function updateTdHud(model) {
   shopWrap.style.display = build ? "" : "none";
   if (build) renderPalette(model.palette || []);
   hintEl.textContent = build
-    ? (model.buildHint || "Pick a barrel, then click a tile to place it")
+    ? (model.buildHint || "Pick a barrel, face a tile, then press E to place · G to remove")
     : "Defend the village!";
 
   // — Actions —————————————————————————————————————————————————————————————

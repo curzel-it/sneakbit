@@ -51,9 +51,10 @@ import {
 } from "./heroSwitch.js";
 import { resetGold, getGold, addGold, spendGold, canAfford } from "./arcadeCurrency.js";
 import {
-  installBuild, placeDefaultItem, placeSelected, setSelectedItem, getPaletteModel,
+  installBuild, placeDefaultItem, placeSelected, eraseAt, setSelectedItem, getPaletteModel,
   buildHintText, resetBuild, getPlacedObstacleCount,
 } from "./tdBuild.js";
+import { tileInFront, drawPlacementPreview } from "./tdPlacementPreview.js";
 import {
   installTdHud, showTdHud, hideTdHud, updateTdHud, showTdGameOver,
 } from "./tdHud.js";
@@ -328,6 +329,12 @@ export function tickTowerDefense(dt, frame) {
   // is sim-only and never draws an off-screen prop.
   updateVisibleEntities(state.zone, state.camera, { all: true });
   render(frame.renderer, state.zone, state.camera, heroes, frame.biomeAnim.frame);
+  // Build ghost: where the active hero will place/remove a barrel (build phase
+  // only). Drawn over the world, camera-relative — render() leaves the ctx at
+  // identity transform with no clip.
+  if (phase === "build") {
+    drawPlacementPreview(frame.renderer.ctx, state, state.camera, activeHero(state));
+  }
   updateHud(frame.hud, { zoneId: state.zone.id, fps: 1 / dt, showFps: getSettings().showFps });
   updateTdHud(buildModel(state));
 }
@@ -438,16 +445,38 @@ function onKey(e) {
   const state = getState();
   const hero = activeHero(state);
   if (!hero) return;
+  // Build phase reuses the action keys as build verbs (no enemies to fight):
+  // Interact (E / Enter) places the selected barrel on the tile ahead, Melee
+  // (G) removes + refunds it. Starting the wave is the dock button only.
+  if (phase === "build") {
+    if (matchesAction("interact", code, 0)) {
+      e.preventDefault();
+      placeInFront(hero);
+    } else if (matchesAction("melee", code, 0)) {
+      e.preventDefault();
+      removeInFront(hero);
+    }
+    return;
+  }
+  // Wave phase: the action keys fight.
   if (matchesAction("shoot", code, 0)) {
     e.preventDefault();
     tryShootForPlayer(hero);
   } else if (matchesAction("melee", code, 0)) {
     e.preventDefault();
     performMeleeSwing(state, { swinger: hero });
-  } else if (code === "Enter" && phase === "build") {
-    e.preventDefault();
-    startNextWave();
   }
+}
+
+// Place / remove the build item on the tile the active hero faces.
+function placeInFront(hero) {
+  const t = tileInFront(hero);
+  placeSelected(t.x, t.y);
+}
+
+function removeInFront(hero) {
+  const t = tileInFront(hero);
+  eraseAt(t.x, t.y);
 }
 
 function isOverlayOpen() {

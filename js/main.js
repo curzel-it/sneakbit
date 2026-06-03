@@ -73,6 +73,7 @@ import { getRuntimeRole, getMode, getJoinCode, setRuntimeRole } from "./onlineMo
 import { switchRole, setStateHandlers } from "./switchRole.js";
 import { installUiTokens } from "./uiTokens.js";
 import { isPvp, isPvpHostSetup, isTowerDefenseMode } from "./gameMode.js";
+import { codesFor } from "./keyBindings.js";
 import {
   installPvpController, pvpGateInput, tickPvpFrame,
 } from "./pvpController.js";
@@ -268,10 +269,21 @@ async function main() {
     },
   });
   setGamepadAction("shoot", () => tryShoot());
-  setGamepadAction("melee", () => tryMelee());
+  setGamepadAction("melee", () => {
+    // In the Tower Defense build phase Melee removes the barrel in front of
+    // the active hero — synthesise the key so towerDefense.onKey routes it to
+    // the active hero (and, in a wave, swings the active hero). melee.js's own
+    // listener no-ops in TD, so there's no double swing.
+    if (isTowerDefenseMode()) {
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: codesFor("melee")[0] || "KeyG" }));
+      return;
+    }
+    tryMelee();
+  });
   setGamepadAction("interact", () => {
     // Synthesise an interact keypress so interact.js's listener fires
     // without us having to duplicate its "find entity in front" logic.
+    // (In the TD build phase this is also how Interact places a barrel.)
     window.dispatchEvent(new KeyboardEvent("keydown", { code: "KeyE" }));
   });
   // Local co-op P2-P4 pads drive slots 2-4 through the same per-slot
