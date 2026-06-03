@@ -28,7 +28,6 @@ import { updateVisibleEntities } from "./zoneVisibility.js";
 import { tickShooting, tryShootForPlayer } from "./shooting.js";
 import { tickMelee, performMeleeSwing } from "./melee.js";
 import { tickCombat } from "./combat.js";
-import { tickMonsterFusion } from "./monsters.js";
 import { tickPlayerHealth } from "./playerHealth.js";
 
 import { isMenuOpen } from "./menu.js";
@@ -316,9 +315,10 @@ export function tickTowerDefense(dt, frame) {
   tickBiomeAnimation(frame.biomeAnim, dt);
   tickEntities(dt);
   const heroes = livingHeroes(state);
-  // TD simulates the whole board, not just what's on camera: off-screen enemies
-  // must still take fire, deal damage and fuse (the camera follows one hero
-  // across a large arena). Rendering culls independently, so this is sim-only.
+  // TD simulates the whole board, not just what's on camera: the camera follows
+  // one hero, but off-screen enemies must still take fire and deal damage, and
+  // off-screen allies must still fight. Rendering culls independently, so this
+  // is sim-only and never draws an off-screen prop.
   updateVisibleEntities(state.zone, state.camera, { all: true });
   render(frame.renderer, state.zone, state.camera, heroes, frame.biomeAnim.frame);
   updateHud(frame.hud, { zoneId: state.zone.id, fps: 1 / dt, showFps: getSettings().showFps });
@@ -345,15 +345,17 @@ function simulate(state, dt) {
     updatePlayer(hero, input, dt, state.zone);
   }
 
-  // World ticks. mobs.js is intentionally NOT run — TD enemies seek the goal
-  // via the flow field, not the player.
+  // World ticks. Two systems are intentionally NOT run: mobs.js (TD enemies
+  // seek the goal via the flow field, not the player) and monster fusion
+  // (difficulty comes from the deliberate tdWaves tier ramp; spontaneous
+  // fusion would tier enemies up off-screen, the very thing its viewport gate
+  // guards against, and double-dips on the wave progression).
   tickShooting(dt);
   tickMelee(dt);
   if (phase === "wave") {
     tickWaves(state.zone, dt);
     tickTdEnemies(state.zone, dt);
   }
-  tickMonsterFusion(state.zone);
   tickCombat(state.zone, livingHeroes(state), dt);
   tickPlayerHealth(dt);
 
