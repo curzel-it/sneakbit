@@ -258,6 +258,30 @@ test("guest.resync triggers a full snapshot send (host reuses the peer.joined pa
   stopSnapshotBroadcaster();
 });
 
+test("guest.resync is throttled per-guest (rapid repeats collapse to one snapshot)", () => {
+  const fakeNet = setupBootstrapWithFakeNet();
+  const state = makeState();
+  const ok = installSnapshotBroadcaster(() => state, { intervalMs: 100000, net: fakeNet });
+  assert.equal(ok, true);
+  // Three rapid resyncs from the same guest within the throttle window
+  // must produce exactly one snapshot — the amplifier is capped.
+  fakeNet.emit("guest.resync", { op: "guest.resync", from: "p_spammer" });
+  fakeNet.emit("guest.resync", { op: "guest.resync", from: "p_spammer" });
+  fakeNet.emit("guest.resync", { op: "guest.resync", from: "p_spammer" });
+  assert.equal(
+    fakeNet.sent.filter((m) => m.op === "snapshot").length, 1,
+    "rapid same-guest resyncs collapse to one snapshot"
+  );
+  // A different guest is throttled independently → its first request still
+  // serves a snapshot.
+  fakeNet.emit("guest.resync", { op: "guest.resync", from: "p_other" });
+  assert.equal(
+    fakeNet.sent.filter((m) => m.op === "snapshot").length, 2,
+    "a distinct guest gets its own snapshot"
+  );
+  stopSnapshotBroadcaster();
+});
+
 test("zone change broadcasts event:zoneChange before the full snapshot", () => {
   const fakeNet = setupBootstrapWithFakeNet();
   const state = makeState(1001);

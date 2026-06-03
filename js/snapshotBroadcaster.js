@@ -30,6 +30,15 @@ export const BROADCAST_INTERVAL_MS = 50;
 // handleDelta refreshes lastFrameAt with zero state churn.
 const KEEPALIVE_TICKS = 4;
 
+// Minimum gap between resync-triggered full snapshots per requesting
+// guest. A full snapshot serialises the whole zone and fans out to
+// EVERY guest, so an unthrottled `guest.resync` is an amplifier: one
+// guest spamming the request forces repeated whole-zone serialisation +
+// broadcast. A genuinely stale mirror only asks once per >1 s staleness
+// window (mirrorWorld), so 1/s per guest never starves a real resync
+// while capping the abuse to one rebuild per guest per second.
+const RESYNC_MIN_INTERVAL_MS = 1000;
+
 let timer = null;
 let stateGetter = null;
 let tickCount = 0;
@@ -39,6 +48,9 @@ let lastEntitySigs = new Map();
 let knownEntityIds = new Set();
 let unsubs = [];
 let lastZoneId = null;
+// Per-guest (playerId) timestamp of the last resync-triggered snapshot,
+// for the RESYNC_MIN_INTERVAL_MS throttle.
+let lastResyncAt = new Map();
 // Per-playerId last-broadcast hp. Used by emitHpTransitions to fire a
 // single event:death (or event:respawn) on a 0-crossing — the snapshot
 // already ships hp as a number, but discrete UI flips (guest's gameOver
@@ -59,7 +71,7 @@ export function installSnapshotBroadcaster(getState, opts = {}) {
   // routes the request to us host-bound. Reuse sendFullSnapshot so the
   // snapshot fans out to every guest — refreshing other lagging
   // mirrors at no extra cost.
-  unsubs.push(net.on("guest.resync", () => sendFullSnapshot(net)));
+  unsubs.push(net.on("guest.resync", (msg) => onGuestResync(net, msg)));
   timer = setInterval(() => broadcastDelta(net), intervalMs);
   return true;
 }
@@ -72,6 +84,7 @@ export function stopSnapshotBroadcaster() {
   lastEntitySigs.clear();
   knownEntityIds = new Set();
   lastHpByPlayerId.clear();
+  lastResyncAt.clear();
   tickCount = 0;
   quietTicks = 0;
   lastZoneId = null;
@@ -152,6 +165,28 @@ function buildKeepalive(state) {
     entities: [],
     lastSeq: getLastSeqMap(),
   };
+}
+
+// Throttled entry point for the guest-driven resync. `from` is the
+// requesting guest's playerId (relay-stamped / DC-overwritten, so it
+// can't be forged to dodge the throttle). Requests arriving faster than
+// RESYNC_MIN_INTERVAL_MS for the same guest are dropped — the guest's
+// mirror is still fresh from the snapshot we just sent it.
+function onGuestResync(net, msg) {
+  const from = msg?.from;
+  const now = nowMs();
+  if (from) {
+    const last = lastResyncAt.get(from);
+    if (last !== undefined && now - last < RESYNC_MIN_INTERVAL_MS) return;
+    lastResyncAt.set(from, now);
+  }
+  sendFullSnapshot(net);
+}
+
+function nowMs() {
+  return (typeof performance !== "undefined" && performance.now)
+    ? performance.now()
+    : Date.now();
 }
 
 function sendFullSnapshot(net) {
