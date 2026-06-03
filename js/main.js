@@ -171,7 +171,7 @@ async function main() {
   let suppressUnloadSave = false;
   window.addEventListener("beforeunload", () => {
     if (suppressUnloadSave) return;
-    persistProgress();
+    flushPendingProgress();
   });
   if (typeof window !== "undefined") {
     window.save = {
@@ -1076,10 +1076,10 @@ function maybeTeleport(state) {
       : { ...d, y: dy + 1 };
     travelTo(state, dest).then(() => {
       markVisited(state.zone.id);
-      persistProgress();
+      flushPendingProgress();
     });
   } else {
-    persistProgress();
+    persistProgressThrottled();
   }
 }
 
@@ -1094,6 +1094,33 @@ function maybeTeleport(state) {
 function persistProgress() {
   if (isPvp()) return;
   saveProgress(state);
+}
+
+// Coalesce the high-frequency per-tile-step save. Walking commits a step
+// ~4.5×/s, and each saveProgress writes 3-4 storage keys whose change events
+// each drive cloudSave to re-serialize + hash the whole save synchronously
+// (even when signed out) — ~15 serialize/hash cycles per second of walking.
+// Saving the player's tile is cheap to defer: a throttled save (at most once
+// per window) bounds the worst-case staleness to ~1s while the
+// zone-change and beforeunload paths below stay immediate, so a clean exit or
+// teleport never loses position. Matches the original "persist on zone change"
+// design intent (see save.js header); per-step was always over-eager.
+const POSITION_SAVE_THROTTLE_MS = 1000;
+let pendingSaveTimer = null;
+function persistProgressThrottled() {
+  if (isPvp()) return;
+  if (pendingSaveTimer) return; // a save is already scheduled — coalesce into it
+  pendingSaveTimer = setTimeout(() => {
+    pendingSaveTimer = null;
+    persistProgress();
+  }, POSITION_SAVE_THROTTLE_MS);
+}
+// Cancel any pending throttled save and persist the current position now.
+// Used by the zone-change and page-unload paths, where the save must land
+// immediately (and the just-saved state supersedes whatever was pending).
+function flushPendingProgress() {
+  if (pendingSaveTimer) { clearTimeout(pendingSaveTimer); pendingSaveTimer = null; }
+  persistProgress();
 }
 
 main().catch((err) => {
