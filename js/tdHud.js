@@ -1,22 +1,36 @@
-// Tower Defense HUD: the DOM panel for the run. Shows wave / phase / gold /
-// score, the build-phase controls (start wave, recruit a hero, revive a downed
-// one, a build hint), the active-hero indicator + switch, and the game-over
-// screen. Per CLAUDE.md the UI is DOM, never canvas.
+// Tower Defense HUD: the DOM for the run. Two pieces, both DOM (never canvas,
+// per CLAUDE.md):
+//
+//   • a compact, always-visible STATUS BAR (#td-hud) — wave / phase / gold /
+//     lives / score plus the button that opens the controls dialog. It sits
+//     top-centre, clear of the touch menu/pause button (top-right) so on mobile
+//     the pause control is never covered.
+//   • a dismissible CONTROLS DIALOG (#td-panel) — the build shop, start-wave /
+//     recruit / switch actions, revives, and the build hint. Open/close it from
+//     the status bar; it has no opaque backdrop, so the board and the bottom
+//     touch controls (d-pad / actions) stay reachable behind it.
 //
 // Stateless about the run itself — towerDefense.js owns the state machine and
 // pushes a fresh model in via updateTdHud each frame; buttons call back through
-// the handlers wired at install time.
+// the handlers wired at install time. The dialog is plain UI chrome: it does NOT
+// pause the sim (mid-wave revive stays a live, premium decision) and does NOT
+// bind Escape (Escape stays the pause menu).
 
-import { el, showOnly } from "./dom.js";
+import { el } from "./dom.js";
 import { onGoldChange, getGold } from "./arcadeCurrency.js";
 import { getSprite } from "./assets.js";
 
 let api = {};
-let root = null;
+let root = null;       // the status bar (#td-hud)
+let panel = null;      // the controls dialog (#td-panel)
 let installed = false;
+let panelOpen = false;
+let lastPhase = null;  // tracks Build entry so we can auto-open the dialog once
 
-// Live element refs we patch each frame.
-let waveEl, phaseEl, goldEl, scoreEl, bestEl, livesEl, heroEl, statusEl, countdownEl;
+// Status-bar element refs.
+let waveEl, phaseEl, goldEl, livesEl, scoreEl, toggleBtn;
+// Dialog element refs.
+let panelTitleEl, bestEl, heroEl, statusEl, countdownEl;
 let readyBtn, recruitBtn, switchBtn, reviveWrap, shopEl, paletteWrap;
 // Build-shop cards, keyed by item id (built once, patched each frame).
 const paletteCards = new Map();
@@ -27,41 +41,74 @@ export function installTdHud(handlers = {}) {
   if (installed) return;
   installed = true;
   injectStyles();
-  buildPanel();
+  buildStatusBar();
+  buildControlsDialog();
   buildGameOver();
   document.body.appendChild(root);
+  document.body.appendChild(panel);
   document.body.appendChild(gameOver);
   onGoldChange((g) => { if (goldEl) goldEl.textContent = String(g); });
 }
 
 export function showTdHud() {
   if (root) root.style.display = "flex";
+  applyPanelVisibility();
 }
 
 export function hideTdHud() {
   if (root) root.style.display = "none";
+  if (panel) panel.style.display = "none";
   if (gameOver) gameOver.style.display = "none";
+}
+
+// — Dialog open/close ————————————————————————————————————————————————————
+function openPanel() { panelOpen = true; applyPanelVisibility(); }
+function closePanel() { panelOpen = false; applyPanelVisibility(); }
+function togglePanel() { panelOpen = !panelOpen; applyPanelVisibility(); }
+
+function applyPanelVisibility() {
+  if (!panel) return;
+  // Only show the dialog while the run HUD itself is showing.
+  const hudShowing = root && root.style.display !== "none";
+  panel.style.display = hudShowing && panelOpen ? "flex" : "none";
+  if (toggleBtn) toggleBtn.classList.toggle("td-open", panelOpen);
 }
 
 // model: { wave, phase, score, highScore, lives, maxLives, countdown, alive,
 //          total, activeHeroName, canSwitch, recruit:{cost,can,label},
-//          revives:[{index,name,cost}], buildHint }
+//          revives:[{index,name,cost}], buildHint, palette }
 export function updateTdHud(model) {
   if (!root) return;
+  const build = model.phase === "Build";
+
+  // Auto-open the dialog the first frame we enter the build phase, so a new
+  // player sees their options. Manual toggle takes over after that.
+  if (model.phase !== lastPhase) {
+    if (build) openPanel();
+    lastPhase = model.phase;
+  }
+
+  // — Status bar —————————————————————————————————————————————————————————
   waveEl.textContent = `Wave ${model.wave}`;
   phaseEl.textContent = model.phase;
   goldEl.textContent = String(getGold());
   scoreEl.textContent = String(model.score | 0);
-  bestEl.textContent = String(model.highScore | 0);
-  heroEl.textContent = model.activeHeroName || "—";
 
   const lv = model.lives | 0;
   const mx = model.maxLives | 0;
-  livesEl.textContent = mx ? `♥ ${lv} / ${mx}` : `♥ ${lv}`;
+  livesEl.textContent = mx ? `♥ ${lv}/${mx}` : `♥ ${lv}`;
   livesEl.classList.toggle("td-lives-low", mx > 0 && lv <= Math.ceil(mx * 0.25));
+
+  // Toggle label: phase word + the build countdown inline.
+  const cd = build && model.countdown != null ? ` ${Math.ceil(model.countdown)}s` : "";
+  toggleBtn.textContent = `${build ? "Build" : "Squad"}${cd}`;
+
+  // — Dialog —————————————————————————————————————————————————————————————
+  panelTitleEl.textContent = build ? "Build phase" : `Wave ${model.wave}`;
+  bestEl.textContent = String(model.highScore | 0);
+  heroEl.textContent = model.activeHeroName || "—";
   switchBtn.style.display = model.canSwitch ? "" : "none";
 
-  const build = model.phase === "Build";
   countdownEl.style.display = build && model.countdown != null ? "" : "none";
   if (build && model.countdown != null) {
     countdownEl.textContent = `Next wave in ${Math.ceil(model.countdown)}s`;
@@ -79,7 +126,7 @@ export function updateTdHud(model) {
   renderRevives(model.revives || []);
 
   if (build) {
-    statusEl.textContent = model.buildHint || "Click a tile to place a barrel · right-click to remove";
+    statusEl.textContent = model.buildHint || "Pick a barrel, then tap a tile to place it";
     const r = model.recruit || {};
     recruitBtn.textContent = r.label || `Recruit hero (${r.cost}g)`;
     recruitBtn.disabled = !r.can;
@@ -165,41 +212,58 @@ function renderRevives(revives) {
   }
 }
 
-function buildPanel() {
+// — The status bar — compact, always visible during a run ————————————————
+function buildStatusBar() {
   waveEl = el("span", { class: "td-wave" });
   phaseEl = el("span", { class: "td-phase" });
   goldEl = el("span", { class: "td-gold-val", text: "0" });
   scoreEl = el("span", { class: "td-score-val", text: "0" });
-  bestEl = el("span", { class: "td-best-val", text: "0" });
   livesEl = el("span", { class: "td-lives-val", text: "♥ —" });
+  toggleBtn = el("button", {
+    class: "td-toggle",
+    text: "Build",
+    title: "Open / close the build & squad controls",
+    on: { click: togglePanel },
+  });
+
+  root = el("div", { id: "td-hud", style: { display: "none" } }, [
+    el("span", { class: "td-bar-group td-bar-wave" }, [
+      waveEl, el("span", { class: "td-sep", text: "·" }), phaseEl,
+    ]),
+    el("span", { class: "td-bar-group" }, [
+      el("span", { class: "td-stat td-stat-lives" }, [livesEl]),
+      el("span", { class: "td-stat" }, [el("span", { class: "td-coin", text: "●" }), " ", goldEl]),
+      el("span", { class: "td-stat td-stat-score" }, [el("span", { class: "td-label", text: "Score " }), scoreEl]),
+    ]),
+    toggleBtn,
+  ]);
+}
+
+// — The controls dialog — openable / closable ————————————————————————————
+function buildControlsDialog() {
+  panelTitleEl = el("span", { class: "td-panel-title", text: "Build phase" });
+  bestEl = el("span", { class: "td-best-val", text: "0" });
   heroEl = el("span", { class: "td-hero-val", text: "—" });
   statusEl = el("p", { class: "td-status" });
   countdownEl = el("div", { class: "td-countdown" });
 
   readyBtn = el("button", { class: "td-btn td-primary", text: "Start wave", on: { click: () => api.onReady?.() } });
   recruitBtn = el("button", { class: "td-btn", text: "Recruit hero", on: { click: () => api.onRecruit?.() } });
-  switchBtn = el("button", { class: "td-btn td-switch", text: "Switch (Tab)", on: { click: () => api.onSwitch?.() } });
+  switchBtn = el("button", { class: "td-btn td-switch", text: "Switch hero", on: { click: () => api.onSwitch?.() } });
   reviveWrap = el("div", { class: "td-revives" });
   paletteWrap = el("div", { class: "td-shop-items" });
   shopEl = el("div", { class: "td-shop" }, [
     el("div", { class: "td-shop-head" }, [
       el("span", { class: "td-shop-title", text: "Build shop" }),
-      el("span", { class: "td-shop-hint", text: "right-click to sell" }),
+      el("span", { class: "td-shop-hint", text: "tap a tile to place" }),
     ]),
     paletteWrap,
   ]);
 
-  root = el("div", { id: "td-hud", style: { display: "none" } }, [
-    el("div", { class: "td-row td-top" }, [
-      waveEl, el("span", { class: "td-sep", text: "·" }), phaseEl,
-    ]),
-    el("div", { class: "td-row td-village" }, [
-      el("span", { class: "td-label", text: "Village " }), livesEl,
-    ]),
-    el("div", { class: "td-row td-stats" }, [
-      el("span", { class: "td-stat" }, [el("span", { class: "td-label", text: "Gold " }), goldEl]),
-      el("span", { class: "td-stat" }, [el("span", { class: "td-label", text: "Score " }), scoreEl]),
-      el("span", { class: "td-stat" }, [el("span", { class: "td-label", text: "Best " }), bestEl]),
+  panel = el("div", { id: "td-panel", style: { display: "none" } }, [
+    el("div", { class: "td-panel-head" }, [
+      panelTitleEl,
+      el("button", { class: "td-panel-close", text: "✕", title: "Close", on: { click: closePanel } }),
     ]),
     el("div", { class: "td-row td-hero" }, [
       el("span", { class: "td-label", text: "Driving: " }), heroEl, switchBtn,
@@ -209,6 +273,9 @@ function buildPanel() {
     statusEl,
     el("div", { class: "td-row td-actions" }, [readyBtn, recruitBtn]),
     reviveWrap,
+    el("div", { class: "td-row td-best" }, [
+      el("span", { class: "td-label", text: "Best " }), bestEl,
+    ]),
   ]);
 }
 
@@ -235,72 +302,124 @@ function injectStyles() {
   const style = document.createElement("style");
   style.id = "td-hud-styles";
   style.textContent = `
+    /* — Status bar: top-centre, clear of the top-right pause button — */
     #td-hud {
-      position: fixed; top: 12px; right: 12px; z-index: 14;
-      display: none; flex-direction: column; gap: 6px;
-      min-width: 220px; padding: 12px 14px;
+      position: fixed; top: 8px; left: 50%; transform: translateX(-50%);
+      z-index: 14; display: none; align-items: center; gap: 10px;
+      flex-wrap: wrap; justify-content: center; max-width: 96vw;
+      padding: 7px 12px;
       background: var(--sb-surface-bg, rgba(20,20,28,0.86));
       border: var(--sb-surface-border, 1px solid #3a3a4a);
       border-radius: var(--sb-surface-radius, 6px);
       color: var(--sb-text, #eee); font-family: var(--sb-font, monospace); font-size: 13px;
       user-select: none;
     }
-    #td-hud .td-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    #td-hud .td-top { font-size: 15px; font-weight: bold; letter-spacing: 1px; }
+    #td-hud .td-bar-group { display: flex; align-items: center; gap: 10px; }
+    #td-hud .td-bar-wave { font-weight: bold; letter-spacing: 1px; }
     #td-hud .td-phase { color: #7fd1ff; }
     #td-hud .td-sep { color: #666; }
-    #td-hud .td-stats { gap: 14px; }
+    #td-hud .td-stat { display: flex; align-items: center; gap: 4px; }
     #td-hud .td-label { color: #8a8a96; }
+    #td-hud .td-coin { color: #ffcf33; font-size: 10px; }
     #td-hud .td-gold-val { color: #ffd966; font-weight: bold; }
-    #td-hud .td-score-val, #td-hud .td-best-val { color: #eee; }
-    #td-hud .td-village { font-size: 13px; }
+    #td-hud .td-score-val { color: #eee; }
     #td-hud .td-lives-val { color: #ff8a8a; font-weight: bold; }
     #td-hud .td-lives-val.td-lives-low { color: #ff3b3b; }
-    #td-hud .td-hero-val { color: #9fe6a0; font-weight: bold; }
-    #td-hud .td-countdown { color: #ffd966; font-size: 12px; }
-    #td-hud .td-status { margin: 2px 0; color: #aaa; font-size: 11px; line-height: 1.4; }
-    #td-hud .td-actions { gap: 6px; }
-    #td-hud .td-shop {
+    #td-hud .td-toggle {
+      background: #2a4a32; color: #eee; border: 1px solid #3f6b4a;
+      padding: 6px 12px; border-radius: 4px; cursor: pointer;
+      font-family: inherit; font-size: 12px; font-weight: bold; white-space: nowrap;
+    }
+    #td-hud .td-toggle:hover { background: #335a3d; }
+    #td-hud .td-toggle.td-open { background: #34343f; border-color: #ffd966; }
+
+    /* — Controls dialog: below the bar, no backdrop, bottom controls free — */
+    #td-panel {
+      position: fixed; top: 56px; left: 50%; transform: translateX(-50%);
+      z-index: 15; display: none; flex-direction: column; gap: 7px;
+      width: min(92vw, 360px); max-height: 62vh; overflow-y: auto;
+      padding: 12px 14px;
+      background: var(--sb-surface-bg, rgba(20,20,28,0.94));
+      border: var(--sb-surface-border, 1px solid #3a3a4a);
+      border-radius: var(--sb-surface-radius, 6px);
+      color: var(--sb-text, #eee); font-family: var(--sb-font, monospace); font-size: 13px;
+      user-select: none;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+    }
+    #td-panel .td-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    #td-panel .td-panel-head { display: flex; align-items: center; justify-content: space-between; }
+    #td-panel .td-panel-title { font-size: 14px; font-weight: bold; letter-spacing: 1px; color: #cfcfe0; }
+    #td-panel .td-panel-close {
+      width: 30px; height: 30px; flex: 0 0 auto;
+      background: #2a2a32; color: #ddd; border: 1px solid #44444f;
+      border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 14px; line-height: 1;
+    }
+    #td-panel .td-panel-close:hover { background: #353541; }
+    #td-panel .td-label { color: #8a8a96; }
+    #td-panel .td-hero-val { color: #9fe6a0; font-weight: bold; }
+    #td-panel .td-best-val { color: #eee; }
+    #td-panel .td-countdown { color: #ffd966; font-size: 12px; }
+    #td-panel .td-status { margin: 2px 0; color: #aaa; font-size: 11px; line-height: 1.4; }
+    #td-panel .td-actions { gap: 6px; }
+    #td-panel .td-best { font-size: 12px; }
+    #td-panel .td-shop {
       display: flex; flex-direction: column; gap: 5px;
       padding: 8px; margin: 2px 0;
       background: rgba(0,0,0,0.22); border: 1px solid #33333f; border-radius: 5px;
     }
-    #td-hud .td-shop-head { display: flex; align-items: baseline; justify-content: space-between; }
-    #td-hud .td-shop-title { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #cfcfe0; font-weight: bold; }
-    #td-hud .td-shop-hint { font-size: 10px; color: #777; }
-    #td-hud .td-shop-items { display: flex; flex-direction: column; gap: 4px; }
-    #td-hud .td-shop-item {
+    #td-panel .td-shop-head { display: flex; align-items: baseline; justify-content: space-between; }
+    #td-panel .td-shop-title { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #cfcfe0; font-weight: bold; }
+    #td-panel .td-shop-hint { font-size: 10px; color: #777; }
+    #td-panel .td-shop-items { display: flex; flex-direction: column; gap: 4px; }
+    #td-panel .td-shop-item {
       display: flex; align-items: center; gap: 9px;
-      padding: 5px 8px; text-align: left;
+      padding: 7px 8px; text-align: left;
       background: #24242c; color: #eee; border: 1px solid #3a3a46;
       border-radius: 5px; cursor: pointer; font-family: inherit;
     }
-    #td-hud .td-shop-item:hover:not(:disabled) { background: #30303c; border-color: #4a4a58; }
-    #td-hud .td-shop-item.td-selected {
+    #td-panel .td-shop-item:hover:not(:disabled) { background: #30303c; border-color: #4a4a58; }
+    #td-panel .td-shop-item.td-selected {
       background: #34343f; border-color: #ffd966;
       box-shadow: inset 0 0 0 1px #ffd966;
     }
-    #td-hud .td-shop-item.td-disabled { opacity: 0.4; cursor: not-allowed; }
-    #td-hud .td-shop-icon {
+    #td-panel .td-shop-item.td-disabled { opacity: 0.4; cursor: not-allowed; }
+    #td-panel .td-shop-icon {
       width: 30px; height: 30px; flex: 0 0 auto;
       image-rendering: pixelated;
       background: #16161c; border-radius: 3px;
     }
-    #td-hud .td-shop-name { flex: 1 1 auto; font-size: 12px; }
-    #td-hud .td-shop-cost { font-size: 12px; font-weight: bold; color: #ffd966; white-space: nowrap; }
-    #td-hud .td-shop-cost .td-coin { color: #ffcf33; font-size: 10px; }
-    #td-hud .td-revives { display: flex; flex-direction: column; gap: 4px; }
-    #td-hud .td-btn {
+    #td-panel .td-shop-name { flex: 1 1 auto; font-size: 12px; }
+    #td-panel .td-shop-cost { font-size: 12px; font-weight: bold; color: #ffd966; white-space: nowrap; }
+    #td-panel .td-shop-cost .td-coin { color: #ffcf33; font-size: 10px; }
+    #td-panel .td-revives { display: flex; flex-direction: column; gap: 4px; }
+    #td-panel .td-btn {
       background: #2a2a32; color: #eee; border: 1px solid #44444f;
-      padding: 6px 10px; border-radius: 4px; cursor: pointer;
+      padding: 7px 12px; border-radius: 4px; cursor: pointer;
       font-family: inherit; font-size: 12px;
     }
-    #td-hud .td-btn:hover:not(:disabled) { background: #353541; }
-    #td-hud .td-primary { background: #2a4a32; border-color: #3f6b4a; }
-    #td-hud .td-primary:hover:not(:disabled) { background: #335a3d; }
-    #td-hud .td-revive { background: #4a2a2a; border-color: #6b3f3f; }
-    #td-hud .td-switch { margin-left: auto; padding: 3px 8px; font-size: 11px; }
-    #td-hud .td-btn:disabled, #td-hud .td-btn.td-disabled { opacity: 0.45; cursor: not-allowed; }
+    #td-panel .td-btn:hover:not(:disabled) { background: #353541; }
+    #td-panel .td-primary { background: #2a4a32; border-color: #3f6b4a; }
+    #td-panel .td-primary:hover:not(:disabled) { background: #335a3d; }
+    #td-panel .td-revive { background: #4a2a2a; border-color: #6b3f3f; }
+    #td-panel .td-switch { margin-left: auto; padding: 5px 10px; font-size: 11px; }
+    #td-panel .td-btn:disabled, #td-panel .td-btn.td-disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* Touch: roomier tap targets so the dialog is thumb-usable. */
+    @media (pointer: coarse) {
+      #td-hud .td-toggle, #td-panel .td-btn, #td-panel .td-panel-close { min-height: 44px; }
+      #td-panel .td-shop-item { min-height: 44px; }
+      #td-panel { width: min(94vw, 380px); }
+    }
+
+    /* Narrow screens: the top edge is shared by the HP bar (left) and the
+       touch menu/pause button (right), with no horizontal room left for a
+       centred status bar. Drop the TD bar (and the dialog under it) to a
+       second row so all three stay legible and the pause button is reachable. */
+    @media (max-width: 820px) {
+      #td-hud { top: 62px; }
+      #td-panel { top: 112px; max-height: 56vh; }
+    }
+
     #td-gameover {
       position: fixed; inset: 0; z-index: 22;
       display: none; align-items: center; justify-content: center;
@@ -316,6 +435,13 @@ function injectStyles() {
     #td-gameover p { margin: 6px 0; }
     #td-gameover .td-go-newbest { color: #ffd966; font-weight: bold; }
     #td-gameover .td-actions { justify-content: center; margin-top: 18px; }
+    #td-gameover .td-btn {
+      background: #2a2a32; color: #eee; border: 1px solid #44444f;
+      padding: 8px 14px; border-radius: 4px; cursor: pointer;
+      font-family: inherit; font-size: 12px;
+    }
+    #td-gameover .td-btn:hover { background: #353541; }
+    #td-gameover .td-primary { background: #2a4a32; border-color: #3f6b4a; }
   `;
   document.head.appendChild(style);
 }
@@ -323,7 +449,9 @@ function injectStyles() {
 // Test seam.
 export function _resetTdHudForTesting() {
   if (root?.parentNode) root.parentNode.removeChild(root);
+  if (panel?.parentNode) panel.parentNode.removeChild(panel);
   if (gameOver?.parentNode) gameOver.parentNode.removeChild(gameOver);
   paletteCards.clear();
-  root = null; gameOver = null; installed = false; api = {};
+  root = null; panel = null; gameOver = null; installed = false; api = {};
+  panelOpen = false; lastPhase = null;
 }
