@@ -37,22 +37,26 @@ const MIGRATIONS = [
     run() {
       // Inventory: read the legacy JSON blob, fan into player.0.*.
       if (typeof localStorage !== "undefined") {
-        try {
-          const raw = localStorage.getItem(LEGACY_INVENTORY_KEY);
-          if (raw) {
-            let parsed = null;
-            try { parsed = JSON.parse(raw); } catch {}
-            if (parsed && typeof parsed === "object") {
-              for (const [sid, n] of Object.entries(parsed)) {
-                const sidNum = Number(sid);
-                const count = Number(n) | 0;
-                if (!Number.isFinite(sidNum) || count <= 0) continue;
-                setValue(`player.0.inventory.amount.${sidNum}`, count);
-              }
+        let raw = null;
+        try { raw = localStorage.getItem(LEGACY_INVENTORY_KEY); } catch {}
+        if (raw) {
+          let parsed = null;
+          try { parsed = JSON.parse(raw); } catch {}
+          let allWritten = true;
+          if (parsed && typeof parsed === "object") {
+            for (const [sid, n] of Object.entries(parsed)) {
+              const sidNum = Number(sid);
+              const count = Number(n) | 0;
+              if (!Number.isFinite(sidNum) || count <= 0) continue;
+              if (!setValue(`player.0.inventory.amount.${sidNum}`, count)) allWritten = false;
             }
-            localStorage.removeItem(LEGACY_INVENTORY_KEY);
           }
-        } catch {}
+          // Drop the source blob only once every entry persisted. If a write
+          // failed, throw so the ladder stops without stamping past v2 and the
+          // original blob is retried (and re-fanned, idempotently) next boot.
+          if (!allWritten) throw new Error("v2: inventory write failed; keeping legacy blob");
+          try { localStorage.removeItem(LEGACY_INVENTORY_KEY); } catch {}
+        }
       }
       // Equipment: legacy keys (player.0.equipped.ranged / .melee) keep
       // the same shape under the new code, so no rewrite is needed for
@@ -68,7 +72,12 @@ const MIGRATIONS = [
     run() {
       const legacy = getValue(LEGACY_LATEST_WORLD_KEY);
       if (legacy != null && getValue(CURRENT_LATEST_ZONE_KEY) == null) {
-        setValue(CURRENT_LATEST_ZONE_KEY, legacy);
+        // If the forward-copy can't reach disk, throw *before* dropping the
+        // old key — otherwise disk holds neither and the save is lost. The
+        // ladder stops, v3 isn't stamped, and the copy retries next boot.
+        if (!setValue(CURRENT_LATEST_ZONE_KEY, legacy)) {
+          throw new Error("v3: failed to persist latest_zone; keeping latest_world");
+        }
       }
       setValue(LEGACY_LATEST_WORLD_KEY, null);
     },
@@ -84,12 +93,20 @@ export function runMigrations() {
     return { applied: 0, from: null, to: BUILD_NUMBER };
   }
   let applied = 0;
+  // Stamp only the highest version we actually *reach*. A throwing migration
+  // stops the ladder so the build number isn't advanced past a step that
+  // didn't complete — that step retries on the next boot instead of being
+  // skipped forever (each migration is written to be idempotent on replay).
+  let reached = current;
   for (const m of MIGRATIONS) {
     if (m.to > current && m.to <= BUILD_NUMBER) {
-      try { m.run(); applied++; }
-      catch (e) { console.error(`Migration to v${m.to} failed:`, e); }
+      try { m.run(); applied++; reached = m.to; }
+      catch (e) {
+        console.error(`Migration to v${m.to} failed; stopping ladder:`, e);
+        break;
+      }
     }
   }
-  setValue(KEY_BUILD, BUILD_NUMBER);
-  return { applied, from: current, to: BUILD_NUMBER };
+  setValue(KEY_BUILD, reached);
+  return { applied, from: current, to: reached };
 }

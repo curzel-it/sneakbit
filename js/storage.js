@@ -7,7 +7,22 @@
 // the "unset" state — distinct from 0.
 
 const PREFIX = "sneakbit.kv.v1.";
-const hasLS = typeof localStorage !== "undefined";
+
+// Probe for a *usable* localStorage, not just a present one. Node ≥25 exposes
+// a stub `localStorage` whose `setItem` throws, and Safari private mode exposes
+// one with a zero quota — in both, presence lies. A throwaway set/remove tells
+// us whether writes actually land; if not, we degrade to the in-memory cache
+// for the whole session rather than treating every write as a (false) failure.
+function probeLocalStorage() {
+  if (typeof localStorage === "undefined" || !localStorage) return false;
+  try {
+    const probe = PREFIX + "__probe__";
+    localStorage.setItem(probe, "1");
+    localStorage.removeItem(probe);
+    return true;
+  } catch { return false; }
+}
+const hasLS = probeLocalStorage();
 
 const cache = new Map();
 let hydrated = false;
@@ -48,18 +63,30 @@ export function getValue(key) {
   return cache.has(key) ? cache.get(key) : null;
 }
 
+// Returns true if the value was persisted (disk write succeeded, or we're in
+// the in-memory-only fallback), false if the disk write threw (quota / Safari
+// private mode). The cache is updated *only* on success, so it never diverges
+// from disk into a "looks saved but isn't" state — the illusion that let a
+// failed migration write silently drop a save (see migrations.js v3).
 export function setValue(key, value) {
   hydrate();
   if (value == null) {
+    if (hasLS) {
+      try { localStorage.removeItem(PREFIX + key); }
+      catch (e) { console.error("storage removeItem failed", e); return false; }
+    }
     cache.delete(key);
-    if (hasLS) { try { localStorage.removeItem(PREFIX + key); } catch {} }
     notifyChange(key);
-    return;
+    return true;
   }
   const v = value | 0;
+  if (hasLS) {
+    try { localStorage.setItem(PREFIX + key, String(v)); }
+    catch (e) { console.error("storage setItem failed; cache left unchanged", e); return false; }
+  }
   cache.set(key, v);
-  if (hasLS) { try { localStorage.setItem(PREFIX + key, String(v)); } catch {} }
   notifyChange(key);
+  return true;
 }
 
 // True if `key` matches `expectedValue` under the Rust core's rule:
