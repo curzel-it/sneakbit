@@ -1,4 +1,6 @@
 .env
+.env*
+.deploy_known_hosts
 .DS_Store
 *.log
 __pycache__/

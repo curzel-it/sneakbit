@@ -289,6 +289,15 @@ def load_env(path: Path) -> dict[str, str]:
 
 _SSH_CLIENT: paramiko.SSHClient | None = None
 
+# Pinned host keys (trust-on-first-use). Kept out of git (.gitignore) — it
+# holds the VPS's public host key, pinned per deployer machine on the first
+# connect. AutoAddPolicy alone silently trusted ANY key on EVERY connect, so
+# a MITM on first connect could capture the root-capable SSH password; with a
+# persistent known_hosts loaded, paramiko raises BadHostKeyException if the
+# pinned key ever changes (real MITM — or a legitimate VPS reimage, in which
+# case delete the stale line in this file to re-pin).
+KNOWN_HOSTS = ROOT / ".deploy_known_hosts"
+
 
 def _ssh_client(env: dict[str, str]) -> paramiko.SSHClient:
     global _SSH_CLIENT
@@ -299,6 +308,12 @@ def _ssh_client(env: dict[str, str]) -> paramiko.SSHClient:
         _SSH_CLIENT.close()
         _SSH_CLIENT = None
     client = paramiko.SSHClient()
+    # load_host_keys requires the file to exist and also makes AutoAddPolicy
+    # PERSIST a newly-seen key here (pin on first use). A mismatched key is
+    # rejected before the policy is consulted, so this is accept-new, not
+    # blind-accept.
+    KNOWN_HOSTS.touch(exist_ok=True)
+    client.load_host_keys(str(KNOWN_HOSTS))
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(
         hostname=env["IP_ADDRESS"],
@@ -392,10 +407,14 @@ def ssh(env: dict[str, str], cmd: str, *, check: bool = True,
 
 
 # Remote shell rsync uses for its transport. Matches the (password) auth model
-# of the paramiko side: host-key checking is off because the VPS gets reimaged
-# and its key legitimately rotates, and ConnectTimeout keeps a dead host from
+# of the paramiko side and shares its pinned known_hosts file:
+# StrictHostKeyChecking=accept-new pins the key on first use and then REJECTS a
+# changed key (MITM, or a legit reimage — re-pin by deleting the stale line),
+# instead of the old `no` + /dev/null which discarded the key and blindly
+# accepted any server on every push. ConnectTimeout keeps a dead host from
 # hanging the whole deploy.
-RSYNC_SSH = ("ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "
+RSYNC_SSH = (f"ssh -o StrictHostKeyChecking=accept-new "
+             f"-o UserKnownHostsFile={shlex.quote(str(KNOWN_HOSTS))} "
              "-o ConnectTimeout=15")
 
 
