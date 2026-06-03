@@ -64,6 +64,10 @@
         text-shadow: 0 1px 0 #000;
       }
       .hud-row { white-space: nowrap; }
+      /* On touch there's no keyboard, so the "WASD / arrows · Esc" hint is
+         noise — and it sits right where the mobile HUD panels stack, bleeding
+         through them. Drop the whole overlay on touch. */
+      body.touch-mode #hud { display: none; }
     </style>
   </head>
   <body>

@@ -23,6 +23,7 @@
 import { el } from "./dom.js";
 import { onGoldChange, getGold } from "./arcadeCurrency.js";
 import { getSprite } from "./assets.js";
+import { setTdActionMode } from "./touch.js";
 
 let api = {};
 let root = null;       // the status bar (#td-hud)
@@ -71,6 +72,7 @@ export function hideTdHud() {
   if (dock) dock.style.display = "none";
   if (shopDialog) shopDialog.style.display = "none";
   if (gameOver) gameOver.style.display = "none";
+  setTdActionMode(null); // hand the touch cluster back to the normal game
 }
 
 // model: { wave, phase, score, highScore, lives, maxLives, countdown,
@@ -130,23 +132,45 @@ export function updateTdHud(model) {
     shopGoldEl.textContent = `Gold: ${getGold()}`;
   }
 
+  const placing = build && mode === "place";
   hintEl.textContent = build
-    ? (model.buildHint || "Open the Shop to place barrels")
+    ? (onTouch() ? touchHint(mode) : (model.buildHint || "Open the Shop to place barrels"))
     : "Defend the village!";
 
   // — Actions —————————————————————————————————————————————————————————————
-  recruitBtn.style.display = build ? "" : "none";
+  // While placing, the player is focused on the marker — hide the recruit /
+  // switch / revive buttons so the dock stays a slim build bar (they return
+  // the moment placement ends). Mobile especially has no room for all of it.
+  recruitBtn.style.display = (build && !placing) ? "" : "none";
   if (build) {
     const r = model.recruit || {};
     recruitBtn.textContent = r.label || `Recruit hero (${r.cost}g)`;
     recruitBtn.disabled = !r.can;
     recruitBtn.classList.toggle("td-disabled", !r.can);
   }
-  switchBtn.style.display = model.canSwitch ? "" : "none";
+  switchBtn.style.display = (model.canSwitch && !placing) ? "" : "none";
 
-  // Revives can be bought in any phase (mid-wave at a premium).
-  reviveWrap.style.display = model.revives?.length ? "" : "none";
+  // Revives can be bought in any phase (mid-wave at a premium), but not while
+  // the dock is in slim placement mode.
+  reviveWrap.style.display = (model.revives?.length && !placing) ? "" : "none";
   renderRevives(model.revives || []);
+
+  // Hand the touch action cluster the current TD verb so its three buttons
+  // relabel to Shop / Place / Remove / Done instead of attack icons.
+  setTdActionMode(build ? mode : (wave ? "wave" : null));
+}
+
+// Are we driving with touch? The body class is toggled by touch.js when the
+// on-screen controls show. Used to swap the dock's keyboard-centric hints for
+// short ones that point at the on-screen buttons.
+function onTouch() {
+  return typeof document !== "undefined" && document.body.classList.contains("touch-mode");
+}
+
+function touchHint(mode) {
+  if (mode === "shop") return "Pick a barrel, then Start placing";
+  if (mode === "place") return "Move the marker, then Place · Remove · Done";
+  return "Tap Shop to build barrels";
 }
 
 function setProgress(fill, frac, kind) {
@@ -472,20 +496,32 @@ function injectStyles() {
       #td-shop-dialog .td-shop-item { min-height: 56px; }
     }
 
-    /* Touch: dock under the top status bar — NOT centred — so the camera-
-       centred hero and the build ghost in front of it stay visible while you
-       move and place. Keeps clear of the bottom-corner d-pad / action
-       clusters too. Roomier tap targets for fingers. */
+    /* Touch: a slim build dock just under the top status bar. It can't go to
+       the bottom (the d-pad + action clusters live in the bottom corners), so
+       keep it short and out of the playfield — the camera-centred hero and the
+       build ghost stay visible while you move and place. Tighter type / padding
+       than desktop; tap targets still finger-sized. */
     @media (pointer: coarse) {
-      #td-dock { bottom: auto; top: 120px; transform: translateX(-50%); width: min(94vw, 520px); }
-      #td-dock .td-btn, #td-dock .td-start { min-height: 44px; }
+      #td-dock {
+        bottom: auto; top: 104px; transform: translateX(-50%);
+        width: min(94vw, 460px); gap: 6px; padding: 8px 10px; font-size: 12px;
+      }
+      #td-dock .td-dock-timer { gap: 8px; }
+      #td-dock .td-dock-label { font-size: 11px; }
+      #td-dock .td-prog { height: 10px; }
+      #td-dock .td-dock-main { gap: 6px; }
+      #td-dock .td-dock-actions { gap: 6px; }
+      #td-dock .td-btn, #td-dock .td-start { min-height: 42px; padding: 7px 10px; }
+      #td-dock .td-placing-label { font-size: 12px; }
+      #td-dock .td-dock-hint { font-size: 10px; }
       #td-dock .td-shop-item { min-height: 48px; }
     }
 
     /* Narrow screens share the top edge with the HP bar (left) and the touch
-       menu/pause button (right) — drop the TD bar to a second row. */
+       menu/pause button (right) — drop the TD bar below the HP card and shrink
+       it so the two never collide. */
     @media (max-width: 820px) {
-      #td-hud { top: 62px; }
+      #td-hud { top: 58px; font-size: 12px; gap: 8px; padding: 6px 10px; }
     }
 
     #td-gameover {

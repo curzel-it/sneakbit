@@ -48,6 +48,17 @@ const ICON_INTERACT = svg(`<path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0
 const ICON_THROW    = svg(`<path d="M12 3 L13.4 9.4 L20 11 L13.4 12.6 L12 19 L10.6 12.6 L4 11 L10.6 9.4 Z" fill="currentColor" stroke="none"></path>`, 24);
 const ICON_MELEE    = svg(`<path d="M14 4 L20 4 L20 10 L9.5 20.5 L7 21 L3 17 L3.5 14.5 L14 4 Z"></path><line x1="9" y1="9" x2="15" y2="15"></line>`, 24);
 const ICON_MENU     = svg(`<line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line>`, 22);
+
+// Tower-Defense build verbs. During the build phase the action cluster stops
+// being "attack" and becomes a tiny build toolbar, so the icons swap to match
+// what the button now does — a barrel (open shop), a drop-into-grid (place), a
+// trash can (remove) and a check (done). Paired with a text label so the verb
+// is unambiguous (a sword that "removes" reads wrong; a labelled trash can
+// doesn't).
+const ICON_TD_SHOP   = svg(`<ellipse cx="12" cy="6" rx="6" ry="2.4"></ellipse><path d="M6 6v12c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4V6"></path><path d="M6 12c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4"></path>`, 24);
+const ICON_TD_PLACE  = svg(`<rect x="4" y="4" width="16" height="16" rx="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line>`, 24);
+const ICON_TD_REMOVE = svg(`<polyline points="4 7 20 7"></polyline><path d="M6 7l1 13h10l1-13"></path><path d="M9 7V4h6v3"></path>`, 22);
+const ICON_TD_DONE   = svg(`<polyline points="5 13 10 18 19 6"></polyline>`, 24);
 const heldBindings = new Map(); // dir -> pointerId
 
 // pointerId -> direction button currently "pressed" by that finger. Used
@@ -85,9 +96,9 @@ export function installTouchControls() {
       <button class="touch-btn" data-dir="down">${ICON_DIR_DOWN}</button>
     </div>
     <div class="touch-pad" data-side="right">
-      <button class="touch-btn touch-action touch-melee"    data-action="melee">${ICON_MELEE}</button>
-      <button class="touch-btn touch-action touch-throw"    data-action="throw">${ICON_THROW}</button>
-      <button class="touch-btn touch-action touch-interact" data-action="interact">${ICON_INTERACT}</button>
+      <button class="touch-btn touch-action touch-melee"    data-action="melee">${ICON_MELEE}<span class="touch-label"></span></button>
+      <button class="touch-btn touch-action touch-throw"    data-action="throw">${ICON_THROW}<span class="touch-label"></span></button>
+      <button class="touch-btn touch-action touch-interact" data-action="interact">${ICON_INTERACT}<span class="touch-label"></span></button>
     </div>
     <div class="touch-pad" data-side="top-right">
       <button class="touch-btn touch-menu" data-action="menu">${ICON_MENU}</button>
@@ -197,7 +208,67 @@ function syncMeleeVisibility() {
 // starts so the melee/remove button appears even if the squad carries no
 // melee weapon (and the mode flips after the overlay was first built).
 export function refreshTouchActions() {
-  syncMeleeVisibility();
+  if (tdActionMode) applyTdActionMode(); else syncMeleeVisibility();
+}
+
+// — Tower-Defense action cluster ——————————————————————————————————————————
+// In TD the three right-side buttons change job by phase, and their icons +
+// labels follow so a thumb knows what each does without reading a hint:
+//   browse → only "Shop" (open the build dialog)
+//   shop   → none (the modal owns its own buttons)
+//   place  → "Place" / "Remove" / "Done"
+//   wave   → attack cluster (shoot + melee), no labels
+//   null   → back to the normal game cluster
+// Driven each frame by tdHud.updateTdHud, cached so the DOM only churns on a
+// real change.
+let tdActionMode = null;
+
+export function setTdActionMode(mode) {
+  const next = mode || null;
+  if (next === tdActionMode) return;
+  tdActionMode = next;
+  applyTdActionMode();
+}
+
+function applyTdActionMode() {
+  if (!root) return;
+  const interact = root.querySelector(".touch-interact");
+  const melee = root.querySelector(".touch-melee");
+  const throwBtn = root.querySelector(".touch-throw");
+  if (!interact || !melee || !throwBtn) return;
+
+  if (tdActionMode === "place") {
+    setActionButton(interact, ICON_TD_PLACE, "Place", "");
+    setActionButton(melee, ICON_TD_REMOVE, "Remove", "");
+    setActionButton(throwBtn, ICON_TD_DONE, "Done", "");
+  } else if (tdActionMode === "browse") {
+    setActionButton(interact, ICON_TD_SHOP, "Shop", "");
+    setActionButton(melee, ICON_MELEE, "", "none");
+    setActionButton(throwBtn, ICON_THROW, "", "none");
+  } else if (tdActionMode === "shop") {
+    // The shop modal carries its own Start placing / Close buttons.
+    setActionButton(interact, ICON_TD_SHOP, "", "none");
+    setActionButton(melee, ICON_MELEE, "", "none");
+    setActionButton(throwBtn, ICON_THROW, "", "none");
+  } else if (tdActionMode === "wave") {
+    setActionButton(interact, ICON_INTERACT, "", "none"); // nothing to interact with mid-wave
+    setActionButton(throwBtn, ICON_THROW, "", "");
+    setActionButton(melee, ICON_MELEE, "", "");
+  } else {
+    // Not TD — restore the normal game cluster.
+    setActionButton(interact, ICON_INTERACT, "", "");
+    setActionButton(throwBtn, ICON_THROW, "", "");
+    setActionButton(melee, ICON_MELEE, "", "");
+    syncMeleeVisibility();
+  }
+}
+
+function setActionButton(btn, iconHtml, label, display) {
+  const icon = btn.querySelector(".touch-icon");
+  if (icon) icon.outerHTML = iconHtml; // constants include the .touch-icon wrapper
+  const lbl = btn.querySelector(".touch-label");
+  if (lbl) lbl.textContent = label;
+  btn.style.display = display;
 }
 
 function show() {
@@ -205,9 +276,10 @@ function show() {
   visible = true;
   root.style.display = "block";
   document.body.classList.add("touch-mode");
-  // The action set can depend on the live game mode (TD shows the remove
-  // button) — re-evaluate each time the overlay appears.
-  syncMeleeVisibility();
+  // The action set can depend on the live game mode (TD relabels the cluster
+  // by phase) — re-evaluate each time the overlay appears, respecting any
+  // active TD mode rather than just the melee-visibility default.
+  refreshTouchActions();
 }
 
 function hide() {
@@ -439,6 +511,19 @@ function injectStyles() {
       width: 100%; height: 100%;
       pointer-events: none;
     }
+    /* Verb label for the TD build cluster. Sits to the LEFT of the round
+       button (toward screen centre) so it never collides with the stacked
+       buttons above/below, and reads as a little pill. Empty = hidden. */
+    #touch-controls .touch-action { position: relative; }
+    #touch-controls .touch-label {
+      position: absolute; right: 100%; top: 50%; transform: translate(-8px, -50%);
+      pointer-events: none; white-space: nowrap;
+      font-family: var(--sb-font, monospace); font-size: 12px; font-weight: bold;
+      color: var(--sb-text); background: var(--sb-surface-bg);
+      border: var(--sb-surface-border); border-radius: 5px; padding: 3px 7px;
+      text-shadow: 0 1px 0 #000;
+    }
+    #touch-controls .touch-label:empty { display: none; }
     @media (min-width: 980px) and (pointer: fine) {
       #touch-controls { display: none !important; }
       /* The ?touch=1 flag keeps the overlay up on desktop for tuning
