@@ -152,6 +152,7 @@ export function createRelay({
       case "guest.join": return onGuestJoin(ctx, msg);
       case "guest.leave": return onGuestLeave(ctx);
       case "input": return onInput(ctx, msg);
+      case "move": return onMove(ctx, msg);
       case "guest.resync": return onGuestResync(ctx);
       case "guest.loadout": return onGuestLoadout(ctx, msg);
       case "snapshot":
@@ -406,7 +407,35 @@ export function createRelay({
       intent: typeof msg.intent === "string" ? msg.intent : "",
     };
     if (typeof msg.dir === "string") out.dir = msg.dir;
+    // Facing the action fires in — the host sets the avatar's direction
+    // before dispatching so a shoot/melee/interact can't be re-timed
+    // against a separate face update (guest-authoritative-movement.md).
+    if (typeof msg.d === "string") out.d = msg.d;
     if (typeof msg.t === "number") out.t = msg.t;
+    session.hostConn.sendJSON(out);
+    metrics.frameRelayed("input", jsonByteLength(out));
+  }
+
+  // Guest → host committed tile-step / face update (guest-authoritative-
+  // movement.md). Same fan-in shape as input: guest-only, forwarded to the
+  // session host with a strict field whitelist so a tampered client can't
+  // ride extra bytes out at the host's cost. `k` selects the variant:
+  //   step → fx,fy (source tile), tx,ty (target tile), d (direction)
+  //   face → x,y (idle tile), d (direction)
+  function onMove(ctx, msg) {
+    if (ctx.role !== "guest") return;
+    const session = store.sessionsById.get(ctx.sessionId);
+    if (!session || !session.hostConn) return;
+    const out = {
+      op: "move",
+      from: ctx.playerId,
+      seq: typeof msg.seq === "number" ? msg.seq : 0,
+      k: typeof msg.k === "string" ? msg.k : "",
+    };
+    if (typeof msg.d === "string") out.d = msg.d;
+    for (const f of ["fx", "fy", "tx", "ty", "x", "y"]) {
+      if (typeof msg[f] === "number") out[f] = msg[f];
+    }
     session.hostConn.sendJSON(out);
     metrics.frameRelayed("input", jsonByteLength(out));
   }
@@ -558,7 +587,7 @@ export function createRelay({
       rl.countOther = 0;
     }
     let limit;
-    if (op === "input") {
+    if (op === "input" || op === "move") {
       limit = LIMIT_INPUT_PER_S;
       if (++rl.countInput > limit) { metrics.dropPerOp(); return false; }
     } else if (BROADCAST_OPS.has(op)) {

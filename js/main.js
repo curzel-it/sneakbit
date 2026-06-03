@@ -11,7 +11,7 @@ import { composeBiomeSheet } from "./biomeSheet.js";
 import { buildZone } from "./zone.js";
 import { pickCoopSpawn } from "./coopSpawn.js";
 import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress } from "./input.js";
-import { createPlayer, updatePlayer } from "./player.js";
+import { createPlayer, updatePlayer, updateGuestAvatar } from "./player.js";
 import { createCamera, updateCamera, cameraRectFor } from "./camera.js";
 import { createRenderer, render, renderViewports } from "./renderer.js";
 import { startGameLoop } from "./gameLoop.js";
@@ -379,16 +379,29 @@ async function main() {
       // player on revive. Without this gate a "dead-but-waiting" host
       // would silently walk around invisibly while spectating guests.
       if (!isPlayerDead(0)) updatePlayer(state.player, pvpGateInput(0, hostInput), dt, state.zone);
+      // Network-guest avatars (playerId set) own their own tile path: the
+      // host only animates committed steps via updateGuestAvatar — never
+      // runs movement decisions for them (guest-authoritative-movement.md).
+      // Local-coop slots (playerId null) still run the full input-driven
+      // updatePlayer.
       if (state.player2) {
-        const input2 = pollInput(2);
-        if (!isPlayerDead(state.player2.index | 0)) {
-          updatePlayer(state.player2, pvpGateInput(1, input2), dt, state.zone);
+        if (state.player2.playerId) {
+          updateGuestAvatar(state.player2, dt, state.zone);
+        } else {
+          const input2 = pollInput(2);
+          if (!isPlayerDead(state.player2.index | 0)) {
+            updatePlayer(state.player2, pvpGateInput(1, input2), dt, state.zone);
+          }
         }
       }
       for (const s of state.players) {
-        const inputN = pollInput(s.slot);
-        if (!isPlayerDead(s.player.index | 0)) {
-          updatePlayer(s.player, pvpGateInput(s.player.index | 0, inputN), dt, state.zone);
+        if (s.playerId) {
+          updateGuestAvatar(s.player, dt, state.zone);
+        } else {
+          const inputN = pollInput(s.slot);
+          if (!isPlayerDead(s.player.index | 0)) {
+            updatePlayer(s.player, pvpGateInput(s.player.index | 0, inputN), dt, state.zone);
+          }
         }
       }
       maybeTeleport(state);
@@ -599,7 +612,11 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
   // will rubber-band back the instant the host resumes. Gating here also
   // means the on-screen overlay is the only thing reacting to input,
   // which matches what the host sees.
-  if (!isDialogueOpen()) tickPredictedSelf(dt);
+  // Freeze the predicted self while a modal dialogue is open (the host
+  // pauses its own tick) or while this guest is dead — a dead guest must
+  // neither move nor stream step commits. The guest's own HP lands at
+  // playerHealth index 0 via guestSelfHpSync, so that's the death seam here.
+  if (!isDialogueOpen() && !isPlayerDead(0)) tickPredictedSelf(dt);
   // Refresh zone.entities with interpolated positions before render.
   // Without this, mobs / pushables / projectiles snap at the broadcaster's
   // 20 Hz tick instead of sliding smoothly. See mirrorWorld.refreshMirrorEntities.

@@ -658,3 +658,37 @@ test("input frame is whitelisted — extra fields stripped before fan-in", async
     h.close(); g.close();
   });
 });
+
+test("move frame is forwarded with from=playerId and whitelisted fields", async () => {
+  // guest-authoritative-movement.md: committed tile-steps fan in to the
+  // host the same way input does. Only op/from/seq/k (+ d, fx,fy,tx,ty,x,y)
+  // cross the wire; attacker bloat is stripped.
+  await withServer(async ({ host, port }) => {
+    const h = await openWsClient(host, port);
+    await hello(h, "u-mv-h");
+    h.send({ op: "host.open" });
+    const opened = await h.recv();
+
+    const g = await openWsClient(host, port);
+    const gw = await hello(g, "u-mv-g");
+    g.send({ op: "guest.join", code: opened.code });
+    await g.recv(); await h.recv();
+
+    g.send({
+      op: "move", seq: 3, k: "step", d: "left",
+      fx: 5, fy: 5, tx: 4, ty: 5,
+      payload: "x".repeat(50_000), junk: { nested: true },
+    });
+    const fwd = await h.recv();
+    assert.equal(fwd.op, "move");
+    assert.equal(fwd.from, gw.playerId);
+    assert.equal(fwd.seq, 3);
+    assert.equal(fwd.k, "step");
+    assert.equal(fwd.d, "left");
+    assert.equal(fwd.tx, 4);
+    assert.equal(fwd.ty, 5);
+    assert.equal(fwd.payload, undefined);
+    assert.equal(fwd.junk, undefined);
+    h.close(); g.close();
+  });
+});

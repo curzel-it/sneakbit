@@ -1,6 +1,6 @@
 # Guest-authoritative tile movement
 
-Status: **spec / not yet implemented**
+Status: **implemented** (shipped on `main`)
 Related: [online-coop.md](online-coop.md), [split-screen.md](split-screen.md)
 Code anchors verified against `main` on 2026-06-03 (see [Code map](#code-map-verified-2026-06-03)).
 Two design questions are settled in [Decisions](#decisions--confirms-2026-06-03); read them before starting.

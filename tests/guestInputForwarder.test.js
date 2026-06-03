@@ -1,7 +1,10 @@
-// Tests the guest's key→intent forwarding: edge emissions only, stopMove
-// when the held set empties, dir-replacement when another arrow is still
-// held. Drives the module via its synthetic _injectKey* seams to avoid
-// pulling in JSDOM.
+// Guest sender. Two channels:
+//   * action intents (shoot/melee/interact) — keyboard + gamepad rising
+//     edges sent as op:"input" carrying the facing `d`.
+//   * committed tile-steps / faces — forwardMove() → op:"move" + a step-log
+//     for reconciliation.
+// Movement is no longer watched here (it reaches predictedSelf via input.js
+// slot 1), so there is no moveX/stopMove/holdSync path to test.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -24,72 +27,26 @@ function setup() {
   return net;
 }
 
-test("pressing the bound move-down key emits moveDown once", () => {
+// --- action intents ---------------------------------------------------------
+
+test("interact key emits intent:interact carrying the current facing", () => {
   const net = setup();
-  // KeyS is the default keyBindings.js bind for moveDown in single-player.
-  fwd._injectKeyDownForTesting("KeyS");
+  fwd._injectKeyDownForTesting("KeyE"); // KeyE = interact default
   assert.equal(net.sent.length, 1);
   assert.equal(net.sent[0].op, "input");
-  assert.equal(net.sent[0].intent, "moveDown");
+  assert.equal(net.sent[0].intent, "interact");
   assert.equal(net.sent[0].seq, 1);
+  // No predicted self installed in this unit → facing defaults to "down".
+  assert.equal(net.sent[0].d, "down");
   fwd._resetForwarderForTesting();
 });
 
-test("releasing the only-held direction sends stopMove", () => {
-  const net = setup();
-  fwd._injectKeyDownForTesting("KeyS");
-  fwd._injectKeyUpForTesting("KeyS");
-  const stop = net.sent.filter((m) => m.intent === "stopMove");
-  assert.equal(stop.length, 1);
-  fwd._resetForwarderForTesting();
-});
-
-test("a second direction press replaces the held direction on the wire", () => {
-  const net = setup();
-  fwd._injectKeyDownForTesting("KeyS"); // down
-  fwd._injectKeyDownForTesting("KeyA"); // left
-  const intents = net.sent.map((m) => m.intent);
-  assert.deepEqual(intents, ["moveDown", "moveLeft"]);
-  fwd._resetForwarderForTesting();
-});
-
-test("releasing one direction with another still held syncs held without a fresh press", () => {
-  const net = setup();
-  fwd._injectKeyDownForTesting("KeyS"); // down
-  fwd._injectKeyDownForTesting("KeyA"); // left
-  fwd._injectKeyUpForTesting("KeyA");   // release left, down still held
-  const intents = net.sent.map((m) => m.intent);
-  // moveDown, moveLeft, holdSync(held=[down])
-  assert.deepEqual(intents, ["moveDown", "moveLeft", "holdSync"]);
-  // The holdSync carries the post-release held set so the host can mirror
-  // it; without held the host has no way to know which key was released.
-  assert.deepEqual(net.sent[2].held, ["down"]);
-  fwd._resetForwarderForTesting();
-});
-
-test("a multi-key press ships the full held set so the host's HOLD_PRIORITY chains correctly", () => {
+test("movement keys do NOT emit (movement is owned by predictedSelf now)", () => {
   const net = setup();
   fwd._injectKeyDownForTesting("KeyW"); // up
-  fwd._injectKeyDownForTesting("KeyA"); // left, still holding up
-  // First message: just up held.
-  assert.deepEqual(net.sent[0].intent, "moveUp");
-  assert.deepEqual(net.sent[0].held, ["up"]);
-  // Second message: both keys held — host needs to know about up too,
-  // otherwise its HOLD_PRIORITY chain would pick left while predicted
-  // picks up.
-  assert.deepEqual(net.sent[1].intent, "moveLeft");
-  assert.deepEqual(net.sent[1].held.slice().sort(), ["left", "up"]);
-  fwd._resetForwarderForTesting();
-});
-
-test("seq increments monotonically across emissions", () => {
-  const net = setup();
-  fwd._injectKeyDownForTesting("KeyS");
-  fwd._injectKeyUpForTesting("KeyS");
-  const seqs = net.sent.map((m) => m.seq);
-  for (let i = 1; i < seqs.length; i++) {
-    assert.ok(seqs[i] > seqs[i - 1], `seq must be increasing: ${seqs}`);
-  }
+  fwd._injectKeyDownForTesting("KeyA"); // left
+  fwd._injectKeyDownForTesting("KeyS"); // down
+  assert.equal(net.sent.length, 0, "no movement intents should hit the wire");
   fwd._resetForwarderForTesting();
 });
 
@@ -100,14 +57,58 @@ test("unbound keys do not emit", () => {
   fwd._resetForwarderForTesting();
 });
 
-test("interact key emits intent: interact", () => {
+test("seq increments monotonically across action emissions", () => {
   const net = setup();
-  // KeyE is the default for interact in keyBindings.js.
-  fwd._injectKeyDownForTesting("KeyE");
-  assert.equal(net.sent.length, 1);
-  assert.equal(net.sent[0].intent, "interact");
+  fwd._injectKeyDownForTesting("KeyF"); // shoot
+  fwd._injectKeyDownForTesting("KeyG"); // melee
+  fwd._injectKeyDownForTesting("KeyE"); // interact
+  const seqs = net.sent.map((m) => m.seq);
+  assert.deepEqual(seqs, [1, 2, 3]);
   fwd._resetForwarderForTesting();
 });
+
+// --- forwardMove + step-log -------------------------------------------------
+
+test("forwardMove(step) ships op:move with the step fields and logs the result tile", () => {
+  const net = setup();
+  const seq = fwd.forwardMove({ k: "step", fx: 5, fy: 5, tx: 5, ty: 6, d: "down" });
+  assert.equal(seq, 1);
+  assert.deepEqual(net.sent[0], { op: "move", seq: 1, k: "step", fx: 5, fy: 5, tx: 5, ty: 6, d: "down" });
+  assert.deepEqual(fwd.getStepLog(), [{ seq: 1, tx: 5, ty: 6 }]);
+  fwd._resetForwarderForTesting();
+});
+
+test("forwardMove(face) ships op:move k:face and does NOT touch the step-log", () => {
+  const net = setup();
+  fwd.forwardMove({ k: "face", x: 5, y: 5, d: "left" });
+  assert.deepEqual(net.sent[0], { op: "move", seq: 1, k: "face", x: 5, y: 5, d: "left" });
+  assert.deepEqual(fwd.getStepLog(), [], "faces are not reconciled, so no log entry");
+  fwd._resetForwarderForTesting();
+});
+
+test("dropAckedSteps drops every step-log entry with seq <= acked", () => {
+  setup();
+  fwd.forwardMove({ k: "step", fx: 5, fy: 5, tx: 5, ty: 6, d: "down" }); // seq 1
+  fwd.forwardMove({ k: "step", fx: 5, fy: 6, tx: 5, ty: 7, d: "down" }); // seq 2
+  fwd.forwardMove({ k: "step", fx: 5, fy: 7, tx: 5, ty: 8, d: "down" }); // seq 3
+  fwd.dropAckedSteps(2);
+  assert.deepEqual(fwd.getStepLog(), [{ seq: 3, tx: 5, ty: 8 }]);
+  fwd._resetForwarderForTesting();
+});
+
+test("action and step seqs share one counter", () => {
+  const net = setup();
+  fwd._injectKeyDownForTesting("KeyF");                                    // seq 1 (shoot)
+  fwd.forwardMove({ k: "step", fx: 5, fy: 5, tx: 6, ty: 5, d: "right" }); // seq 2 (step)
+  fwd._injectKeyDownForTesting("KeyG");                                    // seq 3 (melee)
+  assert.deepEqual(net.sent.map((m) => m.seq), [1, 2, 3]);
+  assert.equal(fwd.getSeq(), 3);
+  // Only the step landed in the log.
+  assert.deepEqual(fwd.getStepLog().map((e) => e.seq), [2]);
+  fwd._resetForwarderForTesting();
+});
+
+// --- disconnect behaviour ---------------------------------------------------
 
 function makeDisconnectableNet() {
   const sent = [];
@@ -128,25 +129,24 @@ test("action intents fired while disconnected are buffered, not sent", () => {
   fwd._injectKeyDownForTesting("KeyF"); // shoot
   fwd._injectKeyDownForTesting("KeyG"); // melee
   fwd._injectKeyDownForTesting("KeyE"); // interact
-  assert.equal(net.sent.length, 0, "nothing should hit the wire while disconnected");
-  const pending = fwd._getPendingActionsForTesting();
-  assert.deepEqual(pending.map((p) => p.intent), ["shoot", "melee", "interact"]);
+  assert.equal(net.sent.length, 0);
+  assert.deepEqual(fwd._getPendingActionsForTesting().map((p) => p.intent), ["shoot", "melee", "interact"]);
   fwd._resetForwarderForTesting();
 });
 
-test("movement intents fired while disconnected are NOT buffered (state re-derives on resume)", () => {
+test("forwardMove while disconnected is dropped (movement is state-derived)", () => {
   fwd._resetForwarderForTesting();
   const net = makeDisconnectableNet();
   fwd.installGuestInputForwarder(net);
   net.setConnected(false);
-  fwd._injectKeyDownForTesting("KeyD"); // moveRight
+  const seq = fwd.forwardMove({ k: "step", fx: 5, fy: 5, tx: 6, ty: 5, d: "right" });
+  assert.equal(seq, null, "a step committed while disconnected must not be queued");
   assert.equal(net.sent.length, 0);
-  assert.equal(fwd._getPendingActionsForTesting().length, 0,
-    "movement intents must not pile up in the action buffer — buffering would phantom-step the avatar on reconnect");
+  assert.deepEqual(fwd.getStepLog(), []);
   fwd._resetForwarderForTesting();
 });
 
-test("flushOnReconnect drains buffered actions in order", () => {
+test("flushOnReconnect drains buffered actions in order (carrying facing)", () => {
   fwd._resetForwarderForTesting();
   const net = makeDisconnectableNet();
   fwd.installGuestInputForwarder(net);
@@ -156,106 +156,49 @@ test("flushOnReconnect drains buffered actions in order", () => {
   net.setConnected(true);
   fwd.flushOnReconnect();
   assert.equal(fwd._getPendingActionsForTesting().length, 0);
-  const intents = net.sent.map((m) => m.intent);
-  assert.deepEqual(intents, ["shoot", "melee"]);
+  const actions = net.sent.filter((m) => m.op === "input");
+  assert.deepEqual(actions.map((m) => m.intent), ["shoot", "melee"]);
+  for (const a of actions) assert.equal(a.d, "down");
   fwd._resetForwarderForTesting();
 });
 
-test("flushOnReconnect drops entries older than ACTION_TTL_MS (5 s)", () => {
+test("flushOnReconnect drops actions older than ACTION_TTL_MS (5 s)", () => {
   fwd._resetForwarderForTesting();
   const net = makeDisconnectableNet();
   fwd.installGuestInputForwarder(net);
   net.setConnected(false);
   fwd._injectKeyDownForTesting("KeyF");
-  fwd._injectKeyDownForTesting("KeyG");
   net.setConnected(true);
-  // Pretend a long time passed before the welcome arrived.
   fwd.flushOnReconnect(Date.now() + 6000);
-  assert.equal(net.sent.length, 0, "stale intents should be dropped — a 6 s-old shoot would surprise the player");
+  assert.equal(net.sent.filter((m) => m.op === "input").length, 0,
+    "a 6 s-old shoot would surprise the player — drop it");
   fwd._resetForwarderForTesting();
 });
 
-test("pending action buffer is bounded (oldest entries evicted past cap)", () => {
+test("pending action buffer is bounded (oldest evicted past cap)", () => {
   fwd._resetForwarderForTesting();
   const net = makeDisconnectableNet();
   fwd.installGuestInputForwarder(net);
   net.setConnected(false);
-  // Press shoot 10 times — cap is 8, so the first 2 should evict.
-  for (let i = 0; i < 10; i++) {
-    fwd._injectKeyDownForTesting("KeyF");
-    fwd._injectKeyUpForTesting("KeyF"); // shoot is an action, but keyup makes the next keydown fire
-  }
-  // The forwarder only emits shoot on keydown if !e.repeat, and our
-  // synthetic events have no repeat flag, so each KeyF down fires
-  // shoot. With keyup between each, the cap should be 8.
-  const pending = fwd._getPendingActionsForTesting();
-  assert.equal(pending.length, 8);
+  for (let i = 0; i < 10; i++) fwd._injectKeyDownForTesting("KeyF");
+  assert.equal(fwd._getPendingActionsForTesting().length, 8);
   fwd._resetForwarderForTesting();
 });
 
-test("flushOnReconnect re-emits a still-held movement direction", () => {
-  fwd._resetForwarderForTesting();
-  const net = makeDisconnectableNet();
-  fwd.installGuestInputForwarder(net);
-  // User starts walking right while connected.
-  fwd._injectKeyDownForTesting("KeyD"); // moveRight
-  assert.equal(net.sent[0].intent, "moveRight");
-  net.sent.length = 0;
-  // Connection drops mid-walk. User is still holding KeyD.
-  net.setConnected(false);
-  // … blip …
-  net.setConnected(true);
-  fwd.flushOnReconnect();
-  // The forwarder should emit moveRight again so the host's avatar
-  // resumes walking without the user lifting + repressing the key.
-  assert.equal(net.sent.length, 1);
-  assert.equal(net.sent[0].intent, "moveRight");
-  fwd._resetForwarderForTesting();
-});
-
-// --- Gamepad forwarding (guest plays with a controller) -----------------
-// Driven via _injectGamepadFrameForTesting, which feeds a synthetic pad
-// snapshot straight into the same edge logic the per-frame poll uses
-// (navigator.getGamepads is absent in node).
-
-test("a held gamepad direction emits moveX once, then holds", () => {
-  const net = setup();
-  fwd._injectGamepadFrameForTesting(["down"]); // press
-  fwd._injectGamepadFrameForTesting(["down"]); // still held — no new edge
-  const intents = net.sent.map((m) => m.intent);
-  assert.deepEqual(intents, ["moveDown"]);
-  assert.deepEqual(net.sent[0].held, ["down"]);
-  fwd._resetForwarderForTesting();
-});
-
-test("releasing the only-held gamepad direction sends stopMove", () => {
-  const net = setup();
-  fwd._injectGamepadFrameForTesting(["right"]);
-  fwd._injectGamepadFrameForTesting([]); // released
-  const intents = net.sent.map((m) => m.intent);
-  assert.deepEqual(intents, ["moveRight", "stopMove"]);
-  fwd._resetForwarderForTesting();
-});
+// --- gamepad action buttons -------------------------------------------------
 
 test("gamepad action buttons emit one intent on the rising edge", () => {
   const net = setup();
   fwd._injectGamepadFrameForTesting([], { shoot: true });
-  fwd._injectGamepadFrameForTesting([], { shoot: true }); // held — no repeat
+  fwd._injectGamepadFrameForTesting([], { shoot: true });  // held — no repeat
   fwd._injectGamepadFrameForTesting([], { shoot: false, melee: true });
-  const intents = net.sent.map((m) => m.intent);
-  assert.deepEqual(intents, ["shoot", "melee"]);
+  assert.deepEqual(net.sent.map((m) => m.intent), ["shoot", "melee"]);
   fwd._resetForwarderForTesting();
 });
 
-test("a gamepad direction and a keyboard direction coexist without a spurious stopMove", () => {
+test("gamepad directions are NOT forwarded (they drive predictedSelf via pollInput)", () => {
   const net = setup();
-  fwd._injectKeyDownForTesting("KeyW");        // keyboard up
-  fwd._injectGamepadFrameForTesting(["left"]); // gamepad left, up still held
-  fwd._injectKeyUpForTesting("KeyW");          // release keyboard up; left still held by pad
-  const intents = net.sent.map((m) => m.intent);
-  // up press, left press, then a holdSync (NOT stopMove) because the pad
-  // still holds left.
-  assert.deepEqual(intents, ["moveUp", "moveLeft", "holdSync"]);
-  assert.deepEqual(net.sent[2].held, ["left"]);
+  fwd._injectGamepadFrameForTesting(["down", "left"]);
+  assert.equal(net.sent.length, 0);
   fwd._resetForwarderForTesting();
 });

@@ -11,7 +11,7 @@
 // participate in pickups/combat.
 
 import { getNetRole, getNet } from "./onlineBootstrap.js";
-import { pushInputPress, clearInputHeld, clearInputState, setNetworkHeld, pushPressEvent } from "./input.js";
+import { clearInputHeld, clearInputState } from "./input.js";
 import { setNetworkGuestCount } from "./coopMode.js";
 import { tryShootForSlot } from "./shooting.js";
 import { tryMeleeForSlot } from "./melee.js";
@@ -20,13 +20,7 @@ import { isPlayerDead } from "./playerHealth.js";
 import { isPvp } from "./gameMode.js";
 import { cornerSpawnTile } from "./pvpSpawn.js";
 import { notifyPlayerDied } from "./pvpMatch.js";
-
-const INTENT_TO_DIR = {
-  moveUp: "up",
-  moveDown: "down",
-  moveLeft: "left",
-  moveRight: "right",
-};
+import { applyNetStep, setGuestAckSink } from "./player.js";
 
 let stateGetter = null;
 let p2Factory = null;
@@ -78,6 +72,11 @@ export function installHostGuests(getState, opts = {}) {
   unsubs.push(net.on("peer.left", onPeerLeft));
   unsubs.push(net.on("peer.ghosted", onPeerGhosted));
   unsubs.push(net.on("input", onInput));
+  unsubs.push(net.on("move", onMove));
+  // Resolved guest steps advance the per-guest lastSeq through this sink,
+  // fired by player.updateGuestAvatar at the exact snap (and on a queued-
+  // step reject) so (tile, seq) stay a consistent pair for the broadcaster.
+  setGuestAckSink(ackStep);
   return true;
 }
 
@@ -88,6 +87,7 @@ export function installHostGuests(getState, opts = {}) {
 export function uninstallHostGuests() {
   for (const u of unsubs) { try { u(); } catch { /* ignore */ } }
   unsubs = [];
+  setGuestAckSink(null);
   stateGetter = null;
   p2Factory = null;
   guestSlotByPlayerId.clear();
@@ -189,57 +189,101 @@ function onPeerGhosted(m) {
   if (slot) clearInputHeld(slot);
 }
 
+// Action intents only (movement is now op:"move" — see onMove). The
+// blanket lastSeq advance that used to live here is gone: under guest-
+// authoritative movement only a *resolved step* touches lastSeq (accept at
+// snap, reject immediately), so actions/faces share the seq counter but
+// must not bump the ack.
 function onInput(m) {
   if (!m || typeof m.intent !== "string") return;
   const from = m.from;
   if (!from) return;
   const slot = guestSlotByPlayerId.get(from);
   if (!slot) return;
-  if (typeof m.seq === "number") {
-    const prev = lastSeqOut[from] ?? 0;
-    if (m.seq > prev) lastSeqOut[from] = m.seq;
-  }
   applyIntent(slot, m.intent, from, m);
 }
 
 function applyIntent(slot, intent, from, msg) {
-  const held = Array.isArray(msg?.held) ? msg.held : null;
-  const dir = INTENT_TO_DIR[intent];
-  if (dir) {
-    if (held) {
-      // New wire (forwarder ≥ 20260528i): the guest ships its full held
-      // set with every movement intent. Mirror it exactly so the host's
-      // HOLD_PRIORITY chains via the same direction the guest's
-      // predicted self picks locally. The intent is queued as a fresh
-      // press event so rotate / queuedDir timing matches a real keydown.
-      setNetworkHeld(slot, held);
-      pushPressEvent(slot, dir);
-    } else {
-      // Legacy wire (no held field): preserve the old absolute-press
-      // semantics. Without `held` we can't reconstruct multi-key state,
-      // so the safest fallback is "this is the only direction held."
-      clearInputState(slot);
-      pushInputPress(slot, dir);
-    }
+  if (intent !== "interact" && intent !== "shoot" && intent !== "melee") return;
+  // Range first — actionCooldownOk has the side effect of stamping the
+  // bucket, so checking it before a definite reject would lock out a
+  // legit guest who mashes the button during death animation.
+  if (!actionRangeOk(slot)) return;
+  if (!actionCooldownOk(from, intent)) return;
+  // Face the way the action fires before dispatch so ordering vs a face
+  // update can't matter — the guest ships `d` on every action intent.
+  if (typeof msg?.d === "string") {
+    const avatar = playerForSlot(stateGetter?.(), slot);
+    if (avatar) avatar.direction = msg.d;
+  }
+  dispatchActionForSlot(slot, intent);
+}
+
+// Guest committed tile-step / face update. The host validates legality
+// (adjacency from-tile + canEnter via applyNetStep) and executes; it no
+// longer runs movement decisions for guest avatars. See
+// guest-authoritative-movement.md.
+function onMove(m) {
+  if (!m || typeof m.k !== "string") return;
+  const from = m.from;
+  if (!from) return;
+  const slot = guestSlotByPlayerId.get(from);
+  if (!slot) return;
+  const state = stateGetter?.();
+  if (!state) return;
+  const avatar = playerForSlot(state, slot);
+  if (!avatar) return;
+  const dead = isPlayerDead(avatar.index | 0);
+  if (m.k === "face") {
+    // Faces never touch lastSeq (not reconciled). A dead guest doesn't turn.
+    if (!dead && !avatar.step && typeof m.d === "string") avatar.direction = m.d;
     return;
   }
-  if (intent === "holdSync") {
-    // Held set shrank but isn't empty (user released one of multiple
-    // held keys). Update the host's view without pushing a press event
-    // — the user didn't press anything new. Skip silently if the wire
-    // didn't include held; an empty holdSync would be ambiguous.
-    if (held) setNetworkHeld(slot, held);
+  if (m.k !== "step") return;
+  if (dead) { ackStep(from, m.seq); return; }   // reject: tile unchanged, lastSeq advances
+  onStep(avatar, m, from, state.zone);
+}
+
+function onStep(avatar, m, from, zone) {
+  const { fx, fy, tx, ty, d, seq } = m;
+  // From-tile check: the commit must originate at the avatar's chain tip
+  // (its current tile when idle, or the target of the last in-flight/queued
+  // step). After a host displacement the guest commits from a stale tile
+  // for ~1 RTT; those reject until the next delta snaps it.
+  const tip = chainTip(avatar);
+  if (fx !== tip.x || fy !== tip.y) { ackStep(from, seq); return; }   // reject
+  if (avatar.step) {
+    // Mid-step: queue for consumption at the snap. lastSeq waits until it
+    // resolves (accept→snap, or reject) in updateGuestAvatar.
+    avatar.netQueuedSteps.push({ d, tx, ty, seq });
     return;
   }
-  if (intent === "stopMove") { clearInputHeld(slot); return; }
-  if (intent === "interact" || intent === "shoot" || intent === "melee") {
-    // Range first — actionCooldownOk has the side effect of stamping the
-    // bucket, so checking it before a definite reject would lock out a
-    // legit guest who mashes the button during death animation.
-    if (!actionRangeOk(slot)) return;
-    if (!actionCooldownOk(from, intent)) return;
-    dispatchActionForSlot(slot, intent);
+  // Idle: execute now. Accept iff a step was produced and its target is the
+  // tile the guest claimed; ack waits for the snap. Otherwise reject.
+  if (applyNetStep(avatar, d, zone)
+      && avatar.step.toX === tx && avatar.step.toY === ty) {
+    avatar.netStepSeq = seq;
+  } else {
+    avatar.step = null;
+    ackStep(from, seq);
   }
+}
+
+// The avatar's chain tip — where its next committed step must start from.
+function chainTip(avatar) {
+  const q = avatar.netQueuedSteps;
+  if (q && q.length) { const t = q[q.length - 1]; return { x: t.tx, y: t.ty }; }
+  if (avatar.step) return { x: avatar.step.toX, y: avatar.step.toY };
+  return { x: avatar.tileX, y: avatar.tileY };
+}
+
+// Advance a guest's lastSeq to a resolved step's seq (monotonic). Shared by
+// the reject paths here and player.updateGuestAvatar's accept/queued-reject
+// snaps via setGuestAckSink.
+function ackStep(from, seq) {
+  if (typeof seq !== "number") return;
+  const prev = lastSeqOut[from] ?? 0;
+  if (seq > prev) lastSeqOut[from] = seq;
 }
 
 // Range / state sanity check — second half of the "light cheat

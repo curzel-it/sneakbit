@@ -48,7 +48,7 @@ const {
   _snapshotForTesting,
   _broadcastDeltaForTesting,
 } = await import("../js/snapshotBroadcaster.js");
-const { createPlayer, updatePlayer } = await import("../js/player.js");
+const { createPlayer, updatePlayer, updateGuestAvatar } = await import("../js/player.js");
 const { installShooting, tickShooting, tryShootForSlot } = await import("../js/shooting.js");
 const { checkPickup } = await import("../js/pickups.js");
 const { loadSpeciesData } = await import("../js/species.js");
@@ -125,60 +125,45 @@ function makeCoopP2(p1, _zone, opts = {}) {
   return p2;
 }
 
-// Single tick step — drives input pipeline → updatePlayer for every slot
-// → pickups → bullets. dt small enough to honour STEP_DURATION (~0.22s)
-// in tile-by-tile resolution.
+// Single tick step — animates guest avatars (updateGuestAvatar) + the host
+// avatar (updatePlayer) → pickups → bullets. dt small enough to honour
+// STEP_DURATION (~0.22s) in tile-by-tile resolution.
 function tick(state, dt = 0.02) {
   const input1 = inputModule.pollInput(1);
   updatePlayer(state.player, input1, dt, state.zone);
   if (state.player2) {
-    const input2 = inputModule.pollInput(2);
-    updatePlayer(state.player2, input2, dt, state.zone);
+    if (state.player2.playerId) updateGuestAvatar(state.player2, dt, state.zone);
+    else updatePlayer(state.player2, inputModule.pollInput(2), dt, state.zone);
   }
   for (const s of state.players) {
-    const inputN = inputModule.pollInput(s.slot);
-    updatePlayer(s.player, inputN, dt, state.zone);
+    if (s.playerId) updateGuestAvatar(s.player, dt, state.zone);
+    else updatePlayer(s.player, inputModule.pollInput(s.slot), dt, state.zone);
   }
   checkPickup(state);
   tickShooting(dt);
 }
 
-// Drives `frames` ticks of `dt` each — coarse-grained way to let the
-// step-locked motion finish. STEP_DURATION is 0.22 s; @ dt=0.02 that's
-// ~11 ticks per tile so 20 ticks comfortably resolves one tile-step.
-function tickN(state, frames, dt = 0.02) {
-  for (let i = 0; i < frames; i++) tick(state, dt);
+const DIR_DELTA = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+
+function avatarFor(state, fromId) {
+  if (state.player2?.playerId === fromId) return state.player2;
+  return state.players.find((s) => s.playerId === fromId)?.player ?? null;
 }
 
-// Holds an intent for exactly enough ticks for `tiles` tile-steps, then
-// releases (stopMove) and lets the final in-flight step snap onto its
-// target tile WITHOUT chaining a new one. Key invariant: stopMove must
-// arrive *before* the Nth snap tick — the chain branch in advanceStep
-// reads input.held at snap time and starts a new step if anything is
-// held. Clearing held first means the Nth snap is the last.
-//
-// Tile timing: STEP_DURATION = 0.22 s, dt = 0.02 s → 11 advances + 1
-// startStep tick per tile (first tile only); chained tiles take 11
-// ticks each (the snap+create-next happens in the same tick). With
-// a direction change, ROTATE_COMMIT_DELAY adds 3 more ticks before
-// the first step is committed.
+// Walk a guest `tiles` whole tiles in `dir` by streaming committed steps —
+// exactly what predictedSelf does on a real guest. Each step is emitted from
+// the avatar's current tile, then animated to its snap (pickups resolve in
+// the snap tick via tick()'s checkPickup).
 let seqCounter = 1;
-function walkIntent(state, fn, fromId, intent, tiles, dt = 0.02) {
-  const dir = intent.startsWith("move") ? intent.slice(4).toLowerCase() : null;
-  // Slot lookup — tests so far only drive the slot-2 guest, but keep
-  // this generic so future variations can wire slot 3/4.
-  const target = (state.player2?.playerId === fromId)
-    ? state.player2
-    : (state.players.find((s) => s.playerId === fromId)?.player ?? null);
-  const willRotate = !!(target && dir && target.direction !== dir);
-  const rotateBudget = willRotate ? 3 : 0;
-  fn.emit("input", { op: "input", seq: seqCounter++, from: fromId, intent });
-  // tiles * 11 + rotateBudget ticks: lands the avatar mid-Nth-step.
-  // stopMove then arrives between the (N-1)th snap and the Nth snap,
-  // so the Nth advance sees held=empty and idles after the snap.
-  tickN(state, tiles * 11 + rotateBudget, dt);
-  fn.emit("input", { op: "input", seq: seqCounter++, from: fromId, intent: "stopMove" });
-  tickN(state, 3, dt);
+function walk(state, fn, fromId, dir, tiles, dt = 0.02) {
+  const a = avatarFor(state, fromId);
+  const [dx, dy] = DIR_DELTA[dir];
+  for (let t = 0; t < tiles; t++) {
+    const fx = a.tileX, fy = a.tileY;
+    fn.emit("move", { op: "move", seq: seqCounter++, from: fromId, k: "step", fx, fy, tx: fx + dx, ty: fy + dy, d: dir });
+    for (let i = 0; i < 30 && a.step; i++) tick(state, dt);
+    tick(state, dt); // settle: pickups on the landed tile
+  }
 }
 
 function setupHostWorld({ bundleAt = { x: 5, y: 8 } } = {}) {
@@ -317,7 +302,7 @@ test("E2E: guest walks down onto a 10× kunai bundle → host credits 10 kunai t
 
     // Hold moveDown for 3 tile-steps — the avatar's chained stepping
     // (HOLD_PRIORITY) walks tile-by-tile while the key is held.
-    walkIntent(state, fn, "p_guest", "moveDown", 3);
+    walk(state, fn, "p_guest", "down", 3);
 
     assert.equal(
       state.player2.tileY, 8,
@@ -356,10 +341,10 @@ test("E2E: after pickup the guest can reverse direction and walk back up", () =>
   try {
     fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest", slot: 2 });
 
-    walkIntent(state, fn, "p_guest", "moveDown", 3);
+    walk(state, fn, "p_guest", "down", 3);
     assert.equal(state.player2.tileY, 8);
 
-    walkIntent(state, fn, "p_guest", "moveUp", 3);
+    walk(state, fn, "p_guest", "up", 3);
     assert.equal(state.player2.tileY, 5, "guest must return to y=5");
     assert.equal(state.player2.direction, "up", "facing direction should be up after the back-walk");
   } finally { teardown(); }
@@ -377,7 +362,7 @@ test("E2E: shoot intent from the guest spawns a bullet at the guest's tile and d
   try {
     fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest", slot: 2 });
 
-    walkIntent(state, fn, "p_guest", "moveDown", 3);
+    walk(state, fn, "p_guest", "down", 3);
     assert.equal(getAmmo(KUNAI, 1), 10, "precondition: 10 kunai available in the guest's slot");
     const expectedDir = "down";
     assert.equal(state.player2.direction, expectedDir);
@@ -416,7 +401,7 @@ test("E2E: after the guest steps, the host's outgoing delta includes the guest's
     // first delta would re-publish every player as "changed".
     _snapshotForTesting(state);
 
-    walkIntent(state, fn, "p_guest", "moveDown", 1);
+    walk(state, fn, "p_guest", "down", 1);
 
     const delta = _broadcastDeltaForTesting(fn, state);
     assert.ok(delta, "expected a non-empty delta after guest movement");
@@ -428,18 +413,21 @@ test("E2E: after the guest steps, the host's outgoing delta includes the guest's
 
 // --- 6. lastSeq feedback to the guest --------------------------------------
 //
-// Reconciliation on the guest side reads delta.lastSeq[selfId] to drop
-// acked inputs. Pin that the highest seq the host has applied for the
-// guest comes back in subsequent deltas.
+// Reconciliation on the guest side reads delta.lastSeq[selfId] to anchor the
+// committed-step log. Pin that a resolved step's seq comes back in the
+// outgoing snapshot — and only at the snap (not at receipt).
 
-test("E2E: outgoing snapshot reflects the highest seq the host has applied for the guest", () => {
+test("E2E: outgoing snapshot reflects the seq of the guest's most recently resolved step", () => {
   const { state, fn } = setupHostWorld();
   try {
     fn.emit("peer.joined", { op: "peer.joined", playerId: "p_guest", slot: 2 });
-    fn.emit("input", { op: "input", seq: 7, from: "p_guest", intent: "moveDown" });
-    fn.emit("input", { op: "input", seq: 8, from: "p_guest", intent: "stopMove" });
-
+    const a = state.player2;
+    const fx = a.tileX, fy = a.tileY;
+    fn.emit("move", { op: "move", seq: 42, from: "p_guest", k: "step", fx, fy, tx: fx, ty: fy + 1, d: "down" });
+    // Mid-step the step isn't acked yet.
+    assert.notEqual(_snapshotForTesting(state).lastSeq["p_guest"], 42);
+    for (let i = 0; i < 30 && a.step; i++) tick(state);
     const snap = _snapshotForTesting(state);
-    assert.equal(snap.lastSeq["p_guest"], 8);
+    assert.equal(snap.lastSeq["p_guest"], 42, "lastSeq advances to the step's seq at its snap");
   } finally { teardown(); }
 });

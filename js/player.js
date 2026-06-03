@@ -91,13 +91,87 @@ export function createPlayer(opts = {}) {
     queuedDir: null,      // direction to commit at next snap
     pendingDir: null,     // direction whose press is being timed for commit
     pendingTimer: 0,
+    // Guest-authoritative movement (host side only): the seq of the
+    // currently in-flight network step (acked at its snap) and the queue
+    // of committed steps that arrived while this avatar was mid-step
+    // (consumed one-per-snap). See guest-authoritative-movement.md.
+    netStepSeq: 0,
+    netQueuedSteps: [],
   };
+}
+
+// Host-side ack sink for resolved guest steps. hostGuests installs this so
+// updateGuestAvatar can advance the per-guest lastSeq at the exact snap
+// where tileX/tileY become the result tile — keeping (tile, seq) a
+// consistent pair for the broadcaster. Kept as an injected callback so
+// player.js doesn't import hostGuests (the ack map lives there).
+let guestAckSink = null;
+export function setGuestAckSink(fn) { guestAckSink = fn; }
+function ackGuestStep(player, seq) {
+  if (seq && guestAckSink) guestAckSink(player.playerId, seq);
 }
 
 export function updatePlayer(player, input, dt, zone) {
   if (player.step) advanceStep(player, input, dt, zone);
   else handleIdle(player, input, dt, zone);
   updateAnimation(player, dt);
+}
+
+// Host-side executor for a single committed guest tile-step. Wraps
+// startStep so pushable carry-back / gate side effects / canEnter all run
+// exactly as for a local avatar. The caller guarantees `player` is idle
+// (step == null). Returns true iff a step was actually produced — i.e. the
+// destination was legal — so the host can accept/reject the commit.
+export function applyNetStep(player, dir, zone) {
+  startStep(player, dir, zone);
+  return player.step != null;
+}
+
+// Host-side animation-only update for a guest avatar. The guest owns its
+// tile path (guest-authoritative-movement.md); the host never runs movement
+// *decisions* for it — only advances an in-flight step's lerp, snaps at
+// completion, then acks the resolved seq and consumes the next queued
+// commit. No input poll, no rotate/hold/chain logic.
+export function updateGuestAvatar(player, dt, zone) {
+  const step = player.step;
+  if (step) {
+    step.progress += dt / stepDuration();
+    if (step.progress < 1) {
+      const t = step.progress;
+      player.x = step.fromX + (step.toX - step.fromX) * t;
+      player.y = step.fromY + (step.toY - step.fromY) * t;
+    } else {
+      // Snap: tileX/tileY become the result tile. Ack the completed step
+      // and consume the queued commit in the same synchronous call so the
+      // broadcaster always reads a consistent (tile, seq) pair.
+      player.tileX = step.toX;
+      player.tileY = step.toY;
+      player.x = step.toX;
+      player.y = step.toY;
+      player.step = null;
+      ackGuestStep(player, player.netStepSeq);
+      player.netStepSeq = 0;
+      consumeQueuedStep(player, zone);
+    }
+  }
+  updateAnimation(player, dt);
+}
+
+function consumeQueuedStep(player, zone) {
+  const q = player.netQueuedSteps;
+  if (!q || q.length === 0) return;
+  const next = q.shift();
+  if (applyNetStep(player, next.d, zone)
+      && player.step.toX === next.tx && player.step.toY === next.ty) {
+    // Accepted — its ack waits for its own snap.
+    player.netStepSeq = next.seq;
+  } else {
+    // A gate/pushable disagreement that emerged since the step was queued.
+    // Drop any partial step and ack immediately: the unchanged tile +
+    // advanced lastSeq makes the guest reconcile (snap), per the contract.
+    player.step = null;
+    ackGuestStep(player, next.seq);
+  }
 }
 
 // Mirrors Rust update_direction_based_on_keyboard: while standing on a

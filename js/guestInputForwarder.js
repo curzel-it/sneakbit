@@ -1,7 +1,19 @@
-// Guest-side: watches the keyboard and forwards movement intents to the
-// host as `input` frames. Action intents (interact / shoot / melee) ride
-// the same channel and land in Phase 7. Each frame carries a monotonic
-// seq for the reconciliation logic that arrives in Phase 6.
+// Guest-side sender to the host. Two channels:
+//
+//   * Action intents (interact / shoot / melee) — keyboard + gamepad
+//     rising edges, sent as `{ op:"input", seq, t, intent, d }`. `d` is the
+//     facing the action fires in (read from the predicted self) so the host
+//     can't reorder a shoot against a separate face update.
+//
+//   * Committed tile-steps + facing — emitted by predictedSelf via
+//     forwardMove() as `{ op:"move", seq, k:"step"|"face", … }`. The guest
+//     owns its own tile path; the host validates + executes each step. See
+//     guest-authoritative-movement.md.
+//
+// Movement is NOT watched here: local motion reaches predictedSelf through
+// input.js's slot-1 keyboard listeners and pollInput(1) (which folds in the
+// guest's gamepad). predictedSelf is the single place that turns that into
+// committed steps on the wire.
 
 import { actionForCode } from "./keyBindings.js";
 import { readPadSnapshotForSlot } from "./gamepad.js";
@@ -9,87 +21,31 @@ import { predictGuestSwing } from "./melee.js";
 import { predictGuestShoot } from "./shooting.js";
 import { getPredictedSelf } from "./predictedSelf.js";
 
-const ACTION_TO_INTENT = {
-  moveUp: "moveUp",
-  moveDown: "moveDown",
-  moveLeft: "moveLeft",
-  moveRight: "moveRight",
-  interact: "interact",
-  shoot: "shoot",
-  melee: "melee",
-};
-
-const MOVE_INTENTS = new Set(["moveUp", "moveDown", "moveLeft", "moveRight"]);
-// Discrete one-shot intents — losing one is a missed shot/swing/talk,
-// which is what the buffer exists to prevent. Movement intents are
-// state-derived (re-emitted from `held` on resume), so they don't need
-// buffering; buffering them would actually be wrong because the player
-// likely released the key during the blip.
+// Discrete one-shot intents — losing one is a missed shot/swing/talk, which
+// is what the pending buffer exists to prevent.
 const ACTION_INTENTS = new Set(["shoot", "melee", "interact"]);
-
-// Must match player.js HOLD_PRIORITY. Used to predict which direction
-// the chain-fallback in advanceStep will pick on the host so the
-// forwarder can stamp lastSentDir to the same value the host's chain
-// will choose. Wrong order here would still be self-consistent (host
-// gets the full held set so chains correctly), but would cause
-// spurious resends since lastSentDir wouldn't match the host's view.
-const HOLD_PRIORITY = ["up", "down", "left", "right"];
-
-// Debug-only ring of every forwarded intent (?debug=snap). Lets the
-// divergence analysis reconstruct the exact input sequence + held set the
-// guest sent around a turn, and time it against when the host applied it
-// (auth.direction changes in the trajectory). Inert without the flag.
-const SNAP_INPUT_DEBUG = typeof window !== "undefined"
-  && /[?&]debug=snap\b/.test(window.location?.search || "");
-const SNAP_INPUT_CAP = 96;
-function recordSentInput(seq, intent, held, t) {
-  if (!SNAP_INPUT_DEBUG) return;
-  let buf = window.__sbSnapInput;
-  if (!Array.isArray(buf)) buf = window.__sbSnapInput = [];
-  buf.push({ t, seq, intent, held: Array.isArray(held) ? held.slice() : null });
-  while (buf.length > SNAP_INPUT_CAP) buf.shift();
-}
 
 let net = null;
 let seq = 0;
 let installed = false;
-const held = new Set();
-let lastSentDir = null;
 let onVisibilityHandler = null;
-// Ring buffer of unacknowledged inputs so predictedSelf can replay
-// them after a snap. Bounded so a wedged ack-stream doesn't grow it
-// without limit — older entries get evicted but the bound is well
-// above the ~30 Hz cap (host's lastSeq tail can't drift more than
-// MAX_LOG entries before the bound bites).
-const INPUT_LOG_CAP = 256;
-const inputLog = [];
-// Action intents (shoot/melee/interact) fired while the WS is down get
-// parked here and flushed on the next welcome. Bounded — a long-dead
-// connection shouldn't dump 30 shots into the host on resume. Each
-// entry is stamped with wall-clock; entries older than ACTION_TTL_MS
-// at flush time are dropped (a five-second-old shoot is stale).
+
+// Committed-step log: one entry per emitted step, used by predictedSelf for
+// exact reconciliation (compare the host's authoritative tile to
+// stepLog[lastSeq].result). Bounded so a wedged ack-stream can't grow it
+// without limit. `tx`/`ty` are the resulting tile of the step.
+const STEP_LOG_CAP = 256;
+const stepLog = [];
+
+// Action intents fired while the WS is down get parked here and flushed on
+// the next welcome. Bounded; each entry is stamped with wall-clock and
+// dropped at flush time if older than ACTION_TTL_MS.
 const PENDING_ACTION_CAP = 8;
 const ACTION_TTL_MS = 5000;
 const pendingActions = [];
 
-function intentToDir(intent) {
-  switch (intent) {
-    case "moveUp": return "up";
-    case "moveDown": return "down";
-    case "moveLeft": return "left";
-    case "moveRight": return "right";
-    default: return null;
-  }
-}
-
-function dirToIntent(dir) {
-  switch (dir) {
-    case "up": return "moveUp";
-    case "down": return "moveDown";
-    case "left": return "moveLeft";
-    case "right": return "moveRight";
-    default: return null;
-  }
+function currentFacing() {
+  return getPredictedSelf()?.direction || "down";
 }
 
 export function installGuestInputForwarder(netIn) {
@@ -98,23 +54,19 @@ export function installGuestInputForwarder(netIn) {
   net = netIn;
   if (typeof window === "undefined") return;
   window.addEventListener("keydown", onKeyDown);
-  window.addEventListener("keyup", onKeyUp);
-  window.addEventListener("blur", onBlur);
   if (typeof document !== "undefined") {
-    onVisibilityHandler = () => { if (document.hidden) onBlur(); };
+    onVisibilityHandler = () => {};
     document.addEventListener("visibilitychange", onVisibilityHandler);
   }
 }
 
-// Production teardown — paired with installGuestInputForwarder. Removes
-// the keyboard listeners so a role switch back to host/offline doesn't
-// keep forwarding intents to a torn-down net, and clears the unacked
-// input log + seq counter so the next install starts at seq 1.
+// Production teardown — paired with installGuestInputForwarder. Removes the
+// keyboard listener so a role switch back to host/offline doesn't keep
+// forwarding to a torn-down net, and resets the step-log + seq counter so
+// the next install starts at seq 1.
 export function uninstallGuestInputForwarder() {
   if (typeof window !== "undefined") {
     window.removeEventListener("keydown", onKeyDown);
-    window.removeEventListener("keyup", onKeyUp);
-    window.removeEventListener("blur", onBlur);
   }
   if (typeof document !== "undefined" && onVisibilityHandler) {
     document.removeEventListener("visibilitychange", onVisibilityHandler);
@@ -123,46 +75,27 @@ export function uninstallGuestInputForwarder() {
   net = null;
   seq = 0;
   installed = false;
-  held.clear();
-  lastSentDir = null;
-  inputLog.length = 0;
+  stepLog.length = 0;
   pendingActions.length = 0;
-  gpHeld.clear();
   gpButtons.interact = gpButtons.shoot = gpButtons.melee = false;
 }
 
-// Called by onlineBootstrap on every `welcome`. Drains action intents
-// that fired while we were mid-reconnect (sub-TTL only) and re-emits
-// the current movement direction so the host's avatar resumes walking
-// without the user having to lift+repress the key. No-op if we don't
-// have an active net (e.g. tear-down racing the welcome).
+// Called by onlineBootstrap on every `welcome`. Drains action intents that
+// fired while we were mid-reconnect (sub-TTL only) and re-emits the current
+// facing so the host's view of our heading is right after the blip — the
+// predicted self re-commits steps from still-held keys on its own.
 export function flushOnReconnect(now = Date.now()) {
   if (!net?.isConnected?.()) return;
   while (pendingActions.length) {
     const entry = pendingActions.shift();
     if (now - entry.queuedAt > ACTION_TTL_MS) continue;
     seq++;
-    inputLog.push({ seq, intent: entry.intent });
-    if (inputLog.length > INPUT_LOG_CAP) inputLog.shift();
-    net.send({ op: "input", seq, t: now, intent: entry.intent });
+    net.send({ op: "input", seq, t: now, intent: entry.intent, d: currentFacing() });
   }
-  // Re-emit movement so a key the user is still holding produces
-  // motion again without a release+press. lastSentDir was zeroed at
-  // disconnect time (clearInputHeld via onlineBootstrap teardown
-  // doesn't run mid-blip, but a fresh welcome means the host's view
-  // of our heading is unset).
-  if (held.size > 0) {
-    const dir = lastSentDir ?? effectiveDir(held) ?? [...held][0];
-    lastSentDir = dir;
-    const intent = dirToIntent(dir);
-    if (intent) {
-      const heldSnapshot = [...held];
-      seq++;
-      inputLog.push({ seq, intent, held: heldSnapshot });
-      if (inputLog.length > INPUT_LOG_CAP) inputLog.shift();
-      recordSentInput(seq, intent, heldSnapshot, now);
-      net.send({ op: "input", seq, t: now, intent, held: heldSnapshot });
-    }
+  const p = getPredictedSelf();
+  if (p) {
+    seq++;
+    net.send({ op: "move", seq, k: "face", x: p.tileX, y: p.tileY, d: p.direction });
   }
 }
 
@@ -170,25 +103,44 @@ export function _getPendingActionsForTesting() { return pendingActions.slice(); 
 
 export function getSeq() { return seq; }
 
-// Snapshot copy of the unacked input log. predictedSelf reads this on
-// every authoritative frame to replay after a snap-back.
-export function getInputLog() { return inputLog.slice(); }
+// Snapshot copy of the committed-step log. predictedSelf reads this each
+// authoritative frame to anchor reconciliation.
+export function getStepLog() { return stepLog.slice(); }
 
-// Drop every entry with seq <= acked. Called by predictedSelf when a
-// snapshot/delta brings in a fresh `lastSeq[selfId]`.
-export function dropAckedInputs(ackedSeq) {
-  while (inputLog.length && inputLog[0].seq <= ackedSeq) inputLog.shift();
+// Drop every step-log entry with seq <= acked. Called by predictedSelf when
+// a snapshot/delta brings in a fresh lastSeq[selfId].
+export function dropAckedSteps(ackedSeq) {
+  while (stepLog.length && stepLog[0].seq <= ackedSeq) stepLog.shift();
+}
+
+// Clears the committed-step log outright (zone change / resync hard reset).
+export function clearStepLog() { stepLog.length = 0; }
+
+// Emit a movement transition produced by predictedSelf. `move` is either
+//   { k:"step", fx, fy, tx, ty, d }  — predicted.step went null→non-null
+//   { k:"face", x, y, d }            — idle direction change, or step→idle
+// Assigns the next seq, appends step commits to the step-log, and ships it.
+// No-op while disconnected: movement is state-derived and resynced from the
+// next snapshot + held keys on reconnect, so a dropped step is never a
+// phantom move. Returns the assigned seq (or null when dropped).
+export function forwardMove(move) {
+  if (!net?.isConnected?.()) return null;
+  seq++;
+  if (move.k === "step") {
+    stepLog.push({ seq, tx: move.tx, ty: move.ty });
+    if (stepLog.length > STEP_LOG_CAP) stepLog.shift();
+  }
+  net.send({ op: "move", seq, ...move });
+  return seq;
 }
 
 // Test seams.
 export function _injectKeyDownForTesting(code) { onKeyDown({ code }); }
-export function _injectKeyUpForTesting(code) { onKeyUp({ code }); }
-// Feeds a synthetic pad frame straight into the edge logic, bypassing
-// navigator.getGamepads (absent in node). `dirs` is the held-direction
-// list, `buttons` an optional { interact, shoot, melee } pressed map.
-export function _injectGamepadFrameForTesting(dirs = [], buttons = {}) {
+// Feeds a synthetic pad frame straight into the action edge logic. `buttons`
+// is an optional { interact, shoot, melee } pressed map; directions are
+// ignored here (they reach predictedSelf via pollInput(1)).
+export function _injectGamepadFrameForTesting(_dirs = [], buttons = {}) {
   applyGamepadSnapshot({
-    held: new Set(dirs),
     interact: !!buttons.interact,
     shoot: !!buttons.shoot,
     melee: !!buttons.melee,
@@ -196,128 +148,44 @@ export function _injectGamepadFrameForTesting(dirs = [], buttons = {}) {
 }
 export const _resetForwarderForTesting = uninstallGuestInputForwarder;
 
-// Core movement transitions, shared by the keyboard listeners and the
-// per-frame gamepad poll. Both sources mutate the one `held` set keyed by
-// direction, so a press already covered by the other source is a no-op
-// and a release only stops motion once nothing holds that direction.
-function pressDir(dir) {
-  if (held.has(dir)) return;
-  held.add(dir);
-  lastSentDir = dir;
-  send(dirToIntent(dir), { held: [...held] });
-}
-
-function releaseDir(dir) {
-  if (!held.has(dir)) return;
-  held.delete(dir);
-  if (held.size === 0) {
-    if (lastSentDir !== null) {
-      lastSentDir = null;
-      send("stopMove");
-    }
+function sendAction(intent) {
+  // Local prediction: animate the guest's own swing / muzzle flash the
+  // instant they press, rather than waiting a full RTT for the host echo.
+  // The host still owns the authoritative swing/bullet via the intent.
+  if (intent === "melee") predictGuestSwing(getPredictedSelf());
+  if (intent === "shoot") predictGuestShoot(getPredictedSelf());
+  if (!net?.isConnected?.()) {
+    // One-shot — drop = miss, so park it for the reconnect flush.
+    if (pendingActions.length >= PENDING_ACTION_CAP) pendingActions.shift();
+    pendingActions.push({ intent, queuedAt: Date.now() });
     return;
   }
-  // One direction released but others still held. We can't drop this on
-  // the floor (host wouldn't know held shrank, and would keep chaining
-  // via the released direction — the multi-key divergence that motivated
-  // this whole change). Emit `holdSync` so the host updates its held set
-  // without pushing a spurious press event. Updating lastSentDir to the
-  // new chain-winner means a future press of that same direction won't
-  // re-fire a redundant moveX intent.
-  lastSentDir = effectiveDir(held);
-  send("holdSync", { held: [...held] });
+  seq++;
+  net.send({ op: "input", seq, t: Date.now(), intent, d: currentFacing() });
 }
 
 function onKeyDown(e) {
   if (e.repeat) return;
-  const action = actionForCode(e.code);
-  const intent = action && ACTION_TO_INTENT[action];
-  if (!intent) return;
-  const dir = intentToDir(intent);
-  if (dir) { pressDir(dir); return; }
-  send(intent);
+  const intent = actionForCode(e.code);
+  if (!ACTION_INTENTS.has(intent)) return;
+  sendAction(intent);
 }
 
-function onKeyUp(e) {
-  const action = actionForCode(e.code);
-  const intent = action && ACTION_TO_INTENT[action];
-  if (!intent || !MOVE_INTENTS.has(intent)) return;
-  releaseDir(intentToDir(intent));
-}
-
-// Previous-frame gamepad state for edge detection. Kept separate from the
-// keyboard listeners (which are event-driven) since the pad has no events
-// — we diff snapshots each frame.
-const gpHeld = new Set();
+// Previous-frame gamepad button state for edge detection.
 const gpButtons = { interact: false, shoot: false, melee: false };
 
-// Called once per frame from the guest loop. Reads the guest's own pad
-// and forwards direction/action edges to the host through the same send
-// path the keyboard uses — so a guest plays with a controller exactly
-// like with the keyboard, with no wire-format change.
+// Called once per frame from the guest loop. Reads the guest's own pad and
+// forwards action-button rising edges. Directions are intentionally not
+// forwarded — they drive predictedSelf through pollInput(1).
 export function pollGuestGamepad() {
   if (!installed) return;
   applyGamepadSnapshot(readPadSnapshotForSlot(1));
 }
 
 function applyGamepadSnapshot(snap) {
-  const heldNow = snap ? snap.held : new Set();
-  for (const d of heldNow) if (!gpHeld.has(d)) pressDir(d);
-  for (const d of [...gpHeld]) if (!heldNow.has(d)) releaseDir(d);
-  gpHeld.clear();
-  for (const d of heldNow) gpHeld.add(d);
-
   for (const name of ["interact", "shoot", "melee"]) {
     const pressedNow = !!(snap && snap[name]);
-    if (pressedNow && !gpButtons[name]) send(name);
+    if (pressedNow && !gpButtons[name]) sendAction(name);
     gpButtons[name] = pressedNow;
   }
-}
-
-function effectiveDir(heldSet) {
-  for (const d of HOLD_PRIORITY) {
-    if (heldSet.has(d)) return d;
-  }
-  return null;
-}
-
-function onBlur() {
-  held.clear();
-  if (lastSentDir !== null) {
-    lastSentDir = null;
-    send("stopMove");
-  }
-}
-
-function send(intent, extras) {
-  // Local prediction: animate the guest's own swing the instant they press
-  // melee, rather than waiting a full RTT for the host's snapshot to echo
-  // the cooldown back. The host still owns the authoritative swing via the
-  // forwarded intent; this is cosmetic. Runs even when the link is down so
-  // a buffered swing still looks responsive.
-  if (intent === "melee") predictGuestSwing(getPredictedSelf());
-  // Same idea for shooting: instant gunshot SFX + muzzle flash, host still
-  // owns the real bullet/ammo/damage via the forwarded intent.
-  if (intent === "shoot") predictGuestShoot(getPredictedSelf());
-  if (!net?.isConnected?.()) {
-    // Movement intents are state-derived; on reconnect, the still-held
-    // key is re-emitted from flushOnReconnect. Buffering a moveLeft
-    // that the user already released would be a phantom step.
-    // Action intents are one-shot — drop = miss, so park them.
-    if (ACTION_INTENTS.has(intent)) {
-      if (pendingActions.length >= PENDING_ACTION_CAP) pendingActions.shift();
-      pendingActions.push({ intent, queuedAt: Date.now() });
-    }
-    return;
-  }
-  seq++;
-  // Carry held into the inputLog so predictedSelf.replayUnackedInputs
-  // can restore the actual held set after a snap, not just the most
-  // recent press direction.
-  const heldSnapshot = Array.isArray(extras?.held) ? extras.held.slice() : null;
-  inputLog.push(heldSnapshot ? { seq, intent, held: heldSnapshot } : { seq, intent });
-  if (inputLog.length > INPUT_LOG_CAP) inputLog.shift();
-  const now = Date.now();
-  recordSentInput(seq, intent, heldSnapshot, now);
-  net.send({ op: "input", seq, t: now, intent, ...(extras || {}) });
 }

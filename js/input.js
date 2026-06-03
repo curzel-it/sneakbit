@@ -38,9 +38,9 @@ function ensureSlot(playerIndex) {
   return s;
 }
 
-// Network-driven injection seams used by hostGuests.js to feed guest
-// inputs into the existing input pipeline for slots 2..4. Same data
-// shape as local keyboard presses so nothing downstream cares.
+// Local-coop injection seam used by main.js's window.coop.tap debug hook to
+// drive a real keyboard slot through the input pipeline for e2e. Same data
+// shape as a local keyboard press so nothing downstream cares.
 export function pushInputPress(playerIndex, direction) {
   const s = ensureSlot(playerIndex);
   if (!s.held.has(direction)) s.pressEvents.push(direction);
@@ -52,9 +52,8 @@ export function releaseInputHeld(playerIndex, direction) {
   if (s) s.held.delete(direction);
 }
 
-// Clears held only. Pending press events are kept so an in-flight step
-// finishes — matches the spec's `stopMove` intent (release the key but
-// let the press that started this step land).
+// Clears held only, keeping pending press events so an in-flight step still
+// finishes. Used on peer.ghosted / window blur for a still-active slot.
 export function clearInputHeld(playerIndex) {
   const s = state[playerIndex];
   if (s) s.held.clear();
@@ -67,29 +66,6 @@ export function clearInputState(playerIndex) {
   if (!s) return;
   s.held.clear();
   s.pressEvents.length = 0;
-}
-
-// Network injection: replace the slot's held set with `dirs`, leaving the
-// pending press events untouched. Used by hostGuests when a guest input
-// frame carries the full authoritative held set: the host needs to mirror
-// the guest's `held` so HOLD_PRIORITY chains pick the same direction on
-// both sides. Without this, a multi-key hold (e.g. user holding Up+Left)
-// makes the guest's predicted self chain Up (HOLD_PRIORITY) while the
-// host chains Left (last-pressed key) — they walk in different directions
-// and divergence grows until the snap-back fires.
-export function setNetworkHeld(playerIndex, dirs) {
-  const s = ensureSlot(playerIndex);
-  s.held.clear();
-  for (const d of dirs || []) s.held.add(d);
-}
-
-// Network injection: append a press event without touching held. Pairs
-// with setNetworkHeld for the press-with-known-held case so the slot's
-// events queue gets the new press (for rotate / queuedDir timing)
-// without redundantly mutating the held set we just synced from the wire.
-export function pushPressEvent(playerIndex, direction) {
-  const s = ensureSlot(playerIndex);
-  s.pressEvents.push(direction);
 }
 
 // Returns { playerIndex, direction } (1-based slot) for a key event, or
@@ -145,17 +121,6 @@ export function initInput() {
   });
   window.addEventListener("blur", clearAll);
   document.addEventListener("visibilitychange", () => { if (document.hidden) clearAll(); });
-}
-
-// Non-draining snapshot of a slot's input state. For debug captures
-// only — predictedSelf.captureDivergence reads this to record exactly
-// what the local input pipeline was holding at the moment of a
-// snap-back. Returning arrays (not Sets) keeps the snapshot
-// JSON-serialisable for the rolling buffer on window.__sbSnapDebug.
-export function peekInputState(playerIndex = 1) {
-  const s = state[playerIndex];
-  if (!s) return { held: [], pressEvents: [] };
-  return { held: [...s.held], pressEvents: s.pressEvents.slice() };
 }
 
 // Returns { events, held } for the requested player and drains the press
