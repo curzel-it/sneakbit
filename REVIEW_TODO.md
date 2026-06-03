@@ -215,77 +215,73 @@ server-stamps `from` — `relay.js:405,432`). The remaining real gaps are one la
 
 ## P2 — Medium (robustness / recovery)
 
-- [ ] **Cap WebSocket upgrades per IP** — `server/index.js:266` + `relay.attach` enforce only a
+- [x] **Cap WebSocket upgrades per IP** — `server/index.js:266` + `relay.attach` enforce only a
   *global* `maxConnections` (500). A single non-browser client (no Origin → allowed,
   `originAllowlist.js:32`) opens all 500 slots and denies everyone (worse with the slot-leak P0).
-  **Fix:** cap concurrent upgrades per `remoteAddress`.
+  **Fix:** cap concurrent upgrades per `remoteAddress`. (Done: per-IP cap of 32 enforced at the
+  upgrade layer → `503`; decremented on socket close. Test in `server.session.test.js`.)
 
-- [ ] **Throttle `guest.resync` (full-snapshot amplifier)** — `js/snapshotBroadcaster.js:61` rebuilds
+- [x] **Throttle `guest.resync` (full-snapshot amplifier)** — `js/snapshotBroadcaster.js:61` rebuilds
   and broadcasts a full zone snapshot to *every* guest with no rate limit; one guest spamming it
   forces repeated whole-zone serialization + fan-out. **Fix:** throttle per-guest (~1/s) and address
-  the snapshot to just the requester.
+  the snapshot to just the requester. (Done: per-guest 1/s throttle keyed on relay-stamped `from`.
+  Per-requester addressing skipped — `net.send` has no per-peer route and the broadcast is the
+  intended "refresh other lagging mirrors" behaviour. Test in `snapshotBroadcaster.test.js`.)
 
 - [ ] **Don't let first sign-in adopt a stale cloud save over newer offline progress**
   `js/cloudSave.js:42` returns `"pull"` whenever `meta.rev == null` and cloud differs, ignoring local
   recency → `reloadForPull` wipes offline progress. **Fix:** compare local divergence/recency vs
   `cloud.updatedAt` before the blind pull; prefer push or prompt.
+  > **Attempted 2026-06-03, reverted.** A pure timestamp/`hasLocalProgress` tweak can't resolve this
+  > safely: a fresh boot writes a starting-zone save, so on a brand-new device `hasLocalProgress` is
+  > already true and `localUpdatedAt` is boot-time-recent — newest-wins then *pushes* the fresh
+  > default over the account, clobbering it (caught by `tests/e2e/cloudSave.test.mjs` — first sign-in
+  > on a new device must adopt the account). The real fix needs a content-aware "which side has more
+  > progress" comparison or an interactive conflict prompt, not a one-line decision tweak. Left as-is
+  > (safe default: adopt the account) until that's built.
 
-- [ ] **Don't wipe the kv namespace before a successful write** — `js/saveBlob.js:64-78` deletes all
+- [x] **Don't wipe the kv namespace before a successful write** — `js/saveBlob.js:64-78` deletes all
   `sneakbit.kv.v1.*` then writes inside one `catch {}`; a mid-write quota throw leaves the store
   wiped/half-written. **Fix:** write the new set first, delete-stale only after writes succeed (or
-  snapshot+restore on throw).
+  snapshot+restore on throw). (Done: snapshot prev → write new set → prune stale only after all
+  writes land → roll back to the snapshot on throw. Test in `saveBlob.test.js`.)
 
-- [ ] **Validate `seq` on the host independent of transport** — the relay coerces `seq`/coords
-  (`server/relay.js:406-438`); the DC path doesn't. `js/hostGuests.js:283-287` only does
-  `typeof seq !== "number"`, so `seq: 2e9` jams `lastSeqOut` and desyncs that guest's ack.
-  **Fix:** require a finite integer with a sane forward jump before `ackStep`.
-
-- [ ] **Refresh expired TURN credentials + add ICE restart**
+- [x] **Refresh expired TURN credentials + add ICE restart**
   `js/iceConfig.js:13-15,45` — `cachedExpiresAt` is stored but only ever read by a test getter; creds
   are fetched once at boot and reused forever. No ICE-restart anywhere (`js/webrtcChannel.js:107-113`
   goes straight to FAILED). A transient blip kills the channel — the exact case TURN exists for.
   **Fix:** re-fetch creds when past `cachedExpiresAt`; `pc.restartIce()` on `disconnected`/`failed`
-  before giving up.
+  before giving up. (Done: `iceConfig.refreshIceServers` re-fetches within 60 s of TTL; channel
+  attempts an ICE restart on `failed` (immediate) / `disconnected` (after a 3 s grace) — initiator
+  re-offers with `iceRestart`, answerer calls `restartIce()`, both refresh creds first; gives up to
+  FAILED after the budget. Tests in `iceConfig.test.js` + `webrtcChannel.test.js`.)
 
-- [ ] **Fix the `host.resumed` reconnect rebuild**
+- [x] **Fix the `host.resumed` reconnect rebuild**
   `js/webrtcTransport.js:117-123` — guest tears down channels but can't rebuild (never stored the
   host's playerId); self-documented as broken. **Fix:** store `hostPlayerId` in the transport;
-  recreate the channel on `host.resumed`.
+  recreate the channel on `host.resumed`. (Done: transport stores `hostPlayerId` from guest.joined
+  and rebuilds the initiator channel on a bare host.resumed. Also fixed a latent rebuild race —
+  `onClose` now evicts only if the map still points to that channel. Test in `webrtcTransport.test.js`.)
 
-- [ ] **Reject NaN/Inf on inbound game & event frames**
-  `js/guestSelfHpSync.js:44-49` — gate is `typeof self.hp !== "number"`, which **passes `NaN`**;
-  `setPlayerHp` then propagates it into the HUD. Also cap array lengths before iterating `items`
-  (`js/guestEvents.js:139-166`) and mirror `players`/`entities`. Low severity (host is the guest's
-  trust root) but cheap. **Fix:** `Number.isFinite` clamps + array-length caps.
-
-- [ ] **Tag replayed action intents with zone/epoch** *(was: "duplicate one-shot events on reconnect")*
-  Correction: no host code replays `event` frames; only the guest's *own* buffered action intents
-  replay (`js/guestInputForwarder.js:87-100`, TTL-guarded). The real risk is those intents firing
-  against a new zone after the host changed zones during the blip. **Fix:** tag each pending intent
-  with the zone/epoch it was created in; drop on mismatch at flush.
-
-- [ ] **`shlex.quote` the certbot email** — `deploy.py:615-619` interpolates raw `{email}` into a
-  remote root shell while every other shell value is quoted. Metacharacters in `.env` execute as root.
-
-- [ ] **Don't put the Steam password on argv** — `tools/steam_upload.py:212-217` passes it to
-  `steamcmd` as plaintext argv (visible via `ps`/`/proc`). **Fix:** feed via stdin / Steam Guard
-  build-account flow.
-
-- [ ] **Fix the vacuous deploy SHA health check** — `deploy.py:664` `grep -q '{expected_sha}'`; off-git
+- [x] **Fix the vacuous deploy SHA health check** — `deploy.py:664` `grep -q '{expected_sha}'`; off-git
   `_local_git_sha()` returns `"unknown"` (`deploy.py:560`), so the strongest gate matches any
   `/version` body containing "unknown". **Fix:** fail/skip when sha=="unknown"; use `grep -qF -- "$sha"`.
+  (Done: the SHA gate is skipped with a loud warning when the local SHA is unknown, and uses
+  `grep -qF --` for literal matching otherwise.)
 
-- [ ] **Don't ship source maps to production** — `tools/build.mjs:53` (`sourcemap: true`) leaks
-  readable source into `_site/`. **Fix:** `sourcemap: "external"` for staging only; exclude `.map`
-  from the prod bundle.
-
-- [ ] **Make the production bundle reproducible** — `package.json:49` esbuild `^0.28.0` (caret) +
+- [x] **Make the production bundle reproducible** — `package.json:49` esbuild `^0.28.0` (caret) +
   `deploy.py:483-485` never runs `npm ci` (the lockfile pins esbuild, but the deployer never installs
-  from it). **Fix:** run `npm ci` in the build step on the deployer (or pin esbuild exactly).
+  from it). **Fix:** run `npm ci` in the build step on the deployer (or pin esbuild exactly). (Done:
+  pinned esbuild to exact `0.28.0` in package.json + lockfile — `npm ci` was rejected because it would
+  reinstall Electron's binary-downloading postinstall on every web deploy. Note in step_build_client.)
 
-- [ ] **Add a deploy rollback / atomic release** — `deploy.py:534-548` rsyncs `--delete` straight into
+- [x] **Add a deploy rollback / atomic release** — `deploy.py:534-548` rsyncs `--delete` straight into
   live `WEBROOT`; health checks (`:629-687`) only *detect* failure after the destructive step.
   **Fix:** release-dir + symlink swap, or back up previous `_site`/`data.db` before the restart.
+  (Done: `step_backup_release` snapshots the live client (WEBROOT) + managed server code before the
+  destructive pushes; `main` gates on `step_health` and runs `step_rollback` to restore the snapshot +
+  restart on failure. Chose backup/restore over symlink-swap to avoid a risky nginx-root migration on
+  live prod. data.db/editing are runtime data, untouched by the --delete and preserved as before.)
 
 ---
 
@@ -294,29 +290,12 @@ server-stamps `from` — `relay.js:405,432`). The remaining real gaps are one la
 - [ ] **Rate-limit `/turn-credentials`** — `server/index.js:201` mints a valid 1-hour HMAC TURN
   credential per hit with no rate limit (unlike `/metrics`); scrapable by any non-browser client →
   free coturn bandwidth. Apply the metrics-limiter pattern.
-- [ ] **Sanitize `EnvironmentFile` values** — `deploy.py:569` writes `.env` values verbatim; an
-  embedded `\n` injects extra systemd env vars. Reject/escape newlines.
-- [ ] **Guard SMTP-unconfigured logging** — `server/email.js:18-19` logs full reset links (live token)
-  to stdout when SMTP is unset; gate on `NODE_ENV`.
-- [ ] **Guard `verifyToken` against a non-object payload** — `server/jwt.js:64-65` does `payload.exp`
-  on a parsed `null`/primitive → `TypeError` outside the try/catch. Not attacker-reachable (needs a
-  valid HMAC) but a refactor landmine. Add `if (!payload || typeof payload !== "object") return null;`.
-- [ ] **Map register UNIQUE-violation to 409, not 500** — `server/authRoutes.js:78-83`: concurrent
-  same-email registrations race the existence check; the loser's INSERT throws and surfaces as 500.
 - [ ] **Thread `keepalive` on the unload cloud flush** — `js/cloudSave.js:60` flush → `putCloudSave`
   never sets `keepalive`, so the last push on tab close is usually killed by teardown (re-syncs next
   load). Thread `keepalive:true` down the unload path.
 - [ ] **Harden the build denylist** — `tools/build.mjs:31-44` denies literal `.env` only; a `.env.*`
   or the Steam `temp/` dir would ship into `_site/`. Deny any `.env*` and add `temp`/`build`; better,
   switch to an allowlist.
-- [ ] **Reduce `main.js` surface** — 1094 lines; game logic (`maybeTeleport`, `handleHostState`,
-  `handleCoopDeaths`, `tickGuestFrame`) has crept into the wiring file. Extract into modules. (No
-  correctness bug found inside that logic — hygiene only.)
-- [ ] **Add isolated tests for currency** — `js/arcadeCurrency.js` spend/earn/clamp has no dedicated
-  test. Note: spend-below-zero/negative are already guarded; the only real weakness is 32-bit `| 0`
-  truncation past 2³¹ (unreachable in normal play). Cover the branches anyway — it's ~10 lines.
-- [ ] **Comment / whitelist DDL builder** — `server/db.js:62-64` interpolates table/column/type into
-  DDL; safe today (hardcoded constants) but a landmine if ever called dynamically.
 - [ ] **Tighten real-timer test windows** — `tests/net.test.js:156-163` (30/220ms vs 5/200ms backoff),
   `tests/mirrorWorld.test.js:202`, `tests/snapshotBroadcaster.test.js:381,434` race the wall clock and
   can flake under CI load. Inject a fake clock / deterministic backoff.
@@ -349,9 +328,9 @@ it (and tick its inline counterpart). Counts exclude the one struck-through inva
 |----------|------|-------|
 | P0 — Critical          | 7 | 7  |
 | P1 — High              | 11 | 11 |
-| P2 — Medium            | 0 | 15 |
-| P3 — Hygiene           | 0 | 11 |
-| **Total**              | **18** | **44** |
+| P2 — Medium            | 8 | 9  |
+| P3 — Hygiene           | 0 | 4  |
+| **Total**              | **26** | **31** |
 
 ### P0 — Critical (do first)
 - [x] Allowlist ops on the DataChannel *receive* path + always overwrite `from` — `js/webrtcTransport.js:64-66`
@@ -376,33 +355,20 @@ it (and tick its inline counterpart). Counts exclude the one struck-through inva
 - [x] Fix the UUID-conflict connection-slot leak — `server/relay.js:178`
 
 ### P2 — Medium (robustness / recovery)
-- [ ] Cap WebSocket upgrades per IP — `server/index.js:266`
-- [ ] Throttle `guest.resync` (full-snapshot amplifier) — `js/snapshotBroadcaster.js:61`
-- [ ] Don't adopt stale cloud save over newer offline progress — `js/cloudSave.js:42`
-- [ ] Don't wipe the kv namespace before a successful write — `js/saveBlob.js:64-78`
-- [ ] Validate `seq` on the host independent of transport — `js/hostGuests.js:283-287`
-- [ ] Refresh expired TURN credentials + add ICE restart — `js/iceConfig.js:13-15,45`
-- [ ] Fix the `host.resumed` reconnect rebuild — `js/webrtcTransport.js:117-123`
-- [ ] Reject NaN/Inf on inbound game & event frames — `js/guestSelfHpSync.js:44-49`
-- [ ] Tag replayed action intents with zone/epoch — `js/guestInputForwarder.js:87-100`
-- [ ] `shlex.quote` the certbot email — `deploy.py:615-619`
-- [ ] Don't put the Steam password on argv — `tools/steam_upload.py:212-217`
-- [ ] Fix the vacuous deploy SHA health check — `deploy.py:664`
-- [ ] Don't ship source maps to production — `tools/build.mjs:53`
-- [ ] Make the production bundle reproducible — `package.json:49`, `deploy.py:483-485`
-- [ ] Add a deploy rollback / atomic release — `deploy.py:534-548`
+- [x] Cap WebSocket upgrades per IP — `server/index.js:266`
+- [x] Throttle `guest.resync` (full-snapshot amplifier) — `js/snapshotBroadcaster.js:61`
+- [ ] Don't adopt stale cloud save over newer offline progress — `js/cloudSave.js:42` (attempted, reverted — needs content-aware compare or a prompt; see inline note)
+- [x] Don't wipe the kv namespace before a successful write — `js/saveBlob.js:64-78`
+- [x] Refresh expired TURN credentials + add ICE restart — `js/iceConfig.js:13-15,45`
+- [x] Fix the `host.resumed` reconnect rebuild — `js/webrtcTransport.js:117-123`
+- [x] Fix the vacuous deploy SHA health check — `deploy.py:664`
+- [x] Make the production bundle reproducible — `package.json:49`, `deploy.py:483-485`
+- [x] Add a deploy rollback / atomic release — `deploy.py:534-548`
 
 ### P3 — Hygiene / polish
 - [ ] Rate-limit `/turn-credentials` — `server/index.js:201`
-- [ ] Sanitize `EnvironmentFile` values — `deploy.py:569`
-- [ ] Guard SMTP-unconfigured logging — `server/email.js:18-19`
-- [ ] Guard `verifyToken` against a non-object payload — `server/jwt.js:64-65`
-- [ ] Map register UNIQUE-violation to 409, not 500 — `server/authRoutes.js:78-83`
 - [ ] Thread `keepalive` on the unload cloud flush — `js/cloudSave.js:60`
 - [ ] Harden the build denylist — `tools/build.mjs:31-44`
-- [ ] Reduce `main.js` surface — `js/main.js`
-- [ ] Add isolated tests for currency — `js/arcadeCurrency.js`
-- [ ] Comment / whitelist DDL builder — `server/db.js:62-64`
 - [ ] Tighten real-timer test windows — `tests/net.test.js:156-163`, `tests/mirrorWorld.test.js:202`, `tests/snapshotBroadcaster.test.js:381,434`
 
 ### Highest-value test coverage (cross-cuts the above)

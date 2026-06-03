@@ -35,6 +35,13 @@ test("local changed, cloud NOT advanced → push (we're ahead)", () => {
 });
 
 test("both diverged on a never-synced device → pull (adopt the account)", () => {
+  // First sign-in on a device that never synced this account adopts the
+  // cloud. NOTE: this can still wipe genuine newer offline progress (the open
+  // P2). A pure timestamp tweak can't fix it safely — a fresh boot writes a
+  // starting-zone save, so `hasLocalProgress` is true and `localUpdatedAt` is
+  // boot-time-recent even on a brand-new device, which would falsely beat the
+  // cloud and clobber the account (verified by the cloudSave e2e). The real
+  // fix needs a content-aware comparison or a user prompt.
   const cloud = { rev: 7, updatedAt: 999, hash: "CLOUD" };
   const meta = {}; // rev == null → never synced here
   assert.equal(decideSync({ cloud, local: localProgress, meta }), "pull");
