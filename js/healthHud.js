@@ -92,7 +92,12 @@ function makeBar(index) {
     },
   }, fill);
   const card = el("div", { class: "hp-card" }, [label, bar]);
-  return { root: card, label, fill, index };
+  // `last` caches the values most recently written to the DOM so redraw can
+  // skip the write (and the string allocation) when nothing changed. redraw
+  // runs every frame while a player takes continuous damage or regenerates
+  // (playerHealth.notify fires per tick), so the unconditional version churned
+  // template strings and thrashed style/layout 60×/s during combat.
+  return { root: card, label, fill, index, last: { display: null, text: null, width: null, left: null, top: null } };
 }
 
 function redraw() {
@@ -102,38 +107,48 @@ function redraw() {
   const slices = sliceCount() > 1 ? getSlices() : null;
   for (const b of bars) {
     // Hide bars beyond the active local player count.
-    if (b.index >= count) { b.root.style.display = "none"; continue; }
-    const hp = getPlayerHp(b.index);
-    const max = getPlayerMaxHp();
+    if (b.index >= count) { setDisplay(b, "none"); continue; }
     const dead = isPlayerDead(b.index);
     // Co-op teammates hide while dead (matches Rust: dead co-op player
     // drops out until the zone reloads). P1 stays visible even at 0 — the
     // game-over modal takes over.
-    if (b.index > 0 && dead) {
-      b.root.style.display = "none";
-      continue;
-    }
-    b.root.style.display = "";
+    if (b.index > 0 && dead) { setDisplay(b, "none"); continue; }
+    setDisplay(b, "");
     anchorBar(b, slices);
-    const pct = Math.max(0, Math.min(100, (hp / max) * 100));
+    const hp = getPlayerHp(b.index);
+    const max = getPlayerMaxHp();
+    // Round before formatting so a fractional damage/regen tick only writes
+    // the DOM when the displayed value actually moves: the label tracks whole
+    // HP and the fill tracks whole-percent width (the 120ms CSS transition
+    // smooths the steps). hp is part of the cache key via `text`/`width`.
+    const pct = Math.max(0, Math.min(100, Math.round((hp / max) * 100)));
     const tag = count > 1 ? `P${b.index + 1} ` : "";
-    b.label.textContent = `${tag}HP ${Math.ceil(hp)} / ${max}`;
-    b.fill.style.width = `${pct}%`;
+    const text = `${tag}HP ${Math.ceil(hp)} / ${max}`;
+    if (text !== b.last.text) { b.label.textContent = text; b.last.text = text; }
+    const width = `${pct}%`;
+    if (width !== b.last.width) { b.fill.style.width = width; b.last.width = width; }
   }
+}
+
+function setDisplay(b, value) {
+  if (b.last.display === value) return;
+  b.root.style.display = value;
+  b.last.display = value;
 }
 
 // Position one bar: fixed to its slice corner in split-screen, or reset to the
 // stacked flex flow (single-slice). Falls back to stacked if slice geometry
-// isn't available yet (e.g. cssRect computed in a non-DOM context).
+// isn't available yet (e.g. cssRect computed in a non-DOM context). Cached
+// per bar so a steady camera doesn't rewrite the same left/top every frame.
 function anchorBar(b, slices) {
   const css = slices?.[b.index]?.cssRect;
-  if (css) {
-    Object.assign(b.root.style, {
-      position: "fixed",
-      left: `${Math.round(css.left + 12)}px`,
-      top: `${Math.round(css.top + 12)}px`,
-    });
-  } else {
-    Object.assign(b.root.style, { position: "", left: "", top: "" });
-  }
+  const left = css ? `${Math.round(css.left + 12)}px` : "";
+  const top = css ? `${Math.round(css.top + 12)}px` : "";
+  const position = css ? "fixed" : "";
+  if (left === b.last.left && top === b.last.top) return;
+  b.root.style.position = position;
+  b.root.style.left = left;
+  b.root.style.top = top;
+  b.last.left = left;
+  b.last.top = top;
 }
