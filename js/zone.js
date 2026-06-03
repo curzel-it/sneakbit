@@ -137,12 +137,9 @@ export function isEntityBlocked(zone, tileX, tileY, opts) {
     if (!shouldBeVisible(e)) continue;
     const hit = entityHittableFrame(e, sp);
     if (!hit) continue;
-    if (sp.entity_type === "Npc" || sp.entity_type === "Hero") {
-      if (!rectOverlapsTile(hit, tileX, tileY)) continue;
-    } else {
-      if (tileX < hit.x || tileX >= hit.x + hit.w) continue;
-      if (tileY < hit.y || tileY >= hit.y + hit.h) continue;
-    }
+    // hittable frames are fractional feet rects for every entity type now,
+    // so a float-rect overlap is the only correct tile test.
+    if (!rectOverlapsTile(hit, tileX, tileY)) continue;
     return true;
   }
   return false;

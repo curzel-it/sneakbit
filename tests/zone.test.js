@@ -83,7 +83,8 @@ test("destination-teleporter on a building tile is enterable", () => {
     ],
   });
   assert.equal(isEntityBlocked(w, 1, 2), false);
-  assert.equal(isEntityBlocked(w, 0, 0), true);
+  // (0,2) is a building floor tile; the top row (0,0) is walkable-behind.
+  assert.equal(isEntityBlocked(w, 0, 2), true);
 });
 
 test("teleporter without destination does not unblock the building", () => {
@@ -126,13 +127,13 @@ test("creative mode walks through Building and closed Gate (is_rigid dropped)", 
       { id: 5, species_id: 2010, frame: { x: 3, y: 3, w: 1, h: 1 } },
     ],
   });
-  // Non-creative: building blocks (0,0); closed gate blocks (3,3).
+  // Non-creative: building blocks its floor tile (0,2); closed gate blocks (3,3).
   _setCreativeModeForTesting(false);
-  assert.equal(isEntityBlocked(w, 0, 0), true);
+  assert.equal(isEntityBlocked(w, 0, 2), true);
   assert.equal(isEntityBlocked(w, 3, 3), true);
   // Creative: both pass through.
   _setCreativeModeForTesting(true);
-  assert.equal(isEntityBlocked(w, 0, 0), false);
+  assert.equal(isEntityBlocked(w, 0, 2), false);
   assert.equal(isEntityBlocked(w, 3, 3), false);
   _setCreativeModeForTesting(false);
 });

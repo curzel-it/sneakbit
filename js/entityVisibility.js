@@ -35,23 +35,32 @@ export function shouldBeVisible(entity) {
   return true;
 }
 
-// Rect used for tile-collision tests. Matches Rust npc_hittable_frame for
-// NPCs/Hero entities (a small box at the feet of the sprite) and falls
-// back to the full entity frame for everything else.
+// Rect used for tile-collision tests. Mirrors Rust Entity::hittable_frame
+// (entity.rs), which dispatches by entity type. The shared idea across every
+// arm is that a sprite only blocks the floor it stands on: a 2-tile-tall
+// barrel, table or building blocks its bottom row and lets the player walk
+// behind the upper tile, exactly like a standing NPC.
 export function entityHittableFrame(entity, species) {
   const f = entity?.frame;
   if (!f) return null;
   const sp = species || (entity ? getSpecies(entity.species_id) : null);
   const t = sp?.entity_type;
   if (t === "Npc" || t === "Hero") {
+    // entities/npcs.rs::npc_hittable_frame
     const tall = f.h > 1.0;
-    const xOff = 0.15;
-    const yOff = tall ? 1.15 : 0.1;
     const w = f.w - 0.3;
     const h = f.h - (tall ? 1.35 : 0.2);
-    return { x: f.x + xOff, y: f.y + yOff, w, h };
+    return { x: f.x + 0.15, y: f.y + (tall ? 1.15 : 0.1), w, h };
   }
-  return f;
+  if (t === "PushableObject" || t === "PressurePlate") {
+    // pushable_object.rs / pressure_plate.rs: frame.padded_all(0.1)
+    return { x: f.x + 0.1, y: f.y + 0.1, w: f.w - 0.2, h: f.h - 0.2 };
+  }
+  // entity.rs generic `_` arm: feet box for tables, barrels, buildings, …
+  const tall = f.h > 1.0;
+  const w = f.w - 0.3;
+  const h = f.h - (tall ? 1.3 : 0.3);
+  return { x: f.x + 0.15, y: f.y + (tall ? 1.15 : 0.15), w, h };
 }
 
 // Does the (integer) tile at (tx, ty) overlap the given rect? Used by

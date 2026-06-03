@@ -100,10 +100,26 @@ test("entityHittableFrame: 1x2 NPC shrinks to a feet rect", () => {
   assert.ok(Math.abs(hit.h - 0.65) < 1e-9);
 });
 
-test("entityHittableFrame: non-NPC keeps full frame", () => {
-  const tree = { species_id: 5000, frame: { x: 4, y: 7, w: 1, h: 1 } };
-  const hit = entityHittableFrame(tree);
-  assert.deepEqual(hit, { x: 4, y: 7, w: 1, h: 1 });
+test("entityHittableFrame: 1x1 static object shrinks to a centered feet box", () => {
+  const sign = { species_id: 10000, frame: { x: 4, y: 7, w: 1, h: 1 } };
+  const hit = entityHittableFrame(sign);
+  assert.ok(Math.abs(hit.x - 4.15) < 1e-9);
+  assert.ok(Math.abs(hit.y - 7.15) < 1e-9);
+  assert.ok(Math.abs(hit.w - 0.7) < 1e-9);
+  assert.ok(Math.abs(hit.h - 0.7) < 1e-9);
+  // Still blocks its single tile.
+  assert.equal(rectOverlapsTile(hit, 4, 7), true);
+});
+
+test("entityHittableFrame: 1x2 barrel blocks bottom tile but NOT top tile", () => {
+  // Static objects (barrels, tables) take the generic Rust arm: the upper
+  // tile of a 2-tall sprite is walkable-behind, only the floor row blocks.
+  const barrel = { species_id: 1073, frame: { x: 10, y: 5, w: 1, h: 2 } };
+  const hit = entityHittableFrame(barrel);
+  assert.ok(Math.abs(hit.y - 6.15) < 1e-9);
+  assert.ok(Math.abs(hit.h - 0.7) < 1e-9);
+  assert.equal(rectOverlapsTile(hit, 10, 5), false); // top tile: walk behind
+  assert.equal(rectOverlapsTile(hit, 10, 6), true);  // floor tile: blocked
 });
 
 test("rectOverlapsTile: NPC feet block bottom tile but NOT head tile", () => {
