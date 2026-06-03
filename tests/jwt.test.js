@@ -1,8 +1,17 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { signToken, verifyToken } from "../server/jwt.js";
+import { signToken, verifyToken, assertStrongSecret, MIN_SECRET_BYTES } from "../server/jwt.js";
 
 const secret = "test-secret";
+
+test("assertStrongSecret rejects a short secret but allows >=32 bytes or unset", () => {
+  assert.throws(() => assertStrongSecret("short"), /too weak/);
+  assert.throws(() => assertStrongSecret("a".repeat(MIN_SECRET_BYTES - 1)), /too weak/);
+  assert.doesNotThrow(() => assertStrongSecret("a".repeat(MIN_SECRET_BYTES)));
+  // A missing/empty secret is fine — that just leaves auth disabled.
+  assert.doesNotThrow(() => assertStrongSecret(undefined));
+  assert.doesNotThrow(() => assertStrongSecret(""));
+});
 
 test("sign/verify round-trip preserves the payload + stamps iat/exp", () => {
   const token = signToken({ sub: "usr_1" }, { secret });

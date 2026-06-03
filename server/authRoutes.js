@@ -166,14 +166,18 @@ export function createAuthHandler({ db, env = process.env } = {}) {
           tokenHash, userId: user.id, expiresAt: Date.now() + RESET_TTL_MS,
         });
         const link = `${baseUrl()}/?reset=${token}`;
-        await sendEmail({
+        // Fire-and-forget: awaiting the email's network round-trip made the
+        // user-exists path measurably slower than the unknown-email path,
+        // which is an account-enumeration oracle that defeats the always-200
+        // design. Kick the send off in the background and answer immediately.
+        sendEmail({
           to: user.email,
           subject: "Reset your SneakBit password",
           html: `<p>Someone asked to reset your SneakBit password.</p>
 <p><a href="${link}">Click here to choose a new password</a>. This link expires in 1 hour.</p>
 <p>If you didn't request this, you can ignore this email.</p>`,
           text: `Reset your SneakBit password: ${link} (expires in 1 hour). If you didn't request this, ignore this email.`,
-        }, env);
+        }, env).catch((e) => { console.error("[auth] forgot-password sendEmail failed", e); });
       }
     }
     return json(res, 200, { ok: true });

@@ -8,6 +8,7 @@ import { handleTurnRequest } from "./turnCredentials.js";
 import { createAuthHandler } from "./authRoutes.js";
 import { createSavesHandler } from "./savesRoutes.js";
 import { createEditingHandler } from "./editingRoutes.js";
+import { assertStrongSecret } from "./jwt.js";
 import { openDb } from "./db.js";
 import { parseAllowedHosts, isOriginAllowed } from "./originAllowlist.js";
 import { log } from "./logger.js";
@@ -104,6 +105,8 @@ export function startServer({
   maxSessions,
   metricsToken = process.env.METRICS_TOKEN,
 } = {}) {
+  // Fail fast on a present-but-weak JWT_SECRET before we bind the port.
+  assertStrongSecret();
   const relay = createRelay({ graceMs, idleTimeoutMs, idleCheckMs, maxConnections, maxSessions });
   const allowedHosts = parseAllowedHosts(allowedOrigins ?? process.env.ALLOWED_ORIGINS);
   const upgradedSockets = new Set();

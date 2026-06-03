@@ -191,6 +191,10 @@ export function createRelay({
     for (const other of conns) {
       if (other !== ctx && other.uuid === msg.uuid) {
         other.ws.close(4003, "uuid conflict");
+        // A server-initiated close doesn't re-emit the socket "close" event,
+        // so reclaim the slot here or it leaks past timeout — same root cause
+        // as the idle-sweep fix. dropConn is guarded against a double call.
+        dropConn(other);
       }
     }
     ctx.uuid = msg.uuid;

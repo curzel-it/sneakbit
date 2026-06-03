@@ -13,6 +13,23 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 // every session would be hostile for an optional, additive feature.
 const DEFAULT_TTL_SECONDS = 60 * 60 * 24 * 30;
 
+// Tokens are non-revocable and live 30 days, so a weak secret means anyone who
+// captures one token can brute-force the secret offline and then mint tokens
+// for any account. 32 bytes is the floor for an HMAC-SHA256 key.
+export const MIN_SECRET_BYTES = 32;
+
+// Fail fast at boot on a misconfigured (crackable) secret. A *missing* secret
+// is fine — that just leaves auth disabled (offline-first); only a present-but-
+// too-short secret throws, so the operator must fix it or unset it.
+export function assertStrongSecret(secret = process.env.JWT_SECRET) {
+  if (!secret) return;
+  if (Buffer.byteLength(String(secret), "utf8") < MIN_SECRET_BYTES) {
+    throw new Error(
+      `JWT_SECRET is too weak: need >= ${MIN_SECRET_BYTES} bytes (got ${Buffer.byteLength(String(secret), "utf8")})`
+    );
+  }
+}
+
 function b64url(buf) {
   return Buffer.from(buf)
     .toString("base64")
