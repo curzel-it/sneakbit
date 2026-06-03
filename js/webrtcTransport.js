@@ -15,6 +15,22 @@ import { createWebrtcChannel, DEFAULT_STUN_SERVERS, STATE } from "./webrtcChanne
 
 const GAME_OPS = new Set(["snapshot", "delta", "event", "input"]);
 
+// Ops a remote peer may legitimately originate over the DataChannel,
+// keyed by OUR role (the peer is the opposite role). The relay enforces
+// this same trust boundary on the WS path by field-whitelisting every
+// op and server-stamping `from`; the DC bypasses the relay, so without
+// this gate a guest could emit relay-authoritative lifecycle frames
+// (`peer.left` to despawn/PvP-kill a victim, `peer.joined` to hijack a
+// slot, `peer.ghosted` to clear a peer's input) that the host's handlers
+// key off attacker-controlled ids. We re-emit only the ops the peer
+// could legitimately send and drop everything else.
+const RECV_OPS = {
+  // Host receives guest-originated game traffic.
+  host: new Set(["input", "move", "event", "guest.loadout", "guest.resync", "webrtc.signal"]),
+  // Guest receives the host's authoritative world frames.
+  guest: new Set(["snapshot", "delta", "event", "webrtc.signal"]),
+};
+
 export function installWebrtcTransport({
   net,
   role,
@@ -33,6 +49,7 @@ export function installWebrtcTransport({
   const channels = new Map(); // remotePlayerId -> webrtcChannel
   const unsubs = [];
   let closed = false;
+  const allowedRecvOps = RECV_OPS[role] || null;
 
   function ensureChannel(remotePlayerId, initiator) {
     if (!remotePlayerId) return null;
@@ -62,7 +79,14 @@ export function installWebrtcTransport({
           try { msg = JSON.parse(new TextDecoder().decode(data)); } catch { return; }
         }
         if (msg && typeof msg.op === "string") {
-          if (!msg.from) msg.from = remotePlayerId;
+          // Drop ops this peer can't legitimately originate (lifecycle /
+          // authoritative frames a guest must not forge). The DC has no
+          // relay to field-whitelist them, so we do it here.
+          if (allowedRecvOps && !allowedRecvOps.has(msg.op)) return;
+          // Always stamp the channel's identity — never trust a peer-set
+          // `from`. A guest pre-setting `from` to another player's id
+          // would otherwise have its inputs applied as that player.
+          msg.from = remotePlayerId;
           net.emitOp?.(msg.op, msg);
         }
       },

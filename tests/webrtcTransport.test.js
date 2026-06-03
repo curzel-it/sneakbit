@@ -197,6 +197,46 @@ test("host transport with no peers does not consume game frames", async () => {
   assert.equal(hostNet.sent[0].op, "delta");
 });
 
+test("host receive path: forged `from` is overwritten, disallowed ops are dropped", async () => {
+  const wire = makeWire();
+  const guestNet = makeNet({ playerId: "p_guest" });
+  const hostNet = makeNet({ playerId: "p_host" });
+  pairNets(hostNet, guestNet);
+  function PC() { return new MockPC({ wire }); }
+
+  installWebrtcTransport({
+    net: guestNet, role: "guest",
+    RTCPeerConnectionCtor: PC, RTCSessionDescriptionCtor: MockSDP, RTCIceCandidateCtor: MockICE,
+  });
+  installWebrtcTransport({
+    net: hostNet, role: "host",
+    RTCPeerConnectionCtor: PC, RTCSessionDescriptionCtor: MockSDP, RTCIceCandidateCtor: MockICE,
+  });
+
+  guestNet.deliver("guest.joined", { hostPlayerId: "p_host" });
+  hostNet.deliver("peer.joined", { playerId: "p_guest" });
+  await wait(40);
+
+  const inputs = [];
+  const peerLefts = [];
+  hostNet.on("input", (m) => inputs.push(m));
+  hostNet.on("peer.left", (m) => peerLefts.push(m));
+
+  // The guest's send DC delivers straight into the host's onMessage,
+  // bypassing the send-side interceptor — exactly the attack surface.
+  const guestDC = wire.dcs[0];
+
+  // Forged `from`: a guest pre-sets `from` to another player's id.
+  guestDC.send(JSON.stringify({ op: "input", from: "p_victim", intent: "shoot", d: "up" }));
+  // Disallowed lifecycle op: guest tries to despawn/PvP-kill a victim.
+  guestDC.send(JSON.stringify({ op: "peer.left", playerId: "p_victim" }));
+  await wait(20);
+
+  assert.equal(inputs.length, 1, "input was re-emitted");
+  assert.equal(inputs[0].from, "p_guest", "from overwritten with channel identity, not the forged value");
+  assert.equal(peerLefts.length, 0, "peer.left from a guest was dropped, not re-emitted");
+});
+
 test("installWebrtcTransport returns null when RTCPeerConnection is missing", () => {
   const net = makeNet();
   const t = installWebrtcTransport({ net, role: "guest" }); // no PC ctor and no global
