@@ -10,7 +10,7 @@
 import { getMode, getJoinCode, getRuntimeRole, isValidJoinCode } from "./onlineMode.js";
 import { createNet } from "./net.js";
 import { installWebrtcTransport } from "./webrtcTransport.js";
-import { getIceServers, primeIceServers } from "./iceConfig.js";
+import { getIceServers, primeIceServers, refreshIceServers } from "./iceConfig.js";
 import { flushOnReconnect } from "./guestInputForwarder.js";
 
 let net = null;
@@ -142,6 +142,8 @@ export function ensureNet({ netFactory = createNet } = {}) {
       net,
       role: currentRole,
       iceServers: getIceServers(),
+      // Re-fetch (only if past TTL) right before an ICE restart needs them.
+      refreshIceServers: () => refreshIceServers(net.getUrl?.()),
       log: (...args) => console.log("[webrtc]", ...args),
     });
     lastTransportRole = currentRole;

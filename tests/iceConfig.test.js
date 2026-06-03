@@ -6,6 +6,8 @@ import assert from "node:assert/strict";
 import {
   getIceServers,
   primeIceServers,
+  refreshIceServers,
+  areIceServersExpired,
   _resetIceConfigForTesting,
   _getCachedExpiresAtForTesting,
 } from "../js/iceConfig.js";
@@ -59,6 +61,41 @@ test("primeIceServers translates wss:// → https:// for the endpoint URL", asyn
     return { ok: false, async json() { return {}; } };
   });
   assert.equal(calledWith, "https://sneakbit.curzel.it/turn-credentials");
+});
+
+test("areIceServersExpired: false with no TURN creds, true past TTL", async () => {
+  _resetIceConfigForTesting();
+  // STUN-only (expiresAt 0) → never "expired", nothing to refresh.
+  assert.equal(areIceServersExpired(Date.now()), false);
+  await primeIceServers("ws://localhost:8090/ws", fakeFetch({
+    ok: true,
+    async json() { return { iceServers: [{ urls: "turn:t" }], expiresAt: 1_000_000 }; },
+  }));
+  assert.equal(areIceServersExpired(0), false, "well before expiry");
+  assert.equal(areIceServersExpired(1_000_000), true, "at expiry");
+});
+
+test("refreshIceServers re-fetches only when past TTL (within skew)", async () => {
+  _resetIceConfigForTesting();
+  await primeIceServers("ws://localhost:8090/ws", fakeFetch({
+    ok: true,
+    async json() { return { iceServers: [{ urls: "turn:old" }], expiresAt: 100_000 }; },
+  }));
+  let fetches = 0;
+  const newBody = fakeFetch({
+    ok: true,
+    async json() { fetches++; return { iceServers: [{ urls: "turn:new" }], expiresAt: 999_999 }; },
+  });
+
+  // Well before expiry → no fetch, cache unchanged.
+  let servers = await refreshIceServers("ws://localhost:8090/ws", newBody, 0);
+  assert.equal(fetches, 0);
+  assert.equal(servers[servers.length - 1].urls, "turn:old");
+
+  // Past expiry → re-fetch, cache replaced.
+  servers = await refreshIceServers("ws://localhost:8090/ws", newBody, 100_000);
+  assert.equal(fetches, 1);
+  assert.equal(servers[servers.length - 1].urls, "turn:new");
 });
 
 test("primeIceServers translates ws:// → http://", async () => {

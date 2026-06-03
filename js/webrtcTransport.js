@@ -35,6 +35,9 @@ export function installWebrtcTransport({
   net,
   role,
   iceServers = DEFAULT_STUN_SERVERS,
+  // Optional async () => iceServers[] for refreshing (expired) TURN creds
+  // before an ICE restart. Forwarded to every channel.
+  refreshIceServers = null,
   // Test seams.
   RTCPeerConnectionCtor,
   RTCSessionDescriptionCtor,
@@ -49,16 +52,22 @@ export function installWebrtcTransport({
   const channels = new Map(); // remotePlayerId -> webrtcChannel
   const unsubs = [];
   let closed = false;
+  // Guest-only: the host's playerId, learned from guest.joined. Stored so a
+  // bare host.resumed (which carries no id — see relay.js) can rebuild the
+  // channel without waiting for an upstream re-fire that never comes.
+  let hostPlayerId = null;
   const allowedRecvOps = RECV_OPS[role] || null;
 
   function ensureChannel(remotePlayerId, initiator) {
     if (!remotePlayerId) return null;
     if (channels.has(remotePlayerId)) return channels.get(remotePlayerId);
-    const ch = createWebrtcChannel({
+    let ch = null;
+    ch = createWebrtcChannel({
       net,
       remotePlayerId,
       initiator,
       iceServers,
+      refreshIceServers,
       RTCPeerConnectionCtor,
       RTCSessionDescriptionCtor,
       RTCIceCandidateCtor,
@@ -91,7 +100,10 @@ export function installWebrtcTransport({
         }
       },
       onClose: () => {
-        channels.delete(remotePlayerId);
+        // Only forget this channel if it's still the active one. A rebuild
+        // (host.resumed / peer.rejoined) may have already replaced it, and
+        // the dead channel's async onClose must not evict the new one.
+        if (channels.get(remotePlayerId) === ch) channels.delete(remotePlayerId);
         log("webrtc closed ←→", remotePlayerId);
       },
       onStateChange: (s) => log("webrtc state", remotePlayerId, "->", s),
@@ -131,6 +143,7 @@ export function installWebrtcTransport({
   } else if (role === "guest") {
     unsubs.push(net.on("guest.joined", (m) => {
       if (!m.hostPlayerId) return;
+      hostPlayerId = m.hostPlayerId;
       // Symmetric to the host's peer.rejoined handling — on a reconnect
       // the relay re-fires guest.joined (with the same hostPlayerId).
       // The old peer connection may be a zombie, so drop it before
@@ -139,11 +152,14 @@ export function installWebrtcTransport({
       ensureChannel(m.hostPlayerId, true);
     }));
     unsubs.push(net.on("host.resumed", () => {
-      // After a host bounce the old DC is dead. Rebuild.
+      // After a host bounce the old DC is dead. The relay's host.resumed
+      // carries no id, but the host's playerId is stable (derived from its
+      // uuid), so rebuild against the one we stored from guest.joined. A
+      // fresh initiator channel re-issues the offer the resumed host accepts
+      // via its webrtc.signal handler. If we somehow never saw guest.joined,
+      // there's nothing to rebuild — fall back to the WS path.
       for (const id of Array.from(channels.keys())) removeChannel(id);
-      // ensureChannel needs the host's playerId. We don't store it here;
-      // wait for the upstream `guest.joined` re-fire, or have the host
-      // accept our offer to a known id on the next reconnect.
+      if (hostPlayerId) ensureChannel(hostPlayerId, true);
     }));
   } else {
     return null;

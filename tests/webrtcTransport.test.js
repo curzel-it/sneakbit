@@ -237,6 +237,30 @@ test("host receive path: forged `from` is overwritten, disallowed ops are droppe
   assert.equal(peerLefts.length, 0, "peer.left from a guest was dropped, not re-emitted");
 });
 
+test("guest transport rebuilds the host channel on a bare host.resumed", async () => {
+  const wire = makeWire();
+  const guestNet = makeNet({ playerId: "p_guest" });
+  function PC() { return new MockPC({ wire }); }
+  const transport = installWebrtcTransport({
+    net: guestNet, role: "guest",
+    RTCPeerConnectionCtor: PC, RTCSessionDescriptionCtor: MockSDP, RTCIceCandidateCtor: MockICE,
+  });
+  // Learn the host id from guest.joined → original channel.
+  guestNet.deliver("guest.joined", { hostPlayerId: "p_host" });
+  await wait(10);
+  const channels = transport.getChannels();
+  assert.ok(channels.has("p_host"), "original channel to host exists");
+  const first = channels.get("p_host");
+
+  // Host bounces and resumes. The relay sends a bare host.resumed (no id) —
+  // the transport must rebuild against the stored hostPlayerId, not stall.
+  guestNet.deliver("host.resumed", {});
+  await wait(20);
+  assert.ok(channels.has("p_host"), "channel rebuilt to the same host id");
+  assert.notEqual(channels.get("p_host"), first, "a fresh channel replaced the dead one");
+  transport.close();
+});
+
 test("installWebrtcTransport returns null when RTCPeerConnection is missing", () => {
   const net = makeNet();
   const t = installWebrtcTransport({ net, role: "guest" }); // no PC ctor and no global

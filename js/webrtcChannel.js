@@ -31,6 +31,16 @@ export function createWebrtcChannel({
   remotePlayerId,
   initiator,
   iceServers = DEFAULT_STUN_SERVERS,
+  // Optional async () => iceServers[] returning fresh creds for an ICE
+  // restart. TURN creds expire mid-session, so a restart that reuses the
+  // boot-time creds would fall back to nothing. Omitted in tests / STUN-only.
+  refreshIceServers = null,
+  // How many ICE restarts to attempt before declaring the channel dead.
+  maxIceRestarts = 1,
+  // Grace before restarting on a `disconnected` state — it's often a
+  // transient blip that recovers on its own, so don't spend a restart
+  // immediately. `failed` is terminal for the candidate pair → restart now.
+  disconnectGraceMs = 3000,
   // Injectable for tests. In a browser these resolve to the globals.
   RTCPeerConnectionCtor,
   RTCSessionDescriptionCtor,
@@ -64,6 +74,8 @@ export function createWebrtcChannel({
   const pendingIce = [];
   let closed = false;
   let unsubSignal = null;
+  let iceRestartAttempts = 0;
+  let disconnectTimer = null;
 
   function setState(next) {
     if (state === next) return;
@@ -106,9 +118,24 @@ export function createWebrtcChannel({
 
     pc.onconnectionstatechange = () => {
       const s = pc.connectionState;
-      if (s === "failed" || s === "disconnected" || s === "closed") {
-        if (state !== STATE.OPEN) setState(STATE.FAILED);
-        else setState(STATE.CLOSED);
+      if (s === "connected") {
+        // Recovered (possibly via a restart). Clear any pending grace timer
+        // and refresh the restart budget for a future, independent blip.
+        clearDisconnectTimer();
+        iceRestartAttempts = 0;
+        return;
+      }
+      if (s === "closed") { finishDead(); return; }
+      if (s === "failed") { clearDisconnectTimer(); tryIceRestart(); return; }
+      if (s === "disconnected") {
+        // Often transient — give it a beat to self-heal before restarting.
+        if (disconnectTimer || closed) return;
+        disconnectTimer = setTimeout(() => {
+          disconnectTimer = null;
+          if (closed) return;
+          const cur = pc?.connectionState;
+          if (cur === "disconnected" || cur === "failed") tryIceRestart();
+        }, disconnectGraceMs);
       }
     };
 
@@ -164,6 +191,48 @@ export function createWebrtcChannel({
     }
   }
 
+  function clearDisconnectTimer() {
+    if (disconnectTimer) { clearTimeout(disconnectTimer); disconnectTimer = null; }
+  }
+
+  // Transition the channel to its terminal state. A connection that never
+  // opened failed outright; one that was OPEN merely closed.
+  function finishDead() {
+    clearDisconnectTimer();
+    if (state === STATE.OPEN) setState(STATE.CLOSED);
+    else if (state !== STATE.CLOSED) setState(STATE.FAILED);
+  }
+
+  // Attempt one ICE restart before giving up. The guest (initiator) drives
+  // it by re-offering with iceRestart; the host (answerer) flags its side
+  // and accepts the guest's fresh offer via the existing signal handler.
+  // Both refresh TURN creds first — a restart is the exact moment expired
+  // creds bite, so reusing the boot-time ones would defeat the fallback.
+  async function tryIceRestart() {
+    if (closed || !pc) return;
+    if (iceRestartAttempts >= maxIceRestarts) { finishDead(); return; }
+    iceRestartAttempts++;
+    if (refreshIceServers && pc.setConfiguration) {
+      try {
+        const fresh = await refreshIceServers();
+        if (Array.isArray(fresh) && fresh.length) pc.setConfiguration({ iceServers: fresh });
+      } catch { /* keep current creds */ }
+    }
+    if (closed) return;
+    try {
+      if (initiator) {
+        const offer = await pc.createOffer({ iceRestart: true });
+        await pc.setLocalDescription(offer);
+        sendSignal("offer", { sdp: offer.sdp });
+      } else {
+        pc.restartIce?.();
+      }
+    } catch (err) {
+      console.error("webrtc ice restart", err);
+      finishDead();
+    }
+  }
+
   function send(s) {
     if (!dc || dc.readyState !== "open") return false;
     try { dc.send(s); return true; }
@@ -173,6 +242,7 @@ export function createWebrtcChannel({
   function close() {
     if (closed) return;
     closed = true;
+    clearDisconnectTimer();
     try { unsubSignal?.(); } catch { /* ignore */ }
     try { dc?.close(); } catch { /* ignore */ }
     try { pc?.close(); } catch { /* ignore */ }

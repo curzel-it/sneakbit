@@ -14,6 +14,24 @@ export function getIceServers() {
   return cachedServers.slice();
 }
 
+// TURN credentials are ephemeral (the relay mints HMAC creds with a TTL).
+// They're fetched once at boot, so by the time an ICE restart needs them —
+// which can be long into a session — they may be expired, defeating the
+// fallback. Re-fetch when we're within REFRESH_SKEW_MS of expiry (or past
+// it); otherwise return the cache unchanged. `cachedExpiresAt === 0` means
+// the server never advertised TURN, so there's nothing to refresh.
+const REFRESH_SKEW_MS = 60_000;
+
+export function areIceServersExpired(now = Date.now()) {
+  return cachedExpiresAt > 0 && now >= cachedExpiresAt - REFRESH_SKEW_MS;
+}
+
+export async function refreshIceServers(wsUrl, fetchImpl, now = Date.now()) {
+  if (!areIceServersExpired(now)) return cachedServers.slice();
+  await primeIceServers(wsUrl, fetchImpl);
+  return cachedServers.slice();
+}
+
 // Translate a ws[s] URL into the matching http[s] origin so we can hit
 // the credentials endpoint on the same host. localhost dev: ws://host:port
 // → http://host:port; prod: wss://host/ws → https://host/turn-credentials.

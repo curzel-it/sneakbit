@@ -69,8 +69,11 @@ class MockPC {
     this.wire.dcs.push(dc);
     return dc;
   }
-  async createOffer() { return new MockSDP({ type: "offer", sdp: "v=0\r\no=- 1 1 IN IP4 0.0.0.0\r\n" }); }
+  async createOffer(opts) { this._lastOfferOpts = opts || null; return new MockSDP({ type: "offer", sdp: "v=0\r\no=- 1 1 IN IP4 0.0.0.0\r\n" }); }
   async createAnswer() { return new MockSDP({ type: "answer", sdp: "v=0\r\no=- 2 2 IN IP4 0.0.0.0\r\n" }); }
+  restartIce() { this._restartIceCalls = (this._restartIceCalls || 0) + 1; }
+  setConfiguration(cfg) { this._lastConfig = cfg; }
+  _setConnectionState(s) { this.connectionState = s; this.onconnectionstatechange?.(); }
   async setLocalDescription(d) { this._localDesc = d; }
   async setRemoteDescription(d) {
     this._remoteDesc = d;
@@ -207,6 +210,69 @@ test("signaling frames addressed to a different peer are ignored", async () => {
   });
   await wait(20);
   assert.ok(calls >= 1, "should have sent at least the offer");
+  chan.close();
+});
+
+test("initiator re-offers with iceRestart on connection failure, refreshing creds", async () => {
+  const wire = makeWire();
+  const sent = [];
+  const fakeNet = { on() { return () => {}; }, send(f) { sent.push(f); } };
+  let refreshed = 0;
+  const fresh = [{ urls: "turn:fresh" }];
+
+  const chan = createWebrtcChannel({
+    net: fakeNet, remotePlayerId: "p_b", initiator: true,
+    refreshIceServers: async () => { refreshed++; return fresh; },
+    RTCPeerConnectionCtor: function PC() { return new MockPC({ wire }); },
+    RTCSessionDescriptionCtor: MockSDP, RTCIceCandidateCtor: MockICE,
+  });
+  await wait(20);
+  const offersBefore = sent.filter((f) => f.payload?.kind === "offer").length;
+  assert.equal(offersBefore, 1, "initial offer sent at startup");
+
+  chan._pc()._setConnectionState("failed");
+  await wait(20);
+
+  assert.equal(refreshed, 1, "TURN creds refreshed before the restart");
+  assert.deepEqual(chan._pc()._lastConfig, { iceServers: fresh }, "fresh creds applied to the pc");
+  const offersAfter = sent.filter((f) => f.payload?.kind === "offer");
+  assert.equal(offersAfter.length, 2, "a fresh restart offer was sent");
+  // The restart offer must carry iceRestart so the browser regathers ICE.
+  assert.deepEqual(chan._pc()._lastOfferOpts, { iceRestart: true });
+  chan.close();
+});
+
+test("host (answerer) calls restartIce on failure instead of re-offering", async () => {
+  const wire = makeWire();
+  const sent = [];
+  const fakeNet = { on() { return () => {}; }, send(f) { sent.push(f); } };
+  const chan = createWebrtcChannel({
+    net: fakeNet, remotePlayerId: "p_a", initiator: false,
+    RTCPeerConnectionCtor: function PC() { return new MockPC({ wire }); },
+    RTCSessionDescriptionCtor: MockSDP, RTCIceCandidateCtor: MockICE,
+  });
+  await wait(20);
+  chan._pc()._setConnectionState("failed");
+  await wait(20);
+  assert.equal(chan._pc()._restartIceCalls, 1, "answerer flags its side for restart");
+  assert.equal(sent.filter((f) => f.payload?.kind === "offer").length, 0, "answerer never offers");
+  chan.close();
+});
+
+test("gives up (FAILED) after the ICE-restart budget is exhausted", async () => {
+  const wire = makeWire();
+  const fakeNet = { on() { return () => {}; }, send() {} };
+  const chan = createWebrtcChannel({
+    net: fakeNet, remotePlayerId: "p_b", initiator: true, maxIceRestarts: 1,
+    RTCPeerConnectionCtor: function PC() { return new MockPC({ wire }); },
+    RTCSessionDescriptionCtor: MockSDP, RTCIceCandidateCtor: MockICE,
+  });
+  await wait(20);
+  chan._pc()._setConnectionState("failed"); // attempt 1
+  await wait(20);
+  chan._pc()._setConnectionState("failed"); // budget exhausted → give up
+  await wait(20);
+  assert.equal(chan.getState(), STATE.FAILED);
   chan.close();
 });
 
