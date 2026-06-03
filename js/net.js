@@ -7,6 +7,15 @@
 import { getOnlineUuid } from "./onlineMode.js";
 
 export const PROTOCOL = 1;
+// Schema version stamped on host-authoritative game frames (snapshot /
+// delta / keepalive) so two mismatched client builds can't silently
+// corrupt each other's world state. The PROTOCOL gate above only covers
+// the WS handshake; game frames ride the DataChannel and bypass the relay
+// entirely, so they carry their own version. Bump this whenever the
+// snapshot/delta payload shape changes incompatibly. A frame with no `v`
+// is treated as schema 1 (the original implied shape) so this can land
+// without a flag-day — only a future bump to 2 starts rejecting old frames.
+export const GAME_FRAME_SCHEMA = 1;
 const DEFAULT_DEV_WS = "ws://localhost:8090/ws";
 const DEFAULT_PROD_WS = "wss://sneakbit.curzel.it/ws";
 const BACKOFF_STEPS_MS = [1000, 2000, 4000, 8000, 16000, 30000];

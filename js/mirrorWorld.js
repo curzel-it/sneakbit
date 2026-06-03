@@ -15,6 +15,7 @@ import { loadZone } from "./data.js";
 import { buildZone } from "./zone.js";
 import { setupCutscenes } from "./cutscenes.js";
 import { evictZoneCache } from "./zoneCache.js";
+import { GAME_FRAME_SCHEMA } from "./net.js";
 
 // Render remote players/entities this far in the past so interpolation
 // always has two real samples to blend between (the host broadcasts at
@@ -183,8 +184,21 @@ function applyMode(msg) {
   setGameMode(msg.mode);
 }
 
+// A host on a different build than this guest must not corrupt our world:
+// reject any game frame whose schema version we can't interpret rather
+// than merging it. Every push to main is a release, so an old tab and a
+// new build coexist for a moment. A missing `v` is the original implied
+// schema 1, so this gate is a no-op until GAME_FRAME_SCHEMA is bumped.
+// On rejection we just drop the frame — the mirror goes stale and the
+// existing resync watchdog / "Host lagging…" UI takes over.
+function schemaMatches(msg) {
+  const v = msg.v == null ? 1 : msg.v;
+  return v === GAME_FRAME_SCHEMA;
+}
+
 export function handleSnapshot(msg, opts = {}) {
   if (!msg || msg.zoneId == null) return;
+  if (!schemaMatches(msg)) return;
   applyMode(msg);
   if (!zone || zone.id !== msg.zoneId) {
     return loadZoneAndApplySnapshot(msg, opts);
@@ -199,6 +213,7 @@ export function handlePeerLeft(msg) {
 
 export function handleDelta(msg) {
   if (!msg) return;
+  if (!schemaMatches(msg)) return;
   applyMode(msg);
   if (!zone || zone.id !== msg.zoneId) return;
   const t = nowMs();

@@ -48,6 +48,31 @@ test("snapshot loads the zone, populates players + entities, marks ready", async
   reset();
 });
 
+test("a game frame from an incompatible schema version is rejected, not merged", async () => {
+  reset();
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [],
+    entities: [{ id: 7, species_id: 50, frame: { x: 1, y: 1, w: 1, h: 1 }, hp: 30 }],
+  });
+  // A future build's delta (schema 99) must not corrupt our world.
+  handleDelta({
+    op: "delta", v: 99, zoneId: 1001,
+    players: [],
+    entities: [{ id: 7, hp: 1 }],
+  });
+  const z = getMirrorZone();
+  assert.equal(z.entities[0].hp, 30, "mismatched-schema delta left state untouched");
+
+  // A mismatched snapshot must not replace the ready zone either.
+  await applySnapshot({
+    op: "snapshot", v: 99, zoneId: 2002,
+    players: [], entities: [],
+  });
+  assert.equal(getMirrorZone().id, 1001, "mismatched-schema snapshot was rejected");
+  reset();
+});
+
 test("delta merges a partial entity update without wiping other fields", async () => {
   reset();
   await applySnapshot({

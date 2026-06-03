@@ -16,6 +16,7 @@ import { getLastSeqMap } from "./hostGuests.js";
 import { broadcastHostEvent } from "./hostEvents.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { getMeleeSwingProgress, getMeleeCooldown } from "./melee.js";
+import { GAME_FRAME_SCHEMA } from "./net.js";
 
 export const BROADCAST_INTERVAL_MS = 50;
 
@@ -143,6 +144,7 @@ function broadcastDelta(net) {
 function buildKeepalive(state) {
   return {
     op: "delta",
+    v: GAME_FRAME_SCHEMA,
     t: tickCount++,
     zoneId: state.zone.id,
     mode: getGameMode(),
@@ -170,6 +172,7 @@ function buildDelta(state) {
   if (!changed.length && !entities.length && !removed.length) return null;
   const msg = {
     op: "delta",
+    v: GAME_FRAME_SCHEMA,
     t: tickCount++,
     zoneId: state.zone.id,
     mode: getGameMode(),
@@ -203,6 +206,7 @@ function buildSnapshot(state) {
   for (const p of players) lastHpByPlayerId.set(p.playerId, p.hp);
   return {
     op: "snapshot",
+    v: GAME_FRAME_SCHEMA,
     t: tickCount++,
     zoneId: state.zone.id,
     mode: getGameMode(),
