@@ -11,8 +11,12 @@
 //                          the post-hit regen delay can lapse and HP recovers.
 //       2. enemy ≤1 tile → melee it (already in reach).
 //       3. enemy ≤2 tiles→ step toward it (short lunge into reach).
-//       4. otherwise     → march on the enemy nearest the exit (the next to
-//                          leak), path-finding around the barrel maze.
+//       4. acquire       → among enemies within 10 tiles, march on the one
+//                          nearest the exit (the next to leak), path-finding
+//                          around the barrel maze.
+//       5. commit        → keep marching on that target until it's eliminated,
+//                          unless a strictly closer enemy turns up (then chase
+//                          the more immediate threat instead).
 //
 // The possessed (active) hero overrides all of this — main's TD loop simply
 // feeds it real input and never calls driveAlly for it.
@@ -30,12 +34,20 @@ const FIRE_RANGE = 8;            // tiles a rooted shooter will fire across
 const MELEE_REACH = 1;           // Manhattan tiles counted as "adjacent"
 const LUNGE_RANGE = 2;           // a charger steps in on a target this close
 const LOW_HP_FRAC = 0.3;         // ≤30% max HP → the charger takes cover
+const ACQUIRE_RANGE = 10;        // tiles a charger will reach out to pick a target
 
 const STEP_DIRS = [["up", 0, -1], ["down", 0, 1], ["left", -1, 0], ["right", 1, 0]];
 
 const IDLE = () => ({ events: [], held: new Set() });
 const walk = (dir) => ({ events: [dir], held: new Set([dir]) });
 const face = (dir) => ({ events: [dir], held: new Set() }); // rotate-only tap
+
+// Each charger's committed march target, by hero index → enemy id. Sticky
+// across frames so the Barbarian doesn't dither between equidistant foes (see
+// marchTarget). Cleared per run via resetAllyAI.
+const committedTargetId = new Map();
+
+export function resetAllyAI() { committedTargetId.clear(); }
 
 // Drive one ally hero for this frame. Returns the movement input to hand to
 // updatePlayer; attacks are fired as a side effect. `ctx` = { enemies, goal }.
@@ -87,10 +99,10 @@ function driveCharger(state, hero, ctx) {
     }
   }
 
-  // 4. Otherwise hunt the enemy nearest the exit, routing around the maze.
-  const target = enemyNearestExit(enemies, getField(), ctx?.goal);
+  // 4 & 5. Otherwise march on a committed target, routing around the maze.
+  const target = marchTarget(hero, enemies, getField(), ctx?.goal);
   if (!target) return IDLE();
-  const step = pathStepToward(state.zone, hero.tileX, hero.tileY, target);
+  const step = pathStepToward(state.zone, hero.tileX, hero.tileY, enemyTile(target));
   return step ? walk(step) : IDLE();
 }
 
@@ -124,21 +136,76 @@ function takeCover(state, hero, enemies) {
   return face(dirToward(hx, hy, threat.x, threat.y));
 }
 
-// The enemy closest to the exit (the next to leak) — ranked by the goal-ward
-// flow-field distance when available (true path length around the maze), else
-// straight-line to the goal. Returns its feet tile, or null if none qualify.
-export function enemyNearestExit(enemies, field, goal) {
+// Priorities 4 & 5 — pick (and keep) the charger's march target.
+//   4. Acquire: the closest live enemy within ACQUIRE_RANGE tiles of the hero;
+//      ties broken by exit-nearness (the one further along toward the leak).
+//   5. Commit: stay on that target until it's eliminated, unless a strictly
+//      closer enemy turns up — then switch to the more immediate threat.
+// Returns the target enemy entity, or null if nothing is in range.
+export function marchTarget(hero, enemies, field, goal) {
+  const idx = hero.index | 0;
+  const committed = liveEnemyById(enemies, committedTargetId.get(idx));
+  if (committed) {
+    const closest = nearestEnemyEntity(hero, enemies);
+    if (closest && closest !== committed && heroDist(hero, closest) < heroDist(hero, committed)) {
+      committedTargetId.set(idx, closest.id);
+      return closest;
+    }
+    return committed;
+  }
+  const pick = acquireTarget(hero, enemies, field, goal, ACQUIRE_RANGE);
+  if (pick) committedTargetId.set(idx, pick.id);
+  else committedTargetId.delete(idx);
+  return pick || null;
+}
+
+// Priority 4's selection: the closest live enemy within `range` tiles of the
+// hero, ties broken by exit-nearness — ranked by goal-ward flow-field distance
+// when a field is supplied (true path length around the maze), else
+// straight-line to the goal. Returns the entity, or null if none are in range.
+export function acquireTarget(hero, enemies, field, goal, range) {
   let best = null;
-  let bestKey = Infinity;
+  let bestHero = Infinity;
+  let bestExit = Infinity;
   for (const e of enemies) {
     if (e._dying) continue;
+    const hd = heroDist(hero, e);
+    if (hd > range) continue;
     const t = enemyTile(e);
-    const key = field
+    const xd = field
       ? fieldDistance(field, t.x, t.y)
       : (goal ? manhattan(t.x, t.y, goal.x, goal.y) : 0);
-    if (key < bestKey) { bestKey = key; best = t; }
+    if (hd < bestHero || (hd === bestHero && xd < bestExit)) {
+      best = e; bestHero = hd; bestExit = xd;
+    }
   }
   return best;
+}
+
+function nearestEnemyEntity(hero, enemies) {
+  let best = null;
+  let bestDist = Infinity;
+  for (const e of enemies) {
+    if (e._dying) continue;
+    const d = heroDist(hero, e);
+    if (d < bestDist) { best = e; bestDist = d; }
+  }
+  return best;
+}
+
+// The committed enemy if it's still live and present this frame, else null
+// (eliminated — killed, leaked, or a stale id from a prior run).
+function liveEnemyById(enemies, id) {
+  if (id == null) return null;
+  for (const e of enemies) {
+    if (e.id === id) return e._dying ? null : e;
+  }
+  return null;
+}
+
+function heroDist(hero, e) {
+  const t = enemyTile(e);
+  return manhattan(hero.tileX, hero.tileY, t.x, t.y);
 }
 
 // One step from (fromX, fromY) toward `target`, routing around walls AND placed

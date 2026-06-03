@@ -44,7 +44,7 @@ import {
 } from "./tdEnemies.js";
 import { getEnemies } from "./tdEnemies.js";
 import { startWave, tickWaves, isWaveSpawningDone, totalThisWave, resetWaves } from "./tdWaves.js";
-import { driveAlly } from "./allyAI.js";
+import { driveAlly, resetAllyAI } from "./allyAI.js";
 import {
   resetHeroSwitch, getActiveHeroIndex, isActiveHero, squadPlayers,
   cycleActiveHero, ensureLiveActive, followActiveHero, activeHero,
@@ -477,6 +477,7 @@ function resetTdState() {
   resetTdEnemies();
   resetWaves();
   resetBoard();
+  resetAllyAI();
 }
 
 // — Debug hook ————————————————————————————————————————————————————————————
