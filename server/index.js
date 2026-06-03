@@ -128,6 +128,13 @@ export function startServer({
   // gated by an optional bearer token (METRICS_TOKEN).
   const metricsRl = new Map();
   let metricsRlEpoch = 0;
+  // /turn-credentials rate limiter, same shape as the /metrics one. Each hit
+  // mints a valid 1-hour HMAC coturn credential; a browser fetches it once at
+  // boot and occasionally on refresh, so legitimate load is tiny. Without a
+  // cap any non-browser client (no Origin → allowed) can scrape free TURN
+  // bandwidth indefinitely.
+  const turnRl = new Map();
+  let turnRlEpoch = 0;
   // Concurrent-upgrade count per source IP, decremented on socket close.
   // Bounds the blast radius of a single client hoarding the global pool.
   const upgradesPerIp = new Map();
@@ -217,6 +224,11 @@ export function startServer({
     }
     if (req.url === "/turn-credentials") {
       applyGatedCors(res, req.headers.origin, allowedHosts);
+      if (!checkTurnRate(req)) {
+        res.writeHead(429, { "content-type": "text/plain; charset=utf-8" });
+        res.end("rate limited\n");
+        return;
+      }
       handleTurnRequest(req, res);
       return;
     }
@@ -278,6 +290,24 @@ export function startServer({
     const n = (metricsRl.get(ip) || 0) + 1;
     metricsRl.set(ip, n);
     return n <= METRICS_RPS_PER_IP;
+  }
+
+  // Per-IP rate limit on /turn-credentials: 10 req/s/IP. Same cheap
+  // reset-each-second map as /metrics. Legitimate clients fetch a
+  // credential once per page load (plus the occasional pre-expiry
+  // refresh), so this is far above real demand and only bites scrapers.
+  function checkTurnRate(req) {
+    const TURN_RPS_PER_IP = 10;
+    const now = Date.now();
+    const epoch = Math.floor(now / 1000);
+    if (epoch !== turnRlEpoch) {
+      turnRl.clear();
+      turnRlEpoch = epoch;
+    }
+    const ip = req.socket?.remoteAddress || "unknown";
+    const n = (turnRl.get(ip) || 0) + 1;
+    turnRl.set(ip, n);
+    return n <= TURN_RPS_PER_IP;
   }
 
   server.on("upgrade", (req, socket) => {

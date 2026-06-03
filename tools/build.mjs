@@ -31,13 +31,18 @@ const OUT_DIR = join(REPO_ROOT, "_site");
 const DENYLIST = new Set([
   "js", "tests", "tools", "server", "node_modules", "docs",
   ".git", ".github", ".claude", "venv", "__pycache__", "_site",
-  ".env", ".gitignore", "deploy.py", "package.json", "package-lock.json",
+  ".gitignore", "deploy.py", "package.json", "package-lock.json",
   // Desktop (Electron/Steam) wrapper — built separately, never part of the web bundle.
   "electron", "dist",
+  // Build scratch + Steam packaging scratch — never runtime assets.
+  "temp", "build",
 ]);
 
 function isDenied(name) {
   if (DENYLIST.has(name)) return true;
+  // Any dotenv file (.env, .env.local, .env.production, …) holds secrets and
+  // must never ship — match the whole family, not just the literal ".env".
+  if (name === ".env" || name.startsWith(".env.")) return true;
   // Docs/dev cruft — never part of the runtime.
   if (name.endsWith(".log") || name.endsWith(".py") || name.endsWith(".md")) return true;
   return false;

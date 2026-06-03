@@ -113,6 +113,25 @@ test("/metrics rate-limits per-IP after a burst", async () => {
   } finally { await close(); }
 });
 
+test("/turn-credentials rate-limits per-IP after a burst", async () => {
+  const { close, base } = await bootServer();
+  try {
+    // Same 10 req/s/IP limiter as /metrics. TURN is unconfigured here, so the
+    // requests that clear the limiter return 503 ("turn not configured") — the
+    // point is that the over-budget ones are rejected with 429 *before* the
+    // handler ever mints a credential.
+    const results = await Promise.all(
+      Array.from({ length: 15 }, () => fetch(`${base}/turn-credentials`).then((r) => r.status))
+    );
+    const passed = results.filter((s) => s !== 429).length;
+    const tooMany = results.filter((s) => s === 429).length;
+    assert.ok(passed > 0, "expected some requests to clear the limiter");
+    assert.ok(tooMany > 0, `expected some 429 responses, got: ${results.join(",")}`);
+    assert.ok(results.every((s) => s === 429 || s === 503),
+      `non-rate-limited responses should be 503 (turn unconfigured), got: ${results.join(",")}`);
+  } finally { await close(); }
+});
+
 test("/metrics CORS is origin-gated, not wildcard", async () => {
   const { close, base } = await bootServer();
   try {
