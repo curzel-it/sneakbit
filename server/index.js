@@ -19,6 +19,16 @@ import { dirname as dirOf } from "node:path";
 const PORT = Number(process.env.PORT) || 8090;
 const HOST = process.env.HOST || "127.0.0.1";
 
+// Cap concurrent WS upgrades per source IP. The relay's global
+// maxConnections (500) is the only other gate, so without this a single
+// non-browser client (no Origin → allowed) opens all 500 slots and
+// denies everyone. 32 is far above any legit co-op fan-out (a handful of
+// guests per host) yet small enough that one IP can't monopolise the
+// pool. Trusts socket.remoteAddress directly — nginx is the only
+// upstream and lives on 127.0.0.1, so there's no X-Forwarded-For hop to
+// spoof here.
+const DEFAULT_MAX_CONNECTIONS_PER_IP = 32;
+
 // Resolved once at startup so /version is cheap to call. Falls back to
 // the GIT_SHA env var (set by the deployer) when this isn't a git
 // checkout — the production VPS only has the tarball.
@@ -102,6 +112,7 @@ export function startServer({
   idleCheckMs,
   allowedOrigins,
   maxConnections,
+  maxConnectionsPerIp = DEFAULT_MAX_CONNECTIONS_PER_IP,
   maxSessions,
   metricsToken = process.env.METRICS_TOKEN,
 } = {}) {
@@ -117,6 +128,9 @@ export function startServer({
   // gated by an optional bearer token (METRICS_TOKEN).
   const metricsRl = new Map();
   let metricsRlEpoch = 0;
+  // Concurrent-upgrade count per source IP, decremented on socket close.
+  // Bounds the blast radius of a single client hoarding the global pool.
+  const upgradesPerIp = new Map();
 
   // Auth + cloud saves are optional and lazy: the db is opened (and data.db
   // created) only on the first bearer-scoped request, and only when
@@ -284,6 +298,13 @@ export function startServer({
       socket.destroy();
       return;
     }
+    const ip = socket.remoteAddress || "unknown";
+    if ((upgradesPerIp.get(ip) || 0) >= maxConnectionsPerIp) {
+      log.warn("ws.ip_capacity", { ip, cap: maxConnectionsPerIp });
+      socket.write("HTTP/1.1 503 Service Unavailable\r\n\r\n");
+      socket.destroy();
+      return;
+    }
     const accept = acceptKey(wsKey);
     const ext = negotiateExtensions(req.headers["sec-websocket-extensions"]);
     const extHeader = formatExtResponse(ext);
@@ -297,7 +318,13 @@ export function startServer({
     );
     socket.setNoDelay(true);
     upgradedSockets.add(socket);
-    socket.on("close", () => upgradedSockets.delete(socket));
+    upgradesPerIp.set(ip, (upgradesPerIp.get(ip) || 0) + 1);
+    socket.on("close", () => {
+      upgradedSockets.delete(socket);
+      const left = (upgradesPerIp.get(ip) || 1) - 1;
+      if (left <= 0) upgradesPerIp.delete(ip);
+      else upgradesPerIp.set(ip, left);
+    });
     const ws = new WsConnection(socket, { deflate: ext ? true : false });
     relay.attach(ws);
   });

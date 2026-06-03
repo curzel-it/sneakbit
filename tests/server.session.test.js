@@ -569,6 +569,31 @@ test("MAX_CONNECTIONS cap closes new attaches with 4006", async () => {
   } finally { await s.close(); }
 });
 
+test("per-IP upgrade cap rejects the surplus upgrade (503), frees on close", async () => {
+  // A single source IP must not be able to hoard the global pool. The
+  // cap is enforced at the HTTP-upgrade layer (before the WS handshake),
+  // so the surplus client never sees a 101 — openWsClient rejects.
+  const s = await startServer({
+    port: 0, host: "127.0.0.1", graceMs: GRACE, maxConnectionsPerIp: 2,
+  });
+  try {
+    const a = await openWsClient(s.host, s.port);
+    const b = await openWsClient(s.host, s.port);
+    await assert.rejects(
+      openWsClient(s.host, s.port),
+      /handshake failed/,
+      "third upgrade from the same IP is refused"
+    );
+    // Closing one frees a slot for the same IP.
+    a.close();
+    await new Promise((r) => setTimeout(r, 30));
+    const c = await openWsClient(s.host, s.port);
+    const w = await hello(c, "ip-cap-recover");
+    assert.equal(w.op, "welcome");
+    b.close(); c.close();
+  } finally { await s.close(); }
+});
+
 test("idle sweep reclaims the connection slot (no leak)", async () => {
   // The sweep closes idle sockets, but a server-initiated close does NOT
   // re-emit the socket "close" event, so without explicit teardown the
