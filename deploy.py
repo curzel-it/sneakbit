@@ -77,6 +77,14 @@ SERVER_NAME = "sneakbit.curzel.it"
 # halves deploy independently and shouldn't share a tree.
 WEBROOT = "/var/www/sneakbit"
 
+# Rollback snapshots, taken just before the destructive client/server pushes.
+# A failed health check restores from these so a broken build never stays
+# live. WEBROOT_BAK mirrors the previous static client; SERVER_BAK_TAR holds
+# the previous managed server code (data.db / editing/ excluded — they're
+# runtime data, preserved across deploys regardless).
+WEBROOT_BAK = WEBROOT + ".bak"
+SERVER_BAK_TAR = f"{REMOTE_DIR}/.rollback-server.tgz"
+
 LOCAL_SERVER_DIR = ROOT / "server"
 SERVER_SYNC_PATHS = [
     "index.js",
@@ -498,8 +506,14 @@ def step_git_commit_push(message: str) -> None:
 def step_build_client():
     """Build the static client into _site/ via esbuild (npm run build).
     Run first so a broken build fails the deploy before we touch the VPS.
-    Assumes node_modules is present on the deployer; if esbuild is missing
-    npm fails loudly — run `npm ci` and retry."""
+
+    esbuild is pinned to an EXACT version in package.json (no caret), so the
+    bundle is reproducible regardless of when node_modules was installed — an
+    `npm install` can't silently drift it to a newer 0.28.x. We deliberately
+    don't `npm ci` here: that would reinstall the heavyweight Electron
+    devDeps (whose postinstall downloads a binary) on every web deploy, a
+    needless failure surface. If esbuild is missing, npm fails loudly —
+    run `npm ci` once and retry."""
     print("[*] build client -> _site/")
     subprocess.check_call(["npm", "run", "build"], cwd=str(ROOT))
 
@@ -539,6 +553,69 @@ def step_user(env):
         f"useradd --system --home {REMOTE_DIR} --shell /usr/sbin/nologin {APP_USER}"
     ))
     ssh(env, f"install -d -o {APP_USER} -g {APP_USER} -m 0755 {REMOTE_DIR}")
+
+
+def step_backup_release(env):
+    """Snapshot the currently-live client + server code BEFORE the destructive
+    pushes, so a failed health check can roll back to the last known-good
+    release rather than leaving a broken site live. The rsync --delete client
+    push and the service restart are otherwise irreversible — the existing
+    health checks only *detect* breakage after the fact.
+
+    data.db and editing/ are runtime data (already preserved across deploys),
+    so the server snapshot covers only the managed code files. On a first-ever
+    deploy there's nothing to snapshot — handled gracefully (no backup → no
+    rollback, which is correct: there's no previous release to fall back to)."""
+    print("[*] snapshot current release (for rollback)")
+    server_files = " ".join(shlex.quote(p) for p in SERVER_SYNC_PATHS)
+    ssh(env, f"""
+set -e
+# Client: mirror the live WEBROOT (skip on a fresh host with no client yet).
+rm -rf {shlex.quote(WEBROOT_BAK)}
+if [ -d {shlex.quote(WEBROOT)} ] && [ -n "$(ls -A {shlex.quote(WEBROOT)} 2>/dev/null)" ]; then
+  cp -a {shlex.quote(WEBROOT)} {shlex.quote(WEBROOT_BAK)}
+fi
+# Server: tar just the managed files that already exist (a fresh deploy has
+# none yet). Build the list first so tar never errors on a missing path.
+rm -f {shlex.quote(SERVER_BAK_TAR)}
+if [ -d {shlex.quote(REMOTE_DIR)} ]; then
+  present=""
+  for f in {server_files}; do
+    [ -e {shlex.quote(REMOTE_DIR)}/$f ] && present="$present $f"
+  done
+  if [ -n "$present" ]; then
+    tar -C {shlex.quote(REMOTE_DIR)} -czf {shlex.quote(SERVER_BAK_TAR)} $present
+  fi
+fi
+""")
+
+
+def step_rollback(env):
+    """Restore the snapshot taken by step_backup_release and restart the
+    service. Best-effort: each half is guarded so a partial backup (e.g. a
+    first deploy that had no client to snapshot) still restores what it can."""
+    print("[!] rolling back to the previous release")
+    ssh(env, f"""
+set +e
+if [ -d {shlex.quote(WEBROOT_BAK)} ]; then
+  rm -rf {shlex.quote(WEBROOT)}
+  cp -a {shlex.quote(WEBROOT_BAK)} {shlex.quote(WEBROOT)}
+  chown -R www-data:www-data {shlex.quote(WEBROOT)}
+  echo "  client restored from {WEBROOT_BAK}"
+else
+  echo "  no client snapshot to restore (first deploy?)"
+fi
+if [ -f {shlex.quote(SERVER_BAK_TAR)} ]; then
+  tar -C {shlex.quote(REMOTE_DIR)} -xzf {shlex.quote(SERVER_BAK_TAR)}
+  chown -R {APP_USER}:{APP_USER} {shlex.quote(REMOTE_DIR)}
+  echo "  server code restored from {SERVER_BAK_TAR}"
+else
+  echo "  no server snapshot to restore (first deploy?)"
+fi
+systemctl restart {APP_NAME}
+sleep 2
+systemctl is-active {APP_NAME} && echo "  service active after rollback" || echo "  WARNING: service not active after rollback"
+""")
 
 
 def step_push_server(env):
@@ -662,6 +739,25 @@ def step_health(env):
     print("[9] health checks")
     ws_key = "dGhlIHNhbXBsZSBub25jZQ=="
     expected_sha = _local_git_sha()
+    # The /version SHA gate is the only check that proves the *new* binary
+    # started (not a leftover from a failed restart). It's only meaningful
+    # when we actually know our SHA: off-git (tarball) deploys return
+    # "unknown", and a bare `grep -q unknown` would match any /version body
+    # containing that word — a vacuous pass. Skip the gate loudly instead,
+    # and match with `grep -qF --` so the SHA is treated as a literal.
+    if expected_sha == "unknown":
+        print("  WARNING: local git SHA unknown (not a git checkout) — "
+              "skipping the /version SHA gate")
+        version_check = (
+            f"sha=$(curl -fsSk https://{SERVER_NAME}/version) && "
+            f"echo \"version:$sha (SHA gate skipped: local sha unknown)\" && "
+        )
+    else:
+        version_check = (
+            f"sha=$(curl -fsSk https://{SERVER_NAME}/version) && "
+            f"echo \"version:$sha\" && "
+            f"echo \"$sha\" | grep -qF -- '{expected_sha}' && "
+        )
     ssh(env, (
         "sleep 2 && "
         f"systemctl is-active {APP_NAME} && "
@@ -678,9 +774,8 @@ def step_health(env):
         # /version: must respond 200 and carry the git SHA we just baked.
         # We grep for the SHA explicitly — a stale process from a failed
         # restart would serve the old SHA and slip past a bare 200 check.
-        f"sha=$(curl -fsSk https://{SERVER_NAME}/version) && "
-        f"echo \"version:$sha\" && "
-        f"echo \"$sha\" | grep -q '{expected_sha}' && "
+        # (Built above; the gate is skipped when our local SHA is unknown.)
+        f"{version_check}"
         # /metrics: shape probe — must be valid JSON with the expected
         # top-level keys. Doesn't assert values; just that the endpoint
         # is wired through nginx and returning the snapshot.
@@ -746,6 +841,7 @@ def main(argv: list[str] | None = None) -> int:
     step_sanity(env)
     step_apt(env)
     step_user(env)
+    step_backup_release(env)  # snapshot before the destructive pushes below
     step_push_server(env)
     step_server_env(env)
     step_systemd(env)
@@ -753,7 +849,18 @@ def main(argv: list[str] | None = None) -> int:
     step_push_client(env)
     step_certs(env)
     step_service(env)
-    step_health(env)
+    # Health is the gate: if the freshly-deployed release is broken, restore
+    # the snapshot rather than leaving it live, then fail the deploy.
+    try:
+        step_health(env)
+    except Exception as e:
+        print(f"\n[!] health check failed: {e}")
+        try:
+            step_rollback(env)
+        except Exception as re:
+            print(f"[!] rollback itself failed: {re}")
+        print("\nDeploy FAILED — rolled back to the previous release.")
+        return 1
     step_smoke(env)
 
     print(f"\nDone.")
