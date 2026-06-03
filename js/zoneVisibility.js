@@ -20,7 +20,14 @@ const ALWAYS_VISIBLE_TYPES = new Set([
 // per player so a guest who wandered away from the host still has live
 // mobs/pickups around them; offline / local co-op pass the single shared
 // camera, exactly as before.
-export function updateVisibleEntities(zone, cameras) {
+//
+// `all` skips the viewport test and flags every entity visible. Tower Defense
+// sets it: its camera follows one hero across a large arena, but the whole
+// battlefield must keep simulating — off-screen enemies still take fire, deal
+// melee damage and fuse, and off-screen allies still fight. Rendering culls on
+// its own (entities.js::collect), so this only opens the combat/fusion gates
+// that read `_visible` / `visibleEntities`; it never draws an off-screen prop.
+export function updateVisibleEntities(zone, cameras, { all = false } = {}) {
   if (!zone) return;
   const cams = Array.isArray(cameras) ? cameras : [cameras];
   const out = [];
@@ -28,7 +35,7 @@ export function updateVisibleEntities(zone, cameras) {
   for (let i = 0; i < ents.length; i++) {
     const e = ents[i];
     let visible;
-    if (e._spawned) {
+    if (all || e._spawned) {
       visible = true;
     } else {
       const sp = getSpecies(e.species_id);
@@ -39,20 +46,6 @@ export function updateVisibleEntities(zone, cameras) {
     if (visible) out.push(e);
   }
   zone.visibleEntities = out;
-}
-
-// Mark every entity visible, bypassing the viewport filter. Tower Defense uses
-// this: its camera follows one hero across a large board, but the whole
-// battlefield must keep simulating — off-screen enemies still take fire, deal
-// melee damage and fuse, and off-screen allies still fight. Rendering culls on
-// its own (entities.js::collect), so flagging everything visible never draws an
-// off-screen prop; it only opens the combat/fusion gates that read `_visible`
-// and `visibleEntities`.
-export function markAllEntitiesVisible(zone) {
-  if (!zone) return;
-  const ents = zone.entities || [];
-  for (let i = 0; i < ents.length; i++) ents[i]._visible = true;
-  zone.visibleEntities = ents.slice();
 }
 
 function overlapsAnyViewport(cams, f) {

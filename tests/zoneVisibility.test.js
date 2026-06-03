@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadSpeciesData } from "../js/species.js";
-import { updateVisibleEntities, markAllEntitiesVisible } from "../js/zoneVisibility.js";
+import { updateVisibleEntities } from "../js/zoneVisibility.js";
 
 loadSpeciesData([
   { id: 4004, entity_type: "CloseCombatMonster", sprite_sheet_id: 1023,
@@ -93,25 +93,18 @@ test("empty viewport array still keeps always-visible and spawned entities", () 
   assert.equal(mob._visible, false);
 });
 
-// Tower Defense bypasses the viewport filter: the whole board simulates even
-// though the camera follows one hero, so every entity must read as visible.
-test("markAllEntitiesVisible flags every entity regardless of the camera", () => {
+// Tower Defense passes { all: true }: the whole board simulates even though
+// the camera follows one hero, so every entity must read as visible.
+test("{ all: true } flags every entity regardless of the camera", () => {
   const onScreen  = { species_id: 4004, frame: { x: 10, y: 10, w: 1, h: 2 } };
   const offScreen = { species_id: 4004, frame: { x: 900, y: 900, w: 1, h: 2 } };
   const zone = { entities: [onScreen, offScreen] };
-  // Even a far-off enemy that updateVisibleEntities would hide…
+  // Baseline: the far-off enemy is hidden by the viewport test…
   updateVisibleEntities(zone, camera(0, 0));
   assert.equal(offScreen._visible, false, "baseline: off-screen enemy is hidden");
-  // …is visible once we mark the whole board.
-  markAllEntitiesVisible(zone);
+  // …but { all: true } marks the whole board, camera notwithstanding.
+  updateVisibleEntities(zone, camera(0, 0), { all: true });
   assert.equal(onScreen._visible, true);
   assert.equal(offScreen._visible, true);
   assert.deepEqual(zone.visibleEntities, [onScreen, offScreen]);
-});
-
-test("markAllEntitiesVisible tolerates a missing zone / entity list", () => {
-  markAllEntitiesVisible(null); // no throw
-  const zone = {};
-  markAllEntitiesVisible(zone);
-  assert.deepEqual(zone.visibleEntities, []);
 });
