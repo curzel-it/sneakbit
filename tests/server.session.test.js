@@ -569,6 +569,36 @@ test("MAX_CONNECTIONS cap closes new attaches with 4006", async () => {
   } finally { await s.close(); }
 });
 
+test("idle sweep reclaims the connection slot (no leak)", async () => {
+  // The sweep closes idle sockets, but a server-initiated close does NOT
+  // re-emit the socket "close" event, so without explicit teardown the
+  // ctx lingered in `conns` past timeout and was re-counted every sweep
+  // against maxConnections. Here a second client must be able to connect
+  // after the first goes idle and is swept.
+  const s = await startServer({
+    port: 0, host: "127.0.0.1", graceMs: GRACE,
+    maxConnections: 1, idleTimeoutMs: 60, idleCheckMs: 20,
+  });
+  try {
+    const a = await openWsClient(s.host, s.port);
+    await hello(a, "idle-leak-1");
+    // a goes silent → swept. Wait past timeout + a couple of sweeps.
+    const swept = await a.waitClose();
+    assert.equal(swept, 4002, "idle conn closed with CLOSE_IDLE");
+
+    const m = s.relay.metrics.snapshot();
+    assert.equal(m.connections.current, 0, "slot was reclaimed, not leaked");
+    assert.equal(m.drops.idleClose, 1);
+
+    // The slot is free again, so a fresh connection succeeds (would be
+    // closed 4006 if the leaked ctx still counted against the cap of 1).
+    const b = await openWsClient(s.host, s.port);
+    const w = await hello(b, "idle-leak-2");
+    assert.equal(w.op, "welcome");
+    b.close();
+  } finally { await s.close(); }
+});
+
 test("MAX_SESSIONS cap blocks host.open beyond the limit (4006)", async () => {
   const s = await startServer({
     port: 0, host: "127.0.0.1", graceMs: GRACE, maxSessions: 1,

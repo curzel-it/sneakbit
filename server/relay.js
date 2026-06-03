@@ -114,12 +114,24 @@ export function createRelay({
     conns.add(ctx);
     metrics.connOpened();
     ws.on("message", (text) => handleMessage(ctx, text));
-    ws.on("close", () => {
-      conns.delete(ctx);
-      metrics.connClosed();
-      onDisconnect(ctx);
-    });
+    ws.on("close", () => dropConn(ctx));
     return ctx;
+  }
+
+  // Idempotent connection teardown. A client-initiated close fires the
+  // socket "close" event; a server-initiated `ctx.ws.close()` (idle sweep,
+  // capacity, rate, uuid conflict) does NOT re-emit it — WsConnection.close
+  // sets `closed` first, so its own finalizer short-circuits. Without
+  // routing those through here, the ctx lingered in `conns` past timeout,
+  // re-counted every sweep against maxConnections (the slot leak), and its
+  // session was never ghosted. The `cleanedUp` guard makes a double call
+  // (close event after a server close) a no-op.
+  function dropConn(ctx) {
+    if (ctx.cleanedUp) return;
+    ctx.cleanedUp = true;
+    conns.delete(ctx);
+    metrics.connClosed();
+    onDisconnect(ctx);
   }
 
   // Sweep idle connections every idleCheckMs. Cheap — `conns` is a
@@ -131,6 +143,9 @@ export function createRelay({
         metrics.dropIdle();
         log.warn("conn.idle", { uuid: ctx.uuid, role: ctx.role, sessionId: ctx.sessionId });
         try { ctx.ws.close(CLOSE_IDLE, "idle"); } catch { /* ignore */ }
+        // The server-initiated close above won't re-emit the socket
+        // "close" event, so tear the ctx down here or it leaks its slot.
+        dropConn(ctx);
       }
     }
   }, idleCheckMs);
