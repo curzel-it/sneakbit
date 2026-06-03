@@ -19,11 +19,12 @@
 
 import { getToken, isSignedIn, onAccountChange } from "./accountSession.js";
 import { getCloudSave, putCloudSave } from "./saveApi.js";
-import { serializeBlob, applyBlob, hasLocalProgress } from "./saveBlob.js";
+import { serializeBlob, applyBlob, hasLocalProgress, hasMeaningfulProgress } from "./saveBlob.js";
 import { onStorageChange } from "./storage.js";
 import { onBindingsChange } from "./keyBindings.js";
 import { onGamepadBindingsChange } from "./gamepadBindings.js";
 import { showToast } from "./toast.js";
+import { askCloudConflict } from "./cloudConflictPrompt.js";
 
 const META_KEY = "sneakbit.cloudsave.v1";
 const DEBOUNCE_MS = 4000;
@@ -34,7 +35,7 @@ let prevHash = null;     // last hash we've observed (seeded from lastHash)
 let syncing = false;
 
 // — Pure conflict decision (unit-tested) ——————————————————————————————————
-// Returns one of: "seed" | "push" | "pull" | "insync" | "noop".
+// Returns one of: "seed" | "push" | "pull" | "conflict" | "insync" | "noop".
 export function decideSync({ cloud, local, meta }) {
   if (!cloud) return local.hasProgress ? "seed" : "noop";
   if (cloud.hash === local.hash) return "insync";
@@ -42,7 +43,14 @@ export function decideSync({ cloud, local, meta }) {
   const cloudAdvanced = cloud.rev !== meta.rev;
   if (!localChanged) return "pull";          // local untouched since last sync
   if (!cloudAdvanced) return "push";         // we're strictly ahead of the cloud
-  if (meta.rev == null) return "pull";       // never synced here → adopt the account
+  if (meta.rev == null) {
+    // First sign-in on this device: it has never synced this account. If local
+    // is just a fresh-boot default, adopt the account (the common new-device
+    // case). But if local holds genuine offline progress that differs from the
+    // account's save, we can't pick a winner without risking real data loss —
+    // surface it as a conflict for the caller to resolve (ask the player).
+    return local.meaningful ? "conflict" : "pull";
+  }
   return (meta.localUpdatedAt || 0) > cloud.updatedAt ? "push" : "pull"; // newest wins
 }
 
@@ -89,7 +97,7 @@ async function reconcile() {
     if (r.offline || r.status === 401) return;
     const blob = safeSerialize();
     if (!blob) return;
-    const local = { hash: hashBlob(blob), hasProgress: hasLocalProgress() };
+    const local = { hash: hashBlob(blob), hasProgress: hasLocalProgress(), meaningful: hasMeaningfulProgress() };
     const meta = readMeta();
     const cloud = (r.status === 204 || !r.data) ? null
       : { rev: r.data.rev, updatedAt: r.data.updatedAt, hash: hashBlob(r.data.blob), blob: r.data.blob };
@@ -102,6 +110,9 @@ async function reconcile() {
       case "pull":
         pull(cloud);
         break;
+      case "conflict":
+        await resolveFirstSignInConflict(cloud);
+        break;
       case "insync":
         adoptCloudMeta(cloud, local.hash);
         break;
@@ -112,17 +123,17 @@ async function reconcile() {
   }
 }
 
-async function pushIfDirty() {
+async function pushIfDirty(opts = {}) {
   if (syncing) return;
   syncing = true;
-  try { await doPush(); }
+  try { await doPush(opts); }
   finally { syncing = false; }
 }
 
 // The actual push, assuming the caller holds the `syncing` lock. Both the
 // debounced pushIfDirty and reconcile call this so the lock is never taken
 // twice (which would self-deadlock the guard).
-async function doPush() {
+async function doPush(opts = {}) {
   const token = getToken();
   if (!token) return;
   const blob = safeSerialize();
@@ -131,9 +142,9 @@ async function doPush() {
   const meta = readMeta();
   if (localHash === meta.lastHash) return; // nothing to push
   const updatedAt = meta.localUpdatedAt || Date.now();
-  const r = await putCloudSave(token, { blob, updatedAt, baseRev: meta.rev ?? 0 });
+  const r = await putCloudSave(token, { blob, updatedAt, baseRev: meta.rev ?? 0 }, opts);
   if (r.offline || r.status === 401) return;
-  if (r.status === 409 && r.data) { await resolveConflict(r.data, blob, localHash); return; }
+  if (r.status === 409 && r.data) { await resolveConflict(r.data, blob, localHash, opts); return; }
   if (r.ok && r.data) {
     writeMeta({ rev: r.data.rev, updatedAt: r.data.updatedAt, lastHash: localHash, localUpdatedAt: r.data.updatedAt });
     prevHash = localHash;
@@ -141,13 +152,13 @@ async function doPush() {
 }
 
 // 409: the cloud advanced under us. Newest-wins against the returned copy.
-async function resolveConflict(cloud, localBlob, localHash) {
+async function resolveConflict(cloud, localBlob, localHash, opts = {}) {
   const cloudHash = hashBlob(cloud.blob);
   if (cloudHash === localHash) { adoptCloudMeta(cloud, localHash); return; }
   const meta = readMeta();
   if ((meta.localUpdatedAt || 0) > cloud.updatedAt) {
     // Local is newer — re-push on top of the cloud's current rev.
-    const r = await putCloudSave(getToken(), { blob: localBlob, updatedAt: meta.localUpdatedAt, baseRev: cloud.rev });
+    const r = await putCloudSave(getToken(), { blob: localBlob, updatedAt: meta.localUpdatedAt, baseRev: cloud.rev }, opts);
     if (r.ok && r.data) {
       writeMeta({ rev: r.data.rev, updatedAt: r.data.updatedAt, lastHash: localHash, localUpdatedAt: r.data.updatedAt });
       prevHash = localHash;
@@ -155,6 +166,26 @@ async function resolveConflict(cloud, localBlob, localHash) {
   } else {
     pull(cloud);
   }
+}
+
+// First sign-in where this device already has genuine offline progress that
+// differs from the account's save. Neither side is safe to discard silently,
+// so ask the player. "local" keeps this device (push it up onto the account);
+// "cloud" / no UI adopts the account (the historical safe default — pull).
+async function resolveFirstSignInConflict(cloud) {
+  if (!cloud) return;
+  let choice = null;
+  try { choice = await askCloudConflict(); } catch { choice = null; }
+  if (choice === "local") {
+    // Keep this device. Stamp the cloud's rev as our base so the push lands as
+    // an update rather than tripping a 409 against the existing account save.
+    const blob = safeSerialize();
+    if (blob) writeMeta({ rev: cloud.rev, updatedAt: cloud.updatedAt, lastHash: null, localUpdatedAt: Date.now() });
+    await doPush();
+    return;
+  }
+  // "cloud" or no UI available → adopt the account.
+  pull(cloud);
 }
 
 function pull(cloud) {
@@ -206,9 +237,10 @@ function noteLocalChange() {
 }
 
 function flush() {
-  // beforeunload: fire-and-forget; pushIfDirty uses keepalive via saveApi if
-  // we ever pass it, but a normal fetch with the page closing is best-effort.
-  if (isSignedIn()) pushIfDirty().catch(() => {});
+  // beforeunload: fire-and-forget. keepalive:true keeps the final PUT alive
+  // through page teardown (a normal fetch is killed when the tab closes), so
+  // the last bit of progress lands instead of waiting for the next load.
+  if (isSignedIn()) pushIfDirty({ keepalive: true }).catch(() => {});
 }
 
 function adoptCloudMeta(cloud, localHash) {

@@ -15,6 +15,8 @@
 // doesn't trip cloudSave's change listener into a feedback loop; the caller
 // reloads the page afterward so every module rehydrates cleanly.
 
+import { STARTING_ZONE_ID } from "./constants.js";
+
 const KV_PREFIX = "sneakbit.kv.v1.";
 const SETTINGS_KEY = "sneakbit.settings.v1";
 const BINDING_KEYS = [
@@ -44,6 +46,40 @@ export function applyBlob(blob) {
 // cloudSave's "empty local → just pull" branch.
 export function hasLocalProgress() {
   return ls(KV_PREFIX + "latest_zone") != null;
+}
+
+// True when local progress is more than a fresh-boot default — i.e. the player
+// has actually played (a skill unlock, an item, a dialogue answer, a visited
+// zone, …) rather than just opened the page. This is the content-aware signal
+// cloudSave needs to tell a genuine first-sign-in conflict (real offline
+// progress vs a different account save, which must NOT be silently clobbered)
+// apart from the common "fresh device adopts the account" case. It cannot be a
+// timestamp/`hasLocalProgress` check: a fresh boot writes a starting save, so
+// those are already "recent" and "present" on a brand-new device.
+//
+// Detection is a conservative ALLOWLIST of progress markers — kv keys that only
+// appear through genuine play. A fresh boot writes build_number, the starting
+// zone + spawn, and a did_visit for the starting zone; none of those match. The
+// asymmetry is deliberate: a missed category just falls back to the historical
+// safe default (adopt the account), whereas a boot key mistaken for progress
+// would pop a spurious conflict prompt on every brand-new device. So we only
+// ever say "meaningful" for things we're sure indicate real advancement.
+export function hasMeaningfulProgress() {
+  const kv = readKv();
+  // Advanced past the starting zone.
+  const zone = kv.latest_zone;
+  if (zone != null && Number(zone) !== STARTING_ZONE_ID) return true;
+  for (const [k, v] of Object.entries(kv)) {
+    if (k.startsWith("skill.")) return true;            // unlocked a skill
+    if (k.startsWith("dialogue.answer.")) return true;  // answered a dialogue
+    if (k.startsWith("item_collected.")) return true;   // picked up a world item
+    if (/^player\.\d+\.equipped\./.test(k)) return true; // equipped a weapon
+    // Holds inventory items (amount > 0; a 0/cleared slot is not progress).
+    if (/^player\.\d+\.inventory\.amount\./.test(k) && Number(v) > 0) return true;
+    // Visited a zone other than the starting one.
+    if (k.startsWith("did_visit.") && Number(k.slice("did_visit.".length)) !== STARTING_ZONE_ID) return true;
+  }
+  return false;
 }
 
 // — kv ————————————————————————————————————————————————————————————————————

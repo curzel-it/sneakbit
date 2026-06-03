@@ -20,7 +20,9 @@ function makeLocalStorage() {
 }
 
 globalThis.localStorage = makeLocalStorage();
-const { serializeBlob, applyBlob, hasLocalProgress } = await import("../js/saveBlob.js");
+const { serializeBlob, applyBlob, hasLocalProgress, hasMeaningfulProgress } = await import("../js/saveBlob.js");
+
+const STARTING_ZONE_ID = 1001; // mirrors js/constants.js
 
 beforeEach(() => { globalThis.localStorage.clear(); });
 
@@ -115,4 +117,75 @@ test("hasLocalProgress reflects a saved zone", () => {
   assert.equal(hasLocalProgress(), false);
   globalThis.localStorage.setItem("sneakbit.kv.v1.latest_zone", "1");
   assert.equal(hasLocalProgress(), true);
+});
+
+// — hasMeaningfulProgress (content-aware first-sign-in conflict signal) ———————
+
+const kvSet = (k, v) => globalThis.localStorage.setItem(`sneakbit.kv.v1.${k}`, String(v));
+
+test("empty kv is not meaningful progress", () => {
+  assert.equal(hasMeaningfulProgress(), false);
+});
+
+// Exactly what a brand-new device writes on boot: migrations stamp
+// build_number, the initial save.js stamps the starting zone + spawn, and the
+// engine records a did_visit for the starting zone. None of these is progress.
+function seedFreshBoot() {
+  kvSet("build_number", 3);
+  kvSet("latest_zone", STARTING_ZONE_ID);
+  kvSet("player.0.spawn.tileX", 68);
+  kvSet("player.0.spawn.tileY", 23);
+  kvSet("player.0.spawn.direction", 0);
+  kvSet(`did_visit.${STARTING_ZONE_ID}`, 1);
+}
+
+test("a fresh-boot default save is not meaningful", () => {
+  seedFreshBoot();
+  assert.equal(hasMeaningfulProgress(), false);
+});
+
+test("moving the spawn tile within the starting zone is still not meaningful", () => {
+  seedFreshBoot();
+  kvSet("player.0.spawn.tileX", 70); // walked a couple tiles, nothing else
+  kvSet("player.0.spawn.tileY", 25);
+  assert.equal(hasMeaningfulProgress(), false);
+});
+
+test("unlocking a skill is meaningful progress", () => {
+  seedFreshBoot();
+  kvSet("skill.piercing", 1);
+  assert.equal(hasMeaningfulProgress(), true);
+});
+
+test("answering a dialogue is meaningful progress", () => {
+  seedFreshBoot();
+  kvSet("dialogue.answer.some-line", 1);
+  assert.equal(hasMeaningfulProgress(), true);
+});
+
+test("holding an inventory item is meaningful, an empty slot is not", () => {
+  seedFreshBoot();
+  kvSet("player.0.inventory.amount.1001", 0); // empty slot — not progress
+  assert.equal(hasMeaningfulProgress(), false);
+  kvSet("player.0.inventory.amount.1001", 3); // actually holds items
+  assert.equal(hasMeaningfulProgress(), true);
+});
+
+test("equipping a weapon is meaningful progress", () => {
+  seedFreshBoot();
+  kvSet("player.0.equipped.0", 2001);
+  assert.equal(hasMeaningfulProgress(), true);
+});
+
+test("visiting the starting zone is not progress, but visiting another zone is", () => {
+  seedFreshBoot();
+  assert.equal(hasMeaningfulProgress(), false); // did_visit.<starting> only
+  kvSet("did_visit.1010", 1);
+  assert.equal(hasMeaningfulProgress(), true);
+});
+
+test("leaving the starting zone is meaningful even with only boot keys", () => {
+  seedFreshBoot();
+  kvSet("latest_zone", 1010); // now standing in a different zone
+  assert.equal(hasMeaningfulProgress(), true);
 });

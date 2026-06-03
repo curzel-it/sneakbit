@@ -34,17 +34,26 @@ test("local changed, cloud NOT advanced → push (we're ahead)", () => {
   assert.equal(decideSync({ cloud, local: localProgress, meta }), "push");
 });
 
-test("both diverged on a never-synced device → pull (adopt the account)", () => {
-  // First sign-in on a device that never synced this account adopts the
-  // cloud. NOTE: this can still wipe genuine newer offline progress (the open
-  // P2). A pure timestamp tweak can't fix it safely — a fresh boot writes a
-  // starting-zone save, so `hasLocalProgress` is true and `localUpdatedAt` is
-  // boot-time-recent even on a brand-new device, which would falsely beat the
-  // cloud and clobber the account (verified by the cloudSave e2e). The real
-  // fix needs a content-aware comparison or a user prompt.
+test("first sign-in, local is a fresh-boot default → pull (adopt the account)", () => {
+  // A brand-new device (meaningful:false) signing into an existing account
+  // adopts the cloud — the common new-device case (the e2e's device B). The
+  // content-aware `meaningful` flag is what lets us keep this branch automatic
+  // while still catching genuine offline progress below.
   const cloud = { rev: 7, updatedAt: 999, hash: "CLOUD" };
   const meta = {}; // rev == null → never synced here
-  assert.equal(decideSync({ cloud, local: localProgress, meta }), "pull");
+  const local = { hash: "LOCAL", hasProgress: true, meaningful: false };
+  assert.equal(decideSync({ cloud, local, meta }), "pull");
+});
+
+test("first sign-in, local has genuine progress diverging from cloud → conflict", () => {
+  // The open-P2 case: this device made real offline progress (meaningful:true)
+  // before ever syncing, and the account already holds a different save. We
+  // can't auto-pick a winner without risking data loss — surface a conflict so
+  // the caller asks the player instead of silently clobbering either side.
+  const cloud = { rev: 7, updatedAt: 999, hash: "CLOUD" };
+  const meta = {}; // rev == null → never synced here
+  const local = { hash: "LOCAL", hasProgress: true, meaningful: true };
+  assert.equal(decideSync({ cloud, local, meta }), "conflict");
 });
 
 test("true conflict, local newer → push", () => {
