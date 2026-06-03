@@ -26,6 +26,7 @@ export class WsConnection extends EventEmitter {
     this.fragments = [];
     this.fragmentOpcode = null;
     this.fragmentCompressed = false;
+    this.fragmentBytes = 0;
     this.deflate = !!deflate;
 
     socket.on("data", (chunk) => this._onData(chunk));
@@ -48,8 +49,11 @@ export class WsConnection extends EventEmitter {
     }
     this.buf = Buffer.concat([this.buf, chunk]);
     let parsed;
-    try { parsed = parseFrames(this.buf); }
-    catch { this.close(1009, "frame too big"); return; }
+    // requireMask: reject unmasked client frames (RFC 6455 §5.1). parseFrames
+    // tags protocol violations with the right close code (1002 control/mask,
+    // 1009 oversize); fall back to 1009 if some other throw slips through.
+    try { parsed = parseFrames(this.buf, { requireMask: true }); }
+    catch (e) { this.close(e?.wsClose || 1009, e?.message || "protocol error"); return; }
     this.buf = parsed.rest;
     for (const frame of parsed.frames) this._handleFrame(frame);
   }
@@ -71,14 +75,26 @@ export class WsConnection extends EventEmitter {
       return;
     }
     if (frame.opcode === OP.TEXT || frame.opcode === OP.BINARY) {
+      // RFC 6455 §5.4: a new data frame while a fragmented message is still
+      // open is illegal. The old code silently reset `fragments`, stranding
+      // the half-assembled message; treat it as a protocol error instead.
+      if (this.fragmentOpcode !== null) { this.close(1002, "interleaved message"); return; }
       this.fragments = [frame.payload];
       this.fragmentOpcode = frame.opcode;
       this.fragmentCompressed = !!frame.rsv1;
+      this.fragmentBytes = frame.payload.length;
     } else if (frame.opcode === OP.CONT) {
+      // A continuation with no message in progress is illegal (§5.4).
+      if (this.fragmentOpcode === null) { this.close(1002, "orphan continuation"); return; }
       this.fragments.push(frame.payload);
+      this.fragmentBytes += frame.payload.length;
     } else {
       return;
     }
+    // Bound the message assembled *across* fragments. The per-frame cap in
+    // parseFrames doesn't help here — unlimited CONT frames would grow
+    // `fragments` without limit and OOM the VPS.
+    if (this.fragmentBytes > MAX_FRAME_PAYLOAD) { this.close(1009, "message too big"); return; }
     if (frame.fin) {
       const full = Buffer.concat(this.fragments);
       const op = this.fragmentOpcode;
@@ -86,6 +102,7 @@ export class WsConnection extends EventEmitter {
       this.fragments = [];
       this.fragmentOpcode = null;
       this.fragmentCompressed = false;
+      this.fragmentBytes = 0;
       let decoded = full;
       if (compressed) {
         if (full.length > MAX_INFLATE_INPUT) {

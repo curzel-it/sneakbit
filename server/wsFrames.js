@@ -38,6 +38,15 @@ export const OP = {
 // compressed message; continuation frames inherit it via the assembler.
 export const RSV1 = 0x40;
 
+// parseFrames throws on a protocol violation; the RFC 6455 close code rides
+// on the error so the connection layer can answer with the right status
+// instead of a blanket 1009.
+export function wsError(code, message) {
+  const e = new Error(message);
+  e.wsClose = code;
+  return e;
+}
+
 export function acceptKey(clientKey) {
   return createHash("sha1").update(clientKey + MAGIC).digest("base64");
 }
@@ -77,7 +86,11 @@ export function encodeCloseFrame(code = 1000, reason = "", opts) {
 
 // Walks `buf` consuming as many complete frames as possible. Returns the
 // frames and the unconsumed tail to feed back next time.
-export function parseFrames(buf) {
+// `requireMask` is set by the server: RFC 6455 §5.1 requires every
+// client→server frame to be masked, and the relay only ever parses client
+// frames. Tests that round-trip encodeFrame (unmasked, server-style) leave it
+// off.
+export function parseFrames(buf, { requireMask = false } = {}) {
   const frames = [];
   let offset = 0;
   while (offset < buf.length) {
@@ -98,13 +111,25 @@ export function parseFrames(buf) {
       if (buf.length - offset < 10) break;
       const big = buf.readBigUInt64BE(offset + 2);
       if (big > BigInt(MAX_FRAME_PAYLOAD)) {
-        throw new Error("frame too big");
+        throw wsError(1009, "frame too big");
       }
       len = Number(big);
       headerLen = 10;
     }
     if (len > MAX_FRAME_PAYLOAD) {
-      throw new Error("frame too big");
+      throw wsError(1009, "frame too big");
+    }
+    // RFC 6455 §5.5: control frames (opcode ≥ 0x8) must not be fragmented
+    // and must carry ≤125 bytes. Without this a 1 MB PING is echoed as a
+    // 1 MB PONG — a bandwidth amplifier below the JSON rate limiter — and a
+    // fragmented control frame is illegal outright.
+    if ((opcode & 0x08) !== 0 && (!fin || len > 125)) {
+      throw wsError(1002, "invalid control frame");
+    }
+    // RFC 6455 §5.1: client→server frames MUST be masked. An unmasked one is
+    // a spec violation (and a non-browser client probing the relay).
+    if (requireMask && !masked) {
+      throw wsError(1002, "unmasked frame");
     }
     let maskKey;
     if (masked) {
