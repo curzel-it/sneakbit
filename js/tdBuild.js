@@ -78,6 +78,22 @@ export function resetBuild() {
 export function getSelectedItem() { return selectedId; }
 export function getPlacedObstacleCount() { return placedBarrelIds.size; }
 
+// The selected catalog item ({ id, label, cost }) — for the placing-bar label.
+export function getSelectedBuildItem() {
+  const def = selectedDef();
+  return { id: def.id, label: def.label, cost: def.cost };
+}
+
+// Move the selection to the next/previous catalog item (wraps). Drives the
+// shop dialog's arrow/d-pad selection for keyboard + gamepad players.
+export function cycleSelectedItem(delta) {
+  const i = BUILD_ITEMS.findIndex((it) => it.id === selectedId);
+  const n = BUILD_ITEMS.length;
+  const next = ((i + (delta | 0)) % n + n) % n;
+  selectedId = BUILD_ITEMS[next].id;
+  return selectedId;
+}
+
 export function setSelectedItem(id) {
   if (BUILD_ITEMS.some((i) => i.id === id)) selectedId = id;
 }
@@ -113,12 +129,6 @@ function iconFor(item) {
     sw: w * TILE_SIZE,
     sh: h * TILE_SIZE,
   };
-}
-
-// Short HUD hint naming the active item and the build controls.
-export function buildHintText() {
-  const def = selectedDef();
-  return `Move the marker · E places ${def.label} (${def.cost}g) · G removes`;
 }
 
 // Source rect + footprint of the currently-selected build item, for the

@@ -268,7 +268,16 @@ async function main() {
       };
     },
   });
-  setGamepadAction("shoot", () => tryShoot());
+  setGamepadAction("shoot", () => {
+    // In Tower Defense the Shoot/throw button is the build "back/done" verb
+    // (close shop, exit placement) and, in a wave, the active hero's shot —
+    // synthesise the key so towerDefense.onKey routes both to the right place.
+    if (isTowerDefenseMode()) {
+      window.dispatchEvent(new KeyboardEvent("keydown", { code: codesFor("shoot")[0] || "KeyF" }));
+      return;
+    }
+    tryShoot();
+  });
   setGamepadAction("melee", () => {
     // In the Tower Defense build phase Melee removes the barrel in front of
     // the active hero — synthesise the key so towerDefense.onKey routes it to

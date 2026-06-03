@@ -52,7 +52,7 @@ import {
 import { resetGold, getGold, addGold, spendGold, canAfford } from "./arcadeCurrency.js";
 import {
   installBuild, placeDefaultItem, placeSelected, eraseAt, setSelectedItem, getPaletteModel,
-  buildHintText, resetBuild, getPlacedObstacleCount,
+  resetBuild, getPlacedObstacleCount, getSelectedBuildItem, cycleSelectedItem,
 } from "./tdBuild.js";
 import {
   resetBuildCursor, moveBuildCursor, getBuildCursor, drawPlacementPreview,
@@ -94,6 +94,12 @@ const EMPTY_INPUT = { events: [], held: new Set() };
 // — State ————————————————————————————————————————————————————————————————
 let getState = () => null;
 let phase = "idle";               // idle | build | wave | gameover
+// Build-phase sub-mode (only meaningful while phase === "build"):
+//   browse — no cursor; arrows reposition the hero; the dock shows the Shop
+//            button. place is gated behind the shop.
+//   shop   — the shop dialog is open; arrows/d-pad cycle the selection.
+//   place  — the placement cursor is live; arrows roam it, E places, G removes.
+let buildMode = "browse";         // browse | shop | place
 let wave = 0;
 let buildTimer = 0;
 let score = 0;
@@ -127,6 +133,10 @@ export function installTowerDefense(stateGetter) {
     onRestart: restartRun,
     onExit: exitRun,
     onSelectItem: setSelectedItem,
+    onOpenShop: openShop,
+    onCloseShop: closeShop,
+    onStartPlacing: startPlacing,
+    onExitPlacing: exitPlacing,
   });
   installBuild(getState, {
     isBuildPhase: () => phase === "build",
@@ -207,10 +217,32 @@ function placeHero(p, tile) {
 function enterBuild() {
   phase = "build";
   buildTimer = BUILD_TIME;
-  // Drop the build cursor on the active hero so each build phase starts
-  // somewhere sensible; the player roams it from there.
+  buildMode = "browse";
+}
+
+// — Build sub-mode transitions (driven by the dock buttons + the E/F keys) ——
+function openShop() {
+  if (phase !== "build") return;
+  buildMode = "shop";
+}
+
+function closeShop() {
+  if (phase !== "build") return;
+  buildMode = "browse";
+}
+
+// Commit the shop selection and go live: drop the cursor on the active hero so
+// it starts somewhere sensible, then roam from there.
+function startPlacing() {
+  if (phase !== "build") return;
   const hero = activeHero(getState());
   resetBuildCursor(hero ? { x: hero.tileX, y: hero.tileY } : { x: 0, y: 0 });
+  buildMode = "place";
+}
+
+function exitPlacing() {
+  if (phase !== "build") return;
+  buildMode = "browse";
 }
 
 function startNextWave({ early = false } = {}) {
@@ -224,6 +256,7 @@ function startNextWave({ early = false } = {}) {
   wave += 1;
   startWave(wave);
   phase = "wave";
+  buildMode = "browse"; // close any open shop / placement when the horde arrives
 }
 
 function clearWave() {
@@ -334,9 +367,9 @@ export function tickTowerDefense(dt, frame) {
   if (!paused && phase !== "gameover") {
     simulate(state, dt);
   }
-  // The camera tracks the roaming build cursor while building (so you can
-  // place across the whole board), and the active hero otherwise.
-  if (phase === "build") updateCamera(state.camera, getBuildCursor(), state.zone);
+  // The camera tracks the roaming build cursor while placing (so you can
+  // build across the whole board), and the active hero otherwise.
+  if (phase === "build" && buildMode === "place") updateCamera(state.camera, getBuildCursor(), state.zone);
   else followActiveHero(state);
   tickBiomeAnimation(frame.biomeAnim, dt);
   tickEntities(dt);
@@ -348,9 +381,9 @@ export function tickTowerDefense(dt, frame) {
   updateVisibleEntities(state.zone, state.camera, { all: true });
   render(frame.renderer, state.zone, state.camera, heroes, frame.biomeAnim.frame);
   // Build ghost: the roaming cursor where a barrel will be placed/removed
-  // (build phase only). Drawn over the world, camera-relative — render()
+  // (placement mode only). Drawn over the world, camera-relative — render()
   // leaves the ctx at identity transform with no clip.
-  if (phase === "build") {
+  if (phase === "build" && buildMode === "place") {
     drawPlacementPreview(frame.renderer.ctx, state, state.camera);
   }
   updateHud(frame.hud, { zoneId: state.zone.id, fps: 1 / dt, showFps: getSettings().showFps });
@@ -365,19 +398,22 @@ function simulate(state, dt) {
     if (buildTimer <= 0) startNextWave();
   }
 
-  // Heroes: real input to the active hero, allyAI to the rest. During the
-  // build phase the human input instead roams the placement cursor, so the
-  // active hero stands idle (allies still regroup via allyAI).
+  // Heroes: real input to the active hero, allyAI to the rest. The human input
+  // is re-targeted during the build phase: it roams the placement cursor
+  // (place), cycles the shop selection (shop), or — when just browsing — still
+  // drives the active hero so the player can reposition the squad.
   ensureLiveActive(state, isPlayerDead);
   const enemies = getEnemies(state.zone);
   const goal = getGoal();
   const humanInput = pollInput(1);
-  if (phase === "build") moveBuildCursor(humanInput, dt, state.zone);
+  const heroIdle = phase === "build" && buildMode !== "browse";
+  if (phase === "build" && buildMode === "place") moveBuildCursor(humanInput, dt, state.zone);
+  else if (phase === "build" && buildMode === "shop") cycleShopSelection(humanInput);
   for (const hero of squadPlayers(state)) {
     const idx = hero.index | 0;
     if (isPlayerDead(idx)) continue;
     let input;
-    if (isActiveHero(idx)) input = phase === "build" ? EMPTY_INPUT : humanInput;
+    if (isActiveHero(idx)) input = heroIdle ? EMPTY_INPUT : humanInput;
     else input = driveAlly(state, hero, { enemies, goal });
     updatePlayer(hero, input, dt, state.zone);
   }
@@ -444,9 +480,19 @@ function buildModel(state) {
       label: nextRecruitIndex(state) == null ? "Squad full" : `Recruit hero (${recruitCost()}g)`,
     },
     palette: getPaletteModel(),
-    buildHint: buildHintText(),
+    buildMode,                       // browse | shop | place — dock swaps on this
+    selected: getSelectedBuildItem(),
+    buildHint: buildHint(),
     revives,
   };
+}
+
+// Mode-aware build hint for the dock.
+function buildHint() {
+  const sel = getSelectedBuildItem();
+  if (buildMode === "shop") return "Pick a barrel, then Start placing";
+  if (buildMode === "place") return `Move the marker · place ${sel.label} (${sel.cost}g) · remove · done`;
+  return "Open the Shop to place barrels";
 }
 
 function phaseLabel() {
@@ -468,16 +514,20 @@ function onKey(e) {
   const state = getState();
   const hero = activeHero(state);
   if (!hero) return;
-  // Build phase reuses the action keys as build verbs (no enemies to fight):
-  // Interact (E / Enter) places the selected barrel at the cursor, Melee (G)
-  // removes + refunds it. Starting the wave is the dock button only.
+  // Build phase repurposes the action keys as a two-button build flow, by
+  // sub-mode. Interact (E) advances, Shoot (F) goes back, Melee (G) removes;
+  // the directional keys (cursor roam / shop selection) are read in simulate.
+  // Starting the wave is the dock button only.
   if (phase === "build") {
-    if (matchesAction("interact", code, 0)) {
-      e.preventDefault();
-      placeAtCursor();
-    } else if (matchesAction("melee", code, 0)) {
-      e.preventDefault();
-      removeAtCursor();
+    if (buildMode === "place") {
+      if (matchesAction("interact", code, 0)) { e.preventDefault(); placeAtCursor(); }
+      else if (matchesAction("melee", code, 0)) { e.preventDefault(); removeAtCursor(); }
+      else if (matchesAction("shoot", code, 0)) { e.preventDefault(); exitPlacing(); }
+    } else if (buildMode === "shop") {
+      if (matchesAction("interact", code, 0)) { e.preventDefault(); startPlacing(); }
+      else if (matchesAction("shoot", code, 0)) { e.preventDefault(); closeShop(); }
+    } else { // browse
+      if (matchesAction("interact", code, 0)) { e.preventDefault(); openShop(); }
     }
     return;
   }
@@ -502,6 +552,15 @@ function removeAtCursor() {
   eraseAt(t.x, t.y);
 }
 
+// Shop dialog: directional presses (keyboard arrows or gamepad d-pad, both via
+// pollInput) cycle which barrel is selected.
+function cycleShopSelection(input) {
+  for (const dir of input.events) {
+    if (dir === "left" || dir === "up") cycleSelectedItem(-1);
+    else if (dir === "right" || dir === "down") cycleSelectedItem(+1);
+  }
+}
+
 function isOverlayOpen() {
   return isMenuOpen() || isDialogueOpen() || isPartyPanelOpen() || isAccountPanelOpen();
 }
@@ -524,6 +583,7 @@ function exitRun() {
 
 function resetTdState() {
   phase = "idle";
+  buildMode = "browse";
   wave = 0; score = 0; combo = 0; comboTimer = 0; lives = VILLAGE_LIVES; recruitedCount = 0;
   for (const slot of [1, 2, 3, 4]) clearInputState(slot);
   resetTdEnemies();

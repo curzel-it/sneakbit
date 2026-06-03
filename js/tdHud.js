@@ -33,7 +33,11 @@ let installed = false;
 let waveEl, phaseEl, goldEl, livesEl, scoreEl;
 // Dock refs.
 let dockLabelEl, dockValEl, progFillEl, startBtn, recruitBtn, switchBtn, hintEl;
-let shopWrap, paletteWrap, reviveWrap;
+let reviveWrap;
+// Dock build-control refs: a single Shop button (browse) or the placing bar.
+let shopBtn, placingWrap, placingLabelEl, swapBtn, doneBtn;
+// Shop dialog refs (the modal opened from the Shop button).
+let shopDialog = null, paletteWrap, shopGoldEl, startPlacingBtn;
 // Build-shop cards, keyed by item id (built once, patched each frame).
 const paletteCards = new Map();
 // Game-over refs.
@@ -48,9 +52,11 @@ export function installTdHud(handlers = {}) {
   injectStyles();
   buildStatusBar();
   buildDock();
+  buildShopDialog();
   buildGameOver();
   document.body.appendChild(root);
   document.body.appendChild(dock);
+  document.body.appendChild(shopDialog);
   document.body.appendChild(gameOver);
   onGoldChange((g) => { if (goldEl) goldEl.textContent = String(g); });
 }
@@ -63,6 +69,7 @@ export function showTdHud() {
 export function hideTdHud() {
   if (root) root.style.display = "none";
   if (dock) dock.style.display = "none";
+  if (shopDialog) shopDialog.style.display = "none";
   if (gameOver) gameOver.style.display = "none";
 }
 
@@ -106,11 +113,25 @@ export function updateTdHud(model) {
     startBtn.style.display = "none";
   }
 
-  // — Build shop (only while building) ————————————————————————————————————
-  shopWrap.style.display = build ? "" : "none";
-  if (build) renderPalette(model.palette || []);
+  // — Build controls: Shop button (browse) or the placing bar (place) ———————
+  const mode = model.buildMode || "browse";
+  shopBtn.style.display = (build && mode === "browse") ? "" : "none";
+  placingWrap.style.display = (build && mode === "place") ? "" : "none";
+  if (build && mode === "place") {
+    const sel = model.selected || {};
+    placingLabelEl.textContent = `Placing ${sel.label || "—"} (${sel.cost | 0}g)`;
+  }
+
+  // — Shop dialog (only while the shop sub-mode is open) ————————————————————
+  const shopping = build && mode === "shop";
+  shopDialog.style.display = shopping ? "flex" : "none";
+  if (shopping) {
+    renderPalette(model.palette || []);
+    shopGoldEl.textContent = `Gold: ${getGold()}`;
+  }
+
   hintEl.textContent = build
-    ? (model.buildHint || "Pick a barrel, move the marker, then press E to place · G to remove")
+    ? (model.buildHint || "Open the Shop to place barrels")
     : "Defend the village!";
 
   // — Actions —————————————————————————————————————————————————————————————
@@ -247,21 +268,61 @@ function buildDock() {
     startBtn,
   ]);
 
-  paletteWrap = el("div", { class: "td-shop-items" });
-  shopWrap = el("div", { class: "td-shop" }, [paletteWrap]);
+  // Build controls: a single Shop button (browse) that opens the dialog, and a
+  // placing bar (place) with the live item label + Swap (reopen shop) + Done.
+  shopBtn = el("button", {
+    class: "td-btn td-primary td-shop-open",
+    text: "🛢 Shop",
+    on: { click: () => api.onOpenShop?.() },
+  });
+  placingLabelEl = el("span", { class: "td-placing-label", text: "Placing —" });
+  swapBtn = el("button", { class: "td-btn", text: "🛢 Swap", on: { click: () => api.onOpenShop?.() } });
+  doneBtn = el("button", { class: "td-btn td-primary", text: "✓ Done", on: { click: () => api.onExitPlacing?.() } });
+  placingWrap = el("div", { class: "td-placing", style: { display: "none" } }, [
+    placingLabelEl, swapBtn, doneBtn,
+  ]);
 
   recruitBtn = el("button", { class: "td-btn", text: "Recruit hero", on: { click: () => api.onRecruit?.() } });
   switchBtn = el("button", { class: "td-btn td-switch", text: "Switch hero", on: { click: () => api.onSwitch?.() } });
   reviveWrap = el("div", { class: "td-revives" });
 
   const mainRow = el("div", { class: "td-dock-main" }, [
-    shopWrap,
+    el("div", { class: "td-build-controls" }, [shopBtn, placingWrap]),
     el("div", { class: "td-dock-actions" }, [recruitBtn, switchBtn, reviveWrap]),
   ]);
 
   hintEl = el("span", { class: "td-dock-hint" });
 
   dock = el("div", { id: "td-dock", style: { display: "none" } }, [timerRow, mainRow, hintEl]);
+}
+
+// The shop dialog: a modal opened from the Shop button. Lists the barrel
+// catalog as selectable cards; "Start placing" commits the choice and goes
+// into placement mode, "Close" backs out. The build timer keeps running
+// behind it (shopping isn't free time).
+function buildShopDialog() {
+  paletteWrap = el("div", { class: "td-shop-items" });
+  shopGoldEl = el("span", { class: "td-shop-gold", text: "Gold: 0" });
+  startPlacingBtn = el("button", {
+    class: "td-btn td-primary",
+    text: "Start placing ▶",
+    on: { click: () => api.onStartPlacing?.() },
+  });
+  const closeBtn = el("button", { class: "td-btn", text: "Close", on: { click: () => api.onCloseShop?.() } });
+
+  shopDialog = el("div", { id: "td-shop-dialog", style: { display: "none" } }, [
+    el("div", { class: "td-shop-card" }, [
+      el("div", { class: "td-shop-head" }, [
+        el("h2", { text: "Build Shop" }),
+        shopGoldEl,
+      ]),
+      el("p", { class: "td-shop-blurb", text: "Barrels block the horde — pick one, then place it to reshape their path." }),
+      paletteWrap,
+      el("div", { class: "td-row td-actions" }, [startPlacingBtn, closeBtn]),
+    ]),
+  ]);
+  // Click the dimmed backdrop (outside the card) to close.
+  shopDialog.addEventListener("click", (e) => { if (e.target === shopDialog) api.onCloseShop?.(); });
 }
 
 function buildGameOver() {
@@ -341,25 +402,29 @@ function injectStyles() {
     #td-dock .td-start { white-space: nowrap; flex: 0 0 auto; }
 
     #td-dock .td-dock-main { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    #td-dock .td-shop { display: flex; }
-    #td-dock .td-shop-items { display: flex; flex-direction: row; gap: 6px; }
-    #td-dock .td-shop-item {
+    #td-dock .td-build-controls { display: flex; align-items: center; gap: 8px; }
+    #td-dock .td-placing { display: flex; align-items: center; gap: 8px; }
+    #td-dock .td-placing-label { font-weight: bold; color: #ffd966; white-space: nowrap; }
+
+    /* Shop catalog cards — shared by the dialog (and any future host). */
+    .td-shop-items { display: flex; flex-direction: row; gap: 6px; flex-wrap: wrap; }
+    .td-shop-item {
       display: flex; flex-direction: column; align-items: center; gap: 2px;
       padding: 5px 7px;
       background: #24242c; color: #eee; border: 1px solid #3a3a46;
       border-radius: 5px; cursor: pointer; font-family: inherit;
     }
-    #td-dock .td-shop-item:hover:not(:disabled) { background: #30303c; border-color: #4a4a58; }
-    #td-dock .td-shop-item.td-selected {
+    .td-shop-item:hover:not(:disabled) { background: #30303c; border-color: #4a4a58; }
+    .td-shop-item.td-selected {
       background: #34343f; border-color: #ffd966; box-shadow: inset 0 0 0 1px #ffd966;
     }
-    #td-dock .td-shop-item.td-disabled { opacity: 0.4; cursor: not-allowed; }
-    #td-dock .td-shop-icon {
+    .td-shop-item.td-disabled { opacity: 0.4; cursor: not-allowed; }
+    .td-shop-icon {
       width: 30px; height: 30px; flex: 0 0 auto;
       image-rendering: pixelated; background: #16161c; border-radius: 3px;
     }
-    #td-dock .td-shop-cost { font-size: 11px; font-weight: bold; color: #ffd966; white-space: nowrap; }
-    #td-dock .td-shop-cost .td-coin { color: #ffcf33; font-size: 9px; }
+    .td-shop-cost { font-size: 11px; font-weight: bold; color: #ffd966; white-space: nowrap; }
+    .td-shop-cost .td-coin { color: #ffcf33; font-size: 9px; }
 
     #td-dock .td-dock-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-left: auto; }
     #td-dock .td-revives { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -375,6 +440,37 @@ function injectStyles() {
     #td-dock .td-primary:hover:not(:disabled) { background: #335a3d; }
     #td-dock .td-revive { background: #4a2a2a; border-color: #6b3f3f; }
     #td-dock .td-btn:disabled, #td-dock .td-btn.td-disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* — Shop dialog: modal opened from the Shop button — */
+    #td-shop-dialog {
+      position: fixed; inset: 0; z-index: 20;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.55); backdrop-filter: blur(2px);
+      color: #eee; font-family: var(--sb-font, monospace);
+    }
+    #td-shop-dialog .td-shop-card {
+      background: var(--sb-card-bg, #16161e); border: var(--sb-card-border, 1px solid #3a3a4a);
+      border-radius: var(--sb-card-radius, 8px); padding: 20px 22px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5); min-width: 280px; max-width: min(92vw, 460px);
+    }
+    #td-shop-dialog .td-shop-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    #td-shop-dialog h2 { margin: 0; font-size: 17px; letter-spacing: 1px; }
+    #td-shop-dialog .td-shop-gold { color: #ffd966; font-weight: bold; }
+    #td-shop-dialog .td-shop-blurb { margin: 8px 0 12px; font-size: 12px; color: #9a9aa6; }
+    #td-shop-dialog .td-shop-items { justify-content: center; margin-bottom: 14px; }
+    #td-shop-dialog .td-shop-icon { width: 38px; height: 38px; }
+    #td-shop-dialog .td-row { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+    #td-shop-dialog .td-btn {
+      background: #2a2a32; color: #eee; border: 1px solid #44444f;
+      padding: 9px 16px; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 13px;
+    }
+    #td-shop-dialog .td-btn:hover:not(:disabled) { background: #353541; }
+    #td-shop-dialog .td-primary { background: #2a4a32; border-color: #3f6b4a; font-weight: bold; }
+    #td-shop-dialog .td-primary:hover:not(:disabled) { background: #335a3d; }
+    @media (pointer: coarse) {
+      #td-shop-dialog .td-btn { min-height: 44px; }
+      #td-shop-dialog .td-shop-item { min-height: 56px; }
+    }
 
     /* Touch: dock under the top status bar — NOT centred — so the camera-
        centred hero and the build ghost in front of it stay visible while you
@@ -423,7 +519,8 @@ function injectStyles() {
 export function _resetTdHudForTesting() {
   if (root?.parentNode) root.parentNode.removeChild(root);
   if (dock?.parentNode) dock.parentNode.removeChild(dock);
+  if (shopDialog?.parentNode) shopDialog.parentNode.removeChild(shopDialog);
   if (gameOver?.parentNode) gameOver.parentNode.removeChild(gameOver);
   paletteCards.clear();
-  root = null; dock = null; gameOver = null; installed = false; api = {};
+  root = null; dock = null; shopDialog = null; gameOver = null; installed = false; api = {};
 }

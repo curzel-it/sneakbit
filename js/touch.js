@@ -235,7 +235,11 @@ function onPress(e, btn) {
   } else if (action === "menu") {
     dispatchKey("keydown", "Escape");
   } else if (action === "throw") {
-    if (getNetRole() === "guest") {
+    if (isTowerDefenseMode()) {
+      // TD build: the throw button is the "back/done" verb (close shop / exit
+      // placement); in a wave it shoots the active hero. Route through onKey.
+      dispatchKey("keydown", codesFor("shoot")[0] || "KeyF");
+    } else if (getNetRole() === "guest") {
       // Guests can't drive the local sim — synthesise a keydown so
       // guestInputForwarder turns it into a `shoot` intent on the wire.
       dispatchKey("keydown", codesFor("shoot")[0] || "KeyF");
