@@ -33,7 +33,19 @@ function createWindow() {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
+      // Run the renderer in the OS sandbox. There's no preload bridge and no
+      // node usage in the page, so nothing here needs the unsandboxed context.
+      sandbox: true,
     },
+  });
+
+  // The renderer is a game, not a browser: it never legitimately opens new
+  // windows, and it should only ever navigate within the bundled app:// origin.
+  // Deny window.open outright and block any navigation that would leave app://
+  // (e.g. an injected link), so an XSS can't pivot the privileged shell.
+  win.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
+  win.webContents.on("will-navigate", (event, url) => {
+    if (!url.startsWith("app://")) event.preventDefault();
   });
 
   win.loadURL(APP_URL);

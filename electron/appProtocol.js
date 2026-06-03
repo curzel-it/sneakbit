@@ -37,6 +37,29 @@ const MIME = {
   ".txt": "text/plain; charset=utf-8",
 };
 
+// Content-Security-Policy for the bundled document. There's no CSP on the
+// website (nginx), so the desktop wrapper — which runs in a more privileged
+// context — sets its own. Tight by default: scripts only from the bundle, no
+// inline/`eval` JS (the page loads `./js/main.js` as a module, nothing inline);
+// network limited to the relay/API origin plus the local blob/data URLs the
+// save-export path uses. `style-src` keeps 'unsafe-inline' for index.html's
+// inline <style> block. WebRTC peer/STUN/TURN traffic isn't governed by CSP.
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'none'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self' data:",
+  "media-src 'self' data: blob:",
+  "connect-src 'self' https://sneakbit.curzel.it wss://sneakbit.curzel.it blob: data:",
+  "worker-src 'self' blob:",
+  "manifest-src 'self'",
+  "base-uri 'none'",
+  "form-action 'none'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+].join("; ");
+
 // _site/ ships inside the app (electron-builder bundles it via `files`); in dev
 // (`electron .`) app.getAppPath() is the repo root. Resolve lazily so this
 // module can be imported before app is ready.
@@ -59,7 +82,11 @@ export async function handleAppRequest(request) {
   try {
     const body = await readFile(filePath);
     const type = MIME[extname(filePath).toLowerCase()] || "application/octet-stream";
-    return new Response(body, { status: 200, headers: { "content-type": type } });
+    const headers = { "content-type": type };
+    // CSP rides on the top-level document; the directives cover everything it
+    // then loads, so it doesn't need repeating on every asset response.
+    if (type.startsWith("text/html")) headers["content-security-policy"] = CONTENT_SECURITY_POLICY;
+    return new Response(body, { status: 200, headers });
   } catch (err) {
     if (err && err.code === "ENOENT") return new Response("Not found", { status: 404 });
     return new Response("Internal error", { status: 500 });
