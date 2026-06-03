@@ -13,6 +13,7 @@
 import { getSpecies } from "./species.js";
 import { isWalkable } from "./zone.js";
 import { getField, getGoal } from "./tdBoard.js";
+import { tdObstacleAt } from "./tdObstacles.js";
 import { fieldDirection, dirDelta } from "./flowField.js";
 
 const TILE_RATE_PER_BASE_SPEED = 1.6; // mirrors mobs.js straight-movement math
@@ -154,8 +155,10 @@ function tryStartStep(e, dir, zone, duration) {
   const toY = e._ai.tileY + dy;
   const feetY = toY + e._ai.h - 1;
   // Enemies don't block each other (they pack into corridors and fuse) — only
-  // the static walkable grid (barricades included) stops them.
+  // the static walkable grid (stone-wall barricades) and placed barrel props
+  // stop them.
   if (!isWalkable(zone, toX, feetY)) return false;
+  if (tdObstacleAt(zone, toX, feetY)) return false;
   e.direction = capitalize(dir);
   e._ai.step = { fromX: e._ai.tileX, fromY: e._ai.tileY, toX, toY, progress: 0, duration };
   return true;

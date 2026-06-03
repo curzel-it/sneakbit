@@ -95,7 +95,7 @@ export function isReachable(field, x, y) {
 }
 
 // Anti-wall-off check: true only if EVERY tile in `tiles` (the spawn tiles)
-// can still reach the goal in this field. tdBarricades calls this against a
+// can still reach the goal in this field. tdBuild calls this against a
 // trial field before committing a placement and rejects any that seals a
 // spawn off.
 export function allReachable(field, tiles) {

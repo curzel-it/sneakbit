@@ -9,6 +9,7 @@
 
 import { el, showOnly } from "./dom.js";
 import { onGoldChange, getGold } from "./arcadeCurrency.js";
+import { getSprite } from "./assets.js";
 
 let api = {};
 let root = null;
@@ -16,7 +17,9 @@ let installed = false;
 
 // Live element refs we patch each frame.
 let waveEl, phaseEl, goldEl, scoreEl, bestEl, livesEl, heroEl, statusEl, countdownEl;
-let readyBtn, recruitBtn, switchBtn, reviveWrap;
+let readyBtn, recruitBtn, switchBtn, reviveWrap, shopEl, paletteWrap;
+// Build-shop cards, keyed by item id (built once, patched each frame).
+const paletteCards = new Map();
 let gameOver = null, goTitleEl, goWaveEl, goScoreEl, goBestEl, goNewBest = null;
 
 export function installTdHud(handlers = {}) {
@@ -66,6 +69,10 @@ export function updateTdHud(model) {
   readyBtn.style.display = build ? "" : "none";
   recruitBtn.style.display = build ? "" : "none";
 
+  // Build shop: only meaningful while building.
+  shopEl.style.display = build ? "" : "none";
+  if (build) renderPalette(model.palette || []);
+
   // Revives can be bought in any phase (mid-wave at a premium) — show them
   // whenever the controller offers any.
   reviveWrap.style.display = model.revives?.length ? "" : "none";
@@ -91,6 +98,60 @@ export function showTdGameOver(result) {
   goBestEl.textContent = `Best: ${result.highScore | 0}`;
   goNewBest.style.display = result.isNewBest ? "" : "none";
   gameOver.style.display = "flex";
+}
+
+// Build the shop cards once (the catalog is static), then patch their selected
+// / affordable state each frame. Each card shows the item's pixel-art sprite,
+// its name and its cost; clicking one tells the controller to switch the active
+// build item.
+function renderPalette(items) {
+  if (paletteCards.size !== items.length) {
+    paletteWrap.replaceChildren();
+    paletteCards.clear();
+    for (const it of items) {
+      const icon = el("canvas", { class: "td-shop-icon", width: 30, height: 30 });
+      const name = el("span", { class: "td-shop-name", text: it.label });
+      const cost = el("span", { class: "td-shop-cost" }, [
+        el("span", { class: "td-coin", text: "●" }), ` ${it.cost}`,
+      ]);
+      const card = el("button", {
+        class: "td-shop-item",
+        on: { click: () => api.onSelectItem?.(it.id) },
+      }, [icon, name, cost]);
+      paletteWrap.appendChild(card);
+      paletteCards.set(it.id, { card, icon, drawn: false });
+    }
+  }
+  for (const it of items) {
+    const entry = paletteCards.get(it.id);
+    if (!entry) continue;
+    if (!entry.drawn) entry.drawn = drawShopIcon(entry.icon, it.icon);
+    entry.card.classList.toggle("td-selected", !!it.selected);
+    const blocked = !it.can && !it.selected;
+    entry.card.classList.toggle("td-disabled", blocked);
+    entry.card.disabled = blocked;
+  }
+}
+
+// Blit an item's sprite into its shop-icon canvas, scaled to fit while keeping
+// the pixel-art aspect ratio (barrels are 1×2). Returns true once drawn —
+// sprite sheets load async, so a miss just retries next frame.
+function drawShopIcon(canvas, icon) {
+  if (!canvas || !icon) return false;
+  let sheet;
+  try { sheet = getSprite(icon.sheet); } catch { return false; }
+  if (!sheet) return false;
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const pad = 1;
+  const scale = Math.min((canvas.width - pad * 2) / icon.sw, (canvas.height - pad * 2) / icon.sh);
+  const dw = Math.round(icon.sw * scale);
+  const dh = Math.round(icon.sh * scale);
+  const dx = Math.round((canvas.width - dw) / 2);
+  const dy = Math.round((canvas.height - dh) / 2);
+  ctx.drawImage(sheet, icon.sx, icon.sy, icon.sw, icon.sh, dx, dy, dw, dh);
+  return true;
 }
 
 function renderRevives(revives) {
@@ -119,6 +180,14 @@ function buildPanel() {
   recruitBtn = el("button", { class: "td-btn", text: "Recruit hero", on: { click: () => api.onRecruit?.() } });
   switchBtn = el("button", { class: "td-btn td-switch", text: "Switch (Tab)", on: { click: () => api.onSwitch?.() } });
   reviveWrap = el("div", { class: "td-revives" });
+  paletteWrap = el("div", { class: "td-shop-items" });
+  shopEl = el("div", { class: "td-shop" }, [
+    el("div", { class: "td-shop-head" }, [
+      el("span", { class: "td-shop-title", text: "Build shop" }),
+      el("span", { class: "td-shop-hint", text: "right-click to sell" }),
+    ]),
+    paletteWrap,
+  ]);
 
   root = el("div", { id: "td-hud", style: { display: "none" } }, [
     el("div", { class: "td-row td-top" }, [
@@ -136,6 +205,7 @@ function buildPanel() {
       el("span", { class: "td-label", text: "Driving: " }), heroEl, switchBtn,
     ]),
     countdownEl,
+    shopEl,
     statusEl,
     el("div", { class: "td-row td-actions" }, [readyBtn, recruitBtn]),
     reviveWrap,
@@ -190,6 +260,35 @@ function injectStyles() {
     #td-hud .td-countdown { color: #ffd966; font-size: 12px; }
     #td-hud .td-status { margin: 2px 0; color: #aaa; font-size: 11px; line-height: 1.4; }
     #td-hud .td-actions { gap: 6px; }
+    #td-hud .td-shop {
+      display: flex; flex-direction: column; gap: 5px;
+      padding: 8px; margin: 2px 0;
+      background: rgba(0,0,0,0.22); border: 1px solid #33333f; border-radius: 5px;
+    }
+    #td-hud .td-shop-head { display: flex; align-items: baseline; justify-content: space-between; }
+    #td-hud .td-shop-title { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #cfcfe0; font-weight: bold; }
+    #td-hud .td-shop-hint { font-size: 10px; color: #777; }
+    #td-hud .td-shop-items { display: flex; flex-direction: column; gap: 4px; }
+    #td-hud .td-shop-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 5px 8px; text-align: left;
+      background: #24242c; color: #eee; border: 1px solid #3a3a46;
+      border-radius: 5px; cursor: pointer; font-family: inherit;
+    }
+    #td-hud .td-shop-item:hover:not(:disabled) { background: #30303c; border-color: #4a4a58; }
+    #td-hud .td-shop-item.td-selected {
+      background: #34343f; border-color: #ffd966;
+      box-shadow: inset 0 0 0 1px #ffd966;
+    }
+    #td-hud .td-shop-item.td-disabled { opacity: 0.4; cursor: not-allowed; }
+    #td-hud .td-shop-icon {
+      width: 30px; height: 30px; flex: 0 0 auto;
+      image-rendering: pixelated;
+      background: #16161c; border-radius: 3px;
+    }
+    #td-hud .td-shop-name { flex: 1 1 auto; font-size: 12px; }
+    #td-hud .td-shop-cost { font-size: 12px; font-weight: bold; color: #ffd966; white-space: nowrap; }
+    #td-hud .td-shop-cost .td-coin { color: #ffcf33; font-size: 10px; }
     #td-hud .td-revives { display: flex; flex-direction: column; gap: 4px; }
     #td-hud .td-btn {
       background: #2a2a32; color: #eee; border: 1px solid #44444f;
@@ -225,5 +324,6 @@ function injectStyles() {
 export function _resetTdHudForTesting() {
   if (root?.parentNode) root.parentNode.removeChild(root);
   if (gameOver?.parentNode) gameOver.parentNode.removeChild(gameOver);
+  paletteCards.clear();
   root = null; gameOver = null; installed = false; api = {};
 }

@@ -86,6 +86,18 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   assert.equal(await evalExpr(s, "window.td.place(57, 20)"), false, "the wall that seals the goal is refused");
   assert.equal(await evalExpr(s, "window.td.state().gold"), goldBeforeSeal, "a refused wall spends no gold");
 
+  // — Barrels: a purchasable, destructible prop places through the same path —
+  const goldBeforeBarrel = await evalExpr(s, "window.td.state().gold");
+  assert.equal(await evalExpr(s, "window.td.placeItem('barrel_wood', 22, 22)"), true, "a barrel places on an open tile");
+  assert.equal(await evalExpr(s, "window.td.obstacles()"), 1, "the placed barrel is tracked");
+  assert.equal(await evalExpr(s, "window.td.state().gold"), goldBeforeBarrel - 10, "the barrel cost 10 gold");
+
+  // The anti-wall-off rule applies to barrels too: the boxed goal's last side
+  // is refused and reverts without spending or tracking anything.
+  assert.equal(await evalExpr(s, "window.td.placeItem('barrel_wood', 57, 20)"), false, "a barrel that seals the goal is refused");
+  assert.equal(await evalExpr(s, "window.td.state().gold"), goldBeforeBarrel - 10, "a refused barrel spends no gold");
+  assert.equal(await evalExpr(s, "window.td.obstacles()"), 1, "a refused barrel is not tracked");
+
   // — A leak ends the run and raises the game-over screen ————————————————
   await evalExpr(s, "window.td.lose()");
   await waitFor(s, "getComputedStyle(document.getElementById('td-gameover')).display !== 'none'");

@@ -51,7 +51,10 @@ import {
   cycleActiveHero, ensureLiveActive, followActiveHero, activeHero,
 } from "./heroSwitch.js";
 import { resetGold, getGold, addGold, spendGold, canAfford } from "./arcadeCurrency.js";
-import { installBarricades, placeBarricade } from "./tdBarricades.js";
+import {
+  installBuild, placeBarricade, placeSelected, setSelectedItem, getPaletteModel,
+  buildHintText, reapDeadObstacles, resetBuild, getPlacedObstacleCount,
+} from "./tdBuild.js";
 import {
   installTdHud, showTdHud, hideTdHud, updateTdHud, showTdGameOver,
 } from "./tdHud.js";
@@ -114,8 +117,9 @@ export function installTowerDefense(stateGetter) {
     onSwitch: switchHero,
     onRestart: restartRun,
     onExit: exitRun,
+    onSelectItem: setSelectedItem,
   });
-  installBarricades(getState, {
+  installBuild(getState, {
     isBuildPhase: () => phase === "build",
   });
   window.addEventListener("keydown", onKey);
@@ -143,6 +147,7 @@ export async function startTowerDefense() {
 
     resetTdEnemies();
     resetWaves();
+    resetBuild();
     setTdEnemyHooks({ onKill, onLeak });
     resetGold(START_GOLD);
     resetHeroSwitch(0);
@@ -349,6 +354,10 @@ function simulate(state, dt) {
   tickCombat(state.zone, livingHeroes(state), dt);
   tickPlayerHealth(dt);
 
+  // Barrels the squad shot apart (flagged dying by tickCombat above) reopen the
+  // corridor — drop them and re-route the horde through the new gap.
+  if (phase === "wave" && reapDeadObstacles(state)) recomputeField(state.zone);
+
   // Lose checks. Leak is handled by the onLeak hook inside tickTdEnemies.
   if (squadWiped(state)) gameOver("squad");
 
@@ -394,6 +403,8 @@ function buildModel(state) {
       can: canRecruit(state),
       label: nextRecruitIndex(state) == null ? "Squad full" : `Recruit hero (${recruitCost()}g)`,
     },
+    palette: getPaletteModel(),
+    buildHint: buildHintText(),
     revives,
   };
 }
@@ -471,6 +482,9 @@ function installDebugHook() {
     squad: () => squadPlayers(getState()).length,
     activeIndex: () => getActiveHeroIndex(),
     place: (x, y) => placeBarricade(x | 0, y | 0),
+    select: (id) => setSelectedItem(id),
+    placeItem: (id, x, y) => { setSelectedItem(id); return placeSelected(x | 0, y | 0); },
+    obstacles: () => getPlacedObstacleCount(),
     recruit: () => recruitHero(),
     killAll: () => {
       const state = getState();
