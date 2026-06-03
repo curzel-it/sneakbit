@@ -1,58 +1,51 @@
 // Tower Defense build shop: the build-phase interaction that turns gold into
-// placed obstacles. The player picks an item from the HUD palette, then clicks
-// a tile to buy and place it; right-click removes a placed item and reclaims
+// placed obstacles. The player picks a barrel from the HUD palette, then clicks
+// a tile to buy and place it; right-click removes a placed barrel and reclaims
 // its cost. Placement is gated to the build phase and to legal tiles, and —
 // the crux of corridor-building — rejected if it would seal the goal off from
 // any spawn (the anti-wall-off rule the flow field answers directly).
 //
-// Two kinds of item share one placement path:
-//   - "construction": a solid wall edited into the raw construction grid
-//     (feeds zone.collision). Permanent for the run.
-//   - "entity": a barrel prop pushed into raw.entities. Rigid, so it blocks
-//     the horde via tdObstacleAt — but destructible: stray fire can break it
-//     and reopen the corridor mid-wave (see reapDeadObstacles).
+// Every shop item is an "entity": a barrel prop pushed into raw.entities. It's
+// rigid, so it blocks the horde via tdObstacleAt, and it's flagged invulnerable
+// so stray fire can't break the maze the player built — it stands for the whole
+// run. (Trees and the map shell are authored construction tiles; the shop never
+// touches the construction grid.)
 //
 // Reuses the same primitives the map editor uses to mutate a zone: edit the
-// raw grid / entity list, rebuild the zone so collision + entities refresh,
-// then recompute the flow field.
+// raw entity list, rebuild the zone so collision + entities refresh, then
+// recompute the flow field.
 
 import { TILE_SIZE } from "./constants.js";
 import { buildZone } from "./zone.js";
-import { CONSTRUCTION, constructionToChar } from "./constructions.js";
 import { getSpecies } from "./species.js";
 import { recomputeField, spawnsReachGoal, getGoal, getSpawns } from "./tdBoard.js";
 import { tdObstacleAt, isBuildObstacleSpecies, obstacleFeetTile, BARREL_SPECIES } from "./tdObstacles.js";
 import { getGold, spendGold, addGold, canAfford } from "./arcadeCurrency.js";
 import { showToast } from "./toast.js";
 
-const EMPTY_CHAR = "0";
-
 // The build palette. Order is the HUD button order; the first entry is the
-// default selection. Extend this list to stock more props — the placement
-// path already handles both kinds. For now: the permanent stone wall plus the
-// four destructible barrel colours (the "variety" the run ships with).
+// default selection. Extend this list to stock more props. For now: the four
+// barrel colours (the "variety" the run ships with), all permanent obstacles.
 export const BUILD_ITEMS = Object.freeze([
-  { id: "wall", label: "Wall", kind: "construction", construction: CONSTRUCTION.STONE_WALL, cost: 20 },
   { id: "barrel_wood", label: "Wood barrel", kind: "entity", species: BARREL_SPECIES.wood, cost: 10 },
   { id: "barrel_brown", label: "Brown barrel", kind: "entity", species: BARREL_SPECIES.brown, cost: 10 },
   { id: "barrel_green", label: "Green barrel", kind: "entity", species: BARREL_SPECIES.green, cost: 10 },
   { id: "barrel_purple", label: "Purple barrel", kind: "entity", species: BARREL_SPECIES.purple, cost: 10 },
 ]);
 
-const WALL_ITEM = BUILD_ITEMS[0];
-const DEFAULT_ITEM_ID = BUILD_ITEMS[0].id;
+const DEFAULT_ITEM = BUILD_ITEMS[0];
+const DEFAULT_ITEM_ID = DEFAULT_ITEM.id;
 
 // Cost lookup for refunds (a placed barrel only carries its species id).
 const COST_FOR_SPECIES = new Map(
-  BUILD_ITEMS.filter((i) => i.kind === "entity").map((i) => [i.species, i.cost]),
+  BUILD_ITEMS.map((i) => [i.species, i.cost]),
 );
 
 // Negative-id pool for build-placed entities — clear of the editor pool (-1…)
 // and the enemy pool (-2_000_000…) so ids never collide.
 let nextBuildEntityId = -3_000_000;
-// Ids of the barrels this run has placed, so we can reap the ones the squad
-// shoots apart (remove their raw entry, so a later rebuild can't resurrect
-// them) and refund the ones the player removes.
+// Ids of the barrels this run has placed, so we can refund the ones the player
+// removes and report the count to the HUD.
 const placedBarrelIds = new Set();
 
 let selectedId = DEFAULT_ITEM_ID;
@@ -91,7 +84,7 @@ export function setSelectedItem(id) {
 }
 
 function selectedDef() {
-  return BUILD_ITEMS.find((i) => i.id === selectedId) || WALL_ITEM;
+  return BUILD_ITEMS.find((i) => i.id === selectedId) || DEFAULT_ITEM;
 }
 
 // Palette model for the HUD: each item plus its shop icon, whether it's
@@ -108,12 +101,8 @@ export function getPaletteModel() {
 }
 
 // Source rect (in sheet pixels) of an item's sprite, for the HUD shop icons.
-// Mirrors mapEditor's placement ghosts: construction tiles read column = id,
-// row 1 (the isolated-tile pattern); entities read their species sprite frame.
+// Every build item is a barrel entity, read from its species sprite frame.
 function iconFor(item) {
-  if (item.kind === "construction") {
-    return { sheet: "tilesConstructions", sx: item.construction * TILE_SIZE, sy: TILE_SIZE, sw: TILE_SIZE, sh: TILE_SIZE };
-  }
   const sp = getSpecies(item.species);
   const w = Math.max(1, sp?.width || 1);
   const h = Math.max(1, sp?.height || 1);
@@ -154,10 +143,10 @@ export function placeSelected(x, y) {
   return placeItem(selectedDef(), x, y);
 }
 
-// Back-compat for the debug hook (window.td.place) and the e2e suite: place a
-// stone wall regardless of the current palette selection.
-export function placeBarricade(x, y) {
-  return placeItem(WALL_ITEM, x, y);
+// Back-compat for the debug hook (window.td.place) and the e2e suite: place the
+// default barrel regardless of the current palette selection.
+export function placeDefaultItem(x, y) {
+  return placeItem(DEFAULT_ITEM, x, y);
 }
 
 // Place a build item at (x, y) if it's the build phase, the tile is legal, the
@@ -170,9 +159,7 @@ function placeItem(def, x, y) {
   if (!isLegalBuildTile(state, x, y)) return false;
   if (getGold() < def.cost) { showToast("Not enough gold", "hint"); return false; }
 
-  const placed = def.kind === "entity"
-    ? placeEntity(state, def, x, y)
-    : placeConstruction(state, def, x, y);
+  const placed = placeEntity(state, def, x, y);
   if (!placed) return false;
 
   if (!spawnsReachGoal()) {
@@ -188,14 +175,6 @@ function placeItem(def, x, y) {
   return true;
 }
 
-function placeConstruction(state, def, x, y) {
-  const ch = constructionToChar(def.construction);
-  const prev = getConstructionChar(state.rawZone, x, y);
-  setConstructionChar(state.rawZone, x, y, ch);
-  rebuild(state);
-  return { revert: () => setConstructionChar(state.rawZone, x, y, prev) };
-}
-
 function placeEntity(state, def, x, y) {
   const sp = getSpecies(def.species);
   const w = Math.max(1, sp?.width || 1);
@@ -207,6 +186,10 @@ function placeEntity(state, def, x, y) {
     species_id: def.species,
     direction: "Down",
     frame: { x, y: y - (h - 1), w, h },
+    // Player-placed props are permanent: stray fire can't destroy them, so the
+    // maze the player builds stands for the whole run (combat skips _invulnerable
+    // targets; the flag survives buildZone's shallow entity clone).
+    _invulnerable: true,
   };
   state.rawZone.entities = state.rawZone.entities ?? [];
   state.rawZone.entities.push(ent);
@@ -226,7 +209,7 @@ export function eraseAt(x, y) {
   if (!state?.rawZone || !state.zone) return false;
   if (!isBuildPhase()) return false;
 
-  // Prefer removing a barrel whose feet sit on this tile…
+  // Remove the barrel whose feet sit on this tile, if any.
   const barrel = barrelAtTile(state.rawZone, x, y);
   if (barrel) {
     state.rawZone.entities = state.rawZone.entities.filter((e) => e !== barrel);
@@ -236,38 +219,7 @@ export function eraseAt(x, y) {
     onChange();
     return true;
   }
-
-  // …otherwise a stone-wall construction tile.
-  if (getConstructionChar(state.rawZone, x, y) === constructionToChar(WALL_ITEM.construction)) {
-    setConstructionChar(state.rawZone, x, y, EMPTY_CHAR);
-    rebuild(state);
-    addGold(WALL_ITEM.cost);
-    onChange();
-    return true;
-  }
   return false;
-}
-
-// Sweep placed barrels the squad has destroyed during a wave: drop their raw
-// entry (so the next rebuild can't bring them back) and forget them. Returns
-// true if anything was reaped, so the caller can recompute the field and let
-// the horde flow through the new gap.
-export function reapDeadObstacles(state) {
-  if (!placedBarrelIds.size || !state?.rawZone) return false;
-  const zone = state.zone;
-  let changed = false;
-  for (const id of [...placedBarrelIds]) {
-    if (isLiveObstacle(zone, id)) continue;
-    state.rawZone.entities = (state.rawZone.entities || []).filter((e) => e.id !== id);
-    placedBarrelIds.delete(id);
-    changed = true;
-  }
-  return changed;
-}
-
-function isLiveObstacle(zone, id) {
-  const e = zone?.entities?.find((x) => x.id === id);
-  return !!e && !e._dying && isBuildObstacleSpecies(e.species_id);
 }
 
 function barrelAtTile(raw, x, y) {
@@ -322,19 +274,4 @@ function eventToTile(e) {
   const y = Math.floor((by - oy) / TILE_SIZE);
   if (x < 0 || y < 0 || x >= state.zone.cols || y >= state.zone.rows) return null;
   return { x, y };
-}
-
-function getConstructionChar(raw, x, y) {
-  const rows = raw.construction_tiles?.tiles;
-  const row = rows?.[y];
-  if (typeof row !== "string" || x < 0 || x >= row.length) return EMPTY_CHAR;
-  return row[x];
-}
-
-function setConstructionChar(raw, x, y, ch) {
-  const rows = raw.construction_tiles?.tiles;
-  if (!Array.isArray(rows) || y < 0 || y >= rows.length) return;
-  const row = rows[y];
-  if (typeof row !== "string" || x < 0 || x >= row.length) return;
-  rows[y] = row.slice(0, x) + ch + row.slice(x + 1);
 }

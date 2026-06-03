@@ -1,8 +1,8 @@
 // Tower Defense build shop: the placeable-obstacle pieces that don't need a
 // DOM or a fully-loaded zone — the obstacle collision query, the way a placed
 // barrel reshapes the horde's flow field (block + anti-wall-off), and the
-// build catalog / palette economy. Full click-to-place + the stone-wall path
-// are exercised end-to-end by tests/e2e/towerDefense.test.mjs.
+// build catalog / palette economy. Full click-to-place is exercised end-to-end
+// by tests/e2e/towerDefense.test.mjs.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -81,30 +81,28 @@ test("anti-wall-off: a barrel ring that seals the only spawn is rejected", () =>
 
 // — Catalog / palette economy ——————————————————————————————————————————————
 
-test("the build catalog ships a wall plus four barrels", () => {
-  assert.equal(BUILD_ITEMS[0].id, "wall");
-  assert.equal(BUILD_ITEMS[0].kind, "construction");
-  const barrels = BUILD_ITEMS.filter((i) => i.kind === "entity");
-  assert.equal(barrels.length, 4, "four barrel colours");
-  assert.ok(barrels.every((b) => isBuildObstacleSpecies(b.species)), "each barrel is an obstacle species");
-  assert.ok(barrels.every((b) => b.cost < BUILD_ITEMS[0].cost), "barrels are cheaper than the permanent wall");
+test("the build catalog ships four barrels and nothing else", () => {
+  assert.equal(BUILD_ITEMS.length, 4, "four barrel colours");
+  assert.ok(BUILD_ITEMS.every((i) => i.kind === "entity"), "every item is an entity — no construction tiles");
+  assert.ok(BUILD_ITEMS.every((b) => isBuildObstacleSpecies(b.species)), "each barrel is an obstacle species");
 });
 
-test("selection defaults to the wall and can be switched", () => {
-  assert.equal(getSelectedItem(), "wall");
+test("selection defaults to the first barrel and can be switched", () => {
+  assert.equal(getSelectedItem(), "barrel_wood");
   setSelectedItem("barrel_green");
   assert.equal(getSelectedItem(), "barrel_green");
   setSelectedItem("nope"); // unknown ids are ignored
   assert.equal(getSelectedItem(), "barrel_green");
-  setSelectedItem("wall");
+  setSelectedItem("barrel_wood");
 });
 
 test("the palette model reflects what the player can afford", () => {
-  resetGold(10); // enough for a 10g barrel, not the 20g wall
-  const model = getPaletteModel();
-  const wall = model.find((m) => m.id === "wall");
-  const barrel = model.find((m) => m.id === "barrel_wood");
-  assert.equal(wall.can, false, "20g wall unaffordable at 10g");
-  assert.equal(barrel.can, true, "10g barrel affordable at 10g");
+  resetGold(10); // enough for one 10g barrel
+  let model = getPaletteModel();
   assert.equal(model.length, BUILD_ITEMS.length);
+  assert.ok(model.every((m) => m.can), "every barrel affordable at 10g");
+
+  resetGold(5); // not enough for any barrel
+  model = getPaletteModel();
+  assert.ok(model.every((m) => !m.can), "no barrel affordable at 5g");
 });

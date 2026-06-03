@@ -52,8 +52,8 @@ import {
 } from "./heroSwitch.js";
 import { resetGold, getGold, addGold, spendGold, canAfford } from "./arcadeCurrency.js";
 import {
-  installBuild, placeBarricade, placeSelected, setSelectedItem, getPaletteModel,
-  buildHintText, reapDeadObstacles, resetBuild, getPlacedObstacleCount,
+  installBuild, placeDefaultItem, placeSelected, setSelectedItem, getPaletteModel,
+  buildHintText, resetBuild, getPlacedObstacleCount,
 } from "./tdBuild.js";
 import {
   installTdHud, showTdHud, hideTdHud, updateTdHud, showTdGameOver,
@@ -354,10 +354,6 @@ function simulate(state, dt) {
   tickCombat(state.zone, livingHeroes(state), dt);
   tickPlayerHealth(dt);
 
-  // Barrels the squad shot apart (flagged dying by tickCombat above) reopen the
-  // corridor — drop them and re-route the horde through the new gap.
-  if (phase === "wave" && reapDeadObstacles(state)) recomputeField(state.zone);
-
   // Lose checks. Leak is handled by the onLeak hook inside tickTdEnemies.
   if (squadWiped(state)) gameOver("squad");
 
@@ -481,7 +477,7 @@ function installDebugHook() {
     enemies: () => { const s = getState(); return s?.zone ? getEnemies(s.zone).length : 0; },
     squad: () => squadPlayers(getState()).length,
     activeIndex: () => getActiveHeroIndex(),
-    place: (x, y) => placeBarricade(x | 0, y | 0),
+    place: (x, y) => placeDefaultItem(x | 0, y | 0),
     select: (id) => setSelectedItem(id),
     placeItem: (id, x, y) => { setSelectedItem(id); return placeSelected(x | 0, y | 0); },
     obstacles: () => getPlacedObstacleCount(),

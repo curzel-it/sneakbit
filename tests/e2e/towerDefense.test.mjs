@@ -1,7 +1,7 @@
 // End-to-end Tower Defense run through the real module graph + DOM HUD,
 // driven via the ?mode=td deep link. Asserts the whole loop wires up: the
 // board + squad boot, the build→wave→clear cycle runs, enemies spawn and
-// march, kills score + bank gold, barricades respect the anti-wall-off rule,
+// march, kills score + bank gold, placed barrels respect the anti-wall-off rule,
 // hero switching cycles, and a leak ends the run — all with zero uncaught
 // page exceptions. Self-skips when Chrome isn't installed.
 
@@ -71,32 +71,34 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   const a1 = await evalExpr(s, "window.td.activeIndex()");
   assert.notEqual(a0, a1, "Tab cycles to the next hero");
 
-  // — Barricade anti-wall-off: a legal wall places; the goal can't be sealed —
-  const placed = await evalExpr(s, "window.td.place(20, 20)");
-  assert.equal(placed, true, "a wall on an open tile places");
-
-  // Box the goal (56,20) in: three sides place fine, but the fourth would
-  // seal the village off from every spawn — it must be refused and cost no
-  // gold (the placement reverts before spending).
+  // — Barrel anti-wall-off: a legal barrel places; the goal can't be sealed —
   await evalExpr(s, "window.td.gold(500)");
-  assert.equal(await evalExpr(s, "window.td.place(55, 20)"), true, "goal-adjacent wall 1 places");
-  assert.equal(await evalExpr(s, "window.td.place(56, 19)"), true, "goal-adjacent wall 2 places");
-  assert.equal(await evalExpr(s, "window.td.place(56, 21)"), true, "goal-adjacent wall 3 places");
-  const goldBeforeSeal = await evalExpr(s, "window.td.state().gold");
-  assert.equal(await evalExpr(s, "window.td.place(57, 20)"), false, "the wall that seals the goal is refused");
-  assert.equal(await evalExpr(s, "window.td.state().gold"), goldBeforeSeal, "a refused wall spends no gold");
+  const placed = await evalExpr(s, "window.td.place(20, 20)");
+  assert.equal(placed, true, "a barrel on an open tile places");
+  assert.equal(await evalExpr(s, "window.td.obstacles()"), 1, "the placed barrel is tracked");
 
-  // — Barrels: a purchasable, destructible prop places through the same path —
+  // The village (goal at 97,24) sits in a pocket reached only through the
+  // six-tile neck at x=95, rows 22..27. Five barrels plug five of them; the
+  // sixth would seal the village off from every spawn — it must be refused
+  // and cost no gold (the placement reverts before spending).
+  for (const y of [22, 23, 24, 25, 26]) {
+    assert.equal(await evalExpr(s, `window.td.place(95, ${y})`), true, `neck barrel at row ${y} places`);
+  }
+  const goldBeforeSeal = await evalExpr(s, "window.td.state().gold");
+  assert.equal(await evalExpr(s, "window.td.place(95, 27)"), false, "the barrel that seals the goal is refused");
+  assert.equal(await evalExpr(s, "window.td.state().gold"), goldBeforeSeal, "a refused barrel spends no gold");
+  assert.equal(await evalExpr(s, "window.td.obstacles()"), 6, "the refused barrel is not tracked (1 + 5 neck)");
+
+  // — placeItem follows the same path, and refunds/economy still hold ————
   const goldBeforeBarrel = await evalExpr(s, "window.td.state().gold");
   assert.equal(await evalExpr(s, "window.td.placeItem('barrel_wood', 22, 22)"), true, "a barrel places on an open tile");
-  assert.equal(await evalExpr(s, "window.td.obstacles()"), 1, "the placed barrel is tracked");
+  assert.equal(await evalExpr(s, "window.td.obstacles()"), 7, "the placed barrel is tracked");
   assert.equal(await evalExpr(s, "window.td.state().gold"), goldBeforeBarrel - 10, "the barrel cost 10 gold");
 
-  // The anti-wall-off rule applies to barrels too: the boxed goal's last side
-  // is refused and reverts without spending or tracking anything.
-  assert.equal(await evalExpr(s, "window.td.placeItem('barrel_wood', 57, 20)"), false, "a barrel that seals the goal is refused");
+  // The anti-wall-off rule applies through placeItem too.
+  assert.equal(await evalExpr(s, "window.td.placeItem('barrel_wood', 95, 27)"), false, "a barrel that seals the goal is refused");
   assert.equal(await evalExpr(s, "window.td.state().gold"), goldBeforeBarrel - 10, "a refused barrel spends no gold");
-  assert.equal(await evalExpr(s, "window.td.obstacles()"), 1, "a refused barrel is not tracked");
+  assert.equal(await evalExpr(s, "window.td.obstacles()"), 7, "a refused barrel is not tracked");
 
   // — A leak ends the run and raises the game-over screen ————————————————
   await evalExpr(s, "window.td.lose()");

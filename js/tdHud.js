@@ -79,7 +79,7 @@ export function updateTdHud(model) {
   renderRevives(model.revives || []);
 
   if (build) {
-    statusEl.textContent = model.buildHint || "Click a tile to build a wall · right-click to remove";
+    statusEl.textContent = model.buildHint || "Click a tile to place a barrel · right-click to remove";
     const r = model.recruit || {};
     recruitBtn.textContent = r.label || `Recruit hero (${r.cost}g)`;
     recruitBtn.disabled = !r.can;
