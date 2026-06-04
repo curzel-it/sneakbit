@@ -85,7 +85,7 @@ function injectStyles() {
       position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
       padding: 6px 14px;
       background: rgba(60, 30, 30, 0.85);
-      border: 1px solid #a44; border-radius: 6px;
+      border: 1px solid #a44; border-radius: var(--sb-surface-radius);
       color: #fed; font-family: monospace; font-size: 13px;
       letter-spacing: 1px;
       z-index: 22; pointer-events: none; user-select: none;

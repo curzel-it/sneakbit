@@ -70,7 +70,7 @@ export function installDialogue() {
       background: linear-gradient(180deg, #20242e 0%, #14161c 100%);
       border: 1px solid #3a4150;
       border-top-color: #525d70;
-      border-radius: 8px;
+      border-radius: var(--sb-card-radius);
       box-shadow: 0 10px 34px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
     }
     #dialogue-text em { font-style: italic; color: #cfe0ff; }
@@ -84,7 +84,7 @@ export function installDialogue() {
       letter-spacing: .3px; color: #fff;
       background: linear-gradient(180deg, #3a4d8a 0%, #2b3a6b 100%);
       border: 1px solid #525d70; border-bottom: none;
-      border-radius: 8px 8px 0 0;
+      border-radius: var(--sb-card-radius) var(--sb-card-radius) 0 0;
       box-shadow: 0 -2px 10px rgba(0,0,0,.35);
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }

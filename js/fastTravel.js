@@ -182,7 +182,7 @@ function injectStyles() {
     #fast-travel .ft-card {
       background: #161b2b;
       border: 1px solid #2c3654;
-      border-radius: 8px;
+      border-radius: var(--sb-card-radius);
       padding: 22px 28px;
       min-width: 320px;
     }
@@ -191,7 +191,7 @@ function injectStyles() {
     #fast-travel .ft-list li { margin: 6px 0; }
     #fast-travel .ft-list button {
       width: 100%; text-align: left; background: #1d2440; color: #dfe7ff;
-      border: 1px solid #303a60; padding: 8px 12px; border-radius: 4px;
+      border: 1px solid #303a60; padding: 8px 12px; border-radius: var(--sb-surface-radius);
       cursor: pointer; font-family: inherit;
     }
     #fast-travel .ft-list button:hover { background: #2a345a; }
@@ -199,7 +199,7 @@ function injectStyles() {
     #fast-travel .ft-actions { text-align: right; }
     #fast-travel #ft-cancel {
       background: #1d2440; color: #dfe7ff; border: 1px solid #303a60;
-      padding: 6px 14px; border-radius: 4px; cursor: pointer;
+      padding: 6px 14px; border-radius: var(--sb-surface-radius); cursor: pointer;
       font-family: inherit;
     }
     #fast-travel #ft-cancel:hover { background: #2a345a; }

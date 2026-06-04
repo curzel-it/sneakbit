@@ -82,7 +82,7 @@ function injectStyles() {
     #loading .ld-track {
       width: min(320px, 70vw); height: 6px;
       background: #1a1d26; border: 1px solid #2a2f3e;
-      border-radius: 3px; overflow: hidden;
+      border-radius: var(--sb-surface-radius); overflow: hidden;
       margin: 0 auto;
     }
     #loading .ld-fill {

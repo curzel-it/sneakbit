@@ -498,7 +498,7 @@ function injectStyles() {
     #menu .menu-card {
       background: #181818;
       border: 1px solid #333;
-      border-radius: 8px;
+      border-radius: var(--sb-card-radius);
       padding: 24px 28px;
       min-width: 320px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
@@ -517,44 +517,44 @@ function injectStyles() {
     #menu label { color: #ddd; cursor: pointer; }
     #menu select {
       background: #2a2a2a; color: #eee; border: 1px solid #444;
-      padding: 6px 10px; border-radius: 4px; cursor: pointer;
+      padding: 6px 10px; border-radius: var(--sb-surface-radius); cursor: pointer;
       font-family: inherit; font-size: 12px;
     }
     #menu input[type="range"] { flex: 1; }
     #menu button {
       background: #2a2a2a; color: #eee; border: 1px solid #444;
-      padding: 8px 12px; border-radius: 4px; cursor: pointer;
+      padding: 8px 12px; border-radius: var(--sb-surface-radius); cursor: pointer;
       font-family: inherit; text-align: left;
     }
     #menu button:hover { background: #353535; }
     #menu .menu-hint { color: #888; font-size: 11px; margin: 14px 0 0; }
     #menu .menu-version { color: #555; font-size: 10px; margin: 10px 0 0; text-align: right; }
     #menu .inv-skill-list { list-style: none; padding: 0; margin: 4px 0 0 28px; }
-    #menu .inv-skill { padding: 5px 9px; margin: 4px 0; border-radius: 3px; background: #191919; border: 1px solid #2a2a2a; border-left-width: 2px; }
+    #menu .inv-skill { padding: 5px 9px; margin: 4px 0; border-radius: var(--sb-surface-radius); background: #191919; border: 1px solid #2a2a2a; border-left-width: 2px; }
     #menu .inv-skill.is-unlocked { border-left-color: #335433; }
     #menu .inv-skill.is-locked { border-left-color: #3a3a3a; opacity: 0.7; }
     #menu .inv-skill-head { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
     #menu .inv-skill-name { color: #ddd; }
     #menu .inv-skill-desc { display: block; color: #999; font-size: 10px; margin-top: 2px; }
-    #menu .inv-skill-tag { font-size: 9px; padding: 1px 6px; border-radius: 3px; letter-spacing: 1px; }
+    #menu .inv-skill-tag { font-size: 9px; padding: 1px 6px; border-radius: var(--sb-surface-radius); letter-spacing: 1px; }
     #menu .inv-skill-tag.is-unlocked { background: #2a5a2a; color: #d8f5d8; }
     #menu .inv-skill-tag.is-locked { background: #3a3a3a; color: #aaa; }
     #menu .menu-credits { font-size: 12px; line-height: 1.5; color: #ccc; margin: 0 0 10px; }
     #menu .menu-credits a { color: #9ab1ff; text-decoration: none; }
     #menu .menu-credits a:hover { text-decoration: underline; }
     #menu .inv-empty { color: #888; font-style: italic; margin: 0 0 12px; }
-    #menu .inv-equipped { background: #1d2440; border: 1px solid #303a60; border-radius: 4px; padding: 8px 12px; margin-bottom: 10px; font-size: 12px; color: #cfd6e8; }
+    #menu .inv-equipped { background: #1d2440; border: 1px solid #303a60; border-radius: var(--sb-surface-radius); padding: 8px 12px; margin-bottom: 10px; font-size: 12px; color: #cfd6e8; }
     #menu .inv-equipped > div { display: flex; align-items: center; gap: 8px; margin: 2px 0; }
     #menu .inv-equipped .inv-label { color: #8090b0; min-width: 60px; }
     #menu .inv-equipped em { color: #777; font-style: italic; }
     #menu .inv-equipped-default { color: #7a8aa8; font-size: 10px; }
-    #menu .inv-equipped button { background: #2a2a2a; color: #eee; border: 1px solid #444; padding: 2px 8px; border-radius: 3px; font-size: 10px; cursor: pointer; }
+    #menu .inv-equipped button { background: #2a2a2a; color: #eee; border: 1px solid #444; padding: 2px 8px; border-radius: var(--sb-surface-radius); font-size: 10px; cursor: pointer; }
     #menu .inv-list { list-style: none; padding: 0; margin: 0; max-height: 280px; overflow-y: auto; min-width: 340px; }
-    #menu .inv-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 4px 0; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: 3px; }
+    #menu .inv-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 4px 0; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: var(--sb-surface-radius); }
     #menu .inv-list .inv-name { flex: 1; font-size: 12px; }
     #menu .inv-list .inv-count { color: #aaa; font-size: 11px; min-width: 36px; text-align: right; }
     #menu .inv-list .inv-action { min-width: 70px; text-align: right; }
-    #menu .inv-list .inv-action button { background: #2a2a2a; color: #eee; border: 1px solid #444; padding: 3px 8px; border-radius: 3px; font-size: 11px; cursor: pointer; }
+    #menu .inv-list .inv-action button { background: #2a2a2a; color: #eee; border: 1px solid #444; padding: 3px 8px; border-radius: var(--sb-surface-radius); font-size: 11px; cursor: pointer; }
     #menu .inv-list .inv-action button:hover { background: #353535; }
     #menu .inv-equipped-tag { color: #b8c6ff; font-size: 10px; letter-spacing: 1px; }
     #menu .inv-player { margin: 8px 0 6px; font-size: 13px; color: #b8c6ff; letter-spacing: 1px; }
@@ -563,7 +563,7 @@ function injectStyles() {
     #menu .inv-slot-title { margin: 0 0 6px; font-size: 12px; color: #8090b0; letter-spacing: 1px; text-transform: uppercase; }
     #menu .inv-slot-list { list-style: none; padding: 0; margin: 0; }
     #menu .inv-slot-list li { margin: 4px 0; }
-    #menu .inv-slot-row { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 7px 10px; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: 3px; color: #eee; font: inherit; font-size: 12px; cursor: pointer; }
+    #menu .inv-slot-row { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 7px 10px; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: var(--sb-surface-radius); color: #eee; font: inherit; font-size: 12px; cursor: pointer; }
     #menu .inv-slot-row:hover { background: #292929; }
     #menu .inv-slot-row.is-active { background: #1d2440; border-color: #3a4a80; }
     #menu .inv-slot-row .inv-radio { color: #6678b0; }
@@ -571,12 +571,12 @@ function injectStyles() {
     #menu .inv-slot-row .inv-name { flex: 1; }
     #menu .inv-slot-row .inv-count { color: #aaa; font-size: 11px; min-width: 36px; text-align: right; }
     #menu .menu-controls-list { list-style: none; padding: 0; margin: 0 0 12px; min-width: 360px; }
-    #menu .menu-controls-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 4px 0; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: 3px; }
+    #menu .menu-controls-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 4px 0; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: var(--sb-surface-radius); }
     #menu .menu-controls-label { flex: 1; font-size: 12px; color: #ccc; }
     #menu .menu-controls-key { min-width: 96px; text-align: center !important; font-family: monospace; font-size: 11px; padding: 4px 8px !important; }
     #menu .menu-controls-key.capturing { background: #3a3a55; border-color: #5a5a88; color: #fff; }
     #menu .menu-tabs { display: flex; gap: 6px; margin: 0 0 10px; }
-    #menu .menu-tab { background: #1f1f1f; color: #aaa; border: 1px solid #333; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+    #menu .menu-tab { background: #1f1f1f; color: #aaa; border: 1px solid #333; padding: 6px 12px; border-radius: var(--sb-surface-radius); font-size: 12px; cursor: pointer; }
     #menu .menu-tab:hover { background: #2a2a2a; }
     #menu .menu-tab.active { background: #2a3a55; border-color: #4a5a88; color: #fff; }
   `;

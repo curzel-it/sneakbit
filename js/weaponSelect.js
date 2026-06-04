@@ -190,7 +190,7 @@ function injectStyles() {
       padding: 14px 18px;
       background: var(--sb-surface-bg, rgba(10,10,10,0.92));
       border: var(--sb-surface-border, 1px solid #444);
-      border-radius: var(--sb-surface-radius, 8px);
+      border-radius: var(--sb-surface-radius, 6px);
       color: var(--sb-text, #eee);
       font-family: var(--sb-font, monospace);
       pointer-events: none;
@@ -208,7 +208,7 @@ function injectStyles() {
       align-items: center;
       justify-content: center;
       border: 2px solid transparent;
-      border-radius: 6px;
+      border-radius: var(--sb-surface-radius);
       opacity: 0.55;
     }
     #weapon-switch .ws-cell.is-active {

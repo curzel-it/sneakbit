@@ -342,7 +342,7 @@ function injectStyles() {
       width: min(560px, 92vw); max-height: 88vh; display: flex; flex-direction: column;
       background: linear-gradient(180deg, #20242e 0%, #14161c 100%);
       border: 1px solid #3a4150; border-top-color: #525d70;
-      border-radius: 10px; box-shadow: 0 14px 40px rgba(0,0,0,.6);
+      border-radius: var(--sb-card-radius); box-shadow: 0 14px 40px rgba(0,0,0,.6);
       overflow: hidden;
     }
     #shop .shop-head {
@@ -357,7 +357,7 @@ function injectStyles() {
     #shop .shop-row {
       display: flex; align-items: center; gap: 12px; width: 100%;
       padding: 8px 12px; text-align: left; cursor: pointer;
-      background: #232a38; border: 1px solid #39425a; border-radius: 8px;
+      background: #232a38; border: 1px solid #39425a; border-radius: var(--sb-surface-radius);
       color: inherit; font-family: inherit; font-size: 15px;
     }
     #shop .shop-row:hover { background: #2c3650; }
@@ -368,7 +368,7 @@ function injectStyles() {
     #shop .shop-row.is-poor .shop-row-price { color: #d98a8a; }
     #shop .shop-desc {
       min-height: 2.4em; padding: 8px 12px; font-size: 13px; line-height: 1.4;
-      color: #c7d2e6; background: #1a1f29; border-radius: 8px; border: 1px solid #2c3444;
+      color: #c7d2e6; background: #1a1f29; border-radius: var(--sb-surface-radius); border: 1px solid #2c3444;
     }
     #shop .shop-screen[data-screen="detail"] { align-items: center; text-align: center; }
     #shop .shop-detail-icon { margin: 4px auto; }
@@ -382,7 +382,7 @@ function injectStyles() {
     #shop .shop-warn { color: #d98a8a; font-size: 13px; }
     #shop .shop-btn {
       padding: 9px 18px; min-width: 44px; min-height: 40px; cursor: pointer;
-      background: #2f3b55; border: 1px solid #4a5878; border-radius: 8px;
+      background: #2f3b55; border: 1px solid #4a5878; border-radius: var(--sb-surface-radius);
       color: #eef2ff; font-family: inherit; font-size: 15px; font-weight: 700;
     }
     #shop .shop-btn:hover:not(:disabled) { background: #3a486a; }

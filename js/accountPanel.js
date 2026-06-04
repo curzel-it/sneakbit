@@ -501,12 +501,12 @@ function injectStyles() {
     .account-card input.account-input {
       display: block; width: 100%; box-sizing: border-box;
       background: #111; color: var(--sb-text);
-      border: 1px solid #555; border-radius: 4px;
+      border: 1px solid #555; border-radius: var(--sb-surface-radius);
       padding: 8px 10px; margin: 6px 0; font-family: inherit; font-size: 13px;
     }
     .account-card button {
       background: #2a2a2a; color: var(--sb-text); border: 1px solid #444;
-      padding: 8px 12px; border-radius: 4px; cursor: pointer;
+      padding: 8px 12px; border-radius: var(--sb-surface-radius); cursor: pointer;
       font-family: inherit; font-size: 12px;
     }
     .account-card button:hover:not(:disabled) { background: #353535; }

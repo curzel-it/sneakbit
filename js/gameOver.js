@@ -203,7 +203,7 @@ function injectStyles() {
     #gameover .go-card {
       background: #1b0d0d;
       border: 1px solid #4a2424;
-      border-radius: 8px;
+      border-radius: var(--sb-card-radius);
       padding: 28px 32px;
       min-width: 280px;
       box-shadow: 0 18px 60px rgba(0,0,0,0.7);
@@ -213,7 +213,7 @@ function injectStyles() {
     #gameover .go-sub { color: #ad8a8a; margin: 0 0 22px; font-size: 12px; }
     #gameover button {
       background: #3a1a1a; color: #f1d4d4; border: 1px solid #5c2a2a;
-      padding: 10px 22px; border-radius: 4px; cursor: pointer;
+      padding: 10px 22px; border-radius: var(--sb-surface-radius); cursor: pointer;
       font-family: inherit; font-size: 13px; letter-spacing: 1px;
     }
     #gameover button:hover:enabled { background: #4d2222; }

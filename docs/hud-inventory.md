@@ -13,6 +13,7 @@ The **Z** column is the element's z-index (stacking order, low → high); blank 
 |---|---|---|---|---|
 | In-game HUD | Player HP bars | `#health-hud` · `healthHud.js` | 11 | Up to 4 cards (`P# HP X/Y`), per-player colour (P1 red, P2 cyan, P3 green, P4 amber). Top-left. Hides on death except P1 (kept for the game-over modal). |
 | In-game HUD | Ammo / kunai counter | `#ammo-hud` · `ammoHud.js` | 11 | Icon + `x#`. Active player's ammo in PvP, shared pool in co-op. Top-right; shifts left `76px` in touch mode to clear the menu button. |
+| In-game HUD | Coins counter | `#coin-hud` · `coinHud.js` | 11 | Coin icon + the hero's wallet balance (`wallet.js`, mirrors the ammo chip but reads coins). Top-centre. Hidden in Tower Defense (own gold HUD) and PvP (no coins). |
 | In-game HUD | Controls hint + zone/FPS | `#hud` (`#hud-controls`, `#hud-meta`) · `hud.js` |  | "WASD / arrows · Esc for menu" and "Zone #### · ## fps" (FPS line toggled in Settings). Top-left. |
 | In-game HUD | Interact hint | `#interact-hint` · `interact.js` |  | "Press E to talk", only when an interactable NPC is directly in front. Top-centre. |
 | Transient | Toast | `#toast` · `toast.js` | 14 | Pickups / hints, auto-dismiss (regular 1s, hint 2s, longHint 3s). Optional sprite icon, optional network broadcast. Top-centre. |
@@ -135,9 +136,10 @@ placed entity opens the **entity inspector** (`after_dialogue` behaviour buttons
 
 Worth addressing in a future HUD-layout pass:
 
-1. **Top-centre is contested.** Interact hint, toast, TD status bar and the
-   host-lagging overlay all anchor top-centre with independent hardcoded offsets and
-   no awareness of each other — they can physically overlap. No managed stack.
+1. **Top-centre is contested.** Coins counter, interact hint, toast, TD status bar
+   and the host-lagging overlay all anchor top-centre with independent hardcoded
+   offsets and no awareness of each other — they can physically overlap. No managed
+   stack.
 2. **Top-right collisions handled by magic number.** Ammo HUD, party chip and the
    touch menu button share the corner; touch mode hardcodes a `76px` shove on the
    ammo HUD to dodge the menu button.

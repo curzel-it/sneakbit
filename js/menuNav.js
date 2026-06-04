@@ -141,7 +141,7 @@ function ensureStyles() {
       outline: 2px solid #6af !important;
       outline-offset: 1px;
       box-shadow: 0 0 0 2px rgba(102,170,255,0.35) !important;
-      border-radius: 4px;
+      border-radius: var(--sb-surface-radius);
     }
     .nav-focused:is(button, .menu-tab) { background: #2f3b55 !important; }
   `;

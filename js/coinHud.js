@@ -11,7 +11,9 @@ import { isTowerDefenseMode, isPvp } from "./gameMode.js";
 import { COIN_SPECIES_ID } from "./coinDrops.js";
 import { el } from "./dom.js";
 
-const ICON_PIXELS = 24;
+// Match the ammo chip exactly (ammoHud.js) so the two top-of-screen counters
+// read as the same size: 28px icon, 6px/10px padding, 8px icon-to-text gap.
+const ICON_PIXELS = 28;
 
 let root = null;
 let iconCanvas = null;
@@ -80,8 +82,8 @@ function injectStyles() {
       transform: translateX(-50%);
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
+      gap: 8px;
+      padding: 6px 10px;
       background: var(--sb-surface-bg);
       border: var(--sb-surface-border);
       border-radius: var(--sb-surface-radius);

@@ -671,16 +671,16 @@ function injectStyles() {
     #map-editor .me-head { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
     #map-editor .me-head .me-hint { color: #888; font-size: 10px; flex: 1; }
     #map-editor .me-close { background: #2a2a2a; color: #eee; border: 1px solid #444;
-      padding: 2px 8px; border-radius: 3px; cursor: pointer; }
+      padding: 2px 8px; border-radius: var(--sb-surface-radius); cursor: pointer; }
     #map-editor .me-selection { background: #1f1f1f; border: 1px solid #333;
-      border-radius: 3px; padding: 6px 8px; margin-bottom: 8px; color: #d8d8d8; }
+      border-radius: var(--sb-surface-radius); padding: 6px 8px; margin-bottom: 8px; color: #d8d8d8; }
     #map-editor .me-section { margin-bottom: 10px; }
     #map-editor .me-section h4 { margin: 4px 0; font-size: 11px; color: #aaa;
       letter-spacing: 1px; text-transform: uppercase; }
     #map-editor .me-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
     #map-editor .me-cell {
       background: #1f1f1f; color: #ddd; border: 1px solid #2e2e2e;
-      border-radius: 3px; padding: 4px; cursor: pointer; font-size: 10px;
+      border-radius: var(--sb-surface-radius); padding: 4px; cursor: pointer; font-size: 10px;
       text-align: center; min-height: 28px; line-height: 1.1;
       overflow: hidden; text-overflow: ellipsis;
       font-family: inherit;

@@ -94,7 +94,7 @@ function injectStyles() {
     #message .msg-card {
       background: #15182a;
       border: 1px solid #2c3654;
-      border-radius: 8px;
+      border-radius: var(--sb-card-radius);
       padding: 26px 32px;
       max-width: min(560px, 86vw);
       box-shadow: 0 16px 48px rgba(0,0,0,0.6);
@@ -105,7 +105,7 @@ function injectStyles() {
     #message .msg-actions { text-align: center; }
     #message button {
       background: #1d2440; color: #e6ecff; border: 1px solid #303a60;
-      padding: 8px 22px; border-radius: 4px; cursor: pointer;
+      padding: 8px 22px; border-radius: var(--sb-surface-radius); cursor: pointer;
       font-family: inherit; font-size: 13px; letter-spacing: 1px;
     }
     #message button:hover:enabled { background: #2a345a; }

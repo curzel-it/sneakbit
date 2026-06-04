@@ -77,7 +77,7 @@ function buildOverlay() {
       zIndex: "30", color: "#eee", fontFamily: "monospace", textAlign: "center",
     },
     html: `
-    <div style="background:#181818;border:1px solid #333;border-radius:8px;padding:28px 32px;max-width:320px;">
+    <div style="background:#181818;border:1px solid #333;border-radius:var(--sb-card-radius);padding:28px 32px;max-width:320px;">
       <h1 style="margin:0 0 12px;font-size:16px;letter-spacing:1px;">Controller disconnected</h1>
       <p style="margin:0;color:#aaa;font-size:12px;line-height:1.6;">
         Reconnect your controller to continue,<br>or press any key to play on the keyboard.

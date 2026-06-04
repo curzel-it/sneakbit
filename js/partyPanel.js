@@ -707,7 +707,7 @@ function injectStyles() {
     .party-confirm-q { color: #e88; font-size: 12px; align-self: center; }
     .party-card button {
       background: #2a2a2a; color: #eee; border: 1px solid #444;
-      padding: 8px 12px; border-radius: 4px; cursor: pointer;
+      padding: 8px 12px; border-radius: var(--sb-surface-radius); cursor: pointer;
       font-family: inherit; font-size: 12px;
     }
     .party-card button:hover:not(:disabled):not(.party-disabled) { background: #353535; }
@@ -720,7 +720,7 @@ function injectStyles() {
     .party-card button.party-danger:hover { background: #4a2828; }
     .party-card input.party-code-input {
       flex: 1; min-width: 80px; background: #111; color: #eee;
-      border: 1px solid #555; border-radius: 4px;
+      border: 1px solid #555; border-radius: var(--sb-surface-radius);
       padding: 6px 10px; font-family: monospace; font-size: 14px;
       text-transform: uppercase; letter-spacing: 2px;
     }
@@ -728,13 +728,13 @@ function injectStyles() {
     .party-code-label { color: #888; font-size: 11px; margin-bottom: 4px; }
     .party-code {
       font-size: 28px; letter-spacing: 6px; padding: 8px;
-      background: #111; border: 1px dashed #555; border-radius: 4px;
+      background: #111; border: 1px dashed #555; border-radius: var(--sb-surface-radius);
     }
     .party-peer-list { list-style: none; padding: 0; margin: 4px 0 14px; }
     .party-peer {
       display: flex; align-items: center; gap: 8px;
       padding: 6px 10px; margin: 4px 0;
-      background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: 3px;
+      background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: var(--sb-surface-radius);
     }
     .party-peer-empty {
       padding: 8px 10px; color: #888; font-style: italic;

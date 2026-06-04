@@ -471,7 +471,7 @@ function injectStyles() {
       pointer-events: auto;
       width: 56px;
       height: 56px;
-      border-radius: 50%;
+      border-radius: var(--sb-surface-radius);
       background: var(--sb-surface-bg);
       color: var(--sb-text);
       border: var(--sb-surface-border);
@@ -520,7 +520,7 @@ function injectStyles() {
       pointer-events: none; white-space: nowrap;
       font-family: var(--sb-font, monospace); font-size: 12px; font-weight: bold;
       color: var(--sb-text); background: var(--sb-surface-bg);
-      border: var(--sb-surface-border); border-radius: 5px; padding: 3px 7px;
+      border: var(--sb-surface-border); border-radius: var(--sb-surface-radius); padding: 3px 7px;
       text-shadow: 0 1px 0 #000;
     }
     #touch-controls .touch-label:empty { display: none; }

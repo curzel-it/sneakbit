@@ -124,14 +124,14 @@ function injectStyles() {
     #entity-inspector .ei-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
     #entity-inspector .ei-head strong { flex: 1; }
     #entity-inspector .ei-close { background: #2a2a2a; color: #eee; border: 1px solid #444;
-      padding: 2px 8px; border-radius: 3px; cursor: pointer; font-family: inherit; }
+      padding: 2px 8px; border-radius: var(--sb-surface-radius); cursor: pointer; font-family: inherit; }
     #entity-inspector .ei-name { background: #1f1f1f; border: 1px solid #333;
-      border-radius: 3px; padding: 4px 6px; margin-bottom: 8px; color: #d8d8d8; }
+      border-radius: var(--sb-surface-radius); padding: 4px 6px; margin-bottom: 8px; color: #d8d8d8; }
     #entity-inspector .ei-field { display: flex; flex-direction: column; gap: 3px; margin-bottom: 6px; }
     #entity-inspector .ei-field span { color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
     #entity-inspector select {
       background: #1f1f1f; color: #eee; border: 1px solid #2e2e2e;
-      border-radius: 3px; padding: 4px; font-family: inherit; font-size: 11px;
+      border-radius: var(--sb-surface-radius); padding: 4px; font-family: inherit; font-size: 11px;
     }
     #entity-inspector .ei-hint { color: #888; font-size: 10px; line-height: 1.3; }
   `;

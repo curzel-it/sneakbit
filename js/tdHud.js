@@ -394,7 +394,7 @@ function injectStyles() {
     }
     #td-hud .td-bar-group { display: flex; align-items: center; gap: 10px; }
     #td-hud .td-bar-wave { font-weight: bold; letter-spacing: 1px; }
-    #td-hud .td-phase { padding: 1px 7px; border-radius: 3px; font-size: 11px; font-weight: bold; letter-spacing: 1px; }
+    #td-hud .td-phase { padding: 1px 7px; border-radius: var(--sb-surface-radius); font-size: 11px; font-weight: bold; letter-spacing: 1px; }
     #td-hud .td-phase.td-phase-build { color: #0d160f; background: #8fe6a0; }
     #td-hud .td-phase.td-phase-wave { color: #1a0d0d; background: #ff9b6b; }
     #td-hud .td-sep { color: #666; }
@@ -426,9 +426,9 @@ function injectStyles() {
     }
     #td-dock .td-prog {
       flex: 1 1 auto; height: 12px; min-width: 80px;
-      background: #15151c; border: 1px solid #33333f; border-radius: 6px; overflow: hidden;
+      background: #15151c; border: 1px solid #33333f; border-radius: var(--sb-surface-radius); overflow: hidden;
     }
-    #td-dock .td-prog-fill { height: 100%; width: 0%; border-radius: 5px; transition: width 0.18s linear; }
+    #td-dock .td-prog-fill { height: 100%; width: 0%; border-radius: var(--sb-surface-radius); transition: width 0.18s linear; }
     #td-dock .td-prog-fill.td-prog-time { background: linear-gradient(90deg, #ffb338, #ffd966); }
     #td-dock .td-prog-fill.td-prog-wave { background: linear-gradient(90deg, #4a9b5a, #8fe6a0); }
     #td-dock .td-start { white-space: nowrap; flex: 0 0 auto; }
@@ -444,7 +444,7 @@ function injectStyles() {
       display: flex; flex-direction: column; align-items: center; gap: 2px;
       padding: 5px 7px;
       background: #24242c; color: #eee; border: 1px solid #3a3a46;
-      border-radius: 5px; cursor: pointer; font-family: inherit;
+      border-radius: var(--sb-surface-radius); cursor: pointer; font-family: inherit;
     }
     .td-shop-item:hover:not(:disabled) { background: #30303c; border-color: #4a4a58; }
     .td-shop-item.td-selected {
@@ -453,7 +453,7 @@ function injectStyles() {
     .td-shop-item.td-disabled { opacity: 0.4; cursor: not-allowed; }
     .td-shop-icon {
       width: 30px; height: 30px; flex: 0 0 auto;
-      image-rendering: pixelated; background: #16161c; border-radius: 3px;
+      image-rendering: pixelated; background: #16161c; border-radius: var(--sb-surface-radius);
     }
     .td-shop-cost { font-size: 11px; font-weight: bold; color: #ffd966; white-space: nowrap; }
     .td-shop-cost .td-coin { color: #ffcf33; font-size: 9px; }
@@ -464,7 +464,7 @@ function injectStyles() {
 
     #td-dock .td-btn {
       background: #2a2a32; color: #eee; border: 1px solid #44444f;
-      padding: 7px 12px; border-radius: 4px; cursor: pointer;
+      padding: 7px 12px; border-radius: var(--sb-surface-radius); cursor: pointer;
       font-family: inherit; font-size: 12px;
     }
     #td-dock .td-btn:hover:not(:disabled) { background: #353541; }
@@ -494,7 +494,7 @@ function injectStyles() {
     #td-shop-dialog .td-row { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
     #td-shop-dialog .td-btn {
       background: #2a2a32; color: #eee; border: 1px solid #44444f;
-      padding: 9px 16px; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 13px;
+      padding: 9px 16px; border-radius: var(--sb-surface-radius); cursor: pointer; font-family: inherit; font-size: 13px;
     }
     #td-shop-dialog .td-btn:hover:not(:disabled) { background: #353541; }
     #td-shop-dialog .td-primary { background: #2a4a32; border-color: #3f6b4a; font-weight: bold; }
@@ -550,7 +550,7 @@ function injectStyles() {
     #td-gameover .td-actions { justify-content: center; margin-top: 18px; }
     #td-gameover .td-btn {
       background: #2a2a32; color: #eee; border: 1px solid #44444f;
-      padding: 8px 14px; border-radius: 4px; cursor: pointer;
+      padding: 8px 14px; border-radius: var(--sb-surface-radius); cursor: pointer;
       font-family: inherit; font-size: 12px;
     }
     #td-gameover .td-btn:hover { background: #353541; }
