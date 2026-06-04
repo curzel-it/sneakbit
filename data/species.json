@@ -4495,7 +4495,7 @@
     "is_invulnerable": true,
     "is_rigid": false,
     "lock_type": "None",
-    "name": "objects.name.ar15.bullet.x10",
+    "name": "objects.name.cannon.bullet.x10",
     "sprite_frame": {
       "h": 1,
       "w": 1,
