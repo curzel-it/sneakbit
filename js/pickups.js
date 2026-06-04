@@ -15,6 +15,8 @@ import { showToast } from "./toast.js";
 import { playSfx } from "./audio.js";
 import { getSpecies } from "./species.js";
 import { addAmmo, getAmmo } from "./inventory.js";
+import { addCoins } from "./wallet.js";
+import { COIN_SPECIES_ID } from "./coinDrops.js";
 import { getValue, setValue } from "./storage.js";
 import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import {
@@ -66,7 +68,10 @@ export function checkPickup(state) {
       triggerHint(e, /* persist */ true);
     } else {
       zone.entities.splice(i, 1);
-      if (e.id != null && !zone.ephemeralState) {
+      // Runtime loot (coins) carries `_ephemeral` and a throwaway negative id —
+      // never persist a collected flag for it (that key is for level-authored
+      // pickups, so they don't respawn on zone reload).
+      if (e.id != null && !e._ephemeral && !zone.ephemeralState) {
         setValue(`item_collected.${e.id}`, 1);
       }
       trigger(e, kind, picker);
@@ -104,6 +109,17 @@ function trigger(e, kind, picker) {
   }
   const playerIndex = picker?.index | 0;
   const sp = getSpecies(e.species_id);
+
+  // Coins: credit the picker's wallet and stop. No toast (you collect them by
+  // the dozen — it would spam), no ammo/weapon handling. In online co-op the
+  // host tells the picking guest to credit its own wallet via the `coins`
+  // event; the host's own pickup just credits index 0 locally.
+  if (e.species_id === COIN_SPECIES_ID) {
+    addCoins(1, playerIndex);
+    playSfx("keyCollected");
+    broadcastHostEvent("coins", { playerId: picker?.playerId ?? null, amount: 1 });
+    return;
+  }
 
   // PvP scavenging: weapon crates swap the picker's equipped ranged weapon;
   // ammo crates fill the matching caliber in the picker's per-player pool

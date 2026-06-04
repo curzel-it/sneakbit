@@ -30,6 +30,7 @@ loadSpeciesData([
 
 const combat = await import("../js/combat.js");
 const playerHealth = await import("../js/playerHealth.js");
+const { COIN_SPECIES_ID } = await import("../js/coinDrops.js");
 
 function makeZone() {
   // 20x20 all-walkable grass map, no constructions.
@@ -84,7 +85,13 @@ test("bullet damages and kills an overlapping monster, then despawns", () => {
   assert.equal(monster._dying, true, "killed monster is dying");
   // Age past the death lifespan (1.0s) → the fireball is removed.
   combat.tickCombat(zone, player, 1.1);
-  assert.equal(zone.entities.length, 0, "fireball removed after lifespan");
+  // The kill may scatter coin pickups (real-game loot, RNG); the monster's
+  // own fireball must be gone, and nothing other than coins may linger.
+  assert.ok(!zone.entities.includes(monster), "fireball removed after lifespan");
+  assert.ok(
+    zone.entities.every((e) => e.species_id === COIN_SPECIES_ID),
+    "only coin drops may remain in the zone",
+  );
 });
 
 test("point-blank bullet destroys a rigid barrel instead of being eaten by the wall check", () => {

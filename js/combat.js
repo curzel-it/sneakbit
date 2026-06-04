@@ -19,6 +19,7 @@ import { isCreativeMode } from "./creativeMode.js";
 import { getSettings } from "./settings.js";
 import { startDeathAnimation, tickDeathAnimations } from "./deathAnimation.js";
 import { isPvp } from "./gameMode.js";
+import { maybeDropCoin } from "./coinDrops.js";
 
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;
@@ -177,6 +178,9 @@ function resolveBullets(zone, players, dt) {
         // beat before tickDeathAnimations removes it. It's flagged `_dying`
         // so it stops blocking, fusing, attacking and taking further hits.
         startDeathAnimation(t);
+        // Real-game loot: scatter coins for the hero to collect (no-op in
+        // TD/PvP/creative, and only for monsters — see coinDrops.js).
+        maybeDropCoin(zone, t);
         consumed = true;
       } else {
         spawnDamageIndicator(zone, entityHittable(t, tsp), b.parent_id ?? b.id);

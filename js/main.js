@@ -37,6 +37,7 @@ import { pollGuestGamepad } from "./guestInputForwarder.js";
 import { installActiveInputDevice } from "./activeInputDevice.js";
 import { installControllerPresence, isControllerPaused } from "./controllerPresence.js";
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js";
+import { installCoinHud, updateCoinHud } from "./coinHud.js";
 import { tickMobs } from "./mobs.js";
 import { tickMonsterFusion } from "./monsters.js";
 import { tickMinionSpawning } from "./minions.js";
@@ -228,6 +229,7 @@ async function main() {
   // playerHealth.records[0] and the per-player ammoSet events keep the
   // inventory in lockstep, so the HUDs render the right numbers.
   installAmmoHud();
+  installCoinHud();
   installHealthHud();
   installActiveInputDevice();
   installControllerPresence();
@@ -490,6 +492,7 @@ async function main() {
       showFps: getSettings().showFps,
     });
     updateAmmoHud();
+    updateCoinHud();
   });
 }
 

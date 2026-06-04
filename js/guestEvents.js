@@ -8,6 +8,7 @@
 import { showToast } from "./toast.js";
 import { fadeOverlayOut, fadeOverlayIn, FADE_OVERLAY_MS } from "./transitions.js";
 import { addAmmo, getAmmo, removeAmmo } from "./inventory.js";
+import { addCoins } from "./wallet.js";
 import { showGameOver, hideGameOver, isGameOverOpen, showMatchResult } from "./gameOver.js";
 import { setGameMode, GAME_MODE } from "./gameMode.js";
 import { getSelfPlayerId, getNameForPlayerId } from "./onlineBootstrap.js";
@@ -91,6 +92,9 @@ export function dispatch(msg) {
     case "ammoSet":
       handleAmmoSet(msg);
       return;
+    case "coins":
+      handleCoins(msg);
+      return;
     case "death":
       handleDeath(msg);
       return;
@@ -168,6 +172,16 @@ function handlePickup(msg) {
     if (!sid || amount <= 0) continue;
     addAmmo(sid, amount, 0);
   }
+}
+
+// Mirror the host's coin credit into this guest's own wallet — but only when
+// the host says THIS guest is the picker (per-player wallets, like inventory).
+// Additive, so it's idempotency-stamped like `pickup`.
+function handleCoins(msg) {
+  if (msg?.playerId != null && msg.playerId !== getSelfPlayerId()) return;
+  if (alreadyApplied(msg?.eid)) return;
+  const amount = msg?.amount | 0;
+  if (amount > 0) addCoins(amount, 0);
 }
 
 // Authoritative absolute-count update from the host. Used for shoot

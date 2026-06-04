@@ -76,6 +76,10 @@ function decorate(raw) {
     base_speed: raw.base_speed ?? 0,
     hp: raw.hp ?? 100,
     dps: raw.dps ?? 0,
+    // Coin economy: chance to drop coins on death and how many (real game
+    // only; coinDrops.js gates on entity_type === CloseCombatMonster).
+    coin_drop_chance: raw.coin_drop_chance ?? 0.5,
+    coin_drop_amount: raw.coin_drop_amount ?? 1,
     movement_directions: raw.movement_directions ?? "None",
     melee_attacks_hero: !!raw.melee_attacks_hero,
     supports_bullet_boomerang: !!raw.supports_bullet_boomerang,

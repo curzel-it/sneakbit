@@ -605,6 +605,26 @@
   },
   {
     "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2010,
+    "inventory_texture_offset": [
+      11,
+      5
+    ],
+    "is_rigid": false,
+    "name": "objects.name.coin",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 0,
+      "y": 18
+    },
+    "sprite_number_of_frames": 6,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
     "entity_type": "Teleporter",
     "id": 1019,
     "inventory_texture_offset": [
@@ -1178,6 +1198,8 @@
   },
   {
     "base_speed": 2.5,
+    "coin_drop_amount": 2,
+    "coin_drop_chance": 0.6,
     "dps": 170.0,
     "entity_type": "CloseCombatMonster",
     "hp": 200,
@@ -1203,6 +1225,8 @@
   },
   {
     "base_speed": 2.75,
+    "coin_drop_amount": 3,
+    "coin_drop_chance": 0.7,
     "dps": 190.0,
     "entity_type": "CloseCombatMonster",
     "hp": 500,
@@ -1228,6 +1252,8 @@
   },
   {
     "base_speed": 3.05,
+    "coin_drop_amount": 5,
+    "coin_drop_chance": 0.8,
     "dps": 210.0,
     "entity_type": "CloseCombatMonster",
     "hp": 900,
@@ -1253,6 +1279,8 @@
   },
   {
     "base_speed": 3.4,
+    "coin_drop_amount": 6,
+    "coin_drop_chance": 0.9,
     "dps": 230.0,
     "entity_type": "CloseCombatMonster",
     "hp": 1100,
@@ -1280,6 +1308,8 @@
     "base_speed": 1.4,
     "bullet_lifespan": -420.0,
     "bullet_species_id": 4009,
+    "coin_drop_amount": 20,
+    "coin_drop_chance": 1.0,
     "cooldown_after_use": 1.0,
     "dps": 170.0,
     "entity_type": "CloseCombatMonster",
