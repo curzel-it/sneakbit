@@ -14,8 +14,11 @@ const {
   getMirrorPlayers,
   getMirrorPlayerById,
   isMirrorReady,
+  refreshMirrorEntities,
   INTERP_DELAY_MS,
 } = await import("../js/mirrorWorld.js");
+
+const { loadSpeciesData } = await import("../js/species.js");
 
 function makeFakeZone(id) {
   return { id, rows: 10, cols: 10, entities: [] };
@@ -164,6 +167,39 @@ test("two deltas for the same player produce an interpolated position", async ()
   const p = getMirrorPlayerById("p_h", 1015 + INTERP_DELAY_MS);
   assert.ok(p);
   assert.ok(p.x > 0 && p.x < 10, `expected interpolated x in (0,10), got ${p.x}`);
+  reset();
+});
+
+test("a pushed pushable slides between tiles instead of snapping", async () => {
+  // The host commits the destination tile instantly and renders a local
+  // slide that never reaches the wire, so a moved pushable arrives as a
+  // single tile-jump delta. The guest must reproduce the slide over a fixed
+  // SLIDE_DURATION (0.22 s) rather than teleporting to the committed tile.
+  reset();
+  loadSpeciesData([{ id: 90, entity_type: "PushableObject", sprite_sheet_id: 1 }]);
+  await applySnapshot({
+    op: "snapshot", zoneId: 1001,
+    players: [],
+    entities: [{ id: 42, species_id: 90, frame: { x: 1, y: 1, w: 1, h: 1 } }],
+  }, { at: 1000 });
+  // Single one-tile push: frame.x 1 → 2, committed in one delta.
+  handleDelta({
+    op: "delta", zoneId: 1001,
+    players: [],
+    entities: [{ id: 42, species_id: 90, frame: { x: 2, y: 1, w: 1, h: 1 } }],
+  }, { at: 1030 });
+  // Mid-slide: slide.at=1030, SLIDE_DURATION_MS=220. refreshMirrorEntities
+  // back-dates by INTERP_DELAY_MS, so at=1030+60+110 → renderTime=1140 →
+  // st≈0.5 → frame.x≈1.5.
+  refreshMirrorEntities(1030 + INTERP_DELAY_MS + 110);
+  const mid = getMirrorZone().entities.find((e) => e.id === 42);
+  assert.ok(mid, "pushable must be present");
+  assert.ok(mid.frame.x > 1 && mid.frame.x < 2,
+    `expected mid-slide x in (1,2), got ${mid.frame.x} (snapping bug regressed)`);
+  // Past the slide window: settled exactly on the committed tile.
+  refreshMirrorEntities(1030 + INTERP_DELAY_MS + 1000);
+  const done = getMirrorZone().entities.find((e) => e.id === 42);
+  assert.equal(done.frame.x, 2, `expected settled x=2, got ${done.frame.x}`);
   reset();
 });
 
