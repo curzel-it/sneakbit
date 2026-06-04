@@ -1194,7 +1194,9 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1023,
-    "z_index": 15
+    "z_index": 15,
+    "coin_drop_chance": 0.5,
+    "coin_drop_amount": 1
   },
   {
     "base_speed": 2.5,
@@ -1359,7 +1361,9 @@
     },
     "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1023,
-    "z_index": 15
+    "z_index": 15,
+    "coin_drop_chance": 0.5,
+    "coin_drop_amount": 1
   },
   {
     "base_speed": 1.0,
