@@ -46,8 +46,8 @@ test("coins: species loads, HUD mounts and tracks the wallet, no exceptions", as
   );
   assert.equal(
     await evalExpr(s, "document.querySelector('#coin-hud span').textContent"),
-    "0",
-    "wallet starts at 0",
+    "50",
+    "a fresh save starts with the 50-coin starting purse",
   );
 
   // — Species data: the coin + tuned monster drops loaded from JSON ————————
@@ -71,15 +71,19 @@ test("coins: species loads, HUD mounts and tracks the wallet, no exceptions", as
   assert.equal(drop.miss, 0, "strawberry drops nothing on a failed roll");
 
   // — Wallet → HUD: crediting coins ticks the counter live ————————————————
-  await evalExpr(s, `(async () => {
-    const { addCoins } = await import('./js/wallet.js');
+  // Delta-based so it survives the starting-purse seed: read the balance,
+  // credit 5, expect the HUD to show before+5.
+  const expected = await evalExpr(s, `(async () => {
+    const { addCoins, getCoins } = await import('./js/wallet.js');
+    const before = getCoins(0);
     addCoins(5, 0);
+    return String(before + 5);
   })()`);
   const label = await waitFor(s, `(() => {
     const t = document.querySelector('#coin-hud span').textContent;
-    return t === '5' ? t : null;
+    return t === ${JSON.stringify(expected)} ? t : null;
   })()`);
-  assert.equal(label, "5", "HUD reflects the credited balance");
+  assert.equal(label, expected, "HUD reflects the credited balance (+5)");
 
   // — Full loop: a forced drop, then walking onto the coin credits the wallet —
   // Exercises the real combat→pickup seam (coinDrops.maybeDropCoin spawning an
