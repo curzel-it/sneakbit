@@ -5,10 +5,7 @@ const cache = new Map();
 
 const SOURCES = {
   heroes: "./assets/heroes.png",
-  tilesBiome1: "./assets/tiles_biome_raw1.png",
-  tilesBiome2: "./assets/tiles_biome_raw2.png",
-  tilesBiome3: "./assets/tiles_biome_raw3.png",
-  tilesBiome4: "./assets/tiles_biome_raw4.png",
+  tilesBiome: "./assets/tiles_biome.png",
   tilesConstructions: "./assets/tiles_constructions_raw.png",
   buildings: "./assets/buildings.png",
   humanoids_1x1: "./assets/humanoids_1x1.png",

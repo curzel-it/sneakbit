@@ -1,7 +1,8 @@
-// Composes the runtime biome sprite sheet from the four raw frames.
-// The raw sheets ship as 5×17 tile grids (one column for the base tile +
-// four rotation-source columns for the directional borders); the composed
-// sheet has 256×(17·4) tiles ready for direct blitting.
+// Composes the runtime biome sprite sheet from the raw source sheet.
+// The raw sheet packs the four animation frames side by side, each a
+// 5-column tile grid (one column for the base tile + four rotation-source
+// columns for the directional borders); the composed sheet has 256×(17·4)
+// tiles ready for direct blitting.
 //
 // Layout (in tile units):
 //   composed.width  = NUM_BIOMES * NUM_COMBOS + 1   (= 256)
@@ -40,6 +41,10 @@ let composed = null;
 
 const CACHE_KEY = "sneakbit.biomeSheet.v2";
 
+// Each animation frame is a 5-column block (base + 4 rotation sources) packed
+// horizontally in the raw sheet, so frame f starts at column f·FRAME_COLS.
+const FRAME_COLS = 5;
+
 export async function composeBiomeSheet() {
   if (composed) return composed;
 
@@ -49,12 +54,7 @@ export async function composeBiomeSheet() {
     return composed;
   }
 
-  const rawSheets = [
-    getSprite("tilesBiome1"),
-    getSprite("tilesBiome2"),
-    getSprite("tilesBiome3"),
-    getSprite("tilesBiome4"),
-  ];
+  const src = getSprite("tilesBiome");
 
   const cols = NUM_BIOMES * NUM_COMBOS + 1;
   const rows = NUM_BIOMES * NUM_BIOME_FRAMES;
@@ -65,20 +65,20 @@ export async function composeBiomeSheet() {
   ctx.imageSmoothingEnabled = false;
 
   for (let f = 0; f < NUM_BIOME_FRAMES; f++) {
-    const src = rawSheets[f];
+    const frameCol = f * FRAME_COLS;
     for (let b = 0; b < NUM_BIOMES; b++) {
       const dstRow = b + f * NUM_BIOMES;
       // Column 0 = pure base biome tile.
-      blitCell(ctx, src, 0, b, 0, dstRow);
+      blitCell(ctx, src, frameCol, b, 0, dstRow);
 
       // Columns 1+ = base composited with neighbor border layer.
       for (let n = 0; n < NUM_BIOMES; n++) {
         for (let i = 0; i < NUM_COMBOS; i++) {
           const dstCol = n * NUM_COMBOS + i + 1;
-          blitCell(ctx, src, 0, b, dstCol, dstRow);
+          blitCell(ctx, src, frameCol, b, dstCol, dstRow);
           const [srcCol, rotations] = COMBO_SOURCE[i];
           for (const deg of rotations) {
-            blitRotatedCell(ctx, src, srcCol, n, dstCol, dstRow, deg);
+            blitRotatedCell(ctx, src, frameCol + srcCol, n, dstCol, dstRow, deg);
           }
         }
       }
