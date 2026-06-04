@@ -285,26 +285,21 @@ function startStep(player, dir, zone) {
   if (!canEnter(toX, toY, zone, dir)) return;
 
   // Pushable carry-back: if we're standing ON a pushable (canEnter only
-  // lets us walk onto a stuck one), shove the rock TWO tiles in the move
-  // direction so it lands one tile beyond our destination. The rock pops
-  // out of the dead end ahead of the player, separating from us; on the
-  // next step it's in front and the canEnter → pushOneTile path takes over
-  // for normal pushing. If a wall sits two tiles out, fall back to a
-  // single-tile drag so the rock at least follows us out of cramped spots
-  // instead of getting stranded.
+  // lets us walk onto a stuck one), slide the rock ONE tile in the move
+  // direction so it pops out of the dead end into the tile ahead of us,
+  // and hold our own tile this step. The rock separates in front; on the
+  // next step it's a normal pushable and the canEnter → pushOneTile path
+  // takes over. Stepping the rock one tile at a time (instead of shoving
+  // it two tiles while we also move) reads much more naturally — the rock
+  // tracks the player's pace out of cramped spots. If the tile ahead is
+  // blocked for the rock we fall through and move normally (e.g. stepping
+  // off the rock onto a teleporter the rock can't follow onto).
   const standingOn = findPushableAt(zone, player.tileX, player.tileY);
-  if (standingOn) {
-    const aheadX = toX + dx;
-    const aheadY = toY + dy;
-    if (canPushableEnter(zone, standingOn, aheadX, aheadY)) {
-      startSlide(standingOn, dx * 2, dy * 2);
-      standingOn.frame.x = aheadX;
-      standingOn.frame.y = aheadY;
-    } else if (canPushableEnter(zone, standingOn, toX, toY)) {
-      startSlide(standingOn, dx, dy);
-      standingOn.frame.x = toX;
-      standingOn.frame.y = toY;
-    }
+  if (standingOn && canPushableEnter(zone, standingOn, toX, toY)) {
+    startSlide(standingOn, dx, dy);
+    standingOn.frame.x = toX;
+    standingOn.frame.y = toY;
+    return;
   }
 
   player.step = {

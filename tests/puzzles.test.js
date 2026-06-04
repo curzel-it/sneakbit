@@ -123,21 +123,23 @@ test("pushable: dead-end carry-back keeps following the player on every step", (
   assert.equal(player.tileX, 6, "player should walk onto the stuck rock");
   assert.equal(rock.frame.x, 6, "rock pinned against the wall");
 
-  // Now walk back. First step pops the rock two tiles ahead so it escapes
-  // the dead end — then subsequent steps are normal pushes with the rock
-  // staying one tile in front of the player.
+  // Now walk back. The first step off the stuck rock holds the player in
+  // place and slides the rock a single tile into the tile ahead, popping it
+  // out of the dead end one tile at a time instead of jumping two. After
+  // that the rock sits in front of the player and subsequent steps are
+  // normal pushes.
   player.direction = "left";
   stepUntilIdle("left");
+  assert.equal(player.tileX, 6, "player holds its tile while the rock pops out");
+  assert.equal(rock.frame.x, 5, "rock slides one tile ahead, escaping the dead end");
+
+  stepUntilIdle("left");
   assert.equal(player.tileX, 5);
-  assert.equal(rock.frame.x, 4, "rock pops two tiles ahead when escaping the dead end");
+  assert.equal(rock.frame.x, 4, "rock is now pushed normally one tile ahead");
 
   stepUntilIdle("left");
   assert.equal(player.tileX, 4);
-  assert.equal(rock.frame.x, 3, "rock keeps being pushed normally on the next step");
-
-  stepUntilIdle("left");
-  assert.equal(player.tileX, 3);
-  assert.equal(rock.frame.x, 2, "rock continues to be pushed one tile ahead of the player");
+  assert.equal(rock.frame.x, 3, "rock continues to be pushed one tile ahead of the player");
 });
 
 test("pushable: blocks player as a rigid entity", () => {
