@@ -10,6 +10,7 @@ import {
   isDying,
   DEATH_SPRITE,
 } from "../js/deathAnimation.js";
+import { getValue, setValue } from "../js/storage.js";
 
 test("startDeathAnimation centres a 1×1 fireball and flags the entity", () => {
   // A 1×2 monster occupying tiles (5,5)-(5,6); centre is (5.5, 6).
@@ -51,6 +52,52 @@ test("the default call still uses the fireball and no onRemove", () => {
   startDeathAnimation(e);
   assert.deepEqual(e._deathSprite, DEATH_SPRITE);
   assert.equal(e._onDeathRemove, null);
+});
+
+test("a killed level entity is marked item_collected on removal (gates kill dialogues)", () => {
+  // The haunted-pub monster: a static, positive-id zone entity. Once its
+  // fireball burns out, item_collected.<id> must be set so the empty seat's
+  // reward dialogue unlocks and the monster stays gone on reload.
+  const monster = { id: 11767738, species_id: 4004, frame: { x: 6, y: 2, w: 1, h: 2 } };
+  setValue(`item_collected.${monster.id}`, 0);
+  startDeathAnimation(monster);
+  const zone = { id: 11199907, entities: [monster] };
+  tickDeathAnimations(zone, 5);
+  assert.ok(!zone.entities.includes(monster), "monster removed");
+  assert.equal(getValue(`item_collected.${monster.id}`), 1, "collected flag persisted");
+});
+
+test("runtime spawns and ephemeral zones don't write item_collected", () => {
+  // Minions/coins use negative ids; coins carry _ephemeral; bullets _spawned.
+  // None should pollute the save with a collected flag, and an ephemeral zone
+  // never persists removals at all (mirrors Rust mark_as_collected_if_needed).
+  const minion = { id: -1000001, species_id: 4004, frame: { x: 1, y: 1, w: 1, h: 1 } };
+  const coin = { id: -42, _ephemeral: true, species_id: 1, frame: { x: 2, y: 2, w: 1, h: 1 } };
+  startDeathAnimation(minion);
+  startDeathAnimation(coin);
+  const zone = { entities: [minion, coin] };
+  tickDeathAnimations(zone, 5);
+  assert.equal(getValue(`item_collected.${minion.id}`), null, "negative-id minion not flagged");
+  assert.equal(getValue(`item_collected.${coin.id}`), null, "ephemeral coin not flagged");
+
+  const authored = { id: 555, species_id: 4004, frame: { x: 3, y: 3, w: 1, h: 1 } };
+  startDeathAnimation(authored);
+  const ephemeralZone = { ephemeralState: true, entities: [authored] };
+  tickDeathAnimations(ephemeralZone, 5);
+  assert.equal(getValue(`item_collected.${authored.id}`), null, "ephemeral zone persists nothing");
+});
+
+test("an entity with _onDeathRemove keeps its own removal hook (no double-mark)", () => {
+  // afterDialogue's VanishSmoke path persists via onRemove; the generic
+  // markDeadCollected must not run for it.
+  const e = { id: 777, frame: { x: 0, y: 0, w: 1, h: 1 } };
+  setValue(`item_collected.${e.id}`, 0);
+  let removed = 0;
+  startDeathAnimation(e, { onRemove: () => removed++ });
+  const zone = { entities: [e] };
+  tickDeathAnimations(zone, 5);
+  assert.equal(removed, 1, "onRemove fired");
+  assert.equal(getValue(`item_collected.${e.id}`), 0, "generic mark skipped when onRemove present");
 });
 
 test("tickDeathAnimations removes the entity after its lifespan expires", () => {

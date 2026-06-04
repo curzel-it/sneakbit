@@ -10,6 +10,7 @@
 // and minions.js. The renderer reads DEATH_SPRITE for the fireball art.
 
 import { ANIMATIONS_FPS } from "./constants.js";
+import { setValue } from "./storage.js";
 
 // Rust: `remaining_lifespan = 10.0 / ANIMATIONS_FPS` → 1.0s at 10fps.
 const DEATH_LIFESPAN = 10 / ANIMATIONS_FPS;
@@ -59,7 +60,24 @@ export function tickDeathAnimations(zone, dt) {
     e._deathLifespan -= dt;
     if (e._deathLifespan <= 0) {
       if (typeof e._onDeathRemove === "function") e._onDeathRemove();
+      else markDeadCollected(zone, e);
       ents.splice(i, 1);
     }
   }
+}
+
+// Persist a killed entity's removal under `item_collected.<id>`, mirroring
+// Rust world.rs::mark_as_collected_if_needed (called from remove_entity_at_index).
+// This keeps destroyed monsters/barrels from respawning on zone reload AND
+// lets kill-gated dialogues detect the death — e.g. the haunted-pub empty
+// seat's reward only unlocks once `item_collected.<monsterId>` is set.
+// Runtime spawns (coins carry _ephemeral, minions/coins use negative ids,
+// player bullets carry _spawned) are skipped so they never pollute the save.
+// Entities with an _onDeathRemove hook persist their own state, so they take
+// the branch above instead.
+function markDeadCollected(zone, e) {
+  if (zone?.ephemeralState) return;
+  if (e._ephemeral || e._spawned) return;
+  if (!(e.id > 0)) return;
+  setValue(`item_collected.${e.id}`, 1);
 }

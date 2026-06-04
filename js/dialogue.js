@@ -322,17 +322,33 @@ function close() {
 // display_conditions resolve correctly. The reward-collected flag is
 // global (one-shot per dialogue text), but the ammo lands in the
 // initiating player's bucket.
-function handleReward(d, playerIndex) {
+export function handleReward(d, playerIndex) {
   if (d.text) setValue(`dialogue.answer.${d.text}`, 1);
   if (!d.reward) return;
   const rewardKey = `dialogue.reward.${d.text}`;
   if (getValue(rewardKey) === 1) return;
   setValue(rewardKey, 1);
-  addAmmo(d.reward, 1, playerIndex | 0);
+  grantReward(d.reward, playerIndex | 0);
   const sp = getSpecies(d.reward);
   const name = sp ? tr(sp.name) : String(d.reward);
   const template = tr("dialogue.reward_received");
   showToast(template.replace("%s", name), "longHint");
+}
+
+// Drop a reward species into the player's inventory, expanding bundles into
+// their contents — a "kunai.x10" bundle (7001) grants 10 kunai (7000), not a
+// single un-usable bundle entry. Mirrors Rust storage.rs::increment_inventory_count,
+// which recurses through bundle_contents, and matches the floor-pickup path in
+// pickups.js.
+function grantReward(speciesId, playerIndex) {
+  const sp = getSpecies(speciesId);
+  if (sp?.bundle_contents?.length) {
+    const counts = new Map();
+    for (const cid of sp.bundle_contents) counts.set(cid, (counts.get(cid) || 0) + 1);
+    for (const [cid, n] of counts) addAmmo(cid, n, playerIndex);
+  } else {
+    addAmmo(speciesId, 1, playerIndex);
+  }
 }
 
 // Resolve the first dialogue from an entity that matches the current

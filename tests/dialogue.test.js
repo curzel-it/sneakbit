@@ -11,14 +11,22 @@ loadSpeciesData([
   { id: 1, entity_type: "Bullet", sprite_sheet_id: 1014,
     dps: 0, base_speed: 0, name: "test.item",
     sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
+  // Kunai (ammo) + a "kunai.x10" bundle, mirroring data/species.json 7000/7001.
+  { id: 7000, entity_type: "Bullet", name: "objects.name.kunai",
+    sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
+  { id: 7001, entity_type: "Bundle", name: "objects.name.kunai.x10",
+    bundle_contents: [7000, 7000, 7000, 7000, 7000, 7000, 7000, 7000, 7000, 7000],
+    sprite_frame: { x: 0, y: 0, w: 1, h: 1 } },
 ]);
 loadStringsData({
   "test.item": "Magic Apple",
+  "objects.name.kunai.x10": "Kunai x10",
   "dialogue.reward_received": "You received `%s`!",
 });
 
-const { resolveEntityDialogue } = await import("../js/dialogue.js");
+const { resolveEntityDialogue, handleReward } = await import("../js/dialogue.js");
 const storage = await import("../js/storage.js");
+const inventory = await import("../js/inventory.js");
 
 test("resolveEntityDialogue: null on empty entity", () => {
   storage._resetStorageForTesting();
@@ -63,6 +71,32 @@ test("resolveEntityDialogue: expected=0 matches an unset key", () => {
   assert.equal(resolveEntityDialogue(entity).text, "intro");
   storage.setValue("quest.x", 1);
   assert.equal(resolveEntityDialogue(entity), null);
+});
+
+test("handleReward: a bundle reward expands into its contents (10 kunai, not 1 bundle)", () => {
+  storage._resetStorageForTesting();
+  // The haunted-pub empty seat grants reward 7001 (kunai.x10). The player must
+  // end up with 10 usable kunai (7000), not a single un-shootable bundle entry.
+  const before = inventory.getAmmo(7000, 0);
+  handleReward({ text: "lore.012.hunted_pub.he_always_comes_back", reward: 7001 }, 0);
+  assert.equal(inventory.getAmmo(7000, 0), before + 10, "10 kunai granted");
+  assert.equal(inventory.getAmmo(7001, 0), 0, "no raw bundle in inventory");
+});
+
+test("handleReward: the reward is one-time per dialogue text", () => {
+  storage._resetStorageForTesting();
+  const text = "lore.012.hunted_pub.he_always_comes_back";
+  handleReward({ text, reward: 7001 }, 0);
+  const after = inventory.getAmmo(7000, 0);
+  // Talking again must not re-grant — mirrors Rust has_dialogue_reward_been_collected.
+  handleReward({ text, reward: 7001 }, 0);
+  assert.equal(inventory.getAmmo(7000, 0), after, "no second payout");
+});
+
+test("handleReward: marks the dialogue read so downstream gates resolve", () => {
+  storage._resetStorageForTesting();
+  handleReward({ text: "some.dialogue" }, 0);
+  assert.equal(storage.getValue("dialogue.answer.some.dialogue"), 1);
 });
 
 test("resolveEntityDialogue: progression chain via dialogue.answer keys", () => {
