@@ -12,12 +12,23 @@ import { getValue, setValue } from "./storage.js";
 import { isCoopMode } from "./coopMode.js";
 
 const MAX_PLAYERS = 4;
+// Every fresh save starts the hero with a small purse so the zone-1001 shop is
+// usable without grinding first. Granted once via seedStartingCoins (see below).
+const STARTING_COINS = 50;
 // Lazy in-memory mirror; null means "not loaded from storage yet".
 const balances = new Array(MAX_PLAYERS).fill(null);
 const listeners = new Set();
 
 function key(playerIndex) {
   return `player.${playerIndex | 0}.coins`;
+}
+
+// Marks that this slot has already received its starting purse. Needed because
+// addCoins persists `null` at a zero balance, so "spent down to 0" is otherwise
+// indistinguishable from "never seeded" — without this flag a broke player would
+// be re-granted STARTING_COINS on every reload.
+function seededKey(playerIndex) {
+  return `player.${playerIndex | 0}.coins.seeded`;
 }
 
 // Local co-op shares one save slot — both local heroes use player.0. Network
@@ -44,6 +55,20 @@ export function addCoins(amount = 1, playerIndex = 0) {
   balances[idx] = next;
   setValue(key(idx), next === 0 ? null : next);
   for (const fn of listeners) fn(next, idx);
+}
+
+// Grant the one-time starting purse if this slot hasn't been seeded yet. Called
+// once at boot (main.js). Kept out of load() so the read path stays
+// side-effect-free and the wallet tests still see a fresh balance of 0. A New
+// game wipes localStorage (flag included), so the next boot re-seeds; an
+// existing pre-currency save gets a one-time top-up on its next boot.
+export function seedStartingCoins(playerIndex = 0) {
+  const idx = effectiveIndex(playerIndex);
+  if (getValue(seededKey(idx))) return;
+  setValue(seededKey(idx), 1);
+  balances[idx] = STARTING_COINS;
+  setValue(key(idx), STARTING_COINS);
+  for (const fn of listeners) fn(STARTING_COINS, idx);
 }
 
 export function onWalletChange(fn) {

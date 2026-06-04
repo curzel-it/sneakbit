@@ -6,11 +6,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadSpeciesData, getSpecies } from "../js/species.js";
-import { rollCoinDrop } from "../js/coinDrops.js";
+import { rollCoinDrop, coinRenderOffset, COIN_SPECIES_ID } from "../js/coinDrops.js";
 import {
   getCoins,
   addCoins,
   clearWallet,
+  seedStartingCoins,
   _resetWalletForTesting,
 } from "../js/wallet.js";
 import { _resetStorageForTesting } from "../js/storage.js";
@@ -100,4 +101,49 @@ test("wallet: clearWallet zeroes a player's balance", () => {
   addCoins(5, 0);
   clearWallet(0);
   assert.equal(getCoins(0), 0);
+});
+
+test("wallet: seedStartingCoins grants the starting purse once", () => {
+  _resetStorageForTesting();
+  _resetWalletForTesting();
+  assert.equal(getCoins(0), 0);
+  seedStartingCoins(0);
+  assert.equal(getCoins(0), 50);
+});
+
+test("wallet: seedStartingCoins is idempotent — no second grant", () => {
+  _resetStorageForTesting();
+  _resetWalletForTesting();
+  seedStartingCoins(0);
+  seedStartingCoins(0);
+  assert.equal(getCoins(0), 50);
+});
+
+test("wallet: seedStartingCoins doesn't re-grant after spending to zero", () => {
+  _resetStorageForTesting();
+  _resetWalletForTesting();
+  seedStartingCoins(0);
+  addCoins(-50, 0); // spend it all
+  assert.equal(getCoins(0), 0);
+  // Drop the in-memory mirror to simulate a reload, then re-seed: the persisted
+  // seed flag must keep the broke player at 0.
+  _resetWalletForTesting();
+  seedStartingCoins(0);
+  assert.equal(getCoins(0), 0);
+});
+
+test("coinRenderOffset: null for non-coins, stable & distinct for coins", () => {
+  assert.equal(coinRenderOffset(null), null);
+  assert.equal(coinRenderOffset({ species_id: 4006, id: -1 }), null);
+
+  const a = coinRenderOffset({ species_id: COIN_SPECIES_ID, id: -2_000_000 });
+  const b = coinRenderOffset({ species_id: COIN_SPECIES_ID, id: -2_000_001 });
+  // Stable: same id → same offset.
+  assert.deepEqual(coinRenderOffset({ species_id: COIN_SPECIES_ID, id: -2_000_000 }), a);
+  // Distinct: consecutive coin ids don't render on top of each other.
+  assert.notDeepEqual(a, b);
+  // Bounded to a sub-tile range.
+  for (const o of [a, b]) {
+    assert.ok(Math.abs(o.x) <= 0.25 && Math.abs(o.y) <= 0.2);
+  }
 });

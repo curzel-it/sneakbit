@@ -38,6 +38,7 @@ import { installActiveInputDevice } from "./activeInputDevice.js";
 import { installControllerPresence, isControllerPaused } from "./controllerPresence.js";
 import { installAmmoHud, updateAmmoHud } from "./ammoHud.js";
 import { installCoinHud, updateCoinHud } from "./coinHud.js";
+import { seedStartingCoins } from "./wallet.js";
 import { tickMobs } from "./mobs.js";
 import { tickMonsterFusion } from "./monsters.js";
 import { tickMinionSpawning } from "./minions.js";
@@ -230,6 +231,9 @@ async function main() {
   // inventory in lockstep, so the HUDs render the right numbers.
   installAmmoHud();
   installCoinHud();
+  // Grant the one-time starting purse before the HUD's first paint so a fresh
+  // save reads 50 rather than flashing 0. Idempotent on a seeded save.
+  seedStartingCoins();
   installHealthHud();
   installActiveInputDevice();
   installControllerPresence();
