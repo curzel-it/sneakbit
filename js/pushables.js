@@ -8,7 +8,7 @@ import { getSpecies } from "./species.js";
 import { isWalkable, isEntityBlocked } from "./zone.js";
 import { isCreativeMode } from "./creativeMode.js";
 
-const SLIDE_DURATION = 0.22; // matches player STEP_DURATION in player.js
+export const SLIDE_DURATION = 0.22; // matches player STEP_DURATION in player.js
 
 const DIR_DELTA = {
   up:    [ 0, -1],

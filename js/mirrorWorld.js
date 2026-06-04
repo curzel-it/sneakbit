@@ -16,6 +16,7 @@ import { buildZone } from "./zone.js";
 import { setupCutscenes } from "./cutscenes.js";
 import { evictZoneCache } from "./zoneCache.js";
 import { GAME_FRAME_SCHEMA } from "./net.js";
+import { isPushable, SLIDE_DURATION } from "./pushables.js";
 
 // Render remote players/entities this far in the past so interpolation
 // always has two real samples to blend between (the host broadcasts at
@@ -25,6 +26,11 @@ import { GAME_FRAME_SCHEMA } from "./net.js";
 // which is RTT-independent.
 export const INTERP_DELAY_MS = 60;
 const STALE_MS = 300;
+// Guests reproduce the host's pushable slide (pushables.js _slide) over this
+// fixed window. That render-only state never hits the wire, so the generic
+// span-lerp below would snap the rock to its committed tile — see ingestEntity
+// / interpolateEntity.
+const SLIDE_DURATION_MS = SLIDE_DURATION * 1000;
 const DEAD_MS = 5000;
 // Auto-resync: after the mirror has been stale for this long, ask the
 // host for a fresh full snapshot. STALE_MS already gates the toast UI;
@@ -311,11 +317,24 @@ function ingestEntity(e, t) {
   if (!e || e.id == null) return;
   const prev = entitySnaps.get(e.id);
   const merged = mergeEntity(prev?.curr, e);
+  // Pushables commit their destination tile on the host instantly; the smooth
+  // motion is a render-only offset that's never serialized. Detect the tile
+  // change here and stamp a fixed-duration slide so interpolateEntity can
+  // reproduce the host's glide. Carry an in-flight slide across non-move
+  // deltas (e.g. an hp tick); otherwise drop it.
+  let slide = prev?.slide && prev.slide.at + SLIDE_DURATION_MS > t ? prev.slide : null;
+  const pf = prev?.curr?.frame;
+  if (pf && merged.frame && isPushable(merged)) {
+    if ((merged.frame.x ?? pf.x) !== pf.x || (merged.frame.y ?? pf.y) !== pf.y) {
+      slide = { fromX: pf.x, fromY: pf.y, at: t };
+    }
+  }
   entitySnaps.set(e.id, {
     prev: prev ? prev.curr : merged,
     curr: merged,
     prevAt: prev ? prev.currAt : t,
     currAt: t,
+    slide,
   });
 }
 
@@ -366,9 +385,19 @@ export function refreshMirrorEntities(at = nowMs()) {
   zone.entities = list;
 }
 
-function interpolateEntity({ prev, curr, prevAt, currAt }, renderTime) {
+function interpolateEntity({ prev, curr, prevAt, currAt, slide }, renderTime) {
   const out = { ...curr };
   if (curr.frame) out.frame = { ...curr.frame };
+  // Pushable slide: glide from the previous tile to the committed one over a
+  // fixed SLIDE_DURATION_MS, matching the host's render. Independent of the
+  // irregular 20 Hz delta cadence the span-lerp below relies on.
+  if (slide && curr.frame) {
+    let st = (renderTime - slide.at) / SLIDE_DURATION_MS;
+    if (st < 0) st = 0; if (st > 1) st = 1;
+    out.frame.x = slide.fromX + ((curr.frame.x ?? slide.fromX) - slide.fromX) * st;
+    out.frame.y = slide.fromY + ((curr.frame.y ?? slide.fromY) - slide.fromY) * st;
+    return out;
+  }
   if (!prev || !prev.frame || !curr.frame) return out;
   const span = currAt - prevAt;
   if (span <= 0) return out;
