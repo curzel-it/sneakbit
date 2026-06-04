@@ -91,6 +91,19 @@ export function installAutoZoom(canvas, camera, hud, onApply) {
   const apply = () => applyAutoZoom(canvas, camera, hud, onApply);
   activeApply = apply;
   apply();
+  // Boot race: the synchronous apply() above can run before the browser has
+  // committed the final layout, so `visualViewport.width` / `devicePixelRatio`
+  // are momentarily stale (a known quirk right after load). Since the viewport
+  // size is already final, no `resize` event ever fires to correct it — which
+  // is why the symptom (black bars / missing tiles on the right + bottom) only
+  // cleared after a *manual* window resize. Re-measuring once layout has
+  // settled fixes it. applyAutoZoom is idempotent (it only touches the canvas
+  // when a dimension actually differs), so these extra passes are free no-ops
+  // in the common case where the first measurement was already correct.
+  if (typeof requestAnimationFrame === "function") {
+    requestAnimationFrame(() => requestAnimationFrame(apply));
+  }
+  if (typeof window !== "undefined") window.addEventListener("load", apply);
   window.addEventListener("resize", apply);
   window.addEventListener("orientationchange", apply);
   // Mobile address bar / soft keyboard animations don't always trigger

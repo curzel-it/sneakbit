@@ -26,6 +26,27 @@ const MAX_KNOB_DIST = 26;    // how far the knob travels from the centre.
 const MAX_FINGER_DIST = 70;  // beyond this the stick centre follows the finger
 const DEADZONE = 16;         // no direction until the thumb leaves this radius
 
+// Both joystick sprites now live in the combined hud.png sheet. Regions are
+// in source px (16px tile units): the lever (red ball) at x1 y1 w3 h3 and the
+// base (dark ring) at x4 y1 w4 h4. We crop them out with background-position /
+// background-size rather than shipping two standalone PNGs.
+const HUD_SHEET = "./assets/hud.png";
+const HUD_SHEET_SIZE = 200;  // hud.png is 200x200
+const BASE_SPRITE = { x: 64, y: 16, w: 64, h: 64 };
+const LEVER_SPRITE = { x: 16, y: 16, w: 48, h: 48 };
+
+// CSS to draw one sprite-sheet region scaled to fit a display box of the given
+// size. Scales the whole sheet so the region's width/height fill the box, then
+// offsets so the region's top-left lands at the box origin.
+function spriteCrop(sprite, dispW, dispH) {
+  const sx = dispW / sprite.w;
+  const sy = dispH / sprite.h;
+  return `
+      background-image: url("${HUD_SHEET}");
+      background-size: ${HUD_SHEET_SIZE * sx}px ${HUD_SHEET_SIZE * sy}px;
+      background-position: ${-sprite.x * sx}px ${-sprite.y * sy}px;`;
+}
+
 // Pure direction mapping: dominant axis wins, with a dead zone around the
 // centre. Screen space, so +y points down. On an exact diagonal tie the
 // horizontal axis wins. Returns "up" | "down" | "left" | "right" | null.
@@ -161,9 +182,8 @@ function injectStyles() {
       pointer-events: auto;
       touch-action: none;
     }
-    /* Pixel-art sprites ported straight from the original game
-       (ios/android joystick.png + joystick_lever.png): a dark base ring
-       and a red lever ball. image-rendering: pixelated keeps the chunky
+    /* Pixel-art sprites cropped from the combined hud.png sheet: a dark base
+       ring and a red lever ball. image-rendering: pixelated keeps the chunky
        pixels crisp when scaled up to finger size, matching the rest of
        the game's art. No border/background fill — the sprites carry their
        own outline and shading. */
@@ -174,20 +194,17 @@ function injectStyles() {
       pointer-events: none;
       touch-action: none;
       background-repeat: no-repeat;
-      background-size: 100% 100%;
       image-rendering: pixelated;
       image-rendering: crisp-edges;
     }
     #touch-controls .touch-joystick-base {
       width: ${BASE_RADIUS * 2}px;
-      height: ${BASE_RADIUS * 2}px;
-      background-image: url("./assets/joystick.png");
+      height: ${BASE_RADIUS * 2}px;${spriteCrop(BASE_SPRITE, BASE_RADIUS * 2, BASE_RADIUS * 2)}
       opacity: 0.85;
     }
     #touch-controls .touch-joystick-knob {
       width: ${KNOB_RADIUS * 2}px;
-      height: ${KNOB_RADIUS * 2}px;
-      background-image: url("./assets/joystick_lever.png");
+      height: ${KNOB_RADIUS * 2}px;${spriteCrop(LEVER_SPRITE, KNOB_RADIUS * 2, KNOB_RADIUS * 2)}
     }
   `;
   document.head.appendChild(style);

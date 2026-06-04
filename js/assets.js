@@ -6,7 +6,7 @@ const cache = new Map();
 const SOURCES = {
   heroes: "./assets/heroes.png",
   tilesBiome: "./assets/tiles_biome.png",
-  tilesConstructions: "./assets/tiles_constructions_raw.png",
+  tilesConstructions: "./assets/tiles_constructions.png",
   buildings: "./assets/buildings.png",
   humanoids_1x1: "./assets/humanoids_1x1.png",
   humanoids_1x2: "./assets/humanoids_1x2.png",

@@ -496,6 +496,7 @@ async function main() {
       zoneId: state.zone.id,
       fps: 1 / dt,
       showFps: getSettings().showFps,
+      player: state.player,
     });
     updateAmmoHud();
     updateCoinHud();
@@ -678,6 +679,7 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
     zoneId: mZone.id,
     fps: 1 / dt,
     showFps: getSettings().showFps,
+    player: self,
   });
   // The chip's count is driven by onInventoryChange, but the icon is
   // lazy-painted on the first updateAmmoHud after the inventory sprite

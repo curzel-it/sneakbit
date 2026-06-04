@@ -7,6 +7,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadSpeciesData } from "../js/species.js";
 import { updateVisibleEntities } from "../js/zoneVisibility.js";
+import { setValue } from "../js/storage.js";
 
 loadSpeciesData([
   { id: 4004, entity_type: "CloseCombatMonster", sprite_sheet_id: 1023,
@@ -91,6 +92,33 @@ test("empty viewport array still keeps always-visible and spawned entities", () 
   assert.equal(plate._visible, true);
   assert.equal(bullet._visible, true);
   assert.equal(mob._visible, false);
+});
+
+// A monster killed in a previous run persists item_collected.<id>=1, then
+// reloads on the death-respawn travelTo. It's invisible (and non-colliding)
+// but must not be simulated either — otherwise it wanders on-screen and deals
+// melee damage from nothing. Regression: tick gate now honors shouldBeVisible.
+test("a collected entity inside the viewport is not simulated", () => {
+  const live    = { id: 5001, species_id: 4004, frame: { x: 10, y: 10, w: 1, h: 2 } };
+  const dead    = { id: 5002, species_id: 4004, frame: { x: 12, y: 10, w: 1, h: 2 } };
+  setValue("item_collected.5002", 1);
+  const zone = { entities: [live, dead] };
+  updateVisibleEntities(zone, camera(0, 0));
+  assert.equal(live._visible, true);
+  assert.equal(dead._visible, false, "collected monster must not tick");
+  assert.deepEqual(zone.visibleEntities, [live]);
+  setValue("item_collected.5002", null);
+});
+
+// Even Tower Defense's { all: true } must not resurrect a collected entity:
+// it forces off-screen simulation, not visibility of things the player killed.
+test("{ all: true } still excludes collected entities", () => {
+  const dead = { id: 5003, species_id: 4004, frame: { x: 10, y: 10, w: 1, h: 2 } };
+  setValue("item_collected.5003", 1);
+  const zone = { entities: [dead] };
+  updateVisibleEntities(zone, camera(0, 0), { all: true });
+  assert.equal(dead._visible, false);
+  setValue("item_collected.5003", null);
 });
 
 // Tower Defense passes { all: true }: the whole board simulates even though

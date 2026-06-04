@@ -8,6 +8,7 @@
 // even when they leave the viewport for a few frames before despawning.
 
 import { getSpecies } from "./species.js";
+import { shouldBeVisible } from "./entityVisibility.js";
 
 const ALWAYS_VISIBLE_TYPES = new Set([
   "Hero",
@@ -41,7 +42,19 @@ export function updateVisibleEntities(zone, cameras, { all = false } = {}) {
   for (let i = 0; i < ents.length; i++) {
     const e = ents[i];
     let visible;
-    if (all || e._spawned) {
+    if (e._spawned) {
+      // Runtime spawns (bullets, coins, minions) carry no collected/display
+      // flags and must keep ticking even off-screen, so they're always live.
+      visible = true;
+    } else if (!shouldBeVisible(e)) {
+      // An entity the player can't see must not be simulated either. Mirrors
+      // Rust world.insert_entity rejecting !should_be_visible entities at load,
+      // so a monster killed in a previous run (item_collected.<id>=1) that
+      // reloads on death-respawn no longer wanders and deals melee damage
+      // while invisible. Re-checked every frame so a display-condition entity
+      // still wakes up the moment its flag flips it visible.
+      visible = false;
+    } else if (all) {
       visible = true;
     } else {
       const sp = getSpecies(e.species_id);

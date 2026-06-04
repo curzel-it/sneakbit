@@ -608,7 +608,7 @@
     "entity_type": "PickableObject",
     "id": 2010,
     "inventory_texture_offset": [
-      11,
+      12,
       5
     ],
     "is_rigid": false,
@@ -616,10 +616,10 @@
     "sprite_frame": {
       "h": 1,
       "w": 1,
-      "x": 0,
-      "y": 18
+      "x": 9,
+      "y": 7
     },
-    "sprite_number_of_frames": 6,
+    "sprite_number_of_frames": 12,
     "sprite_sheet_id": 1012,
     "z_index": 14
   },

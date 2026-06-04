@@ -14,6 +14,7 @@ import { glyphForAction } from "./inputGlyphs.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { isDying } from "./deathAnimation.js";
+import { isWalkable } from "./zone.js";
 import { el } from "./dom.js";
 
 const DIR_DELTA = {
@@ -169,10 +170,28 @@ function makeHint() {
   return node;
 }
 
-function findFacingEntity(zone, player) {
+// How far the interact ray reaches past the player. The tile directly in
+// front is always probed; each further tile is only reached if the tile
+// before it is non-walkable — i.e. you can talk to a clerk across a counter
+// but not across open floor. Mirrors the Rust core's "reach over the
+// counter" behaviour (is_around_and_pointed_at over a blocked tile).
+const MAX_REACH = 3;
+
+export function findFacingEntity(zone, player) {
   const [dx, dy] = DIR_DELTA[player.direction] ?? [0, 1];
-  const tx = player.tileX + dx;
-  const ty = player.tileY + dy;
+  for (let step = 1; step <= MAX_REACH; step++) {
+    const tx = player.tileX + dx * step;
+    const ty = player.tileY + dy * step;
+    const hit = dialogueEntityAt(zone, tx, ty);
+    if (hit) return hit;
+    // Stop reaching once we hit walkable ground: an empty floor tile means
+    // there's nothing to reach over, so a clerk further down isn't in range.
+    if (isWalkable(zone, tx, ty)) break;
+  }
+  return null;
+}
+
+function dialogueEntityAt(zone, tx, ty) {
   for (const e of zone.entities) {
     if (!e.frame) continue;
     if (!shouldBeVisible(e)) continue;
