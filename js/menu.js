@@ -9,7 +9,6 @@ import { getSettings, saveSettings } from "./settings.js";
 import { playSfx } from "./audio.js";
 import { APP_VERSION } from "./constants.js";
 import { clearProgress } from "./save.js";
-import { getSkills } from "./skills.js";
 import { renderInventoryInto } from "./inventoryScreen.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { matchesAction } from "./keyBindings.js";
@@ -48,7 +47,7 @@ function isAnotherModalOpen() {
 
 let root = null;
 let open = false;
-let screen = "pause"; // "pause" | "settings" | "skills" | "credits" | "inventory" | "controls" | "creative"
+let screen = "pause"; // "pause" | "settings" | "credits" | "inventory" | "controls" | "creative"
 
 // Optional getter the host wires in at install time. Provides access to
 // the live game state (rawZone + current zone id) without coupling the
@@ -77,7 +76,6 @@ export function installMenu(stateGetter) {
         <button id="menu-open-multiplayer">Multiplayer</button>
         <button id="menu-open-account">Account</button>
         <button id="menu-open-inventory">Inventory &amp; Equipment</button>
-        <button id="menu-open-skills">Skills</button>
         <button id="menu-open-settings">Settings</button>
         <button id="menu-open-creative" data-creative-only>Creative tools…</button>
         <button id="menu-open-credits">Credits</button>
@@ -151,16 +149,6 @@ export function installMenu(stateGetter) {
       <div class="menu-row menu-controls">
         <button id="menu-controls-reset">Reset to defaults</button>
         <button id="menu-controls-back">Back</button>
-      </div>
-    </div>
-    <div class="menu-card" data-screen="skills">
-      <h1>Skills</h1>
-      <ul class="menu-skills" id="menu-skill-list"></ul>
-      <p class="menu-hint">
-        Earn skills from the three ninja questlines (red / black / blue).
-      </p>
-      <div class="menu-row menu-controls">
-        <button id="menu-skills-back">Back</button>
       </div>
     </div>
     <div class="menu-card" data-screen="inventory">
@@ -339,35 +327,12 @@ function showScreen(next) {
     card.style.display = card.dataset.screen === next ? "block" : "none";
   });
   if (next === "settings") syncSettingsWidgets();
-  if (next === "skills") syncSkillsWidgets();
   if (next === "inventory") renderInventoryInto(root.querySelector("#menu-inventory-body"));
   if (next === "controls") renderControlsList();
   if (next !== "controls") resetCaptures();
   // Highlight the first item of the now-visible screen for keyboard /
   // controller navigation.
   if (open) focusFirstIn(activeCard);
-}
-
-const SKILL_LABELS = [
-  { id: "piercing",  name: "Piercing Kunai",  desc: "Kunai deals 2× damage." },
-  { id: "boomerang", name: "Boomerang Kunai", desc: "Kunai bounces back on wall/kill." },
-  { id: "catcher",   name: "Bullet Catcher",  desc: "Caught bullets refund into ammo." },
-];
-
-function syncSkillsWidgets() {
-  const list = root.querySelector("#menu-skill-list");
-  if (!list) return;
-  const skills = getSkills();
-  list.replaceChildren(...SKILL_LABELS.map((s) => {
-    const unlocked = !!skills[s.id];
-    return el("li", { class: unlocked ? "on" : "off" }, [
-      el("div", { class: "menu-skill-head" }, [
-        `${s.name} `,
-        el("span", { class: `menu-skill-tag ${unlocked ? "on" : "off"}`, text: unlocked ? "UNLOCKED" : "LOCKED" }),
-      ]),
-      el("div", { class: "menu-skill-desc", text: s.desc }),
-    ]);
-  }));
 }
 
 function bindWidgets() {
@@ -405,7 +370,6 @@ function bindWidgets() {
     onFullscreenChange(syncFullscreenLabel);
     syncFullscreenLabel();
   }
-  root.querySelector("#menu-open-skills").addEventListener("click", () => showScreen("skills"));
   root.querySelector("#menu-open-credits").addEventListener("click", () => showScreen("credits"));
   root.querySelector("#menu-open-creative").addEventListener("click", () => showScreen("creative"));
   root.querySelector("#menu-open-inventory").addEventListener("click", () => showScreen("inventory"));
@@ -414,7 +378,6 @@ function bindWidgets() {
   root.querySelector("#menu-controls-back").addEventListener("click", () => showScreen("settings"));
   // The Key Bindings screen's own controls (device/player tabs, reset) are
   // wired by initKeyBindingsScreen().
-  root.querySelector("#menu-skills-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-credits-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-inventory-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-creative-back").addEventListener("click", () => showScreen("pause"));
@@ -566,15 +529,16 @@ function injectStyles() {
     #menu button:hover { background: #353535; }
     #menu .menu-hint { color: #888; font-size: 11px; margin: 14px 0 0; }
     #menu .menu-version { color: #555; font-size: 10px; margin: 10px 0 0; text-align: right; }
-    #menu .menu-skills { list-style: none; padding: 0; margin: 0 0 12px; min-width: 320px; }
-    #menu .menu-skills li { padding: 8px 10px; margin: 6px 0; border-radius: 4px; background: #1f1f1f; border: 1px solid #2e2e2e; }
-    #menu .menu-skills li.on  { background: #1d2a1d; border-color: #335433; }
-    #menu .menu-skills li.off { opacity: 0.75; }
-    #menu .menu-skill-head { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-    #menu .menu-skill-desc { color: #aaa; font-size: 11px; margin-top: 2px; }
-    #menu .menu-skill-tag { font-size: 10px; padding: 1px 6px; border-radius: 3px; letter-spacing: 1px; }
-    #menu .menu-skill-tag.on  { background: #2a5a2a; color: #d8f5d8; }
-    #menu .menu-skill-tag.off { background: #3a3a3a; color: #aaa; }
+    #menu .inv-skill-list { list-style: none; padding: 0; margin: 4px 0 0 28px; }
+    #menu .inv-skill { padding: 5px 9px; margin: 4px 0; border-radius: 3px; background: #191919; border: 1px solid #2a2a2a; border-left-width: 2px; }
+    #menu .inv-skill.is-unlocked { border-left-color: #335433; }
+    #menu .inv-skill.is-locked { border-left-color: #3a3a3a; opacity: 0.7; }
+    #menu .inv-skill-head { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+    #menu .inv-skill-name { color: #ddd; }
+    #menu .inv-skill-desc { display: block; color: #999; font-size: 10px; margin-top: 2px; }
+    #menu .inv-skill-tag { font-size: 9px; padding: 1px 6px; border-radius: 3px; letter-spacing: 1px; }
+    #menu .inv-skill-tag.is-unlocked { background: #2a5a2a; color: #d8f5d8; }
+    #menu .inv-skill-tag.is-locked { background: #3a3a3a; color: #aaa; }
     #menu .menu-credits { font-size: 12px; line-height: 1.5; color: #ccc; margin: 0 0 10px; }
     #menu .menu-credits a { color: #9ab1ff; text-decoration: none; }
     #menu .menu-credits a:hover { text-decoration: underline; }

@@ -133,6 +133,22 @@ test("devtools override pins skill on regardless of dialogue state", async () =>
   assert.equal(skills.hasBoomerangSkill(), false);
 });
 
+test("skillsForWeapon maps the kunai launcher to its three passives", () => {
+  resetAllSkills();
+  skills.setSkill("piercing", true);
+  const kunai = skills.skillsForWeapon(1160); // DEFAULT_RANGED_WEAPON_ID
+  assert.equal(kunai.length, 3);
+  assert.deepEqual(kunai.map((s) => s.id), ["piercing", "boomerang", "catcher"]);
+  const piercing = kunai.find((s) => s.id === "piercing");
+  assert.equal(piercing.unlocked, true);
+  assert.equal(piercing.name, "Piercing Kunai");
+  assert.equal(kunai.find((s) => s.id === "boomerang").unlocked, false);
+});
+
+test("skillsForWeapon returns [] for a weapon with no skills", () => {
+  assert.deepEqual(skills.skillsForWeapon(9999), []);
+});
+
 test("bounced bullet on player without catcher skill just despawns", () => {
   resetAllSkills();
   inventory.clearInventory();

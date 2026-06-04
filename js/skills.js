@@ -90,6 +90,35 @@ export function getSkills() {
   };
 }
 
+// Display metadata for each skill. The inventory screen renders these
+// under the weapon they modify (see WEAPON_SKILLS below).
+export const SKILL_INFO = {
+  piercing:  { name: "Piercing Kunai",  desc: "Kunai deals 2× damage." },
+  boomerang: { name: "Boomerang Kunai", desc: "Kunai bounces back on wall/kill." },
+  catcher:   { name: "Bullet Catcher",  desc: "Caught bullets refund into ammo." },
+};
+
+// Which skills belong to which weapon. Today every skill is a kunai
+// launcher passive (id 1160 = equipment.DEFAULT_RANGED_WEAPON_ID); a future
+// sword skill would map to its melee weapon id and surface under Melee.
+const WEAPON_SKILLS = {
+  1160: ["piercing", "boomerang", "catcher"],
+};
+
+// The skills attached to a weapon, with live unlocked state, ready to
+// render. Returns [] for weapons that have no skills.
+export function skillsForWeapon(weaponId) {
+  const ids = WEAPON_SKILLS[weaponId];
+  if (!ids) return [];
+  const unlocked = getSkills();
+  return ids.map((id) => ({
+    id,
+    name: SKILL_INFO[id].name,
+    desc: SKILL_INFO[id].desc,
+    unlocked: !!unlocked[id],
+  }));
+}
+
 export function onSkillsChange(fn) {
   listeners.add(fn);
   return () => listeners.delete(fn);

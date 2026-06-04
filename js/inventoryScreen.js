@@ -22,6 +22,7 @@ import {
 } from "./equipment.js";
 import { snapshotInventory, onInventoryChange } from "./inventory.js";
 import { weaponsInSlot } from "./weaponSlots.js";
+import { skillsForWeapon, onSkillsChange } from "./skills.js";
 import { isCoopMode } from "./coopMode.js";
 
 let unsubscribers = [];
@@ -36,6 +37,7 @@ export function renderInventoryInto(host) {
   const rerender = () => { if (host.isConnected) draw(host); else teardown(); };
   unsubscribers.push(onEquipmentChange(rerender));
   unsubscribers.push(onInventoryChange(rerender));
+  unsubscribers.push(onSkillsChange(rerender));
 }
 
 function teardown() {
@@ -81,6 +83,7 @@ function slotPanelHtml(title, slot, playerIndex, withUnarmed) {
       ammo: slot === SLOT_RANGED ? (e.ammo | 0) : null,
       attrs: `data-equip="${e.id}" data-slot="${slot}" data-player="${playerIndex | 0}"`,
       raw: true,
+      extra: skillsHtml(e.id),
     }));
   }
 
@@ -90,7 +93,7 @@ function slotPanelHtml(title, slot, playerIndex, withUnarmed) {
   </div>`;
 }
 
-function rowHtml({ active, name, ammo = null, attrs, raw = false }) {
+function rowHtml({ active, name, ammo = null, attrs, raw = false, extra = "" }) {
   const nameHtml = raw ? name : escapeHtml(name);
   const ammoHtml = ammo != null ? `<span class="inv-count">x${ammo}</span>` : "";
   return `<li>
@@ -99,7 +102,27 @@ function rowHtml({ active, name, ammo = null, attrs, raw = false }) {
       <span class="inv-name">${nameHtml}</span>
       ${ammoHtml}
     </button>
+    ${extra}
   </li>`;
+}
+
+// The weapon's unlockable skills, rendered as a nested locked/unlocked
+// list under its row. Empty string for weapons with no skills.
+function skillsHtml(weaponId) {
+  const skills = skillsForWeapon(weaponId);
+  if (skills.length === 0) return "";
+  const items = skills.map((s) => {
+    const cls = s.unlocked ? "is-unlocked" : "is-locked";
+    const tag = s.unlocked ? "UNLOCKED" : "LOCKED";
+    return `<li class="inv-skill ${cls}">
+      <span class="inv-skill-head">
+        <span class="inv-skill-name">${escapeHtml(s.name)}</span>
+        <span class="inv-skill-tag ${cls}">${tag}</span>
+      </span>
+      <span class="inv-skill-desc">${escapeHtml(s.desc)}</span>
+    </li>`;
+  }).join("");
+  return `<ul class="inv-skill-list">${items}</ul>`;
 }
 
 // Non-weapon pickups — weapons live in the slot panels above.
