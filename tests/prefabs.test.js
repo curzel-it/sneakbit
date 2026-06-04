@@ -134,6 +134,14 @@ test("shop: interior has counter + library construction blocks + clerk NPC", () 
   assert.ok(clerk);
   assert.equal(clerk.frame.y, 1);
   assert.equal(clerk.frame.h, 2);
+  // Clerk greets (so interact detects it) and carries a default stock.
+  assert.equal(clerk.dialogues[0].text, "shop.greeting");
+  assert.ok(Array.isArray(clerk.shop_stock) && clerk.shop_stock.length > 0);
+  // Stock entries are independent copies, not shared references.
+  const other = tryBuildingPrefab(1070, SOURCE, 0, 0).interiorZones[0]
+    .entities.find((e) => e.species_id === 3008);
+  assert.notEqual(clerk.shop_stock[0], other.shop_stock[0]);
+  assert.deepEqual(clerk.shop_stock[0], other.shop_stock[0]);
 });
 
 test("non-Building species returns null (NPCs, items, etc.)", () => {

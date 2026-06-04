@@ -46,6 +46,22 @@ const HOUSE_IDS       = new Set([1002, 1003, 1004, 1084, 1086, 1087, 1129]);
 const TWO_FLOOR_IDS   = new Set([1005, 1006, 1007, 1085]);
 const SHOP_IDS        = new Set([1070, 1071, 1072]);
 
+// Default goods a prefab-spawned shop sells: ammo bundles (stackable) plus
+// one-of-a-kind weapons, gated purely by price. Shipped zone data can
+// override a clerk's shop_stock to tailor a shop. Item ids match data:
+// 7001 kunai x10, 1176 .223 x10, 1173 .223 x100, 1174 cannonball x100,
+// 1164 sword, 1172 shield, 1162 AR-15, 1168 cannon.
+const DEFAULT_SHOP_STOCK = [
+  { item: 7001, price: 10, stackable: true },
+  { item: 1176, price: 30, stackable: true },
+  { item: 1173, price: 250, stackable: true },
+  { item: 1174, price: 400, stackable: true },
+  { item: 1164, price: 99 },
+  { item: 1172, price: 150 },
+  { item: 1162, price: 450 },
+  { item: 1168, price: 999 },
+];
+
 // Editor-allocated zone ids must stay within int32 because js/storage.js
 // (saveProgress → setValue → `n | 0`) round-trips numeric values through
 // int32. We pick a base well above any shipped id (shipped tops out near
@@ -241,8 +257,12 @@ function shopBuilding(sp, sourceZoneId, tileX, tileY) {
     [1,9],[1,10],[2,9],[2,10],
   ]) setChar(cons, r, c, CONS_LIBRARY);
 
+  // The clerk greets, then the greeting closing opens the buy screen
+  // (interact.js). A default stock so a freshly-prefabbed shop works out of
+  // the box; shipped zone data can override shop_stock per shop.
   const clerk = entity(SPECIES_NPC_SHOP_CLERK, 6, 1, 1, 2);
-  clerk.dialogues = [];
+  clerk.dialogues = [{ text: "shop.greeting", key: "always", expected_value: 0, reward: null }];
+  clerk.shop_stock = DEFAULT_SHOP_STOCK.map((e) => ({ ...e }));
   interior.entities.push(clerk);
 
   const building = buildingEntity(sp, tileX, tileY);

@@ -171,7 +171,14 @@
       "after_dialogue": "Nothing",
       "demands_attention": false,
       "destination": null,
-      "dialogues": [],
+      "dialogues": [
+        {
+          "text": "shop.greeting",
+          "key": "always",
+          "expected_value": 0,
+          "reward": null
+        }
+      ],
       "direction": "Down",
       "display_conditions": [],
       "frame": {
@@ -183,6 +190,16 @@
       "id": 12900010,
       "is_consumable": false,
       "lock_type": "None",
+      "shop_stock": [
+        { "item": 7001, "price": 10, "stackable": true },
+        { "item": 1176, "price": 30, "stackable": true },
+        { "item": 1173, "price": 250, "stackable": true },
+        { "item": 1174, "price": 400, "stackable": true },
+        { "item": 1164, "price": 99 },
+        { "item": 1172, "price": 150 },
+        { "item": 1162, "price": 450 },
+        { "item": 1168, "price": 999 }
+      ],
       "species_id": 3008
     }
   ],

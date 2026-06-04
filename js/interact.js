@@ -7,6 +7,7 @@
 
 import { showDialogue, resolveEntityDialogue, isDialogueOpen, speakerNameForEntity } from "./dialogue.js";
 import { handleAfterDialogue } from "./afterDialogue.js";
+import { openShop, isShopOpen } from "./shop.js";
 import { matchesAction } from "./keyBindings.js";
 import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js";
 import { glyphForAction } from "./inputGlyphs.js";
@@ -30,7 +31,7 @@ export function installInteract(getState) {
   hintEl = makeHint();
   window.addEventListener("keydown", (e) => {
     if (e.repeat) return;
-    if (isDialogueOpen()) return;
+    if (isDialogueOpen() || isShopOpen()) return;
     // Guests don't drive dialogues — the host owns the dialogue modal
     // and broadcasts the resulting event frames back via guestEvents.
     // Letting the local interact handler fire would pop a duplicate
@@ -76,7 +77,16 @@ function performInteract(state, initiator) {
   const dialogue = resolveEntityDialogue(target);
   if (!dialogue) return false;
   const speaker = speakerNameForEntity(target);
-  showDialogue(dialogue, initiator.index | 0, speaker).then(() => handleAfterDialogue(state.zone, target));
+  showDialogue(dialogue, initiator.index | 0, speaker).then(() => {
+    handleAfterDialogue(state.zone, target);
+    // A clerk carrying shop_stock opens the buy screen once the greeting
+    // closes (Pokémon-mart cadence). Local players only — a host driving a
+    // remote guest's interact shouldn't pop the modal on the host's screen.
+    const local = initiator === state.player || initiator === state.player2;
+    if (local && Array.isArray(target.shop_stock) && target.shop_stock.length) {
+      openShop(target.shop_stock, initiator.index | 0);
+    }
+  });
   return true;
 }
 

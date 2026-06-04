@@ -47,6 +47,7 @@ import { tickAfterDialogue } from "./afterDialogue.js";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
 import { installHealthHud, refreshHealthHud } from "./healthHud.js";
 import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js";
+import { installShop, isShopOpen } from "./shop.js";
 import { installMessage, isMessageOpen } from "./message.js";
 import { installFastTravel, isFastTravelOpen, tickFastTravel, markVisited } from "./fastTravel.js";
 import { applyFirstLaunch } from "./firstLaunch.js";
@@ -134,6 +135,7 @@ async function main() {
   installToast();
   installTouchControls();
   installGameOver();
+  installShop();
   installMessage();
   if (!bootGuest) applyFirstLaunch();
 
@@ -253,7 +255,7 @@ async function main() {
   installFastTravel(() => state);
   installWeaponSelect({
     isBlocked: () =>
-      isMenuOpen() || isDialogueOpen() || isGameOverOpen() ||
+      isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isShopOpen() ||
       isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen() || isAccountPanelOpen(),
     // Anchor the ribbon above the local player's head. Single-camera only —
     // split-screen has no single "the player", so fall back to centered.
@@ -377,7 +379,7 @@ async function main() {
     // (menu, dialogue, party panel, …) or when the active controller drops.
     // Hosting never freezes the shared world for a local overlay — that
     // would strand guests in a dead zone — so the gate is role-aware.
-    const overlayOpen = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen() || isAccountPanelOpen();
+    const overlayOpen = isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isShopOpen() || isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen() || isAccountPanelOpen();
     const localPause = (overlayOpen || isControllerPaused()) && getRuntimeRole() !== "host";
     // While a host is still setting up an Online PvP match (sending invite
     // links, before "Start match"), freeze the host's own world so monsters
