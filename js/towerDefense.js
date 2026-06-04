@@ -13,7 +13,7 @@ import { TD_ZONE_ID } from "./constants.js";
 import { loadZone } from "./data.js";
 import { buildZone } from "./zone.js";
 import { createPlayer, updatePlayer } from "./player.js";
-import { pollInput, clearInputState } from "./input.js";
+import { pollInput } from "./input.js";
 import { setGameMode, GAME_MODE, isTowerDefenseMode } from "./gameMode.js";
 import { setLocalPlayerCount } from "./coopMode.js";
 import { resetPlayerHealth, isPlayerDead } from "./playerHealth.js";
@@ -38,13 +38,13 @@ import { showToast } from "./toast.js";
 import { playTrack } from "./music.js";
 import { getValue, setValue } from "./storage.js";
 
-import { initBoard, getHeroSpawns, getGoal, recomputeField, resetBoard } from "./tdBoard.js";
+import { initBoard, getHeroSpawns, getGoal, recomputeField } from "./tdBoard.js";
 import {
   setTdEnemyHooks, resetTdEnemies, tickTdEnemies, aliveEnemyCount,
 } from "./tdEnemies.js";
 import { getEnemies } from "./tdEnemies.js";
 import { startWave, tickWaves, isWaveSpawningDone, totalThisWave, resetWaves } from "./tdWaves.js";
-import { driveAlly, resetAllyAI } from "./allyAI.js";
+import { driveAlly } from "./allyAI.js";
 import {
   resetHeroSwitch, getActiveHeroIndex, isActiveHero, squadPlayers,
   cycleActiveHero, ensureLiveActive, followActiveHero, activeHero,
@@ -131,7 +131,6 @@ export function installTowerDefense(stateGetter) {
     onRevive: reviveHero,
     onSwitch: switchHero,
     onRestart: restartRun,
-    onExit: exitRun,
     onSelectItem: setSelectedItem,
     onOpenShop: openShop,
     onCloseShop: closeShop,
@@ -565,31 +564,10 @@ function isOverlayOpen() {
   return isMenuOpen() || isDialogueOpen() || isPartyPanelOpen() || isAccountPanelOpen();
 }
 
-// — Exit / restart ————————————————————————————————————————————————————————
+// — Restart ——————————————————————————————————————————————————————————————
 function restartRun() {
   hideTdHud();
   startTowerDefense();
-}
-
-// Leave TD entirely: drop the ?mode=td latch and reload into the normal game.
-// A reload guarantees a clean offline state without re-threading every TD
-// mutation back out by hand.
-function exitRun() {
-  setGameMode(GAME_MODE.coop);
-  hideTdHud();
-  resetTdState();
-  if (typeof location !== "undefined") location.assign(location.pathname);
-}
-
-function resetTdState() {
-  phase = "idle";
-  buildMode = "browse";
-  wave = 0; score = 0; combo = 0; comboTimer = 0; lives = VILLAGE_LIVES; recruitedCount = 0;
-  for (const slot of [1, 2, 3, 4]) clearInputState(slot);
-  resetTdEnemies();
-  resetWaves();
-  resetBoard();
-  resetAllyAI();
 }
 
 // — Debug hook ————————————————————————————————————————————————————————————

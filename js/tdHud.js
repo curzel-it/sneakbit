@@ -34,6 +34,7 @@ let waveEl, phaseEl, goldEl, livesEl, scoreEl;
 // Dock refs.
 let dockLabelEl, dockValEl, progFillEl, startBtn, recruitBtn, switchBtn, hintEl;
 let reviveWrap;
+let reviveSig = "";   // signature of the rendered revive set (see renderRevives)
 // Dock build-control refs: a single Shop button (browse) or the placing bar.
 let shopBtn, placingWrap, placingLabelEl, swapBtn, doneBtn;
 // Shop dialog refs (the modal opened from the Shop button).
@@ -219,7 +220,15 @@ function drawShopIcon(canvas, icon) {
   return true;
 }
 
+// Rebuilding these buttons every frame (the dock model is pushed each tick)
+// would swap each <button> out from under the pointer between mousedown and
+// mouseup, so the click never lands — the element under the cursor at release
+// is a brand-new node. Only re-render when the revive set actually changes;
+// identical frames keep the same stable, clickable buttons.
 function renderRevives(revives) {
+  const sig = revives.map((r) => `${r.index}:${r.name}:${r.cost}`).join("|");
+  if (sig === reviveSig) return;
+  reviveSig = sig;
   reviveWrap.replaceChildren();
   for (const r of revives) {
     reviveWrap.appendChild(el("button", {
@@ -337,7 +346,6 @@ function buildGameOver() {
       goWaveEl, goScoreEl, goBestEl, goNewBest,
       el("div", { class: "td-row td-actions" }, [
         el("button", { class: "td-btn td-primary", text: "Play again", on: { click: () => api.onRestart?.() } }),
-        el("button", { class: "td-btn", text: "Exit", on: { click: () => api.onExit?.() } }),
       ]),
     ]),
   ]);
@@ -522,5 +530,6 @@ export function _resetTdHudForTesting() {
   if (shopDialog?.parentNode) shopDialog.parentNode.removeChild(shopDialog);
   if (gameOver?.parentNode) gameOver.parentNode.removeChild(gameOver);
   paletteCards.clear();
+  reviveSig = "";
   root = null; dock = null; shopDialog = null; gameOver = null; installed = false; api = {};
 }
