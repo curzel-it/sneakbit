@@ -64,6 +64,23 @@ function scatterTile(zone, cx, cy, homeX, homeY, rng) {
   return { x: homeX, y: homeY };
 }
 
+// Cosmetic sub-tile offset so coins that land on the same tile (common for a
+// big drop like the grapevine's 20) fan out instead of stacking into one
+// sprite. Derived purely from the coin's id — which is shipped in the co-op
+// snapshot — so host and guest compute the identical offset with no extra
+// state to sync. Returns null for anything that isn't a coin. The pickup
+// hitbox is unaffected: it still keys off the integer frame.x/y.
+const OFF_X = 0.22;
+const OFF_Y = 0.18;
+export function coinRenderOffset(entity) {
+  if (!entity || entity.species_id !== COIN_SPECIES_ID) return null;
+  const n = Math.abs(entity.id | 0);
+  return {
+    x: ((n % 3) - 1) * OFF_X,
+    y: ((Math.floor(n / 3) % 3) - 1) * OFF_Y,
+  };
+}
+
 function makeCoin(tileX, tileY) {
   return {
     id: nextCoinId--,

@@ -17,6 +17,7 @@ import { SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { resolveLoadout } from "./sessionLoadouts.js";
 import { getMeleeSwingProgress } from "./melee.js";
 import { pushableRenderOffset } from "./pushables.js";
+import { coinRenderOffset } from "./coinDrops.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { isDying, DEATH_SPRITE } from "./deathAnimation.js";
@@ -268,8 +269,11 @@ function draw(ctx, e, camera) {
   // the rock visually slides toward its new tile (already committed in
   // frame.x/y for collision purposes).
   const slide = pushableRenderOffset(e);
-  const rx = slide ? x - slide.x : x;
-  const ry = slide ? y - slide.y : y;
+  let rx = slide ? x - slide.x : x;
+  let ry = slide ? y - slide.y : y;
+  // Coins fan out within their tile so a pile reads as separate coins.
+  const coinOff = coinRenderOffset(e);
+  if (coinOff) { rx += coinOff.x; ry += coinOff.y; }
   const px = Math.round((rx - camera.x) * TILE_SIZE);
   const py = Math.round((ry - camera.y) * TILE_SIZE);
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
