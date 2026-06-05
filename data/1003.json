@@ -502,15 +502,15 @@
       "direction": "Down",
       "display_conditions": [],
       "frame": {
-        "h": 3,
-        "w": 4,
-        "x": 36,
+        "h": 4,
+        "w": 5,
+        "x": 35,
         "y": 10
       },
       "id": 11199896,
       "is_consumable": false,
       "lock_type": "None",
-      "species_id": 1086
+      "species_id": 1070
     },
     {
       "after_dialogue": "Nothing",
@@ -858,7 +858,7 @@
       "demands_attention": false,
       "destination": {
         "direction": "None",
-        "world": 11199897,
+        "world": 12900001,
         "x": 0,
         "y": 0
       },
@@ -869,7 +869,7 @@
         "h": 1,
         "w": 1,
         "x": 38,
-        "y": 12
+        "y": 13
       },
       "id": 11199898,
       "is_consumable": false,

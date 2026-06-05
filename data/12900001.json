@@ -36,7 +36,7 @@
       "demands_attention": false,
       "destination": {
         "direction": "None",
-        "world": 1001,
+        "world": 1003,
         "x": 0,
         "y": 0
       },
@@ -59,7 +59,7 @@
       "demands_attention": false,
       "destination": {
         "direction": "None",
-        "world": 1001,
+        "world": 1003,
         "x": 0,
         "y": 0
       },
