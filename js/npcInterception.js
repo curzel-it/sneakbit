@@ -110,6 +110,11 @@ function beginInterception(zone, e, hit, footX, footY) {
   const { player, dx, dy } = hit;
   player._frozen = true;
   activeCount++;
+  // Drop the exclamation-mark state the instant the NPC starts moving so the
+  // renderer plays the directional walk animation instead of the row-8 "!".
+  // The one-time disarm is persisted on dialogue close (finish, below); an
+  // aborted approach restores it (abortApproach).
+  e.demands_attention = false;
   // Walk to the tile one step before the player (along the spotting axis), then
   // face the player. If we're already adjacent there's no path to walk.
   const stopX = player.tileX - dx;
@@ -164,8 +169,7 @@ function tickApproach(state, e, dt) {
 function triggerDialogue(state, e, player) {
   const finish = () => {
     player._frozen = false;
-    setValue(`npc_interactions.${e.id}`, 1);
-    e.demands_attention = false;
+    setValue(`npc_interactions.${e.id}`, 1);   // persist the one-time disarm
     activeCount = Math.max(0, activeCount - 1);
   };
   // Intercepted players are always local (localTargets filters guests), so the
@@ -181,6 +185,9 @@ function abortApproach(e) {
   const a = e._approach;
   if (a?.player) a.player._frozen = false;
   e._approach = null;
+  // The encounter never reached its dialogue, so it was never persisted —
+  // re-arm the mark so a later pass can intercept again.
+  e.demands_attention = true;
   activeCount = Math.max(0, activeCount - 1);
 }
 

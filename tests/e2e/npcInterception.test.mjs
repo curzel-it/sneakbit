@@ -61,16 +61,23 @@ test("interception: spotted hero freezes, NPC walks over, dialogue opens", async
     const frozeImmediately = player._frozen === true && isInterceptionActive();
     const startX = npc.frame.x, startY = npc.frame.y;
 
+    // The mark must clear the instant it starts moving so the walk animation
+    // plays — assert that at some point during the walk npc.moving is true
+    // while isDemandingAttention has gone false (no row-8 "!" override).
+    let markClearedWhileMoving = false;
+
     // Run the loop until the dialogue opens (or give up).
     let opened = false;
     for (let i = 0; i < 1200 && !opened; i++) {
       tickNpcInterception(state, 1 / 60);
+      if (npc.moving === true && isDemandingAttention(npc) === false) markClearedWhileMoving = true;
       opened = isDialogueOpen();
     }
 
     return {
       armed,
       frozeImmediately,
+      markClearedWhileMoving,
       walked: npc.frame.y !== startY || npc.frame.x !== startX,
       faces: npc.direction,                 // should face the player ('down')
       stillFrozen: player._frozen === true,
@@ -81,6 +88,7 @@ test("interception: spotted hero freezes, NPC walks over, dialogue opens", async
 
   assert.equal(result.armed, true, "demands_attention NPC reads as armed");
   assert.equal(result.frozeImmediately, true, "hero freezes the moment it is spotted");
+  assert.equal(result.markClearedWhileMoving, true, "the '!' clears while the NPC walks (walk animation plays)");
   assert.equal(result.walked, true, "the NPC walked from its start tile");
   assert.equal(result.faces, "down", "the NPC ends up facing the player");
   assert.equal(result.stillFrozen, true, "hero stays frozen through the dialogue");
