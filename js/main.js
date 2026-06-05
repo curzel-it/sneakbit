@@ -26,7 +26,7 @@ import { installMenu, isMenuOpen } from "./menu.js";
 import { installTransitions, findTeleporterAt, travelTo } from "./transitions.js";
 import { checkPickup } from "./pickups.js";
 import { installMusic, playTrack } from "./music.js";
-import { installTouchControls, setInteractPrompt } from "./touch.js";
+import { installTouchControls, setInteractPrompt, updateTouchCombat } from "./touch.js";
 import { installToast, showToast } from "./toast.js";
 import { installShooting, tickShooting, tryShoot, tryShootForSlot } from "./shooting.js";
 import { installMelee, tickMelee, tryMelee, tryMeleeForSlot } from "./melee.js";
@@ -482,6 +482,7 @@ async function main() {
     tickBiomeAnimation(biomeAnim, dt);
     tickEntities(dt);
     setInteractPrompt(tickInteract());
+    updateTouchCombat();
     // Pass live players to the renderer so P2 sorts correctly with the
     // entity z-stack and not just on top as a separate draw call. Dead
     // co-op players are filtered out so they vanish from the screen

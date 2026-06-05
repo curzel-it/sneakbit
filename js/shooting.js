@@ -47,7 +47,21 @@ const DIR_DELTA = {
 
 let stateRef = null;
 const cooldown = new Float32Array(MAX_PLAYERS);
+// Latest cooldown length per player, so the on-screen attack button can derive
+// a 0..1 sweep (mirrors melee.js's cooldownDuration).
+const cooldownDuration = new Float32Array(MAX_PLAYERS);
 let nextBulletId = 1;
+
+// Returns 0..1 while a shot is still cooling down for the given player (1.0 =
+// just fired, 0.0 = ready), or null when ready. Parallels melee.js's
+// getMeleeSwingProgress; the touch HUD reads it to draw the cooldown ring.
+export function getShootCooldownProgress(playerIndex = 0) {
+  const i = playerIndex | 0;
+  const cd = cooldown[i] ?? 0;
+  const dur = cooldownDuration[i] ?? 0;
+  if (cd <= 0 || dur <= 0) return null;
+  return Math.max(0, Math.min(1, cd / dur));
+}
 
 export function installShooting(getState) {
   stateRef = getState;
@@ -130,6 +144,10 @@ export function predictGuestShoot(player) {
   const now = Date.now();
   if (now - lastPredictAt < cd * 1000) return; // throttle to the weapon's rate
   lastPredictAt = now;
+  // Drive the touch cooldown ring for the guest's own avatar — the guest never
+  // runs the authoritative shoot() path, so seed the cooldown here too.
+  const i = player.index | 0;
+  if (i >= 0 && i < MAX_PLAYERS) { cooldown[i] = cd; cooldownDuration[i] = cd; }
 
   playSfx(SFX_FOR_USAGE[weapon?.equipment_usage_sound_effect] || "knifeThrown");
   const [dx, dy] = DIR_DELTA[player.direction] ?? DIR_DELTA.down;
@@ -240,6 +258,7 @@ function shoot(state, shooter) {
     });
   }
   cooldown[idx] = (weapon?.cooldown_after_use > 0) ? weapon.cooldown_after_use : COOLDOWN;
+  cooldownDuration[idx] = cooldown[idx];
 
   const dir = shooter.direction;
   const [dx, dy] = DIR_DELTA[dir] ?? DIR_DELTA.down;

@@ -6,16 +6,23 @@
 // Hidden by default; show when a touch (or pointer with pointerType ===
 // "touch") is detected so we don't clutter desktop screens.
 
-import { tryShoot } from "./shooting.js";
-import { tryMelee } from "./melee.js";
-import { getEquipped, onEquipmentChange, SLOT_MELEE } from "./equipment.js";
+import { tryShoot, getShootCooldownProgress } from "./shooting.js";
+import { tryMelee, getMeleeSwingProgress } from "./melee.js";
+import { getEquipped, onEquipmentChange, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { codesFor } from "./keyBindings.js";
 import { isTowerDefenseMode } from "./gameMode.js";
 import { onActiveInputDeviceChange } from "./activeInputDevice.js";
 import { getSettings } from "./settings.js";
 import { mountJoystick, unmountJoystick } from "./touchJoystick.js";
+import { getSpecies } from "./species.js";
+import { getSprite } from "./assets.js";
+import { TILE_SIZE } from "./constants.js";
 import { el } from "./dom.js";
+
+// Weapon-icon supersample: paint the 16px inventory tile into an ×8 backing
+// canvas and let CSS downscale it crisply (same trick as ammoHud.js).
+const WICON_RES = TILE_SIZE * 8;
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 
@@ -81,6 +88,14 @@ let forcedTouch = false;
 // reapply it once TD hands the buttons back.
 let interactVerb = null;
 
+// Cached refs for the two attack buttons' weapon-icon canvas + cooldown ring,
+// keyed by action ("melee" | "throw"). `lastCd` memoises the last ring value
+// written so updateTouchCombat only touches the DOM on a real change.
+const combatEls = { melee: null, throw: null };
+// True when a weapon icon couldn't paint yet (sprite sheet still loading) and
+// updateTouchCombat should retry. Cleared once both icons resolve.
+let weaponIconsPending = false;
+
 export function installTouchControls() {
   if (root) return root;
   // SVG icons (not text glyphs): the previous "▲ ◀ ▶ ▼ ⚔ ✦ E ☰"
@@ -101,8 +116,8 @@ export function installTouchControls() {
       <button class="touch-btn" data-dir="down">${ICON_DIR_DOWN}</button>
     </div>
     <div class="touch-pad" data-side="right">
-      <button class="touch-btn touch-action touch-melee"    data-action="melee">${ICON_MELEE}<span class="touch-label"></span></button>
-      <button class="touch-btn touch-action touch-throw"    data-action="throw">${ICON_THROW}<span class="touch-label"></span></button>
+      <button class="touch-btn touch-action touch-melee"    data-action="melee">${ICON_MELEE}<canvas class="touch-wicon"></canvas><span class="touch-cd"></span><span class="touch-label"></span></button>
+      <button class="touch-btn touch-action touch-throw"    data-action="throw">${ICON_THROW}<canvas class="touch-wicon"></canvas><span class="touch-cd"></span><span class="touch-label"></span></button>
       <button class="touch-btn touch-action touch-interact" data-action="interact">${ICON_INTERACT}<span class="touch-verb"></span><span class="touch-label"></span></button>
     </div>
   `,
@@ -169,11 +184,16 @@ export function installTouchControls() {
     if (d === "touch") show(); else hide();
   });
 
+  cacheCombatEls();
   syncMeleeVisibility();
-  onEquipmentChange((slot) => { if (slot === SLOT_MELEE) syncMeleeVisibility(); });
+  onEquipmentChange((slot) => {
+    if (slot === SLOT_MELEE) syncMeleeVisibility();
+    if (slot === SLOT_MELEE || slot === SLOT_RANGED) refreshWeaponIcons();
+  });
 
   applyControlStyle();
   applyInteractPrompt(); // start hidden until something's in range
+  refreshWeaponIcons();  // paint the equipped weapon onto each attack button
   return root;
 }
 
@@ -291,6 +311,9 @@ function applyTdActionMode() {
     syncMeleeVisibility();
     applyInteractPrompt();
   }
+  // Hide the weapon canvases in any TD mode; repaint them when the normal
+  // cluster returns. refreshWeaponIcons() gates on tdActionMode internally.
+  refreshWeaponIcons();
 }
 
 function setActionButton(btn, iconHtml, label, display) {
@@ -304,6 +327,108 @@ function setActionButton(btn, iconHtml, label, display) {
   btn.style.display = display;
 }
 
+// — Equipped-weapon icons + cooldown rings ————————————————————————————————
+// The throw/melee buttons paint the actual equipped weapon's inventory icon
+// (so a thumb knows what it's holding at a glance, sword included) and overlay
+// a sweep that drains over the weapon's cooldown. Both are gated off in Tower
+// Defense, where the cluster is build controls rather than attacks.
+
+function cacheCombatEls() {
+  if (!root) return;
+  for (const action of ["melee", "throw"]) {
+    const btn = root.querySelector(`.touch-${action}`);
+    if (!btn) continue;
+    combatEls[action] = {
+      btn,
+      svg: btn.querySelector(".touch-icon"),
+      wicon: btn.querySelector(".touch-wicon"),
+      cd: btn.querySelector(".touch-cd"),
+      lastCd: 0,
+    };
+  }
+}
+
+// Repaint both attack buttons from the currently equipped weapons. In TD the
+// cluster carries build glyphs, so hide the weapon canvases and fall back to
+// whatever icon setActionButton put there.
+function refreshWeaponIcons() {
+  if (!root) return;
+  if (tdActionMode) { hideWeaponIcon("melee"); hideWeaponIcon("throw"); return; }
+  weaponIconsPending = false;
+  applyWeaponIcon("melee", getEquipped(SLOT_MELEE, 0));
+  applyWeaponIcon("throw", getEquipped(SLOT_RANGED, 0));
+}
+
+function applyWeaponIcon(action, weaponId) {
+  const e = combatEls[action];
+  if (!e) return;
+  // setActionButton swaps .touch-icon's outerHTML for the TD glyphs, so re-grab
+  // the live SVG node before toggling it.
+  e.svg = e.btn.querySelector(".touch-icon");
+  const sp = weaponId != null ? getSpecies(weaponId) : null;
+  const painted = sp ? paintWeaponIcon(e.wicon, sp) : false;
+  if (painted) {
+    // Explicit value — the base rule is display:none, so "" wouldn't reveal it.
+    e.wicon.style.display = "block";
+    if (e.svg) e.svg.style.display = "none";
+  } else {
+    e.wicon.style.display = "none";
+    if (e.svg) e.svg.style.display = "";
+    // A real weapon whose sprite sheet hasn't loaded yet — retry next frame.
+    if (sp?.inventory_texture_offset) weaponIconsPending = true;
+  }
+}
+
+function hideWeaponIcon(action) {
+  const e = combatEls[action];
+  if (!e) return;
+  if (e.wicon) e.wicon.style.display = "none";
+  const svg = e.btn.querySelector(".touch-icon");
+  if (svg) svg.style.display = "";
+}
+
+// Blit a weapon species' inventory icon into the button canvas. Returns false
+// (leaving the SVG fallback up) when the offset or sprite sheet isn't ready.
+// inventory_texture_offset is [row, col] — same convention as ammoHud.js.
+function paintWeaponIcon(canvas, sp) {
+  const off = sp?.inventory_texture_offset;
+  if (!off || !canvas) return false;
+  let sheet;
+  try { sheet = getSprite("inventory"); } catch { return false; }
+  if (!sheet || !sheet.complete) return false;
+  if (canvas.width !== WICON_RES) { canvas.width = WICON_RES; canvas.height = WICON_RES; }
+  const [row, col] = off;
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, WICON_RES, WICON_RES);
+  ctx.drawImage(sheet, col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 0, 0, WICON_RES, WICON_RES);
+  return true;
+}
+
+// Per-frame combat HUD tick, called from the main loop. Cheap: bails while the
+// overlay is hidden or TD owns the cluster, and only writes the DOM on change.
+export function updateTouchCombat() {
+  if (!visible || tdActionMode) return;
+  if (weaponIconsPending) refreshWeaponIcons();
+  updateCooldownRing("melee", getMeleeSwingProgress(0));
+  updateCooldownRing("throw", getShootCooldownProgress(0));
+}
+
+function updateCooldownRing(action, progress) {
+  const e = combatEls[action];
+  if (!e || !e.cd) return;
+  if (progress == null) {
+    if (e.lastCd !== 0) { e.cd.style.opacity = "0"; e.lastCd = 0; }
+    return;
+  }
+  // Quantise so a 0.35s cooldown doesn't write a new value every single frame.
+  const q = Math.round(progress * 50) / 50;
+  if (q === e.lastCd) return;
+  e.lastCd = q;
+  e.cd.style.setProperty("--cd", String(q));
+  e.cd.style.opacity = "1";
+}
+
 function show() {
   if (visible) return;
   visible = true;
@@ -313,6 +438,7 @@ function show() {
   // by phase) — re-evaluate each time the overlay appears, respecting any
   // active TD mode rather than just the melee-visibility default.
   refreshTouchActions();
+  refreshWeaponIcons();
 }
 
 function hide() {
@@ -532,6 +658,28 @@ function injectStyles() {
       display: flex; align-items: center; justify-content: center;
       width: 100%; height: 100%;
       pointer-events: none;
+    }
+    /* Equipped-weapon icon, painted from the inventory sprite sheet. Sits over
+       the button face (the SVG glyph is hidden when this paints). Hidden until
+       refreshWeaponIcons() succeeds. */
+    #touch-controls .touch-wicon {
+      position: absolute; top: 50%; left: 50%;
+      width: 38px; height: 38px;
+      transform: translate(-50%, -50%);
+      image-rendering: pixelated;
+      pointer-events: none;
+      display: none;
+    }
+    /* Cooldown sweep: a translucent wedge whose angle = remaining fraction
+       (--cd, 0..1). Drains to nothing as the weapon comes off cooldown.
+       updateTouchCombat() toggles opacity so a ready weapon shows no ring. */
+    #touch-controls .touch-cd {
+      position: absolute; inset: 0;
+      border-radius: var(--sb-surface-radius);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 90ms ease;
+      background: conic-gradient(rgba(0,0,0,0.55) calc(var(--cd, 0) * 360deg), transparent 0);
     }
     /* Verb label for the TD build cluster. Sits to the LEFT of the round
        button (toward screen centre) so it never collides with the stacked

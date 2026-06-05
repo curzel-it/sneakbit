@@ -250,6 +250,19 @@ export function installMenu(stateGetter) {
 
 export function isMenuOpen() { return open; }
 
+// Open the overlay straight on the Inventory screen — the one-tap route from
+// the ammo HUD chip (ammoHud.js). Mirrors openMenu() but lands on inventory
+// instead of the pause root; opening the overlay flips isMenuOpen() true,
+// which the main loop already treats as "pause" for non-hosts.
+export function openInventory() {
+  if (!root || open) return;
+  open = true;
+  root.style.display = "flex";
+  applyRoleVisibility();
+  showScreen("inventory");
+  playSfx("hintReceived", { volume: 0.5 });
+}
+
 // Save export/import are creative-mode-only — they map onto the Rust
 // build's "Save" menu entry (game/src/gameui/game_menu.rs only shows
 // save-related actions when GameMode::Creative). In the regular
