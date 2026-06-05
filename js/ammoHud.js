@@ -21,6 +21,12 @@ import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js"
 import { el } from "./dom.js";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
+// The 28px icon box isn't an integer multiple of the 16px source tile, so a
+// straight nearest-neighbour upscale duplicates some source pixels and not
+// others — lumpy on round sprites. Paint into a clean integer-multiple (×8)
+// backing canvas and let the browser smoothly downscale it to ICON_PIXELS.
+const ICON_SUPERSAMPLE = 8;
+const ICON_RES = TILE_SIZE * ICON_SUPERSAMPLE;
 const MAX_PLAYERS = 4;
 
 let root = null;
@@ -49,9 +55,9 @@ function rangedBulletFor(playerIndex) {
 
 function makeChip(index) {
   const icon = el("canvas", {
-    width: TILE_SIZE,
-    height: TILE_SIZE,
-    style: { width: `${ICON_PIXELS}px`, height: `${ICON_PIXELS}px`, imageRendering: "pixelated" },
+    width: ICON_RES,
+    height: ICON_RES,
+    style: { width: `${ICON_PIXELS}px`, height: `${ICON_PIXELS}px` },
   });
   const count = el("span", { text: "x0" });
   const card = el("div", { class: "ammo-chip" }, [icon, count]);
@@ -165,12 +171,12 @@ function paintIcon(iconCanvas, speciesId = KUNAI_SPECIES_ID) {
   // `inventory_texture_offset` is [row, col] in the rust source.
   const [row, col] = sp.inventory_texture_offset;
   const ctx = iconCanvas.getContext("2d");
-  ctx.imageSmoothingEnabled = false;
-  ctx.clearRect(0, 0, TILE_SIZE, TILE_SIZE);
+  ctx.imageSmoothingEnabled = false; // crisp integer upscale into the backing canvas
+  ctx.clearRect(0, 0, ICON_RES, ICON_RES);
   ctx.drawImage(
     sheet,
     col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE,
-    0, 0, TILE_SIZE, TILE_SIZE,
+    0, 0, ICON_RES, ICON_RES,
   );
   iconCanvas.dataset.painted = "1";
 }

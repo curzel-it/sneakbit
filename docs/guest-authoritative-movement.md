@@ -88,7 +88,7 @@ ordering vs a face update can't matter:
 { op:"input", seq, t, intent:"shoot"|"melee"|"interact", d }
 ```
 
-This is a clean break: a single `python3 deploy.py` flips host and guest together. A stale
+This is a clean break: a single `npm run deploy` flips host and guest together. A stale
 cached client co-oping across the deploy window breaks until reload — acceptable for opt-in
 co-op with a small audience.
 

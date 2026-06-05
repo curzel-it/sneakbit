@@ -4,7 +4,7 @@
 // can pass a `:memory:` db and the route layer can share one connection).
 //
 // node:sqlite is stable/unflagged on Node 24+ (production runs 24); on older
-// runtimes it's behind a flag. See deploy.py NODE_MAJOR.
+// runtimes it's behind a flag. See tools/deploy.mjs NODE_MAJOR.
 
 import { DatabaseSync } from "node:sqlite";
 

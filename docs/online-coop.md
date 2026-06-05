@@ -211,7 +211,7 @@ Topology: the **guest is the initiator** for every channel. The guest creates th
 
 NAT traversal:
 - **STUN** — list of free public servers in `js/webrtcChannel.js` (`DEFAULT_STUN_SERVERS`). Enough for most consumer NATs.
-- **TURN** — relay exposes `GET /turn-credentials` returning short-lived HMAC-SHA1 credentials matching coturn's `use-auth-secret` (TURN REST API, draft-uberti-rtcweb-turn-rest-00). When `TURN_SECRET` + `TURN_URLS` are unset, the endpoint returns 503 and the client uses STUN only. Self-hosting runbook lives beside `TURN_ENV_FILE` in `deploy.py`.
+- **TURN** — relay exposes `GET /turn-credentials` returning short-lived HMAC-SHA1 credentials matching coturn's `use-auth-secret` (TURN REST API, draft-uberti-rtcweb-turn-rest-00). When `TURN_SECRET` + `TURN_URLS` are unset, the endpoint returns 503 and the client uses STUN only. Self-hosting runbook lives beside `TURN_ENV_FILE` in `tools/deploy.mjs`.
 
 WebRTC's SCTP transport handles its own framing — no `permessage-deflate` applies there.
 
@@ -520,9 +520,9 @@ H → snapshot (full, fresh)
 - Security batch: WS frame size cap (1 MB) checked before allocation; origin allowlist on WS upgrade (`curzel.it`, `sneakbit.curzel.it`, `localhost`, `127.0.0.1`; overridable via `ALLOWED_ORIGINS`); join-code format gate; `?server=` override restricted to localhost (anti-phishing).
 - Guest role gates: `?join=CODE` boot path skips host-only installs (migrations, firstLaunch, HUDs reading offline state); hides "New game"/"Clear cache" while running as guest.
 - Reconnect backoff fix: `attempts` counter resets on `welcome` (not `onopen`), so a TLS-handshake-OK-but-server-closes failure escalates backoff instead of fast-looping at the 1 s floor.
-- **Ops:** relay live at `https://sneakbit.curzel.it/ws` (nginx reverse proxy, systemd unit `sneakbit-server`, TLS via certbot). Health endpoint `/health` returns "ok"; WS upgrade through nginx verified end-to-end; origin allowlist verified against prod. Restartborgo.it co-tenant protected by `deploy.py`'s final health gate.
+- **Ops:** relay live at `https://sneakbit.curzel.it/ws` (nginx reverse proxy, systemd unit `sneakbit-server`, TLS via certbot). Health endpoint `/health` returns "ok"; WS upgrade through nginx verified end-to-end; origin allowlist verified against prod. Restartborgo.it co-tenant protected by `tools/deploy.mjs`'s final health gate.
 
-**Remaining:** see `todo.md` for the live punch list — server polish (structured logging, `/metrics`, `/version`, `LOG_LEVEL`, SIGTERM drain, full UUID validation, intent cheat-resistance), client polish (action-intent buffering on reconnect, snapshot delta signature tightening, mirror animation phase alignment, mirror resync op), and ops smoke tests (WS-upgrade health check inside `deploy.py`, full session suite against `wss://sneakbit.curzel.it/ws`).
+**Remaining:** see `todo.md` for the live punch list — server polish (structured logging, `/metrics`, `/version`, `LOG_LEVEL`, SIGTERM drain, full UUID validation, intent cheat-resistance), client polish (action-intent buffering on reconnect, snapshot delta signature tightening, mirror animation phase alignment, mirror resync op), and ops smoke tests (WS-upgrade health check inside `tools/deploy.mjs`, full session suite against `wss://sneakbit.curzel.it/ws`).
 
 # Motion smoothness, prediction & reconciliation
 

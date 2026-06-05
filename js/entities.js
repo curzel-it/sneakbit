@@ -226,6 +226,12 @@ function draw(ctx, e, camera) {
   // needing the per-entity lifespan in the snapshot.
   if (isDying(e)) { drawDeath(ctx, e, camera); return; }
 
+  // Teleporters are an editing aid: the "T" marker (creative sprite row)
+  // only makes sense in the map editor. In normal gameplay they're
+  // invisible portals, so skip rendering entirely rather than blitting a
+  // blank/placeholder row that leaks a stray line over the door tile.
+  if (sp?.entity_type === "Teleporter" && !isCreativeMode()) return;
+
   // Creative-mode hint re-skin: in the Rust core hint signs render from
   // the inventory sheet at their `inventory_texture_offset` instead of
   // the placed-sign sprite on static_objects. Same one-off override here.
@@ -253,13 +259,7 @@ function draw(ctx, e, camera) {
   // inventory_texture_offset is [row, col]; everything else uses
   // texture_x / texture_y (cols, rows).
   const baseX = reskin ? reskin.col : sp.texture_x;
-  // Teleporters use a different sprite row in non-creative — Rust
-  // setup_teleporter assigns 6 normally and 5 in creative. species.json
-  // ships with the creative row (5), so add +1 for the non-creative
-  // "placed teleporter" art.
-  const teleporterRowShift =
-    !reskin && sp?.entity_type === "Teleporter" && !isCreativeMode() ? 1 : 0;
-  const baseY = reskin ? reskin.row : sp.texture_y + teleporterRowShift;
+  const baseY = reskin ? reskin.row : sp.texture_y;
   const sx = (baseX + offsetX + frame * w) * TILE_SIZE;
   const sy = (baseY + dirRow * h) * TILE_SIZE;
   const sw = w * TILE_SIZE;

@@ -23,12 +23,12 @@ This repo *is* that game. The original Rust source is preserved in this reposito
   ```
   Run `test:unit` often — at minimum before each commit. Run `test:e2e` before any push that touches `onlineBootstrap.js`, `webrtcTransport.js`, `webrtcChannel.js`, `predictedSelf.js`, `mirrorWorld.js`, or `snapshotBroadcaster.js`.
 - **Commit often.** Small focused commits beat large ones. Each commit should leave the game in a runnable state (`npm test` green, page loads without console errors).
-- **Push to main often.** Each push to `main` is a public release. Production is <https://sneakbit.curzel.it>, served from the VPS via `python3 deploy.py` (which also builds + ships the client). After any change large enough to be visible to a user, push it — don't sit on local changes; there's no staging.
+- **Push to main often.** Each push to `main` is a public release. Production is <https://sneakbit.curzel.it>, served from the VPS via `npm run deploy` (which also builds + ships the client). After any change large enough to be visible to a user, push it — don't sit on local changes; there's no staging.
 
 ## Server (`server/`)
 - The Node server lives in `server/` — vanilla `node:http`, no deps, ES modules, same "one feature one file" rule as the client. Run locally with `node server/index.js` (defaults: `127.0.0.1:8090`). `GET /health` returns 200 "ok" — keep that endpoint cheap.
 - Production lives at <https://sneakbit.curzel.it> on a shared Ubuntu VPS (IP in `.env` as `IP_ADDRESS`). systemd unit `sneakbit-server`, nginx reverse proxy, TLS via certbot.
-- Deploy with `python3 deploy.py` (paramiko-based, idempotent). `--commit "msg"` to commit + push + deploy in one shot.
+- Deploy with `npm run deploy` (i.e. `node tools/deploy.mjs` — ssh2-based, idempotent). `npm run deploy -- --commit "msg"` to commit + push + deploy in one shot.
 
 ## Style and Guidelines
 - **No build step for development.** Open `index.html` (or serve the folder with any static server) and reload — dev and the e2e harness load the raw ES modules straight from `js/`. Production is the exception: `npm run build` (esbuild, the only devDependency) bundles the module graph into a content-hashed single file under `_site/` for deploy — see `tools/build.mjs`. Don't add a build dependency for the dev loop.

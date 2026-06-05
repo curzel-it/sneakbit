@@ -25,7 +25,7 @@ No build step for development - serve the folder with any static HTTP server
 from `js/`:
 
 ```bash
-npm run serve            # python3 -m http.server 8000
+npm run serve            # node tools/serve.mjs (port 8000)
 # or
 npx http-server -p 8000
 ```
@@ -35,7 +35,7 @@ Then open <http://localhost:8000>.
 Production *is* bundled: `npm run build` (esbuild, the only devDependency) writes
 a content-hashed single-file bundle into `_site/`. That's what ships - the public
 build at <https://sneakbit.curzel.it> is deployed from the VPS via
-`python3 deploy.py`. Dev and the e2e harness never touch the bundle; only deploys
+`npm run deploy`. Dev and the e2e harness never touch the bundle; only deploys
 do.
 
 ## Tests

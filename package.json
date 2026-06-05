@@ -14,6 +14,7 @@
     "shots": "node tools/screenshot.mjs",
     "sprites": "node tools/exportSpriteSheets.mjs",
     "build": "node tools/build.mjs",
+    "deploy": "node tools/deploy.mjs",
     "serve": "node tools/serve.mjs",
     "dev": "node tools/serve.mjs",
     "electron": "npm run build && electron .",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "electron": "^42.3.2",
     "electron-builder": "^26.8.1",
-    "esbuild": "0.28.0"
+    "esbuild": "0.28.0",
+    "ssh2": "1.17.0"
   }
 }
