@@ -105,10 +105,16 @@ export function installDialogue() {
       #dialogue { transition: none; }
       #dialogue-caret { animation: none; }
     }
-    /* On touch devices the on-screen joystick sits at the bottom; flip
-       the modal dialogue to the top so it doesn't cover the controls. */
+    /* On touch devices, anchor the dialogue to the bottom so it grows
+       upward as text reveals — reads better than top-anchored "expand
+       down" in the common short-line case. It's modal (no movement or
+       attacks while open), so overlapping the bottom controls is only
+       cosmetic. Lift it clear of the home-indicator safe area. */
     @media (pointer: coarse) {
-      #dialogue { bottom: auto !important; top: 6% !important; }
+      #dialogue {
+        top: auto !important;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 5%) !important;
+      }
       #dialogue-panel { font-size: 14px; }
     }
   `;
