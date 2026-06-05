@@ -5,6 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { findFacingEntity } from "../js/interact.js";
+import { loadSpeciesData } from "../js/species.js";
 
 // Builds a zone with a collision grid. `blocked` is a set of "x,y" tile
 // keys that are non-walkable. isWalkable() reads zone.collision[y][x].
@@ -55,6 +56,17 @@ test("reach respects facing direction", () => {
 test("ignores entities without dialogue", () => {
   const wall = { frame: { x: 5, y: 4, w: 1, h: 1 }, dialogues: [] };
   const zone = makeZone(10, 10, new Set(["5,4"]), [wall]);
+  const player = { tileX: 5, tileY: 5, direction: "up" };
+  assert.equal(findFacingEntity(zone, player), null);
+});
+
+test("ignores Hint signs even though they carry dialogue (toast-only, no talk affordance)", () => {
+  // Hints store their walk-over toast text in `dialogues`, but they're
+  // proximity-triggered (pickups.js) and must not light up the interact
+  // prompt or be talk-able.
+  loadSpeciesData([{ id: 42, name: "hint", entity_type: "Hint" }]);
+  const hint = { species_id: 42, frame: { x: 5, y: 4, w: 1, h: 1 }, dialogues: [{ text: "tip" }] };
+  const zone = makeZone(10, 10, new Set(["5,4"]), [hint]);
   const player = { tileX: 5, tileY: 5, direction: "up" };
   assert.equal(findFacingEntity(zone, player), null);
 });
