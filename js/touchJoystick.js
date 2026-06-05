@@ -222,12 +222,20 @@ export function playJoystickHint() {
   document.body.appendChild(hint);
 
   let done = false;
-  const cleanup = () => { if (done) return; done = true; hint.remove(); };
+  const cleanup = () => {
+    if (done) return;
+    done = true;
+    document.removeEventListener("pointerdown", cleanup);
+    hint.remove();
+  };
   // animationend on the container's fade is the natural end; the timeout is a
   // belt-and-braces fallback in case the event never fires.
   hint.addEventListener("animationend", (e) => {
     if (e.target === hint) cleanup();
   });
+  // The moment the player reaches for the real stick, drop the demo so the two
+  // never show at once.
+  document.addEventListener("pointerdown", cleanup);
   setTimeout(cleanup, HINT_DURATION_MS + 200);
 }
 
