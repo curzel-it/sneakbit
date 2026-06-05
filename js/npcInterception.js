@@ -38,6 +38,8 @@ const DIRS = [
   { dir: "right", dx: 1,  dy: 0 },
 ];
 
+const OPPOSITE = { up: "down", down: "up", left: "right", right: "left" };
+
 // Count of interception cutscenes currently running (spotted → walking →
 // dialogue open). The freeze itself is per-player; this is just a cheap
 // "is a cutscene in progress" flag for any system that wants to know.
@@ -109,6 +111,9 @@ function localTargets(state) {
 function beginInterception(zone, e, hit, footX, footY) {
   const { player, dx, dy } = hit;
   player._frozen = true;
+  // Turn the hero to face the approaching NPC (hit.dir points NPC → player, so
+  // the NPC is the other way). The frozen hero keeps this facing for the walk.
+  player.direction = OPPOSITE[hit.dir] ?? player.direction;
   activeCount++;
   // Drop the exclamation-mark state the instant the NPC starts moving so the
   // renderer plays the directional walk animation instead of the row-8 "!".

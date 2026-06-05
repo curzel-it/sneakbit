@@ -51,14 +51,17 @@ test("interception: spotted hero freezes, NPC walks over, dialogue opens", async
       after_dialogue: 'Nothing',
     };
     const zone = { id: 1, cols: 1, rows: 9, collision, entities: [npc] };
-    const player = { index: 0, tileX: 0, tileY: 6, x: 0, y: 6, direction: 'up' };
+    // Start the hero facing AWAY from the NPC (which sits above it) so the turn
+    // is observable.
+    const player = { index: 0, tileX: 0, tileY: 6, x: 0, y: 6, direction: 'down' };
     const state = { zone, player, player2: null, players: [] };
 
     const armed = isDemandingAttention(npc);
 
-    // First tick: should spot the player and freeze them.
+    // First tick: should spot the player, freeze it, and turn it to face the NPC.
     tickNpcInterception(state, 1 / 60);
     const frozeImmediately = player._frozen === true && isInterceptionActive();
+    const heroFacesNpc = player.direction;   // NPC is above → hero should face 'up'
     const startX = npc.frame.x, startY = npc.frame.y;
 
     // The mark must clear the instant it starts moving so the walk animation
@@ -77,6 +80,7 @@ test("interception: spotted hero freezes, NPC walks over, dialogue opens", async
     return {
       armed,
       frozeImmediately,
+      heroFacesNpc,
       markClearedWhileMoving,
       walked: npc.frame.y !== startY || npc.frame.x !== startX,
       faces: npc.direction,                 // should face the player ('down')
@@ -88,6 +92,7 @@ test("interception: spotted hero freezes, NPC walks over, dialogue opens", async
 
   assert.equal(result.armed, true, "demands_attention NPC reads as armed");
   assert.equal(result.frozeImmediately, true, "hero freezes the moment it is spotted");
+  assert.equal(result.heroFacesNpc, "up", "hero turns to face the approaching NPC");
   assert.equal(result.markClearedWhileMoving, true, "the '!' clears while the NPC walks (walk animation plays)");
   assert.equal(result.walked, true, "the NPC walked from its start tile");
   assert.equal(result.faces, "down", "the NPC ends up facing the player");
