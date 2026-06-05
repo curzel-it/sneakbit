@@ -9,6 +9,8 @@ import { getSpecies } from "./species.js";
 import { getCoins, onWalletChange } from "./wallet.js";
 import { isTowerDefenseMode, isPvp } from "./gameMode.js";
 import { COIN_SPECIES_ID } from "./coinDrops.js";
+import { sliceCount } from "./splitScreen.js";
+import { topHudRow } from "./topHudRow.js";
 import { el } from "./dom.js";
 
 // Match the ammo chip exactly (ammoHud.js) so the two top-of-screen counters
@@ -37,7 +39,7 @@ export function installCoinHud() {
   });
   countEl = el("span", { text: "0" });
   root = el("div", { id: "coin-hud" }, [iconCanvas, countEl]);
-  document.body.appendChild(root);
+  topHudRow().appendChild(root);
   onWalletChange(updateCoinHud);
   return root;
 }
@@ -48,6 +50,10 @@ export function updateCoinHud() {
   const visible = !isTowerDefenseMode() && !isPvp();
   root.style.display = visible ? "" : "none";
   if (!visible) return;
+  // In split-screen the HP bar + ammo chips anchor to each slice, leaving the
+  // top row empty — float the (single, shared) coin counter back to centre so
+  // it doesn't sit on top of slice 0's HP card at the top-left corner.
+  root.classList.toggle("split", sliceCount() > 1);
   const label = String(getCoins(0));
   if (label !== lastLabel) {
     countEl.textContent = label;
@@ -83,10 +89,8 @@ function injectStyles() {
   style.id = "coin-hud-styles";
   style.textContent = `
     #coin-hud {
-      position: fixed;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%);
+      position: relative;
+      flex: 0 0 auto;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -97,10 +101,17 @@ function injectStyles() {
       color: var(--sb-text);
       font-family: var(--sb-font);
       font-size: 14px;
-      z-index: 11;
       pointer-events: none;
       user-select: none;
       -webkit-user-select: none;
+    }
+    /* Split-screen: leave the row and centre at the top of the viewport. */
+    #coin-hud.split {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 11;
     }
   `;
   document.head.appendChild(style);

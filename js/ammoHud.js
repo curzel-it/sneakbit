@@ -18,6 +18,7 @@ import { isPvp } from "./gameMode.js";
 import { localPlayerCount } from "./coopMode.js";
 import { sliceCount, getSlices } from "./splitScreen.js";
 import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
+import { topHudRow } from "./topHudRow.js";
 import { el } from "./dom.js";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
@@ -39,7 +40,7 @@ export function installAmmoHud() {
   // (the local player count is hot-toggled, so we can't size the set here).
   for (let i = 0; i < MAX_PLAYERS; i++) chips.push(makeChip(i));
   root = el("div", { id: "ammo-hud" }, chips.map((c) => c.root));
-  document.body.appendChild(root);
+  topHudRow().appendChild(root);
 
   onInventoryChange(updateAmmoHud);
   onEquipmentChange(updateAmmoHud); // chip follows the equipped ranged weapon
@@ -123,20 +124,18 @@ function injectStyles() {
   if (document.getElementById("ammo-hud-styles")) return;
   const style = document.createElement("style");
   style.id = "ammo-hud-styles";
-  // Positioning + layout lives here (not inline) so the touch-mode rule
-  // below can actually shift the chip left of the menu button. Inline
-  // style.right beats a class selector, which used to silently neuter
-  // the touch-mode shift and stacked the ☰ button on top of the chip.
+  // Single-slice: a flex item in the shared top row (topHudRow.js), which owns
+  // its position and the gap that clears the ☰ menu button. Split-screen:
+  // anchorChip pins each chip to its slice via inline position:fixed, which
+  // beats the relative rule here.
   style.textContent = `
     #ammo-hud {
-      position: fixed;
-      top: 12px;
-      right: 12px;
+      position: relative;
+      flex: 0 0 auto;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
       gap: 6px;
-      z-index: 11;
       pointer-events: none;
       user-select: none;
       -webkit-user-select: none;
@@ -153,11 +152,6 @@ function injectStyles() {
       align-items: center;
       gap: 8px;
     }
-    /* Touch-mode shift clears the ☰ menu button at top-right. The menu
-       button is 56px wide pinned at right:12px (its rendered size — the
-       .touch-menu CSS attempts width:44px but a later .touch-btn rule
-       wins on specificity), so 12+56+8 = 76px gives a comfortable gap. */
-    body.touch-mode #ammo-hud { right: 76px; }
   `;
   document.head.appendChild(style);
 }

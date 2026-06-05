@@ -8,6 +8,7 @@
 import { getPlayerHp, getPlayerMaxHp, onPlayerHealthChange, isPlayerDead } from "./playerHealth.js";
 import { localPlayerCount } from "./coopMode.js";
 import { sliceCount, getSlices } from "./splitScreen.js";
+import { topHudRow } from "./topHudRow.js";
 import { el } from "./dom.js";
 
 const MAX_PLAYERS = 4;
@@ -29,7 +30,7 @@ export function installHealthHud() {
   // bar set at install time.
   for (let i = 0; i < MAX_PLAYERS; i++) bars.push(makeBar(i));
   root = el("div", { id: "health-hud" }, bars.map((b) => b.root));
-  document.body.appendChild(root);
+  topHudRow().appendChild(root);
 
   onPlayerHealthChange(redraw);
   // Re-anchor each bar to its slice when the window resizes (the slice
@@ -52,13 +53,18 @@ function injectStyles() {
   style.id = "health-hud-styles";
   style.textContent = `
     #health-hud {
-      position: fixed; top: 12px; left: 12px;
+      position: relative;
       display: flex; flex-direction: column; gap: 6px;
-      z-index: 11; pointer-events: none;
+      /* Elastic item of the top row: grow to 180px, shrink to 84px so the
+         coin + ammo chips always fit beside it on narrow screens. */
+      flex: 0 1 180px;
+      min-width: 84px;
+      pointer-events: none;
       user-select: none; -webkit-user-select: none;
     }
     .hp-card {
-      width: 180px;
+      width: 100%;
+      box-sizing: border-box;
       padding: 6px 10px;
       background: var(--sb-surface-bg);
       border: var(--sb-surface-border);
