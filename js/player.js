@@ -117,12 +117,28 @@ const FROZEN_INPUT = { events: [], held: new Set() };
 
 export function updatePlayer(player, input, dt, zone) {
   // A frozen hero (caught by a demands-attention NPC, npcInterception.js)
-  // finishes any in-flight step so it lands cleanly on a tile, then stands
-  // idle until the encounter releases it.
+  // takes no new steps; haltPlayer already snapped it onto a tile when the
+  // freeze began, so it just stands idle until the encounter releases it.
   if (player._frozen) input = FROZEN_INPUT;
   if (player.step) advanceStep(player, input, dt, zone);
   else handleIdle(player, input, dt, zone);
   updateAnimation(player, dt);
+}
+
+// Stop the player dead on its current tile: drop any in-flight or queued step
+// and snap the render position back to the tile. The tile-locked model chains
+// the next step at the same snap it lands a tile, so a hero holding a movement
+// key has already committed the following step by the time an interception
+// freezes it that frame — without this it would coast one tile past the
+// line-of-sight tile. Safe because tileX/tileY is always a real tile at snap.
+export function haltPlayer(player) {
+  player.step = null;
+  player.queuedDir = null;
+  player.pendingDir = null;
+  player.pendingTimer = 0;
+  player._sliding = false;
+  player.x = player.tileX;
+  player.y = player.tileY;
 }
 
 // Host-side executor for a single committed guest tile-step. Wraps

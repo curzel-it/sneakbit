@@ -18,6 +18,7 @@
 // renders for everyone. Creative / PvP / Tower-Defense are skipped.
 
 import { isWalkable } from "./zone.js";
+import { haltPlayer } from "./player.js";
 import { findPathToNearest } from "./pathfinding.js";
 import { getValue, setValue } from "./storage.js";
 import { openDialogueWithEntity } from "./interact.js";
@@ -111,6 +112,10 @@ function localTargets(state) {
 function beginInterception(zone, e, hit, footX, footY) {
   const { player, dx, dy } = hit;
   player._frozen = true;
+  // Halt the hero exactly on the line-of-sight tile. Holding a movement key
+  // chains the next step at the same snap it reached this tile, so without
+  // this it would coast one tile past before the freeze took hold.
+  haltPlayer(player);
   // Turn the hero to face the approaching NPC (hit.dir points NPC → player, so
   // the NPC is the other way). The frozen hero keeps this facing for the walk.
   player.direction = OPPOSITE[hit.dir] ?? player.direction;
