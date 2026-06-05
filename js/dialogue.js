@@ -67,13 +67,18 @@ export function installDialogue() {
       padding: 18px 20px 16px;
       color: #f2f2f2;
       font-family: monospace; font-size: 15px; line-height: 1.5;
-      white-space: pre-wrap; overflow-wrap: break-word;
       background: linear-gradient(180deg, #20242e 0%, #14161c 100%);
       border: 1px solid #3a4150;
       border-top-color: #525d70;
       border-radius: var(--sb-card-radius);
       box-shadow: 0 10px 34px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
     }
+    /* pre-wrap lives here, not on the panel: the panel's markup carries
+       inter-element whitespace (newlines/indent around the text + caret
+       nodes) which pre-wrap would render as blank lines, padding the box
+       out top and bottom. Scoped to the text, only the dialogue's own \\n
+       line breaks are preserved. */
+    #dialogue-text { white-space: pre-wrap; overflow-wrap: break-word; }
     #dialogue-text em { font-style: italic; color: #cfe0ff; }
     #dialogue-text strong { font-weight: 700; color: #ffe9a8; }
     #dialogue-name {
@@ -115,7 +120,7 @@ export function installDialogue() {
         top: auto !important;
         bottom: calc(env(safe-area-inset-bottom, 0px) + 5%) !important;
       }
-      #dialogue-panel { font-size: 14px; }
+      #dialogue-panel { font-size: 13px; }
     }
   `;
   document.head.appendChild(style);
