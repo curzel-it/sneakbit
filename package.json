@@ -14,8 +14,8 @@
     "shots": "node tools/screenshot.mjs",
     "sprites": "node tools/exportSpriteSheets.mjs",
     "build": "node tools/build.mjs",
-    "serve": "python3 -m http.server 8000",
-    "dev": "python3 -m http.server 8000",
+    "serve": "node tools/serve.mjs",
+    "dev": "node tools/serve.mjs",
     "electron": "npm run build && electron .",
     "dist": "npm run build && electron-builder --mac --win --linux --x64",
     "steam": "python3 tools/steam_upload.py"

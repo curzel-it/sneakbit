@@ -1149,6 +1149,27 @@
     "sprite_sheet_id": 1004
   },
   {
+    "base_speed": 2.0,
+    "entity_type": "Building",
+    "id": 1201,
+    "inventory_texture_offset": [
+      5,
+      26
+    ],
+    "is_invulnerable": true,
+    "is_rigid": true,
+    "lock_type": "None",
+    "name": "building.name.shop",
+    "sprite_frame": {
+      "h": 4,
+      "w": 5,
+      "x": 20,
+      "y": 15
+    },
+    "sprite_number_of_frames": 1,
+    "sprite_sheet_id": 1004
+  },
+  {
     "base_speed": 1.0,
     "entity_type": "Npc",
     "id": 4001,
