@@ -111,7 +111,15 @@ function ackGuestStep(player, seq) {
   if (seq && guestAckSink) guestAckSink(player.playerId, seq);
 }
 
+// Neutral input for a frozen player: no new presses, nothing held. Shared and
+// read-only on these paths, so a single instance is safe.
+const FROZEN_INPUT = { events: [], held: new Set() };
+
 export function updatePlayer(player, input, dt, zone) {
+  // A frozen hero (caught by a demands-attention NPC, npcInterception.js)
+  // finishes any in-flight step so it lands cleanly on a tile, then stands
+  // idle until the encounter releases it.
+  if (player._frozen) input = FROZEN_INPUT;
   if (player.step) advanceStep(player, input, dt, zone);
   else handleIdle(player, input, dt, zone);
   updateAnimation(player, dt);

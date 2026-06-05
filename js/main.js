@@ -44,6 +44,7 @@ import { tickMonsterFusion } from "./monsters.js";
 import { tickMinionSpawning } from "./minions.js";
 import { tickCombat } from "./combat.js";
 import { tickAfterDialogue } from "./afterDialogue.js";
+import { tickNpcInterception, isInterceptionActive } from "./npcInterception.js";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
 import { installHealthHud, refreshHealthHud } from "./healthHud.js";
 import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js";
@@ -256,7 +257,8 @@ async function main() {
   installWeaponSelect({
     isBlocked: () =>
       isMenuOpen() || isDialogueOpen() || isGameOverOpen() || isShopOpen() ||
-      isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen() || isAccountPanelOpen(),
+      isFastTravelOpen() || isMessageOpen() || isPartyPanelOpen() || isAccountPanelOpen() ||
+      isInterceptionActive(),
     // Anchor the ribbon above the local player's head. Single-camera only —
     // split-screen has no single "the player", so fall back to centered.
     anchorFor: (playerIndex) => {
@@ -452,6 +454,7 @@ async function main() {
       // friendly-fire gating.
       tickCombat(state.zone, allPlayers(state), dt);
       tickAfterDialogue(state.zone, dt);
+      tickNpcInterception(state, dt);
       tickPuzzles(state.zone, state.player);
       tickCutscenes(state.zone, state.player, dt);
       tickTrails(state.zone, state.player, dt);

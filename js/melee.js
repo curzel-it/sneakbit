@@ -242,6 +242,8 @@ export function performMeleeSwing(state, opts = {}) {
 }
 
 function swing(state, swinger) {
+  // A hero frozen by a demands-attention NPC can't act during the cutscene.
+  if ((swinger || state.player)?._frozen) return;
   performMeleeSwing(state, { swinger: swinger || state.player });
 }
 

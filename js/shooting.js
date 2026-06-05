@@ -208,6 +208,8 @@ function playerForSlot(state, slot) {
 function shoot(state, shooter) {
   const idx = (shooter?.index | 0) || 0;
   if (isPlayerDead(idx)) return;
+  // A hero frozen by a demands-attention NPC can't act during the cutscene.
+  if (shooter?._frozen) return;
   // PvP: only the player whose turn is active may fire (no-op otherwise).
   if (!pvpSlotCanAct(idx + 1)) return;
   if (cooldown[idx] > 0) return;
