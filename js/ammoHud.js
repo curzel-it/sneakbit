@@ -18,7 +18,7 @@ import { isPvp } from "./gameMode.js";
 import { localPlayerCount } from "./coopMode.js";
 import { sliceCount, getSlices } from "./splitScreen.js";
 import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
-import { topHudRow } from "./topHudRow.js";
+import { topHudRow, setTopHudSplit } from "./topHudRow.js";
 import { el } from "./dom.js";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
@@ -72,6 +72,8 @@ export function updateAmmoHud() {
   // own slice and reading its own count. Single-slice (single-player / online)
   // shows just the local hero's chip in the shared top-right corner.
   const split = sliceCount() > 1;
+  // Drive the shared bar's unified-vs-split look (runs every frame, idempotent).
+  setTopHudSplit(split);
   const slices = split ? getSlices() : null;
   const count = split ? localPlayerCount() : 1;
   // Tag with the player number when more than one chip is on screen, or in

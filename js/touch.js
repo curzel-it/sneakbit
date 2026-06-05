@@ -43,11 +43,10 @@ const ICON_DIR_RIGHT = svg(`<polyline points="9,6 15,12 9,18"></polyline>`);
 //   Throw:    star-spark for kunai. Generic enough to still read if a
 //             different ranged weapon ever takes the slot.
 //   Melee:    a sword outline. Sized larger so the cross-guard reads.
-//   Menu:     three horizontal lines (hamburger), the platform norm.
+// (The ☰ menu button now lives in the top HUD bar — see topHudRow.js.)
 const ICON_INTERACT = svg(`<path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"></path><circle cx="12" cy="12" r="0.6" fill="currentColor"></circle>`, 24);
 const ICON_THROW    = svg(`<path d="M12 3 L13.4 9.4 L20 11 L13.4 12.6 L12 19 L10.6 12.6 L4 11 L10.6 9.4 Z" fill="currentColor" stroke="none"></path>`, 24);
 const ICON_MELEE    = svg(`<path d="M14 4 L20 4 L20 10 L9.5 20.5 L7 21 L3 17 L3.5 14.5 L14 4 Z"></path><line x1="9" y1="9" x2="15" y2="15"></line>`, 24);
-const ICON_MENU     = svg(`<line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line>`, 22);
 
 // Tower-Defense build verbs. During the build phase the action cluster stops
 // being "attack" and becomes a tiny build toolbar, so the icons swap to match
@@ -105,9 +104,6 @@ export function installTouchControls() {
       <button class="touch-btn touch-action touch-melee"    data-action="melee">${ICON_MELEE}<span class="touch-label"></span></button>
       <button class="touch-btn touch-action touch-throw"    data-action="throw">${ICON_THROW}<span class="touch-label"></span></button>
       <button class="touch-btn touch-action touch-interact" data-action="interact">${ICON_INTERACT}<span class="touch-verb"></span><span class="touch-label"></span></button>
-    </div>
-    <div class="touch-pad" data-side="top-right">
-      <button class="touch-btn touch-menu" data-action="menu">${ICON_MENU}</button>
     </div>
   `,
     style: {
@@ -341,8 +337,6 @@ function onPress(e, btn) {
     dispatchKey("keydown", KEY_FOR_DIR[dir]);
   } else if (action === "interact") {
     dispatchKey("keydown", "KeyE");
-  } else if (action === "menu") {
-    dispatchKey("keydown", "Escape");
   } else if (action === "throw") {
     if (isTowerDefenseMode()) {
       // TD build: the throw button is the "back/done" verb (close shop / exit
@@ -494,15 +488,6 @@ function injectStyles() {
       flex-direction: column-reverse;
       gap: 14px;
       align-items: center;
-    }
-    #touch-controls .touch-pad[data-side="top-right"] {
-      top: 12px;
-      right: 12px;
-      bottom: auto;
-    }
-    #touch-controls .touch-menu {
-      width: 44px;
-      height: 44px;
     }
     #touch-controls .touch-btn {
       pointer-events: auto;
