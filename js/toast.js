@@ -24,6 +24,7 @@ let fadeTimer = null;
 export function installToast() {
   if (root) return root;
   if (typeof document === "undefined") return null;
+  injectStyles();
   iconEl = el("canvas", {
     width: 16,
     height: 16,
@@ -62,6 +63,32 @@ export function installToast() {
   }, [iconEl, textEl]);
   document.body.appendChild(root);
   return root;
+}
+
+// On phone portrait the content-hugging centred pill reads as tiny and can
+// collide with the top HUD strip (topHudRow.js, ~52px tall at top:12px). Grow
+// it into a full-width banner with comfortable lateral margins, bump the type,
+// and drop it clear below the HUD. The toast's base geometry is set inline, so
+// these overrides need !important to win — same pattern as dialogue.js.
+function injectStyles() {
+  if (typeof document === "undefined") return;
+  if (document.getElementById("toast-styles")) return;
+  const style = document.createElement("style");
+  style.id = "toast-styles";
+  style.textContent = `
+    @media (max-width: 600px) and (orientation: portrait) {
+      #toast {
+        top: 64px !important;
+        left: 16px !important;
+        right: 16px !important;
+        transform: none !important;
+        max-width: none !important;
+        padding: 14px 18px !important;
+        font-size: 15px !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
 }
 
 export function showToast(text, mode = "hint", opts = {}) {

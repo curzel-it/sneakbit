@@ -109,6 +109,7 @@ export function installDialogue() {
        the modal dialogue to the top so it doesn't cover the controls. */
     @media (pointer: coarse) {
       #dialogue { bottom: auto !important; top: 6% !important; }
+      #dialogue-panel { font-size: 14px; }
     }
   `;
   document.head.appendChild(style);

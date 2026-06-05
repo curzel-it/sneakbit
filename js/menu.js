@@ -601,6 +601,16 @@ function injectStyles() {
     #menu .menu-tab { background: #1f1f1f; color: #aaa; border: 1px solid #333; padding: 6px 12px; border-radius: var(--sb-surface-radius); font-size: 12px; cursor: pointer; }
     #menu .menu-tab:hover { background: #2a2a2a; }
     #menu .menu-tab.active { background: #2a3a55; border-color: #4a5a88; color: #fff; }
+    /* On narrow screens the card has no breathing room — it grows to the
+       screen edges. Cap its width so the flex-centering leaves a lateral
+       margin, and drop the inner min-widths that would otherwise force it
+       wider than that cap (and overflow). Padding stays. */
+    @media (max-width: 480px) {
+      #menu .menu-card { min-width: 0; max-width: calc(100vw - 32px); }
+      #menu .inv-list,
+      #menu .inv-slot,
+      #menu .menu-controls-list { min-width: 0; }
+    }
   `;
   const style = document.createElement("style");
   style.id = "menu-styles";
