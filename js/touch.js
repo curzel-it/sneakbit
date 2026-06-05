@@ -9,9 +9,11 @@
 import { tryShoot, getShootCooldownProgress } from "./shooting.js";
 import { tryMelee, getMeleeSwingProgress } from "./melee.js";
 import { getEquipped, onEquipmentChange, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
+import { getAmmo } from "./inventory.js";
+import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { codesFor } from "./keyBindings.js";
-import { isTowerDefenseMode } from "./gameMode.js";
+import { isTowerDefenseMode, isPvp } from "./gameMode.js";
 import { onActiveInputDeviceChange } from "./activeInputDevice.js";
 import { getSettings } from "./settings.js";
 import { mountJoystick, unmountJoystick } from "./touchJoystick.js";
@@ -23,6 +25,10 @@ import { el } from "./dom.js";
 // Weapon-icon supersample: paint the 16px inventory tile into an ×8 backing
 // canvas and let CSS downscale it crisply (same trick as ammoHud.js).
 const WICON_RES = TILE_SIZE * 8;
+
+// Fallback bullet when the equipped ranged weapon doesn't resolve to one
+// (default loadout / tests) — matches ammoHud.js / shooting.js.
+const KUNAI_BULLET_SPECIES_ID = 7000;
 
 const KEY_FOR_DIR = { up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight" };
 
@@ -252,6 +258,38 @@ function syncMeleeVisibility() {
   btn.style.display = (isTowerDefenseMode() || getEquipped(SLOT_MELEE)) ? "" : "none";
 }
 
+// The bullet the local hero's equipped ranged weapon fires (mirrors
+// ammoHud.js::rangedBulletFor) — falls back to the kunai when none resolves.
+function localRangedBullet() {
+  const sp = getSpecies(getEquipped(SLOT_RANGED, 0));
+  return sp?.bullet_species_id || KUNAI_BULLET_SPECIES_ID;
+}
+
+// True when the local hero can actually fire: TD heroes have unlimited kunai;
+// PvP draws from the per-player scavenge pool; story/co-op from the persisted
+// inventory. Mirrors shooting.js::shoot's ammo gate so the button matches what
+// a tap would do.
+function hasRangedAmmo() {
+  if (isTowerDefenseMode()) return true;
+  if (isPvp()) return getPvpAmmo(0, bulletOfWeapon(getPvpRangedWeapon(0))) > 0;
+  return getAmmo(localRangedBullet(), 0) > 0;
+}
+
+// Hide the throw button when the ranged weapon is out of ammo so a thumb never
+// taps a dead control. TD owns the button's display by phase, so leave it alone
+// there (tdActionMode gates the per-frame caller). Memoised on lastThrowHidden
+// so the per-frame poll only writes the DOM on a real change.
+let lastThrowHidden = null;
+function syncThrowVisibility() {
+  if (!root) return;
+  const btn = root.querySelector(".touch-throw");
+  if (!btn) return;
+  const hidden = !hasRangedAmmo();
+  if (hidden === lastThrowHidden) return;
+  lastThrowHidden = hidden;
+  btn.style.display = hidden ? "none" : "";
+}
+
 // Re-evaluate which action buttons show — towerDefense calls this when a run
 // starts so the melee/remove button appears even if the squad carries no
 // melee weapon (and the mode flips after the overlay was first built).
@@ -314,6 +352,9 @@ function applyTdActionMode() {
   // Hide the weapon canvases in any TD mode; repaint them when the normal
   // cluster returns. refreshWeaponIcons() gates on tdActionMode internally.
   refreshWeaponIcons();
+  // We just forced the throw button's display by phase, so drop the memo —
+  // syncThrowVisibility re-asserts ammo gating on the next normal-cluster tick.
+  lastThrowHidden = null;
 }
 
 function setActionButton(btn, iconHtml, label, display) {
@@ -374,8 +415,12 @@ function applyWeaponIcon(action, weaponId) {
   } else {
     e.wicon.style.display = "none";
     if (e.svg) e.svg.style.display = "";
-    // A real weapon whose sprite sheet hasn't loaded yet — retry next frame.
-    if (sp?.inventory_texture_offset) weaponIconsPending = true;
+    // We expected an icon but it isn't ready yet — installTouchControls runs
+    // before main.js awaits loadAssets()/loadSpecies(), so the first paint sees
+    // an unloaded species (sp === null) or sprite sheet. Retry next frame. Skip
+    // weapons that resolve to no inventory icon at all, so we don't spin forever
+    // on a species that legitimately has no offset.
+    if (weaponId != null && (!sp || sp.inventory_texture_offset)) weaponIconsPending = true;
   }
 }
 
@@ -410,6 +455,7 @@ function paintWeaponIcon(canvas, sp) {
 export function updateTouchCombat() {
   if (!visible || tdActionMode) return;
   if (weaponIconsPending) refreshWeaponIcons();
+  syncThrowVisibility();
   updateCooldownRing("melee", getMeleeSwingProgress(0));
   updateCooldownRing("throw", getShootCooldownProgress(0));
 }
@@ -432,6 +478,7 @@ function updateCooldownRing(action, progress) {
 function show() {
   if (visible) return;
   visible = true;
+  lastThrowHidden = null; // re-assert ammo gating on the next combat tick
   root.style.display = "block";
   document.body.classList.add("touch-mode");
   // The action set can depend on the live game mode (TD relabels the cluster
