@@ -72,26 +72,36 @@ function playerForSlotInState(state, slot) {
   return s ? s.player : null;
 }
 
-// Returns true if a dialogue was kicked off (the keyboard handler then
-// preventDefault's so the key doesn't double-fire downstream). Returns
-// false when there's nothing in front to talk to.
-function performInteract(state, initiator) {
-  const target = findFacingEntity(state.zone, initiator);
-  if (!target) return false;
+// Resolve the entity's dialogue, open it, run its after-dialogue behavior on
+// close, and (for a local initiator carrying shop_stock) pop the shop once the
+// greeting closes. Returns the showDialogue promise, or null when no dialogue
+// matches the current game state. Shared by manual interact (below) and the
+// NPC-initiated interception cutscene (npcInterception.js).
+export function openDialogueWithEntity(state, initiator, target, { local = false } = {}) {
   const dialogue = resolveEntityDialogue(target);
-  if (!dialogue) return false;
+  if (!dialogue) return null;
   const speaker = speakerNameForEntity(target);
-  showDialogue(dialogue, initiator.index | 0, speaker).then(() => {
+  return showDialogue(dialogue, initiator.index | 0, speaker).then(() => {
     handleAfterDialogue(state.zone, target);
     // A clerk carrying shop_stock opens the buy screen once the greeting
     // closes (Pokémon-mart cadence). Local players only — a host driving a
     // remote guest's interact shouldn't pop the modal on the host's screen.
-    const local = initiator === state.player || initiator === state.player2;
     if (local && Array.isArray(target.shop_stock) && target.shop_stock.length) {
       openShop(target.shop_stock, initiator.index | 0);
     }
   });
-  return true;
+}
+
+// Returns true if a dialogue was kicked off (the keyboard handler then
+// preventDefault's so the key doesn't double-fire downstream). Returns
+// false when there's nothing in front to talk to.
+function performInteract(state, initiator) {
+  // A frozen hero (mid-interception cutscene) can't start its own dialogue.
+  if (initiator?._frozen) return false;
+  const target = findFacingEntity(state.zone, initiator);
+  if (!target) return false;
+  const local = initiator === state.player || initiator === state.player2;
+  return openDialogueWithEntity(state, initiator, target, { local }) != null;
 }
 
 // Maps a keydown to the player who should act on it. P1 always uses
