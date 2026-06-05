@@ -152,12 +152,18 @@ function injectStyles() {
   const style = document.createElement("style");
   style.id = "touch-joystick-styles";
   style.textContent = `
+    /* Capture the left 75% of the screen — but NOT the top strip, which the
+       HUD bar (☰ menu / HP / coins / ammo) owns. The bar sits at a lower
+       z-index than this overlay, so without the top inset a thumb landing on
+       the menu button would start the stick instead of tapping the button.
+       The reserved band clears the bar (top:12px + its height) plus any
+       notch/safe-area. */
     #touch-controls .touch-joystick-zone {
       position: absolute;
       left: 0;
-      top: 0;
+      top: calc(env(safe-area-inset-top, 0px) + 60px);
+      bottom: 0;
       width: 75vw;
-      height: 100%;
       pointer-events: auto;
       touch-action: none;
     }
