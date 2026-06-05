@@ -7,7 +7,8 @@
 //     On close, marks dialogue_read.<text>=1 and (if reward set + not yet
 //     collected) adds the reward to inventory and shows a toast.
 
-import { tr } from "./strings.js";
+import { tr, trVariant } from "./strings.js";
+import { getActiveInputDevice } from "./activeInputDevice.js";
 import { playSfx } from "./audio.js";
 import { getValue, setValue, keyMatches } from "./storage.js";
 import { addAmmo } from "./inventory.js";
@@ -152,7 +153,16 @@ export function showDialogue(payload, playerIndex = 0, speaker = "") {
   return new Promise((resolve) => {
     const dialogue = isDialogueObject(payload) ? payload : null;
     const rawLines = dialogue ? [dialogue.text] : (Array.isArray(payload) ? payload : [payload]);
-    const lines = rawLines.flatMap(splitOnSeparator).map((s) => tr(s));
+    const touch = getActiveInputDevice() === "touch";
+    const lines = rawLines.flatMap(splitOnSeparator).map((s) => trVariant(s, touch)).filter((s) => s !== "");
+    // A hint blanked for this platform (or an otherwise-empty payload) has
+    // nothing to show. Still settle the promise and grant any reward so
+    // progression/read-tracking isn't skipped, but don't open an empty panel.
+    if (lines.length === 0) {
+      if (dialogue) handleReward(dialogue, playerIndex | 0);
+      resolve(dialogue);
+      return;
+    }
     active = { lines, idx: 0, resolve, dialogue, playerIndex: playerIndex | 0, speaker: speaker || "" };
     openPanel();
     paint();
@@ -375,7 +385,8 @@ export function resolveEntityDialogue(entity) {
 // want the resolved text.
 export function dialogueLines(dialogue) {
   if (!dialogue) return [];
-  return splitOnSeparator(dialogue.text).map((s) => tr(s));
+  const touch = getActiveInputDevice() === "touch";
+  return splitOnSeparator(dialogue.text).map((s) => trVariant(s, touch)).filter((s) => s !== "");
 }
 
 // Test-only helpers.

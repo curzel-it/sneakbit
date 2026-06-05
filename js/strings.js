@@ -19,3 +19,20 @@ export function tr(key) {
   if (key in fallback) return fallback[key];
   return key;
 }
+
+// Resolve a key to the platform-appropriate variant. On touch devices a
+// `<key>.mobile` entry wins when one exists — even if it's an empty string,
+// which is how a hint opts out of a platform (e.g. "press F to throw" makes
+// no sense without a keyboard, so its `.mobile` variant is blank). We test
+// for key *presence*, not truthiness, so a blank variant is honored as
+// "show nothing here" rather than falling through to the desktop text.
+// When no `.mobile` variant exists, or we're not on touch, behaves like tr().
+export function trVariant(key, touch) {
+  if (!key) return "";
+  if (touch) {
+    const m = `${key}.mobile`;
+    if (m in table) return table[m];
+    if (m in fallback) return fallback[m];
+  }
+  return tr(key);
+}
