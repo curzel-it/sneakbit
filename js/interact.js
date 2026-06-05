@@ -11,6 +11,8 @@ import { openShop, isShopOpen } from "./shop.js";
 import { matchesAction } from "./keyBindings.js";
 import { isCoopMode, isCoopActive, localPlayerCount, COOP_KEYMAPS } from "./coopMode.js";
 import { glyphForAction } from "./inputGlyphs.js";
+import { getActiveInputDevice } from "./activeInputDevice.js";
+import { tr } from "./strings.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { isDying } from "./deathAnimation.js";
@@ -121,19 +123,27 @@ function playerForSlot(state, slot) {
   return s ? s.player : null;
 }
 
+// Per-frame interaction-prompt update. Returns the label the on-screen touch
+// interact button should show, or null to hide it — main.js forwards this to
+// touch.setInteractPrompt so the button only appears when there's actually
+// something in front to talk to. On touch the labelled button *is* the
+// affordance, so the top banner (which reads "Press E…", keyboard-centric and
+// meaningless on a phone) stays suppressed; keyboard/gamepad keep the banner.
 export function tickInteract() {
-  if (!stateRef || !hintEl) return;
-  if (isDialogueOpen()) { hintEl.style.display = "none"; return; }
+  if (!stateRef || !hintEl) return null;
+  if (isDialogueOpen()) { hintEl.style.display = "none"; return null; }
   const state = stateRef();
   const target = state ? findFacingEntity(state.zone, state.player) : null;
-  if (target) {
-    // Show the prompt with the active device's glyph (e.g. "Press E" /
-    // "Press Ⓐ"). Recomputed while visible so it tracks device switches.
-    hintEl.textContent = `Press ${glyphForAction("interact", 0)} to talk`;
-    hintEl.style.display = "block";
-  } else {
+  if (!target) { hintEl.style.display = "none"; return null; }
+  if (getActiveInputDevice() === "touch") {
     hintEl.style.display = "none";
+    return tr("hud.interact.talk");
   }
+  // Show the prompt with the active device's glyph (e.g. "Press E" /
+  // "Press Ⓐ"). Recomputed while visible so it tracks device switches.
+  hintEl.textContent = `Press ${glyphForAction("interact", 0)} to talk`;
+  hintEl.style.display = "block";
+  return null;
 }
 
 function makeHint() {

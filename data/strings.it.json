@@ -77,6 +77,7 @@
   "game.menu.enable_pvp": "Passa alla modalità Pvp",
   "game.menu.enable_sound_effects": "Ablita Effetti Sonori",
   "game.menu.exit": "Chiudi il gioco",
+  "hud.interact.talk": "Parla",
   "game.menu.exit_pvp": "Esci dalla PvP",
   "game.menu.exit_pvp_are_you_sure": "Sicuro?\nSe confermi ritornerai a Duskhaven",
   "game.menu.inventory": "Inventario",

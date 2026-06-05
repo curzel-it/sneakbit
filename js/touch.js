@@ -75,6 +75,12 @@ let controlStyle = "buttons";
 // pointer so the joystick can be tuned with a mouse (and so the e2e /
 // remote-verify harness can drive it). Off in normal play.
 let forcedTouch = false;
+// Localized label for the auto-managed interact button, or null when there's
+// nothing in front to interact with (button hidden). Driven each frame by
+// main.js forwarding interact.tickInteract()'s return value. In Tower Defense
+// the cluster is owned by setTdActionMode, so we only remember the verb and
+// reapply it once TD hands the buttons back.
+let interactVerb = null;
 
 export function installTouchControls() {
   if (root) return root;
@@ -98,7 +104,7 @@ export function installTouchControls() {
     <div class="touch-pad" data-side="right">
       <button class="touch-btn touch-action touch-melee"    data-action="melee">${ICON_MELEE}<span class="touch-label"></span></button>
       <button class="touch-btn touch-action touch-throw"    data-action="throw">${ICON_THROW}<span class="touch-label"></span></button>
-      <button class="touch-btn touch-action touch-interact" data-action="interact">${ICON_INTERACT}<span class="touch-label"></span></button>
+      <button class="touch-btn touch-action touch-interact" data-action="interact">${ICON_INTERACT}<span class="touch-verb"></span><span class="touch-label"></span></button>
     </div>
     <div class="touch-pad" data-side="top-right">
       <button class="touch-btn touch-menu" data-action="menu">${ICON_MENU}</button>
@@ -171,7 +177,33 @@ export function installTouchControls() {
   onEquipmentChange((slot) => { if (slot === SLOT_MELEE) syncMeleeVisibility(); });
 
   applyControlStyle();
+  applyInteractPrompt(); // start hidden until something's in range
   return root;
+}
+
+// Auto-managed interact button. `verb` is the localized label to show ("Talk"),
+// or null to hide the button. Cheap to call every frame — bails when nothing
+// changed. While Tower Defense owns the cluster we just remember the verb;
+// applyTdActionMode reapplies it when TD hands the buttons back.
+export function setInteractPrompt(verb) {
+  const next = verb || null;
+  if (next === interactVerb) return;
+  interactVerb = next;
+  if (!tdActionMode) applyInteractPrompt();
+}
+
+function applyInteractPrompt() {
+  if (!root) return;
+  const btn = root.querySelector(".touch-interact");
+  if (!btn) return;
+  if (interactVerb) {
+    const verbEl = btn.querySelector(".touch-verb");
+    if (verbEl) verbEl.textContent = interactVerb;
+    btn.classList.add("show-verb");
+    btn.style.display = "";
+  } else {
+    btn.style.display = "none";
+  }
 }
 
 // Show the d-pad or the floating joystick for movement, depending on the
@@ -255,11 +287,13 @@ function applyTdActionMode() {
     setActionButton(throwBtn, ICON_THROW, "", "");
     setActionButton(melee, ICON_MELEE, "", "");
   } else {
-    // Not TD — restore the normal game cluster.
-    setActionButton(interact, ICON_INTERACT, "", "");
+    // Not TD — restore the normal game cluster. The interact button is then
+    // auto-managed by setInteractPrompt (shown only when something's in range),
+    // so reapply its current verb/hidden state rather than forcing the icon.
     setActionButton(throwBtn, ICON_THROW, "", "");
     setActionButton(melee, ICON_MELEE, "", "");
     syncMeleeVisibility();
+    applyInteractPrompt();
   }
 }
 
@@ -268,6 +302,9 @@ function setActionButton(btn, iconHtml, label, display) {
   if (icon) icon.outerHTML = iconHtml; // constants include the .touch-icon wrapper
   const lbl = btn.querySelector(".touch-label");
   if (lbl) lbl.textContent = label;
+  // An explicit icon takes the button face — drop the auto verb-text mode
+  // (only the interact button ever carries it) so the icon isn't CSS-hidden.
+  btn.classList.remove("show-verb");
   btn.style.display = display;
 }
 
@@ -524,6 +561,21 @@ function injectStyles() {
       text-shadow: 0 1px 0 #000;
     }
     #touch-controls .touch-label:empty { display: none; }
+    /* Auto-managed interact button shows a verb word ("Talk") in place of the
+       icon — the button only appears when something's in range, so the word
+       reads as the action without a hint banner. Centered on the button face;
+       the .touch-icon is swapped out for it via the show-verb class. */
+    #touch-controls .touch-verb {
+      display: none;
+      align-items: center; justify-content: center;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      font-family: var(--sb-font, monospace);
+      font-size: 14px; font-weight: bold; color: var(--sb-text);
+      text-shadow: 0 1px 0 #000;
+    }
+    #touch-controls .touch-interact.show-verb .touch-icon { display: none; }
+    #touch-controls .touch-interact.show-verb .touch-verb { display: flex; }
     @media (min-width: 980px) and (pointer: fine) {
       #touch-controls { display: none !important; }
       /* The ?touch=1 flag keeps the overlay up on desktop for tuning
