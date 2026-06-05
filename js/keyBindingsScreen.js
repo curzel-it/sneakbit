@@ -15,6 +15,7 @@ import { GAMEPAD_ACTIONS, GAMEPAD_ACTIONS_P2, buttonFor, setGamepadBinding, rese
 import { setGamepadCapturing, pressedButtonsForSlot } from "./gamepad.js";
 import { formatKeyCode, formatPadButton } from "./inputGlyphs.js";
 import { localPlayerCount } from "./coopMode.js";
+import { showConfirm } from "./confirmDialog.js";
 
 let root = null;
 // Which player's bindings are shown. The P2+ tabs are only visible when
@@ -34,10 +35,16 @@ let padCapture = null; // { action, playerIndex, btn, prev, raf } | null
 export function initKeyBindingsScreen(menuRoot) {
   root = menuRoot;
   const reset = root.querySelector("#menu-controls-reset");
-  reset?.addEventListener("click", () => {
+  reset?.addEventListener("click", async () => {
     const who = controlsPlayer === 1 ? "Player 2's" : "Player 1's";
     const what = controlsDevice === "controller" ? "controller bindings" : "key bindings";
-    if (!confirm(`Reset ${who} ${what} to their defaults?`)) return;
+    const ok = await showConfirm({
+      title: "Reset bindings?",
+      text: `Reset ${who} ${what} to their defaults?`,
+      confirmLabel: "Reset",
+      danger: true,
+    });
+    if (!ok) return;
     if (controlsDevice === "controller") resetGamepadBindings(controlsPlayer);
     else resetBindings(controlsPlayer);
     renderControlsList();

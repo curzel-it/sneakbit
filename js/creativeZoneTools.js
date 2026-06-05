@@ -9,6 +9,8 @@
 import { el } from "./dom.js";
 import { saveEditedWorld, revertEditedWorld } from "./editedWorlds.js";
 import { invalidateZoneCache } from "./data.js";
+import { showMessage } from "./message.js";
+import { showConfirm } from "./confirmDialog.js";
 
 // () => ({ zone, rawZone, ... }) | null — the live game state. Wired by
 // the menu at install so this module doesn't reach into main.js.
@@ -27,14 +29,14 @@ export async function saveZoneNow() {
   const st = getState();
   const id = st?.zone?.id;
   const raw = st?.rawZone;
-  if (!id || !raw) { alert("No zone is loaded yet."); return; }
+  if (!id || !raw) { showMessage("Save zone", "No zone is loaded yet."); return; }
   try {
     const ok = await saveEditedWorld(id, raw);
     invalidateZoneCache(id);
-    if (ok) alert(`Saved zone ${id} to the server.`);
-    else alert(`Save failed: sign in as an editor first.`);
+    if (ok) showMessage("Zone saved", `Saved zone ${id} to the server.`);
+    else showMessage("Save failed", "Sign in as an editor first.");
   } catch (e) {
-    alert(`Save failed: ${e?.message ?? "unknown error"}`);
+    showMessage("Save failed", e?.message ?? "unknown error");
   }
 }
 
@@ -45,7 +47,7 @@ export function exportZone() {
   const st = getState();
   const id = st?.zone?.id;
   const raw = st?.rawZone;
-  if (!id || !raw) { alert("No zone is loaded yet."); return; }
+  if (!id || !raw) { showMessage("Export zone", "No zone is loaded yet."); return; }
   const json = JSON.stringify(raw, null, 2);
   const blob = new Blob([json], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -63,14 +65,20 @@ export function exportZone() {
 export async function resetZone() {
   const st = getState();
   const id = st?.zone?.id;
-  if (!id) { alert("No zone is loaded yet."); return; }
-  if (!confirm(`Reset zone ${id} to the shipped version? Any server-stored creative edits will be discarded.`)) return;
+  if (!id) { showMessage("Reset zone", "No zone is loaded yet."); return; }
+  const ok = await showConfirm({
+    title: `Reset zone ${id}?`,
+    text: "Reverts to the shipped version. Any server-stored creative edits will be discarded.",
+    confirmLabel: "Reset zone",
+    danger: true,
+  });
+  if (!ok) return;
   try {
-    const ok = await revertEditedWorld(id);
+    const reverted = await revertEditedWorld(id);
     invalidateZoneCache(id);
-    if (ok) alert(`Reverted zone ${id} to shipped. Reload (or teleport in/out) to see it.`);
-    else alert(`Reset failed: sign in as an editor first.`);
+    if (reverted) showMessage("Zone reset", `Reverted zone ${id} to shipped. Reload (or teleport in/out) to see it.`);
+    else showMessage("Reset failed", "Sign in as an editor first.");
   } catch (e) {
-    alert(`Reset failed: ${e?.message ?? "unknown error"}`);
+    showMessage("Reset failed", e?.message ?? "unknown error");
   }
 }

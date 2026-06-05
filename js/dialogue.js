@@ -123,6 +123,11 @@ export function installDialogue() {
     // unusual key. Otherwise the rebound interact key works too.
     if (e.code === "Space" || matchesAction("interact", e.code)) {
       e.preventDefault();
+      // Stop later window keydown listeners (notably interact.js) from
+      // acting on this same press. Without this, closing the dialogue with
+      // the interact key would null out `active` and then let interact.js
+      // immediately re-open it on the very same event.
+      e.stopImmediatePropagation();
       advance();
     }
   };

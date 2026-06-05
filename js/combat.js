@@ -179,7 +179,8 @@ function resolveBullets(zone, players, dt) {
         // so it stops blocking, fusing, attacking and taking further hits.
         startDeathAnimation(t);
         // Real-game loot: scatter coins for the hero to collect (no-op in
-        // TD/PvP/creative, and only for monsters — see coinDrops.js).
+        // TD/PvP/creative — see coinDrops.js). Monsters and barrels both drop,
+        // each on its own weighted table.
         maybeDropCoin(zone, t);
         consumed = true;
       } else {

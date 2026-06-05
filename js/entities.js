@@ -226,11 +226,15 @@ function draw(ctx, e, camera) {
   // needing the per-entity lifespan in the snapshot.
   if (isDying(e)) { drawDeath(ctx, e, camera); return; }
 
-  // Teleporters are an editing aid: the "T" marker (creative sprite row)
-  // only makes sense in the map editor. In normal gameplay they're
-  // invisible portals, so skip rendering entirely rather than blitting a
-  // blank/placeholder row that leaks a stray line over the door tile.
-  if (sp?.entity_type === "Teleporter" && !isCreativeMode()) return;
+  // Teleporters and hints are editing aids — the "T"/sign markers only
+  // make sense in the map editor. In normal gameplay teleporters are
+  // invisible portals and hints are invisible trigger tiles, so skip
+  // rendering entirely rather than blitting a placeholder sprite that
+  // leaks a stray line or dot onto the map.
+  if (!isCreativeMode() &&
+      (sp?.entity_type === "Teleporter" || sp?.entity_type === "Hint")) {
+    return;
+  }
 
   // Creative-mode hint re-skin: in the Rust core hint signs render from
   // the inventory sheet at their `inventory_texture_offset` instead of

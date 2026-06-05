@@ -28,6 +28,7 @@ import { isGameOverOpen } from "./gameOver.js";
 import { isFastTravelOpen } from "./fastTravel.js";
 import { isMessageOpen } from "./message.js";
 import { isDialogueOpen } from "./dialogue.js";
+import { showConfirm, isConfirmOpen } from "./confirmDialog.js";
 import { getRuntimeRole, onRoleChange } from "./onlineMode.js";
 import { isFullscreenSupported, isFullscreen, toggleFullscreen, onFullscreenChange } from "./fullscreen.js";
 import { setTouchControlStyle } from "./touch.js";
@@ -42,7 +43,8 @@ function isAnotherModalOpen() {
     || isMessageOpen()
     || isDialogueOpen()
     || isPartyPanelOpen()
-    || isAccountPanelOpen();
+    || isAccountPanelOpen()
+    || isConfirmOpen();
 }
 
 let root = null;
@@ -390,8 +392,15 @@ function bindWidgets() {
     closeMenu();
     window.creative?.openMapEditor?.();
   });
-  root.querySelector("#menu-new-game").addEventListener("click", () => {
-    if (!confirm("Wipe save and start over? Inventory, dialogue progress and unlocked skills will be reset.")) return;
+  root.querySelector("#menu-new-game").addEventListener("click", async () => {
+    const ok = await showConfirm({
+      title: "Start a new game?",
+      text: "This wipes your save. Inventory, dialogue progress and unlocked skills will all be reset.",
+      confirmLabel: "Wipe save",
+      cancelLabel: "Cancel",
+      danger: true,
+    });
+    if (!ok) return;
     // A fresh start should be truly fresh: when signed in, delete the cloud
     // save too (keepalive so it survives the imminent reload), otherwise it
     // would just sync back down on the next sign-in. Best-effort — a failed

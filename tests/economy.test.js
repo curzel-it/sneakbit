@@ -60,6 +60,24 @@ test("rollCoinDrop: non-monster species never drops", () => {
   assert.equal(rollCoinDrop(null, seq(0.0)), 0);
 });
 
+test("rollCoinDrop: barrels use the weighted table, not the monster fields", () => {
+  // isExplosive keys off the species id alone, so a bare {id} is enough here.
+  // Cumulative bands: <0.5→0, <0.87→1, <0.95→2, <0.99→5, else→10.
+  for (const id of [1038, 1039, 1073, 1074]) {
+    const barrel = { id };
+    assert.equal(rollCoinDrop(barrel, seq(0.0)), 0);
+    assert.equal(rollCoinDrop(barrel, seq(0.49)), 0);
+    assert.equal(rollCoinDrop(barrel, seq(0.5)), 1);
+    assert.equal(rollCoinDrop(barrel, seq(0.86)), 1);
+    assert.equal(rollCoinDrop(barrel, seq(0.87)), 2);
+    assert.equal(rollCoinDrop(barrel, seq(0.94)), 2);
+    assert.equal(rollCoinDrop(barrel, seq(0.95)), 5);
+    assert.equal(rollCoinDrop(barrel, seq(0.98)), 5);
+    assert.equal(rollCoinDrop(barrel, seq(0.99)), 10);
+    assert.equal(rollCoinDrop(barrel, seq(0.999)), 10);
+  }
+});
+
 test("wallet: addCoins accumulates and getCoins reads back", () => {
   _resetStorageForTesting();
   _resetWalletForTesting();
