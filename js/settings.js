@@ -31,8 +31,10 @@ const DEFAULTS = {
   friendlyFire: false,
   // On-screen mobile movement input: "buttons" (the 4-way d-pad) or
   // "joystick" (the floating analog stick ported from the original).
-  // Touch-only; ignored on desktop. Buttons by default.
-  touchControls: "buttons",
+  // Touch-only; ignored on desktop. Joystick by default — it matches the
+  // feel of the original game and reads as a single, discoverable control.
+  // Only affects fresh installs; returning players keep their saved choice.
+  touchControls: "joystick",
 };
 
 let current = { ...DEFAULTS };
