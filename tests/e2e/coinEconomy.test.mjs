@@ -57,9 +57,9 @@ test("coins: species loads, HUD mounts and tracks the wallet, no exceptions", as
     return { type: c.entity_type, frames: c.frames, ty: c.texture_y, off: c.inventory_texture_offset };
   })()`);
   assert.equal(coin.type, "PickableObject", "coin is a PickableObject");
-  assert.equal(coin.frames, 6, "coin uses the 6-frame ground strip");
-  assert.equal(coin.ty, 18, "coin ground sprite at animated_objects row 18");
-  assert.deepEqual(coin.off, [11, 5], "coin HUD icon at inventory [11,5]");
+  assert.equal(coin.frames, 12, "coin uses the 12-frame ground strip");
+  assert.equal(coin.ty, 7, "coin ground sprite at animated_objects row 7");
+  assert.deepEqual(coin.off, [12, 5], "coin HUD icon at inventory [12,5]");
 
   const drop = await evalExpr(s, `(async () => {
     const { getSpecies } = await import('./js/species.js');
