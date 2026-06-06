@@ -656,7 +656,7 @@ function injectStyles() {
     #touch-controls .touch-pad[data-side="left"] .touch-btn[data-dir="down"]  { grid-column: 2; grid-row: 3; }
     #touch-controls .touch-pad[data-side="right"] {
       right: 4vw;
-      bottom: 8vh;
+      bottom: 14vh;
       display: flex;
       flex-direction: column-reverse;
       gap: 14px;

@@ -118,7 +118,7 @@ export function installDialogue() {
     @media (pointer: coarse) {
       #dialogue {
         top: auto !important;
-        bottom: calc(env(safe-area-inset-bottom, 0px) + 5%) !important;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 12%) !important;
       }
       #dialogue-panel { font-size: 13px; }
     }
