@@ -78,7 +78,21 @@ export function installDialogue() {
        nodes) which pre-wrap would render as blank lines, padding the box
        out top and bottom. Scoped to the text, only the dialogue's own \\n
        line breaks are preserved. */
-    #dialogue-text { white-space: pre-wrap; overflow-wrap: break-word; }
+    /* Cap the text at 60% of the viewport and scroll the overflow rather
+       than letting a long book entry grow the panel off the top of the
+       screen (worst on short mobile viewports). Short lines fit and never
+       show a scrollbar, so the common case is unchanged. The reveal
+       auto-follows to the bottom (see startTypewriter) so the typewriter
+       never types below the fold. */
+    #dialogue-text {
+      white-space: pre-wrap; overflow-wrap: break-word;
+      max-height: 60vh; overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin; scrollbar-color: #525d70 transparent;
+    }
+    #dialogue-text::-webkit-scrollbar { width: 8px; }
+    #dialogue-text::-webkit-scrollbar-thumb { background: #525d70; border-radius: 4px; }
+    #dialogue-text::-webkit-scrollbar-track { background: transparent; }
     #dialogue-text em { font-style: italic; color: #cfe0ff; }
     #dialogue-text strong { font-weight: 700; color: #ffe9a8; }
     #dialogue-name {
@@ -275,6 +289,7 @@ function paint() {
   active.revealed = false;
   root.classList.remove("is-ready");
   renderReveal();
+  textEl.scrollTop = 0; // start each line at the top; the reveal follows down
 
   // No motion (preference or empty line) → show it all immediately.
   if (reduceMotion || active.total === 0) finishReveal();
@@ -297,6 +312,7 @@ function startTypewriter() {
       active.shown = Math.min(active.total, active.shown + add);
       lastRevealTs = ts;
       renderReveal();
+      textEl.scrollTop = textEl.scrollHeight; // keep the newest text in view
     }
     if (active.shown >= active.total) { finishReveal(); return; }
     typingRaf = requestAnimationFrame(step);
