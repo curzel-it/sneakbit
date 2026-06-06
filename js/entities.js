@@ -249,15 +249,17 @@ function draw(ctx, e, camera) {
   let frame = 0;
   let dirRow = 0;
   const moving = isEntityMoving(e, sp);
+  // Frames advance whenever the sprite has more than one, moving or not —
+  // mirrors the Rust core's AnimatedSprite::update (gated only on
+  // number_of_frames). Movement selects the row, never whether we animate;
+  // gating frames on `moving` froze idle NPCs on their first still frame.
+  if (!reskin && frames > 1) {
+    frame = Math.floor(animClock * ANIMATIONS_FPS) % frames;
+  }
   if (!reskin && sp.directional) {
     const dirKey = (e.direction || "down").toLowerCase();
     const table = moving ? DIR_ROW_MOVING : DIR_ROW_STILL;
     dirRow = table[dirKey] ?? DIR_ROW_STILL.down;
-    if (moving && frames > 1) {
-      frame = Math.floor(animClock * ANIMATIONS_FPS) % frames;
-    }
-  } else if (!reskin && frames > 1) {
-    frame = Math.floor(animClock * ANIMATIONS_FPS) % frames;
   }
 
   // "Demands attention" NPCs render the exclamation-mark row (row 8, past the
