@@ -28,6 +28,19 @@ const DIR_DELTA = {
   right: [ 1,  0],
 };
 
+const OPPOSITE = { up: "down", down: "up", left: "right", right: "left" };
+
+// Turn an NPC to face whoever just started talking to it. The initiator is
+// pointed straight at the target — findFacingEntity walked along its facing
+// to reach it — so the target faces back the opposite way. Mirrors the Rust
+// core's npc update, which set the npc's direction toward the hero on the
+// confirmation key. The renderer reads e.direction next frame; the host
+// ships it to guests in the entity snapshot. No-op for an unknown facing.
+export function faceTargetAtInitiator(target, initiator) {
+  const face = OPPOSITE[initiator?.direction];
+  if (face) target.direction = face;
+}
+
 let stateRef = null;
 let hintEl = null;
 
@@ -101,6 +114,7 @@ function performInteract(state, initiator) {
   if (initiator?._frozen) return false;
   const target = findFacingEntity(state.zone, initiator);
   if (!target) return false;
+  faceTargetAtInitiator(target, initiator);
   const local = initiator === state.player || initiator === state.player2;
   return openDialogueWithEntity(state, initiator, target, { local }) != null;
 }

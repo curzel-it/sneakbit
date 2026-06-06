@@ -4,7 +4,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { findFacingEntity } from "../js/interact.js";
+import { findFacingEntity, faceTargetAtInitiator } from "../js/interact.js";
 import { loadSpeciesData } from "../js/species.js";
 
 // Builds a zone with a collision grid. `blocked` is a set of "x,y" tile
@@ -58,6 +58,22 @@ test("ignores entities without dialogue", () => {
   const zone = makeZone(10, 10, new Set(["5,4"]), [wall]);
   const player = { tileX: 5, tileY: 5, direction: "up" };
   assert.equal(findFacingEntity(zone, player), null);
+});
+
+test("NPC turns to face the player who starts talking (opposite of their facing)", () => {
+  for (const [dir, expected] of [["up", "down"], ["down", "up"], ["left", "right"], ["right", "left"]]) {
+    const npc = clerk(5, 4);
+    npc.direction = "down";
+    faceTargetAtInitiator(npc, { direction: dir });
+    assert.equal(npc.direction, expected, `player facing ${dir} → npc faces ${expected}`);
+  }
+});
+
+test("faceTargetAtInitiator leaves direction untouched for an unknown facing", () => {
+  const npc = clerk(5, 4);
+  npc.direction = "left";
+  faceTargetAtInitiator(npc, { direction: undefined });
+  assert.equal(npc.direction, "left");
 });
 
 test("ignores Hint signs even though they carry dialogue (toast-only, no talk affordance)", () => {
