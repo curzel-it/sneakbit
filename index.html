@@ -44,6 +44,12 @@
         image-rendering: pixelated;
         image-rendering: crisp-edges;
         background: #000;
+        /* touch-action is NOT inherited, so the body's `manipulation` doesn't
+           reach here — without this the full-screen canvas defaults to `auto`
+           and iOS Safari keeps double-tap-to-zoom alive over the whole game
+           surface. `none` kills every browser gesture on the canvas; input
+           comes from the control overlays, never from touching the canvas. */
+        touch-action: none;
         /* No max-width/height: js/zoom.js sizes the canvas to be a hair
            bigger than the viewport so integer-scaling doesn't leave a
            thin black border on viewports whose width isn't a clean
