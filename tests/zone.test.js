@@ -101,6 +101,49 @@ test("teleporter without destination does not unblock the building", () => {
   assert.equal(isEntityBlocked(w, 1, 2), true);
 });
 
+test("a locked teleporter blocks instead of unblocking its tile", () => {
+  const w = buildZone({
+    ...TINY,
+    biome_tiles: { sheet_id: 1002, tiles: ["1111","1111","1111","1111"] },
+    construction_tiles: { sheet_id: 1003, tiles: ["0000","0000","0000","0000"] },
+    entities: [
+      { species_id: 1006, frame: { x: 0, y: 0, w: 3, h: 3 } },
+      { species_id: 1019, lock_type: "Permanent",
+        destination: { zone: 42, x: 5, y: 5 },
+        frame: { x: 1, y: 2, w: 1, h: 1 } },
+    ],
+  });
+  // A None-locked teleporter on this tile would be enterable (false);
+  // the Permanent lock keeps the door shut, so the tile blocks.
+  assert.equal(isEntityBlocked(w, 1, 2), true);
+});
+
+test("a locked teleporter on open ground still blocks (no building behind)", () => {
+  const w = buildZone({
+    ...TINY,
+    biome_tiles: { sheet_id: 1002, tiles: ["1111","1111","1111","1111"] },
+    construction_tiles: { sheet_id: 1003, tiles: ["0000","0000","0000","0000"] },
+    entities: [
+      { species_id: 1019, lock_type: "Red",
+        destination: { zone: 42, x: 5, y: 5 },
+        frame: { x: 2, y: 2, w: 1, h: 1 } },
+    ],
+  });
+  assert.equal(isEntityBlocked(w, 2, 2), true);
+  // An unlocked teleporter on open walkable ground does not block.
+  const open = buildZone({
+    ...TINY,
+    biome_tiles: { sheet_id: 1002, tiles: ["1111","1111","1111","1111"] },
+    construction_tiles: { sheet_id: 1003, tiles: ["0000","0000","0000","0000"] },
+    entities: [
+      { species_id: 1019, lock_type: "None",
+        destination: { zone: 42, x: 5, y: 5 },
+        frame: { x: 2, y: 2, w: 1, h: 1 } },
+    ],
+  });
+  assert.equal(isEntityBlocked(open, 2, 2), false);
+});
+
 test("NPC 1x2 only blocks its feet tile, head tile is walkable", () => {
   storage._resetStorageForTesting();
   const w = buildZone({

@@ -9,7 +9,7 @@
 // CSS transitions.
 
 import { loadZone } from "./data.js";
-import { buildZone, isWalkable, isEntityBlocked } from "./zone.js";
+import { buildZone, isWalkable, isEntityBlocked, isTeleporterLocked } from "./zone.js";
 import { el } from "./dom.js";
 import { playSfx } from "./audio.js";
 import { playTrack } from "./music.js";
@@ -66,6 +66,14 @@ export function findTeleporterAt(zone, tileX, tileY) {
     }
   }
   return null;
+}
+
+// The locked teleporter occupying a tile, if any. canEnter uses this to
+// keep the player from stepping onto a shut door (and to show the locked
+// toast); maybeTeleport uses it to never fire a transition for a locked one.
+export function findLockedTeleporterAt(zone, tileX, tileY) {
+  const tele = findTeleporterAt(zone, tileX, tileY);
+  return tele && isTeleporterLocked(tele) ? tele : null;
 }
 
 // Every usable exit in the zone, as the anchor (top-left) tile of each

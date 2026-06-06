@@ -8,7 +8,7 @@ import { installDialogue, isDialogueOpen } from "./dialogue.js";
 import { installInteract, tickInteract, tryInteractForSlot } from "./interact.js";
 import { loadSpeciesData } from "./species.js";
 import { composeBiomeSheet } from "./biomeSheet.js";
-import { buildZone } from "./zone.js";
+import { buildZone, isTeleporterLocked } from "./zone.js";
 import { pickCoopSpawn } from "./coopSpawn.js";
 import { initInput, pollInput, clearInputState, clearInputHeld, pushInputPress } from "./input.js";
 import { createPlayer, updatePlayer, updateGuestAvatar } from "./player.js";
@@ -1074,7 +1074,10 @@ function maybeTeleport(state) {
     }
   }
   const tele = teleEntity;
-  if (tele) {
+  // Locked teleporters never transition — collision keeps the player off
+  // the tile, but guard here too in case a spawn/co-op reposition lands a
+  // player on one. Treat a locked teleporter as "no teleporter".
+  if (tele && !isTeleporterLocked(tele)) {
     // Zone data stores destination.y as the Rust frame.y (sprite TOP)
     // while travelTo / player.tileY work in feet-tile space — bump by 1
     // so the player drops onto the floor in front of the destination

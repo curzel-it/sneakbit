@@ -9,6 +9,9 @@ import { constructionTextureRow } from "./constructionTiles.js";
 import { getSpecies } from "./species.js";
 import { shouldBeVisible, entityHittableFrame, rectOverlapsTile } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
+import { canonicaliseLock, LOCK_NONE } from "./locks.js";
+
+const TELEPORTER_SPECIES_ID = 1019;
 
 // Entity types that go through Rust's setup_generic — they all have
 // is_rigid forced to false in creative mode. Plus Gate / InverseGate get
@@ -122,6 +125,12 @@ export function isTileSlippery(zone, tileX, tileY) {
 export function isEntityBlocked(zone, tileX, tileY, opts) {
   if (!zone?.entities) return false;
   if (hasEnterableTeleporter(zone, tileX, tileY)) return false;
+  // A locked teleporter is rigid (mirrors Rust update_teleporter:
+  // is_rigid = lock != None) so the player can't step onto it and trigger
+  // the transition. The enterable check above already excluded locked ones
+  // from the unblock path; this makes them affirmatively block even when no
+  // building footprint sits behind them.
+  if (hasLockedTeleporter(zone, tileX, tileY)) return true;
   const creative = isCreativeMode();
   const ignore = opts?.ignore;
   for (const e of zone.entities) {
@@ -147,8 +156,31 @@ export function isEntityBlocked(zone, tileX, tileY, opts) {
 
 export function hasEnterableTeleporter(zone, tileX, tileY) {
   for (const e of zone.entities) {
-    if (e.species_id !== 1019) continue;
+    if (e.species_id !== TELEPORTER_SPECIES_ID) continue;
     if (!e.destination) continue;
+    if (isTeleporterLocked(e)) continue;
+    const f = e.frame; if (!f) continue;
+    if (tileX < f.x || tileX >= f.x + f.w) continue;
+    if (tileY < f.y || tileY >= f.y + f.h) continue;
+    return true;
+  }
+  return false;
+}
+
+// A teleporter whose lock_type is anything but None is impassable in normal
+// play. Unlike colored gates, teleporter locks are never spent by a key —
+// the door simply stays shut (the Permanent lock on dungeon exits is the
+// canonical case: you arrive beside it, you never walk back into it).
+// Creative mode ignores the lock so the map editor can pass freely.
+export function isTeleporterLocked(e) {
+  if (!e || e.species_id !== TELEPORTER_SPECIES_ID) return false;
+  if (isCreativeMode()) return false;
+  return canonicaliseLock(e.lock_type) !== LOCK_NONE;
+}
+
+function hasLockedTeleporter(zone, tileX, tileY) {
+  for (const e of zone.entities) {
+    if (!isTeleporterLocked(e)) continue;
     const f = e.frame; if (!f) continue;
     if (tileX < f.x || tileX >= f.x + f.w) continue;
     if (tileY < f.y || tileY >= f.y + f.h) continue;
