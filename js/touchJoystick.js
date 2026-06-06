@@ -57,6 +57,13 @@ export function mountJoystick(root) {
 
   zone.addEventListener("pointerdown", onPointerDown);
   zone.addEventListener("contextmenu", (e) => e.preventDefault());
+  // The zone is a plain <div>, not a native control like the d-pad <button>s,
+  // so on iOS a long hold on the stick (holding a direction to keep moving) is
+  // a long-press over magnifiable content and Safari pops its "magnifier loupe"
+  // — and Pointer Events' preventDefault doesn't stop it; only the underlying
+  // Touch event's does. Suppress it at touchstart. Listener must be non-passive
+  // for preventDefault to take effect; pointerdown still fires for the stick.
+  zone.addEventListener("touchstart", (e) => e.preventDefault(), { passive: false });
   // Track move/up on the document so the stick keeps following even when
   // the finger slides outside the capture zone.
   onMove = onPointerMove;
@@ -166,6 +173,12 @@ function injectStyles() {
       width: 75vw;
       pointer-events: auto;
       touch-action: none;
+      /* Belt-and-braces with the touchstart preventDefault above: kill text
+         selection and the iOS long-press callout/loupe over the stick region. */
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
     /* Drawn from the shared HUD tokens (uiTokens.js) rather than pixel-art
        sprites, so the stick reads as part of the same UI as the chips and
