@@ -3,7 +3,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { spotPlayerFrom, isDemandingAttention } from "../js/npcInterception.js";
+import { spotPlayerFrom, isDemandingAttention, tickNpcInterception } from "../js/npcInterception.js";
 import { setValue, _resetStorageForTesting } from "../js/storage.js";
 
 // Build a zone from an ASCII map: '#' blocked, anything else walkable.
@@ -72,5 +72,38 @@ test("isDemandingAttention is gated by the npc_interactions flag", () => {
 
   assert.equal(isDemandingAttention({ id: 7, demands_attention: false }), false);
   assert.equal(isDemandingAttention(null), false);
+  _resetStorageForTesting();
+});
+
+// A demands-attention NPC whose display_conditions keep it hidden (a story flag
+// not yet set — e.g. the wizard who only appears after you meet punk) must not
+// intercept the hero out of order. The arming loop respects the same visibility
+// gate the renderer uses.
+test("a story-hidden NPC does not intercept the hero", () => {
+  _resetStorageForTesting();
+  const npc = {
+    id: 99, species_id: 3007, demands_attention: true,
+    frame: { x: 2, y: 2, w: 1, h: 1 },
+    dialogues: [{ key: "always", expected_value: 0, text: "x" }],
+    // Visible only once `met.punk` is set; default hidden.
+    display_conditions: [
+      { key: "met.punk", expected_value: 1, visible: true },
+      { key: "always", expected_value: 0, visible: false },
+    ],
+  };
+  const zone = { ...grid(["....."]), entities: [npc] };
+  zone.collision = grid([".....", ".....", ".....", ".....", "....."]).collision;
+  zone.rows = 5; zone.cols = 5;
+  const hero = { index: 0, tileX: 4, tileY: 2 };   // in line of sight, same row
+  const state = { zone, player: hero };
+
+  tickNpcInterception(state, 0.016);
+  assert.equal(npc._approach, undefined, "hidden NPC never starts an approach");
+  assert.equal(hero._frozen, undefined, "hero stays free");
+  assert.equal(npc.demands_attention, true, "mark stays armed for later");
+
+  // Once the gating flag is set the NPC becomes eligible again.
+  setValue("met.punk", 1);
+  assert.equal(isDemandingAttention(npc), true);
   _resetStorageForTesting();
 });

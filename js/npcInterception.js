@@ -18,6 +18,7 @@
 // renders for everyone. Creative / PvP / Tower-Defense are skipped.
 
 import { isWalkable } from "./zone.js";
+import { shouldBeVisible } from "./entityVisibility.js";
 import { haltPlayer } from "./player.js";
 import { findPathToNearest } from "./pathfinding.js";
 import { getValue, setValue } from "./storage.js";
@@ -86,6 +87,11 @@ export function tickNpcInterception(state, dt) {
     if (!players || players.length === 0) continue;
     if (!e.frame || isDying(e) || e._walkAway) continue;
     if (!isDemandingAttention(e)) continue;
+    // Respect the same story gate the renderer uses: an NPC the player can't
+    // see (its display_conditions keep it hidden until some flag is set) must
+    // not walk over out of order — e.g. the wizard who only appears after you
+    // meet punk. Mirrors entities.js::collect's visibility check.
+    if (!e._spawned && !shouldBeVisible(e)) continue;
     if (!(e.dialogues || []).length) continue;
     const footX = e.frame.x | 0;
     const footY = (e.frame.y + (e.frame.h || 1) - 1) | 0;
