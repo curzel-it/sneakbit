@@ -51,7 +51,13 @@ export function checkPickup(state) {
   const players = livePlayers(state);
   if (!players.length) return;
 
-  for (let i = 0; i < zone.entities.length; i++) {
+  // Collect every overlapping pickup in this single pass, not just the first.
+  // One tile routinely holds several coins (a big drop fans out cosmetically
+  // but the coins share an integer tile), and checkPickup only runs when a
+  // player changes tile — so stopping after one would strand the rest until
+  // the player stepped off the tile and back onto it. Iterate backward so
+  // splicing a collected entity never shifts an unprocessed one out of reach.
+  for (let i = zone.entities.length - 1; i >= 0; i--) {
     const e = zone.entities[i];
     if (e._spawned) continue;
     if (!shouldBeVisible(e)) continue;
@@ -76,7 +82,6 @@ export function checkPickup(state) {
       }
       trigger(e, kind, picker);
     }
-    return;
   }
 }
 
