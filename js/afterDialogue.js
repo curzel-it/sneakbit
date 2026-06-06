@@ -8,21 +8,18 @@
 //   "Nothing"            — stay put, re-openable.
 //   "Disappear"          — vanish instantly.
 //   "FlyAwayEast"        — drift east off-screen, then vanish.
-//   "VanishSmoke"        — play an in-place effect (smoke bomb), then vanish.
-//   "VanishTeleport"     — play an in-place effect (instant transmission),
-//                          then vanish.
+//   "VanishSmoke"        — fade out behind a puff of smoke, then vanish.
+//   "VanishTeleport"     — fade out behind a teleport flash, then vanish.
 //   "WalkToNearestExit"  — path-find to the nearest teleporter and walk
 //                          there, then vanish (falls back to an instant
 //                          vanish if no exit is reachable).
 //
-// The two "Vanish*" effects reuse the death-animation lifecycle
-// (deathAnimation.js) for the in-place strip-then-remove behavior. They
-// share the fireball strip as a placeholder today; swap real art in via
-// the EFFECTS registry below without touching anything else.
+// The two "Vanish*" effects defer to vanishEffect.js, which fades the NPC
+// body while a one-shot effect strip plays in front of it.
 
 import { setValue } from "./storage.js";
 import { isCreativeMode } from "./creativeMode.js";
-import { startDeathAnimation, DEATH_SPRITE } from "./deathAnimation.js";
+import { startVanish, tickVanish } from "./vanishEffect.js";
 import { findPathToNearest } from "./pathfinding.js";
 import { teleporterTiles } from "./transitions.js";
 
@@ -43,15 +40,6 @@ const FLY_AWAY_SPEED = 6;       // tiles/sec
 const FLY_AWAY_LIFESPAN = 1.5;  // seconds
 const WALK_AWAY_SPEED = 4;      // tiles/sec the NPC walks toward the exit
 
-// Per-effect sprite seam. Both vanish effects currently borrow the death
-// fireball; give "smoke" / "teleport" their own strips here once the art
-// lands and the renderer (entities.js::drawDeath) picks them up via
-// entity._deathSprite.
-const EFFECTS = {
-  smoke: DEATH_SPRITE,
-  teleport: DEATH_SPRITE,
-};
-
 export function handleAfterDialogue(zone, entity) {
   const beh = entity?.after_dialogue;
   if (!beh || beh === "Nothing") return;
@@ -64,14 +52,11 @@ export function handleAfterDialogue(zone, entity) {
   }
   if (beh === "VanishSmoke" || beh === "VanishTeleport") {
     if (isCreativeMode()) return;
-    const sprite = beh === "VanishSmoke" ? EFFECTS.smoke : EFFECTS.teleport;
-    // startDeathAnimation drives the in-place strip + lifespan; its tick
-    // (tickDeathAnimations, run every frame from combat.js) does the
-    // removal and fires onRemove so the despawn persists like Disappear.
-    startDeathAnimation(entity, {
-      sprite,
-      onRemove: () => markCollected(zone, entity),
-    });
+    // startVanish fades the body while the effect strip plays; tickVanish
+    // (driven from tickAfterDialogue below) does the removal and fires
+    // onRemove so the despawn persists like Disappear.
+    const kind = beh === "VanishSmoke" ? "smoke" : "teleport";
+    startVanish(entity, kind, () => markCollected(zone, entity));
     return;
   }
   if (beh === "WalkToNearestExit") {
@@ -100,6 +85,7 @@ function startWalkAway(zone, entity) {
 
 export function tickAfterDialogue(zone, dt) {
   if (!zone?.entities) return;
+  tickVanish(zone, dt);
   for (let i = zone.entities.length - 1; i >= 0; i--) {
     const e = zone.entities[i];
     if (e._flyAway) { tickFlyAway(zone, e, i, dt); continue; }

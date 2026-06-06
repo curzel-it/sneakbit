@@ -16,6 +16,7 @@ import { tr } from "./strings.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { getNetRole } from "./onlineBootstrap.js";
 import { isDying } from "./deathAnimation.js";
+import { isVanishing } from "./vanishEffect.js";
 import { isWalkable } from "./zone.js";
 import { getSpecies } from "./species.js";
 import { el } from "./dom.js";
@@ -216,9 +217,10 @@ function dialogueEntityAt(zone, tx, ty) {
   for (const e of zone.entities) {
     if (!e.frame) continue;
     if (!shouldBeVisible(e)) continue;
-    // An NPC mid-vanish (death-anim effect) or walking to an exit shouldn't
-    // re-open its dialogue if the player faces it again before it's gone.
-    if (isDying(e) || e._walkAway) continue;
+    // An NPC mid-vanish (death-anim effect, or fading vanish strip) or
+    // walking to an exit shouldn't re-open its dialogue if the player faces
+    // it again before it's gone.
+    if (isDying(e) || isVanishing(e) || e._walkAway) continue;
     // Hint signs carry a `dialogues` array, but it's the walk-over toast
     // text (handled in pickups.js) — they're proximity-triggered and have
     // no talk affordance, so they must not light up the interact prompt.

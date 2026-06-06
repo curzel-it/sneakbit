@@ -29,6 +29,7 @@ import { isDialogueOpen } from "./dialogue.js";
 import { isShopOpen } from "./shop.js";
 import { isPlayerDead } from "./playerHealth.js";
 import { isDying } from "./deathAnimation.js";
+import { isVanishing } from "./vanishEffect.js";
 
 const SIGHT_RANGE = 5;       // clear tiles an NPC can spot the hero across
 const APPROACH_SPEED = 4;    // tiles/sec the NPC walks toward the hero
@@ -85,7 +86,7 @@ export function tickNpcInterception(state, dt) {
   for (const e of zone.entities) {
     if (e._approach) { tickApproach(state, e, dt); continue; }
     if (!players || players.length === 0) continue;
-    if (!e.frame || isDying(e) || e._walkAway) continue;
+    if (!e.frame || isDying(e) || isVanishing(e) || e._walkAway) continue;
     if (!isDemandingAttention(e)) continue;
     // Respect the same story gate the renderer uses: an NPC the player can't
     // see (its display_conditions keep it hidden until some flag is set) must

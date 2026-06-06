@@ -4,6 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { handleAfterDialogue, tickAfterDialogue } from "../js/afterDialogue.js";
 import { isDying } from "../js/deathAnimation.js";
+import { isVanishing } from "../js/vanishEffect.js";
 import * as storage from "../js/storage.js";
 import { _setCreativeModeForTesting } from "../js/creativeMode.js";
 
@@ -37,7 +38,7 @@ test("Disappear removes the entity and persists collection", () => {
   assert.equal(storage.getValue("item_collected.7"), 1, "collected flag set");
 });
 
-test("VanishSmoke / VanishTeleport play an in-place effect then persist on removal", () => {
+test("VanishSmoke / VanishTeleport fade out then persist on removal", () => {
   for (const beh of ["VanishSmoke", "VanishTeleport"]) {
     storage._resetStorageForTesting();
     _setCreativeModeForTesting(false);
@@ -45,12 +46,14 @@ test("VanishSmoke / VanishTeleport play an in-place effect then persist on remov
     const e = npc(beh);
     zone.entities.push(e);
     handleAfterDialogue(zone, e);
-    assert.equal(isDying(e), true, `${beh}: entity is dying`);
-    assert.ok(e._deathSprite, `${beh}: has an effect sprite`);
+    assert.equal(isVanishing(e), true, `${beh}: entity is vanishing`);
     assert.ok(zone.entities.includes(e), `${beh}: stays while the effect plays`);
-    // Burn through its lifespan — tickDeathAnimations (combat tick) owns the
-    // actual removal, but the onRemove hook must persist collection.
-    e._onDeathRemove();
+    // Burn through the fade; tickAfterDialogue (via tickVanish) owns removal
+    // and the onRemove hook must persist collection.
+    for (let i = 0; i < 50 && zone.entities.includes(e); i++) {
+      tickAfterDialogue(zone, 0.1);
+    }
+    assert.ok(!zone.entities.includes(e), `${beh}: gone after the fade`);
     assert.equal(storage.getValue("item_collected.7"), 1, `${beh}: collected flag set`);
   }
 });
@@ -106,6 +109,7 @@ test("creative mode is a no-op for every vanish behavior", () => {
     handleAfterDialogue(zone, e);
     assert.ok(zone.entities.includes(e), `${beh}: NPC stays in creative mode`);
     assert.equal(isDying(e), false, `${beh}: not dying in creative mode`);
+    assert.equal(isVanishing(e), false, `${beh}: not vanishing in creative mode`);
     assert.equal(e._walkAway, undefined, `${beh}: no walker in creative mode`);
   }
   _setCreativeModeForTesting(false);

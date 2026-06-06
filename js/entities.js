@@ -21,6 +21,7 @@ import { coinRenderOffset } from "./coinDrops.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { isDying, DEATH_SPRITE } from "./deathAnimation.js";
+import { isVanishing, vanishAlpha, vanishOverlay } from "./vanishEffect.js";
 import { isDemandingAttention } from "./npcInterception.js";
 
 const Z_INDEX_OVERLAY = 99;
@@ -292,6 +293,37 @@ function draw(ctx, e, camera) {
   if (coinOff) { rx += coinOff.x; ry += coinOff.y; }
   const px = Math.round((rx - camera.x) * TILE_SIZE);
   const py = Math.round((ry - camera.y) * TILE_SIZE);
+
+  // A vanishing NPC (afterDialogue VanishSmoke/VanishTeleport) fades its
+  // body out while the effect strip plays on top of it.
+  if (isVanishing(e)) {
+    ctx.globalAlpha = vanishAlpha(e);
+    ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+    ctx.globalAlpha = 1;
+    drawVanishOverlay(ctx, e, camera);
+    return;
+  }
+  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+}
+
+// Blits the vanish effect strip in front of a fading NPC: a 1×2 column from
+// the animated_objects sheet, its frame advancing once (no loop) over the
+// fade. Centred horizontally on the NPC and bottom-aligned to its feet.
+function drawVanishOverlay(ctx, e, camera) {
+  const ov = vanishOverlay(e);
+  if (!ov) return;
+  const sp = ov.sprite;
+  const sheet = getSprite(sp.sheet);
+  if (!sheet) return;
+  const sx = (sp.texX + ov.frame * sp.w) * TILE_SIZE;
+  const sy = sp.texY * TILE_SIZE;
+  const sw = sp.w * TILE_SIZE;
+  const sh = sp.h * TILE_SIZE;
+  const { x, y, w, h } = e.frame;
+  const ex = x + (w - sp.w) / 2;
+  const ey = y + (h - sp.h);
+  const px = Math.round((ex - camera.x) * TILE_SIZE);
+  const py = Math.round((ey - camera.y) * TILE_SIZE);
   ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 }
 
