@@ -534,6 +534,18 @@ function injectStyles() {
     .account-legal a { color: #9ab1ff; text-decoration: none; }
     .account-legal a:hover { text-decoration: underline; }
     .account-close-row { display: flex; justify-content: flex-end; margin-top: 18px; }
+    /* On narrow screens the card fills the viewport, leaving a 12px lateral
+       margin; box-sizing folds the padding into that width so the content
+       also gets 12px of horizontal breathing room. */
+    @media (max-width: 480px) {
+      .account-card {
+        box-sizing: border-box;
+        min-width: 0;
+        width: calc(100vw - 24px);
+        max-width: calc(100vw - 24px);
+        padding: 24px 12px;
+      }
+    }
   `;
   document.head.appendChild(style);
 }

@@ -747,6 +747,18 @@ function injectStyles() {
       background: #3a1f1f !important; border-color: #6b3434 !important;
     }
     .party-kick:hover { background: #4a2828 !important; }
+    /* On narrow screens the card fills the viewport, leaving a 12px lateral
+       margin; box-sizing folds the padding into that width so the content
+       also gets 12px of horizontal breathing room. */
+    @media (max-width: 480px) {
+      .party-card {
+        box-sizing: border-box;
+        min-width: 0;
+        width: calc(100vw - 24px);
+        max-width: calc(100vw - 24px);
+        padding: 24px 12px;
+      }
+    }
   `;
   document.head.appendChild(style);
 }

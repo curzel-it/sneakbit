@@ -89,39 +89,42 @@ export function installMenu(stateGetter) {
 
     <div class="menu-card" data-screen="settings">
       <h1>Settings</h1>
-      <div class="menu-row">
+      <div class="menu-row menu-slider-row">
         <label for="opt-sfx-volume">SFX</label>
         <input id="opt-sfx-volume" type="range" min="0" max="100" step="1" />
-        <span id="opt-sfx-volume-val"></span>
+        <span id="opt-sfx-volume-val" class="menu-slider-val"></span>
       </div>
-      <div class="menu-row">
+      <div class="menu-row menu-slider-row">
         <label for="opt-music-volume">Music</label>
         <input id="opt-music-volume" type="range" min="0" max="100" step="1" />
-        <span id="opt-music-volume-val"></span>
+        <span id="opt-music-volume-val" class="menu-slider-val"></span>
       </div>
-      <div class="menu-row">
-        <label for="opt-muted"><input id="opt-muted" type="checkbox" /> Mute all</label>
+      <div class="menu-row menu-toggle-row">
+        <label for="opt-muted">Mute all</label>
+        <input id="opt-muted" type="checkbox" class="menu-toggle" />
       </div>
-      <div class="menu-row">
-        <label for="opt-fps"><input id="opt-fps" type="checkbox" /> Show FPS</label>
+      <div class="menu-row menu-toggle-row">
+        <label for="opt-fps">Show FPS</label>
+        <input id="opt-fps" type="checkbox" class="menu-toggle" />
       </div>
-      <div class="menu-row" id="opt-touch-controls-row">
+      <div class="menu-row menu-select-row" id="opt-touch-controls-row">
         <label for="opt-touch-controls">Touch controls</label>
         <select id="opt-touch-controls">
           <option value="buttons">Buttons</option>
           <option value="joystick">Joystick</option>
         </select>
       </div>
-      <div class="menu-row">
-        <label for="opt-language">Language / Lingua</label>
+      <div class="menu-row menu-select-row">
+        <label for="opt-language">Language</label>
         <select id="opt-language">
           <option value="auto">Auto</option>
           <option value="en">English</option>
           <option value="it">Italiano</option>
         </select>
       </div>
-      <div class="menu-row" id="opt-friendly-fire-row">
-        <label for="opt-friendly-fire"><input id="opt-friendly-fire" type="checkbox" /> Friendly fire (co-op)</label>
+      <div class="menu-row menu-toggle-row" id="opt-friendly-fire-row">
+        <label for="opt-friendly-fire">Friendly fire (co-op)</label>
+        <input id="opt-friendly-fire" type="checkbox" class="menu-toggle" />
       </div>
       <div class="menu-row menu-controls menu-stack">
         <button id="menu-open-controls">Key bindings…</button>
@@ -543,6 +546,28 @@ function injectStyles() {
       font-family: inherit; font-size: 12px;
     }
     #menu input[type="range"] { flex: 1; }
+    /* Fixed label + value widths so SFX and Music sliders start and end at
+       the same x — identical size, right edges aligned. */
+    #menu .menu-slider-row label { min-width: 48px; }
+    #menu .menu-slider-val { min-width: 40px; text-align: right; }
+    /* Toggle and select rows: label takes the row, control sits flush right,
+       so every settings label shares the same left edge as SFX/Music. */
+    #menu .menu-toggle-row label,
+    #menu .menu-select-row label { flex: 1; min-width: 48px; }
+    #menu input.menu-toggle {
+      appearance: none; -webkit-appearance: none;
+      box-sizing: border-box; flex: none;
+      position: relative; width: 40px; height: 22px;
+      background: #2a2a2a; border: 1px solid #444; border-radius: 11px;
+      cursor: pointer; transition: background 0.15s, border-color 0.15s;
+    }
+    #menu input.menu-toggle::before {
+      content: ""; position: absolute; top: 2px; left: 2px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #888; transition: transform 0.15s, background 0.15s;
+    }
+    #menu input.menu-toggle:checked { background: #2a3a55; border-color: #4a5a88; }
+    #menu input.menu-toggle:checked::before { transform: translateX(18px); background: #cfe0ff; }
     #menu button {
       background: #2a2a2a; color: #eee; border: 1px solid #444;
       padding: 8px 12px; border-radius: var(--sb-surface-radius); cursor: pointer;
@@ -601,12 +626,18 @@ function injectStyles() {
     #menu .menu-tab { background: #1f1f1f; color: #aaa; border: 1px solid #333; padding: 6px 12px; border-radius: var(--sb-surface-radius); font-size: 12px; cursor: pointer; }
     #menu .menu-tab:hover { background: #2a2a2a; }
     #menu .menu-tab.active { background: #2a3a55; border-color: #4a5a88; color: #fff; }
-    /* On narrow screens the card has no breathing room — it grows to the
-       screen edges. Cap its width so the flex-centering leaves a lateral
-       margin, and drop the inner min-widths that would otherwise force it
-       wider than that cap (and overflow). Padding stays. */
+    /* On narrow screens the card fills the viewport, leaving a 12px lateral
+       margin. box-sizing makes the width include padding, so the inner
+       content also gets exactly 12px of horizontal breathing room. Drop the
+       inner min-widths that would otherwise force it wider and overflow. */
     @media (max-width: 480px) {
-      #menu .menu-card { min-width: 0; max-width: calc(100vw - 32px); }
+      #menu .menu-card {
+        box-sizing: border-box;
+        min-width: 0;
+        width: calc(100vw - 24px);
+        max-width: calc(100vw - 24px);
+        padding: 24px 12px;
+      }
       #menu .inv-list,
       #menu .inv-slot,
       #menu .menu-controls-list { min-width: 0; }

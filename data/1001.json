@@ -546,7 +546,7 @@
       "species_id": 4004
     },
     {
-      "after_dialogue": "Disappear",
+      "after_dialogue": "VanishSmoke",
       "demands_attention": true,
       "destination": null,
       "dialogues": [
