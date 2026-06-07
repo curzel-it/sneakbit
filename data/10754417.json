@@ -371,7 +371,7 @@
       "species_id": 50000
     }
   ],
-  "ephemeral_state": true,
+  "ephemeral_state": false,
   "id": 10754417,
   "light_conditions": "Day",
   "revision": 0,
