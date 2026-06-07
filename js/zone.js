@@ -10,6 +10,7 @@ import { getSpecies } from "./species.js";
 import { shouldBeVisible, entityHittableFrame, rectOverlapsTile } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { canonicaliseLock, LOCK_NONE } from "./locks.js";
+import { populateMonsters } from "./spawnMonsters.js";
 
 const TELEPORTER_SPECIES_ID = 1019;
 
@@ -77,7 +78,7 @@ export function buildZone(raw) {
     })
     .map(cloneEntity);
 
-  return {
+  const zone = {
     id: raw.id,
     rows,
     cols,
@@ -95,6 +96,13 @@ export function buildZone(raw) {
     ephemeralState: !!raw.ephemeral_state,
     _cutscenesRaw: raw.cutscenes ?? [],
   };
+
+  // Append procedurally-generated monsters (opt-in via raw.monster_spawn).
+  // Deterministic per zone id, so co-op peers agree; additive, so authored
+  // monsters and set-pieces are preserved.
+  populateMonsters(zone, raw);
+
+  return zone;
 }
 
 export function isWalkable(zone, tileX, tileY) {
