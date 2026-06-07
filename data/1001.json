@@ -642,7 +642,7 @@
       "dialogues": [
         {
           "expected_value": 1,
-          "key": "dialogue.answer.quest.ninja_skills.blue_ninja.please_check_on_sister,dialogue.answer.quest.ninja_skills.black_ninja.please_check_on_sister",
+          "key": "dialogue.answer.quest.ninja_skills.blue_ninja.please_check_on_sister",
           "reward": null,
           "text": "quest.ninja_skills.lyria.father_introduction"
         },
@@ -650,13 +650,7 @@
           "expected_value": 1,
           "key": "dialogue.answer.quest.ninja_skills.black_ninja.please_check_on_sister",
           "reward": null,
-          "text": "quest.ninja_skills.lyria.thats_my_brother_black"
-        },
-        {
-          "expected_value": 1,
-          "key": "dialogue.answer.quest.ninja_skills.blue_ninja.please_check_on_sister",
-          "reward": null,
-          "text": "quest.ninja_skills.lyria.thats_my_brother_blue"
+          "text": "quest.ninja_skills.lyria.father_introduction"
         },
         {
           "expected_value": 0,

@@ -28,6 +28,70 @@ const { resolveEntityDialogue, handleReward } = await import("../js/dialogue.js"
 const storage = await import("../js/storage.js");
 const inventory = await import("../js/inventory.js");
 
+// --- Ninja "check on the sister" quest regression -------------------------
+// Blue (Duskhaven) and black (Aridreach) ninjas both send the player to
+// Evergrove to meet their sister Lyria, then reward a kunai skill. The quests
+// must be completable in EITHER order: a previous bug left Lyria forever
+// answering for whichever brother appeared first in her dialogue list (black),
+// so once the black quest was done the blue quest could never advance.
+const { readFileSync } = await import("node:fs");
+const { fileURLToPath } = await import("node:url");
+const dataDir = fileURLToPath(new URL("../data/", import.meta.url));
+const loadEntity = (zone, id) =>
+  JSON.parse(readFileSync(`${dataDir}${zone}.json`)).entities.find((e) => e.id === id);
+const BLUE_NINJA = loadEntity(10810193, 11200316);
+const BLACK_NINJA = loadEntity(11199957, 11200171);
+const LYRIA = loadEntity(1001, 10754440);
+const BLUE_SKILL = "dialogue.answer.quest.ninja_skills.blue_ninja.gain_knife_catcher_skill";
+const BLACK_SKILL = "dialogue.answer.quest.ninja_skills.black_ninja.gain_bouncing_knifes_skill";
+// "Talk to" an NPC: resolve the matching line and apply its read/reward flag.
+const talk = (entity) => {
+  const d = resolveEntityDialogue(entity);
+  if (d) handleReward(d, 0);
+  return d?.text;
+};
+const runNinjaQuest = (ninja) => { talk(ninja); talk(LYRIA); talk(ninja); };
+
+test("ninja quest: completable blue-first then black", () => {
+  storage._resetStorageForTesting();
+  runNinjaQuest(BLUE_NINJA);
+  runNinjaQuest(BLACK_NINJA);
+  assert.equal(storage.getValue(BLUE_SKILL), 1);
+  assert.equal(storage.getValue(BLACK_SKILL), 1);
+});
+
+test("ninja quest: completable black-first then blue (the reported bug)", () => {
+  storage._resetStorageForTesting();
+  runNinjaQuest(BLACK_NINJA);
+  runNinjaQuest(BLUE_NINJA);
+  assert.equal(storage.getValue(BLACK_SKILL), 1);
+  assert.equal(storage.getValue(BLUE_SKILL), 1);
+});
+
+test("ninja quest: a ninja asks before rewarding (no skip-to-reward)", () => {
+  storage._resetStorageForTesting();
+  // Even with Lyria already met (here via a finished black quest), the blue
+  // ninja still asks the player to check on the sister on first contact
+  // instead of handing over the skill immediately.
+  runNinjaQuest(BLACK_NINJA);
+  assert.equal(talk(BLUE_NINJA), "quest.ninja_skills.blue_ninja.please_check_on_sister");
+  assert.equal(storage.getValue(BLUE_SKILL), null);
+});
+
+test("ninja quest: a stuck save recovers by revisiting Lyria", () => {
+  storage._resetStorageForTesting();
+  // Reproduce the broken save state from the old data: black done, blue asked,
+  // but Lyria never set the shared introduction flag for the blue branch.
+  storage.setValue("dialogue.answer.quest.ninja_skills.black_ninja.please_check_on_sister", 1);
+  storage.setValue("dialogue.answer.quest.ninja_skills.blue_ninja.please_check_on_sister", 1);
+  storage.setValue("dialogue.answer.quest.ninja_skills.lyria.thats_my_brother_black", 1);
+  storage.setValue(BLACK_SKILL, 1);
+  // The exact recovery the player attempts: talk to Lyria, then the blue ninja.
+  talk(LYRIA);
+  talk(BLUE_NINJA);
+  assert.equal(storage.getValue(BLUE_SKILL), 1);
+});
+
 test("resolveEntityDialogue: null on empty entity", () => {
   storage._resetStorageForTesting();
   assert.equal(resolveEntityDialogue({}), null);
