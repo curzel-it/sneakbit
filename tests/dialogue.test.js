@@ -46,8 +46,12 @@ const loadEntity = (zone, id) =>
 const BLUE_NINJA = loadEntity(10810193, 11200316);
 const BLACK_NINJA = loadEntity(11199957, 11200171);
 const LYRIA = loadEntity(1001, 10754440);
+// The Red Ninja is the kids' father: he hands over the piercing skill only once
+// BOTH the blue and black quests are done, via a comma (AND) gate.
+const RED_NINJA = loadEntity(11110814, 11201365);
 const BLUE_SKILL = "dialogue.answer.quest.ninja_skills.blue_ninja.gain_knife_catcher_skill";
 const BLACK_SKILL = "dialogue.answer.quest.ninja_skills.black_ninja.gain_bouncing_knifes_skill";
+const PIERCING_SKILL = "dialogue.answer.quest.ninja_skills.red_ninja.gain_piercing_knife_skill";
 // "Talk to" an NPC: resolve the matching line and apply its read/reward flag.
 const talk = (entity) => {
   const d = resolveEntityDialogue(entity);
@@ -94,6 +98,32 @@ test("ninja quest: a stuck save recovers by revisiting Lyria", () => {
   talk(LYRIA);
   talk(BLUE_NINJA);
   assert.equal(storage.getValue(BLUE_SKILL), 1);
+});
+
+const runKidQuest = (kid) => { talk(kid); talk(LYRIA); talk(kid); };
+
+test("red ninja: only rewards the piercing skill once BOTH kids are done", () => {
+  storage._resetStorageForTesting();
+  // First contact with neither kid done → he just frets about his children.
+  assert.equal(talk(RED_NINJA), "quest.ninja_skills.red_ninja.please_check_on_my_kids");
+  assert.equal(storage.getValue(PIERCING_SKILL), null);
+  // One kid is not enough — the comma gate is AND.
+  runKidQuest(BLUE_NINJA);
+  assert.equal(talk(RED_NINJA), "quest.ninja_skills.red_ninja.please_check_on_my_kids");
+  assert.equal(storage.getValue(PIERCING_SKILL), null);
+  // Both kids done → he teaches the piercing skill.
+  runKidQuest(BLACK_NINJA);
+  assert.equal(talk(RED_NINJA), "quest.ninja_skills.red_ninja.gain_piercing_knife_skill");
+  assert.equal(storage.getValue(PIERCING_SKILL), 1);
+});
+
+test("red ninja: post-reward visits show the 'about the skill' flavor", () => {
+  storage._resetStorageForTesting();
+  runKidQuest(BLUE_NINJA);
+  runKidQuest(BLACK_NINJA);
+  talk(RED_NINJA); // grants the skill
+  assert.equal(talk(RED_NINJA), "quest.ninja_skills.red_ninja.about_piercing_knife_skill");
+  assert.equal(talk(RED_NINJA), "quest.ninja_skills.red_ninja.about_piercing_knife_skill");
 });
 
 test("resolveEntityDialogue: null on empty entity", () => {
