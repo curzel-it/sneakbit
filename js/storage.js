@@ -60,6 +60,19 @@ function hydrate() {
 
 export function getValue(key) {
   hydrate();
+  // Comma-joined keys are a multi-condition gate, ported from Rust
+  // storage.rs::get_value_for_global_key: resolve every sub-key and return the
+  // value they ALL share, or null when they disagree. Paired with keyMatches'
+  // `stored === expected` test this yields AND semantics — the gate holds only
+  // when every sub-key equals the expected value. Dialogue data relies on it
+  // for "the player asked about both ninjas" and "quest started AND item
+  // collected"; without it those lines were dead and the branches unreachable.
+  if (typeof key === "string" && key.includes(",")) {
+    const values = new Set(
+      key.split(",").filter((k) => k !== "").map((k) => getValue(k)),
+    );
+    return values.size === 1 ? values.values().next().value : null;
+  }
   return cache.has(key) ? cache.get(key) : null;
 }
 

@@ -48,3 +48,30 @@ test("falsy key behaves like 'always'", () => {
   assert.equal(keyMatches("", 5), true);
   assert.equal(keyMatches(undefined, 5), true);
 });
+
+// Comma-joined keys are a multi-condition gate, ported from Rust
+// storage.rs::get_value_for_global_key: getValue returns the value shared by
+// ALL sub-keys, or null when they disagree. With keyMatches this is AND — the
+// gate holds only when every sub-key equals the expected value. Dialogue data
+// relies on this (e.g. "asked about both ninjas", "quest started AND item
+// collected"); before the port these lines were dead and their branch
+// unreachable.
+test("getValue: comma key returns the value shared by all sub-keys", () => {
+  _resetStorageForTesting();
+  assert.equal(getValue("a,b"), null); // both unset → no common value vs the rest
+  setValue("a", 1);
+  assert.equal(getValue("a,b"), null); // a=1, b unset → disagree → null
+  setValue("b", 1);
+  assert.equal(getValue("a,b"), 1);    // both 1 → shared value 1
+  setValue("b", 2);
+  assert.equal(getValue("a,b"), null); // 1 vs 2 → disagree → null
+});
+
+test("keyMatches: comma key is AND across sub-keys", () => {
+  _resetStorageForTesting();
+  assert.equal(keyMatches("a,b", 1), false); // neither set
+  setValue("a", 1);
+  assert.equal(keyMatches("a,b", 1), false); // only one set
+  setValue("b", 1);
+  assert.equal(keyMatches("a,b", 1), true);  // both set
+});

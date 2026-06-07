@@ -31,9 +31,13 @@ const inventory = await import("../js/inventory.js");
 // --- Ninja "check on the sister" quest regression -------------------------
 // Blue (Duskhaven) and black (Aridreach) ninjas both send the player to
 // Evergrove to meet their sister Lyria, then reward a kunai skill. The quests
-// must be completable in EITHER order: a previous bug left Lyria forever
-// answering for whichever brother appeared first in her dialogue list (black),
-// so once the black quest was done the blue quest could never advance.
+// must be completable in EITHER order. Lyria's "father_introduction" line — the
+// shared completion both ninjas accept — is gated on a comma-joined key
+// ("blue…,black…") meaning "the player asked about BOTH brothers". That
+// multi-condition gate was unported (keyMatches ignored commas), so once the
+// black quest was done the blue branch could never advance; restoring the comma
+// semantics in storage.js (mirroring Rust) makes either order work with the
+// original dialogue data intact.
 const { readFileSync } = await import("node:fs");
 const { fileURLToPath } = await import("node:url");
 const dataDir = fileURLToPath(new URL("../data/", import.meta.url));
@@ -70,8 +74,8 @@ test("ninja quest: completable black-first then blue (the reported bug)", () => 
 
 test("ninja quest: a ninja asks before rewarding (no skip-to-reward)", () => {
   storage._resetStorageForTesting();
-  // Even with Lyria already met (here via a finished black quest), the blue
-  // ninja still asks the player to check on the sister on first contact
+  // Finishing the black quest first must not auto-complete the blue one: the
+  // blue ninja still asks the player to check on the sister on first contact
   // instead of handing over the skill immediately.
   runNinjaQuest(BLACK_NINJA);
   assert.equal(talk(BLUE_NINJA), "quest.ninja_skills.blue_ninja.please_check_on_sister");
@@ -80,8 +84,8 @@ test("ninja quest: a ninja asks before rewarding (no skip-to-reward)", () => {
 
 test("ninja quest: a stuck save recovers by revisiting Lyria", () => {
   storage._resetStorageForTesting();
-  // Reproduce the broken save state from the old data: black done, blue asked,
-  // but Lyria never set the shared introduction flag for the blue branch.
+  // A save left stuck by the unported comma gate: black done, blue asked, but
+  // Lyria's shared "both brothers" intro was never reachable for the blue path.
   storage.setValue("dialogue.answer.quest.ninja_skills.black_ninja.please_check_on_sister", 1);
   storage.setValue("dialogue.answer.quest.ninja_skills.blue_ninja.please_check_on_sister", 1);
   storage.setValue("dialogue.answer.quest.ninja_skills.lyria.thats_my_brother_black", 1);
