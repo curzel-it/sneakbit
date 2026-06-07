@@ -28,6 +28,11 @@ test("getShootCooldownProgress: null before firing", () => {
   assert.equal(shooting.getShootCooldownProgress(0), null);
 });
 
+test("getShootAnimProgress: null before firing", () => {
+  storage._resetStorageForTesting();
+  assert.equal(shooting.getShootAnimProgress(0), null);
+});
+
 test("getShootCooldownProgress: 0..1 after a shot, draining to null", () => {
   storage._resetStorageForTesting();
   inventory.addAmmo(7000, 5, 0);
@@ -49,4 +54,30 @@ test("getShootCooldownProgress: 0..1 after a shot, draining to null", () => {
   // Past the cooldown it reads ready again.
   shooting.tickShooting(0.2);
   assert.equal(shooting.getShootCooldownProgress(0), null);
+});
+
+test("getShootAnimProgress: firing pose outlives the cooldown, then ends", () => {
+  storage._resetStorageForTesting();
+  inventory.addAmmo(7000, 5, 0);
+  const state = {
+    zone: { entities: [] },
+    player: { index: 0, tileX: 5, tileY: 5, direction: "down" },
+  };
+  shooting.installShooting(() => state);
+
+  shooting.tryShootForPlayer(state.player);
+  const a0 = shooting.getShootAnimProgress(0);
+  assert.ok(a0 > 0 && a0 <= 1, `expected 0..1 right after firing, got ${a0}`);
+
+  // Past the 0.35s fallback cooldown the weapon is ready to fire again, but
+  // the 0.4s firing pose must still be on screen — that decoupling is the
+  // whole point: weapons with a sub-frame cooldown (the AR-15's 0.005s) still
+  // animate. This would have read null before the fix.
+  shooting.tickShooting(0.36);
+  assert.equal(shooting.getShootCooldownProgress(0), null, "cooldown should be ready");
+  assert.ok(shooting.getShootAnimProgress(0) != null, "pose should still be showing");
+
+  // Once the pose duration elapses it clears.
+  shooting.tickShooting(0.1);
+  assert.equal(shooting.getShootAnimProgress(0), null);
 });

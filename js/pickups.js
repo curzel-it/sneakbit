@@ -164,6 +164,22 @@ function trigger(e, kind, picker) {
     items.push({ speciesId: e.species_id, amount: 1 });
   }
   playSfx("ammoCollected");
+  // "Picked up X" toast for plain collectibles (ammo, keys, consumables).
+  // Weapon pickups get their own "Equipped: …" toast in maybeEquipWeapon,
+  // and coins are handled (toast-free) above — so skip both here. Local
+  // index 0 only, mirroring the weapon toast: a guest sees its own pickups
+  // on its own client, not the host's.
+  //
+  // Single thrown-ammo bullets (a lone kunai on the floor) are skipped too:
+  // they're scattered by the dozen like coins, so a toast each would spam.
+  // The "kunai.x10" bundle still toasts — it has bundle_contents.
+  const singleBullet = sp?.entity_type === "Bullet" && !sp?.bundle_contents?.length;
+  if (playerIndex === 0 && !sp?.associated_weapon && !singleBullet) {
+    const name = tr(sp?.name) || sp?.name || "";
+    showToast(tr("picked_up_item").replace("%s", name), "hint", {
+      image: inventoryIconFor(sp),
+    });
+  }
   maybeEquipWeapon(sp, picker);
   // Per-player inventory in online co-op: the picker.playerId tag lets
   // the matching guest's handler addAmmo into their own counts; other

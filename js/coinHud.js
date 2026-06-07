@@ -3,26 +3,18 @@
 // (wallet.js) instead of ammo. Anchored top-centre; hidden in Tower Defense
 // (its own gold HUD) and PvP (no coins).
 
-import { TILE_SIZE } from "./constants.js";
-import { getSprite } from "./assets.js";
+import { ICON_RES, paintInventoryIcon } from "./inventoryIcon.js";
 import { getSpecies } from "./species.js";
 import { getCoins, onWalletChange } from "./wallet.js";
 import { isTowerDefenseMode, isPvp } from "./gameMode.js";
 import { COIN_SPECIES_ID } from "./coinDrops.js";
-import { sliceCount } from "./splitScreen.js";
+import { sliceCount, getSlices } from "./splitScreen.js";
 import { topHudRow } from "./topHudRow.js";
 import { el } from "./dom.js";
 
 // Match the ammo chip exactly (ammoHud.js) so the two top-of-screen counters
 // read as the same size: 28px icon, 6px/10px padding, 8px icon-to-text gap.
 const ICON_PIXELS = 28;
-// The icon box (28px) isn't an integer multiple of the 16px source tile, so a
-// straight nearest-neighbour upscale duplicates some source pixels and not
-// others — lumpy on a round sprite like the coin. Instead we paint into a
-// backing canvas that IS a clean integer multiple (×8) and let the browser
-// smoothly downscale it to ICON_PIXELS, keeping circular icons round.
-const ICON_SUPERSAMPLE = 8;
-const ICON_RES = TILE_SIZE * ICON_SUPERSAMPLE;
 
 let root = null;
 let iconCanvas = null;
@@ -51,9 +43,11 @@ export function updateCoinHud() {
   root.style.display = visible ? "" : "none";
   if (!visible) return;
   // In split-screen the HP bar + ammo chips anchor to each slice, leaving the
-  // top row empty — float the (single, shared) coin counter back to centre so
-  // it doesn't sit on top of slice 0's HP card at the top-left corner.
-  root.classList.toggle("split", sliceCount() > 1);
+  // top row empty — pin the (single, shared) coin counter beside P1's HP card,
+  // mirroring the desktop top strip, instead of leaving it stranded mid-screen.
+  const split = sliceCount() > 1;
+  root.classList.toggle("split", split);
+  if (split) anchorCoin(); else { root.style.left = lastLeft = ""; root.style.top = lastTop = ""; }
   const label = String(getCoins(0));
   if (label !== lastLabel) {
     countEl.textContent = label;
@@ -64,23 +58,27 @@ export function updateCoinHud() {
   if (!iconCanvas.dataset.painted) paintIcon();
 }
 
+// Pin the coin chip just right of P1's HP card in split-screen, anchored to
+// slice 0's top-left corner. HP_CARD_W must track the split HP-card width in
+// topHudRow.js (#top-hud-row.split .hp-card). Clamped to a 12px viewport margin
+// like the HP card, since the centred canvas can start a few px off-screen.
+const ANCHOR_MARGIN = 12;
+const HP_CARD_W = 180;
+const HP_TO_COIN_GAP = 10;
+let lastLeft = null, lastTop = null;
+function anchorCoin() {
+  const css = getSlices()?.[0]?.cssRect;
+  if (!css) { if (lastLeft !== "") { root.style.left = lastLeft = ""; root.style.top = lastTop = ""; } return; }
+  const left = `${Math.max(ANCHOR_MARGIN, Math.round(css.left + ANCHOR_MARGIN)) + HP_CARD_W + HP_TO_COIN_GAP}px`;
+  const top = `${Math.max(ANCHOR_MARGIN, Math.round(css.top + ANCHOR_MARGIN))}px`;
+  if (left !== lastLeft) { root.style.left = left; lastLeft = left; }
+  if (top !== lastTop) { root.style.top = top; lastTop = top; }
+}
+
 function paintIcon() {
-  const sp = getSpecies(COIN_SPECIES_ID);
-  if (!sp || !sp.inventory_texture_offset) return;
-  let sheet;
-  try { sheet = getSprite("inventory"); } catch { return; }
-  if (!sheet || !sheet.complete) return;
-  // `inventory_texture_offset` is [row, col] in the rust source.
-  const [row, col] = sp.inventory_texture_offset;
-  const ctx = iconCanvas.getContext("2d");
-  ctx.imageSmoothingEnabled = false; // crisp integer upscale into the backing canvas
-  ctx.clearRect(0, 0, ICON_RES, ICON_RES);
-  ctx.drawImage(
-    sheet,
-    col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE,
-    0, 0, ICON_RES, ICON_RES,
-  );
-  iconCanvas.dataset.painted = "1";
+  const off = getSpecies(COIN_SPECIES_ID)?.inventory_texture_offset;
+  if (!off) return; // `inventory_texture_offset` is [row, col] in the rust source.
+  paintInventoryIcon(iconCanvas, off[0], off[1]);
 }
 
 function injectStyles() {
@@ -105,12 +103,9 @@ function injectStyles() {
       user-select: none;
       -webkit-user-select: none;
     }
-    /* Split-screen: leave the row and centre at the top of the viewport. */
+    /* Split-screen: leave the row; anchorCoin() pins left/top beside P1's card. */
     #coin-hud.split {
       position: fixed;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%);
       z-index: 11;
     }
   `;

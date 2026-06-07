@@ -576,16 +576,6 @@ function injectStyles() {
     #menu button:hover { background: #353535; }
     #menu .menu-hint { color: #888; font-size: 11px; margin: 14px 0 0; }
     #menu .menu-version { color: #555; font-size: 10px; margin: 10px 0 0; text-align: right; }
-    #menu .inv-skill-list { list-style: none; padding: 0; margin: 4px 0 0 28px; }
-    #menu .inv-skill { padding: 5px 9px; margin: 4px 0; border-radius: var(--sb-surface-radius); background: #191919; border: 1px solid #2a2a2a; border-left-width: 2px; }
-    #menu .inv-skill.is-unlocked { border-left-color: #335433; }
-    #menu .inv-skill.is-locked { border-left-color: #3a3a3a; opacity: 0.7; }
-    #menu .inv-skill-head { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
-    #menu .inv-skill-name { color: #ddd; }
-    #menu .inv-skill-desc { display: block; color: #999; font-size: 10px; margin-top: 2px; }
-    #menu .inv-skill-tag { font-size: 9px; padding: 1px 6px; border-radius: var(--sb-surface-radius); letter-spacing: 1px; }
-    #menu .inv-skill-tag.is-unlocked { background: #2a5a2a; color: #d8f5d8; }
-    #menu .inv-skill-tag.is-locked { background: #3a3a3a; color: #aaa; }
     #menu .menu-credits { font-size: 12px; line-height: 1.5; color: #ccc; margin: 0 0 10px; }
     #menu .menu-credits a { color: #9ab1ff; text-decoration: none; }
     #menu .menu-credits a:hover { text-decoration: underline; }
@@ -596,13 +586,21 @@ function injectStyles() {
     #menu .inv-equipped em { color: #777; font-style: italic; }
     #menu .inv-equipped-default { color: #7a8aa8; font-size: 10px; }
     #menu .inv-equipped button { background: #2a2a2a; color: #eee; border: 1px solid #444; padding: 2px 8px; border-radius: var(--sb-surface-radius); font-size: 10px; cursor: pointer; }
+    /* No image-rendering override: the canvas backing is supersampled (×8) and
+       the browser's smooth downscale to 24px is what keeps the sprite crisp —
+       same as the HUD chips. Nearest-neighbour here would make it lumpy. */
+    #menu .inv-icon { flex: 0 0 auto; }
+    #menu .inv-icon-empty { display: inline-block; width: 24px; height: 24px; }
+    #menu .inv-group { margin-bottom: 12px; min-width: 340px; }
     #menu .inv-list { list-style: none; padding: 0; margin: 0; max-height: 280px; overflow-y: auto; min-width: 340px; }
     #menu .inv-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 4px 0; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: var(--sb-surface-radius); }
     #menu .inv-list .inv-name { flex: 1; font-size: 12px; }
     #menu .inv-list .inv-count { color: #aaa; font-size: 11px; min-width: 36px; text-align: right; }
+    #menu .inv-list .inv-skill-note { color: #888; font-size: 10px; font-style: italic; text-align: right; }
     #menu .inv-list .inv-action { min-width: 70px; text-align: right; }
     #menu .inv-list .inv-action button { background: #2a2a2a; color: #eee; border: 1px solid #444; padding: 3px 8px; border-radius: var(--sb-surface-radius); font-size: 11px; cursor: pointer; }
     #menu .inv-list .inv-action button:hover { background: #353535; }
+    #menu .inv-list .inv-action button:disabled { opacity: .4; cursor: default; background: #2a2a2a; }
     #menu .inv-equipped-tag { color: #b8c6ff; font-size: 10px; letter-spacing: 1px; }
     #menu .inv-player { margin: 8px 0 6px; font-size: 13px; color: #b8c6ff; letter-spacing: 1px; }
     #menu .inv-sep { border: none; border-top: 1px dashed #2e2e2e; margin: 14px 0; }
@@ -639,6 +637,7 @@ function injectStyles() {
         padding: 24px 12px;
       }
       #menu .inv-list,
+      #menu .inv-group,
       #menu .inv-slot,
       #menu .menu-controls-list { min-width: 0; }
     }

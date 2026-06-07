@@ -90,33 +90,23 @@ export function getSkills() {
   };
 }
 
-// Display metadata for each skill. The inventory screen renders these
-// under the weapon they modify (see WEAPON_SKILLS below).
+// Display metadata for each skill. The inventory screen lists the unlocked
+// ones plainly, alongside keys and other non-weapon pickups. `icon` is the
+// [row, col] tile on the inventory sheet, matching inventory_texture_offset.
 export const SKILL_INFO = {
-  piercing:  { name: "Piercing Kunai",  desc: "Kunai deals 2× damage." },
-  boomerang: { name: "Boomerang Kunai", desc: "Kunai bounces back on wall/kill." },
-  catcher:   { name: "Bullet Catcher",  desc: "Caught bullets refund into ammo." },
+  piercing:  { name: "Piercing Kunai",  desc: "Kunai deals 2× damage.",            icon: [12, 9] },
+  boomerang: { name: "Boomerang Kunai", desc: "Kunai bounces back on wall/kill.",  icon: [12, 7] },
+  catcher:   { name: "Bullet Catcher",  desc: "Caught bullets refund into ammo.",  icon: [12, 8] },
 };
 
-// Which skills belong to which weapon. Today every skill is a kunai
-// launcher passive (id 1160 = equipment.DEFAULT_RANGED_WEAPON_ID); a future
-// sword skill would map to its melee weapon id and surface under Melee.
-const WEAPON_SKILLS = {
-  1160: ["piercing", "boomerang", "catcher"],
-};
-
-// The skills attached to a weapon, with live unlocked state, ready to
-// render. Returns [] for weapons that have no skills.
-export function skillsForWeapon(weaponId) {
-  const ids = WEAPON_SKILLS[weaponId];
-  if (!ids) return [];
+// The skills you've actually earned, ready to list in the inventory as
+// non-selectable "owned" items (like keys). Locked skills are omitted —
+// you only see a skill once you've earned it.
+export function unlockedSkills() {
   const unlocked = getSkills();
-  return ids.map((id) => ({
-    id,
-    name: SKILL_INFO[id].name,
-    desc: SKILL_INFO[id].desc,
-    unlocked: !!unlocked[id],
-  }));
+  return Object.keys(SKILL_INFO)
+    .filter((id) => unlocked[id])
+    .map((id) => ({ id, name: SKILL_INFO[id].name, desc: SKILL_INFO[id].desc, icon: SKILL_INFO[id].icon }));
 }
 
 export function onSkillsChange(fn) {

@@ -77,12 +77,21 @@ export function computeLayout(count, w, h) {
   };
 }
 
-// Partition a w×h surface into per-player pixel rects. Boundaries are shared
-// integer pixel lines (floor of the proportional split), so slices tile the
-// surface with no gaps or overlaps. Pure — takes plain numbers, not a canvas.
+// Partition a w×h surface into per-player pixel rects. Boundaries are snapped
+// to whole TILE_SIZE lines so every slice width/height is an exact tile count.
+// That matters because each slice camera covers floor(rect / TILE_SIZE) tiles:
+// if a boundary fell mid-tile, the camera would render slightly narrower than
+// its slice, leaving an unrendered black gutter on the slice's right/bottom
+// wherever the zone image doesn't bleed past it (map edges, dark/cone zones).
+// The surface dims (w, h) are already tile multiples (zoom.js), so the outer
+// edges land exactly on w/h and the slices still tile with no gaps/overlaps.
 export function sliceRectsPx(w, h, layout) {
-  const colAt = (c) => Math.round((c * w) / layout.cols);
-  const rowAt = (r) => Math.round((r * h) / layout.rows);
+  const snap = (v) => Math.round(v / TILE_SIZE) * TILE_SIZE;
+  // Outer edges stay exact (0 and w/h) so the slices always cover the whole
+  // surface; only interior boundaries snap to a tile line. In real use w/h are
+  // tile multiples (zoom.js), so every resulting slice is tile-aligned.
+  const colAt = (c) => (c === 0 ? 0 : c === layout.cols ? w : snap((c * w) / layout.cols));
+  const rowAt = (r) => (r === 0 ? 0 : r === layout.rows ? h : snap((r * h) / layout.rows));
   return layout.cells.map((cell) => {
     const x0 = colAt(cell.col);
     const x1 = colAt(cell.col + 1);

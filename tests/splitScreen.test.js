@@ -6,6 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 const { computeLayout, sliceRectsPx, sliceCount } = await import("../js/splitScreen.js");
+const { TILE_SIZE } = await import("../js/constants.js");
 const coopMode = await import("../js/coopMode.js");
 const gameMode = await import("../js/gameMode.js");
 const onlineMode = await import("../js/onlineMode.js");
@@ -74,8 +75,12 @@ test("sliceRectsPx tiles the surface with no gaps or overlaps", () => {
       // surface for full grids (1/2/4), and is 3/4 for the 3-up blank-cell.
       const covered = rects.reduce((s, r) => s + r.w * r.h, 0);
       const expected = count === 3 && layout.cols === 2 ? (w * h * 3) / 4 : w * h;
-      // Allow rounding slop from integer boundaries.
-      assert.ok(Math.abs(covered - expected) <= w + h, `area ${count} ${w}x${h}`);
+      // Full grids tile exactly (covered === w*h). The 3-up blank-cell case is
+      // an approximation: its expected 3/4 assumes a mid-point split, but the
+      // interior boundaries snap to whole tiles (so cameras render no black
+      // gutter), shifting the blank cell's area by up to half a tile per edge.
+      const slop = count === 3 && layout.cols === 2 ? TILE_SIZE * (w + h) : w + h;
+      assert.ok(Math.abs(covered - expected) <= slop, `area ${count} ${w}x${h}`);
     }
   }
 });

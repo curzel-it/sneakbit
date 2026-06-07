@@ -33,20 +33,23 @@ const MAX_HP = 100;
 function maxHp() {
   return isPvp() ? pvpPlayerHp() : MAX_HP;
 }
-// Intentional divergence from Rust HERO_RECOVERY_PS=1.0. Block-A playtests
-// found 1 HP/s left the player chip-damage-locked when crossing biome
-// edges with low health — the web build also has no inventory consumables
-// yet, so there's no other heal path. Bump up to 3 if/when potion drops
-// land, then re-evaluate.
-const RECOVERY_PER_SEC = 3;
+// Matches Rust HERO_RECOVERY_PS=1.0. Potion drops now provide a faster,
+// deliberate heal path, so passive regen is back to the original slow trickle.
+const RECOVERY_PER_SEC = 1;
 const REGEN_DELAY_AFTER_HIT = 1.5;
 const INVULN_AFTER_BURST = 0.4;
+
+// Potions don't snap HP up — they top off a per-player `pendingHeal` pool
+// that drains into hp at this rate so the bar visibly climbs. 100/s means
+// the base 50 HP health potion takes ~0.5s to fill. Drained before (and
+// regardless of) the regen delay so a potion still works right after a hit.
+const HEAL_PER_SEC = 100;
 
 // Up to 4 players (online co-op cap: host + 3 network guests).
 const MAX_PLAYERS = 4;
 
 function makeRecord() {
-  return { hp: maxHp(), invuln: 0, regenDelay: 0 };
+  return { hp: maxHp(), invuln: 0, regenDelay: 0, pendingHeal: 0 };
 }
 
 const records = Array.from({ length: MAX_PLAYERS }, makeRecord);
@@ -61,6 +64,14 @@ export function tickPlayerHealth(dt) {
   let changed = false;
   for (const rec of records) {
     if (rec.invuln > 0) rec.invuln = Math.max(0, rec.invuln - dt);
+    // Drain any queued potion healing first — independent of the regen
+    // delay, so drinking right after a hit still heals.
+    if (rec.pendingHeal > 0 && rec.hp > 0) {
+      const step = Math.min(rec.pendingHeal, HEAL_PER_SEC * dt);
+      rec.hp = Math.min(maxHp(), rec.hp + step);
+      rec.pendingHeal -= step;
+      changed = true;
+    }
     if (rec.regenDelay > 0) {
       rec.regenDelay = Math.max(0, rec.regenDelay - dt);
       continue;
@@ -127,6 +138,22 @@ export function applyPlayerContinuousDamage(amount, victim = 0) {
   return rec.hp <= 0 ? "died" : "hurt";
 }
 
+// Potion healing. Queues `amount` into the victim's pending-heal pool,
+// which tickPlayerHealth drains into hp over ~0.5s so the bar climbs
+// instead of snapping. Capped to the room left under maxHp (accounting
+// for heal already in flight) so overheal doesn't waste pool time, and
+// a no-op on a dead player — they need a revive, not a potion. Accepts
+// an index or a player object, same as the damage paths. Returns the HP
+// actually queued.
+export function applyPlayerHeal(amount, victim = 0) {
+  const rec = recordFor(indexOf(victim));
+  if (rec.hp <= 0 || amount <= 0) return 0;
+  const room = Math.max(0, maxHp() - rec.hp - rec.pendingHeal);
+  const granted = Math.min(amount, room);
+  rec.pendingHeal += granted;
+  return granted;
+}
+
 function indexOf(victim) {
   if (typeof victim === "number") return victim;
   if (victim && typeof victim === "object") return victim.index | 0;
@@ -158,11 +185,11 @@ export function resetPlayerHealth(index) {
   const full = maxHp();
   if (index == null) {
     for (const rec of records) {
-      rec.hp = full; rec.invuln = 0; rec.regenDelay = 0;
+      rec.hp = full; rec.invuln = 0; rec.regenDelay = 0; rec.pendingHeal = 0;
     }
   } else {
     const rec = recordFor(index);
-    rec.hp = full; rec.invuln = 0; rec.regenDelay = 0;
+    rec.hp = full; rec.invuln = 0; rec.regenDelay = 0; rec.pendingHeal = 0;
   }
   notify();
 }

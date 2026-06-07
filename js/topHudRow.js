@@ -93,6 +93,11 @@ function injectStyles() {
       max-width: calc(100vw - 24px);
     }
     #top-hud-row:not(.split) #health-hud { flex: 0 0 auto; width: 150px; min-width: 0; }
+    /* Split-screen: each HP card is anchored position:fixed to its slice corner
+       (see healthHud.anchorBar). Without a width, its width:100% resolves to the
+       full viewport and the bar stretches across both slices. Pin it to a
+       compact panel — the desktop look, one per slice. */
+    #top-hud-row.split .hp-card { width: 180px; }
     #top-hud-row:not(.split) .hp-card,
     #top-hud-row:not(.split) #coin-hud,
     #top-hud-row:not(.split) .ammo-chip {

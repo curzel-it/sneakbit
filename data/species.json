@@ -625,6 +625,186 @@
   },
   {
     "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2020,
+    "inventory_texture_offset": [
+      13,
+      1
+    ],
+    "is_rigid": false,
+    "name": "objects.name.potion_red",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 38,
+      "y": 0
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2021,
+    "inventory_texture_offset": [
+      13,
+      2
+    ],
+    "is_rigid": false,
+    "name": "objects.name.potion_purple",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 38,
+      "y": 1
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2022,
+    "inventory_texture_offset": [
+      13,
+      6
+    ],
+    "is_rigid": false,
+    "name": "objects.name.potion_green",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 38,
+      "y": 2
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2023,
+    "inventory_texture_offset": [
+      13,
+      3
+    ],
+    "is_rigid": false,
+    "name": "objects.name.potion_blue",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 38,
+      "y": 3
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2024,
+    "inventory_texture_offset": [
+      13,
+      7
+    ],
+    "is_rigid": false,
+    "name": "objects.name.potion_yellow",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 38,
+      "y": 4
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2025,
+    "inventory_texture_offset": [
+      13,
+      4
+    ],
+    "is_rigid": false,
+    "name": "objects.name.potion_ice",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 38,
+      "y": 5
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2026,
+    "inventory_texture_offset": [
+      13,
+      5
+    ],
+    "is_rigid": false,
+    "name": "objects.name.potion_silver",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 38,
+      "y": 6
+    },
+    "sprite_number_of_frames": 4,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2027,
+    "inventory_texture_offset": [
+      13,
+      8
+    ],
+    "is_rigid": false,
+    "name": "objects.name.potion_rainbow",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 38,
+      "y": 7
+    },
+    "sprite_number_of_frames": 7,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
+    "entity_type": "PickableObject",
+    "id": 2028,
+    "inventory_texture_offset": [
+      7,
+      2
+    ],
+    "is_rigid": false,
+    "name": "objects.name.red_pill",
+    "sprite_frame": {
+      "h": 1,
+      "w": 1,
+      "x": 38,
+      "y": 8
+    },
+    "sprite_number_of_frames": 8,
+    "sprite_sheet_id": 1012,
+    "z_index": 14
+  },
+  {
+    "base_speed": 0.0,
     "entity_type": "Teleporter",
     "id": 1019,
     "inventory_texture_offset": [

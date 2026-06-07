@@ -22,12 +22,20 @@ import { pvpSlotCanAct } from "./pvpMatch.js";
 import { isPvp, isTowerDefenseMode } from "./gameMode.js";
 import { spendPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 import { spawnLocalFlash } from "./localEffects.js";
+import { ANIMATIONS_FPS } from "./constants.js";
 
 const KUNAI_BULLET_SPECIES_ID = 7000;
 const BULLET_SPEED = 9;           // fallback: kunai base_speed
 const BULLET_LIFESPAN = 1.6;      // fallback when species lifespan missing
 const COOLDOWN = 0.35;            // fallback when weapon.cooldown_after_use==0
 const MAX_PLAYERS = 4;
+// How long the firing pose stays on screen after a shot. Mirrors Rust
+// equipment/ranged.rs, where play_equipment_usage_animation holds the
+// attack-row strip until the sprite completes one full loop — i.e. its
+// frame count / animation FPS — rather than the (often tiny) firing
+// cooldown. The AR-15's 0.005s cooldown would otherwise flash the pose
+// for a single frame and look like nothing happened.
+const FIRE_ANIM_FALLBACK = 0.4;   // 4-frame strip at ANIMATIONS_FPS
 
 // Maps Rust EquipmentUsageSoundEffect → audio.js sfx names.
 const SFX_FOR_USAGE = {
@@ -50,6 +58,12 @@ const cooldown = new Float32Array(MAX_PLAYERS);
 // Latest cooldown length per player, so the on-screen attack button can derive
 // a 0..1 sweep (mirrors melee.js's cooldownDuration).
 const cooldownDuration = new Float32Array(MAX_PLAYERS);
+// Firing-pose animation, decoupled from the cooldown above (see
+// FIRE_ANIM_FALLBACK). fireAnim[i] decays each tick; fireAnimDuration[i]
+// holds the latest pose length so the equipment overlay can derive a 0..1
+// progress, exactly like melee's swing state.
+const fireAnim = new Float32Array(MAX_PLAYERS);
+const fireAnimDuration = new Float32Array(MAX_PLAYERS);
 let nextBulletId = 1;
 
 // Returns 0..1 while a shot is still cooling down for the given player (1.0 =
@@ -63,6 +77,28 @@ export function getShootCooldownProgress(playerIndex = 0) {
   return Math.max(0, Math.min(1, cd / dur));
 }
 
+// Returns 0..1 while the firing pose is still showing for the given player
+// (1.0 = just fired, 0.0 = pose done), or null when idle. entities.js's
+// drawEquipment reads this for the ranged slot, the way it reads
+// getMeleeSwingProgress for the melee slot — flipping the weapon overlay to
+// its attack-row strip while the shot animates.
+export function getShootAnimProgress(playerIndex = 0) {
+  const i = playerIndex | 0;
+  const a = fireAnim[i] ?? 0;
+  const dur = fireAnimDuration[i] ?? 0;
+  if (a <= 0 || dur <= 0) return null;
+  return Math.max(0, Math.min(1, a / dur));
+}
+
+// One sprite-loop's worth of seconds for the weapon's overlay strip, used as
+// the firing-pose length. Falls back to a fixed window when the weapon has no
+// (or a single-frame) sprite — e.g. the kunai launcher, which has no in-zone
+// overlay to animate anyway.
+function fireAnimDurationFor(weapon) {
+  const frames = weapon?.frames | 0;
+  return frames > 1 ? frames / ANIMATIONS_FPS : FIRE_ANIM_FALLBACK;
+}
+
 export function installShooting(getState) {
   stateRef = getState;
   window.addEventListener("keydown", onKey);
@@ -71,9 +107,10 @@ export function installShooting(getState) {
 export function tickShooting(dt) {
   for (let i = 0; i < MAX_PLAYERS; i++) {
     if (cooldown[i] > 0) cooldown[i] = Math.max(0, cooldown[i] - dt);
+    if (fireAnim[i] > 0) fireAnim[i] = Math.max(0, fireAnim[i] - dt);
   }
   const state = stateRef?.();
-  if (!state) return;
+  if (!state || !state.zone) return;
   advanceBullets(state, dt);
 }
 
@@ -147,7 +184,13 @@ export function predictGuestShoot(player) {
   // Drive the touch cooldown ring for the guest's own avatar — the guest never
   // runs the authoritative shoot() path, so seed the cooldown here too.
   const i = player.index | 0;
-  if (i >= 0 && i < MAX_PLAYERS) { cooldown[i] = cd; cooldownDuration[i] = cd; }
+  if (i >= 0 && i < MAX_PLAYERS) {
+    cooldown[i] = cd; cooldownDuration[i] = cd;
+    // Arm the firing pose for the guest's own avatar too, so the predicted
+    // self animates the shot without waiting on the host's snapshot.
+    fireAnimDuration[i] = fireAnimDurationFor(weapon);
+    fireAnim[i] = fireAnimDuration[i];
+  }
 
   playSfx(SFX_FOR_USAGE[weapon?.equipment_usage_sound_effect] || "knifeThrown");
   const [dx, dy] = DIR_DELTA[player.direction] ?? DIR_DELTA.down;
@@ -259,6 +302,12 @@ function shoot(state, shooter) {
   }
   cooldown[idx] = (weapon?.cooldown_after_use > 0) ? weapon.cooldown_after_use : COOLDOWN;
   cooldownDuration[idx] = cooldown[idx];
+  // Arm the firing pose. Reset on every shot so rapid fire (the AR-15's
+  // 0.005s cooldown) keeps the overlay on its attack-row strip; once firing
+  // stops it plays out the remaining loop, like Rust's sprite.reset() +
+  // play_equipment_usage_animation.
+  fireAnimDuration[idx] = fireAnimDurationFor(weapon);
+  fireAnim[idx] = fireAnimDuration[idx];
 
   const dir = shooter.direction;
   const [dx, dy] = DIR_DELTA[dir] ?? DIR_DELTA.down;

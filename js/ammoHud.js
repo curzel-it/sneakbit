@@ -9,8 +9,7 @@
 // anchored to the top-right of THAT player's slice — mirroring the per-slice
 // HP bars — each showing that player's own count.
 
-import { TILE_SIZE } from "./constants.js";
-import { getSprite } from "./assets.js";
+import { ICON_RES, paintInventoryIcon } from "./inventoryIcon.js";
 import { getAmmo, onInventoryChange } from "./inventory.js";
 import { getEquipped, SLOT_RANGED, onEquipmentChange } from "./equipment.js";
 import { getSpecies } from "./species.js";
@@ -23,12 +22,6 @@ import { openInventory } from "./menu.js";
 import { el } from "./dom.js";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
-// The 28px icon box isn't an integer multiple of the 16px source tile, so a
-// straight nearest-neighbour upscale duplicates some source pixels and not
-// others — lumpy on round sprites. Paint into a clean integer-multiple (×8)
-// backing canvas and let the browser smoothly downscale it to ICON_PIXELS.
-const ICON_SUPERSAMPLE = 8;
-const ICON_RES = TILE_SIZE * ICON_SUPERSAMPLE;
 const MAX_PLAYERS = 4;
 
 let root = null;
@@ -117,10 +110,16 @@ export function updateAmmoHud() {
 function anchorChip(c, slices) {
   const css = slices?.[c.index]?.cssRect;
   if (css) {
+    // The canvas is centred and overscans the viewport (zoom.js), so a slice's
+    // right edge / top can fall outside the visible area. Clamp to a 12px
+    // viewport margin so the chip never clips off-screen (the chip is
+    // right-anchored via translateX(-100%), so `left` is its right edge).
+    const vw = (typeof window !== "undefined" && window.visualViewport)
+      ? window.visualViewport.width : (typeof window !== "undefined" ? window.innerWidth : 0);
     Object.assign(c.root.style, {
       position: "fixed",
-      left: `${Math.round(css.left + css.width - 12)}px`,
-      top: `${Math.round(css.top + 12)}px`,
+      left: `${Math.min(vw - 12, Math.round(css.left + css.width - 12))}px`,
+      top: `${Math.max(12, Math.round(css.top + 12))}px`,
       transform: "translateX(-100%)",
     });
   } else {
@@ -159,6 +158,11 @@ function injectStyles() {
       display: flex;
       align-items: center;
       gap: 8px;
+      /* Right-anchored in split-screen (position:fixed + translateX(-100%)),
+         so the browser sizes the chip from its left edge to the viewport edge —
+         a tiny gap that would wrap the P2 ammo label. Pin it to one line; the
+         chip overflows leftward, which is the intended direction. */
+      white-space: nowrap;
       pointer-events: auto; /* tappable shortcut into the inventory */
       cursor: pointer;
     }
@@ -167,20 +171,7 @@ function injectStyles() {
 }
 
 function paintIcon(iconCanvas, speciesId = KUNAI_SPECIES_ID) {
-  const sp = getSpecies(speciesId);
-  if (!sp || !sp.inventory_texture_offset) return;
-  let sheet;
-  try { sheet = getSprite("inventory"); } catch { return; }
-  if (!sheet || !sheet.complete) return;
-  // `inventory_texture_offset` is [row, col] in the rust source.
-  const [row, col] = sp.inventory_texture_offset;
-  const ctx = iconCanvas.getContext("2d");
-  ctx.imageSmoothingEnabled = false; // crisp integer upscale into the backing canvas
-  ctx.clearRect(0, 0, ICON_RES, ICON_RES);
-  ctx.drawImage(
-    sheet,
-    col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE,
-    0, 0, ICON_RES, ICON_RES,
-  );
-  iconCanvas.dataset.painted = "1";
+  const off = getSpecies(speciesId)?.inventory_texture_offset;
+  if (!off) return; // `inventory_texture_offset` is [row, col] in the rust source.
+  paintInventoryIcon(iconCanvas, off[0], off[1]);
 }

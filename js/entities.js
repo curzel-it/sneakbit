@@ -16,6 +16,7 @@ import { getPlayerSpriteFrame } from "./player.js";
 import { SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { resolveLoadout } from "./sessionLoadouts.js";
 import { getMeleeSwingProgress } from "./melee.js";
+import { getShootAnimProgress } from "./shooting.js";
 import { pushableRenderOffset } from "./pushables.js";
 import { coinRenderOffset } from "./coinDrops.js";
 import { shouldBeVisible } from "./entityVisibility.js";
@@ -105,7 +106,9 @@ function drawPlayer(ctx, player, camera) {
   // and local-coop the lookup falls back to local equipment by index.
   const idx = player.index | 0;
   const { melee, ranged } = resolveLoadout(player);
-  const equipInFront = player.direction === "up" || getMeleeSwingProgress(idx) != null;
+  const equipInFront = player.direction === "up"
+    || getMeleeSwingProgress(idx) != null
+    || getShootAnimProgress(idx) != null;
   if (!equipInFront) {
     drawEquipment(ctx, player, camera, ranged, SLOT_RANGED);
     drawEquipment(ctx, player, camera, melee, SLOT_MELEE);
@@ -139,11 +142,13 @@ const ATTACK_ROW_Y = { up: 37, right: 41, down: 45, left: 49 };
 // directional sprite layout. Skips weapons whose sprite sheet isn't loaded
 // (e.g. the kunai launcher, which has no in-zone overlay sprite).
 //
-// When the player is mid-swing (melee.getMeleeSwingProgress > 0 and this
-// is the melee slot) the overlay flips to the absolute attack-row strip
-// at ATTACK_ROW_Y[direction] and the source-x frame index advances with
-// the cooldown — that's the sword swing animation the player expects to
-// see in response to G.
+// When the weapon is mid-use the overlay flips to the absolute attack-row
+// strip at ATTACK_ROW_Y[direction] and the source-x frame index advances
+// with the cooldown. For the melee slot that's the sword swing in response
+// to G (melee.getMeleeSwingProgress); for the ranged slot it's the firing
+// animation in response to F (shooting.getShootAnimProgress) — mirroring
+// Rust equipment/{melee,ranged}.rs, which both call
+// play_equipment_usage_animation while action_cooldown_remaining > 0.
 function drawEquipment(ctx, player, camera, weaponId, slot) {
   if (!weaponId) return;
   const sp = getSpecies(weaponId);
@@ -155,7 +160,9 @@ function drawEquipment(ctx, player, camera, weaponId, slot) {
   const h = sp.height || 1;
   const frames = Math.max(1, sp.frames);
 
-  const swing = slot === SLOT_MELEE ? getMeleeSwingProgress(player.index | 0) : null;
+  const swing = slot === SLOT_MELEE
+    ? getMeleeSwingProgress(player.index | 0)
+    : getShootAnimProgress(player.index | 0);
   let sourceY, frameIdx;
   if (swing != null) {
     sourceY = (ATTACK_ROW_Y[player.direction] ?? ATTACK_ROW_Y.down) * TILE_SIZE;

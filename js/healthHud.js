@@ -148,8 +148,12 @@ function setDisplay(b, value) {
 // per bar so a steady camera doesn't rewrite the same left/top every frame.
 function anchorBar(b, slices) {
   const css = slices?.[b.index]?.cssRect;
-  const left = css ? `${Math.round(css.left + 12)}px` : "";
-  const top = css ? `${Math.round(css.top + 12)}px` : "";
+  // The canvas is centred and sized a hair larger than the viewport (zoom.js),
+  // so a top-row / left-column slice's cssRect can start a few px off-screen.
+  // Clamp to a 12px viewport margin so the card never clips above/left of the
+  // visible area (the symptom: P1/P2's panel top sliced off).
+  const left = css ? `${Math.max(12, Math.round(css.left + 12))}px` : "";
+  const top = css ? `${Math.max(12, Math.round(css.top + 12))}px` : "";
   const position = css ? "fixed" : "";
   if (left === b.last.left && top === b.last.top) return;
   b.root.style.position = position;

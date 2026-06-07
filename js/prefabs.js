@@ -52,6 +52,7 @@ const SHOP_IDS        = new Set([1070, 1071, 1072]);
 // 7001 kunai x10, 1176 .223 x10, 1173 .223 x100, 1174 cannonball x100,
 // 1164 sword, 1172 shield, 1162 AR-15, 1168 cannon.
 const DEFAULT_SHOP_STOCK = [
+  { item: 2020, price: 30, stackable: true }, // health potion (+50 HP)
   { item: 7001, price: 10, stackable: true },
   { item: 1176, price: 30, stackable: true },
   { item: 1173, price: 250, stackable: true },

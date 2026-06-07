@@ -639,6 +639,10 @@ function tickGuestFrame(dt, state, renderer, hud, biomeAnim) {
   // the cooldown never drains, so the swing animation would freeze at its
   // first frame and never finish.
   tickMelee(dt);
+  // Same for the predicted-self firing pose (predictGuestShoot arms it).
+  // tickShooting no-ops its bullet advance while the guest's local zone is
+  // wiped; here it just drains the fire-anim timer so the pose finishes.
+  tickShooting(dt);
   // Age out the guest's local cosmetic flashes (muzzle flash, etc).
   tickLocalEffects(dt);
   if (!isMirrorReady() || !mZone) {

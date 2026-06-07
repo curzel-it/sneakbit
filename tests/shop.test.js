@@ -13,6 +13,7 @@ loadSpeciesData([
   { id: 1169, entity_type: "Bullet" },                                          // .223 round
   { id: 7000, entity_type: "Bullet" },                                          // kunai round
   { id: 7001, entity_type: "Bundle", bundle_contents: Array(10).fill(7000) },   // kunai x10
+  { id: 2020, entity_type: "PickableObject" },                                  // health potion
 ]);
 
 const shop = await import("../js/shopPurchase.js");
@@ -24,6 +25,9 @@ const storage = await import("../js/storage.js");
 const SWORD = { item: 1164, price: 99 };
 const AR15  = { item: 1162, price: 450 };
 const KUNAI = { item: 7001, price: 10 };
+// Health potion: a PickableObject, so it only stacks with the explicit
+// stockentry override (mirrors data/prefabs).
+const POTION = { item: 2020, price: 30, stackable: true };
 
 function reset(coins = 0) {
   storage._resetStorageForTesting();
@@ -103,6 +107,22 @@ test("an owned weapon cannot be re-bought (and isn't charged)", () => {
   assert.equal(res.ok, false);
   assert.equal(res.reason, "owned");
   assert.equal(wallet.getCoins(), coinsAfterFirst); // no double charge
+});
+
+test("health potion is repeatable, never owned, and stacks in inventory", () => {
+  reset(100);
+  // PickableObject isn't stackable by default — only via the stock override.
+  assert.equal(shop.isStackable({ item: 2020, price: 30 }), false);
+  assert.equal(shop.isStackable(POTION), true);
+  // It's a consumable, not a weapon item, so it's never "owned".
+  assert.equal(shop.isWeaponItem(2020), false);
+  assert.equal(shop.isOwned(2020), false);
+  const res = shop.buy(POTION, 3);
+  assert.equal(res.ok, true);
+  assert.equal(res.spent, 90);
+  assert.equal(inventory.getAmmo(2020), 3); // carried, stackable
+  assert.equal(shop.isOwned(2020), false);  // can keep buying more
+  assert.equal(wallet.getCoins(), 10);
 });
 
 test("a failed purchase never spends coins", () => {

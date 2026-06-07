@@ -1,0 +1,86 @@
+// Consumable inventory items: pickups you carry and "use" from the
+// inventory screen to fire an effect — as opposed to weapons (which equip)
+// or passive pickups (keys, coins). The registry keeps the inventory UI
+// generic: a new potion becomes usable by adding one entry here, with no
+// change to inventoryScreen.js.
+
+import { getAmmo, removeAmmo } from "./inventory.js";
+import { applyPlayerHeal, getPlayerHp, getPlayerMaxHp } from "./playerHealth.js";
+import { playSfx } from "./audio.js";
+import { getSpecies } from "./species.js";
+import { showToast } from "./toast.js";
+import { tr } from "./strings.js";
+import { TILE_SIZE } from "./constants.js";
+
+const HEALTH_POTION_HEAL = 50;
+
+// speciesId -> consumable definition.
+//   verb    button label in the inventory list.
+//   sfx     sound on a successful use (optional).
+//   canUse  would using it right now actually do anything? Gates the button
+//           so a potion isn't wasted (e.g. drinking a heal at full HP).
+//   effect  runs after one unit is consumed.
+const CONSUMABLES = {
+  2020: {
+    verb: "Drink",
+    sfx: "playerResurrected",
+    canUse: (idx) => getPlayerHp(idx) < getPlayerMaxHp(),
+    effect: (idx) => applyPlayerHeal(HEALTH_POTION_HEAL, idx),
+  },
+  // Red pill: restores all health (heal clamps to the missing amount).
+  2028: {
+    verb: "Take",
+    sfx: "playerResurrected",
+    canUse: (idx) => getPlayerHp(idx) < getPlayerMaxHp(),
+    effect: (idx) => applyPlayerHeal(getPlayerMaxHp(), idx),
+  },
+};
+
+export function isConsumable(speciesId) {
+  return !!CONSUMABLES[speciesId | 0];
+}
+
+export function consumableVerb(speciesId) {
+  return CONSUMABLES[speciesId | 0]?.verb ?? "Use";
+}
+
+// True only when the player holds at least one and the effect would do
+// something right now. Drives the button's enabled state.
+export function canUseConsumable(speciesId, playerIndex = 0) {
+  const def = CONSUMABLES[speciesId | 0];
+  if (!def) return false;
+  if (getAmmo(speciesId, playerIndex) <= 0) return false;
+  return def.canUse ? def.canUse(playerIndex | 0) : true;
+}
+
+// Consume one unit and fire its effect. Returns true on success, false if
+// the item isn't consumable, none are held, or it would have no effect
+// right now (so the unit isn't wasted).
+export function useConsumable(speciesId, playerIndex = 0) {
+  const sid = speciesId | 0;
+  const def = CONSUMABLES[sid];
+  if (!canUseConsumable(sid, playerIndex)) return false;
+  if (!removeAmmo(sid, 1, playerIndex)) return false;
+  def.effect(playerIndex | 0);
+  if (def.sfx) playSfx(def.sfx);
+  const sp = getSpecies(sid);
+  const name = tr(sp?.name) || sp?.name || "";
+  showToast(tr("used_item").replace("%s", name), "hint", { image: inventoryIconFor(sp) });
+  return true;
+}
+
+// Builds the ToastImage payload for a species' inventory icon, or null if
+// the species has no inventory_texture_offset. Same source rect math as
+// pickups.js / shop.js (inventory_texture_offset is [row, col]).
+function inventoryIconFor(sp) {
+  const off = sp?.inventory_texture_offset;
+  if (!off) return null;
+  return {
+    url: "./assets/inventory.png",
+    sx: (off[1] | 0) * TILE_SIZE,
+    sy: (off[0] | 0) * TILE_SIZE,
+    sw: TILE_SIZE,
+    sh: TILE_SIZE,
+    renderSize: 32,
+  };
+}

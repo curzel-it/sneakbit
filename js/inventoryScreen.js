@@ -22,9 +22,15 @@ import {
 } from "./equipment.js";
 import { snapshotInventory, onInventoryChange } from "./inventory.js";
 import { weaponsInSlot } from "./weaponSlots.js";
-import { skillsForWeapon, onSkillsChange } from "./skills.js";
+import { unlockedSkills, onSkillsChange } from "./skills.js";
 import { isCoopMode } from "./coopMode.js";
+import {
+  isConsumable, consumableVerb, canUseConsumable, useConsumable,
+} from "./consumables.js";
+import { onPlayerHealthChange } from "./playerHealth.js";
+import { ICON_RES, paintInventoryIcon } from "./inventoryIcon.js";
 
+const ICON_PIXELS = 24;
 let unsubscribers = [];
 
 export function renderInventoryInto(host) {
@@ -38,6 +44,10 @@ export function renderInventoryInto(host) {
   unsubscribers.push(onEquipmentChange(rerender));
   unsubscribers.push(onInventoryChange(rerender));
   unsubscribers.push(onSkillsChange(rerender));
+  // Health changes flip a consumable's "would this do anything?" state
+  // (e.g. a heal potion greys out at full HP, re-enables once you take a
+  // hit) while the panel is open.
+  unsubscribers.push(onPlayerHealthChange(rerender));
 }
 
 function teardown() {
@@ -48,6 +58,26 @@ function teardown() {
 function draw(host) {
   host.innerHTML = sectionsHtml(0);
   bindButtons(host, 0);
+  paintIcons(host);
+}
+
+// The list HTML embeds blank icon canvases tagged with their [row, col]; paint
+// them once the DOM exists. The sprite sheet is loaded by the time the menu
+// opens mid-game, so a single pass suffices.
+function paintIcons(host) {
+  for (const c of host.querySelectorAll("canvas.inv-icon[data-icon-row]")) {
+    paintInventoryIcon(c, Number(c.dataset.iconRow), Number(c.dataset.iconCol));
+  }
+}
+
+// A blank icon canvas for the given [row, col] inventory-sheet tile, painted
+// after insertion by paintIcons. Renders a same-sized spacer when the tile is
+// unknown (e.g. the Unarmed row) so names stay aligned.
+function iconHtml(offset) {
+  if (!offset) return `<span class="inv-icon inv-icon-empty"></span>`;
+  return `<canvas class="inv-icon" width="${ICON_RES}" height="${ICON_RES}"
+    style="width:${ICON_PIXELS}px;height:${ICON_PIXELS}px"
+    data-icon-row="${offset[0] | 0}" data-icon-col="${offset[1] | 0}"></canvas>`;
 }
 
 function sectionsHtml(playerIndex) {
@@ -80,10 +110,10 @@ function slotPanelHtml(title, slot, playerIndex, withUnarmed) {
     rows.push(rowHtml({
       active: e.isEquipped,
       name: label,
+      icon: e.species?.inventory_texture_offset,
       ammo: slot === SLOT_RANGED ? (e.ammo | 0) : null,
       attrs: `data-equip="${e.id}" data-slot="${slot}" data-player="${playerIndex | 0}"`,
       raw: true,
-      extra: skillsHtml(e.id),
     }));
   }
 
@@ -93,57 +123,85 @@ function slotPanelHtml(title, slot, playerIndex, withUnarmed) {
   </div>`;
 }
 
-function rowHtml({ active, name, ammo = null, attrs, raw = false, extra = "" }) {
+function rowHtml({ active, name, icon = null, ammo = null, attrs, raw = false }) {
   const nameHtml = raw ? name : escapeHtml(name);
   const ammoHtml = ammo != null ? `<span class="inv-count">x${ammo}</span>` : "";
   return `<li>
     <button class="inv-slot-row${active ? " is-active" : ""}" ${attrs}>
       <span class="inv-radio">${active ? "◉" : "◯"}</span>
+      ${iconHtml(icon)}
       <span class="inv-name">${nameHtml}</span>
       ${ammoHtml}
     </button>
-    ${extra}
   </li>`;
 }
 
-// The weapon's unlockable skills, rendered as a nested locked/unlocked
-// list under its row. Empty string for weapons with no skills.
-function skillsHtml(weaponId) {
-  const skills = skillsForWeapon(weaponId);
-  if (skills.length === 0) return "";
-  const items = skills.map((s) => {
-    const cls = s.unlocked ? "is-unlocked" : "is-locked";
-    const tag = s.unlocked ? "UNLOCKED" : "LOCKED";
-    return `<li class="inv-skill ${cls}">
-      <span class="inv-skill-head">
-        <span class="inv-skill-name">${escapeHtml(s.name)}</span>
-        <span class="inv-skill-tag ${cls}">${tag}</span>
-      </span>
-      <span class="inv-skill-desc">${escapeHtml(s.desc)}</span>
-    </li>`;
-  }).join("");
-  return `<ul class="inv-skill-list">${items}</ul>`;
-}
-
-// Non-weapon pickups — weapons live in the slot panels above.
+// Non-weapon contents, split into three labelled groups: consumables you
+// can use, plain pickups (keys, quest items), and the passive skills
+// you've earned. All non-selectable; weapons live in the slot panels above.
 function itemsHtml(playerIndex) {
   const counts = snapshotInventory(playerIndex);
-  const rows = Object.entries(counts)
+  const items = Object.entries(counts)
     .map(([id, n]) => ({ id: Number(id), count: n | 0 }))
     .filter((r) => r.count > 0)
     .map((r) => ({ ...r, sp: getSpecies(r.id) }))
     .filter((r) => r.sp && !isWeaponItem(r.sp))
     .sort(byName);
 
-  if (rows.length === 0) return `<p class="inv-empty">No other items.</p>`;
+  const sections = [
+    itemGroupHtml("Consumables", items.filter((r) => isConsumable(r.id)), playerIndex),
+    itemGroupHtml("Items", items.filter((r) => !isConsumable(r.id)), playerIndex),
+    skillGroupHtml("Skills"),
+  ].filter(Boolean);
 
-  return `<ul class="inv-list">${rows.map((r) => {
+  if (sections.length === 0) return `<p class="inv-empty">No other items.</p>`;
+  return sections.join("");
+}
+
+// One labelled group of pickup rows (name × count, plus a use button for
+// consumables). Empty string when the group has nothing to show.
+function itemGroupHtml(title, rows, playerIndex) {
+  if (rows.length === 0) return "";
+  const lis = rows.map((r) => {
     const name = tr(r.sp.name) || r.sp.name || `Species ${r.id}`;
     return `<li>
+      ${iconHtml(r.sp.inventory_texture_offset)}
       <span class="inv-name">${escapeHtml(name)}</span>
       <span class="inv-count">×${r.count}</span>
+      ${actionHtml(r.id, playerIndex)}
     </li>`;
-  }).join("")}</ul>`;
+  }).join("");
+  return groupHtml(title, lis);
+}
+
+// The Skills group: every unlocked passive, listed like keys — a plain
+// owned-item row with a short note. Empty string when none are unlocked.
+function skillGroupHtml(title) {
+  const skills = unlockedSkills();
+  if (skills.length === 0) return "";
+  const lis = skills.map((s) => `<li>
+    ${iconHtml(s.icon)}
+    <span class="inv-name">${escapeHtml(s.name)}</span>
+    <span class="inv-skill-note">${escapeHtml(s.desc)}</span>
+  </li>`).join("");
+  return groupHtml(title, lis);
+}
+
+function groupHtml(title, lis) {
+  return `<div class="inv-group">
+    <h2 class="inv-slot-title">${escapeHtml(title)}</h2>
+    <ul class="inv-list">${lis}</ul>
+  </div>`;
+}
+
+// A "use" button for consumable items (the heal potion's "Drink"), disabled
+// when using it right now would do nothing. Empty string for plain pickups.
+function actionHtml(speciesId, playerIndex) {
+  if (!isConsumable(speciesId)) return "";
+  const disabled = canUseConsumable(speciesId, playerIndex) ? "" : " disabled";
+  return `<span class="inv-action">
+    <button data-use="${speciesId}" data-player="${playerIndex | 0}"${disabled}>${escapeHtml(consumableVerb(speciesId))}</button>
+  </span>`;
 }
 
 function isWeaponItem(sp) {
@@ -167,6 +225,14 @@ function bindButtons(host, playerIndex) {
     btn.addEventListener("click", () => {
       const idx = parseInt(btn.dataset.unequipMelee, 10) | 0;
       clearEquipped(SLOT_MELEE, idx);
+    });
+  }
+  for (const btn of host.querySelectorAll("[data-use]")) {
+    btn.addEventListener("click", () => {
+      const id = parseInt(btn.dataset.use, 10);
+      const idx = parseInt(btn.dataset.player, 10) | 0;
+      // Re-render rides onInventoryChange (count drops) / onPlayerHealthChange.
+      useConsumable(id, idx);
     });
   }
 }
