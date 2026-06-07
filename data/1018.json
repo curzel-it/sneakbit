@@ -952,6 +952,9 @@
   "ephemeral_state": true,
   "id": 1018,
   "light_conditions": "Day",
+  "monster_spawn": {
+    "density": 0.0165
+  },
   "revision": 0,
   "soundtrack": "pol_king_of_coins_short.mp3",
   "world_type": "Exterior"
