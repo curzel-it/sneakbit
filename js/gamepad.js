@@ -40,6 +40,10 @@ const STICK_DEADZONE = 0.25;
 
 const DIR_BUTTONS = { 12: "up", 13: "down", 14: "left", 15: "right" };
 
+// Standard-Mapping Start button. In menu mode it's a fixed "back" alongside
+// B, regardless of the rebindable gameplay menu button.
+const START_BUTTON = 9;
+
 // While true (the menu's controller-rebind capture is open) scanPad still
 // tracks button edges but fires no action/menu callbacks — so binding a
 // button doesn't also shoot or pop the menu.

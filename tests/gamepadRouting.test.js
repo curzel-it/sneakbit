@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 
 const gp = await import("../js/gamepad.js");
 const binds = await import("../js/gamepadBindings.js");
+const nav = await import("../js/menuNav.js");
 
 // Build a Standard-Mapping pad. `buttons` is a sparse {index: true} map;
 // axes default to neutral. The same object is returned on every
@@ -120,6 +121,31 @@ test("polling a slot with no assigned pad returns empty", () => {
   const r = gp.pollGamepadForSlot(2);
   assert.deepEqual(r.events, []);
   assert.equal(r.held.size, 0);
+});
+
+test("menu mode: polling a pad doesn't throw and A fires confirm (Start bug regression)", () => {
+  // Regression for an undefined `START_BUTTON` reference that threw on every
+  // frame a menu/dialog was open, freezing the game with a pad connected.
+  gp._resetGamepadForTesting();
+  let menuOpen = true;
+  let confirmed = 0;
+  nav.registerMenuSurface({ isOpen: () => menuOpen, onConfirm: () => confirmed++ });
+  try {
+    // Idle pad while a surface is open: must not throw.
+    setPads(pad(0));
+    assert.doesNotThrow(() => gp.pollGamepadForSlot(1));
+    // A (button 0) → confirm, on the rising edge only.
+    setPads(pad(0, { buttons: { 0: true } }));
+    assert.doesNotThrow(() => gp.pollGamepadForSlot(1));
+    assert.equal(confirmed, 1, "A activates the focused surface");
+    gp.pollGamepadForSlot(1); // still held — no repeat
+    assert.equal(confirmed, 1);
+    // Start (button 9) drives "back" without throwing.
+    setPads(pad(0, { buttons: { 9: true } }));
+    assert.doesNotThrow(() => gp.pollGamepadForSlot(1));
+  } finally {
+    menuOpen = false; // leave nav inactive for the remaining tests
+  }
 });
 
 test("readPadSnapshotForSlot is side-effect-free (fires no callbacks)", () => {
