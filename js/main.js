@@ -494,7 +494,14 @@ async function main() {
     if (sliceCount() > 1) {
       renderViewports(renderer, state.zone, buildViewports(state), renderPlayers, biomeAnim.frame);
     } else {
-      render(renderer, state.zone, state.camera, renderPlayers, biomeAnim.frame);
+      // Pin the darkness cone to state.player explicitly: renderPlayers drops
+      // dead avatars, so on death the live-player array is empty and the cone
+      // would otherwise lose its center. state.player persists through death,
+      // so the limited-visibility overlay stays centered on the corpse instead
+      // of vanishing (and the renderer never dereferences an undefined focus).
+      render(renderer, state.zone, state.camera, renderPlayers, biomeAnim.frame, {
+        focusPlayer: state.player,
+      });
     }
     updateHud(hud, {
       zoneId: state.zone.id,

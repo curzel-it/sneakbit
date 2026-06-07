@@ -103,6 +103,10 @@ function drawDarkness(ctx, vp, zone, camera, player) {
   // designer needs to see everything regardless of CantSeeShit / Night.
   // Mirrors Rust lib.rs::is_limited_visibility returning false in creative.
   if (isCreativeMode()) return;
+  // No focus player (e.g. every local avatar is dead) — skip rather than
+  // dereference an undefined position, which would throw and kill the frame
+  // loop. Callers pass a death-persistent focus so the cone normally stays put.
+  if (!player) return;
   if (zone.lightConditions === "CantSeeShit") {
     const cx = (player.x + 0.5 - camera.x) * TILE_SIZE;
     const cy = (player.y - camera.y) * TILE_SIZE;
@@ -111,7 +115,11 @@ function drawDarkness(ctx, vp, zone, camera, player) {
     const grad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
     grad.addColorStop(0, "rgba(0,0,0,0)");
     grad.addColorStop(0.6, "rgba(0,0,0,0.85)");
-    grad.addColorStop(1, "rgba(0,0,0,0.985)");
+    // Fully opaque at the cone's edge: a radial gradient extends its last
+    // stop's color past `outer`, so anything beyond the vision radius is
+    // pure black — the maze outside the cone is hidden completely, not at
+    // ~98% where it stayed faintly legible.
+    grad.addColorStop(1, "rgba(0,0,0,1)");
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, vp.w, vp.h);
     return;
