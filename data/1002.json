@@ -568,7 +568,7 @@
   "id": 1002,
   "light_conditions": "Day",
   "monster_spawn": {
-    "density": 0.015
+    "density": 0.0165
   },
   "revision": 0,
   "soundtrack": "pol_chubby_cat_short.mp3",
