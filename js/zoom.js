@@ -58,8 +58,15 @@ export function applyAutoZoom(canvas, camera, hud, onApply) {
   // half-tiles at the edges land outside the visible area (clipped by
   // body { overflow: hidden }), so the player sees a seamless surface
   // instead of a thin black border on the bottom/right.
-  let tilesW = Math.ceil(pvW / (scale * TILE_SIZE));
-  tilesW = Math.max(MIN_TILES_W, Math.min(MAX_TILES_W, tilesW));
+  //
+  // MAX_TILES_W is only a *target* for the scale-selection loops above (it
+  // drives how far they bump the scale on big monitors) — it must NOT hard-cap
+  // the backing here. Clamping the ceil down to MAX_TILES_W makes the canvas
+  // narrower than the window whenever the window needs that one extra tile,
+  // re-introducing the exact black edge the ceil exists to kill. The loops keep
+  // the count at MAX_TILES_W in the common case, so dropping the cap costs at
+  // most a single extra tile (e.g. 37) at the sizes that would otherwise gutter.
+  let tilesW = Math.max(MIN_TILES_W, Math.ceil(pvW / (scale * TILE_SIZE)));
   let tilesH = Math.max(10, Math.ceil(pvH / (scale * TILE_SIZE)));
 
   const backingW = tilesW * TILE_SIZE;
