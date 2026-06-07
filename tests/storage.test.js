@@ -75,3 +75,28 @@ test("keyMatches: comma key is AND across sub-keys", () => {
   setValue("b", 1);
   assert.equal(keyMatches("a,b", 1), true);  // both set
 });
+
+// Inventory counts are stored per-player as `player.<p>.inventory.amount.<sid>`.
+// A bare `inventory.amount.<sid>` gate is player-agnostic and resolves to the
+// first local player who holds the item — ported from Rust
+// storage.rs::get_value_for_global_key. Without it the bare form (used by
+// several lore/quest gates) never matched.
+test("getValue: bare inventory.amount resolves across player slots", () => {
+  _resetStorageForTesting();
+  assert.equal(getValue("inventory.amount.2005"), null); // nobody holds it
+  setValue("player.0.inventory.amount.2005", 2);
+  assert.equal(getValue("inventory.amount.2005"), 2);
+});
+
+test("getValue: bare inventory.amount finds a co-op partner's item", () => {
+  _resetStorageForTesting();
+  setValue("player.1.inventory.amount.2005", 1); // only player 2 holds it
+  assert.equal(keyMatches("inventory.amount.2005", 1), true);
+});
+
+test("getValue: explicit player.N.inventory.amount reads that slot directly", () => {
+  _resetStorageForTesting();
+  setValue("player.0.inventory.amount.2005", 3);
+  assert.equal(getValue("player.0.inventory.amount.2005"), 3);
+  assert.equal(keyMatches("player.0.inventory.amount.2005", 3), true);
+});

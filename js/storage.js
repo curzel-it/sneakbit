@@ -8,6 +8,13 @@
 
 const PREFIX = "sneakbit.kv.v1.";
 
+// Inventory counts live under `player.<p>.inventory.amount.<sid>`; a bare
+// `inventory.amount.<sid>` dialogue gate is expanded across these slots (see
+// getValue). Mirrors Rust storage.rs constants + MAX_PLAYERS.
+const INVENTORY_AMOUNT = "inventory.amount";
+const PLAYER_PREFIX = "player.";
+const MAX_PLAYERS = 4;
+
 // Probe for a *usable* localStorage, not just a present one. Node ≥25 exposes
 // a stub `localStorage` whose `setItem` throws, and Safari private mode exposes
 // one with a zero quota — in both, presence lies. A throwaway set/remove tells
@@ -60,18 +67,33 @@ function hydrate() {
 
 export function getValue(key) {
   hydrate();
-  // Comma-joined keys are a multi-condition gate, ported from Rust
-  // storage.rs::get_value_for_global_key: resolve every sub-key and return the
-  // value they ALL share, or null when they disagree. Paired with keyMatches'
-  // `stored === expected` test this yields AND semantics — the gate holds only
-  // when every sub-key equals the expected value. Dialogue data relies on it
-  // for "the player asked about both ninjas" and "quest started AND item
-  // collected"; without it those lines were dead and the branches unreachable.
-  if (typeof key === "string" && key.includes(",")) {
-    const values = new Set(
-      key.split(",").filter((k) => k !== "").map((k) => getValue(k)),
-    );
-    return values.size === 1 ? values.values().next().value : null;
+  if (typeof key === "string") {
+    // A player-agnostic `inventory.amount.<sid>` gate resolves to the first
+    // local player who holds that item, mirroring Rust
+    // storage.rs::get_value_for_global_key. Inventory counts are stored
+    // per-player (`player.<p>.inventory.amount.<sid>`), so without this the
+    // bare form never matches and the dialogue/lore lines gated on it are
+    // unreachable. The explicit `player.N.…` form skips this and reads direct.
+    if (key.includes(INVENTORY_AMOUNT) && !key.includes(PLAYER_PREFIX)) {
+      for (let p = 0; p < MAX_PLAYERS; p++) {
+        const v = getValue(`${PLAYER_PREFIX}${p}.${key}`);
+        if (v !== null) return v;
+      }
+      return null;
+    }
+    // Comma-joined keys are a multi-condition gate, ported from the same Rust
+    // function: resolve every sub-key and return the value they ALL share, or
+    // null when they disagree. Paired with keyMatches' `stored === expected`
+    // test this yields AND semantics — the gate holds only when every sub-key
+    // equals the expected value. Dialogue data relies on it for "the player
+    // asked about both ninjas" and "quest started AND item collected"; without
+    // it those lines were dead and the branches unreachable.
+    if (key.includes(",")) {
+      const values = new Set(
+        key.split(",").filter((k) => k !== "").map((k) => getValue(k)),
+      );
+      return values.size === 1 ? values.values().next().value : null;
+    }
   }
   return cache.has(key) ? cache.get(key) : null;
 }
