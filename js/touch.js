@@ -60,6 +60,8 @@ const ICON_DIR_RIGHT = svg(`<polyline points="9,6 15,12 9,18"></polyline>`);
 const ICON_INTERACT = svg(`<path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"></path><circle cx="12" cy="12" r="0.6" fill="currentColor"></circle>`, 24);
 const ICON_THROW    = svg(`<path d="M12 3 L13.4 9.4 L20 11 L13.4 12.6 L12 19 L10.6 12.6 L4 11 L10.6 9.4 Z" fill="currentColor" stroke="none"></path>`, 24);
 const ICON_MELEE    = svg(`<path d="M14 4 L20 4 L20 10 L9.5 20.5 L7 21 L3 17 L3.5 14.5 L14 4 Z"></path><line x1="9" y1="9" x2="15" y2="15"></line>`, 24);
+//   Switch:  two looping arrows — "cycle to the next hero" (TD wave only).
+const ICON_SWITCH   = svg(`<polyline points="17 3 21 7 17 11"></polyline><path d="M21 7H8a4 4 0 0 0-4 4"></path><polyline points="7 21 3 17 7 13"></polyline><path d="M3 17h13a4 4 0 0 0 4-4"></path>`, 24);
 
 const heldBindings = new Map(); // dir -> pointerId
 
@@ -295,11 +297,17 @@ export function refreshTouchActions() {
 // Driven each frame by tdHud.updateTdHud, cached so the DOM only churns on a
 // real change.
 let tdActionMode = null;
+// Whether the active squad has another living hero to switch to. Drives the
+// switch button in the wave cluster; tracked alongside the mode so a change
+// while the mode stays "wave" still re-renders.
+let tdCanSwitch = false;
 
-export function setTdActionMode(mode) {
+export function setTdActionMode(mode, opts = {}) {
   const next = mode || null;
-  if (next === tdActionMode) return;
+  const canSwitch = !!opts.canSwitch;
+  if (next === tdActionMode && canSwitch === tdCanSwitch) return;
   tdActionMode = next;
+  tdCanSwitch = canSwitch;
   applyTdActionMode();
 }
 
@@ -317,13 +325,17 @@ function applyTdActionMode() {
     setActionButton(melee, ICON_MELEE, "", "none");
     setActionButton(throwBtn, ICON_THROW, "", "none");
   } else if (tdActionMode === "wave") {
-    setActionButton(interact, ICON_INTERACT, "", "none"); // nothing to interact with mid-wave
     setActionButton(throwBtn, ICON_THROW, "", "");
     setActionButton(melee, ICON_MELEE, "", "");
+    // The interact slot becomes "switch hero" mid-wave (there's nothing to talk
+    // to). Hidden when the squad has only one hero standing.
+    if (tdCanSwitch) setActionButton(interact, ICON_SWITCH, "Switch", "");
+    else setActionButton(interact, ICON_INTERACT, "", "none");
   } else {
     // Not TD — restore the normal game cluster. The interact button is then
     // auto-managed by setInteractPrompt (shown only when something's in range),
     // so reapply its current verb/hidden state rather than forcing the icon.
+    setActionButton(interact, ICON_INTERACT, "", "none");
     setActionButton(throwBtn, ICON_THROW, "", "");
     setActionButton(melee, ICON_MELEE, "", "");
     syncMeleeVisibility();
@@ -489,7 +501,11 @@ function onPress(e, btn) {
     dirPointerHeld.set(e.pointerId, btn);
     dispatchKey("keydown", KEY_FOR_DIR[dir]);
   } else if (action === "interact") {
-    dispatchKey("keydown", "KeyE");
+    // In a TD wave the interact slot is the "switch hero" button — synthesise a
+    // single Q press (towerDefense.onKey owns Tab/Q switching). Otherwise it's
+    // the normal talk/use key.
+    if (isTowerDefenseMode() && tdActionMode === "wave") dispatchKey("keydown", "KeyQ");
+    else dispatchKey("keydown", "KeyE");
   } else if (action === "throw") {
     if (isTowerDefenseMode()) {
       // TD: the cluster only shows during a wave (build hides it) — shoot the
@@ -527,7 +543,8 @@ function onRelease(e, btn) {
   btn.classList.remove("active");
   const action = btn.dataset.action;
   if (action === "interact") {
-    dispatchKey("keyup", "KeyE");
+    const code = (isTowerDefenseMode() && tdActionMode === "wave") ? "KeyQ" : "KeyE";
+    dispatchKey("keyup", code);
   }
 }
 

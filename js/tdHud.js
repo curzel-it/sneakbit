@@ -73,6 +73,12 @@ export function updateTdHud(model) {
   if (!root) return;
   const build = model.phase === "Build";
   const wave = model.phase === "Wave";
+  const touch = onTouch();
+
+  // The dock restyles by phase on touch: a slim, bottom-anchored progress strip
+  // during a wave (see injectStyles), the full build panel otherwise.
+  dock.classList.toggle("td-dock-build", build);
+  dock.classList.toggle("td-dock-wave", wave);
 
   // — Top status bar (same shape every frame) —————————————————————————————
   waveEl.textContent = `Wave ${model.wave}`;
@@ -117,7 +123,9 @@ export function updateTdHud(model) {
     recruitBtn.disabled = !r.can;
     recruitBtn.classList.toggle("td-disabled", !r.can);
   }
-  switchBtn.style.display = model.canSwitch ? "" : "none";
+  // On touch during a wave the switch button moves into the action cluster (the
+  // interact slot — see touch.js), so hide the dock's copy to avoid two of them.
+  switchBtn.style.display = (model.canSwitch && !(touch && wave)) ? "" : "none";
 
   // Revives can be bought in any phase (mid-wave at a premium).
   reviveWrap.style.display = model.revives?.length ? "" : "none";
@@ -125,7 +133,7 @@ export function updateTdHud(model) {
 
   // Hand the touch action cluster the current TD verb. During build there's
   // nothing to tap — movement shoves stones — so the action buttons hide.
-  setTdActionMode(build ? "build" : (wave ? "wave" : null));
+  setTdActionMode(build ? "build" : (wave ? "wave" : null), { canSwitch: model.canSwitch });
 }
 
 // Are we driving with touch? The body class is toggled by touch.js when the
@@ -326,6 +334,26 @@ function injectStyles() {
       #td-dock .td-dock-actions { gap: 6px; }
       #td-dock .td-btn, #td-dock .td-start { min-height: 42px; padding: 7px 10px; }
       #td-dock .td-dock-hint { font-size: 10px; }
+
+      /* Wave phase: collapse the dock into a slim strip pinned to the bottom-
+         centre gap between the d-pad and the action cluster. The top status bar
+         already carries "Wave N", so the strip is purely the live enemies-
+         remaining bar. Switch-hero moves to the action cluster, so the strip
+         normally has no buttons — make it click-through so it never steals a
+         tap from the controls (mid-wave revive buttons re-enable themselves). */
+      #td-dock.td-dock-wave {
+        top: auto; bottom: 8px; transform: translateX(-50%);
+        flex-direction: row; align-items: center; flex-wrap: nowrap;
+        width: auto; max-width: 92vw; gap: 8px; padding: 6px 12px;
+        pointer-events: none;
+      }
+      #td-dock.td-dock-wave .td-dock-label,
+      #td-dock.td-dock-wave .td-dock-hint { display: none; }
+      #td-dock.td-dock-wave .td-dock-timer { gap: 8px; }
+      #td-dock.td-dock-wave .td-prog { min-width: 96px; }
+      #td-dock.td-dock-wave .td-dock-main { margin: 0; }
+      #td-dock.td-dock-wave .td-dock-actions { margin-left: 0; }
+      #td-dock.td-dock-wave .td-btn { pointer-events: auto; }
     }
 
     /* Narrow screens share the top edge with the HP bar (left) and the touch
