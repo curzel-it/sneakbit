@@ -18,6 +18,7 @@ import { playSfx } from "./audio.js";
 import { showToast } from "./toast.js";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { getSkin } from "./skins.js";
+import { mountShowcase, showEntry, stopShowcase } from "./shopShowcase.js";
 import {
   isStackable, isEntryOwned, isSkinEntry, clampQty, maxAffordable, canBuy, buy,
 } from "./shopPurchase.js";
@@ -28,6 +29,8 @@ let detailScreen = null;
 let listEl = null;
 let coinValEl = null;
 let descEl = null;
+let showcaseNameEl = null;
+let showcasePriceEl = null;
 let titleEl = null;
 let closeBtn = null;
 
@@ -44,13 +47,31 @@ export function installShop() {
   injectStyles();
 
   listEl = el("div", { class: "shop-list" });
-  descEl = el("div", { class: "shop-desc" });
+
+  // Showcase: a large, animated preview of the currently-focused good. Updates
+  // on row focus/hover (setDesc → setShowcase). The sprite canvas is driven by
+  // shopShowcase.js; the text mirrors the focused row's name / price / blurb.
+  const showcaseSprite = el("canvas", {
+    class: "shop-showcase-sprite",
+    width: 80,
+    height: 80,
+    style: { width: "80px", height: "80px", imageRendering: "pixelated" },
+  });
+  showcaseNameEl = el("div", { class: "shop-showcase-name" });
+  showcasePriceEl = el("div", { class: "shop-showcase-price" });
+  descEl = el("div", { class: "shop-desc shop-showcase-desc" });
+  const showcaseEl = el("div", { class: "shop-showcase" }, [
+    showcaseSprite,
+    el("div", { class: "shop-showcase-info" }, [showcaseNameEl, showcasePriceEl, descEl]),
+  ]);
+
   closeBtn = el("button", { class: "shop-btn shop-close", text: tr("shop.close"), on: { click: closeShop } });
   listScreen = el("div", { class: "shop-screen", dataset: { screen: "list" } }, [
+    showcaseEl,
     listEl,
-    descEl,
     closeBtn,
   ]);
+  mountShowcase(showcaseSprite);
 
   detailScreen = el("div", { class: "shop-screen", dataset: { screen: "detail" }, style: { display: "none" } });
 
@@ -109,6 +130,7 @@ export function closeShop() {
   open = false;
   root.style.display = "none";
   detailEntry = null;
+  stopShowcase();
   showToast(tr("shop.farewell"), "hint");
 }
 
@@ -132,7 +154,7 @@ function renderList() {
   for (let i = 0; i < stock.length; i++) {
     listEl.appendChild(rowFor(stock[i], i));
   }
-  // Default the description to the first row so the foot isn't blank.
+  // Default the showcase to the first row so it isn't blank.
   if (stock.length) setDesc(stock[0]);
 }
 
@@ -163,8 +185,19 @@ function rowFor(entry, i) {
   return row;
 }
 
+// Update the showcase to a focused good: animated sprite, name, price (or
+// "Owned"), and the blurb. Drives shopShowcase.js's rAF for the sprite.
 function setDesc(entry) {
+  showEntry(entry);
+  showcaseNameEl.textContent = entryName(entry);
   descEl.textContent = entryDesc(entry);
+  if (isEntryOwned(entry, playerIndex)) {
+    showcasePriceEl.replaceChildren(el("span", { class: "shop-row-tag is-owned", text: tr("shop.owned") }));
+  } else {
+    showcasePriceEl.replaceChildren(
+      el("span", { class: "shop-row-price" }, [String(entry.price | 0), priceCoin()]),
+    );
+  }
 }
 
 // ---- Detail / quantity ---------------------------------------------------
@@ -397,7 +430,9 @@ function injectStyles() {
     #shop .shop-title { margin: 0; font-size: 18px; letter-spacing: .5px; }
     #shop .shop-coins { display: flex; align-items: center; gap: 6px; font-size: 15px; }
     #shop .shop-screen { padding: 12px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
-    #shop .shop-list { display: flex; flex-direction: column; gap: 6px; }
+    /* On the storefront the showcase + Close stay pinned; only the rows scroll. */
+    #shop .shop-screen[data-screen="list"] { overflow: hidden; min-height: 0; }
+    #shop .shop-list { display: flex; flex-direction: column; gap: 6px; max-height: 44vh; overflow-y: auto; }
     #shop .shop-row {
       display: flex; align-items: center; gap: 12px; width: 100%;
       padding: 8px 12px; text-align: left; cursor: pointer;
@@ -414,6 +449,20 @@ function injectStyles() {
       min-height: 2.4em; padding: 8px 12px; font-size: 13px; line-height: 1.4;
       color: #c7d2e6; background: #1a1f29; border-radius: var(--sb-surface-radius); border: 1px solid #2c3444;
     }
+    /* Showcase: animated preview of the focused good, pinned above the list. */
+    #shop .shop-showcase {
+      display: flex; align-items: center; gap: 14px; padding: 12px;
+      background: linear-gradient(180deg, #232a3a 0%, #1a1f29 100%);
+      border: 1px solid #39425a; border-radius: var(--sb-surface-radius);
+    }
+    #shop .shop-showcase-sprite {
+      flex: 0 0 auto; width: 80px; height: 80px;
+      background: #11141b; border: 1px solid #2c3444; border-radius: var(--sb-surface-radius);
+    }
+    #shop .shop-showcase-info { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    #shop .shop-showcase-name { font-size: 17px; font-weight: 700; letter-spacing: .3px; }
+    #shop .shop-showcase-price { display: flex; align-items: center; min-height: 18px; }
+    #shop .shop-showcase-desc { min-height: 1.4em; border: none; background: none; padding: 0; }
     #shop .shop-screen[data-screen="detail"] { align-items: center; text-align: center; }
     #shop .shop-detail-icon { margin: 4px auto; }
     #shop .shop-detail-name { font-size: 18px; font-weight: 700; }

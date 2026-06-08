@@ -53,7 +53,36 @@ export function installUiTokens() {
       /* Interactive feedback for buttons — kept consistent across
          touch + DOM so a "pressed" state reads the same everywhere. */
       --sb-surface-bg-active: rgba(60, 60, 60, 0.85);
+
+      /* Scrollbars. A thin dark-blue thumb on a transparent track, tuned
+         to the modal palette (#3a4150 borders, #4a5878 button edges) so
+         every scrollable surface — shop list, menu/inventory, wardrobe,
+         panels — matches the rest of the chrome instead of showing the
+         OS default. */
+      --sb-scrollbar-size: 10px;
+      --sb-scrollbar-thumb: #3a4150;
+      --sb-scrollbar-thumb-hover: #4a5878;
     }
+
+    /* Firefox. Applied to every element so nested scroll areas inherit it. */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--sb-scrollbar-thumb) transparent;
+    }
+
+    /* WebKit / Chromium / Safari. */
+    *::-webkit-scrollbar { width: var(--sb-scrollbar-size); height: var(--sb-scrollbar-size); }
+    *::-webkit-scrollbar-track { background: transparent; }
+    *::-webkit-scrollbar-thumb {
+      background: var(--sb-scrollbar-thumb);
+      border-radius: 6px;
+      /* Transparent border + padding-box clip insets the thumb so it reads
+         as a slim pill with breathing room rather than filling the gutter. */
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    *::-webkit-scrollbar-thumb:hover { background: var(--sb-scrollbar-thumb-hover); }
+    *::-webkit-scrollbar-corner { background: transparent; }
   `;
   document.head.appendChild(style);
 }
