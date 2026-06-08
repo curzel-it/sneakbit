@@ -162,7 +162,7 @@ test("buying a skin marks it owned, debits coins, and never auto-equips", () => 
   assert.equal(res.spent, 400);
   assert.equal(skins.isOwned("ninja_black"), true);
   assert.equal(shop.isEntryOwned(SKIN), true);
-  // Bought but NOT worn — equipping is the wardrobe's job.
+  // Bought but NOT worn — equipping is the inventory Skin slot's job.
   assert.equal(skins.getSelected(), "default");
   assert.equal(wallet.getCoins(), 100);
 });

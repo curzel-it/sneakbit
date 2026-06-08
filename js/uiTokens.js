@@ -56,7 +56,7 @@ export function installUiTokens() {
 
       /* Scrollbars. A thin dark-blue thumb on a transparent track, tuned
          to the modal palette (#3a4150 borders, #4a5878 button edges) so
-         every scrollable surface — shop list, menu/inventory, wardrobe,
+         every scrollable surface — shop list, menu/inventory,
          panels — matches the rest of the chrome instead of showing the
          OS default. */
       --sb-scrollbar-size: 10px;

@@ -10,7 +10,6 @@ import { playSfx } from "./audio.js";
 import { APP_VERSION } from "./constants.js";
 import { clearProgress } from "./save.js";
 import { renderInventoryInto } from "./inventoryScreen.js";
-import { renderWardrobeInto } from "./wardrobe.js";
 import { isCreativeMode } from "./creativeMode.js";
 import { matchesAction } from "./keyBindings.js";
 import { glyphForAction } from "./inputGlyphs.js";
@@ -50,7 +49,7 @@ function isAnotherModalOpen() {
 
 let root = null;
 let open = false;
-let screen = "pause"; // "pause" | "settings" | "credits" | "inventory" | "wardrobe" | "controls" | "creative"
+let screen = "pause"; // "pause" | "settings" | "credits" | "inventory" | "controls" | "creative"
 
 // Optional getter the host wires in at install time. Provides access to
 // the live game state (rawZone + current zone id) without coupling the
@@ -79,7 +78,6 @@ export function installMenu(stateGetter) {
         <button id="menu-open-multiplayer">Multiplayer</button>
         <button id="menu-open-account">Account</button>
         <button id="menu-open-inventory">Inventory &amp; Equipment</button>
-        <button id="menu-open-wardrobe">Wardrobe</button>
         <button id="menu-open-settings">Settings</button>
         <button id="menu-open-creative" data-creative-only>Creative tools…</button>
         <button id="menu-open-credits">Credits</button>
@@ -163,13 +161,6 @@ export function installMenu(stateGetter) {
       <div id="menu-inventory-body"></div>
       <div class="menu-row menu-controls">
         <button id="menu-inventory-back">Back</button>
-      </div>
-    </div>
-    <div class="menu-card" data-screen="wardrobe">
-      <h1>Wardrobe</h1>
-      <div id="menu-wardrobe-body"></div>
-      <div class="menu-row menu-controls">
-        <button id="menu-wardrobe-back">Back</button>
       </div>
     </div>
     <div class="menu-card" data-screen="credits">
@@ -355,7 +346,6 @@ function showScreen(next) {
   });
   if (next === "settings") syncSettingsWidgets();
   if (next === "inventory") renderInventoryInto(root.querySelector("#menu-inventory-body"));
-  if (next === "wardrobe") renderWardrobeInto(root.querySelector("#menu-wardrobe-body"));
   if (next === "controls") renderControlsList();
   if (next !== "controls") resetCaptures();
   // Highlight the first item of the now-visible screen for keyboard /
@@ -401,7 +391,6 @@ function bindWidgets() {
   root.querySelector("#menu-open-credits").addEventListener("click", () => showScreen("credits"));
   root.querySelector("#menu-open-creative").addEventListener("click", () => showScreen("creative"));
   root.querySelector("#menu-open-inventory").addEventListener("click", () => showScreen("inventory"));
-  root.querySelector("#menu-open-wardrobe").addEventListener("click", () => showScreen("wardrobe"));
   root.querySelector("#menu-settings-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-open-controls").addEventListener("click", () => showScreen("controls"));
   root.querySelector("#menu-controls-back").addEventListener("click", () => showScreen("settings"));
@@ -409,7 +398,6 @@ function bindWidgets() {
   // wired by initKeyBindingsScreen().
   root.querySelector("#menu-credits-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-inventory-back").addEventListener("click", () => showScreen("pause"));
-  root.querySelector("#menu-wardrobe-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-creative-back").addEventListener("click", () => showScreen("pause"));
   root.querySelector("#menu-export-save").addEventListener("click", exportSave);
   root.querySelector("#menu-import-save").addEventListener("click", importSave);
@@ -603,6 +591,7 @@ function injectStyles() {
        same as the HUD chips. Nearest-neighbour here would make it lumpy. */
     #menu .inv-icon { flex: 0 0 auto; }
     #menu .inv-icon-empty { display: inline-block; width: 24px; height: 24px; }
+    #menu .inv-hero { flex: 0 0 auto; }
     #menu .inv-group { margin-bottom: 12px; min-width: 340px; }
     #menu .inv-list { list-style: none; padding: 0; margin: 0; max-height: 280px; overflow-y: auto; min-width: 340px; }
     #menu .inv-list li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 4px 0; background: #1f1f1f; border: 1px solid #2e2e2e; border-radius: var(--sb-surface-radius); }

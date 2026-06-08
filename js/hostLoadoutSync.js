@@ -73,7 +73,7 @@ export function installHostLoadoutSync(opts = {}) {
     });
   }));
 
-  // Host's own wardrobe change → push the skin on a loadout frame (gear
+  // Host's own skin change → push the skin on a loadout frame (gear
   // unchanged), so every guest re-renders the host's avatar.
   unsubs.push(onSkinChange((idx) => {
     if (idx !== 0) return;

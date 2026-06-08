@@ -19,7 +19,7 @@ export const MAX_PURCHASE_QTY = 99;
 // A skin good carries a string `skin` id instead of a numeric species `item`.
 // Skins aren't inventory items (no ammo / no weapon slot), so they branch out
 // of the species-driven paths below — bought one-of-a-kind, granted as an
-// ownership flag (skins.js), and equipped later in the wardrobe.
+// ownership flag (skins.js), and equipped later from the inventory Skin slot.
 export function isSkinEntry(entry) {
   return typeof entry?.skin === "string";
 }
@@ -125,7 +125,7 @@ function grant(itemId, qty, playerIndex) {
 // Execute a purchase after validation. Spends coins, then grants the goods.
 // Charges nothing and returns the failing verdict if canBuy rejects. A skin is
 // granted as an ownership flag only — it does NOT auto-equip (equipping is the
-// wardrobe's job), so buying never yanks the hero's current look.
+// inventory Skin slot's job), so buying never yanks the hero's current look.
 export function buy(entry, qty, playerIndex = 0) {
   const verdict = canBuy(entry, qty, playerIndex);
   if (!verdict.ok) return verdict;

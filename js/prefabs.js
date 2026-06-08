@@ -61,7 +61,7 @@ const DEFAULT_SHOP_STOCK = [
   { item: 1172, price: 150 },
   { item: 1162, price: 450 },
   { item: 1168, price: 999 },
-  // Cosmetic skins (skins.js) — one-of-a-kind, equipped from the wardrobe.
+  // Cosmetic skins (skins.js) — one-of-a-kind, equipped from the inventory Skin slot.
   // Tiered by rarity: colored outfits common, tracksuit/ninja premium.
   { skin: "outfit_red", price: 150 },
   { skin: "outfit_yellow", price: 150 },

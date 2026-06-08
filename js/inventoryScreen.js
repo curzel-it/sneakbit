@@ -29,6 +29,11 @@ import {
 } from "./consumables.js";
 import { onPlayerHealthChange } from "./playerHealth.js";
 import { ICON_RES, paintInventoryIcon } from "./inventoryIcon.js";
+import {
+  ownedSkins, getSelected, setSelected, defaultColumn,
+  onSkinChange, DEFAULT_SKIN_ID,
+} from "./skins.js";
+import { paintHeroPreview, PREVIEW_W, PREVIEW_H } from "./heroPreview.js";
 
 const ICON_PIXELS = 24;
 let unsubscribers = [];
@@ -44,6 +49,8 @@ export function renderInventoryInto(host) {
   unsubscribers.push(onEquipmentChange(rerender));
   unsubscribers.push(onInventoryChange(rerender));
   unsubscribers.push(onSkillsChange(rerender));
+  // The Skin slot equips by selection, not equipment — keep it live too.
+  unsubscribers.push(onSkinChange(rerender));
   // Health changes flip a consumable's "would this do anything?" state
   // (e.g. a heal potion greys out at full HP, re-enables once you take a
   // hit) while the panel is open.
@@ -59,6 +66,7 @@ function draw(host) {
   host.innerHTML = sectionsHtml(0);
   bindButtons(host, 0);
   paintIcons(host);
+  paintHeroPreviews(host);
 }
 
 // The list HTML embeds blank icon canvases tagged with their [row, col]; paint
@@ -80,13 +88,57 @@ function iconHtml(offset) {
     data-icon-row="${offset[0] | 0}" data-icon-col="${offset[1] | 0}"></canvas>`;
 }
 
+// A blank hero-portrait canvas for the given heroes-sheet column, painted after
+// insertion by paintHeroPreviews. Two tiles tall (16×32 on screen) so an
+// outfit's body colour reads, not just the head.
+function heroPreviewHtml(column) {
+  return `<canvas class="inv-hero" width="${PREVIEW_W}" height="${PREVIEW_H}"
+    style="width:16px;height:32px;image-rendering:pixelated"
+    data-hero-column="${column | 0}"></canvas>`;
+}
+
+function paintHeroPreviews(host) {
+  for (const c of host.querySelectorAll("canvas.inv-hero[data-hero-column]")) {
+    paintHeroPreview(c, Number(c.dataset.heroColumn));
+  }
+}
+
 function sectionsHtml(playerIndex) {
   const header = isCoopMode() ? `<h2 class="inv-player">Shared</h2>` : "";
   return `${header}
     ${slotPanelHtml("Ranged", SLOT_RANGED, playerIndex, false)}
     ${slotPanelHtml("Melee",  SLOT_MELEE,  playerIndex, true)}
+    ${skinPanelHtml(playerIndex)}
     <hr class="inv-sep" />
     ${itemsHtml(playerIndex)}`;
+}
+
+// The Skin slot — purely cosmetic, but modelled like the weapon slots: a
+// single-select list of the skins you own (default always owned), each
+// previewed by its hero portrait. Picking one calls setSelected; buying new
+// skins stays in the shop. Selection is per RAW index (skins.js), and the
+// inventory panel always edits the local/primary hero (index 0).
+function skinPanelHtml(playerIndex) {
+  const selected = getSelected(playerIndex);
+  const rows = ownedSkins(playerIndex).map((skin) => {
+    const column = skin.column == null ? defaultColumn(playerIndex) : skin.column;
+    const name = tr(skin.nameKey) || skin.id;
+    const label = skin.id === DEFAULT_SKIN_ID
+      ? `${escapeHtml(name)} <span class="inv-equipped-default">(default)</span>`
+      : escapeHtml(name);
+    return `<li>
+      <button class="inv-slot-row${skin.id === selected ? " is-active" : ""}" data-skin="${skin.id}" data-player="${playerIndex | 0}">
+        <span class="inv-radio">${skin.id === selected ? "◉" : "◯"}</span>
+        ${heroPreviewHtml(column)}
+        <span class="inv-name">${label}</span>
+      </button>
+    </li>`;
+  }).join("");
+
+  return `<div class="inv-slot">
+    <h2 class="inv-slot-title">Skin</h2>
+    <ul class="inv-slot-list">${rows}</ul>
+  </div>`;
 }
 
 function slotPanelHtml(title, slot, playerIndex, withUnarmed) {
@@ -225,6 +277,14 @@ function bindButtons(host, playerIndex) {
     btn.addEventListener("click", () => {
       const idx = parseInt(btn.dataset.unequipMelee, 10) | 0;
       clearEquipped(SLOT_MELEE, idx);
+    });
+  }
+  for (const btn of host.querySelectorAll("[data-skin]")) {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.skin;
+      const idx = parseInt(btn.dataset.player, 10) | 0;
+      if (getSelected(idx) === id) return; // already worn
+      setSelected(id, idx); // re-render rides onSkinChange
     });
   }
   for (const btn of host.querySelectorAll("[data-use]")) {

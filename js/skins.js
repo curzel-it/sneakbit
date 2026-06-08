@@ -2,7 +2,7 @@
 // `heroes` sheet the hero draws from (see player.js getPlayerSpriteFrame); it
 // never touches stats, hitbox, or gear. The default skin is always owned and
 // free; the rest are bought with coins in the shop (shopPurchase.js) and
-// equipped from the wardrobe (wardrobe.js).
+// equipped from the Skin slot in the inventory panel (inventoryScreen.js).
 //
 // Persistence (mirrors wallet.js / equipment.js key conventions):
 //   * ownership: player.{i}.skin.owned.{skinId}  -> 1 when owned

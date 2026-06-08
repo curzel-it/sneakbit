@@ -41,7 +41,7 @@ export function installGuestLoadoutSync(opts = {}) {
     sendSelfLoadout(net);
   }));
 
-  // The chosen skin rides the same loadout frame, so a wardrobe change shows
+  // The chosen skin rides the same loadout frame, so a skin change shows
   // on the host + other peers exactly like an equipment change.
   unsubs.push(onSkinChange((idx) => {
     if (idx !== 0) return;

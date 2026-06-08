@@ -1,7 +1,7 @@
 // End-to-end skins flow through the real module graph + DOM. Boots the
 // offline game, buys a cosmetic skin from the SHIPPED clerk stock by driving
-// the shop DOM, then equips it from the wardrobe screen in the pause menu —
-// asserting the buy debits coins without auto-equipping, and the wardrobe
+// the shop DOM, then equips it from the Skin slot in the inventory screen —
+// asserting the buy debits coins without auto-equipping, and the inventory
 // equip flips the selected skin (and thus the rendered hero column).
 //
 // Dev serves raw ES modules from /js, so an in-page import() resolves the SAME
@@ -28,7 +28,7 @@ const SKIN_COLUMN = 21; // ninja_black's heroes-sheet column (skins.js)
 const key = (s, code) =>
   evalExpr(s, `window.dispatchEvent(new KeyboardEvent('keydown', { code: ${JSON.stringify(code)}, bubbles: true }))`);
 
-test("skins: buy a skin in the shop, then equip it from the wardrobe", async (t) => {
+test("skins: buy a skin in the shop, then equip it from the inventory", async (t) => {
   if (!skipIfNoChrome(t)) return;
   const servers = await startServers({ staticPort: STATIC_PORT, relayPort: RELAY_PORT });
   t.after(() => servers.stop());
@@ -96,16 +96,16 @@ test("skins: buy a skin in the shop, then equip it from the wardrobe", async (t)
   assert.equal(before.coins - afterBuy.coins, SKIN_PRICE, "wallet debited the skin price");
   assert.equal(afterBuy.selected, "default", "buying does NOT auto-equip the skin");
 
-  // — Close the shop, open the pause menu, go to the Wardrobe ————————————————
+  // — Close the shop, open the pause menu, go to the Inventory ———————————————
   await evalExpr(s, `document.querySelector('#shop .shop-close').click()`);
   await waitFor(s, `(() => getComputedStyle(document.getElementById('shop')).display === 'none')()`);
   await key(s, "Escape"); // open the pause menu
   await waitFor(s, `(() => getComputedStyle(document.getElementById('menu')).display !== 'none')()`);
-  await evalExpr(s, `document.getElementById('menu-open-wardrobe').click()`);
-  await waitFor(s, `(() => !!document.querySelector('#menu-wardrobe-body .wardrobe-card[data-skin="${SKIN_ID}"]'))()`);
+  await evalExpr(s, `document.getElementById('menu-open-inventory').click()`);
+  await waitFor(s, `(() => !!document.querySelector('#menu-inventory-body .inv-slot-row[data-skin="${SKIN_ID}"]'))()`);
 
-  // — Equip the owned skin from the wardrobe ————————————————————————————————
-  await evalExpr(s, `document.querySelector('#menu-wardrobe-body .wardrobe-card[data-skin="${SKIN_ID}"]').click()`);
+  // — Equip the owned skin from the inventory Skin slot —————————————————————
+  await evalExpr(s, `document.querySelector('#menu-inventory-body .inv-slot-row[data-skin="${SKIN_ID}"]').click()`);
   await waitFor(s, `(async () => {
     const { getSelected } = await import('./js/skins.js');
     return getSelected(0) === '${SKIN_ID}';
