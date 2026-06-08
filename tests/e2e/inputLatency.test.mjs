@@ -40,26 +40,55 @@ function median(arr) {
 }
 
 // Runs one workload, returns an array of "input → auth-tile-change"
-// samples in ms. Strategy: jog one tile east first (zone 1001's spawn
-// at (68,24) is bordered on the south, but (69,24)→south is open road
-// for ~15 tiles), then hold ArrowDown continuously and time every auth
-// tile change the mirror sees. The first change is "input → first
-// step's auth confirmation" (the round-trip we care about); subsequent
-// changes mostly measure the host's step+broadcast cadence.
+// samples in ms. Strategy: walk the guest onto row 25, then hold
+// ArrowRight and time every auth tile change the mirror sees.
+//
+// Why this lane: the guest spawns at (69,24), one tile east of the host
+// at (68,24). Straight south is *not* usable — the prologue wizard NPC
+// sits at (69,26) and its feet block (69,27), so a held ArrowDown dies
+// after two tiles. Row 25 is the reliable open stretch: from (69,25) the
+// tiles east (70,25)…(74,25) are all clear (the wall at (75,25) stops the
+// run), giving five clean chained steps. So we jog east one tile, drop
+// south one tile onto row 25, then measure the eastward hold.
+//
+// The first change is "input → first step's auth confirmation" (the
+// round-trip we care about); subsequent changes mostly measure the
+// host's step+broadcast cadence.
 //
 // We record both the keydown timestamp and per-tile-change timestamps,
 // then return the delta from keydown to each change. That gives one
 // "transport latency" sample (first change) plus several "steady-state
 // step duration" samples — both useful when comparing transports.
 async function measureRoundTrips(session, label) {
-  // Jog east one tile so we're on the road south of spawn. Single
-  // press, brief hold, release — that's enough for one step.
+  // Jog onto row 25's open stretch: east one tile (→69,24), then exactly
+  // one tile south (→69,25). The eastward jog is a single brief press; the
+  // southward step has to be precise — holding ArrowDown chains straight to
+  // row 26 (whose eastern neighbour is a wall), so we release the key the
+  // instant the *predicted self* (which moves locally with no round-trip)
+  // is mid-step. Releasing during the step lands a single tile on row 25
+  // instead of chaining; cadence-independent, unlike a fixed-duration tap.
   await evalExpr(session.guest, dispatchKey("keydown", KEYS.ArrowRight.key, KEYS.ArrowRight.code, KEYS.ArrowRight.vk));
   await new Promise((r) => setTimeout(r, 400));
   await evalExpr(session.guest, dispatchKey("keyup", KEYS.ArrowRight.key, KEYS.ArrowRight.code, KEYS.ArrowRight.vk));
   await new Promise((r) => setTimeout(r, 400));
+  await evalExpr(session.guest, dispatchKey("keydown", KEYS.ArrowDown.key, KEYS.ArrowDown.code, KEYS.ArrowDown.vk));
+  await evalExpr(session.guest, `
+    (async () => {
+      const p = window.__sb.p;
+      const startY = p.getPredictedSelf()?.y ?? 0;
+      const deadline = performance.now() + 2000;
+      while (performance.now() < deadline) {
+        const ps = p.getPredictedSelf();
+        if (ps && ps.y >= startY + 0.4) break;
+        await new Promise((r) => setTimeout(r, 8));
+      }
+      return true;
+    })()
+  `);
+  await evalExpr(session.guest, dispatchKey("keyup", KEYS.ArrowDown.key, KEYS.ArrowDown.code, KEYS.ArrowDown.vk));
+  await new Promise((r) => setTimeout(r, 600));
 
-  // Install the probe: stamp the moment we hold ArrowDown, watch the
+  // Install the probe: stamp the moment we hold ArrowRight, watch the
   // mirror auth tile via rAF, and record `t_change - t_keydown` for
   // every tile change until we release.
   await evalExpr(session.guest, `
@@ -92,12 +121,12 @@ async function measureRoundTrips(session, label) {
     })()
   `);
 
-  // Hold ArrowDown for ~3 s — long enough for ~10 chained steps on the
-  // road south of (69,24).
+  // Hold ArrowRight for ~3 s — long enough for every chained step east
+  // along row 25 (five tiles, (70,25)…(74,25), before the wall at (75,25)).
   await evalExpr(session.guest, `window.__sb_lat.keydownAt = performance.now()`);
-  await evalExpr(session.guest, dispatchKey("keydown", KEYS.ArrowDown.key, KEYS.ArrowDown.code, KEYS.ArrowDown.vk));
+  await evalExpr(session.guest, dispatchKey("keydown", KEYS.ArrowRight.key, KEYS.ArrowRight.code, KEYS.ArrowRight.vk));
   await new Promise((r) => setTimeout(r, 3000));
-  await evalExpr(session.guest, dispatchKey("keyup", KEYS.ArrowDown.key, KEYS.ArrowDown.code, KEYS.ArrowDown.vk));
+  await evalExpr(session.guest, dispatchKey("keyup", KEYS.ArrowRight.key, KEYS.ArrowRight.code, KEYS.ArrowRight.vk));
   await new Promise((r) => setTimeout(r, 600));
 
   const samples = await evalExpr(session.guest, `
@@ -113,9 +142,6 @@ async function measureRoundTrips(session, label) {
   for (let i = 1; i < cumulative.length; i++) interStep.push(cumulative[i] - cumulative[i - 1]);
 
   console.log(`[latency:${label}] tiles=${cumulative.length}  first-step RTT=${firstRtt.toFixed(0)}ms  inter-step ms=[${interStep.map((x) => x.toFixed(0)).join(", ")}]`);
-  console.log(`[latency:${label}] DEBUG sample tiles: ${samples.map((s) => `(${s.tileX},${s.tileY})`).join(" ")}`);
-  const dbgStart = await evalExpr(session.guest, `(() => { const m=window.__sb.m, o=window.__sb.o; const mp=m.getMirrorPlayerById(o.getSelfPlayerId()); return mp ? mp.tileX+","+mp.tileY : "no-mirror"; })()`);
-  console.log(`[latency:${label}] DEBUG final mirror tile: ${dbgStart}`);
   return { firstRtt, interStep, tilesMoved: cumulative.length };
 }
 
