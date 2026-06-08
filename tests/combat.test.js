@@ -76,22 +76,32 @@ test("bullet damages and kills an overlapping monster, then despawns", () => {
   };
   zone.entities.push(monster, bullet);
   const player = { x: 1, y: 1, tileX: 1, tileY: 1 };
-  // One large dt to deal lethal damage in one go (dps 1800 × 0.2 = 360 > 200 hp).
-  combat.tickCombat(zone, player, 0.2);
-  // The bullet despawns immediately; the monster lingers as a dying
-  // fireball (flagged _dying) until its ~1s lifespan runs out.
-  assert.ok(!zone.entities.includes(bullet), "bullet removed");
-  assert.ok(zone.entities.includes(monster), "monster lingers as fireball");
-  assert.equal(monster._dying, true, "killed monster is dying");
-  // Age past the death lifespan (1.0s) → the fireball is removed.
-  combat.tickCombat(zone, player, 1.1);
-  // The kill may scatter coin pickups (real-game loot, RNG); the monster's
-  // own fireball must be gone, and nothing other than coins may linger.
-  assert.ok(!zone.entities.includes(monster), "fireball removed after lifespan");
-  assert.ok(
-    zone.entities.every((e) => e.species_id === COIN_SPECIES_ID),
-    "only coin drops may remain in the zone",
-  );
+  // Pin the loot roll to "coin" so the death is deterministic: tickCombat rolls
+  // Math.random for the kill's loot category (nothing/coin/ammo — see
+  // lootDrops.js), and a stray "ammo" roll would scatter a non-coin pickup and
+  // flake the "only coins may remain" assertion below. 0.5 lands in the coin band.
+  const realRandom = Math.random;
+  Math.random = () => 0.5;
+  try {
+    // One large dt to deal lethal damage in one go (dps 1800 × 0.2 = 360 > 200 hp).
+    combat.tickCombat(zone, player, 0.2);
+    // The bullet despawns immediately; the monster lingers as a dying
+    // fireball (flagged _dying) until its ~1s lifespan runs out.
+    assert.ok(!zone.entities.includes(bullet), "bullet removed");
+    assert.ok(zone.entities.includes(monster), "monster lingers as fireball");
+    assert.equal(monster._dying, true, "killed monster is dying");
+    // Age past the death lifespan (1.0s) → the fireball is removed.
+    combat.tickCombat(zone, player, 1.1);
+    // The kill scatters coin pickups (loot pinned to "coin" above); the monster's
+    // own fireball must be gone, and nothing other than coins may linger.
+    assert.ok(!zone.entities.includes(monster), "fireball removed after lifespan");
+    assert.ok(
+      zone.entities.every((e) => e.species_id === COIN_SPECIES_ID),
+      "only coin drops may remain in the zone",
+    );
+  } finally {
+    Math.random = realRandom;
+  }
 });
 
 test("point-blank bullet destroys a rigid barrel instead of being eaten by the wall check", () => {
