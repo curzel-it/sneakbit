@@ -2512,25 +2512,6 @@
       "frame": {
         "h": 1,
         "w": 1,
-        "x": 21,
-        "y": 11
-      },
-      "id": 11162714,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
         "x": 43,
         "y": 23
       },

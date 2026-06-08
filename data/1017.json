@@ -334,25 +334,6 @@
   ],
   "entities": [
     {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 31,
-        "y": 31
-      },
-      "id": 11326691,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
       "after_dialogue": "Disappear",
       "contents": null,
       "demands_attention": true,
@@ -424,44 +405,6 @@
       "frame": {
         "h": 1,
         "w": 1,
-        "x": 61,
-        "y": 39
-      },
-      "id": 11326689,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 57,
-        "y": 33
-      },
-      "id": 11326690,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
         "x": 47,
         "y": 45
       },
@@ -507,139 +450,6 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 11003
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 43,
-        "y": 43
-      },
-      "id": 11326682,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 31,
-        "y": 45
-      },
-      "id": 11326683,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 33,
-        "y": 61
-      },
-      "id": 11326684,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 40,
-        "y": 57
-      },
-      "id": 11326685,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 49,
-        "y": 59
-      },
-      "id": 11326686,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 61,
-        "y": 61
-      },
-      "id": 11326687,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 65,
-        "y": 52
-      },
-      "id": 11326688,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
     },
     {
       "after_dialogue": "Nothing",
@@ -702,63 +512,6 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1152
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 66,
-        "y": 31
-      },
-      "id": 13048198,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 46,
-        "y": 31
-      },
-      "id": 13048199,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 1,
-        "w": 1,
-        "x": 67,
-        "y": 69
-      },
-      "id": 13048200,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 7000
     }
   ],
   "ephemeral_state": true,
