@@ -31,6 +31,7 @@ let coinValEl = null;
 let descEl = null;
 let showcaseNameEl = null;
 let showcasePriceEl = null;
+let listShowcaseCanvas = null;
 let titleEl = null;
 let closeBtn = null;
 
@@ -49,9 +50,11 @@ export function installShop() {
   listEl = el("div", { class: "shop-list" });
 
   // Showcase: a large, animated preview of the currently-focused good. Updates
-  // on row focus/hover (setDesc → setShowcase). The sprite canvas is driven by
+  // on row focus/hover (setDesc). The sprite canvas is driven by
   // shopShowcase.js; the text mirrors the focused row's name / price / blurb.
-  const showcaseSprite = el("canvas", {
+  // Hidden on touch devices (no hover) — there the preview moves into the
+  // detail/quantity popup instead (see renderDetail).
+  listShowcaseCanvas = el("canvas", {
     class: "shop-showcase-sprite",
     width: 80,
     height: 80,
@@ -61,7 +64,7 @@ export function installShop() {
   showcasePriceEl = el("div", { class: "shop-showcase-price" });
   descEl = el("div", { class: "shop-desc shop-showcase-desc" });
   const showcaseEl = el("div", { class: "shop-showcase" }, [
-    showcaseSprite,
+    listShowcaseCanvas,
     el("div", { class: "shop-showcase-info" }, [showcaseNameEl, showcasePriceEl, descEl]),
   ]);
 
@@ -71,7 +74,6 @@ export function installShop() {
     listEl,
     closeBtn,
   ]);
-  mountShowcase(showcaseSprite);
 
   detailScreen = el("div", { class: "shop-screen", dataset: { screen: "detail" }, style: { display: "none" } });
 
@@ -145,6 +147,9 @@ function refreshCoins() {
 // ---- Storefront ----------------------------------------------------------
 
 function showStorefront() {
+  // The showcase canvas follows the visible screen — point it back at the
+  // storefront's before renderList re-shows the focused good.
+  mountShowcase(listShowcaseCanvas);
   renderList();
   showOnly({ list: listScreen, detail: detailScreen }, "list", "flex");
 }
@@ -214,10 +219,18 @@ function renderDetail() {
   const entry = detailEntry;
   detailScreen.replaceChildren();
 
-  const icon = makeIcon(entry, "shop-detail-icon", 48);
+  // The detail popup shows the same animated preview as the storefront
+  // showcase — this is the only preview on touch devices, where the pinned
+  // storefront showcase is hidden. mounted + started at the tail.
+  const preview = el("canvas", {
+    class: "shop-detail-showcase",
+    width: 96,
+    height: 96,
+    style: { width: "96px", height: "96px", imageRendering: "pixelated" },
+  });
 
   const children = [
-    icon,
+    preview,
     el("div", { class: "shop-detail-name", text: entryName(entry) }),
     el("div", { class: "shop-detail-desc", text: entryDesc(entry) }),
   ];
@@ -253,6 +266,10 @@ function renderDetail() {
   }
 
   detailScreen.append(...children);
+
+  // Drive the popup preview (canvas is recreated on every renderDetail).
+  mountShowcase(preview);
+  showEntry(entry);
 }
 
 function bumpQty(delta) {
@@ -463,8 +480,14 @@ function injectStyles() {
     #shop .shop-showcase-name { font-size: 17px; font-weight: 700; letter-spacing: .3px; }
     #shop .shop-showcase-price { display: flex; align-items: center; min-height: 18px; }
     #shop .shop-showcase-desc { min-height: 1.4em; border: none; background: none; padding: 0; }
+    /* Touch devices have no hover to drive the pinned showcase, so hide it —
+       the animated preview lives in the detail popup there instead. */
+    @media (pointer: coarse) { #shop .shop-showcase { display: none; } }
     #shop .shop-screen[data-screen="detail"] { align-items: center; text-align: center; }
-    #shop .shop-detail-icon { margin: 4px auto; }
+    #shop .shop-detail-showcase {
+      margin: 4px auto; width: 96px; height: 96px;
+      background: #11141b; border: 1px solid #2c3444; border-radius: var(--sb-surface-radius);
+    }
     #shop .shop-detail-name { font-size: 18px; font-weight: 700; }
     #shop .shop-detail-desc { font-size: 13px; color: #c7d2e6; max-width: 36ch; }
     #shop .shop-qty { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 6px 0; }
