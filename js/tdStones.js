@@ -57,7 +57,12 @@ export function stoneCount(zone) {
 // "Free" means in-bounds and visible, walkable, not blocked by another entity,
 // not already a stone, not the goal or a spawn, and not under a hero. Spawns
 // fewer than `count` if the view can't fit that many.
-export function spawnStonesInView(state, count = STONES_PER_WAVE) {
+//
+// `near` (a tile) + `radius` narrow the candidates to a square around a point —
+// used for the opening drop so the first stones land close to the squad and
+// stay on-screen on a tall phone (whose visible area is narrower than the
+// camera rect), rather than scattering to the rect's far edges.
+export function spawnStonesInView(state, count = STONES_PER_WAVE, { near = null, radius = 0 } = {}) {
   const zone = state?.zone;
   const cam = state?.camera;
   if (!zone || !cam) return [];
@@ -69,10 +74,16 @@ export function spawnStonesInView(state, count = STONES_PER_WAVE) {
   const spawns = getSpawns();
   const isSpawnTile = (x, y) => spawns.some((s) => s.x === x && s.y === y);
 
-  const x0 = Math.max(0, Math.floor(cam.x));
-  const x1 = Math.min(zone.cols - 1, Math.floor(cam.x + cam.w));
-  const y0 = Math.max(0, Math.floor(cam.y));
-  const y1 = Math.min(zone.rows - 1, Math.floor(cam.y + cam.h));
+  let x0 = Math.max(0, Math.floor(cam.x));
+  let x1 = Math.min(zone.cols - 1, Math.floor(cam.x + cam.w));
+  let y0 = Math.max(0, Math.floor(cam.y));
+  let y1 = Math.min(zone.rows - 1, Math.floor(cam.y + cam.h));
+  if (near && radius > 0) {
+    x0 = Math.max(x0, (near.x | 0) - radius);
+    x1 = Math.min(x1, (near.x | 0) + radius);
+    y0 = Math.max(y0, (near.y | 0) - radius);
+    y1 = Math.min(y1, (near.y | 0) + radius);
+  }
 
   const free = [];
   for (let y = y0; y <= y1; y++) {

@@ -43,6 +43,7 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
   assert.ok(await evalExpr(s, "window.td.state().gold > 0"), "starting gold granted");
   assert.ok(await evalExpr(s, "!!document.getElementById('td-hud') && getComputedStyle(document.getElementById('td-hud')).display !== 'none'"), "HUD visible");
   assert.ok(await evalExpr(s, "window.td.state().lives > 0"), "village starts with lives, not instant-loss");
+  assert.equal(await evalExpr(s, "window.td.stones()"), 2, "opening build seeds a couple of stones");
 
   // — Recruiting grows the squad with a real third hero ————————————————————
   await evalExpr(s, "window.td.gold(500)");
@@ -67,7 +68,8 @@ test("tower defense boots, runs a wave, scores kills, and ends on a leak", async
 
   // — Stones drop after the wave clears, for the next build phase ——————————
   // (FOV placement + horde-blocking are unit-tested in tests/tdStones.test.js.)
-  assert.equal(await evalExpr(s, "window.td.stones()"), 4, "four pushable stones dropped after the wave");
+  // Two seeded the opening build; four more drop on clear → six in all.
+  assert.equal(await evalExpr(s, "window.td.stones()"), 6, "two opening stones + four dropped after the wave");
 
   // — Hero switching cycles the active slot ——————————————————————————————
   const a0 = await evalExpr(s, "window.td.activeIndex()");

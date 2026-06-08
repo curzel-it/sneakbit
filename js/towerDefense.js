@@ -11,7 +11,7 @@
 
 import { TD_ZONE_ID } from "./constants.js";
 import { loadZone } from "./data.js";
-import { buildZone } from "./zone.js";
+import { buildZone, isWalkable } from "./zone.js";
 import { createPlayer, updatePlayer } from "./player.js";
 import { pollInput } from "./input.js";
 import { setGameMode, GAME_MODE, isTowerDefenseMode } from "./gameMode.js";
@@ -52,7 +52,7 @@ import {
 } from "./heroSwitch.js";
 import { resetGold, getGold, addGold, spendGold, canAfford } from "./arcadeCurrency.js";
 import {
-  resetStones, spawnStonesInView, reconcileStones, stoneCount,
+  resetStones, spawnStonesInView, reconcileStones, stoneCount, stoneBlocksTile, STONE_SPECIES,
 } from "./tdStones.js";
 import { refreshTouchActions } from "./touch.js";
 import {
@@ -61,6 +61,7 @@ import {
 
 // — Tuning ————————————————————————————————————————————————————————————————
 const START_GOLD = 150;           // enough to recruit a third hero turn 1 if you skip walls
+const INITIAL_STONES = 2;         // a couple of stones to start shaping before wave 1
 const BUILD_TIME = 30;            // seconds of build phase before auto-start
 const EARLY_BONUS_PER_SEC = 2;    // gold for calling the wave early, per second saved
 const STIPEND_BASE = 40;          // per-wave starting income
@@ -159,6 +160,13 @@ export async function startTowerDefense() {
     followActiveHero(state);
     if (zone.soundtrack) playTrack(zone.soundtrack);
     enterBuild();
+    // Seed the opening build phase with a couple of stones so the player can
+    // start shaping the path before wave 1 (each cleared wave drops more). Keep
+    // them near the squad so they're on-screen and immediately shoveable.
+    const lead = activeHero(state) || state.player;
+    spawnStonesInView(state, INITIAL_STONES, {
+      near: { x: lead.tileX | 0, y: lead.tileY | 0 }, radius: 4,
+    });
     showTdHud();
     // On touch, surface the melee/remove action button — the squad may carry
     // no melee weapon, which would otherwise keep it hidden.
@@ -174,9 +182,9 @@ export async function startTowerDefense() {
 
 function spawnSquad(state) {
   const spawns = getHeroSpawns();
-  state.player = placeHero(createPlayer({ index: 0 }), spawns[0]);
-  state.player2 = placeHero(createPlayer({ index: 1 }), spawns[1] || spawns[0]);
   state.players = [];
+  state.player = placeHero(createPlayer({ index: 0 }), spawns[0]);
+  state.player2 = placeHero(createPlayer({ index: 1 }), freeHeroTile(state, spawns[1] || spawns[0]));
   state.lastTile = { x: state.player.tileX, y: state.player.tileY };
   state.lastTile2 = { x: state.player2.tileX, y: state.player2.tileY };
   resetPlayerHealth(0);
@@ -188,6 +196,34 @@ function placeHero(p, tile) {
   p.direction = "left"; // face the incoming horde
   p.step = null; p.queuedDir = null; p.pendingDir = null;
   return p;
+}
+
+// A live hero (other than `exclude`) is sitting on this tile.
+function occupiedByHero(state, x, y, exclude) {
+  return squadPlayers(state).some((p) =>
+    p !== exclude && !isPlayerDead(p.index | 0) && (p.tileX | 0) === x && (p.tileY | 0) === y);
+}
+
+// The preferred tile, or — if it's blocked or already taken by a hero — the
+// nearest walkable, stone-free, hero-free tile spiralling out from it. Keeps
+// recruited/revived heroes (and the second starter) from spawning on top of
+// the squad, since the heroes-share-a-tile guard only blocks *stepping* onto
+// an occupied tile, not spawning onto one.
+function freeHeroTile(state, preferred, exclude) {
+  const zone = state.zone;
+  const px = preferred.x | 0, py = preferred.y | 0;
+  const ok = (x, y) =>
+    isWalkable(zone, x, y) && !stoneBlocksTile(zone, x, y) && !occupiedByHero(state, x, y, exclude);
+  if (ok(px, py)) return { x: px, y: py };
+  for (let r = 1; r <= 6; r++) {
+    for (let dy = -r; dy <= r; dy++) {
+      for (let dx = -r; dx <= r; dx++) {
+        if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
+        if (ok(px + dx, py + dy)) return { x: px + dx, y: py + dy };
+      }
+    }
+  }
+  return { x: px, y: py };
 }
 
 // — Phase transitions ————————————————————————————————————————————————————
@@ -275,7 +311,7 @@ function recruitHero() {
   if (index == null) return;
   if (!spendGold(recruitCost())) { showToast("Not enough gold", "hint"); return; }
   const spawns = getHeroSpawns();
-  const tile = spawns[index % spawns.length] || spawns[0];
+  const tile = freeHeroTile(state, spawns[index % spawns.length] || spawns[0]);
   const p = placeHero(createPlayer({ index }), tile);
   state.players.push({ player: p, slot: index + 1, playerId: null, lastTile: { x: p.tileX, y: p.tileY } });
   resetPlayerHealth(index);
@@ -298,7 +334,7 @@ function reviveHero(index) {
   const hero = squadPlayers(state).find((p) => (p.index | 0) === (index | 0));
   if (!hero) return;
   const spawns = getHeroSpawns();
-  placeHero(hero, spawns[(index | 0) % spawns.length] || spawns[0]);
+  placeHero(hero, freeHeroTile(state, spawns[(index | 0) % spawns.length] || spawns[0], hero));
   resetPlayerHealth(index | 0);
 }
 
@@ -351,13 +387,20 @@ function simulate(state, dt) {
   const enemies = getEnemies(state.zone);
   const goal = getGoal();
   const humanInput = pollInput(1);
-  for (const hero of squadPlayers(state)) {
-    const idx = hero.index | 0;
-    if (isPlayerDead(idx)) continue;
-    let input;
-    if (isActiveHero(idx)) input = humanInput;
-    else input = driveAlly(state, hero, { enemies, goal });
-    updatePlayer(hero, input, dt, state.zone);
+  const living = squadPlayers(state).filter((h) => !isPlayerDead(h.index | 0));
+  for (const hero of living) {
+    const active = isActiveHero(hero.index | 0);
+    if (active) {
+      updatePlayer(hero, humanInput, dt, state.zone);
+      continue;
+    }
+    // Allies are AI-driven: they never shove stones (only the human shapes the
+    // maze) and never step onto another hero's tile (no stacking).
+    const input = driveAlly(state, hero, { enemies, goal });
+    updatePlayer(hero, input, dt, state.zone, {
+      canPush: false,
+      blockedTile: (tx, ty) => heroOnTile(living, hero, tx, ty),
+    });
   }
 
   // Stones the heroes shoved this frame: animate their slide and, if any
@@ -399,6 +442,18 @@ function squadWiped(state) {
 
 function livingHeroes(state) {
   return squadPlayers(state).filter((p) => !isPlayerDead(p.index | 0));
+}
+
+// Is a hero other than `self` standing on — or mid-step toward — tile (tx, ty)?
+// Allies use this to refuse a step that would stack them onto another hero
+// (heroes aren't zone entities, so isEntityBlocked never sees them).
+function heroOnTile(heroes, self, tx, ty) {
+  for (const h of heroes) {
+    if (h === self) continue;
+    if ((h.tileX | 0) === tx && (h.tileY | 0) === ty) return true;
+    if (h.step && (h.step.toX | 0) === tx && (h.step.toY | 0) === ty) return true;
+  }
+  return false;
 }
 
 function buildModel(state) {
@@ -487,6 +542,16 @@ function installDebugHook() {
     enemies: () => { const s = getState(); return s?.zone ? getEnemies(s.zone).length : 0; },
     squad: () => squadPlayers(getState()).length,
     activeIndex: () => getActiveHeroIndex(),
+    heroTiles: () => squadPlayers(getState())
+      .filter((p) => !isPlayerDead(p.index | 0))
+      .map((p) => ({ i: p.index | 0, x: p.tileX | 0, y: p.tileY | 0 })),
+    stoneTiles: () => {
+      const s = getState();
+      if (!s?.zone) return [];
+      return s.zone.entities
+        .filter((e) => e.species_id === STONE_SPECIES && !e._dying)
+        .map((e) => ({ x: e.frame.x | 0, y: e.frame.y | 0 }));
+    },
     stones: () => { const s = getState(); return s?.zone ? stoneCount(s.zone) : 0; },
     recruit: () => recruitHero(),
     killAll: () => {
