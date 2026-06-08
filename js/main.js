@@ -1066,16 +1066,15 @@ function maybeTeleport(state) {
   // Pickups: scan once with both players in play so whichever player
   // stepped onto the pickup tile wins it.
   checkPickup(state);
-  // Teleporters: P1 always triggers; an online guest (P2 with a
-  // playerId, or any slot-3/4 entry) also triggers so the spec's "guest
-  // steps on teleporter → both move to the new zone" works. Local-only
-  // P2 (no playerId) still follows P1 like before, so local co-op
-  // behaves the same.
+  // Teleporters: any player triggers a transition so whoever steps onto
+  // the tile moves everyone to the new zone. This covers P1, local offline
+  // P2, online guest P2 (with a playerId) and any slot-3/4 network guest —
+  // travelTo repositions the rest of the party around the trigger.
   let teleEntity = null;
   if (p1Moved) {
     teleEntity = findTeleporterAt(zone, player.tileX, player.tileY);
   }
-  if (!teleEntity && p2Moved && player2?.playerId) {
+  if (!teleEntity && p2Moved) {
     teleEntity = findTeleporterAt(zone, player2.tileX, player2.tileY);
   }
   if (!teleEntity) {
