@@ -5,9 +5,10 @@
 //
 // Resolution by good:
 //   * skin        → the hero, walking in place (heroes sheet, down-moving row)
-//   * weapon item → the weapon it grants (weapons sheet, down-moving strip)
-//   * ammo bundle → the projectile it contains (the first bundle content)
-//   * anything else (raw bullet, potion, plain pickup) → its own world sprite
+//   * ammo bundle → the projectile it contains, flying up (first bundle content,
+//                   shown on its up-moving directional row, looping its frames)
+//   * anything else (weapon pickup, raw bullet, potion) → its own world sprite,
+//                   i.e. the on-ground idle animation for pickable weapons
 // Frames that don't animate (sprite_number_of_frames <= 1) paint once and hold.
 
 import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js";
@@ -16,10 +17,10 @@ import { getSpecies, getEntitySheet } from "./species.js";
 import { getSkin } from "./skins.js";
 import { isSkinEntry } from "./shopPurchase.js";
 
-// Directional sprites (hero, weapon) keep 8 rows (4 dirs × moving/still); row 4
-// is "down-moving". For the hero that lands at sheet-y 9 (origin 1 + 4×h2),
-// mirroring player.js getPlayerSpriteFrame's down/moving offset.
-const DOWN_MOVING_ROW = 4;
+// The hero's directional sheet keeps 8 rows (4 dirs × moving/still); "down-moving"
+// lands at sheet-y 9 (origin 1 + row 4 × h2), mirroring player.js
+// getPlayerSpriteFrame's down/moving offset. Bullets use their up-moving row,
+// which is the base sprite_frame row (DIR_ROW_MOVING.up === 0), so no offset.
 const HERO_DOWN_MOVING_Y = 9;
 
 let canvas = null;
@@ -85,22 +86,15 @@ function descriptorFor(entry) {
   const sp = getSpecies(entry.item);
   if (!sp) return null;
 
-  // A weapon item shows the weapon it grants, on its down-moving strip.
-  if (sp.associated_weapon) {
-    const w = getSpecies(sp.associated_weapon);
-    if (w) {
-      const sheet = getEntitySheet(w);
-      const h = w.height || 1;
-      if (sheet) return { sheet, sx0: w.texture_x * TILE_SIZE, sy: (w.texture_y + DOWN_MOVING_ROW * h) * TILE_SIZE, tileW: w.width || 1, tileH: h, frames: Math.max(1, w.frames) };
-    }
-  }
-
-  // An ammo bundle shows the projectile it contains.
+  // An ammo bundle shows the projectile it contains, on its up-moving row (its
+  // base sprite_frame), looping its flight frames — the "shot up" animation.
   if (sp.bundle_contents?.length) {
     const b = getSpecies(sp.bundle_contents[0]);
     if (b) { const d = genericDescriptor(b); if (d) return d; }
   }
 
+  // Everything else (weapon pickups included) shows its own world sprite. For a
+  // pickable weapon that's its on-ground idle strip; for a potion, its sprite.
   return genericDescriptor(sp);
 }
 
