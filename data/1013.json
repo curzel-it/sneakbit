@@ -4616,7 +4616,7 @@
   "id": 1013,
   "light_conditions": "Day",
   "monster_spawn": {
-    "density": 0.0072
+    "density": 0.0116
   },
   "revision": 0,
   "soundtrack": "pol_pyramid_sands_short.mp3",

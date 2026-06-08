@@ -2135,7 +2135,7 @@
   "id": 1021,
   "light_conditions": "Day",
   "monster_spawn": {
-    "density": 0.0168,
+    "density": 0.0215,
     "chokeberry_chance": 0.19
   },
   "revision": 0,
