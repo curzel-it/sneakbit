@@ -56,6 +56,42 @@ export function findPathToNearest(zone, startX, startY, goals) {
   return null;
 }
 
+// Flood-fill every walkable tile reachable from any of `starts` (4-directional,
+// matching player movement). `starts` is an array of { x, y } seed tiles; a
+// seed need not itself be walkable (a teleporter can sit on a door tile), but
+// only walkable tiles are collected and expanded through. Returns a Set of
+// "x,y" keys. Use it to separate "walkable" from "actually reachable" — a
+// walled-off pocket of floor is walkable yet the player can never stand on it.
+export function reachableTiles(zone, starts) {
+  const reached = new Set();
+  if (!zone || !Array.isArray(starts) || starts.length === 0) return reached;
+
+  let queue = [];
+  for (const s of starts) {
+    const key = `${s.x | 0},${s.y | 0}`;
+    if (reached.has(key)) continue;
+    reached.add(key);
+    queue.push([s.x | 0, s.y | 0]);
+  }
+
+  while (queue.length) {
+    const next = [];
+    for (const [x, y] of queue) {
+      for (const [dx, dy] of NEIGHBOURS) {
+        const nx = x + dx;
+        const ny = y + dy;
+        const key = `${nx},${ny}`;
+        if (reached.has(key)) continue;
+        if (!isWalkable(zone, nx, ny)) continue;
+        reached.add(key);
+        next.push([nx, ny]);
+      }
+    }
+    queue = next;
+  }
+  return reached;
+}
+
 function reconstruct(cameFrom, gx, gy) {
   const path = [{ x: gx, y: gy }];
   let key = `${gx},${gy}`;

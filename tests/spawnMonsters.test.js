@@ -72,6 +72,31 @@ test("keeps clear of teleporters and authored footprints", () => {
   }
 });
 
+test("never spawns in a walkable-but-unreachable pocket", () => {
+  const z = openZone(1002, 20, 20);
+  // Wall off column x=10 top-to-bottom, sealing the right half (x>10) into a
+  // walkable pocket the player can never reach.
+  for (let y = 0; y < 20; y++) z.collision[y][10] = true;
+  const raw = {
+    monster_spawn: { density: 0.5 },
+    // A wired teleporter (has a destination) on the LEFT half seeds the flood.
+    entities: [
+      { species_id: TELEPORTER_SPECIES_ID, destination: { world: 1003, x: 0, y: 0 }, frame: { x: 2, y: 2, w: 1, h: 1 } },
+    ],
+  };
+  const g = generateMonsters(z, raw);
+  assert.ok(g.length > 0);
+  for (const m of g) assert.ok(m.frame.x < 10, `monster in sealed pocket at ${m.frame.x},${m.frame.y}`);
+});
+
+test("no teleporter to seed from leaves placement unfiltered", () => {
+  const z = openZone(1002, 20, 20);
+  for (let y = 0; y < 20; y++) z.collision[y][10] = true;
+  // No wired teleporter → can't compute reachability → both halves stay eligible.
+  const g = generateMonsters(z, { monster_spawn: { density: 0.5 } });
+  assert.ok(g.some((m) => m.frame.x > 10), "expected spawns on both sides when unfiltered");
+});
+
 test("respects minimum spacing between generated monsters", () => {
   const z = openZone(1002, 40, 40);
   const g = generateMonsters(z, { monster_spawn: { density: 0.1 } });

@@ -99,7 +99,16 @@ authored entities are cloned in:
      (reuse the enterable-teleporter tiles already enumerated for the autoplay
      pathfinding fix), so doorways stay clean;
    - any tile already covered by an **authored entity's footprint** (don't stack a
-     generated berry on a placed NPC, chest, or building).
+     generated berry on a placed NPC, chest, or building);
+   - any tile **not reachable from a zone entry point**. Walkability (the static
+     collision mask) is not the same as reachability: a strip of grass fenced off
+     behind a line of trees is walkable yet sealed, and a monster scattered there
+     is stranded out of play. We flood-fill (`reachableTiles`, `js/pathfinding.js`)
+     from every wired teleporter footprint — 4-directional, matching player
+     movement — and keep only reachable tiles. A zone with no wired teleporter to
+     seed from is left unfiltered (no zone can regress to zero spawns). Because
+     reachability filters the eligible set, `density` is a fraction of *reachable*
+     tiles, so count-matched zones are tuned against the reachable area.
 3. **Target count** = `round(density × eligibleTiles.length)`.
 4. **Sample with spacing.** Shuffle the eligible list with the seeded PRNG
    (Fisher–Yates, same shape as the existing shuffle in `js/mobs.js` but sourced),

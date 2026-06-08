@@ -9,6 +9,7 @@
 
 import { getSpecies } from "./species.js";
 import { makeRng, zoneSeed } from "./rng.js";
+import { reachableTiles } from "./pathfinding.js";
 
 const SPECIES_BLACKBERRY = 4004; // staple base tier
 const SPECIES_CHOKEBERRY = 4003; // occasional low-end flavour
@@ -45,12 +46,14 @@ export function generateMonsters(zone, raw) {
 
   const rand = makeRng(zoneSeed(zone.id));
   const excluded = buildExclusionMask(zone, raw);
+  const reachable = reachableSpawnArea(zone, raw);
 
   const eligible = [];
   for (let y = 0; y < zone.rows; y++) {
     for (let x = 0; x < zone.cols; x++) {
       if (excluded[y][x]) continue;
       if (!walkable(zone, x, y)) continue;
+      if (reachable && !reachable.has(`${x},${y}`)) continue;
       eligible.push([x, y]);
     }
   }
@@ -97,6 +100,29 @@ function makeMonster(id, speciesId, tileX, tileY) {
     direction: "Down",
     _generated: true, // ephemeral marker: never persisted
   };
+}
+
+// The set of tiles the player can actually walk to, flood-filled from the
+// zone's entry points (every wired teleporter footprint). Walkable-but-sealed
+// pockets — e.g. a strip of grass fenced off behind a line of trees — are
+// walkable yet unreachable, so scattering monsters there strands them out of
+// play. Returns null when the zone has no wired teleporters to seed from,
+// leaving placement unfiltered so no zone can regress to zero spawns.
+function reachableSpawnArea(zone, raw) {
+  const seeds = [];
+  for (const e of raw?.entities ?? []) {
+    if (e.species_id !== TELEPORTER_SPECIES_ID) continue;
+    if (!e.destination) continue; // unwired/decorative teleporters aren't entry points
+    const f = e.frame;
+    if (!f) continue;
+    for (let ty = Math.floor(f.y); ty < Math.ceil(f.y + f.h); ty++) {
+      for (let tx = Math.floor(f.x); tx < Math.ceil(f.x + f.w); tx++) {
+        seeds.push({ x: tx, y: ty });
+      }
+    }
+  }
+  if (seeds.length === 0) return null;
+  return reachableTiles(zone, seeds);
 }
 
 // Tiles a generated monster may not occupy: authored-entity footprints (so we
