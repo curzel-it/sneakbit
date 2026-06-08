@@ -23,7 +23,7 @@ This repo *is* that game. The original Rust source is preserved in this reposito
   ```
   Run `test:unit` often — at minimum before each commit. Run `test:e2e` before any push that touches `onlineBootstrap.js`, `webrtcTransport.js`, `webrtcChannel.js`, `predictedSelf.js`, `mirrorWorld.js`, or `snapshotBroadcaster.js`.
 - **Commit often.** Small focused commits beat large ones. Each commit should leave the game in a runnable state (`npm test` green, page loads without console errors).
-- **Push to main often.** Each push to `main` is a public release. Production is <https://sneakbit.curzel.it>, served from the VPS via `npm run deploy` (which also builds + ships the client). After any change large enough to be visible to a user, push it — don't sit on local changes; there's no staging.
+- **Push to main often.** Pushing to `main` is *not* a release on its own — nothing is wired to auto-deploy from it anymore. Production is <https://sneakbit.curzel.it>, served from the VPS, and only goes live when you run `npm run deploy` (which builds + ships the client). So keep `main` healthy and push freely; ship to users explicitly with `npm run deploy` (or `npm run deploy -- --commit "msg"` to commit + push + deploy in one shot).
 
 ## Server (`server/`)
 - The Node server lives in `server/` — vanilla `node:http`, no deps, ES modules, same "one feature one file" rule as the client. Run locally with `node server/index.js` (defaults: `127.0.0.1:8090`). `GET /health` returns 200 "ok" — keep that endpoint cheap.
