@@ -1,6 +1,15 @@
 # Procedural monster spawning
 
-Status: **implemented** (first zone: 1002) · Owner: Federico · Last updated: 2026-06-07
+Status: **implemented · rolled out to all monster zones** · Owner: Federico · Last updated: 2026-06-08
+
+> **Rollout.** Live in every combat zone: 1002, 1010, 1017, 1018 (originals) and
+> 1004, 1005, 1007, 1009, 1013, 1014, 1015, 1016, 1019, 1021, 1022, 1099. Each
+> dungeon/maze kept its hand-authored monster *count* — densities were
+> count-matched against the real `buildZone` collision mask. Cities stay
+> monster-free; 1001 (Evergrove) and 1020 (Peak Levek) were left as-is. The one
+> surviving authored monster is the grapevine boss (4008) in 1099 — set-pieces
+> stay, only filler is generated. 1021 carries `chokeberry_chance: 0.19` to
+> preserve its authored chokeberry mix.
 
 > First slice of a broader "stop hand-authoring filler content" effort. This spec
 > covers **monsters only**. Ammo and barrels are deliberately out of scope — they

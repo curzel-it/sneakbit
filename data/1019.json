@@ -197,68 +197,14 @@
       "is_consumable": false,
       "lock_type": "None",
       "species_id": 1019
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 13,
-        "y": 2
-      },
-      "id": 12839225,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 4004
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 9,
-        "y": 17
-      },
-      "id": 12839226,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 4004
-    },
-    {
-      "after_dialogue": "Nothing",
-      "contents": null,
-      "demands_attention": false,
-      "destination": null,
-      "dialogues": [],
-      "direction": "Down",
-      "display_conditions": [],
-      "frame": {
-        "h": 2,
-        "w": 1,
-        "x": 13,
-        "y": 30
-      },
-      "id": 12839227,
-      "is_consumable": false,
-      "lock_type": "None",
-      "species_id": 4004
     }
   ],
   "ephemeral_state": true,
   "id": 1019,
   "light_conditions": "CantSeeShit",
+  "monster_spawn": {
+    "density": 0.0067
+  },
   "revision": 0,
   "soundtrack": "pol_combat_plan_short.mp3",
   "world_type": "Dungeon"
