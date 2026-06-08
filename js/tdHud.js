@@ -98,7 +98,9 @@ export function updateTdHud(model) {
     dockLabelEl.textContent = "Next wave";
     dockValEl.textContent = `${Math.ceil(cd)}s`;
     setProgress(progFillEl, model.countdownMax > 0 ? cd / model.countdownMax : 0, "time");
-    startBtn.style.display = "";
+    // On touch the Start button lives in the action cluster (see touch.js), so
+    // the dock keeps only its slim countdown strip.
+    startBtn.style.display = touch ? "none" : "";
     startBtn.textContent = model.earlyBonus > 0
       ? `Start wave ▶  +${model.earlyBonus}g`
       : "Start wave ▶";
@@ -116,16 +118,16 @@ export function updateTdHud(model) {
     : "Defend the village!";
 
   // — Actions —————————————————————————————————————————————————————————————
-  recruitBtn.style.display = build ? "" : "none";
-  if (build) {
+  // On touch the recruit/switch buttons move into the action cluster, so the
+  // dock shows them only on desktop (where there's no cluster).
+  recruitBtn.style.display = (build && !touch) ? "" : "none";
+  if (build && !touch) {
     const r = model.recruit || {};
     recruitBtn.textContent = r.label || `Recruit hero (${r.cost}g)`;
     recruitBtn.disabled = !r.can;
     recruitBtn.classList.toggle("td-disabled", !r.can);
   }
-  // On touch during a wave the switch button moves into the action cluster (the
-  // interact slot — see touch.js), so hide the dock's copy to avoid two of them.
-  switchBtn.style.display = (model.canSwitch && !(touch && wave)) ? "" : "none";
+  switchBtn.style.display = (model.canSwitch && !(touch && (build || wave))) ? "" : "none";
 
   // Revives can be bought in any phase (mid-wave at a premium).
   reviveWrap.style.display = model.revives?.length ? "" : "none";
@@ -133,7 +135,13 @@ export function updateTdHud(model) {
 
   // Hand the touch action cluster the current TD verb. During build there's
   // nothing to tap — movement shoves stones — so the action buttons hide.
-  setTdActionMode(build ? "build" : (wave ? "wave" : null), { canSwitch: model.canSwitch });
+  setTdActionMode(build ? "build" : (wave ? "wave" : null), {
+    canSwitch: model.canSwitch,
+    earlyBonus: model.earlyBonus | 0,
+    recruit: model.recruit,
+    onStart: api.onReady,
+    onRecruit: api.onRecruit,
+  });
 }
 
 // Are we driving with touch? The body class is toggled by touch.js when the
@@ -335,25 +343,28 @@ function injectStyles() {
       #td-dock .td-btn, #td-dock .td-start { min-height: 42px; padding: 7px 10px; }
       #td-dock .td-dock-hint { font-size: 10px; }
 
-      /* Wave phase: collapse the dock into a slim strip pinned to the bottom-
-         centre gap between the d-pad and the action cluster. The top status bar
-         already carries "Wave N", so the strip is purely the live enemies-
-         remaining bar. Switch-hero moves to the action cluster, so the strip
-         normally has no buttons — make it click-through so it never steals a
-         tap from the controls (mid-wave revive buttons re-enable themselves). */
-      #td-dock.td-dock-wave {
+      /* Build + wave both collapse the dock into a slim strip pinned to the
+         bottom-centre gap between the d-pad and the action cluster. The top
+         status bar already carries "Wave N", so the strip is purely the live
+         bar — enemies-remaining during a wave, countdown to the next while
+         building. The phase actions (Start / Recruit / Switch in build, Switch
+         in wave) move to the action cluster, so the strip normally has no
+         buttons — make it click-through so it never steals a tap from the
+         controls (revive buttons, which can appear in any phase, re-enable
+         themselves). */
+      #td-dock.td-dock-wave, #td-dock.td-dock-build {
         top: auto; bottom: 8px; transform: translateX(-50%);
         flex-direction: row; align-items: center; flex-wrap: nowrap;
         width: auto; max-width: 92vw; gap: 8px; padding: 6px 12px;
         pointer-events: none;
       }
-      #td-dock.td-dock-wave .td-dock-label,
-      #td-dock.td-dock-wave .td-dock-hint { display: none; }
-      #td-dock.td-dock-wave .td-dock-timer { gap: 8px; }
-      #td-dock.td-dock-wave .td-prog { min-width: 96px; }
-      #td-dock.td-dock-wave .td-dock-main { margin: 0; }
-      #td-dock.td-dock-wave .td-dock-actions { margin-left: 0; }
-      #td-dock.td-dock-wave .td-btn { pointer-events: auto; }
+      #td-dock.td-dock-wave .td-dock-label, #td-dock.td-dock-build .td-dock-label,
+      #td-dock.td-dock-wave .td-dock-hint,  #td-dock.td-dock-build .td-dock-hint { display: none; }
+      #td-dock.td-dock-wave .td-dock-timer, #td-dock.td-dock-build .td-dock-timer { gap: 8px; }
+      #td-dock.td-dock-wave .td-prog, #td-dock.td-dock-build .td-prog { min-width: 96px; }
+      #td-dock.td-dock-wave .td-dock-main, #td-dock.td-dock-build .td-dock-main { margin: 0; }
+      #td-dock.td-dock-wave .td-dock-actions, #td-dock.td-dock-build .td-dock-actions { margin-left: 0; }
+      #td-dock.td-dock-wave .td-btn, #td-dock.td-dock-build .td-btn { pointer-events: auto; }
     }
 
     /* Narrow screens share the top edge with the HP bar (left) and the touch

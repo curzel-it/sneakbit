@@ -60,8 +60,12 @@ const ICON_DIR_RIGHT = svg(`<polyline points="9,6 15,12 9,18"></polyline>`);
 const ICON_INTERACT = svg(`<path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"></path><circle cx="12" cy="12" r="0.6" fill="currentColor"></circle>`, 24);
 const ICON_THROW    = svg(`<path d="M12 3 L13.4 9.4 L20 11 L13.4 12.6 L12 19 L10.6 12.6 L4 11 L10.6 9.4 Z" fill="currentColor" stroke="none"></path>`, 24);
 const ICON_MELEE    = svg(`<path d="M14 4 L20 4 L20 10 L9.5 20.5 L7 21 L3 17 L3.5 14.5 L14 4 Z"></path><line x1="9" y1="9" x2="15" y2="15"></line>`, 24);
-//   Switch:  two looping arrows — "cycle to the next hero" (TD wave only).
+//   Switch:  two looping arrows — "cycle to the next hero" (TD only).
+//   Start:   a play triangle — "start the next wave now" (TD build).
+//   Recruit: a person + plus — "buy another hero" (TD build).
 const ICON_SWITCH   = svg(`<polyline points="17 3 21 7 17 11"></polyline><path d="M21 7H8a4 4 0 0 0-4 4"></path><polyline points="7 21 3 17 7 13"></polyline><path d="M3 17h13a4 4 0 0 0 4-4"></path>`, 24);
+const ICON_START    = svg(`<path d="M8 5 L19 12 L8 19 Z" fill="currentColor" stroke="none"></path>`, 24);
+const ICON_RECRUIT  = svg(`<circle cx="9" cy="8" r="3.2"></circle><path d="M3.5 20a5.5 5.5 0 0 1 11 0"></path><line x1="19" y1="8" x2="19" y2="14"></line><line x1="16" y1="11" x2="22" y2="11"></line>`, 24);
 
 const heldBindings = new Map(); // dir -> pointerId
 
@@ -297,17 +301,31 @@ export function refreshTouchActions() {
 // Driven each frame by tdHud.updateTdHud, cached so the DOM only churns on a
 // real change.
 let tdActionMode = null;
-// Whether the active squad has another living hero to switch to. Drives the
-// switch button in the wave cluster; tracked alongside the mode so a change
-// while the mode stays "wave" still re-renders.
+// Cluster-render inputs pushed from tdHud each frame. Tracked so a change while
+// the mode stays the same (a falling countdown, a now-affordable recruit, a
+// hero going down) still re-renders. Handlers (onStart/onRecruit) are stable
+// refs straight from the run's install-time wiring.
 let tdCanSwitch = false;
+let tdEarlyBonus = 0;
+let tdRecruit = null;   // { cost, can, full } or null
+let tdHandlers = {};    // { onStart, onRecruit }
+let tdSig = "";
 
 export function setTdActionMode(mode, opts = {}) {
   const next = mode || null;
+  tdHandlers = opts; // onStart / onRecruit live here, stable across frames
   const canSwitch = !!opts.canSwitch;
-  if (next === tdActionMode && canSwitch === tdCanSwitch) return;
+  const recruit = opts.recruit || null;
+  const sig = [
+    next, canSwitch ? 1 : 0, opts.earlyBonus | 0,
+    recruit ? `${recruit.cost}|${recruit.can ? 1 : 0}|${recruit.full ? 1 : 0}` : "",
+  ].join(":");
+  if (sig === tdSig) return;
+  tdSig = sig;
   tdActionMode = next;
   tdCanSwitch = canSwitch;
+  tdEarlyBonus = opts.earlyBonus | 0;
+  tdRecruit = recruit;
   applyTdActionMode();
 }
 
@@ -319,17 +337,25 @@ function applyTdActionMode() {
   if (!interact || !melee || !throwBtn) return;
 
   if (tdActionMode === "build") {
-    // Building is pure movement — shove a stone by walking into it. No action
-    // buttons; the d-pad / joystick does it all.
-    setActionButton(interact, ICON_INTERACT, "", "none");
-    setActionButton(melee, ICON_MELEE, "", "none");
-    setActionButton(throwBtn, ICON_THROW, "", "none");
+    // Movement (d-pad / joystick) shoves the stones; the right cluster carries
+    // the build actions — Start wave (▶), Recruit, Switch — so the dock can
+    // shrink to a slim countdown strip. Start sits in the bottom (melee) slot,
+    // the most thumb-reachable spot.
+    setActionButton(melee, ICON_START, tdEarlyBonus > 0 ? `+${tdEarlyBonus}g` : "", "");
+    if (tdRecruit && !tdRecruit.full) {
+      setActionButton(throwBtn, ICON_RECRUIT, `${tdRecruit.cost}g`, "");
+      throwBtn.classList.toggle("touch-dim", !tdRecruit.can);
+    } else {
+      setActionButton(throwBtn, ICON_RECRUIT, "", "none");
+    }
+    if (tdCanSwitch) setActionButton(interact, ICON_SWITCH, "", "");
+    else setActionButton(interact, ICON_INTERACT, "", "none");
   } else if (tdActionMode === "wave") {
     setActionButton(throwBtn, ICON_THROW, "", "");
     setActionButton(melee, ICON_MELEE, "", "");
     // The interact slot becomes "switch hero" mid-wave (there's nothing to talk
     // to). Hidden when the squad has only one hero standing.
-    if (tdCanSwitch) setActionButton(interact, ICON_SWITCH, "Switch", "");
+    if (tdCanSwitch) setActionButton(interact, ICON_SWITCH, "", "");
     else setActionButton(interact, ICON_INTERACT, "", "none");
   } else {
     // Not TD — restore the normal game cluster. The interact button is then
@@ -355,8 +381,9 @@ function setActionButton(btn, iconHtml, label, display) {
   const lbl = btn.querySelector(".touch-label");
   if (lbl) lbl.textContent = label;
   // An explicit icon takes the button face — drop the auto verb-text mode
-  // (only the interact button ever carries it) so the icon isn't CSS-hidden.
-  btn.classList.remove("show-verb");
+  // (only the interact button ever carries it) so the icon isn't CSS-hidden,
+  // and clear any leftover "dimmed" (can't-afford) state from a prior phase.
+  btn.classList.remove("show-verb", "touch-dim");
   btn.style.display = display;
 }
 
@@ -501,18 +528,18 @@ function onPress(e, btn) {
     dirPointerHeld.set(e.pointerId, btn);
     dispatchKey("keydown", KEY_FOR_DIR[dir]);
   } else if (action === "interact") {
-    // In a TD wave the interact slot is the "switch hero" button — synthesise a
-    // single Q press (towerDefense.onKey owns Tab/Q switching). Otherwise it's
+    // In any TD phase the interact slot is the "switch hero" button — synthesise
+    // a single Q press (towerDefense.onKey owns Tab/Q switching). Otherwise it's
     // the normal talk/use key.
-    if (isTowerDefenseMode() && tdActionMode === "wave") dispatchKey("keydown", "KeyQ");
+    if (isTowerDefenseMode() && tdActionMode) dispatchKey("keydown", "KeyQ");
     else dispatchKey("keydown", "KeyE");
   } else if (action === "throw") {
-    if (isTowerDefenseMode()) {
-      // TD: the cluster only shows during a wave (build hides it) — shoot the
-      // active hero. Route through onKey so possession is respected.
-      dispatchKey("keydown", codesFor("shoot")[0] || "KeyF");
-    } else if (getNetRole() === "guest") {
-      // Guests can't drive the local sim — synthesise a keydown so
+    if (isTowerDefenseMode() && tdActionMode === "build") {
+      // Build cluster: this slot is the Recruit button, not an attack.
+      tdHandlers.onRecruit?.();
+    } else if (isTowerDefenseMode() || getNetRole() === "guest") {
+      // TD wave: shoot the active hero (route through onKey so possession is
+      // respected). Guests can't drive the local sim — synthesise a keydown so
       // guestInputForwarder turns it into a `shoot` intent on the wire.
       dispatchKey("keydown", codesFor("shoot")[0] || "KeyF");
     } else {
@@ -521,10 +548,11 @@ function onPress(e, btn) {
       tryShoot();
     }
   } else if (action === "melee") {
-    if (isTowerDefenseMode()) {
-      // TD: a wave-only swing for the active hero (build hides the cluster).
-      dispatchKey("keydown", codesFor("melee")[0] || "KeyG");
-    } else if (getNetRole() === "guest") {
+    if (isTowerDefenseMode() && tdActionMode === "build") {
+      // Build cluster: this slot starts the next wave early, not a swing.
+      tdHandlers.onStart?.();
+    } else if (isTowerDefenseMode() || getNetRole() === "guest") {
+      // TD wave: a swing for the active hero.
       dispatchKey("keydown", codesFor("melee")[0] || "KeyG");
     } else {
       tryMelee();
@@ -543,7 +571,7 @@ function onRelease(e, btn) {
   btn.classList.remove("active");
   const action = btn.dataset.action;
   if (action === "interact") {
-    const code = (isTowerDefenseMode() && tdActionMode === "wave") ? "KeyQ" : "KeyE";
+    const code = (isTowerDefenseMode() && tdActionMode) ? "KeyQ" : "KeyE";
     dispatchKey("keyup", code);
   }
 }
@@ -693,6 +721,9 @@ function injectStyles() {
     #touch-controls .touch-btn.active {
       background: var(--sb-surface-bg-active);
     }
+    /* Can't-afford state for a TD build-action button (e.g. Recruit with too
+       little gold). Still tappable — the handler answers with a toast. */
+    #touch-controls .touch-btn.touch-dim { opacity: 0.45; }
     /* Icon wrapper. pointer-events: none so taps that land on the SVG
        still bubble to the button — without this the wrapper would
        eat the pointerdown and onPress wouldn't fire on direct hits. */

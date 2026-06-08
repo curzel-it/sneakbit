@@ -424,6 +424,7 @@ function buildModel(state) {
     recruit: {
       cost: recruitCost(),
       can: canRecruit(state),
+      full: nextRecruitIndex(state) == null,
       label: nextRecruitIndex(state) == null ? "Squad full" : `Recruit hero (${recruitCost()}g)`,
     },
     buildHint: "Push the stones to shape the path",
