@@ -61,16 +61,6 @@ const ICON_INTERACT = svg(`<path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0
 const ICON_THROW    = svg(`<path d="M12 3 L13.4 9.4 L20 11 L13.4 12.6 L12 19 L10.6 12.6 L4 11 L10.6 9.4 Z" fill="currentColor" stroke="none"></path>`, 24);
 const ICON_MELEE    = svg(`<path d="M14 4 L20 4 L20 10 L9.5 20.5 L7 21 L3 17 L3.5 14.5 L14 4 Z"></path><line x1="9" y1="9" x2="15" y2="15"></line>`, 24);
 
-// Tower-Defense build verbs. During the build phase the action cluster stops
-// being "attack" and becomes a tiny build toolbar, so the icons swap to match
-// what the button now does — a barrel (open shop), a drop-into-grid (place), a
-// trash can (remove) and a check (done). Paired with a text label so the verb
-// is unambiguous (a sword that "removes" reads wrong; a labelled trash can
-// doesn't).
-const ICON_TD_SHOP   = svg(`<ellipse cx="12" cy="6" rx="6" ry="2.4"></ellipse><path d="M6 6v12c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4V6"></path><path d="M6 12c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4"></path>`, 24);
-const ICON_TD_PLACE  = svg(`<rect x="4" y="4" width="16" height="16" rx="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line>`, 24);
-const ICON_TD_REMOVE = svg(`<polyline points="4 7 20 7"></polyline><path d="M6 7l1 13h10l1-13"></path><path d="M9 7V4h6v3"></path>`, 22);
-const ICON_TD_DONE   = svg(`<polyline points="5 13 10 18 19 6"></polyline>`, 24);
 const heldBindings = new Map(); // dir -> pointerId
 
 // pointerId -> direction button currently "pressed" by that finger. Used
@@ -252,9 +242,9 @@ function syncMeleeVisibility() {
   if (!root) return;
   const btn = root.querySelector(".touch-melee");
   if (!btn) return;
-  // In Tower Defense the melee button is the build "remove" control (it
-  // refunds the barrel the active hero faces), so it must show regardless of
-  // whether a melee weapon is equipped.
+  // In Tower Defense the active hero may carry no melee weapon yet still needs
+  // the wave-phase swing button, so show it regardless of what's equipped.
+  // (tdActionMode hides it during build, where there's nothing to swing at.)
   btn.style.display = (isTowerDefenseMode() || getEquipped(SLOT_MELEE)) ? "" : "none";
 }
 
@@ -298,13 +288,10 @@ export function refreshTouchActions() {
 }
 
 // — Tower-Defense action cluster ——————————————————————————————————————————
-// In TD the three right-side buttons change job by phase, and their icons +
-// labels follow so a thumb knows what each does without reading a hint:
-//   browse → only "Shop" (open the build dialog)
-//   shop   → none (the modal owns its own buttons)
-//   place  → "Place" / "Remove" / "Done"
-//   wave   → attack cluster (shoot + melee), no labels
-//   null   → back to the normal game cluster
+// In TD the three right-side buttons change job by phase:
+//   build → none (you build by walking the hero into stones to shove them)
+//   wave  → attack cluster (shoot + melee), no labels
+//   null  → back to the normal game cluster
 // Driven each frame by tdHud.updateTdHud, cached so the DOM only churns on a
 // real change.
 let tdActionMode = null;
@@ -323,17 +310,10 @@ function applyTdActionMode() {
   const throwBtn = root.querySelector(".touch-throw");
   if (!interact || !melee || !throwBtn) return;
 
-  if (tdActionMode === "place") {
-    setActionButton(interact, ICON_TD_PLACE, "Place", "");
-    setActionButton(melee, ICON_TD_REMOVE, "Remove", "");
-    setActionButton(throwBtn, ICON_TD_DONE, "Done", "");
-  } else if (tdActionMode === "browse") {
-    setActionButton(interact, ICON_TD_SHOP, "Shop", "");
-    setActionButton(melee, ICON_MELEE, "", "none");
-    setActionButton(throwBtn, ICON_THROW, "", "none");
-  } else if (tdActionMode === "shop") {
-    // The shop modal carries its own Start placing / Close buttons.
-    setActionButton(interact, ICON_TD_SHOP, "", "none");
+  if (tdActionMode === "build") {
+    // Building is pure movement — shove a stone by walking into it. No action
+    // buttons; the d-pad / joystick does it all.
+    setActionButton(interact, ICON_INTERACT, "", "none");
     setActionButton(melee, ICON_MELEE, "", "none");
     setActionButton(throwBtn, ICON_THROW, "", "none");
   } else if (tdActionMode === "wave") {
@@ -512,8 +492,8 @@ function onPress(e, btn) {
     dispatchKey("keydown", "KeyE");
   } else if (action === "throw") {
     if (isTowerDefenseMode()) {
-      // TD build: the throw button is the "back/done" verb (close shop / exit
-      // placement); in a wave it shoots the active hero. Route through onKey.
+      // TD: the cluster only shows during a wave (build hides it) — shoot the
+      // active hero. Route through onKey so possession is respected.
       dispatchKey("keydown", codesFor("shoot")[0] || "KeyF");
     } else if (getNetRole() === "guest") {
       // Guests can't drive the local sim — synthesise a keydown so
@@ -526,9 +506,7 @@ function onPress(e, btn) {
     }
   } else if (action === "melee") {
     if (isTowerDefenseMode()) {
-      // TD build phase: Melee removes the barrel in front of the active hero.
-      // Synthesise the key so towerDefense.onKey routes it to the active hero
-      // (interact already does this for placing via the KeyE branch above).
+      // TD: a wave-only swing for the active hero (build hides the cluster).
       dispatchKey("keydown", codesFor("melee")[0] || "KeyG");
     } else if (getNetRole() === "guest") {
       dispatchKey("keydown", codesFor("melee")[0] || "KeyG");

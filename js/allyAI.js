@@ -28,7 +28,7 @@ import { tryShootForPlayer } from "./shooting.js";
 import { performMeleeSwing } from "./melee.js";
 import { resolveLoadout } from "./sessionLoadouts.js";
 import { isWalkable } from "./zone.js";
-import { tdObstacleAt } from "./tdObstacles.js";
+import { stoneBlocksTile } from "./tdStones.js";
 import { getField } from "./tdBoard.js";
 import { computeFlowField, fieldDirection, fieldDistance } from "./flowField.js";
 import { getPlayerHp, getPlayerMaxHp } from "./playerHealth.js";
@@ -263,17 +263,17 @@ function safestStep(zone, hero, enemies) {
 
 function stepIsClear(zone, x, y) {
   if (!zone) return true;
-  return isWalkable(zone, x, y) && !tdObstacleAt(zone, x, y);
+  return isWalkable(zone, x, y) && !stoneBlocksTile(zone, x, y);
 }
 
 // The flow-field's grid view of a TD zone: a tile is blocked if it isn't
-// walkable (wall / forest / void) or a placed barrel sits on it. Matches
-// tdBoard's gridFor so allies route exactly as the horde does.
+// walkable (wall / forest / void) or a stone sits on it. Matches tdBoard's
+// gridFor so allies route exactly as the horde does.
 function navGrid(zone) {
   return {
     cols: zone.cols,
     rows: zone.rows,
-    isBlocked: (x, y) => !isWalkable(zone, x, y) || tdObstacleAt(zone, x, y),
+    isBlocked: (x, y) => !isWalkable(zone, x, y) || stoneBlocksTile(zone, x, y),
   };
 }
 

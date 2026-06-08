@@ -113,6 +113,9 @@ async function measureRoundTrips(session, label) {
   for (let i = 1; i < cumulative.length; i++) interStep.push(cumulative[i] - cumulative[i - 1]);
 
   console.log(`[latency:${label}] tiles=${cumulative.length}  first-step RTT=${firstRtt.toFixed(0)}ms  inter-step ms=[${interStep.map((x) => x.toFixed(0)).join(", ")}]`);
+  console.log(`[latency:${label}] DEBUG sample tiles: ${samples.map((s) => `(${s.tileX},${s.tileY})`).join(" ")}`);
+  const dbgStart = await evalExpr(session.guest, `(() => { const m=window.__sb.m, o=window.__sb.o; const mp=m.getMirrorPlayerById(o.getSelfPlayerId()); return mp ? mp.tileX+","+mp.tileY : "no-mirror"; })()`);
+  console.log(`[latency:${label}] DEBUG final mirror tile: ${dbgStart}`);
   return { firstRtt, interStep, tilesMoved: cumulative.length };
 }
 

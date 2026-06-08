@@ -9,8 +9,8 @@
 // the arrow on their tile.
 
 import { isWalkable } from "./zone.js";
-import { computeFlowField, allReachable } from "./flowField.js";
-import { tdObstacleAt } from "./tdObstacles.js";
+import { computeFlowField } from "./flowField.js";
+import { stoneBlocksTile } from "./tdStones.js";
 import { TD_ZONE_ID } from "./constants.js";
 
 let goal = null;          // { x, y }
@@ -18,15 +18,16 @@ let spawns = [];          // [{ x, y }] — enemy entry tiles
 let heroSpawns = [];      // [{ x, y }] — where the squad starts
 let field = null;         // cached flow field; rebuilt on barricade changes
 
-// Adapt a runtime zone into the flow-field's tiny grid abstraction. Stone-wall
-// barricades land on the construction layer (zone.collision via isWalkable);
-// placed barrels are rigid entities, so we also fold in tdObstacleAt. Either
-// way the field automatically routes the horde around what the player built.
+// Adapt a runtime zone into the flow-field's tiny grid abstraction. Authored
+// walls land on the construction layer (zone.collision via isWalkable); the
+// stones the player shoves around are pushable entities, so we also fold in
+// stoneBlocksTile. Either way the field automatically routes the horde around
+// what the player built.
 function gridFor(zone) {
   return {
     cols: zone.cols,
     rows: zone.rows,
-    isBlocked: (x, y) => !isWalkable(zone, x, y) || tdObstacleAt(zone, x, y),
+    isBlocked: (x, y) => !isWalkable(zone, x, y) || stoneBlocksTile(zone, x, y),
   };
 }
 
@@ -63,13 +64,6 @@ export function getGoal() { return goal; }
 export function getSpawns() { return spawns; }
 export function getHeroSpawns() { return heroSpawns; }
 export function getField() { return field; }
-
-// True if every spawn tile can still reach the goal in the current field —
-// the anti-wall-off invariant. tdBuild calls recomputeField then this
-// against a trial placement and rejects any that seals a spawn off.
-export function spawnsReachGoal() {
-  return allReachable(field, spawns);
-}
 
 export function isTdBoardZone(zoneId) {
   return zoneId === TD_ZONE_ID;

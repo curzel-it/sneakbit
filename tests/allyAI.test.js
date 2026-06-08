@@ -10,16 +10,21 @@ import {
   selectTarget, marchTarget, resetAllyAI, pathStepToward,
   alignStep, laneDirToward, seekVisibleArea,
 } from "../js/allyAI.js";
-import { BARREL_SPECIES } from "../js/tdObstacles.js";
+import { STONE_SPECIES } from "../js/tdStones.js";
+import { loadSpeciesData } from "../js/species.js";
+
+// stoneBlocksTile (via allyAI's navGrid) looks the stone up by species, so the
+// pushable boulder species must be registered.
+loadSpeciesData([{ id: STONE_SPECIES, entity_type: "PushableObject", sprite_sheet_id: 1010 }]);
 
 const enemy = (id, x, y, extra = {}) => ({ id, frame: { x, y, w: 1, h: 1 }, ...extra });
 const hero = (tileX, tileY, index = 1) => ({ tileX, tileY, index });
 
-function tdZone(cols, rows, { walls = [], barrels = [] } = {}) {
+function tdZone(cols, rows, { walls = [], stones = [] } = {}) {
   const collision = Array.from({ length: rows }, () => Array.from({ length: cols }, () => false));
   for (const [x, y] of walls) collision[y][x] = true;
-  const entities = barrels.map(([x, y], i) => ({
-    id: -100 - i, species_id: BARREL_SPECIES.wood, frame: { x, y: y - 1, w: 1, h: 2 },
+  const entities = stones.map(([x, y], i) => ({
+    id: -100 - i, species_id: STONE_SPECIES, frame: { x, y, w: 1, h: 1 },
   }));
   return { cols, rows, collision, entities };
 }
@@ -127,14 +132,14 @@ test("seekVisibleArea steps toward the camera centre, and holds once centred", (
   assert.deepEqual([...centred.held], []);
 });
 
-// — pathStepToward: route around the barrel maze ————————————————————————————
+// — pathStepToward: route around the stone maze —————————————————————————————
 
 test("pathStepToward steps straight at a target with a clear lane", () => {
   assert.equal(pathStepToward(tdZone(5, 5), 0, 2, { x: 4, y: 2 }), "right");
 });
 
-test("pathStepToward routes around a barrel blocking the direct lane", () => {
-  const zone = tdZone(3, 3, { walls: [[1, 0]], barrels: [[1, 1]] });
+test("pathStepToward routes around a stone blocking the direct lane", () => {
+  const zone = tdZone(3, 3, { walls: [[1, 0]], stones: [[1, 1]] });
   assert.equal(pathStepToward(tdZone(3, 3), 0, 1, { x: 2, y: 1 }), "right");
   assert.equal(pathStepToward(zone, 0, 1, { x: 2, y: 1 }), "down");
 });

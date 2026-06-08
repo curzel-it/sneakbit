@@ -94,10 +94,9 @@ export function isReachable(field, x, y) {
   return Number.isFinite(fieldDistance(field, x, y));
 }
 
-// Anti-wall-off check: true only if EVERY tile in `tiles` (the spawn tiles)
-// can still reach the goal in this field. tdBuild calls this against a
-// trial field before committing a placement and rejects any that seals a
-// spawn off.
+// Reachability check: true only if EVERY tile in `tiles` (e.g. the spawn
+// tiles) can still reach the goal in this field — i.e. the goal isn't sealed
+// off from any of them.
 export function allReachable(field, tiles) {
   if (!Array.isArray(tiles) || tiles.length === 0) return true;
   for (const t of tiles) {

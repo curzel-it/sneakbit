@@ -279,9 +279,9 @@ async function main() {
     },
   });
   setGamepadAction("shoot", () => {
-    // In Tower Defense the Shoot/throw button is the build "back/done" verb
-    // (close shop, exit placement) and, in a wave, the active hero's shot —
-    // synthesise the key so towerDefense.onKey routes both to the right place.
+    // In Tower Defense the Shoot button fires the active hero during a wave;
+    // build-phase presses are inert (onKey ignores them). Synthesise the key so
+    // towerDefense.onKey routes it through possession.
     if (isTowerDefenseMode()) {
       window.dispatchEvent(new KeyboardEvent("keydown", { code: codesFor("shoot")[0] || "KeyF" }));
       return;
@@ -289,10 +289,9 @@ async function main() {
     tryShoot();
   });
   setGamepadAction("melee", () => {
-    // In the Tower Defense build phase Melee removes the barrel in front of
-    // the active hero — synthesise the key so towerDefense.onKey routes it to
-    // the active hero (and, in a wave, swings the active hero). melee.js's own
-    // listener no-ops in TD, so there's no double swing.
+    // In Tower Defense Melee swings the active hero during a wave (build-phase
+    // presses are inert). Synthesise the key so towerDefense.onKey routes it to
+    // the active hero. melee.js's own listener no-ops in TD, so no double swing.
     if (isTowerDefenseMode()) {
       window.dispatchEvent(new KeyboardEvent("keydown", { code: codesFor("melee")[0] || "KeyG" }));
       return;

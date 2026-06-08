@@ -5,10 +5,10 @@
 //   • a compact top STATUS BAR (#td-hud) — wave / phase / lives / gold / score.
 //     Top-centre, clear of the top-right pause button.
 //   • a bottom BUILD DOCK (#td-dock) — the prominent wave countdown + progress
-//     bar + "Start wave" call-early button, the barrel palette, and the
-//     recruit / switch / revive actions. Bottom-centre, between the touch
-//     controls' bottom corners. It never overlaps the hero, so there's nothing
-//     to "look behind": you build and move at the same time.
+//     bar + "Start wave" call-early button, and the recruit / switch / revive
+//     actions. Bottom-centre, between the touch controls' bottom corners. It
+//     never overlaps the hero, so there's nothing to "look behind": you shove
+//     stones and move at the same time.
 //
 // Both follow the Kingdom Rush / Bloons convention — UI lives at the screen
 // edges, not in a modal over the field. The dock's content swaps by phase: a
@@ -22,7 +22,6 @@
 
 import { el } from "./dom.js";
 import { onGoldChange, getGold } from "./arcadeCurrency.js";
-import { getSprite } from "./assets.js";
 import { setTdActionMode } from "./touch.js";
 
 let api = {};
@@ -36,12 +35,6 @@ let waveEl, phaseEl, goldEl, livesEl, scoreEl;
 let dockLabelEl, dockValEl, progFillEl, startBtn, recruitBtn, switchBtn, hintEl;
 let reviveWrap;
 let reviveSig = "";   // signature of the rendered revive set (see renderRevives)
-// Dock build-control refs: a single Shop button (browse) or the placing bar.
-let shopBtn, placingWrap, placingLabelEl, swapBtn, doneBtn;
-// Shop dialog refs (the modal opened from the Shop button).
-let shopDialog = null, paletteWrap, shopGoldEl, startPlacingBtn;
-// Build-shop cards, keyed by item id (built once, patched each frame).
-const paletteCards = new Map();
 // Game-over refs.
 let gameOver = null, goTitleEl, goWaveEl, goScoreEl, goBestEl, goNewBest = null;
 
@@ -54,11 +47,9 @@ export function installTdHud(handlers = {}) {
   injectStyles();
   buildStatusBar();
   buildDock();
-  buildShopDialog();
   buildGameOver();
   document.body.appendChild(root);
   document.body.appendChild(dock);
-  document.body.appendChild(shopDialog);
   document.body.appendChild(gameOver);
   onGoldChange((g) => { if (goldEl) goldEl.textContent = String(g); });
 }
@@ -71,15 +62,13 @@ export function showTdHud() {
 export function hideTdHud() {
   if (root) root.style.display = "none";
   if (dock) dock.style.display = "none";
-  if (shopDialog) shopDialog.style.display = "none";
   if (gameOver) gameOver.style.display = "none";
   setTdActionMode(null); // hand the touch cluster back to the normal game
 }
 
 // model: { wave, phase, score, highScore, lives, maxLives, countdown,
 //          countdownMax, earlyBonus, alive, total, activeHeroName, canSwitch,
-//          recruit:{cost,can,label}, revives:[{index,name,cost}], buildHint,
-//          palette }
+//          recruit:{cost,can,label}, revives:[{index,name,cost}], buildHint }
 export function updateTdHud(model) {
   if (!root) return;
   const build = model.phase === "Build";
@@ -116,62 +105,33 @@ export function updateTdHud(model) {
     startBtn.style.display = "none";
   }
 
-  // — Build controls: Shop button (browse) or the placing bar (place) ———————
-  const mode = model.buildMode || "browse";
-  shopBtn.style.display = (build && mode === "browse") ? "" : "none";
-  placingWrap.style.display = (build && mode === "place") ? "" : "none";
-  if (build && mode === "place") {
-    const sel = model.selected || {};
-    placingLabelEl.textContent = `Placing ${sel.label || "—"} (${sel.cost | 0}g)`;
-  }
-
-  // — Shop dialog (only while the shop sub-mode is open) ————————————————————
-  const shopping = build && mode === "shop";
-  shopDialog.style.display = shopping ? "flex" : "none";
-  if (shopping) {
-    renderPalette(model.palette || []);
-    shopGoldEl.textContent = `Gold: ${getGold()}`;
-  }
-
-  const placing = build && mode === "place";
   hintEl.textContent = build
-    ? (onTouch() ? touchHint(mode) : (model.buildHint || "Open the Shop to place barrels"))
+    ? (onTouch() ? "Walk into a stone to push it" : (model.buildHint || "Push the stones to shape the path"))
     : "Defend the village!";
 
   // — Actions —————————————————————————————————————————————————————————————
-  // While placing, the player is focused on the marker — hide the recruit /
-  // switch / revive buttons so the dock stays a slim build bar (they return
-  // the moment placement ends). Mobile especially has no room for all of it.
-  recruitBtn.style.display = (build && !placing) ? "" : "none";
+  recruitBtn.style.display = build ? "" : "none";
   if (build) {
     const r = model.recruit || {};
     recruitBtn.textContent = r.label || `Recruit hero (${r.cost}g)`;
     recruitBtn.disabled = !r.can;
     recruitBtn.classList.toggle("td-disabled", !r.can);
   }
-  switchBtn.style.display = (model.canSwitch && !placing) ? "" : "none";
+  switchBtn.style.display = model.canSwitch ? "" : "none";
 
-  // Revives can be bought in any phase (mid-wave at a premium), but not while
-  // the dock is in slim placement mode.
-  reviveWrap.style.display = (model.revives?.length && !placing) ? "" : "none";
+  // Revives can be bought in any phase (mid-wave at a premium).
+  reviveWrap.style.display = model.revives?.length ? "" : "none";
   renderRevives(model.revives || []);
 
-  // Hand the touch action cluster the current TD verb so its three buttons
-  // relabel to Shop / Place / Remove / Done instead of attack icons.
-  setTdActionMode(build ? mode : (wave ? "wave" : null));
+  // Hand the touch action cluster the current TD verb. During build there's
+  // nothing to tap — movement shoves stones — so the action buttons hide.
+  setTdActionMode(build ? "build" : (wave ? "wave" : null));
 }
 
 // Are we driving with touch? The body class is toggled by touch.js when the
-// on-screen controls show. Used to swap the dock's keyboard-centric hints for
-// short ones that point at the on-screen buttons.
+// on-screen controls show.
 function onTouch() {
   return typeof document !== "undefined" && document.body.classList.contains("touch-mode");
-}
-
-function touchHint(mode) {
-  if (mode === "shop") return "Pick a barrel, then Start placing";
-  if (mode === "place") return "Move the marker, then Place · Remove · Done";
-  return "Tap Shop to build barrels";
 }
 
 function setProgress(fill, frac, kind) {
@@ -188,60 +148,6 @@ export function showTdGameOver(result) {
   goBestEl.textContent = `Best: ${result.highScore | 0}`;
   goNewBest.style.display = result.isNewBest ? "" : "none";
   gameOver.style.display = "flex";
-}
-
-// Build the shop cards once (the catalog is static), then patch their selected
-// / affordable state each frame. Each compact card shows the item's pixel-art
-// sprite and its cost; the full name rides in the tooltip. Clicking one tells
-// the controller to switch the active build item.
-function renderPalette(items) {
-  if (paletteCards.size !== items.length) {
-    paletteWrap.replaceChildren();
-    paletteCards.clear();
-    for (const it of items) {
-      const icon = el("canvas", { class: "td-shop-icon", width: 30, height: 30 });
-      const cost = el("span", { class: "td-shop-cost" }, [
-        el("span", { class: "td-coin", text: "●" }), ` ${it.cost}`,
-      ]);
-      const card = el("button", {
-        class: "td-shop-item",
-        title: it.label,
-        on: { click: () => api.onSelectItem?.(it.id) },
-      }, [icon, cost]);
-      paletteWrap.appendChild(card);
-      paletteCards.set(it.id, { card, icon, drawn: false });
-    }
-  }
-  for (const it of items) {
-    const entry = paletteCards.get(it.id);
-    if (!entry) continue;
-    if (!entry.drawn) entry.drawn = drawShopIcon(entry.icon, it.icon);
-    entry.card.classList.toggle("td-selected", !!it.selected);
-    const blocked = !it.can && !it.selected;
-    entry.card.classList.toggle("td-disabled", blocked);
-    entry.card.disabled = blocked;
-  }
-}
-
-// Blit an item's sprite into its shop-icon canvas, scaled to fit while keeping
-// the pixel-art aspect ratio (barrels are 1×2). Returns true once drawn —
-// sprite sheets load async, so a miss just retries next frame.
-function drawShopIcon(canvas, icon) {
-  if (!canvas || !icon) return false;
-  let sheet;
-  try { sheet = getSprite(icon.sheet); } catch { return false; }
-  if (!sheet) return false;
-  const ctx = canvas.getContext("2d");
-  ctx.imageSmoothingEnabled = false;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const pad = 1;
-  const scale = Math.min((canvas.width - pad * 2) / icon.sw, (canvas.height - pad * 2) / icon.sh);
-  const dw = Math.round(icon.sw * scale);
-  const dh = Math.round(icon.sh * scale);
-  const dx = Math.round((canvas.width - dw) / 2);
-  const dy = Math.round((canvas.height - dh) / 2);
-  ctx.drawImage(sheet, icon.sx, icon.sy, icon.sw, icon.sh, dx, dy, dw, dh);
-  return true;
 }
 
 // Rebuilding these buttons every frame (the dock model is pushed each tick)
@@ -283,7 +189,7 @@ function buildStatusBar() {
   ]);
 }
 
-// — Bottom build dock — countdown + shop + actions, edge-docked ——————————————
+// — Bottom build dock — countdown + actions, edge-docked ————————————————————
 function buildDock() {
   dockLabelEl = el("span", { class: "td-dock-label", text: "Next wave" });
   dockValEl = el("span", { class: "td-dock-val", text: "—" });
@@ -301,61 +207,17 @@ function buildDock() {
     startBtn,
   ]);
 
-  // Build controls: a single Shop button (browse) that opens the dialog, and a
-  // placing bar (place) with the live item label + Swap (reopen shop) + Done.
-  shopBtn = el("button", {
-    class: "td-btn td-primary td-shop-open",
-    text: "🛢 Shop",
-    on: { click: () => api.onOpenShop?.() },
-  });
-  placingLabelEl = el("span", { class: "td-placing-label", text: "Placing —" });
-  swapBtn = el("button", { class: "td-btn", text: "🛢 Swap", on: { click: () => api.onOpenShop?.() } });
-  doneBtn = el("button", { class: "td-btn td-primary", text: "✓ Done", on: { click: () => api.onExitPlacing?.() } });
-  placingWrap = el("div", { class: "td-placing", style: { display: "none" } }, [
-    placingLabelEl, swapBtn, doneBtn,
-  ]);
-
   recruitBtn = el("button", { class: "td-btn", text: "Recruit hero", on: { click: () => api.onRecruit?.() } });
   switchBtn = el("button", { class: "td-btn td-switch", text: "Switch hero", on: { click: () => api.onSwitch?.() } });
   reviveWrap = el("div", { class: "td-revives" });
 
   const mainRow = el("div", { class: "td-dock-main" }, [
-    el("div", { class: "td-build-controls" }, [shopBtn, placingWrap]),
     el("div", { class: "td-dock-actions" }, [recruitBtn, switchBtn, reviveWrap]),
   ]);
 
   hintEl = el("span", { class: "td-dock-hint" });
 
   dock = el("div", { id: "td-dock", style: { display: "none" } }, [timerRow, mainRow, hintEl]);
-}
-
-// The shop dialog: a modal opened from the Shop button. Lists the barrel
-// catalog as selectable cards; "Start placing" commits the choice and goes
-// into placement mode, "Close" backs out. The build timer keeps running
-// behind it (shopping isn't free time).
-function buildShopDialog() {
-  paletteWrap = el("div", { class: "td-shop-items" });
-  shopGoldEl = el("span", { class: "td-shop-gold", text: "Gold: 0" });
-  startPlacingBtn = el("button", {
-    class: "td-btn td-primary",
-    text: "Start placing ▶",
-    on: { click: () => api.onStartPlacing?.() },
-  });
-  const closeBtn = el("button", { class: "td-btn", text: "Close", on: { click: () => api.onCloseShop?.() } });
-
-  shopDialog = el("div", { id: "td-shop-dialog", style: { display: "none" } }, [
-    el("div", { class: "td-shop-card" }, [
-      el("div", { class: "td-shop-head" }, [
-        el("h2", { text: "Build Shop" }),
-        shopGoldEl,
-      ]),
-      el("p", { class: "td-shop-blurb", text: "Barrels block the horde — pick one, then place it to reshape their path." }),
-      paletteWrap,
-      el("div", { class: "td-row td-actions" }, [startPlacingBtn, closeBtn]),
-    ]),
-  ]);
-  // Click the dimmed backdrop (outside the card) to close.
-  shopDialog.addEventListener("click", (e) => { if (e.target === shopDialog) api.onCloseShop?.(); });
 }
 
 function buildGameOver() {
@@ -434,30 +296,6 @@ function injectStyles() {
     #td-dock .td-start { white-space: nowrap; flex: 0 0 auto; }
 
     #td-dock .td-dock-main { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    #td-dock .td-build-controls { display: flex; align-items: center; gap: 8px; }
-    #td-dock .td-placing { display: flex; align-items: center; gap: 8px; }
-    #td-dock .td-placing-label { font-weight: bold; color: #ffd966; white-space: nowrap; }
-
-    /* Shop catalog cards — shared by the dialog (and any future host). */
-    .td-shop-items { display: flex; flex-direction: row; gap: 6px; flex-wrap: wrap; }
-    .td-shop-item {
-      display: flex; flex-direction: column; align-items: center; gap: 2px;
-      padding: 5px 7px;
-      background: #24242c; color: #eee; border: 1px solid #3a3a46;
-      border-radius: var(--sb-surface-radius); cursor: pointer; font-family: inherit;
-    }
-    .td-shop-item:hover:not(:disabled) { background: #30303c; border-color: #4a4a58; }
-    .td-shop-item.td-selected {
-      background: #34343f; border-color: #ffd966; box-shadow: inset 0 0 0 1px #ffd966;
-    }
-    .td-shop-item.td-disabled { opacity: 0.4; cursor: not-allowed; }
-    .td-shop-icon {
-      width: 30px; height: 30px; flex: 0 0 auto;
-      image-rendering: pixelated; background: #16161c; border-radius: var(--sb-surface-radius);
-    }
-    .td-shop-cost { font-size: 11px; font-weight: bold; color: #ffd966; white-space: nowrap; }
-    .td-shop-cost .td-coin { color: #ffcf33; font-size: 9px; }
-
     #td-dock .td-dock-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-left: auto; }
     #td-dock .td-revives { display: flex; gap: 6px; flex-wrap: wrap; }
     #td-dock .td-dock-hint { font-size: 11px; color: #8a8a96; text-align: center; }
@@ -473,42 +311,9 @@ function injectStyles() {
     #td-dock .td-revive { background: #4a2a2a; border-color: #6b3f3f; }
     #td-dock .td-btn:disabled, #td-dock .td-btn.td-disabled { opacity: 0.45; cursor: not-allowed; }
 
-    /* — Shop dialog: modal opened from the Shop button — */
-    #td-shop-dialog {
-      position: fixed; inset: 0; z-index: 20;
-      display: none; align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.55); backdrop-filter: blur(2px);
-      color: #eee; font-family: var(--sb-font, monospace);
-    }
-    #td-shop-dialog .td-shop-card {
-      background: var(--sb-card-bg, #16161e); border: var(--sb-card-border, 1px solid #3a3a4a);
-      border-radius: var(--sb-card-radius, 8px); padding: 20px 22px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5); min-width: 280px; max-width: min(92vw, 460px);
-    }
-    #td-shop-dialog .td-shop-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-    #td-shop-dialog h2 { margin: 0; font-size: 17px; letter-spacing: 1px; }
-    #td-shop-dialog .td-shop-gold { color: #ffd966; font-weight: bold; }
-    #td-shop-dialog .td-shop-blurb { margin: 8px 0 12px; font-size: 12px; color: #9a9aa6; }
-    #td-shop-dialog .td-shop-items { justify-content: center; margin-bottom: 14px; }
-    #td-shop-dialog .td-shop-icon { width: 38px; height: 38px; }
-    #td-shop-dialog .td-row { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
-    #td-shop-dialog .td-btn {
-      background: #2a2a32; color: #eee; border: 1px solid #44444f;
-      padding: 9px 16px; border-radius: var(--sb-surface-radius); cursor: pointer; font-family: inherit; font-size: 13px;
-    }
-    #td-shop-dialog .td-btn:hover:not(:disabled) { background: #353541; }
-    #td-shop-dialog .td-primary { background: #2a4a32; border-color: #3f6b4a; font-weight: bold; }
-    #td-shop-dialog .td-primary:hover:not(:disabled) { background: #335a3d; }
-    @media (pointer: coarse) {
-      #td-shop-dialog .td-btn { min-height: 44px; }
-      #td-shop-dialog .td-shop-item { min-height: 56px; }
-    }
-
     /* Touch: a slim build dock just under the top status bar. It can't go to
        the bottom (the d-pad + action clusters live in the bottom corners), so
-       keep it short and out of the playfield — the camera-centred hero and the
-       build ghost stay visible while you move and place. Tighter type / padding
-       than desktop; tap targets still finger-sized. */
+       keep it short and out of the playfield. */
     @media (pointer: coarse) {
       #td-dock {
         bottom: auto; top: 104px; transform: translateX(-50%);
@@ -520,9 +325,7 @@ function injectStyles() {
       #td-dock .td-dock-main { gap: 6px; }
       #td-dock .td-dock-actions { gap: 6px; }
       #td-dock .td-btn, #td-dock .td-start { min-height: 42px; padding: 7px 10px; }
-      #td-dock .td-placing-label { font-size: 12px; }
       #td-dock .td-dock-hint { font-size: 10px; }
-      #td-dock .td-shop-item { min-height: 48px; }
     }
 
     /* Narrow screens share the top edge with the HP bar (left) and the touch
@@ -563,9 +366,7 @@ function injectStyles() {
 export function _resetTdHudForTesting() {
   if (root?.parentNode) root.parentNode.removeChild(root);
   if (dock?.parentNode) dock.parentNode.removeChild(dock);
-  if (shopDialog?.parentNode) shopDialog.parentNode.removeChild(shopDialog);
   if (gameOver?.parentNode) gameOver.parentNode.removeChild(gameOver);
-  paletteCards.clear();
   reviveSig = "";
-  root = null; dock = null; shopDialog = null; gameOver = null; installed = false; api = {};
+  root = null; dock = null; gameOver = null; installed = false; api = {};
 }
