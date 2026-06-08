@@ -115,11 +115,17 @@ function buildExclusionMask(zone, raw) {
   return mask;
 }
 
+// Entity frames can sit at sub-tile positions (decorations are placed with
+// fractional x/y), so floor the origin and ceil the extent to mark every
+// integer tile the footprint touches — indexing the mask with a fractional
+// row would otherwise throw.
 function markRect(mask, zone, x, y, w, h) {
-  for (let ty = y; ty < y + h; ty++) {
-    if (ty < 0 || ty >= zone.rows) continue;
-    for (let tx = x; tx < x + w; tx++) {
-      if (tx < 0 || tx >= zone.cols) continue;
+  const x0 = Math.max(0, Math.floor(x));
+  const y0 = Math.max(0, Math.floor(y));
+  const x1 = Math.min(zone.cols, Math.ceil(x + w));
+  const y1 = Math.min(zone.rows, Math.ceil(y + h));
+  for (let ty = y0; ty < y1; ty++) {
+    for (let tx = x0; tx < x1; tx++) {
       mask[ty][tx] = true;
     }
   }

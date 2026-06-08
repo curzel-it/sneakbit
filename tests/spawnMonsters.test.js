@@ -90,6 +90,24 @@ test("species split honours chokeberry_chance", () => {
   assert.ok(all4003.every((e) => e.species_id === SPECIES_CHOKEBERRY));
 });
 
+test("tolerates authored entities at sub-tile (fractional) positions", () => {
+  const z = openZone(1002, 30, 30);
+  const raw = {
+    monster_spawn: { density: 0.2 },
+    // Decorations are placed with fractional x/y; the exclusion mask must
+    // floor/ceil rather than index the grid with a fractional row (which threw).
+    entities: [{ species_id: 1030, frame: { x: 10.15, y: 12.30875, w: 1, h: 1 } }],
+  };
+  let g;
+  assert.doesNotThrow(() => { g = generateMonsters(z, raw); });
+  assert.ok(g.length > 0);
+  // The integer tiles the fractional footprint overlaps stay clear.
+  for (const m of g) {
+    const onDecor = m.frame.x >= 10 && m.frame.x <= 11 && m.frame.y >= 12 && m.frame.y <= 13;
+    assert.ok(!onDecor, `monster on fractional footprint at ${m.frame.x},${m.frame.y}`);
+  }
+});
+
 test("opt-out: no monster_spawn field generates nothing", () => {
   const z = openZone(1002, 40, 40);
   assert.deepEqual(generateMonsters(z, {}), []);
