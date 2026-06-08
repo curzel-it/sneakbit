@@ -21,6 +21,7 @@ const inventory = await import("../js/inventory.js");
 const wallet = await import("../js/wallet.js");
 const equipment = await import("../js/equipment.js");
 const storage = await import("../js/storage.js");
+const skins = await import("../js/skins.js");
 
 const SWORD = { item: 1164, price: 99 };
 const AR15  = { item: 1162, price: 450 };
@@ -138,4 +139,54 @@ test("spending never drives the wallet negative", () => {
   reset(10);
   shop.buy(KUNAI, 1); // spend 10, exactly to zero
   assert.equal(wallet.getCoins(), 0);
+});
+
+// ---- Skin goods --------------------------------------------------------
+
+const SKIN = { skin: "ninja_black", price: 400 };
+
+test("skin entries are one-of-a-kind: never stackable", () => {
+  reset();
+  assert.equal(shop.isSkinEntry(SKIN), true);
+  assert.equal(shop.isStackable(SKIN), false);
+  // qty is pinned to at most one
+  reset(1000);
+  assert.equal(shop.clampQty(SKIN, 5), 1);
+});
+
+test("buying a skin marks it owned, debits coins, and never auto-equips", () => {
+  reset(500);
+  assert.equal(shop.isEntryOwned(SKIN), false);
+  const res = shop.buy(SKIN, 1);
+  assert.equal(res.ok, true);
+  assert.equal(res.spent, 400);
+  assert.equal(skins.isOwned("ninja_black"), true);
+  assert.equal(shop.isEntryOwned(SKIN), true);
+  // Bought but NOT worn — equipping is the wardrobe's job.
+  assert.equal(skins.getSelected(), "default");
+  assert.equal(wallet.getCoins(), 100);
+});
+
+test("an owned skin cannot be re-bought (and isn't charged)", () => {
+  reset(1000);
+  shop.buy(SKIN, 1);
+  const after = wallet.getCoins();
+  const res = shop.buy(SKIN, 1);
+  assert.equal(res.ok, false);
+  assert.equal(res.reason, "owned");
+  assert.equal(wallet.getCoins(), after);
+});
+
+test("an unknown skin id is an invalid good", () => {
+  reset(1000);
+  assert.equal(shop.canBuy({ skin: "not_real", price: 1 }, 1).reason, "invalid");
+});
+
+test("a skin you can't afford is rejected without spending", () => {
+  reset(50);
+  const res = shop.buy(SKIN, 1); // 400 > 50
+  assert.equal(res.ok, false);
+  assert.equal(res.reason, "poor");
+  assert.equal(wallet.getCoins(), 50);
+  assert.equal(skins.isOwned("ninja_black"), false);
 });

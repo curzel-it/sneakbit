@@ -61,6 +61,13 @@ const DEFAULT_SHOP_STOCK = [
   { item: 1172, price: 150 },
   { item: 1162, price: 450 },
   { item: 1168, price: 999 },
+  // Cosmetic skins (skins.js) — one-of-a-kind, equipped from the wardrobe.
+  // Tiered by rarity: colored outfits common, tracksuit/ninja premium.
+  { skin: "outfit_red", price: 150 },
+  { skin: "outfit_yellow", price: 150 },
+  { skin: "outfit_blue", price: 150 },
+  { skin: "tracksuit_black", price: 400 },
+  { skin: "ninja_black", price: 400 },
 ];
 
 // Editor-allocated zone ids must stay within int32 because js/storage.js

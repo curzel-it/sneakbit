@@ -17,8 +17,9 @@ import { el, showOnly } from "./dom.js";
 import { playSfx } from "./audio.js";
 import { showToast } from "./toast.js";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
+import { getSkin } from "./skins.js";
 import {
-  isStackable, isOwned, clampQty, maxAffordable, canBuy, buy,
+  isStackable, isEntryOwned, isSkinEntry, clampQty, maxAffordable, canBuy, buy,
 } from "./shopPurchase.js";
 
 let root = null;
@@ -89,7 +90,9 @@ export function installShop() {
 // array ({ item, price, stackable? }); playerIdx is the buyer.
 export function openShop(stockList, playerIdx = 0) {
   if (!root) installShop();
-  stock = Array.isArray(stockList) ? stockList.filter((e) => e && getSpecies(e.item)) : [];
+  stock = Array.isArray(stockList)
+    ? stockList.filter((e) => e && (isSkinEntry(e) ? getSkin(e.skin) : getSpecies(e.item)))
+    : [];
   playerIndex = playerIdx | 0;
   open = true;
   // Refresh labels built at install time, in case strings hydrated after boot.
@@ -134,17 +137,10 @@ function renderList() {
 }
 
 function rowFor(entry, i) {
-  const sp = getSpecies(entry.item);
-  const owned = isOwned(entry.item, playerIndex);
+  const owned = isEntryOwned(entry, playerIndex);
   const affordable = maxAffordable(entry.price, playerIndex) > 0;
 
-  const icon = el("canvas", {
-    class: "shop-row-icon",
-    width: TILE_SIZE,
-    height: TILE_SIZE,
-    style: { width: "32px", height: "32px", imageRendering: "pixelated" },
-  });
-  paintIcon(icon, entry.item);
+  const icon = makeIcon(entry, "shop-row-icon", 32);
 
   const tag = owned
     ? el("span", { class: "shop-row-tag is-owned", text: tr("shop.owned") })
@@ -161,14 +157,14 @@ function rowFor(entry, i) {
     },
   }, [
     icon,
-    el("span", { class: "shop-row-name", text: nameOf(sp) }),
+    el("span", { class: "shop-row-name", text: entryName(entry) }),
     tag,
   ]);
   return row;
 }
 
 function setDesc(entry) {
-  descEl.textContent = descOf(getSpecies(entry.item));
+  descEl.textContent = entryDesc(entry);
 }
 
 // ---- Detail / quantity ---------------------------------------------------
@@ -183,21 +179,14 @@ function openDetail(entry) {
 
 function renderDetail() {
   const entry = detailEntry;
-  const sp = getSpecies(entry.item);
   detailScreen.replaceChildren();
 
-  const icon = el("canvas", {
-    class: "shop-detail-icon",
-    width: TILE_SIZE,
-    height: TILE_SIZE,
-    style: { width: "48px", height: "48px", imageRendering: "pixelated" },
-  });
-  paintIcon(icon, entry.item);
+  const icon = makeIcon(entry, "shop-detail-icon", 48);
 
   const children = [
     icon,
-    el("div", { class: "shop-detail-name", text: nameOf(sp) }),
-    el("div", { class: "shop-detail-desc", text: descOf(sp) }),
+    el("div", { class: "shop-detail-name", text: entryName(entry) }),
+    el("div", { class: "shop-detail-desc", text: entryDesc(entry) }),
   ];
 
   const stackable = isStackable(entry);
@@ -249,8 +238,9 @@ function confirmBuy() {
   const res = buy(detailEntry, qty, playerIndex);
   if (!res.ok) { renderDetail(); return; }
   playSfx("ammoCollected");
-  const name = nameOf(getSpecies(detailEntry.item));
-  showToast(tr("shop.bought").replace("%s", name), "hint", { image: toastIcon(detailEntry.item) });
+  const name = entryName(detailEntry);
+  const image = isSkinEntry(detailEntry) ? null : toastIcon(detailEntry.item);
+  showToast(tr("shop.bought").replace("%s", name), "hint", { image });
   refreshCoins();
   showStorefront();
   focusFirstIn(listScreen);
@@ -274,6 +264,60 @@ function onKeydownCapture(e) {
 }
 
 // ---- Shared helpers ------------------------------------------------------
+
+// A stock entry's display name / description, whether it's a skin (string
+// `skin` id → skins catalog keys) or a species good (numeric `item`).
+function entryName(entry) {
+  if (isSkinEntry(entry)) return tr(getSkin(entry.skin)?.nameKey);
+  return nameOf(getSpecies(entry.item));
+}
+
+function entryDesc(entry) {
+  if (isSkinEntry(entry)) {
+    const key = `skins.desc.${entry.skin}`;
+    const text = tr(key);
+    return text === key ? "" : text;
+  }
+  return descOf(getSpecies(entry.item));
+}
+
+// Build the icon node for a stock entry. Skins blit a hero preview from the
+// `heroes` sheet (1×2 tiles, so the canvas is twice as tall as wide); species
+// goods use the square inventory icon.
+function makeIcon(entry, className, sizePx) {
+  if (isSkinEntry(entry)) {
+    const canvas = el("canvas", {
+      class: className,
+      width: TILE_SIZE,
+      height: TILE_SIZE * 2,
+      style: { width: `${sizePx / 2}px`, height: `${sizePx}px`, imageRendering: "pixelated" },
+    });
+    paintHero(canvas, getSkin(entry.skin)?.column);
+    return canvas;
+  }
+  const canvas = el("canvas", {
+    class: className,
+    width: TILE_SIZE,
+    height: TILE_SIZE,
+    style: { width: `${sizePx}px`, height: `${sizePx}px`, imageRendering: "pixelated" },
+  });
+  paintIcon(canvas, entry.item);
+  return canvas;
+}
+
+// Blit a hero's down-facing still frame from the `heroes` sheet at the given
+// column. Row math mirrors player.js getPlayerSpriteFrame (down/still = row 5,
+// each frame 2 tiles tall, sheet origin y=1) → source y = (1 + 5*2) = 11.
+function paintHero(canvas, column) {
+  if (column == null) return;
+  let sheet;
+  try { sheet = getSprite("heroes"); } catch { return; }
+  if (!sheet || !sheet.complete) return;
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(sheet, column * TILE_SIZE, 11 * TILE_SIZE, TILE_SIZE, TILE_SIZE * 2, 0, 0, TILE_SIZE, TILE_SIZE * 2);
+}
 
 function nameOf(sp) {
   return tr(sp?.name) || sp?.name || "";

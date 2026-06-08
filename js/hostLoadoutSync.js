@@ -30,6 +30,13 @@ import {
   clearSessionLoadouts,
   listSessionLoadouts,
 } from "./sessionLoadouts.js";
+import {
+  setSessionSkin,
+  skinFor,
+  deleteSessionSkin,
+  clearSessionSkins,
+} from "./sessionSkins.js";
+import { getSelected, onSkinChange } from "./skins.js";
 
 let unsubs = [];
 let installed = false;
@@ -62,7 +69,20 @@ export function installHostLoadoutSync(opts = {}) {
       playerId: selfId,
       melee: next.melee,
       ranged: next.ranged,
+      skin: skinFor(selfId) ?? getSelected(0),
     });
+  }));
+
+  // Host's own wardrobe change → push the skin on a loadout frame (gear
+  // unchanged), so every guest re-renders the host's avatar.
+  unsubs.push(onSkinChange((idx) => {
+    if (idx !== 0) return;
+    const selfId = getSelfPlayerId();
+    if (!selfId) return;
+    const skin = getSelected(0);
+    setSessionSkin(selfId, skin);
+    const lo = getSessionLoadout(selfId) || { melee: null, ranged: null };
+    broadcastHostEvent("loadout", { playerId: selfId, melee: lo.melee, ranged: lo.ranged, skin });
   }));
 
   unsubs.push(net.on("peer.joined", broadcastAll));
@@ -77,6 +97,7 @@ export function uninstallHostLoadoutSync() {
   unsubs = [];
   installed = false;
   clearSessionLoadouts();
+  clearSessionSkins();
 }
 
 export const _uninstallHostLoadoutSyncForTesting = uninstallHostLoadoutSync;
@@ -87,6 +108,7 @@ function seedSelfFromLocal() {
   const melee = getEquipped(SLOT_MELEE, 0) ?? null;
   const ranged = getEquipped(SLOT_RANGED, 0) ?? null;
   setSessionLoadout(selfId, melee, ranged);
+  setSessionSkin(selfId, getSelected(0));
 }
 
 function onGuestLoadout(m) {
@@ -94,13 +116,16 @@ function onGuestLoadout(m) {
   const playerId = m.from;
   const melee = m.melee == null ? null : m.melee;
   const ranged = m.ranged == null ? null : m.ranged;
+  const skin = m.skin == null ? null : m.skin;
   setSessionLoadout(playerId, melee, ranged);
-  broadcastHostEvent("loadout", { playerId, melee, ranged });
+  setSessionSkin(playerId, skin);
+  broadcastHostEvent("loadout", { playerId, melee, ranged, skin });
 }
 
 function onPeerLeft(m) {
   if (!m || !m.playerId) return;
   deleteSessionLoadout(m.playerId);
+  deleteSessionSkin(m.playerId);
 }
 
 function broadcastAll() {
@@ -113,6 +138,7 @@ function broadcastAll() {
       playerId: e.playerId,
       melee: e.melee,
       ranged: e.ranged,
+      skin: skinFor(e.playerId),
     });
   }
 }

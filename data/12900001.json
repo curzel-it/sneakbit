@@ -199,7 +199,12 @@
         { "item": 1164, "price": 99 },
         { "item": 1172, "price": 150 },
         { "item": 1162, "price": 450 },
-        { "item": 1168, "price": 999 }
+        { "item": 1168, "price": 999 },
+        { "skin": "outfit_red", "price": 150 },
+        { "skin": "outfit_yellow", "price": 150 },
+        { "skin": "outfit_blue", "price": 150 },
+        { "skin": "tracksuit_black", "price": 400 },
+        { "skin": "ninja_black", "price": 400 }
       ],
       "species_id": 3008
     }

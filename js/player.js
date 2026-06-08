@@ -24,6 +24,7 @@ import { findGateAt, tryUnlockGate } from "./gateUnlock.js";
 import { findLockedTeleporterAt } from "./transitions.js";
 import { showToast } from "./toast.js";
 import { isCreativeMode } from "./creativeMode.js";
+import { resolveSkinColumn } from "./skins.js";
 
 // Hero sprites live on the `heroes` sheet at columns (1, 5, 9, 13) — one
 // per player index. Mirrors Rust entities/hero.rs::setup_hero_with_player_index.
@@ -400,12 +401,15 @@ function updateAnimation(player, dt) {
   }
 }
 
-// Source rect into the heroes sprite sheet, in tile units.
+// Source rect into the heroes sprite sheet, in tile units. The column is
+// resolved per-draw from the equipped skin (skins.js) rather than the
+// baked-in baseFrame.x, so this single seam recolors every avatar — local,
+// local-coop, and networked mirror copies all render through here.
 export function getPlayerSpriteFrame(player) {
   const { baseFrame, direction, moving, frameIndex } = player;
   const rowOffset = DIRECTION_ROW[direction][moving ? "moving" : "still"];
   return {
-    x: baseFrame.x + frameIndex * baseFrame.w,
+    x: resolveSkinColumn(player) + frameIndex * baseFrame.w,
     y: baseFrame.y + rowOffset * baseFrame.h,
     w: baseFrame.w,
     h: baseFrame.h,

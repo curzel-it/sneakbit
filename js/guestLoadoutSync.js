@@ -19,6 +19,8 @@ import {
   setSessionLoadout,
   clearSessionLoadouts,
 } from "./sessionLoadouts.js";
+import { setSessionSkin, clearSessionSkins } from "./sessionSkins.js";
+import { getSelected, onSkinChange } from "./skins.js";
 
 let unsubs = [];
 let installed = false;
@@ -39,6 +41,13 @@ export function installGuestLoadoutSync(opts = {}) {
     sendSelfLoadout(net);
   }));
 
+  // The chosen skin rides the same loadout frame, so a wardrobe change shows
+  // on the host + other peers exactly like an equipment change.
+  unsubs.push(onSkinChange((idx) => {
+    if (idx !== 0) return;
+    sendSelfLoadout(net);
+  }));
+
   unsubs.push(net.on("event", (m) => {
     if (!m || m.kind !== "loadout") return;
     onLoadoutEvent(m);
@@ -51,6 +60,7 @@ export function uninstallGuestLoadoutSync() {
   unsubs = [];
   installed = false;
   clearSessionLoadouts();
+  clearSessionSkins();
 }
 
 export const _uninstallGuestLoadoutSyncForTesting = uninstallGuestLoadoutSync;
@@ -61,6 +71,7 @@ function sendSelfLoadout(net) {
     op: "guest.loadout",
     melee: getEquipped(SLOT_MELEE, 0) ?? null,
     ranged: getEquipped(SLOT_RANGED, 0) ?? null,
+    skin: getSelected(0),
   };
   net.send(payload);
 }
@@ -71,6 +82,9 @@ function onLoadoutEvent(m) {
   const melee = m.melee == null ? null : m.melee;
   const ranged = m.ranged == null ? null : m.ranged;
   setSessionLoadout(playerId, melee, ranged);
+  // Skin is render-only — mirror it so every avatar draws the right column.
+  // No write-through for self: this client already owns its selection locally.
+  setSessionSkin(playerId, m.skin == null ? null : m.skin);
   // Write-through for self: a host-side auto-equip after a pickup should
   // persist on this client's local save so it survives reconnect / going
   // offline. Compare against current local equipment to avoid the echo

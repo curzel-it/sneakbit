@@ -11,14 +11,24 @@ import { getSpecies } from "./species.js";
 import { getCoins, addCoins } from "./wallet.js";
 import { addAmmo, getAmmo } from "./inventory.js";
 import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
+import { getSkin, isOwned as isSkinOwned, markOwned as markSkinOwned } from "./skins.js";
 
 // Hard ceiling on a single purchase; the wallet clamps it further down.
 export const MAX_PURCHASE_QTY = 99;
 
+// A skin good carries a string `skin` id instead of a numeric species `item`.
+// Skins aren't inventory items (no ammo / no weapon slot), so they branch out
+// of the species-driven paths below — bought one-of-a-kind, granted as an
+// ownership flag (skins.js), and equipped later in the wardrobe.
+export function isSkinEntry(entry) {
+  return typeof entry?.skin === "string";
+}
+
 // A good is "stackable" (quantity-selectable) when it's ammo — a Bundle or
-// a raw Bullet. Weapons and other one-of-a-kind pickups are not. An explicit
-// `stackable` on the stock entry overrides the species-derived default.
+// a raw Bullet. Weapons, skins, and other one-of-a-kind goods are not. An
+// explicit `stackable` on the stock entry overrides the species-derived default.
 export function isStackable(entry) {
+  if (isSkinEntry(entry)) return false;
   if (entry && typeof entry.stackable === "boolean") return entry.stackable;
   const sp = getSpecies(entry?.item);
   return sp?.entity_type === "Bundle" || sp?.entity_type === "Bullet";
@@ -49,6 +59,14 @@ export function isOwned(itemId, playerIndex = 0) {
   return getAmmo(itemId, playerIndex) > 0;
 }
 
+// Entry-level ownership: skins are one-of-a-kind via the skins store; species
+// goods fall back to the weapon-item derivation above. The shop UI and the
+// buy rules below route through this so a bought skin greys out as "Owned".
+export function isEntryOwned(entry, playerIndex = 0) {
+  if (isSkinEntry(entry)) return isSkinOwned(entry.skin, playerIndex);
+  return isOwned(entry?.item, playerIndex);
+}
+
 // Largest quantity the wallet can afford, clamped to [0, cap]. Free goods
 // (price <= 0) clamp straight to the cap.
 export function maxAffordable(price, playerIndex = 0, cap = MAX_PURCHASE_QTY) {
@@ -60,21 +78,27 @@ export function maxAffordable(price, playerIndex = 0, cap = MAX_PURCHASE_QTY) {
 // Clamp a requested quantity to what's valid for this good: 0 if owned or
 // unaffordable, 1 for one-of-a-kind goods, else [1, maxAffordable].
 export function clampQty(entry, requested, playerIndex = 0) {
-  if (isOwned(entry?.item, playerIndex)) return 0;
+  if (isEntryOwned(entry, playerIndex)) return 0;
   if (!isStackable(entry)) return maxAffordable(entry?.price, playerIndex, 1);
   const max = maxAffordable(entry?.price, playerIndex);
   if (max <= 0) return 0;
   return Math.max(1, Math.min(max, requested | 0));
 }
 
+// True if the stock entry names a real good (a known skin or a known species).
+function isValidEntry(entry) {
+  if (!entry) return false;
+  return isSkinEntry(entry) ? !!getSkin(entry.skin) : !!getSpecies(entry.item);
+}
+
 // Validate a prospective purchase. Returns { ok, reason } — reason is one of
 // "invalid" | "quantity" | "owned" | "poor" when ok is false.
 export function canBuy(entry, qty, playerIndex = 0) {
-  if (!entry || !getSpecies(entry.item)) return { ok: false, reason: "invalid" };
+  if (!isValidEntry(entry)) return { ok: false, reason: "invalid" };
   const n = qty | 0;
   if (n < 1) return { ok: false, reason: "quantity" };
   if (!isStackable(entry) && n > 1) return { ok: false, reason: "quantity" };
-  if (isOwned(entry.item, playerIndex)) return { ok: false, reason: "owned" };
+  if (isEntryOwned(entry, playerIndex)) return { ok: false, reason: "owned" };
   const total = (entry.price | 0) * n;
   if (getCoins(playerIndex) < total) return { ok: false, reason: "poor" };
   return { ok: true };
@@ -99,13 +123,16 @@ function grant(itemId, qty, playerIndex) {
 }
 
 // Execute a purchase after validation. Spends coins, then grants the goods.
-// Charges nothing and returns the failing verdict if canBuy rejects.
+// Charges nothing and returns the failing verdict if canBuy rejects. A skin is
+// granted as an ownership flag only — it does NOT auto-equip (equipping is the
+// wardrobe's job), so buying never yanks the hero's current look.
 export function buy(entry, qty, playerIndex = 0) {
   const verdict = canBuy(entry, qty, playerIndex);
   if (!verdict.ok) return verdict;
   const n = qty | 0;
   const total = (entry.price | 0) * n;
   addCoins(-total, playerIndex);
-  grant(entry.item, n, playerIndex);
+  if (isSkinEntry(entry)) markSkinOwned(entry.skin, playerIndex);
+  else grant(entry.item, n, playerIndex);
   return { ok: true, spent: total, qty: n };
 }
