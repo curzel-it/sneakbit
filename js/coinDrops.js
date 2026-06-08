@@ -65,7 +65,15 @@ export function maybeDropCoin(zone, entity, rng = Math.random) {
   if (!zone?.entities || !entity) return;
   if (isTowerDefenseMode() || isPvp() || isCreativeMode()) return;
   const count = rollCoinDrop(getSpecies(entity.species_id), rng);
-  if (count <= 0) return;
+  scatterPickups(zone, entity, count, makeCoin, rng);
+}
+
+// Scatter `count` pickups around an entity's footprint, each on a free tile
+// near the corpse (see scatterTile). `makeAt(x, y)` builds the entity to push.
+// Shared by coin and ammo drops so both land where the hero can actually reach
+// them. The drop *decision* (how many, what kind) is the caller's job.
+export function scatterPickups(zone, entity, count, makeAt, rng = Math.random) {
+  if (!zone?.entities || !entity || count <= 0) return;
   const f = entity.frame || { x: 0, y: 0, w: 1, h: 1 };
   const cx = f.x + (f.w || 1) * 0.5;
   const cy = f.y + (f.h || 1) * 0.5;
@@ -73,8 +81,14 @@ export function maybeDropCoin(zone, entity, rng = Math.random) {
   const homeY = Math.floor(cy);
   for (let i = 0; i < count; i++) {
     const t = scatterTile(zone, cx, cy, homeX, homeY, rng);
-    zone.entities.push(makeCoin(t.x, t.y));
+    zone.entities.push(makeAt(t.x, t.y));
   }
+}
+
+// Forced coin drop: scatter exactly `count` coins. The gate (coin vs ammo vs
+// nothing) is decided upstream in lootDrops.js; this just does the scatter.
+export function dropCoins(zone, entity, count, rng = Math.random) {
+  scatterPickups(zone, entity, count, makeCoin, rng);
 }
 
 // How far nearestFreeTile will spiral out from the kill tile before giving up.

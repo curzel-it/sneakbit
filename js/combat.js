@@ -19,7 +19,7 @@ import { isCreativeMode } from "./creativeMode.js";
 import { getSettings } from "./settings.js";
 import { startDeathAnimation, tickDeathAnimations } from "./deathAnimation.js";
 import { isPvp } from "./gameMode.js";
-import { maybeDropCoin } from "./coinDrops.js";
+import { maybeDropLoot } from "./lootDrops.js";
 
 const BULLET_HITTABLE_INSET = 0.2; // matches Rust core bullet_hittable_frame
 const KUNAI_SPECIES_ID = 7000;
@@ -178,10 +178,11 @@ function resolveBullets(zone, players, dt) {
         // beat before tickDeathAnimations removes it. It's flagged `_dying`
         // so it stops blocking, fusing, attacking and taking further hits.
         startDeathAnimation(t);
-        // Real-game loot: scatter coins for the hero to collect (no-op in
-        // TD/PvP/creative — see coinDrops.js). Monsters and barrels both drop,
-        // each on its own weighted table.
-        maybeDropCoin(zone, t);
+        // Real-game loot: one mutually-exclusive roll → nothing / coins / ammo
+        // (no-op in TD/PvP/creative — see lootDrops.js). The killing bullet's
+        // owner drives weapon-aware ammo type. Monsters and barrels use
+        // different odds.
+        maybeDropLoot(zone, t, b._playerIndex | 0);
         consumed = true;
       } else {
         spawnDamageIndicator(zone, entityHittable(t, tsp), b.parent_id ?? b.id);
