@@ -204,7 +204,8 @@
         { "skin": "outfit_yellow", "price": 150 },
         { "skin": "outfit_blue", "price": 150 },
         { "skin": "tracksuit_black", "price": 400 },
-        { "skin": "ninja_black", "price": 400 }
+        { "skin": "ninja_black", "price": 400 },
+        { "skill": "aura", "price": 1 }
       ],
       "species_id": 3008
     }

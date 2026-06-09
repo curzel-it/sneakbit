@@ -17,6 +17,7 @@ import { SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { resolveLoadout } from "./sessionLoadouts.js";
 import { getMeleeSwingProgress } from "./melee.js";
 import { getShootAnimProgress } from "./shooting.js";
+import { getAuraAnimProgress, AURA_SPRITE } from "./knockbackAura.js";
 import { pushableRenderOffset } from "./pushables.js";
 import { coinRenderOffset } from "./coinDrops.js";
 import { shouldBeVisible } from "./entityVisibility.js";
@@ -128,6 +129,36 @@ function drawPlayer(ctx, player, camera) {
     drawEquipment(ctx, player, camera, ranged, SLOT_RANGED);
     drawEquipment(ctx, player, camera, melee, SLOT_MELEE);
   }
+
+  // Knockback-aura activation burst, drawn over the hero while it plays.
+  drawAuraEffect(ctx, player, camera);
+}
+
+// The aura's activation animation: a w×h sprite from the weapons sheet
+// (AURA_SPRITE), its frame advancing with the activation progress (1.0 at
+// start → 0.0 at end), centred on the hero. Progress comes from
+// knockbackAura — locally for host players, off the render object for guests.
+function drawAuraEffect(ctx, player, camera) {
+  const progress = getAuraAnimProgress(player);
+  if (progress == null) return;
+  let sheet;
+  try { sheet = getSprite("weapons"); } catch { return; }
+  if (!sheet || !sheet.complete) return;
+
+  const { texX, texY, frames, w, h } = AURA_SPRITE;
+  const n = Math.max(1, frames);
+  const frameIdx = Math.min(n - 1, Math.floor((1 - progress) * n));
+  const sx = (texX + frameIdx * w) * TILE_SIZE;
+  const sy = texY * TILE_SIZE;
+  const sw = w * TILE_SIZE;
+  const sh = h * TILE_SIZE;
+
+  // Hero feet sit at (player.x + 0.5, player.y + 0.5); centre the burst there.
+  const wx = player.x + 0.5 - w / 2;
+  const wy = player.y + 0.5 - h / 2;
+  const px = Math.round((wx - camera.x) * TILE_SIZE);
+  const py = Math.round((wy - camera.y) * TILE_SIZE);
+  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 }
 
 // Absolute sprite-sheet rows used by Rust's

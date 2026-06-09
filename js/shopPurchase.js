@@ -12,6 +12,7 @@ import { getCoins, addCoins } from "./wallet.js";
 import { addAmmo, getAmmo } from "./inventory.js";
 import { setEquipped, SLOT_MELEE, SLOT_RANGED } from "./equipment.js";
 import { getSkin, isOwned as isSkinOwned, markOwned as markSkinOwned } from "./skins.js";
+import { skillInfo, hasSkill, grantSkill } from "./skills.js";
 
 // Hard ceiling on a single purchase; the wallet clamps it further down.
 export const MAX_PURCHASE_QTY = 99;
@@ -24,11 +25,18 @@ export function isSkinEntry(entry) {
   return typeof entry?.skin === "string";
 }
 
+// A skill good carries a string `skill` id (skills.js, e.g. "aura"). Like a
+// skin it's one-of-a-kind and not an inventory item — bought once, granted as
+// an unlock flag, and shown in the inventory Skills group.
+export function isSkillEntry(entry) {
+  return typeof entry?.skill === "string";
+}
+
 // A good is "stackable" (quantity-selectable) when it's ammo — a Bundle or
 // a raw Bullet. Weapons, skins, and other one-of-a-kind goods are not. An
 // explicit `stackable` on the stock entry overrides the species-derived default.
 export function isStackable(entry) {
-  if (isSkinEntry(entry)) return false;
+  if (isSkinEntry(entry) || isSkillEntry(entry)) return false;
   if (entry && typeof entry.stackable === "boolean") return entry.stackable;
   const sp = getSpecies(entry?.item);
   return sp?.entity_type === "Bundle" || sp?.entity_type === "Bullet";
@@ -64,6 +72,7 @@ export function isOwned(itemId, playerIndex = 0) {
 // buy rules below route through this so a bought skin greys out as "Owned".
 export function isEntryOwned(entry, playerIndex = 0) {
   if (isSkinEntry(entry)) return isSkinOwned(entry.skin, playerIndex);
+  if (isSkillEntry(entry)) return hasSkill(entry.skill);
   return isOwned(entry?.item, playerIndex);
 }
 
@@ -88,7 +97,9 @@ export function clampQty(entry, requested, playerIndex = 0) {
 // True if the stock entry names a real good (a known skin or a known species).
 function isValidEntry(entry) {
   if (!entry) return false;
-  return isSkinEntry(entry) ? !!getSkin(entry.skin) : !!getSpecies(entry.item);
+  if (isSkinEntry(entry)) return !!getSkin(entry.skin);
+  if (isSkillEntry(entry)) return !!skillInfo(entry.skill);
+  return !!getSpecies(entry.item);
 }
 
 // Validate a prospective purchase. Returns { ok, reason } — reason is one of
@@ -133,6 +144,7 @@ export function buy(entry, qty, playerIndex = 0) {
   const total = (entry.price | 0) * n;
   addCoins(-total, playerIndex);
   if (isSkinEntry(entry)) markSkinOwned(entry.skin, playerIndex);
+  else if (isSkillEntry(entry)) grantSkill(entry.skill);
   else grant(entry.item, n, playerIndex);
   return { ok: true, spent: total, qty: n };
 }

@@ -68,6 +68,8 @@ const DEFAULT_SHOP_STOCK = [
   { skin: "outfit_blue", price: 150 },
   { skin: "tracksuit_black", price: 400 },
   { skin: "ninja_black", price: 400 },
+  // Knockback Aura skill — 1 coin while we test it (skills.js / shopPurchase.js).
+  { skill: "aura", price: 1 },
 ];
 
 // Editor-allocated zone ids must stay within int32 because js/storage.js

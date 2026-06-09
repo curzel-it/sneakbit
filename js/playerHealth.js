@@ -49,7 +49,7 @@ const HEAL_PER_SEC = 100;
 const MAX_PLAYERS = 4;
 
 function makeRecord() {
-  return { hp: maxHp(), invuln: 0, regenDelay: 0, pendingHeal: 0 };
+  return { hp: maxHp(), invuln: 0, regenDelay: 0, pendingHeal: 0, hardImmune: 0 };
 }
 
 const records = Array.from({ length: MAX_PLAYERS }, makeRecord);
@@ -64,6 +64,9 @@ export function tickPlayerHealth(dt) {
   let changed = false;
   for (const rec of records) {
     if (rec.invuln > 0) rec.invuln = Math.max(0, rec.invuln - dt);
+    // Hard immunity (knockback aura activation): a full-immunity window that,
+    // unlike `invuln`, also blocks the continuous melee path. Decayed here.
+    if (rec.hardImmune > 0) rec.hardImmune = Math.max(0, rec.hardImmune - dt);
     // Drain any queued potion healing first — independent of the regen
     // delay, so drinking right after a hit still heals.
     if (rec.pendingHeal > 0 && rec.hp > 0) {
@@ -112,6 +115,7 @@ export function setPlayerHp(hp, index = 0) {
 export function applyPlayerDamage(amount, victim = 0) {
   const index = indexOf(victim);
   const rec = recordFor(index);
+  if (rec.hardImmune > 0) return "ignored";
   if (rec.invuln > 0 || rec.hp <= 0 || amount <= 0) return "ignored";
   const reduced = applyDamageReductions(amount, victim);
   if (reduced <= 0) return "ignored";
@@ -128,6 +132,7 @@ export function applyPlayerDamage(amount, victim = 0) {
 export function applyPlayerContinuousDamage(amount, victim = 0) {
   const index = indexOf(victim);
   const rec = recordFor(index);
+  if (rec.hardImmune > 0) return "ignored";
   if (rec.hp <= 0 || amount <= 0) return "ignored";
   const reduced = applyDamageReductions(amount, victim);
   if (reduced <= 0) return "ignored";
@@ -152,6 +157,16 @@ export function applyPlayerHeal(amount, victim = 0) {
   const granted = Math.min(amount, room);
   rec.pendingHeal += granted;
   return granted;
+}
+
+// Open a full-immunity window for `seconds` on a player. Unlike the brief
+// post-hit `invuln`, this also blocks the continuous melee path, so the
+// player takes zero damage from any source while it lasts. Used by the
+// knockback aura during its activation animation. Extends (never shortens)
+// any window already open. Accepts an index or a player object.
+export function setPlayerHardImmunity(seconds, victim = 0) {
+  const rec = recordFor(indexOf(victim));
+  rec.hardImmune = Math.max(rec.hardImmune, +seconds || 0);
 }
 
 function indexOf(victim) {
@@ -185,11 +200,11 @@ export function resetPlayerHealth(index) {
   const full = maxHp();
   if (index == null) {
     for (const rec of records) {
-      rec.hp = full; rec.invuln = 0; rec.regenDelay = 0; rec.pendingHeal = 0;
+      rec.hp = full; rec.invuln = 0; rec.regenDelay = 0; rec.pendingHeal = 0; rec.hardImmune = 0;
     }
   } else {
     const rec = recordFor(index);
-    rec.hp = full; rec.invuln = 0; rec.regenDelay = 0; rec.pendingHeal = 0;
+    rec.hp = full; rec.invuln = 0; rec.regenDelay = 0; rec.pendingHeal = 0; rec.hardImmune = 0;
   }
   notify();
 }

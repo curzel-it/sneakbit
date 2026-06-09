@@ -16,6 +16,7 @@ import { getLastSeqMap } from "./hostGuests.js";
 import { broadcastHostEvent } from "./hostEvents.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { getMeleeSwingProgress, getMeleeCooldown } from "./melee.js";
+import { getAuraAnimRemaining } from "./knockbackAura.js";
 import { GAME_FRAME_SCHEMA } from "./net.js";
 
 export const BROADCAST_INTERVAL_MS = 50;
@@ -395,6 +396,13 @@ function serializePlayer({ player, slot, playerId }) {
     out.sw = round3(cd);
     out.swd = round3(dur);
   }
+  // Knockback-aura activation: the effect (damage/knockback/HP) is host-
+  // authoritative and already mirrors via entity/HP snapshots — only the
+  // per-player animation timer needs shipping so the burst renders on
+  // guests. mirrorWorld converts `aura` (seconds remaining) into 0..1
+  // progress on the render player. Omitted when idle.
+  const auraRem = getAuraAnimRemaining(idx);
+  if (auraRem > 0) out.aura = round3(auraRem);
   // PvP: the host owns each player's per-caliber ammo (pvpLoadout). Ship the
   // equipped weapon (pw) + its current ammo (pa) so a guest's own HUD is right.
   if (isPvp()) {
@@ -480,6 +488,10 @@ function sigPlayer(p) {
     // Only the edge needs to ship — the guest decays the cooldown locally
     // via tickMelee between deltas.
     p.swd ? 1 : 0,
+    // Aura progress: ship the decaying value across the activation window so
+    // each broadcast tick during the (~0.6s) burst forces a delta — there's
+    // no guest-side decay for it, so the guest needs fresh samples to animate.
+    p.aura || 0,
   ].join("|");
 }
 

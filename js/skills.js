@@ -14,10 +14,15 @@
 
 import { getValue, setValue } from "./storage.js";
 
+// Storage keys backing each skill's "owned" flag. The three ninja skills are
+// unlocked by reading a "gain_…_skill" dialogue; the knockback aura is bought
+// from the shop, so it has its own plain storage key. Both go through the same
+// getValue/setValue store, so has*()/grant work identically for either origin.
 const DIALOGUE_KEYS = {
   piercing:  "dialogue.answer.quest.ninja_skills.red_ninja.gain_piercing_knife_skill",
   boomerang: "dialogue.answer.quest.ninja_skills.black_ninja.gain_bouncing_knifes_skill",
   catcher:   "dialogue.answer.quest.ninja_skills.blue_ninja.gain_knife_catcher_skill",
+  aura:      "skill.knockback_aura.owned",
 };
 
 const OVERRIDE_KEY = "sneakbit.skills.override.v1";
@@ -25,7 +30,7 @@ const overrides = loadOverrides();
 const listeners = new Set();
 
 function loadOverrides() {
-  const fallback = { piercing: null, boomerang: null, catcher: null };
+  const fallback = { piercing: null, boomerang: null, catcher: null, aura: null };
   try {
     const raw = (typeof localStorage !== "undefined") && localStorage.getItem(OVERRIDE_KEY);
     if (!raw) return fallback;
@@ -34,6 +39,7 @@ function loadOverrides() {
       piercing:  normaliseOverride(parsed.piercing),
       boomerang: normaliseOverride(parsed.boomerang),
       catcher:   normaliseOverride(parsed.catcher),
+      aura:      normaliseOverride(parsed.aura),
     };
   } catch {
     return fallback;
@@ -64,6 +70,7 @@ function isUnlocked(name) {
 export function hasPiercingKnifeSkill() { return isUnlocked("piercing"); }
 export function hasBoomerangSkill()      { return isUnlocked("boomerang"); }
 export function hasBulletCatcherSkill()  { return isUnlocked("catcher"); }
+export function hasKnockbackAura()       { return isUnlocked("aura"); }
 
 // Devtools toggle: pins the flag on/off regardless of dialogue progress.
 export function setSkill(name, on) {
@@ -87,8 +94,17 @@ export function getSkills() {
     piercing:  hasPiercingKnifeSkill(),
     boomerang: hasBoomerangSkill(),
     catcher:   hasBulletCatcherSkill(),
+    aura:      hasKnockbackAura(),
   };
 }
+
+// Shop-facing helpers, keyed by the same internal skill id used everywhere
+// else (e.g. "aura"). Let the shop treat a skill good like a skin: check
+// ownership, grant on purchase, and read display metadata — without the shop
+// needing to know each skill's storage key.
+export function skillInfo(id)  { return SKILL_INFO[id] || null; }
+export function hasSkill(id)   { return id in DIALOGUE_KEYS ? isUnlocked(id) : false; }
+export function grantSkill(id) { unlockSkillFromGameplay(id); }
 
 // Display metadata for each skill. The inventory screen lists the unlocked
 // ones plainly, alongside keys and other non-weapon pickups. `icon` is the
@@ -97,6 +113,9 @@ export const SKILL_INFO = {
   piercing:  { name: "Piercing Kunai",  desc: "Kunai deals 2× damage.",            icon: [12, 9] },
   boomerang: { name: "Boomerang Kunai", desc: "Kunai bounces back on wall/kill.",  icon: [12, 7] },
   catcher:   { name: "Bullet Catcher",  desc: "Caught bullets refund into ammo.",  icon: [12, 8] },
+  // TODO: point `icon` at the real knockback-aura inventory tile once the art
+  // lands; [12, 10] is a placeholder next to the other skill icons.
+  aura:      { name: "Knockback Aura",  desc: "At <10% HP, blast nearby enemies back for 25% of their HP. 30s cooldown.", icon: [12, 10] },
 };
 
 // The skills you've actually earned, ready to list in the inventory as

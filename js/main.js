@@ -46,6 +46,7 @@ import { tickCombat } from "./combat.js";
 import { tickAfterDialogue } from "./afterDialogue.js";
 import { tickNpcInterception, isInterceptionActive } from "./npcInterception.js";
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
+import { tickKnockbackAura, resetKnockbackAura } from "./knockbackAura.js";
 import { installHealthHud, refreshHealthHud } from "./healthHud.js";
 import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js";
 import { installShop, isShopOpen } from "./shop.js";
@@ -434,6 +435,9 @@ async function main() {
       // resolution; bullets carry _playerIndex for catcher refunds and
       // friendly-fire gating.
       tickCombat(state.zone, allPlayers(state), dt);
+      // Passive knockback aura: reacts to the damage tickCombat just resolved
+      // (low HP + enemy in range) before health regen runs.
+      tickKnockbackAura(state.zone, allPlayers(state), dt);
       tickAfterDialogue(state.zone, dt);
       tickNpcInterception(state, dt);
       tickPuzzles(state.zone, state.player);
@@ -694,6 +698,11 @@ function buildGuestRenderPlayers(mPlayers) {
   const selfId = getSelfPlayerId();
   const predicted = getPredictedSelf();
   if (!selfId || !predicted) return mPlayers;
+  // The predicted self carries no hp/aura (host-authoritative); pull the
+  // aura activation progress from the matching mirror entry so the guest
+  // sees its own knockback-aura burst play out.
+  const mirrorSelf = mPlayers.find((p) => p.playerId === selfId);
+  predicted.auraAnim = mirrorSelf ? mirrorSelf.auraAnim : null;
   const out = [predicted];
   for (const p of mPlayers) {
     if (p.playerId !== selfId) out.push(p);
@@ -896,6 +905,7 @@ function handleHostState(state) {
       // — the next tick treats P2 as alive again next to P1 (the
       // co-op spawn rule re-applied inside travelTo).
       resetPlayerHealth();
+      resetKnockbackAura();
       deathToasted.clear();
       hostDeathToasted = false;
       hostDying = false;

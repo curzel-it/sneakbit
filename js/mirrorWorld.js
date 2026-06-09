@@ -10,6 +10,7 @@
 // overwrites `zone.entities` from network frames.
 
 import { SPRITE_SHEET_HEROES, ANIMATIONS_FPS } from "./constants.js";
+import { AURA_ANIM_DURATION } from "./knockbackAura.js";
 import { setGameMode } from "./gameMode.js";
 import { loadZone } from "./data.js";
 import { buildZone } from "./zone.js";
@@ -288,6 +289,11 @@ function ingestPlayer(p, t) {
   const prev = players.get(p.playerId);
   if (prev) {
     const merged = { ...prev.curr, ...p };
+    // `aura` is shipped only while the burst plays (and changes every tick,
+    // so the player is in every delta during it). The first payload after it
+    // ends omits the field — drop the stale value so the overlay clears
+    // instead of freezing on its last frame.
+    if (p.aura == null) delete merged.aura;
     const wasMoving = !!prev.curr?.moving;
     const isMoving = !!merged.moving;
     // Stamp the moment a step starts so animation phase is anchored to
@@ -458,6 +464,12 @@ function interpolatePlayer({ prev, curr, prevAt, currAt, stepStartedAt }, render
     frameIndex: animFrame < 0 ? 0 : animFrame,
     frameTimer: 0,
     step: curr.moving ? { progress: t } : null,
+    // Knockback-aura activation progress (1.0 start → 0.0 end), or null when
+    // idle. The host ships seconds-remaining as `aura`; entities.drawAuraEffect
+    // reads `auraAnim` off the render player.
+    auraAnim: curr.aura != null
+      ? Math.max(0, Math.min(1, curr.aura / AURA_ANIM_DURATION))
+      : null,
   };
 }
 

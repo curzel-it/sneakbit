@@ -18,9 +18,10 @@ import { playSfx } from "./audio.js";
 import { showToast } from "./toast.js";
 import { registerMenuSurface, focusFirstIn } from "./menuNav.js";
 import { getSkin } from "./skins.js";
+import { skillInfo } from "./skills.js";
 import { mountShowcase, showEntry, stopShowcase } from "./shopShowcase.js";
 import {
-  isStackable, isEntryOwned, isSkinEntry, clampQty, maxAffordable, canBuy, buy,
+  isStackable, isEntryOwned, isSkinEntry, isSkillEntry, clampQty, maxAffordable, canBuy, buy,
 } from "./shopPurchase.js";
 
 let root = null;
@@ -114,7 +115,11 @@ export function installShop() {
 export function openShop(stockList, playerIdx = 0) {
   if (!root) installShop();
   stock = Array.isArray(stockList)
-    ? stockList.filter((e) => e && (isSkinEntry(e) ? getSkin(e.skin) : getSpecies(e.item)))
+    ? stockList.filter((e) => e && (
+        isSkinEntry(e) ? getSkin(e.skin)
+        : isSkillEntry(e) ? skillInfo(e.skill)
+        : getSpecies(e.item)
+      ))
     : [];
   playerIndex = playerIdx | 0;
   open = true;
@@ -289,7 +294,7 @@ function confirmBuy() {
   if (!res.ok) { renderDetail(); return; }
   playSfx("ammoCollected");
   const name = entryName(detailEntry);
-  const image = isSkinEntry(detailEntry) ? null : toastIcon(detailEntry.item);
+  const image = (isSkinEntry(detailEntry) || isSkillEntry(detailEntry)) ? null : toastIcon(detailEntry.item);
   showToast(tr("shop.bought").replace("%s", name), "hint", { image });
   refreshCoins();
   showStorefront();
@@ -319,6 +324,7 @@ function onKeydownCapture(e) {
 // `skin` id → skins catalog keys) or a species good (numeric `item`).
 function entryName(entry) {
   if (isSkinEntry(entry)) return tr(getSkin(entry.skin)?.nameKey);
+  if (isSkillEntry(entry)) return skillInfo(entry.skill)?.name || "";
   return nameOf(getSpecies(entry.item));
 }
 
@@ -328,6 +334,7 @@ function entryDesc(entry) {
     const text = tr(key);
     return text === key ? "" : text;
   }
+  if (isSkillEntry(entry)) return skillInfo(entry.skill)?.desc || "";
   return descOf(getSpecies(entry.item));
 }
 
@@ -351,8 +358,23 @@ function makeIcon(entry, className, sizePx) {
     height: TILE_SIZE,
     style: { width: `${sizePx}px`, height: `${sizePx}px`, imageRendering: "pixelated" },
   });
-  paintIcon(canvas, entry.item);
+  if (isSkillEntry(entry)) paintIconAt(canvas, skillInfo(entry.skill)?.icon);
+  else paintIcon(canvas, entry.item);
   return canvas;
+}
+
+// Blit an inventory-sheet tile given a raw [row, col] offset — used for skill
+// goods, whose icon lives in skills.js (SKILL_INFO) rather than on a species.
+function paintIconAt(canvas, offset) {
+  if (!offset) return;
+  let sheet;
+  try { sheet = getSprite("inventory"); } catch { return; }
+  if (!sheet || !sheet.complete) return;
+  const [row, col] = offset;
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, TILE_SIZE, TILE_SIZE);
+  ctx.drawImage(sheet, col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 0, 0, TILE_SIZE, TILE_SIZE);
 }
 
 // Blit a hero's down-facing still frame from the `heroes` sheet at the given

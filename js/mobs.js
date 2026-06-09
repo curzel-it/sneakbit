@@ -146,6 +146,53 @@ function advanceStep(e, dt) {
   e._ai.step = null;
 }
 
+// Knockback: shove a mob away from a point (the player's tile centre),
+// sliding it up to `tiles` tiles in the dominant cardinal direction. Reuses
+// the AI's tile-locked step so the push reads as a fast slide and the mob
+// resumes normal movement afterwards. No-op if the mob can't be stepped (no
+// AI species) or every tile behind it is blocked. Owned here so all `_ai`
+// manipulation stays in one file; knockbackAura.js calls it.
+const KNOCKBACK_DURATION = 0.12; // sec — a quick shove, matches the step floor
+
+export function knockbackEntity(zone, e, fromX, fromY, tiles = 1) {
+  const sp = getSpecies(e.species_id);
+  if (!sp || !isMobAi(sp)) return;
+  ensureAi(e);
+  // Start from where the mob visually is, snapped to the grid, so an in-flight
+  // step doesn't make the shove jump from a stale from-tile.
+  e._ai.tileX = Math.round(e.frame.x);
+  e._ai.tileY = Math.round(e.frame.y);
+  e.frame.x = e._ai.tileX;
+  e.frame.y = e._ai.tileY;
+
+  const cx = e._ai.tileX + 0.5;
+  const cy = e._ai.tileY + e._ai.h - 0.5;
+  const ddx = cx - fromX;
+  const ddy = cy - fromY;
+  let dx = 0, dy = 0;
+  if (Math.abs(ddx) >= Math.abs(ddy)) dx = ddx >= 0 ? 1 : -1;
+  else dy = ddy >= 0 ? 1 : -1;
+
+  let tx = e._ai.tileX, ty = e._ai.tileY, steps = 0;
+  for (let n = 0; n < tiles; n++) {
+    const nx = tx + dx, ny = ty + dy;
+    if (!canEnter(zone, e, nx, ny)) break;
+    tx = nx; ty = ny; steps++;
+  }
+  if (steps === 0) return;
+
+  e.direction = capitalize(dx > 0 ? "right" : dx < 0 ? "left" : dy > 0 ? "down" : "up");
+  e._ai.step = {
+    fromX: e._ai.tileX,
+    fromY: e._ai.tileY,
+    toX: tx, toY: ty,
+    progress: 0,
+    duration: KNOCKBACK_DURATION,
+  };
+  // Don't immediately re-decide a chase step the instant the slide lands.
+  e._ai.decideTimer = WANDER_PAUSE;
+}
+
 // Picks the closest live player whose Manhattan distance from the mob's
 // feet tile is within VISION_TILES. Used by FindHero mobs so co-op mobs
 // switch targets when P2 gets in close range, instead of locking onto

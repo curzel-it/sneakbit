@@ -15,7 +15,8 @@ import { TILE_SIZE, ANIMATIONS_FPS } from "./constants.js";
 import { getSprite } from "./assets.js";
 import { getSpecies, getEntitySheet } from "./species.js";
 import { getSkin } from "./skins.js";
-import { isSkinEntry } from "./shopPurchase.js";
+import { skillInfo } from "./skills.js";
+import { isSkinEntry, isSkillEntry } from "./shopPurchase.js";
 
 // The hero's directional sheet keeps 8 rows (4 dirs × moving/still); "down-moving"
 // lands at sheet-y 9 (origin 1 + row 4 × h2), mirroring player.js
@@ -81,6 +82,15 @@ function descriptorFor(entry) {
     let sheet;
     try { sheet = getSprite("heroes"); } catch { return null; }
     return { sheet, sx0: skin.column * TILE_SIZE, sy: HERO_DOWN_MOVING_Y * TILE_SIZE, tileW: 1, tileH: 2, frames: 4 };
+  }
+
+  // A skill shows its static inventory-sheet icon (no in-world sprite to animate).
+  if (isSkillEntry(entry)) {
+    const icon = skillInfo(entry.skill)?.icon;
+    if (!icon) return null;
+    let sheet;
+    try { sheet = getSprite("inventory"); } catch { return null; }
+    return { sheet, sx0: icon[1] * TILE_SIZE, sy: icon[0] * TILE_SIZE, tileW: 1, tileH: 1, frames: 1 };
   }
 
   const sp = getSpecies(entry.item);

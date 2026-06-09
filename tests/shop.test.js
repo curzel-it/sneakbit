@@ -22,6 +22,7 @@ const wallet = await import("../js/wallet.js");
 const equipment = await import("../js/equipment.js");
 const storage = await import("../js/storage.js");
 const skins = await import("../js/skins.js");
+const skills = await import("../js/skills.js");
 
 const SWORD = { item: 1164, price: 99 };
 const AR15  = { item: 1162, price: 450 };
@@ -189,4 +190,57 @@ test("a skin you can't afford is rejected without spending", () => {
   assert.equal(res.reason, "poor");
   assert.equal(wallet.getCoins(), 50);
   assert.equal(skins.isOwned("ninja_black"), false);
+});
+
+// ---- Skill goods -------------------------------------------------------
+
+const AURA = { skill: "aura", price: 1 };
+
+function resetSkill(coins = 0) {
+  reset(coins);
+  skills.setSkill("aura", null); // drop any devtools override → fall to storage
+}
+
+test("skill entries are one-of-a-kind: never stackable", () => {
+  resetSkill(100);
+  assert.equal(shop.isSkillEntry(AURA), true);
+  assert.equal(shop.isStackable(AURA), false);
+  assert.equal(shop.clampQty(AURA, 5), 1);
+});
+
+test("buying a skill grants the unlock and debits coins", () => {
+  resetSkill(5);
+  assert.equal(shop.isEntryOwned(AURA), false);
+  assert.equal(skills.hasKnockbackAura(), false);
+  const res = shop.buy(AURA, 1);
+  assert.equal(res.ok, true);
+  assert.equal(res.spent, 1);
+  assert.equal(skills.hasSkill("aura"), true);
+  assert.equal(skills.hasKnockbackAura(), true);
+  assert.equal(shop.isEntryOwned(AURA), true);
+  assert.equal(wallet.getCoins(), 4);
+});
+
+test("an owned skill cannot be re-bought (and isn't charged)", () => {
+  resetSkill(5);
+  shop.buy(AURA, 1);
+  const after = wallet.getCoins();
+  const res = shop.buy(AURA, 1);
+  assert.equal(res.ok, false);
+  assert.equal(res.reason, "owned");
+  assert.equal(wallet.getCoins(), after);
+});
+
+test("an unknown skill id is an invalid good", () => {
+  resetSkill(100);
+  assert.equal(shop.canBuy({ skill: "not_real", price: 1 }, 1).reason, "invalid");
+});
+
+test("a skill you can't afford is rejected without spending", () => {
+  resetSkill(0);
+  const res = shop.buy(AURA, 1); // 1 > 0
+  assert.equal(res.ok, false);
+  assert.equal(res.reason, "poor");
+  assert.equal(wallet.getCoins(), 0);
+  assert.equal(skills.hasKnockbackAura(), false);
 });
