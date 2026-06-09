@@ -45,11 +45,12 @@ function exportBuilding(filePath, destinationFolder) {
 
 function exportWeapons(filePath, destinationFolder) {
   const outputPath = join(destinationFolder, `${assetNameFromFilePath(filePath)}.png`);
+  // weapons.aseprite carries extra authoring layers (reference art, numbering);
+  // the shipped sheet is just the single "weapons" layer, flattened onto the
+  // canvas so the sprite_frame coords in species.json stay valid.
   run([
     "-b", filePath,
-    "--layer", "Slashes",
     "--layer", "Weapons",
-    "--ignore-layer", "Reference",
     "--save-as", outputPath,
   ], `weapons asset: ${outputPath}`);
 }
