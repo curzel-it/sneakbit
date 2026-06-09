@@ -18,7 +18,7 @@ import { localPlayerCount } from "./coopMode.js";
 import { sliceCount, getSlices } from "./splitScreen.js";
 import { getPvpAmmo, getPvpRangedWeapon, bulletOfWeapon } from "./pvpLoadout.js";
 import { topHudRow, setTopHudSplit } from "./topHudRow.js";
-import { openInventory } from "./menu.js";
+import { cycleWeapon } from "./weaponSelect.js";
 import { el } from "./dom.js";
 const KUNAI_SPECIES_ID = 7000;
 const ICON_PIXELS = 28;
@@ -56,11 +56,12 @@ function makeChip(index) {
   });
   const count = el("span", { text: "x0" });
   const card = el("div", { class: "ammo-chip" }, [icon, count]);
-  // Tapping the chip is a one-tap shortcut into the Inventory screen (which
-  // pauses for non-hosts) — the fastest way to swap weapons/gear mid-run on a
-  // phone. The chip opts back into pointer events (the #ammo-hud parent stays
-  // pass-through so it never blocks the canvas / joystick).
-  card.addEventListener("click", () => openInventory());
+  // Tapping the chip cycles to the next ranged weapon for this player — the
+  // phone equivalent of the desktop next-weapon key, with the chip itself as
+  // the live feedback (its icon + count follow the equipped weapon). The chip
+  // opts back into pointer events (the #ammo-hud parent stays pass-through so
+  // it never blocks the canvas / joystick).
+  card.addEventListener("click", () => cycleWeapon(SLOT_RANGED, index, +1));
   return { root: card, icon, count, lastLabel: null, iconSpecies: -1, index };
 }
 

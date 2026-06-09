@@ -1,26 +1,22 @@
 // Quick weapon-switch: a single input equips the next/previous weapon in
-// one slot, live (no pause), with a brief screen-centered ribbon for
-// feedback. Ranged and melee are independent slots with their own
-// prev/next bindings (the only model that fits a game where both slots
-// are equipped at once and fired by different keys). The ranged shoulder
-// pair (RB/LB) makes this most useful on a controller — there's otherwise
-// no fast way to re-equip without opening the pause menu.
+// one slot, live (no pause). Ranged and melee are independent slots with
+// their own prev/next bindings (the only model that fits a game where both
+// slots are equipped at once and fired by different keys). The ranged
+// shoulder pair (RB/LB) makes this most useful on a controller — there's
+// otherwise no fast way to re-equip without opening the pause menu. The
+// ammo HUD already follows the equipped ranged weapon, so the swap shows
+// up there with no overlay of its own.
 //
 // Equipping is a bare setEquipped(): host/guest loadout sync both listen
 // on onEquipmentChange, so a local switch propagates in every mode with
 // no extra wiring here.
 
-import { weaponsInSlot, nextWeaponInSlot } from "./weaponSlots.js";
+import { nextWeaponInSlot } from "./weaponSlots.js";
 import { setEquipped, SLOT_RANGED, SLOT_MELEE } from "./equipment.js";
 import { resolveAction } from "./keyBindings.js";
 import { localPlayerCount } from "./coopMode.js";
 import { isPvp } from "./gameMode.js";
 import { isPlayerDead } from "./playerHealth.js";
-import { getSpecies } from "./species.js";
-import { tr } from "./strings.js";
-import { getSprite } from "./assets.js";
-import { TILE_SIZE } from "./constants.js";
-import { el } from "./dom.js";
 
 // action id → [slot, direction]
 const ACTION_MAP = {
@@ -30,19 +26,10 @@ const ACTION_MAP = {
   meleePrev:  [SLOT_MELEE,  -1],
 };
 
-const RIBBON_MS = 1500;
-const FADE_MS = 200;
-
 // Whether an overlay (pause menu, dialogue, …) is up — a stray Tab behind
 // the menu shouldn't silently swap your gun. Injected by main.js, which
 // already owns that set, so this feature doesn't reach into six UI modules.
 let isBlocked = () => false;
-
-// Screen position (viewport px) to anchor the ribbon above, for the given
-// local player — { x, y } at the player's head, or null to fall back to a
-// screen-centered ribbon (split-screen / no camera). Injected by main.js,
-// which owns the canvas + camera.
-let anchorFor = () => null;
 
 // Equip the next/previous weapon in `slot` for the given local player.
 // No-op in PvP, while dead, while an overlay is open, or when the slot has
@@ -54,16 +41,13 @@ export function cycleWeapon(slot, playerIndex = 0, dir = +1) {
   const id = nextWeaponInSlot(slot, playerIndex, dir);
   if (id == null) return;
   setEquipped(slot, id, playerIndex); // sync handled via onEquipmentChange
-  showWeaponRibbon(slot, playerIndex);
 }
 
 let installed = false;
 
 // opts.isBlocked: () => boolean — true while a blocking overlay is open.
-// opts.anchorFor: (playerIndex) => {x,y}|null — ribbon anchor (player head).
 export function installWeaponSelect(opts = {}) {
   if (typeof opts.isBlocked === "function") isBlocked = opts.isBlocked;
-  if (typeof opts.anchorFor === "function") anchorFor = opts.anchorFor;
   if (installed) return;
   installed = true;
   if (typeof window === "undefined") return;
@@ -81,147 +65,4 @@ function onKey(e) {
   if (r.playerIndex >= 1 && (r.playerIndex + 1) > localPlayerCount()) return;
   e.preventDefault(); // Tab must not walk DOM focus
   cycleWeapon(map[0], r.playerIndex, map[1]);
-}
-
-// ---- ribbon ----------------------------------------------------------
-
-let root = null;
-let stripEl = null;
-let labelEl = null;
-let hideTimer = null;
-let fadeTimer = null;
-
-function ensureRibbon() {
-  if (root || typeof document === "undefined") return root;
-  injectStyles();
-  stripEl = el("div", { class: "ws-strip" });
-  labelEl = el("div", { class: "ws-label" });
-  root = el("div", { id: "weapon-switch" }, [stripEl, labelEl]);
-  document.body.appendChild(root);
-  return root;
-}
-
-function showWeaponRibbon(slot, playerIndex) {
-  if (!ensureRibbon()) return;
-  const list = weaponsInSlot(slot, playerIndex);
-  if (!list.length) return;
-
-  stripEl.replaceChildren();
-  let active = null;
-  for (const entry of list) {
-    if (entry.isEquipped) active = entry;
-    const icon = el("canvas", { width: TILE_SIZE, height: TILE_SIZE });
-    const cell = el("div", { class: "ws-cell" + (entry.isEquipped ? " is-active" : "") }, icon);
-    stripEl.appendChild(cell);
-    paintIcon(icon, entry.species);
-  }
-
-  const name = active ? (tr(active.species?.name) || active.species?.name || `#${active.id}`) : "";
-  labelEl.textContent = (active && active.ammo != null) ? `${name} · x${active.ammo}` : name;
-
-  clearTimers();
-  root.style.display = "flex";
-  positionRibbon(playerIndex); // measures offsetWidth/Height, so after display
-  void root.offsetWidth; // reflow so the fade-in starts from opacity 0
-  root.style.opacity = "1";
-  hideTimer = setTimeout(() => {
-    root.style.opacity = "0";
-    fadeTimer = setTimeout(() => { root.style.display = "none"; }, FADE_MS);
-  }, RIBBON_MS);
-}
-
-// Anchor the ribbon just above the player's head, clamped to the viewport.
-// Falls back to screen-centered when there's no anchor (split-screen / boot).
-function positionRibbon(playerIndex) {
-  const a = anchorFor(playerIndex);
-  if (!a) {
-    root.style.left = "50%";
-    root.style.top = "50%";
-    root.style.transform = "translate(-50%, -50%)";
-    return;
-  }
-  const w = root.offsetWidth || 0;
-  const h = root.offsetHeight || 0;
-  const vw = typeof window !== "undefined" ? window.innerWidth : 0;
-  const half = w / 2 + 8;
-  const x = vw ? Math.max(half, Math.min(a.x, vw - half)) : a.x;
-  let top = a.y - 16 - h;          // above the head
-  if (top < 8) top = a.y + 24;     // no room above → drop just below
-  root.style.left = `${Math.round(x)}px`;
-  root.style.top = `${Math.round(top)}px`;
-  root.style.transform = "translateX(-50%)";
-}
-
-function clearTimers() {
-  if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-  if (fadeTimer) { clearTimeout(fadeTimer); fadeTimer = null; }
-}
-
-// Blit a species' inventory icon. inventory_texture_offset is [row, col]
-// (same convention as ammoHud.js / pickups.js).
-function paintIcon(canvas, species) {
-  const off = species?.inventory_texture_offset;
-  if (!off) return;
-  let sheet;
-  try { sheet = getSprite("inventory"); } catch { return; }
-  if (!sheet || !sheet.complete) return;
-  const [row, col] = off;
-  const ctx = canvas.getContext("2d");
-  ctx.imageSmoothingEnabled = false;
-  ctx.clearRect(0, 0, TILE_SIZE, TILE_SIZE);
-  ctx.drawImage(sheet, col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 0, 0, TILE_SIZE, TILE_SIZE);
-}
-
-function injectStyles() {
-  if (document.getElementById("weapon-switch-styles")) return;
-  const style = document.createElement("style");
-  style.id = "weapon-switch-styles";
-  style.textContent = `
-    #weapon-switch {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 15;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 18px;
-      background: var(--sb-surface-bg, rgba(10,10,10,0.92));
-      border: var(--sb-surface-border, 1px solid #444);
-      border-radius: var(--sb-surface-radius, 6px);
-      color: var(--sb-text, #eee);
-      font-family: var(--sb-font, monospace);
-      pointer-events: none;
-      user-select: none;
-      -webkit-user-select: none;
-      opacity: 0;
-      transition: opacity ${FADE_MS}ms ease;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-    }
-    #weapon-switch .ws-strip { display: flex; gap: 8px; }
-    #weapon-switch .ws-cell {
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid transparent;
-      border-radius: var(--sb-surface-radius);
-      opacity: 0.55;
-    }
-    #weapon-switch .ws-cell.is-active {
-      opacity: 1;
-      border-color: var(--sb-accent, #ffd34d);
-      background: rgba(255,255,255,0.08);
-    }
-    #weapon-switch .ws-cell canvas {
-      width: 32px;
-      height: 32px;
-      image-rendering: pixelated;
-    }
-    #weapon-switch .ws-label { font-size: 14px; }
-  `;
-  document.head.appendChild(style);
 }
