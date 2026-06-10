@@ -40,11 +40,11 @@ const AURA_DAMAGE_FRAC = 0.25;       // 25% of each enemy's base HP, instant
 const AURA_COOLDOWN = 30;            // seconds between activations
 const AURA_KNOCKBACK_TILES = 1;      // how far enemies are pushed
 
-// Placeholder activation sprite on the weapons sheet (SPRITE_SHEET_WEAPONS).
-// `texX/texY` are tile coords; `frames` are laid out horizontally; `w/h` is
-// the sprite size in tiles. TODO: swap these for the real aura frames once
-// they're added to the weapons spritesheet (entities.drawAuraEffect reads it).
-export const AURA_SPRITE = { texX: 1, texY: 1, frames: 4, w: 4, h: 4 };
+// Activation sprite on the weapons sheet (SPRITE_SHEET_WEAPONS). `texX/texY`
+// are tile coords; `frames` are laid out horizontally; `w/h` is the sprite
+// size in tiles. Same 4-frame / 4×4 layout as the equipable weapons, in the
+// x=97 slot (entities.drawAuraEffect reads it).
+export const AURA_SPRITE = { texX: 97, texY: 1, frames: 4, w: 4, h: 4 };
 
 // Animation length derived from the frame count, with a floor so a 1-frame
 // placeholder still gives a visible immunity beat. Exported because the guest

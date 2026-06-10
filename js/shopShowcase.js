@@ -84,13 +84,21 @@ function descriptorFor(entry) {
     return { sheet, sx0: skin.column * TILE_SIZE, sy: HERO_DOWN_MOVING_Y * TILE_SIZE, tileW: 1, tileH: 2, frames: 4 };
   }
 
-  // A skill shows its static inventory-sheet icon (no in-world sprite to animate).
+  // A skill loops its weapons-sheet preview strip if it has one; otherwise it
+  // falls back to its static inventory-sheet icon.
   if (isSkillEntry(entry)) {
-    const icon = skillInfo(entry.skill)?.icon;
-    if (!icon) return null;
+    const info = skillInfo(entry.skill);
+    if (!info) return null;
+    const pv = info.preview;
+    if (pv) {
+      let sheet;
+      try { sheet = getSprite(pv.sheet); } catch { return null; }
+      return { sheet, sx0: pv.x * TILE_SIZE, sy: pv.y * TILE_SIZE, tileW: pv.w, tileH: pv.h, frames: Math.max(1, pv.frames) };
+    }
+    if (!info.icon) return null;
     let sheet;
     try { sheet = getSprite("inventory"); } catch { return null; }
-    return { sheet, sx0: icon[1] * TILE_SIZE, sy: icon[0] * TILE_SIZE, tileW: 1, tileH: 1, frames: 1 };
+    return { sheet, sx0: info.icon[1] * TILE_SIZE, sy: info.icon[0] * TILE_SIZE, tileW: 1, tileH: 1, frames: 1 };
   }
 
   const sp = getSpecies(entry.item);

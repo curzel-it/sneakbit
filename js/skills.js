@@ -109,13 +109,19 @@ export function grantSkill(id) { unlockSkillFromGameplay(id); }
 // Display metadata for each skill. The inventory screen lists the unlocked
 // ones plainly, alongside keys and other non-weapon pickups. `icon` is the
 // [row, col] tile on the inventory sheet, matching inventory_texture_offset.
+// `preview` (optional) is an animated strip on the weapons sheet — the shop
+// showcase loops it instead of the static icon; same layout convention as a
+// pickable weapon's on-ground idle (x,y tile coords; frames laid out along x).
 export const SKILL_INFO = {
   piercing:  { name: "Piercing Kunai",  desc: "Kunai deals 2× damage.",            icon: [12, 9] },
   boomerang: { name: "Boomerang Kunai", desc: "Kunai bounces back on wall/kill.",  icon: [12, 7] },
   catcher:   { name: "Bullet Catcher",  desc: "Caught bullets refund into ammo.",  icon: [12, 8] },
-  // TODO: point `icon` at the real knockback-aura inventory tile once the art
-  // lands; [12, 10] is a placeholder next to the other skill icons.
-  aura:      { name: "Knockback Aura",  desc: "At <10% HP, blast nearby enemies back for 25% of their HP. 30s cooldown.", icon: [12, 10] },
+  aura:      {
+    name: "Knockback Aura",
+    desc: "At <10% HP, blast nearby enemies back for 25% of their HP. 30s cooldown.",
+    icon: [13, 9],
+    preview: { sheet: "weapons", x: 97, y: 53, w: 1, h: 1, frames: 8 },
+  },
 };
 
 // The skills you've actually earned, ready to list in the inventory as
