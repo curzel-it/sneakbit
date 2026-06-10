@@ -192,6 +192,7 @@
       "lock_type": "None",
       "shop_stock": [
         { "item": 2020, "price": 30, "stackable": true },
+        { "item": 2029, "price": 10, "stackable": true },
         { "item": 7001, "price": 10, "stackable": true },
         { "item": 1176, "price": 30, "stackable": true },
         { "item": 1173, "price": 250, "stackable": true },

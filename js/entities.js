@@ -25,6 +25,7 @@ import { isCreativeMode } from "./creativeMode.js";
 import { isDying, DEATH_SPRITE } from "./deathAnimation.js";
 import { isVanishing, vanishAlpha, vanishOverlay } from "./vanishEffect.js";
 import { isDemandingAttention } from "./npcInterception.js";
+import { isGiant } from "./giantMode.js";
 
 const Z_INDEX_OVERLAY = 99;
 const Z_INDEX_UNDERLAY = -1;
@@ -106,32 +107,68 @@ function drawPlayer(ctx, player, camera) {
   // each guest's actual gear instead of the local user's. In single-player
   // and local-coop the lookup falls back to local equipment by index.
   const idx = player.index | 0;
+  // Giant mode swaps the hero for a dedicated 3×4 humanoid sprite. The
+  // normal-size weapon overlay would float out of place at that scale, so
+  // it's skipped for the duration (collision and everything else stay
+  // normal-sized — only the rendered sprite changes).
+  const giant = isGiant(player);
   const { melee, ranged } = resolveLoadout(player);
   const equipInFront = player.direction === "up"
     || getMeleeSwingProgress(idx) != null
     || getShootAnimProgress(idx) != null;
-  if (!equipInFront) {
+  if (!giant && !equipInFront) {
     drawEquipment(ctx, player, camera, ranged, SLOT_RANGED);
     drawEquipment(ctx, player, camera, melee, SLOT_MELEE);
   }
 
-  const sheet = getSprite("heroes");
-  const frame = getPlayerSpriteFrame(player);
-  const sx = frame.x * TILE_SIZE;
-  const sy = frame.y * TILE_SIZE;
-  const sw = frame.w * TILE_SIZE;
-  const sh = frame.h * TILE_SIZE;
-  const px = Math.round((player.x - camera.x) * TILE_SIZE);
-  const py = Math.round((player.y - camera.y - 1) * TILE_SIZE);
-  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+  if (giant) {
+    drawGiant(ctx, player, camera);
+  } else {
+    const sheet = getSprite("heroes");
+    const frame = getPlayerSpriteFrame(player);
+    const sx = frame.x * TILE_SIZE;
+    const sy = frame.y * TILE_SIZE;
+    const sw = frame.w * TILE_SIZE;
+    const sh = frame.h * TILE_SIZE;
+    const px = Math.round((player.x - camera.x) * TILE_SIZE);
+    const py = Math.round((player.y - camera.y - 1) * TILE_SIZE);
+    ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
+  }
 
-  if (equipInFront) {
+  if (!giant && equipInFront) {
     drawEquipment(ctx, player, camera, ranged, SLOT_RANGED);
     drawEquipment(ctx, player, camera, melee, SLOT_MELEE);
   }
 
   // Knockback-aura activation burst, drawn over the hero while it plays.
   drawAuraEffect(ctx, player, camera);
+}
+
+// Giant mode renders from a dedicated 3×4 humanoid sheet (humanoids_3x4):
+// one humanoid (no skin columns), 8 frames per directional strip, laid out
+// in the standard 8-row directional order (DIR_ROW_MOVING/STILL). The sprite
+// is kept centred on the hero's 1-wide tile and feet-aligned (bottom at
+// player.y + 1) so the unchanged collision tile still sits under the giant's
+// feet. Frames ride the shared animClock like any other directional sprite.
+const GIANT_TILES_W = 3;
+const GIANT_TILES_H = 4;
+const GIANT_FRAMES = 8;
+
+function drawGiant(ctx, player, camera) {
+  let sheet;
+  try { sheet = getSprite("humanoids_3x4"); } catch { return; }
+  if (!sheet || !sheet.complete) return;
+  const moving = !!player.moving;
+  const dir = player.direction || "down";
+  const dirRow = (moving ? DIR_ROW_MOVING : DIR_ROW_STILL)[dir] ?? DIR_ROW_STILL.down;
+  const frameIdx = moving ? Math.floor(animClock * ANIMATIONS_FPS) % GIANT_FRAMES : 0;
+  const sw = GIANT_TILES_W * TILE_SIZE;
+  const sh = GIANT_TILES_H * TILE_SIZE;
+  const sx = frameIdx * sw;
+  const sy = dirRow * sh;
+  const px = Math.round((player.x - 1 - camera.x) * TILE_SIZE);
+  const py = Math.round((player.y - 3 - camera.y) * TILE_SIZE);
+  ctx.drawImage(sheet, sx, sy, sw, sh, px, py, sw, sh);
 }
 
 // The aura's activation animation: a w×h sprite from the weapons sheet

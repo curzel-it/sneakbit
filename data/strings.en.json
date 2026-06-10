@@ -334,6 +334,8 @@
   "objects.name.potion_rainbow": "Rainbow Potion",
   "objects.name.red_pill": "Red Pill",
   "objects.desc.red_pill": "Restores all health.",
+  "objects.name.giant_pill": "Giant Pill",
+  "objects.desc.giant_pill": "Tower over the world for a short while.",
   "objects.name.key_yellow": "key from Grimsun desert",
   "objects.name.kunai": "Kunai",
   "objects.name.kunai.x10": "Kunai x10",

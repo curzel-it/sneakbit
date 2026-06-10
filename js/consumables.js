@@ -11,6 +11,7 @@ import { getSpecies } from "./species.js";
 import { showToast } from "./toast.js";
 import { tr } from "./strings.js";
 import { TILE_SIZE } from "./constants.js";
+import { triggerGiant, isGiantIndex } from "./giantMode.js";
 
 const HEALTH_POTION_HEAL = 50;
 
@@ -33,6 +34,15 @@ const CONSUMABLES = {
     sfx: "playerResurrected",
     canUse: (idx) => getPlayerHp(idx) < getPlayerMaxHp(),
     effect: (idx) => applyPlayerHeal(getPlayerMaxHp(), idx),
+  },
+  // Giant pill: grow to a towering 3×4 silhouette for a short while. Purely
+  // cosmetic (collision unchanged); giantMode networks it to every peer.
+  // Gated so it can't be re-taken (and wasted) while already a giant.
+  2029: {
+    verb: "Drink",
+    sfx: "playerResurrected",
+    canUse: (idx) => !isGiantIndex(idx),
+    effect: (idx) => triggerGiant(idx),
   },
 };
 

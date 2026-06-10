@@ -334,6 +334,8 @@
   "objects.name.potion_rainbow": "Pozione Arcobaleno",
   "objects.name.red_pill": "Pillola Rossa",
   "objects.desc.red_pill": "Ripristina tutta la salute.",
+  "objects.name.giant_pill": "Pillola Gigante",
+  "objects.desc.giant_pill": "Diventa un gigante per un breve periodo.",
   "objects.name.key_yellow": "chiave del deserto di Grimsun",
   "objects.name.kunai": "Kunai",
   "objects.name.kunai.x10": "Kunai x10",

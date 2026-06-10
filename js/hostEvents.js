@@ -28,6 +28,7 @@ const ALLOWED_KINDS = new Set([
   "toast",
   "hostPause",
   "loadout",
+  "giant",      // a peer turned giant (cosmetic) — fan to everyone (giantMode.js)
   "ammoSet",
   "coins",      // host credited a guest's coin wallet (real-game currency)
   "pvpStart",   // host opened a realtime PvP match — guests enter PvP rendering

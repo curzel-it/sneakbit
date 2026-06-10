@@ -27,6 +27,7 @@ import { installHostGuests, uninstallHostGuests } from "./hostGuests.js";
 import { installHostPauseBroadcaster, uninstallHostPauseBroadcaster } from "./hostPauseState.js";
 import { installHostLoadoutSync, uninstallHostLoadoutSync } from "./hostLoadoutSync.js";
 import { installGuestLoadoutSync, uninstallGuestLoadoutSync } from "./guestLoadoutSync.js";
+import { installGiantNet, uninstallGiantNet } from "./giantMode.js";
 import { installGuestSelfHpSync, uninstallGuestSelfHpSync } from "./guestSelfHpSync.js";
 import { installMirrorWorld, uninstallMirrorWorld } from "./mirrorWorld.js";
 import { installPredictedSelf, uninstallPredictedSelf } from "./predictedSelf.js";
@@ -126,6 +127,7 @@ async function teardownRole(role) {
     safe("uninstallHostGuests", uninstallHostGuests);
     safe("uninstallHostPauseBroadcaster", uninstallHostPauseBroadcaster);
     safe("uninstallHostLoadoutSync", uninstallHostLoadoutSync);
+    safe("uninstallGiantNet", uninstallGiantNet);
   } else if (role === "guest") {
     safe("guest.leave", () => getNet()?.send({ op: "guest.leave" }));
     safe("uninstallMirrorWorld", uninstallMirrorWorld);
@@ -133,6 +135,7 @@ async function teardownRole(role) {
     safe("uninstallGuestInputForwarder", uninstallGuestInputForwarder);
     safe("uninstallGuestEvents", uninstallGuestEvents);
     safe("uninstallGuestLoadoutSync", uninstallGuestLoadoutSync);
+    safe("uninstallGiantNet", uninstallGiantNet);
     safe("uninstallGuestSelfHpSync", uninstallGuestSelfHpSync);
     // Drop any in-flight local cosmetic flashes so a stale one can't paint
     // into the next world after the guest leaves.
@@ -190,6 +193,7 @@ async function setupRole(target, opts) {
     installSnapshotBroadcaster(stateHandlers.stateGetter);
     installHostPauseBroadcaster();
     installHostLoadoutSync();
+    installGiantNet({ net: n });
     return;
   }
 
@@ -204,6 +208,7 @@ async function setupRole(target, opts) {
     installPredictedSelf(n);
     installGuestEvents(n);
     installGuestLoadoutSync({ net: n });
+    installGiantNet({ net: n });
     installGuestSelfHpSync({ net: n });
     if (isWelcomed()) dispatchHandshake();
     return;
