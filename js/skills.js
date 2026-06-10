@@ -120,7 +120,7 @@ export const SKILL_INFO = {
     name: "Knockback Aura",
     desc: "At <10% HP, blast nearby enemies back for 25% of their HP. 30s cooldown.",
     icon: [13, 9],
-    preview: { sheet: "weapons", x: 97, y: 53, w: 1, h: 1, frames: 8 },
+    preview: { sheet: "weapons", x: 97, y: 53, w: 1, h: 1, frames: 4 },
   },
 };
 
