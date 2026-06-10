@@ -25,24 +25,27 @@ const CONSUMABLES = {
   2020: {
     verb: "Drink",
     sfx: "playerResurrected",
-    canUse: (idx) => getPlayerHp(idx) < getPlayerMaxHp(),
+    canUse: (idx) => getPlayerHp(idx) < getPlayerMaxHp(idx),
     effect: (idx) => applyPlayerHeal(HEALTH_POTION_HEAL, idx),
   },
   // Red pill: restores all health (heal clamps to the missing amount).
   2028: {
     verb: "Take",
     sfx: "playerResurrected",
-    canUse: (idx) => getPlayerHp(idx) < getPlayerMaxHp(),
-    effect: (idx) => applyPlayerHeal(getPlayerMaxHp(), idx),
+    canUse: (idx) => getPlayerHp(idx) < getPlayerMaxHp(idx),
+    effect: (idx) => applyPlayerHeal(getPlayerMaxHp(idx), idx),
   },
-  // Giant pill: grow to a towering 3×4 silhouette for a short while. Purely
-  // cosmetic (collision unchanged); giantMode networks it to every peer.
-  // Gated so it can't be re-taken (and wasted) while already a giant.
+  // Giant pill: grow to a towering 3×4 silhouette for a short while. Collision
+  // stays normal-sized, but the giant gets two combat buffs — triple max HP
+  // (playerHealth.maxHp) and bare-handed melee (melee.js). giantMode networks
+  // the transform to every peer. Gated so it can't be re-taken while already a
+  // giant. Topping the bar off to the new tripled max makes the survivability
+  // buff felt immediately (it drains in over ~2s, like a potion).
   2029: {
     verb: "Drink",
     sfx: "playerResurrected",
     canUse: (idx) => !isGiantIndex(idx),
-    effect: (idx) => triggerGiant(idx),
+    effect: (idx) => { triggerGiant(idx); applyPlayerHeal(getPlayerMaxHp(idx), idx); },
   },
 };
 

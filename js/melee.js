@@ -14,6 +14,7 @@ import { getNetRole } from "./onlineBootstrap.js";
 import { isPlayerDead } from "./playerHealth.js";
 import { pvpSlotCanAct } from "./pvpMatch.js";
 import { isTowerDefenseMode } from "./gameMode.js";
+import { isGiant } from "./giantMode.js";
 
 const DEFAULT_COOLDOWN = 0.35;
 const DEFAULT_LIFESPAN = 0.4;
@@ -27,6 +28,26 @@ const BULLET_OFFSETS = [
   [ 1,  0],
   [-1,  0],
   [ 0,  1],
+];
+
+// Giant melee: while transformed (giantMode) the hero fights bare-handed.
+// The weapon overlay is hidden at giant scale (entities.drawGiant), so a
+// sword would be invisible anyway — and a towering giant punching with its
+// fists is the point. Fists ignore the equipped weapon entirely: they hit
+// harder than a default swing and reach two tiles out across the giant's
+// wider 3-tile footprint. They reuse the (invisible, dps-overridden) sword
+// bullet species purely as the entity carrier, so no new species data is
+// needed — combat.js reads `_dpsOverride`, not the species dps.
+const GIANT_FIST_BULLET_ID = 1166;
+const GIANT_FIST_DPS = 700;
+const GIANT_FIST_COOLDOWN = 0.5;
+const GIANT_FIST_LIFESPAN = 0.4;
+const GIANT_FIST_SPEED = 2.0;
+const GIANT_FIST_SFX = "smallExplosion"; // a heavy thud befitting a giant's punch
+const GIANT_BULLET_OFFSETS = [
+  [ 0,  0],
+  [ 0, -1], [ 0,  1], [ 1,  0], [-1,  0], // the giant's own footprint + adjacent
+  [ 0, -2], [ 0,  2], [ 2,  0], [-2,  0], // long-armed reach, two tiles out
 ];
 
 const DIR_DELTA = {
@@ -93,6 +114,13 @@ export function setSwingAnimation(playerIndex, remaining, duration) {
 // way the guest ever hears its own swing, and it can't double up.
 export function predictGuestSwing(player) {
   if (!player) return;
+  // A giant guest swings bare-handed — no weapon to consult; play the punch
+  // SFX so they hear it without waiting a full RTT for the host's echo.
+  if (isGiant(player)) {
+    setSwingAnimation(player.index | 0, GIANT_FIST_COOLDOWN, GIANT_FIST_COOLDOWN);
+    playSfx(GIANT_FIST_SFX);
+    return;
+  }
   const weaponId = resolveLoadout(player).melee;
   if (!weaponId) return;
   const weapon = getSpecies(weaponId);
@@ -195,26 +223,19 @@ export function performMeleeSwing(state, opts = {}) {
   // PvP: only the active player's turn may swing (no-op outside PvP).
   if (!pvpSlotCanAct(idx + 1)) return false;
   if (cooldown[idx] > 0 && !opts.ignoreCooldown) return false;
-  const weaponId = resolveLoadout(swinger).melee;
-  if (!weaponId) return false;
-  const weapon = getSpecies(weaponId);
-  if (!weapon || weapon.entity_type !== "WeaponMelee") return false;
-  const bulletId = weapon.bullet_species_id;
-  if (!bulletId) return false;
-  const bulletSp = getSpecies(bulletId);
-  if (!bulletSp) return false;
 
-  const cd = weapon.cooldown_after_use > 0 ? weapon.cooldown_after_use : DEFAULT_COOLDOWN;
+  // While giant, the equipped melee weapon is bypassed for bare-handed fists.
+  const profile = isGiant(swinger) ? giantFistProfile() : weaponProfile(swinger);
+  if (!profile) return false;
+  const { bulletId, dps, cd, lifespan, speed, sfx, offsets } = profile;
+
   cooldown[idx] = cd;
   cooldownDuration[idx] = cd;
-  const lifespan = weapon.bullet_lifespan > 0 ? weapon.bullet_lifespan : DEFAULT_LIFESPAN;
-  const speed = bulletSp.base_speed > 0 ? bulletSp.base_speed : 0;
-  const dps = (bulletSp.dps || 0) * (weapon.melee_dps_multiplier || 1);
 
   const dir = swinger.direction;
   const [vx, vy] = DIR_DELTA[dir] ?? [0, 1];
 
-  for (const [ox, oy] of BULLET_OFFSETS) {
+  for (const [ox, oy] of offsets) {
     const bullet = {
       id: -(nextBulletId++),
       _spawned: true,
@@ -237,8 +258,45 @@ export function performMeleeSwing(state, opts = {}) {
     };
     state.zone.entities.push(bullet);
   }
-  playSfx(SFX_FOR_USAGE[weapon.equipment_usage_sound_effect] || "swordSlash");
+  playSfx(sfx);
   return true;
+}
+
+// Swing parameters for the equipped melee weapon, or null if none is equipped
+// / it isn't a valid melee weapon. Damage = bullet.dps * melee_dps_multiplier.
+function weaponProfile(swinger) {
+  const weaponId = resolveLoadout(swinger).melee;
+  if (!weaponId) return null;
+  const weapon = getSpecies(weaponId);
+  if (!weapon || weapon.entity_type !== "WeaponMelee") return null;
+  const bulletId = weapon.bullet_species_id;
+  if (!bulletId) return null;
+  const bulletSp = getSpecies(bulletId);
+  if (!bulletSp) return null;
+  return {
+    bulletId,
+    dps: (bulletSp.dps || 0) * (weapon.melee_dps_multiplier || 1),
+    cd: weapon.cooldown_after_use > 0 ? weapon.cooldown_after_use : DEFAULT_COOLDOWN,
+    lifespan: weapon.bullet_lifespan > 0 ? weapon.bullet_lifespan : DEFAULT_LIFESPAN,
+    speed: bulletSp.base_speed > 0 ? bulletSp.base_speed : 0,
+    sfx: SFX_FOR_USAGE[weapon.equipment_usage_sound_effect] || "swordSlash",
+    offsets: BULLET_OFFSETS,
+  };
+}
+
+// Swing parameters for a giant's bare-handed punch — no weapon required.
+// Returns null only if the carrier bullet species isn't loaded.
+function giantFistProfile() {
+  if (!getSpecies(GIANT_FIST_BULLET_ID)) return null;
+  return {
+    bulletId: GIANT_FIST_BULLET_ID,
+    dps: GIANT_FIST_DPS,
+    cd: GIANT_FIST_COOLDOWN,
+    lifespan: GIANT_FIST_LIFESPAN,
+    speed: GIANT_FIST_SPEED,
+    sfx: GIANT_FIST_SFX,
+    offsets: GIANT_BULLET_OFFSETS,
+  };
 }
 
 function swing(state, swinger) {

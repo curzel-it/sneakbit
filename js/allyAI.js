@@ -278,7 +278,7 @@ function navGrid(zone) {
 }
 
 function heroIsLowHp(hero) {
-  const max = getPlayerMaxHp() || 1;
+  const max = getPlayerMaxHp(hero.index | 0) || 1;
   return getPlayerHp(hero.index | 0) <= max * LOW_HP_FRAC;
 }
 

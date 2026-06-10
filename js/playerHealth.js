@@ -24,14 +24,29 @@ import { getSpecies } from "./species.js";
 import { resolveLoadout } from "./sessionLoadouts.js";
 import { rumble } from "./rumble.js";
 import { isPvp, pvpPlayerHp } from "./gameMode.js";
+import { isGiantIndex } from "./giantMode.js";
 
 const MAX_HP = 100;
 
+// Giant mode (giantMode.js) triples a player's max HP for the duration of
+// the transformation — the survivability half of the giant power-up (the
+// other half is bare-handed melee, see melee.js). Keyed by player index, so
+// the buff is correct for the local self (index 0, keyed by playerId under
+// the hood) and for local co-op partners (index > 0). A lapsing giant is
+// clamped back down in tickPlayerHealth, since expiry is lazy (no event).
+const GIANT_HP_MULT = 3;
+
 // Max HP depends on the game mode: PvP runs at 1000 (Rust
 // GameMode::player_hp) so matches actually last; co-op/creative stay at
-// 100. Every runtime cap (regen, clamp, reset, HUD) goes through here.
-function maxHp() {
+// 100 — then tripled while this player is giant. Every runtime cap (regen,
+// clamp, reset, HUD) goes through here, threading the player index so the
+// giant buff applies per-player.
+function baseMaxHp() {
   return isPvp() ? pvpPlayerHp() : MAX_HP;
+}
+function maxHp(index = 0) {
+  const base = baseMaxHp();
+  return isGiantIndex(index) ? base * GIANT_HP_MULT : base;
 }
 // Matches Rust HERO_RECOVERY_PS=1.0. Potion drops now provide a faster,
 // deliberate heal path, so passive regen is back to the original slow trickle.
@@ -48,8 +63,11 @@ const HEAL_PER_SEC = 100;
 // Up to 4 players (online co-op cap: host + 3 network guests).
 const MAX_PLAYERS = 4;
 
+// Uses baseMaxHp (not maxHp) so module-load never reaches into giantMode →
+// onlineBootstrap, which is still mid-evaluation in the import cycle (and no
+// one is giant at startup regardless).
 function makeRecord() {
-  return { hp: maxHp(), invuln: 0, regenDelay: 0, pendingHeal: 0, hardImmune: 0 };
+  return { hp: baseMaxHp(), invuln: 0, regenDelay: 0, pendingHeal: 0, hardImmune: 0 };
 }
 
 const records = Array.from({ length: MAX_PLAYERS }, makeRecord);
@@ -62,16 +80,22 @@ function recordFor(index) {
 
 export function tickPlayerHealth(dt) {
   let changed = false;
-  for (const rec of records) {
+  for (let i = 0; i < records.length; i++) {
+    const rec = records[i];
+    const cap = maxHp(i);
     if (rec.invuln > 0) rec.invuln = Math.max(0, rec.invuln - dt);
     // Hard immunity (knockback aura activation): a full-immunity window that,
     // unlike `invuln`, also blocks the continuous melee path. Decayed here.
     if (rec.hardImmune > 0) rec.hardImmune = Math.max(0, rec.hardImmune - dt);
+    // Giant expiry: the cap can drop (3× → 1×) the instant the timer lapses,
+    // since giantMode expires lazily with no event. Clamp the oversized HP
+    // back down here so the bar can't stay above the restored max.
+    if (rec.hp > cap) { rec.hp = cap; changed = true; }
     // Drain any queued potion healing first — independent of the regen
     // delay, so drinking right after a hit still heals.
     if (rec.pendingHeal > 0 && rec.hp > 0) {
       const step = Math.min(rec.pendingHeal, HEAL_PER_SEC * dt);
-      rec.hp = Math.min(maxHp(), rec.hp + step);
+      rec.hp = Math.min(cap, rec.hp + step);
       rec.pendingHeal -= step;
       changed = true;
     }
@@ -79,7 +103,6 @@ export function tickPlayerHealth(dt) {
       rec.regenDelay = Math.max(0, rec.regenDelay - dt);
       continue;
     }
-    const cap = maxHp();
     if (rec.hp > 0 && rec.hp < cap) {
       rec.hp = Math.min(cap, rec.hp + RECOVERY_PER_SEC * dt);
       changed = true;
@@ -89,7 +112,7 @@ export function tickPlayerHealth(dt) {
 }
 
 export function getPlayerHp(index = 0)            { return recordFor(index).hp; }
-export function getPlayerMaxHp()                  { return maxHp(); }
+export function getPlayerMaxHp(index = 0)         { return maxHp(index); }
 export function isPlayerInvulnerable(index = 0)   { return recordFor(index).invuln > 0; }
 export function isPlayerDead(index = 0)           { return recordFor(index).hp <= 0; }
 
@@ -100,7 +123,7 @@ export function isPlayerDead(index = 0)           { return recordFor(index).hp <
 // onPlayerHealthChange listeners.
 export function setPlayerHp(hp, index = 0) {
   const rec = recordFor(index);
-  const next = Math.max(0, Math.min(maxHp(), +hp));
+  const next = Math.max(0, Math.min(maxHp(index), +hp));
   if (rec.hp === next) return;
   rec.hp = next;
   notify();
@@ -151,9 +174,10 @@ export function applyPlayerContinuousDamage(amount, victim = 0) {
 // an index or a player object, same as the damage paths. Returns the HP
 // actually queued.
 export function applyPlayerHeal(amount, victim = 0) {
-  const rec = recordFor(indexOf(victim));
+  const victimIdx = indexOf(victim);
+  const rec = recordFor(victimIdx);
   if (rec.hp <= 0 || amount <= 0) return 0;
-  const room = Math.max(0, maxHp() - rec.hp - rec.pendingHeal);
+  const room = Math.max(0, maxHp(victimIdx) - rec.hp - rec.pendingHeal);
   const granted = Math.min(amount, room);
   rec.pendingHeal += granted;
   return granted;
@@ -197,14 +221,14 @@ function applyDamageReductions(amount, victim) {
 // Reset HP for a given player (default both). Used by death/respawn and
 // by tests.
 export function resetPlayerHealth(index) {
-  const full = maxHp();
   if (index == null) {
-    for (const rec of records) {
-      rec.hp = full; rec.invuln = 0; rec.regenDelay = 0; rec.pendingHeal = 0; rec.hardImmune = 0;
+    for (let i = 0; i < records.length; i++) {
+      const rec = records[i];
+      rec.hp = maxHp(i); rec.invuln = 0; rec.regenDelay = 0; rec.pendingHeal = 0; rec.hardImmune = 0;
     }
   } else {
     const rec = recordFor(index);
-    rec.hp = full; rec.invuln = 0; rec.regenDelay = 0; rec.pendingHeal = 0; rec.hardImmune = 0;
+    rec.hp = maxHp(index); rec.invuln = 0; rec.regenDelay = 0; rec.pendingHeal = 0; rec.hardImmune = 0;
   }
   notify();
 }
@@ -215,5 +239,5 @@ export function onPlayerHealthChange(fn) {
 }
 
 function notify() {
-  for (const fn of listeners) fn(records[0].hp, maxHp());
+  for (const fn of listeners) fn(records[0].hp, maxHp(0));
 }

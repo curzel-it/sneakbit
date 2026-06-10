@@ -75,7 +75,7 @@ export function tickKnockbackAura(zone, players, dt) {
     if (idx < 0 || idx >= MAX_PLAYERS) continue;
     if (cooldowns[idx] > 0) continue;
     if (isPlayerDead(idx)) continue;
-    const max = getPlayerMaxHp() || 1;
+    const max = getPlayerMaxHp(idx) || 1;
     if (getPlayerHp(idx) > max * AURA_HP_THRESHOLD) continue;
     const targets = enemiesInRange(zone, p);
     if (targets.length === 0) continue;

@@ -122,7 +122,7 @@ function redraw() {
     setDisplay(b, "");
     anchorBar(b, slices);
     const hp = getPlayerHp(b.index);
-    const max = getPlayerMaxHp();
+    const max = getPlayerMaxHp(b.index);
     // Round before formatting so a fractional damage/regen tick only writes
     // the DOM when the displayed value actually moves: the label tracks whole
     // HP and the fill tracks whole-percent width (the 120ms CSS transition
