@@ -11,6 +11,8 @@ const {
   isGiant,
   isGiantIndex,
   triggerGiant,
+  getGiantRemainingMs,
+  onGiantChange,
   GIANT_DURATION_MS,
   _clearGiantsForTesting,
   _armForTesting,
@@ -50,4 +52,29 @@ test("local co-op partners (index > 0) key independently without a playerId", ()
   assert.equal(isGiantIndex(0), false);
   assert.equal(isGiant({ index: 1 }), true);
   assert.equal(isGiant({ index: 0 }), false);
+});
+
+test("getGiantRemainingMs reports the countdown and clamps a lapsed timer to 0", () => {
+  _clearGiantsForTesting();
+  // Never armed → 0.
+  assert.equal(getGiantRemainingMs(0), 0);
+  triggerGiant(0);
+  const remaining = getGiantRemainingMs(0);
+  // Fresh arm: ~full duration (allow a few ms of clock drift during the call).
+  assert.equal(remaining > GIANT_DURATION_MS - 1000 && remaining <= GIANT_DURATION_MS, true);
+  // A timer in the past reads as 0, never negative.
+  _clearGiantsForTesting();
+  _armForTesting("local:0", -10);
+  assert.equal(getGiantRemainingMs(0), 0);
+});
+
+test("onGiantChange fires on arm and stops after unsubscribe", () => {
+  _clearGiantsForTesting();
+  let count = 0;
+  const off = onGiantChange(() => { count++; });
+  triggerGiant(0);
+  assert.equal(count, 1);
+  off();
+  triggerGiant(0);
+  assert.equal(count, 1); // no further notifications after unsubscribe
 });

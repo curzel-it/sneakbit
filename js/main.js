@@ -48,6 +48,7 @@ import { tickNpcInterception, isInterceptionActive } from "./npcInterception.js"
 import { tickPlayerHealth, isPlayerDead, resetPlayerHealth } from "./playerHealth.js";
 import { tickKnockbackAura, resetKnockbackAura } from "./knockbackAura.js";
 import { installHealthHud, refreshHealthHud } from "./healthHud.js";
+import { installGiantTimerBar } from "./giantTimerBar.js";
 import { installGameOver, isGameOverOpen, showGameOver } from "./gameOver.js";
 import { installShop, isShopOpen } from "./shop.js";
 import { installMessage, isMessageOpen } from "./message.js";
@@ -239,6 +240,7 @@ async function main() {
   // save reads 50 rather than flashing 0. Idempotent on a seeded save.
   seedStartingCoins();
   installHealthHud();
+  installGiantTimerBar();
   installActiveInputDevice();
   installControllerPresence();
   // These listeners stay installed for the lifetime of the page,

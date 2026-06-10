@@ -45,6 +45,20 @@ function keyForPlayer(player) {
 function arm(key, ms) {
   if (!key) return;
   giants.set(key, nowMs() + Math.max(0, ms | 0));
+  notify();
+}
+
+// Change listeners — the HUD timer bar (giantTimerBar.js) subscribes so it can
+// wake up and start its countdown the instant a pill is consumed (locally or via
+// the network), mirroring onWalletChange/onInventoryChange used by the other HUDs.
+const listeners = new Set();
+export function onGiantChange(cb) {
+  if (typeof cb !== "function") return () => {};
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+}
+function notify() {
+  for (const cb of listeners) { try { cb(); } catch { /* ignore */ } }
 }
 
 // Lazy expiry: a key past its endsAt is dropped on read, so no per-frame tick
@@ -65,6 +79,15 @@ export function isGiant(player) { return active(keyForPlayer(player)); }
 // Inventory query for a local player index — gates the consumable's Use button
 // so a pill isn't wasted while already giant.
 export function isGiantIndex(index) { return active(keyForIndex(index)); }
+
+// Remaining giant time (ms) for a local player index, clamped to >= 0 and 0 once
+// lapsed/absent. Feeds the HUD timer bar's countdown; shares the lazy-expiry
+// semantics of active() (a key past its endsAt simply reads as 0 here).
+export function getGiantRemainingMs(index) {
+  const endsAt = giants.get(keyForIndex(index));
+  if (endsAt == null) return 0;
+  return Math.max(0, endsAt - nowMs());
+}
 
 // Local activation for a player index (the consumable effect). Arms locally,
 // then announces to peers so every client renders this avatar as a giant.
@@ -118,8 +141,9 @@ export function uninstallGiantNet() {
   unsubs = [];
   // Drop session state so a stale giant can't bleed into the next session.
   giants.clear();
+  notify();
 }
 
 // Test seams.
-export function _clearGiantsForTesting() { giants.clear(); }
+export function _clearGiantsForTesting() { giants.clear(); notify(); }
 export function _armForTesting(key, ms) { arm(key, ms); }
