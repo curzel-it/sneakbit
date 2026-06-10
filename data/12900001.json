@@ -196,7 +196,7 @@
         { "item": 7001, "price": 10, "stackable": true },
         { "item": 1176, "price": 30, "stackable": true },
         { "item": 1173, "price": 250, "stackable": true },
-        { "item": 1174, "price": 400, "stackable": true },
+        { "item": 1177, "price": 400, "stackable": true },
         { "item": 1164, "price": 99 },
         { "item": 1172, "price": 150 },
         { "item": 1162, "price": 450 },

@@ -808,8 +808,8 @@
     "entity_type": "PickableObject",
     "id": 2029,
     "inventory_texture_offset": [
-      7,
-      2
+      13,
+      3
     ],
     "is_rigid": false,
     "name": "objects.name.giant_pill",
@@ -817,9 +817,9 @@
       "h": 1,
       "w": 1,
       "x": 38,
-      "y": 8
+      "y": 3
     },
-    "sprite_number_of_frames": 8,
+    "sprite_number_of_frames": 4,
     "sprite_sheet_id": 1012,
     "z_index": 14
   },

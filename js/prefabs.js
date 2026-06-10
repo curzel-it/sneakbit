@@ -49,14 +49,14 @@ const SHOP_IDS        = new Set([1070, 1071, 1072]);
 // Default goods a prefab-spawned shop sells: ammo bundles (stackable) plus
 // one-of-a-kind weapons, gated purely by price. Shipped zone data can
 // override a clerk's shop_stock to tailor a shop. Item ids match data:
-// 7001 kunai x10, 1176 .223 x10, 1173 .223 x100, 1174 cannonball x100,
+// 7001 kunai x10, 1176 .223 x10, 1173 .223 x100, 1177 cannonball x10,
 // 1164 sword, 1172 shield, 1162 AR-15, 1168 cannon.
 const DEFAULT_SHOP_STOCK = [
   { item: 2020, price: 30, stackable: true }, // health potion (+50 HP)
   { item: 7001, price: 10, stackable: true },
   { item: 1176, price: 30, stackable: true },
   { item: 1173, price: 250, stackable: true },
-  { item: 1174, price: 400, stackable: true },
+  { item: 1177, price: 400, stackable: true },
   { item: 1164, price: 99 },
   { item: 1172, price: 150 },
   { item: 1162, price: 450 },
