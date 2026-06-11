@@ -3,6 +3,14 @@
 Status: **implementation-ready** · Designed 2026-06-09 · Expanded with technical
 detail 2026-06-11
 
+> **Product decisions locked (2026-06-11):** pricing anchor is **€4.99 / $4.99 per
+> 1,000 coins of value** → at 1 gem = 10 coins that's **100 gems for €4.99** (base
+> rate ≈ €0.0499/gem); the pack lineup in §6.6 is built on that anchor. Also: **New
+> game / Clear cache no longer sign the player out** — this fix is now **built**
+> (`captureSession`/`restoreSession` in `js/accountSession.js`, called around the
+> `localStorage.clear()` in `js/menu.js`), landing ahead of the gem work because the
+> sign-out-on-wipe footgun exists today independent of gems.
+
 > **Product decisions locked (2026-06-09):** v1 is **web/Stripe only**; **gems→coins
 > is one-way** (no coins→gems, no reconcile-on-wipe); exchange rate **1 gem = 10
 > coins**. The doc below reflects these. Earlier alternatives are kept as struck
@@ -379,18 +387,33 @@ The client never sends gem amounts or prices; it sends a `packId`.
 // differ per deployment without a code change.
 export function getGemPacks(env = process.env) {
   return [
-    { id: "gems_500",  gems: 500,  stripePriceId: env.STRIPE_PRICE_500  || null, label: "500 gems" },
-    { id: "gems_1200", gems: 1200, stripePriceId: env.STRIPE_PRICE_1200 || null, label: "1,200 gems", bonus: "+20%" },
-    { id: "gems_3000", gems: 3000, stripePriceId: env.STRIPE_PRICE_3000 || null, label: "3,000 gems", bonus: "+50%" },
+    { id: "gems_100",  gems: 100,  stripePriceId: env.STRIPE_PRICE_100  || null, label: "100 gems" },
+    { id: "gems_220",  gems: 220,  stripePriceId: env.STRIPE_PRICE_220  || null, label: "220 gems",   bonus: "+10%" },
+    { id: "gems_600",  gems: 600,  stripePriceId: env.STRIPE_PRICE_600  || null, label: "600 gems",   bonus: "+20%" },
+    { id: "gems_1300", gems: 1300, stripePriceId: env.STRIPE_PRICE_1300 || null, label: "1,300 gems", bonus: "+30%" },
   ].filter((p) => p.stripePriceId);
 }
 export function findGemPack(env, packId) { /* by id, null if absent */ }
 ```
 
-Prices, currencies, and localization live in **Stripe** (multi-currency Prices), so
-we don't reimplement FX. The pack config only maps `packId → {gems, stripePriceId}`.
-(Exact pack lineup/price points are still an open product question — §17.1; the
-three-tier shape above is illustrative.)
+**Pack lineup & pricing (locked 2026-06-11).** Anchor: **€4.99 / $4.99 = 100 gems =
+1,000 coins** (base rate ≈ €0.0499/gem). Bigger packs add an escalating gem bonus —
+same money, more gems:
+
+| packId | Gems | Price (EUR/USD) | Bonus | Coin-equivalent (×10) |
+|---|---|---|---|---|
+| `gems_100`  | 100   | 4.99  | — (base)  | 1,000 |
+| `gems_220`  | 220   | 9.99  | +10%      | 2,200 |
+| `gems_600`  | 600   | 24.99 | +20%      | 6,000 |
+| `gems_1300` | 1,300 | 49.99 | +30%      | 13,000 |
+
+(The "bonus" is gems above the base rate at that price: e.g. €9.99 buys ~200 gems at
+the base rate, so 220 is +10%.) The **amounts** live in this config; the **prices**
+(and per-currency localization) live in **Stripe** multi-currency Prices, so we don't
+reimplement FX — the config only maps `packId → {gems, stripePriceId}`. Tune amounts
+here against the shop's settled coin prices without touching Stripe; tune money in the
+Stripe dashboard without a code change. The base pack's coin-equivalent ("1,000
+coins") is a good UI subtitle on the card.
 
 ---
 
@@ -498,7 +521,7 @@ New env vars (same `.env` pattern as `JWT_SECRET`; on the VPS they go into the
 |---|---|
 | `STRIPE_SECRET_KEY` | `sk_test_…`/`sk_live_…` — Checkout Session creation (§8.1) |
 | `STRIPE_WEBHOOK_SECRET` | `whsec_…` — webhook signature verification (§8.2) |
-| `STRIPE_PRICE_500` etc. | Price ids per pack (§6.6) |
+| `STRIPE_PRICE_100` / `_220` / `_600` / `_1300` | Price ids per pack (§6.6) |
 | `APP_BASE_URL` | already exists (reset emails) — reused for success/cancel URLs (§9) |
 
 Gating ("off unless configured", parallels `[[accounts-auth-ops]]`):
@@ -717,15 +740,24 @@ All DOM, per the project rule (no canvas UI). Lives with the account feature.
   Buy/Convert are disabled with the standard offline copy (`OFFLINE_MSG` pattern).
 - **New game wording:** the **"New game (wipe save)"** button keeps its
   `localStorage.clear()` + reload flow (`js/menu.js`) — no gem reconciliation,
-  there is no coins→gems. Two required adjustments:
-  1. Confirm copy gains a line: unspent **coins are lost**, but **gems are safe on
-     your account**.
-  2. `localStorage.clear()` currently also wipes `sneakbit.account.v1` — i.e.
-     **New game signs the player out** (verified in `menu.js`). Acceptable before
-     money was involved; not after ("my gems are gone" panic). Fix: capture the
-     account-session value before `clear()` and restore it immediately after
-     (2 lines in the new-game handler, same for "Clear cache"). This is
-     deliberately *not* a selective wipe — it's clear-then-restore of one key.
+  there is no coins→gems. Two adjustments, one **already built**:
+  1. **Stay signed in across a wipe — DONE.** `localStorage.clear()` used to also
+     wipe `sneakbit.account.v1`, i.e. **New game (and Clear cache) signed the
+     player out** — unacceptable once real-money gems are attached to the account
+     ("my gems are gone" panic). Fixed by `captureSession()`/`restoreSession()` in
+     `js/accountSession.js`, called around the `clear()` in both handlers in
+     `js/menu.js`. It's a clear-then-restore of one storage key, deliberately
+     *not* a selective wipe. (Landed ahead of the gem work — the footgun predates
+     gems.)
+  2. **Confirm copy (still TODO, do it with the gem UI):** the new-game confirm
+     dialog gains a line — unspent **coins are lost**, but **gems are safe on your
+     account**.
+  3. Note the gem cache (`sneakbit.gems.v1`) and any pending-convert record (§12.3)
+     *are* wiped by `clear()` — that's fine: the cache refetches on the next panel
+     open, and a pending-convert is intentionally **not** preserved (its coins
+     would have credited the now-wiped save, so abandoning it is correct; the gems
+     debit stands — an extreme edge: a convert crash immediately followed by a
+     wipe).
 - **Live updates:** a new `js/gems.js` module mirrors `wallet.js`'s
   notifier pattern (`onGemsChange`) — see §12.1. No HUD gem chip in v1 — gems are
   an account-screen concept, not a moment-to-moment gameplay number.
@@ -848,11 +880,11 @@ it handles `?reset=` today:
   manual-refund matter; the `payment_events` row preserves the evidence. Rare
   enough to keep manual. The delete-account confirm (`accountPanel.js`) gains a
   line: remaining gems are forfeited.
-- **New game / Clear cache signing the player out** — fixed by clear-then-restore
-  of the account-session key (§11). Gem cache (`sneakbit.gems.v1`) and any
-  pending-convert record are *also* wiped by `clear()`; the former refetches on
-  next panel open, the latter is restored along with the session key (add it to
-  the same capture/restore pair) so an in-flight convert still completes.
+- **New game / Clear cache signing the player out** — **fixed** (built) by the
+  `captureSession`/`restoreSession` clear-then-restore of the account-session key
+  in `js/menu.js` (§11). The gem cache (`sneakbit.gems.v1`) and any pending-convert
+  record are still wiped by `clear()`: the cache refetches on next panel open; the
+  pending-convert is intentionally abandoned (its coins targeted the wiped save).
 - **Webhook arrives before the redirect** (common): first poll already shows the
   new balance — the "processing" state resolves instantly.
 - **Stripe is down / misconfigured.** `/billing/checkout` → 502 `stripe_error`,
@@ -951,8 +983,8 @@ return 503), `server/gemPacks.js` → `index.js` wiring (§7.4) →
 `js/billingApi.js` → `js/gems.js` (cache, notifier, pending-convert protocol,
 `initGems()` from `main.js`) → `js/gemStorePanel.js` + the `accountPanel.js`
 integration (gems view, "Gems & Store" link) → converter UX with `showConfirm` →
-New-game copy + account-session clear-then-restore in `menu.js` → client unit
-tests + `tests/e2e/gemConvert.test.mjs`.
+New-game confirm copy in `menu.js` (the clear-then-restore sign-out fix already
+shipped, §11) → client unit tests + `tests/e2e/gemConvert.test.mjs`.
 
 **M3 — Stripe purchases.**
 `readRawBody` in `httpBody.js` → `server/stripe.js` (§8.1/8.2) → checkout +
@@ -984,18 +1016,17 @@ key is `sneakbit.account.v1` (`accountSession.js`); the New-game wipe is the
 Resolved 2026-06-09 (see header): platform scope (web/Stripe only), conversion
 direction (gems→coins one-way), and rate (1 gem = 10 coins). Resolved 2026-06-11
 by this expansion (flag if you disagree): no Stripe npm dependency (§8); ledger
-kept on account deletion, no FK (§6.5); idempotency index per-user (§6.2);
-New-game preserves the account session via clear-then-restore (§11); convert caps
-and `requestId` format (§7.2); minimum conversion = 1 gem with a confirm dialog
-(closes the old granularity question). Still open:
+kept on account deletion, no FK (§6.5); idempotency index per-user (§6.2); convert
+caps and `requestId` format (§7.2); minimum conversion = 1 gem with a confirm
+dialog (closes the old granularity question). Also resolved 2026-06-11 by product
+decision (see second header note): **pricing** — €4.99 = 100 gems = 1,000 coins,
+four-tier lineup with escalating bonus (§6.6); and **New-game sign-out** — *built*,
+the account session is now preserved across a wipe (§11). Still open:
 
-1. **Pack lineup & prices.** How many packs, what gem amounts, what EUR price
-   points, and which "+X% bonus" tiers? Single currency to start, or Stripe
-   multi-currency Prices from day one? (§6.6's three tiers are illustrative.)
-   Sanity check at 1 gem = 10 coins: a shop priced in the hundreds–low-thousands
-   of coins means a ~€5 pack probably wants to grant a few hundred to ~1,000
-   gems — tune once the shop's coin prices are settled. Blocks only M3's
-   dashboard setup; M1/M2 don't care.
+1. **Per-currency price points (minor).** The EUR/USD anchor is locked (§6.6); if
+   we ship Stripe multi-currency Prices from day one, the non-EUR/USD amounts (GBP,
+   JPY, …) still need picking in the Stripe dashboard. Blocks only M3's dashboard
+   setup; M1/M2 don't care, and the gem *amounts* are already fixed in code.
 2. **Ledger retention policy.** §6.5 implements **keep** (no FK, rows survive
    account deletion as orphans). Counsel may eventually want a retention window
    (e.g. anonymize `payment_events` payloads after N years); nothing in the
