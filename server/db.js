@@ -54,6 +54,44 @@ function migrate(db) {
       updated_at INTEGER NOT NULL
     );
   `);
+  // Real-money store (Stripe). Entitlements are the account-bound "owned
+  // forever" grants; purchases is the audit log + the join refunds need (a
+  // refund event carries a payment_intent, not a sku); stripe_events is the
+  // webhook de-dup ledger. All created idempotently here — no manual migration.
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS entitlements (
+      user_id     TEXT NOT NULL REFERENCES users(id),
+      sku         TEXT NOT NULL,
+      kind        TEXT NOT NULL,
+      ref_id      TEXT NOT NULL,
+      status      TEXT NOT NULL,
+      source      TEXT NOT NULL,
+      granted_at  INTEGER NOT NULL,
+      revoked_at  INTEGER,
+      PRIMARY KEY (user_id, sku)
+    );
+  `);
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS purchases (
+      id                    TEXT PRIMARY KEY,
+      user_id               TEXT NOT NULL REFERENCES users(id),
+      sku                   TEXT NOT NULL,
+      stripe_payment_intent TEXT,
+      amount                INTEGER NOT NULL,
+      currency              TEXT NOT NULL,
+      status                TEXT NOT NULL,
+      created_at            INTEGER NOT NULL,
+      updated_at            INTEGER NOT NULL
+    );
+  `);
+  db.exec(`CREATE INDEX IF NOT EXISTS purchases_pi ON purchases(stripe_payment_intent);`);
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS stripe_events (
+      id          TEXT PRIMARY KEY,
+      type        TEXT NOT NULL,
+      received_at INTEGER NOT NULL
+    );
+  `);
 }
 
 // ALTER TABLE ADD COLUMN, but a no-op if the column already exists (node:sqlite
@@ -91,6 +129,8 @@ export function deleteUser(db, id) {
   try {
     db.prepare(`DELETE FROM saves WHERE user_id = ?`).run(id);
     db.prepare(`DELETE FROM password_resets WHERE user_id = ?`).run(id);
+    db.prepare(`DELETE FROM entitlements WHERE user_id = ?`).run(id);
+    db.prepare(`DELETE FROM purchases WHERE user_id = ?`).run(id);
     db.prepare(`DELETE FROM users WHERE id = ?`).run(id);
     db.exec("COMMIT");
   } catch (err) {
@@ -164,4 +204,75 @@ export function putSave(db, { userId, blob, rev, updatedAt }) {
 
 export function deleteSave(db, userId) {
   db.prepare(`DELETE FROM saves WHERE user_id = ?`).run(userId);
+}
+
+// — Store entitlements / purchases (Stripe) ——————————————————————————————
+
+// Upsert so replays and re-purchase-after-refund are idempotent: a second
+// grant of the same (user, sku) just re-activates the existing row.
+export function grantEntitlement(db, { userId, sku, kind, refId, now }) {
+  db.prepare(`
+    INSERT INTO entitlements (user_id, sku, kind, ref_id, status, source, granted_at, revoked_at)
+    VALUES (?, ?, ?, ?, 'active', 'stripe', ?, NULL)
+    ON CONFLICT(user_id, sku) DO UPDATE SET status='active', granted_at=excluded.granted_at, revoked_at=NULL
+  `).run(userId, sku, kind, refId, now);
+}
+
+export function revokeEntitlement(db, { userId, sku, now }) {
+  db.prepare(`
+    UPDATE entitlements SET status='revoked', revoked_at=? WHERE user_id=? AND sku=?
+  `).run(now, userId, sku);
+}
+
+export function listActiveEntitlements(db, userId) {
+  return db.prepare(`
+    SELECT sku, kind, ref_id, granted_at FROM entitlements
+    WHERE user_id = ? AND status = 'active'
+    ORDER BY granted_at ASC
+  `).all(userId);
+}
+
+export function hasActiveEntitlement(db, userId, sku) {
+  const row = db.prepare(`
+    SELECT 1 FROM entitlements WHERE user_id = ? AND sku = ? AND status = 'active'
+  `).get(userId, sku);
+  return !!row;
+}
+
+export function recordPurchase(db, { id, userId, sku, paymentIntent, amount, currency, now }) {
+  db.prepare(`
+    INSERT INTO purchases (id, user_id, sku, stripe_payment_intent, amount, currency, status, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, 'paid', ?, ?)
+    ON CONFLICT(id) DO UPDATE SET
+      stripe_payment_intent = excluded.stripe_payment_intent, updated_at = excluded.updated_at
+  `).run(id, userId, sku, paymentIntent ?? null, amount, currency, now, now);
+}
+
+export function findPurchaseByPaymentIntent(db, paymentIntent) {
+  if (!paymentIntent) return null;
+  return db.prepare(`SELECT * FROM purchases WHERE stripe_payment_intent = ?`).get(paymentIntent) ?? null;
+}
+
+export function markPurchaseRefunded(db, paymentIntent, now) {
+  db.prepare(`
+    UPDATE purchases SET status='refunded', updated_at=? WHERE stripe_payment_intent=?
+  `).run(now, paymentIntent);
+}
+
+// Webhook de-dup: has this event id already been processed? Checked BEFORE
+// dispatch so a replay is skipped; the id is only recorded (below) AFTER the
+// handler succeeds, so a processing failure leaves it unseen and Stripe's retry
+// re-processes (grants are idempotent, so re-processing is safe).
+export function stripeEventSeen(db, id) {
+  return !!db.prepare(`SELECT 1 FROM stripe_events WHERE id = ?`).get(id);
+}
+
+// Mark an event id processed. insert-or-ignore so a racing duplicate (two
+// deliveries interleaving at await points before either records) is a no-op.
+// Returns true if this call inserted the row (first to record it).
+export function recordStripeEvent(db, { id, type, now }) {
+  const res = db.prepare(`
+    INSERT OR IGNORE INTO stripe_events (id, type, received_at) VALUES (?, ?, ?)
+  `).run(id, type, now);
+  return res.changes > 0;
 }

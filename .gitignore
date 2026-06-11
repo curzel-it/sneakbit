@@ -6,6 +6,10 @@
 __pycache__/
 venv/
 node_modules/
+# Local SQLite DB created at runtime by the server (default ./data.db). The
+# production DB lives under the VPS app dir and is never committed.
+data.db
+data.db-*
 _site/
 dist/
 temp/

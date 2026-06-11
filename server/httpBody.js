@@ -34,3 +34,32 @@ export function readJsonBody(req, { maxBytes = 64 * 1024 } = {}) {
     req.on("error", (err) => reject(err));
   });
 }
+
+// Buffer the raw request body and return it as a Buffer — NO JSON.parse. The
+// Stripe webhook verifies its signature over the exact bytes Stripe sent, so a
+// re-serialized JSON object would never match. Same size-cap/drain posture as
+// readJsonBody; the 1 MB default comfortably covers Stripe's largest events.
+export function readRawBody(req, { maxBytes = 1024 * 1024 } = {}) {
+  return new Promise((resolve, reject) => {
+    let size = 0;
+    let over = false;
+    const chunks = [];
+    req.on("data", (chunk) => {
+      if (over) return; // already rejected — draining the rest
+      size += chunk.length;
+      if (size > maxBytes) {
+        over = true;
+        chunks.length = 0;
+        req.resume();
+        reject(Object.assign(new Error("request body too large"), { code: "BODY_TOO_LARGE" }));
+        return;
+      }
+      chunks.push(chunk);
+    });
+    req.on("end", () => {
+      if (over) return;
+      resolve(chunks.length ? Buffer.concat(chunks) : Buffer.alloc(0));
+    });
+    req.on("error", (err) => reject(err));
+  });
+}

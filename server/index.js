@@ -8,6 +8,8 @@ import { handleTurnRequest } from "./turnCredentials.js";
 import { createAuthHandler } from "./authRoutes.js";
 import { createSavesHandler } from "./savesRoutes.js";
 import { createEditingHandler } from "./editingRoutes.js";
+import { createPaymentsHandler } from "./paymentsRoutes.js";
+import { createStripeWebhookHandler } from "./stripeWebhook.js";
 import { assertStrongSecret } from "./jwt.js";
 import { openDb } from "./db.js";
 import { parseAllowedHosts, isOriginAllowed } from "./originAllowlist.js";
@@ -101,7 +103,8 @@ function isAuthScoped(url) {
   if (!url) return false;
   return url.startsWith("/auth/")
     || url === "/saves" || url.startsWith("/saves?")
-    || url === "/editing" || url.startsWith("/editing/") || url.startsWith("/editing?");
+    || url === "/editing" || url.startsWith("/editing/") || url.startsWith("/editing?")
+    || url === "/store" || url.startsWith("/store/") || url.startsWith("/store?");
 }
 
 export function startServer({
@@ -173,6 +176,16 @@ export function startServer({
     if (!editingHandler) { const d = getDb(); if (d) editingHandler = createEditingHandler({ db: d }); }
     return editingHandler;
   }
+  let paymentsHandler = null;
+  function getPaymentsHandler() {
+    if (!paymentsHandler) { const d = getDb(); if (d) paymentsHandler = createPaymentsHandler({ db: d }); }
+    return paymentsHandler;
+  }
+  let stripeWebhookHandler = null;
+  function getStripeWebhookHandler() {
+    if (!stripeWebhookHandler) { const d = getDb(); if (d) stripeWebhookHandler = createStripeWebhookHandler({ db: d }); }
+    return stripeWebhookHandler;
+  }
 
   const server = createServer((req, res) => {
     if (req.method === "OPTIONS") {
@@ -232,10 +245,30 @@ export function startServer({
       handleTurnRequest(req, res);
       return;
     }
+    // Stripe webhook: server-to-server, NOT a browser request — registered
+    // outside the CORS + bearer path. The handler verifies the signature over
+    // the raw body itself, so we apply no CORS and do no auth here.
+    if (req.url === "/webhooks/stripe" || (req.url && req.url.startsWith("/webhooks/stripe?"))) {
+      const handler = getStripeWebhookHandler();
+      if (!handler) {
+        res.writeHead(503, { "content-type": "text/plain; charset=utf-8" });
+        res.end("payments disabled\n");
+        return;
+      }
+      handler(req, res).catch((err) => {
+        log.error("stripe.unhandled", { err: err?.message || String(err) });
+        if (!res.headersSent) {
+          res.writeHead(500, { "content-type": "text/plain; charset=utf-8" });
+          res.end("server error\n");
+        }
+      });
+      return;
+    }
     if (isAuthScoped(req.url)) {
       applyAuthCors(res, req.headers.origin, allowedHosts);
       const handler = req.url.startsWith("/saves") ? getSavesHandler()
         : req.url.startsWith("/editing") ? getEditingHandler()
+        : req.url.startsWith("/store") ? getPaymentsHandler()
         : getAuthHandler();
       if (!handler) {
         res.writeHead(503, { "content-type": "application/json; charset=utf-8" });
