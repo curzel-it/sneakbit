@@ -38,7 +38,7 @@ export const AURA_RADIUS = 1;        // tiles — enemies this close are affecte
 const AURA_HP_THRESHOLD = 0.10;      // fires only under 10% HP
 const AURA_DAMAGE_FRAC = 0.25;       // 25% of each enemy's base HP, instant
 const AURA_COOLDOWN = 30;            // seconds between activations
-const AURA_KNOCKBACK_TILES = 1;      // how far enemies are pushed
+const AURA_KNOCKBACK_TILES = 3;      // how far enemies are pushed
 
 // Activation sprite on the weapons sheet (SPRITE_SHEET_WEAPONS). `texX/texY`
 // are tile coords; `frames` are laid out horizontally; `w/h` is the sprite

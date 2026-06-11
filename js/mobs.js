@@ -13,6 +13,7 @@
 import { getSpecies } from "./species.js";
 import { isWalkable } from "./zone.js";
 import { isCreativeMode } from "./creativeMode.js";
+import { TILE_SIZE } from "./constants.js";
 
 const VISION_TILES = 6;            // chase trigger range (Manhattan)
 const WANDER_PAUSE = 0.9;          // sec idle between wander steps
@@ -152,7 +153,14 @@ function advanceStep(e, dt) {
 // resumes normal movement afterwards. No-op if the mob can't be stepped (no
 // AI species) or every tile behind it is blocked. Owned here so all `_ai`
 // manipulation stays in one file; knockbackAura.js calls it.
-const KNOCKBACK_DURATION = 0.12; // sec — a quick shove, matches the step floor
+//
+// The slide duration scales with the distance covered so a multi-tile shove
+// still reads as a fast push rather than a teleport, and the step is flagged
+// `hop` so the renderer lifts the sprite a couple pixels mid-slide — a small
+// recoil bounce (knockbackHopOffset, applied by entities.js).
+const KNOCKBACK_MIN_DURATION = 0.12;      // sec floor — matches the step floor
+const KNOCKBACK_DURATION_PER_TILE = 0.07; // sec added per tile slid
+const KNOCKBACK_HOP_TILES = 3 / TILE_SIZE; // peak lift (~3px) at mid-slide
 
 export function knockbackEntity(zone, e, fromX, fromY, tiles = 1) {
   const sp = getSpecies(e.species_id);
@@ -187,10 +195,21 @@ export function knockbackEntity(zone, e, fromX, fromY, tiles = 1) {
     fromY: e._ai.tileY,
     toX: tx, toY: ty,
     progress: 0,
-    duration: KNOCKBACK_DURATION,
+    duration: Math.max(KNOCKBACK_MIN_DURATION, steps * KNOCKBACK_DURATION_PER_TILE),
+    hop: true,
   };
   // Don't immediately re-decide a chase step the instant the slide lands.
   e._ai.decideTimer = WANDER_PAUSE;
+}
+
+// Vertical render lift (tiles, positive = up) for a mob mid-knockback, so the
+// shove reads as a small recoil hop that peaks at the midpoint of the slide.
+// Zero for any normal step or idle mob; entities.js subtracts it from draw Y.
+export function knockbackHopOffset(e) {
+  const s = e?._ai?.step;
+  if (!s || !s.hop) return 0;
+  const p = s.progress < 0 ? 0 : s.progress > 1 ? 1 : s.progress;
+  return Math.sin(p * Math.PI) * KNOCKBACK_HOP_TILES;
 }
 
 // Picks the closest live player whose Manhattan distance from the mob's

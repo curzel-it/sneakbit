@@ -19,6 +19,7 @@ import { getMeleeSwingProgress } from "./melee.js";
 import { getShootAnimProgress } from "./shooting.js";
 import { getAuraAnimProgress, AURA_SPRITE } from "./knockbackAura.js";
 import { pushableRenderOffset } from "./pushables.js";
+import { knockbackHopOffset } from "./mobs.js";
 import { coinRenderOffset } from "./coinDrops.js";
 import { shouldBeVisible } from "./entityVisibility.js";
 import { isCreativeMode } from "./creativeMode.js";
@@ -366,6 +367,8 @@ function draw(ctx, e, camera) {
   // Coins fan out within their tile so a pile reads as separate coins.
   const coinOff = coinRenderOffset(e);
   if (coinOff) { rx += coinOff.x; ry += coinOff.y; }
+  // A mob mid-knockback hops a couple pixels off the ground (recoil bounce).
+  ry -= knockbackHopOffset(e);
   const px = Math.round((rx - camera.x) * TILE_SIZE);
   const py = Math.round((ry - camera.y) * TILE_SIZE);
 
